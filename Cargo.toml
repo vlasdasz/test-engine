@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 glfw = "0.41.0"
+rustc-serialize = "0.3.24"

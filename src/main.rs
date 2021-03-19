@@ -2,6 +2,9 @@
 
 #![allow(dead_code)]
 
+extern crate rustc_serialize;
+use rustc_serialize::json;
+
 mod gm;
 mod gl;
 
@@ -20,6 +23,10 @@ fn main() {
     );
 
     println!("{}", point.normalized().length());
+
+    let encoded = json::encode(&point).unwrap();
+
+    println!("{}", encoded);
 
     GL::init(Size { width: 500.0, height: 500.0 });
 

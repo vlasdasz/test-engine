@@ -3,16 +3,19 @@ use crate::gm;
 extern crate glfw;
 
 use gm::Size;
-use glfw::{Action, Context, Key};
+use glfw::{Action, Context, Key, Glfw };
+use self::glfw::OpenGlProfileHint::Core;
 
-pub struct GL {
-
-}
+pub struct GL;
 
 impl GL {
 
     pub fn init(size: Size) {
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
+
+        glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
+        glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
+        glfw.window_hint(glfw::WindowHint::OpenGlProfile(Core));
 
         let (mut window, events) =
             glfw.create_window(size.width as u32,
