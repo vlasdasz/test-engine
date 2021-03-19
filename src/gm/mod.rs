@@ -1,2 +1,4 @@
 
-pub mod point;
+mod point;
+
+pub use point::Point;

@@ -2,7 +2,7 @@
 
 mod gm;
 
-use gm::point::Point;
+use gm::Point;
 
 fn main() {
     let point = Point { x: 5.0, y: 5.0 };
