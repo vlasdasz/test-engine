@@ -1,8 +1,13 @@
 // Rust
 
+#![allow(dead_code)]
+
 mod gm;
+mod gl;
 
 use gm::Point;
+use gl::GL;
+use crate::gm::Size;
 
 
 fn main() {
@@ -14,5 +19,8 @@ fn main() {
         new_point.to_string()
     );
 
-    println!("{}", point.normalized().length())
+    println!("{}", point.normalized().length());
+
+    GL::init(Size { width: 500.0, height: 500.0 });
+
 }
