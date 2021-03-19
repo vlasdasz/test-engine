@@ -1,12 +1,15 @@
 // Rust
 
-mod Point;
+mod gm;
+
+use gm::point::Point;
 
 fn main() {
-    let point = Point::Point { x: 5.0, y: 5.0 };
-    let new_point = Point::Point::new();
+    let point = Point { x: 5.0, y: 5.0 };
+    let new_point = Point::new();
     println!(
-        "The area of the rectangle is {} square pixels.",
-        point.kok()
+        "The area of the rectangle is {} square pixels. A {}",
+        point.kok(),
+        new_point.kok()
     );
 }
