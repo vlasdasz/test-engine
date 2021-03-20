@@ -1,13 +1,16 @@
 
-use crate::gm;
 extern crate gl;
 extern crate glfw;
 
-use gm::Size;
-use gm::Color;
-use glfw::{Action, Context, Key, Glfw };
+use crate::gm::*;
+
+use crate::te::shaders;
+
+use super::shader::Shader;
+use super::gl_info::GLInfo;
+
+use glfw::{Action, Context, Key };
 use self::glfw::OpenGlProfileHint::Core;
-//use gl::types::*;
 
 pub struct GL;
 
@@ -22,7 +25,14 @@ impl GL {
     }
 
     pub fn init(size: Size) {
+
+        //let
+
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
+
+        let _shader = Shader::new(shaders::isometric());
+
+
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
@@ -33,10 +43,11 @@ impl GL {
                                size.height as u32,
                                "Hello this is window",
                                glfw::WindowMode::Windowed)
-
             .expect("Failed to create GLFW window.");
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
+
+        let _info = GLInfo::get();
 
         window.make_current();
         window.set_key_polling(true);

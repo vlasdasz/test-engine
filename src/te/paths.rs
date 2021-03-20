@@ -14,6 +14,7 @@ impl PathBufExt for PathBuf {
     }
 }
 
+#[allow(deprecated)]
 pub fn home() -> PathBuf { env::home_dir().unwrap_or_default() }
 
 pub fn assets() -> PathBuf { home().pushing("Assets")  }
