@@ -6,12 +6,12 @@ extern crate rustc_serialize;
 use rustc_serialize::json;
 
 mod gm;
-mod gl;
+mod gl_wrapper;
 mod te;
 
 
 use gm::Point;
-use gl::GL;
+use gl_wrapper::GL;
 use crate::gm::{Size, Color};
 
 
@@ -35,6 +35,6 @@ fn main() {
 
     println!("{}", Color::random().to_string());
 
- //   GL::init(Size { width: 500.0, height: 500.0 });
+    GL::init(Size { width: 500.0, height: 500.0 });
 
 }
