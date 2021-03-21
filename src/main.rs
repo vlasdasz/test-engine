@@ -8,8 +8,9 @@ use rustc_serialize::json;
 mod gm;
 mod gl_wrapper;
 mod te;
+mod utils;
 
-
+use utils::log;
 use gm::Point;
 use gl_wrapper::GL;
 use crate::gm::{Size, Color};
@@ -25,15 +26,15 @@ fn main() {
         new_point.to_string()
     );
 
-    println!("{}", point.normalized().length());
+    log(&point.normalized().length());
 
     let encoded = json::encode(&point).unwrap();
 
-    println!("{}", encoded);
+    log(&encoded);
 
-    println!("{}", te::paths::shaders::isometric().to_string_lossy());
+    log(&te::paths::shaders::isometric().to_string_lossy());
 
-    println!("{}", Color::random().to_string());
+    log(&Color::random().to_string());
 
     GL::init(Size { width: 500.0, height: 500.0 });
 

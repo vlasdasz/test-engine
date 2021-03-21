@@ -6,6 +6,8 @@ use crate::gm::*;
 
 use crate::te::shaders;
 
+use crate::utils::log;
+
 use super::shader::Shader;
 use super::gl_info::GLInfo;
 
@@ -48,6 +50,10 @@ impl GL {
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
         let _info = GLInfo::get();
+
+        log(&_info);
+
+        return;
 
         window.make_current();
         window.set_key_polling(true);
