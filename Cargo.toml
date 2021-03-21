@@ -8,7 +8,11 @@ edition = "2018"
 
 [dependencies]
 gl = "0.14.0"
+glm = "0.2.3"
 glfw = "0.41.0"
-rustc-serialize = "0.3.24"
 rand = "0.8.3"
 regex = "1.4.5"
+assimp = "0.3.1"
+freetype = "0.7.0"
+rubullet = "0.1.0-alpha-2"
+rustc-serialize = "0.3.24"

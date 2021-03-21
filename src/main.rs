@@ -14,8 +14,8 @@ mod utils;
 
 use utils::log;
 use gm::Point;
-use gl_wrapper::GL;
 use crate::gm::{Size, Color};
+use crate::gl_wrapper::gl_wrapper::GL;
 
 
 fn main() {

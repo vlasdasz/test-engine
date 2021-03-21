@@ -1,7 +1,5 @@
 
-mod gl_wrapper;
-mod shader;
-mod gl_info;
-
-pub use gl_wrapper::GL;
-pub use shader::Shader;
+pub mod buffer;
+pub mod shader;
+pub mod gl_info;
+pub mod gl_wrapper;

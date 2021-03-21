@@ -11,9 +11,11 @@ use crate::te::paths::PathBufExt;
 
 use super::gl_info::GLInfo;
 use crate::gl_wrapper::shader::ShaderCompiler;
+use crate::gl_wrapper::buffer::buffer_config::BufferConfig;
 
 use glfw::{Action, Context, Key };
 use self::glfw::OpenGlProfileHint::Core;
+use crate::gl_wrapper::buffer::buffer::Buffer;
 
 pub struct GL;
 
@@ -59,7 +61,13 @@ impl GL {
 
         log(&shader_compiler.gl_info);
 
-        return;
+        BufferConfig::_2.set_pointers();
+
+        println!("{:?}", BufferConfig::_3_3_4);
+
+        let buf = Buffer { config: &BufferConfig::_3_3_2 };
+
+        println!("{:?}", buf);
 
         window.make_current();
         window.set_key_polling(true);

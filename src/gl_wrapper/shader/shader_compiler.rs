@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use std::ffi::CString;
 
 use crate::te::paths;
-use crate::gl_wrapper::Shader;
+use crate::gl_wrapper::shader::Shader;
 use crate::gl_wrapper::gl_info::GLInfo;
 
 use crate::utils::regex::*;
@@ -79,8 +79,6 @@ impl ShaderCompiler {
     fn compile_shader(&self, path: PathBuf, code: String, kind: gl::types::GLenum) -> u32 {
 
         let code = self.version() + "\n" + &ShaderCompiler::unfold_includes(code);
-
-        println!("{}", code);
 
         let shader = unsafe { gl::CreateShader(kind) };
 

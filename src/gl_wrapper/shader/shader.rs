@@ -54,7 +54,7 @@ impl Shader {
     }
 
     pub fn set_selected(&self, selected: bool) {
-        unsafe { gl::Uniform1i(self.selected, selected as i32) }
+        unsafe { gl::Uniform1i(self.selected, selected.into()) }
     }
 
     pub fn set_resolution(&self, resolution: &Size) {
@@ -74,7 +74,7 @@ impl Shader {
     }
 
     pub fn set_flip(&self, flip: bool) {
-        unsafe { gl::Uniform1i(self.flip, flip as i32) }
+        unsafe { gl::Uniform1i(self.flip, flip.into()) }
     }
 
 }
