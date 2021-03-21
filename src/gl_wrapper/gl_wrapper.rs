@@ -4,9 +4,10 @@ extern crate glfw;
 
 use crate::gm::*;
 
-use crate::te::shaders;
+use crate::te::paths;
 
 use crate::utils::log;
+use crate::te::paths::PathBufExt;
 
 use super::gl_info::GLInfo;
 use crate::gl_wrapper::shader::ShaderCompiler;
@@ -37,6 +38,10 @@ impl GL {
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(Core));
 
+        if cfg!(target_os = "macos") {
+            glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
+        }
+
         let (mut window, events) =
             glfw.create_window(size.width as u32,
                                size.height as u32,
@@ -50,7 +55,7 @@ impl GL {
 
         let shader_compiler = ShaderCompiler { gl_info };
 
-        let _shader = shader_compiler.compile(shaders::isometric());
+        let _shader = shader_compiler.compile(paths::shaders::sprites().pushing("sprite"));
 
         log(&shader_compiler.gl_info);
 

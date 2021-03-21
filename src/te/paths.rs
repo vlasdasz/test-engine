@@ -2,22 +2,22 @@
 use std::env;
 use std::path::PathBuf;
 
-trait PathBufExt {
-    fn pushing(&self, path: &str) -> PathBuf;
+pub trait PathBufExt {
+    fn pushing<P: AsRef<str>>(&self, path: P) -> PathBuf;
 }
 
 impl PathBufExt for PathBuf {
-    fn pushing(&self, path: &str) -> PathBuf {
+    fn pushing<P: AsRef<str>>(&self, path: P) -> PathBuf {
         let mut result = self.clone();
-        result.push(path);
+        result.push(path.as_ref());
         return result;
     }
 }
 
 #[allow(deprecated)]
 pub fn home() -> PathBuf { env::home_dir().unwrap_or_default() }
-//pub fn root() -> PathBuf {  }
-pub fn assets() -> PathBuf { home().pushing("Assets")  }
+pub fn root() -> PathBuf {  home().pushing(".deps/test_engine") }
+pub fn assets() -> PathBuf { root().pushing("Assets")  }
 
 pub mod shaders {
     use std::path::PathBuf;
