@@ -16,7 +16,7 @@ impl PathBufExt for PathBuf {
 
 #[allow(deprecated)]
 pub fn home() -> PathBuf { env::home_dir().unwrap_or_default() }
-pub fn root() -> PathBuf {  home().pushing(".deps/test_engine") }
+pub fn root() -> PathBuf { home().pushing(".deps/test_engine") }
 pub fn assets() -> PathBuf { root().pushing("Assets")  }
 
 pub mod shaders {
