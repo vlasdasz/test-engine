@@ -8,8 +8,8 @@ use crate::te::shaders;
 
 use crate::utils::log;
 
-use super::shader::Shader;
 use super::gl_info::GLInfo;
+use crate::gl_wrapper::shader::ShaderCompiler;
 
 use glfw::{Action, Context, Key };
 use self::glfw::OpenGlProfileHint::Core;
@@ -32,9 +32,6 @@ impl GL {
 
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
 
-        let _shader = Shader::new(shaders::isometric());
-
-
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
@@ -49,9 +46,13 @@ impl GL {
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
-        let _info = GLInfo::get();
+        let gl_info = GLInfo::get();
 
-        log(&_info);
+        let shader_compiler = ShaderCompiler { gl_info };
+
+        let _shader = shader_compiler.compile(shaders::isometric());
+
+        log(&shader_compiler.gl_info);
 
         return;
 

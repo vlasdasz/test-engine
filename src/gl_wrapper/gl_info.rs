@@ -1,8 +1,6 @@
 
 extern crate gl;
 
-use crate::log;
-use crate::utils;
 use crate::utils::regex::find_match;
 
 #[derive(Debug)]
@@ -31,8 +29,7 @@ impl GLInfo {
     pub fn get() -> GLInfo {
         let version = GLInfo::get_string(gl::VERSION);
         let is_gles = version.contains("ES");
-        use utils::regex;
-        let gl_version   = find_match(&version, GLInfo::GL_QUERY);
+        let gl_version = find_match(&version, GLInfo::GL_QUERY);
         let mut glsl_version = gl_version.clone();
         glsl_version = glsl_version.replace(".", "");
         glsl_version += "0";

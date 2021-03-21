@@ -1,6 +1,8 @@
 // Rust
 
 #![allow(dead_code)]
+#![allow(unreachable_code)]
+#![allow(unused_variables)]
 
 extern crate rustc_serialize;
 use rustc_serialize::json;
