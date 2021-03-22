@@ -33,30 +33,28 @@ impl Buffer {
             if indices.is_none() { vertex_data.size as i32 / config.size() as i32 }
             else { -1 };
 
-        unsafe {
-            gl::GenVertexArrays(1, &mut vertex_array_object);
-            gl::BindVertexArray(vertex_array_object);
+        GL!(GenVertexArrays, 1, &mut vertex_array_object);
+        GL!(BindVertexArray, vertex_array_object);
 
-            gl::GenBuffers(1, &mut vertex_buffer_object);
-            gl::BindBuffer(gl::ARRAY_BUFFER, vertex_buffer_object);
+        GL!(GenBuffers, 1, &mut vertex_buffer_object);
+        GL!(BindBuffer, gl::ARRAY_BUFFER, vertex_buffer_object);
 
-            gl::BufferData(gl::ARRAY_BUFFER,
+        GL!(BufferData, gl::ARRAY_BUFFER,
                            (vertex_data.size * std::mem::size_of::<gl::types::GLfloat>()) as isize,
                            vertex_data.data as *const c_void,
                            gl::STATIC_DRAW);
 
-            if let Some(indices) = &indices {
-                gl::GenBuffers(1, &mut index_buffer_object);
-                gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, index_buffer_object);
-                gl::BufferData(gl::ELEMENT_ARRAY_BUFFER,
-                               (indices.size * std::mem::size_of::<gl::types::GLushort>()) as isize,
-                               indices.data as *const c_void,
-                               gl::STATIC_DRAW);
-            }
-
-            config.set_pointers();
-            gl::BindVertexArray(0);
+        if let Some(indices) = &indices {
+            GL!(GenBuffers, 1, &mut index_buffer_object);
+            GL!(BindBuffer, gl::ELEMENT_ARRAY_BUFFER, index_buffer_object);
+            GL!(BufferData, gl::ELEMENT_ARRAY_BUFFER,
+                           (indices.size * std::mem::size_of::<gl::types::GLushort>()) as isize,
+                           indices.data as *const c_void,
+                           gl::STATIC_DRAW);
         }
+
+        config.set_pointers();
+        GL!(BindVertexArray, 0);
 
         Buffer {
             config,
@@ -73,21 +71,19 @@ impl Buffer {
 
 impl Buffer {
     pub fn draw(&self) {
-        unsafe {
-            gl::BindVertexArray(self.vertex_array_object);
+        GL!(BindVertexArray, self.vertex_array_object);
 
-            if let Some(indices) = &self.indices {
-                gl::DrawElements(self.draw_mode,
-                                 indices.size as i32,
-                                 gl::UNSIGNED_SHORT,
-                                 0 as *const c_void)
-            }
-            else {
-                gl::DrawArrays(self.draw_mode, 0, self.vertices_count)
-            }
-
-            gl::BindVertexArray(0);
+        if let Some(indices) = &self.indices {
+            GL!(DrawElements, self.draw_mode,
+                              indices.size as i32,
+                              gl::UNSIGNED_SHORT,
+                              0 as *const c_void)
         }
+        else {
+            GL!(DrawArrays, self.draw_mode, 0, self.vertices_count)
+        }
+
+        GL!(BindVertexArray, 0);
     }
 
     pub fn print(&self) {
@@ -100,12 +96,10 @@ impl Buffer {
 
 impl Drop for Buffer {
     fn drop(&mut self) {
-        unsafe {
-            gl::DeleteBuffers(1, &self.vertex_buffer_object);
-            if self.index_buffer_object != u32::MAX {
-                gl::DeleteBuffers(1, &self.index_buffer_object);
-            }
-            gl::DeleteVertexArrays(1, &self.vertex_array_object);
+        GL!(DeleteBuffers, 1, &self.vertex_buffer_object);
+        if self.index_buffer_object != u32::MAX {
+            GL!(DeleteBuffers, 1, &self.index_buffer_object);
         }
+        GL!(DeleteVertexArrays, 1, &self.vertex_array_object);
     }
 }

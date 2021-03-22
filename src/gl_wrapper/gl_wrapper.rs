@@ -16,35 +16,26 @@ pub struct GLWrapper {
 impl GLWrapper {
 
     pub fn set_clear_color(color: Color) {
-        unsafe { gl::ClearColor(color.r, color.g, color.b, color.a); }
+        GL!(ClearColor, color.r, color.g, color.b, color.a)
     }
 
     pub fn clear() {
-        unsafe { gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT); }
+        GL!(Clear, gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT)
     }
 
     pub fn enable_depth_test() {
-        unsafe { gl::Enable(gl::DEPTH_TEST) }
+        GL!(Enable, gl::DEPTH_TEST)
     }
 
     pub fn disable_depth_test() {
-        unsafe { gl::Disable(gl::DEPTH_TEST) }
+        GL!(Disable, gl::DEPTH_TEST)
     }
 
     pub fn set_viewport(&self, rect: &Rect) {
-        // unsafe {
-        //     gl::Viewport(rect.origin.x as i32,
-        //                  (self.window_size.height - rect.origin.y - rect.size.height) as i32,
-        //                  rect.size.width as i32,
-        //                  rect.size.height as i32)
-        // }
-
-        unsafe {
-            gl::Viewport(rect.origin.x as i32,
-                         rect.origin.y as i32,
-                         rect.size.width as i32,
-                         rect.size.height as i32)
-        }
+        GL!(Viewport, rect.origin.x as i32,
+                      rect.origin.y as i32,
+                      rect.size.width as i32,
+                      rect.size.height as i32)
     }
 
     pub fn init(size: Size) {
@@ -68,7 +59,7 @@ impl GLWrapper {
                                glfw::WindowMode::Windowed)
                 .expect("Failed to create GLFW window.");
 
-        gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
+        GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
 
         let assets = Assets::init();
         let gl_wrapper = GLWrapper { window_size: size };
@@ -79,8 +70,6 @@ impl GLWrapper {
         window.set_key_polling(true);
 
         GLWrapper::set_clear_color(Color::GRAY);
-
-        GLWrapper::clear();
 
         while !window.should_close() {
             glfw.poll_events();
@@ -96,8 +85,10 @@ impl GLWrapper {
 
             GLWrapper::disable_depth_test();
 
+            GLWrapper::clear();
+
             ui_drawer.draw_rect(&Rect::make(100.0, 100.0, 100.0, 100.0), &Color::RED);
-          //  ui_drawer.fill_rect(&Rect::make(300.0, 300.0, 100.0, 100.0), &Color::YELLOW);
+            ui_drawer.fill_rect(&Rect::make(300.0, 300.0, 100.0, 100.0), &Color::YELLOW);
 
             window.swap_buffers();
         }

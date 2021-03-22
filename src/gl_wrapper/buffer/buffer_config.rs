@@ -10,7 +10,7 @@ impl BufferConfig {
     fn stride_for_index(&self, index: u8) -> u8 {
         if index == 0 { return 0 }
         if index == 1 { return self.vertex_size - self.config[1] - self.config[2] }
-                        return self.vertex_size                  - self.config[2]
+        return self.vertex_size                  - self.config[2]
     }
 }
 
@@ -32,17 +32,15 @@ impl BufferConfig {
         self.vertex_size
     }
     pub fn set_pointers(&self) {
-        unsafe {
-            const GLFLOAT_SIZE: u8 = std::mem::size_of::<gl::types::GLfloat>() as u8;
-            for i in 0..self.size {
-                gl::EnableVertexAttribArray(i.into());
-                gl::VertexAttribPointer(i.into(),
-                                        self.config[i as usize] as i32,
-                                        gl::FLOAT,
-                                        gl::FALSE,
-                                        (self.vertex_size * GLFLOAT_SIZE) as gl::types::GLint,
-                                        (self.stride_for_index(i) * GLFLOAT_SIZE) as *const gl::types::GLvoid);
-            }
+        const GLFLOAT_SIZE: u8 = std::mem::size_of::<gl::types::GLfloat>() as u8;
+        for i in 0..self.size {
+            GL!(EnableVertexAttribArray, i.into());
+            GL!(VertexAttribPointer, i.into(),
+                                     self.config[i as usize] as i32,
+                                     gl::FLOAT,
+                                     gl::FALSE,
+                                     (self.vertex_size * GLFLOAT_SIZE) as gl::types::GLint,
+                                     (self.stride_for_index(i) * GLFLOAT_SIZE) as *const gl::types::GLvoid);
         }
     }
 }
