@@ -1,9 +1,9 @@
 
+pub mod flat;
+pub mod color;
+pub mod volume;
 
-mod size;
-mod point;
-mod color;
+pub use flat::point::Point;
+pub use flat::size::Size;
 
-pub use point::Point;
-pub use size::Size;
 pub use color::Color;

@@ -10,7 +10,7 @@ impl BufferConfig {
     fn stride_for_index(&self, index: u8) -> u8 {
         if index == 0 { return 0 }
         if index == 1 { return self.vertex_size - self.config[1] - self.config[2] }
-        return self.vertex_size                  - self.config[2]
+                        return self.vertex_size                  - self.config[2]
     }
 }
 
@@ -55,12 +55,3 @@ impl BufferConfig {
     pub const _3_3_3: BufferConfig = BufferConfig::new(3, 3, 3);
     pub const _3_3_4: BufferConfig = BufferConfig::new(3, 3, 4);
 }
-
-// gl::VertexAttribPointer(
-// 1,
-// 3,
-// gl::FLOAT,
-// gl::FALSE,
-// (6 * std::mem::size_of::<f32>()) as gl::types::GLint,
-// (3 * std::mem::size_of::<f32>()) as *const gl::types::GLvoid
-// );
