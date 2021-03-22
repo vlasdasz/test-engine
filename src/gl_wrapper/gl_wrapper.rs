@@ -33,7 +33,7 @@ impl GLWrapper {
 
     pub fn set_viewport(&self, rect: &Rect) {
         GL!(Viewport, rect.origin.x as i32,
-                      rect.origin.y as i32,
+                      (self.window_size.height - rect.origin.y - rect.size.height) as i32,
                       rect.size.width as i32,
                       rect.size.height as i32)
     }
