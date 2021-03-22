@@ -14,10 +14,14 @@ use std::collections::HashMap;
 use crate::te::paths::PathBufExt;
 
 pub struct ShaderCompiler {
-    pub gl_info: GLInfo
+    gl_info: GLInfo
 }
 
 impl ShaderCompiler {
+
+    pub fn new() -> ShaderCompiler {
+        ShaderCompiler { gl_info: GLInfo::get() }
+    }
 
     fn version(&self) -> String {
         let mut result = "#version ".to_string();
@@ -99,8 +103,13 @@ impl ShaderCompiler {
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 
-        let vert_code = fs::read_to_string(&vert_path).unwrap();
-        let frag_code = fs::read_to_string(&frag_path).unwrap();
+        guard!(let Ok(vert_code) = fs::read_to_string(&vert_path) else {
+            panic!("Failed to read shader file: {:?}", vert_path)
+        });
+
+        guard!(let Ok(frag_code) = fs::read_to_string(&frag_path) else {
+            panic!("Failed to read shader file: {:?}", frag_path)
+        });
 
         let vert = self.compile_shader(vert_path, vert_code, gl::VERTEX_SHADER);
         let frag = self.compile_shader(frag_path, frag_code, gl::FRAGMENT_SHADER);

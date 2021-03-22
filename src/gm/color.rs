@@ -1,5 +1,4 @@
 
-#[derive(Copy, Clone)]
 pub struct Color {
     pub r: f32,
     pub g: f32,
@@ -52,9 +51,9 @@ impl Color {
         Color::CLEAR
     ];
 
-    pub fn random() -> Color {
+    pub fn random() -> &'static Color {
         use rand::Rng;
-        Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
+        &Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
     }
 
 }

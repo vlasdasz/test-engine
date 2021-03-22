@@ -3,26 +3,17 @@ extern crate gl;
 extern crate glfw;
 
 use crate::gm::*;
-use crate::gm::volume::Vector3;
 
-use crate::te::paths;
+use crate::te::{Assets, TEUIDrawer};
 
-use crate::utils::log;
-use crate::utils::ArrayView;
-
-use crate::te::paths::PathBufExt;
-
-use super::gl_info::GLInfo;
-use crate::gl_wrapper::shader::ShaderCompiler;
-use crate::gl_wrapper::buffer::buffer_config::BufferConfig;
-
-use glfw::{Action, Context, Key };
+use glfw::{ Action, Context, Key };
 use self::glfw::OpenGlProfileHint::Core;
-use crate::gl_wrapper::buffer::buffer::Buffer;
 
-pub struct GL;
+pub struct GLWrapper {
+    window_size: Size
+}
 
-impl GL {
+impl GLWrapper {
 
     pub fn set_clear_color(color: Color) {
         unsafe { gl::ClearColor(color.r, color.g, color.b, color.a); }
@@ -30,6 +21,30 @@ impl GL {
 
     pub fn clear() {
         unsafe { gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT); }
+    }
+
+    pub fn enable_depth_test() {
+        unsafe { gl::Enable(gl::DEPTH_TEST) }
+    }
+
+    pub fn disable_depth_test() {
+        unsafe { gl::Disable(gl::DEPTH_TEST) }
+    }
+
+    pub fn set_viewport(&self, rect: &Rect) {
+        // unsafe {
+        //     gl::Viewport(rect.origin.x as i32,
+        //                  (self.window_size.height - rect.origin.y - rect.size.height) as i32,
+        //                  rect.size.width as i32,
+        //                  rect.size.height as i32)
+        // }
+
+        unsafe {
+            gl::Viewport(rect.origin.x as i32,
+                         rect.origin.y as i32,
+                         rect.size.width as i32,
+                         rect.size.height as i32)
+        }
     }
 
     pub fn init(size: Size) {
@@ -49,50 +64,25 @@ impl GL {
                                size.height as u32,
                                "Hello this is window",
                                glfw::WindowMode::Windowed)
-            .expect("Failed to create GLFW window.");
+                .expect("Failed to create GLFW window.");
 
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
 
-        let gl_info = GLInfo::get();
+        let assets = Assets::init();
+        let gl_wrapper = GLWrapper { window_size: size };
 
-        let shader_compiler = ShaderCompiler { gl_info };
+        let ui_drawer = TEUIDrawer::new(&gl_wrapper, &assets);
 
-        let _shader = shader_compiler.compile(paths::shaders::sprites().pushing("sprite"));
-
-        log(&shader_compiler.gl_info);
-
-        let original_buffer = vec![
-            Vector3 { x: 1.0, y: 2.0, z: 3.0},
-            Vector3 { x: 4.0, y: 5.0, z: 6.0},
-            Vector3 { x: 7.0, y: 8.0, z: 9.0},
-        ];
-
-        let indices = vec![1, 2, 3, 4];
-
-        let buf = Buffer::new(
-            &BufferConfig::_3_3_2,
-            ArrayView::from_vector(&original_buffer),
-            None
-        );
-
-        let buf2 = Buffer::new(
-            &BufferConfig::_3_3_2,
-            ArrayView::from_vector(&original_buffer),
-            Some(ArrayView::from_vector(&indices))
-        );
-
-        println!("{:?}", buf);
-        println!("{:?}", buf2);
+        assets.buffers.fullscreen.print();
 
         window.make_current();
         window.set_key_polling(true);
 
+        GLWrapper::set_clear_color(Color::GRAY);
+
+        GLWrapper::clear();
+
         while !window.should_close() {
-            window.swap_buffers();
-
-            GL::set_clear_color(Color::random());
-            GL::clear();
-
             glfw.poll_events();
             for (_, event) in glfw::flush_messages(&events) {
                 println!("{:?}", event);
@@ -103,6 +93,13 @@ impl GL {
                     _ => {},
                 }
             }
+
+            GLWrapper::disable_depth_test();
+
+            ui_drawer.draw_rect(&Rect::make(100.0, 100.0, 100.0, 100.0), &Color::RED);
+            ui_drawer.fill_rect(&Rect::make(300.0, 300.0, 100.0, 100.0), &Color::YELLOW);
+
+            window.swap_buffers();
         }
     }
 

@@ -5,22 +5,33 @@ use crate::gl_wrapper::BufferConfig;
 #[derive(Debug)]
 pub struct Buffer {
     config: &'static BufferConfig,
+
     vertex_data: ArrayView<f32>,
     indices: Option<ArrayView<u32>>,
+
+    vertices_count: i32,
+
     vertex_array_object:  u32,
     vertex_buffer_object: u32,
-    index_buffer_object:  u32
+    index_buffer_object:  u32,
+
+    pub draw_mode: u32
 }
 
 impl Buffer {
     pub fn new(config: &'static BufferConfig,
                vertex_data: ArrayView<f32>,
-               indices: Option<ArrayView<u32>>
+               indices: Option<ArrayView<u32>>,
+               draw_mode: u32
     ) -> Buffer {
 
-        let mut vertex_array_object:  u32 = 0;
-        let mut vertex_buffer_object: u32 = 0;
-        let mut index_buffer_object:  u32 = 0;
+        let mut vertex_array_object:  u32 = u32::MAX;
+        let mut vertex_buffer_object: u32 = u32::MAX;
+        let mut index_buffer_object:  u32 = u32::MAX;
+
+        let vertices_count: i32 =
+            if indices.is_none() { vertex_data.size as i32 / config.size() as i32 }
+            else { -1 };
 
         unsafe {
             gl::GenVertexArrays(1, &mut vertex_array_object);
@@ -50,10 +61,51 @@ impl Buffer {
         Buffer {
             config,
             vertex_data,
+            vertices_count,
             indices,
             vertex_array_object,
             vertex_buffer_object,
-            index_buffer_object
+            index_buffer_object,
+            draw_mode
+        }
+    }
+}
+
+impl Buffer {
+    pub fn draw(&self) {
+        unsafe {
+            gl::BindVertexArray(self.vertex_array_object);
+
+            if let Some(indices) = &self.indices {
+                gl::DrawElements(self.draw_mode,
+                                 indices.size as i32,
+                                 gl::UNSIGNED_SHORT,
+                                 0 as *const c_void)
+            }
+            else {
+                gl::DrawArrays(self.draw_mode, 0, self.vertices_count)
+            }
+
+            gl::BindVertexArray(0);
+        }
+    }
+
+    pub fn print(&self) {
+        if let Some(indices) = &self.indices {
+            indices.print();
+        }
+        self.vertex_data.print();
+    }
+}
+
+impl Drop for Buffer {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteBuffers(1, &self.vertex_buffer_object);
+            if self.index_buffer_object != u32::MAX {
+                gl::DeleteBuffers(1, &self.index_buffer_object);
+            }
+            gl::DeleteVertexArrays(1, &self.vertex_array_object);
         }
     }
 }

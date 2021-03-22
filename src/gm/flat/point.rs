@@ -1,10 +1,9 @@
 
-#[derive(RustcDecodable, RustcEncodable)]
+#[derive(Debug)]
 pub struct Point {
     pub x: f32,
     pub y: f32
 }
-
 
 impl Point {
     pub fn new() -> Point {
