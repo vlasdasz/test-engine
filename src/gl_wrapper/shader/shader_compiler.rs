@@ -36,9 +36,16 @@ impl ShaderCompiler {
     }
 
     fn check_programm_error(path: PathBuf, program: u32) {
+
         let mut success: gl::types::GLint = 1;
-        GL!(GetShaderiv, program, gl::COMPILE_STATUS, &mut success);
+
+        unsafe {
+            gl::GetShaderiv(program, gl::COMPILE_STATUS, &mut success);
+            gl::GetError(); //^ returns invalid errors
+        };
+
         if success != 0 { return; }
+
         let mut len: gl::types::GLint = 0;
 
         GL!(GetShaderiv, program, gl::INFO_LOG_LENGTH, &mut len);

@@ -25,9 +25,10 @@ impl<T: num_traits::Num + Debug> ArrayView<T> {
         unsafe {
             let mut ptr = self.data;
             for i in 0..self.size {
-                println!("{:?}", *ptr);
+                print!("{:?} ", *ptr);
                 ptr = ptr.offset(1);
             }
+            println!();
         }
     }
 }

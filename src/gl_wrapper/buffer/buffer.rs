@@ -7,7 +7,7 @@ pub struct Buffer {
     config: &'static BufferConfig,
 
     vertex_data: ArrayView<f32>,
-    indices: Option<ArrayView<u32>>,
+    indices: Option<ArrayView<u16>>,
 
     vertices_count: i32,
 
@@ -21,7 +21,7 @@ pub struct Buffer {
 impl Buffer {
     pub fn new(config: &'static BufferConfig,
                vertex_data: ArrayView<f32>,
-               indices: Option<ArrayView<u32>>,
+               indices: Option<ArrayView<u16>>,
                draw_mode: u32
     ) -> Buffer {
 

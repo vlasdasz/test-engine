@@ -5,8 +5,8 @@ use crate::gl_wrapper::{Buffer, BufferConfig};
 
 const RECT: Rect = Rect::make(-1.0, -1.0, 2.0, 2.0);
 
-const RECT_INDICES: [u32; 4] = [0, 1, 3, 4 ];
-const INDICES:      [u32; 4] = [0, 1, 2, 3 ];
+const RECT_INDICES: [u16; 4] = [0, 1, 3, 2 ];
+const INDICES:      [u16; 4] = [0, 1, 2, 3 ];
 
 const FULLSCREEN_VERT: [f32; 8] = [
     RECT.origin.x,                   RECT.origin.y,
