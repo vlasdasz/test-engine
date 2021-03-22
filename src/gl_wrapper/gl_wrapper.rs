@@ -49,6 +49,8 @@ impl GLWrapper {
 
     pub fn init(size: Size) {
 
+        log!(size);
+
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
@@ -73,8 +75,6 @@ impl GLWrapper {
 
         let ui_drawer = TEUIDrawer::new(&gl_wrapper, &assets);
 
-        assets.buffers.fullscreen.print();
-
         window.make_current();
         window.set_key_polling(true);
 
@@ -97,7 +97,7 @@ impl GLWrapper {
             GLWrapper::disable_depth_test();
 
             ui_drawer.draw_rect(&Rect::make(100.0, 100.0, 100.0, 100.0), &Color::RED);
-            ui_drawer.fill_rect(&Rect::make(300.0, 300.0, 100.0, 100.0), &Color::YELLOW);
+          //  ui_drawer.fill_rect(&Rect::make(300.0, 300.0, 100.0, 100.0), &Color::YELLOW);
 
             window.swap_buffers();
         }

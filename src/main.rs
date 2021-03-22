@@ -5,10 +5,10 @@
 #![allow(unused_variables)]
 
 #[macro_use] extern crate guard;
+#[macro_use] mod utils;
 
 mod gm;
 mod te;
-mod utils;
 mod gl_wrapper;
 
 use crate::gm::*;
