@@ -41,11 +41,9 @@ impl<'a> View<'a> {
         }
     }
 
-    // pub fn add_subview(&mut self, mut view: View<'a>) {
-        // let mut kok: View<'a> = view;
-        // kok.superview = Some(self);
-        // self._subviews.push(kok);
-    // }
+    pub fn add_subview(&mut self, mut view: View<'a>) {
+
+    }
 
     pub fn subviews(&mut self) -> &mut [View<'a>] {
         &mut self._subviews

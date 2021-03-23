@@ -15,42 +15,42 @@ mod gl_wrapper;
 use crate::gm::*;
 use crate::gl_wrapper::GLWrapper;
 
-struct Parent<'a> {
-    pub parent: Option<&'a Parent<'a>>,
-    pub childred: Vec<Parent<'a >>
+struct Kok {
+    pub superkok: *const Kok,
+    pub subkoks: Vec<Kok>
 }
 
-
-impl<'a> Parent<'a> {
-
-    pub fn new() -> Parent<'a> {
-        Parent { parent: None, childred: vec![] }
+impl Kok {
+    pub fn new() -> Kok {
+        Kok { superkok: std::ptr::null(), subkoks: vec!() }
     }
-
-    pub fn add_child(&mut self, child: Parent) {
-        // let mut ch = Parent { parent: None, childred: vec![] };
-        // ch.parent = Some(self);
-        // self.childred.push(ch)
+    pub fn add_kok(&mut self, mut kok: Kok) {
+        kok.superkok = self;
+        self.subkoks.push(kok);
+    }
+    pub fn get_superkok(&self) -> Option<&Kok> {
+        unsafe { Some(&*self.superkok) }
     }
 }
 
 fn main() {
 
-    // let mut items = vec![1];
-    // let mut item = items.last();
-    //
-    // items.push(2);
-    //
-    // log!(&mut item);
+    let mut root_kok = Kok::new();
+
+    let mut small_kok = Kok::new();
+
+    small_kok.superkok = &root_kok;
+
+    root_kok.add_kok(small_kok);
+    root_kok.add_kok(Kok::new());
+    root_kok.add_kok(Kok::new());
 
 
-    // let mut root = Parent::new();
-    //
-    // let mut child = Parent::new();
-    //
-    // child.parent = Some(&root);
-    // root.childred.push(child);
 
+
+
+
+    return;
 
     GLWrapper::init(Size { width: 500.0, height: 500.0 });
 }
