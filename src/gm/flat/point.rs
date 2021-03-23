@@ -1,5 +1,6 @@
+use std::ops::AddAssign;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Point {
     pub x: f32,
     pub y: f32
@@ -62,14 +63,8 @@ impl Point {
     }
 }
 
-
-// void trim(float max_lenght);
-// Point trimmed(float max_length) const;
-//
-// Direction directionX() const { return x > 0 ? Direction::Right : Direction::Left; }
-//
-// float distanceTo(const Point& p) const {
-// auto _x = x - p.x;
-// auto _y = y - p.y;
-// return std::sqrt(_x * _x + _y * _y);
-// }
+impl AddAssign for Point {
+    fn add_assign(&mut self, rhs: Point) {
+        self.x += rhs.x; self.y += rhs.y;
+    }
+}

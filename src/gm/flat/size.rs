@@ -1,5 +1,5 @@
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Size {
     pub width: f32,
     pub height: f32

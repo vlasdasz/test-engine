@@ -1,4 +1,5 @@
 
+#[derive(Debug)]
 pub struct Color {
     pub r: f32,
     pub g: f32,
@@ -33,6 +34,8 @@ impl Color {
     pub const BROWN:      Color = Color { r: 0.7, g: 0.4, b: 0.2, a: 0.0 };
     pub const LIGHT_GRAY: Color = Color { r: 0.8, g: 0.8, b: 0.8, a: 0.0 };
     pub const CLEAR:      Color = Color { r: 0.0, g: 0.0, b: 0.0, a: 0.0 };
+
+    pub const DEFAULT: Color = Color::CLEAR;
 
     pub const ALL: [Color; 14] = [
         Color::BLACK,

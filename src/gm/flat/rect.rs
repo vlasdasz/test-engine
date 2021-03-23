@@ -2,7 +2,7 @@
 use crate::Point;
 use crate::Size;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Rect {
     pub origin: Point,
     pub size: Size

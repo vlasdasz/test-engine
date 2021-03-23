@@ -36,16 +36,14 @@ macro_rules! format_code_location {
 
 #[macro_export]
 macro_rules! code_location {
-    () => {{
+    () => {
         format_code_location!(file!(), function!(), line!())
-    }}
+    }
 }
 
 #[macro_export]
 macro_rules! log {
     ($message:expr) => {
-        {
-            println!("{} {:#?}", code_location!(), $message);
-        }
+        println!("{} {:?}", code_location!(), $message);
     }
 }

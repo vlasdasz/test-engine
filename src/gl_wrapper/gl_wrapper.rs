@@ -8,6 +8,7 @@ use crate::te::{Assets, TEUIDrawer};
 
 use glfw::{ Action, Context, Key };
 use self::glfw::OpenGlProfileHint::Core;
+use crate::ui::View;
 
 pub struct GLWrapper {
     window_size: Size
@@ -32,10 +33,11 @@ impl GLWrapper {
     }
 
     pub fn set_viewport(&self, rect: &Rect) {
-        GL!(Viewport, rect.origin.x as i32,
-                      (self.window_size.height - rect.origin.y - rect.size.height) as i32,
-                      rect.size.width as i32,
-                      rect.size.height as i32)
+        const SCALE: f32 = 2.0;
+        GL!(Viewport, (rect.origin.x * SCALE) as i32,
+                      ((self.window_size.height - rect.origin.y - rect.size.height) * SCALE) as i32,
+                      (rect.size.width * SCALE) as i32,
+                      (rect.size.height * SCALE) as i32)
     }
 
     pub fn init(size: Size) {
@@ -66,6 +68,13 @@ impl GLWrapper {
 
         let ui_drawer = TEUIDrawer::new(&gl_wrapper, &assets);
 
+        let mut view = View::new();
+
+        view.color = Color::TURQUOISE;
+        view.set_frame(Rect::make(10.0, 10.0, 50.0, 50.0));
+
+        log!(view);
+
         window.make_current();
         window.set_key_polling(true);
 
@@ -87,8 +96,7 @@ impl GLWrapper {
 
             GLWrapper::clear();
 
-            ui_drawer.draw_rect(&Rect::make(100.0, 100.0, 100.0, 100.0), &Color::RED);
-            ui_drawer.fill_rect(&Rect::make(300.0, 300.0, 100.0, 100.0), &Color::YELLOW);
+        //    ui_drawer.draw_view(&mut view);
 
             window.swap_buffers();
         }
