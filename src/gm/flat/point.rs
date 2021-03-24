@@ -7,7 +7,7 @@ pub struct Point {
 }
 
 impl Point {
-    pub fn new() -> Point {
+    pub const fn new() -> Point {
         Point { x: 0.0, y: 0.0 }
     }
 }

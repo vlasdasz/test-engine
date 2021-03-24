@@ -68,12 +68,21 @@ impl GLWrapper {
 
         let ui_drawer = TEUIDrawer::new(&gl_wrapper, &assets);
 
-        let mut view = View::new();
+        let mut root_vew = View::new();
 
-        view.color = Color::TURQUOISE;
-        view.set_frame(Rect::make(10.0, 10.0, 50.0, 50.0));
+        root_vew.set_frame(Rect::from_size(size));
 
-        log!(view);
+        root_vew.make_subview(|view| {
+            view.set_frame(Rect::make(100.0, 100.0, 200.0, 200.0));
+            view.make_subview(|view|{
+                view.set_frame(Rect::make(100.0, 100.0, 40.0, 40.0));
+                view.make_subview(|view| {
+                    view.set_frame(Rect::make(10.0, 10.0, 20.0, 20.0));
+                });
+            });
+        });
+
+        log!(root_vew);
 
         window.make_current();
         window.set_key_polling(true);
@@ -96,7 +105,7 @@ impl GLWrapper {
 
             GLWrapper::clear();
 
-        //    ui_drawer.draw_view(&mut view);
+            ui_drawer.draw_view(&mut root_vew);
 
             window.swap_buffers();
         }

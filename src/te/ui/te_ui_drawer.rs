@@ -15,9 +15,9 @@ impl<'a> TEUIDrawer<'a> {
 }
 
 impl<'a> TEUIDrawer<'a> {
-    pub fn draw_view(&self, view: &'a mut View<'a>) {
+    pub fn draw_view(&self, view: & mut View) {
         view.calculate_absolute_frame();
-        self.draw_rect(view.frame(), &view.color);
+        self.draw_rect(view.absolute_frame(), &view.color);
         for view in view.subviews() {
             self.draw_view(view)
         }
