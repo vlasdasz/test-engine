@@ -1,21 +1,29 @@
+
+use std::rc::Rc;
+
 use crate::ui::View;
 use crate::te::Assets;
-use crate::gm::{ Rect, Color };
 use crate::gl_wrapper::GLWrapper;
 
-pub struct TEUIDrawer<'a> {
-    gl:     &'a GLWrapper,
-    assets: &'a Assets
+use crate::gm::{ Rect, Color };
+use std::cell::RefCell;
+
+pub struct TEUIDrawer {
+    assets:     Rc<Assets>,
+    gl_wrapper: Rc<RefCell<GLWrapper>>
 }
 
-impl<'a> TEUIDrawer<'a> {
-    pub fn new(gl: &'a GLWrapper, assets: &'a Assets) -> TEUIDrawer<'a> {
-        TEUIDrawer { gl, assets }
+impl TEUIDrawer {
+    pub fn new(assets: &Rc<Assets>, gl_wrapper: &Rc<RefCell<GLWrapper>>) -> TEUIDrawer {
+        TEUIDrawer {
+            assets:     Rc::clone(assets),
+            gl_wrapper: Rc::clone(gl_wrapper)
+        }
     }
 }
 
-impl<'a> TEUIDrawer<'a> {
-    pub fn draw_view(&self, view: & mut View) {
+impl TEUIDrawer {
+    pub fn draw_view(&self, view: &mut View) {
         view.calculate_absolute_frame();
         self.draw_rect(view.absolute_frame(), &view.color);
         for view in view.subviews() {
@@ -24,13 +32,13 @@ impl<'a> TEUIDrawer<'a> {
     }
 }
 
-impl TEUIDrawer<'_> {
+impl TEUIDrawer {
     fn set_viewport(&self, rect: &Rect) {
-        self.gl.set_viewport(rect)
+        self.gl_wrapper.borrow_mut().set_viewport(rect)
     }
 }
 
-impl TEUIDrawer<'_> {
+impl TEUIDrawer {
     fn fill_rect(&self, rect: &Rect, color: &Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();

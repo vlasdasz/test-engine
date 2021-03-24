@@ -13,8 +13,9 @@ mod te;
 mod gl_wrapper;
 
 use crate::gm::*;
-use crate::gl_wrapper::GLWrapper;
+
+use crate::te::*;
 
 fn main() {
-    GLWrapper::init(Size { width: 500.0, height: 500.0 });
+    TestScreen::with_size(Size { width: 500.0, height: 500.0 });
 }

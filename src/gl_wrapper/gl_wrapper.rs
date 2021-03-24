@@ -4,31 +4,34 @@ extern crate glfw;
 
 use crate::gm::*;
 
-use crate::te::{Assets, TEUIDrawer};
-
-use glfw::{ Action, Context, Key };
+use glfw::{ Action, Context, Key, Glfw, WindowEvent };
 use self::glfw::OpenGlProfileHint::Core;
 use crate::ui::View;
+use self::glfw::Window;
 
 pub struct GLWrapper {
+    events: std::sync::mpsc::Receiver<(f64, WindowEvent)>,
+    glfw: Glfw,
+    frame: Box<dyn Fn()>,
+    window: Window,
     window_size: Size
 }
 
 impl GLWrapper {
 
-    pub fn set_clear_color(color: Color) {
+    pub fn set_clear_color(&self, color: Color) {
         GL!(ClearColor, color.r, color.g, color.b, color.a)
     }
 
-    pub fn clear() {
+    pub fn clear(&self) {
         GL!(Clear, gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT)
     }
 
-    pub fn enable_depth_test() {
+    pub fn enable_depth_test(&self) {
         GL!(Enable, gl::DEPTH_TEST)
     }
 
-    pub fn disable_depth_test() {
+    pub fn disable_depth_test(&self) {
         GL!(Disable, gl::DEPTH_TEST)
     }
 
@@ -40,9 +43,51 @@ impl GLWrapper {
                       (rect.size.height * SCALE) as i32)
     }
 
-    pub fn init(size: Size) {
+    pub fn start_main_loop(&mut self) {
 
-        log!(size);
+        self.window.make_current();
+        self.window.set_key_polling(true);
+
+        self.set_clear_color(Color::GRAY);
+
+        while !self.window.should_close() {
+
+            self.glfw.poll_events();
+            for (_, event) in glfw::flush_messages(&self.events) {
+                println!("{:?}", event);
+                match event {
+                    glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
+                        self.window.set_should_close(true)
+                    },
+                    _ => {},
+                }
+            }
+
+            self.clear();
+            (self.frame)();
+            self.window.swap_buffers();
+        }
+    }
+
+    fn init(&mut self) {
+
+        let mut root_vew = View::new();
+
+        root_vew.set_frame(Rect::from_size(self.window_size));
+
+        root_vew.make_subview(|view| {
+            view.set_frame(Rect::make(100.0, 100.0, 200.0, 200.0));
+            view.make_subview(|view|{
+                view.set_frame(Rect::make(100.0, 100.0, 40.0, 40.0));
+                view.make_subview(|view| {
+                    view.set_frame(Rect::make(10.0, 10.0, 20.0, 20.0));
+                });
+            });
+        });
+
+    }
+
+    pub fn with_size(size: Size, frame: Box<dyn Fn()>) -> GLWrapper {
 
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
 
@@ -63,52 +108,10 @@ impl GLWrapper {
 
         GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
 
-        let assets = Assets::init();
-        let gl_wrapper = GLWrapper { window_size: size };
+        let mut wrapper = GLWrapper { frame, events, glfw, window, window_size: size };
+        wrapper.init();
 
-        let ui_drawer = TEUIDrawer::new(&gl_wrapper, &assets);
-
-        let mut root_vew = View::new();
-
-        root_vew.set_frame(Rect::from_size(size));
-
-        root_vew.make_subview(|view| {
-            view.set_frame(Rect::make(100.0, 100.0, 200.0, 200.0));
-            view.make_subview(|view|{
-                view.set_frame(Rect::make(100.0, 100.0, 40.0, 40.0));
-                view.make_subview(|view| {
-                    view.set_frame(Rect::make(10.0, 10.0, 20.0, 20.0));
-                });
-            });
-        });
-
-        log!(root_vew);
-
-        window.make_current();
-        window.set_key_polling(true);
-
-        GLWrapper::set_clear_color(Color::GRAY);
-
-        while !window.should_close() {
-            glfw.poll_events();
-            for (_, event) in glfw::flush_messages(&events) {
-                println!("{:?}", event);
-                match event {
-                    glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
-                        window.set_should_close(true)
-                    },
-                    _ => {},
-                }
-            }
-
-            GLWrapper::disable_depth_test();
-
-            GLWrapper::clear();
-
-            ui_drawer.draw_view(&mut root_vew);
-
-            window.swap_buffers();
-        }
+        wrapper
     }
 
 }
