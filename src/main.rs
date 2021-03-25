@@ -23,37 +23,61 @@ struct Kok {
 }
 
 struct KokObserver<'a> {
-    kok: &'a Kok
+    pub kok: &'a Kok
+}
+
+impl<'a> KokObserver<'a> {
+    pub fn with_kok(kok: &'a mut Kok) -> KokObserver {
+        KokObserver { kok }
+    }
 }
 
 struct KokUser<'a> {
-    kok: &'a mut Kok
+    pub kok: &'a Kok
 }
 
 impl<'a> KokUser<'a> {
-    pub fn use_kok(&mut self) {
-        self.kok.val += 1;
+
+    pub fn with_kok(kok: &'a Kok) -> KokUser {
+        KokUser { kok }
+    }
+
+    pub fn use_kok(&self) {
+       // self.kok.val += 1;
         log!(self.kok.val)
     }
+}
+
+struct KokUserManager<'a> {
+    pub kok_user: KokUser<'a>
 }
 
 fn main() {
 
     let mut kok = Kok { val: 10 };
 
-    let kok_observer = KokObserver { kok: &kok };
-    let mut kok_user = KokUser { kok: &mut kok };
+    let kok_observer = KokObserver::with_kok(&mut kok);
+    let kok_user = KokUser::with_kok(&kok);
 
     kok_user.use_kok();
+
+
+    let manager = KokUserManager { kok_user };
+
 
     // let mut gl_loader = GLLoader::with_size(Size { width: 500.0, height: 500.0 });
     //
     // let assets = Assets::init();
     //
-    // let screen = Screen { gl_loader: &gl_loader, assets };
+    // let screen = Screen {
+    //     gl_loader: &gl_loader,
+    //     assets
+    // };
     //
-    // let mut gl_drawer = GLDrawer::new(&mut gl_loader, screen);
-    //
+    // let mut gl_drawer = GLDrawer::new(
+    //     &mut gl_loader,
+    //     screen
+    // );
     //
     // gl_drawer.start_main_loop();
 

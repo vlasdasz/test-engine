@@ -3,15 +3,27 @@ use crate::gm::Color;
 
 use glfw::{ Action, Context, Key, Glfw, WindowEvent, OpenGlProfileHint::Core, Window };
 
-pub struct GLDrawer<'a, T: Updatable + 'a> {
+pub struct GLDrawer<'a,
+    T: Updatable + 'a
+> {
     loader: &'a mut GLLoader,
     drawer: T
 }
 
-impl<'a, T: Updatable> GLDrawer<'a, T> {
+impl<'a,
+    T: Updatable
+> GLDrawer<'a,
+    T
+> {
 
-    pub fn new(loader: &'a mut GLLoader, drawer: T) -> GLDrawer<'a, T> {
-        GLDrawer { loader, drawer }
+    pub fn new(loader: &'a mut GLLoader,
+               drawer: T
+    ) -> GLDrawer<'a,
+        T
+    > {
+        GLDrawer { loader,
+            drawer
+        }
     }
 
     pub fn start_main_loop(&mut self) {
@@ -32,7 +44,7 @@ impl<'a, T: Updatable> GLDrawer<'a, T> {
             }
 
             self.loader.clear();
-            self.drawer.update();
+         //   self.drawer.update();
             self.loader.window.swap_buffers();
         }
     }
