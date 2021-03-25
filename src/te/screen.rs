@@ -17,9 +17,9 @@ pub struct ScreenBase {
 
 impl ScreenBase {
     pub fn with_size(size: Size) -> ScreenBase {
-        let kok = Box::new(||{
-            log!(&self.root_view.color);
-        });
+        // let kok = Box::new(||{
+        //     log!(&self.root_view.color);
+        // });
         let gl_wrapper = Rc::new(RefCell::new(GLWrapper::with_size(size)));
         let assets     = Rc::new(Assets::init());
         let ui_drawer = TEUIDrawer::new(&assets, &gl_wrapper);

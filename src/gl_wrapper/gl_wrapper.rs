@@ -12,7 +12,6 @@ use self::glfw::Window;
 pub struct GLWrapper {
     events: std::sync::mpsc::Receiver<(f64, WindowEvent)>,
     glfw: Glfw,
-    frame: Box<dyn Fn()>,
     window: Window,
     window_size: Size
 }
@@ -64,7 +63,7 @@ impl GLWrapper {
             }
 
             self.clear();
-            (self.frame)();
+         //   (self.frame)();
             self.window.swap_buffers();
         }
     }
@@ -87,7 +86,7 @@ impl GLWrapper {
 
     }
 
-    pub fn with_size(size: Size, frame: Box<dyn Fn()>) -> GLWrapper {
+    pub fn with_size(size: Size) -> GLWrapper {
 
         let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
 
@@ -108,7 +107,7 @@ impl GLWrapper {
 
         GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
 
-        let mut wrapper = GLWrapper { frame, events, glfw, window, window_size: size };
+        let mut wrapper = GLWrapper { events, glfw, window, window_size: size };
         wrapper.init();
 
         wrapper
