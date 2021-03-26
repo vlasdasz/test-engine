@@ -1,12 +1,5 @@
-
-use std::rc::Rc;
-
 use crate::ui::View;
-use crate::te::Assets;
-use crate::gl_wrapper::GLLoader;
-
-use crate::gm::{ Rect, Color };
-use std::cell::RefCell;
+use crate::gm::{Rect, Color};
 
 pub struct TEUIDrawer {
     //assets:     Rc<Assets>,

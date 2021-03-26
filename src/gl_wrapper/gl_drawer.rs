@@ -1,34 +1,22 @@
-use crate::gl_wrapper::{GLLoader, Updatable};
-use crate::gm::Color;
+use crate::gl_wrapper::{GLLoader, Updatable, GLWrapper};
+use crate::gm::{Color, Size};
 
-use glfw::{ Action, Context, Key, Glfw, WindowEvent, OpenGlProfileHint::Core, Window };
+use glfw::{ Action, Context, Key };
 
-pub struct GLDrawer<'a,
-    T: Updatable + 'a
-> {
-    loader: &'a mut GLLoader,
+pub struct GLDrawer<T: Updatable> {
+    loader: GLLoader,
     drawer: T
 }
 
-impl<'a,
-    T: Updatable
-> GLDrawer<'a,
-    T
-> {
+impl<T: Updatable> GLDrawer<T> {
 
-    pub fn new(loader: &'a mut GLLoader,
-               drawer: T
-    ) -> GLDrawer<'a,
-        T
-    > {
-        GLDrawer { loader,
-            drawer
-        }
+    pub fn with_size(size: Size) -> GLDrawer<T> {
+        GLDrawer { loader: GLLoader::with_size(size), drawer: T::new() }
     }
 
     pub fn start_main_loop(&mut self) {
 
-        self.loader.set_clear_color(Color::GRAY);
+        GLWrapper::set_clear_color(&Color::GRAY);
 
         while !self.loader.window.should_close() {
 
@@ -43,8 +31,11 @@ impl<'a,
                 }
             }
 
-            self.loader.clear();
-         //   self.drawer.update();
+            GLWrapper::clear();
+            let win_size = self.loader.window.get_size();
+
+            self.loader.window_size = Size { width: win_size.0 as f32, height: win_size.1 as f32 };
+            self.drawer.update(&self.loader.window_size);
             self.loader.window.swap_buffers();
         }
     }

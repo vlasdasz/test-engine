@@ -1,25 +1,19 @@
-
-use std::rc::Rc;
-
+use crate::gl_wrapper::Updatable;
 use crate::gm::Size;
 
-use crate::te::{Assets, TEUIDrawer};
-use crate::gl_wrapper::GLLoader;
-use std::cell::RefCell;
-use crate::ui::View;
-use crate::gl_wrapper::gl_loader::Updatable;
-
-pub struct Screen<'a> {
-    pub gl_loader: &'a GLLoader,
-    pub assets: Assets
+pub struct Screen {
+    window_size: Size
 }
 
-impl<'a> Screen<'a> {
+impl Screen {
 
 }
 
-impl<'a> Updatable for Screen<'a> {
-    fn update(&mut self) {
-
+impl Updatable for Screen {
+    fn new() -> Screen {
+        Screen { window_size: Size::new() }
+    }
+    fn update(&mut self, windows_size: &Size) {
+        self.window_size = *windows_size
     }
 }
