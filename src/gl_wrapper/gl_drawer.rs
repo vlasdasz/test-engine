@@ -33,7 +33,7 @@ impl<T: Updatable> GLDrawer<T> {
 
             for (_, event) in glfw::flush_messages(&self.loader.events) {
                 match event {
-                    glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => {
+                    glfw::WindowEvent::Key(key, scancode, action, mods) => {
                         self.loader.window.set_should_close(true)
                     },
                     glfw::WindowEvent::CursorPos(xpos, ypos) => self.loader.window.set_title(
