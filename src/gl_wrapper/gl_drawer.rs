@@ -18,6 +18,8 @@ impl<T: Updatable> GLDrawer<T> {
 
         GLWrapper::set_clear_color(&Color::GRAY);
 
+        self.drawer.init();
+
         while !self.loader.window.should_close() {
 
             self.loader.window.glfw.poll_events();

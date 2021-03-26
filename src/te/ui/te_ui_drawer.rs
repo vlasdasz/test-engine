@@ -1,18 +1,20 @@
 use crate::ui::View;
-use crate::gm::{Rect, Color};
+use crate::gm::{Rect, Color, Size};
+use crate::te::Assets;
+use crate::gl_wrapper::GLWrapper;
 
 pub struct TEUIDrawer {
-    //assets:     Rc<Assets>,
-    //gl_wrapper: Rc<RefCell<GLWrapper>>
+    assets: Assets,
+    window_size: Size
 }
 
 impl TEUIDrawer {
-    // pub fn new(assets: &Rc<Assets>, gl_wrapper: &Rc<RefCell<GLWrapper>>) -> TEUIDrawer {
-    //     TEUIDrawer {
-    //         assets:     Rc::clone(assets),
-    //         gl_wrapper: Rc::clone(gl_wrapper)
-    //     }
-    // }
+    pub fn new(assets: Assets) -> TEUIDrawer {
+        TEUIDrawer { assets, window_size: Size::new() }
+    }
+    pub fn set_size(&mut self, size: &Size) {
+        self.window_size = *size;
+    }
 }
 
 impl TEUIDrawer {
@@ -27,21 +29,21 @@ impl TEUIDrawer {
 
 impl TEUIDrawer {
     fn set_viewport(&self, rect: &Rect) {
-        //self.gl_wrapper.borrow_mut().set_viewport(rect)
+        GLWrapper::set_viewport(self.window_size.height, 1.0, rect);
     }
 }
 
 impl TEUIDrawer {
     fn fill_rect(&self, rect: &Rect, color: &Color) {
-        // self.set_viewport(rect);
-        // self.assets.shaders.ui.enable();
-        // self.assets.shaders.ui.set_color(color);
-        // self.assets.buffers.fullscreen.draw();
+        self.set_viewport(rect);
+        self.assets.shaders.ui.enable();
+        self.assets.shaders.ui.set_color(color);
+        self.assets.buffers.fullscreen.draw();
     }
     fn draw_rect(&self, rect: &Rect, color: &Color) {
-        // self.set_viewport(rect);
-        // self.assets.shaders.ui.enable();
-        // self.assets.shaders.ui.set_color(color);
-        // self.assets.buffers.fullscreen_outline.draw();
+        self.set_viewport(rect);
+        self.assets.shaders.ui.enable();
+        self.assets.shaders.ui.set_color(color);
+        self.assets.buffers.fullscreen_outline.draw();
     }
 }

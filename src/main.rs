@@ -15,7 +15,7 @@ mod gl_wrapper;
 use crate::gm::*;
 
 use crate::te::*;
-use crate::gl_wrapper::{GLLoader, GLDrawer};
+use crate::gl_wrapper::GLDrawer;
 
 
 fn main() {

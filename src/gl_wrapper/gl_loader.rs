@@ -8,6 +8,7 @@ use glfw::{ Context, WindowEvent, OpenGlProfileHint::Core, Window };
 
 pub trait Updatable {
     fn new() -> Self;
+    fn init(&mut self);
     fn update(&mut self, windows_size: &Size);
 }
 

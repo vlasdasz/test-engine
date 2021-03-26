@@ -2,11 +2,10 @@
 #[macro_export]
 macro_rules! check_gl_error {
     () => {{
-        let mut err = gl::GetError();
-        while err != gl::NO_ERROR {
+        let err = gl::GetError();
+        if err != gl::NO_ERROR {
             println!("{} OpenGL Error with code: {}",
                  format_code_location!(file!(), function!(), line!()), err);
-            err = gl::GetError();
         }
     }}
 }
