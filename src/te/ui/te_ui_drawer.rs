@@ -1,6 +1,6 @@
-use crate::ui::View;
-use crate::gm::{Rect, Color, Size};
 use crate::te::Assets;
+use crate::gm::{Size, Rect, Color};
+use crate::ui::View;
 use crate::gl_wrapper::GLWrapper;
 
 pub struct TEUIDrawer {

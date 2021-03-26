@@ -1,7 +1,7 @@
-use crate::gl_wrapper::Updatable;
 use crate::gm::{Size, Rect, Color};
 use crate::te::{TEUIDrawer, Assets};
 use crate::ui::View;
+use crate::gl_wrapper::Updatable;
 
 pub struct Screen {
     root_view: View,

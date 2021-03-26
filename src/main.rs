@@ -1,4 +1,3 @@
-// Rust
 
 #![allow(dead_code)]
 #![allow(unreachable_code)]
@@ -7,16 +6,14 @@
 #[macro_use] mod utils;
 #[macro_use] extern crate guard;
 
-mod ui;
 mod gm;
 mod te;
+mod ui;
 mod gl_wrapper;
 
-use crate::gm::*;
-
-use crate::te::*;
+use crate::gm::Size;
+use crate::te::Screen;
 use crate::gl_wrapper::GLDrawer;
-
 
 fn main() {
     GLDrawer::

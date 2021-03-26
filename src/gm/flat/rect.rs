@@ -1,6 +1,4 @@
-
-use crate::Point;
-use crate::Size;
+use crate::gm::{Point, Size};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Rect {
