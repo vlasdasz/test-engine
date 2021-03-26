@@ -9,7 +9,8 @@ use glfw::{ Context, WindowEvent, OpenGlProfileHint::Core, Window };
 pub trait Updatable {
     fn new() -> Self;
     fn init(&mut self);
-    fn update(&mut self, windows_size: &Size);
+    fn set_size(&mut self, size: Size);
+    fn update(&mut self);
 }
 
 pub struct GLLoader {
@@ -42,7 +43,6 @@ impl GLLoader {
         GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
 
         window.make_current();
-        window.set_key_polling(true);
 
         GLLoader { window_size: size, window, events }
     }

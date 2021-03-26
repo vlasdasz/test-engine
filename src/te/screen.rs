@@ -5,7 +5,6 @@ use crate::gl_wrapper::Updatable;
 
 pub struct Screen {
     root_view: View,
-    window_size: Size,
     ui_drawer: TEUIDrawer
 }
 
@@ -16,7 +15,7 @@ impl Updatable for Screen {
     fn new() -> Screen {
         let assets = Assets::init();
         let ui_drawer = TEUIDrawer::new(assets);
-        Screen { root_view: View::new(), ui_drawer, window_size: Size::new() }
+        Screen { root_view: View::new(), ui_drawer }
     }
     fn init(&mut self) {
         self.root_view.make_subview(|view|{
@@ -37,10 +36,11 @@ impl Updatable for Screen {
 
         });
     }
-    fn update(&mut self, windows_size: &Size) {
-        self.window_size = *windows_size;
-        self.root_view.set_frame(Rect::from_size(windows_size));
-        self.ui_drawer.set_size(windows_size);
+    fn set_size(&mut self, size: Size) {
+        self.ui_drawer.set_size(&size);
+        self.root_view.set_frame(Rect::from_size(&size));
+    }
+    fn update(&mut self) {
         self.ui_drawer.draw_view(&mut self.root_view);
     }
 }
