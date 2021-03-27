@@ -1,5 +1,6 @@
 use crate::gm::{Rect, Color, Point};
 use crate::ui::input::Touch;
+use crate::utils::{Shared, make_shared};
 
 #[derive(Debug)]
 pub struct View {
@@ -10,7 +11,7 @@ pub struct View {
     _absolute_frame: Rect,
     _needs_layout: bool,
 
-    _subviews: Vec<View>
+    _subviews: Vec<Shared<View>>
 }
 
 impl View {
@@ -38,7 +39,8 @@ impl View {
     }
 
     pub fn calculate_absolute_frame(&mut self) {
-        for view in self._subviews.iter_mut() {
+        for shared in self._subviews.iter_mut() {
+            let mut view = shared.borrow_mut();
             view._absolute_frame = view._frame;
             view._absolute_frame.origin += self._absolute_frame.origin;
             view.calculate_absolute_frame();
@@ -46,7 +48,7 @@ impl View {
     }
 
     pub fn add_subview(&mut self, view: View) {
-        self._subviews.push(view)
+        self._subviews.push(make_shared(view))
     }
 
     pub fn make_subview(&mut self, make: fn (&mut View) -> ()) {
@@ -55,7 +57,7 @@ impl View {
         self.add_subview(view);
     }
 
-    pub fn subviews(&mut self) -> &mut [View] {
+    pub fn subviews(&mut self) -> &mut [Shared<View>] {
         &mut self._subviews
     }
 

@@ -14,6 +14,18 @@ mod gl_wrapper;
 use crate::gm::Size;
 use crate::te::Screen;
 use crate::gl_wrapper::GLDrawer;
+use std::cell::{Cell, RefCell};
+use std::rc::Rc;
+use std::borrow::Borrow;
+use crate::utils::{Shared, make_shared};
+
+struct Obj {
+    pub val: i8
+}
+
+struct Kok {
+    pub sok: Cell<Obj>
+}
 
 fn main() {
     GLDrawer::

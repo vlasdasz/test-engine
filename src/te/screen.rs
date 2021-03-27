@@ -4,6 +4,8 @@ use crate::ui::View;
 use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 pub struct Screen {
     cursor_position: Point,
