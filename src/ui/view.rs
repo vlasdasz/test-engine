@@ -1,4 +1,5 @@
-use crate::gm::{ Rect, Color };
+use crate::gm::{Rect, Color, Point};
+use crate::ui::input::Touch;
 
 #[derive(Debug)]
 pub struct View {
@@ -58,4 +59,15 @@ impl View {
         &mut self._subviews
     }
 
+}
+
+impl View {
+
+    pub fn contains_global_point(&self, point: &Point) -> bool {
+        self._absolute_frame.contains(point)
+    }
+
+    pub fn on_touch(&mut self, touch: Touch) {
+        log!(touch)
+    }
 }

@@ -12,6 +12,5 @@ pub use buffer::{ Buffer, BufferConfig };
 pub use shader::{ Shader, ShaderCompiler };
 pub use gl_info::GLInfo;
 pub use gl_loader::GLLoader;
-pub use gl_loader::Updatable;
 pub use gl_drawer::GLDrawer;
 pub use gl_wrapper::GLWrapper;

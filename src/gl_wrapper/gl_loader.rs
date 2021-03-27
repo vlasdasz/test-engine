@@ -6,13 +6,6 @@ use crate::gm::*;
 
 use glfw::{ Context, WindowEvent, OpenGlProfileHint::Core, Window };
 
-pub trait Updatable {
-    fn new() -> Self;
-    fn init(&mut self);
-    fn set_size(&mut self, size: Size);
-    fn update(&mut self);
-}
-
 pub struct GLLoader {
     pub window: Window,
     pub events: std::sync::mpsc::Receiver<(f64, WindowEvent)>,
