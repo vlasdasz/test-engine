@@ -14,7 +14,6 @@ pub trait Updatable {
 }
 
 pub struct GLLoader {
-    pub window_size: Size,
     pub window: Window,
     pub events: std::sync::mpsc::Receiver<(f64, WindowEvent)>,
 }
@@ -23,7 +22,7 @@ impl GLLoader {
 
     pub fn with_size(size: Size) -> GLLoader {
 
-        let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
+        let mut glfw = glfw::init(glfw::LOG_ERRORS).unwrap();
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
@@ -44,7 +43,7 @@ impl GLLoader {
 
         window.make_current();
 
-        GLLoader { window_size: size, window, events }
+        GLLoader { window, events }
     }
 
 }
