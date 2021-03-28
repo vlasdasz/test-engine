@@ -9,6 +9,7 @@
 mod gm;
 mod te;
 mod ui;
+mod image;
 mod gl_wrapper;
 
 use crate::gm::Size;

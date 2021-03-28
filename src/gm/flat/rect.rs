@@ -8,7 +8,7 @@ pub struct Rect {
 
 impl Rect {
     pub fn new() -> Rect {
-        Rect{ origin: Point::new(), size: Size::new() }
+        Rect { origin: Point::new(), size: Size::new() }
     }
     pub const fn from_size(size: &Size) -> Rect {
         Rect { origin: Point::new(), size: *size }

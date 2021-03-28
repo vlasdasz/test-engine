@@ -19,6 +19,8 @@ pub fn home() -> PathBuf { env::home_dir().unwrap_or_default() }
 pub fn root() -> PathBuf { home().pushing(".deps/test_engine") }
 pub fn assets() -> PathBuf { root().pushing("Assets")  }
 
+pub fn fonts() -> PathBuf { assets().pushing("Fonts")  }
+
 pub mod shaders {
     use std::path::PathBuf;
     use crate::te::paths::PathBufExt;
@@ -30,5 +32,4 @@ pub mod shaders {
     pub fn isometric() -> PathBuf { root().pushing("isometric") }
     pub fn include  () -> PathBuf { root().pushing("include")   }
     pub fn test     () -> PathBuf { root().pushing("test")      }
-
 }
