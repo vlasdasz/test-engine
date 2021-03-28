@@ -3,22 +3,26 @@ use crate::gm::{Size, Rect, Color};
 use crate::ui::View;
 use crate::gl_wrapper::GLWrapper;
 use crate::utils::Shared;
+use crate::image::Image;
 
 pub struct TEUIDrawer {
-    assets: Assets,
-    window_size: Size
+    pub assets: Assets,
+    pub window_size: Size
 }
 
 impl TEUIDrawer {
+
     pub fn new(assets: Assets) -> TEUIDrawer {
         TEUIDrawer { assets, window_size: Size::new() }
     }
+
     pub fn set_size(&mut self, size: &Size) {
         self.window_size = *size;
     }
 }
 
 impl TEUIDrawer {
+
     pub fn draw_view(&self, view: Shared<View>) {
         {
             let mut borrowed_mut = view.try_borrow_mut().unwrap();
@@ -35,22 +39,43 @@ impl TEUIDrawer {
 }
 
 impl TEUIDrawer {
+
     fn set_viewport(&self, rect: &Rect) {
-        GLWrapper::set_viewport(self.window_size.height, 1.0, rect);
+        GLWrapper::set_viewport(self.window_size.height, 2.0, rect);
     }
 }
 
 impl TEUIDrawer {
+
     fn fill_rect(&self, rect: &Rect, color: &Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);
         self.assets.buffers.fullscreen.draw();
     }
+
     fn draw_rect(&self, rect: &Rect, color: &Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);
         self.assets.buffers.fullscreen_outline.draw();
+    }
+
+    pub fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: &Color) {
+        if rect.size.is_negative() {
+            return
+        }
+
+        if image.is_monochrome() {
+            self.assets.shaders.ui_monochrome.enable();
+            self.assets.shaders.ui_monochrome.set_color(color);
+        }
+        else {
+            self.assets.shaders.ui_texture.enable();
+        }
+
+        self.set_viewport(rect);
+        image.bind();
+        self.assets.buffers.fullscreen_image.draw();
     }
 }

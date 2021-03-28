@@ -3,8 +3,9 @@
 
 use std::ffi::c_void;
 use crate::gm::Size;
-use crate::gl_wrapper::TextureLoader;
+use crate::gl_wrapper::{TextureLoader, GLWrapper};
 
+#[derive(Debug)]
 pub struct Image {
     pub size: Size,
     pub channels: u32,
@@ -12,8 +13,17 @@ pub struct Image {
 }
 
 impl Image {
+
     pub fn from(data: *const c_void, size: Size, channels: u32) -> Image {
         let gl_handle = TextureLoader::load(data, size, channels);
         Image { size, channels, gl_handle }
+    }
+
+    pub fn is_monochrome(&self) -> bool {
+        self.channels == 1
+    }
+
+    pub fn bind(&self) {
+        GLWrapper::bind_image(self.gl_handle)
     }
 }

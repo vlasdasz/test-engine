@@ -4,6 +4,10 @@ pub struct GLWrapper;
 
 impl GLWrapper {
 
+    pub fn bind_image(id: u32) {
+        GL!(BindTexture, gl::TEXTURE_2D, id);
+    }
+
     pub fn set_clear_color(color: &Color) {
         GL!(ClearColor, color.r, color.g, color.b, color.a)
     }

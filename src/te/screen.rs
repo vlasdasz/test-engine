@@ -15,6 +15,7 @@ pub struct Screen {
 }
 
 impl Screen {
+
     fn on_touch(&mut self, mut touch: Touch) {
         self.root_view.try_borrow_mut().unwrap().check_touch(&mut touch)
     }
@@ -73,5 +74,12 @@ impl Updatable for Screen {
 
     fn update(&mut self) {
         self.ui_drawer.draw_view(self.root_view.clone());
+
+        let font = &self.ui_drawer.assets.fonts.default;
+        let image = &font.glyph_for_char('b').image;
+        let rect = Rect::make(10.0, 10.0, 300.0, 300.0);
+        let color = Color::WHITE;
+
+        self.ui_drawer.draw_image_in_rect(image, &rect, &color);
     }
 }

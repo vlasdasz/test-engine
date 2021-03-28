@@ -17,6 +17,8 @@ impl TextureLoader {
 
         GL!(GenTextures, 1, &mut id);
 
+        GL!(BindTexture, gl::TEXTURE_2D, id);
+
         if channels == 1 {
             GL!(PixelStorei, gl::UNPACK_ALIGNMENT, 1);
         }

@@ -7,6 +7,7 @@ use crate::gm::{Size, Point};
 use crate::image::Image;
 use std::ffi::c_void;
 use crate::ui::Glyph;
+use std::ops::Range;
 
 unsafe fn render_glyph(face: FT_Face, symbol: char, ft_lib: FT_Library) -> Glyph {
     let index = FT_Get_Char_Index(face, symbol as u64);
@@ -39,18 +40,13 @@ unsafe fn render_glyph(face: FT_Face, symbol: char, ft_lib: FT_Library) -> Glyph
     glyph
 }
 
-// auto glyph = new Glyph(symbol,
-// new Image(bitmap_glyph->bitmap.buffer, size.width, size.height, 1),
-// static_cast<int>(face->glyph->metrics.horiAdvance / 64),
-// bearing);
-//
-// FT_Done_Glyph(ft_glyph);
-//
-// return glyph;
-// }
-
 pub struct Font {
 
+    pub size: u32,
+    pub height: f32,
+    pub baseline_shift: f32,
+
+    glyphs: Vec<Glyph>
 }
 
 impl Font {
@@ -64,7 +60,7 @@ impl Font {
         let mut data: Vec<u8> = vec![];
 
         for byte in file.bytes() {
-            data.push(byte.unwrap());
+            data.push(byte.unwrap())
         }
 
         unsafe {
@@ -89,10 +85,47 @@ impl Font {
 
             FT_Set_Pixel_Sizes(face, 0, size);
 
+            let mut glyphs = Vec::<Glyph>::with_capacity(128);
+
+            let mut y_max: f32 = f32::MIN;
+            let mut y_min: f32 = f32::MAX;
+
+            for symbol in (Range { start: 0 as char, end: 127 as char }) {
+                let glyph = render_glyph(face, symbol, ft_lib);
+
+                if y_max < glyph.y_max() {
+                    y_max = glyph.y_max()
+                }
+
+                if y_min > glyph.y_min() {
+                    y_min = glyph.y_min()
+                }
+
+                log!(&glyph.image);
+
+                glyphs.push(glyph);
+            }
+
+            let height = y_max - y_min;
+            let baseline_position = y_min.abs();
+            let baseline_shift = height / 2.0 - baseline_position;
 
             FT_Done_FreeType(ft_lib);
-        }
 
-        Some(Font {})
+            Some(Font {
+                size,
+                height,
+                baseline_shift,
+                glyphs
+            })
+        }
     }
+}
+
+impl Font {
+
+    pub fn glyph_for_char(&self, ch: char) -> &Glyph {
+        &self.glyphs[ch as usize]
+    }
+
 }
