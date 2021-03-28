@@ -9,8 +9,19 @@ use std::ffi::c_void;
 use crate::ui::Glyph;
 use std::ops::Range;
 
+cfg_if::cfg_if! {
+    if #[cfg(target_os = "windows")] {
+        pub type FtSymbol = u32;
+        pub type FtLen = i32;
+    } else {
+        pub type FtSymbol = i64;
+        pub type FtLen = u32;
+    }
+}
+
 unsafe fn render_glyph(face: FT_Face, symbol: char, ft_lib: FT_Library) -> Glyph {
-    let index = FT_Get_Char_Index(face, symbol as u64);
+
+    let index = FT_Get_Char_Index(face, symbol as FtSymbol);
 
     FT_Load_Glyph(face, index, FT_LOAD_RENDER as i32);
 
@@ -77,7 +88,7 @@ impl Font {
 
             FT_New_Memory_Face(ft_lib,
                                data.as_ptr(),
-                               len as i64,
+                               len as FtLen,
                                0,
                                &mut face);
 
