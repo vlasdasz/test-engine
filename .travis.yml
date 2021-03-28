@@ -1,5 +1,13 @@
 language: rust
-os:
-  - osx
-  - linux
-  - windows
+matrix:
+  include:
+    - os: osx
+    - os: windows
+    - os: linux
+      addons:
+        apt:
+          packages:
+            - libxrandr-dev
+            - libxinerama-dev
+            - libxcursor-dev
+            - libxi-dev
