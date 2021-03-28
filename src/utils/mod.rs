@@ -2,7 +2,10 @@
 #[macro_use] pub mod log;
 
 pub mod array_view;
+pub mod platform;
 pub mod regex;
+
+pub use platform::Platform;
 
 pub use array_view::ArrayView;
 use std::rc::Rc;

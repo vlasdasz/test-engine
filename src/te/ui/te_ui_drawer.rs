@@ -2,7 +2,7 @@ use crate::te::Assets;
 use crate::gm::{Size, Rect, Color};
 use crate::ui::View;
 use crate::gl_wrapper::GLWrapper;
-use crate::utils::Shared;
+use crate::utils::{Shared, Platform};
 use crate::image::Image;
 
 pub struct TEUIDrawer {
@@ -41,7 +41,8 @@ impl TEUIDrawer {
 impl TEUIDrawer {
 
     fn set_viewport(&self, rect: &Rect) {
-        GLWrapper::set_viewport(self.window_size.height, 2.0, rect);
+        const SCALE: f32 = if Platform::MAC { 2.0 } else { 1.0 };
+        GLWrapper::set_viewport(self.window_size.height, SCALE, rect);
     }
 }
 
