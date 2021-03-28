@@ -1,4 +1,4 @@
-use crate::gm::{Rect, Color, Point};
+use crate::gm::{Rect, Color};
 use crate::ui::input::Touch;
 use crate::utils::{Shared, make_shared};
 use std::rc::{Weak, Rc};
