@@ -1,6 +1,11 @@
 use crate::gm::{Rect, Color, Point};
 use crate::ui::input::Touch;
 use crate::utils::{Shared, make_shared};
+use std::rc::{Weak, Rc};
+use std::borrow::BorrowMut;
+use std::cell::RefCell;
+
+pub type SuperView = Weak<RefCell<View>>;
 
 #[derive(Debug)]
 pub struct View {
@@ -11,19 +16,30 @@ pub struct View {
     _absolute_frame: Rect,
     _needs_layout: bool,
 
-    _subviews: Vec<Shared<View>>
+    _superview: SuperView,
+    _subviews: Vec<Shared<View>>,
+
+    _weak: SuperView
 }
 
 impl View {
-    pub fn new() -> View {
-        View {
-            _frame: Rect::new(),
-            _super_frame: Rect::new(),
-            _absolute_frame: Rect::new(),
-            color: Color::DEFAULT,
-            _needs_layout: true,
-            _subviews: vec!()
-        }
+    pub fn new() -> Shared<View> {
+        let result = make_shared(
+            View {
+                _frame: Rect::new(),
+                _super_frame: Rect::new(),
+                _absolute_frame: Rect::new(),
+                color: Color::DEFAULT,
+                _needs_layout: true,
+                _superview: Weak::new(),
+                _subviews: vec!(),
+                _weak: Weak::new()
+            }
+        );
+
+        result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
+
+        result
     }
 
     pub fn frame(&self) -> &Rect {
@@ -39,26 +55,29 @@ impl View {
     }
 
     pub fn calculate_absolute_frame(&mut self) {
-        for shared in self._subviews.iter_mut() {
-            let mut view = shared.borrow_mut();
-            view._absolute_frame = view._frame;
-            view._absolute_frame.origin += self._absolute_frame.origin;
-            view.calculate_absolute_frame();
-        }
+        self._absolute_frame = self._frame;
+
+        if let Some(superview) = self._superview.upgrade() {
+            self._absolute_frame.origin += superview.try_borrow().unwrap()._absolute_frame.origin;
+        };
     }
 
-    pub fn add_subview(&mut self, view: View) {
-        self._subviews.push(make_shared(view))
+    pub fn add_subview(&mut self, view: Shared<View>) {
+        {
+            let mut mut_ref = view.try_borrow_mut().unwrap();
+            mut_ref._superview = self._weak.clone();
+        }
+        self._subviews.push(view)
     }
 
     pub fn make_subview(&mut self, make: fn (&mut View) -> ()) {
-        let mut view = View::new();
-        make(&mut view);
+        let view = View::new();
+        make(&mut view.try_borrow_mut().unwrap());
         self.add_subview(view);
     }
 
-    pub fn subviews(&mut self) -> &mut [Shared<View>] {
-        &mut self._subviews
+    pub fn subviews(&self) -> &[Shared<View>] {
+        &self._subviews
     }
 
 }

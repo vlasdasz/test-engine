@@ -2,7 +2,8 @@ use crate::te::Assets;
 use crate::gm::{Size, Rect, Color};
 use crate::ui::View;
 use crate::gl_wrapper::GLWrapper;
-use std::borrow::BorrowMut;
+use std::borrow::{BorrowMut, Borrow};
+use crate::utils::Shared;
 
 pub struct TEUIDrawer {
     assets: Assets,
@@ -19,13 +20,18 @@ impl TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    pub fn draw_view(&self, view: &mut View) {
-        view.calculate_absolute_frame();
-        self.draw_rect(view.absolute_frame(), &view.color);
-        // for shared in view.subviews().iter_mut() {
-        //     let mut view = shared.as_ref();
-        //     self.draw_view(view.get_mut());
-        // }
+    pub fn draw_view(&self, view: Shared<View>) {
+        {
+            let mut borrowed_mut = view.try_borrow_mut().unwrap();
+            borrowed_mut.calculate_absolute_frame();
+            self.draw_rect(borrowed_mut.absolute_frame(), &borrowed_mut.color);
+        }
+
+        let borrowed = view.try_borrow().unwrap();
+
+        for view in borrowed.subviews() {
+            self.draw_view(view.clone());
+        }
     }
 }
 

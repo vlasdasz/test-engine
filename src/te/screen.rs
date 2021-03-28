@@ -6,10 +6,11 @@ use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
 use std::rc::Rc;
 use std::cell::RefCell;
+use crate::utils::{Shared, make_shared};
 
 pub struct Screen {
     cursor_position: Point,
-    root_view: View,
+    root_view: Shared<View>,
     ui_drawer: TEUIDrawer
 }
 
@@ -28,7 +29,7 @@ impl Updatable for Screen {
     }
 
     fn init(&mut self) {
-        self.root_view.make_subview(|view|{
+        self.root_view.borrow_mut().make_subview(|view|{
 
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));
             view.color = Color::BLUE;
@@ -49,7 +50,7 @@ impl Updatable for Screen {
 
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
-        self.root_view.set_frame(Rect::from_size(&size));
+        self.root_view.borrow_mut().set_frame(Rect::from_size(&size));
     }
 
     fn on_cursor_moved(&mut self, position: Point) {
@@ -65,6 +66,6 @@ impl Updatable for Screen {
     }
 
     fn update(&mut self) {
-        self.ui_drawer.draw_view(&mut self.root_view);
+        self.ui_drawer.draw_view(self.root_view.clone());
     }
 }
