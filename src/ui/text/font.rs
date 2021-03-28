@@ -14,8 +14,8 @@ cfg_if::cfg_if! {
         pub type FtSymbol = u32;
         pub type FtLen = i32;
     } else {
-        pub type FtSymbol = i64;
-        pub type FtLen = u32;
+        pub type FtSymbol = u64;
+        pub type FtLen = i64;
     }
 }
 
