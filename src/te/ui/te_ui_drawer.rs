@@ -2,7 +2,6 @@ use crate::te::Assets;
 use crate::gm::{Size, Rect, Color};
 use crate::ui::View;
 use crate::gl_wrapper::GLWrapper;
-use std::borrow::{BorrowMut, Borrow};
 use crate::utils::Shared;
 
 pub struct TEUIDrawer {

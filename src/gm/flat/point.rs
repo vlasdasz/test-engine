@@ -1,4 +1,4 @@
-use std::ops::AddAssign;
+use std::ops::{AddAssign, SubAssign};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Point {
@@ -65,6 +65,12 @@ impl Point {
 
 impl AddAssign for Point {
     fn add_assign(&mut self, rhs: Point) {
-        self.x += rhs.x; self.y += rhs.y;
+        self.x += rhs.x; self.y += rhs.y
+    }
+}
+
+impl SubAssign for Point {
+    fn sub_assign(&mut self, rhs: Point) {
+        self.x -= rhs.x; self.y -= rhs.y
     }
 }

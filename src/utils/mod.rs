@@ -6,7 +6,7 @@ pub mod regex;
 
 pub use array_view::ArrayView;
 use std::rc::Rc;
-use std::cell::{RefCell, Cell};
+use std::cell::RefCell;
 
 pub type Shared<T> = Rc<RefCell<T>>;
 

@@ -4,19 +4,19 @@ use crate::ui::View;
 use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
-use std::rc::Rc;
-use std::cell::RefCell;
-use crate::utils::{Shared, make_shared};
+use crate::utils::{Shared};
+use crate::ui::view::WeakView;
 
 pub struct Screen {
     cursor_position: Point,
     root_view: Shared<View>,
+    touch_views: Vec<WeakView>,
     ui_drawer: TEUIDrawer
 }
 
 impl Screen {
-    fn on_touch(&mut self, touch: Touch) {
-        log!(touch)
+    fn on_touch(&mut self, mut touch: Touch) {
+        self.root_view.try_borrow_mut().unwrap().check_touch(&mut touch)
     }
 }
 
@@ -25,7 +25,12 @@ impl Updatable for Screen {
     fn new() -> Screen {
         let assets = Assets::init();
         let ui_drawer = TEUIDrawer::new(assets);
-        Screen { cursor_position: Point::new(), root_view: View::new(), ui_drawer }
+        Screen {
+            cursor_position: Point::new(),
+            root_view: View::new(),
+            touch_views: vec![],
+            ui_drawer
+        }
     }
 
     fn init(&mut self) {
@@ -40,6 +45,7 @@ impl Updatable for Screen {
 
                 view.make_subview(|view| {
                     view.set_frame(Rect::make(10.0, 10.0, 20.0, 20.0));
+                    view.touch_enabled = true;
                     view.color = Color::TURQUOISE;
                 });
 
