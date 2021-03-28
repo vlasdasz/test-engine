@@ -11,11 +11,11 @@ use std::ops::Range;
 
 cfg_if::cfg_if! {
     if #[cfg(target_os = "windows")] {
-        pub type FtSymbol = u32;
-        pub type FtLen = i32;
+        type FtSymbol = u32;
+        type FtLen = i32;
     } else {
-        pub type FtSymbol = u64;
-        pub type FtLen = i64;
+        type FtSymbol = u64;
+        type FtLen = i64;
     }
 }
 
