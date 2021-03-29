@@ -20,6 +20,6 @@ use crate::gl_wrapper::GLDrawer;
 fn main() {
     GLDrawer::
     <Screen>::
-    with_size(Size { width: 800.0, height: 800.0 })
+    with_size(Size { width: 1000.0, height: 600.0 })
         .start_main_loop();
 }

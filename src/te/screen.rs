@@ -11,7 +11,8 @@ pub struct Screen {
     cursor_position: Point,
     root_view: Shared<View>,
     touch_views: Vec<WeakView>,
-    ui_drawer: TEUIDrawer
+    ui_drawer: TEUIDrawer,
+    char: u8
 }
 
 impl Screen {
@@ -30,7 +31,8 @@ impl Updatable for Screen {
             cursor_position: Point::new(),
             root_view: View::new(),
             touch_views: vec![],
-            ui_drawer
+            ui_drawer,
+            char: 0
         }
     }
 
@@ -76,8 +78,13 @@ impl Updatable for Screen {
         self.ui_drawer.draw_view(self.root_view.clone());
 
         let font = &self.ui_drawer.assets.fonts.default;
-        let image = &font.glyph_for_char('b').image;
-        let rect = Rect::make(10.0, 10.0, 300.0, 300.0);
+
+        let image = &font.glyph_for_char(self.char as char).image;
+        self.char += 1;
+        if self.char > 120 {
+            self.char = 0;
+        }
+        let rect = Rect::make(10.0, 10.0, 20.0, 20.0);
         let color = Color::WHITE;
 
         self.ui_drawer.draw_image_in_rect(image, &rect, &color);

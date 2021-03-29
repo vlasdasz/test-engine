@@ -112,8 +112,6 @@ impl Font {
                     y_min = glyph.y_min()
                 }
 
-                log!(&glyph.image);
-
                 glyphs.push(glyph);
             }
 

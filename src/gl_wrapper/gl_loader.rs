@@ -34,6 +34,10 @@ impl GLLoader {
 
         GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
 
+        //GL!(Enable, gl::DEPTH_TEST);
+        GL!(Enable, gl::BLEND);
+        GL!(BlendFunc, gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+
         window.make_current();
 
         GLLoader { window, events }
