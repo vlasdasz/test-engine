@@ -1,13 +1,27 @@
 use crate::gm::{Rect, Color};
 use crate::ui::input::Touch;
-use crate::utils::{Shared, make_shared};
+use crate::utils::{Shared, make_shared, MutWeak};
 use std::rc::{Weak, Rc};
 use std::cell::RefCell;
 
-pub type WeakView = Weak<RefCell<View>>;
+pub type WeakView = Weak<RefCell<ViewBase>>;
+
+pub trait View {
+    // type This;
+    //
+    // fn color(&self) -> &Color;
+    //
+    // fn new_shared() -> Shared<Self::This>;
+    // fn weak(&self) -> MutWeak<Self::This>;
+    //
+    // fn absolute_frame(&self) -> &Rect;
+    // fn calculate_absolute_frame(&mut self);
+    //
+    // fn subviews(&self) -> &[Shared<dyn View<This = Self::This>>];
+}
 
 #[derive(Debug)]
-pub struct View {
+pub struct ViewBase {
     pub color: Color,
     pub touch_enabled: bool,
 
@@ -17,29 +31,30 @@ pub struct View {
     _needs_layout: bool,
 
     _superview: WeakView,
-    _subviews: Vec<Shared<View>>,
+    _subviews: Vec<Shared<ViewBase>>,
 
     _weak: WeakView
 }
 
-impl View {
-    pub fn new() -> Shared<View> {
-        let result = make_shared(
-            View {
-                color: Color::DEFAULT,
-                touch_enabled: false,
-                _frame: Rect::new(),
-                _super_frame: Rect::new(),
-                _absolute_frame: Rect::new(),
-                _needs_layout: true,
-                _superview: Weak::new(),
-                _subviews: vec!(),
-                _weak: Weak::new()
-            }
-        );
+impl ViewBase {
 
+    pub fn new() -> ViewBase {
+        ViewBase {
+            color: Color::DEFAULT,
+            touch_enabled: false,
+            _frame: Rect::new(),
+            _super_frame: Rect::new(),
+            _absolute_frame: Rect::new(),
+            _needs_layout: true,
+            _superview: Weak::new(),
+            _subviews: vec!(),
+            _weak: Weak::new()
+        }
+    }
+
+    pub fn new_shared() -> Shared<ViewBase> {
+        let result = make_shared(ViewBase::new());
         result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
-
         result
     }
 
@@ -63,7 +78,7 @@ impl View {
         };
     }
 
-    pub fn add_subview(&mut self, view: Shared<View>) {
+    pub fn add_subview(&mut self, view: Shared<ViewBase>) {
         {
             let mut mut_ref = view.try_borrow_mut().unwrap();
             mut_ref._superview = self._weak.clone();
@@ -71,13 +86,13 @@ impl View {
         self._subviews.push(view)
     }
 
-    pub fn make_subview(&mut self, make: fn (&mut View) -> ()) {
-        let view = View::new();
+    pub fn make_subview(&mut self, make: fn (&mut ViewBase) -> ()) {
+        let view = ViewBase::new_shared();
         make(&mut view.try_borrow_mut().unwrap());
         self.add_subview(view);
     }
 
-    pub fn subviews(&self) -> &[Shared<View>] {
+    pub fn subviews(&self) -> &[Shared<ViewBase>] {
         &self._subviews
     }
 

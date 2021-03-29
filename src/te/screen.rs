@@ -1,6 +1,6 @@
 use crate::gm::{Size, Rect, Color, Point};
 use crate::te::{TEUIDrawer, Assets};
-use crate::ui::View;
+use crate::ui::ViewBase;
 use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
@@ -9,7 +9,7 @@ use crate::ui::view::WeakView;
 
 pub struct Screen {
     cursor_position: Point,
-    root_view: Shared<View>,
+    root_view: Shared<ViewBase>,
     touch_views: Vec<WeakView>,
     ui_drawer: TEUIDrawer,
     char: u8
@@ -29,7 +29,7 @@ impl Updatable for Screen {
         let ui_drawer = TEUIDrawer::new(assets);
         Screen {
             cursor_position: Point::new(),
-            root_view: View::new(),
+            root_view: ViewBase::new_shared(),
             touch_views: vec![],
             ui_drawer,
             char: 0

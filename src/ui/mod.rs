@@ -1,5 +1,8 @@
 pub mod input;
 pub mod view;
 pub mod text;
-pub use view::View;
+pub mod basic;
+
+pub use view::ViewBase;
+pub use basic::ImageView;
 pub use text::{ Font, Glyph };

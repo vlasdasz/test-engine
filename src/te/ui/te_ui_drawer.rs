@@ -1,6 +1,6 @@
 use crate::te::Assets;
 use crate::gm::{Size, Rect, Color};
-use crate::ui::View;
+use crate::ui::ViewBase;
 use crate::gl_wrapper::GLWrapper;
 use crate::utils::{Shared, Platform};
 use crate::image::Image;
@@ -23,7 +23,7 @@ impl TEUIDrawer {
 
 impl TEUIDrawer {
 
-    pub fn draw_view(&self, view: Shared<View>) {
+    pub fn draw_view(&self, view: Shared<ViewBase>) {
         {
             let mut borrowed_mut = view.try_borrow_mut().unwrap();
             borrowed_mut.calculate_absolute_frame();
