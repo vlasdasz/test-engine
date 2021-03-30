@@ -5,13 +5,11 @@ use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
 use crate::utils::{Shared};
-use crate::ui::view::WeakView;
 use crate::utils::weak_self::HasWeakSelf;
 
 pub struct Screen {
     cursor_position: Point,
     root_view: Shared<ViewBase>,
-    touch_views: Vec<WeakView>,
     ui_drawer: TEUIDrawer,
     char: u8
 }
@@ -31,7 +29,6 @@ impl Updatable for Screen {
         Screen {
             cursor_position: Point::new(),
             root_view: ViewBase::new_shared(),
-            touch_views: vec![],
             ui_drawer,
             char: 0
         }

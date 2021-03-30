@@ -3,8 +3,6 @@ use crate::ui::input::Touch;
 pub use crate::utils::{Shared, make_shared, MutWeak, HasWeakSelf};
 use std::rc::{Weak, Rc};
 
-pub type WeakView = MutWeak<ViewBase>;
-
 pub trait View: HasWeakSelf {
 
     fn color(&self) -> &Color;
@@ -26,10 +24,10 @@ pub struct ViewBase {
     _absolute_frame: Rect,
     _needs_layout: bool,
 
-    _superview: WeakView,
+    _superview: MutWeak<ViewBase>,
     _subviews: Vec<Shared<dyn View>>,
 
-    _weak: WeakView
+    _weak: MutWeak<ViewBase>
 }
 
 impl ViewBase {

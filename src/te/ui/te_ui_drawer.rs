@@ -1,6 +1,5 @@
 use crate::te::Assets;
 use crate::gm::{Size, Rect, Color};
-use crate::ui::ViewBase;
 use crate::gl_wrapper::GLWrapper;
 use crate::utils::{Shared, Platform};
 use crate::image::Image;
