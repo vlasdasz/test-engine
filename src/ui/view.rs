@@ -2,6 +2,7 @@ use crate::gm::{Rect, Color};
 use crate::ui::input::Touch;
 pub use crate::utils::{Shared, make_shared, MutWeak, HasWeakSelf};
 use std::rc::{Weak, Rc};
+use crate::utils::DynWeak;
 
 pub trait View: HasWeakSelf {
 
@@ -24,7 +25,7 @@ pub struct ViewBase {
     _absolute_frame: Rect,
     _needs_layout: bool,
 
-    _superview: MutWeak<ViewBase>,
+    _superview: DynWeak<dyn View>,
     _subviews: Vec<Shared<dyn View>>,
 
     _weak: MutWeak<ViewBase>
@@ -47,7 +48,7 @@ impl ViewBase {
     pub fn add_subview(&mut self, view: Shared<ViewBase>) {
         {
             let mut mut_ref = view.try_borrow_mut().unwrap();
-            mut_ref._superview = self._weak.clone();
+            mut_ref._superview = Some(self._weak.clone());
         }
         self._subviews.push(view)
     }
@@ -84,8 +85,12 @@ impl View for ViewBase {
     fn calculate_absolute_frame(&mut self) {
         self._absolute_frame = self._frame;
 
-        if let Some(superview) = self._superview.upgrade() {
-            self._absolute_frame.origin += superview.try_borrow().unwrap()._absolute_frame.origin;
+        if self._superview.is_none() {
+            return;
+        }
+
+        if let Some(superview) = self._superview.as_ref().unwrap().upgrade() {
+            self._absolute_frame.origin += superview.try_borrow().unwrap().absolute_frame().origin;
         };
     }
 
@@ -109,7 +114,7 @@ impl HasWeakSelf for ViewBase {
             _super_frame: Rect::new(),
             _absolute_frame: Rect::new(),
             _needs_layout: true,
-            _superview: Weak::new(),
+            _superview: None,
             _subviews: vec!(),
             _weak: Weak::new()
         }
