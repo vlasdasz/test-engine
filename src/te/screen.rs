@@ -6,6 +6,7 @@ use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
 use crate::utils::{Shared};
 use crate::ui::view::WeakView;
+use crate::utils::weak_self::HasWeakSelf;
 
 pub struct Screen {
     cursor_position: Point,

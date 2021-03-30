@@ -1,6 +1,6 @@
 use crate::gm::{Rect, Color};
 use crate::ui::input::Touch;
-use crate::utils::{Shared, make_shared, MutWeak};
+pub use crate::utils::{Shared, make_shared, MutWeak, HasWeakSelf};
 use std::rc::{Weak, Rc};
 use std::cell::RefCell;
 
@@ -37,26 +37,6 @@ pub struct ViewBase {
 }
 
 impl ViewBase {
-
-    pub fn new() -> ViewBase {
-        ViewBase {
-            color: Color::DEFAULT,
-            touch_enabled: false,
-            _frame: Rect::new(),
-            _super_frame: Rect::new(),
-            _absolute_frame: Rect::new(),
-            _needs_layout: true,
-            _superview: Weak::new(),
-            _subviews: vec!(),
-            _weak: Weak::new()
-        }
-    }
-
-    pub fn new_shared() -> Shared<ViewBase> {
-        let result = make_shared(ViewBase::new());
-        result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
-        result
-    }
 
     pub fn frame(&self) -> &Rect {
         &self._frame
@@ -111,4 +91,31 @@ impl ViewBase {
         log!(touch);
     }
 
+}
+
+impl HasWeakSelf<ViewBase> for ViewBase {
+
+    fn new() -> ViewBase {
+        ViewBase {
+            color: Color::DEFAULT,
+            touch_enabled: false,
+            _frame: Rect::new(),
+            _super_frame: Rect::new(),
+            _absolute_frame: Rect::new(),
+            _needs_layout: true,
+            _superview: Weak::new(),
+            _subviews: vec!(),
+            _weak: Weak::new()
+        }
+    }
+
+    fn new_shared() -> Self::Shared {
+        let result = make_shared(ViewBase::new());
+        result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
+        result
+    }
+
+    fn weak(&self) -> Self::Weak {
+        self._weak.clone()
+    }
 }
