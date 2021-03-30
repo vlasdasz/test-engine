@@ -1,11 +1,11 @@
 use crate::gm::{Size, Rect, Color, Point};
 use crate::te::{TEUIDrawer, Assets};
-use crate::ui::ViewBase;
+use crate::ui::{ViewBase, ImageView};
 use crate::ui::view::View;
 use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
-use crate::utils::{Shared};
+use crate::utils::{Shared, make_shared};
 use crate::utils::weak_self::HasWeakSelf;
 
 pub struct Screen {
@@ -36,6 +36,13 @@ impl Updatable for Screen {
     }
 
     fn init(&mut self) {
+
+        let mut image_view = ImageView::new();
+
+        image_view.image = self.ui_drawer.assets.fonts.default.glyph_for_char('A').image;
+        image_view.set_frame(Rect::make(500.0, 10.0, 200.0, 200.0));
+        self.root_view.borrow_mut().add_subview(make_shared(image_view));
+
         self.root_view.borrow_mut().make_subview(|view|{
 
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));

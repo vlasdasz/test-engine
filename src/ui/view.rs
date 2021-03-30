@@ -3,8 +3,18 @@ use crate::ui::input::Touch;
 pub use crate::utils::{Shared, make_shared, MutWeak, HasWeakSelf};
 use std::rc::{Weak, Rc};
 use crate::utils::DynWeak;
+use std::any::Any;
 
-pub trait View: HasWeakSelf {
+pub enum ViewType {
+    Plain,
+    Image
+}
+
+pub trait AsAny {
+    fn as_any(&self) -> &dyn Any;
+}
+
+pub trait View: AsAny + HasWeakSelf {
 
     fn color(&self) -> &Color;
     fn set_color(&mut self, color: Color);
@@ -12,10 +22,14 @@ pub trait View: HasWeakSelf {
     fn touch_enabled(&self) -> bool;
     fn enable_touch(&mut self);
 
+    fn set_frame(&mut self, frame: Rect);
+
     fn absolute_frame(&self) -> &Rect;
     fn calculate_absolute_frame(&mut self);
 
-    fn superview(&self) -> MutWeak<dyn View>;
+    fn superview(&self) -> DynWeak<dyn View>;
+    fn set_superview(&mut self, superview: DynWeak<dyn View>);
+
     fn subviews(&self) -> &[Shared<dyn View>];
 
     fn check_touch(&self, touch: &mut Touch);
@@ -26,9 +40,7 @@ pub struct ViewBase {
     _touch_enabled: bool,
 
     _frame: Rect,
-    _super_frame: Rect,
     _absolute_frame: Rect,
-    _needs_layout: bool,
 
     _superview: DynWeak<dyn View>,
     _subviews: Vec<Shared<dyn View>>,
@@ -42,18 +54,10 @@ impl ViewBase {
         &self._frame
     }
 
-    pub fn absolute_frame(&self) -> &Rect {
-        &self._absolute_frame
-    }
-
-    pub fn set_frame(&mut self, frame: Rect)  {
-        self._frame = frame
-    }
-
-    pub fn add_subview(&mut self, view: Shared<ViewBase>) {
+    pub fn add_subview(&mut self, view: Shared<dyn View>) {
         {
             let mut mut_ref = view.try_borrow_mut().unwrap();
-            mut_ref._superview = Some(self._weak.clone());
+            mut_ref.set_superview(Some(self._weak.clone()));
         }
         self._subviews.push(view)
     }
@@ -78,6 +82,10 @@ impl View for ViewBase {
     fn touch_enabled (&self) ->  bool  {  self._touch_enabled  }
     fn enable_touch(&mut self) { self._touch_enabled = true }
 
+    fn set_frame(&mut self, frame: Rect)  {
+        self._frame = frame
+    }
+
     fn absolute_frame(&self) -> &Rect  { &self._absolute_frame }
 
     fn calculate_absolute_frame(&mut self) {
@@ -92,8 +100,12 @@ impl View for ViewBase {
         };
     }
 
-    fn superview(&self) -> MutWeak<dyn View> {
-        self._weak.clone()
+    fn superview(&self) -> DynWeak<dyn View> {
+        self._superview.clone()
+    }
+
+    fn set_superview(&mut self, superview: DynWeak<dyn View>) {
+        self._superview = superview
     }
 
     fn subviews(&self) -> &[Shared<dyn View>] {
@@ -113,6 +125,10 @@ impl View for ViewBase {
 
 }
 
+impl AsAny for ViewBase {
+    fn as_any(&self) -> &dyn Any { self }
+}
+
 impl HasWeakSelf for ViewBase {
 
     fn new() -> ViewBase {
@@ -120,9 +136,7 @@ impl HasWeakSelf for ViewBase {
             _color: Color::DEFAULT,
             _touch_enabled: false,
             _frame: Rect::new(),
-            _super_frame: Rect::new(),
             _absolute_frame: Rect::new(),
-            _needs_layout: true,
             _superview: None,
             _subviews: vec!(),
             _weak: Weak::new()

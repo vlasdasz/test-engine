@@ -5,6 +5,9 @@ pub struct GLWrapper;
 impl GLWrapper {
 
     pub fn bind_image(id: u32) {
+        if id == u32::MAX {
+            panic!("Invalid image gl_handle");
+        }
         GL!(BindTexture, gl::TEXTURE_2D, id);
     }
 
