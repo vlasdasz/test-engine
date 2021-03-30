@@ -1,9 +1,9 @@
 
 use crate::te::paths;
+use crate::te::paths::PathBufExt;
 
 use crate::gl_wrapper::Shader;
 use crate::gl_wrapper::ShaderCompiler;
-use crate::te::paths::PathBufExt;
 
 pub struct Shaders {
     compiler: ShaderCompiler,
@@ -19,10 +19,10 @@ impl Shaders {
 
         let compiler = ShaderCompiler::new();
 
-        let ui            = compiler.compile(paths::shaders::ui().pushing("ui"));
-        let ui_path       = compiler.compile(paths::shaders::ui().pushing("ui_path"));
-        let ui_texture    = compiler.compile(paths::shaders::ui().pushing("ui_texture"));
-        let ui_monochrome = compiler.compile(paths::shaders::ui().pushing("ui_monochrome"));
+        let ui            = compiler.compile(&paths::shaders::ui().pushing("ui"));
+        let ui_path       = compiler.compile(&paths::shaders::ui().pushing("ui_path"));
+        let ui_texture    = compiler.compile(&paths::shaders::ui().pushing("ui_texture"));
+        let ui_monochrome = compiler.compile(&paths::shaders::ui().pushing("ui_monochrome"));
 
         Shaders {
             compiler,

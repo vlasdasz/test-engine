@@ -39,7 +39,7 @@ impl Updatable for Screen {
 
         let mut image_view = ImageView::new();
 
-        image_view.image = self.ui_drawer.assets.fonts.default.glyph_for_char('A').image;
+        image_view.image = self.ui_drawer.assets.images.palm;
         image_view.set_frame(Rect::make(500.0, 10.0, 200.0, 200.0));
         self.root_view.borrow_mut().add_subview(make_shared(image_view));
 

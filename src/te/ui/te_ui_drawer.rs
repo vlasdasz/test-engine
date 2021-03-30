@@ -25,21 +25,19 @@ impl TEUIDrawer {
 impl TEUIDrawer {
 
     pub fn draw_view(&self, view: Shared<dyn View>) {
-        {
-            let mut borrowed_mut = view.try_borrow_mut().unwrap();
-            borrowed_mut.calculate_absolute_frame();
-        }
 
-        let borrowed = view.try_borrow().unwrap();
+        view.try_borrow_mut().unwrap().calculate_absolute_frame();
 
-        if let Some(image_view) = borrowed.as_any().downcast_ref::<ImageView>() {
+        let view = view.try_borrow().unwrap();
+
+        if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             self.draw_image_in_rect(&image_view.image, image_view.absolute_frame(), image_view.color());
         }
         else {
-            self.draw_rect(borrowed.absolute_frame(), borrowed.color());
+            self.draw_rect(view.absolute_frame(), view.color());
         }
 
-        for view in view.try_borrow().unwrap().subviews() {
+        for view in view.subviews() {
             self.draw_view(view.clone());
         }
     }
@@ -48,7 +46,7 @@ impl TEUIDrawer {
 impl TEUIDrawer {
 
     fn set_viewport(&self, rect: &Rect) {
-        const SCALE: f32 = if Platform::MAC { 1.0 } else { 1.0 };
+        const SCALE: f32 = if Platform::MAC { 2.0 } else { 1.0 };
         GLWrapper::set_viewport(self.window_size.height, SCALE, rect);
     }
 }

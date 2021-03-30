@@ -1,4 +1,4 @@
 
 mod image;
 
-pub use image::Image;
+pub use self::image::Image;

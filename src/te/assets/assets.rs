@@ -1,9 +1,10 @@
 
-use crate::te::{Buffers, Shaders, Fonts};
+use crate::te::{Buffers, Shaders, Images, Fonts};
 
 pub struct Assets {
     pub buffers: Buffers,
     pub shaders: Shaders,
+    pub images:  Images,
     pub fonts:   Fonts
 }
 
@@ -12,6 +13,7 @@ impl Assets {
         Assets {
             buffers: Buffers::init(),
             shaders: Shaders::init(),
+            images:  Images::init(),
             fonts:   Fonts::init()
         }
     }

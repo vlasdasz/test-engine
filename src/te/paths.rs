@@ -19,7 +19,8 @@ pub fn home() -> PathBuf { env::home_dir().unwrap_or_default() }
 pub fn root() -> PathBuf { home().pushing(".deps/test_engine") }
 pub fn assets() -> PathBuf { root().pushing("Assets")  }
 
-pub fn fonts() -> PathBuf { assets().pushing("Fonts")  }
+pub fn images() -> PathBuf { assets().pushing("Images") }
+pub fn fonts () -> PathBuf { assets().pushing("Fonts" ) }
 
 pub mod shaders {
     use std::path::PathBuf;
@@ -27,9 +28,9 @@ pub mod shaders {
 
     pub fn root() -> PathBuf { super::assets().pushing("Shaders") }
 
-    pub fn ui       () -> PathBuf { root().pushing("ui")        }
-    pub fn sprites  () -> PathBuf { root().pushing("sprites")   }
+    pub fn ui       () -> PathBuf { root().pushing("ui"       ) }
+    pub fn sprites  () -> PathBuf { root().pushing("sprites"  ) }
     pub fn isometric() -> PathBuf { root().pushing("isometric") }
-    pub fn include  () -> PathBuf { root().pushing("include")   }
-    pub fn test     () -> PathBuf { root().pushing("test")      }
+    pub fn include  () -> PathBuf { root().pushing("include"  ) }
+    pub fn test     () -> PathBuf { root().pushing("test"     ) }
 }

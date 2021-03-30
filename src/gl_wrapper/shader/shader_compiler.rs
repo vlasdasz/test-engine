@@ -35,7 +35,7 @@ impl ShaderCompiler {
         result + "\n"
     }
 
-    fn check_programm_error(path: PathBuf, program: u32) {
+    fn check_programm_error(path: &PathBuf, program: u32) {
 
         let mut success: gl::types::GLint = 1;
 
@@ -92,12 +92,12 @@ impl ShaderCompiler {
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
         GL!(CompileShader, shader);
 
-        ShaderCompiler::check_programm_error(path, shader);
+        ShaderCompiler::check_programm_error(&path, shader);
 
         shader
     }
 
-    pub fn compile(&self, path: PathBuf) -> Shader {
+    pub fn compile(&self, path: &PathBuf) -> Shader {
 
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");

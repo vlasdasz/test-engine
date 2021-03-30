@@ -38,7 +38,7 @@ unsafe fn render_glyph(face: FT_Face, symbol: char, ft_lib: FT_Library) -> Glyph
     let metrics = (*(*face).glyph).metrics;
 
     let bearing = Point {
-        x:  metrics.horiBearingX as f32 / 64.0,
+        x: metrics.horiBearingX as f32 / 64.0,
         y: metrics.horiBearingY as f32 / 64.0,
     };
 
