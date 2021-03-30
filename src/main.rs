@@ -2,6 +2,7 @@
 #![allow(dead_code)]
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
+#![feature(associated_type_defaults)]
 
 #[macro_use] mod utils;
 #[macro_use] extern crate guard;

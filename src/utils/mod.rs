@@ -2,10 +2,12 @@
 #[macro_use] pub mod log;
 
 pub mod array_view;
+pub mod weak_self;
 pub mod platform;
 pub mod regex;
 
 pub use platform::Platform;
+pub use weak_self::HasWeakSelf;
 
 pub use array_view::ArrayView;
 use std::rc::{Rc, Weak};

@@ -4,7 +4,7 @@ use crate::utils::{Shared, make_shared, MutWeak};
 use std::rc::{Weak, Rc};
 use std::cell::RefCell;
 
-pub type WeakView = Weak<RefCell<ViewBase>>;
+pub type WeakView = MutWeak<ViewBase>;
 
 pub trait View {
     // type This;
