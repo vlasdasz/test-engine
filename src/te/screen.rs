@@ -41,16 +41,16 @@ impl Updatable for Screen {
         self.root_view.borrow_mut().make_subview(|view|{
 
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));
-            view.color = Color::BLUE;
+            view._color = Color::BLUE;
 
             view.make_subview(|view|{
                 view.set_frame(Rect::make(20.0, 20.0, 100.0, 100.0));
-                view.color = Color::GREEN;
+                view._color = Color::GREEN;
 
                 view.make_subview(|view| {
                     view.set_frame(Rect::make(10.0, 10.0, 20.0, 20.0));
-                    view.touch_enabled = true;
-                    view.color = Color::TURQUOISE;
+                    //view.touch_enabled = true;
+                    view._color = Color::TURQUOISE;
                 });
 
             });
