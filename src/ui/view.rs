@@ -7,17 +7,22 @@ use crate::utils::DynWeak;
 pub trait View: HasWeakSelf {
 
     fn color(&self) -> &Color;
+    fn set_color(&mut self, color: Color);
+
     fn touch_enabled(&self) -> bool;
+    fn enable_touch(&mut self);
 
     fn absolute_frame(&self) -> &Rect;
     fn calculate_absolute_frame(&mut self);
 
     fn superview(&self) -> MutWeak<dyn View>;
     fn subviews(&self) -> &[Shared<dyn View>];
+
+    fn check_touch(&self, touch: &mut Touch);
 }
 
 pub struct ViewBase {
-    pub _color: Color,
+    _color: Color,
     _touch_enabled: bool,
 
     _frame: Rect,
@@ -59,17 +64,6 @@ impl ViewBase {
         self.add_subview(view);
     }
 
-    pub fn check_touch(&self, touch: &mut Touch) {
-        // if self.touch_enabled && self._absolute_frame.contains(&touch.position)  {
-        //     touch.position -= self._absolute_frame.origin;
-        //     self.on_touch(touch);
-        // }
-        // for view in self.subviews() {
-        //     let borrowed = view.try_borrow().unwrap();
-        //     borrowed.check_touch(touch);
-        // }
-    }
-
     pub fn on_touch(&self, touch: &Touch) {
         log!(touch);
     }
@@ -78,8 +72,12 @@ impl ViewBase {
 
 impl View for ViewBase {
 
-    fn color         (&self) -> &Color { &self._color          }
+    fn color (&self) -> &Color { &self._color }
+    fn set_color(&mut self, color: Color) { self._color = color }
+
     fn touch_enabled (&self) ->  bool  {  self._touch_enabled  }
+    fn enable_touch(&mut self) { self._touch_enabled = true }
+
     fn absolute_frame(&self) -> &Rect  { &self._absolute_frame }
 
     fn calculate_absolute_frame(&mut self) {
@@ -100,6 +98,17 @@ impl View for ViewBase {
 
     fn subviews(&self) -> &[Shared<dyn View>] {
         &self._subviews
+    }
+
+    fn check_touch(&self, touch: &mut Touch) {
+        if self._touch_enabled && self._absolute_frame.contains(&touch.position)  {
+            touch.position -= self._absolute_frame.origin;
+            self.on_touch(touch);
+        }
+        for view in self.subviews() {
+            let borrowed = view.try_borrow().unwrap();
+            borrowed.check_touch(touch);
+        }
     }
 
 }

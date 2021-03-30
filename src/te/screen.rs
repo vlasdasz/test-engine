@@ -1,6 +1,7 @@
 use crate::gm::{Size, Rect, Color, Point};
 use crate::te::{TEUIDrawer, Assets};
 use crate::ui::ViewBase;
+use crate::ui::view::View;
 use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
@@ -38,16 +39,16 @@ impl Updatable for Screen {
         self.root_view.borrow_mut().make_subview(|view|{
 
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));
-            view._color = Color::BLUE;
+            view.set_color(Color::BLUE);
 
             view.make_subview(|view|{
                 view.set_frame(Rect::make(20.0, 20.0, 100.0, 100.0));
-                view._color = Color::GREEN;
+                view.set_color(Color::GREEN);
 
                 view.make_subview(|view| {
                     view.set_frame(Rect::make(10.0, 10.0, 20.0, 20.0));
-                    //view.touch_enabled = true;
-                    view._color = Color::TURQUOISE;
+                    view.enable_touch();
+                    view.set_color(Color::TURQUOISE);
                 });
 
             });
