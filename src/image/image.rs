@@ -9,6 +9,8 @@ use assimp::Texture;
 use image::io::Reader;
 use image::{load, GenericImageView};
 use image::DynamicImage::*;
+use soil2::SOIL_load_image;
+use std::os::raw::c_int;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Image {
@@ -25,22 +27,39 @@ impl Image {
 
     pub fn load(path: &PathBuf) -> Image {
 
-        log!(path);
+        //
+        // log!(path);
+        // //
+        // // filename: *const c_char,
+        // // width: *mut c_int,
+        // // height: *mut c_int,
+        // // channels: *mut c_int,
+        // // force_channels: c_int
+        //
+        // unsafe {
+        //
+        //     let mut width: c_int = -1;
+        //     let mut height: c_int = -1;
+        //     let mut channels: c_int = -1;
+        //
+        //
+        //     let data = SOIL_load_image(
+        //         path.to_str().unwrap().as_ptr() as *const i8,
+        //         &mut width,
+        //         &mut height,
+        //         &mut channels,
+        //         0
+        //     );
+        //
+        //     let image = Image::from(
+        //         data as *const c_void,
+        //         Size { width: width as f32, height: height as f32 },
+        //         channels as u32
+        //     );
+        //
+        //     image
 
-        let img = image::open(path).unwrap();
-
-
-        let data = img.as_bytes();
-        let size = Size { width: img.width() as f32, height: img.height() as f32 };
-
-        let channels = img.color().channel_count();
-
-        let image = Image::from(data.as_ptr() as *const c_void, size, channels as u32);
-
-        log!(image);
-        log!(image.is_monochrome());
-
-        image
+        Image::new()
 
     }
 
