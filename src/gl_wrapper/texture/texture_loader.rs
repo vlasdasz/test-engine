@@ -23,6 +23,8 @@ impl TextureLoader {
             GL!(PixelStorei, gl::UNPACK_ALIGNMENT, 1);
         }
 
+        log!(size);
+
         GL!(TexImage2D,
             gl::TEXTURE_2D,
             0,

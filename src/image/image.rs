@@ -43,6 +43,10 @@ impl Image {
 
             check_gl_error!();
 
+            if width == -1 || height == -1 {
+                panic!("Failed to load image");
+            }
+
             let image = Image::from(
                 data as *const c_void,
                 Size { width: width as f32, height: height as f32 },

@@ -33,6 +33,8 @@ pub trait View: AsAny + HasWeakSelf {
     fn subviews(&self) -> &[Shared<dyn View>];
 
     fn check_touch(&self, touch: &mut Touch);
+
+    fn setup(&mut self) { }
 }
 
 pub struct ViewBase {
@@ -58,6 +60,7 @@ impl ViewBase {
         {
             let mut mut_ref = view.try_borrow_mut().unwrap();
             mut_ref.set_superview(Some(self._weak.clone()));
+            mut_ref.setup();
         }
         self._subviews.push(view)
     }
