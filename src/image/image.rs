@@ -5,11 +5,10 @@ use std::ffi::c_void;
 use crate::gm::Size;
 use crate::gl_wrapper::{TextureLoader, GLWrapper};
 use std::path::PathBuf;
-use image::io::Reader;
-use image::{load, GenericImageView};
-use image::DynamicImage::*;
 use soil2::{SOIL_load_image, SOIL_free_image_data};
 use std::os::raw::c_int;
+
+use crate::check_gl_error;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Image {
@@ -39,8 +38,10 @@ impl Image {
                 &mut width,
                 &mut height,
                 &mut channels,
-                0
+                4 //SOIL_LOAD_RGBA
             );
+
+            check_gl_error!();
 
             let image = Image::from(
                 data as *const c_void,
@@ -49,6 +50,8 @@ impl Image {
             );
 
             SOIL_free_image_data(data);
+
+            check_gl_error!();
 
             image
         }
