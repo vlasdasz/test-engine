@@ -18,4 +18,4 @@ num-traits = "0.2.14"
 freetype-sys = "0.14.0"
 rustc-serialize = "0.3.24"
 
-soil2 = { git = "https://github.com/VladasZ/soil2" }
+soil2 = { git = "https://github.com/VladasZ/soil2",  branch = 'main' }
