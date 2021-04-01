@@ -11,27 +11,27 @@ env:
 
 jobs:
 
-    linux:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: linux
-          run: |
-            sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev
-            cargo build --verbose
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: mac
+        run: |
+          cargo build --verbose
 
-    macos:
-      runs-on: macos-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: macos
-          run: |
-            cargo build --verbose
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: linux
+        run: |
+          sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev
+          cargo build --verbose
 
-    windows:
-      runs-on: windows-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: windows
-          run: |
-            cargo build --verbose
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: windows
+        run: |
+          cargo build --verbose
