@@ -2,11 +2,11 @@ use crate::gm::{Size, Rect, Color, Point};
 use crate::te::{TEUIDrawer, Assets};
 use crate::ui::{ViewBase, ImageView, Label};
 use crate::ui::view::View;
-use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
-use crate::ui::input::touch::Event;
+use crate::ui::input::touch::{Event, MouseButton, ButtonState};
 use crate::utils::{Shared, make_shared};
 use crate::utils::weak_self::HasWeakSelf;
+use crate::gl_wrapper::gl_wrapper::Updatable;
 
 pub struct Screen {
     cursor_position: Point,

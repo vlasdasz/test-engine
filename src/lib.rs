@@ -17,7 +17,6 @@ mod image;
 
 use crate::gm::Size;
 use crate::te::Screen;
-use crate::gl_wrapper::GLDrawer;
 
 #[no_mangle]
 pub extern fn rust_greeting(to: *const c_char) -> *mut c_char {

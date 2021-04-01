@@ -3,49 +3,8 @@ use crate::gm::{Color, Size, Point};
 
 use glfw::{Action, Context, Window, WindowEvent};
 use crate::gl_wrapper::gl_drawer::MouseButton::Undefined;
-
-pub enum MouseButton {
-    Left,
-    Right,
-    Middle,
-    Undefined
-}
-
-impl MouseButton {
-    pub fn from_gl(btn: glfw::MouseButton) -> Self {
-        match btn {
-            glfw::MouseButtonLeft   => Self::Left,
-            glfw::MouseButtonRight  => Self::Right,
-            glfw::MouseButtonMiddle => Self::Middle,
-            _ => Undefined
-        }
-    }
-}
-
-pub enum ButtonState {
-    Up,
-    Down,
-    Repeat
-}
-
-impl ButtonState {
-    pub fn from_gl(action: Action) -> Self {
-        match action {
-            Action::Release => Self::Up,
-            Action::Press   => Self::Down,
-            Action::Repeat  => Self::Repeat
-        }
-    }
-}
-
-pub trait Updatable {
-    fn new() -> Self;
-    fn init(&mut self);
-    fn set_size(&mut self, size: Size);
-    fn on_cursor_moved(&mut self, position: Point);
-    fn on_mouse_key_pressed(&mut self, button: MouseButton, state: ButtonState);
-    fn update(&mut self);
-}
+use crate::ui::input::touch::{MouseButton, ButtonState};
+use crate::gl_wrapper::gl_wrapper::Updatable;
 
 pub struct GLDrawer<T: Updatable> {
     window: Window,
@@ -69,6 +28,10 @@ impl<T: Updatable> GLDrawer<T> {
     pub fn start_main_loop(&mut self) {
 
         GLWrapper::set_clear_color(&Color::GRAY);
+
+        //GL!(Enable, gl::DEPTH_TEST);
+        GL!(Enable, gl::BLEND);
+        GL!(BlendFunc, gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
 
         self.drawer.init();
 
@@ -94,8 +57,8 @@ impl<T: Updatable> GLDrawer<T> {
                     },
                     glfw::WindowEvent::MouseButton(btn, action, mods) => {
                         self.drawer.on_mouse_key_pressed(
-                            MouseButton::from_gl(btn),
-                            ButtonState::from_gl(action)
+                            MouseButton::from_glfw(btn),
+                            ButtonState::from_glfw(action)
                         )
                     },
                     _ => {},

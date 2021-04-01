@@ -1,6 +1,17 @@
-use crate::gm::{Rect, Color};
+use crate::gm::{Rect, Color, Size, Point};
+
+use crate::ui::input::touch::{MouseButton, ButtonState};
 
 pub struct GLWrapper;
+
+pub trait Updatable {
+    fn new() -> Self;
+    fn init(&mut self);
+    fn set_size(&mut self, size: Size);
+    fn on_cursor_moved(&mut self, position: Point);
+    fn on_mouse_key_pressed(&mut self, button: MouseButton, state: ButtonState);
+    fn update(&mut self);
+}
 
 impl GLWrapper {
 
