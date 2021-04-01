@@ -1,5 +1,5 @@
 [package]
-name = "untitled"
+name = "test_engine"
 version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2018"
