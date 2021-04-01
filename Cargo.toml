@@ -11,8 +11,8 @@ crate-type = ["staticlib"]
 [[bin]]
 name = "test_engine"
 
+[target.'cfg(any(target_os="macos", target_os="windows", target_os="linux"))'.dependencies]
 
-[dependencies]
 gl = "0.14.0"
 glfw = "0.41.0"
 rand = "0.8.3"
