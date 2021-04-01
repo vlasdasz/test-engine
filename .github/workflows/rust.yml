@@ -10,19 +10,28 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-    job1:
+
+    linux:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - name: Build
+        - name: linux
           run: |
             sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev
             cargo build --verbose
 
-    job2:
-      runs-on: ubuntu-latest
+    macos:
+      runs-on: macos-latest
       steps:
         - uses: actions/checkout@v2
-        - name: Build2
+        - name: macos
+          run: |
+            cargo build --verbose
+
+    windows:
+      runs-on: windows-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: windows
           run: |
             cargo build --verbose
