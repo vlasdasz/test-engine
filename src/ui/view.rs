@@ -22,6 +22,7 @@ pub trait View: AsAny + HasWeakSelf {
     fn touch_enabled(&self) -> bool;
     fn enable_touch(&mut self);
 
+    fn frame(&self) -> &Rect;
     fn set_frame(&mut self, frame: Rect);
 
     fn absolute_frame(&self) -> &Rect;
@@ -31,6 +32,9 @@ pub trait View: AsAny + HasWeakSelf {
     fn set_superview(&mut self, superview: DynWeak<dyn View>);
 
     fn subviews(&self) -> &[Shared<dyn View>];
+
+    fn add_subview(&mut self, view: Shared<dyn View>);
+    fn remove_all_subviews(&mut self);
 
     fn check_touch(&self, touch: &mut Touch);
 
@@ -56,15 +60,6 @@ impl ViewBase {
         &self._frame
     }
 
-    pub fn add_subview(&mut self, view: Shared<dyn View>) {
-        {
-            let mut mut_ref = view.try_borrow_mut().unwrap();
-            mut_ref.set_superview(Some(self._weak.clone()));
-            mut_ref.setup();
-        }
-        self._subviews.push(view)
-    }
-
     pub fn make_subview(&mut self, make: fn (&mut ViewBase) -> ()) {
         let view = ViewBase::new_shared();
         make(&mut view.try_borrow_mut().unwrap());
@@ -84,6 +79,8 @@ impl View for ViewBase {
 
     fn touch_enabled (&self) ->  bool  {  self._touch_enabled  }
     fn enable_touch(&mut self) { self._touch_enabled = true }
+
+    fn frame(&self) -> &Rect { &self._frame }
 
     fn set_frame(&mut self, frame: Rect)  {
         self._frame = frame
@@ -105,6 +102,19 @@ impl View for ViewBase {
 
     fn superview(&self) -> DynWeak<dyn View> {
         self._superview.clone()
+    }
+
+    fn add_subview(&mut self, view: Shared<dyn View>) {
+        {
+            let mut mut_ref = view.try_borrow_mut().unwrap();
+            mut_ref.set_superview(Some(self._weak.clone()));
+            mut_ref.setup();
+        }
+        self._subviews.push(view)
+    }
+
+    fn remove_all_subviews(&mut self) {
+        self._subviews.clear()
     }
 
     fn set_superview(&mut self, superview: DynWeak<dyn View>) {

@@ -25,8 +25,6 @@ impl Image {
 
     pub fn load(path: &PathBuf) -> Image {
 
-        log!(path);
-
         unsafe {
 
             let mut width: c_int = -1;

@@ -1,6 +1,6 @@
 use crate::gm::{Size, Rect, Color, Point};
 use crate::te::{TEUIDrawer, Assets};
-use crate::ui::{ViewBase, ImageView};
+use crate::ui::{ViewBase, ImageView, Label};
 use crate::ui::view::View;
 use crate::gl_wrapper::gl_drawer::{Updatable, MouseButton, ButtonState};
 use crate::ui::input::Touch;
@@ -37,10 +37,16 @@ impl Updatable for Screen {
 
     fn init(&mut self) {
 
+        let mut label = Label::new();
+        label.font = self.ui_drawer.assets.fonts.default.clone();
+        label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadag4ka");
+
+        self.root_view.borrow_mut().add_subview(make_shared(label));
+
         let mut image_view = ImageView::new();
 
         image_view.image = self.ui_drawer.assets.images.cat;
-        image_view.set_frame(Rect::make(500.0, 10.0, 200.0, 200.0));
+        image_view.set_frame(Rect::make(10.0, 100.0, 200.0, 200.0));
         self.root_view.borrow_mut().add_subview(make_shared(image_view));
 
         self.root_view.borrow_mut().make_subview(|view|{

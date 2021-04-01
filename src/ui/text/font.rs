@@ -51,6 +51,7 @@ unsafe fn render_glyph(face: FT_Face, symbol: char, ft_lib: FT_Library) -> Glyph
     glyph
 }
 
+#[derive(Debug, Clone)]
 pub struct Font {
 
     pub size: u32,
@@ -61,6 +62,11 @@ pub struct Font {
 }
 
 impl Font {
+
+    pub fn blank() -> Font {
+        Font { size: 0, height: 0.0, baseline_shift: 0.0, glyphs: vec![] }
+    }
+
     pub fn new(path: &PathBuf, size: u32) -> Option<Font> {
 
         guard!(let Ok(file) = File::open(path) else {

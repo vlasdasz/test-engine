@@ -56,8 +56,6 @@ impl Buffer {
         config.set_pointers();
         GL!(BindVertexArray, 0);
 
-        log!("New buffer");
-
         Buffer {
             config,
             vertex_data,
@@ -98,10 +96,10 @@ impl Buffer {
 
 impl Drop for Buffer {
     fn drop(&mut self) {
-        // GL!(DeleteBuffers, 1, &self.vertex_buffer_object);
-        // if self.index_buffer_object != u32::MAX {
-        //     GL!(DeleteBuffers, 1, &self.index_buffer_object);
-        // }
-        // GL!(DeleteVertexArrays, 1, &self.vertex_array_object);
+        GL!(DeleteBuffers, 1, &self.vertex_buffer_object);
+        if self.index_buffer_object != u32::MAX {
+            GL!(DeleteBuffers, 1, &self.index_buffer_object);
+        }
+        GL!(DeleteVertexArrays, 1, &self.vertex_array_object);
     }
 }

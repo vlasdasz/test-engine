@@ -2,7 +2,7 @@
 use crate::gm::{Point, Size};
 use crate::image::Image;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Glyph {
     pub ch: char,
     pub image: Image,

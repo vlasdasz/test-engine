@@ -20,11 +20,11 @@ impl AsAny for ImageView {
 impl HasWeakSelf for ImageView {
 
     fn new() -> Self {
-        ImageView { image: Image::new(), base: ViewBase::new(), _weak: MutWeak::new() }
+        Self { image: Image::new(), base: ViewBase::new(), _weak: MutWeak::new() }
     }
 
     fn new_shared() -> Shared<Self> {
-        let result = make_shared(ImageView::new());
+        let result = make_shared(Self::new());
         result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
         result
     }
@@ -41,15 +41,21 @@ impl View for ImageView {
     fn touch_enabled(&self) -> bool { self.base.touch_enabled() }
     fn enable_touch(&mut self) { self.base.enable_touch() }
 
+    fn frame(&self) -> &Rect { self.base.frame() }
     fn set_frame(&mut self, frame: Rect) { self.base.set_frame(frame) }
 
     fn absolute_frame(&self) -> &Rect { self.base.absolute_frame() }
     fn calculate_absolute_frame(&mut self) { self.base.calculate_absolute_frame() }
 
     fn superview(&self) -> DynWeak<dyn View> { self.base.superview() }
+
+    fn add_subview(&mut self, view: Shared<dyn View>) { self.base.add_subview(view) }
+
     fn set_superview(&mut self, superview: DynWeak<dyn View>) { self.base.set_superview(superview) }
 
     fn subviews(&self) -> &[Shared<dyn View>] { self.base.subviews() }
+
+    fn remove_all_subviews(&mut self) {  self.base.remove_all_subviews() }
 
     fn check_touch(&self, touch: &mut Touch) { self.base.check_touch(touch) }
 }

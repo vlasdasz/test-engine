@@ -27,7 +27,7 @@ impl GLWrapper {
         GL!(Disable, gl::DEPTH_TEST)
     }
 
-    pub fn set_viewport(window_height: f32, scale: f32, rect: &Rect) {
+    pub fn set_viewport(window_height: f32, scale: &'static f32, rect: &Rect) {
         GL!(Viewport, (rect.origin.x * scale) as i32,
                       ((window_height - rect.origin.y - rect.size.height) * scale) as i32,
                       (rect.size.width * scale) as i32,

@@ -23,6 +23,10 @@ impl Rect {
 
 impl Rect {
 
+    pub fn max_x(&self) -> f32 {
+        self.origin.x + self.size.width
+    }
+
     pub fn contains(&self, point: &Point) -> bool {
         point.x >= self.origin.x                   &&
         point.y >= self.origin.y                   &&
