@@ -43,8 +43,8 @@ impl Image {
 
             check_gl_error!();
 
-            if width == -1 || height == -1 {
-                panic!(format!("Failed to load image: {:?}", path));
+            if data.is_null() || width == -1 || height == -1 {
+                panic!("Failed to load image: {:?}", path);
             }
 
             let image = Image::from(
