@@ -1,7 +1,7 @@
 
 // void* data, float width, float height, uint8_t channels
 
-use std::ffi::c_void;
+use std::ffi::{c_void, CString};
 use crate::gm::Size;
 use crate::gl_wrapper::{TextureLoader, GLWrapper};
 use std::path::PathBuf;
@@ -33,8 +33,10 @@ impl Image {
             let mut height: c_int = -1;
             let mut channels: c_int = -1;
 
+            let c_path = CString::new(path.to_str().unwrap()).expect("CString::new failed");
+
             let data = SOIL_load_image(
-                path.to_str().unwrap().as_ptr() as *const i8,
+                c_path.as_ptr() as *const i8,
                 &mut width,
                 &mut height,
                 &mut channels,
