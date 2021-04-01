@@ -16,6 +16,10 @@ use crate::gm::Size;
 use crate::te::Screen;
 use crate::gl_wrapper::GLDrawer;
 
+fn start() {
+
+}
+
 
 fn main() {
 
