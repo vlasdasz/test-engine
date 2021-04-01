@@ -17,4 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: cargo build --verbose
+      run: |
+        sudo apt-get install xorg-dev libglu1-mesa-dev
+        cargo build --verbose
