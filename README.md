@@ -2,11 +2,19 @@
 
 ### Supported platforms:
 
-![Mac](https://github.com/vladasz/rust_sand/actions/workflows/mac.yml/badge.svg)
-![Mac](https://github.com/vladasz/rust_sand/actions/workflows/linux.yml/badge.svg)
-![Mac](https://github.com/vladasz/rust_sand/actions/workflows/windows.yml/badge.svg)
+[MAC1]: https://github.com/vladasz/rust_sand/actions/workflows/mac.yml/badge.svg
+[LIN1]: https://github.com/vladasz/rust_sand/actions/workflows/linux.yml/badge.svg
+[WIN1]: https://github.com/vladasz/rust_sand/actions/workflows/windows.yml/badge.svg
 
-[TR]: https://travis-ci.com/VladasZ/rust_sand
+[LMAC]: https://github.com/VladasZ/rust_sand/actions/workflows/mac.yml
+[LLIN]: https://github.com/VladasZ/rust_sand/actions/workflows/linux.yml
+[LWIN]: https://github.com/VladasZ/rust_sand/actions/workflows/windows.yml
+
+
+[![MAC][MAC1]][LMAC]
+[![Lin][LIN1]][LLIN]
+[![Win][WIN1]][LWIN]
+
 
 My attempt to create a cross platform, OpenGL based game engine.
 
