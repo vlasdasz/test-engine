@@ -27,6 +27,8 @@ pub extern fn rust_greeting(to: *const c_char) -> *mut c_char {
     };
 
     log!("KOK!");
+    log!("KOKOSOK!");
+    log!("KOKOSOKSOSOK!");
 
     CString::new("Hello ".to_owned() + recipient).unwrap().into_raw()
 }

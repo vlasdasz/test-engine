@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D10E740626172374005130DE /* libtest_engine_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D10E740526172374005130DE /* libtest_engine_lib.a */; };
 		D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1411E8A2617166800F3F18B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
 		D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D10E740526172374005130DE /* libtest_engine_lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine_lib.a; path = "../../../target/x86_64-apple-ios/debug/libtest_engine_lib.a"; sourceTree = "<group>"; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1411E7D2617166700F3F18B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D1411E7E2617166700F3F18B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -21,6 +23,7 @@
 		D1411E8C2617166800F3F18B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D1411E8E2617166800F3F18B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D1411E8F2617166800F3F18B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D14901F72617215B0044E630 /* test_engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = test_engine.h; path = ../../../src/test_engine.h; sourceTree = "<group>"; };
 		D17CC3E42617174D00F55C2E /* TestEngine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestEngine.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -29,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D10E740626172374005130DE /* libtest_engine_lib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +59,9 @@
 			isa = PBXGroup;
 			children = (
 				D17CC3E42617174D00F55C2E /* TestEngine.entitlements */,
+				D14901F72617215B0044E630 /* test_engine.h */,
 				D1411E7D2617166700F3F18B /* AppDelegate.h */,
+				D10E740526172374005130DE /* libtest_engine_lib.a */,
 				D1411E7E2617166700F3F18B /* AppDelegate.m */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
@@ -72,6 +78,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D1411E932617166800F3F18B /* Build configuration list for PBXNativeTarget "TestEngine" */;
 			buildPhases = (
+				D101F777261724C1002F98E1 /* Cargo */,
 				D1411E762617166700F3F18B /* Sources */,
 				D1411E772617166700F3F18B /* Frameworks */,
 				D1411E782617166700F3F18B /* Resources */,
@@ -127,6 +134,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D101F777261724C1002F98E1 /* Cargo */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Cargo;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pwd\n/Users/vladas/.cargo/bin/cargo lipo --manifest-path ../../Cargo.toml\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D1411E762617166700F3F18B /* Sources */ = {
@@ -272,12 +300,14 @@
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2545JX4S8U;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
 				INFOPLIST_FILE = TestEngine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../target/universal/debug\"/**";
 				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -293,12 +323,14 @@
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2545JX4S8U;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
 				INFOPLIST_FILE = TestEngine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../target/universal/debug\"/**";
 				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;

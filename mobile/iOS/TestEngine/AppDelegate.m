@@ -6,8 +6,8 @@
 //
 
 #import <GLKit/GLKit.h>
-
 #import "AppDelegate.h"
+#include "test_engine.h"
 
 @interface Controller : GLKViewController
 
@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setup];
-
+    rust_greeting("KOK!");
 }
 
 - (void)update {
