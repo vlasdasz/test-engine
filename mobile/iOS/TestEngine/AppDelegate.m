@@ -22,7 +22,7 @@
 }
 
 - (void)update {
-
+    clear_with_random_color();
 }
 
 - (void)setup {

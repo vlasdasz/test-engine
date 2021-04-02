@@ -15,8 +15,15 @@ mod ui;
 mod image;
 #[macro_use] mod gl_wrapper;
 
-use crate::gm::Size;
+use crate::gm::*;
 use crate::te::Screen;
+use crate::gl_wrapper::GLWrapper;
+
+#[no_mangle]
+pub extern fn clear_with_random_color() {
+    GLWrapper::set_clear_color(Color::random());
+    GLWrapper::clear();
+}
 
 #[no_mangle]
 pub extern fn rust_greeting(to: *const c_char) -> *mut c_char {
