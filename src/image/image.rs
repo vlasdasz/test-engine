@@ -5,6 +5,7 @@ use std::ffi::{c_void, CString};
 use crate::gm::Size;
 use crate::gl_wrapper::{TextureLoader, GLWrapper};
 use std::path::PathBuf;
+#[cfg(not(target_os="ios"))]
 use soil2::{SOIL_load_image, SOIL_free_image_data};
 use std::os::raw::c_int;
 
@@ -24,6 +25,18 @@ impl Image {
     }
 
     pub fn load(path: &PathBuf) -> Image {
+        cfg_if::cfg_if! {
+            if #[cfg(target_os ="ios")] {
+                Image { size: Size::new(), channels: 0, gl_handle: 0 }
+            }
+            else {
+                Image::load_soil(path)
+            }
+        }
+    }
+
+    #[cfg(not(target_os="ios"))]
+    pub fn load_soil(path: &PathBuf) -> Image {
 
         unsafe {
 

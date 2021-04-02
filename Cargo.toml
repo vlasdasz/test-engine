@@ -22,7 +22,6 @@ num-traits = "0.2.14"
 
 [target.'cfg(not(target_os="ios"))'.dependencies]
 glfw = "0.41.0"
-freetype-sys = "0.14.0"
 
 soil2 = { git = "https://github.com/VladasZ/soil2",  branch = 'main' }
  

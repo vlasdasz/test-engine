@@ -1,8 +1,7 @@
 use crate::gl_wrapper::{GLLoader, GLWrapper};
 use crate::gm::{Color, Size, Point};
 
-use glfw::{Action, Context, Window, WindowEvent};
-use crate::gl_wrapper::gl_drawer::MouseButton::Undefined;
+use glfw::{Context, Window, WindowEvent};
 use crate::ui::input::touch::{MouseButton, ButtonState};
 use crate::gl_wrapper::gl_wrapper::Updatable;
 
