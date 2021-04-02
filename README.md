@@ -1,6 +1,5 @@
 # TestEngine
 
----
 ## Supported platforms:
 
 [MAC1]: https://github.com/vladasz/rust_sand/actions/workflows/mac.yml/badge.svg
@@ -15,13 +14,13 @@
 [LIOSS]: https://github.com/VladasZ/rust_sand/actions/workflows/ios_sim.yml
 [LIOSD]: https://github.com/VladasZ/rust_sand/actions/workflows/ios_dev.yml
 
-###Desktop:
+Desktop:
 
 [![MAC][MAC1]][LMAC]
 [![Lin][LIN1]][LLIN]
 [![Win][WIN1]][LWIN]
 
-###Mobile:
+Mobile:
 
 [![IOSS][IOSS1]][LIOSS]
 
