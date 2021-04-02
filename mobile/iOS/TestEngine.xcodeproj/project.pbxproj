@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D10E740626172374005130DE /* libtest_engine_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D10E740526172374005130DE /* libtest_engine_lib.a */; };
+		D10254132617379500C197BD /* libtest_engine_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D10254122617379500C197BD /* libtest_engine_lib.a */; };
 		D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1411E8A2617166800F3F18B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
 		D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D10E740526172374005130DE /* libtest_engine_lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine_lib.a; path = "../../../target/x86_64-apple-ios/debug/libtest_engine_lib.a"; sourceTree = "<group>"; };
+		D10254122617379500C197BD /* libtest_engine_lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine_lib.a; path = ../../../target/universal/debug/libtest_engine_lib.a; sourceTree = "<group>"; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1411E7D2617166700F3F18B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D1411E7E2617166700F3F18B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D10E740626172374005130DE /* libtest_engine_lib.a in Frameworks */,
+				D10254132617379500C197BD /* libtest_engine_lib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,7 @@
 				D17CC3E42617174D00F55C2E /* TestEngine.entitlements */,
 				D14901F72617215B0044E630 /* test_engine.h */,
 				D1411E7D2617166700F3F18B /* AppDelegate.h */,
-				D10E740526172374005130DE /* libtest_engine_lib.a */,
+				D10254122617379500C197BD /* libtest_engine_lib.a */,
 				D1411E7E2617166700F3F18B /* AppDelegate.m */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
