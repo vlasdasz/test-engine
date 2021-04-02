@@ -14,5 +14,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build
+      - name: Mac
         run: cargo build --verbose
