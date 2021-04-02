@@ -21,4 +21,4 @@ jobs:
           cargo lipo
           cd mobile/iOS
           xcodebuild -showsdks
-          xcodebuild -sdk iphoneos -scheme TestEngine build
+          xcodebuild -sdk iphoneos -scheme TestEngine build -allowProvisioningUpdates

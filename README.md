@@ -1,6 +1,7 @@
 # TestEngine
 
-### Supported platforms:
+---
+## Supported platforms:
 
 [MAC1]: https://github.com/vladasz/rust_sand/actions/workflows/mac.yml/badge.svg
 [LIN1]: https://github.com/vladasz/rust_sand/actions/workflows/linux.yml/badge.svg
@@ -14,14 +15,18 @@
 [LIOSS]: https://github.com/VladasZ/rust_sand/actions/workflows/ios_sim.yml
 [LIOSD]: https://github.com/VladasZ/rust_sand/actions/workflows/ios_dev.yml
 
-####Desktop:
+###Desktop:
+
 [![MAC][MAC1]][LMAC]
 [![Lin][LIN1]][LLIN]
 [![Win][WIN1]][LWIN]
-####Mobile:
+
+###Mobile:
+
 [![IOSS][IOSS1]][LIOSS]
 [![IOSD][IOSD1]][LIOSD]
 
+---
 
 My attempt to create a cross platform, OpenGL based game engine using Rust.
 
