@@ -24,7 +24,7 @@
 ###Mobile:
 
 [![IOSS][IOSS1]][LIOSS]
-[![IOSD][IOSD1]][LIOSD]
+
 
 ---
 
