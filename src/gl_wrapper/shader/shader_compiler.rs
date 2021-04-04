@@ -11,7 +11,6 @@ use crate::gl_wrapper::gl_info::GLInfo;
 
 use crate::utils::regex::*;
 use std::collections::HashMap;
-use crate::te::paths::PathBufExt;
 
 pub struct ShaderCompiler {
     gl_info: GLInfo
@@ -71,7 +70,7 @@ impl ShaderCompiler {
         let mut files: HashMap<String, String> = HashMap::new();
         for include in includes {
             let file_name = find_match(&include, QUOTES_QUERY).replace("\"", "");
-            let file_path = paths::shaders::include().pushing(file_name);
+            let file_path = paths::shaders::include().join(file_name);
             let include_code = fs::read_to_string(file_path).unwrap();
             files.insert(include, include_code);
         }

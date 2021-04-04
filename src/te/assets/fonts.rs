@@ -1,6 +1,5 @@
 use crate::ui::Font;
 use crate::te::paths;
-use crate::te::paths::PathBufExt;
 
 pub struct Fonts {
     pub default: Font
@@ -8,6 +7,6 @@ pub struct Fonts {
 
 impl Fonts {
     pub fn init() -> Fonts {
-        Fonts { default: Font::new(&paths::fonts().pushing("SF.otf"), 24).unwrap() }
+        Fonts { default: Font::new(&paths::fonts().join("SF.otf"), 24).unwrap() }
     }
 }

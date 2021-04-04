@@ -5,13 +5,17 @@ authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2018"
 
 [lib]
-name = "test_engine_lib"
+name = "test_engine"
 crate-type = ["staticlib"]
 
 [[bin]]
 name = "test_engine"
 
+[build-dependencies]
+home = "0.5.3"
+
 [dependencies]
+git = "0.3.0"
 gl = "0.14.0"
 rand = "0.8.3"
 regex = "1.4.5"
@@ -22,6 +26,7 @@ num-traits = "0.2.14"
 
 [target.'cfg(not(target_os="ios"))'.dependencies]
 glfw = "0.41.0"
-
 soil2 = { git = "https://github.com/VladasZ/soil2",  branch = 'main' }
- 
+
+[target.'cfg(target_os="ios")'.dependencies]
+gles30 = "0.5.2"
