@@ -47,7 +47,7 @@ impl Image {
             let c_path = CString::new(path.to_str().unwrap()).expect("CString::new failed");
 
             let data = SOIL_load_image(
-                c_path.as_ptr() as *const i8,
+                c_path.as_ptr() as *const u8,
                 &mut width,
                 &mut height,
                 &mut channels,

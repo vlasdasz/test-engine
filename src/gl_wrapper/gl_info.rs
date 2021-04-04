@@ -21,7 +21,7 @@ impl GLInfo {
         use std::ffi::CStr;
         let c_str: &CStr = unsafe {
             let full_gl_version = gl::GetString(id);
-            CStr::from_ptr(full_gl_version as *const i8)
+            CStr::from_ptr(full_gl_version as *const u8)
         };
         c_str.to_str().unwrap().to_string()
     }
