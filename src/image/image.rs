@@ -46,8 +46,18 @@ impl Image {
 
             let c_path = CString::new(path.to_str().unwrap()).expect("CString::new failed");
 
+            cfg_if::cfg_if! {
+                if #[cfg(all(target_os = "linux", target_arch = "arm"))] {
+                    type CPath = *const u8;
+                }
+                else {
+                    type CPath = *const i8;
+                }
+            };
+
+
             let data = SOIL_load_image(
-                c_path.as_ptr() as *const u8,
+                c_path.as_ptr() as CPath,
                 &mut width,
                 &mut height,
                 &mut channels,

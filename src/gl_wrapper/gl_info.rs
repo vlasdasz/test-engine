@@ -21,7 +21,15 @@ impl GLInfo {
         use std::ffi::CStr;
         let c_str: &CStr = unsafe {
             let full_gl_version = gl::GetString(id);
-            CStr::from_ptr(full_gl_version as *const u8)
+            cfg_if::cfg_if! {
+                if #[cfg(all(target_os = "linux", target_arch = "arm"))] {
+                    type CPath = *const u8;
+                }
+                else {
+                    type CPath = *const i8;
+                }
+            };
+            CStr::from_ptr(full_gl_version as CPath)
         };
         c_str.to_str().unwrap().to_string()
     }
