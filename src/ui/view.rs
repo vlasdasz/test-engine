@@ -1,9 +1,9 @@
 use crate::gm::{Rect, Color};
 use crate::ui::input::Touch;
-pub use crate::utils::{Shared, make_shared, MutWeak, HasWeakSelf};
 use std::rc::{Weak, Rc};
-use crate::utils::DynWeak;
 use std::any::Any;
+use tools::refs::{DynWeak, Shared, MutWeak, make_shared};
+use tools::weak_self::HasWeakSelf;
 
 pub enum ViewType {
     Plain,
@@ -14,7 +14,7 @@ pub trait AsAny {
     fn as_any(&self) -> &dyn Any;
 }
 
-pub trait View: AsAny + HasWeakSelf {
+pub trait View: AsAny +  {
 
     fn color(&self) -> &Color;
     fn set_color(&mut self, color: Color);

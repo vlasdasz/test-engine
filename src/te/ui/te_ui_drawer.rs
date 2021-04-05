@@ -1,10 +1,11 @@
 use crate::te::Assets;
 use crate::gm::{Size, Rect, Color};
 use crate::gl_wrapper::GLWrapper;
-use crate::utils::{Shared, Platform};
 use crate::image::Image;
 use crate::ui::view::View;
 use crate::ui::ImageView;
+use crate::tools::platform::Platform;
+use tools::refs::Shared;
 
 pub struct TEUIDrawer {
     pub assets: Assets,

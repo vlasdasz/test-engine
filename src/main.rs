@@ -3,7 +3,7 @@
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
 
-#[macro_use] mod utils;
+#[macro_use] extern crate tools;
 #[macro_use] extern crate guard;
 
 mod gm;

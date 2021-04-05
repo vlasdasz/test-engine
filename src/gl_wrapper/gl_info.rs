@@ -1,7 +1,7 @@
 
 extern crate gl;
 
-use crate::utils::regex::find_match;
+use tools::regex::find_match;
 
 #[derive(Debug)]
 pub struct GLInfo {

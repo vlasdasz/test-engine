@@ -1,7 +1,7 @@
 
 use crate::gm::Rect;
-use crate::utils::ArrayView;
 use crate::gl_wrapper::{Buffer, BufferConfig};
+use tools::array_view::ArrayView;
 
 const RECT: Rect = Rect::make(-1.0, -1.0, 2.0, 2.0);
 

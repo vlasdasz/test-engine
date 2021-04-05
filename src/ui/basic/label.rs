@@ -1,10 +1,11 @@
 use crate::ui::{ViewBase, Font, ImageView};
-use crate::utils::{MutWeak, HasWeakSelf, Shared, make_shared, DynWeak};
 use std::rc::Rc;
 use crate::ui::view::{View, AsAny};
 use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
+use tools::refs::{MutWeak, make_shared, Shared, DynWeak};
+use tools::weak_self::HasWeakSelf;
 
 pub struct Label {
     pub font: Font,

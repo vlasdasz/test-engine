@@ -9,8 +9,8 @@ use crate::te::paths;
 use crate::gl_wrapper::shader::Shader;
 use crate::gl_wrapper::gl_info::GLInfo;
 
-use crate::utils::regex::*;
 use std::collections::HashMap;
+use tools::regex::{find_matches, find_match};
 
 pub struct ShaderCompiler {
     gl_info: GLInfo

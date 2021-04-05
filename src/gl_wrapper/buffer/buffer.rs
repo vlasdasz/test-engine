@@ -1,6 +1,6 @@
 use std::ffi::c_void;
-use crate::utils::ArrayView;
 use crate::gl_wrapper::BufferConfig;
+use tools::array_view::ArrayView;
 
 #[derive(Debug)]
 pub struct Buffer {

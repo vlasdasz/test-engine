@@ -4,9 +4,9 @@ use crate::ui::{ViewBase, ImageView, Label};
 use crate::ui::view::View;
 use crate::ui::input::Touch;
 use crate::ui::input::touch::{Event, MouseButton, ButtonState};
-use crate::utils::{Shared, make_shared};
-use crate::utils::weak_self::HasWeakSelf;
 use crate::gl_wrapper::gl_wrapper::Updatable;
+use tools::refs::{Shared, make_shared};
+use crate::tools::weak_self::HasWeakSelf;
 
 pub struct Screen {
     cursor_position: Point,
