@@ -52,18 +52,26 @@ def clone(rep, destination = ""):
 clone("tools", tools_path)
 
 
+def link_tools():
+    try:
+        os.symlink(tools_path, "./tools")
+    except FileExistsError:
+        print("exists")
+
 def linux_setup():
     print("Lin setup")
     run("sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
-    run("ln -sfn " + tools_path)
+    link_tools()
+
 
 def windows_setup():
     print("Win setup")
+    link_tools()
 
 
 def mac_setup():
     print("Mac setup")
-    run("ln -sfn " + tools_path)
+    link_tools()
 
 if is_windows:
     windows_setup()
