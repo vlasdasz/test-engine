@@ -15,4 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Mac
-        run: cargo build --verbose
+        run: |
+          ln -s ~/.rdeps/tools
+          cargo build --verbose

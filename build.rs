@@ -66,7 +66,18 @@ fn pwd() {
     println!("cargo:warning=pwd {}", output_to_str(output))
 }
 
+fn link_deps() {
+    let output = Command::new("ln")
+        .arg("-s")
+        .arg("~/.rdeps/tools")
+        .output()
+        .expect("ln command failed");
+    println!("cargo:warning=pwd {}", output_to_str(output))
+}
+
 fn main() {
+
+    link_deps();
 
     pwd();
 
@@ -84,5 +95,8 @@ fn main() {
     else {
         clone(&tools_remote, &tools)
     }
+
+
+    println!("cargo:rustc-link-lib=framework=OpenGLES");
 
 }

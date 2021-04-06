@@ -15,7 +15,7 @@ name = "test_engine"
 dirs = "3.0.1"
 
 [dependencies]
-tools = { path = "../../../.rdeps/tools" }
+tools = { path = "tools" }
 
 git = "0.3.0"
 gl = "0.14.0"
@@ -31,4 +31,7 @@ glfw = "0.41.0"
 soil2 = { git = "https://github.com/VladasZ/soil2",  branch = 'main' }
 
 [target.'cfg(target_os="ios")'.dependencies]
-gles30 = "0.5.2"
+gles31-sys = { path = "/Users/vladas/.rdeps/gles31-sys" }
+
+[[example]]
+name = "gles_load"

@@ -7,15 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D10254132617379500C197BD /* libtest_engine_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D10254122617379500C197BD /* libtest_engine_lib.a */; };
 		D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1411E8A2617166800F3F18B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
 		D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
 		D1411E902617166800F3F18B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E8F2617166800F3F18B /* main.m */; };
+		D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC20261C455B00B81CFB /* libSystem.tbd */; };
+		D180CC29261C457000B81CFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC23261C457000B81CFB /* SystemConfiguration.framework */; };
+		D180CC2A261C457000B81CFB /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC24261C457000B81CFB /* libSystem.B.tbd */; };
+		D180CC2B261C457000B81CFB /* libswiftSystem_Foundation.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC25261C457000B81CFB /* libswiftSystem_Foundation.tbd */; };
+		D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC26261C457000B81CFB /* libswiftSystem.tbd */; };
+		D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
+		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
+		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; };
+		D1EFD4ED261B6B0600979776 /* libtest_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1EFD4EC261B6B0600979776 /* libtest_engine.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D10254122617379500C197BD /* libtest_engine_lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine_lib.a; path = ../../../target/universal/debug/libtest_engine_lib.a; sourceTree = "<group>"; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1411E7D2617166700F3F18B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D1411E7E2617166700F3F18B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -25,6 +32,15 @@
 		D1411E8F2617166800F3F18B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D14901F72617215B0044E630 /* test_engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = test_engine.h; path = ../../../src/test_engine.h; sourceTree = "<group>"; };
 		D17CC3E42617174D00F55C2E /* TestEngine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestEngine.entitlements; sourceTree = "<group>"; };
+		D180CC20261C455B00B81CFB /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
+		D180CC23261C457000B81CFB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D180CC24261C457000B81CFB /* libSystem.B.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B.tbd; path = usr/lib/libSystem.B.tbd; sourceTree = SDKROOT; };
+		D180CC25261C457000B81CFB /* libswiftSystem_Foundation.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftSystem_Foundation.tbd; path = usr/lib/swift/libswiftSystem_Foundation.tbd; sourceTree = SDKROOT; };
+		D180CC26261C457000B81CFB /* libswiftSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftSystem.tbd; path = usr/lib/swift/libswiftSystem.tbd; sourceTree = SDKROOT; };
+		D180CC27261C457000B81CFB /* libSystem_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem_asan.tbd; path = usr/lib/libSystem_asan.tbd; sourceTree = SDKROOT; };
+		D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B_asan.tbd; path = usr/lib/libSystem.B_asan.tbd; sourceTree = SDKROOT; };
+		D1D524F3261BB078005C1426 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		D1EFD4EC261B6B0600979776 /* libtest_engine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine.a; path = ../../../target/universal/debug/libtest_engine.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,7 +48,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D10254132617379500C197BD /* libtest_engine_lib.a in Frameworks */,
+				D180CC29261C457000B81CFB /* SystemConfiguration.framework in Frameworks */,
+				D180CC2A261C457000B81CFB /* libSystem.B.tbd in Frameworks */,
+				D180CC2B261C457000B81CFB /* libswiftSystem_Foundation.tbd in Frameworks */,
+				D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */,
+				D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */,
+				D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */,
+				D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */,
+				D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */,
+				D1EFD4ED261B6B0600979776 /* libtest_engine.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +68,7 @@
 			children = (
 				D1411E7C2617166700F3F18B /* TestEngine */,
 				D1411E7B2617166700F3F18B /* Products */,
+				D1D524F2261BB078005C1426 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,8 +85,8 @@
 			children = (
 				D17CC3E42617174D00F55C2E /* TestEngine.entitlements */,
 				D14901F72617215B0044E630 /* test_engine.h */,
+				D1EFD4EC261B6B0600979776 /* libtest_engine.a */,
 				D1411E7D2617166700F3F18B /* AppDelegate.h */,
-				D10254122617379500C197BD /* libtest_engine_lib.a */,
 				D1411E7E2617166700F3F18B /* AppDelegate.m */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
@@ -69,6 +94,21 @@
 				D1411E8F2617166800F3F18B /* main.m */,
 			);
 			path = TestEngine;
+			sourceTree = "<group>";
+		};
+		D1D524F2261BB078005C1426 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D180CC25261C457000B81CFB /* libswiftSystem_Foundation.tbd */,
+				D180CC26261C457000B81CFB /* libswiftSystem.tbd */,
+				D180CC27261C457000B81CFB /* libSystem_asan.tbd */,
+				D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */,
+				D180CC24261C457000B81CFB /* libSystem.B.tbd */,
+				D180CC23261C457000B81CFB /* SystemConfiguration.framework */,
+				D180CC20261C455B00B81CFB /* libSystem.tbd */,
+				D1D524F3261BB078005C1426 /* OpenGLES.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -309,7 +349,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../target/universal/debug\"/**";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../target/universal/debug\"/**",
+					"$(SDKROOT)/usr/lib/swift",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -334,7 +377,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../target/universal/debug\"/**";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../target/universal/debug\"/**",
+					"$(SDKROOT)/usr/lib/swift",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";

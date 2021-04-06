@@ -6,6 +6,9 @@
 //
 
 #import <GLKit/GLKit.h>
+
+#include <OpenGLES/ES3/gl.h>
+
 #import "AppDelegate.h"
 #include "test_engine.h"
 
@@ -18,11 +21,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setup];
+    glClearColor(0.5, 1, 0.5, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     rust_greeting("KOK!");
 }
 
 - (void)update {
-    clear_with_random_color();
+   clear_with_random_color();
 }
 
 - (void)setup {
