@@ -15,7 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: linux
-        run: |
-          sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev
-          ln -s ~/.rdeps/tools
-          cargo build --verbose
+        run: python3 build.py

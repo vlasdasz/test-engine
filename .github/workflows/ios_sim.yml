@@ -15,11 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: iOS Simulator
-        run: |
-          ln -s ~/.rdeps/tools
-          rustup target add aarch64-apple-ios x86_64-apple-ios
-          cargo install cargo-lipo
-          cargo lipo
-          cd mobile/iOS
-          xcodebuild -showsdks
-          xcodebuild -sdk iphonesimulator -scheme TestEngine build
+        run: python3 build.py ios

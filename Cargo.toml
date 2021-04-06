@@ -15,7 +15,7 @@ name = "test_engine"
 dirs = "3.0.1"
 
 [dependencies]
-tools = { path = "tools" }
+tools = { path = "/Users/vladas/.rdeps/tools" }
 
 git = "0.3.0"
 gl = "0.14.0"

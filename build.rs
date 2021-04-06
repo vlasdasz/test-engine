@@ -72,31 +72,9 @@ fn link_deps() {
         .arg("~/.rdeps/tools")
         .output()
         .expect("ln command failed");
-    println!("cargo:warning=pwd {}", output_to_str(output))
+    println!("cargo:warning=ln {}", output_to_str(output))
 }
 
 fn main() {
-
-    link_deps();
-
-    pwd();
-
-    let home = home_dir().unwrap();
-    let deps = home.join(".rdeps");
-
-    let tools = deps.join("tools");
-
-    let git_root = PathBuf::from("https://github.com/VladasZ");
-    let tools_remote = git_root.join("tools");
-
-    if tools.exists() {
-        pull(&tools)
-    }
-    else {
-        clone(&tools_remote, &tools)
-    }
-
-
     println!("cargo:rustc-link-lib=framework=OpenGLES");
-
 }
