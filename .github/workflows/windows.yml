@@ -15,5 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: windows
-        run: |
-          cargo build --verbose
+        run: py build.py
