@@ -26,8 +26,10 @@ def _get_home():
     
 
 home = _get_home()
+deps_path = home + "/.rdeps/"
 
-tools_path = home + "/.rdeps/tools/"
+tools_path = deps_path + "tools/"
+gles_path = deps_path + "gles31-sys/"
 
 def copy(src, dst):
     print("Copying:\n" + src + " to:\n" + dst)
@@ -50,28 +52,29 @@ def clone(rep, destination = ""):
 
 
 clone("tools", tools_path)
+clone("gles31-sys", gles_path)
 
 
-def link_tools():
+def link_deps():
     try:
-        os.symlink(tools_path, "./tools")
+        os.symlink(deps_path, "./.rdeps")
     except FileExistsError:
         print("exists")
 
 def linux_setup():
     print("Lin setup")
     run("sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
-    link_tools()
+    link_deps()
 
 
 def windows_setup():
     print("Win setup")
-    link_tools()
+    link_deps()
 
 
 def mac_setup():
     print("Mac setup")
-    link_tools()
+    link_deps()
 
 if is_windows:
     windows_setup()
