@@ -1,4 +1,7 @@
 
+#[cfg(target_os="ios")]
+use gles31_sys::*;
+
 use crate::gm::*;
 
 pub struct Shader {

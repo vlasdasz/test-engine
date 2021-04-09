@@ -1,5 +1,6 @@
 
 #![allow(dead_code)]
+#![allow(unused_unsafe)]
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
 
@@ -22,7 +23,6 @@ fn start() {
 
 
 fn main() {
-
     GLDrawer::
     <Screen>::
     with_size(Size { width: 1000.0, height: 600.0 })

@@ -1,3 +1,7 @@
+
+#[cfg(target_os="ios")]
+use gles31_sys::*;
+
 use std::ffi::c_void;
 use crate::gl_wrapper::BufferConfig;
 use tools::array_view::ArrayView;
@@ -37,20 +41,29 @@ impl Buffer {
         GL!(BindVertexArray, vertex_array_object);
 
         GL!(GenBuffers, 1, &mut vertex_buffer_object);
-        GL!(BindBuffer, gl::ARRAY_BUFFER, vertex_buffer_object);
+        GL!(BindBuffer, GLC!(ARRAY_BUFFER), vertex_buffer_object);
 
-        GL!(BufferData, gl::ARRAY_BUFFER,
-                           (vertex_data.size * std::mem::size_of::<gl::types::GLfloat>()) as isize,
+        cfg_if::cfg_if! {
+            if #[cfg(target_os = "ios")] {
+                type VertexSize = i64;
+            }
+            else {
+                type VertexSize = isize;
+            }
+        };
+
+        GL!(BufferData, GLC!(ARRAY_BUFFER),
+                           (vertex_data.size * std::mem::size_of::<GLT!(GLfloat)>()) as VertexSize,
                            vertex_data.data as *const c_void,
-                           gl::STATIC_DRAW);
+                           GLC!(STATIC_DRAW));
 
         if let Some(indices) = &indices {
             GL!(GenBuffers, 1, &mut index_buffer_object);
-            GL!(BindBuffer, gl::ELEMENT_ARRAY_BUFFER, index_buffer_object);
-            GL!(BufferData, gl::ELEMENT_ARRAY_BUFFER,
-                           (indices.size * std::mem::size_of::<gl::types::GLushort>()) as isize,
+            GL!(BindBuffer, GLC!(ELEMENT_ARRAY_BUFFER), index_buffer_object);
+            GL!(BufferData, GLC!(ELEMENT_ARRAY_BUFFER),
+                           (indices.size * std::mem::size_of::<GLT!(GLushort)>()) as VertexSize,
                            indices.data as *const c_void,
-                           gl::STATIC_DRAW);
+                           GLC!(STATIC_DRAW));
         }
 
         config.set_pointers();
@@ -76,7 +89,7 @@ impl Buffer {
         if let Some(indices) = &self.indices {
             GL!(DrawElements, self.draw_mode,
                               indices.size as i32,
-                              gl::UNSIGNED_SHORT,
+                              GLC!(UNSIGNED_SHORT),
                               0 as *const c_void)
         }
         else {

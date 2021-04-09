@@ -3,8 +3,13 @@
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
 
+#![feature(concat_idents)]
+
 use std::os::raw::{c_char};
 use std::ffi::{CString, CStr};
+
+#[cfg(target_os="ios")]
+use gles31_sys::*;
 
 mod te;
 mod ui;
@@ -17,26 +22,28 @@ use crate::gm::Color;
 #[macro_use] extern crate tools;
 #[macro_use] extern crate guard;
 
-pub const GL_COLOR_BUFFER_BIT: u32 = 16384;
-pub const GL_DEPTH_BUFFER_BIT: u32 = 256;
+// pub const GL_COLOR_BUFFER_BIT: u32 = 16384;
+// pub const GL_DEPTH_BUFFER_BIT: u32 = 256;
+//
+// pub type GLfloat = f32;
+// pub type GLbitfield = ::std::os::raw::c_uint;
+//
+// extern "C" {
+//     pub fn glClearColor(red: GLfloat, green: GLfloat, blue: GLfloat, alpha: GLfloat);
+//     pub fn glClear(mask: GLbitfield);
+// }
 
-pub type GLfloat = f32;
-pub type GLbitfield = ::std::os::raw::c_uint;
-
-extern "C" {
-    pub fn glClearColor(red: GLfloat, green: GLfloat, blue: GLfloat, alpha: GLfloat);
-    pub fn glClear(mask: GLbitfield);
-}
 
 #[no_mangle]
 pub extern fn clear_with_random_color() {
 
     let color = Color::random();
 
-    unsafe {
-        glClearColor(color.r, color.g, color.b, color.a);
-        glClear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
-    }
+    #[cfg(target_os="ios")]
+    log!("ios");
+
+    GL!(ClearColor, color.r, color.g, color.b, color.a);
+    GL!(Clear, GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT));
 
 }
 

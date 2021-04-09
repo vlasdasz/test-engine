@@ -29,8 +29,8 @@ impl<T: Updatable> GLDrawer<T> {
         GLWrapper::set_clear_color(&Color::GRAY);
 
         //GL!(Enable, gl::DEPTH_TEST);
-        GL!(Enable, gl::BLEND);
-        GL!(BlendFunc, gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+        GL!(Enable, GLC!(BLEND));
+        GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
 
         self.drawer.init();
 

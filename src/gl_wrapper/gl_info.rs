@@ -1,4 +1,8 @@
 
+#[cfg(target_os="ios")]
+use gles31_sys::*;
+
+#[cfg(not(target_os="ios"))]
 extern crate gl;
 
 use tools::regex::find_match;
@@ -20,7 +24,7 @@ impl GLInfo {
     fn get_string(id: u32) -> String {
         use std::ffi::CStr;
         let c_str: &CStr = unsafe {
-            let full_gl_version = gl::GetString(id);
+            let full_gl_version = GL!(GetString, id);
             cfg_if::cfg_if! {
                 if #[cfg(all(target_os = "linux", target_arch = "arm"))] {
                     type CPath = *const u8;
@@ -35,7 +39,7 @@ impl GLInfo {
     }
 
     pub fn get() -> GLInfo {
-        let version = GLInfo::get_string(gl::VERSION);
+        let version = GLInfo::get_string(GLC!(VERSION));
         let is_gles = version.contains("ES");
         let gl_version = find_match(&version, GLInfo::GL_QUERY);
         let mut glsl_version = gl_version.clone();

@@ -192,7 +192,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pwd\n~/.cargo/bin/cargo lipo --manifest-path ../../Cargo.toml\n";
+			shellScript = "pwd\n~/.cargo/bin/cargo lipo --manifest-path ../../Cargo.toml --verbose\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -1,4 +1,7 @@
 
+#[cfg(target_os="ios")]
+use gles31_sys::*;
+
 #[derive(Debug)]
 pub struct BufferConfig {
     size: u8,
@@ -32,15 +35,15 @@ impl BufferConfig {
         self.vertex_size
     }
     pub fn set_pointers(&self) {
-        const GLFLOAT_SIZE: u8 = std::mem::size_of::<gl::types::GLfloat>() as u8;
+        const GLFLOAT_SIZE: u8 = std::mem::size_of::<GLT!(GLfloat)>() as u8;
         for i in 0..self.size {
             GL!(EnableVertexAttribArray, i.into());
             GL!(VertexAttribPointer, i.into(),
                                      self.config[i as usize] as i32,
-                                     gl::FLOAT,
-                                     gl::FALSE,
-                                     (self.vertex_size * GLFLOAT_SIZE) as gl::types::GLint,
-                                     (self.stride_for_index(i) * GLFLOAT_SIZE) as *const gl::types::GLvoid);
+                                     GLC!(FLOAT),
+                                     0,
+                                     (self.vertex_size * GLFLOAT_SIZE) as GLT!(GLint),
+                                     (self.stride_for_index(i) * GLFLOAT_SIZE) as *const GLT!(GLvoid));
         }
     }
 }

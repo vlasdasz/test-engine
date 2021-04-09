@@ -1,4 +1,9 @@
 
+#[cfg(target_os="ios")]
+use gles31_sys::*;
+
+use crate::GLC;
+
 use crate::gm::Rect;
 use crate::gl_wrapper::{Buffer, BufferConfig};
 use tools::array_view::ArrayView;
@@ -42,21 +47,21 @@ impl Buffers {
             &BufferConfig::_2,
             ArrayView::from_data(&FULLSCREEN_VERT[0], FULLSCREEN_VERT.len()),
             Some(ArrayView::from_data(&RECT_INDICES[0], RECT_INDICES.len())),
-            gl::TRIANGLE_STRIP
+            GLC!(TRIANGLE_STRIP)
         );
 
         let fullscreen_image = Buffer::new(
             &BufferConfig::_2_2,
             ArrayView::from_data(&IMAGE_VERTICES[0], IMAGE_VERTICES.len()),
             Some(ArrayView::from_data(&RECT_INDICES[0], RECT_INDICES.len())),
-            gl::TRIANGLE_STRIP
+            GLC!(TRIANGLE_STRIP)
         );
 
         let fullscreen_outline = Buffer::new(
             &BufferConfig::_2,
             ArrayView::from_data(&OUTLINE_VERTICES[0], OUTLINE_VERTICES.len()),
             Some(ArrayView::from_data(&INDICES[0], INDICES.len())),
-            gl::LINE_LOOP
+            GLC!(LINE_LOOP)
         );
 
         Buffers {

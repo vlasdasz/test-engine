@@ -1,5 +1,9 @@
 
+#[cfg(not(target_os="ios"))]
 extern crate gl;
+
+#[cfg(target_os="ios")]
+use gles31_sys::*;
 
 use std::fs;
 use std::path::PathBuf;
@@ -36,18 +40,16 @@ impl ShaderCompiler {
 
     fn check_programm_error(path: &PathBuf, program: u32) {
 
-        let mut success: gl::types::GLint = 1;
+        let mut success: GLT!(GLint) = 1;
 
-        unsafe {
-            gl::GetShaderiv(program, gl::COMPILE_STATUS, &mut success);
-            gl::GetError(); //^ returns invalid errors
-        };
+        GL!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
+        GL!(GetError); //^ returns invalid errors
 
         if success != 0 { return; }
 
-        let mut len: gl::types::GLint = 0;
+        let mut len: GLT!(GLint) = 0;
 
-        GL!(GetShaderiv, program, gl::INFO_LOG_LENGTH, &mut len);
+        GL!(GetShaderiv, program, GLC!(INFO_LOG_LENGTH), &mut len);
 
         fn alloc_str(len: usize) -> CString {
             let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
@@ -57,7 +59,7 @@ impl ShaderCompiler {
 
         let error = alloc_str(len as usize);
 
-        GL!(GetShaderInfoLog, program, len, std::ptr::null_mut(), error.as_ptr() as *mut gl::types::GLchar);
+        GL!(GetShaderInfoLog, program, len, std::ptr::null_mut(), error.as_ptr() as *mut GLT!(GLchar));
 
         let error = error.to_string_lossy().into_owned();
         panic!("Failed to compile shader: {:?} error: {}", path, error);
@@ -80,7 +82,7 @@ impl ShaderCompiler {
         code
     }
 
-    fn compile_shader(&self, path: PathBuf, code: String, kind: gl::types::GLenum) -> u32 {
+    fn compile_shader(&self, path: PathBuf, code: String, kind: GLT!(GLenum)) -> u32 {
 
         let code = self.version() + "\n" + &ShaderCompiler::unfold_includes(code);
 
@@ -109,8 +111,8 @@ impl ShaderCompiler {
             panic!("Failed to read shader file: {:?}", frag_path)
         });
 
-        let vert = self.compile_shader(vert_path, vert_code, gl::VERTEX_SHADER);
-        let frag = self.compile_shader(frag_path, frag_code, gl::FRAGMENT_SHADER);
+        let vert = self.compile_shader(vert_path, vert_code, GLC!(VERTEX_SHADER));
+        let frag = self.compile_shader(frag_path, frag_code, GLC!(FRAGMENT_SHADER));
 
         let program = GL!(CreateProgram);
 

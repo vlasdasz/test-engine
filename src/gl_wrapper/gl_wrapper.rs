@@ -1,3 +1,8 @@
+
+
+#[cfg(target_os="ios")]
+use gles31_sys::*;
+
 use crate::gm::{Rect, Color, Size, Point};
 
 use crate::ui::input::touch::{MouseButton, ButtonState};
@@ -19,7 +24,7 @@ impl GLWrapper {
         if id == u32::MAX {
             panic!("Invalid image gl_handle");
         }
-        GL!(BindTexture, gl::TEXTURE_2D, id);
+        GL!(BindTexture, GLC!(TEXTURE_2D), id);
     }
 
     pub fn set_clear_color(color: &Color) {
@@ -27,15 +32,15 @@ impl GLWrapper {
     }
 
     pub fn clear() {
-        GL!(Clear, gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT)
+        GL!(Clear, GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT))
     }
 
     pub fn enable_depth_test() {
-        GL!(Enable, gl::DEPTH_TEST)
+        GL!(Enable, GLC!(DEPTH_TEST))
     }
 
     pub fn disable_depth_test() {
-        GL!(Disable, gl::DEPTH_TEST)
+        GL!(Disable, GLC!(DEPTH_TEST))
     }
 
     pub fn set_viewport(window_height: f32, scale: &'static f32, rect: &Rect) {
