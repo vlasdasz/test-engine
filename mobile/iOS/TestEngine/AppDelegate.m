@@ -21,13 +21,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setup];
-    glClearColor(0.5, 1, 0.5, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    rust_greeting("KOK!");
+    rust_greeting();
+    create_screen();
+    set_screen_size(800, 1000);
 }
 
 - (void)update {
-   clear_with_random_color();
+    update_screen();
 }
 
 - (void)setup {

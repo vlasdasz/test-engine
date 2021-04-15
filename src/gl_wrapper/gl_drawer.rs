@@ -24,11 +24,12 @@ impl<T: Updatable> GLDrawer<T> {
         }
     }
 
+    pub fn update(&mut self) {
+        self.drawer.update();
+    }
+
     pub fn start_main_loop(&mut self) {
 
-        GLWrapper::set_clear_color(&Color::GRAY);
-
-        //GL!(Enable, gl::DEPTH_TEST);
         GL!(Enable, GLC!(BLEND));
         GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
 
@@ -64,9 +65,7 @@ impl<T: Updatable> GLDrawer<T> {
                 }
             }
 
-            GLWrapper::clear();
-
-            self.drawer.update();
+            self.update();
             self.window.swap_buffers();
         }
     }

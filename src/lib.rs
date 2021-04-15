@@ -1,11 +1,15 @@
 
 #![allow(dead_code)]
+#![allow(unused_unsafe)]
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
 
+
+#![feature(new_uninit)]
 #![feature(concat_idents)]
 
-use std::os::raw::{c_char};
+use std::ptr;
+use std::os::raw::{c_char, c_float};
 use std::ffi::{CString, CStr};
 
 #[cfg(target_os="ios")]
@@ -17,55 +21,58 @@ mod gm;
 mod image;
 mod gl_wrapper;
 
-use crate::gm::Color;
+use crate::gm::{Color, Size};
+use crate::te::Screen;
+use crate::gl_wrapper::gl_wrapper::Updatable;
+use std::cell::RefCell;
+use std::borrow::BorrowMut;
+use std::mem::MaybeUninit;
 
 #[macro_use] extern crate tools;
 #[macro_use] extern crate guard;
 
-// pub const GL_COLOR_BUFFER_BIT: u32 = 16384;
-// pub const GL_DEPTH_BUFFER_BIT: u32 = 256;
-//
-// pub type GLfloat = f32;
-// pub type GLbitfield = ::std::os::raw::c_uint;
-//
-// extern "C" {
-//     pub fn glClearColor(red: GLfloat, green: GLfloat, blue: GLfloat, alpha: GLfloat);
-//     pub fn glClear(mask: GLbitfield);
-// }
+static mut SCREEN: *mut Screen = ptr::null_mut();
 
+#[no_mangle]
+pub extern fn create_screen() {
+    unsafe {
+        let mut screen = Screen::new();
+        screen.init();
+        SCREEN = Box::into_raw(Box::new(screen));
+    }
+}
 
 #[no_mangle]
 pub extern fn clear_with_random_color() {
 
     let color = Color::random();
 
-    #[cfg(target_os="ios")]
-    log!("ios");
-
     GL!(ClearColor, color.r, color.g, color.b, color.a);
     GL!(Clear, GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT));
 
+    unsafe {
+
+    }
+
 }
 
 #[no_mangle]
-pub extern fn rust_greeting(to: *const c_char) -> *mut c_char {
-    let c_str = unsafe { CStr::from_ptr(to) };
-    let recipient = match c_str.to_str() {
-        Err(_) => "there",
-        Ok(string) => string,
-    };
+pub extern fn set_screen_size(width: c_float, height: c_float) {
+    unsafe {
+        SCREEN.as_mut().unwrap().set_size(Size { width, height });
+    }
+}
 
+#[no_mangle]
+pub extern fn update_screen() {
+    unsafe {
+        SCREEN.as_mut().unwrap().update();
+    }
+}
+
+#[no_mangle]
+pub extern fn rust_greeting()  {
     log!("KOK!");
     log!("KOKOSOK!");
     log!("suehoh! 22");
-
-    CString::new("Hello ".to_owned() + recipient).unwrap().into_raw()
-}
-
-#[no_mangle]
-pub extern fn rust_greeting_free(s: *mut c_char) {
-    unsafe {
-        if s.is_null() { return }
-        CString::from_raw(s)
-    };
 }

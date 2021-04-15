@@ -18,6 +18,8 @@ impl Shaders {
 
         let compiler = ShaderCompiler::new();
 
+        log!(paths::shaders::ui());
+
         let ui            = compiler.compile(&paths::shaders::ui().join("ui"));
         let ui_path       = compiler.compile(&paths::shaders::ui().join("ui_path"));
         let ui_texture    = compiler.compile(&paths::shaders::ui().join("ui_texture"));

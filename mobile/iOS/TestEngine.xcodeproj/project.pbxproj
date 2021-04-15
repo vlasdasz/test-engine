@@ -18,6 +18,7 @@
 		D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC26261C457000B81CFB /* libswiftSystem.tbd */; };
 		D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
 		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
+		D1903B3C26285BDF00263929 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = D1903B3B26285BDF00263929 /* Assets */; };
 		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; };
 		D1EFD4ED261B6B0600979776 /* libtest_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1EFD4EC261B6B0600979776 /* libtest_engine.a */; };
 /* End PBXBuildFile section */
@@ -39,6 +40,7 @@
 		D180CC26261C457000B81CFB /* libswiftSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftSystem.tbd; path = usr/lib/swift/libswiftSystem.tbd; sourceTree = SDKROOT; };
 		D180CC27261C457000B81CFB /* libSystem_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem_asan.tbd; path = usr/lib/libSystem_asan.tbd; sourceTree = SDKROOT; };
 		D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B_asan.tbd; path = usr/lib/libSystem.B_asan.tbd; sourceTree = SDKROOT; };
+		D1903B3B26285BDF00263929 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../../../../../.deps/test_engine/Assets; sourceTree = "<group>"; };
 		D1D524F3261BB078005C1426 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		D1EFD4EC261B6B0600979776 /* libtest_engine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine.a; path = ../../../target/universal/debug/libtest_engine.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,6 +88,7 @@
 				D17CC3E42617174D00F55C2E /* TestEngine.entitlements */,
 				D14901F72617215B0044E630 /* test_engine.h */,
 				D1EFD4EC261B6B0600979776 /* libtest_engine.a */,
+				D1903B3B26285BDF00263929 /* Assets */,
 				D1411E7D2617166700F3F18B /* AppDelegate.h */,
 				D1411E7E2617166700F3F18B /* AppDelegate.m */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
@@ -169,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */,
+				D1903B3C26285BDF00263929 /* Assets in Resources */,
 				D1411E8A2617166800F3F18B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,6 +7,7 @@ use crate::ui::input::touch::{Event, MouseButton, ButtonState};
 use crate::gl_wrapper::gl_wrapper::Updatable;
 use tools::refs::{Shared, make_shared};
 use crate::tools::weak_self::HasWeakSelf;
+use crate::gl_wrapper::GLWrapper;
 
 pub struct Screen {
     cursor_position: Point,
@@ -36,6 +37,8 @@ impl Updatable for Screen {
     }
 
     fn init(&mut self) {
+
+        GLWrapper::set_clear_color(&Color::GRAY);
 
         let mut label = Label::new();
         label.font = self.ui_drawer.assets.fonts.default.clone();
@@ -87,6 +90,8 @@ impl Updatable for Screen {
     }
 
     fn update(&mut self) {
+        GLWrapper::clear();
+
         self.ui_drawer.draw_view(self.root_view.clone());
 
         let font = &self.ui_drawer.assets.fonts.default;
