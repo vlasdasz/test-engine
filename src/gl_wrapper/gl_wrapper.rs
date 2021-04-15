@@ -50,4 +50,9 @@ impl GLWrapper {
                       (rect.size.height * scale) as i32)
     }
 
+    pub fn enable_blend() {
+        GL!(Enable, GLC!(BLEND));
+        GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
+    }
+
 }

@@ -9,6 +9,9 @@ pub struct TextureLoader;
 
 fn mode_for_channels(channels: u32) -> u32 {
     match channels {
+        #[cfg(target_os="ios")]
+        1 => GLC!(LUMINANCE),
+        #[cfg(not(target_os="ios"))]
         1 => GLC!(RED),
         _ => GLC!(RGBA)
     }

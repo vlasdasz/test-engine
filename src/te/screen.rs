@@ -38,6 +38,7 @@ impl Updatable for Screen {
 
     fn init(&mut self) {
 
+        GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
         let mut label = Label::new();

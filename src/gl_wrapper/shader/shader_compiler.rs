@@ -43,7 +43,7 @@ impl ShaderCompiler {
         let mut success: GLT!(GLint) = 1;
 
         GL!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
-        GL!(GetError); //^ returns invalid errors
+       // GL!(GetError); //^ returns invalid errors
 
         if success != 0 { return; }
 

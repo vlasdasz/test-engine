@@ -30,9 +30,6 @@ impl<T: Updatable> GLDrawer<T> {
 
     pub fn start_main_loop(&mut self) {
 
-        GL!(Enable, GLC!(BLEND));
-        GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
-
         self.drawer.init();
 
         self.window.set_key_polling(true);
