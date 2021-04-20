@@ -9,11 +9,7 @@
 #![feature(concat_idents)]
 
 use std::ptr;
-use std::os::raw::{c_char, c_float};
-use std::ffi::{CString, CStr};
-
-#[cfg(target_os="ios")]
-use gles31_sys::*;
+use std::os::raw::{c_float};
 
 mod te;
 mod ui;
@@ -21,12 +17,9 @@ mod gm;
 mod image;
 mod gl_wrapper;
 
-use crate::gm::{Color, Size};
+use crate::gm::{Size};
 use crate::te::Screen;
 use crate::gl_wrapper::gl_wrapper::Updatable;
-use std::cell::RefCell;
-use std::borrow::BorrowMut;
-use std::mem::MaybeUninit;
 
 #[macro_use] extern crate tools;
 #[macro_use] extern crate guard;
@@ -43,20 +36,6 @@ pub extern fn create_screen() {
 }
 
 #[no_mangle]
-pub extern fn clear_with_random_color() {
-
-    let color = Color::random();
-
-    GL!(ClearColor, color.r, color.g, color.b, color.a);
-    GL!(Clear, GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT));
-
-    unsafe {
-
-    }
-
-}
-
-#[no_mangle]
 pub extern fn set_screen_size(width: c_float, height: c_float) {
     unsafe {
         SCREEN.as_mut().unwrap().set_size(Size { width, height });
@@ -68,11 +47,4 @@ pub extern fn update_screen() {
     unsafe {
         SCREEN.as_mut().unwrap().update();
     }
-}
-
-#[no_mangle]
-pub extern fn rust_greeting()  {
-    log!("KOK!");
-    log!("KOKOSOK!");
-    log!("suehoh! 22");
 }

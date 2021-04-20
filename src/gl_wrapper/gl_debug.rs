@@ -1,7 +1,4 @@
 
-#[cfg(target_os="ios")]
-use gles31_sys::*;
-
 #[cfg(not(target_os="ios"))]
 #[macro_export]
 macro_rules! GLT {

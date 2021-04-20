@@ -1,5 +1,5 @@
-use crate::gl_wrapper::{GLLoader, GLWrapper};
-use crate::gm::{Color, Size, Point};
+use crate::gl_wrapper::{GLLoader};
+use crate::gm::{Size, Point};
 
 use glfw::{Context, Window, WindowEvent};
 use crate::ui::input::touch::{MouseButton, ButtonState};
