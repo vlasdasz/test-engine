@@ -2,17 +2,17 @@
 
 ## Supported platforms:
 
-[MAC1]: https://github.com/vladasz/rust_sand/actions/workflows/mac.yml/badge.svg
-[LIN1]: https://github.com/vladasz/rust_sand/actions/workflows/linux.yml/badge.svg
-[WIN1]: https://github.com/vladasz/rust_sand/actions/workflows/windows.yml/badge.svg
-[IOSS1]: https://github.com/vladasz/rust_sand/actions/workflows/ios_sim.yml/badge.svg
-[IOSD1]: https://github.com/vladasz/rust_sand/actions/workflows/ios_dev.yml/badge.svg
+[MAC1]: https://github.com/vladasz/test_engine/actions/workflows/mac.yml/badge.svg
+[LIN1]: https://github.com/vladasz/test_engine/actions/workflows/linux.yml/badge.svg
+[WIN1]: https://github.com/vladasz/test_engine/actions/workflows/windows.yml/badge.svg
+[IOSS1]: https://github.com/vladasz/test_engine/actions/workflows/ios_sim.yml/badge.svg
+[IOSD1]: https://github.com/vladasz/test_engine/actions/workflows/ios_dev.yml/badge.svg
 
-[LMAC]: https://github.com/VladasZ/rust_sand/actions/workflows/mac.yml
-[LLIN]: https://github.com/VladasZ/rust_sand/actions/workflows/linux.yml
-[LWIN]: https://github.com/VladasZ/rust_sand/actions/workflows/windows.yml
-[LIOSS]: https://github.com/VladasZ/rust_sand/actions/workflows/ios_sim.yml
-[LIOSD]: https://github.com/VladasZ/rust_sand/actions/workflows/ios_dev.yml
+[LMAC]: https://github.com/VladasZ/test_engine/actions/workflows/mac.yml
+[LLIN]: https://github.com/VladasZ/test_engine/actions/workflows/linux.yml
+[LWIN]: https://github.com/VladasZ/test_engine/actions/workflows/windows.yml
+[LIOSS]: https://github.com/VladasZ/test_engine/actions/workflows/ios_sim.yml
+[LIOSD]: https://github.com/VladasZ/test_engine/actions/workflows/ios_dev.yml
 
 Desktop:
 

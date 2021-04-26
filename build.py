@@ -27,7 +27,9 @@ def _get_home():
 
 home = _get_home()
 deps_path = home + "/.rdeps/"
+cpp_deps_path = home + "/.deps/"
 
+tools_path = deps_path + "tools/"
 tools_path = deps_path + "tools/"
 gles_path = deps_path + "gles31-sys/"
 
@@ -58,6 +60,7 @@ clone("gles31-sys", gles_path)
 def link_deps():
     try:
         os.symlink(deps_path, "./.rdeps")
+        os.symlink(cpp_deps_path, "./.deps/")
     except FileExistsError:
         print("exists")
 
