@@ -56,13 +56,11 @@ def clone(rep, destination = ""):
 
 clone("tools", tools_path)
 clone("gles31-sys", gles_path)
-clone("soil2", soil_path)
 
 
 def link_deps():
     try:
         os.symlink(deps_path, "./.rdeps")
-        os.symlink(cpp_deps_path, "./.deps/")
     except FileExistsError:
         print("exists")
 
