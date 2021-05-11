@@ -30,8 +30,9 @@ deps_path = home + "/.rdeps/"
 cpp_deps_path = home + "/.deps/"
 
 tools_path = deps_path + "tools/"
-tools_path = deps_path + "tools/"
 gles_path = deps_path + "gles31-sys/"
+soil_path = cpp_deps_path + "soil2/"
+
 
 def copy(src, dst):
     print("Copying:\n" + src + " to:\n" + dst)
@@ -55,6 +56,7 @@ def clone(rep, destination = ""):
 
 clone("tools", tools_path)
 clone("gles31-sys", gles_path)
+clone("soil2", soil_path)
 
 
 def link_deps():
