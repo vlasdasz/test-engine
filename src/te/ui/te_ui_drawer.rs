@@ -19,7 +19,7 @@ impl TEUIDrawer {
     }
 
     pub fn set_size(&mut self, size: &Size) {
-        self.window_size = *size;
+        self.window_size = size.clone();
     }
 }
 
@@ -47,7 +47,7 @@ impl TEUIDrawer {
 impl TEUIDrawer {
 
     fn set_viewport(&self, rect: &Rect) {
-        const SCALE: f32 = if Platform::MAC { 1.0 } else { 1.0 };
+        const SCALE: f32 = if Platform::MAC { 2.0 } else { 1.0 };
         GLWrapper::set_viewport(self.window_size.height, &SCALE, rect);
     }
 }

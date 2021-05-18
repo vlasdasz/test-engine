@@ -8,6 +8,7 @@ use crate::gl_wrapper::gl_wrapper::Updatable;
 use tools::refs::{Shared, make_shared};
 use crate::tools::weak_self::HasWeakSelf;
 use crate::gl_wrapper::GLWrapper;
+use tools::New;
 
 pub struct Screen {
     cursor_position: Point,

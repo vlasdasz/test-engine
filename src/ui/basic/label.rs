@@ -6,6 +6,7 @@ use crate::ui::input::Touch;
 use std::any::Any;
 use tools::refs::{MutWeak, make_shared, Shared, DynWeak};
 use tools::weak_self::HasWeakSelf;
+use tools::New;
 
 pub struct Label {
     pub font: Font,
@@ -67,13 +68,17 @@ impl AsAny for Label {
     fn as_any(&self) -> &dyn Any { self }
 }
 
-impl HasWeakSelf for Label {
+impl New for Label {
 
     fn new() -> Self {
         Self { font: Font::blank(), base: ViewBase::new(), _weak: MutWeak::new() }
     }
+}
+
+impl HasWeakSelf for Label {
 
     fn new_shared() -> Shared<Self> {
+        let mut new = Self::new();
         let result = make_shared(Self::new());
         result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
         result
@@ -99,11 +104,11 @@ impl View for Label {
 
     fn superview(&self) -> DynWeak<dyn View> { self.base.superview() }
 
-    fn add_subview(&mut self, view: Shared<dyn View>) { self.base.add_subview(view) }
-
     fn set_superview(&mut self, superview: DynWeak<dyn View>) { self.base.set_superview(superview) }
 
     fn subviews(&self) -> &[Shared<dyn View>] { self.base.subviews() }
+
+    fn add_subview(&mut self, view: Shared<dyn View>) { self.base.add_subview(view) }
 
     fn remove_all_subviews(&mut self) {  self.base.remove_all_subviews() }
 

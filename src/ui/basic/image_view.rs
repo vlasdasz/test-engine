@@ -7,6 +7,7 @@ use std::any::Any;
 use crate::image::Image;
 use tools::refs::{MutWeak, make_shared, Shared, DynWeak};
 use tools::weak_self::HasWeakSelf;
+use tools::New;
 
 pub struct ImageView {
     pub image: Image,
@@ -18,11 +19,14 @@ impl AsAny for ImageView {
     fn as_any(&self) -> &dyn Any { self }
 }
 
-impl HasWeakSelf for ImageView {
+impl New for ImageView {
 
     fn new() -> Self {
         Self { image: Image::new(), base: ViewBase::new(), _weak: MutWeak::new() }
     }
+}
+
+impl HasWeakSelf for ImageView {
 
     fn new_shared() -> Shared<Self> {
         let result = make_shared(Self::new());
@@ -50,11 +54,11 @@ impl View for ImageView {
 
     fn superview(&self) -> DynWeak<dyn View> { self.base.superview() }
 
-    fn add_subview(&mut self, view: Shared<dyn View>) { self.base.add_subview(view) }
-
     fn set_superview(&mut self, superview: DynWeak<dyn View>) { self.base.set_superview(superview) }
 
     fn subviews(&self) -> &[Shared<dyn View>] { self.base.subviews() }
+
+    fn add_subview(&mut self, view: Shared<dyn View>) { self.base.add_subview(view) }
 
     fn remove_all_subviews(&mut self) {  self.base.remove_all_subviews() }
 

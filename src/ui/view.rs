@@ -4,6 +4,7 @@ use std::rc::{Weak, Rc};
 use std::any::Any;
 use tools::refs::{DynWeak, Shared, MutWeak, make_shared};
 use tools::weak_self::HasWeakSelf;
+use tools::New;
 
 pub enum ViewType {
     Plain,
@@ -142,7 +143,7 @@ impl AsAny for ViewBase {
     fn as_any(&self) -> &dyn Any { self }
 }
 
-impl HasWeakSelf for ViewBase {
+impl New for ViewBase {
 
     fn new() -> ViewBase {
         ViewBase {
@@ -155,6 +156,9 @@ impl HasWeakSelf for ViewBase {
             _weak: Weak::new()
         }
     }
+}
+
+impl HasWeakSelf for ViewBase {
 
     fn new_shared() -> Shared<Self> {
         let result = make_shared(ViewBase::new());
