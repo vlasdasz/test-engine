@@ -4,15 +4,11 @@ use std::any::Any;
 use std::rc::{Rc, Weak};
 use tools::refs::{make_shared, DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
-use tools::New;
+use tools::{New, AsAny};
 
 pub enum ViewType {
     Plain,
     Image,
-}
-
-pub trait AsAny {
-    fn as_any(&self) -> &dyn Any;
 }
 
 pub trait View: AsAny {
@@ -113,6 +109,14 @@ impl View for ViewBase {
         self._superview.clone()
     }
 
+    fn set_superview(&mut self, superview: DynWeak<dyn View>) {
+        self._superview = superview
+    }
+
+    fn subviews(&self) -> &[Shared<dyn View>] {
+        &self._subviews
+    }
+
     fn add_subview(&mut self, view: Shared<dyn View>) {
         {
             let mut mut_ref = view.try_borrow_mut().unwrap();
@@ -124,14 +128,6 @@ impl View for ViewBase {
 
     fn remove_all_subviews(&mut self) {
         self._subviews.clear()
-    }
-
-    fn set_superview(&mut self, superview: DynWeak<dyn View>) {
-        self._superview = superview
-    }
-
-    fn subviews(&self) -> &[Shared<dyn View>] {
-        &self._subviews
     }
 
     fn check_touch(&self, touch: &mut Touch) {
@@ -168,7 +164,7 @@ impl New for ViewBase {
 
 impl HasWeakSelf for ViewBase {
     fn new_shared() -> Shared<Self> {
-        let result = make_shared(ViewBase::new());
+        let result = make_shared(Self::new());
         result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
         result
     }

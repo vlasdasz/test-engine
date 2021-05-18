@@ -1,13 +1,13 @@
 use crate::gm::{Color, Rect};
 use crate::image::Image;
 use crate::ui::input::Touch;
-use crate::ui::view::{AsAny, View};
+use crate::ui::view::{View};
 use crate::ui::ViewBase;
 use std::any::Any;
 use std::rc::Rc;
 use tools::refs::{make_shared, DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
-use tools::New;
+use tools::{New, AsAny};
 
 pub struct ImageView {
     pub image: Image,

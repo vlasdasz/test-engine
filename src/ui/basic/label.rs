@@ -1,12 +1,13 @@
 use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
-use crate::ui::view::{AsAny, View};
+use crate::ui::view::{View};
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
 use std::rc::Rc;
 use tools::refs::{make_shared, DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
-use tools::New;
+use tools::{New, AsAny};
+use std::ops::{Deref, DerefMut};
 
 pub struct Label {
     pub font: Font,
@@ -79,7 +80,6 @@ impl New for Label {
 
 impl HasWeakSelf for Label {
     fn new_shared() -> Shared<Self> {
-        let mut new = Self::new();
         let result = make_shared(Self::new());
         result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
         result
@@ -87,6 +87,19 @@ impl HasWeakSelf for Label {
 
     fn weak(&self) -> MutWeak<Self> {
         self._weak.clone()
+    }
+}
+
+impl Deref for Label {
+    type Target = ViewBase;
+    fn deref(&self) -> &Self::Target {
+        &self.base
+    }
+}
+
+impl DerefMut for Label {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.base
     }
 }
 
