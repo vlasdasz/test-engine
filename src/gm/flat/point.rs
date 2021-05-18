@@ -3,7 +3,7 @@ use std::ops::{AddAssign, SubAssign};
 #[derive(Debug, Copy, Clone)]
 pub struct Point {
     pub x: f32,
-    pub y: f32
+    pub y: f32,
 }
 
 impl Point {
@@ -26,7 +26,8 @@ impl Point {
 
 impl Point {
     pub fn invert(&mut self) {
-        self.x = -self.x; self.y = -self.y;
+        self.x = -self.x;
+        self.y = -self.y;
     }
     pub fn invert_x(&mut self) {
         self.x = -self.x
@@ -48,7 +49,10 @@ impl Point {
 impl Point {
     pub fn with_length(&self, l: f32) -> Point {
         let ratio = l / self.length();
-        return Point { x: self.x * ratio, y: self.y * ratio };
+        return Point {
+            x: self.x * ratio,
+            y: self.y * ratio,
+        };
     }
     pub fn set_length(&mut self, l: f32) {
         let ratio = l / self.length();
@@ -65,12 +69,14 @@ impl Point {
 
 impl AddAssign for Point {
     fn add_assign(&mut self, rhs: Point) {
-        self.x += rhs.x; self.y += rhs.y
+        self.x += rhs.x;
+        self.y += rhs.y
     }
 }
 
 impl SubAssign for Point {
     fn sub_assign(&mut self, rhs: Point) {
-        self.x -= rhs.x; self.y -= rhs.y
+        self.x -= rhs.x;
+        self.y -= rhs.y
     }
 }

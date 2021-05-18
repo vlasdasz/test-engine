@@ -1,23 +1,21 @@
-use crate::ui::{ViewBase, Font, ImageView};
-use std::rc::Rc;
-use crate::ui::view::{View, AsAny};
 use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
+use crate::ui::view::{AsAny, View};
+use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
-use tools::refs::{MutWeak, make_shared, Shared, DynWeak};
+use std::rc::Rc;
+use tools::refs::{make_shared, DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
 use tools::New;
 
 pub struct Label {
     pub font: Font,
     base: ViewBase,
-    _weak: MutWeak<Label>
+    _weak: MutWeak<Label>,
 }
 
 impl Label {
-
     pub fn set_text(&mut self, text: &str) {
-
         self.remove_all_subviews();
 
         if text.is_empty() {
@@ -42,7 +40,7 @@ impl Label {
                 advance + glyph.bearing.x,
                 content_size.height - glyph.bearing.y + self.font.baseline_shift,
                 glyph.size().width,
-                glyph.size().height
+                glyph.size().height,
             ));
 
             last_max_x = glyph_view.frame().max_x();
@@ -58,25 +56,28 @@ impl Label {
             self.frame().origin.x,
             self.frame().origin.y,
             content_size.width,
-            content_size.height
+            content_size.height,
         ));
-
     }
 }
 
 impl AsAny for Label {
-    fn as_any(&self) -> &dyn Any { self }
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 impl New for Label {
-
     fn new() -> Self {
-        Self { font: Font::blank(), base: ViewBase::new(), _weak: MutWeak::new() }
+        Self {
+            font: Font::blank(),
+            base: ViewBase::new(),
+            _weak: MutWeak::new(),
+        }
     }
 }
 
 impl HasWeakSelf for Label {
-
     fn new_shared() -> Shared<Self> {
         let mut new = Self::new();
         let result = make_shared(Self::new());
@@ -90,27 +91,55 @@ impl HasWeakSelf for Label {
 }
 
 impl View for Label {
-    fn color(&self) -> &Color { self.base.color() }
-    fn set_color(&mut self, color: Color) { self.base.set_color(color) }
+    fn color(&self) -> &Color {
+        self.base.color()
+    }
+    fn set_color(&mut self, color: Color) {
+        self.base.set_color(color)
+    }
 
-    fn touch_enabled(&self) -> bool { self.base.touch_enabled() }
-    fn enable_touch(&mut self) { self.base.enable_touch() }
+    fn touch_enabled(&self) -> bool {
+        self.base.touch_enabled()
+    }
+    fn enable_touch(&mut self) {
+        self.base.enable_touch()
+    }
 
-    fn frame(&self) -> &Rect { self.base.frame() }
-    fn set_frame(&mut self, frame: Rect) { self.base.set_frame(frame) }
+    fn frame(&self) -> &Rect {
+        self.base.frame()
+    }
+    fn set_frame(&mut self, frame: Rect) {
+        self.base.set_frame(frame)
+    }
 
-    fn absolute_frame(&self) -> &Rect { self.base.absolute_frame() }
-    fn calculate_absolute_frame(&mut self) { self.base.calculate_absolute_frame() }
+    fn absolute_frame(&self) -> &Rect {
+        self.base.absolute_frame()
+    }
+    fn calculate_absolute_frame(&mut self) {
+        self.base.calculate_absolute_frame()
+    }
 
-    fn superview(&self) -> DynWeak<dyn View> { self.base.superview() }
+    fn superview(&self) -> DynWeak<dyn View> {
+        self.base.superview()
+    }
 
-    fn set_superview(&mut self, superview: DynWeak<dyn View>) { self.base.set_superview(superview) }
+    fn set_superview(&mut self, superview: DynWeak<dyn View>) {
+        self.base.set_superview(superview)
+    }
 
-    fn subviews(&self) -> &[Shared<dyn View>] { self.base.subviews() }
+    fn subviews(&self) -> &[Shared<dyn View>] {
+        self.base.subviews()
+    }
 
-    fn add_subview(&mut self, view: Shared<dyn View>) { self.base.add_subview(view) }
+    fn add_subview(&mut self, view: Shared<dyn View>) {
+        self.base.add_subview(view)
+    }
 
-    fn remove_all_subviews(&mut self) {  self.base.remove_all_subviews() }
+    fn remove_all_subviews(&mut self) {
+        self.base.remove_all_subviews()
+    }
 
-    fn check_touch(&self, touch: &mut Touch) { self.base.check_touch(touch) }
+    fn check_touch(&self, touch: &mut Touch) {
+        self.base.check_touch(touch)
+    }
 }

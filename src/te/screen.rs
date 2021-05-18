@@ -1,31 +1,32 @@
-use crate::gm::{Size, Rect, Color, Point};
-use crate::te::{TEUIDrawer, Assets};
-use crate::ui::{ViewBase, ImageView, Label};
-use crate::ui::view::View;
-use crate::ui::input::Touch;
-use crate::ui::input::touch::{Event, MouseButton, ButtonState};
 use crate::gl_wrapper::gl_wrapper::Updatable;
-use tools::refs::{Shared, make_shared};
-use crate::tools::weak_self::HasWeakSelf;
 use crate::gl_wrapper::GLWrapper;
+use crate::gm::{Color, Point, Rect, Size};
+use crate::te::{Assets, TEUIDrawer};
+use crate::tools::weak_self::HasWeakSelf;
+use crate::ui::input::touch::{ButtonState, Event, MouseButton};
+use crate::ui::input::Touch;
+use crate::ui::view::View;
+use crate::ui::{ImageView, Label, ViewBase};
+use tools::refs::{make_shared, Shared};
 use tools::New;
 
 pub struct Screen {
     cursor_position: Point,
     root_view: Shared<ViewBase>,
     ui_drawer: TEUIDrawer,
-    char: u8
+    char: u8,
 }
 
 impl Screen {
-
     fn on_touch(&mut self, mut touch: Touch) {
-        self.root_view.try_borrow_mut().unwrap().check_touch(&mut touch)
+        self.root_view
+            .try_borrow_mut()
+            .unwrap()
+            .check_touch(&mut touch)
     }
 }
 
 impl Updatable for Screen {
-
     fn new() -> Screen {
         let assets = Assets::init();
         let ui_drawer = TEUIDrawer::new(assets);
@@ -33,12 +34,11 @@ impl Updatable for Screen {
             cursor_position: Point::new(),
             root_view: ViewBase::new_shared(),
             ui_drawer,
-            char: 0
+            char: 0,
         }
     }
 
     fn init(&mut self) {
-
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
@@ -52,14 +52,15 @@ impl Updatable for Screen {
 
         image_view.image = self.ui_drawer.assets.images.cat;
         image_view.set_frame(Rect::make(10.0, 100.0, 200.0, 200.0));
-        self.root_view.borrow_mut().add_subview(make_shared(image_view));
+        self.root_view
+            .borrow_mut()
+            .add_subview(make_shared(image_view));
 
-        self.root_view.borrow_mut().make_subview(|view|{
-
+        self.root_view.borrow_mut().make_subview(|view| {
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));
             view.set_color(Color::BLUE);
 
-            view.make_subview(|view|{
+            view.make_subview(|view| {
                 view.set_frame(Rect::make(20.0, 20.0, 100.0, 100.0));
                 view.set_color(Color::GREEN);
 
@@ -68,15 +69,15 @@ impl Updatable for Screen {
                     view.enable_touch();
                     view.set_color(Color::TURQUOISE);
                 });
-
             });
-
         });
     }
 
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
-        self.root_view.borrow_mut().set_frame(Rect::from_size(&size));
+        self.root_view
+            .borrow_mut()
+            .set_frame(Rect::from_size(&size));
     }
 
     fn on_cursor_moved(&mut self, position: Point) {
@@ -87,7 +88,7 @@ impl Updatable for Screen {
         self.on_touch(Touch {
             id: 1,
             position: self.cursor_position,
-            event: Event::from_state(state)
+            event: Event::from_state(state),
         })
     }
 

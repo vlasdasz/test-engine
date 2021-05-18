@@ -1,29 +1,29 @@
-
-#[cfg(not(target_os="ios"))]
+#[cfg(not(target_os = "ios"))]
 extern crate gl;
 
-#[cfg(target_os="ios")]
+#[cfg(target_os = "ios")]
 use gles31_sys::*;
 
+use std::ffi::CString;
 use std::fs;
 use std::path::PathBuf;
-use std::ffi::CString;
 
-use crate::te::paths;
-use crate::gl_wrapper::shader::Shader;
 use crate::gl_wrapper::gl_info::GLInfo;
+use crate::gl_wrapper::shader::Shader;
+use crate::te::paths;
 
 use std::collections::HashMap;
-use tools::regex::{find_matches, find_match};
+use tools::regex::{find_match, find_matches};
 
 pub struct ShaderCompiler {
-    gl_info: GLInfo
+    gl_info: GLInfo,
 }
 
 impl ShaderCompiler {
-
     pub fn new() -> ShaderCompiler {
-        ShaderCompiler { gl_info: GLInfo::get() }
+        ShaderCompiler {
+            gl_info: GLInfo::get(),
+        }
     }
 
     fn version(&self) -> String {
@@ -31,21 +31,21 @@ impl ShaderCompiler {
         result += &self.gl_info.glsl_version;
         if self.gl_info.is_gles {
             result += " es";
-        }
-        else {
+        } else {
             result += " core";
         }
         result + "\n"
     }
 
     fn check_programm_error(path: &PathBuf, program: u32) {
-
         let mut success: GLT!(GLint) = 1;
 
         GL!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
-       // GL!(GetError); //^ returns invalid errors
+        // GL!(GetError); //^ returns invalid errors
 
-        if success != 0 { return; }
+        if success != 0 {
+            return;
+        }
 
         let mut len: GLT!(GLint) = 0;
 
@@ -59,7 +59,13 @@ impl ShaderCompiler {
 
         let error = alloc_str(len as usize);
 
-        GL!(GetShaderInfoLog, program, len, std::ptr::null_mut(), error.as_ptr() as *mut GLT!(GLchar));
+        GL!(
+            GetShaderInfoLog,
+            program,
+            len,
+            std::ptr::null_mut(),
+            error.as_ptr() as *mut GLT!(GLchar)
+        );
 
         let error = error.to_string_lossy().into_owned();
         panic!("Failed to compile shader: {:?} error: {}", path, error);
@@ -83,7 +89,6 @@ impl ShaderCompiler {
     }
 
     fn compile_shader(&self, path: PathBuf, code: String, kind: GLT!(GLenum)) -> u32 {
-
         let code = self.version() + "\n" + &ShaderCompiler::unfold_includes(code);
 
         let shader = GL!(CreateShader, kind);
@@ -99,7 +104,6 @@ impl ShaderCompiler {
     }
 
     pub fn compile(&self, path: &PathBuf) -> Shader {
-
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 
@@ -130,5 +134,4 @@ impl ShaderCompiler {
 
         Shader::new(program)
     }
-
 }

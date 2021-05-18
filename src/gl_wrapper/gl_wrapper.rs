@@ -1,11 +1,9 @@
-
-
-#[cfg(target_os="ios")]
+#[cfg(target_os = "ios")]
 use gles31_sys::*;
 
-use crate::gm::{Rect, Color, Size, Point};
+use crate::gm::{Color, Point, Rect, Size};
 
-use crate::ui::input::touch::{MouseButton, ButtonState};
+use crate::ui::input::touch::{ButtonState, MouseButton};
 
 pub struct GLWrapper;
 
@@ -19,7 +17,6 @@ pub trait Updatable {
 }
 
 impl GLWrapper {
-
     pub fn bind_image(id: u32) {
         if id == u32::MAX {
             panic!("Invalid image gl_handle");
@@ -44,15 +41,17 @@ impl GLWrapper {
     }
 
     pub fn set_viewport(window_height: f32, scale: &'static f32, rect: &Rect) {
-        GL!(Viewport, (rect.origin.x * scale) as i32,
-                      ((window_height - rect.origin.y - rect.size.height) * scale) as i32,
-                      (rect.size.width * scale) as i32,
-                      (rect.size.height * scale) as i32)
+        GL!(
+            Viewport,
+            (rect.origin.x * scale) as i32,
+            ((window_height - rect.origin.y - rect.size.height) * scale) as i32,
+            (rect.size.width * scale) as i32,
+            (rect.size.height * scale) as i32
+        )
     }
 
     pub fn enable_blend() {
         GL!(Enable, GLC!(BLEND));
         GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
     }
-
 }

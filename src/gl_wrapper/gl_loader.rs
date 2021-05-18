@@ -1,10 +1,9 @@
-
 extern crate gl;
 extern crate glfw;
 
 use crate::gm::*;
 
-use glfw::{ Context, WindowEvent, OpenGlProfileHint::Core, Window };
+use glfw::{Context, OpenGlProfileHint::Core, Window, WindowEvent};
 
 pub struct GLLoader {
     pub window: Window,
@@ -12,9 +11,7 @@ pub struct GLLoader {
 }
 
 impl GLLoader {
-
     pub fn with_size(size: Size) -> GLLoader {
-
         let mut glfw = glfw::init(glfw::LOG_ERRORS).unwrap();
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
@@ -25,18 +22,20 @@ impl GLLoader {
             glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
         }
 
-        let (mut window, events) =
-            glfw.create_window(size.width as u32,
-                               size.height as u32,
-                               "Hello this is window",
-                               glfw::WindowMode::Windowed)
-                .expect("Failed to create GLFW window.");
+        let (mut window, events) = glfw
+            .create_window(
+                size.width as u32,
+                size.height as u32,
+                "Hello this is window",
+                glfw::WindowMode::Windowed,
+            )
+            .expect("Failed to create GLFW window.");
 
-        GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
+        GL!(load_with, |symbol| window.get_proc_address(symbol)
+            as *const _);
 
         window.make_current();
 
         GLLoader { window, events }
     }
-
 }

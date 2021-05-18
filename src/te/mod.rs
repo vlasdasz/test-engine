@@ -1,8 +1,7 @@
-
-pub mod ui;
+pub mod assets;
 pub mod paths;
 pub mod screen;
-pub mod assets;
+pub mod ui;
 
 pub use ui::TEUIDrawer;
 

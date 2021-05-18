@@ -1,9 +1,9 @@
-pub mod input;
-pub mod view;
-pub mod text;
 pub mod basic;
+pub mod input;
+pub mod text;
+pub mod view;
 
-pub use view::ViewBase;
-pub use basic::Label;
 pub use basic::ImageView;
-pub use text::{ Font, Glyph };
+pub use basic::Label;
+pub use text::{Font, Glyph};
+pub use view::ViewBase;

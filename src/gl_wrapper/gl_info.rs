@@ -1,8 +1,7 @@
-
-#[cfg(target_os="ios")]
+#[cfg(target_os = "ios")]
 use gles31_sys::*;
 
-#[cfg(not(target_os="ios"))]
+#[cfg(not(target_os = "ios"))]
 extern crate gl;
 
 use tools::regex::find_match;
@@ -17,9 +16,8 @@ pub struct GLInfo {
 }
 
 impl GLInfo {
-
     const GLSL_QUERY: &'static str = r#"((\d\.)(\d\d))"#;
-    const GL_QUERY:   &'static str = r#"((\d\.)(\d))"#;
+    const GL_QUERY: &'static str = r#"((\d\.)(\d))"#;
 
     fn get_string(id: u32) -> String {
         use std::ffi::CStr;
@@ -54,7 +52,7 @@ impl GLInfo {
             gl_version,
             major_version,
             glsl_version,
-            glsl_version_number
-        }
+            glsl_version_number,
+        };
     }
 }

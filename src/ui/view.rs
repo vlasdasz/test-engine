@@ -1,22 +1,21 @@
-use crate::gm::{Rect, Color};
+use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
-use std::rc::{Weak, Rc};
 use std::any::Any;
-use tools::refs::{DynWeak, Shared, MutWeak, make_shared};
+use std::rc::{Rc, Weak};
+use tools::refs::{make_shared, DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
 use tools::New;
 
 pub enum ViewType {
     Plain,
-    Image
+    Image,
 }
 
 pub trait AsAny {
     fn as_any(&self) -> &dyn Any;
 }
 
-pub trait View: AsAny +  {
-
+pub trait View: AsAny {
     fn color(&self) -> &Color;
     fn set_color(&mut self, color: Color);
 
@@ -39,7 +38,7 @@ pub trait View: AsAny +  {
 
     fn check_touch(&self, touch: &mut Touch);
 
-    fn setup(&mut self) { }
+    fn setup(&mut self) {}
 }
 
 pub struct ViewBase {
@@ -52,16 +51,15 @@ pub struct ViewBase {
     _superview: DynWeak<dyn View>,
     _subviews: Vec<Shared<dyn View>>,
 
-    _weak: MutWeak<ViewBase>
+    _weak: MutWeak<ViewBase>,
 }
 
 impl ViewBase {
-
     pub fn frame(&self) -> &Rect {
         &self._frame
     }
 
-    pub fn make_subview(&mut self, make: fn (&mut ViewBase) -> ()) {
+    pub fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
         let view = ViewBase::new_shared();
         make(&mut view.try_borrow_mut().unwrap());
         self.add_subview(view);
@@ -70,24 +68,34 @@ impl ViewBase {
     pub fn on_touch(&self, touch: &Touch) {
         log!(touch);
     }
-
 }
 
 impl View for ViewBase {
+    fn color(&self) -> &Color {
+        &self._color
+    }
+    fn set_color(&mut self, color: Color) {
+        self._color = color
+    }
 
-    fn color (&self) -> &Color { &self._color }
-    fn set_color(&mut self, color: Color) { self._color = color }
+    fn touch_enabled(&self) -> bool {
+        self._touch_enabled
+    }
+    fn enable_touch(&mut self) {
+        self._touch_enabled = true
+    }
 
-    fn touch_enabled (&self) ->  bool  {  self._touch_enabled  }
-    fn enable_touch(&mut self) { self._touch_enabled = true }
+    fn frame(&self) -> &Rect {
+        &self._frame
+    }
 
-    fn frame(&self) -> &Rect { &self._frame }
-
-    fn set_frame(&mut self, frame: Rect)  {
+    fn set_frame(&mut self, frame: Rect) {
         self._frame = frame
     }
 
-    fn absolute_frame(&self) -> &Rect  { &self._absolute_frame }
+    fn absolute_frame(&self) -> &Rect {
+        &self._absolute_frame
+    }
 
     fn calculate_absolute_frame(&mut self) {
         self._absolute_frame = self._frame;
@@ -127,7 +135,7 @@ impl View for ViewBase {
     }
 
     fn check_touch(&self, touch: &mut Touch) {
-        if self._touch_enabled && self._absolute_frame.contains(&touch.position)  {
+        if self._touch_enabled && self._absolute_frame.contains(&touch.position) {
             touch.position -= self._absolute_frame.origin;
             self.on_touch(touch);
         }
@@ -136,15 +144,15 @@ impl View for ViewBase {
             borrowed.check_touch(touch);
         }
     }
-
 }
 
 impl AsAny for ViewBase {
-    fn as_any(&self) -> &dyn Any { self }
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 impl New for ViewBase {
-
     fn new() -> ViewBase {
         ViewBase {
             _color: Color::DEFAULT,
@@ -152,14 +160,13 @@ impl New for ViewBase {
             _frame: Rect::new(),
             _absolute_frame: Rect::new(),
             _superview: None,
-            _subviews: vec!(),
-            _weak: Weak::new()
+            _subviews: vec![],
+            _weak: Weak::new(),
         }
     }
 }
 
 impl HasWeakSelf for ViewBase {
-
     fn new_shared() -> Shared<Self> {
         let result = make_shared(ViewBase::new());
         result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);

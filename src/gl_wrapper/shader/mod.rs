@@ -1,4 +1,3 @@
-
 mod shader;
 mod shader_compiler;
 
