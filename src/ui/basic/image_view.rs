@@ -1,12 +1,12 @@
 use crate::gm::{Color, Rect};
 use crate::image::Image;
 use crate::ui::input::Touch;
-use crate::ui::view::{View};
+use crate::ui::view::View;
 use crate::ui::ViewBase;
 use std::any::Any;
 use tools::refs::{DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
-use tools::{New, AsAny};
+use tools::{AsAny, New};
 
 pub struct ImageView {
     pub image: Image,
@@ -31,7 +31,6 @@ impl New for ImageView {
 }
 
 impl HasWeakSelf for ImageView {
-
     fn weak(&self) -> MutWeak<Self> {
         self._weak.clone()
     }

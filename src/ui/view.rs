@@ -1,10 +1,10 @@
 use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
-use std::rc::{Weak};
+use std::rc::Weak;
 use tools::refs::{DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
-use tools::{New, AsAny};
+use tools::{AsAny, New};
 
 pub enum ViewType {
     Plain,
@@ -163,7 +163,6 @@ impl New for ViewBase {
 }
 
 impl HasWeakSelf for ViewBase {
-
     fn weak(&self) -> MutWeak<Self> {
         self._weak.clone()
     }

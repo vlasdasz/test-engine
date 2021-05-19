@@ -18,10 +18,10 @@ mod gl_wrapper;
 use crate::gl_wrapper::GLDrawer;
 use crate::gm::Size;
 use crate::te::Screen;
-use std::ops::{Deref};
+use std::ops::Deref;
 
 struct Drawable {
-    pub handler: u32
+    pub handler: u32,
 }
 
 impl Drawable {
@@ -32,7 +32,7 @@ impl Drawable {
 
 struct Square {
     pub base: Drawable,
-    pub side: u32
+    pub side: u32,
 }
 
 impl Deref for Square {
@@ -44,24 +44,20 @@ impl Deref for Square {
 
 struct Circle {
     pub base: Drawable,
-    pub radius: u32
+    pub radius: u32,
 }
 
 fn start() {}
 
 fn main() {
-
     let sq = Square {
-        base: Drawable {
-            handler: 0
-        },
-        side: 0
+        base: Drawable { handler: 0 },
+        side: 0,
     };
-
 
     sq.draw();
 
- //   return;
+    //   return;
 
     GLDrawer::<Screen>::with_size(Size {
         width: 1000.0,
