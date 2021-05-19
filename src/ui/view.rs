@@ -1,8 +1,8 @@
 use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
-use std::rc::{Rc, Weak};
-use tools::refs::{make_shared, DynWeak, MutWeak, Shared};
+use std::rc::{Weak};
+use tools::refs::{DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
 use tools::{New, AsAny};
 
@@ -163,13 +163,12 @@ impl New for ViewBase {
 }
 
 impl HasWeakSelf for ViewBase {
-    fn new_shared() -> Shared<Self> {
-        let result = make_shared(Self::new());
-        result.try_borrow_mut().unwrap()._weak = Rc::downgrade(&result);
-        result
-    }
 
     fn weak(&self) -> MutWeak<Self> {
         self._weak.clone()
+    }
+
+    fn set_weak(&mut self, weak: MutWeak<Self>) {
+        self._weak = weak
     }
 }
