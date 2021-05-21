@@ -7,7 +7,9 @@ pub struct Rect {
 }
 
 impl Rect {
-    pub fn new() -> Rect {
+    pub const DEFAULT: Rect = Rect::new();
+
+    pub const fn new() -> Rect {
         Rect {
             origin: Point::new(),
             size: Size::new(),

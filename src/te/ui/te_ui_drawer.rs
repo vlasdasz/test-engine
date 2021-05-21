@@ -40,7 +40,12 @@ impl TEUIDrawer {
         }
 
         for view in view.view().subviews() {
-            self.draw_view(view.try_borrow_mut().unwrap().deref_mut());
+            match view.try_borrow_mut().as_deref_mut() {
+                Ok(view) => self.draw_view(view),
+                Err(error) => {
+                    dbg!(&error);
+                }
+            }
         }
     }
 }

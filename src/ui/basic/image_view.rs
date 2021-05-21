@@ -4,7 +4,7 @@ use crate::ui::view::View;
 use crate::ui::ViewBase;
 use std::any::Any;
 use std::ops::{Deref, DerefMut};
-use tools::refs::{MutWeak};
+use tools::refs::MutWeak;
 use tools::weak_self::HasWeakSelf;
 use tools::{AsAny, New};
 

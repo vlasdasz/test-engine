@@ -2,7 +2,6 @@
 #![allow(unused_unsafe)]
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
-#![feature(new_uninit)]
 #![feature(concat_idents)]
 
 use std::os::raw::c_float;
@@ -22,6 +21,8 @@ use crate::te::Screen;
 extern crate tools;
 #[macro_use]
 extern crate guard;
+#[macro_use]
+extern crate derivative;
 
 static mut SCREEN: *mut Screen = ptr::null_mut();
 

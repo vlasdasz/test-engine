@@ -5,7 +5,7 @@ pub struct Size {
 }
 
 impl Size {
-    pub fn new() -> Size {
+    pub const fn new() -> Size {
         Size {
             width: 0.0,
             height: 0.0,

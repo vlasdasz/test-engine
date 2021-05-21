@@ -18,6 +18,8 @@ pub trait View: AsAny {
     fn setup(&mut self) {}
 }
 
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct ViewBase {
     pub color: Color,
     pub touch_enabled: bool,
@@ -25,7 +27,9 @@ pub struct ViewBase {
     _frame: Rect,
     _absolute_frame: Rect,
 
+    #[derivative(Debug = "ignore")]
     _superview: DynWeak<dyn View>,
+    #[derivative(Debug = "ignore")]
     _subviews: Vec<Shared<dyn View>>,
 
     _weak: MutWeak<ViewBase>,
@@ -62,23 +66,36 @@ impl ViewBase {
         &self._absolute_frame
     }
 
+    fn super_frame(&self) -> &Rect {
+        return if let Some(superview) = &self._superview {
+            &Rect::DEFAULT
+        } else {
+            &Rect::DEFAULT
+        };
+    }
+
     pub fn calculate_absolute_frame(&mut self) {
         self._absolute_frame = self._frame;
 
-        if let Some(superview) = &self._superview {
-            if let Some(superview) = superview.upgrade() {
-                if let Ok(mut superview) = superview.try_borrow_mut() {
-                    let superview: &mut ViewBase = &mut superview.view_mut();
-                    self._absolute_frame.origin += superview._absolute_frame.origin;
-                } else {
-                  //  dbg!("failed to borrow");
-                }
-            } else {
-                //TODO: check why this happens
-                dbg!("failed to upgrade, cleaning");
-                self._superview = None;
+        guard!(let Some(superview) = &self._superview else {
+            return;
+        });
+
+        guard!(let Some(superview) = superview.upgrade() else {
+            //TODO: check why this happens
+            // dbg!("failed to upgrade, cleaning");
+            self._superview = None;
+            return;
+        });
+
+        match superview.try_borrow() {
+            Ok(superview) => {
+                self._absolute_frame.origin += superview.view()._absolute_frame.origin;
             }
-        }
+            Err(error) => {
+                dbg!(error);
+            }
+        };
     }
 
     fn superview(&self) -> DynWeak<dyn View> {
