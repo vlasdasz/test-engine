@@ -1,11 +1,10 @@
-use crate::gm::{Color, Rect};
 use crate::image::Image;
-use crate::ui::input::Touch;
+
 use crate::ui::view::View;
 use crate::ui::ViewBase;
 use std::any::Any;
 use std::ops::{Deref, DerefMut};
-use tools::refs::{DynWeak, MutWeak, Shared};
+use tools::refs::{MutWeak};
 use tools::weak_self::HasWeakSelf;
 use tools::{AsAny, New};
 

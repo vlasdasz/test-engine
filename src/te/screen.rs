@@ -5,9 +5,9 @@ use crate::te::{Assets, TEUIDrawer};
 use crate::tools::weak_self::HasWeakSelf;
 use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
-use crate::ui::view::View;
+
 use crate::ui::{ImageView, Label, ViewBase};
-use std::ops::DerefMut;
+
 use tools::refs::{make_shared, Shared};
 use tools::New;
 

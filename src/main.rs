@@ -19,8 +19,8 @@ use crate::gl_wrapper::GLDrawer;
 use crate::gm::Size;
 use crate::te::Screen;
 use std::fmt::Debug;
-use std::ops::Deref;
-use tools::refs::{make_shared, Shared};
+
+use tools::refs::make_shared;
 
 trait Kokable: Debug {
     fn kok(&self);
