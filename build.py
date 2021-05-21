@@ -27,11 +27,10 @@ def _get_home():
 
 home = _get_home()
 deps_path = home + "/.rdeps/"
-cpp_deps_path = home + "/.deps/"
 
 tools_path = deps_path + "tools/"
 gles_path = deps_path + "gles31-sys/"
-soil_path = cpp_deps_path + "soil2/"
+soil_path = deps_path + "soil2/"
 
 
 def copy(src, dst):
@@ -53,6 +52,7 @@ def clone(rep, destination = ""):
         run("git clone --recursive https://github.com/vladasz/" + rep + " " + destination)
 
 
+clone("soil2", soil_path)
 clone("tools", tools_path)
 clone("gles31-sys", gles_path)
 

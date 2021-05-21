@@ -24,7 +24,7 @@ num-traits = "0.2.14"
 derivative = "2.2.0"
 
 tools = { path = ".rdeps/tools" }
-soil2 = { git = "https://github.com/VladasZ/soil2",  branch = 'main' }
+soil2 = { path = ".rdeps/soil2" }
 
 
 [target.'cfg(not(target_os="ios"))'.dependencies]

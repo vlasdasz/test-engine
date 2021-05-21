@@ -1,5 +1,3 @@
-use tools::*;
-
 fn main() {
-    log!("Hello")
+    dbg!("Hello");
 }
