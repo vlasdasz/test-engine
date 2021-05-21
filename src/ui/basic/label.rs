@@ -6,7 +6,7 @@ use std::any::Any;
 use std::ops::{Deref, DerefMut};
 use tools::refs::{make_shared, MutWeak};
 use tools::weak_self::HasWeakSelf;
-use tools::{AsAny, New};
+use tools::{AsAny, HasNew};
 
 pub struct Label {
     pub font: Font,
@@ -69,7 +69,7 @@ impl AsAny for Label {
     }
 }
 
-impl New for Label {
+impl HasNew for Label {
     fn new() -> Self {
         Self {
             font: Font::blank(),

@@ -9,7 +9,7 @@ use crate::ui::input::Touch;
 use crate::ui::{ImageView, Label, ViewBase};
 
 use tools::refs::{make_shared, Shared};
-use tools::New;
+use tools::HasNew;
 
 pub struct Screen {
     cursor_position: Point,
@@ -43,6 +43,9 @@ impl Updatable for Screen {
         let mut label = Label::new();
         label.font = self.ui_drawer.assets.fonts.default.clone();
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadag4ka");
+
+        let mut another_label = Label::new();
+        another_label.font = label.font.clone();
 
         self.root_view.add_subview(make_shared(label));
 

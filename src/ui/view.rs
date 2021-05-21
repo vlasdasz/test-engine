@@ -5,7 +5,7 @@ use std::any::Any;
 use std::rc::Weak;
 use tools::refs::{DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
-use tools::{AsAny, New};
+use tools::{AsAny, HasNew};
 
 pub enum ViewType {
     Plain,
@@ -66,36 +66,25 @@ impl ViewBase {
         &self._absolute_frame
     }
 
-    fn super_frame(&self) -> &Rect {
+    fn super_frame(&self) -> Rect {
         return if let Some(superview) = &self._superview {
-            &Rect::DEFAULT
+            if let Some(superview) = superview.upgrade() {
+                if let Ok(superview) = superview.try_borrow() {
+                    *superview.view().absolute_frame()
+                } else {
+                    Rect::DEFAULT
+                }
+            } else {
+                Rect::DEFAULT
+            }
         } else {
-            &Rect::DEFAULT
+            Rect::DEFAULT
         };
     }
 
     pub fn calculate_absolute_frame(&mut self) {
         self._absolute_frame = self._frame;
-
-        guard!(let Some(superview) = &self._superview else {
-            return;
-        });
-
-        guard!(let Some(superview) = superview.upgrade() else {
-            //TODO: check why this happens
-            // dbg!("failed to upgrade, cleaning");
-            self._superview = None;
-            return;
-        });
-
-        match superview.try_borrow() {
-            Ok(superview) => {
-                self._absolute_frame.origin += superview.view()._absolute_frame.origin;
-            }
-            Err(error) => {
-                dbg!(error);
-            }
-        };
+        self._absolute_frame.origin += self.super_frame().origin
     }
 
     fn superview(&self) -> DynWeak<dyn View> {
@@ -151,7 +140,7 @@ impl AsAny for ViewBase {
     }
 }
 
-impl New for ViewBase {
+impl HasNew for ViewBase {
     fn new() -> ViewBase {
         ViewBase {
             color: Color::DEFAULT,

@@ -6,7 +6,7 @@ use std::any::Any;
 use std::ops::{Deref, DerefMut};
 use tools::refs::MutWeak;
 use tools::weak_self::HasWeakSelf;
-use tools::{AsAny, New};
+use tools::{AsAny, HasNew};
 
 pub struct ImageView {
     pub image: Image,
@@ -20,7 +20,7 @@ impl AsAny for ImageView {
     }
 }
 
-impl New for ImageView {
+impl HasNew for ImageView {
     fn new() -> Self {
         Self {
             image: Image::new(),
