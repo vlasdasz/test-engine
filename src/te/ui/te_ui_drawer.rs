@@ -5,6 +5,7 @@ use crate::te::Assets;
 use crate::tools::platform::Platform;
 use crate::ui::view::View;
 use crate::ui::ImageView;
+use std::ops::DerefMut;
 use tools::refs::Shared;
 
 pub struct TEUIDrawer {
@@ -26,23 +27,21 @@ impl TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    pub fn draw_view(&self, view: Shared<dyn View>) {
-        view.try_borrow_mut().unwrap().calculate_absolute_frame();
-
-        let view = view.try_borrow().unwrap();
+    pub fn draw_view(&self, view: &mut dyn View) {
+        view.view_mut().calculate_absolute_frame();
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             self.draw_image_in_rect(
                 &image_view.image,
                 image_view.absolute_frame(),
-                image_view.color(),
+                &image_view.color,
             );
         } else {
-            self.draw_rect(view.absolute_frame(), view.color());
+            self.draw_rect(view.view().absolute_frame(), &view.view().color);
         }
 
-        for view in view.subviews() {
-            self.draw_view(view.clone());
+        for view in view.view().subviews() {
+            self.draw_view(view.try_borrow_mut().unwrap().deref_mut());
         }
     }
 }

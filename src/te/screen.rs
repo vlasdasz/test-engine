@@ -7,6 +7,7 @@ use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
 use crate::ui::view::View;
 use crate::ui::{ImageView, Label, ViewBase};
+use std::ops::DerefMut;
 use tools::refs::{make_shared, Shared};
 use tools::New;
 
@@ -58,16 +59,16 @@ impl Updatable for Screen {
 
         self.root_view.borrow_mut().make_subview(|view| {
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));
-            view.set_color(Color::BLUE);
+            view.color = Color::BLUE;
 
             view.make_subview(|view| {
                 view.set_frame(Rect::make(20.0, 20.0, 100.0, 100.0));
-                view.set_color(Color::GREEN);
+                view.color = Color::GREEN;
 
                 view.make_subview(|view| {
                     view.set_frame(Rect::make(10.0, 10.0, 20.0, 20.0));
                     view.enable_touch();
-                    view.set_color(Color::TURQUOISE);
+                    view.color = Color::TURQUOISE;
                 });
             });
         });
@@ -95,7 +96,9 @@ impl Updatable for Screen {
     fn update(&mut self) {
         GLWrapper::clear();
 
-        self.ui_drawer.draw_view(self.root_view.clone());
+        let root_view: &mut ViewBase = &mut self.root_view.try_borrow_mut().unwrap();
+
+        self.ui_drawer.draw_view(root_view);
 
         let font = &self.ui_drawer.assets.fonts.default;
 

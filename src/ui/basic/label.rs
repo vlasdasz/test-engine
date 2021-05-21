@@ -52,12 +52,14 @@ impl Label {
 
         content_size.width = last_max_x;
 
-        self.set_frame(Rect::make(
-            self.frame().origin.x,
-            self.frame().origin.y,
+        let rect = Rect::make(
+            self.view().frame().origin.x,
+            self.view().frame().origin.y,
             content_size.width,
             content_size.height,
-        ));
+        );
+
+        self.set_frame(rect);
     }
 }
 
@@ -101,55 +103,11 @@ impl DerefMut for Label {
 }
 
 impl View for Label {
-    fn color(&self) -> &Color {
-        self.base.color()
-    }
-    fn set_color(&mut self, color: Color) {
-        self.base.set_color(color)
+    fn view(&self) -> &ViewBase {
+        &self.base
     }
 
-    fn touch_enabled(&self) -> bool {
-        self.base.touch_enabled()
-    }
-    fn enable_touch(&mut self) {
-        self.base.enable_touch()
-    }
-
-    fn frame(&self) -> &Rect {
-        self.base.frame()
-    }
-    fn set_frame(&mut self, frame: Rect) {
-        self.base.set_frame(frame)
-    }
-
-    fn absolute_frame(&self) -> &Rect {
-        self.base.absolute_frame()
-    }
-    fn calculate_absolute_frame(&mut self) {
-        self.base.calculate_absolute_frame()
-    }
-
-    fn superview(&self) -> DynWeak<dyn View> {
-        self.base.superview()
-    }
-
-    fn set_superview(&mut self, superview: DynWeak<dyn View>) {
-        self.base.set_superview(superview)
-    }
-
-    fn subviews(&self) -> &[Shared<dyn View>] {
-        self.base.subviews()
-    }
-
-    fn add_subview(&mut self, view: Shared<dyn View>) {
-        self.base.add_subview(view)
-    }
-
-    fn remove_all_subviews(&mut self) {
-        self.base.remove_all_subviews()
-    }
-
-    fn check_touch(&self, touch: &mut Touch) {
-        self.base.check_touch(touch)
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
     }
 }

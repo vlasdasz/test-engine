@@ -1,6 +1,7 @@
 use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
+use std::ops::Deref;
 use std::rc::Weak;
 use tools::refs::{DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
@@ -12,34 +13,14 @@ pub enum ViewType {
 }
 
 pub trait View: AsAny {
-    fn color(&self) -> &Color;
-    fn set_color(&mut self, color: Color);
-
-    fn touch_enabled(&self) -> bool;
-    fn enable_touch(&mut self);
-
-    fn frame(&self) -> &Rect;
-    fn set_frame(&mut self, frame: Rect);
-
-    fn absolute_frame(&self) -> &Rect;
-    fn calculate_absolute_frame(&mut self);
-
-    fn superview(&self) -> DynWeak<dyn View>;
-    fn set_superview(&mut self, superview: DynWeak<dyn View>);
-
-    fn subviews(&self) -> &[Shared<dyn View>];
-
-    fn add_subview(&mut self, view: Shared<dyn View>);
-    fn remove_all_subviews(&mut self);
-
-    fn check_touch(&self, touch: &mut Touch);
-
+    fn view(&self) -> &ViewBase;
+    fn view_mut(&mut self) -> &mut ViewBase;
     fn setup(&mut self) {}
 }
 
 pub struct ViewBase {
-    _color: Color,
-    _touch_enabled: bool,
+    pub color: Color,
+    pub touch_enabled: bool,
 
     _frame: Rect,
     _absolute_frame: Rect,
@@ -64,36 +45,24 @@ impl ViewBase {
     pub fn on_touch(&self, touch: &Touch) {
         log!(touch);
     }
-}
-
-impl View for ViewBase {
-    fn color(&self) -> &Color {
-        &self._color
-    }
-    fn set_color(&mut self, color: Color) {
-        self._color = color
-    }
 
     fn touch_enabled(&self) -> bool {
-        self._touch_enabled
-    }
-    fn enable_touch(&mut self) {
-        self._touch_enabled = true
+        self.touch_enabled
     }
 
-    fn frame(&self) -> &Rect {
-        &self._frame
+    pub fn enable_touch(&mut self) {
+        self.touch_enabled = true
     }
 
-    fn set_frame(&mut self, frame: Rect) {
+    pub fn set_frame(&mut self, frame: Rect) {
         self._frame = frame
     }
 
-    fn absolute_frame(&self) -> &Rect {
+    pub fn absolute_frame(&self) -> &Rect {
         &self._absolute_frame
     }
 
-    fn calculate_absolute_frame(&mut self) {
+    pub fn calculate_absolute_frame(&mut self) {
         self._absolute_frame = self._frame;
 
         if self._superview.is_none() {
@@ -101,7 +70,11 @@ impl View for ViewBase {
         }
 
         if let Some(superview) = self._superview.as_ref().unwrap().upgrade() {
-            self._absolute_frame.origin += superview.try_borrow().unwrap().absolute_frame().origin;
+            if let Ok(superview) = superview.try_borrow() {
+                self._absolute_frame.origin += superview.view().absolute_frame().origin;
+            } else {
+                dbg!("fail");
+            }
         };
     }
 
@@ -113,32 +86,42 @@ impl View for ViewBase {
         self._superview = superview
     }
 
-    fn subviews(&self) -> &[Shared<dyn View>] {
+    pub fn subviews(&self) -> &[Shared<dyn View>] {
         &self._subviews
     }
 
-    fn add_subview(&mut self, view: Shared<dyn View>) {
+    pub fn add_subview(&mut self, view: Shared<dyn View>) {
         {
             let mut mut_ref = view.try_borrow_mut().unwrap();
-            mut_ref.set_superview(Some(self._weak.clone()));
-            mut_ref.setup();
+            mut_ref.view_mut().set_superview(Some(self._weak.clone()));
+            mut_ref.view_mut().setup();
         }
         self._subviews.push(view)
     }
 
-    fn remove_all_subviews(&mut self) {
+    pub fn remove_all_subviews(&mut self) {
         self._subviews.clear()
     }
 
-    fn check_touch(&self, touch: &mut Touch) {
-        if self._touch_enabled && self._absolute_frame.contains(&touch.position) {
+    pub fn check_touch(&self, touch: &mut Touch) {
+        if self.touch_enabled && self._absolute_frame.contains(&touch.position) {
             touch.position -= self._absolute_frame.origin;
             self.on_touch(touch);
         }
         for view in self.subviews() {
             let borrowed = view.try_borrow().unwrap();
-            borrowed.check_touch(touch);
+            borrowed.view().check_touch(touch);
         }
+    }
+}
+
+impl View for ViewBase {
+    fn view(&self) -> &ViewBase {
+        self
+    }
+
+    fn view_mut(&mut self) -> &mut Self {
+        self
     }
 }
 
@@ -151,8 +134,8 @@ impl AsAny for ViewBase {
 impl New for ViewBase {
     fn new() -> ViewBase {
         ViewBase {
-            _color: Color::DEFAULT,
-            _touch_enabled: false,
+            color: Color::DEFAULT,
+            touch_enabled: false,
             _frame: Rect::new(),
             _absolute_frame: Rect::new(),
             _superview: None,

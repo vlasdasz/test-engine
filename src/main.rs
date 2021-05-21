@@ -18,46 +18,53 @@ mod gl_wrapper;
 use crate::gl_wrapper::GLDrawer;
 use crate::gm::Size;
 use crate::te::Screen;
+use std::fmt::Debug;
 use std::ops::Deref;
+use tools::refs::{make_shared, Shared};
 
-struct Drawable {
-    pub handler: u32,
+trait Kokable: Debug {
+    fn kok(&self);
 }
 
-impl Drawable {
-    pub fn draw(&self) {
-        log!("kok")
-    }
-}
-
+#[derive(Debug)]
 struct Square {
-    pub base: Drawable,
     pub side: u32,
 }
 
-impl Deref for Square {
-    type Target = Drawable;
-    fn deref(&self) -> &Self::Target {
-        &self.base
+impl Kokable for Square {
+    fn kok(&self) {
+        dbg!("square kok");
     }
 }
 
+#[derive(Debug)]
 struct Circle {
-    pub base: Drawable,
     pub radius: u32,
 }
 
-fn start() {}
+impl Kokable for Circle {
+    fn kok(&self) {
+        dbg!("circle kok");
+    }
+}
+
+fn draw(dr: &dyn Kokable) {
+    dr.kok();
+    dbg!(dr);
+}
 
 fn main() {
-    let sq = Square {
-        base: Drawable { handler: 0 },
-        side: 0,
-    };
+    let mut vector: Vec<Box<dyn Kokable>> = vec![];
 
-    sq.draw();
+    vector.push(Box::new(Square { side: 0 }));
 
-    //   return;
+    vector.push(Box::new(Circle { radius: 0 }));
+
+    let shared = make_shared(Circle { radius: 14 });
+
+    let circle: &Circle = &shared.try_borrow().unwrap();
+
+    draw(circle);
 
     GLDrawer::<Screen>::with_size(Size {
         width: 1000.0,
