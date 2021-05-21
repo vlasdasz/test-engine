@@ -45,8 +45,7 @@ def copy(src, dst):
 def run(string):
     print(string)
     if os.system(string):
-        print("Shell script has failed")
-        exit()
+        raise Exception("Shell script has failed")
 
 
 def clone(rep, destination = ""):
@@ -97,4 +96,4 @@ if ios:
     run("xcodebuild -showsdks")
     run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
 else:
-    run("cargo build --verbose")
+    run("cargo build")
