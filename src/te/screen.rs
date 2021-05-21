@@ -13,17 +13,14 @@ use tools::New;
 
 pub struct Screen {
     cursor_position: Point,
-    root_view: Shared<ViewBase>,
+    root_view: ViewBase,
     ui_drawer: TEUIDrawer,
     char: u8,
 }
 
 impl Screen {
     fn on_touch(&mut self, mut touch: Touch) {
-        self.root_view
-            .try_borrow_mut()
-            .unwrap()
-            .check_touch(&mut touch)
+        self.root_view.check_touch(&mut touch)
     }
 }
 
@@ -33,7 +30,7 @@ impl Updatable for Screen {
         let ui_drawer = TEUIDrawer::new(assets);
         Screen {
             cursor_position: Point::new(),
-            root_view: ViewBase::new_shared(),
+            root_view: ViewBase::new(),
             ui_drawer,
             char: 0,
         }
@@ -47,17 +44,15 @@ impl Updatable for Screen {
         label.font = self.ui_drawer.assets.fonts.default.clone();
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadag4ka");
 
-        self.root_view.borrow_mut().add_subview(make_shared(label));
+        self.root_view.add_subview(make_shared(label));
 
         let mut image_view = ImageView::new();
 
         image_view.image = self.ui_drawer.assets.images.cat;
         image_view.set_frame(Rect::make(10.0, 100.0, 200.0, 200.0));
-        self.root_view
-            .borrow_mut()
-            .add_subview(make_shared(image_view));
+        self.root_view.add_subview(make_shared(image_view));
 
-        self.root_view.borrow_mut().make_subview(|view| {
+        self.root_view.make_subview(|view| {
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));
             view.color = Color::BLUE;
 
@@ -76,9 +71,7 @@ impl Updatable for Screen {
 
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
-        self.root_view
-            .borrow_mut()
-            .set_frame(Rect::from_size(&size));
+        self.root_view.set_frame(Rect::from_size(&size));
     }
 
     fn on_cursor_moved(&mut self, position: Point) {
@@ -96,9 +89,7 @@ impl Updatable for Screen {
     fn update(&mut self) {
         GLWrapper::clear();
 
-        let root_view: &mut ViewBase = &mut self.root_view.try_borrow_mut().unwrap();
-
-        self.ui_drawer.draw_view(root_view);
+        self.ui_drawer.draw_view(&mut self.root_view);
 
         let font = &self.ui_drawer.assets.fonts.default;
 
