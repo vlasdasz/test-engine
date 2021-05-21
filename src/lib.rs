@@ -2,7 +2,7 @@
 #![allow(unused_unsafe)]
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
-#![feature(concat_idents)]
+//#![feature(concat_idents)]
 
 use std::os::raw::c_float;
 use std::ptr;
