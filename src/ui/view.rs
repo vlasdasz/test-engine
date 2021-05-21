@@ -43,7 +43,7 @@ impl ViewBase {
     }
 
     pub fn on_touch(&self, touch: &Touch) {
-        log!(touch);
+        dbg!(touch);
     }
 
     fn touch_enabled(&self) -> bool {
@@ -65,17 +65,20 @@ impl ViewBase {
     pub fn calculate_absolute_frame(&mut self) {
         self._absolute_frame = self._frame;
 
-        if self._superview.is_none() {
-            return;
-        }
-
-        if let Some(superview) = self._superview.as_ref().unwrap().upgrade() {
-            if let Ok(superview) = superview.try_borrow() {
-                self._absolute_frame.origin += superview.view().absolute_frame().origin;
+        if let Some(superview) = &self._superview {
+            if let Some(superview) = superview.upgrade() {
+                if let Ok(mut superview) = superview.try_borrow_mut() {
+                    let superview: &mut ViewBase = &mut superview.view_mut();
+                    self._absolute_frame.origin += superview._absolute_frame.origin;
+                } else {
+                  //  dbg!("failed to borrow");
+                }
             } else {
-                dbg!("fail");
+                //TODO: check why this happens
+                dbg!("failed to upgrade, cleaning");
+                self._superview = None;
             }
-        };
+        }
     }
 
     fn superview(&self) -> DynWeak<dyn View> {
