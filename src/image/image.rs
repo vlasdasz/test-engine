@@ -51,7 +51,7 @@ impl Image {
             let c_path = CString::new(path.to_str().unwrap()).expect("CString::new failed");
 
             cfg_if::cfg_if! {
-                if #[cfg(all(target_os = "linux", target_arch = "arm"))] {
+                if #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))] {
                     type CPath = *const u8;
                 }
                 else {
