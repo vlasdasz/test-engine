@@ -47,13 +47,13 @@ impl Updatable for Screen {
         self.root_view.add_subview(make_shared(label));
 
         let mut image_view = ImageView::from_rect(Rect::make(100.0, 100.0, 200.0, 200.0));
-        image_view.image = self.ui_drawer.assets.images.cat;
+        image_view.image = self.ui_drawer.assets.images.frisk;
 
         let mut image2 = ImageView::from_rect(Rect::make(10.0, 10.0, 100.0, 100.0));
-        image2.image = self.ui_drawer.assets.images.cat;
+        image2.image = self.ui_drawer.assets.images.frisk;
 
         let mut image3 = ImageView::from_rect(Rect::make(10.0, 10.0, 50.0, 50.0));
-        image3.image = self.ui_drawer.assets.images.cat;
+        image3.image = self.ui_drawer.assets.images.frisk;
         image2.add_subview(make_shared(image3));
 
         image_view.add_subview(make_shared(image2));

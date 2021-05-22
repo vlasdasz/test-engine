@@ -2,6 +2,7 @@
 
 use crate::gl_wrapper::{GLWrapper, TextureLoader};
 use crate::gm::Size;
+use image::GenericImageView;
 #[cfg(not(target_os = "ios"))]
 use soil2::{SOIL_free_image_data, SOIL_load_image};
 use std::ffi::{c_void, CString};
@@ -36,13 +37,30 @@ impl Image {
                 Image { size: Size::new(), channels: 0, gl_handle: 0 }
             }
             else {
-                Image::load_soil(path)
+                Image::load_with_image(path)
             }
         }
     }
 
+    pub fn load_with_image(path: &PathBuf) -> Image {
+        let image = image::open(path).expect(&format!("Failed to open image {:?}", path));
+
+        let dimensions = image.dimensions();
+
+        let data = image.as_bytes();
+
+        let channels = image.color().channel_count();
+
+        let size = Size {
+            width: dimensions.0 as f32,
+            height: dimensions.1 as f32,
+        };
+
+        Image::from(data.as_ptr() as *const c_void, size, channels as u32)
+    }
+
     #[cfg(not(target_os = "ios"))]
-    pub fn load_soil(path: &PathBuf) -> Image {
+    pub fn load_with_soil(path: &PathBuf) -> Image {
         unsafe {
             let mut width: c_int = -1;
             let mut height: c_int = -1;
