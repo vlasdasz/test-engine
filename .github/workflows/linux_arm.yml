@@ -17,6 +17,6 @@ jobs:
         arch:
           - arm64
     steps:
-      - uses: apoorv33/azure-arm@V6
+      - uses: actions/checkout@v2
       - name: linux arm
         run: python3 build.py
