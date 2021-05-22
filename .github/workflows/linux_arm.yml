@@ -1,0 +1,18 @@
+name: Linux arm
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: apoorv33/azure-arm@V6
+      - name: linux arm
+        run: python3 build.py
