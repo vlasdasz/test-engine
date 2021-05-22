@@ -64,10 +64,11 @@ def link_deps():
         print("exists")
 
 print("Arch:")
-print(platform.architecture())
+print(platform.uname())
 
 def linux_setup():
     print("Lin setup")
+    run("sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
     link_deps()
 
 
