@@ -3,7 +3,6 @@ use crate::gm::Rect;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
-use std::ops::{Deref, DerefMut};
 use tools::refs::{make_shared, MutWeak};
 use tools::weak_self::HasWeakSelf;
 use tools::{AsAny, HasNew};

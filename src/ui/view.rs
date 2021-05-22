@@ -112,19 +112,19 @@ impl ViewBase {
     }
 
     fn super_frame(&self) -> Rect {
-        return if let Some(superview) = &self._superview {
-            if let Some(superview) = superview.upgrade() {
-                if let Ok(superview) = superview.try_borrow() {
-                    *superview.view().absolute_frame()
-                } else {
-                    Rect::DEFAULT
-                }
+        guard!(let Some(superview) = &self._superview else {
+            return Rect::DEFAULT;
+        });
+
+        if let Some(superview) = superview.upgrade() {
+            if let Ok(superview) = superview.try_borrow() {
+                *superview.view().absolute_frame()
             } else {
                 Rect::DEFAULT
             }
         } else {
             Rect::DEFAULT
-        };
+        }
     }
 
     pub fn calculate_absolute_frame(&mut self) {
