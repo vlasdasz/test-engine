@@ -21,12 +21,6 @@ impl AsAny for ImageView {
     }
 }
 
-// impl From<Rect> for ImageView {
-//     fn from(rect: Rect) -> Self {
-//         let new
-//     }
-// }
-
 impl HasNew for ImageView {
     fn new() -> Self {
         Self {

@@ -40,17 +40,23 @@ impl Updatable for Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
-        let mut label = Label::new();
+        let mut label = Label::from_rect(Rect::make(500.0, 100.0, 200.0, 200.0));
         label.font = self.ui_drawer.assets.fonts.default.clone();
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadag4ka");
 
         self.root_view.add_subview(make_shared(label));
 
-        let mut image_view = ImageView::new();
+        let mut image_view = ImageView::from_rect(Rect::make(100.0, 100.0, 200.0, 200.0));
         image_view.image = self.ui_drawer.assets.images.cat;
-        image_view.set_frame(Rect::make(10.0, 100.0, 200.0, 200.0));
 
-        //   let mu
+        let mut image2 = ImageView::from_rect(Rect::make(10.0, 10.0, 100.0, 100.0));
+        image2.image = self.ui_drawer.assets.images.cat;
+
+        let mut image3 = ImageView::from_rect(Rect::make(10.0, 10.0, 50.0, 50.0));
+        image3.image = self.ui_drawer.assets.images.cat;
+        image2.add_subview(make_shared(image3));
+
+        image_view.add_subview(make_shared(image2));
 
         self.root_view.add_subview(make_shared(image_view));
 
@@ -73,7 +79,7 @@ impl Updatable for Screen {
 
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
-        self.root_view.set_frame(Rect::from_size(&size));
+        self.root_view.set_frame(Rect::from(size));
     }
 
     fn on_cursor_moved(&mut self, position: Point) {

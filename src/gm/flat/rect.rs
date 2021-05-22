@@ -16,13 +16,6 @@ impl Rect {
         }
     }
 
-    pub const fn from_size(size: &Size) -> Rect {
-        Rect {
-            origin: Point::new(),
-            size: *size,
-        }
-    }
-
     pub const fn make(x: f32, y: f32, width: f32, height: f32) -> Rect {
         Rect {
             origin: Point { x, y },
@@ -41,5 +34,14 @@ impl Rect {
             && point.y >= self.origin.y
             && point.x <= self.origin.x + self.size.width
             && point.y <= self.origin.y + self.size.height
+    }
+}
+
+impl From<Size> for Rect {
+    fn from(size: Size) -> Self {
+        Rect {
+            origin: Point::new(),
+            size,
+        }
     }
 }

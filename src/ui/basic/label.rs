@@ -31,16 +31,14 @@ impl Label {
         for letter in text.chars() {
             let glyph = self.font.glyph_for_char(letter);
 
-            let mut glyph_view = ImageView::new();
-
-            glyph_view.set_frame(Rect::from_size(&glyph.size()));
+            let mut glyph_view = ImageView::from_rect(Rect::from(glyph.size));
             glyph_view.image = glyph.image;
 
             glyph_view.set_frame(Rect::make(
                 advance + glyph.bearing.x,
                 content_size.height - glyph.bearing.y + self.font.baseline_shift,
-                glyph.size().width,
-                glyph.size().height,
+                glyph.size.width,
+                glyph.size.height,
             ));
 
             last_max_x = glyph_view.frame().max_x();
@@ -93,14 +91,6 @@ impl HasWeakSelf for Label {
 
     fn set_weak(&mut self, weak: MutWeak<Self>) {
         self._weak = weak
-    }
-}
-
-impl From<Rect> for Label {
-    fn from(rect: Rect) -> Self {
-        let mut new = Label::new();
-        new.set_frame(rect);
-        new
     }
 }
 

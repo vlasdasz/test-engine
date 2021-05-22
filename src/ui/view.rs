@@ -12,7 +12,7 @@ pub enum ViewType {
     Image,
 }
 
-pub trait View: AsAny {
+pub trait View: AsAny + HasNew {
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
     fn setup(&mut self) {}
@@ -43,6 +43,15 @@ pub trait View: AsAny {
 
     fn remove_all_subviews(&mut self) {
         self.view_mut()._remove_all_subviews()
+    }
+
+    fn from_rect(rect: Rect) -> Self
+    where
+        Self: Sized,
+    {
+        let mut new = Self::new();
+        new.set_frame(rect);
+        new
     }
 }
 
@@ -167,14 +176,6 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
-    }
-}
-
-impl From<Rect> for ViewBase {
-    fn from(rect: Rect) -> Self {
-        let mut new = ViewBase::new();
-        new._frame = rect;
-        new
     }
 }
 
