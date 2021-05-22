@@ -1,4 +1,4 @@
 fn main() {
-    #[cfg(any(target_os = "ios", target_os = "macos"))]
+    #[cfg(target_os = "ios")]
     println!("cargo:rustc-link-lib=framework=OpenGLES");
 }

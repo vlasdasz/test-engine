@@ -5,7 +5,6 @@ use crate::te::Assets;
 use crate::tools::platform::Platform;
 use crate::ui::view::View;
 use crate::ui::ImageView;
-use std::ops::DerefMut;
 
 pub struct TEUIDrawer {
     pub assets: Assets,
@@ -33,11 +32,11 @@ impl TEUIDrawer {
             self.draw_image_in_rect(
                 &image_view.image,
                 image_view.absolute_frame(),
-                &image_view.color,
+                &image_view.color(),
             );
-        } else {
-            self.draw_rect(view.view().absolute_frame(), &view.view().color);
         }
+
+        self.draw_rect(view.absolute_frame(), &view.color());
 
         for view in view.view().subviews() {
             match view.try_borrow_mut().as_deref_mut() {
@@ -73,6 +72,10 @@ impl TEUIDrawer {
     }
 
     pub fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: &Color) {
+        if image.invalid() {
+            return;
+        }
+
         if rect.size.is_negative() {
             return;
         }

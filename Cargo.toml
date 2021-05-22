@@ -6,21 +6,16 @@ edition = "2018"
 
 [lib]
 name = "test_engine"
-crate-type = ["staticlib"]
 
 [[bin]]
 name = "test_engine"
 
-[build-dependencies]
-dirs = "3.0.1"
-
 [dependencies]
-git = "0.3.0"
+num = "0.4.0"
 rand = "0.8.3"
 guard = "0.5.0"
 cfg-if = "1.0.0"
 fontdue = "0.4.0"
-num-traits = "0.2.14"
 derivative = "2.2.0"
 
 tools = { path = ".rdeps/tools" }
@@ -33,6 +28,3 @@ glfw = "0.41.0"
 
 [target.'cfg(target_os="ios")'.dependencies]
 gles31-sys = { path = ".rdeps/gles31-sys" }
-
-[[example]]
-name = "gles_load"

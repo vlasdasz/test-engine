@@ -16,13 +16,41 @@ pub trait View: AsAny {
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
     fn setup(&mut self) {}
+
+    fn color(&self) -> &Color {
+        self.view()._get_color()
+    }
+
+    fn set_color(&mut self, color: Color) {
+        self.view_mut()._set_color(color)
+    }
+
+    fn frame(&self) -> &Rect {
+        self.view()._frame()
+    }
+
+    fn set_frame(&mut self, rect: Rect) {
+        self.view_mut()._set_frame(rect)
+    }
+
+    fn absolute_frame(&self) -> &Rect {
+        self.view()._absolute_frame()
+    }
+
+    fn add_subview(&mut self, view: Shared<dyn View>) {
+        self.view_mut()._add_subview(view)
+    }
+
+    fn remove_all_subviews(&mut self) {
+        self.view_mut()._remove_all_subviews()
+    }
 }
 
 #[derive(Derivative)]
 #[derivative(Debug)]
 pub struct ViewBase {
-    pub color: Color,
-    pub touch_enabled: bool,
+    _color: Color,
+    _touch_enabled: bool,
 
     _frame: Rect,
     _absolute_frame: Rect,
@@ -36,8 +64,16 @@ pub struct ViewBase {
 }
 
 impl ViewBase {
-    pub fn frame(&self) -> &Rect {
+    pub(self) fn _frame(&self) -> &Rect {
         &self._frame
+    }
+
+    pub(self) fn _get_color(&self) -> &Color {
+        &self._color
+    }
+
+    pub(self) fn _set_color(&mut self, color: Color) {
+        self._color = color
     }
 
     pub fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
@@ -51,18 +87,18 @@ impl ViewBase {
     }
 
     fn touch_enabled(&self) -> bool {
-        self.touch_enabled
+        self._touch_enabled
     }
 
     pub fn enable_touch(&mut self) {
-        self.touch_enabled = true
+        self._touch_enabled = true
     }
 
-    pub fn set_frame(&mut self, frame: Rect) {
+    pub(self) fn _set_frame(&mut self, frame: Rect) {
         self._frame = frame
     }
 
-    pub fn absolute_frame(&self) -> &Rect {
+    pub(self) fn _absolute_frame(&self) -> &Rect {
         &self._absolute_frame
     }
 
@@ -99,7 +135,7 @@ impl ViewBase {
         &self._subviews
     }
 
-    pub fn add_subview(&mut self, view: Shared<dyn View>) {
+    pub(self) fn _add_subview(&mut self, view: Shared<dyn View>) {
         {
             let mut mut_ref = view.try_borrow_mut().unwrap();
             mut_ref.view_mut().set_superview(Some(self._weak.clone()));
@@ -108,12 +144,12 @@ impl ViewBase {
         self._subviews.push(view)
     }
 
-    pub fn remove_all_subviews(&mut self) {
+    pub(self) fn _remove_all_subviews(&mut self) {
         self._subviews.clear()
     }
 
     pub fn check_touch(&self, touch: &mut Touch) {
-        if self.touch_enabled && self._absolute_frame.contains(&touch.position) {
+        if self._touch_enabled && self._absolute_frame.contains(&touch.position) {
             touch.position -= self._absolute_frame.origin;
             self.on_touch(touch);
         }
@@ -134,6 +170,14 @@ impl View for ViewBase {
     }
 }
 
+impl From<Rect> for ViewBase {
+    fn from(rect: Rect) -> Self {
+        let mut new = ViewBase::new();
+        new._frame = rect;
+        new
+    }
+}
+
 impl AsAny for ViewBase {
     fn as_any(&self) -> &dyn Any {
         self
@@ -143,8 +187,8 @@ impl AsAny for ViewBase {
 impl HasNew for ViewBase {
     fn new() -> ViewBase {
         ViewBase {
-            color: Color::DEFAULT,
-            touch_enabled: false,
+            _color: Color::DEFAULT,
+            _touch_enabled: false,
             _frame: Rect::new(),
             _absolute_frame: Rect::new(),
             _superview: None,

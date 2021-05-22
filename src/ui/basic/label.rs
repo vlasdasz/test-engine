@@ -59,7 +59,14 @@ impl Label {
             content_size.height,
         );
 
-        self.set_frame(rect);
+        let frame = Rect::make(
+            self.view().frame().origin.x,
+            self.view().frame().origin.y,
+            content_size.width,
+            content_size.height,
+        );
+
+        self.set_frame(frame);
     }
 }
 
@@ -89,16 +96,11 @@ impl HasWeakSelf for Label {
     }
 }
 
-impl Deref for Label {
-    type Target = ViewBase;
-    fn deref(&self) -> &Self::Target {
-        &self.base
-    }
-}
-
-impl DerefMut for Label {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.base
+impl From<Rect> for Label {
+    fn from(rect: Rect) -> Self {
+        let mut new = Label::new();
+        new.set_frame(rect);
+        new
     }
 }
 

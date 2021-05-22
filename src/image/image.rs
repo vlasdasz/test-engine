@@ -26,6 +26,10 @@ impl Image {
         }
     }
 
+    pub fn invalid(&self) -> bool {
+        self.gl_handle == u32::MAX
+    }
+
     pub fn load(path: &PathBuf) -> Image {
         cfg_if::cfg_if! {
             if #[cfg(target_os ="ios")] {

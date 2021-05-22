@@ -1,5 +1,6 @@
 use crate::image::Image;
 
+use crate::gm::Rect;
 use crate::ui::view::View;
 use crate::ui::ViewBase;
 use std::any::Any;
@@ -19,6 +20,12 @@ impl AsAny for ImageView {
         self
     }
 }
+
+// impl From<Rect> for ImageView {
+//     fn from(rect: Rect) -> Self {
+//         let new
+//     }
+// }
 
 impl HasNew for ImageView {
     fn new() -> Self {
@@ -46,19 +53,6 @@ impl View for ImageView {
     }
 
     fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-}
-
-impl Deref for ImageView {
-    type Target = ViewBase;
-    fn deref(&self) -> &Self::Target {
-        &self.base
-    }
-}
-
-impl DerefMut for ImageView {
-    fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.base
     }
 }
