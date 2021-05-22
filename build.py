@@ -63,10 +63,11 @@ def link_deps():
     except FileExistsError:
         print("exists")
 
+print("Arch:")
+print(platform.architecture())
+
 def linux_setup():
     print("Lin setup")
-    run("uname -a")
-    run("sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
     link_deps()
 
 
