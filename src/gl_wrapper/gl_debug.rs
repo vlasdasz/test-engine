@@ -25,9 +25,14 @@ macro_rules! GLC {
 #[cfg(target_os = "ios")]
 #[macro_export]
 macro_rules! GLC {
-    ($constant:ident) => {
-        concat_idents!(GL_, $constant)
-    };
+    ($constant:ident) => {{
+        mashup! {
+            glc["GLC"] = GL_ $constant;
+        }
+        glc! {
+            "GLC"
+        }
+    }};
 }
 
 #[cfg(not(target_os = "ios"))]
@@ -84,7 +89,12 @@ macro_rules! GL {
 macro_rules! GL {
     ($call:ident) => {
         unsafe {
-            let function = concat_idents!(gl, $call);
+            mashup! {
+                gl["GL"] = gl $call;
+            }
+            let function = gl! {
+                "GL"
+            };
             let ret = function();
             check_gl_error!();
             ret
@@ -92,13 +102,15 @@ macro_rules! GL {
     };
     ($call:ident, $($args:expr), *) => {
         unsafe {
-            let function = concat_idents!(gl, $call);
+            mashup! {
+                gl2["GL2"] = gl $call;
+            }
+            let function = gl2! {
+                "GL2"
+            };
             let ret = function($($args,)*);
             check_gl_error!();
             ret
         }
     };
 }
-
-// let function = concat_idents!(gl, $call);
-// let ret = function($($args,)*);

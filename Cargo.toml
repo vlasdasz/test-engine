@@ -12,6 +12,8 @@ crate-type = ["staticlib"]
 name = "test_engine"
 
 [dependencies]
+mashup = "0.1.12"
+
 num = "0.4.0"
 rand = "0.8.3"
 guard = "0.5.0"
@@ -21,12 +23,12 @@ fontdue = "0.4.0"
 derivative = "2.2.0"
 
 tools = { path = ".rdeps/tools" }
-soil2 = { path = ".rdeps/soil2" }
 
 
 [target.'cfg(not(target_os="ios"))'.dependencies]
 gl = "0.14.0"
 glfw = "0.41.0"
+soil2 = { path = ".rdeps/soil2" }
 
 [target.'cfg(target_os="ios")'.dependencies]
 gles31-sys = { path = ".rdeps/gles31-sys" }

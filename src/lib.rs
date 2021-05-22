@@ -23,6 +23,8 @@ extern crate tools;
 extern crate guard;
 #[macro_use]
 extern crate derivative;
+#[macro_use]
+extern crate mashup;
 
 static mut SCREEN: *mut Screen = ptr::null_mut();
 
