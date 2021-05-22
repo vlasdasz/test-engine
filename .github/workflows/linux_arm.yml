@@ -12,6 +12,10 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - arm64
     steps:
       - uses: apoorv33/azure-arm@V6
       - name: linux arm
