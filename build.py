@@ -64,7 +64,7 @@ def link_deps():
         print("exists")
 
 print("Arch:")
-print(platform.architecture())
+print(platform.uname())
 
 def linux_setup():
     print("Lin setup")
