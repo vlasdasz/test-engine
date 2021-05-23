@@ -1,15 +1,17 @@
-// void* data, float width, float height, uint8_t channels
+use cfg_if::cfg_if;
+
+cfg_if! {if #[cfg(not(target_os = "ios"))] {
+    use crate::check_gl_error;
+    use soil2::{SOIL_free_image_data, SOIL_load_image};
+    use std::os::raw::c_int;
+    use std::ffi::CString;
+}}
 
 use crate::gl_wrapper::{GLWrapper, TextureLoader};
 use crate::gm::Size;
 use image::GenericImageView;
-#[cfg(not(target_os = "ios"))]
-use soil2::{SOIL_free_image_data, SOIL_load_image};
-use std::ffi::{c_void, CString};
-use std::os::raw::c_int;
+use std::ffi::c_void;
 use std::path::PathBuf;
-
-use crate::check_gl_error;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Image {

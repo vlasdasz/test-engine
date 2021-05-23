@@ -9,8 +9,6 @@ extern crate tools;
 extern crate guard;
 #[macro_use]
 extern crate derivative;
-#[macro_use]
-extern crate mashup;
 
 mod gm;
 mod image;

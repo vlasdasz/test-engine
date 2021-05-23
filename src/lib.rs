@@ -2,7 +2,6 @@
 #![allow(unused_unsafe)]
 #![allow(unreachable_code)]
 #![allow(unused_variables)]
-//#![feature(concat_idents)]
 
 use std::os::raw::c_float;
 use std::ptr;
@@ -23,6 +22,7 @@ extern crate tools;
 extern crate guard;
 #[macro_use]
 extern crate derivative;
+#[cfg(target_os = "ios")]
 #[macro_use]
 extern crate mashup;
 

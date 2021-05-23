@@ -1,4 +1,5 @@
 use crate::gm::Point;
+#[cfg(not(target_os = "ios"))]
 use crate::ui::input::touch::MouseButton::Undefined;
 #[cfg(not(target_os = "ios"))]
 use glfw::Action;
