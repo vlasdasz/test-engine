@@ -7,12 +7,14 @@
 [WIN1]: https://github.com/vladasz/test_engine/actions/workflows/windows.yml/badge.svg
 [IOSS1]: https://github.com/vladasz/test_engine/actions/workflows/ios_sim.yml/badge.svg
 [IOSD1]: https://github.com/vladasz/test_engine/actions/workflows/ios_dev.yml/badge.svg
+[ANDR1]: https://github.com/vladasz/test_engine/actions/workflows/android.yml/badge.svg
 
 [LMAC]: https://github.com/VladasZ/test_engine/actions/workflows/mac.yml
 [LLIN]: https://github.com/VladasZ/test_engine/actions/workflows/linux.yml
 [LWIN]: https://github.com/VladasZ/test_engine/actions/workflows/windows.yml
 [LIOSS]: https://github.com/VladasZ/test_engine/actions/workflows/ios_sim.yml
 [LIOSD]: https://github.com/VladasZ/test_engine/actions/workflows/ios_dev.yml
+[ANDR]: https://github.com/VladasZ/test_engine/actions/workflows/android.yml
 
 Desktop:
 
@@ -22,7 +24,8 @@ Desktop:
 
 Mobile:
 
-[![IOSS][IOSS1]][LIOSS]
+[![IOS][IOSS1]][LIOSS]
+[![ANDR][ANDR1]][ANDR]
 
 
 ---
