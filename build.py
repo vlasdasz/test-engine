@@ -34,9 +34,6 @@ tools_path = deps_path + "tools/"
 gles_path = deps_path + "gles31-sys/"
 soil_path = deps_path + "soil2/"
 
-if 
-
-
 def copy(src, dst):
     print("Copying:\n" + src + " to:\n" + dst)
     if os.path.isfile(src):
