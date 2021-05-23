@@ -12,11 +12,13 @@ is_linux   = platform.system() == "Linux"
 unix = is_mac or is_linux
 
 ios = False
+android = False
 
 if len(sys.argv) > 1:
     if sys.argv[1] == "ios":
         ios = True
-
+    if sys.argv[1] == "android":
+        android = True
 
 
 def _get_home():
@@ -31,6 +33,8 @@ deps_path = home + "/.rdeps/"
 tools_path = deps_path + "tools/"
 gles_path = deps_path + "gles31-sys/"
 soil_path = deps_path + "soil2/"
+
+if 
 
 
 def copy(src, dst):
@@ -50,6 +54,12 @@ def run(string):
 def clone(rep, destination = ""):
     if not os.path.exists(destination):
         run("git clone --recursive https://github.com/vladasz/" + rep + " " + destination)
+
+
+if android:
+    run("echo $ANDROID_HOME")
+    run("echo $NDK_HOME")
+    exit()
 
 
 clone("soil2", soil_path)
