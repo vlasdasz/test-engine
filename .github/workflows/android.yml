@@ -15,5 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: nttld/setup-ndk@v1.0.5
+        with:
+          ndk-version: r21e
       - name: android
         run: python3 build.py android
