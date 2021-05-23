@@ -59,8 +59,8 @@ if android:
     run("ls $ANDROID_HOME")
     run("ls $ANDROID_HOME/ndk")
     run("mkdir NDK")
+    run("rustup target add aarch64-linux-android")
     run("${ANDROID_HOME}/ndk/22.1.7171670/build/tools/make_standalone_toolchain.py --api 26 --arch arm64 --install-dir NDK/arm64")
-    exit()
 
 
 clone("soil2", soil_path)
@@ -109,5 +109,7 @@ if ios:
     os.chdir("mobile/iOS")
     run("xcodebuild -showsdks")
     run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
+if android:
+    run("cargo build --target aarch64-linux-android --release --lib")
 else:
     run("cargo build")
