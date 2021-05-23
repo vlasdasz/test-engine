@@ -58,6 +58,8 @@ if android:
     run("echo $NDK_HOME")
     run("ls $ANDROID_HOME")
     run("ls $ANDROID_HOME/ndk")
+    run("mkdir NDK")
+    run("${ANDROID_HOME}/ndk/22.1.7171670/build/tools/make_standalone_toolchain.py --api 26 --arch arm64 --install-dir NDK/arm64")
     exit()
 
 
