@@ -56,6 +56,7 @@ def clone(rep, destination = ""):
 if android:
     run("echo $ANDROID_HOME")
     run("echo $NDK_HOME")
+    run("ls $ANDROID_HOME/ndk")
     exit()
 
 
