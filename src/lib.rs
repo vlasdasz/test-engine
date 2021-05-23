@@ -22,7 +22,7 @@ extern crate tools;
 extern crate guard;
 #[macro_use]
 extern crate derivative;
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]
 extern crate mashup;
 

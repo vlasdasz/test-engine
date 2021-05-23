@@ -1,6 +1,6 @@
 use cfg_if::cfg_if;
 
-cfg_if! {if #[cfg(not(target_os = "ios"))] {
+cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
     use crate::check_gl_error;
     use soil2::{SOIL_free_image_data, SOIL_load_image};
     use std::os::raw::c_int;
@@ -35,7 +35,7 @@ impl Image {
 
     pub fn load(path: &PathBuf) -> Image {
         cfg_if::cfg_if! {
-            if #[cfg(target_os ="ios")] {
+            if #[cfg(any(target_os="ios", target_os="android"))] {
                 Image { size: Size::new(), channels: 0, gl_handle: 0 }
             }
             else {
@@ -61,7 +61,7 @@ impl Image {
         Image::from(data.as_ptr() as *const c_void, size, channels as u32)
     }
 
-    #[cfg(not(target_os = "ios"))]
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn load_with_soil(path: &PathBuf) -> Image {
         unsafe {
             let mut width: c_int = -1;

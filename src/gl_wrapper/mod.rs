@@ -1,15 +1,14 @@
 #[macro_use]
 pub mod gl_debug;
 
-#[cfg(not(target_os = "ios"))]
-pub mod gl_drawer;
-#[cfg(not(target_os = "ios"))]
-pub mod gl_loader;
+use cfg_if::cfg_if;
 
-#[cfg(not(target_os = "ios"))]
-pub use gl_drawer::GLDrawer;
-#[cfg(not(target_os = "ios"))]
-pub use gl_loader::GLLoader;
+cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
+    pub mod gl_drawer;
+    pub mod gl_loader;
+    pub use gl_drawer::GLDrawer;
+    pub use gl_loader::GLLoader;
+}}
 
 pub mod buffer;
 pub mod gl_info;

@@ -1,4 +1,4 @@
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
 
 use crate::gl_wrapper::BufferConfig;
@@ -45,7 +45,7 @@ impl Buffer {
         GL!(BindBuffer, GLC!(ARRAY_BUFFER), vertex_buffer_object);
 
         cfg_if::cfg_if! {
-            if #[cfg(target_os = "ios")] {
+            if #[cfg(any(target_os="ios", target_os="android"))] {
                 type VertexSize = i64;
             }
             else {

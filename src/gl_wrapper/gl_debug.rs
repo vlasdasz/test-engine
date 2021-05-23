@@ -1,4 +1,4 @@
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 #[macro_export]
 macro_rules! GLT {
     ($type:ident) => {
@@ -6,7 +6,7 @@ macro_rules! GLT {
     };
 }
 
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_export]
 macro_rules! GLT {
     ($type:ident) => {
@@ -14,7 +14,7 @@ macro_rules! GLT {
     };
 }
 
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 #[macro_export]
 macro_rules! GLC {
     ($constant:ident) => {
@@ -22,7 +22,7 @@ macro_rules! GLC {
     };
 }
 
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_export]
 macro_rules! GLC {
     ($constant:ident) => {{
@@ -35,7 +35,7 @@ macro_rules! GLC {
     }};
 }
 
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 #[macro_export]
 macro_rules! check_gl_error {
     () => {{
@@ -50,7 +50,7 @@ macro_rules! check_gl_error {
     }};
 }
 
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_export]
 macro_rules! check_gl_error {
     () => {{
@@ -65,7 +65,7 @@ macro_rules! check_gl_error {
     }};
 }
 
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 #[macro_export]
 macro_rules! GL {
     ($call:ident) => {
@@ -84,7 +84,7 @@ macro_rules! GL {
     };
 }
 
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_export]
 macro_rules! GL {
     ($call:ident) => {

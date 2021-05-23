@@ -1,8 +1,11 @@
-#[cfg(target_os = "ios")]
-use gles31_sys::*;
+use cfg_if::cfg_if;
 
-#[cfg(not(target_os = "ios"))]
-extern crate gl;
+cfg_if! {
+if #[cfg(any(target_os="ios", target_os="android"))] {
+    use gles31_sys::*;
+} else {
+    extern crate gl;
+}}
 
 use tools::regex::find_match;
 
@@ -24,7 +27,10 @@ impl GLInfo {
         let c_str: &CStr = unsafe {
             let full_gl_version = GL!(GetString, id);
             cfg_if::cfg_if! {
-                if #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))] {
+                if #[cfg(
+                    any(
+                     all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")),
+                     target_os = "android"))] {
                     type CPath = *const u8;
                 }
                 else {

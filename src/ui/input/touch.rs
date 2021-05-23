@@ -1,7 +1,7 @@
 use crate::gm::Point;
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use crate::ui::input::touch::MouseButton::Undefined;
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::Action;
 
 pub enum MouseButton {
@@ -11,7 +11,7 @@ pub enum MouseButton {
     Undefined,
 }
 
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 impl MouseButton {
     pub fn from_glfw(btn: glfw::MouseButton) -> Self {
         match btn {
@@ -29,7 +29,7 @@ pub enum ButtonState {
     Repeat,
 }
 
-#[cfg(not(target_os = "ios"))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 impl ButtonState {
     pub fn from_glfw(action: Action) -> Self {
         match action {

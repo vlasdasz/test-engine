@@ -23,11 +23,11 @@ derivative = "2.2.0"
 tools = { path = ".rdeps/tools" }
 
 
-[target.'cfg(not(target_os="ios"))'.dependencies]
+[target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14.0"
 glfw = "0.41.0"
 soil2 = { path = ".rdeps/soil2" }
 
-[target.'cfg(target_os="ios")'.dependencies]
+[target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 mashup = "0.1.12"
 gles31-sys = { path = ".rdeps/gles31-sys" }

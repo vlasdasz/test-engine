@@ -1,8 +1,11 @@
-#[cfg(not(target_os = "ios"))]
-extern crate gl;
+use cfg_if::cfg_if;
 
-#[cfg(target_os = "ios")]
-use gles31_sys::*;
+cfg_if! {
+if #[cfg(any(target_os="ios", target_os="android"))] {
+    use gles31_sys::*;
+} else {
+    extern crate gl;
+}}
 
 use std::ffi::CString;
 use std::fs;
