@@ -1,9 +1,9 @@
+pub use assets::*;
+pub use screen::*;
+
 pub mod assets;
 pub mod paths;
 pub mod screen;
-pub mod ui;
+pub mod ui_drawer;
 
-pub use ui::TEUIDrawer;
-
-pub use assets::*;
-pub use screen::*;
+pub use ui_drawer::UIDrawer;

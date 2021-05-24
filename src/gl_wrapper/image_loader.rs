@@ -4,7 +4,7 @@ use gles31_sys::*;
 use crate::gm::Size;
 use std::ffi::c_void;
 
-pub struct TextureLoader;
+pub struct ImageLoader;
 
 fn mode_for_channels(channels: u32) -> u32 {
     match channels {
@@ -16,9 +16,9 @@ fn mode_for_channels(channels: u32) -> u32 {
     }
 }
 
-impl TextureLoader {
+impl ImageLoader {
     pub fn load(data: *const c_void, size: Size, channels: u32) -> u32 {
-        let mut id: u32 = u32::MAX;
+        let mut id = u32::MAX;
 
         GL!(GenTextures, 1, &mut id);
 

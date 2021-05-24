@@ -1,7 +1,4 @@
 #![allow(dead_code)]
-#![allow(unused_unsafe)]
-#![allow(unreachable_code)]
-#![allow(unused_variables)]
 
 use std::os::raw::c_float;
 use std::ptr;

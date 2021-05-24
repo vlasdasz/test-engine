@@ -40,9 +40,7 @@ impl<T: Updatable> GLDrawer<T> {
 
             for (_, event) in glfw::flush_messages(&self.events) {
                 match event {
-                    glfw::WindowEvent::Key(key, scancode, action, mods) => {
-                        self.window.set_should_close(true)
-                    }
+                    glfw::WindowEvent::Key(_, _, _, _) => self.window.set_should_close(true),
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
                         self.drawer.on_cursor_moved(Point {
                             x: xpos as f32,
@@ -55,7 +53,7 @@ impl<T: Updatable> GLDrawer<T> {
                             height: height as f32,
                         });
                     }
-                    glfw::WindowEvent::MouseButton(btn, action, mods) => {
+                    glfw::WindowEvent::MouseButton(btn, action, _) => {
                         self.drawer.on_mouse_key_pressed(
                             MouseButton::from_glfw(btn),
                             ButtonState::from_glfw(action),

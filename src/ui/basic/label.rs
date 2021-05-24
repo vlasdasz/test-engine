@@ -49,13 +49,6 @@ impl Label {
 
         content_size.width = last_max_x;
 
-        let rect = Rect::make(
-            self.view().frame().origin.x,
-            self.view().frame().origin.y,
-            content_size.width,
-            content_size.height,
-        );
-
         let frame = Rect::make(
             self.view().frame().origin.x,
             self.view().frame().origin.y,

@@ -7,7 +7,8 @@ cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
     use std::ffi::CString;
 }}
 
-use crate::gl_wrapper::{GLWrapper, TextureLoader};
+use crate::gl_wrapper::image_loader::ImageLoader;
+use crate::gl_wrapper::GLWrapper;
 use crate::gm::Size;
 use image::GenericImageView;
 use std::ffi::c_void;
@@ -36,10 +37,10 @@ impl Image {
     pub fn load(path: &PathBuf) -> Image {
         cfg_if::cfg_if! {
             if #[cfg(any(target_os="ios", target_os="android"))] {
-                Image { size: Size::new(), channels: 0, gl_handle: 0 }
+                Image::load_with_image(path)
             }
             else {
-                Image::load_with_image(path)
+                Image::load_with_soil(path)
             }
         }
     }
@@ -111,7 +112,7 @@ impl Image {
     }
 
     pub fn from(data: *const c_void, size: Size, channels: u32) -> Image {
-        let gl_handle = TextureLoader::load(data, size, channels);
+        let gl_handle = ImageLoader::load(data, size, channels);
         Image {
             size,
             channels,

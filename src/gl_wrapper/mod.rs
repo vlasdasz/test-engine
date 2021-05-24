@@ -1,7 +1,12 @@
+use cfg_if::cfg_if;
+
+pub use buffer::{Buffer, BufferConfig};
+pub use gl_info::GLInfo;
+pub use gl_wrapper::GLWrapper;
+pub use shader::{Shader, ShaderCompiler};
+
 #[macro_use]
 pub mod gl_debug;
-
-use cfg_if::cfg_if;
 
 cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
     pub mod gl_drawer;
@@ -13,12 +18,5 @@ cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
 pub mod buffer;
 pub mod gl_info;
 pub mod gl_wrapper;
+pub mod image_loader;
 pub mod shader;
-pub mod texture;
-
-pub use buffer::{Buffer, BufferConfig};
-pub use gl_info::GLInfo;
-pub use shader::{Shader, ShaderCompiler};
-
-pub use gl_wrapper::GLWrapper;
-pub use texture::TextureLoader;

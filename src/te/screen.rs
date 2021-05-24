@@ -1,7 +1,7 @@
 use crate::gl_wrapper::gl_wrapper::Updatable;
 use crate::gl_wrapper::GLWrapper;
 use crate::gm::{Color, Point, Rect, Size};
-use crate::te::{Assets, TEUIDrawer};
+use crate::te::{Assets, UIDrawer};
 use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
 
@@ -14,7 +14,7 @@ use tools::HasNew;
 pub struct Screen {
     cursor_position: Point,
     root_view: ViewBase,
-    ui_drawer: TEUIDrawer,
+    ui_drawer: UIDrawer,
     char: u8,
 }
 
@@ -27,7 +27,7 @@ impl Screen {
 impl Updatable for Screen {
     fn new() -> Screen {
         let assets = Assets::init();
-        let ui_drawer = TEUIDrawer::new(assets);
+        let ui_drawer = UIDrawer::new(assets);
         Screen {
             cursor_position: Point::new(),
             root_view: ViewBase::new(),
@@ -86,7 +86,7 @@ impl Updatable for Screen {
         self.cursor_position = position
     }
 
-    fn on_mouse_key_pressed(&mut self, button: MouseButton, state: ButtonState) {
+    fn on_mouse_key_pressed(&mut self, _: MouseButton, state: ButtonState) {
         self.on_touch(Touch {
             id: 1,
             position: self.cursor_position,

@@ -6,14 +6,14 @@ use crate::tools::platform::Platform;
 use crate::ui::view::View;
 use crate::ui::ImageView;
 
-pub struct TEUIDrawer {
+pub struct UIDrawer {
     pub assets: Assets,
     pub window_size: Size,
 }
 
-impl TEUIDrawer {
-    pub fn new(assets: Assets) -> TEUIDrawer {
-        TEUIDrawer {
+impl UIDrawer {
+    pub fn new(assets: Assets) -> UIDrawer {
+        UIDrawer {
             assets,
             window_size: Size::new(),
         }
@@ -24,7 +24,7 @@ impl TEUIDrawer {
     }
 }
 
-impl TEUIDrawer {
+impl UIDrawer {
     pub fn draw_view(&self, view: &mut dyn View) {
         view.view_mut().calculate_absolute_frame();
 
@@ -51,14 +51,14 @@ impl TEUIDrawer {
     }
 }
 
-impl TEUIDrawer {
+impl UIDrawer {
     fn set_viewport(&self, rect: &Rect) {
         const SCALE: f32 = if Platform::MAC { 2.0 } else { 1.0 };
         GLWrapper::set_viewport(self.window_size.height, &SCALE, rect);
     }
 }
 
-impl TEUIDrawer {
+impl UIDrawer {
     fn fill_rect(&self, rect: &Rect, color: &Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();

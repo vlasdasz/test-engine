@@ -24,21 +24,19 @@ impl GLInfo {
 
     fn get_string(id: u32) -> String {
         use std::ffi::CStr;
-        let c_str: &CStr = unsafe {
-            let full_gl_version = GL!(GetString, id);
-            cfg_if::cfg_if! {
-                if #[cfg(
-                    any(
-                     all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")),
-                     target_os = "android"))] {
-                    type CPath = *const u8;
-                }
-                else {
-                    type CPath = *const i8;
-                }
-            };
-            CStr::from_ptr(full_gl_version as CPath)
+        let full_gl_version = GL!(GetString, id);
+        cfg_if::cfg_if! {
+            if #[cfg(
+                any(
+                 all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")),
+                 target_os = "android"))] {
+                type CPath = *const u8;
+            }
+            else {
+                type CPath = *const i8;
+            }
         };
+        let c_str: &CStr = unsafe { CStr::from_ptr(full_gl_version as CPath) };
         c_str.to_str().unwrap().to_string()
     }
 
