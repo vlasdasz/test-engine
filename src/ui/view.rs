@@ -18,31 +18,54 @@ pub trait View: AsAny + HasNew {
     fn setup(&mut self) {}
 
     fn color(&self) -> &Color {
-        self.view()._get_color()
+        &self.view()._color
     }
 
     fn set_color(&mut self, color: Color) {
-        self.view_mut()._set_color(color)
+        self.view_mut()._color = color
     }
 
     fn frame(&self) -> &Rect {
-        self.view()._frame()
+        &self.view()._frame
     }
 
     fn set_frame(&mut self, rect: Rect) {
-        self.view_mut()._set_frame(rect)
+        self.view_mut()._frame = rect
     }
 
     fn absolute_frame(&self) -> &Rect {
-        self.view()._absolute_frame()
+        &self.view()._absolute_frame
     }
 
     fn add_subview(&mut self, view: Shared<dyn View>) {
-        self.view_mut()._add_subview(view)
+        {
+            let mut mut_ref = view.try_borrow_mut().unwrap();
+            mut_ref.view_mut()._superview = Some(self.view()._weak.clone());
+            mut_ref.view_mut().setup();
+        }
+        self.view_mut()._subviews.push(view)
     }
 
     fn remove_all_subviews(&mut self) {
-        self.view_mut()._remove_all_subviews()
+        self.view_mut()._subviews.clear()
+    }
+
+    fn subviews(&self) -> &[Shared<dyn View>] {
+        &self.view()._subviews
+    }
+
+    fn calculate_absolute_frame(&mut self) {
+        let view = self.view_mut();
+        view._absolute_frame = view._frame;
+        view._absolute_frame.origin += view.super_frame().origin
+    }
+
+    fn enable_touch(&mut self) {
+        self.view_mut()._touch_enabled = true
+    }
+
+    fn on_touch(&self, touch: &Touch) {
+        dbg!(touch);
     }
 
     fn from_rect(rect: Rect) -> Self
@@ -52,6 +75,41 @@ pub trait View: AsAny + HasNew {
         let mut new = Self::new();
         new.set_frame(rect);
         new
+    }
+
+    fn check_touch(&self, touch: &mut Touch) {
+        let view = self.view();
+        if view._touch_enabled && view._absolute_frame.contains(&touch.position) {
+            touch.position -= view._absolute_frame.origin;
+            view.on_touch(touch);
+        }
+        for view in view.subviews() {
+            let borrowed = view.try_borrow().unwrap();
+            borrowed.view().check_touch(touch);
+        }
+    }
+
+    fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
+        let view = ViewBase::new_shared();
+        make(&mut view.try_borrow_mut().unwrap());
+        self.add_subview(view);
+    }
+
+    fn super_frame(&self) -> Rect {
+        if let Some(superview) = &self.view()._superview {
+            if let Some(superview) = superview.upgrade() {
+                if let Ok(superview) = superview.try_borrow() {
+                    *superview.absolute_frame()
+                } else {
+                    panic!("KOKOKO!!");
+                    Rect::DEFAULT
+                }
+            } else {
+                Rect::DEFAULT
+            }
+        } else {
+            return Rect::DEFAULT;
+        }
     }
 }
 
@@ -70,103 +128,6 @@ pub struct ViewBase {
     _subviews: Vec<Shared<dyn View>>,
 
     _weak: MutWeak<ViewBase>,
-}
-
-impl ViewBase {
-    pub(self) fn _frame(&self) -> &Rect {
-        &self._frame
-    }
-
-    pub(self) fn _get_color(&self) -> &Color {
-        &self._color
-    }
-
-    pub(self) fn _set_color(&mut self, color: Color) {
-        self._color = color
-    }
-
-    pub fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
-        let view = ViewBase::new_shared();
-        make(&mut view.try_borrow_mut().unwrap());
-        self.add_subview(view);
-    }
-
-    pub fn on_touch(&self, touch: &Touch) {
-        dbg!(touch);
-    }
-
-    fn touch_enabled(&self) -> bool {
-        self._touch_enabled
-    }
-
-    pub fn enable_touch(&mut self) {
-        self._touch_enabled = true
-    }
-
-    pub(self) fn _set_frame(&mut self, frame: Rect) {
-        self._frame = frame
-    }
-
-    pub(self) fn _absolute_frame(&self) -> &Rect {
-        &self._absolute_frame
-    }
-
-    fn super_frame(&self) -> Rect {
-        guard!(let Some(superview) = &self._superview else {
-            return Rect::DEFAULT;
-        });
-
-        if let Some(superview) = superview.upgrade() {
-            if let Ok(superview) = superview.try_borrow() {
-                *superview.view().absolute_frame()
-            } else {
-                Rect::DEFAULT
-            }
-        } else {
-            Rect::DEFAULT
-        }
-    }
-
-    pub fn calculate_absolute_frame(&mut self) {
-        self._absolute_frame = self._frame;
-        self._absolute_frame.origin += self.super_frame().origin
-    }
-
-    fn superview(&self) -> DynWeak<dyn View> {
-        self._superview.clone()
-    }
-
-    fn set_superview(&mut self, superview: DynWeak<dyn View>) {
-        self._superview = superview
-    }
-
-    pub fn subviews(&self) -> &[Shared<dyn View>] {
-        &self._subviews
-    }
-
-    pub(self) fn _add_subview(&mut self, view: Shared<dyn View>) {
-        {
-            let mut mut_ref = view.try_borrow_mut().unwrap();
-            mut_ref.view_mut().set_superview(Some(self._weak.clone()));
-            mut_ref.view_mut().setup();
-        }
-        self._subviews.push(view)
-    }
-
-    pub(self) fn _remove_all_subviews(&mut self) {
-        self._subviews.clear()
-    }
-
-    pub fn check_touch(&self, touch: &mut Touch) {
-        if self._touch_enabled && self._absolute_frame.contains(&touch.position) {
-            touch.position -= self._absolute_frame.origin;
-            self.on_touch(touch);
-        }
-        for view in self.subviews() {
-            let borrowed = view.try_borrow().unwrap();
-            borrowed.view().check_touch(touch);
-        }
-    }
 }
 
 impl View for ViewBase {

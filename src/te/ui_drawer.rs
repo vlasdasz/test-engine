@@ -26,8 +26,6 @@ impl UIDrawer {
 
 impl UIDrawer {
     pub fn draw_view(&self, view: &mut dyn View) {
-        view.view_mut().calculate_absolute_frame();
-
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             self.draw_image_in_rect(
                 &image_view.image,
@@ -36,9 +34,10 @@ impl UIDrawer {
             );
         }
 
+        view.calculate_absolute_frame();
         self.draw_rect(view.absolute_frame(), &view.color());
 
-        for view in view.view().subviews() {
+        for view in view.subviews() {
             match view.try_borrow_mut().as_deref_mut() {
                 Ok(view) => {
                     self.draw_view(view);
