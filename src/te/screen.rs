@@ -106,7 +106,8 @@ impl Updatable for Screen {
         if self.char > 120 {
             self.char = 0;
         }
-        let rect = Rect::make(10.0, 10.0, 20.0, 20.0);
+        let mut rect = Rect::make(10.0, 10.0, 20.0, 20.0);
+        rect.origin = self.ui_drawer.window_size.center();
         let color = Color::WHITE;
 
         self.ui_drawer.draw_image_in_rect(image, &rect, &color);

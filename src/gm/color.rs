@@ -15,6 +15,7 @@ impl Color {
             a: 0.0,
         }
     }
+
     pub fn make(r: f32, g: f32, b: f32) -> Color {
         Color { r, g, b, a: 1.0 }
     }
