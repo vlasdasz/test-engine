@@ -97,6 +97,7 @@ impl Updatable for Screen {
     fn update(&mut self) {
         GLWrapper::clear();
 
+        self.ui_drawer.layout_view(&mut self.root_view);
         self.ui_drawer.draw_view(&mut self.root_view);
 
         let font = &self.ui_drawer.assets.fonts.default;

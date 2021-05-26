@@ -101,7 +101,7 @@ pub trait View: AsAny + HasNew {
                 if let Ok(superview) = superview.try_borrow() {
                     *superview.absolute_frame()
                 } else {
-                    panic!("KOKOKO!!");
+                    //panic!("KOKOKO!!");
                     Rect::DEFAULT
                 }
             } else {
