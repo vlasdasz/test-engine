@@ -3,10 +3,11 @@ use crate::gm::Rect;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
-use tools::refs::{make_shared, MutWeak};
+use tools::refs::{make_shared, MutWeak, make_box};
 use tools::weak_self::HasWeakSelf;
 use tools::{AsAny, HasNew};
 
+#[derive(Debug)]
 pub struct Label {
     pub font: Font,
     base: ViewBase,
@@ -44,7 +45,7 @@ impl Label {
 
             advance += glyph.advance as f32;
 
-            self.add_subview(make_shared(glyph_view));
+            self.add_subview(make_box(glyph_view));
         }
 
         content_size.width = last_max_x;

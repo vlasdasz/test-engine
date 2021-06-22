@@ -6,13 +6,15 @@ use std::rc::Weak;
 use tools::refs::{DynWeak, MutWeak, Shared};
 use tools::weak_self::HasWeakSelf;
 use tools::{AsAny, HasNew};
+use std::fmt::Debug;
+use std::ptr::null;
 
 pub enum ViewType {
     Plain,
     Image,
 }
 
-pub trait View: AsAny + HasNew {
+pub trait View: AsAny + HasNew + Debug {
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
     fn setup(&mut self) {}
@@ -37,20 +39,16 @@ pub trait View: AsAny + HasNew {
         &self.view()._absolute_frame
     }
 
-    fn add_subview(&mut self, view: Shared<dyn View>) {
-        {
-            let mut mut_ref = view.try_borrow_mut().unwrap();
-            mut_ref.view_mut()._superview = Some(self.view()._weak.clone());
-            mut_ref.view_mut().setup();
-        }
-        self.view_mut()._subviews.push(view)
+    fn add_subview(&mut self, view: Box<dyn View>) {
+        // view.view_mut()._superview = unsafe { self as *const dyn View };
+        // self.view_mut()._subviews.push(view)
     }
 
     fn remove_all_subviews(&mut self) {
         self.view_mut()._subviews.clear()
     }
 
-    fn subviews(&self) -> &[Shared<dyn View>] {
+    fn subviews(&self) -> &[Box<dyn View>] {
         &self.view()._subviews
     }
 
@@ -78,38 +76,39 @@ pub trait View: AsAny + HasNew {
     }
 
     fn check_touch(&self, touch: &mut Touch) {
-        let view = self.view();
-        if view._touch_enabled && view._absolute_frame.contains(&touch.position) {
-            touch.position -= view._absolute_frame.origin;
-            view.on_touch(touch);
-        }
-        for view in view.subviews() {
-            let borrowed = view.try_borrow().unwrap();
-            borrowed.view().check_touch(touch);
-        }
+        // let view = self.view();
+        // if view._touch_enabled && view._absolute_frame.contains(&touch.position) {
+        //     touch.position -= view._absolute_frame.origin;
+        //     view.on_touch(touch);
+        // }
+        // for view in view.subviews() {
+        //     let borrowed = view.try_borrow().unwrap();
+        //     borrowed.view().check_touch(touch);
+        // }
     }
 
     fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
-        let view = ViewBase::new_shared();
-        make(&mut view.try_borrow_mut().unwrap());
-        self.add_subview(view);
+        // let view = ViewBase::new_shared();
+        // make(&mut view.try_borrow_mut().unwrap());
+        // self.add_subview(view);
     }
 
     fn super_frame(&self) -> Rect {
-        if let Some(superview) = &self.view()._superview {
-            if let Some(superview) = superview.upgrade() {
-                if let Ok(superview) = superview.try_borrow() {
-                    *superview.absolute_frame()
-                } else {
-                    //panic!("KOKOKO!!");
-                    Rect::DEFAULT
-                }
-            } else {
-                Rect::DEFAULT
-            }
-        } else {
-            return Rect::DEFAULT;
-        }
+        Rect::new()
+        // if let Some(superview) = &self.view()._superview {
+        //     if let Some(superview) = superview.upgrade() {
+        //         if let Ok(superview) = superview.try_borrow() {
+        //             *superview.absolute_frame()
+        //         } else {
+        //             //panic!("KOKOKO!!");
+        //             Rect::DEFAULT
+        //         }
+        //     } else {
+        //         Rect::DEFAULT
+        //     }
+        // } else {
+        //     return Rect::DEFAULT;
+        // }
     }
 }
 
@@ -122,12 +121,8 @@ pub struct ViewBase {
     _frame: Rect,
     _absolute_frame: Rect,
 
-    #[derivative(Debug = "ignore")]
-    _superview: DynWeak<dyn View>,
-    #[derivative(Debug = "ignore")]
-    _subviews: Vec<Shared<dyn View>>,
-
-    _weak: MutWeak<ViewBase>,
+    _superview: *const dyn View,
+    _subviews: Vec<Box<dyn View>>
 }
 
 impl View for ViewBase {
@@ -153,19 +148,8 @@ impl HasNew for ViewBase {
             _touch_enabled: false,
             _frame: Rect::new(),
             _absolute_frame: Rect::new(),
-            _superview: None,
+            _superview: null::<Self>(),
             _subviews: vec![],
-            _weak: Weak::new(),
         }
-    }
-}
-
-impl HasWeakSelf for ViewBase {
-    fn weak(&self) -> MutWeak<Self> {
-        self._weak.clone()
-    }
-
-    fn set_weak(&mut self, weak: MutWeak<Self>) {
-        self._weak = weak
     }
 }

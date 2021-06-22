@@ -26,17 +26,17 @@ impl UIDrawer {
 
 impl UIDrawer {
     pub fn layout_view(&self, view: &mut dyn View) {
-        view.calculate_absolute_frame();
-        for view in view.subviews() {
-            match view.try_borrow_mut().as_deref_mut() {
-                Ok(view) => {
-                    self.layout_view(view);
-                }
-                Err(error) => {
-                    dbg!(&error);
-                }
-            }
-        }
+        // view.calculate_absolute_frame();
+        // for view in view.subviews() {
+        //     match view.try_borrow_mut().as_deref_mut() {
+        //         Ok(view) => {
+        //             self.layout_view(view);
+        //         }
+        //         Err(error) => {
+        //             dbg!(&error);
+        //         }
+        //     }
+        // }
     }
 
     pub fn draw_view(&self, view: &dyn View) {
@@ -51,14 +51,14 @@ impl UIDrawer {
         self.draw_rect(view.absolute_frame(), &view.color());
 
         for view in view.subviews() {
-            match view.try_borrow().as_deref() {
-                Ok(view) => {
-                    self.draw_view(view);
-                }
-                Err(error) => {
-                    dbg!(&error);
-                }
-            }
+            // match view.try_borrow().as_deref() {
+            //     Ok(view) => {
+            //         self.draw_view(view);
+            //     }
+            //     Err(error) => {
+            //         dbg!(&error);
+            //     }
+            // }
         }
     }
 }

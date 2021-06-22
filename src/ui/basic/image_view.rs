@@ -7,6 +7,7 @@ use tools::refs::MutWeak;
 use tools::weak_self::HasWeakSelf;
 use tools::{AsAny, HasNew};
 
+#[derive(Debug)]
 pub struct ImageView {
     pub image: Image,
     base: ViewBase,

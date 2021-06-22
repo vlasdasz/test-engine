@@ -24,22 +24,30 @@ use std::ops::Deref;
 use std::ptr::{null};
 
 
+trait Kok : Debug {
+
+}
+
 #[derive(Debug)]
 struct View {
-    pub super_view: *const View,
-    pub subviews: Vec<View>,
+    pub super_view: *const dyn Kok,
+    pub subviews: Vec<Box<dyn Kok>>,
+}
+
+impl Kok for View {
+
 }
 
 impl View {
 
     pub fn new() -> View {
         View {
-            super_view: null(),
+            super_view: null::<View>(),
             subviews: vec![]
         }
     }
 
-    pub fn get_super_view(&self) -> Option<&View> {
+    pub fn get_super_view(&self) -> Option<&dyn Kok> {
         if self.super_view.is_null() {
             return None;
         }
@@ -48,7 +56,7 @@ impl View {
 
     pub fn add_subview(&mut self, mut view: View) {
         view.super_view = self as *const View;
-        self.subviews.push(view)
+        self.subviews.push(Box::new(view))
     }
 
 }

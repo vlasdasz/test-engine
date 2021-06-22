@@ -8,7 +8,7 @@ use crate::ui::input::Touch;
 use crate::ui::{ImageView, Label, ViewBase};
 
 use crate::ui::view::View;
-use tools::refs::make_shared;
+use tools::refs::{make_shared, make_box};
 use tools::HasNew;
 
 pub struct Screen {
@@ -44,7 +44,7 @@ impl Updatable for Screen {
         label.font = self.ui_drawer.assets.fonts.default.clone();
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadag4ka");
 
-        self.root_view.add_subview(make_shared(label));
+        self.root_view.add_subview(make_box(label));
 
         let mut image_view = ImageView::from_rect(Rect::make(100.0, 100.0, 200.0, 200.0));
         image_view.image = self.ui_drawer.assets.images.frisk;
@@ -54,11 +54,11 @@ impl Updatable for Screen {
 
         let mut image3 = ImageView::from_rect(Rect::make(10.0, 10.0, 50.0, 50.0));
         image3.image = self.ui_drawer.assets.images.frisk;
-        image2.add_subview(make_shared(image3));
+        image2.add_subview(make_box(image3));
 
-        image_view.add_subview(make_shared(image2));
+        image_view.add_subview(make_box(image2));
 
-        self.root_view.add_subview(make_shared(image_view));
+        self.root_view.add_subview(make_box(image_view));
 
         self.root_view.make_subview(|view| {
             view.set_frame(Rect::make(200.0, 200.0, 300.0, 300.0));
