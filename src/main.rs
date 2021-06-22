@@ -19,34 +19,53 @@ use crate::gm::Size;
 use crate::te::Screen;
 use std::fmt::Debug;
 use tools::HasNew;
+use std::pin::Pin;
+use std::ops::Deref;
+use std::ptr::{null};
 
-trait Object where Self: Debug {
-    fn get_obj(&self) -> &BaseObject;
-}
 
 #[derive(Debug)]
-struct BaseObject {
-    pub i: u32,
-    pub sub: Vec<Box<dyn Object>>
+struct View {
+    pub super_view: *const View,
+    pub subviews: Vec<View>,
 }
 
-impl HasNew for BaseObject {
-    fn new() -> BaseObject {
-        BaseObject {
-            i: 15,
-            sub: vec![]
+impl View {
+
+    pub fn new() -> View {
+        View {
+            super_view: null(),
+            subviews: vec![]
         }
     }
-}
 
-impl Object for BaseObject {
-    fn get_obj(&self) -> &BaseObject {
-        &self
+    pub fn get_super_view(&self) -> Option<&View> {
+        if self.super_view.is_null() {
+            return None;
+        }
+        return Some(unsafe { &*self.super_view });
     }
+
+    pub fn add_subview(&mut self, mut view: View) {
+        view.super_view = self as *const View;
+        self.subviews.push(view)
+    }
+
 }
 
 
 fn main() {
+
+    let mut view = View::new();
+
+    let subview = View::new();
+
+    view.add_subview(subview);
+
+
+    dbg!(&view);
+
+
     GLDrawer::<Screen>::with_size(Size {
         width: 1000.0,
         height: 600.0,
