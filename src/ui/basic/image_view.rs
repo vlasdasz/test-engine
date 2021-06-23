@@ -48,4 +48,8 @@ impl View for ImageView {
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
     }
+
+    fn ptr(&self) -> *const dyn View {
+        self as *const dyn View
+    }
 }

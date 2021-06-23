@@ -3,7 +3,7 @@ use crate::ui::input::Touch;
 use std::any::Any;
 
 use std::rc::Weak;
-use tools::refs::{DynWeak, MutWeak, Shared};
+use tools::refs::{DynWeak, MutWeak, Shared, make_box};
 use tools::weak_self::HasWeakSelf;
 use tools::{AsAny, HasNew};
 use std::fmt::Debug;
@@ -15,8 +15,12 @@ pub enum ViewType {
 }
 
 pub trait View: AsAny + HasNew + Debug {
+
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
+
+    fn ptr(&self) -> *const dyn View;
+
     fn setup(&mut self) {}
 
     fn color(&self) -> &Color {
@@ -39,17 +43,24 @@ pub trait View: AsAny + HasNew + Debug {
         &self.view()._absolute_frame
     }
 
-    fn add_subview(&mut self, view: Box<dyn View>) {
-        // view.view_mut()._superview = unsafe { self as *const dyn View };
-        // self.view_mut()._subviews.push(view)
+    fn add_subview(&mut self, mut view: Box<dyn View>) {
+        view.view_mut()._superview = self.ptr();
+        self.view_mut()._subviews.push(view)
     }
 
     fn remove_all_subviews(&mut self) {
         self.view_mut()._subviews.clear()
     }
 
-    fn subviews(&self) -> &[Box<dyn View>] {
-        &self.view()._subviews
+    fn subviews(&mut self) -> &mut [Box<dyn View>] {
+        &mut self.view_mut()._subviews
+    }
+
+    fn superview(&self) -> Option<&dyn View> {
+        if self.view()._superview.is_null() {
+            return None;
+        }
+        Some(unsafe { &*self.view()._superview })
     }
 
     fn calculate_absolute_frame(&mut self) {
@@ -88,32 +99,20 @@ pub trait View: AsAny + HasNew + Debug {
     }
 
     fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
-        // let view = ViewBase::new_shared();
-        // make(&mut view.try_borrow_mut().unwrap());
-        // self.add_subview(view);
+        let mut view = ViewBase::new();
+        make(&mut view);
+        self.add_subview(make_box(view));
     }
 
-    fn super_frame(&self) -> Rect {
-        Rect::new()
-        // if let Some(superview) = &self.view()._superview {
-        //     if let Some(superview) = superview.upgrade() {
-        //         if let Ok(superview) = superview.try_borrow() {
-        //             *superview.absolute_frame()
-        //         } else {
-        //             //panic!("KOKOKO!!");
-        //             Rect::DEFAULT
-        //         }
-        //     } else {
-        //         Rect::DEFAULT
-        //     }
-        // } else {
-        //     return Rect::DEFAULT;
-        // }
+    fn super_frame(&self) -> &Rect {
+        if let Some(superview) = self.superview() {
+            return superview.frame();
+        }
+        return &Rect::DEFAULT;
     }
 }
 
-#[derive(Derivative)]
-#[derivative(Debug)]
+#[derive(Debug)]
 pub struct ViewBase {
     _color: Color,
     _touch_enabled: bool,
@@ -132,6 +131,10 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
+    }
+
+    fn ptr(&self) -> *const dyn View {
+        self as *const dyn View
     }
 }
 

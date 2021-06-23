@@ -25,21 +25,15 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn layout_view(&self, view: &mut dyn View) {
-        // view.calculate_absolute_frame();
-        // for view in view.subviews() {
-        //     match view.try_borrow_mut().as_deref_mut() {
-        //         Ok(view) => {
-        //             self.layout_view(view);
-        //         }
-        //         Err(error) => {
-        //             dbg!(&error);
-        //         }
-        //     }
-        // }
+    pub fn layout_view(&self, view: &mut Box<dyn View>) {
+        view.calculate_absolute_frame();
+
+        for mut view in view.subviews() {
+            self.layout_view(view);
+        }
     }
 
-    pub fn draw_view(&self, view: &dyn View) {
+    pub fn draw_view(&self, view: &mut Box<dyn View>) {
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             self.draw_image_in_rect(
                 &image_view.image,
@@ -51,14 +45,7 @@ impl UIDrawer {
         self.draw_rect(view.absolute_frame(), &view.color());
 
         for view in view.subviews() {
-            // match view.try_borrow().as_deref() {
-            //     Ok(view) => {
-            //         self.draw_view(view);
-            //     }
-            //     Err(error) => {
-            //         dbg!(&error);
-            //     }
-            // }
+            self.draw_view(view)
         }
     }
 }
