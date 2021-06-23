@@ -27,8 +27,7 @@ impl UIDrawer {
 impl UIDrawer {
     pub fn layout_view(&self, view: &mut Box<dyn View>) {
         view.calculate_absolute_frame();
-
-        for mut view in view.subviews() {
+        for view in view.subviews_mut() {
             self.layout_view(view);
         }
     }
@@ -44,7 +43,7 @@ impl UIDrawer {
 
         self.draw_rect(view.absolute_frame(), &view.color());
 
-        for view in view.subviews() {
+        for view in view.subviews_mut() {
             self.draw_view(view)
         }
     }

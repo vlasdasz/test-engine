@@ -2,20 +2,17 @@ use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
 
-use std::rc::Weak;
-use tools::refs::{DynWeak, MutWeak, Shared, make_box};
-use tools::weak_self::HasWeakSelf;
-use tools::{AsAny, HasNew};
 use std::fmt::Debug;
 use std::ptr::null;
+use tools::refs::make_box;
+use tools::{AsAny, HasNew};
 
 pub enum ViewType {
     Plain,
     Image,
 }
 
-pub trait View: AsAny + HasNew + Debug {
-
+pub trait View: AsAny + Debug + HasNew {
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
 
@@ -52,7 +49,11 @@ pub trait View: AsAny + HasNew + Debug {
         self.view_mut()._subviews.clear()
     }
 
-    fn subviews(&mut self) -> &mut [Box<dyn View>] {
+    fn subviews(&self) -> &[Box<dyn View>] {
+        &self.view()._subviews
+    }
+
+    fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
         &mut self.view_mut()._subviews
     }
 
@@ -87,15 +88,14 @@ pub trait View: AsAny + HasNew + Debug {
     }
 
     fn check_touch(&self, touch: &mut Touch) {
-        // let view = self.view();
-        // if view._touch_enabled && view._absolute_frame.contains(&touch.position) {
-        //     touch.position -= view._absolute_frame.origin;
-        //     view.on_touch(touch);
-        // }
-        // for view in view.subviews() {
-        //     let borrowed = view.try_borrow().unwrap();
-        //     borrowed.view().check_touch(touch);
-        // }
+        let view = self.view();
+        if view._touch_enabled && view._absolute_frame.contains(&touch.position) {
+            touch.position -= view._absolute_frame.origin;
+            view.on_touch(touch);
+        }
+        for view in self.subviews() {
+            view.check_touch(touch);
+        }
     }
 
     fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
@@ -121,7 +121,7 @@ pub struct ViewBase {
     _absolute_frame: Rect,
 
     _superview: *const dyn View,
-    _subviews: Vec<Box<dyn View>>
+    _subviews: Vec<Box<dyn View>>,
 }
 
 impl View for ViewBase {

@@ -3,8 +3,7 @@ use crate::gm::Rect;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
-use tools::refs::{make_shared, MutWeak, make_box};
-use tools::weak_self::HasWeakSelf;
+use tools::refs::make_box;
 use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
@@ -12,7 +11,6 @@ pub struct Label {
     pub font: Font,
     text: String,
     base: ViewBase,
-    _weak: MutWeak<Label>,
 }
 
 impl Label {
@@ -74,18 +72,7 @@ impl HasNew for Label {
             font: Font::blank(),
             text: String::new(),
             base: ViewBase::new(),
-            _weak: MutWeak::new(),
         }
-    }
-}
-
-impl HasWeakSelf for Label {
-    fn weak(&self) -> MutWeak<Self> {
-        self._weak.clone()
-    }
-
-    fn set_weak(&mut self, weak: MutWeak<Self>) {
-        self._weak = weak
     }
 }
 
