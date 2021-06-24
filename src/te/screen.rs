@@ -7,6 +7,8 @@ use crate::ui::input::Touch;
 use crate::ui::view::View;
 use crate::ui::ViewBase;
 use tools::HasNew;
+use tools::refs::make_box;
+use crate::te::ui::DebugView;
 
 pub struct Screen {
     cursor_position: Point,
@@ -36,6 +38,7 @@ impl Updatable for Screen {
     fn init(&mut self) {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
+        self.root_view.add_subview(make_box(DebugView::new()));
     }
 
     fn set_size(&mut self, size: Size) {

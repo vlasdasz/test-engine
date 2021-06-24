@@ -8,7 +8,15 @@ pub struct DebugView {
     view: ViewBase,
 }
 
+impl DebugView {
+
+}
+
 impl View for DebugView {
+    fn setup(&mut self) {
+        dbg!("hello");
+    }
+
     fn view(&self) -> &ViewBase {
         &self.view
     }
@@ -29,10 +37,7 @@ impl AsAny for DebugView {
 }
 
 impl HasNew for DebugView {
-    fn new() -> Self
-    where
-        Self: Sized,
-    {
+    fn new() -> Self {
         DebugView {
             view: ViewBase::new(),
         }

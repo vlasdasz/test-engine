@@ -13,12 +13,12 @@ pub enum ViewType {
 }
 
 pub trait View: AsAny + Debug + HasNew {
+    fn setup(&mut self) {}
+
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
 
     fn ptr(&self) -> *const dyn View;
-
-    fn setup(&mut self) {}
 
     fn color(&self) -> &Color {
         &self.view()._color
@@ -42,7 +42,8 @@ pub trait View: AsAny + Debug + HasNew {
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
         view.view_mut()._superview = self.ptr();
-        self.view_mut()._subviews.push(view)
+        view.setup();
+        self.view_mut()._subviews.push(view);
     }
 
     fn remove_all_subviews(&mut self) {
