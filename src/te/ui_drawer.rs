@@ -25,13 +25,6 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn layout_view(&self, view: &mut Box<dyn View>) {
-        view.calculate_absolute_frame();
-        for view in view.subviews_mut() {
-            self.layout_view(view);
-        }
-    }
-
     pub fn draw_view(&self, view: &mut Box<dyn View>) {
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             self.draw_image_in_rect(

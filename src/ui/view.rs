@@ -3,7 +3,6 @@ use crate::ui::input::Touch;
 use std::any::Any;
 
 use std::fmt::Debug;
-use std::ptr::null;
 use tools::refs::make_box;
 use tools::{AsAny, HasNew};
 
@@ -41,7 +40,6 @@ pub trait View: AsAny + Debug + HasNew {
     }
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
-        view.view_mut()._superview = self.ptr();
         view.setup();
         self.view_mut()._subviews.push(view);
     }
@@ -58,17 +56,14 @@ pub trait View: AsAny + Debug + HasNew {
         &mut self.view_mut()._subviews
     }
 
-    fn superview(&self) -> Option<&dyn View> {
-        if self.view()._superview.is_null() {
-            return None;
-        }
-        Some(unsafe { &*self.view()._superview })
-    }
-
-    fn calculate_absolute_frame(&mut self) {
+    fn calculate_absolute_frame(&mut self, super_frame: &Rect) {
         let view = self.view_mut();
         view._absolute_frame = view._frame;
-        view._absolute_frame.origin += view.super_frame().origin
+        view._absolute_frame.origin += super_frame.origin;
+        let frame = view._frame;
+        for view in self.subviews_mut() {
+            view.calculate_absolute_frame(&frame);
+        }
     }
 
     fn enable_touch(&mut self) {
@@ -104,13 +99,6 @@ pub trait View: AsAny + Debug + HasNew {
         make(&mut view);
         self.add_subview(make_box(view));
     }
-
-    fn super_frame(&self) -> &Rect {
-        if let Some(superview) = self.superview() {
-            return superview.frame();
-        }
-        return &Rect::DEFAULT;
-    }
 }
 
 #[derive(Debug)]
@@ -121,7 +109,6 @@ pub struct ViewBase {
     _frame: Rect,
     _absolute_frame: Rect,
 
-    _superview: *const dyn View,
     _subviews: Vec<Box<dyn View>>,
 }
 
@@ -152,7 +139,6 @@ impl HasNew for ViewBase {
             _touch_enabled: false,
             _frame: Rect::new(),
             _absolute_frame: Rect::new(),
-            _superview: null::<Self>(),
             _subviews: vec![],
         }
     }

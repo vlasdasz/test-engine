@@ -14,6 +14,10 @@ impl Size {
         }
     }
 
+    pub const fn make(width: f32, height: f32) -> Size {
+        Size { width, height }
+    }
+
     pub fn is_negative(&self) -> bool {
         self.width < 0.0 || self.height < 0.0
     }

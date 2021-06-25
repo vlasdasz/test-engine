@@ -1,14 +1,14 @@
 use crate::gl_wrapper::gl_wrapper::Updatable;
 use crate::gl_wrapper::GLWrapper;
 use crate::gm::{Color, Point, Rect, Size};
+use crate::te::ui::DebugView;
 use crate::te::{Assets, UIDrawer};
 use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
 use crate::ui::view::View;
 use crate::ui::ViewBase;
-use tools::HasNew;
 use tools::refs::make_box;
-use crate::te::ui::DebugView;
+use tools::HasNew;
 
 pub struct Screen {
     cursor_position: Point,
@@ -61,7 +61,8 @@ impl Updatable for Screen {
     fn update(&mut self) {
         GLWrapper::clear();
 
-        self.ui_drawer.layout_view(&mut self.root_view);
+        self.root_view
+            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
         self.ui_drawer.draw_view(&mut self.root_view);
 
         let font = &self.ui_drawer.assets.fonts.default;

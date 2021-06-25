@@ -1,3 +1,4 @@
+use crate::gm::{Rect, Size};
 use crate::ui::view::View;
 use crate::ui::ViewBase;
 use std::any::Any;
@@ -8,12 +9,20 @@ pub struct DebugView {
     view: ViewBase,
 }
 
-impl DebugView {
-
-}
+impl DebugView {}
 
 impl View for DebugView {
     fn setup(&mut self) {
+        self.set_frame(Rect::make(200.0, 200.0, 400.0, 100.0).into());
+
+        self.make_subview(|view| {
+            view.set_frame(Rect::make(10.0, 20.0, 50.0, 50.0));
+
+            view.make_subview(|view| {
+               view.set_frame(Rect::make(5.0, 5.0, 5.0, 5.0));
+            });
+        });
+
         dbg!("hello");
     }
 
