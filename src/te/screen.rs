@@ -39,6 +39,7 @@ impl Updatable for Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
         self.root_view.add_subview(make_box(DebugView::new()));
+        dbg!(&self.root_view);
     }
 
     fn set_size(&mut self, size: Size) {
@@ -63,6 +64,7 @@ impl Updatable for Screen {
 
         self.root_view
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+
         self.ui_drawer.draw_view(&mut self.root_view);
 
         let font = &self.ui_drawer.assets.fonts.default;
@@ -72,7 +74,7 @@ impl Updatable for Screen {
         if self.char > 120 {
             self.char = 0;
         }
-        let mut rect = Rect::make(10.0, 10.0, 20.0, 20.0);
+        let mut rect = Rect::make(10, 10, 20, 20);
         rect.origin = self.ui_drawer.window_size.center();
         let color = Color::WHITE;
 

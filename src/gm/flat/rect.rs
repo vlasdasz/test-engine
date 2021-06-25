@@ -1,4 +1,4 @@
-use crate::gm::{Point, Size};
+use crate::gm::{IntoF32, Point, Size};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Rect {
@@ -16,10 +16,10 @@ impl Rect {
         }
     }
 
-    pub const fn make(x: f32, y: f32, width: f32, height: f32) -> Rect {
+    pub fn make<T: IntoF32>(x: T, y: T, width: T, height: T) -> Rect {
         Rect {
-            origin: Point { x, y },
-            size: Size { width, height },
+            origin: Point::make(x, y),
+            size: Size::make(width, height),
         }
     }
 }

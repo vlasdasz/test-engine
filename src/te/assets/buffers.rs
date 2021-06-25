@@ -4,10 +4,16 @@ use gles31_sys::*;
 use crate::GLC;
 
 use crate::gl_wrapper::{Buffer, BufferConfig};
-use crate::gm::Rect;
+use crate::gm::{Point, Rect, Size};
 use tools::array_view::ArrayView;
 
-const RECT: Rect = Rect::make(-1.0, -1.0, 2.0, 2.0);
+const RECT: Rect = Rect {
+    origin: Point { x: -1.0, y: -1.0 },
+    size: Size {
+        width: 2.0,
+        height: 2.0,
+    },
+};
 
 const RECT_INDICES: [u16; 4] = [0, 1, 3, 2];
 const INDICES: [u16; 4] = [0, 1, 2, 3];

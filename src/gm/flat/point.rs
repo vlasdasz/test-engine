@@ -1,5 +1,21 @@
 use std::ops::{AddAssign, SubAssign};
 
+pub trait IntoF32 {
+    fn into_f32(self) -> f32;
+}
+
+impl IntoF32 for i32 {
+    fn into_f32(self) -> f32 {
+        self as f32
+    }
+}
+
+impl IntoF32 for f32 {
+    fn into_f32(self) -> f32 {
+        self
+    }
+}
+
 #[derive(Debug, Copy, Clone)]
 pub struct Point {
     pub x: f32,
@@ -9,6 +25,13 @@ pub struct Point {
 impl Point {
     pub const fn new() -> Point {
         Point { x: 0.0, y: 0.0 }
+    }
+
+    pub fn make<T: IntoF32>(x: T, y: T) -> Point {
+        Point {
+            x: x.into_f32(),
+            y: y.into_f32(),
+        }
     }
 }
 

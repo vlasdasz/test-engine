@@ -1,3 +1,4 @@
+use crate::gm::IntoF32;
 use crate::gm::Point;
 
 #[derive(Debug, Copy, Clone)]
@@ -14,8 +15,11 @@ impl Size {
         }
     }
 
-    pub const fn make(width: f32, height: f32) -> Size {
-        Size { width, height }
+    pub fn make<T: IntoF32>(width: T, height: T) -> Size {
+        Size {
+            width: width.into_f32(),
+            height: height.into_f32(),
+        }
     }
 
     pub fn is_negative(&self) -> bool {
