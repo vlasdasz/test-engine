@@ -21,6 +21,13 @@ impl Screen {
     fn on_touch(&mut self, mut touch: Touch) {
         self.root_view.check_touch(&mut touch)
     }
+
+    fn update_view(view: &mut Box<dyn View>) {
+        view.update();
+        for view in view.subviews_mut() {
+            Screen::update_view(view);
+        }
+    }
 }
 
 impl Updatable for Screen {
@@ -38,9 +45,11 @@ impl Updatable for Screen {
     fn init(&mut self) {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
-        self.root_view.add_subview(make_box(DebugView::new()));
-        self.root_view.calculate_absolute_frame(&self.ui_drawer.window_size.into());
-        dbg!(&self.root_view);
+        let mut debug_view = DebugView::new();
+        debug_view.font = self.ui_drawer.assets.fonts.default.clone();
+        self.root_view.add_subview(make_box(debug_view));
+        self.root_view
+            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
     }
 
     fn set_size(&mut self, size: Size) {
@@ -63,9 +72,10 @@ impl Updatable for Screen {
     fn update(&mut self) {
         GLWrapper::clear();
 
+        Screen::update_view(&mut self.root_view);
+
         self.root_view
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
-
         self.ui_drawer.draw_view(&mut self.root_view);
 
         let font = &self.ui_drawer.assets.fonts.default;

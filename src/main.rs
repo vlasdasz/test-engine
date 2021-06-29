@@ -17,9 +17,5 @@ use crate::gm::Size;
 use crate::te::Screen;
 
 fn main() {
-    GLDrawer::<Screen>::with_size(Size {
-        width: 1000.0,
-        height: 600.0,
-    })
-    .start_main_loop();
+    GLDrawer::<Screen>::with_size(Size::make(1200, 800)).start_main_loop();
 }

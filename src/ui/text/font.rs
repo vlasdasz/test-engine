@@ -6,8 +6,8 @@ use std::fs;
 use std::ops::Range;
 use std::path::PathBuf;
 
-fn render_glyph(font: &fontdue::Font, symbol: char) -> Glyph {
-    let (metrics, bitmap) = font.rasterize(symbol, 48.0);
+fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
+    let (metrics, bitmap) = font.rasterize(symbol, size);
 
     let size = Size {
         width: metrics.width as f32,
@@ -51,7 +51,7 @@ impl Font {
             start: 0 as char,
             end: 127 as char,
         }) {
-            let glyph = render_glyph(&font, symbol);
+            let glyph = render_glyph(&font, symbol, size as f32);
             if y_max < glyph.y_max() {
                 y_max = glyph.y_max()
             }
@@ -76,6 +76,9 @@ impl Font {
 
 impl Font {
     pub fn glyph_for_char(&self, ch: char) -> &Glyph {
+        if self.glyphs.is_empty() {
+            panic!("Font is not initialized");
+        }
         &self.glyphs[ch as usize]
     }
 }

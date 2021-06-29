@@ -99,6 +99,8 @@ pub trait View: AsAny + Debug + HasNew {
         make(&mut view);
         self.add_subview(make_box(view));
     }
+
+    fn update(&mut self) {}
 }
 
 #[derive(Debug)]

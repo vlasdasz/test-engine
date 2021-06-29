@@ -15,9 +15,43 @@ pub struct Label {
 
 impl Label {
     pub fn set_text(&mut self, text: &str) {
+        self.text = text.into()
+    }
+}
+
+impl AsAny for Label {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}
+
+impl HasNew for Label {
+    fn new() -> Self {
+        Self {
+            font: Font::blank(),
+            text: String::new(),
+            base: ViewBase::new(),
+        }
+    }
+}
+
+impl View for Label {
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
+
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
+
+    fn ptr(&self) -> *const dyn View {
+        self as *const dyn View
+    }
+
+    fn update(&mut self) {
         self.remove_all_subviews();
 
-        if text.is_empty() {
+        if self.text.is_empty() {
             return;
         }
 
@@ -26,6 +60,8 @@ impl Label {
         let mut content_size = self.base.frame().size;
 
         content_size.height = self.font.height;
+
+        let text = self.text.clone();
 
         for letter in text.chars() {
             let glyph = self.font.glyph_for_char(letter);
@@ -57,35 +93,5 @@ impl Label {
         );
 
         self.set_frame(frame);
-    }
-}
-
-impl AsAny for Label {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
-
-impl HasNew for Label {
-    fn new() -> Self {
-        Self {
-            font: Font::blank(),
-            text: String::new(),
-            base: ViewBase::new(),
-        }
-    }
-}
-
-impl View for Label {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-
-    fn ptr(&self) -> *const dyn View {
-        self as *const dyn View
     }
 }

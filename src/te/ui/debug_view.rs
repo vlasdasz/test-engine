@@ -1,19 +1,21 @@
 use crate::gm::Rect;
 use crate::ui::view::View;
-use crate::ui::ViewBase;
+use crate::ui::{Font, Label, ViewBase};
 use std::any::Any;
+use tools::refs::make_box;
 use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
 pub struct DebugView {
     view: ViewBase,
+    pub font: Font,
 }
 
 impl DebugView {}
 
 impl View for DebugView {
     fn setup(&mut self) {
-        self.set_frame(Rect::make(200, 200, 400, 100).into());
+        self.set_frame(Rect::make(200, 200, 680, 400).into());
 
         self.make_subview(|view| {
             view.set_frame(Rect::make(10, 20, 50, 50));
@@ -23,7 +25,10 @@ impl View for DebugView {
             });
         });
 
-        dbg!("hello");
+        let mut label = Label::from_rect(Rect::make(40, 200, 100, 100));
+        label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
+        label.font = self.font.clone();
+        self.add_subview(make_box(label));
     }
 
     fn view(&self) -> &ViewBase {
@@ -49,6 +54,7 @@ impl HasNew for DebugView {
     fn new() -> Self {
         DebugView {
             view: ViewBase::new(),
+            font: Font::blank(),
         }
     }
 }

@@ -8,7 +8,7 @@ pub struct Fonts {
 impl Fonts {
     pub fn init() -> Fonts {
         Fonts {
-            default: Font::new(&paths::fonts().join("SF.otf"), 24).unwrap(),
+            default: Font::new(&paths::fonts().join("SF.otf"), 48).unwrap(),
         }
     }
 }
