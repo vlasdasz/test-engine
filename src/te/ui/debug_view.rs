@@ -1,6 +1,7 @@
 use crate::gm::Rect;
+use crate::image::Image;
 use crate::ui::view::View;
-use crate::ui::{Font, Label, ViewBase};
+use crate::ui::{Font, ImageView, Label, ViewBase};
 use std::any::Any;
 use tools::refs::make_box;
 use tools::{AsAny, HasNew};
@@ -15,14 +16,20 @@ impl DebugView {}
 
 impl View for DebugView {
     fn setup(&mut self) {
-        self.set_frame(Rect::make(200, 200, 680, 400).into());
+        self.set_frame(Rect::make(10, 10, 680, 400).into());
 
         self.make_subview(|view| {
             view.set_frame(Rect::make(10, 20, 50, 50));
+            view.enable_touch();
 
             view.make_subview(|view| {
                 view.set_frame(Rect::make(5, 5, 5, 5));
             });
+
+            let mut cat_image = ImageView::new();
+            cat_image.image = Image::load(&crate::te::paths::images().join("cat.jpg"));
+            cat_image.set_frame(Rect::make(200, 20, 100, 120));
+            view.add_subview(make_box(cat_image));
         });
 
         let mut label = Label::from_rect(Rect::make(40, 200, 100, 100));

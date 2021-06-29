@@ -2,6 +2,7 @@ use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
 
+use crate::ui::Layout;
 use std::fmt::Debug;
 use tools::refs::make_box;
 use tools::{AsAny, HasNew};
@@ -61,6 +62,11 @@ pub trait View: AsAny + Debug + HasNew {
         view._absolute_frame = view._frame;
         view._absolute_frame.origin += super_frame.origin;
         let frame = view._absolute_frame;
+
+        // let layout = Layout::new(super_frame, &mut view._frame);
+        //
+        // view.layout(layout);
+
         for view in self.subviews_mut() {
             view.calculate_absolute_frame(&frame);
         }
@@ -101,6 +107,8 @@ pub trait View: AsAny + Debug + HasNew {
     }
 
     fn update(&mut self) {}
+
+    fn layout(&self, _: Layout) {}
 }
 
 #[derive(Debug)]

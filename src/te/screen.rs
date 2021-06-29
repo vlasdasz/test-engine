@@ -55,6 +55,7 @@ impl Updatable for Screen {
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
         self.root_view.set_frame(Rect::from(size));
+        self.update();
     }
 
     fn on_cursor_moved(&mut self, position: Point) {
