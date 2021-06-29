@@ -10,8 +10,8 @@ impl<'a> Layout<'a> {
         Layout { sup_frame, frame }
     }
 
-    pub fn br(&mut self) {
-        self.frame.origin.x = self.sup_frame.size.width - self.frame.size.width;
-        self.frame.origin.y = self.sup_frame.size.height - self.frame.size.height;
+    pub fn br(frame: &mut Rect, super_frame: &Rect) {
+        frame.origin.x = super_frame.size.width - frame.size.width;
+        frame.origin.y = super_frame.size.height - frame.size.height;
     }
 }

@@ -32,6 +32,10 @@ pub trait View: AsAny + Debug + HasNew {
         &self.view()._frame
     }
 
+    fn frame_mut(&mut self) -> &mut Rect {
+        &mut self.view_mut()._frame
+    }
+
     fn set_frame(&mut self, rect: Rect) {
         self.view_mut()._frame = rect
     }
@@ -62,11 +66,7 @@ pub trait View: AsAny + Debug + HasNew {
         view._absolute_frame = view._frame;
         view._absolute_frame.origin += super_frame.origin;
         let frame = view._absolute_frame;
-
-        // let layout = Layout::new(super_frame, &mut view._frame);
-        //
-        // view.layout(layout);
-
+        self.layout(super_frame);
         for view in self.subviews_mut() {
             view.calculate_absolute_frame(&frame);
         }
@@ -108,7 +108,7 @@ pub trait View: AsAny + Debug + HasNew {
 
     fn update(&mut self) {}
 
-    fn layout(&self, _: Layout) {}
+    fn layout(&mut self, _super_frame: &Rect) {}
 }
 
 #[derive(Debug)]

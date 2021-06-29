@@ -1,7 +1,7 @@
 use crate::gm::Rect;
 use crate::image::Image;
 use crate::ui::view::View;
-use crate::ui::{Font, ImageView, Label, ViewBase};
+use crate::ui::{Font, ImageView, Label, ViewBase, Layout};
 use std::any::Any;
 use tools::refs::make_box;
 use tools::{AsAny, HasNew};
@@ -48,6 +48,10 @@ impl View for DebugView {
 
     fn ptr(&self) -> *const dyn View {
         self as *const dyn View
+    }
+
+    fn layout(&mut self, _super_frame: &Rect) {
+        Layout::br(self.frame_mut(), _super_frame);
     }
 }
 
