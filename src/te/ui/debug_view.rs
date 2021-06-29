@@ -1,7 +1,7 @@
 use crate::gm::Rect;
 use crate::image::Image;
 use crate::ui::view::View;
-use crate::ui::{Font, ImageView, Label, ViewBase, Layout};
+use crate::ui::{Font, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
 use tools::refs::make_box;
 use tools::{AsAny, HasNew};

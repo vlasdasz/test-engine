@@ -26,7 +26,7 @@ impl GLLoader {
             .create_window(
                 size.width as u32,
                 size.height as u32,
-                "Hello this is window",
+                "Test Engine",
                 glfw::WindowMode::Windowed,
             )
             .expect("Failed to create GLFW window.");
