@@ -39,6 +39,7 @@ impl Updatable for Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
         self.root_view.add_subview(make_box(DebugView::new()));
+        self.root_view.calculate_absolute_frame(&self.ui_drawer.window_size.into());
         dbg!(&self.root_view);
     }
 

@@ -60,7 +60,7 @@ pub trait View: AsAny + Debug + HasNew {
         let view = self.view_mut();
         view._absolute_frame = view._frame;
         view._absolute_frame.origin += super_frame.origin;
-        let frame = view._frame;
+        let frame = view._absolute_frame;
         for view in self.subviews_mut() {
             view.calculate_absolute_frame(&frame);
         }

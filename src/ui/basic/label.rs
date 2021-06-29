@@ -30,7 +30,7 @@ impl Label {
         for letter in text.chars() {
             let glyph = self.font.glyph_for_char(letter);
 
-            let mut glyph_view = ImageView::from_rect(Rect::from(glyph.size));
+            let mut glyph_view = ImageView::from_rect(glyph.size.into());
             glyph_view.image = glyph.image;
 
             glyph_view.set_frame(Rect::make(
