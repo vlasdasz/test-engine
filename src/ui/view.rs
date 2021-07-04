@@ -2,7 +2,6 @@ use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
 
-use crate::ui::Layout;
 use std::fmt::Debug;
 use tools::refs::make_box;
 use tools::{AsAny, HasNew};
