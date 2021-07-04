@@ -15,7 +15,18 @@ mod gl_wrapper;
 use crate::gl_wrapper::GLDrawer;
 use crate::gm::Size;
 use crate::te::Screen;
+use tools::HasNew;
+
+struct TestModel {
+    pub data: u32
+}
+
+impl HasNew for TestModel {
+    fn new() -> Self {
+        TestModel { data: 0 }
+    }
+}
 
 fn main() {
-    GLDrawer::<Screen>::with_size(Size::make(800, 600)).start_main_loop();
+    GLDrawer::<Screen<TestModel>>::with_size(Size::make(800, 600)).start_main_loop();
 }

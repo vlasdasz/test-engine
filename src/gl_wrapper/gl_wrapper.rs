@@ -4,11 +4,11 @@ use gles31_sys::*;
 use crate::gm::{Color, Point, Rect, Size};
 
 use crate::ui::input::touch::{ButtonState, MouseButton};
+use tools::HasNew;
 
 pub struct GLWrapper;
 
-pub trait Updatable {
-    fn new() -> Self;
+pub trait Updatable : HasNew {
     fn init(&mut self);
     fn set_size(&mut self, size: Size);
     fn on_cursor_moved(&mut self, position: Point);

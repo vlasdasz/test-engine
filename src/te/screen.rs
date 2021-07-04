@@ -10,14 +10,15 @@ use crate::ui::ViewBase;
 use tools::refs::make_box;
 use tools::HasNew;
 
-pub struct Screen {
+pub struct Screen<Model: HasNew> {
     cursor_position: Point,
     root_view: Box<dyn View>,
     ui_drawer: UIDrawer,
     char: u8,
+    model: Model
 }
 
-impl Screen {
+impl<T: HasNew> Screen<T> {
     fn on_touch(&mut self, mut touch: Touch) {
         self.root_view.check_touch(&mut touch)
     }
@@ -25,23 +26,12 @@ impl Screen {
     fn update_view(view: &mut Box<dyn View>) {
         view.update();
         for view in view.subviews_mut() {
-            Screen::update_view(view);
+            Screen::<T>::update_view(view);
         }
     }
 }
 
-impl Updatable for Screen {
-    fn new() -> Screen {
-        let assets = Assets::init();
-        let ui_drawer = UIDrawer::new(assets);
-        Screen {
-            cursor_position: Point::new(),
-            root_view: Box::new(ViewBase::new()),
-            ui_drawer,
-            char: 0,
-        }
-    }
-
+impl<T: HasNew> Updatable for Screen<T> {
     fn init(&mut self) {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
@@ -73,7 +63,7 @@ impl Updatable for Screen {
     fn update(&mut self) {
         GLWrapper::clear();
 
-        Screen::update_view(&mut self.root_view);
+        Screen::<T>::update_view(&mut self.root_view);
 
         self.root_view
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
@@ -91,5 +81,19 @@ impl Updatable for Screen {
         let color = Color::WHITE;
 
         self.ui_drawer.draw_image_in_rect(image, &rect, &color);
+    }
+}
+
+impl<T: HasNew> HasNew for Screen<T> {
+    fn new() -> Screen<T> {
+        let assets = Assets::init();
+        let ui_drawer = UIDrawer::new(assets);
+        Screen {
+            cursor_position: Point::new(),
+            root_view: Box::new(ViewBase::new()),
+            ui_drawer,
+            char: 0,
+            model: T::new()
+        }
     }
 }
