@@ -8,7 +8,7 @@ use tools::HasNew;
 
 pub struct GLWrapper;
 
-pub trait Updatable : HasNew {
+pub trait Updatable: HasNew {
     fn init(&mut self);
     fn set_size(&mut self, size: Size);
     fn on_cursor_moved(&mut self, position: Point);

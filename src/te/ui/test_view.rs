@@ -1,17 +1,15 @@
-use crate::ui::ViewBase;
 use crate::ui::view::View;
-use tools::{HasNew, AsAny};
+use crate::ui::ViewBase;
 use std::any::Any;
+use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
 struct TestView {
-    base: ViewBase
+    base: ViewBase,
 }
 
 impl View for TestView {
-    fn setup(&mut self) {
-
-    }
+    fn setup(&mut self) {}
 
     fn view(&self) -> &ViewBase {
         &self.base
@@ -29,7 +27,7 @@ impl View for TestView {
 impl HasNew for TestView {
     fn new() -> Self {
         TestView {
-            base: ViewBase::new()
+            base: ViewBase::new(),
         }
     }
 }

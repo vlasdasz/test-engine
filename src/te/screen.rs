@@ -15,7 +15,7 @@ pub struct Screen<Model: HasNew> {
     root_view: Box<dyn View>,
     ui_drawer: UIDrawer,
     char: u8,
-    model: Model
+    model: Model,
 }
 
 impl<T: HasNew> Screen<T> {
@@ -93,7 +93,7 @@ impl<T: HasNew> HasNew for Screen<T> {
             root_view: Box::new(ViewBase::new()),
             ui_drawer,
             char: 0,
-            model: T::new()
+            model: T::new(),
         }
     }
 }

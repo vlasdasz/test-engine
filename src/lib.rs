@@ -11,8 +11,8 @@ mod ui;
 
 use crate::gl_wrapper::gl_wrapper::Updatable;
 use crate::gm::Size;
-use crate::te::Screen;
 use crate::te::ui::TestModel;
+use crate::te::Screen;
 use crate::tools::HasNew;
 
 #[macro_use]

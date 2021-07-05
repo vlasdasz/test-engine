@@ -1,7 +1,7 @@
 use tools::HasNew;
 
 pub struct TestModel {
-    pub data: u32
+    pub data: u32,
 }
 
 impl HasNew for TestModel {

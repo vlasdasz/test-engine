@@ -38,8 +38,7 @@
     if (context == nil) {
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         NSLog(@"%s", "kEAGLRenderingAPIOpenGLES2");
-    }
-    else {
+    } else {
         NSLog(@"%s", "kEAGLRenderingAPIOpenGLES3");
     }
 
@@ -54,7 +53,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-
+    set_screen_size(self.view.frame.size.width * 2, self.view.frame.size.height * 2);
 }
 
 - (void)touchesBegan:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
