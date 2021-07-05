@@ -12,23 +12,23 @@ mod ui;
 use crate::gl_wrapper::gl_wrapper::Updatable;
 use crate::gm::Size;
 use crate::te::Screen;
+use crate::te::ui::TestModel;
+use crate::tools::HasNew;
 
 #[macro_use]
 extern crate tools;
 #[macro_use]
 extern crate guard;
-#[macro_use]
-extern crate derivative;
 #[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]
 extern crate mashup;
 
-static mut SCREEN: *mut Screen = ptr::null_mut();
+static mut SCREEN: *mut Screen<TestModel> = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        let mut screen = Screen::new();
+        let mut screen = Screen::<TestModel>::new();
         screen.init();
         SCREEN = Box::into_raw(Box::new(screen));
     }
