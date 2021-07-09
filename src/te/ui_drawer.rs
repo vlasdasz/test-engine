@@ -40,9 +40,14 @@ impl UIDrawer {
             );
         }
 
-        self.draw_rect(
+        self.fill_rect(
             view.try_borrow().unwrap().absolute_frame(),
             &view.try_borrow().unwrap().color(),
+        );
+
+        self.draw_rect(
+            view.try_borrow().unwrap().absolute_frame(),
+            &Color::TURQUOISE,
         );
 
         for view in view.try_borrow_mut().unwrap().subviews_mut() {

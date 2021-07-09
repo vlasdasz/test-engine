@@ -9,13 +9,17 @@ use tools::{AsAny, HasNew};
 #[derive(Debug)]
 pub struct Label {
     pub font: Font,
-    text: String,
+    _text: String,
     base: ViewBase,
 }
 
 impl Label {
+    pub fn text(&self) -> &str {
+        &self._text
+    }
+
     pub fn set_text(&mut self, text: &str) {
-        self.text = text.into()
+        self._text = text.into()
     }
 }
 
@@ -29,7 +33,7 @@ impl HasNew for Label {
     fn new() -> Self {
         Self {
             font: Font::blank(),
-            text: String::new(),
+            _text: String::new(),
             base: ViewBase::new(),
         }
     }
@@ -51,7 +55,7 @@ impl View for Label {
     fn update(&mut self) {
         self.remove_all_subviews();
 
-        if self.text.is_empty() {
+        if self._text.is_empty() {
             return;
         }
 
@@ -61,7 +65,7 @@ impl View for Label {
 
         content_size.height = self.font.height;
 
-        let text = self.text.clone();
+        let text = self._text.clone();
 
         for letter in text.chars() {
             let glyph = self.font.glyph_for_char(letter);

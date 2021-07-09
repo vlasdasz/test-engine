@@ -14,6 +14,8 @@ pub enum ViewType {
 pub trait View: AsAny + Debug + HasNew {
     fn setup(&mut self) {}
 
+    fn update(&mut self) {}
+
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
 
@@ -106,8 +108,6 @@ pub trait View: AsAny + Debug + HasNew {
         make(&mut view);
         self.add_subview(make_shared(view));
     }
-
-    fn update(&mut self) {}
 
     fn layout(&mut self, _super_frame: &Rect) {}
 }

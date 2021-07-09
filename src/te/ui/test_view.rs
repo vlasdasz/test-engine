@@ -1,39 +1,62 @@
-use crate::gm::Rect;
+use crate::gm::{Color, Rect};
 use crate::image::Image;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
-use tools::refs::make_shared;
+use tools::refs::{make_shared, Shared};
 use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
 pub struct TestView {
     base: ViewBase,
+    pub data: u128,
     pub font: Font,
+    pub image: Option<Shared<ImageView>>,
+    pub label: Option<Shared<Label>>,
 }
 
 impl View for TestView {
     fn setup(&mut self) {
-        self.set_frame(Rect::make(10, 10, 680, 400).into());
+        self.set_frame(Rect::make(10, 10, 680, 500));
+
+        let mut cat_image = ImageView::new();
+        cat_image.image = Image::load(&crate::te::paths::images().join("cat.jpg"));
+        cat_image.set_frame(Rect::make(200, 20, 100, 120));
+        let shared_cat = make_shared(cat_image);
+        self.image = Some(shared_cat.clone());
+        self.add_subview(shared_cat);
 
         self.make_subview(|view| {
+            view.set_color(Color::WHITE);
             view.set_frame(Rect::make(10, 20, 50, 50));
             view.enable_touch();
 
             view.make_subview(|view| {
-                view.set_frame(Rect::make(5, 5, 5, 5));
+                view.set_color(Color::RED);
+                view.set_frame(Rect::make(10, 10, 20, 20));
             });
-
-            let mut cat_image = ImageView::new();
-            cat_image.image = Image::load(&crate::te::paths::images().join("cat.jpg"));
-            cat_image.set_frame(Rect::make(200, 20, 100, 120));
-            view.add_subview(make_shared(cat_image));
         });
 
-        let mut label = Label::from_rect(Rect::make(40, 200, 100, 100));
+        let mut label = Label::from_rect(Rect::make(5, 200, 100, 100));
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
         label.font = self.font.clone();
-        self.add_subview(make_shared(label));
+        let shared_label = make_shared(label);
+        self.label = Some(shared_label.clone());
+        self.add_subview(shared_label);
+
+    }
+
+    fn update(&mut self) {
+        guard!(let Some(label) = &self.label else {
+           return;
+        });
+
+        let mut label = label.try_borrow_mut().unwrap();
+
+        label.set_text(&format!("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka: {}", self.data));
+
+        self.data += 1;
+
     }
 
     fn view(&self) -> &ViewBase {
@@ -57,7 +80,10 @@ impl HasNew for TestView {
     fn new() -> Self {
         TestView {
             base: ViewBase::new(),
+            data: 0,
             font: Font::blank(),
+            image: None,
+            label: None
         }
     }
 }
