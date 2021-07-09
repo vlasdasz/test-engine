@@ -4,3 +4,4 @@ mod test_view;
 
 pub use self::debug_view::DebugView;
 pub use test_model::TestModel;
+pub use test_view::TestView;

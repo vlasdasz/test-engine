@@ -3,7 +3,7 @@ use crate::gm::Rect;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
-use tools::refs::{make_box, make_shared};
+use tools::refs::make_shared;
 use tools::{AsAny, HasNew};
 
 #[derive(Debug)]

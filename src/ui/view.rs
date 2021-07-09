@@ -3,7 +3,7 @@ use crate::ui::input::Touch;
 use std::any::Any;
 
 use std::fmt::Debug;
-use tools::refs::{make_box, Shared};
+use tools::refs::{make_shared, Shared};
 use tools::{AsAny, HasNew};
 
 pub enum ViewType {
@@ -43,7 +43,7 @@ pub trait View: AsAny + Debug + HasNew {
         &self.view()._absolute_frame
     }
 
-    fn add_subview(&mut self, mut view: Shared<dyn View>) {
+    fn add_subview(&mut self, view: Shared<dyn View>) {
         view.borrow_mut().setup();
         self.view_mut()._subviews.push(view);
     }
@@ -67,7 +67,9 @@ pub trait View: AsAny + Debug + HasNew {
         let frame = view._absolute_frame;
         self.layout(super_frame);
         for view in self.subviews_mut() {
-            view.calculate_absolute_frame(&frame);
+            view.try_borrow_mut()
+                .unwrap()
+                .calculate_absolute_frame(&frame);
         }
     }
 
@@ -95,14 +97,14 @@ pub trait View: AsAny + Debug + HasNew {
             view.on_touch(touch);
         }
         for view in self.subviews() {
-            view.check_touch(touch);
+            view.try_borrow_mut().unwrap().check_touch(touch);
         }
     }
 
     fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
         let mut view = ViewBase::new();
         make(&mut view);
-        self.add_subview(make_box(view));
+        self.add_subview(make_shared(view));
     }
 
     fn update(&mut self) {}

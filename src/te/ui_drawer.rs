@@ -5,6 +5,7 @@ use crate::te::Assets;
 use crate::tools::platform::Platform;
 use crate::ui::view::View;
 use crate::ui::ImageView;
+use tools::refs::Shared;
 
 pub struct UIDrawer {
     pub assets: Assets,
@@ -25,8 +26,13 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn draw_view(&self, view: &mut Box<dyn View>) {
-        if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
+    pub fn draw_view(&self, view: Shared<dyn View>) {
+        if let Some(image_view) = view
+            .try_borrow_mut()
+            .unwrap()
+            .as_any()
+            .downcast_ref::<ImageView>()
+        {
             self.draw_image_in_rect(
                 &image_view.image,
                 image_view.absolute_frame(),
@@ -34,10 +40,13 @@ impl UIDrawer {
             );
         }
 
-        self.draw_rect(view.absolute_frame(), &view.color());
+        self.draw_rect(
+            view.try_borrow().unwrap().absolute_frame(),
+            &view.try_borrow().unwrap().color(),
+        );
 
-        for view in view.subviews_mut() {
-            self.draw_view(view)
+        for view in view.try_borrow_mut().unwrap().subviews_mut() {
+            self.draw_view(view.clone())
         }
     }
 }
