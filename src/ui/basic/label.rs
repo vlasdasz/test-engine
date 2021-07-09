@@ -3,7 +3,7 @@ use crate::gm::Rect;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
-use tools::refs::make_box;
+use tools::refs::{make_box, make_shared};
 use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
@@ -80,7 +80,7 @@ impl View for Label {
 
             advance += glyph.advance as f32;
 
-            self.add_subview(make_box(glyph_view));
+            self.add_subview(make_shared(glyph_view));
         }
 
         content_size.width = last_max_x;

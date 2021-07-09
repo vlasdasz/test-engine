@@ -7,8 +7,9 @@ use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
 use crate::ui::view::View;
 use crate::ui::ViewBase;
-use tools::refs::make_box;
+use tools::refs::{make_box, make_shared, Shared};
 use tools::HasNew;
+use std::borrow::BorrowMut;
 
 pub struct Screen<Model: HasNew> {
     cursor_position: Point,
@@ -23,7 +24,8 @@ impl<T: HasNew> Screen<T> {
         self.root_view.check_touch(&mut touch)
     }
 
-    fn update_view(view: &mut Box<dyn View>) {
+    fn update_view(view: &Shared<dyn View>) {
+        let view = view.into_inner();
         view.update();
         for view in view.subviews_mut() {
             Screen::<T>::update_view(view);
@@ -37,7 +39,7 @@ impl<T: HasNew> Updatable for Screen<T> {
         GLWrapper::set_clear_color(&Color::GRAY);
         let mut debug_view = DebugView::new();
         debug_view.font = self.ui_drawer.assets.fonts.default.clone();
-        self.root_view.add_subview(make_box(debug_view));
+        self.root_view.add_subview(make_shared(debug_view));
         self.root_view
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
     }

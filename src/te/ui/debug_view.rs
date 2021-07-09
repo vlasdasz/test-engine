@@ -3,7 +3,7 @@ use crate::image::Image;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
-use tools::refs::make_box;
+use tools::refs::{make_box, make_shared};
 use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
@@ -29,13 +29,13 @@ impl View for DebugView {
             let mut cat_image = ImageView::new();
             cat_image.image = Image::load(&crate::te::paths::images().join("cat.jpg"));
             cat_image.set_frame(Rect::make(200, 20, 100, 120));
-            view.add_subview(make_box(cat_image));
+            view.add_subview(make_shared(cat_image));
         });
 
         let mut label = Label::from_rect(Rect::make(40, 200, 100, 100));
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
         label.font = self.font.clone();
-        self.add_subview(make_box(label));
+        self.add_subview(make_shared(label));
     }
 
     fn view(&self) -> &ViewBase {
