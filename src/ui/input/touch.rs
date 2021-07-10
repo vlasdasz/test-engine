@@ -40,7 +40,7 @@ impl ButtonState {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Event {
     Began,
     Moved,
@@ -62,4 +62,18 @@ pub struct Touch {
     pub id: i32,
     pub position: Point,
     pub event: Event,
+}
+
+impl Touch {
+    pub fn is_began(&self) -> bool {
+        self.event == Event::Began
+    }
+
+    pub fn is_moved(&self) -> bool {
+        self.event == Event::Moved
+    }
+
+    pub fn is_ended(&self) -> bool {
+        self.event == Event::Ended
+    }
 }

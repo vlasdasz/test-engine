@@ -31,6 +31,12 @@ impl View for TestView {
             view.set_frame(Rect::make(10, 20, 50, 50));
             view.enable_touch();
 
+            view.on_touch().subscribe(|touch| {
+                if touch.is_began() {
+                    dbg!("Hellooouyuuuufff");
+                }
+            });
+
             view.make_subview(|view| {
                 view.set_color(Color::RED);
                 view.set_frame(Rect::make(10, 10, 20, 20));
@@ -43,7 +49,6 @@ impl View for TestView {
         let shared_label = make_shared(label);
         self.label = Some(shared_label.clone());
         self.add_subview(shared_label);
-
     }
 
     fn update(&mut self) {
@@ -53,10 +58,12 @@ impl View for TestView {
 
         let mut label = label.try_borrow_mut().unwrap();
 
-        label.set_text(&format!("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka: {}", self.data));
+        label.set_text(&format!(
+            "ti stragadag stragadag4naja stragadag stragadag stragadakt4ka: {}",
+            self.data
+        ));
 
         self.data += 1;
-
     }
 
     fn view(&self) -> &ViewBase {
@@ -83,7 +90,7 @@ impl HasNew for TestView {
             data: 0,
             font: Font::blank(),
             image: None,
-            label: None
+            label: None,
         }
     }
 }
