@@ -47,7 +47,6 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-
     pub fn reset_viewport(&self) {
         self.set_viewport(&self.window_size.into());
     }
