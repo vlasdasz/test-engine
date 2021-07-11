@@ -10,7 +10,6 @@ pub struct DebugView {
 }
 
 impl View for DebugView {
-
     fn view(&self) -> &ViewBase {
         &self.view
     }

@@ -12,7 +12,7 @@ pub trait Updatable: HasNew {
     fn init(&mut self);
     fn set_size(&mut self, size: Size);
     fn on_cursor_moved(&mut self, position: Point);
-    fn on_mouse_key_pressed(&mut self, button: MouseButton, state: ButtonState);
+    fn on_mouse_key_pressed(&self, button: MouseButton, state: ButtonState);
     fn update(&mut self);
 }
 

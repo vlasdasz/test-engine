@@ -19,11 +19,8 @@ pub struct Screen<Model: HasNew> {
 }
 
 impl<T: HasNew> Screen<T> {
-    fn on_touch(&mut self, mut touch: Touch) {
-        self.root_view
-            .try_borrow_mut()
-            .unwrap()
-            .check_touch(&mut touch);
+    fn on_touch(&self, mut touch: Touch) {
+        self.root_view.borrow().check_touch(&mut touch);
     }
 
     fn update_view(view: Shared<dyn View>) {
@@ -64,7 +61,7 @@ impl<T: HasNew> Updatable for Screen<T> {
         self.cursor_position = position
     }
 
-    fn on_mouse_key_pressed(&mut self, _: MouseButton, state: ButtonState) {
+    fn on_mouse_key_pressed(&self, _: MouseButton, state: ButtonState) {
         self.on_touch(Touch {
             id: 1,
             position: self.cursor_position,

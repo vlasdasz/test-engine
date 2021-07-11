@@ -3,7 +3,7 @@ use crate::ui::input::Touch;
 use std::any::Any;
 
 use std::fmt::Debug;
-use tools::refs::{make_shared, Shared};
+use tools::refs::Shared;
 use tools::{AsAny, Event, HasNew};
 
 pub enum ViewType {
@@ -77,6 +77,10 @@ pub trait View: AsAny + Debug + HasNew {
         self.view_mut()._touch_enabled = true
     }
 
+    fn touch_enabled(&self) -> bool {
+        self.view()._touch_enabled
+    }
+
     fn handle_touch(&self, touch: &Touch) {
         self.view()._on_touch.trigger(touch);
     }
@@ -95,10 +99,9 @@ pub trait View: AsAny + Debug + HasNew {
     }
 
     fn check_touch(&self, touch: &mut Touch) -> bool {
-        let view = self.view();
-        if view._touch_enabled && view._absolute_frame.contains(&touch.position) {
-            touch.position -= view._absolute_frame.origin;
-            view.handle_touch(touch);
+        if self.touch_enabled() && self.absolute_frame().contains(&touch.position) {
+            touch.position -= self.absolute_frame().origin;
+            self.handle_touch(touch);
             return true;
         }
         for view in self.subviews() {
@@ -107,12 +110,6 @@ pub trait View: AsAny + Debug + HasNew {
             }
         }
         false
-    }
-
-    fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {
-        let mut view = ViewBase::new();
-        make(&mut view);
-        self.add_subview(make_shared(view));
     }
 
     fn layout(&mut self, _super_frame: &Rect) {}

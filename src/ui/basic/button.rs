@@ -1,17 +1,16 @@
-use crate::ui::ViewBase;
 use crate::ui::view::View;
-use tools::{HasNew, AsAny, Event};
+use crate::ui::ViewBase;
 use std::any::Any;
 use tools::refs::Shared;
+use tools::{AsAny, Event, HasNew};
 
 #[derive(Debug)]
 pub struct Button {
     base: ViewBase,
-    pub on_tap: Event<()>
+    pub on_tap: Event<()>,
 }
 
 impl View for Button {
-
     fn setup(&mut self, this: Shared<dyn View>) {
         self.enable_touch();
         let this = this.clone();
@@ -34,10 +33,13 @@ impl View for Button {
 }
 
 impl HasNew for Button {
-    fn new() -> Self where Self: Sized {
+    fn new() -> Self
+    where
+        Self: Sized,
+    {
         Button {
             base: ViewBase::new(),
-            on_tap: Event::new()
+            on_tap: Event::new(),
         }
     }
 }

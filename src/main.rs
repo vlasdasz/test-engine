@@ -18,5 +18,5 @@ use crate::te::ui::TestModel;
 use crate::te::Screen;
 
 fn main() {
-    GLDrawer::<Screen<TestModel>>::with_size(Size::make(800, 600)).start_main_loop();
+    GLDrawer::<Screen<TestModel>>::with_size(Size::make(1200, 600)).start_main_loop();
 }
