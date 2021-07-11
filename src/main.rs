@@ -15,8 +15,7 @@ mod sprites;
 
 use crate::gl_wrapper::GLDrawer;
 use crate::gm::Size;
-use crate::te::Screen;
 
 fn main() {
-    GLDrawer::<Screen>::with_size(Size::make(1200, 600)).start_main_loop();
+    GLDrawer::with_size(Size::make(1200, 600)).start_main_loop();
 }

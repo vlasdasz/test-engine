@@ -1,5 +1,5 @@
 use crate::gm::Rect;
-
+use crate::te::screen::DEFAULT_FONT;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
@@ -8,7 +8,7 @@ use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
 pub struct Label {
-    pub font: Font,
+    font: Font,
     _text: String,
     base: ViewBase,
 }
@@ -32,7 +32,7 @@ impl AsAny for Label {
 impl HasNew for Label {
     fn new() -> Self {
         Self {
-            font: Font::blank(),
+            font: DEFAULT_FONT.lock().unwrap().clone(),
             _text: String::new(),
             base: ViewBase::new(),
         }

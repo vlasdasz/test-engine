@@ -29,15 +29,6 @@ pub struct Font {
 }
 
 impl Font {
-    pub fn blank() -> Font {
-        Font {
-            size: 0,
-            height: 0.0,
-            baseline_shift: 0.0,
-            glyphs: vec![],
-        }
-    }
-
     pub fn new(path: &PathBuf, size: u32) -> Result<Font, &'static str> {
         let data = fs::read(path).unwrap();
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;

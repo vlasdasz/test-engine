@@ -10,7 +10,6 @@ mod sprites;
 mod te;
 mod ui;
 
-use crate::gl_wrapper::gl_wrapper::Updatable;
 use crate::gm::{Point, Size};
 use crate::te::Screen;
 use crate::tools::HasNew;

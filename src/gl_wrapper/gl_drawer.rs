@@ -1,39 +1,41 @@
 use crate::gl_wrapper::GLLoader;
 use crate::gm::{Point, Size};
-
-use crate::gl_wrapper::gl_wrapper::Updatable;
+use crate::te::Screen;
+use crate::tools::HasNew;
 use crate::ui::input::touch::{ButtonState, MouseButton};
 use glfw::{Context, Window, WindowEvent};
 
-pub struct GLDrawer<T: Updatable> {
+pub struct GLDrawer {
     window: Window,
     events: std::sync::mpsc::Receiver<(f64, WindowEvent)>,
-    drawer: T,
+    screen: Screen,
+    size: Size,
 }
 
-impl<T: Updatable> GLDrawer<T> {
-    pub fn with_size(size: Size) -> GLDrawer<T> {
+impl GLDrawer {
+    pub fn with_size(size: Size) -> GLDrawer {
         let loader = GLLoader::with_size(size);
-        let mut drawer = T::new();
-        drawer.set_size(size);
         GLDrawer {
             window: loader.window,
             events: loader.events,
-            drawer,
+            screen: Screen::new(),
+            size,
         }
     }
 
     pub fn update(&mut self) {
-        self.drawer.update();
+        self.screen.update();
     }
 
     pub fn start_main_loop(&mut self) {
-        self.drawer.init();
+        self.screen.init();
 
         self.window.set_key_polling(true);
         self.window.set_size_polling(true);
         self.window.set_cursor_pos_polling(true);
         self.window.set_mouse_button_polling(true);
+
+        self.screen.set_size(self.size);
 
         while !self.window.should_close() {
             self.window.glfw.poll_events();
@@ -42,19 +44,19 @@ impl<T: Updatable> GLDrawer<T> {
                 match event {
                     glfw::WindowEvent::Key(_, _, _, _) => self.window.set_should_close(true),
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
-                        self.drawer.on_cursor_moved(Point {
+                        self.screen.on_cursor_moved(Point {
                             x: xpos as f32,
                             y: ypos as f32,
                         });
                     }
                     glfw::WindowEvent::Size(width, height) => {
-                        self.drawer.set_size(Size {
+                        self.screen.set_size(Size {
                             width: width as f32,
                             height: height as f32,
                         });
                     }
                     glfw::WindowEvent::MouseButton(btn, action, _) => {
-                        self.drawer.on_mouse_key_pressed(
+                        self.screen.on_mouse_key_pressed(
                             MouseButton::from_glfw(btn),
                             ButtonState::from_glfw(action),
                         )

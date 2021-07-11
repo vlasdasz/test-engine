@@ -1,20 +1,9 @@
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
 
-use crate::gm::{Color, Point, Rect, Size};
-
-use crate::ui::input::touch::{ButtonState, MouseButton};
-use tools::HasNew;
+use crate::gm::{Color, Rect};
 
 pub struct GLWrapper;
-
-pub trait Updatable: HasNew {
-    fn init(&mut self);
-    fn set_size(&mut self, size: Size);
-    fn on_cursor_moved(&mut self, position: Point);
-    fn on_mouse_key_pressed(&self, button: MouseButton, state: ButtonState);
-    fn update(&mut self);
-}
 
 impl GLWrapper {
     pub fn bind_image(id: u32) {

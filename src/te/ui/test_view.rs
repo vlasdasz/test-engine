@@ -1,6 +1,5 @@
 use crate::gm::{Color, Rect};
 use crate::image::Image;
-use crate::te::screen::DEFAULT_FONT;
 use crate::ui::basic::Button;
 use crate::ui::view::View;
 use crate::ui::{ImageView, Label, Layout, ViewBase};
@@ -33,7 +32,6 @@ impl View for TestView {
         let mut label = Label::from_rect(Rect::make(5, 200, 100, 100));
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
 
-        label.font = DEFAULT_FONT.lock().unwrap().clone();
         let shared_label = make_shared(label);
         self.label = Some(shared_label.clone());
         self.add_subview(shared_label.clone());
