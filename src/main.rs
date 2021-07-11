@@ -11,12 +11,12 @@ mod te;
 mod ui;
 #[macro_use]
 mod gl_wrapper;
+mod sprites;
 
 use crate::gl_wrapper::GLDrawer;
 use crate::gm::Size;
-use crate::te::ui::TestModel;
 use crate::te::Screen;
 
 fn main() {
-    GLDrawer::<Screen<TestModel>>::with_size(Size::make(1200, 600)).start_main_loop();
+    GLDrawer::<Screen>::with_size(Size::make(1200, 600)).start_main_loop();
 }

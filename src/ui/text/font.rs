@@ -38,9 +38,9 @@ impl Font {
         }
     }
 
-    pub fn new(path: &PathBuf, size: u32) -> Option<Font> {
+    pub fn new(path: &PathBuf, size: u32) -> Result<Font, &'static str> {
         let data = fs::read(path).unwrap();
-        let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default()).unwrap();
+        let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
         let mut glyphs = Vec::<Glyph>::with_capacity(128);
 
@@ -65,7 +65,7 @@ impl Font {
         let baseline_position = y_min.abs();
         let baseline_shift = height / 2.0 - baseline_position;
 
-        Some(Font {
+        Ok(Font {
             size,
             height,
             baseline_shift,

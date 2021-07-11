@@ -69,22 +69,22 @@ impl Buffers {
     pub fn init() -> Buffers {
         let fullscreen = Buffer::new(
             &BufferConfig::_2,
-            ArrayView::from_data(&FULLSCREEN_VERT[0], FULLSCREEN_VERT.len()),
-            Some(ArrayView::from_data(&RECT_INDICES[0], RECT_INDICES.len())),
+            ArrayView::from_array(&FULLSCREEN_VERT),
+            Some(ArrayView::from_array(&RECT_INDICES)),
             GLC!(TRIANGLE_STRIP),
         );
 
         let fullscreen_image = Buffer::new(
             &BufferConfig::_2_2,
-            ArrayView::from_data(&IMAGE_VERTICES[0], IMAGE_VERTICES.len()),
-            Some(ArrayView::from_data(&RECT_INDICES[0], RECT_INDICES.len())),
+            ArrayView::from_array(&IMAGE_VERTICES),
+            Some(ArrayView::from_array(&RECT_INDICES)),
             GLC!(TRIANGLE_STRIP),
         );
 
         let fullscreen_outline = Buffer::new(
             &BufferConfig::_2,
-            ArrayView::from_data(&OUTLINE_VERTICES[0], OUTLINE_VERTICES.len()),
-            Some(ArrayView::from_data(&INDICES[0], INDICES.len())),
+            ArrayView::from_array(&OUTLINE_VERTICES),
+            Some(ArrayView::from_array(&INDICES)),
             GLC!(LINE_LOOP),
         );
 

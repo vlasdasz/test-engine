@@ -40,14 +40,6 @@ impl HasNew for Label {
 }
 
 impl View for Label {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-
     fn update(&mut self) {
         self.remove_all_subviews();
 
@@ -93,5 +85,13 @@ impl View for Label {
         );
 
         self.set_frame(frame);
+    }
+
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
+
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
     }
 }

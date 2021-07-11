@@ -6,16 +6,17 @@ use std::ptr;
 mod gl_wrapper;
 mod gm;
 mod image;
+mod sprites;
 mod te;
 mod ui;
 
 use crate::gl_wrapper::gl_wrapper::Updatable;
-use crate::gm::{Size, Point};
+use crate::gm::{Point, Size};
 use crate::te::ui::TestModel;
 use crate::te::Screen;
 use crate::tools::HasNew;
-use crate::ui::input::Touch;
 use crate::ui::input::touch::Event;
+use crate::ui::input::Touch;
 
 #[macro_use]
 extern crate tools;
@@ -56,7 +57,7 @@ pub extern "C" fn on_touch(id: c_int, x: c_float, y: c_float, event: c_int) {
         SCREEN.as_mut().unwrap().on_touch(Touch {
             id,
             position: Point::make(x * 2.0, y * 2.0),
-            event: Event::from_int(event)
+            event: Event::from_int(event),
         })
     }
 }

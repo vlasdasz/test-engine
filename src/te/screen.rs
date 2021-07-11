@@ -1,24 +1,32 @@
 use crate::gl_wrapper::gl_wrapper::Updatable;
 use crate::gl_wrapper::GLWrapper;
 use crate::gm::{Color, Point, Rect, Size};
-use crate::te::ui::TestView;
+use crate::te::paths;
+use crate::te::ui::{DebugView, TestView};
 use crate::te::{Assets, UIDrawer};
 use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
 use crate::ui::view::View;
+use crate::ui::Font;
 use crate::ui::ViewBase;
+use lazy_static::lazy_static;
+use std::sync::Mutex;
 use tools::refs::{make_shared, Shared};
 use tools::HasNew;
 
-pub struct Screen<Model: HasNew> {
-    cursor_position: Point,
-    root_view: Shared<dyn View>,
-    ui_drawer: UIDrawer,
-    char: u8,
-    model: Model,
+lazy_static! {
+    pub static ref DEFAULT_FONT: Mutex<Font> =
+        Mutex::new(Font::new(&paths::fonts().join("SF.otf"), 48).unwrap());
 }
 
-impl<T: HasNew> Screen<T> {
+pub struct Screen {
+    cursor_position: Point,
+    debug_view: Shared<DebugView>,
+    root_view: Shared<dyn View>,
+    ui_drawer: UIDrawer,
+}
+
+impl Screen {
     pub fn on_touch(&self, mut touch: Touch) {
         self.root_view.borrow().check_touch(&mut touch);
     }
@@ -27,27 +35,27 @@ impl<T: HasNew> Screen<T> {
         let mut view = view.try_borrow_mut().unwrap();
         view.update();
         for view in view.subviews_mut() {
-            Screen::<T>::update_view(view.clone());
+            Screen::update_view(view.clone());
         }
     }
 }
 
-impl<T: HasNew> Updatable for Screen<T> {
+impl Updatable for Screen {
     fn init(&mut self) {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
-        let mut debug_view = TestView::new();
-        debug_view.font = self.ui_drawer.assets.fonts.default.clone();
-        self.root_view.borrow_mut()
-            .add_subview(make_shared(debug_view));
-        self.root_view.borrow_mut()
+
+        self.root_view
+            .borrow_mut()
+            .add_subview(make_shared(TestView::new()));
+        self.root_view
+            .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
     }
 
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
-        self.root_view.borrow_mut()
-            .set_frame(Rect::from(size));
+        self.root_view.borrow_mut().set_frame(Rect::from(size));
         self.update();
     }
 
@@ -66,39 +74,28 @@ impl<T: HasNew> Updatable for Screen<T> {
     fn update(&mut self) {
         GLWrapper::clear();
 
-        Screen::<T>::update_view(self.root_view.clone());
+        Screen::update_view(self.root_view.clone());
 
         self.root_view
-            .try_borrow_mut()
-            .unwrap()
+            .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
         self.ui_drawer.draw_view(self.root_view.clone());
 
-        let font = &self.ui_drawer.assets.fonts.default;
-
-        let image = &font.glyph_for_char(self.char as char).image;
-        self.char += 1;
-        if self.char > 120 {
-            self.char = 0;
-        }
-        let mut rect = Rect::make(10, 10, 20, 20);
-        rect.origin = self.ui_drawer.window_size.center();
-        let color = Color::WHITE;
-
-        self.ui_drawer.draw_image_in_rect(image, &rect, &color);
+        self.debug_view
+            .borrow_mut()
+            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+        self.ui_drawer.draw_view(self.debug_view.clone());
     }
 }
 
-impl<T: HasNew> HasNew for Screen<T> {
-    fn new() -> Screen<T> {
+impl HasNew for Screen {
+    fn new() -> Screen {
         let assets = Assets::init();
-        let ui_drawer = UIDrawer::new(assets);
         Screen {
             cursor_position: Point::new(),
+            debug_view: make_shared(DebugView::new()),
             root_view: make_shared(ViewBase::new()),
-            ui_drawer,
-            char: 0,
-            model: T::new(),
+            ui_drawer: UIDrawer::new(assets),
         }
     }
 }

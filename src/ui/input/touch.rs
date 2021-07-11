@@ -61,13 +61,13 @@ impl Event {
             0 => Event::Began,
             1 => Event::Moved,
             2 => Event::Ended,
-            _ => unreachable!("Invalid value for touch event")
+            _ => unreachable!("Invalid value for touch event"),
         }
     }
 }
 
 #[derive(Debug)]
-pub struct  Touch {
+pub struct Touch {
     pub id: i32,
     pub position: Point,
     pub event: Event,

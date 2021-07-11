@@ -5,15 +5,16 @@ use crate::te::Assets;
 use crate::tools::platform::Platform;
 use crate::ui::view::View;
 use crate::ui::ImageView;
+use std::rc::Rc;
 use tools::refs::Shared;
 
 pub struct UIDrawer {
-    pub assets: Assets,
+    pub assets: Rc<Assets>,
     pub window_size: Size,
 }
 
 impl UIDrawer {
-    pub fn new(assets: Assets) -> UIDrawer {
+    pub fn new(assets: Rc<Assets>) -> UIDrawer {
         UIDrawer {
             assets,
             window_size: Size::new(),
@@ -27,12 +28,7 @@ impl UIDrawer {
 
 impl UIDrawer {
     pub fn draw_view(&self, view: Shared<dyn View>) {
-        if let Some(image_view) = view
-            .try_borrow_mut()
-            .unwrap()
-            .as_any()
-            .downcast_ref::<ImageView>()
-        {
+        if let Some(image_view) = view.borrow_mut().as_any().downcast_ref::<ImageView>() {
             self.draw_image_in_rect(
                 &image_view.image,
                 image_view.absolute_frame(),
@@ -40,17 +36,11 @@ impl UIDrawer {
             );
         }
 
-        self.fill_rect(
-            view.try_borrow().unwrap().absolute_frame(),
-            &view.try_borrow().unwrap().color(),
-        );
+        self.fill_rect(view.borrow().absolute_frame(), &view.borrow().color());
 
-        self.draw_rect(
-            view.try_borrow().unwrap().absolute_frame(),
-            &Color::TURQUOISE,
-        );
+        self.draw_rect(view.borrow().absolute_frame(), &Color::TURQUOISE);
 
-        for view in view.try_borrow_mut().unwrap().subviews_mut() {
+        for view in view.borrow_mut().subviews_mut() {
             self.draw_view(view.clone())
         }
     }

@@ -1,11 +1,12 @@
 use crate::gm::{Color, Rect};
 use crate::image::Image;
+use crate::te::screen::DEFAULT_FONT;
+use crate::ui::basic::Button;
 use crate::ui::view::View;
-use crate::ui::{Font, ImageView, Label, Layout, ViewBase};
+use crate::ui::{ImageView, Label, Layout, ViewBase};
 use std::any::Any;
 use tools::refs::{make_shared, Shared};
 use tools::{AsAny, HasNew};
-use crate::ui::basic::Button;
 
 static mut COUNTER: u32 = 0;
 
@@ -14,7 +15,6 @@ pub struct TestView {
     base: ViewBase,
     pub data: u128,
     pub clicks: u128,
-    pub font: Font,
     pub image: Option<Shared<ImageView>>,
     pub label: Option<Shared<Label>>,
 }
@@ -32,7 +32,8 @@ impl View for TestView {
 
         let mut label = Label::from_rect(Rect::make(5, 200, 100, 100));
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
-        label.font = self.font.clone();
+
+        label.font = DEFAULT_FONT.lock().unwrap().clone();
         let shared_label = make_shared(label);
         self.label = Some(shared_label.clone());
         self.add_subview(shared_label.clone());
@@ -59,12 +60,11 @@ impl View for TestView {
             // let this = this.as_any_mut().downcast_mut::<Self>().unwrap();
             // this.clicks += 1;
             unsafe {
-                shared_label.borrow_mut().set_text(&format!("kok: {}", COUNTER));
+                shared_label
+                    .borrow_mut()
+                    .set_text(&format!("kok: {}", COUNTER));
                 COUNTER += 1;
             }
-
-
-            dbg!("Hellof");
         });
 
         view.add_subview(make_shared(button));
@@ -106,7 +106,6 @@ impl HasNew for TestView {
             base: ViewBase::new(),
             data: 0,
             clicks: 0,
-            font: Font::blank(),
             image: None,
             label: None,
         }

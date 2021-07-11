@@ -1,12 +1,11 @@
 use crate::ui::view::View;
-use crate::ui::{Font, ViewBase};
+use crate::ui::ViewBase;
 use std::any::Any;
 use tools::{AsAny, HasNew};
 
 #[derive(Debug)]
 pub struct DebugView {
     view: ViewBase,
-    pub font: Font,
 }
 
 impl View for DebugView {
@@ -29,7 +28,6 @@ impl HasNew for DebugView {
     fn new() -> Self {
         DebugView {
             view: ViewBase::new(),
-            font: Font::blank(),
         }
     }
 }
