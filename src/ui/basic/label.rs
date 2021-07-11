@@ -48,10 +48,6 @@ impl View for Label {
         &mut self.base
     }
 
-    fn ptr(&self) -> *const dyn View {
-        self as *const dyn View
-    }
-
     fn update(&mut self) {
         self.remove_all_subviews();
 

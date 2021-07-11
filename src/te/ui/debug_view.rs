@@ -21,10 +21,6 @@ impl View for DebugView {
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.view
     }
-
-    fn ptr(&self) -> *const dyn View {
-        self as *const dyn View
-    }
 }
 
 impl AsAny for DebugView {

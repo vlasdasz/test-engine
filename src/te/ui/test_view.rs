@@ -74,10 +74,6 @@ impl View for TestView {
         &mut self.base
     }
 
-    fn ptr(&self) -> *const dyn View {
-        self as *const dyn View
-    }
-
     fn layout(&mut self, _super_frame: &Rect) {
         Layout::br(self.frame_mut(), _super_frame);
     }

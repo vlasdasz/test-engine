@@ -19,8 +19,6 @@ pub trait View: AsAny + Debug + HasNew {
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
 
-    fn ptr(&self) -> *const dyn View;
-
     fn color(&self) -> &Color {
         &self.view()._color
     }
@@ -136,10 +134,6 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
-    }
-
-    fn ptr(&self) -> *const dyn View {
-        self as *const dyn View
     }
 }
 
