@@ -55,10 +55,19 @@ impl Event {
             ButtonState::Repeat => Self::Moved,
         }
     }
+
+    pub fn from_int(event: i32) -> Event {
+        match event {
+            0 => Event::Began,
+            1 => Event::Moved,
+            2 => Event::Ended,
+            _ => unreachable!("Invalid value for touch event")
+        }
+    }
 }
 
 #[derive(Debug)]
-pub struct Touch {
+pub struct  Touch {
     pub id: i32,
     pub position: Point,
     pub event: Event,

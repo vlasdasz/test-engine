@@ -21,7 +21,7 @@ pub struct Images {
     //
     pub frisk: Image,
     //
-    pub full_hd: Image,
+    // pub full_hd: Image,
     // pub scale_test: Image,
 }
 
@@ -43,7 +43,7 @@ impl Images {
             // left: Image::load(&paths::images().join("left.png")),
             // right: Image::load(&paths::images().join("right.png")),
             frisk: Image::load(&paths::images().join("frisk.png")),
-            full_hd: Image::load(&paths::images().join("full_hd.jpg")),
+            // full_hd: Image::load(&paths::images().join("full_hd.jpg")),
             // scale_test: Image::load(&paths::images().join("scale_test.png")),
         }
     }

@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::os::raw::c_float;
+use std::os::raw::{c_float, c_int};
 use std::ptr;
 
 mod gl_wrapper;
@@ -10,10 +10,12 @@ mod te;
 mod ui;
 
 use crate::gl_wrapper::gl_wrapper::Updatable;
-use crate::gm::Size;
+use crate::gm::{Size, Point};
 use crate::te::ui::TestModel;
 use crate::te::Screen;
 use crate::tools::HasNew;
+use crate::ui::input::Touch;
+use crate::ui::input::touch::Event;
 
 #[macro_use]
 extern crate tools;
@@ -45,5 +47,16 @@ pub extern "C" fn set_screen_size(width: c_float, height: c_float) {
 pub extern "C" fn update_screen() {
     unsafe {
         SCREEN.as_mut().unwrap().update();
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn on_touch(id: c_int, x: c_float, y: c_float, event: c_int) {
+    unsafe {
+        SCREEN.as_mut().unwrap().on_touch(Touch {
+            id,
+            position: Point::make(x * 2.0, y * 2.0),
+            event: Event::from_int(event)
+        })
     }
 }

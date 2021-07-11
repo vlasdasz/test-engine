@@ -19,7 +19,7 @@ pub struct Screen<Model: HasNew> {
 }
 
 impl<T: HasNew> Screen<T> {
-    fn on_touch(&self, mut touch: Touch) {
+    pub fn on_touch(&self, mut touch: Touch) {
         self.root_view.borrow().check_touch(&mut touch);
     }
 
@@ -38,21 +38,15 @@ impl<T: HasNew> Updatable for Screen<T> {
         GLWrapper::set_clear_color(&Color::GRAY);
         let mut debug_view = TestView::new();
         debug_view.font = self.ui_drawer.assets.fonts.default.clone();
-        self.root_view
-            .try_borrow_mut()
-            .unwrap()
+        self.root_view.borrow_mut()
             .add_subview(make_shared(debug_view));
-        self.root_view
-            .try_borrow_mut()
-            .unwrap()
+        self.root_view.borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
     }
 
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
-        self.root_view
-            .try_borrow_mut()
-            .unwrap()
+        self.root_view.borrow_mut()
             .set_frame(Rect::from(size));
         self.update();
     }

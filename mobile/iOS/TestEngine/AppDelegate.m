@@ -56,16 +56,28 @@
     set_screen_size(self.view.frame.size.width * 2, self.view.frame.size.height * 2);
 }
 
-- (void)touchesBegan:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
+- (void)process_touch:(UITouch*)touch event:(int)event {
+    const long long touch_id = (long long)touch;
+    const CGPoint ns_location = [touch locationInView: self.view];
+    on_touch((int)touch_id, ns_location.x, ns_location.y, event);
+}
 
+- (void)touchesBegan:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
+    for (UITouch* touch in touches) {
+        [self process_touch:touch event:0];
+    }
 }
 
 - (void)touchesMoved:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
-
+    for (UITouch* touch in touches) {
+        [self process_touch:touch event:1];
+    }
 }
 
 - (void)touchesEnded:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
- 
+    for (UITouch* touch in touches) {
+        [self process_touch:touch event:2];
+    }
 }
 
 @end
