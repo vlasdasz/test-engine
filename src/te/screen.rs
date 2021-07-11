@@ -79,12 +79,12 @@ impl Updatable for Screen {
         self.root_view
             .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
-        self.ui_drawer.draw_view(self.root_view.clone());
+        self.ui_drawer.draw(self.root_view.clone());
 
         self.debug_view
             .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
-        self.ui_drawer.draw_view(self.debug_view.clone());
+        self.ui_drawer.draw(self.debug_view.clone());
     }
 }
 

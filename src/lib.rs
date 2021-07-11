@@ -12,7 +12,6 @@ mod ui;
 
 use crate::gl_wrapper::gl_wrapper::Updatable;
 use crate::gm::{Point, Size};
-use crate::te::ui::TestModel;
 use crate::te::Screen;
 use crate::tools::HasNew;
 use crate::ui::input::touch::Event;
@@ -26,12 +25,12 @@ extern crate guard;
 #[macro_use]
 extern crate mashup;
 
-static mut SCREEN: *mut Screen<TestModel> = ptr::null_mut();
+static mut SCREEN: *mut Screen = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        let mut screen = Screen::<TestModel>::new();
+        let mut screen = Screen::new();
         screen.init();
         SCREEN = Box::into_raw(Box::new(screen));
     }

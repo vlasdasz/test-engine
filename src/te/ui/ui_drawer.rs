@@ -27,7 +27,7 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn draw_view(&self, view: Shared<dyn View>) {
+    pub fn draw(&self, view: Shared<dyn View>) {
         if let Some(image_view) = view.borrow_mut().as_any().downcast_ref::<ImageView>() {
             self.draw_image_in_rect(
                 &image_view.image,
@@ -41,7 +41,7 @@ impl UIDrawer {
         self.draw_rect(view.borrow().absolute_frame(), &Color::TURQUOISE);
 
         for view in view.borrow_mut().subviews_mut() {
-            self.draw_view(view.clone())
+            self.draw(view.clone())
         }
     }
 }
@@ -68,7 +68,7 @@ impl UIDrawer {
         self.assets.buffers.fullscreen_outline.draw();
     }
 
-    pub fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: &Color) {
+    fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: &Color) {
         if image.invalid() {
             return;
         }
