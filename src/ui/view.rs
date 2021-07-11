@@ -12,7 +12,7 @@ pub enum ViewType {
 }
 
 pub trait View: AsAny + Debug + HasNew {
-    fn setup(&mut self) {}
+    fn setup(&mut self, _this: Shared<dyn View>) {}
 
     fn update(&mut self) {}
 
@@ -44,7 +44,7 @@ pub trait View: AsAny + Debug + HasNew {
     }
 
     fn add_subview(&mut self, view: Shared<dyn View>) {
-        view.borrow_mut().setup();
+        view.borrow_mut().setup(view.clone());
         self.view_mut()._subviews.push(view);
     }
 
@@ -94,15 +94,19 @@ pub trait View: AsAny + Debug + HasNew {
         &mut self.view_mut()._on_touch
     }
 
-    fn check_touch(&self, touch: &mut Touch) {
+    fn check_touch(&self, touch: &mut Touch) -> bool {
         let view = self.view();
         if view._touch_enabled && view._absolute_frame.contains(&touch.position) {
             touch.position -= view._absolute_frame.origin;
             view.handle_touch(touch);
+            return true;
         }
         for view in self.subviews() {
-            view.try_borrow_mut().unwrap().check_touch(touch);
+            if view.borrow().check_touch(touch) {
+                return true;
+            }
         }
+        false
     }
 
     fn make_subview(&mut self, make: fn(&mut ViewBase) -> ()) {

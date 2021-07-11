@@ -9,10 +9,7 @@ pub struct DebugView {
     pub font: Font,
 }
 
-impl DebugView {}
-
 impl View for DebugView {
-    fn setup(&mut self) {}
 
     fn view(&self) -> &ViewBase {
         &self.view

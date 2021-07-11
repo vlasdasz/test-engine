@@ -23,7 +23,7 @@ impl<T: HasNew> Screen<T> {
         self.root_view
             .try_borrow_mut()
             .unwrap()
-            .check_touch(&mut touch)
+            .check_touch(&mut touch);
     }
 
     fn update_view(view: Shared<dyn View>) {

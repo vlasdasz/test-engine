@@ -5,6 +5,7 @@ use crate::ui::{Font, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
 use tools::refs::{make_shared, Shared};
 use tools::{AsAny, HasNew};
+use crate::ui::basic::Button;
 
 #[derive(Debug)]
 pub struct TestView {
@@ -16,7 +17,7 @@ pub struct TestView {
 }
 
 impl View for TestView {
-    fn setup(&mut self) {
+    fn setup(&mut self, _: Shared<dyn View>) {
         self.set_frame(Rect::make(10, 10, 680, 500));
 
         let mut cat_image = ImageView::new();
@@ -29,18 +30,17 @@ impl View for TestView {
         self.make_subview(|view| {
             view.set_color(Color::WHITE);
             view.set_frame(Rect::make(10, 20, 50, 50));
-            view.enable_touch();
 
-            view.on_touch().subscribe(|touch| {
-                if touch.is_began() {
-                    dbg!("Hellooouyuuuufff");
-                }
+            let mut button = Button::new();
+            button.set_frame(Rect::make(10, 10, 20, 20));
+            button.set_color(Color::RED);
+
+            button.on_tap.subscribe(|_| {
+               dbg!("Hellof");
             });
 
-            view.make_subview(|view| {
-                view.set_color(Color::RED);
-                view.set_frame(Rect::make(10, 10, 20, 20));
-            });
+            view.add_subview(make_shared(button));
+
         });
 
         let mut label = Label::from_rect(Rect::make(5, 200, 100, 100));

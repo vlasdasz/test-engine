@@ -2,6 +2,7 @@ use crate::ui::ViewBase;
 use crate::ui::view::View;
 use tools::{HasNew, AsAny, Event};
 use std::any::Any;
+use tools::refs::Shared;
 
 #[derive(Debug)]
 pub struct Button {
@@ -11,8 +12,16 @@ pub struct Button {
 
 impl View for Button {
 
-    fn setup(&mut self) {
-
+    fn setup(&mut self, this: Shared<dyn View>) {
+        self.enable_touch();
+        let this = this.clone();
+        self.on_touch().subscribe(move |touch| {
+            if touch.is_began() {
+                let this = this.borrow();
+                let this = this.as_any().downcast_ref::<Button>().unwrap();
+                this.on_tap.trigger(&());
+            }
+        });
     }
 
     fn view(&self) -> &ViewBase {

@@ -9,8 +9,6 @@ pub struct DPadView {
 }
 
 impl View for DPadView {
-    fn setup(&mut self) {}
-
     fn view(&self) -> &ViewBase {
         &self.base
     }
