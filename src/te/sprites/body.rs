@@ -1,12 +1,9 @@
-
-
 pub struct Body {
     // body: box2d::body::Body,
-    // body_def: box2d::body::BodyDef,
-    // shape: box2d::shape::shape::Shape,
-    //fixture_def: box2d::collision::
+// body_def: box2d::body::BodyDef,
+// shape: box2d::shape::shape::Shape,
+//fixture_def: box2d::collision::
 }
-
 
 // b2Body* _body = nullptr;
 // b2BodyDef _body_def;
