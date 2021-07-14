@@ -15,12 +15,19 @@ mod sprites;
 
 use crate::gl_wrapper::GLDrawer;
 use crate::gm::Size;
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
+use std::cell::{Cell, RefCell, RefMut};
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::marker::PhantomData;
+use std::ops::{Deref, DerefMut};
+use std::path::PathBuf;
 use tools::HasNew;
 
-#[derive(Serialize, Deserialize)]
+trait Wrappable: Serialize + DeserializeOwned + HasNew {}
+impl<T: Serialize + DeserializeOwned + HasNew> Wrappable for T {}
+
+#[derive(Serialize, Deserialize, Debug)]
 struct TestGest {
     pub i: u32,
     pub stro: String,
@@ -60,33 +67,68 @@ fn set_value<T: Serialize>(value: &T, key: &str) {
     fs::write(dir.join(key), json).expect("Failed to write to file");
 }
 
-fn get_value<'a, T: Serialize + Deserialize<'a> + HasNew>(key: &str) -> T {
+fn get_value<T: Wrappable>(key: &str) -> T {
     let dir = storage_dir();
     let path = dir.join(key);
-
     if !dir.exists() {
         fs::create_dir(dir).expect("Failed to create dir");
     }
-
     if !path.exists() {
         let new = T::new();
         set_value(&new, key);
         return new;
     }
+    let json = fs::read_to_string(path).expect("Failed to read file");
+    serde_json::from_str(&json).expect("Failet to parse json")
+}
 
-    let file = fs::File::open(path)
-        .expect("file should open read only");
+struct PropertyWrapper<T: Wrappable> {
+    name: &'static str,
+    data: T,
+}
 
-    T::new()
+impl<T: Wrappable> PropertyWrapper<T> {
+    pub fn new(name: &'static str) -> Self {
+        let mut new = Self {
+            name,
+            data: T::new(),
+        };
+        new.get();
+        new
+    }
+
+    pub fn get(&mut self) {
+        self.data = get_value(self.name)
+    }
+
+    pub fn store(&self) {
+        set_value(&self.data, self.name)
+    }
+}
+
+impl<T: Wrappable> Deref for PropertyWrapper<T> {
+    type Target = T;
+    fn deref(&self) -> &Self::Target {
+        &self.data
+    }
+}
+
+impl<T: Wrappable> DerefMut for PropertyWrapper<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.data
+    }
 }
 
 fn main() {
-    dbg!(executable_name());
-    dbg!(storage_dir());
+    let mut sokol = PropertyWrapper::<TestGest>::new("sokol");
 
-    let val = TestGest::new();
+    dbg!(&sokol.i);
+    dbg!(&sokol.stro);
 
-    set_value(&val, "sokol");
+    sokol.i += 1;
+    sokol.stro = "guga".into();
+
+    sokol.store();
 
     return;
     GLDrawer::with_size(Size::make(1200, 600)).start_main_loop();
