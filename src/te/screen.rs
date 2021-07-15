@@ -3,7 +3,7 @@ use crate::gm::{Color, Point, Rect, Size};
 use crate::sprites::Sprite;
 use crate::te::paths;
 use crate::te::sprites::sprites_drawer::SpritesDrawer;
-use crate::te::ui::{DebugView, TestView};
+use crate::te::ui::DebugView;
 use crate::te::{Assets, UIDrawer};
 use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
@@ -31,6 +31,11 @@ pub struct Screen {
 }
 
 impl Screen {
+    pub fn with_view(self, view: impl View + 'static) -> Self {
+        self.root_view.borrow_mut().add_subview(make_shared(view));
+        self
+    }
+
     pub fn on_touch(&self, mut touch: Touch) {
         self.root_view.borrow().check_touch(&mut touch);
     }
@@ -46,10 +51,6 @@ impl Screen {
     pub fn init(&mut self) {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
-
-        self.root_view
-            .borrow_mut()
-            .add_subview(make_shared(TestView::new()));
         self.root_view
             .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());

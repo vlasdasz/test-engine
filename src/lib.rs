@@ -11,6 +11,7 @@ mod te;
 mod ui;
 
 use crate::gm::{Point, Size};
+use crate::te::ui::TestView;
 use crate::te::Screen;
 use crate::tools::HasNew;
 use crate::ui::input::touch::Event;
@@ -29,7 +30,7 @@ static mut SCREEN: *mut Screen = ptr::null_mut();
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        let mut screen = Screen::new();
+        let mut screen = Screen::new().with_view(TestView::new());
         screen.init();
         SCREEN = Box::into_raw(Box::new(screen));
     }

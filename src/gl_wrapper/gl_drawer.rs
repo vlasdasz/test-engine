@@ -3,6 +3,7 @@ use crate::gm::{Point, Size};
 use crate::te::Screen;
 use crate::tools::HasNew;
 use crate::ui::input::touch::{ButtonState, MouseButton};
+use crate::ui::view::View;
 use glfw::{Context, Window, WindowEvent};
 
 pub struct GLDrawer {
@@ -13,6 +14,11 @@ pub struct GLDrawer {
 }
 
 impl GLDrawer {
+    pub fn with_view(mut self, view: impl View + 'static) -> Self {
+        self.screen = self.screen.with_view(view);
+        self
+    }
+
     pub fn with_size(size: Size) -> GLDrawer {
         let loader = GLLoader::with_size(size);
         GLDrawer {
