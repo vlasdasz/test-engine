@@ -32,7 +32,7 @@ deps_path = home + "/.rdeps/"
 tools_path = deps_path + "tools/"
 gles_path = deps_path + "gles31-sys/"
 soil_path = deps_path + "soil2/"
-this_path = deps_path + "test_engine/"
+this_path = os.getcwd()
 
 def run(string):
     print(string)
