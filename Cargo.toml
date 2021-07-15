@@ -6,7 +6,7 @@ edition = "2018"
 
 [lib]
 name = "test_engine"
-crate-type = ["staticlib"]
+crate-type = ["rlib"]
 
 [[bin]]
 name = "test_engine"

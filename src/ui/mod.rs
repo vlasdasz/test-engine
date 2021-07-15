@@ -10,4 +10,4 @@ pub use basic::Label;
 pub use complex::DPadView;
 pub use layout::Layout;
 pub use text::{Font, Glyph};
-pub use view::ViewBase;
+pub use view::*;

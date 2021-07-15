@@ -3,12 +3,12 @@
 use std::os::raw::{c_float, c_int};
 use std::ptr;
 
-mod gl_wrapper;
-mod gm;
-mod image;
-mod sprites;
-mod te;
-mod ui;
+pub mod gl_wrapper;
+pub mod gm;
+pub mod image;
+pub mod sprites;
+pub mod te;
+pub mod ui;
 
 use crate::gm::{Point, Size};
 use crate::te::ui::TestView;

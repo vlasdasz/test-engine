@@ -4,7 +4,7 @@ use std::any::Any;
 
 use std::fmt::Debug;
 use tools::refs::Shared;
-use tools::{AsAny, Event, HasNew};
+pub use tools::{AsAny, Event, HasNew};
 
 pub enum ViewType {
     Plain,

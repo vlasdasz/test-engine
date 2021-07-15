@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 #[macro_use]
-extern crate tools;
+pub extern crate tools;
 #[macro_use]
 extern crate guard;
 
