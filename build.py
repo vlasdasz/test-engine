@@ -2,7 +2,6 @@
 
 import os
 import sys
-import shutil
 import platform
 
 is_windows = platform.system() == "Windows"
@@ -33,14 +32,7 @@ deps_path = home + "/.rdeps/"
 tools_path = deps_path + "tools/"
 gles_path = deps_path + "gles31-sys/"
 soil_path = deps_path + "soil2/"
-
-def copy(src, dst):
-    print("Copying:\n" + src + " to:\n" + dst)
-    if os.path.isfile(src):
-        shutil.copyfile(src, dst)
-    else:
-        shutil.copytree(src, dst)
-
+this_path = deps_path + "test_engine/"
 
 def run(string):
     print(string)
@@ -70,7 +62,7 @@ clone("gles31-sys", gles_path)
 
 def link_deps():
     try:
-        os.symlink(deps_path, "./.rdeps")
+        os.symlink(deps_path, this_path + "/.rdeps")
     except FileExistsError:
         print("exists")
 
