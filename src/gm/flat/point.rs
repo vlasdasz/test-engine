@@ -27,7 +27,7 @@ impl Point {
         Point { x: 0.0, y: 0.0 }
     }
 
-    pub fn make<T: IntoF32>(x: T, y: T) -> Point {
+    pub fn make<X: IntoF32, Y: IntoF32>(x: X, y: Y) -> Point {
         Point {
             x: x.into_f32(),
             y: y.into_f32(),

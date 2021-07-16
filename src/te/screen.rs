@@ -1,6 +1,6 @@
 use crate::gl_wrapper::GLWrapper;
 use crate::gm::{Color, Point, Rect, Size};
-use crate::sprites::Sprite;
+use crate::sprites::Scene;
 use crate::te::paths;
 use crate::te::sprites::sprites_drawer::SpritesDrawer;
 use crate::te::ui::DebugView;
@@ -26,6 +26,7 @@ pub struct Screen {
     assets: Rc<Assets>,
     debug_view: Shared<DebugView>,
     root_view: Shared<dyn View>,
+    scene: Scene,
     ui_drawer: UIDrawer,
     sprites_drawer: SpritesDrawer,
 }
@@ -54,6 +55,16 @@ impl Screen {
         self.root_view
             .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+
+        self.scene
+            .add_collider(Point::new(), Size::make(100.0, 0.1));
+        self.scene.add_ball(Point::make(0.1, 10), 0.5);
+        self.scene.add_ball(Point::make(0.3, 11), 0.5);
+        self.scene.add_ball(Point::make(0.4, 12), 0.5);
+        self.scene.add_ball(Point::make(0.5, 13), 0.5);
+        self.scene.add_ball(Point::make(0.6, 14), 0.5);
+        self.scene.add_ball(Point::make(0.7, 15), 0.5);
+        self.scene.add_ball(Point::make(0.8, 16), 0.5);
     }
 
     pub fn set_size(&mut self, size: Size) {
@@ -79,9 +90,17 @@ impl Screen {
     pub fn update(&mut self) {
         GLWrapper::clear();
 
-        let mut sprite: Sprite = Size::make(5, 10).into();
-        sprite.position.y = 25.0;
-        sprite.color = Color::GREEN;
+        self.scene.update();
+
+        for sprite in &self.scene.sprites {
+            let sprite = sprite.borrow();
+            self.sprites_drawer.draw(&sprite);
+        }
+
+        for wall in &self.scene.walls {
+            let wall = wall.borrow();
+            self.sprites_drawer.draw(&wall);
+        }
 
         Screen::update_view(self.root_view.clone());
 
@@ -96,12 +115,6 @@ impl Screen {
         self.ui_drawer.draw(self.debug_view.clone());
 
         self.ui_drawer.reset_viewport();
-
-        self.sprites_drawer.draw(&sprite);
-
-        // let sprite = Sprite {
-        //
-        // }
     }
 }
 
@@ -113,6 +126,7 @@ impl HasNew for Screen {
             assets: assets.clone(),
             debug_view: make_shared(DebugView::new()),
             root_view: make_shared(ViewBase::new()),
+            scene: Scene::new(),
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: SpritesDrawer::new(assets),
         }
