@@ -4,7 +4,6 @@ use crate::image::Image;
 use crate::te::Assets;
 use crate::tools::platform::Platform;
 use crate::ui::view::View;
-use crate::ui::ImageView;
 use std::rc::Rc;
 use tools::refs::Shared;
 
@@ -28,12 +27,9 @@ impl UIDrawer {
 
 impl UIDrawer {
     pub fn draw(&self, view: Shared<dyn View>) {
-        if let Some(image_view) = view.borrow_mut().as_any().downcast_ref::<ImageView>() {
-            self.draw_image_in_rect(
-                &image_view.image,
-                image_view.absolute_frame(),
-                &image_view.color(),
-            );
+        if let Some(image) = view.borrow().image() {
+            let view = view.borrow();
+            self.draw_image_in_rect(&image, view.absolute_frame(), view.color());
         }
 
         self.fill_rect(view.borrow().absolute_frame(), &view.borrow().color());

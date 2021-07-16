@@ -13,7 +13,8 @@ use crate::ui::ViewBase;
 use lazy_static::lazy_static;
 use std::rc::Rc;
 use std::sync::Mutex;
-use tools::refs::{make_shared, Shared};
+use tools::has_new::new;
+use tools::refs::{make_shared, new_shared, Shared};
 use tools::HasNew;
 
 lazy_static! {
@@ -124,9 +125,9 @@ impl HasNew for Screen {
         Screen {
             cursor_position: Point::new(),
             assets: assets.clone(),
-            debug_view: make_shared(DebugView::new()),
-            root_view: make_shared(ViewBase::new()),
-            scene: Scene::new(),
+            debug_view: new_shared::<DebugView>(),
+            root_view: new_shared::<ViewBase>(),
+            scene: new(),
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: SpritesDrawer::new(assets),
         }

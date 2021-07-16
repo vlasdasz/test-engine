@@ -1,3 +1,4 @@
+use crate::image::Image;
 use crate::ui::view::View;
 use crate::ui::ViewBase;
 use std::any::Any;
@@ -8,6 +9,7 @@ use tools::{AsAny, Event, HasNew};
 pub struct Button {
     base: ViewBase,
     pub on_tap: Event<()>,
+    pub image: Option<Image>,
 }
 
 impl View for Button {
@@ -30,6 +32,10 @@ impl View for Button {
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
     }
+
+    fn image(&self) -> Option<Image> {
+        self.image
+    }
 }
 
 impl HasNew for Button {
@@ -40,6 +46,7 @@ impl HasNew for Button {
         Button {
             base: ViewBase::new(),
             on_tap: Event::new(),
+            image: None,
         }
     }
 }

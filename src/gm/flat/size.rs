@@ -15,7 +15,7 @@ impl Size {
         }
     }
 
-    pub fn make<T: IntoF32>(width: T, height: T) -> Size {
+    pub fn make<W: IntoF32, H: IntoF32>(width: W, height: H) -> Size {
         Size {
             width: width.into_f32(),
             height: height.into_f32(),

@@ -2,7 +2,9 @@ use crate::gm::{Color, Rect};
 use crate::ui::input::Touch;
 use std::any::Any;
 
+use crate::image::Image;
 use std::fmt::Debug;
+use tools::has_new::new;
 use tools::refs::Shared;
 pub use tools::{AsAny, Event, HasNew};
 
@@ -113,6 +115,10 @@ pub trait View: AsAny + Debug + HasNew {
     }
 
     fn layout(&mut self, _super_frame: &Rect) {}
+
+    fn image(&self) -> Option<Image> {
+        None
+    }
 }
 
 #[derive(Debug)]
@@ -149,10 +155,10 @@ impl HasNew for ViewBase {
         ViewBase {
             _color: Color::DEFAULT,
             _touch_enabled: false,
-            _frame: Rect::new(),
-            _absolute_frame: Rect::new(),
+            _frame: new(),
+            _absolute_frame: new(),
             _subviews: vec![],
-            _on_touch: Event::new(),
+            _on_touch: new(),
         }
     }
 }

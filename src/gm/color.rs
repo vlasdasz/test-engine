@@ -119,7 +119,7 @@ impl Color {
 
     pub const DEFAULT: Color = Color::CLEAR;
 
-    pub const ALL: [Color; 14] = [
+    pub const ALL: [Color; 13] = [
         Color::BLACK,
         Color::WHITE,
         Color::RED,
@@ -133,7 +133,6 @@ impl Color {
         Color::GRAY,
         Color::BROWN,
         Color::LIGHT_GRAY,
-        Color::CLEAR,
     ];
 
     pub fn random() -> &'static Color {
