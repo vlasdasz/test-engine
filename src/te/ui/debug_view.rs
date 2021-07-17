@@ -11,6 +11,7 @@ pub struct DebugView {
     view: ViewBase,
     fps_label: Shared<Label>,
     frame_drawn_label: Shared<Label>,
+    frame_drawn: u64,
 }
 
 impl View for DebugView {
@@ -27,7 +28,12 @@ impl View for DebugView {
             .set_text("frame drawn label");
     }
 
-    fn update(&mut self) {}
+    fn update(&mut self) {
+        self.frame_drawn += 1;
+        self.frame_drawn_label
+            .borrow_mut()
+            .set_text(&format!("Frame drawn: {}", self.frame_drawn));
+    }
 
     fn layout(&mut self, _super_frame: &Rect) {
         Layout::distribute_vertically(&self.frame().clone(), self.subviews_mut());
@@ -54,6 +60,7 @@ impl New for DebugView {
             view: new(),
             fps_label: new_shared(),
             frame_drawn_label: new_shared(),
+            frame_drawn: 0,
         }
     }
 }
