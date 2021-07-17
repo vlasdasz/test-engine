@@ -8,7 +8,7 @@ use std::any::Any;
 use tools::has_new::new;
 use tools::refs::{new_shared, Shared};
 use tools::Event;
-use tools::{AsAny, HasNew};
+use tools::{AsAny, New};
 
 #[derive(Debug)]
 pub struct DPadView {
@@ -92,7 +92,7 @@ impl View for DPadView {
     }
 }
 
-impl HasNew for DPadView {
+impl New for DPadView {
     fn new() -> DPadView {
         DPadView {
             base: new(),

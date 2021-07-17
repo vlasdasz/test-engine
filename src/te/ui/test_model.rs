@@ -1,10 +1,10 @@
-use tools::HasNew;
+use tools::New;
 
 pub struct TestModel {
     pub data: u32,
 }
 
-impl HasNew for TestModel {
+impl New for TestModel {
     fn new() -> Self {
         TestModel { data: 0 }
     }

@@ -6,7 +6,7 @@ use crate::ui::{DPadView, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
-use tools::{AsAny, HasNew};
+use tools::{AsAny, New};
 
 static mut COUNTER: u32 = 0;
 
@@ -101,7 +101,7 @@ impl View for TestView {
     }
 }
 
-impl HasNew for TestView {
+impl New for TestView {
     fn new() -> Self {
         TestView {
             base: new(),

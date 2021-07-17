@@ -4,7 +4,7 @@ use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
 use std::any::Any;
 use tools::refs::make_shared;
-use tools::{AsAny, HasNew};
+use tools::{AsAny, New};
 
 #[derive(Debug)]
 pub struct Label {
@@ -29,7 +29,7 @@ impl AsAny for Label {
     }
 }
 
-impl HasNew for Label {
+impl New for Label {
     fn new() -> Self {
         Self {
             font: DEFAULT_FONT.lock().unwrap().clone(),

@@ -5,7 +5,7 @@ use crate::ui::ViewBase;
 use std::any::Any;
 use tools::refs::MutWeak;
 use tools::weak_self::HasWeakSelf;
-use tools::{AsAny, HasNew};
+use tools::{AsAny, New};
 
 #[derive(Debug)]
 pub struct ImageView {
@@ -20,7 +20,7 @@ impl AsAny for ImageView {
     }
 }
 
-impl HasNew for ImageView {
+impl New for ImageView {
     fn new() -> Self {
         Self {
             image: Image::new(),

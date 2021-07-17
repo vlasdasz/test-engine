@@ -6,17 +6,19 @@ use crate::image::Image;
 use std::fmt::Debug;
 use tools::has_new::new;
 use tools::refs::Shared;
-pub use tools::{AsAny, Event, HasNew};
+pub use tools::{AsAny, Event, New};
 
 pub enum ViewType {
     Plain,
     Image,
 }
 
-pub trait View: AsAny + Debug + HasNew {
+pub trait View: AsAny + Debug + New {
     fn setup(&mut self, _this: Shared<dyn View>) {}
 
     fn update(&mut self) {}
+
+    fn layout(&mut self, _super_frame: &Rect) {}
 
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
@@ -114,8 +116,6 @@ pub trait View: AsAny + Debug + HasNew {
         false
     }
 
-    fn layout(&mut self, _super_frame: &Rect) {}
-
     fn image(&self) -> Option<Image> {
         None
     }
@@ -150,7 +150,7 @@ impl AsAny for ViewBase {
     }
 }
 
-impl HasNew for ViewBase {
+impl New for ViewBase {
     fn new() -> ViewBase {
         ViewBase {
             _color: Color::DEFAULT,

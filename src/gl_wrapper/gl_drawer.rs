@@ -1,7 +1,7 @@
 use crate::gl_wrapper::GLLoader;
 use crate::gm::{Point, Size};
 use crate::te::Screen;
-use crate::tools::HasNew;
+use crate::tools::New;
 use crate::ui::input::touch::{ButtonState, MouseButton};
 use crate::ui::view::View;
 use glfw::{Context, Window, WindowEvent};

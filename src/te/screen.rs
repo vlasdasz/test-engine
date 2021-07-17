@@ -15,7 +15,7 @@ use std::rc::Rc;
 use std::sync::Mutex;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
-use tools::HasNew;
+use tools::New;
 
 lazy_static! {
     pub static ref DEFAULT_FONT: Mutex<Font> =
@@ -56,6 +56,12 @@ impl Screen {
         self.root_view
             .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+
+        self.debug_view
+            .borrow_mut()
+            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+
+        self.debug_view.borrow_mut().setup(self.debug_view.clone());
 
         self.scene
             .add_collider(Point::new(), Size::make(100.0, 0.1));
@@ -104,6 +110,7 @@ impl Screen {
         }
 
         Screen::update_view(self.root_view.clone());
+        Screen::update_view(self.debug_view.clone());
 
         self.root_view
             .borrow_mut()
@@ -119,7 +126,7 @@ impl Screen {
     }
 }
 
-impl HasNew for Screen {
+impl New for Screen {
     fn new() -> Screen {
         let assets = Assets::init();
         Screen {

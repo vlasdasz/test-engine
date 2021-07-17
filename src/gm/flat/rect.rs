@@ -1,5 +1,5 @@
 use crate::gm::{IntoF32, Point, Size};
-use tools::HasNew;
+use tools::New;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Rect {
@@ -55,7 +55,7 @@ impl Rect {
     }
 }
 
-impl HasNew for Rect {
+impl New for Rect {
     fn new() -> Rect {
         Rect {
             origin: Point::new(),

@@ -3,7 +3,7 @@ use crate::ui::view::View;
 use crate::ui::ViewBase;
 use std::any::Any;
 use tools::refs::Shared;
-use tools::{AsAny, Event, HasNew};
+use tools::{AsAny, Event, New};
 
 #[derive(Debug)]
 pub struct Button {
@@ -38,7 +38,7 @@ impl View for Button {
     }
 }
 
-impl HasNew for Button {
+impl New for Button {
     fn new() -> Self
     where
         Self: Sized,

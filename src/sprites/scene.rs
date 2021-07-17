@@ -2,7 +2,7 @@ use crate::gm;
 use crate::sprites::Sprite;
 use rapier2d::na::Vector2;
 use tools::refs::{make_shared, Shared};
-use tools::HasNew;
+use tools::New;
 
 use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
@@ -87,7 +87,7 @@ impl Scene {
     }
 }
 
-impl HasNew for Scene {
+impl New for Scene {
     fn new() -> Self {
         let rigid_body_set = RigidBodySet::new();
         let collider_set = ColliderSet::new();
