@@ -1,4 +1,5 @@
 use crate::gm::Rect;
+use crate::ui::complex::IntView;
 use crate::ui::view::View;
 use crate::ui::{Label, Layout, ViewBase};
 use std::any::Any;
@@ -12,6 +13,7 @@ pub struct DebugView {
     fps_label: Shared<Label>,
     frame_drawn_label: Shared<Label>,
     frame_drawn: u64,
+    scale_view: Shared<IntView>,
 }
 
 impl View for DebugView {
@@ -26,6 +28,12 @@ impl View for DebugView {
         self.frame_drawn_label
             .borrow_mut()
             .set_text("frame drawn label");
+
+        self.add_subview(self.scale_view.clone());
+
+        self.scale_view.borrow_mut().on_change.subscribe(|val| {
+            dbg!(val);
+        });
     }
 
     fn update(&mut self) {
@@ -52,6 +60,10 @@ impl AsAny for DebugView {
     fn as_any(&self) -> &dyn Any {
         self
     }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
+    }
 }
 
 impl New for DebugView {
@@ -61,6 +73,7 @@ impl New for DebugView {
             fps_label: new_shared(),
             frame_drawn_label: new_shared(),
             frame_drawn: 0,
+            scale_view: new_shared(),
         }
     }
 }

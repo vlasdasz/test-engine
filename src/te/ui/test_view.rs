@@ -88,16 +88,16 @@ impl View for TestView {
         self.data += 1;
     }
 
+    fn layout(&mut self, _super_frame: &Rect) {
+        Layout::br(self.frame_mut(), _super_frame);
+    }
+
     fn view(&self) -> &ViewBase {
         &self.base
     }
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-
-    fn layout(&mut self, _super_frame: &Rect) {
-        Layout::br(self.frame_mut(), _super_frame);
     }
 }
 
@@ -116,6 +116,10 @@ impl New for TestView {
 
 impl AsAny for TestView {
     fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
         self
     }
 }

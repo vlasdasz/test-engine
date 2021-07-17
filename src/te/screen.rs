@@ -40,6 +40,7 @@ impl Screen {
 
     pub fn on_touch(&self, mut touch: Touch) {
         self.root_view.borrow().check_touch(&mut touch);
+        self.debug_view.borrow().check_touch(&mut touch);
     }
 
     fn update_view(view: Shared<dyn View>) {
