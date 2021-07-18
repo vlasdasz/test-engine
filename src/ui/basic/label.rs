@@ -67,7 +67,7 @@ impl View for Label {
 
             glyph_view.set_frame(Rect::make(
                 advance + glyph.bearing.x,
-                content_size.height - glyph.bearing.y + self.font.baseline_shift,
+                0, //content_size.height - glyph.bearing.y + self.font.baseline_shift,
                 glyph.size.width,
                 glyph.size.height,
             ));

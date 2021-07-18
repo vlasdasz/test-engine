@@ -18,8 +18,8 @@ pub struct DebugView {
 
 impl View for DebugView {
     fn setup(&mut self, _: Shared<dyn View>) {
-        self.frame_mut().size.height = 200.0;
-        self.frame_mut().size.width = 400.0;
+        self.frame_mut().size.height = 100.0;
+        self.frame_mut().size.width = 280.0;
 
         self.add_subview(self.fps_label.clone());
         self.add_subview(self.frame_drawn_label.clone());
@@ -45,6 +45,7 @@ impl View for DebugView {
 
     fn layout(&mut self, _super_frame: &Rect) {
         Layout::distribute_vertically(&self.frame().clone(), self.subviews_mut());
+        self.scale_view.borrow_mut().frame_mut().size.width = self.frame().width() / 10.0
     }
 
     fn view(&self) -> &ViewBase {

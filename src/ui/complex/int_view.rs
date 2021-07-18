@@ -4,6 +4,8 @@ use crate::te::paths;
 use crate::ui::basic::Button;
 use crate::ui::{Label, Layout, View, ViewBase};
 use std::any::Any;
+use std::cell::RefCell;
+use std::ops::AddAssign;
 use tools::has_new::new;
 use tools::refs::{new_shared, Shared};
 use tools::{AsAny, Event, New};
@@ -11,7 +13,7 @@ use tools::{AsAny, Event, New};
 #[derive(Debug)]
 pub struct IntView {
     base: ViewBase,
-    value: i64,
+    value: RefCell<i64>,
     label: Shared<Label>,
     up: Shared<Button>,
     down: Shared<Button>,
@@ -19,7 +21,7 @@ pub struct IntView {
 }
 
 impl View for IntView {
-    fn setup(&mut self, _: Shared<dyn View>) {
+    fn setup(&mut self, this: Shared<dyn View>) {
         self.add_subview(self.label.clone());
         self.add_subview(self.up.clone());
         self.add_subview(self.down.clone());
@@ -27,28 +29,27 @@ impl View for IntView {
         self.up.borrow_mut().image = Some(Image::load(&paths::images().join("up.png")));
         self.down.borrow_mut().image = Some(Image::load(&paths::images().join("down.png")));
 
-        //let a = this.clone();
+        let a = this.clone();
         self.up.borrow_mut().on_tap.subscribe(move |_| {
-            // let this = a.borrow();
-            // let this = this.as_any().downcast_ref::<Self>().unwrap();
-            // this.on_change.trigger(&50);
-            //let mut this = a.borrow_mut();
-            // let mut this = this.as_any_mut().downcast_mut::<Self>().unwrap();
-            // this.value += 1;
-            // this.on_change.trigger(&this.value);
+            let this = a.borrow();
+            let this = this.as_any().downcast_ref::<Self>().unwrap();
+            this.value.borrow_mut().add_assign(1);
+            this.on_change.trigger(&this.value.borrow());
         });
 
-        // let a = this.clone();
-        // self.down.borrow_mut().on_tap.subscribe(move |_| {
-        //     let mut this = a.borrow_mut();
-        //     let mut this = this.as_any_mut().downcast_mut::<Self>().unwrap();
-        //     this.value -= 1;
-        //     this.on_change.trigger(&this.value);
-        // });
+        let a = this.clone();
+        self.down.borrow_mut().on_tap.subscribe(move |_| {
+            let this = a.borrow();
+            let this = this.as_any().downcast_ref::<Self>().unwrap();
+            this.value.borrow_mut().add_assign(-1);
+            this.on_change.trigger(&this.value.borrow());
+        });
     }
 
     fn update(&mut self) {
-        self.label.borrow_mut().set_text(&self.value.to_string());
+        self.label
+            .borrow_mut()
+            .set_text(&self.value.borrow().to_string());
     }
 
     fn layout(&mut self, _super_frame: &Rect) {
@@ -68,7 +69,7 @@ impl New for IntView {
     fn new() -> Self {
         IntView {
             base: new(),
-            value: 0,
+            value: RefCell::new(0),
             label: new_shared(),
             up: new_shared(),
             down: new_shared(),
