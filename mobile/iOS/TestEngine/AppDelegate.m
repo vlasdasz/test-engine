@@ -22,6 +22,10 @@
     [super viewDidLoad];
     [self setup];
     create_screen();
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     set_screen_size(self.view.frame.size.width * 2, self.view.frame.size.height * 2);
 }
 
@@ -50,10 +54,6 @@
     view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
     view.drawableStencilFormat = GLKViewDrawableStencilFormat8;
     view.multipleTouchEnabled = true;
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    set_screen_size(self.view.frame.size.width * 2, self.view.frame.size.height * 2);
 }
 
 - (void)process_touch:(UITouch*)touch event:(int)event {
