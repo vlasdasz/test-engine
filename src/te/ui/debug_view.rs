@@ -2,6 +2,7 @@ use crate::gm::Rect;
 use crate::ui::complex::IntView;
 use crate::ui::view::View;
 use crate::ui::{Label, Layout, ViewBase};
+use chrono::Utc;
 use std::any::Any;
 use tools::has_new::new;
 use tools::platform::Platform;
@@ -15,6 +16,7 @@ pub struct DebugView {
     frame_drawn_label: Shared<Label>,
     frame_drawn: u64,
     scale_view: Shared<IntView>,
+    prev_time: i64,
 }
 
 impl View for DebugView {
@@ -47,6 +49,18 @@ impl View for DebugView {
         self.frame_drawn_label
             .borrow_mut()
             .set_text(&format!("Frame drawn: {}", self.frame_drawn));
+
+        let now = Utc::now().timestamp_nanos();
+
+        let interval = now - self.prev_time;
+        self.prev_time = now;
+
+        let frame_time = interval as f64 / 1000000000.0;
+        let fps = 1.0 / frame_time as f64;
+
+        self.fps_label
+            .borrow_mut()
+            .set_text(&format!("FPS: {}", fps as i64));
     }
 
     fn layout(&mut self, _super_frame: &Rect) {
@@ -77,6 +91,7 @@ impl New for DebugView {
             frame_drawn_label: new_shared(),
             frame_drawn: 0,
             scale_view: new_shared(),
+            prev_time: Utc::now().timestamp_nanos(),
         }
     }
 }
