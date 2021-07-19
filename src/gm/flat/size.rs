@@ -15,6 +15,10 @@ impl Size {
         }
     }
 
+    pub fn square(side: f32) -> Size {
+        Size::make(side, side)
+    }
+
     pub fn make<W: IntoF32, H: IntoF32>(width: W, height: H) -> Size {
         Size {
             width: width.into_f32(),

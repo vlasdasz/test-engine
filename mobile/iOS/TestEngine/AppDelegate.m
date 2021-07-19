@@ -40,8 +40,7 @@
     EAGLContext* context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
     
     if (context == nil) {
-        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-        NSLog(@"%s", "kEAGLRenderingAPIOpenGLES2");
+        NSAssert(false, @"Failed to initialize OpenGL");
     } else {
         NSLog(@"%s", "kEAGLRenderingAPIOpenGLES3");
     }
@@ -49,7 +48,7 @@
     NSLog(@"%@", context);
     [EAGLContext setCurrentContext:context];
     GLKView* view = (GLKView*)self.view;
-    view .context = context;
+    view.context = context;
     view.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
     view.drawableStencilFormat = GLKViewDrawableStencilFormat8;

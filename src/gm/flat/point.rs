@@ -1,4 +1,5 @@
 use std::ops::{AddAssign, SubAssign};
+use tools::New;
 
 pub trait IntoF32 {
     fn into_f32(self) -> f32;
@@ -23,10 +24,6 @@ pub struct Point {
 }
 
 impl Point {
-    pub const fn new() -> Point {
-        Point { x: 0.0, y: 0.0 }
-    }
-
     pub fn make<X: IntoF32, Y: IntoF32>(x: X, y: Y) -> Point {
         Point {
             x: x.into_f32(),
@@ -101,5 +98,11 @@ impl SubAssign for Point {
     fn sub_assign(&mut self, rhs: Point) {
         self.x -= rhs.x;
         self.y -= rhs.y
+    }
+}
+
+impl New for Point {
+    fn new() -> Self {
+        Point { x: 0.0, y: 0.0 }
     }
 }

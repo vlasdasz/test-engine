@@ -64,21 +64,23 @@ impl Screen {
 
         self.debug_view.borrow_mut().setup(self.debug_view.clone());
 
+        self.scene.add_collider(new(), Size::make(100, 1));
+
         self.scene
-            .add_collider(Point::new(), Size::make(100.0, 0.1));
-        self.scene.add_ball(Point::make(0.1, 10), 0.5);
-        self.scene.add_ball(Point::make(0.3, 11), 0.5);
-        self.scene.add_ball(Point::make(0.4, 12), 0.5);
-        self.scene.add_ball(Point::make(0.5, 13), 0.5);
-        self.scene.add_ball(Point::make(0.6, 14), 0.5);
-        self.scene.add_ball(Point::make(0.7, 15), 0.5);
-        self.scene.add_ball(Point::make(0.8, 16), 0.5);
+            .add_collider(Point::make(20, 0), Size::make(1, 100));
+        self.scene
+            .add_collider(Point::make(-20, 0), Size::make(1, 100));
+
+        for i in 0..500 {
+            self.scene
+                .add_cube(Point::make(0.1 * i as f32, i * 2), Size::square(0.5));
+        }
     }
 
     pub fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
         self.root_view.borrow_mut().set_frame(Rect::from(size));
-        self.sprites_drawer.set_size(&size);
+        self.sprites_drawer.set_resolution(&size);
         self.sprites_drawer.set_camera_position(&Point::make(0, 0));
         self.update();
     }

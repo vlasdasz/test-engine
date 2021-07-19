@@ -9,7 +9,7 @@ pub struct Rect {
 
 impl Rect {
     pub const DEFAULT: Rect = Rect {
-        origin: Point::new(),
+        origin: Point { x: 0.0, y: 0.0 },
         size: Size::new(),
     };
 

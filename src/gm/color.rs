@@ -119,7 +119,7 @@ impl Color {
 
     pub const DEFAULT: Color = Color::CLEAR;
 
-    pub const ALL: [Color; 13] = [
+    pub const ALL: [Color; 12] = [
         Color::BLACK,
         Color::WHITE,
         Color::RED,
@@ -130,7 +130,6 @@ impl Color {
         Color::ORANGE,
         Color::PURPLE,
         Color::TURQUOISE,
-        Color::GRAY,
         Color::BROWN,
         Color::LIGHT_GRAY,
     ];

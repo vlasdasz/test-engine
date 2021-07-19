@@ -12,7 +12,7 @@ impl SpritesDrawer {
         Self { assets }
     }
 
-    pub fn set_size(&self, size: &Size) {
+    pub fn set_resolution(&self, size: &Size) {
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_resolution(size)
     }

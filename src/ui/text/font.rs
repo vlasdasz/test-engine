@@ -1,10 +1,11 @@
-use crate::gm::{Point, Size};
+use crate::gm::Size;
 use crate::image::Image;
 use crate::ui::Glyph;
 use std::ffi::c_void;
 use std::fs;
 use std::ops::Range;
 use std::path::PathBuf;
+use tools::new;
 
 fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     let (metrics, bitmap) = font.rasterize(symbol, size);
@@ -16,7 +17,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 
     let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1);
 
-    Glyph::new(symbol, image, 20, Point::new())
+    Glyph::new(symbol, image, 20, new())
 }
 
 #[derive(Debug, Clone)]
@@ -33,10 +34,10 @@ impl Font {
         let data = fs::read(path).unwrap();
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
-        let mut glyphs = Vec::<Glyph>::with_capacity(128);
+        let mut glyphs = Vec::with_capacity(128);
 
-        let mut y_max: f32 = f32::MIN;
-        let mut y_min: f32 = f32::MAX;
+        let mut y_max = f32::MIN;
+        let mut y_min = f32::MAX;
 
         for symbol in (Range {
             start: 0 as char,

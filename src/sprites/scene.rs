@@ -56,7 +56,9 @@ impl Scene {
     }
 
     pub fn add_collider(&mut self, pos: gm::Point, size: gm::Size) -> Shared<Sprite> {
-        let collider = ColliderBuilder::cuboid(100.0, 0.1).build();
+        let collider = ColliderBuilder::cuboid(size.width, size.height)
+            .translation(Vector2::new(pos.x, pos.y))
+            .build();
         let handle = self.collider_set.insert(collider);
         let sprite = Sprite::new(pos, size, handle, None);
         let sprite = make_shared(sprite);
@@ -64,23 +66,20 @@ impl Scene {
         sprite
     }
 
-    pub fn add_ball(&mut self, pos: gm::Point, size: f32) -> Shared<Sprite> {
+    pub fn add_cube(&mut self, pos: gm::Point, size: gm::Size) -> Shared<Sprite> {
         let rigid_body = RigidBodyBuilder::new_dynamic()
             .translation(Vector2::new(pos.x, pos.y))
             .build();
-        let collider = ColliderBuilder::ball(size).restitution(0.7).build();
+        let collider = ColliderBuilder::cuboid(size.width, size.height)
+            .restitution(0.7)
+            .build();
         let ball_body_handle = self.rigid_body_set.insert(rigid_body);
         let handle = self.collider_set.insert_with_parent(
             collider,
             ball_body_handle,
             &mut self.rigid_body_set,
         );
-        let sprite = Sprite::new(
-            pos,
-            gm::Size::make(size * 2.0, size * 2.0),
-            handle,
-            Some(ball_body_handle),
-        );
+        let sprite = Sprite::new(pos, size, handle, Some(ball_body_handle));
         let sprite = make_shared(sprite);
         self.sprites.push(sprite.clone());
         sprite

@@ -4,6 +4,7 @@ use crate::ui::view::View;
 use crate::ui::{Label, Layout, ViewBase};
 use std::any::Any;
 use tools::has_new::new;
+use tools::platform::Platform;
 use tools::refs::{new_shared, Shared};
 use tools::{AsAny, New};
 
@@ -34,6 +35,11 @@ impl View for DebugView {
         self.scale_view.borrow_mut().on_change.subscribe(|val| {
             dbg!(val);
         });
+
+        if Platform::MOBILE {
+            self.frame_mut().origin.x = 28.0;
+            self.frame_mut().origin.y = 28.0;
+        }
     }
 
     fn update(&mut self) {
@@ -59,10 +65,6 @@ impl View for DebugView {
 
 impl AsAny for DebugView {
     fn as_any(&self) -> &dyn Any {
-        self
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any {
         self
     }
 }
