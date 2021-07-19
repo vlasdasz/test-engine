@@ -1,7 +1,7 @@
 use crate::gm;
 use crate::sprites::Sprite;
 use rapier2d::na::Vector2;
-use tools::refs::{make_shared, Shared};
+use tools::refs::{make_shared, Shared, new_shared};
 use tools::New;
 
 use rapier2d::prelude::{
@@ -9,9 +9,11 @@ use rapier2d::prelude::{
     JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
 };
 
-pub struct Scene {
+pub struct Level {
     pub sprites: Vec<Shared<Sprite>>,
     pub walls: Vec<Shared<Sprite>>,
+
+    pub player: Shared<Sprite>,
 
     rigid_body_set: RigidBodySet,
     collider_set: ColliderSet,
@@ -28,7 +30,14 @@ pub struct Scene {
     event_handler: (),
 }
 
-impl Scene {
+impl Level {
+    pub fn setup(&mut self) {
+        let player = self.add_rect(gm::Point::make(0, 10), gm::Size::make(1, 2));
+        self.player = player;
+        let body = &mut self.rigid_body_set[self.player.borrow().rigid_body_handle.unwrap()];
+        body.lock_rotations(true, true);
+    }
+
     pub fn update(&mut self) {
         self.physics_pipeline.step(
             &self.gravity,
@@ -60,13 +69,13 @@ impl Scene {
             .translation(Vector2::new(pos.x, pos.y))
             .build();
         let handle = self.collider_set.insert(collider);
-        let sprite = Sprite::new(pos, size, handle, None);
+        let sprite = Sprite::make(pos, size, handle, None);
         let sprite = make_shared(sprite);
         self.walls.push(sprite.clone());
         sprite
     }
 
-    pub fn add_cube(&mut self, pos: gm::Point, size: gm::Size) -> Shared<Sprite> {
+    pub fn add_rect(&mut self, pos: gm::Point, size: gm::Size) -> Shared<Sprite> {
         let rigid_body = RigidBodyBuilder::new_dynamic()
             .translation(Vector2::new(pos.x, pos.y))
             .build();
@@ -79,14 +88,14 @@ impl Scene {
             ball_body_handle,
             &mut self.rigid_body_set,
         );
-        let sprite = Sprite::new(pos, size, handle, Some(ball_body_handle));
+        let sprite = Sprite::make(pos, size, handle, Some(ball_body_handle));
         let sprite = make_shared(sprite);
         self.sprites.push(sprite.clone());
         sprite
     }
 }
 
-impl New for Scene {
+impl New for Level {
     fn new() -> Self {
         let rigid_body_set = RigidBodySet::new();
         let collider_set = ColliderSet::new();
@@ -101,9 +110,10 @@ impl New for Scene {
         let ccd_solver = CCDSolver::new();
         let physics_hooks = ();
         let event_handler = ();
-        Scene {
+        Level {
             sprites: vec![],
             walls: vec![],
+            player: new_shared(),
             rigid_body_set,
             collider_set,
             gravity,

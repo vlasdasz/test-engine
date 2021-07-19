@@ -6,6 +6,7 @@ use crate::tools::platform::Platform;
 use crate::ui::view::View;
 use std::rc::Rc;
 use tools::refs::Shared;
+use tools::new;
 
 pub struct UIDrawer {
     pub assets: Rc<Assets>,
@@ -16,7 +17,7 @@ impl UIDrawer {
     pub fn new(assets: Rc<Assets>) -> UIDrawer {
         UIDrawer {
             assets,
-            window_size: Size::new(),
+            window_size: new(),
         }
     }
 

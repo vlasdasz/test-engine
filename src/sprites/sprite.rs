@@ -1,6 +1,8 @@
 use crate::gm::{Color, Point, Size};
-use rapier2d::dynamics::RigidBodyHandle;
+use rapier2d::dynamics::{RigidBodyHandle, RigidBody};
 use rapier2d::prelude::ColliderHandle;
+use tools::{New, new};
+use std::ptr::{null_mut};
 
 pub struct Sprite {
     pub position: Point,
@@ -9,10 +11,11 @@ pub struct Sprite {
     pub color: Color,
     pub collider_handle: ColliderHandle,
     pub rigid_body_handle: Option<RigidBodyHandle>,
+    rigid_body: *mut RigidBody,
 }
 
 impl Sprite {
-    pub fn new(
+    pub fn make(
         position: Point,
         size: Size,
         collider_handle: ColliderHandle,
@@ -25,6 +28,21 @@ impl Sprite {
             color: Color::random().clone(),
             collider_handle,
             rigid_body_handle,
+            rigid_body: null_mut()
+        }
+    }
+}
+
+impl New for Sprite {
+    fn new() -> Self {
+        Sprite {
+            position: new(),
+            size: new(),
+            rotation: 0.0,
+            color: new(),
+            collider_handle: ColliderHandle::invalid(),
+            rigid_body_handle: None,
+            rigid_body: null_mut()
         }
     }
 }

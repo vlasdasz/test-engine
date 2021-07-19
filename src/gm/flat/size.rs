@@ -1,5 +1,6 @@
 use crate::gm::IntoF32;
 use crate::gm::Point;
+use tools::New;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Size {
@@ -8,13 +9,6 @@ pub struct Size {
 }
 
 impl Size {
-    pub const fn new() -> Size {
-        Size {
-            width: 0.0,
-            height: 0.0,
-        }
-    }
-
     pub fn square(side: f32) -> Size {
         Size::make(side, side)
     }
@@ -36,4 +30,14 @@ impl Size {
             y: self.height / 2.0,
         }
     }
+}
+
+impl New for Size {
+    fn new() -> Size {
+        Size {
+            width: 0.0,
+            height: 0.0,
+        }
+    }
+
 }

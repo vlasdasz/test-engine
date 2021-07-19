@@ -13,6 +13,7 @@ use crate::gm::Size;
 use image::GenericImageView;
 use std::ffi::c_void;
 use std::path::PathBuf;
+use tools::new;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Image {
@@ -24,7 +25,7 @@ pub struct Image {
 impl Image {
     pub fn new() -> Image {
         Image {
-            size: Size::new(),
+            size: new(),
             channels: 0,
             gl_handle: u32::MAX,
         }

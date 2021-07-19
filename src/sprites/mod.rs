@@ -1,5 +1,5 @@
-pub mod scene;
+pub mod level;
 pub mod sprite;
 
-pub use scene::Scene;
+pub use level::Level;
 pub use sprite::Sprite;
