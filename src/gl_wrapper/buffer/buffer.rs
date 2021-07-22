@@ -46,7 +46,13 @@ impl Buffer {
 
         cfg_if::cfg_if! {
             if #[cfg(any(target_os="ios", target_os="android"))] {
-                type VertexSize = i64;
+                cfg_if::cfg_if! {
+                    if #[cfg(target_pointer_width = "64")] {
+                        type VertexSize = i64;
+                    } else {
+                        type VertexSize = i32;
+                    }
+                };
             }
             else {
                 type VertexSize = isize;

@@ -45,14 +45,21 @@ def clone(rep, destination = ""):
         run("git clone --recursive https://github.com/vladasz/" + rep + " " + destination)
 
 
-if android:
+def setup_android():
     run("echo $ANDROID_HOME")
     run("echo $NDK_HOME")
     run("ls $ANDROID_HOME")
     run("ls $ANDROID_HOME/ndk")
+    if os.path.isdir("NDK"):
+        return
     run("mkdir NDK")
-    run("rustup target add aarch64-linux-android")
-    run("${ANDROID_HOME}/ndk/22.1.7171670/build/tools/make_standalone_toolchain.py --api 26 --arch arm64 --install-dir NDK/arm64")
+    run("rustup target add aarch64-linux-android armv7-linux-androideabi")
+    run("${ANDROID_HOME}/ndk/22.1.7171670/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
+    run("${ANDROID_HOME}/ndk/22.1.7171670/build/tools/make_standalone_toolchain.py --api 17 --arch arm --install-dir NDK/arm")
+
+
+if android:
+    setup_android()
 
 
 clone("soil2", soil_path)
@@ -104,5 +111,6 @@ if ios:
     run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
 if android:
     run("cargo build --target aarch64-linux-android --release --lib")
+    run("cargo build --target armv7-linux-androideabi --release --lib")
 else:
     run("cargo build")
