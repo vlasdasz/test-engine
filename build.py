@@ -46,16 +46,14 @@ def clone(rep, destination = ""):
 
 
 def setup_android():
-    run("echo $ANDROID_HOME")
-    run("echo $NDK_HOME")
-    run("ls $ANDROID_HOME")
-    run("ls $ANDROID_HOME/ndk")
     if os.path.isdir("NDK"):
         return
     run("mkdir NDK")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi")
-    run("${ANDROID_HOME}/ndk/22.1.7171670/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
-    run("${ANDROID_HOME}/ndk/22.1.7171670/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
+    ndk_home = os. environ["NDK_HOME"]
+    print("NDK_HOME: " + ndk_home)
+    run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
+    run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
 
 
 if android:
