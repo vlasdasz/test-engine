@@ -39,5 +39,4 @@ impl New for Size {
             height: 0.0,
         }
     }
-
 }

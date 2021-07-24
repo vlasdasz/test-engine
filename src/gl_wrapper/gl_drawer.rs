@@ -1,10 +1,12 @@
 use crate::gl_wrapper::GLLoader;
 use crate::gm::{Point, Size};
+use crate::sprites::Level;
 use crate::te::Screen;
 use crate::tools::New;
 use crate::ui::input::touch::{ButtonState, MouseButton};
 use crate::ui::view::View;
 use glfw::{Context, Window, WindowEvent};
+use tools::refs::Shared;
 
 pub struct GLDrawer {
     window: Window,
@@ -16,6 +18,11 @@ pub struct GLDrawer {
 impl GLDrawer {
     pub fn with_view(mut self, view: impl View + 'static) -> Self {
         self.screen = self.screen.with_view(view);
+        self
+    }
+
+    pub fn with_level(mut self, level: Shared<Level>) -> Self {
+        self.screen = self.screen.with_level(level);
         self
     }
 
@@ -48,7 +55,11 @@ impl GLDrawer {
 
             for (_, event) in glfw::flush_messages(&self.events) {
                 match event {
-                    glfw::WindowEvent::Key(_, _, _, _) => self.window.set_should_close(true),
+                    glfw::WindowEvent::Key(key, _, _, _) => {
+                        if key == glfw::Key::Escape {
+                            self.window.set_should_close(true)
+                        }
+                    }
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
                         self.screen.on_cursor_moved(Point {
                             x: xpos as f32,

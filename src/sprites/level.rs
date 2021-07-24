@@ -1,13 +1,17 @@
 use crate::gm;
 use crate::sprites::Sprite;
 use rapier2d::na::Vector2;
-use tools::refs::{make_shared, Shared, new_shared};
+use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 
 use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
     JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
 };
+
+pub trait Control {
+    fn jump(&mut self);
+}
 
 pub struct Level {
     pub sprites: Vec<Shared<Sprite>>,
@@ -127,5 +131,14 @@ impl New for Level {
             physics_hooks,
             event_handler,
         }
+    }
+}
+
+impl Control for Level {
+    fn jump(&mut self) {
+        dbg!("Jomp");
+        let player = self.player.borrow();
+        let body = &mut self.rigid_body_set[player.rigid_body_handle.unwrap()];
+        body.apply_force(Vector2::new(0.0, 100.0), true)
     }
 }

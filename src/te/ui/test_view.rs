@@ -63,22 +63,6 @@ impl View for TestView {
         dpad.frame_mut().size.height = 200.0;
         dpad.frame_mut().origin.y = 300.0;
 
-        dpad.on_up.subscribe(|_| {
-            dbg!("up");
-        });
-
-        dpad.on_down.subscribe(|_| {
-            dbg!("down");
-        });
-
-        dpad.on_left.subscribe(|_| {
-            dbg!("left");
-        });
-
-        dpad.on_right.subscribe(|_| {
-            dbg!("right");
-        });
-
         drop(dpad);
 
         self.add_subview(shared_dpad);

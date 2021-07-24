@@ -27,7 +27,7 @@ pub struct Screen {
     assets: Rc<Assets>,
     debug_view: Shared<DebugView>,
     root_view: Shared<dyn View>,
-    level: Level,
+    level: Shared<Level>,
     ui_drawer: UIDrawer,
     sprites_drawer: SpritesDrawer,
 }
@@ -35,6 +35,11 @@ pub struct Screen {
 impl Screen {
     pub fn with_view(self, view: impl View + 'static) -> Self {
         self.root_view.borrow_mut().add_subview(make_shared(view));
+        self
+    }
+
+    pub fn with_level(mut self, level: Shared<Level>) -> Self {
+        self.level = level;
         self
     }
 
@@ -55,7 +60,7 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
-        self.level.setup();
+        self.level.borrow_mut().setup();
 
         self.root_view
             .borrow_mut()
@@ -67,15 +72,20 @@ impl Screen {
 
         self.debug_view.borrow_mut().setup(self.debug_view.clone());
 
-        self.level.add_collider(new(), Size::make(100, 1));
+        self.level
+            .borrow_mut()
+            .add_collider(new(), Size::make(100, 1));
 
         self.level
+            .borrow_mut()
             .add_collider(Point::make(20, 0), Size::make(1, 100));
         self.level
+            .borrow_mut()
             .add_collider(Point::make(-20, 0), Size::make(1, 100));
 
         for i in 0..500 {
             self.level
+                .borrow_mut()
                 .add_rect(Point::make(0.1 * i as f32, i * 2), Size::square(0.5));
         }
     }
@@ -103,16 +113,17 @@ impl Screen {
     pub fn update(&mut self) {
         GLWrapper::clear();
 
-        self.level.update();
+        self.level.borrow_mut().update();
 
-        self.sprites_drawer.set_camera_position(&self.level.player.borrow().position);
+        self.sprites_drawer
+            .set_camera_position(&self.level.borrow().player.borrow().position);
 
-        for sprite in &self.level.sprites {
+        for sprite in &self.level.borrow().sprites {
             let sprite = sprite.borrow();
             self.sprites_drawer.draw(&sprite);
         }
 
-        for wall in &self.level.walls {
+        for wall in &self.level.borrow().walls {
             let wall = wall.borrow();
             self.sprites_drawer.draw(&wall);
         }
@@ -142,7 +153,7 @@ impl New for Screen {
             assets: assets.clone(),
             debug_view: new_shared::<DebugView>(),
             root_view: new_shared::<ViewBase>(),
-            level: new(),
+            level: new_shared(),
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: SpritesDrawer::new(assets),
         }

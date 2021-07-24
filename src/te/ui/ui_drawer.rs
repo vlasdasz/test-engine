@@ -5,8 +5,8 @@ use crate::te::Assets;
 use crate::tools::platform::Platform;
 use crate::ui::view::View;
 use std::rc::Rc;
-use tools::refs::Shared;
 use tools::new;
+use tools::refs::Shared;
 
 pub struct UIDrawer {
     pub assets: Rc<Assets>,

@@ -1,4 +1,4 @@
-name: iOS Simulator
+name: iOS
 
 on:
   push:
@@ -14,5 +14,5 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: iOS Simulator
+      - name: iOS
         run: python3 build.py ios
