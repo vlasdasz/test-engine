@@ -106,7 +106,7 @@ if ios:
     os.chdir("mobile/iOS")
     run("xcodebuild -showsdks")
     run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
-if android:
+else if android:
     run("cargo build --target aarch64-linux-android --release --lib")
     run("cargo build --target armv7-linux-androideabi --release --lib")
 else:
