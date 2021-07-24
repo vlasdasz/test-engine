@@ -14,16 +14,28 @@ impl SpritesDrawer {
 
     pub fn set_resolution(&self, size: &Size) {
         self.assets.shaders.sprite.enable();
-        self.assets.shaders.sprite.set_resolution(size)
+        self.assets.shaders.sprite.set_resolution(size);
+        self.assets.shaders.textured_sprite.enable();
+        self.assets.shaders.textured_sprite.set_resolution(size)
     }
 
     pub fn set_camera_position(&self, pos: &Point) {
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_camera_position(pos);
+        self.assets.shaders.textured_sprite.enable();
+        self.assets.shaders.textured_sprite.set_camera_position(pos);
     }
 
     pub fn draw(&self, sprite: &Sprite) {
-        let shader = &self.assets.shaders.sprite;
+        let mut shader = &self.assets.shaders.sprite;
+        let mut buffer = &self.assets.buffers.fullscreen;
+
+        if let Some(image) = sprite.image {
+            shader = &self.assets.shaders.textured_sprite;
+            buffer = &self.assets.buffers.fullscreen_image;
+            image.bind();
+        } else {
+        }
 
         shader.enable();
 
@@ -32,6 +44,6 @@ impl SpritesDrawer {
         shader.set_rotation(sprite.rotation);
         shader.set_color(&sprite.color);
 
-        self.assets.buffers.fullscreen.draw();
+        buffer.draw();
     }
 }

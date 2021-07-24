@@ -12,6 +12,7 @@ pub struct Shaders {
     pub ui_monochrome: Shader,
 
     pub sprite: Shader,
+    pub textured_sprite: Shader,
 }
 
 impl Shaders {
@@ -24,6 +25,7 @@ impl Shaders {
         let ui_monochrome = compiler.compile(&paths::shaders::ui().join("ui_monochrome"));
 
         let sprite = compiler.compile(&paths::shaders::sprites().join("sprite"));
+        let textured_sprite = compiler.compile(&paths::shaders::sprites().join("textured_sprite"));
 
         Shaders {
             compiler,
@@ -34,6 +36,7 @@ impl Shaders {
             ui_monochrome,
 
             sprite,
+            textured_sprite,
         }
     }
 }
