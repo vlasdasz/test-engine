@@ -11,7 +11,6 @@ pub mod te;
 pub mod ui;
 
 use crate::gm::{Point, Size};
-use crate::te::ui::TestView;
 use crate::te::Screen;
 use crate::tools::New;
 use crate::ui::input::touch::Event;

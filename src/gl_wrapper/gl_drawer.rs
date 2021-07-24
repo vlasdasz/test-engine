@@ -1,12 +1,9 @@
 use crate::gl_wrapper::GLLoader;
 use crate::gm::{Point, Size};
-use crate::sprites::Level;
 use crate::te::Screen;
 use crate::tools::New;
 use crate::ui::input::touch::{ButtonState, MouseButton};
-use crate::ui::view::View;
 use glfw::{Context, Window, WindowEvent};
-use tools::refs::Shared;
 
 pub struct GLDrawer {
     window: Window,
