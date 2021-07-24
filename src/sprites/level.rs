@@ -6,11 +6,13 @@ use tools::New;
 
 use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
-    JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
+    JointSet, NarrowPhase, PhysicsPipeline, RigidBody, RigidBodyBuilder, RigidBodySet,
 };
 
 pub trait Control {
     fn jump(&mut self);
+    fn go_left(&mut self);
+    fn go_right(&mut self);
 }
 
 pub struct Level {
@@ -38,8 +40,9 @@ impl Level {
     pub fn setup(&mut self) {
         let player = self.add_rect(gm::Point::make(0, 10), gm::Size::make(1, 2));
         self.player = player;
-        let body = &mut self.rigid_body_set[self.player.borrow().rigid_body_handle.unwrap()];
+        let body = self.player_body();
         body.lock_rotations(true, true);
+        dbg!(body.mass());
     }
 
     pub fn update(&mut self) {
@@ -97,6 +100,10 @@ impl Level {
         self.sprites.push(sprite.clone());
         sprite
     }
+
+    fn player_body(&mut self) -> &mut RigidBody {
+        &mut self.rigid_body_set[self.player.borrow().rigid_body_handle.unwrap()]
+    }
 }
 
 impl New for Level {
@@ -136,9 +143,14 @@ impl New for Level {
 
 impl Control for Level {
     fn jump(&mut self) {
-        dbg!("Jomp");
-        let player = self.player.borrow();
-        let body = &mut self.rigid_body_set[player.rigid_body_handle.unwrap()];
-        body.apply_force(Vector2::new(0.0, 100.0), true)
+        self.player_body().set_linvel([0.0, 50.0].into(), true);
+    }
+
+    fn go_left(&mut self) {
+        self.player_body().set_linvel([-50.0, 0.0].into(), true);
+    }
+
+    fn go_right(&mut self) {
+        self.player_body().set_linvel([50.0, 0.0].into(), true);
     }
 }

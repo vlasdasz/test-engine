@@ -27,8 +27,17 @@ fn main() {
 
     let a = level.clone();
     view.dpad.borrow_mut().on_up.subscribe(move |_| {
-        let mut level = a.borrow_mut();
-        level.jump();
+        a.borrow_mut().jump();
+    });
+
+    let a = level.clone();
+    view.dpad.borrow_mut().on_left.subscribe(move |_| {
+        a.borrow_mut().go_left();
+    });
+
+    let a = level.clone();
+    view.dpad.borrow_mut().on_right.subscribe(move |_| {
+        a.borrow_mut().go_right();
     });
 
     drawer.with_view(view).with_level(level).start_main_loop();

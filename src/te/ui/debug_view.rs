@@ -17,6 +17,9 @@ pub struct DebugView {
     frame_drawn: u64,
     scale_view: Shared<IntView>,
     prev_time: i64,
+    min_fps: u64,
+    max_fps: u64,
+    skipped: u64,
 }
 
 impl View for DebugView {
@@ -56,11 +59,24 @@ impl View for DebugView {
         self.prev_time = now;
 
         let frame_time = interval as f64 / 1000000000.0;
-        let fps = 1.0 / frame_time as f64;
+        let fps = (1.0 / frame_time as f64) as u64;
 
-        self.fps_label
-            .borrow_mut()
-            .set_text(&format!("FPS: {}", fps as i64));
+        if self.skipped > 100 {
+            if fps < self.min_fps {
+                self.min_fps = fps
+            }
+
+            if fps > self.max_fps {
+                self.max_fps = fps;
+            }
+        } else {
+            self.skipped += 1;
+        }
+
+        self.fps_label.borrow_mut().set_text(&format!(
+            "FPS: {} min: {} max: {}",
+            fps, self.min_fps, self.max_fps
+        ));
     }
 
     fn layout(&mut self, _super_frame: &Rect) {
@@ -92,6 +108,9 @@ impl New for DebugView {
             frame_drawn: 0,
             scale_view: new_shared(),
             prev_time: Utc::now().timestamp_nanos(),
+            min_fps: u64::MAX,
+            max_fps: u64::MIN,
+            skipped: 0,
         }
     }
 }
