@@ -50,8 +50,7 @@ def setup_android():
         return
     run("mkdir NDK")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi")
-    ndk_home = os. environ["NDK_HOME"]
-    print("NDK_HOME: " + ndk_home)
+    ndk_home = "${ANDROID_HOME}/ndk/22.1.7171670"
     run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
     run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
 
