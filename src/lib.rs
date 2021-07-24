@@ -30,7 +30,7 @@ static mut SCREEN: *mut Screen = ptr::null_mut();
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        let mut screen = Screen::new().with_view(TestView::new());
+        let mut screen = Screen::new();
         screen.init();
         SCREEN = Box::into_raw(Box::new(screen));
     }

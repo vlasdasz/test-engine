@@ -1,9 +1,10 @@
 use crate::gl_wrapper::GLWrapper;
 use crate::gm::{Color, Point, Rect, Size};
+use crate::sprites::Control;
 use crate::sprites::Level;
 use crate::te::paths;
 use crate::te::sprites::sprites_drawer::SpritesDrawer;
-use crate::te::ui::DebugView;
+use crate::te::ui::{DebugView, TestView};
 use crate::te::{Assets, UIDrawer};
 use crate::ui::input::touch::{ButtonState, Event, MouseButton};
 use crate::ui::input::Touch;
@@ -33,16 +34,6 @@ pub struct Screen {
 }
 
 impl Screen {
-    pub fn with_view(self, view: impl View + 'static) -> Self {
-        self.root_view.borrow_mut().add_subview(make_shared(view));
-        self
-    }
-
-    pub fn with_level(mut self, level: Shared<Level>) -> Self {
-        self.level = level;
-        self
-    }
-
     pub fn on_touch(&self, mut touch: Touch) {
         self.root_view.borrow().check_touch(&mut touch);
         self.debug_view.borrow().check_touch(&mut touch);
@@ -60,8 +51,6 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
-        self.level.borrow_mut().setup();
-
         self.root_view
             .borrow_mut()
             .calculate_absolute_frame(&self.ui_drawer.window_size.into());
@@ -72,22 +61,44 @@ impl Screen {
 
         self.debug_view.borrow_mut().setup(self.debug_view.clone());
 
-        self.level
-            .borrow_mut()
-            .add_collider(new(), Size::make(100, 1));
+        self.setup_level();
+        self.setup_test_view();
+    }
 
-        self.level
-            .borrow_mut()
-            .add_collider(Point::make(20, 0), Size::make(1, 100));
-        self.level
-            .borrow_mut()
-            .add_collider(Point::make(-20, 0), Size::make(1, 100));
+    fn setup_level(&mut self) {
+        let mut level = self.level.borrow_mut();
+
+        level.setup();
+
+        level.add_collider(new(), Size::make(100, 1));
+
+        level.add_collider(Point::make(20, 0), Size::make(1, 100));
+        level.add_collider(Point::make(-20, 0), Size::make(1, 100));
 
         for i in 0..500 {
-            self.level
-                .borrow_mut()
-                .add_rect(Point::make(0.1 * i as f32, i * 2), Size::square(0.5));
+            level.add_rect(Point::make(0.1 * i as f32, i * 2), Size::square(0.5));
         }
+    }
+
+    fn setup_test_view(&mut self) {
+        let view = TestView::new();
+
+        let a = self.level.clone();
+        view.dpad.borrow_mut().on_up.subscribe(move |_| {
+            a.borrow_mut().jump();
+        });
+
+        let a = self.level.clone();
+        view.dpad.borrow_mut().on_left.subscribe(move |_| {
+            a.borrow_mut().go_left();
+        });
+
+        let a = self.level.clone();
+        view.dpad.borrow_mut().on_right.subscribe(move |_| {
+            a.borrow_mut().go_right();
+        });
+
+        self.root_view.borrow_mut().add_subview(make_shared(view));
     }
 
     pub fn set_size(&mut self, size: Size) {
@@ -113,17 +124,19 @@ impl Screen {
     pub fn update(&mut self) {
         GLWrapper::clear();
 
-        self.level.borrow_mut().update();
+        let mut level = self.level.borrow_mut();
+
+        level.update();
 
         self.sprites_drawer
-            .set_camera_position(&self.level.borrow().player.borrow().position);
+            .set_camera_position(&level.player.borrow().position);
 
-        for sprite in &self.level.borrow().sprites {
+        for sprite in &level.sprites {
             let sprite = sprite.borrow();
             self.sprites_drawer.draw(&sprite);
         }
 
-        for wall in &self.level.borrow().walls {
+        for wall in &level.walls {
             let wall = wall.borrow();
             self.sprites_drawer.draw(&wall);
         }

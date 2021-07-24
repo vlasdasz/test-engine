@@ -64,14 +64,6 @@ impl View for DPadView {
         });
     }
 
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-
     fn layout(&mut self, _super_frame: &Rect) {
         let frame = self.frame();
         let third = frame.width() / 3.0;
@@ -89,6 +81,14 @@ impl View for DPadView {
         self.right
             .borrow_mut()
             .set_frame(Rect::make(third * 2.0, half, third, half));
+    }
+
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
+
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
     }
 }
 

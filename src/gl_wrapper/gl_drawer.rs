@@ -16,16 +16,6 @@ pub struct GLDrawer {
 }
 
 impl GLDrawer {
-    pub fn with_view(mut self, view: impl View + 'static) -> Self {
-        self.screen = self.screen.with_view(view);
-        self
-    }
-
-    pub fn with_level(mut self, level: Shared<Level>) -> Self {
-        self.screen = self.screen.with_level(level);
-        self
-    }
-
     pub fn with_size(size: Size) -> GLDrawer {
         let loader = GLLoader::with_size(size);
         GLDrawer {

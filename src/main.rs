@@ -20,25 +20,5 @@ use tools::new;
 use tools::refs::new_shared;
 
 fn main() {
-    let drawer = GLDrawer::with_size(Size::make(1200, 600));
-
-    let view: TestView = new();
-    let level = new_shared::<Level>();
-
-    let a = level.clone();
-    view.dpad.borrow_mut().on_up.subscribe(move |_| {
-        a.borrow_mut().jump();
-    });
-
-    let a = level.clone();
-    view.dpad.borrow_mut().on_left.subscribe(move |_| {
-        a.borrow_mut().go_left();
-    });
-
-    let a = level.clone();
-    view.dpad.borrow_mut().on_right.subscribe(move |_| {
-        a.borrow_mut().go_right();
-    });
-
-    drawer.with_view(view).with_level(level).start_main_loop();
+    GLDrawer::with_size(Size::make(1200, 600)).start_main_loop();
 }
