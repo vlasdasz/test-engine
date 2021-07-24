@@ -22,7 +22,7 @@ Desktop:
 
 Mobile:
 
-[![IOS][IOSS1]][LIOSS]
+[![IOS][IOSS1]][LIOSD]
 [![ANDR][ANDR1]][ANDR]
 
 
