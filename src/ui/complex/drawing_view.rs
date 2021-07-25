@@ -14,9 +14,9 @@ pub struct DrawingView {
 }
 
 impl DrawingView {
-    pub fn add_path(&mut self, path: PointsPath, color: Color, draw_mode: DrawMode) {
+    pub fn add_path(&mut self, path: PointsPath, color: Color) {
         self.paths
-            .push(UIDrawer::initialize_path_data(path, color, draw_mode))
+            .push(UIDrawer::initialize_path_data(path, color, DrawMode::Fill))
     }
 }
 

@@ -2,7 +2,6 @@ use crate::gm::flat::PointsPath;
 use crate::gm::{Color, Rect};
 use crate::image::Image;
 use crate::ui::basic::Button;
-use crate::ui::complex::path_data::DrawMode;
 use crate::ui::complex::DrawingView;
 use crate::ui::view::View;
 use crate::ui::{DPadView, ImageView, Label, Layout, ViewBase};
@@ -83,7 +82,7 @@ impl View for TestView {
         path.add_point((1, 60).into());
         path.add_point((300, 70).into());
 
-        drawing.add_path(path, Color::GREEN, DrawMode::Fill);
+        drawing.add_path(path, Color::GREEN);
 
         self.add_subview(make_shared(drawing));
     }
