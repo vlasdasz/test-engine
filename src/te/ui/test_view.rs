@@ -1,5 +1,5 @@
 use crate::gm::flat::PointsPath;
-use crate::gm::{Color, Point, Rect};
+use crate::gm::{Color, Rect};
 use crate::image::Image;
 use crate::ui::basic::Button;
 use crate::ui::complex::path_data::DrawMode;
@@ -25,12 +25,12 @@ pub struct TestView {
 
 impl View for TestView {
     fn setup(&mut self, _this: Shared<dyn View>) {
-        self.set_frame(Rect::make(10, 10, 1000, 500));
+        self.set_frame((10, 10, 1000, 500).into());
 
         let cat_image = self.image.clone();
         let mut cat_image = cat_image.borrow_mut();
         cat_image.image = Image::load(&crate::te::paths::images().join("cat.jpg"));
-        cat_image.set_frame(Rect::make(200, 20, 100, 120));
+        cat_image.set_frame((200, 20, 100, 120).into());
         drop(cat_image);
         self.add_subview(self.image.clone());
 
@@ -42,11 +42,11 @@ impl View for TestView {
         self.add_subview(self.label.clone());
 
         let mut view = ViewBase::new();
-        view.set_frame(Rect::make(10, 20, 50, 50));
+        view.set_frame((10, 20, 50, 50).into());
         view.set_color(Color::WHITE);
 
         let mut button = Button::new();
-        button.set_frame(Rect::make(10, 10, 20, 20));
+        button.set_frame((10, 10, 20, 20).into());
         button.set_color(Color::RED);
 
         let label = self.label.clone();
@@ -72,16 +72,16 @@ impl View for TestView {
 
         let mut drawing = DrawingView::new();
 
-        drawing.set_frame(Rect::make(500, 10, 200, 200));
+        drawing.set_frame((500, 10, 200, 200).into());
 
         let mut path = PointsPath::new();
 
-        path.add_point(Point::make(1, 20));
-        path.add_point(Point::make(100, 30));
-        path.add_point(Point::make(1, 40));
-        path.add_point(Point::make(200, 50));
-        path.add_point(Point::make(1, 60));
-        path.add_point(Point::make(300, 70));
+        path.add_point((1, 20).into());
+        path.add_point((100, 30).into());
+        path.add_point((1, 40).into());
+        path.add_point((200, 50).into());
+        path.add_point((1, 60).into());
+        path.add_point((300, 70).into());
 
         drawing.add_path(path, Color::GREEN, DrawMode::Fill);
 

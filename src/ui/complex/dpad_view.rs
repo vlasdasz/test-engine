@@ -71,16 +71,16 @@ impl View for DPadView {
 
         self.up
             .borrow_mut()
-            .set_frame(Rect::make(third, 0, third, half));
+            .set_frame((third, 0, third, half).into());
         self.down
             .borrow_mut()
-            .set_frame(Rect::make(third, half, third, half));
+            .set_frame((third, half, third, half).into());
         self.left
             .borrow_mut()
-            .set_frame(Rect::make(0, half, third, half));
+            .set_frame((0, half, third, half).into());
         self.right
             .borrow_mut()
-            .set_frame(Rect::make(third * 2.0, half, third, half));
+            .set_frame((third * 2.0, half, third, half).into());
     }
 
     fn view(&self) -> &ViewBase {

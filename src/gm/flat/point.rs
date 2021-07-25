@@ -24,15 +24,6 @@ pub struct Point {
 }
 
 impl Point {
-    pub fn make<X: IntoF32, Y: IntoF32>(x: X, y: Y) -> Point {
-        Point {
-            x: x.into_f32(),
-            y: y.into_f32(),
-        }
-    }
-}
-
-impl Point {
     pub fn angle(&self) -> f32 {
         self.y.atan2(self.x)
     }
@@ -104,5 +95,14 @@ impl SubAssign for Point {
 impl New for Point {
     fn new() -> Self {
         Point { x: 0.0, y: 0.0 }
+    }
+}
+
+impl<X: IntoF32, Y: IntoF32> From<(X, Y)> for Point {
+    fn from(tup: (X, Y)) -> Self {
+        Self {
+            x: tup.0.into_f32(),
+            y: tup.1.into_f32(),
+        }
     }
 }

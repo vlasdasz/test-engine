@@ -15,18 +15,6 @@ impl Rect {
             height: 0.0,
         },
     };
-
-    pub fn make<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32>(
-        x: X,
-        y: Y,
-        width: W,
-        height: H,
-    ) -> Rect {
-        Rect {
-            origin: Point::make(x, y),
-            size: Size::make(width, height),
-        }
-    }
 }
 
 impl Rect {
@@ -72,6 +60,15 @@ impl From<Size> for Rect {
         Rect {
             origin: new(),
             size,
+        }
+    }
+}
+
+impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Rect {
+    fn from(tup: (X, Y, W, H)) -> Self {
+        Self {
+            origin: (tup.0, tup.1).into(),
+            size: (tup.2, tup.3).into(),
         }
     }
 }

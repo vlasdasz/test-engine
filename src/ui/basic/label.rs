@@ -1,4 +1,3 @@
-use crate::gm::Rect;
 use crate::te::screen::DEFAULT_FONT;
 use crate::ui::view::View;
 use crate::ui::{Font, ImageView, ViewBase};
@@ -61,12 +60,15 @@ impl View for Label {
             let mut glyph_view = ImageView::from_rect(glyph.size.into());
             glyph_view.image = glyph.image;
 
-            glyph_view.set_frame(Rect::make(
-                advance + glyph.bearing.x,
-                0, //content_size.height - glyph.bearing.y + self.font.baseline_shift,
-                glyph.size.width,
-                glyph.size.height,
-            ));
+            glyph_view.set_frame(
+                (
+                    advance + glyph.bearing.x,
+                    0, //content_size.height - glyph.bearing.y + self.font.baseline_shift,
+                    glyph.size.width,
+                    glyph.size.height,
+                )
+                    .into(),
+            );
 
             last_max_x = glyph_view.frame().max_x();
 
@@ -77,12 +79,13 @@ impl View for Label {
 
         content_size.width = last_max_x;
 
-        let frame = Rect::make(
+        let frame = (
             self.view().frame().origin.x,
             self.view().frame().origin.y,
             content_size.width,
             content_size.height,
-        );
+        )
+            .into();
 
         self.set_frame(frame);
     }

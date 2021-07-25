@@ -39,10 +39,7 @@ pub struct Level {
 
 impl Level {
     pub fn setup(&mut self) {
-        let player = self.add_rect(
-            gm::Point::make(0, 10),
-            gm::Size::make(17.0 / 6.0, 28.0 / 6.0),
-        );
+        let player = self.add_rect((0, 10).into(), (17.0 / 6.0, 28.0 / 6.0).into());
         self.player = player;
         self.player.borrow_mut().image =
             Some(Image::load(&crate::te::paths::images().join("frisk.png")));

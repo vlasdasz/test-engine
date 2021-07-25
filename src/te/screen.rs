@@ -70,13 +70,13 @@ impl Screen {
 
         level.setup();
 
-        level.add_collider(new(), Size::make(100, 1));
+        level.add_collider(new(), (100, 1).into());
 
-        level.add_collider(Point::make(20, 0), Size::make(1, 100));
-        level.add_collider(Point::make(-20, 0), Size::make(1, 100));
+        level.add_collider((20, 0).into(), (1, 100).into());
+        level.add_collider((-20, 0).into(), (1, 100).into());
 
         for i in 0..500 {
-            level.add_rect(Point::make(0.1 * i as f32, i * 2), Size::square(0.5));
+            level.add_rect((0.1 * i as f32, i * 2).into(), Size::square(0.5));
         }
     }
 
@@ -105,7 +105,7 @@ impl Screen {
         self.ui_drawer.set_size(&size);
         self.root_view.borrow_mut().set_frame(Rect::from(size));
         self.sprites_drawer.set_resolution(&size);
-        self.sprites_drawer.set_camera_position(&Point::make(0, 0));
+        self.sprites_drawer.set_camera_position(&(0, 0).into());
         self.update();
     }
 

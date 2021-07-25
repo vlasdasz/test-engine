@@ -13,8 +13,8 @@ mod ui;
 mod gl_wrapper;
 mod sprites;
 
-use crate::{gl_wrapper::GLDrawer, gm::Size};
+use crate::gl_wrapper::GLDrawer;
 
 fn main() {
-    GLDrawer::with_size(Size::make(1200, 600)).start_main_loop();
+    GLDrawer::with_size((1200, 600).into()).start_main_loop();
 }

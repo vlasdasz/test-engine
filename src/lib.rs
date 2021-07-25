@@ -10,7 +10,7 @@ pub mod sprites;
 pub mod te;
 pub mod ui;
 
-use crate::gm::{Point, Size};
+use crate::gm::Size;
 use crate::te::Screen;
 use crate::tools::New;
 use crate::ui::input::touch::Event;
@@ -54,7 +54,7 @@ pub extern "C" fn on_touch(id: c_int, x: c_float, y: c_float, event: c_int) {
     unsafe {
         SCREEN.as_mut().unwrap().on_touch(Touch {
             id,
-            position: Point::make(x * 2.0, y * 2.0),
+            position: (x * 2.0, y * 2.0).into(),
             event: Event::from_int(event),
         })
     }
