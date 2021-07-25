@@ -1,6 +1,9 @@
-use crate::gm::{Color, Rect};
+use crate::gm::flat::PointsPath;
+use crate::gm::{Color, Point, Rect};
 use crate::image::Image;
 use crate::ui::basic::Button;
+use crate::ui::complex::path_data::DrawMode;
+use crate::ui::complex::DrawingView;
 use crate::ui::view::View;
 use crate::ui::{DPadView, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
@@ -66,6 +69,23 @@ impl View for TestView {
         drop(dpad);
 
         self.add_subview(shared_dpad);
+
+        let mut drawing = DrawingView::new();
+
+        drawing.set_frame(Rect::make(500, 10, 200, 200));
+
+        let mut path = PointsPath::new();
+
+        path.add_point(Point::make(1, 20));
+        path.add_point(Point::make(100, 30));
+        path.add_point(Point::make(1, 40));
+        path.add_point(Point::make(200, 50));
+        path.add_point(Point::make(1, 60));
+        path.add_point(Point::make(300, 70));
+
+        drawing.add_path(path, Color::GREEN, DrawMode::Fill);
+
+        self.add_subview(make_shared(drawing));
     }
 
     fn update(&mut self) {

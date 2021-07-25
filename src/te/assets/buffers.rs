@@ -67,21 +67,21 @@ pub struct Buffers {
 
 impl Buffers {
     pub fn init() -> Buffers {
-        let fullscreen = Buffer::new(
+        let fullscreen = Buffer::make(
             &BufferConfig::_2,
             ArrayView::from_array(&FULLSCREEN_VERT),
             Some(ArrayView::from_array(&RECT_INDICES)),
             GLC!(TRIANGLE_STRIP),
         );
 
-        let fullscreen_image = Buffer::new(
+        let fullscreen_image = Buffer::make(
             &BufferConfig::_2_2,
             ArrayView::from_array(&IMAGE_VERTICES),
             Some(ArrayView::from_array(&RECT_INDICES)),
             GLC!(TRIANGLE_STRIP),
         );
 
-        let fullscreen_outline = Buffer::new(
+        let fullscreen_outline = Buffer::make(
             &BufferConfig::_2,
             ArrayView::from_array(&OUTLINE_VERTICES),
             Some(ArrayView::from_array(&INDICES)),

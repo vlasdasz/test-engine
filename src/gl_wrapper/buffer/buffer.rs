@@ -22,7 +22,7 @@ pub struct Buffer {
 }
 
 impl Buffer {
-    pub fn new(
+    pub fn make(
         config: &'static BufferConfig,
         vertex_data: ArrayView<f32>,
         indices: Option<ArrayView<u16>>,
