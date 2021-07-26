@@ -53,7 +53,7 @@ pub extern "C" fn update_screen() {
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     unsafe {
         SCREEN.as_mut().unwrap().on_touch(Touch {
-            id,
+            id: id.into(),
             position: (x * 2.0, y * 2.0).into(),
             event: Event::from_int(event),
         })
