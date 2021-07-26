@@ -19,8 +19,8 @@
 		D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC26261C457000B81CFB /* libswiftSystem.tbd */; };
 		D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
 		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
+		D1AAD83526AEDBF1008B86C5 /* libtest_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AAD83426AEDBF1008B86C5 /* libtest_engine.a */; };
 		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; };
-		D1EFD4ED261B6B0600979776 /* libtest_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1EFD4EC261B6B0600979776 /* libtest_engine.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +41,8 @@
 		D180CC26261C457000B81CFB /* libswiftSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftSystem.tbd; path = usr/lib/swift/libswiftSystem.tbd; sourceTree = SDKROOT; };
 		D180CC27261C457000B81CFB /* libSystem_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem_asan.tbd; path = usr/lib/libSystem_asan.tbd; sourceTree = SDKROOT; };
 		D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B_asan.tbd; path = usr/lib/libSystem.B_asan.tbd; sourceTree = SDKROOT; };
+		D1AAD83426AEDBF1008B86C5 /* libtest_engine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine.a; path = ../../../target/universal/release/libtest_engine.a; sourceTree = "<group>"; };
 		D1D524F3261BB078005C1426 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		D1EFD4EC261B6B0600979776 /* libtest_engine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine.a; path = ../../../target/universal/debug/libtest_engine.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,9 +56,9 @@
 				D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */,
 				D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */,
 				D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */,
+				D1AAD83526AEDBF1008B86C5 /* libtest_engine.a in Frameworks */,
 				D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */,
 				D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */,
-				D1EFD4ED261B6B0600979776 /* libtest_engine.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,9 +88,9 @@
 				D17B6FB1262EE65200D61876 /* Assets */,
 				D17CC3E42617174D00F55C2E /* TestEngine.entitlements */,
 				D14901F72617215B0044E630 /* test_engine.h */,
-				D1EFD4EC261B6B0600979776 /* libtest_engine.a */,
 				D1411E7D2617166700F3F18B /* AppDelegate.h */,
 				D1411E7E2617166700F3F18B /* AppDelegate.m */,
+				D1AAD83426AEDBF1008B86C5 /* libtest_engine.a */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
 				D1411E8E2617166800F3F18B /* Info.plist */,
@@ -196,7 +196,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pwd\n~/.cargo/bin/cargo lipo --manifest-path ../../Cargo.toml --verbose\n";
+			shellScript = "pwd\n~/.cargo/bin/cargo lipo --release --manifest-path ../../Cargo.toml --verbose\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -354,7 +354,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../target/universal/debug\"/**",
+					"\"$(SRCROOT)/../../target/universal/release\"/**",
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
@@ -382,7 +382,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../target/universal/debug\"/**",
+					"\"$(SRCROOT)/../../target/universal/release\"/**",
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = YES;

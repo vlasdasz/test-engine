@@ -9,11 +9,13 @@ use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
     JointSet, NarrowPhase, PhysicsPipeline, RigidBody, RigidBodyBuilder, RigidBodySet,
 };
+use crate::gm::Point;
 
 pub trait Control {
     fn jump(&mut self);
     fn go_left(&mut self);
     fn go_right(&mut self);
+    fn add_impulse(&mut self, impulse: &Point);
 }
 
 pub struct Level {
@@ -155,5 +157,9 @@ impl Control for Level {
 
     fn go_right(&mut self) {
         self.player_body().set_linvel([50.0, 0.0].into(), true);
+    }
+
+    fn add_impulse(&mut self, impulse: &Point) {
+        self.player_body().apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)
     }
 }

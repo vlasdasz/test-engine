@@ -98,6 +98,11 @@ impl Screen {
             a.borrow_mut().go_right();
         });
 
+        let a = self.level.clone();
+        view.left_stick.borrow_mut().on_direction_change.subscribe(move |direction| {
+            a.borrow_mut().add_impulse(direction);
+        });
+
         self.root_view.borrow_mut().add_subview(make_shared(view));
     }
 

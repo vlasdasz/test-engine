@@ -102,7 +102,7 @@ else:
 if ios:
     run("rustup target add aarch64-apple-ios x86_64-apple-ios")
     run("cargo install cargo-lipo")
-    run("cargo lipo")
+    run("cargo lipo --release")
     os.chdir("mobile/iOS")
     run("xcodebuild -showsdks")
     run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
