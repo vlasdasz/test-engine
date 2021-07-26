@@ -20,7 +20,8 @@ pub struct TestView {
     pub image: Shared<ImageView>,
     pub label: Shared<Label>,
     pub dpad: Shared<DPadView>,
-    pub stick: Shared<AnalogStickView>,
+    pub left_stick: Shared<AnalogStickView>,
+    pub right_stick: Shared<AnalogStickView>,
 }
 
 impl View for TestView {
@@ -87,8 +88,13 @@ impl View for TestView {
 
         self.add_subview(make_shared(drawing));
 
-        self.add_subview(self.stick.clone());
-        self.stick.borrow_mut().frame_mut().origin.x = 320.0;
+        self.add_subview(self.left_stick.clone());
+        self.left_stick.borrow_mut().frame_mut().origin.x = 320.0;
+        self.left_stick.borrow_mut().frame_mut().origin.y = 300.0;
+
+        self.add_subview(self.right_stick.clone());
+        self.right_stick.borrow_mut().frame_mut().origin.x = 520.0;
+        self.right_stick.borrow_mut().frame_mut().origin.y = 300.0;
     }
 
     fn update(&mut self) {
@@ -117,7 +123,8 @@ impl New for TestView {
             image: new_shared(),
             label: new_shared(),
             dpad: new_shared(),
-            stick: new_shared(),
+            left_stick: new_shared(),
+            right_stick: new_shared(),
         }
     }
 }

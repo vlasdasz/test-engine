@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::os::raw::{c_float, c_int};
+use std::os::raw::{c_float, c_int, c_ulong};
 use std::ptr;
 
 pub mod gl_wrapper;
@@ -50,7 +50,7 @@ pub extern "C" fn update_screen() {
 }
 
 #[no_mangle]
-pub extern "C" fn on_touch(id: c_int, x: c_float, y: c_float, event: c_int) {
+pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     unsafe {
         SCREEN.as_mut().unwrap().on_touch(Touch {
             id,

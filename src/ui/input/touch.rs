@@ -68,7 +68,7 @@ impl Event {
 
 #[derive(Debug)]
 pub struct Touch {
-    pub id: i32,
+    pub id: u64,
     pub position: Point,
     pub event: Event,
 }

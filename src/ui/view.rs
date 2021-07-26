@@ -3,6 +3,7 @@ use crate::ui::input::Touch;
 use std::any::Any;
 
 use crate::image::Image;
+use std::cell::RefCell;
 use std::fmt::Debug;
 use tools::has_new::new;
 use tools::refs::Shared;
@@ -89,6 +90,14 @@ pub trait View: AsAny + Debug + New {
         self.view()._on_touch.trigger(touch);
     }
 
+    fn touch_id(&self) -> u64 {
+        self.view()._touch_id.borrow().clone()
+    }
+
+    fn set_touch_id(&self, id: u64) {
+        *self.view()._touch_id.borrow_mut() = id;
+    }
+
     fn from_rect(rect: Rect) -> Self
     where
         Self: Sized,
@@ -103,16 +112,38 @@ pub trait View: AsAny + Debug + New {
     }
 
     fn check_touch(&self, touch: &mut Touch) -> bool {
-        if self.touch_enabled() && self.absolute_frame().contains(&touch.position) {
-            touch.position -= self.absolute_frame().origin;
-            self.handle_touch(touch);
-            return true;
+        if self.touch_enabled() {
+            if touch.is_moved() && self.touch_id() == touch.id {
+                touch.position -= self.absolute_frame().origin;
+                self.handle_touch(touch);
+                return true;
+            }
+
+            if touch.is_moved() {
+                return false;
+            }
+
+            if touch.is_ended() && self.touch_id() == touch.id {
+                touch.position -= self.absolute_frame().origin;
+                self.set_touch_id(0);
+                self.handle_touch(touch);
+                return true;
+            }
+
+            if self.absolute_frame().contains(&touch.position) {
+                touch.position -= self.absolute_frame().origin;
+                self.set_touch_id(touch.id);
+                self.handle_touch(touch);
+                return true;
+            }
         }
+
         for view in self.subviews() {
             if view.borrow().check_touch(touch) {
                 return true;
             }
         }
+
         false
     }
 
@@ -132,6 +163,7 @@ pub struct ViewBase {
     _subviews: Vec<Shared<dyn View>>,
 
     _on_touch: Event<Touch>,
+    _touch_id: RefCell<u64>,
 }
 
 impl View for ViewBase {
@@ -159,6 +191,7 @@ impl New for ViewBase {
             _absolute_frame: new(),
             _subviews: vec![],
             _on_touch: new(),
+            _touch_id: RefCell::new(0),
         }
     }
 }

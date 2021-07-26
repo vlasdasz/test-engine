@@ -30,8 +30,7 @@ impl AnalogStickView {
             .frame_mut()
             .set_center(&(vector + self.frame().size.center()));
 
-        self.on_direction_change
-            .trigger(&(vector * 0.1));
+        self.on_direction_change.trigger(&(vector * 0.1));
     }
 }
 

@@ -28,7 +28,6 @@ pub struct Screen {
     assets: Rc<Assets>,
     debug_view: Shared<DebugView>,
     root_view: Shared<dyn View>,
-   // active_view: Option<Shared<dyn View>>,
     level: Shared<Level>,
     ui_drawer: UIDrawer,
     sprites_drawer: SpritesDrawer,
@@ -36,8 +35,8 @@ pub struct Screen {
 
 impl Screen {
     pub fn on_touch(&self, mut touch: Touch) {
-        self.root_view.borrow().check_touch(&mut touch);
-        self.debug_view.borrow().check_touch(&mut touch);
+        self.root_view.borrow_mut().check_touch(&mut touch);
+        self.debug_view.borrow_mut().check_touch(&mut touch);
     }
 
     fn update_view(view: Shared<dyn View>) {
@@ -115,7 +114,7 @@ impl Screen {
         self.on_touch(Touch {
             id: 1,
             position: self.cursor_position,
-            event: Event::Moved
+            event: Event::Moved,
         });
     }
 
