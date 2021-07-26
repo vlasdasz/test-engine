@@ -34,6 +34,9 @@ impl Sprite {
             rigid_body: null_mut(),
         }
     }
+    pub fn set_image(&mut self, image: Image) {
+        self.image = Some(image)
+    }
 }
 
 impl New for Sprite {

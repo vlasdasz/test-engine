@@ -1,5 +1,6 @@
 use crate::gl_wrapper::GLWrapper;
 use crate::gm::{Color, Point, Rect, Size};
+use crate::image::Image;
 use crate::sprites::Control;
 use crate::sprites::Level;
 use crate::te::paths;
@@ -70,10 +71,22 @@ impl Screen {
 
         level.setup();
 
-        level.add_collider(new(), (100, 1).into());
+        let square = Image::load(&crate::te::paths::images().join("square.png"));
 
-        level.add_collider((20, 0).into(), (1, 100).into());
-        level.add_collider((-20, 0).into(), (1, 100).into());
+        level
+            .add_collider(new(), (100, 1).into())
+            .borrow_mut()
+            .set_image(square);
+
+        level
+            .add_collider((20, 0).into(), (1, 100).into())
+            .borrow_mut()
+            .set_image(square);
+
+        level
+            .add_collider((-20, 0).into(), (1, 100).into())
+            .borrow_mut()
+            .set_image(square);
 
         for i in 0..500 {
             level.add_rect((0.1 * i as f32, i * 2).into(), Size::square(0.5));
@@ -99,9 +112,12 @@ impl Screen {
         });
 
         let a = self.level.clone();
-        view.left_stick.borrow_mut().on_direction_change.subscribe(move |direction| {
-            a.borrow_mut().add_impulse(direction);
-        });
+        view.left_stick
+            .borrow_mut()
+            .on_direction_change
+            .subscribe(move |direction| {
+                a.borrow_mut().add_impulse(direction);
+            });
 
         self.root_view.borrow_mut().add_subview(make_shared(view));
     }

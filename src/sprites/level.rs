@@ -4,12 +4,12 @@ use rapier2d::na::Vector2;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 
+use crate::gm::Point;
 use crate::image::Image;
 use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
     JointSet, NarrowPhase, PhysicsPipeline, RigidBody, RigidBodyBuilder, RigidBodySet,
 };
-use crate::gm::Point;
 
 pub trait Control {
     fn jump(&mut self);
@@ -160,6 +160,7 @@ impl Control for Level {
     }
 
     fn add_impulse(&mut self, impulse: &Point) {
-        self.player_body().apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)
+        self.player_body()
+            .apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)
     }
 }

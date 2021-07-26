@@ -27,7 +27,7 @@ void main() {
 
     gl_Position *= rotation_z_matrix(-rotation);
 
-    gl_Position.xy += (position - camera_position) * 2.0;
+    gl_Position.xy += position - camera_position;
 
     gl_Position.x *= resolution.y / resolution.x;
 
