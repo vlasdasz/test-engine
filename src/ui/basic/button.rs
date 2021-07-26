@@ -8,7 +8,7 @@ use tools::{AsAny, Event, New};
 #[derive(Debug)]
 pub struct Button {
     base: ViewBase,
-    pub on_tap: Event<()>,
+    pub on_tap: Event,
     pub image: Option<Image>,
 }
 

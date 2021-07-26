@@ -1,28 +1,48 @@
 use crate::gm::flat::PointsPath;
-use crate::gm::{Color, Rect};
+use crate::gm::{Color, Point};
 use crate::ui::complex::DrawingView;
-use crate::ui::{View, ViewBase, Event};
+use crate::ui::{Event, View, ViewBase};
 use std::any::Any;
 use tools::refs::{new_shared, Shared};
 use tools::{new, AsAny, New};
-use crate::ui::input::Touch;
-use crate::image::Image;
 
+const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
+const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
 #[derive(Debug)]
 pub struct AnalogStickView {
     base: ViewBase,
     direction_stick: Shared<DrawingView>,
     background: Shared<DrawingView>,
+    pub on_direction_change: Event<Point>,
+}
+
+impl AnalogStickView {
+    fn on_touch_moved(&self, touch: &Point) {
+        let max_lenght = self.frame().size.height / 2.0;
+        let center = self.frame().size.center();
+
+        let vector = (touch - &center).trimmed(max_lenght);
+
+        self.direction_stick
+            .borrow_mut()
+            .frame_mut()
+            .set_center(&(vector + self.frame().size.center()));
+
+        self.on_direction_change
+            .trigger(&(vector * 0.1));
+    }
 }
 
 impl View for AnalogStickView {
-    fn setup(&mut self, _this: Shared<dyn View>) {
+    fn setup(&mut self, this: Shared<dyn View>) {
+        self.set_frame((SIZE, SIZE).into());
+
         self.enable_touch();
 
         self.background.borrow_mut().add_path(
-            PointsPath::circle_with(self.frame().size.center(), self.frame().size.width, 50),
+            PointsPath::circle_with(self.frame().size.center(), self.frame().size.width),
             Color::BLACK,
         );
 
@@ -30,34 +50,48 @@ impl View for AnalogStickView {
             PointsPath::circle_with(
                 self.frame().size.center(),
                 self.frame().size.width - OUTLINE_WIDTH,
-                50,
             ),
             Color::WHITE,
         );
 
-        let STICK_VIEW_SIZE = self.frame().size.width / 2.0;
+        let mut direction_stick = self.direction_stick.borrow_mut();
 
-        self.direction_stick
-            .borrow_mut()
-            .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE).into());
+        direction_stick.set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE).into());
+
+        direction_stick
+            .frame_mut()
+            .set_center(&self.frame().size.center());
+
+        let stick_center = direction_stick.frame().size.center();
+
+        direction_stick.add_path(
+            PointsPath::circle_with(stick_center, STICK_VIEW_SIZE),
+            Color::BLACK,
+        );
+
+        direction_stick.add_path(
+            PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
+            Color::LIGHT_GRAY,
+        );
+
+        drop(direction_stick);
 
         self.add_subview(self.direction_stick.clone());
-        
-        //
-        // auto stick_center = direction_stick->frame().size.center();
-        //
-        // direction_stick->add_path(
-        //     PointsPath::circle_with(stick_center, STICK_VIEW_SIZE),
-        //     Color::black);
-        //
-        // direction_stick->add_path(
-        //     PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
-        //     Color::light_gray);
-    }
 
-    fn layout(&mut self, _super_frame: &Rect) {
-        // direction_stick->place.set_center(_frame.size.center());
-
+        let a = this.clone();
+        self.on_touch().subscribe(move |touch| {
+            let this = a.borrow();
+            let this = this.as_any().downcast_ref::<Self>().unwrap();
+            if touch.is_ended() {
+                this.direction_stick
+                    .borrow_mut()
+                    .frame_mut()
+                    .set_center(&this.frame().size.center());
+                this.on_direction_change.trigger(&Point::DEFAULT);
+            } else {
+                this.on_touch_moved(&touch.position);
+            }
+        });
     }
 
     fn view(&self) -> &ViewBase {
@@ -81,6 +115,7 @@ impl New for AnalogStickView {
             base: new(),
             direction_stick: new_shared(),
             background: new_shared(),
+            on_direction_change: new(),
         }
     }
 }

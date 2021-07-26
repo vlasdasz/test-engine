@@ -8,8 +8,9 @@ pub struct PointsPath {
 }
 
 impl PointsPath {
-    pub fn circle_with(center: Point, radius: f32, precision: u32) -> Self {
+    pub fn circle_with(center: Point, radius: f32) -> Self {
         let mut path = PointsPath::new();
+        let precision = 50;
         let angle_step = PI * 2.0 / precision as f32;
         for i in 0..precision {
             path.add_point(point_on_circle(radius, angle_step * i as f32, &center));

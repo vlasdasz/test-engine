@@ -2,7 +2,7 @@ use crate::gm::flat::PointsPath;
 use crate::gm::{Color, Rect};
 use crate::image::Image;
 use crate::ui::basic::Button;
-use crate::ui::complex::DrawingView;
+use crate::ui::complex::{AnalogStickView, DrawingView};
 use crate::ui::view::View;
 use crate::ui::{DPadView, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
@@ -20,6 +20,7 @@ pub struct TestView {
     pub image: Shared<ImageView>,
     pub label: Shared<Label>,
     pub dpad: Shared<DPadView>,
+    pub stick: Shared<AnalogStickView>,
 }
 
 impl View for TestView {
@@ -85,6 +86,9 @@ impl View for TestView {
         drawing.add_path(path, Color::GREEN);
 
         self.add_subview(make_shared(drawing));
+
+        self.add_subview(self.stick.clone());
+        self.stick.borrow_mut().frame_mut().origin.x = 320.0;
     }
 
     fn update(&mut self) {
@@ -113,6 +117,7 @@ impl New for TestView {
             image: new_shared(),
             label: new_shared(),
             dpad: new_shared(),
+            stick: new_shared(),
         }
     }
 }

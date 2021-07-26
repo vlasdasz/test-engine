@@ -46,6 +46,13 @@ impl Rect {
     }
 }
 
+impl Rect {
+    pub fn set_center(&mut self, center: &Point) {
+        self.origin.x = center.x - self.size.width / 2.0;
+        self.origin.y = center.y - self.size.height / 2.0;
+    }
+}
+
 impl New for Rect {
     fn new() -> Rect {
         Rect {

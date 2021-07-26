@@ -17,10 +17,10 @@ pub struct DPadView {
     down: Shared<Button>,
     left: Shared<Button>,
     right: Shared<Button>,
-    pub on_up: Event<()>,
-    pub on_down: Event<()>,
-    pub on_left: Event<()>,
-    pub on_right: Event<()>,
+    pub on_up: Event,
+    pub on_down: Event,
+    pub on_left: Event,
+    pub on_right: Event,
 }
 
 impl View for DPadView {
