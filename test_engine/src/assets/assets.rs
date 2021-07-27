@@ -1,5 +1,5 @@
+use crate::assets::{Buffers, Fonts, Images, Shaders};
 use std::rc::Rc;
-use crate::assets::{Buffers, Shaders, Images, Fonts};
 
 pub struct Assets {
     pub buffers: Buffers,

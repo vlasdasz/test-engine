@@ -14,7 +14,7 @@ crate-type = ["rlib", "staticlib"]
 #fontdue = "0.4.0"
 #
 gm = { path = "../gm" }
-image = { path = "../image" }
+gl_image = { path = "../gl_image" }
 tools = { path = "../.rdeps/tools" }
 rapier2d = { version = "0.9.2", features = [ "parallel", "simd-stable" ] }
 

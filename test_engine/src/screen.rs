@@ -1,22 +1,22 @@
+use crate::assets::Assets;
+use crate::paths;
+use crate::sprites::SpritesDrawer;
+use crate::ui::ui_drawer::UIDrawer;
+use crate::ui::{DebugView, TestView};
+use gl_image::Image;
+use gl_wrapper::GLWrapper;
+use gm::{Color, Point, Rect, Size};
 use lazy_static::lazy_static;
+use sprites::Control;
+use sprites::Level;
 use std::rc::Rc;
 use std::sync::Mutex;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
-use crate::paths;
-use gm::{Color, Point, Size, Rect};
-use image::Image;
-use ui::input::touch::{MouseButton, ButtonState, Event};
+use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
 use ui::{Font, View, ViewBase};
-use crate::assets::Assets;
-use crate::ui::{DebugView, TestView};
-use sprites::Level;
-use crate::ui::ui_drawer::UIDrawer;
-use crate::sprites::SpritesDrawer;
-use gl_wrapper::GLWrapper;
-use sprites::Control;
 
 lazy_static! {
     pub static ref DEFAULT_FONT: Mutex<Font> =
@@ -138,13 +138,13 @@ impl Screen {
         });
     }
 
-    pub fn on_mouse_key_pressed(&self, _: MouseButton, state: ButtonState) {
-        self.on_touch(Touch {
-            id: 1,
-            position: self.cursor_position,
-            event: Event::from_state(state),
-        })
-    }
+    // pub fn on_mouse_key_pressed(&self, _: MouseButton, state: ButtonState) {
+    //     self.on_touch(Touch {
+    //         id: 1,
+    //         position: self.cursor_position,
+    //         event: Event::from_state(state),
+    //     })
+    // }
 
     pub fn update(&mut self) {
         GLWrapper::clear();

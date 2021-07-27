@@ -1,6 +1,6 @@
 use crate::Glyph;
+use gl_image::Image;
 use gm::Size;
-use image::Image;
 use std::ffi::c_void;
 use std::fs;
 use std::ops::Range;

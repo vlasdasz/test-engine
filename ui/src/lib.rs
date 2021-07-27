@@ -8,7 +8,7 @@ pub mod view;
 pub use basic::ImageView;
 pub use basic::Label;
 pub use complex::DPadView;
+pub use input::Touch;
 pub use layout::Layout;
 pub use text::{Font, Glyph};
 pub use view::*;
-pub use input::Touch;

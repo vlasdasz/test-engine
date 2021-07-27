@@ -8,6 +8,10 @@ pub use shader::{Shader, ShaderCompiler};
 #[macro_use]
 pub mod gl_debug;
 
+#[cfg(any(target_os = "ios", target_os = "android"))]
+#[macro_use]
+extern crate mashup;
+
 cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
     pub mod gl_drawer;
     pub mod gl_loader;

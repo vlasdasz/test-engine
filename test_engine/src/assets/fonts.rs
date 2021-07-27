@@ -1,4 +1,3 @@
-
 use crate::paths;
 use ui::Font;
 

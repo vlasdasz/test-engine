@@ -1,11 +1,11 @@
 [package]
-name = "image"
+name = "gl_image"
 version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2018"
 
 [lib]
-name = "image"
+name = "gl_image"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]

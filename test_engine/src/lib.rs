@@ -1,18 +1,21 @@
 #![allow(dead_code)]
 
-mod ui;
+mod assets;
 mod paths;
 mod screen;
-mod assets;
 mod sprites;
+mod ui;
 
+use crate::screen::Screen;
+use ::ui::input::touch::Event;
+use gm::Size;
 use std::os::raw::{c_float, c_int, c_ulong};
 use std::ptr;
-use crate::screen::Screen;
-use gm::Size;
-use ::ui::input::touch::Event;
 use tools::New;
 
+#[cfg(any(target_os = "ios", target_os = "android"))]
+#[macro_use]
+extern crate mashup;
 
 static mut SCREEN: *mut Screen = ptr::null_mut();
 

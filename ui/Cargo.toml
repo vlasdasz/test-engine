@@ -14,6 +14,6 @@ crate-type = ["rlib", "staticlib"]
 fontdue = "0.4.0"
 
 gm = { path = "../gm" }
-image = { path = "../image" }
+gl_image = { path = "../gl_image" }
 tools = { path = "../.rdeps/tools" }
 

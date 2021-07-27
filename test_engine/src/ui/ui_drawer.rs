@@ -1,16 +1,15 @@
+use crate::assets::Assets;
+use gl_image::Image;
+use gl_wrapper::{Buffer, BufferConfig, GLWrapper, GLC};
+use gm::flat::PointsPath;
+use gm::{Color, Rect, Size};
 use std::rc::Rc;
 use tools::new;
-use tools::refs::Shared;
-use gl_wrapper::{GLC, BufferConfig, Buffer, GLWrapper};
-use gm::{Color, Size, Rect};
-use ui::complex::{DrawingView, PathData};
 use tools::platform::Platform;
-use crate::assets::Assets;
-use ui::View;
-use image::Image;
-use gm::flat::PointsPath;
+use tools::refs::Shared;
 use ui::complex::path_data::DrawMode;
-
+use ui::complex::{DrawingView, PathData};
+use ui::View;
 
 pub struct UIDrawer {
     pub assets: Rc<Assets>,
@@ -107,7 +106,7 @@ impl UIDrawer {
         self.assets.shaders.ui_path.enable();
         self.assets.shaders.ui_path.set_color(&path.color);
         self.assets.shaders.ui_path.set_size(&rect.size);
-       // path.buffer.draw();
+        // path.buffer.draw();
     }
 
     pub fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {
@@ -118,11 +117,11 @@ impl UIDrawer {
             &BufferConfig::_2,
             (&path.points).into(),
             None,
-            0,//GLC!(LINE_STRIP), //draw_mode.to_gl(),
+            0, //GLC!(LINE_STRIP), //draw_mode.to_gl(),
         );
 
         PathData {
-          //  buffer,
+            //  buffer,
             path,
             color,
             draw_mode,

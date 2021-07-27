@@ -18,8 +18,8 @@ lazy_static = "1.4.0"
 
 gm = { path = "../gm" }
 ui = { path = "../ui" }
-image = { path = "../image" }
 sprites = { path = "../sprites" }
+gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
 tools = { path = "../.rdeps/tools" }
 rapier2d = { version = "0.9.2", features = [ "parallel", "simd-stable" ] }

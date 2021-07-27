@@ -1,14 +1,14 @@
+use crate::paths;
+use gl_image::Image;
+use gm::flat::PointsPath;
+use gm::{Color, Rect};
 use std::any::Any;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::{AsAny, New};
-use crate::paths;
-use gm::{Color, Rect};
-use ui::{ViewBase, ImageView, Label, DPadView, View, Layout};
-use ui::complex::{AnalogStickView, DrawingView};
-use image::Image;
 use ui::basic::Button;
-use gm::flat::PointsPath;
+use ui::complex::{AnalogStickView, DrawingView};
+use ui::{DPadView, ImageView, Label, Layout, View, ViewBase};
 
 static mut COUNTER: u32 = 0;
 

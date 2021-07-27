@@ -1,5 +1,5 @@
+use gl_image::Image;
 use gm::{Point, Size};
-use image::Image;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Glyph {

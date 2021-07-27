@@ -1,5 +1,5 @@
 use crate::{View, ViewBase};
-use image::Image;
+use gl_image::Image;
 use std::any::Any;
 use tools::refs::MutWeak;
 use tools::weak_self::HasWeakSelf;

@@ -1,8 +1,8 @@
 use std::any::Any;
 
 use crate::input::Touch;
+use gl_image::Image;
 use gm::{Color, Rect};
-use image::Image;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use tools::has_new::new;

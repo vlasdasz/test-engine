@@ -1,5 +1,5 @@
+use gl_image::Image;
 use gm::{Color, Point, Size};
-use image::Image;
 use rapier2d::dynamics::{RigidBody, RigidBodyHandle};
 use rapier2d::prelude::ColliderHandle;
 use std::ptr::null_mut;
