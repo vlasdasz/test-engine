@@ -1,0 +1,24 @@
+[package]
+name = "image"
+version = "0.1.0"
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "image"
+crate-type = ["rlib", "staticlib"]
+
+[dependencies]
+image = "0.23.14"
+cfg-if = "1.0.0"
+#rand = "0.8.3"
+
+gm = { path = "../gm" }
+tools = { path = "../.rdeps/tools" }
+gl_wrapper = { path = "../gl_wrapper" }
+
+[target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
+gl = "0.14.0"
+#glfw = "0.41.0"
+soil2 = { path = "../.rdeps/soil2" }
+
