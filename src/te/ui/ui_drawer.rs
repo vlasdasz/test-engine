@@ -9,7 +9,6 @@ use crate::ui::complex::{DrawingView, PathData};
 use crate::ui::view::View;
 use crate::GLC;
 use std::rc::Rc;
-use tools::array_view::ArrayView;
 use tools::new;
 use tools::refs::Shared;
 
@@ -117,7 +116,7 @@ impl UIDrawer {
 
         let buffer = Buffer::make(
             &BufferConfig::_2,
-            ArrayView::from_vector(&path.points),
+            (&path.points).into(),
             None,
             GLC!(LINE_STRIP), //draw_mode.to_gl(),
         );
