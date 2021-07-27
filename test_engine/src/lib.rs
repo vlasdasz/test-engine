@@ -1,28 +1,18 @@
 #![allow(dead_code)]
 
+mod ui;
+mod paths;
+mod screen;
+mod assets;
+mod sprites;
+
 use std::os::raw::{c_float, c_int, c_ulong};
 use std::ptr;
+use crate::screen::Screen;
+use gm::Size;
+use ::ui::input::touch::Event;
+use tools::New;
 
-pub mod gl_wrapper;
-pub mod gm;
-pub mod image;
-pub mod sprites;
-pub mod te;
-pub mod ui;
-
-use crate::gm::Size;
-use crate::te::Screen;
-use crate::tools::New;
-use crate::ui::input::touch::Event;
-use crate::ui::input::Touch;
-
-#[macro_use]
-extern crate tools;
-#[macro_use]
-extern crate guard;
-#[cfg(any(target_os = "ios", target_os = "android"))]
-#[macro_use]
-extern crate mashup;
 
 static mut SCREEN: *mut Screen = ptr::null_mut();
 
@@ -52,10 +42,10 @@ pub extern "C" fn update_screen() {
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     unsafe {
-        SCREEN.as_mut().unwrap().on_touch(Touch {
-            id: id.into(),
-            position: (x * 2.0, y * 2.0).into(),
-            event: Event::from_int(event),
-        })
+        // SCREEN.as_mut().unwrap().on_touch(Touch {
+        //     id: id.into(),
+        //     position: (x * 2.0, y * 2.0).into(),
+        //     event: Event::from_int(event),
+        // })
     }
 }

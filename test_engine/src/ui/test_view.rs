@@ -1,14 +1,14 @@
-use crate::gm::flat::PointsPath;
-use crate::gm::{Color, Rect};
-use crate::image::Image;
-use crate::ui::basic::Button;
-use crate::ui::complex::{AnalogStickView, DrawingView};
-use crate::ui::view::View;
-use crate::ui::{DPadView, ImageView, Label, Layout, ViewBase};
 use std::any::Any;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::{AsAny, New};
+use crate::paths;
+use gm::{Color, Rect};
+use ui::{ViewBase, ImageView, Label, DPadView, View, Layout};
+use ui::complex::{AnalogStickView, DrawingView};
+use image::Image;
+use ui::basic::Button;
+use gm::flat::PointsPath;
 
 static mut COUNTER: u32 = 0;
 
@@ -30,7 +30,7 @@ impl View for TestView {
 
         let cat_image = self.image.clone();
         let mut cat_image = cat_image.borrow_mut();
-        cat_image.image = Image::load(&crate::te::paths::images().join("cat.jpg"));
+        cat_image.image = Image::load(&paths::images().join("cat.jpg"));
         cat_image.set_frame((200, 20, 100, 120).into());
         drop(cat_image);
         self.add_subview(self.image.clone());

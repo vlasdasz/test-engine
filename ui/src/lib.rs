@@ -11,3 +11,4 @@ pub use complex::DPadView;
 pub use layout::Layout;
 pub use text::{Font, Glyph};
 pub use view::*;
+pub use input::Touch;

@@ -1,13 +1,12 @@
-use crate::gm::Rect;
-use crate::ui::complex::IntView;
-use crate::ui::view::View;
-use crate::ui::{Label, Layout, ViewBase};
 use chrono::Utc;
 use std::any::Any;
 use tools::has_new::new;
 use tools::platform::Platform;
 use tools::refs::{new_shared, Shared};
 use tools::{AsAny, New};
+use ui::{ViewBase, Label, View, Layout};
+use ui::complex::IntView;
+use gm::Rect;
 
 #[derive(Debug)]
 pub struct DebugView {

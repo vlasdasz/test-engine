@@ -4,7 +4,9 @@ members = [
     "gm",
     "ui",
     "image",
+    "sprites",
     "gl_wrapper",
+    "test_engine",
 ]
 
 

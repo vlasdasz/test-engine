@@ -1,10 +1,8 @@
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
 
-use crate::GLC;
-
-use crate::gl_wrapper::{Buffer, BufferConfig};
-use crate::gm::{Point, Rect, Size};
+use gl_wrapper::{GLC, BufferConfig, Buffer};
+use gm::{Rect, Point, Size};
 
 const RECT: Rect = Rect {
     origin: Point { x: -1.0, y: -1.0 },

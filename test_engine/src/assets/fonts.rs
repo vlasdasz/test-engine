@@ -1,5 +1,6 @@
-use crate::te::paths;
-use crate::ui::Font;
+
+use crate::paths;
+use ui::Font;
 
 pub struct Fonts {
     pub default: Font,

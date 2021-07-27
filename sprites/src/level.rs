@@ -1,11 +1,9 @@
-use crate::gm;
-use crate::sprites::Sprite;
 use rapier2d::na::Vector2;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 
-use crate::gm::Point;
-use crate::image::Image;
+use crate::Sprite;
+use gm::Point;
 use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
     JointSet, NarrowPhase, PhysicsPipeline, RigidBody, RigidBodyBuilder, RigidBodySet,
@@ -43,8 +41,8 @@ impl Level {
     pub fn setup(&mut self) {
         let player = self.add_rect((0, 10).into(), (17.0 / 6.0, 28.0 / 6.0).into());
         self.player = player;
-        self.player.borrow_mut().image =
-            Some(Image::load(&crate::te::paths::images().join("frisk.png")));
+        // self.player.borrow_mut().image =
+        //     Some(Image::load(&crate::te::paths::images().join("frisk.png")));
         let body = self.player_body();
         body.lock_rotations(true, true);
         dbg!(body.mass());

@@ -1,7 +1,6 @@
-use crate::te::paths;
 
-use crate::gl_wrapper::Shader;
-use crate::gl_wrapper::ShaderCompiler;
+use crate::paths;
+use gl_wrapper::{ShaderCompiler, Shader};
 
 pub struct Shaders {
     compiler: ShaderCompiler,

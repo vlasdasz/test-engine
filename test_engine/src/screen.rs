@@ -1,23 +1,22 @@
-use crate::gl_wrapper::GLWrapper;
-use crate::gm::{Color, Point, Rect, Size};
-use crate::image::Image;
-use crate::sprites::Control;
-use crate::sprites::Level;
-use crate::te::paths;
-use crate::te::sprites::sprites_drawer::SpritesDrawer;
-use crate::te::ui::{DebugView, TestView};
-use crate::te::{Assets, UIDrawer};
-use crate::ui::input::touch::{ButtonState, Event, MouseButton};
-use crate::ui::input::Touch;
-use crate::ui::view::View;
-use crate::ui::Font;
-use crate::ui::ViewBase;
 use lazy_static::lazy_static;
 use std::rc::Rc;
 use std::sync::Mutex;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
+use crate::paths;
+use gm::{Color, Point, Size, Rect};
+use image::Image;
+use ui::input::touch::{MouseButton, ButtonState, Event};
+use ui::input::Touch;
+use ui::{Font, View, ViewBase};
+use crate::assets::Assets;
+use crate::ui::{DebugView, TestView};
+use sprites::Level;
+use crate::ui::ui_drawer::UIDrawer;
+use crate::sprites::SpritesDrawer;
+use gl_wrapper::GLWrapper;
+use sprites::Control;
 
 lazy_static! {
     pub static ref DEFAULT_FONT: Mutex<Font> =
@@ -71,7 +70,7 @@ impl Screen {
 
         level.setup();
 
-        let square = Image::load(&crate::te::paths::images().join("square.png"));
+        let square = Image::load(&paths::images().join("square.png"));
 
         level
             .add_collider(new(), (100, 1).into())

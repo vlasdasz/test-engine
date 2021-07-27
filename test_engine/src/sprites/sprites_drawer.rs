@@ -1,7 +1,7 @@
-use crate::gm::{Point, Size};
-use crate::sprites::Sprite;
-use crate::te::Assets;
 use std::rc::Rc;
+use crate::assets::Assets;
+use gm::{Size, Point};
+use sprites::Sprite;
 
 pub struct SpritesDrawer {
     assets: Rc<Assets>,
