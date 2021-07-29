@@ -14,7 +14,6 @@ crate-type = ["rlib", "staticlib"]
 #fontdue = "0.4.0"
 #
 chrono = "0.4.19"
-lazy_static = "1.4.0"
 
 gm = { path = "../gm" }
 ui = { path = "../ui" }

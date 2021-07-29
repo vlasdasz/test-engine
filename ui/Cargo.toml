@@ -12,8 +12,17 @@ crate-type = ["rlib", "staticlib"]
 #rand = "0.8.3"
 
 fontdue = "0.4.0"
+lazy_static = "1.4.0"
 
 gm = { path = "../gm" }
+
 gl_image = { path = "../gl_image" }
 tools = { path = "../.rdeps/tools" }
 
+[target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
+gl = "0.14.0"
+glfw = "0.41.0"
+
+[target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
+mashup = "0.1.12"
+gles31-sys = { path = "../.rdeps/gles31-sys" }

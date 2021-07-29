@@ -1,5 +1,6 @@
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use crate::input::touch::MouseButton::Undefined;
+use glfw::Action;
 use gm::Point;
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -13,14 +14,14 @@ pub enum MouseButton {
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 impl MouseButton {
-    // pub fn from_glfw(btn: glfw::MouseButton) -> Self {
-    //     match btn {
-    //         glfw::MouseButtonLeft => Self::Left,
-    //         glfw::MouseButtonRight => Self::Right,
-    //         glfw::MouseButtonMiddle => Self::Middle,
-    //         _ => Undefined,
-    //     }
-    // }
+    pub fn from_glfw(btn: glfw::MouseButton) -> Self {
+        match btn {
+            glfw::MouseButtonLeft => Self::Left,
+            glfw::MouseButtonRight => Self::Right,
+            glfw::MouseButtonMiddle => Self::Middle,
+            _ => Undefined,
+        }
+    }
 }
 
 pub enum ButtonState {
@@ -31,13 +32,13 @@ pub enum ButtonState {
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 impl ButtonState {
-    // pub fn from_glfw(action: Action) -> Self {
-    //     match action {
-    //         Action::Release => Self::Up,
-    //         Action::Press => Self::Down,
-    //         Action::Repeat => Self::Repeat,
-    //     }
-    // }
+    pub fn from_glfw(action: Action) -> Self {
+        match action {
+            Action::Release => Self::Up,
+            Action::Press => Self::Down,
+            Action::Repeat => Self::Repeat,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq)]

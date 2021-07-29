@@ -2,12 +2,13 @@
 
 mod assets;
 mod paths;
-mod screen;
 mod sprites;
+mod test_screen;
 mod ui;
 
-use crate::screen::Screen;
+pub use crate::test_screen::TestScreen;
 use ::ui::input::touch::Event;
+use gl_wrapper::gl_drawer::Screen;
 use gm::Size;
 use std::os::raw::{c_float, c_int, c_ulong};
 use std::ptr;
@@ -17,12 +18,12 @@ use tools::New;
 #[macro_use]
 extern crate mashup;
 
-static mut SCREEN: *mut Screen = ptr::null_mut();
+static mut SCREEN: *mut TestScreen = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        let mut screen = Screen::new();
+        let mut screen = TestScreen::new();
         screen.init();
         SCREEN = Box::into_raw(Box::new(screen));
     }

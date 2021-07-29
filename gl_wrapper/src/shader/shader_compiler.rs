@@ -17,12 +17,14 @@ use tools::regex::{find_match, find_matches};
 use tools::*;
 
 pub struct ShaderCompiler {
+    path: PathBuf,
     gl_info: GLInfo,
 }
 
 impl ShaderCompiler {
-    pub fn new() -> ShaderCompiler {
+    pub fn new(path: PathBuf) -> ShaderCompiler {
         ShaderCompiler {
+            path,
             gl_info: GLInfo::get(),
         }
     }
@@ -38,7 +40,7 @@ impl ShaderCompiler {
         result + "\n"
     }
 
-    fn check_programm_error(path: &PathBuf, program: u32) {
+    fn check_programm_error(&self, path: &PathBuf, program: u32) {
         let mut success: GLT!(GLint) = 1;
 
         GL!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
@@ -72,17 +74,16 @@ impl ShaderCompiler {
         panic!("Failed to compile shader: {:?} error: {}", path, error);
     }
 
-    fn unfold_includes(mut code: String) -> String {
-        //const QUOTES_QUERY: &'static str = r#"(("[^ "]+"))"#;
+    fn unfold_includes(&self, mut code: String) -> String {
+        const QUOTES_QUERY: &'static str = r#"(("[^ "]+"))"#;
         const INCLUDE_QUERY: &'static str = r#"#include (("[^ "]+"))"#;
         let includes = find_matches(&code, INCLUDE_QUERY);
         let mut files: HashMap<String, String> = HashMap::new();
         for include in includes {
-            //TODO: - Fix
-            // let file_name = find_match(&include, QUOTES_QUERY).replace("\"", "");
-            // let file_path = paths::shaders::include().join(file_name);
-            // let include_code = fs::read_to_string(file_path).unwrap();
-            // files.insert(include, include_code);
+            let file_name = find_match(&include, QUOTES_QUERY).replace("\"", "");
+            let file_path = self.path.join(file_name);
+            let include_code = fs::read_to_string(file_path).unwrap();
+            files.insert(include, include_code);
         }
         for (include, include_code) in files {
             code = code.replace(include.as_str(), include_code.as_str());
@@ -91,7 +92,7 @@ impl ShaderCompiler {
     }
 
     fn compile_shader(&self, path: PathBuf, code: String, kind: GLT!(GLenum)) -> u32 {
-        let code = self.version() + "\n" + &ShaderCompiler::unfold_includes(code);
+        let code = self.version() + "\n" + &self.unfold_includes(code);
 
         let shader = GL!(CreateShader, kind);
 
@@ -100,7 +101,7 @@ impl ShaderCompiler {
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
         GL!(CompileShader, shader);
 
-        ShaderCompiler::check_programm_error(&path, shader);
+        self.check_programm_error(&path, shader);
 
         shader
     }
@@ -126,7 +127,7 @@ impl ShaderCompiler {
         GL!(AttachShader, program, frag);
         GL!(LinkProgram, program);
 
-        ShaderCompiler::check_programm_error(path, program);
+        self.check_programm_error(path, program);
 
         GL!(DetachShader, program, vert);
         GL!(DetachShader, program, frag);

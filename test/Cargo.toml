@@ -1,0 +1,25 @@
+[package]
+name = "test"
+version = "0.1.0"
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "test"
+
+[dependencies]
+#rand = "0.8.3"
+
+#fontdue = "0.4.0"
+#
+#chrono = "0.4.19"
+#lazy_static = "1.4.0"
+#
+#gm = { path = "../gm" }
+#ui = { path = "../ui" }
+#sprites = { path = "../sprites" }
+#gl_image = { path = "../gl_image" }
+gl_wrapper = { path = "../gl_wrapper" }
+test_engine = { path = "../test_engine" }
+#tools = { path = "../.rdeps/tools" }
+#rapier2d = { version = "0.9.2", features = [ "parallel", "simd-stable" ] }

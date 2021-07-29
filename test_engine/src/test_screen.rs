@@ -4,26 +4,24 @@ use crate::sprites::SpritesDrawer;
 use crate::ui::ui_drawer::UIDrawer;
 use crate::ui::{DebugView, TestView};
 use gl_image::Image;
+use gl_wrapper::gl_drawer::Screen;
 use gl_wrapper::GLWrapper;
+use glfw::Action;
 use gm::{Color, Point, Rect, Size};
-use lazy_static::lazy_static;
 use sprites::Control;
 use sprites::Level;
+use std::cell::RefCell;
+use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::Mutex;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
-use ui::input::touch::{ButtonState, Event};
+use ui::input::touch::{ButtonState, Event, MouseButton};
 use ui::input::Touch;
 use ui::{Font, View, ViewBase};
 
-lazy_static! {
-    pub static ref DEFAULT_FONT: Mutex<Font> =
-        Mutex::new(Font::new(&paths::fonts().join("SF.otf"), 48).unwrap());
-}
-
-pub struct Screen {
+pub struct TestScreen {
     cursor_position: Point,
     assets: Rc<Assets>,
     debug_view: Shared<DebugView>,
@@ -33,7 +31,7 @@ pub struct Screen {
     sprites_drawer: SpritesDrawer,
 }
 
-impl Screen {
+impl TestScreen {
     pub fn on_touch(&self, mut touch: Touch) {
         self.root_view.borrow_mut().check_touch(&mut touch);
         self.debug_view.borrow_mut().check_touch(&mut touch);
@@ -43,26 +41,8 @@ impl Screen {
         let mut view = view.try_borrow_mut().unwrap();
         view.update();
         for view in view.subviews_mut() {
-            Screen::update_view(view.clone());
+            TestScreen::update_view(view.clone());
         }
-    }
-
-    pub fn init(&mut self) {
-        GLWrapper::enable_blend();
-        GLWrapper::set_clear_color(&Color::GRAY);
-
-        self.root_view
-            .borrow_mut()
-            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
-
-        self.debug_view
-            .borrow_mut()
-            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
-
-        self.debug_view.borrow_mut().setup(self.debug_view.clone());
-
-        self.setup_level();
-        self.setup_test_view();
     }
 
     fn setup_level(&mut self) {
@@ -120,33 +100,28 @@ impl Screen {
 
         self.root_view.borrow_mut().add_subview(make_shared(view));
     }
+}
 
-    pub fn set_size(&mut self, size: Size) {
-        self.ui_drawer.set_size(&size);
-        self.root_view.borrow_mut().set_frame(Rect::from(size));
-        self.sprites_drawer.set_resolution(&size);
-        self.sprites_drawer.set_camera_position(&(0, 0).into());
-        self.update();
+impl Screen for TestScreen {
+    fn init(&mut self) {
+        GLWrapper::enable_blend();
+        GLWrapper::set_clear_color(&Color::GRAY);
+
+        self.root_view
+            .borrow_mut()
+            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+
+        self.debug_view
+            .borrow_mut()
+            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+
+        self.debug_view.borrow_mut().setup(self.debug_view.clone());
+
+        self.setup_level();
+        self.setup_test_view();
     }
 
-    pub fn on_cursor_moved(&mut self, position: Point) {
-        self.cursor_position = position;
-        self.on_touch(Touch {
-            id: 1,
-            position: self.cursor_position,
-            event: Event::Moved,
-        });
-    }
-
-    // pub fn on_mouse_key_pressed(&self, _: MouseButton, state: ButtonState) {
-    //     self.on_touch(Touch {
-    //         id: 1,
-    //         position: self.cursor_position,
-    //         event: Event::from_state(state),
-    //     })
-    // }
-
-    pub fn update(&mut self) {
+    fn update(&mut self) {
         GLWrapper::clear();
 
         let mut level = self.level.borrow_mut();
@@ -166,8 +141,8 @@ impl Screen {
             self.sprites_drawer.draw(&wall);
         }
 
-        Screen::update_view(self.root_view.clone());
-        Screen::update_view(self.debug_view.clone());
+        TestScreen::update_view(self.root_view.clone());
+        TestScreen::update_view(self.debug_view.clone());
 
         self.root_view
             .borrow_mut()
@@ -181,12 +156,40 @@ impl Screen {
 
         self.ui_drawer.reset_viewport();
     }
+
+    fn set_size(&mut self, size: Size) {
+        self.ui_drawer.set_size(&size);
+        self.root_view.borrow_mut().set_frame(Rect::from(size));
+        self.sprites_drawer.set_resolution(&size);
+        self.sprites_drawer.set_camera_position(&(0, 0).into());
+        self.update();
+    }
+
+    fn on_cursor_moved(&mut self, position: Point) {
+        self.cursor_position = position;
+        self.on_touch(Touch {
+            id: 1,
+            position: self.cursor_position,
+            event: Event::Moved,
+        });
+    }
+
+    fn on_mouse_key_pressed(&self, button: glfw::MouseButton, state: Action) {
+        self.on_touch(Touch {
+            id: 1,
+            position: self.cursor_position,
+            event: Event::from_state(ButtonState::from_glfw(state)),
+        })
+    }
 }
 
-impl New for Screen {
-    fn new() -> Screen {
+impl New for TestScreen {
+    fn new() -> TestScreen {
+        let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
+        *font_path = paths::fonts().join("SF.otf");
+        drop(font_path);
         let assets = Assets::init();
-        Screen {
+        TestScreen {
             cursor_position: Point::new(),
             assets: assets.clone(),
             debug_view: new_shared::<DebugView>(),

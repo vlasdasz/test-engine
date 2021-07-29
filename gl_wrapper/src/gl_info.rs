@@ -20,7 +20,6 @@ pub struct GLInfo {
 }
 
 impl GLInfo {
-    //const GLSL_QUERY: &'static str = r#"((\d\.)(\d\d))"#;
     const GL_QUERY: &'static str = r#"((\d\.)(\d))"#;
 
     fn get_string(id: u32) -> String {

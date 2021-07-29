@@ -1,6 +1,9 @@
-use crate::{Font, ImageView, View, ViewBase};
+use crate::{Event, Font, ImageView, Touch, View, ViewBase, DEFAULT_FONT};
+use gl_image::Image;
+use gm::{Color, Rect};
 use std::any::Any;
 use tools::refs::make_shared;
+use tools::refs::Shared;
 use tools::{AsAny, New};
 
 #[derive(Debug)]
@@ -29,7 +32,7 @@ impl AsAny for Label {
 impl New for Label {
     fn new() -> Self {
         Self {
-            font: Font::invalid(), // DEFAULT_FONT.lock().unwrap().clone(),
+            font: DEFAULT_FONT.lock().unwrap().clone(),
             _text: String::new(),
             base: ViewBase::new(),
         }

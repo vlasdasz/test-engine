@@ -3,6 +3,7 @@
 members = [
     "gm",
     "ui",
+    "test",
     "sprites",
     "gl_image",
     "gl_wrapper",

@@ -15,7 +15,7 @@ pub struct Shaders {
 
 impl Shaders {
     pub fn init() -> Shaders {
-        let compiler = ShaderCompiler::new();
+        let compiler = ShaderCompiler::new(paths::shaders::include());
 
         let ui = compiler.compile(&paths::shaders::ui().join("ui"));
         let ui_path = compiler.compile(&paths::shaders::ui().join("ui_path"));

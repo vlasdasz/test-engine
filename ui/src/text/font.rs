@@ -73,6 +73,10 @@ impl Font {
             glyphs,
         })
     }
+
+    pub fn is_invalid(&self) -> bool {
+        self.glyphs.is_empty()
+    }
 }
 
 impl Font {
