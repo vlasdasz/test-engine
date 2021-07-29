@@ -1,18 +1,9 @@
-use crate::GLLoader;
+use crate::{GLLoader, Screen};
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Context, MouseButton, Window, WindowEvent};
 use gm::{Point, Size};
 use tools::new;
 use tools::New;
-
-pub trait Screen: New {
-    fn init(&mut self);
-    fn update(&mut self);
-    fn set_size(&mut self, size: Size);
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_cursor_moved(&mut self, position: Point);
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_mouse_key_pressed(&self, button: MouseButton, state: Action);
-}
 
 pub struct GLDrawer<Sc: Screen> {
     window: Window,

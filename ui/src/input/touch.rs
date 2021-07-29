@@ -1,10 +1,10 @@
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use crate::input::touch::MouseButton::Undefined;
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::Action;
 use gm::Point;
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
-
 pub enum MouseButton {
     Left,
     Right,

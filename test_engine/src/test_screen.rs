@@ -4,8 +4,8 @@ use crate::sprites::SpritesDrawer;
 use crate::ui::ui_drawer::UIDrawer;
 use crate::ui::{DebugView, TestView};
 use gl_image::Image;
-use gl_wrapper::gl_drawer::Screen;
-use gl_wrapper::GLWrapper;
+use gl_wrapper::{GLWrapper, Screen};
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::Action;
 use gm::{Color, Point, Rect, Size};
 use sprites::Control;
@@ -17,7 +17,9 @@ use std::sync::Mutex;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
-use ui::input::touch::{ButtonState, Event, MouseButton};
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+use ui::input::touch::MouseButton;
+use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
 use ui::{Font, View, ViewBase};
 
@@ -165,6 +167,7 @@ impl Screen for TestScreen {
         self.update();
     }
 
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;
         self.on_touch(Touch {
@@ -174,6 +177,7 @@ impl Screen for TestScreen {
         });
     }
 
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     fn on_mouse_key_pressed(&self, button: glfw::MouseButton, state: Action) {
         self.on_touch(Touch {
             id: 1,

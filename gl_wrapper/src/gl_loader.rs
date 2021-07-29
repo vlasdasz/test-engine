@@ -1,7 +1,9 @@
 extern crate gl;
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 extern crate glfw;
 use tools::*;
 
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, OpenGlProfileHint::Core, Window, WindowEvent};
 use gm::Size;
 

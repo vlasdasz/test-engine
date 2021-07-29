@@ -8,11 +8,11 @@ mod ui;
 
 pub use crate::test_screen::TestScreen;
 use ::ui::input::touch::Event;
-use gl_wrapper::gl_drawer::Screen;
 use gm::Size;
 use std::os::raw::{c_float, c_int, c_ulong};
 use std::ptr;
 use tools::New;
+use gl_wrapper::Screen;
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]
