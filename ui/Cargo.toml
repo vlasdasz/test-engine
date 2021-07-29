@@ -9,13 +9,11 @@ name = "ui"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-#rand = "0.8.3"
 
 fontdue = "0.4.0"
 lazy_static = "1.4.0"
 
 gm = { path = "../gm" }
-
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
 

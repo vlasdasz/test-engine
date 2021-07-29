@@ -9,10 +9,6 @@ name = "test_engine"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-#rand = "0.8.3"
-
-#fontdue = "0.4.0"
-#
 chrono = "0.4.19"
 
 gm = { path = "../gm" }
@@ -21,8 +17,6 @@ sprites = { path = "../sprites" }
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
 tools = { path = "../.rdeps/tools" }
-rapier2d = { version = "0.9.2", features = [ "parallel", "simd-stable" ] }
-
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14.0"
