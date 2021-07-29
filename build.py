@@ -100,6 +100,7 @@ else:
 
 
 if ios:
+    os.environ["CARGO_CFG_TARGET_OS"] = "ios"
     run("rustup target add aarch64-apple-ios x86_64-apple-ios")
     run("cargo install cargo-lipo")
     run("cargo lipo --release")
@@ -107,7 +108,9 @@ if ios:
     run("xcodebuild -showsdks")
     run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
 elif android:
+    os.environ["CARGO_CFG_TARGET_OS"] = "android"
     run("cargo build --target aarch64-linux-android --release --lib")
     run("cargo build --target armv7-linux-androideabi --release --lib")
 else:
+    os.environ["CARGO_CFG_TARGET_OS"] = "desktop"
     run("cargo build")
