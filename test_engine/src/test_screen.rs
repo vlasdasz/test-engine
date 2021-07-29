@@ -10,18 +10,14 @@ use glfw::Action;
 use gm::{Color, Point, Rect, Size};
 use sprites::Control;
 use sprites::Level;
-use std::cell::RefCell;
-use std::path::PathBuf;
 use std::rc::Rc;
-use std::sync::Mutex;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
-use ui::input::touch::MouseButton;
 use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
-use ui::{Font, View, ViewBase};
+use ui::{View, ViewBase};
 
 pub struct TestScreen {
     cursor_position: Point,
@@ -178,7 +174,7 @@ impl Screen for TestScreen {
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_mouse_key_pressed(&self, button: glfw::MouseButton, state: Action) {
+    fn on_mouse_key_pressed(&self, _button: glfw::MouseButton, state: Action) {
         self.on_touch(Touch {
             id: 1,
             position: self.cursor_position,

@@ -1,6 +1,3 @@
-use crate::paths;
-use ui::Font;
-
 pub struct Fonts {
     //pub default: Font,
 }

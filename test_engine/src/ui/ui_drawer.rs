@@ -1,6 +1,6 @@
 use crate::assets::Assets;
 use gl_image::Image;
-use gl_wrapper::{Buffer, BufferConfig, GLWrapper, GLC};
+use gl_wrapper::{Buffer, BufferConfig, GLWrapper};
 use gm::flat::PointsPath;
 use gm::{Color, Rect, Size};
 use std::rc::Rc;
@@ -110,8 +110,8 @@ impl UIDrawer {
     }
 
     pub fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {
-        #[cfg(any(target_os = "ios", target_os = "android"))]
-        use gles31_sys::GL_LINE_STRIP;
+        // #[cfg(any(target_os = "ios", target_os = "android"))]
+        // use gles31_sys::GL_LINE_STRIP;
 
         let buffer = Buffer::make(
             &BufferConfig::_2,
@@ -121,7 +121,7 @@ impl UIDrawer {
         );
 
         PathData {
-            //  buffer,
+            buffer,
             path,
             color,
             draw_mode,

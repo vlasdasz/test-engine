@@ -1,9 +1,8 @@
 use crate::{GLLoader, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
-use glfw::{Action, Context, MouseButton, Window, WindowEvent};
+use glfw::{Context, Window, WindowEvent};
 use gm::{Point, Size};
 use tools::new;
-use tools::New;
 
 pub struct GLDrawer<Sc: Screen> {
     window: Window,

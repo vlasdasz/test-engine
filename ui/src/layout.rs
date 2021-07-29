@@ -3,16 +3,9 @@ use gm::Rect;
 use std::cell::RefMut;
 use tools::refs::Shared;
 
-pub struct Layout<'a> {
-    sup_frame: &'a Rect,
-    frame: &'a mut Rect,
-}
+pub struct Layout;
 
-impl<'a> Layout<'a> {
-    pub fn new(sup_frame: &'a Rect, frame: &'a mut Rect) -> Layout<'a> {
-        Layout { sup_frame, frame }
-    }
-
+impl Layout {
     pub fn br(frame: &mut Rect, super_frame: &Rect) {
         frame.origin.x = super_frame.size.width - frame.size.width;
         frame.origin.y = super_frame.size.height - frame.size.height;

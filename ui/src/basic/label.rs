@@ -1,9 +1,8 @@
-use crate::{Event, Font, ImageView, Touch, View, ViewBase, DEFAULT_FONT};
-use gl_image::Image;
-use gm::{Color, Rect};
+use crate::{Font, ImageView, View, ViewBase, DEFAULT_FONT};
+
 use std::any::Any;
 use tools::refs::make_shared;
-use tools::refs::Shared;
+
 use tools::{AsAny, New};
 
 #[derive(Debug)]

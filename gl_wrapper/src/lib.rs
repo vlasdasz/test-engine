@@ -3,10 +3,12 @@ use cfg_if::cfg_if;
 pub use buffer::{Buffer, BufferConfig};
 pub use gl_info::GLInfo;
 pub use gl_wrapper::GLWrapper;
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+use glfw::{Action, MouseButton};
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+use gm::Point;
+use gm::Size;
 pub use shader::{Shader, ShaderCompiler};
-use gm::{Size, Point};
-#[cfg(not(any(target_os="ios", target_os="android")))]
-use glfw::{MouseButton, Action};
 use tools::New;
 
 #[macro_use]

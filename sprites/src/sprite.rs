@@ -1,8 +1,7 @@
 use gl_image::Image;
 use gm::{Color, Point, Size};
-use rapier2d::dynamics::{RigidBody, RigidBodyHandle};
+use rapier2d::dynamics::RigidBodyHandle;
 use rapier2d::prelude::ColliderHandle;
-use std::ptr::null_mut;
 use tools::{new, New};
 
 pub struct Sprite {
@@ -13,7 +12,7 @@ pub struct Sprite {
     pub collider_handle: ColliderHandle,
     pub rigid_body_handle: Option<RigidBodyHandle>,
     pub image: Option<Image>,
-    rigid_body: *mut RigidBody,
+    //rigid_body: *mut RigidBody,
 }
 
 impl Sprite {
@@ -31,7 +30,7 @@ impl Sprite {
             collider_handle,
             rigid_body_handle,
             image: None,
-            rigid_body: null_mut(),
+            //rigid_body: null_mut(),
         }
     }
     pub fn set_image(&mut self, image: Image) {
@@ -49,7 +48,7 @@ impl New for Sprite {
             collider_handle: ColliderHandle::invalid(),
             rigid_body_handle: None,
             image: None,
-            rigid_body: null_mut(),
+            //rigid_body: null_mut(),
         }
     }
 }
