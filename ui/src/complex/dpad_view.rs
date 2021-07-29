@@ -1,5 +1,6 @@
 use crate::basic::Button;
 use crate::{View, ViewBase};
+use gl_image::Image;
 use gm::Rect;
 use std::any::Any;
 use tools::has_new::new;
@@ -20,17 +21,21 @@ pub struct DPadView {
     pub on_right: Event,
 }
 
+impl DPadView {
+    pub fn set_images(&self, up: Image, down: Image, left: Image, right: Image) {
+        self.up.borrow_mut().image = up.into();
+        self.down.borrow_mut().image = down.into();
+        self.left.borrow_mut().image = left.into();
+        self.right.borrow_mut().image = right.into();
+    }
+}
+
 impl View for DPadView {
     fn setup(&mut self, this: Shared<dyn View>) {
         self.add_subview(self.up.clone());
         self.add_subview(self.down.clone());
         self.add_subview(self.left.clone());
         self.add_subview(self.right.clone());
-
-        // self.up.borrow_mut().image = Some(Image::load(&paths::images().join("up.png")));
-        // self.down.borrow_mut().image = Some(Image::load(&paths::images().join("down.png")));
-        // self.left.borrow_mut().image = Some(Image::load(&paths::images().join("left.png")));
-        // self.right.borrow_mut().image = Some(Image::load(&paths::images().join("right.png")));
 
         let a = this.clone();
         self.up.borrow_mut().on_tap.subscribe(move |_| {

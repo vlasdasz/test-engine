@@ -67,6 +67,13 @@ impl View for TestView {
         dpad.frame_mut().size.height = 200.0;
         dpad.frame_mut().origin.y = 300.0;
 
+        dpad.set_images(
+            Image::load(&paths::images().join("up.png")),
+            Image::load(&paths::images().join("down.png")),
+            Image::load(&paths::images().join("left.png")),
+            Image::load(&paths::images().join("right.png")),
+        );
+
         drop(dpad);
 
         self.add_subview(shared_dpad);

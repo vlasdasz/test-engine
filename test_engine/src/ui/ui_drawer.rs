@@ -1,13 +1,11 @@
 use crate::assets::Assets;
 use gl_image::Image;
-use gl_wrapper::{Buffer, BufferConfig, GLWrapper};
-use gm::flat::PointsPath;
+use gl_wrapper::GLWrapper;
 use gm::{Color, Rect, Size};
 use std::rc::Rc;
 use tools::new;
 use tools::platform::Platform;
 use tools::refs::Shared;
-use ui::complex::path_data::DrawMode;
 use ui::complex::{DrawingView, PathData};
 use ui::View;
 
@@ -106,25 +104,6 @@ impl UIDrawer {
         self.assets.shaders.ui_path.enable();
         self.assets.shaders.ui_path.set_color(&path.color);
         self.assets.shaders.ui_path.set_size(&rect.size);
-        // path.buffer.draw();
-    }
-
-    pub fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {
-        // #[cfg(any(target_os = "ios", target_os = "android"))]
-        // use gles31_sys::GL_LINE_STRIP;
-
-        let buffer = Buffer::make(
-            &BufferConfig::_2,
-            (&path.points).into(),
-            None,
-            0, //GLC!(LINE_STRIP), //draw_mode.to_gl(),
-        );
-
-        PathData {
-            buffer,
-            path,
-            color,
-            draw_mode,
-        }
+        path.buffer.draw();
     }
 }
