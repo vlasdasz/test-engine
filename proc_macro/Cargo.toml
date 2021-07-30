@@ -1,0 +1,11 @@
+[package]
+name = "proc_macro"
+version = "0.1.0"
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "proc_macro"
+proc-macro = true
+
+[dependencies]

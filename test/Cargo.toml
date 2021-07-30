@@ -9,4 +9,5 @@ name = "test"
 
 [dependencies]
 gl_wrapper = { path = "../gl_wrapper" }
+proc_macro = { path = "../proc_macro" }
 test_engine = { path = "../test_engine" }
