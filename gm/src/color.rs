@@ -1,4 +1,4 @@
-use tools::New;
+use tools::{new, New};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Color {
@@ -136,10 +136,10 @@ impl Color {
 impl New for Color {
     fn new() -> Color {
         Color {
-            r: 0.0,
-            g: 0.0,
-            b: 0.0,
-            a: 0.0,
+            r: new(),
+            g: new(),
+            b: new(),
+            a: new(),
         }
     }
 }

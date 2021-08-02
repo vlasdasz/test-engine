@@ -43,11 +43,11 @@ impl New for Sprite {
         Sprite {
             position: new(),
             size: new(),
-            rotation: 0.0,
+            rotation: new(),
             color: new(),
             collider_handle: ColliderHandle::invalid(),
-            rigid_body_handle: None,
-            image: None,
+            rigid_body_handle: new(),
+            image: new(),
             //rigid_body: null_mut(),
         }
     }

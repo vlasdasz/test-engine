@@ -1,6 +1,6 @@
 extern crate proc_macro;
 
-use syn::{parse_macro_input, DeriveInput};
+use syn::{parse_macro_input, Data, DataStruct, DeriveInput, Fields};
 
 use proc_macro::TokenStream;
 use quote::quote;
@@ -10,13 +10,41 @@ pub fn derive_as_any(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     let name = &input.ident;
 
-    let expanded = quote! {
+    (quote! {
         impl tools::AsAny for #name {
             fn as_any(&self) -> &dyn std::any::Any {
                 self
             }
         }
+    })
+    .into()
+}
+
+#[proc_macro_derive(New)]
+pub fn derive_new(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &input.ident;
+
+    let fields = match &input.data {
+        Data::Struct(DataStruct {
+            fields: Fields::Named(fields),
+            ..
+        }) => &fields.named,
+        _ => panic!("expected a struct with named fields"),
     };
 
-    return TokenStream::from(expanded);
+    let field_name = fields.iter().map(|field| &field.ident);
+
+    (quote! {
+        impl tools::New for #name {
+            fn new() -> Self {
+                Self {
+                    #(
+                    #field_name: tools::new(),
+                    )*
+                }
+            }
+        }
+    })
+    .into()
 }

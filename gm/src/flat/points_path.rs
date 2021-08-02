@@ -1,6 +1,6 @@
 use crate::Point;
 use std::f32::consts::PI;
-use tools::New;
+use tools::{new, New};
 
 #[derive(Debug)]
 pub struct PointsPath {
@@ -31,7 +31,7 @@ impl PointsPath {
 
 impl New for PointsPath {
     fn new() -> Self {
-        Self { points: vec![] }
+        Self { points: new() }
     }
 }
 

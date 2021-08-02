@@ -6,7 +6,7 @@ use std::cell::RefCell;
 use std::fmt::Debug;
 use tools::has_new::new;
 use tools::refs::Shared;
-pub use tools::{AsAny, Event, New};
+use tools::{AsAny, Event, New};
 
 pub enum ViewType {
     Plain,
@@ -151,7 +151,7 @@ pub trait View: AsAny + Debug + New {
     }
 }
 
-#[derive(Debug, AsAny)]
+#[derive(Debug, New, AsAny)]
 pub struct ViewBase {
     _color: Color,
     _touch_enabled: bool,
@@ -172,19 +172,5 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
-    }
-}
-
-impl New for ViewBase {
-    fn new() -> ViewBase {
-        ViewBase {
-            _color: Color::DEFAULT,
-            _touch_enabled: false,
-            _frame: new(),
-            _absolute_frame: new(),
-            _subviews: vec![],
-            _on_touch: new(),
-            _touch_id: RefCell::new(0),
-        }
     }
 }

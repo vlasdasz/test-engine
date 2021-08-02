@@ -1,7 +1,7 @@
 use crate::{IntoF32, Point};
-use tools::New;
+use proc_macro::New;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, New)]
 pub struct Size {
     pub width: f32,
     pub height: f32,
@@ -20,15 +20,6 @@ impl Size {
         Point {
             x: self.width / 2.0,
             y: self.height / 2.0,
-        }
-    }
-}
-
-impl New for Size {
-    fn new() -> Size {
-        Size {
-            width: 0.0,
-            height: 0.0,
         }
     }
 }

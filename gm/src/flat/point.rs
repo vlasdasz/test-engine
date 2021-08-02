@@ -1,5 +1,5 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
-use tools::New;
+use proc_macro::New;
 
 pub trait IntoF32 {
     fn into_f32(self) -> f32;
@@ -17,7 +17,7 @@ impl IntoF32 for f32 {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, New)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
@@ -122,12 +122,6 @@ impl Mul<f32> for Point {
     type Output = Point;
     fn mul(self, rhs: f32) -> Point {
         (self.x * rhs, self.y * rhs).into()
-    }
-}
-
-impl New for Point {
-    fn new() -> Self {
-        Point { x: 0.0, y: 0.0 }
     }
 }
 

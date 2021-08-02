@@ -67,7 +67,7 @@ impl New for IntView {
     fn new() -> Self {
         IntView {
             base: new(),
-            value: RefCell::new(0),
+            value: new(),
             label: new_shared(),
             up: new_shared(),
             down: new_shared(),
