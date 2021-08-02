@@ -20,7 +20,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     Glyph::new(symbol, image, 20, new())
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Font {
     pub size: u32,
     pub height: f32,

@@ -16,7 +16,7 @@ use std::ffi::c_void;
 use std::path::PathBuf;
 use tools::new;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Image {
     pub size: Size,
     pub channels: u32,

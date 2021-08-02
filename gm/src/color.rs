@@ -1,6 +1,6 @@
 use tools::{new, New};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Color {
     pub r: f32,
     pub g: f32,

@@ -2,9 +2,9 @@ use crate::input::Touch;
 use gl_image::Image;
 use gm::{Color, Rect};
 use proc_macro::AsAny;
+use proc_macro::New;
 use std::cell::RefCell;
 use std::fmt::Debug;
-use tools::has_new::new;
 use tools::refs::Shared;
 use tools::{AsAny, Event, New};
 
@@ -151,7 +151,7 @@ pub trait View: AsAny + Debug + New {
     }
 }
 
-#[derive(Debug, New, AsAny)]
+#[derive(Debug, AsAny, New)]
 pub struct ViewBase {
     _color: Color,
     _touch_enabled: bool,

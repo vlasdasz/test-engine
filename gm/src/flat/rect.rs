@@ -1,7 +1,7 @@
 use crate::{IntoF32, Point, Size};
 use proc_macro::New;
 
-#[derive(Debug, Copy, Clone, New)]
+#[derive(Copy, Clone, Debug, New)]
 pub struct Rect {
     pub origin: Point,
     pub size: Size,
