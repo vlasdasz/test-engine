@@ -2,17 +2,17 @@ use crate::paths;
 use gl_image::Image;
 use gm::flat::PointsPath;
 use gm::{Color, Rect};
-use std::any::Any;
+use proc_macro::AsAny;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
-use tools::{AsAny, New};
+use tools::New;
 use ui::basic::Button;
 use ui::complex::{AnalogStickView, DrawingView};
 use ui::{DPadView, ImageView, Label, Layout, View, ViewBase};
 
 static mut COUNTER: u32 = 0;
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct TestView {
     base: ViewBase,
     pub data: u128,
@@ -133,11 +133,5 @@ impl New for TestView {
             left_stick: new_shared(),
             right_stick: new_shared(),
         }
-    }
-}
-
-impl AsAny for TestView {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }

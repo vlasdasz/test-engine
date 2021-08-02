@@ -1,11 +1,9 @@
 use crate::{Font, ImageView, View, ViewBase, DEFAULT_FONT};
-
-use std::any::Any;
+use proc_macro::AsAny;
 use tools::refs::make_shared;
+use tools::New;
 
-use tools::{AsAny, New};
-
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct Label {
     font: Font,
     _text: String,
@@ -19,12 +17,6 @@ impl Label {
 
     pub fn set_text(&mut self, text: &str) {
         self._text = text.into()
-    }
-}
-
-impl AsAny for Label {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }
 

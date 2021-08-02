@@ -1,14 +1,14 @@
 use crate::basic::Button;
 use crate::{Label, Layout, View, ViewBase};
 use gm::Rect;
-use std::any::Any;
+use proc_macro::AsAny;
 use std::cell::RefCell;
 use std::ops::AddAssign;
 use tools::has_new::new;
 use tools::refs::{new_shared, Shared};
-use tools::{AsAny, Event, New};
+use tools::{Event, New};
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct IntView {
     base: ViewBase,
     value: RefCell<i64>,
@@ -73,11 +73,5 @@ impl New for IntView {
             down: new_shared(),
             on_change: new(),
         }
-    }
-}
-
-impl AsAny for IntView {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }

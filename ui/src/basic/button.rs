@@ -1,10 +1,10 @@
 use crate::{View, ViewBase};
 use gl_image::Image;
-use std::any::Any;
+use proc_macro::AsAny;
 use tools::refs::Shared;
-use tools::{AsAny, Event, New};
+use tools::{Event, New};
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct Button {
     base: ViewBase,
     pub on_tap: Event,
@@ -47,11 +47,5 @@ impl New for Button {
             on_tap: Event::new(),
             image: None,
         }
-    }
-}
-
-impl AsAny for Button {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }

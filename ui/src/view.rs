@@ -1,8 +1,7 @@
-use std::any::Any;
-
 use crate::input::Touch;
 use gl_image::Image;
 use gm::{Color, Rect};
+use proc_macro::AsAny;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use tools::has_new::new;
@@ -152,7 +151,7 @@ pub trait View: AsAny + Debug + New {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct ViewBase {
     _color: Color,
     _touch_enabled: bool,
@@ -172,12 +171,6 @@ impl View for ViewBase {
     }
 
     fn view_mut(&mut self) -> &mut Self {
-        self
-    }
-}
-
-impl AsAny for ViewBase {
-    fn as_any(&self) -> &dyn Any {
         self
     }
 }

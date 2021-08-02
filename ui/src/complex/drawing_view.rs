@@ -4,10 +4,10 @@ use crate::{View, ViewBase};
 use gl_wrapper::{Buffer, BufferConfig};
 use gm::flat::PointsPath;
 use gm::Color;
-use std::any::Any;
-use tools::{new, AsAny, New};
+use proc_macro::AsAny;
+use tools::{new, New};
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct DrawingView {
     base: ViewBase,
     pub paths: Vec<PathData>,
@@ -27,12 +27,6 @@ impl View for DrawingView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-}
-
-impl AsAny for DrawingView {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }
 

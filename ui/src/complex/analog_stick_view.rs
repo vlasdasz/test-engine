@@ -2,15 +2,15 @@ use crate::complex::DrawingView;
 use crate::{View, ViewBase};
 use gm::flat::PointsPath;
 use gm::{Color, Point};
-use std::any::Any;
+use proc_macro::AsAny;
 use tools::refs::{new_shared, Shared};
-use tools::{new, AsAny, Event, New};
+use tools::{new, Event, New};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct AnalogStickView {
     base: ViewBase,
     direction_stick: Shared<DrawingView>,
@@ -99,12 +99,6 @@ impl View for AnalogStickView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-}
-
-impl AsAny for AnalogStickView {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }
 

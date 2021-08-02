@@ -1,21 +1,15 @@
 use crate::{View, ViewBase};
 use gl_image::Image;
-use std::any::Any;
+use proc_macro::AsAny;
 use tools::refs::MutWeak;
 use tools::weak_self::HasWeakSelf;
-use tools::{AsAny, New};
+use tools::New;
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct ImageView {
     pub image: Image,
     base: ViewBase,
     _weak: MutWeak<ImageView>,
-}
-
-impl AsAny for ImageView {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
 }
 
 impl New for ImageView {

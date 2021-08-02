@@ -2,13 +2,13 @@ use crate::basic::Button;
 use crate::{View, ViewBase};
 use gl_image::Image;
 use gm::Rect;
-use std::any::Any;
+use proc_macro::AsAny;
 use tools::has_new::new;
 use tools::refs::{new_shared, Shared};
 use tools::Event;
-use tools::{AsAny, New};
+use tools::New;
 
-#[derive(Debug)]
+#[derive(Debug, AsAny)]
 pub struct DPadView {
     base: ViewBase,
     up: Shared<Button>,
@@ -107,11 +107,5 @@ impl New for DPadView {
             on_left: new(),
             on_right: new(),
         }
-    }
-}
-
-impl AsAny for DPadView {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }

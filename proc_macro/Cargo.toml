@@ -9,3 +9,5 @@ name = "proc_macro"
 proc-macro = true
 
 [dependencies]
+syn = "1.0.74"
+quote = "1.0.9"

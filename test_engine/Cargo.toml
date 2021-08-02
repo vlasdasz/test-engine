@@ -11,12 +11,14 @@ crate-type = ["rlib", "staticlib"]
 [dependencies]
 chrono = "0.4.19"
 
+tools = { path = "../.rdeps/tools" }
+
 gm = { path = "../gm" }
 ui = { path = "../ui" }
 sprites = { path = "../sprites" }
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
-tools = { path = "../.rdeps/tools" }
+proc_macro = { path = "../proc_macro" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14.0"
