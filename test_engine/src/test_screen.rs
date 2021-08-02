@@ -4,9 +4,9 @@ use crate::sprites::SpritesDrawer;
 use crate::ui::ui_drawer::UIDrawer;
 use crate::ui::{DebugView, TestView};
 use gl_image::Image;
-use gl_wrapper::{GLWrapper, Screen};
+use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
-use glfw::Action;
+use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
 use sprites::Control;
 use sprites::Level;
@@ -100,6 +100,33 @@ impl TestScreen {
     }
 }
 
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+impl DesktopInput for TestScreen {
+    fn on_cursor_moved(&mut self, position: Point) {
+        self.cursor_position = position;
+        self.on_touch(Touch {
+            id: 1,
+            position: self.cursor_position,
+            event: Event::Moved,
+        });
+    }
+
+    fn on_mouse_key_pressed(&self, _button: glfw::MouseButton, state: Action) {
+        self.on_touch(Touch {
+            id: 1,
+            position: self.cursor_position,
+            event: Event::from_state(ButtonState::from_glfw(state)),
+        })
+    }
+
+    fn on_key_pressed(&self, key: Key, action: Action) {
+        self.level.borrow_mut().on_key_pressed(key, action)
+    }
+}
+
+#[cfg(any(target_os = "ios", target_os = "android"))]
+impl DesktopInput for TestScreen {}
+
 impl Screen for TestScreen {
     fn init(&mut self) {
         GLWrapper::enable_blend();
@@ -161,25 +188,6 @@ impl Screen for TestScreen {
         self.sprites_drawer.set_resolution(&size);
         self.sprites_drawer.set_camera_position(&(0, 0).into());
         self.update();
-    }
-
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_cursor_moved(&mut self, position: Point) {
-        self.cursor_position = position;
-        self.on_touch(Touch {
-            id: 1,
-            position: self.cursor_position,
-            event: Event::Moved,
-        });
-    }
-
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_mouse_key_pressed(&self, _button: glfw::MouseButton, state: Action) {
-        self.on_touch(Touch {
-            id: 1,
-            position: self.cursor_position,
-            event: Event::from_state(ButtonState::from_glfw(state)),
-        })
     }
 }
 

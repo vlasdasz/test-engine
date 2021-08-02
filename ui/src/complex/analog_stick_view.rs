@@ -36,9 +36,11 @@ impl AnalogStickView {
 
 impl View for AnalogStickView {
     fn setup(&mut self, this: Shared<dyn View>) {
-        self.set_frame((SIZE, SIZE).into());
+        self.frame_mut().size = (SIZE, SIZE).into();
 
         self.enable_touch();
+
+        self.background.borrow_mut().frame_mut().size = (SIZE, SIZE).into();
 
         self.background.borrow_mut().add_path(
             PointsPath::circle_with(self.frame().size.center(), self.frame().size.width),
@@ -52,6 +54,8 @@ impl View for AnalogStickView {
             ),
             Color::WHITE,
         );
+
+        self.add_subview(self.background.clone());
 
         let mut direction_stick = self.direction_stick.borrow_mut();
 

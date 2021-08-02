@@ -4,15 +4,15 @@ use glfw::{Context, Window, WindowEvent};
 use gm::{Point, Size};
 use tools::new;
 
-pub struct GLDrawer<Sc: Screen> {
+pub struct GLDrawer<ScreenT: Screen> {
     window: Window,
     events: std::sync::mpsc::Receiver<(f64, WindowEvent)>,
     size: Size,
-    screen: Sc,
+    screen: ScreenT,
 }
 
-impl<Sc: Screen> GLDrawer<Sc> {
-    pub fn with_size(size: Size) -> GLDrawer<Sc> {
+impl<ScreenT: Screen> GLDrawer<ScreenT> {
+    pub fn with_size(size: Size) -> GLDrawer<ScreenT> {
         let loader = GLLoader::with_size(size);
         GLDrawer {
             window: loader.window,
@@ -41,10 +41,11 @@ impl<Sc: Screen> GLDrawer<Sc> {
 
             for (_, event) in glfw::flush_messages(&self.events) {
                 match event {
-                    glfw::WindowEvent::Key(key, _, _, _) => {
+                    glfw::WindowEvent::Key(key, _, action, _) => {
                         if key == glfw::Key::Escape {
                             self.window.set_should_close(true)
                         }
+                        self.screen.on_key_pressed(key, action);
                     }
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
                         self.screen.on_cursor_moved(Point {

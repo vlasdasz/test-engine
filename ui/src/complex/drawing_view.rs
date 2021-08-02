@@ -38,7 +38,7 @@ fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> 
         &BufferConfig::_2,
         (&path.points).into(),
         None,
-        2, //GLC!(LINE_STRIP), //draw_mode.to_gl(),
+        6, //GLC!(GL_TRIANGLE_FAN), //draw_mode.to_gl(),
     );
 
     PathData {

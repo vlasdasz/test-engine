@@ -31,12 +31,18 @@ pub mod gl_wrapper;
 pub mod image_loader;
 pub mod shader;
 
-pub trait Screen: New {
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+pub trait DesktopInput {
+    fn on_cursor_moved(&mut self, position: Point);
+    fn on_mouse_key_pressed(&self, button: MouseButton, state: Action);
+    fn on_key_pressed(&self, key: glfw::Key, action: glfw::Action);
+}
+
+#[cfg(any(target_os = "ios", target_os = "android"))]
+pub trait DesktopInput {}
+
+pub trait Screen: New + DesktopInput {
     fn init(&mut self);
     fn update(&mut self);
     fn set_size(&mut self, size: Size);
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_cursor_moved(&mut self, position: Point);
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_mouse_key_pressed(&self, button: MouseButton, state: Action);
 }

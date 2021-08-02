@@ -3,6 +3,8 @@ use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 
 use crate::Sprite;
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+use glfw::{Action, Key};
 use gm::Point;
 use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
@@ -104,6 +106,18 @@ impl Level {
         sprite
     }
 
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    pub fn on_key_pressed(&mut self, key: Key, _action: Action) {
+        if key == Key::A {
+            self.go_left()
+        } else if key == Key::D {
+            self.go_right();
+        } else if key == Key::W {
+            self.jump()
+        } else if key == Key::S {
+        }
+    }
+
     fn player_body(&mut self) -> &mut RigidBody {
         &mut self.rigid_body_set[self.player.borrow().rigid_body_handle.unwrap()]
     }
@@ -111,35 +125,22 @@ impl Level {
 
 impl New for Level {
     fn new() -> Self {
-        let rigid_body_set = RigidBodySet::new();
-        let collider_set = ColliderSet::new();
-
-        let gravity = Vector2::new(0.0, -9.81);
-        let integration_parameters = IntegrationParameters::default();
-        let physics_pipeline = PhysicsPipeline::new();
-        let island_manager = IslandManager::new();
-        let broad_phase = BroadPhase::new();
-        let narrow_phase = NarrowPhase::new();
-        let joint_set = JointSet::new();
-        let ccd_solver = CCDSolver::new();
-        let physics_hooks = ();
-        let event_handler = ();
         Level {
             sprites: vec![],
             walls: vec![],
             player: new_shared(),
-            rigid_body_set,
-            collider_set,
-            gravity,
-            integration_parameters,
-            physics_pipeline,
-            island_manager,
-            broad_phase,
-            narrow_phase,
-            joint_set,
-            ccd_solver,
-            physics_hooks,
-            event_handler,
+            rigid_body_set: RigidBodySet::new(),
+            collider_set: ColliderSet::new(),
+            gravity: Vector2::new(0.0, -9.81),
+            integration_parameters: IntegrationParameters::default(),
+            physics_pipeline: PhysicsPipeline::new(),
+            island_manager: IslandManager::new(),
+            broad_phase: BroadPhase::new(),
+            narrow_phase: NarrowPhase::new(),
+            joint_set: JointSet::new(),
+            ccd_solver: CCDSolver::new(),
+            physics_hooks: (),
+            event_handler: (),
         }
     }
 }
