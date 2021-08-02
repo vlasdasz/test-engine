@@ -1,10 +1,11 @@
 use crate::{View, ViewBase};
 use gl_image::Image;
 use proc_macro::AsAny;
+use proc_macro::New;
 use tools::refs::Shared;
-use tools::{Event, New};
+use tools::Event;
 
-#[derive(Debug, AsAny)]
+#[derive(Debug, AsAny, New)]
 pub struct Button {
     base: ViewBase,
     pub on_tap: Event,
@@ -24,28 +25,15 @@ impl View for Button {
         });
     }
 
+    fn image(&self) -> Option<Image> {
+        self.image
+    }
+
     fn view(&self) -> &ViewBase {
         &self.base
     }
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-
-    fn image(&self) -> Option<Image> {
-        self.image
-    }
-}
-
-impl New for Button {
-    fn new() -> Self
-    where
-        Self: Sized,
-    {
-        Button {
-            base: ViewBase::new(),
-            on_tap: Event::new(),
-            image: None,
-        }
     }
 }

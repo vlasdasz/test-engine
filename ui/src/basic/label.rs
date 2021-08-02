@@ -1,9 +1,9 @@
-use crate::{Font, ImageView, View, ViewBase, DEFAULT_FONT};
+use crate::{Font, ImageView, View, ViewBase};
 use proc_macro::AsAny;
+use proc_macro::New;
 use tools::refs::make_shared;
-use tools::New;
 
-#[derive(Debug, AsAny)]
+#[derive(Debug, AsAny, New)]
 pub struct Label {
     font: Font,
     _text: String,
@@ -17,16 +17,6 @@ impl Label {
 
     pub fn set_text(&mut self, text: &str) {
         self._text = text.into()
-    }
-}
-
-impl New for Label {
-    fn new() -> Self {
-        Self {
-            font: DEFAULT_FONT.lock().unwrap().clone(),
-            _text: String::new(),
-            base: ViewBase::new(),
-        }
     }
 }
 

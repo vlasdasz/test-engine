@@ -77,7 +77,7 @@ impl UIDrawer {
     }
 
     fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: &Color) {
-        if image.invalid() {
+        if image.is_invalid() {
             return;
         }
 

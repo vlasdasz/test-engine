@@ -15,6 +15,7 @@ use image::GenericImageView;
 use std::ffi::c_void;
 use std::path::PathBuf;
 use tools::new;
+use tools::New;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Image {
@@ -24,15 +25,7 @@ pub struct Image {
 }
 
 impl Image {
-    pub fn new() -> Image {
-        Image {
-            size: new(),
-            channels: 0,
-            gl_handle: u32::MAX,
-        }
-    }
-
-    pub fn invalid(&self) -> bool {
+    pub fn is_invalid(&self) -> bool {
         self.gl_handle == u32::MAX
     }
 
@@ -128,5 +121,15 @@ impl Image {
 
     pub fn bind(&self) {
         GLWrapper::bind_image(self.gl_handle)
+    }
+}
+
+impl New for Image {
+    fn new() -> Image {
+        Image {
+            size: new(),
+            channels: 0,
+            gl_handle: u32::MAX,
+        }
     }
 }

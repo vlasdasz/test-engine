@@ -5,9 +5,9 @@ use gl_wrapper::{Buffer, BufferConfig};
 use gm::flat::PointsPath;
 use gm::Color;
 use proc_macro::AsAny;
-use tools::{new, New};
+use proc_macro::New;
 
-#[derive(Debug, AsAny)]
+#[derive(Debug, AsAny, New)]
 pub struct DrawingView {
     base: ViewBase,
     pub paths: Vec<PathData>,
@@ -27,15 +27,6 @@ impl View for DrawingView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-}
-
-impl New for DrawingView {
-    fn new() -> Self {
-        Self {
-            base: new(),
-            paths: vec![],
-        }
     }
 }
 

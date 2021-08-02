@@ -20,9 +20,6 @@ pub trait View: AsAny + Debug + New {
 
     fn layout(&mut self, _super_frame: &Rect) {}
 
-    fn view(&self) -> &ViewBase;
-    fn view_mut(&mut self) -> &mut ViewBase;
-
     fn color(&self) -> &Color {
         &self.view()._color
     }
@@ -149,6 +146,9 @@ pub trait View: AsAny + Debug + New {
     fn image(&self) -> Option<Image> {
         None
     }
+
+    fn view(&self) -> &ViewBase;
+    fn view_mut(&mut self) -> &mut ViewBase;
 }
 
 #[derive(Debug, AsAny, New)]
