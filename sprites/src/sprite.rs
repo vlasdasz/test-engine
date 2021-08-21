@@ -4,7 +4,15 @@ use rapier2d::dynamics::RigidBodyHandle;
 use rapier2d::prelude::ColliderHandle;
 use tools::{new, New};
 
-pub struct Sprite {
+
+pub trait Sprite {
+    fn sprite(&self) -> &SpriteBase;
+    fn sprite_mut(&mut self) -> &mut SpriteBase;
+
+
+}
+
+pub struct SpriteBase {
     pub position: Point,
     pub size: Size,
     pub rotation: f32,
@@ -12,10 +20,9 @@ pub struct Sprite {
     pub collider_handle: ColliderHandle,
     pub rigid_body_handle: Option<RigidBodyHandle>,
     pub image: Option<Image>,
-    //rigid_body: *mut RigidBody,
 }
 
-impl Sprite {
+impl SpriteBase {
     pub fn make(
         position: Point,
         size: Size,
@@ -38,9 +45,9 @@ impl Sprite {
     }
 }
 
-impl New for Sprite {
+impl New for SpriteBase {
     fn new() -> Self {
-        Sprite {
+        SpriteBase {
             position: new(),
             size: new(),
             rotation: new(),
@@ -48,7 +55,6 @@ impl New for Sprite {
             collider_handle: ColliderHandle::invalid(),
             rigid_body_handle: new(),
             image: new(),
-            //rigid_body: null_mut(),
         }
     }
 }

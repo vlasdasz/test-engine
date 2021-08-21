@@ -2,7 +2,7 @@ use rapier2d::na::Vector2;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 
-use crate::Sprite;
+use crate::SpriteBase;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::Point;
@@ -18,11 +18,18 @@ pub trait Control {
     fn add_impulse(&mut self, impulse: &Point);
 }
 
-pub struct Level {
-    pub sprites: Vec<Shared<Sprite>>,
-    pub walls: Vec<Shared<Sprite>>,
+pub trait Level {
+    fn level(&self) -> &LevelBase;
+    fn level_mut(&mut self) -> &mut LevelBase;
 
-    pub player: Shared<Sprite>,
+
+}
+
+pub struct LevelBase {
+    pub sprites: Vec<Shared<SpriteBase>>,
+    pub walls: Vec<Shared<SpriteBase>>,
+
+    pub player: Shared<SpriteBase>,
 
     rigid_body_set: RigidBodySet,
     collider_set: ColliderSet,
@@ -39,7 +46,7 @@ pub struct Level {
     event_handler: (),
 }
 
-impl Level {
+impl LevelBase {
     pub fn setup(&mut self) {
         let player = self.add_rect((0, 10).into(), (17.0 / 6.0, 28.0 / 6.0).into());
         self.player = player;
@@ -76,18 +83,18 @@ impl Level {
         }
     }
 
-    pub fn add_collider(&mut self, pos: gm::Point, size: gm::Size) -> Shared<Sprite> {
+    pub fn add_collider(&mut self, pos: gm::Point, size: gm::Size) -> Shared<SpriteBase> {
         let collider = ColliderBuilder::cuboid(size.width, size.height)
             .translation(Vector2::new(pos.x, pos.y))
             .build();
         let handle = self.collider_set.insert(collider);
-        let sprite = Sprite::make(pos, size, handle, None);
+        let sprite = SpriteBase::make(pos, size, handle, None);
         let sprite = make_shared(sprite);
         self.walls.push(sprite.clone());
         sprite
     }
 
-    pub fn add_rect(&mut self, pos: gm::Point, size: gm::Size) -> Shared<Sprite> {
+    pub fn add_rect(&mut self, pos: gm::Point, size: gm::Size) -> Shared<SpriteBase> {
         let rigid_body = RigidBodyBuilder::new_dynamic()
             .translation(Vector2::new(pos.x, pos.y))
             .build();
@@ -100,7 +107,7 @@ impl Level {
             ball_body_handle,
             &mut self.rigid_body_set,
         );
-        let sprite = Sprite::make(pos, size, handle, Some(ball_body_handle));
+        let sprite = SpriteBase::make(pos, size, handle, Some(ball_body_handle));
         let sprite = make_shared(sprite);
         self.sprites.push(sprite.clone());
         sprite
@@ -123,9 +130,9 @@ impl Level {
     }
 }
 
-impl New for Level {
+impl New for LevelBase {
     fn new() -> Self {
-        Level {
+        LevelBase {
             sprites: vec![],
             walls: vec![],
             player: new_shared(),
@@ -145,7 +152,7 @@ impl New for Level {
     }
 }
 
-impl Control for Level {
+impl Control for LevelBase {
     fn jump(&mut self) {
         self.player_body().set_linvel([0.0, 50.0].into(), true);
     }

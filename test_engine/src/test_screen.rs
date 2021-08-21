@@ -9,7 +9,7 @@ use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
 use sprites::Control;
-use sprites::Level;
+use sprites::LevelBase;
 use std::rc::Rc;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
@@ -24,7 +24,7 @@ pub struct TestScreen {
     assets: Rc<Assets>,
     debug_view: Shared<DebugView>,
     root_view: Shared<dyn View>,
-    level: Shared<Level>,
+    level: Shared<LevelBase>,
     ui_drawer: UIDrawer,
     sprites_drawer: SpritesDrawer,
 }

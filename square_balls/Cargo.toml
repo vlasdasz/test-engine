@@ -1,0 +1,15 @@
+[package]
+name = "square_balls"
+version = "0.1.0"
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "square_balls"
+
+[dependencies]
+gl_wrapper = { path = "../gl_wrapper" }
+proc_macro = { path = "../proc_macro" }
+test_engine = { path = "../test_engine" }
+
+tools = { path = "../.rdeps/tools" }

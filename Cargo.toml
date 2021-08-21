@@ -9,4 +9,5 @@ members = [
     "proc_macro",
     "gl_wrapper",
     "test_engine",
+    "square_balls",
 ]
