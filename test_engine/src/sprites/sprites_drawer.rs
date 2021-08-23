@@ -1,7 +1,9 @@
 use crate::assets::Assets;
+use gl_wrapper::Shader;
 use gm::{Point, Size};
-use sprites::SpriteBase;
+use sprites::Sprite;
 use std::rc::Rc;
+use tools::refs::Shared;
 
 pub struct SpritesDrawer {
     assets: Rc<Assets>,
@@ -26,11 +28,13 @@ impl SpritesDrawer {
         self.assets.shaders.textured_sprite.set_camera_position(pos);
     }
 
-    pub fn draw(&self, sprite: &SpriteBase) {
+    pub fn draw(&self, sprite: &Shared<dyn Sprite>) {
+        let sprite = sprite.borrow();
+
         let mut shader = &self.assets.shaders.sprite;
         let mut buffer = &self.assets.buffers.fullscreen;
 
-        if let Some(image) = sprite.image {
+        if let Some(image) = sprite.image() {
             shader = &self.assets.shaders.textured_sprite;
             buffer = &self.assets.buffers.fullscreen_image;
             image.bind();
@@ -39,10 +43,10 @@ impl SpritesDrawer {
 
         shader.enable();
 
-        shader.set_size(&sprite.size);
-        shader.set_position(&sprite.position);
-        shader.set_rotation(sprite.rotation);
-        shader.set_color(&sprite.color);
+        shader.set_size(&sprite.size());
+        shader.set_position(&sprite.position());
+        shader.set_rotation(sprite.rotation());
+        shader.set_color(&sprite.color());
 
         buffer.draw();
     }

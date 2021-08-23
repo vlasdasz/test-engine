@@ -50,51 +50,53 @@ impl TestScreen {
 
         let square = Image::load(&paths::images().join("square.png"));
 
-        level
-            .add_collider(new(), (100, 1).into())
-            .borrow_mut()
-            .set_image(square);
+        level.add_sprite((0, 0, 1, 1).into());
 
-        level
-            .add_collider((20, 0).into(), (1, 100).into())
-            .borrow_mut()
-            .set_image(square);
-
-        level
-            .add_collider((-20, 0).into(), (1, 100).into())
-            .borrow_mut()
-            .set_image(square);
-
-        for i in 0..500 {
-            level.add_rect((0.1 * i as f32, i * 2).into(), Size::square(0.5));
-        }
+        // level
+        //     .add_collider(new(), (100, 1).into())
+        //     .borrow_mut()
+        //     .set_image(square);
+        //
+        // level
+        //     .add_collider((20, 0).into(), (1, 100).into())
+        //     .borrow_mut()
+        //     .set_image(square);
+        //
+        // level
+        //     .add_collider((-20, 0).into(), (1, 100).into())
+        //     .borrow_mut()
+        //     .set_image(square);
+        //
+        // for i in 0..500 {
+        //     level.add_rect((0.1 * i as f32, i * 2).into(), Size::square(0.5));
+        // }
     }
 
     fn setup_test_view(&mut self) {
         let view = TestView::new();
 
-        let a = self.level.clone();
-        view.dpad.borrow_mut().on_up.subscribe(move |_| {
-            a.borrow_mut().jump();
-        });
-
-        let a = self.level.clone();
-        view.dpad.borrow_mut().on_left.subscribe(move |_| {
-            a.borrow_mut().go_left();
-        });
-
-        let a = self.level.clone();
-        view.dpad.borrow_mut().on_right.subscribe(move |_| {
-            a.borrow_mut().go_right();
-        });
-
-        let a = self.level.clone();
-        view.left_stick
-            .borrow_mut()
-            .on_direction_change
-            .subscribe(move |direction| {
-                a.borrow_mut().add_impulse(direction);
-            });
+        // let a = self.level.clone();
+        // view.dpad.borrow_mut().on_up.subscribe(move |_| {
+        //     a.borrow_mut().jump();
+        // });
+        //
+        // let a = self.level.clone();
+        // view.dpad.borrow_mut().on_left.subscribe(move |_| {
+        //     a.borrow_mut().go_left();
+        // });
+        //
+        // let a = self.level.clone();
+        // view.dpad.borrow_mut().on_right.subscribe(move |_| {
+        //     a.borrow_mut().go_right();
+        // });
+        //
+        // let a = self.level.clone();
+        // view.left_stick
+        //     .borrow_mut()
+        //     .on_direction_change
+        //     .subscribe(move |direction| {
+        //         a.borrow_mut().add_impulse(direction);
+        //     });
 
         self.root_view.borrow_mut().add_subview(make_shared(view));
     }
@@ -153,18 +155,18 @@ impl Screen for TestScreen {
 
         level.update();
 
-        self.sprites_drawer
-            .set_camera_position(&level.player.borrow().position);
+        // self.sprites_drawer
+        //     .set_camera_position(&level.player.borrow().position);
 
         for sprite in &level.sprites {
-            let sprite = sprite.borrow();
-            self.sprites_drawer.draw(&sprite);
+            self.sprites_drawer.draw(sprite);
         }
 
-        for wall in &level.walls {
-            let wall = wall.borrow();
-            self.sprites_drawer.draw(&wall);
-        }
+        //
+        // for wall in &level.walls {
+        //     let wall = wall.borrow();
+        //     self.sprites_drawer.draw(&wall);
+        // }
 
         TestScreen::update_view(self.root_view.clone());
         TestScreen::update_view(self.debug_view.clone());

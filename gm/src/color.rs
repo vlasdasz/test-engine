@@ -127,9 +127,9 @@ impl Color {
         Color::LIGHT_GRAY,
     ];
 
-    pub fn random() -> &'static Color {
+    pub fn random() -> Color {
         use rand::Rng;
-        &Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
+        Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
     }
 }
 
