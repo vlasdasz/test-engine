@@ -26,6 +26,10 @@ pub trait Sprite {
     fn image(&self) -> &Option<Image> {
         &self.sprite().image
     }
+
+    fn set_image(&mut self, image: Image) {
+        self.sprite_mut().image = image.into()
+    }
 }
 
 #[derive(New)]

@@ -2,7 +2,7 @@ use rapier2d::na::Vector2;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 
-use crate::{Sprite, SpriteBase};
+use crate::{Collider, Sprite, SpriteBase};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::Point;
@@ -78,17 +78,6 @@ impl LevelBase {
         // }
     }
 
-    // pub fn add_collider(&mut self, pos: gm::Point, size: gm::Size) -> Shared<SpriteBase> {
-    //     let collider = ColliderBuilder::cuboid(size.width, size.height)
-    //         .translation(Vector2::new(pos.x, pos.y))
-    //         .build();
-    //     let handle = self.collider_set.insert(collider);
-    //     let sprite = SpriteBase::make(pos, size, handle, None);
-    //     let sprite = make_shared(sprite);
-    //     self.walls.push(sprite.clone());
-    //     sprite
-    // }
-
     // pub fn add_rect(&mut self, pos: gm::Point, size: gm::Size) -> Shared<SpriteBase> {
     //     let rigid_body = RigidBodyBuilder::new_dynamic()
     //         .translation(Vector2::new(pos.x, pos.y))
@@ -126,6 +115,16 @@ impl LevelBase {
 
     pub fn add_sprite(&mut self, sprite: SpriteBase) {
         self.sprites.push(make_shared(sprite))
+    }
+
+    pub fn add_collider(&mut self, sprite: SpriteBase) -> Shared<dyn Sprite> {
+        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
+            .translation(Vector2::new(sprite.position.x, sprite.position.y))
+            .build();
+        let handle = self.collider_set.insert(collider);
+        let collider = make_shared(Collider::make(sprite, handle));
+        self.sprites.push(collider.clone());
+        collider
     }
 }
 

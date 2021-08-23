@@ -52,20 +52,20 @@ impl TestScreen {
 
         level.add_sprite((0, 0, 1, 1).into());
 
-        // level
-        //     .add_collider(new(), (100, 1).into())
-        //     .borrow_mut()
-        //     .set_image(square);
-        //
-        // level
-        //     .add_collider((20, 0).into(), (1, 100).into())
-        //     .borrow_mut()
-        //     .set_image(square);
-        //
-        // level
-        //     .add_collider((-20, 0).into(), (1, 100).into())
-        //     .borrow_mut()
-        //     .set_image(square);
+        level
+            .add_collider((0, 0, 100, 1).into())
+            .borrow_mut()
+            .set_image(square);
+
+        level
+            .add_collider((20, 0, 1, 100).into())
+            .borrow_mut()
+            .set_image(square);
+
+        level
+            .add_collider((-20, 0, 1, 100).into())
+            .borrow_mut()
+            .set_image(square);
         //
         // for i in 0..500 {
         //     level.add_rect((0.1 * i as f32, i * 2).into(), Size::square(0.5));
