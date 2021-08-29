@@ -8,6 +8,10 @@ edition = "2018"
 name = "test"
 
 [dependencies]
+
+
+gm = { path = "../gm" }
+
 gl_wrapper = { path = "../gl_wrapper" }
 proc_macro = { path = "../proc_macro" }
 test_engine = { path = "../test_engine" }
