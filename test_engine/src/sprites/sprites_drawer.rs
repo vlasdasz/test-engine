@@ -1,5 +1,4 @@
 use crate::assets::Assets;
-use gl_wrapper::Shader;
 use gm::{Point, Size};
 use sprites::Sprite;
 use std::rc::Rc;

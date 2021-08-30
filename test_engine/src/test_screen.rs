@@ -8,10 +8,8 @@ use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
-use sprites::Control;
 use sprites::LevelBase;
 use std::rc::Rc;
-use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::New;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
