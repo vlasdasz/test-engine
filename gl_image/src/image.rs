@@ -21,8 +21,6 @@ impl Image {
         self.gl_handle == u32::MAX
     }
 
-    a
-
     pub fn load(path: &PathBuf) -> Image {
         Image::load_with_image(path)
     }
