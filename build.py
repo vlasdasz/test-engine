@@ -79,7 +79,6 @@ print(platform.uname())
 
 
 def rm(path):
-    Debug.info("Deleting: " + path)
     if os.path.exists(path):
         if os.path.isfile(path):
             os.remove(path)
