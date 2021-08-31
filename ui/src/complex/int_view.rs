@@ -8,7 +8,7 @@ use tools::has_new::new;
 use tools::refs::{new_shared, Shared};
 use tools::{Event, New};
 
-#[derive(Debug, AsAny)]
+#[derive(AsAny)]
 pub struct IntView {
     base: ViewBase,
     value: RefCell<i64>,

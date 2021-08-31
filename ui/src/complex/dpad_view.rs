@@ -8,7 +8,7 @@ use tools::refs::{new_shared, Shared};
 use tools::Event;
 use tools::New;
 
-#[derive(Debug, AsAny)]
+#[derive(AsAny)]
 pub struct DPadView {
     base: ViewBase,
     up: Shared<Button>,

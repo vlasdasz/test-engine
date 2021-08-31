@@ -4,16 +4,10 @@ use gm::{Color, Rect};
 use proc_macro::AsAny;
 use proc_macro::New;
 use std::cell::RefCell;
-use std::fmt::Debug;
 use tools::refs::Shared;
-use tools::{AsAny, Event, New};
+use tools::{AsAny, Event, New, Rglica};
 
-pub enum ViewType {
-    Plain,
-    Image,
-}
-
-pub trait View: AsAny + Debug + New {
+pub trait View: AsAny + New {
     fn setup(&mut self, _this: Shared<dyn View>) {}
 
     fn update(&mut self) {}
@@ -26,6 +20,13 @@ pub trait View: AsAny + Debug + New {
 
     fn set_color(&mut self, color: Color) {
         self.view_mut()._color = color
+    }
+
+    fn super_frame(&self) -> &Rect {
+        if self.view()._superview.is_ok() {
+            return self.view()._superview.frame();
+        }
+        self.frame()
     }
 
     fn frame(&self) -> &Rect {
@@ -61,12 +62,12 @@ pub trait View: AsAny + Debug + New {
         &mut self.view_mut()._subviews
     }
 
-    fn calculate_absolute_frame(&mut self, super_frame: &Rect) {
+    fn calculate_absolute_frame(&mut self, _super_frame: &Rect) {
         let view = self.view_mut();
         view._absolute_frame = view._frame;
-        view._absolute_frame.origin += super_frame.origin;
+        view._absolute_frame.origin += view.super_frame().origin;
         let frame = view._absolute_frame;
-        self.layout(super_frame);
+        self.layout(&Rect::DEFAULT);
         for view in self.subviews_mut() {
             view.try_borrow_mut()
                 .unwrap()
@@ -151,13 +152,15 @@ pub trait View: AsAny + Debug + New {
     fn view_mut(&mut self) -> &mut ViewBase;
 }
 
-#[derive(Debug, AsAny, New)]
+#[derive(AsAny, New)]
 pub struct ViewBase {
     _color: Color,
     _touch_enabled: bool,
 
     _frame: Rect,
     _absolute_frame: Rect,
+
+    _superview: Rglica<dyn View>,
 
     _subviews: Vec<Shared<dyn View>>,
 

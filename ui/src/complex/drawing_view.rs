@@ -7,7 +7,7 @@ use gm::Color;
 use proc_macro::AsAny;
 use proc_macro::New;
 
-#[derive(Debug, AsAny, New)]
+#[derive(AsAny, New)]
 pub struct DrawingView {
     base: ViewBase,
     pub paths: Vec<PathData>,

@@ -3,7 +3,7 @@ use proc_macro::AsAny;
 use proc_macro::New;
 use tools::refs::make_shared;
 
-#[derive(Debug, AsAny, New)]
+#[derive(AsAny, New)]
 pub struct Label {
     font: Font,
     _text: String,

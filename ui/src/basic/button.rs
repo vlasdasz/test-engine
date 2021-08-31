@@ -5,7 +5,7 @@ use proc_macro::New;
 use tools::refs::Shared;
 use tools::Event;
 
-#[derive(Debug, AsAny, New)]
+#[derive(AsAny, New)]
 pub struct Button {
     base: ViewBase,
     pub on_tap: Event,

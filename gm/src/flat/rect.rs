@@ -1,5 +1,6 @@
 use crate::{IntoF32, Point, Size};
 use proc_macro::New;
+use tools::new;
 
 #[derive(Copy, Clone, Debug, New)]
 pub struct Rect {
@@ -77,5 +78,11 @@ impl<W: IntoF32, H: IntoF32> From<(W, H)> for Rect {
             origin: tools::new(),
             size: (tup.0, tup.1).into(),
         }
+    }
+}
+
+impl From<()> for Rect {
+    fn from(_: ()) -> Self {
+        new()
     }
 }

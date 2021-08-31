@@ -12,7 +12,7 @@ use ui::{DPadView, ImageView, Label, Layout, View, ViewBase};
 
 static mut COUNTER: u32 = 0;
 
-#[derive(Debug, AsAny)]
+#[derive(AsAny)]
 pub struct TestView {
     base: ViewBase,
     pub data: u128,

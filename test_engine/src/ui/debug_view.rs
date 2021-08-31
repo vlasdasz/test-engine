@@ -8,7 +8,7 @@ use tools::New;
 use ui::complex::IntView;
 use ui::{Label, Layout, View, ViewBase};
 
-#[derive(Debug, AsAny)]
+#[derive(AsAny)]
 pub struct DebugView {
     view: ViewBase,
     fps_label: Shared<Label>,
