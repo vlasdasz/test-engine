@@ -1,32 +1,40 @@
 use std::ops::{Deref, DerefMut};
+use std::cell::RefCell;
+use std::borrow::Borrow;
 
 extern crate gm;
 
-struct Fok<T> {
-    value: T,
+struct Rglica<T: ?Sized> {
+    pub ptr: *mut T
 }
 
-impl<T> Fok<T> {
-    pub fn new(value: T) -> Self {
-        Self { value }
+impl<T: ?Sized> Rglica<T> {
+    pub fn from_box(bx: &mut Box<T>) -> Self {
+        Self {
+            ptr: &mut **bx
+        }
     }
 }
 
-impl<T> Deref for Fok<T> {
+impl<T: ?Sized> Deref for Rglica<T> {
     type Target = T;
-    fn deref(&self) -> &T {
-        &self.value
+    fn deref(&self) -> &Self::Target {
+        unsafe {
+            self.ptr.as_ref().unwrap()
+        }
     }
 }
 
-impl<T> DerefMut for Fok<T> {
-    fn deref_mut(&mut self) -> &mut T {
-        &mut self.value
+impl<T: ?Sized> DerefMut for Rglica<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe {
+            self.ptr.as_mut().unwrap()
+        }
     }
 }
 
 trait Soka {
-    fn sok(&self);
+    fn sok(&mut self);
 }
 
 #[derive(Default)]
@@ -35,28 +43,33 @@ struct Kal {
 }
 
 impl Soka for Kal {
-    fn sok(&self) {
+    fn sok(&mut self) {
         dbg!("sok");
     }
 }
 
 fn main() {
-    let skidel: Fok<Kal> = Fok::new(Kal::default());
+    let mut sepel_old: Box<dyn Soka> = Box::new(Kal::default());
+    sepel_old.sok();
 
-    skidel.sok();
-    dbg!(skidel.val);
+    let mut skogol_old: Box<Kal> = Box::new(Kal::default());
+    skogol_old.sok();
+    dbg!(skogol_old.val);
 
-    //dbg!(skidel.sok());
+    let mut pookto = Rglica::from_box(&mut sepel_old);
 
-    // let sok: Rect = (1, 2, 3, 4).into();
-    //
-    // dbg!(&sok);
-    //
-    // let mut own = Own::from(sok);
-    //
-    // dbg!(&own);
-    //
-    // own.origin.x += 20.0;
-    //
-    // dbg!(&own);
+    let mut skidrow = Rglica::from_box(&mut skogol_old);
+    
+    dbg!(skidrow.val);
+
+    pookto.sok();
+    skidrow.sok();
+
+    unsafe {
+        pookto.ptr.as_mut().unwrap().sok();
+    }
+
+    unsafe {
+        skidrow.ptr.as_mut().unwrap().sok();
+    }
 }
