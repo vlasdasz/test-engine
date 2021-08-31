@@ -11,6 +11,7 @@ is_linux   = platform.system() == "Linux"
 unix = is_mac or is_linux
 
 ios = False
+cleanup = False
 android = False
 
 if len(sys.argv) > 1:
@@ -18,6 +19,8 @@ if len(sys.argv) > 1:
         ios = True
     if sys.argv[1] == "android":
         android = True
+    if sys.argv[1] == "cleanup":
+        cleanup = True
 
 
 def _get_home():
@@ -74,6 +77,16 @@ def link_deps():
 print("Arch:")
 print(platform.uname())
 
+
+def rm(path):
+    Debug.info("Deleting: " + path)
+    if os.path.exists(path):
+        if os.path.isfile(path):
+            os.remove(path)
+        else:
+            shutil.rmtree(path)
+
+
 def linux_setup():
     print("Lin setup")
     run("sudo apt update")
@@ -89,6 +102,9 @@ def windows_setup():
 def mac_setup():
     print("Mac setup")
     link_deps()
+
+if cleanup:
+    rm(deps_path)
 
 if is_windows:
     windows_setup()
