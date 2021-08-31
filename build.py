@@ -68,6 +68,11 @@ clone("tools", tools_path)
 clone("gles31-sys", gles_path)
 
 
+if cleanup:
+    rm(deps_path)
+    rm(this_path + "/.rdeps")
+
+
 def link_deps():
     try:
         print("Symlimk: " + deps_path + " to: " + this_path + "/.rdeps")
@@ -102,9 +107,6 @@ def windows_setup():
 def mac_setup():
     print("Mac setup")
     link_deps()
-
-if cleanup:
-    rm(deps_path)
 
 if is_windows:
     windows_setup()
