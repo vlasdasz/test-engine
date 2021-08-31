@@ -68,6 +68,14 @@ clone("tools", tools_path)
 clone("gles31-sys", gles_path)
 
 
+def rm(path):
+    if os.path.exists(path):
+        if os.path.isfile(path):
+            os.remove(path)
+        else:
+            shutil.rmtree(path)
+
+
 if cleanup:
     rm(deps_path)
     rm(this_path + "/.rdeps")
@@ -83,13 +91,6 @@ def link_deps():
 print("Arch:")
 print(platform.uname())
 
-
-def rm(path):
-    if os.path.exists(path):
-        if os.path.isfile(path):
-            os.remove(path)
-        else:
-            shutil.rmtree(path)
 
 
 def linux_setup():
