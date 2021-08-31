@@ -1,5 +1,5 @@
 use rapier2d::na::Vector2;
-use tools::refs::{make_shared, new_shared, Shared};
+use tools::refs::{make_shared, Shared};
 use tools::New;
 
 use crate::{Collider, Sprite, SpriteBase};
@@ -8,7 +8,7 @@ use glfw::{Action, Key};
 use gm::Point;
 use rapier2d::prelude::{
     BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
-    JointSet, NarrowPhase, PhysicsPipeline, RigidBody, RigidBodyBuilder, RigidBodySet,
+    JointSet, NarrowPhase, PhysicsPipeline, RigidBodySet,
 };
 
 pub trait Control {
@@ -98,7 +98,7 @@ impl LevelBase {
     // }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    pub fn on_key_pressed(&mut self, key: Key, _action: Action) {
+    pub fn on_key_pressed(&mut self, _key: Key, _action: Action) {
         // if key == Key::A {
         //     self.go_left()
         // } else if key == Key::D {

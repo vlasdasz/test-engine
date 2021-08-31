@@ -1,81 +1,62 @@
-use gm::Rect;
-use std::alloc::alloc;
-use std::alloc::Layout;
-use std::fmt::{Debug, Formatter};
 use std::ops::{Deref, DerefMut};
-use std::ptr::{null, null_mut};
 
 extern crate gm;
 
-struct Own<T: Debug> {
-    pointer: *mut T,
+struct Fok<T> {
+    value: T,
 }
 
-impl<T: Debug> Own<T> {
-    pub fn from(value: T) -> Self {
-        Self {
-            pointer: unsafe {
-                let ptr = alloc(Layout::new::<T>()) as *mut T;
-                *ptr = value;
-                ptr
-            },
-        }
+impl<T> Fok<T> {
+    pub fn new(value: T) -> Self {
+        Self { value }
     }
 }
 
-impl<T: Debug> Deref for Own<T> {
+impl<T> Deref for Fok<T> {
     type Target = T;
     fn deref(&self) -> &T {
-        unsafe { &*self.pointer }
+        &self.value
     }
 }
 
-impl<T: Debug> DerefMut for Own<T> {
+impl<T> DerefMut for Fok<T> {
     fn deref_mut(&mut self) -> &mut T {
-        unsafe { &mut *self.pointer }
+        &mut self.value
     }
 }
 
-impl<T: Debug> Debug for Own<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.deref().fmt(f)
+trait Soka {
+    fn sok(&self);
+}
+
+#[derive(Default)]
+struct Kal {
+    pub val: u32,
+}
+
+impl Soka for Kal {
+    fn sok(&self) {
+        dbg!("sok");
     }
-}
-
-struct Fer<T> {
-    pointer: *mut T,
-}
-
-// impl<T> Fer<T> {
-//     pub fn from()
-// }
-
-struct View {
-    pub superview: *const View,
-    pub subviews: Vec<Box<View>>,
-}
-
-impl View {
-    pub fn new() -> Self {
-        Self {
-            superview: null(),
-            subviews: vec![],
-        }
-    }
-
-    //pub fn add_subview()
 }
 
 fn main() {
-    let sok: Rect = (1, 2, 3, 4).into();
+    let skidel: Fok<Kal> = Fok::new(Kal::default());
 
-    dbg!(&sok);
+    skidel.sok();
+    dbg!(skidel.val);
 
-    let mut own = Own::from(sok);
+    //dbg!(skidel.sok());
 
-    dbg!(&own);
-
-    own.origin.x += 20.0;
-
-    dbg!(&own);
+    // let sok: Rect = (1, 2, 3, 4).into();
+    //
+    // dbg!(&sok);
+    //
+    // let mut own = Own::from(sok);
+    //
+    // dbg!(&own);
+    //
+    // own.origin.x += 20.0;
+    //
+    // dbg!(&own);
 }

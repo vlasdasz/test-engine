@@ -1,15 +1,14 @@
 use crate::{Sprite, SpriteBase};
 use rapier2d::prelude::ColliderHandle;
-use tools::new;
 
 pub struct Collider {
     base: SpriteBase,
-    handle: ColliderHandle,
+    _handle: ColliderHandle,
 }
 
 impl Collider {
-    pub fn make(base: SpriteBase, handle: ColliderHandle) -> Self {
-        Self { base, handle }
+    pub fn make(base: SpriteBase, _handle: ColliderHandle) -> Self {
+        Self { base, _handle }
     }
 }
 

@@ -1,7 +1,6 @@
 use gl_image::Image;
 use gm::{Color, IntoF32, Point, Size};
 use proc_macro::New;
-use rapier2d::{dynamics::RigidBodyHandle, prelude::ColliderHandle};
 
 pub trait Sprite {
     fn sprite(&self) -> &SpriteBase;

@@ -1,5 +1,3 @@
-use cfg_if::cfg_if;
-
 use gl_wrapper::image_loader::ImageLoader;
 use gl_wrapper::GLWrapper;
 use gm::Size;
