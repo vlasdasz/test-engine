@@ -2,6 +2,7 @@
 
 import os
 import sys
+import shutil
 import platform
 
 is_windows = platform.system() == "Windows"
