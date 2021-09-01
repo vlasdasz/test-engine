@@ -7,6 +7,7 @@ use std::{
     cell::RefCell,
     ops::{Deref, DerefMut},
 };
+use tools::rglica::ToRglica;
 use tools::{refs::Shared, AsAny, Event, New, Rglica};
 
 pub trait View: AsAny + New {
@@ -48,9 +49,8 @@ pub trait View: AsAny + New {
     }
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
-        view.view_mut()._superview = Rglica::from_ref(self.view_mut());
+        view.view_mut()._superview = Rglica::from_ref(self.view());
         view.setup();
-
         view.view_mut().lay = Layout::make(&view);
         self.view_mut()._subviews.push(view);
     }
@@ -162,7 +162,7 @@ pub struct ViewBase {
     _frame: Rect,
     _absolute_frame: Rect,
 
-    _superview: Rglica<dyn View>,
+    _superview: Rglica<ViewBase>,
 
     _subviews: Vec<Box<dyn View>>,
 
@@ -170,6 +170,19 @@ pub struct ViewBase {
     _touch_id: RefCell<u64>,
 
     pub lay: Layout,
+}
+
+impl ViewBase {
+    pub fn make_view<T: 'static + View>(&mut self) -> Rglica<T> {
+        let view = Box::new(T::new());
+        let rglica = view.to_rglica();
+        self.add_subview(view);
+        rglica
+    }
+}
+
+pub fn make_view_on<T: 'static + View>(view: &mut dyn View) -> Rglica<T> {
+    view.view_mut().make_view()
 }
 
 impl View for ViewBase {
