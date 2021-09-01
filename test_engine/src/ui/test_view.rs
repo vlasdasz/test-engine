@@ -1,7 +1,7 @@
 use crate::paths;
 use gl_image::Image;
 use gm::flat::PointsPath;
-use gm::{Color, Rect};
+use gm::Color;
 use proc_macro::AsAny;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
@@ -108,8 +108,9 @@ impl View for TestView {
         self.data += 1;
     }
 
-    fn layout(&mut self, _super_frame: &Rect) {
-        Layout::br(self.frame_mut(), _super_frame);
+    fn layout(&mut self) {
+        let sf = self.super_frame().clone();
+        Layout::br(self.frame_mut(), &sf);
     }
 
     fn view(&self) -> &ViewBase {

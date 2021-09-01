@@ -132,13 +132,9 @@ impl Screen for TestScreen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
-        self.root_view
-            .borrow_mut()
-            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+        self.root_view.borrow_mut().calculate_absolute_frame();
 
-        self.debug_view
-            .borrow_mut()
-            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+        self.debug_view.borrow_mut().calculate_absolute_frame();
 
         self.debug_view.borrow_mut().setup(self.debug_view.clone());
 
@@ -169,14 +165,10 @@ impl Screen for TestScreen {
         TestScreen::update_view(self.root_view.clone());
         TestScreen::update_view(self.debug_view.clone());
 
-        self.root_view
-            .borrow_mut()
-            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+        self.root_view.borrow_mut().calculate_absolute_frame();
         self.ui_drawer.draw(self.root_view.clone());
 
-        self.debug_view
-            .borrow_mut()
-            .calculate_absolute_frame(&self.ui_drawer.window_size.into());
+        self.debug_view.borrow_mut().calculate_absolute_frame();
         self.ui_drawer.draw(self.debug_view.clone());
 
         self.ui_drawer.reset_viewport();

@@ -1,5 +1,4 @@
 use chrono::Utc;
-use gm::Rect;
 use proc_macro::AsAny;
 use tools::has_new::new;
 use tools::platform::Platform;
@@ -78,7 +77,7 @@ impl View for DebugView {
         ));
     }
 
-    fn layout(&mut self, _super_frame: &Rect) {
+    fn layout(&mut self) {
         Layout::distribute_vertically(&self.frame().clone(), self.subviews_mut());
         self.scale_view.borrow_mut().frame_mut().size.width = self.frame().width() / 10.0
     }

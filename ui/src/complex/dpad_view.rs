@@ -1,7 +1,6 @@
 use crate::basic::Button;
 use crate::{View, ViewBase};
 use gl_image::Image;
-use gm::Rect;
 use proc_macro::AsAny;
 use tools::has_new::new;
 use tools::refs::{new_shared, Shared};
@@ -66,7 +65,7 @@ impl View for DPadView {
         });
     }
 
-    fn layout(&mut self, _super_frame: &Rect) {
+    fn layout(&mut self) {
         let frame = self.frame();
         let third = frame.width() / 3.0;
         let half = frame.height() / 2.0;

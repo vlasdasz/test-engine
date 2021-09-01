@@ -12,7 +12,7 @@ pub trait View: AsAny + New {
 
     fn update(&mut self) {}
 
-    fn layout(&mut self, _super_frame: &Rect) {}
+    fn layout(&mut self) {}
 
     fn color(&self) -> &Color {
         &self.view()._color
@@ -46,6 +46,7 @@ pub trait View: AsAny + New {
     }
 
     fn add_subview(&mut self, view: Shared<dyn View>) {
+        view.borrow_mut().view_mut()._superview = Rglica::from_ref(self.view_mut());
         view.borrow_mut().setup(view.clone());
         self.view_mut()._subviews.push(view);
     }
@@ -62,16 +63,13 @@ pub trait View: AsAny + New {
         &mut self.view_mut()._subviews
     }
 
-    fn calculate_absolute_frame(&mut self, _super_frame: &Rect) {
+    fn calculate_absolute_frame(&mut self) {
         let view = self.view_mut();
         view._absolute_frame = view._frame;
         view._absolute_frame.origin += view.super_frame().origin;
-        let frame = view._absolute_frame;
-        self.layout(&Rect::DEFAULT);
+        self.layout();
         for view in self.subviews_mut() {
-            view.try_borrow_mut()
-                .unwrap()
-                .calculate_absolute_frame(&frame);
+            view.try_borrow_mut().unwrap().calculate_absolute_frame();
         }
     }
 
