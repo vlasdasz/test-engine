@@ -2,6 +2,7 @@ use crate::{complex::DrawingView, View, ViewBase};
 use gm::{flat::PointsPath, Color, Point};
 use proc_macro::AsAny;
 use std::borrow::BorrowMut;
+use tools::rglica::ToRglica;
 use tools::{
     new,
     refs::{new_shared, Shared},
@@ -33,7 +34,7 @@ impl AnalogStickView {
             .frame_mut()
             .set_center(&(vector + frame.size.center()));
 
-        self.on_direction_change.trigger(&(vector * 0.1));
+        self.on_direction_change.trigger(&mut (vector * 0.1));
     }
 }
 
@@ -43,8 +44,8 @@ impl View for AnalogStickView {
 
         self.enable_touch();
 
-        let mut background = Box::new(DrawingView::new());
-        // self.background = background;
+        let background = Box::new(DrawingView::new());
+        self.background = background.to_rglica();
 
         self.background.frame_mut().size = (SIZE, SIZE).into();
 
@@ -81,21 +82,22 @@ impl View for AnalogStickView {
             Color::LIGHT_GRAY,
         );
 
+        self.direction_stick = direction_stick.to_rglica();
+
         self.add_subview(direction_stick);
 
-        // let a = this.clone();
-        // self.on_touch().subscribe(move |touch| {
-        //     let this = a.borrow();
-        //     let this = this.as_any().downcast_ref::<Self>().unwrap();
-        //     if touch.is_ended() {
-        //         this.direction_stick
-        //             .frame_mut()
-        //             .set_center(&this.frame().size.center());
-        //         this.on_direction_change.trigger(&Point::DEFAULT);
-        //     } else {
-        //         this.on_touch_moved(&touch.position);
-        //     }
-        // });
+        let mut this = Rglica::from_ref(self);
+        self.on_touch().subscribe(move |touch| {
+            if touch.is_ended() {
+                let frame = this.frame().clone();
+                this.direction_stick
+                    .frame_mut()
+                    .set_center(&frame.size.center());
+                this.on_direction_change.trigger(&mut Point::DEFAULT);
+            } else {
+                this.on_touch_moved(&touch.position);
+            }
+        });
     }
 
     fn view(&self) -> &ViewBase {

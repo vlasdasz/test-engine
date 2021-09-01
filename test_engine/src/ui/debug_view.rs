@@ -27,11 +27,11 @@ impl View for DebugView {
         self.frame_mut().size.height = 100.0;
         self.frame_mut().size.width = 280.0;
 
-        let mut fps_label = Box::new(Label::new());
+        let fps_label = Box::new(Label::new());
         self.fps_label = fps_label.to_rglica();
         self.add_subview(fps_label);
 
-        let mut frame_drawn_label = Box::new(Label::new());
+        let frame_drawn_label = Box::new(Label::new());
 
         self.frame_drawn_label = frame_drawn_label.to_rglica();
 
@@ -40,7 +40,7 @@ impl View for DebugView {
         self.fps_label.set_text("fps label");
         self.frame_drawn_label.set_text("frame drawn label");
 
-        let mut scale_view = Box::new(IntView::new());
+        let scale_view = Box::new(IntView::new());
 
         self.scale_view = scale_view.to_rglica();
 

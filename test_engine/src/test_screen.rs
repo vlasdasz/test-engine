@@ -31,7 +31,7 @@ pub struct TestScreen {
 }
 
 impl TestScreen {
-    pub fn on_touch(&self, mut touch: Touch) {
+    pub fn on_touch(&mut self, mut touch: Touch) {
         self.root_view.check_touch(&mut touch);
         self.debug_view.check_touch(&mut touch);
     }
@@ -113,7 +113,7 @@ impl DesktopInput for TestScreen {
         });
     }
 
-    fn on_mouse_key_pressed(&self, _button: glfw::MouseButton, state: Action) {
+    fn on_mouse_key_pressed(&mut self, _button: glfw::MouseButton, state: Action) {
         self.on_touch(Touch {
             id: 1,
             position: self.cursor_position,

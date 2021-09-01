@@ -47,22 +47,22 @@ impl View for DPadView {
         self.add_subview(left);
         self.add_subview(right);
 
-        let a = Rglica::from_ref(self);
+        let mut a = Rglica::from_ref(self);
         self.up.on_tap.subscribe(move |_| {
             a.on_up.trigger(&());
         });
 
-        let a = Rglica::from_ref(self);
+        let mut a = Rglica::from_ref(self);
         self.down.on_tap.subscribe(move |_| {
             a.on_down.trigger(&());
         });
 
-        let a = Rglica::from_ref(self);
+        let mut a = Rglica::from_ref(self);
         self.left.on_tap.subscribe(move |_| {
             a.on_left.trigger(&());
         });
 
-        let a = Rglica::from_ref(self);
+        let mut a = Rglica::from_ref(self);
         self.right.on_tap.subscribe(move |_| {
             a.on_right.trigger(&());
         });

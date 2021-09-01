@@ -13,7 +13,7 @@ pub struct Button {
 impl View for Button {
     fn setup(&mut self) {
         self.enable_touch();
-        let this = Rglica::from_ref(self);
+        let mut this = Rglica::from_ref(self);
         self.on_touch().subscribe(move |touch| {
             if touch.is_began() {
                 this.on_tap.trigger(&());

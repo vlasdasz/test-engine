@@ -1,4 +1,5 @@
 use crate::input::Touch;
+use crate::Layout;
 use gl_image::Image;
 use gm::{Color, Rect};
 use proc_macro::{AsAny, New};
@@ -49,6 +50,8 @@ pub trait View: AsAny + New {
     fn add_subview(&mut self, mut view: Box<dyn View>) {
         view.view_mut()._superview = Rglica::from_ref(self.view_mut());
         view.setup();
+
+        view.view_mut().lay = Layout::make(&view);
         self.view_mut()._subviews.push(view);
     }
 
@@ -82,8 +85,8 @@ pub trait View: AsAny + New {
         self.view()._touch_enabled
     }
 
-    fn handle_touch(&self, touch: &Touch) {
-        self.view()._on_touch.trigger(touch);
+    fn handle_touch(&mut self, touch: &Touch) {
+        self.view_mut()._on_touch.trigger(touch);
     }
 
     fn touch_id(&self) -> u64 {
@@ -107,7 +110,7 @@ pub trait View: AsAny + New {
         &mut self.view_mut()._on_touch
     }
 
-    fn check_touch(&self, touch: &mut Touch) -> bool {
+    fn check_touch(&mut self, touch: &mut Touch) -> bool {
         if self.touch_enabled() {
             if touch.is_moved() && self.touch_id() == touch.id {
                 touch.position -= self.absolute_frame().origin;
@@ -134,7 +137,7 @@ pub trait View: AsAny + New {
             }
         }
 
-        for view in self.subviews() {
+        for view in self.subviews_mut() {
             if view.check_touch(touch) {
                 return true;
             }
@@ -165,6 +168,8 @@ pub struct ViewBase {
 
     _on_touch: Event<Touch>,
     _touch_id: RefCell<u64>,
+
+    pub lay: Layout,
 }
 
 impl View for ViewBase {

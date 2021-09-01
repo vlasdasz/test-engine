@@ -3,6 +3,7 @@ use gl_image::Image;
 use gm::flat::PointsPath;
 use gm::Color;
 use proc_macro::AsAny;
+use proc_macro::New;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::rglica::ToRglica;
@@ -10,20 +11,20 @@ use tools::New;
 use tools::Rglica;
 use ui::basic::Button;
 use ui::complex::{AnalogStickView, DrawingView};
-use ui::{DPadView, ImageView, Label, Layout, View, ViewBase};
+use ui::{DPadView, ImageView, Label, View, ViewBase};
 
 static mut COUNTER: u32 = 0;
 
-#[derive(AsAny)]
+#[derive(AsAny, New)]
 pub struct TestView {
     base: ViewBase,
     pub data: u128,
     pub clicks: u128,
-    // pub image: Shared<ImageView>,
+    pub image: Rglica<ImageView>,
     pub label: Rglica<Label>,
     pub dpad: Rglica<DPadView>,
-    // pub left_stick: Rglica<AnalogStickView>,
-    // pub right_stick: Rglica<AnalogStickView>,
+    pub left_stick: Rglica<AnalogStickView>,
+    pub right_stick: Rglica<AnalogStickView>,
 }
 
 impl View for TestView {
@@ -100,13 +101,18 @@ impl View for TestView {
         //
         // self.add_subview(make_shared(drawing));
         //
-        // self.add_subview(self.left_stick.clone());
-        // self.left_stick.borrow_mut().frame_mut().origin.x = 320.0;
-        // self.left_stick.borrow_mut().frame_mut().origin.y = 300.0;
-        //
-        // self.add_subview(self.right_stick.clone());
-        // self.right_stick.borrow_mut().frame_mut().origin.x = 520.0;
-        // self.right_stick.borrow_mut().frame_mut().origin.y = 300.0;
+
+        let left_stick = Box::new(AnalogStickView::new());
+        self.left_stick = left_stick.to_rglica();
+        self.add_subview(left_stick);
+        self.left_stick.frame_mut().origin.x = 320.0;
+        self.left_stick.frame_mut().origin.y = 300.0;
+
+        let right_stick = Box::new(AnalogStickView::new());
+        self.right_stick = right_stick.to_rglica();
+        self.add_subview(right_stick);
+        self.right_stick.frame_mut().origin.x = 520.0;
+        self.right_stick.frame_mut().origin.y = 300.0;
     }
 
     fn update(&mut self) {
@@ -114,8 +120,7 @@ impl View for TestView {
     }
 
     fn layout(&mut self) {
-        let sf = self.super_frame().clone();
-        Layout::br(self.frame_mut(), &sf);
+        self.view_mut().lay.br();
     }
 
     fn view(&self) -> &ViewBase {
@@ -124,20 +129,5 @@ impl View for TestView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-}
-
-impl New for TestView {
-    fn new() -> Self {
-        TestView {
-            base: new(),
-            data: 0,
-            clicks: 0,
-            // image: new_shared(),
-            label: new(),
-            dpad: new(),
-            // left_stick: new_shared(),
-            // right_stick: new_shared(),
-        }
     }
 }

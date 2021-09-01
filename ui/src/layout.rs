@@ -1,14 +1,29 @@
 use crate::View;
 use gm::Rect;
+use proc_macro::New;
 use std::cell::RefMut;
 use tools::refs::Shared;
+use tools::Rglica;
 
-pub struct Layout;
+#[derive(New)]
+pub struct Layout {
+    frame: Rglica<Rect>,
+    super_frame: Rglica<Rect>,
+}
 
 impl Layout {
-    pub fn br(frame: &mut Rect, super_frame: &Rect) {
-        frame.origin.x = super_frame.size.width - frame.size.width;
-        frame.origin.y = super_frame.size.height - frame.size.height;
+    pub fn make(view: &Box<dyn View>) -> Self {
+        Self {
+            frame: Rglica::from_ref(view.frame()),
+            super_frame: Rglica::from_ref(view.super_frame()),
+        }
+    }
+}
+
+impl Layout {
+    pub fn br(&mut self) {
+        self.frame.origin.x = self.super_frame.size.width - self.frame.size.width;
+        self.frame.origin.y = self.super_frame.size.height - self.frame.size.height;
     }
 
     pub fn distribute_vertically(frame: &Rect, views: &mut [Box<dyn View>]) {
