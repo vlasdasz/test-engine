@@ -5,12 +5,12 @@ use gm::Color;
 use proc_macro::AsAny;
 use tools::has_new::new;
 use tools::refs::{make_shared, new_shared, Shared};
+use tools::rglica::ToRglica;
 use tools::New;
 use tools::Rglica;
 use ui::basic::Button;
 use ui::complex::{AnalogStickView, DrawingView};
 use ui::{DPadView, ImageView, Label, Layout, View, ViewBase};
-use tools::rglica::ToRglica;
 
 static mut COUNTER: u32 = 0;
 

@@ -1,12 +1,12 @@
 use crate::input::Touch;
 use gl_image::Image;
 use gm::{Color, Rect};
-use proc_macro::AsAny;
-use proc_macro::New;
-use std::cell::RefCell;
-use tools::refs::Shared;
-use tools::{AsAny, Event, New, Rglica};
-use std::ops::Deref;
+use proc_macro::{AsAny, New};
+use std::{
+    cell::RefCell,
+    ops::{Deref, DerefMut},
+};
+use tools::{refs::Shared, AsAny, Event, New, Rglica};
 
 pub trait View: AsAny + New {
     fn setup(&mut self) {}
@@ -174,12 +174,5 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
-    }
-}
-
-impl Deref for dyn View {
-    type Target = ViewBase;
-    fn deref(&self) -> &Self::Target {
-        self.view()
     }
 }

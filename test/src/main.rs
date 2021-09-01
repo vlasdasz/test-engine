@@ -17,6 +17,4 @@ impl Soka for Kal {
     }
 }
 
-fn main() {
-
-}
+fn main() {}

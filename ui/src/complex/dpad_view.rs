@@ -1,12 +1,12 @@
 use crate::{basic::Button, View, ViewBase};
 use gl_image::Image;
 use proc_macro::AsAny;
+use tools::rglica::ToRglica;
 use tools::{
     has_new::new,
     refs::{new_shared, Shared},
     Event, New, Rglica,
 };
-use tools::rglica::ToRglica;
 
 #[derive(AsAny)]
 pub struct DPadView {
