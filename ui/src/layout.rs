@@ -11,12 +11,10 @@ impl Layout {
         frame.origin.y = super_frame.size.height - frame.size.height;
     }
 
-    pub fn distribute_vertically(frame: &Rect, views: &mut [Shared<dyn View>]) {
+    pub fn distribute_vertically(frame: &Rect, views: &mut [Box<dyn View>]) {
         if views.is_empty() {
             return;
         }
-
-        let mut views: Vec<RefMut<dyn View>> = views.iter_mut().map(|a| a.borrow_mut()).collect();
 
         let mut frames: Vec<&mut Rect> = views.iter_mut().map(|a| a.frame_mut()).collect();
         let height: f32 = frame.height() / frames.len() as f32;

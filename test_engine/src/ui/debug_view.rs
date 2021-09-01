@@ -21,28 +21,28 @@ pub struct DebugView {
 }
 
 impl View for DebugView {
-    fn setup(&mut self, _: Shared<dyn View>) {
-        self.frame_mut().size.height = 100.0;
-        self.frame_mut().size.width = 280.0;
-
-        self.add_subview(self.fps_label.clone());
-        self.add_subview(self.frame_drawn_label.clone());
-
-        self.fps_label.borrow_mut().set_text("fps label");
-        self.frame_drawn_label
-            .borrow_mut()
-            .set_text("frame drawn label");
-
-        self.add_subview(self.scale_view.clone());
-
-        self.scale_view.borrow_mut().on_change.subscribe(|val| {
-            dbg!(val);
-        });
-
-        if Platform::MOBILE {
-            self.frame_mut().origin.x = 28.0;
-            self.frame_mut().origin.y = 28.0;
-        }
+    fn setup(&mut self) {
+        // self.frame_mut().size.height = 100.0;
+        // self.frame_mut().size.width = 280.0;
+        //
+        // self.add_subview(self.fps_label.clone());
+        // self.add_subview(self.frame_drawn_label.clone());
+        //
+        // self.fps_label.borrow_mut().set_text("fps label");
+        // self.frame_drawn_label
+        //     .borrow_mut()
+        //     .set_text("frame drawn label");
+        //
+        // self.add_subview(self.scale_view.clone());
+        //
+        // self.scale_view.borrow_mut().on_change.subscribe(|val| {
+        //     dbg!(val);
+        // });
+        //
+        // if Platform::MOBILE {
+        //     self.frame_mut().origin.x = 28.0;
+        //     self.frame_mut().origin.y = 28.0;
+        // }
     }
 
     fn update(&mut self) {

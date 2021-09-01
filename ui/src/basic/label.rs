@@ -56,7 +56,7 @@ impl View for Label {
 
             advance += glyph.advance as f32;
 
-            self.add_subview(make_shared(glyph_view));
+            self.add_subview(Box::new(glyph_view));
         }
 
         content_size.width = last_max_x;

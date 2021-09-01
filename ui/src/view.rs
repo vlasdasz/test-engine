@@ -8,7 +8,7 @@ use tools::refs::Shared;
 use tools::{AsAny, Event, New, Rglica};
 
 pub trait View: AsAny + New {
-    fn setup(&mut self, _this: Shared<dyn View>) {}
+    fn setup(&mut self) {}
 
     fn update(&mut self) {}
 
@@ -45,9 +45,9 @@ pub trait View: AsAny + New {
         &self.view()._absolute_frame
     }
 
-    fn add_subview(&mut self, view: Shared<dyn View>) {
-        view.borrow_mut().view_mut()._superview = Rglica::from_ref(self.view_mut());
-        view.borrow_mut().setup(view.clone());
+    fn add_subview(&mut self, mut view: Box<dyn View>) {
+        view.view_mut()._superview = Rglica::from_ref(self.view_mut());
+        view.setup();
         self.view_mut()._subviews.push(view);
     }
 
@@ -55,11 +55,11 @@ pub trait View: AsAny + New {
         self.view_mut()._subviews.clear()
     }
 
-    fn subviews(&self) -> &[Shared<dyn View>] {
+    fn subviews(&self) -> &[Box<dyn View>] {
         &self.view()._subviews
     }
 
-    fn subviews_mut(&mut self) -> &mut [Shared<dyn View>] {
+    fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
         &mut self.view_mut()._subviews
     }
 
@@ -69,7 +69,7 @@ pub trait View: AsAny + New {
         view._absolute_frame.origin += view.super_frame().origin;
         self.layout();
         for view in self.subviews_mut() {
-            view.try_borrow_mut().unwrap().calculate_absolute_frame();
+            view.calculate_absolute_frame();
         }
     }
 
@@ -134,7 +134,7 @@ pub trait View: AsAny + New {
         }
 
         for view in self.subviews() {
-            if view.borrow().check_touch(touch) {
+            if view.check_touch(touch) {
                 return true;
             }
         }
@@ -160,7 +160,7 @@ pub struct ViewBase {
 
     _superview: Rglica<dyn View>,
 
-    _subviews: Vec<Shared<dyn View>>,
+    _subviews: Vec<Box<dyn View>>,
 
     _on_touch: Event<Touch>,
     _touch_id: RefCell<u64>,

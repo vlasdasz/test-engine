@@ -1,9 +1,7 @@
 use crate::{View, ViewBase};
 use gl_image::Image;
-use proc_macro::AsAny;
-use proc_macro::New;
-use tools::refs::Shared;
-use tools::Event;
+use proc_macro::{AsAny, New};
+use tools::{refs::Shared, Event, Rglica};
 
 #[derive(AsAny, New)]
 pub struct Button {
@@ -13,13 +11,11 @@ pub struct Button {
 }
 
 impl View for Button {
-    fn setup(&mut self, this: Shared<dyn View>) {
+    fn setup(&mut self) {
         self.enable_touch();
-        let this = this.clone();
+        let this = Rglica::from_ref(self);
         self.on_touch().subscribe(move |touch| {
             if touch.is_began() {
-                let this = this.borrow();
-                let this = this.as_any().downcast_ref::<Button>().unwrap();
                 this.on_tap.trigger(&());
             }
         });

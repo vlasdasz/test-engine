@@ -28,24 +28,23 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn draw(&self, view: Shared<dyn View>) {
-        if let Some(image) = view.borrow().image() {
-            let view = view.borrow();
+    pub fn draw(&self, view: &mut Box<dyn View>) {
+        if let Some(image) = view.image() {
             self.draw_image_in_rect(&image, view.absolute_frame(), view.color());
         }
 
-        self.fill_rect(view.borrow().absolute_frame(), &view.borrow().color());
+        self.fill_rect(view.absolute_frame(), &view.color());
 
-        self.draw_rect(view.borrow().absolute_frame(), &Color::TURQUOISE);
+        self.draw_rect(view.absolute_frame(), &Color::TURQUOISE);
 
-        if let Some(drawing_view) = view.borrow().as_any().downcast_ref::<DrawingView>() {
+        if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in &drawing_view.paths {
                 self.draw_path_in_rect(path, drawing_view.absolute_frame());
             }
         }
 
-        for view in view.borrow_mut().subviews_mut() {
-            self.draw(view.clone())
+        for view in view.subviews_mut() {
+            self.draw(view)
         }
     }
 }

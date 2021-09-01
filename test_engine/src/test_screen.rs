@@ -10,8 +10,11 @@ use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
 use sprites::LevelBase;
 use std::rc::Rc;
-use tools::refs::{make_shared, new_shared, Shared};
-use tools::New;
+use tools::{
+    new,
+    refs::{make_shared, new_shared, Shared},
+    New,
+};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
@@ -20,8 +23,8 @@ use ui::{View, ViewBase};
 pub struct TestScreen {
     cursor_position: Point,
     assets: Rc<Assets>,
-    debug_view: Shared<DebugView>,
-    root_view: Shared<dyn View>,
+    debug_view: Box<dyn View>,
+    root_view: Box<dyn View>,
     level: Shared<LevelBase>,
     ui_drawer: UIDrawer,
     sprites_drawer: SpritesDrawer,
@@ -29,15 +32,14 @@ pub struct TestScreen {
 
 impl TestScreen {
     pub fn on_touch(&self, mut touch: Touch) {
-        self.root_view.borrow_mut().check_touch(&mut touch);
-        self.debug_view.borrow_mut().check_touch(&mut touch);
+        self.root_view.check_touch(&mut touch);
+        self.debug_view.check_touch(&mut touch);
     }
 
-    fn update_view(view: Shared<dyn View>) {
-        let mut view = view.try_borrow_mut().unwrap();
+    fn update_view(view: &mut Box<dyn View>) {
         view.update();
         for view in view.subviews_mut() {
-            TestScreen::update_view(view.clone());
+            Self::update_view(view);
         }
     }
 
@@ -96,7 +98,7 @@ impl TestScreen {
         //         a.borrow_mut().add_impulse(direction);
         //     });
 
-        self.root_view.borrow_mut().add_subview(make_shared(view));
+        self.root_view.add_subview(Box::new(view));
     }
 }
 
@@ -132,11 +134,11 @@ impl Screen for TestScreen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
-        self.root_view.borrow_mut().calculate_absolute_frame();
+        self.root_view.calculate_absolute_frame();
 
-        self.debug_view.borrow_mut().calculate_absolute_frame();
+        self.debug_view.calculate_absolute_frame();
 
-        self.debug_view.borrow_mut().setup(self.debug_view.clone());
+        self.debug_view.setup();
 
         self.setup_level();
         self.setup_test_view();
@@ -162,21 +164,21 @@ impl Screen for TestScreen {
         //     self.sprites_drawer.draw(&wall);
         // }
 
-        TestScreen::update_view(self.root_view.clone());
-        TestScreen::update_view(self.debug_view.clone());
+        TestScreen::update_view(&mut self.root_view);
+        TestScreen::update_view(&mut self.debug_view);
 
-        self.root_view.borrow_mut().calculate_absolute_frame();
-        self.ui_drawer.draw(self.root_view.clone());
+        self.root_view.calculate_absolute_frame();
+        self.ui_drawer.draw(&mut self.root_view);
 
-        self.debug_view.borrow_mut().calculate_absolute_frame();
-        self.ui_drawer.draw(self.debug_view.clone());
+        self.debug_view.calculate_absolute_frame();
+        self.ui_drawer.draw(&mut self.debug_view);
 
         self.ui_drawer.reset_viewport();
     }
 
     fn set_size(&mut self, size: Size) {
         self.ui_drawer.set_size(&size);
-        self.root_view.borrow_mut().set_frame(Rect::from(size));
+        self.root_view.set_frame(Rect::from(size));
         self.sprites_drawer.set_resolution(&size);
         self.sprites_drawer.set_camera_position(&(0, 0).into());
         self.update();
@@ -192,8 +194,8 @@ impl New for TestScreen {
         TestScreen {
             cursor_position: Point::new(),
             assets: assets.clone(),
-            debug_view: new_shared::<DebugView>(),
-            root_view: new_shared::<ViewBase>(),
+            debug_view: Box::new(DebugView::new()),
+            root_view: Box::new(ViewBase::new()),
             level: new_shared(),
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: SpritesDrawer::new(assets),
