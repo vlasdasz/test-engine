@@ -5,7 +5,6 @@ use gm::{Color, Rect, Size};
 use std::rc::Rc;
 use tools::new;
 use tools::platform::Platform;
-use tools::refs::Shared;
 use ui::complex::{DrawingView, PathData};
 use ui::View;
 

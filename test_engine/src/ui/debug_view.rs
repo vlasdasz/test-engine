@@ -1,19 +1,20 @@
 use chrono::Utc;
 use proc_macro::AsAny;
-use tools::has_new::new;
-use tools::platform::Platform;
-use tools::refs::{new_shared, Shared};
-use tools::New;
-use ui::complex::IntView;
-use ui::{Label, Layout, View, ViewBase};
+use tools::{
+    has_new::new,
+    platform::Platform,
+    refs::{new_shared, Shared},
+    New, Rglica,
+};
+use ui::{complex::IntView, Label, Layout, View, ViewBase};
 
 #[derive(AsAny)]
 pub struct DebugView {
     view: ViewBase,
-    fps_label: Shared<Label>,
-    frame_drawn_label: Shared<Label>,
+    fps_label: Rglica<Label>,
+    frame_drawn_label: Rglica<Label>,
     frame_drawn: u64,
-    scale_view: Shared<IntView>,
+    scale_view: Rglica<IntView>,
     prev_time: i64,
     min_fps: u64,
     max_fps: u64,
@@ -48,7 +49,6 @@ impl View for DebugView {
     fn update(&mut self) {
         self.frame_drawn += 1;
         self.frame_drawn_label
-            .borrow_mut()
             .set_text(&format!("Frame drawn: {}", self.frame_drawn));
 
         let now = Utc::now().timestamp_nanos();
@@ -71,7 +71,7 @@ impl View for DebugView {
             self.skipped += 1;
         }
 
-        self.fps_label.borrow_mut().set_text(&format!(
+        self.fps_label.set_text(&format!(
             "FPS: {} min: {} max: {}",
             fps, self.min_fps, self.max_fps
         ));
@@ -79,7 +79,7 @@ impl View for DebugView {
 
     fn layout(&mut self) {
         Layout::distribute_vertically(&self.frame().clone(), self.subviews_mut());
-        self.scale_view.borrow_mut().frame_mut().size.width = self.frame().width() / 10.0
+        self.scale_view.frame_mut().size.width = self.frame().width() / 10.0
     }
 
     fn view(&self) -> &ViewBase {
@@ -95,10 +95,10 @@ impl New for DebugView {
     fn new() -> Self {
         DebugView {
             view: new(),
-            fps_label: new_shared(),
-            frame_drawn_label: new_shared(),
+            fps_label: new(),
+            frame_drawn_label: new(),
             frame_drawn: 0,
-            scale_view: new_shared(),
+            scale_view: new(),
             prev_time: Utc::now().timestamp_nanos(),
             min_fps: u64::MAX,
             max_fps: u64::MIN,

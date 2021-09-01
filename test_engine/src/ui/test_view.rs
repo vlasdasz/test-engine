@@ -19,7 +19,7 @@ pub struct TestView {
     pub data: u128,
     pub clicks: u128,
     // pub image: Shared<ImageView>,
-    // pub label: Shared<Label>,
+    pub label: Rglica<Label>,
     pub dpad: Rglica<DPadView>,
     // pub left_stick: Shared<AnalogStickView>,
     // pub right_stick: Shared<AnalogStickView>,
@@ -36,13 +36,13 @@ impl View for TestView {
         // drop(cat_image);
         // self.add_subview(self.image.clone());
         //
-        // let label = self.label.clone();
-        // let mut label = label.borrow_mut();
-        // label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
-        // label.frame_mut().origin.y = 240.0;
-        // drop(label);
-        // self.add_subview(self.label.clone());
-        //
+
+        let mut label = Box::new(Label::new());
+        label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
+        label.frame_mut().origin.y = 240.0;
+        self.label = Rglica::from_box(&mut label);
+        self.add_subview(label);
+
         // let mut view = ViewBase::new();
         // view.set_frame((10, 20, 50, 50).into());
         // view.set_color(Color::WHITE);
@@ -133,7 +133,7 @@ impl New for TestView {
             data: 0,
             clicks: 0,
             // image: new_shared(),
-            // label: new_shared(),
+            label: new(),
             dpad: new(),
             // left_stick: new_shared(),
             // right_stick: new_shared(),
