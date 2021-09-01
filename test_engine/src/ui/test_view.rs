@@ -10,6 +10,7 @@ use tools::Rglica;
 use ui::basic::Button;
 use ui::complex::{AnalogStickView, DrawingView};
 use ui::{DPadView, ImageView, Label, Layout, View, ViewBase};
+use tools::rglica::ToRglica;
 
 static mut COUNTER: u32 = 0;
 
@@ -21,14 +22,14 @@ pub struct TestView {
     // pub image: Shared<ImageView>,
     pub label: Rglica<Label>,
     pub dpad: Rglica<DPadView>,
-    // pub left_stick: Shared<AnalogStickView>,
-    // pub right_stick: Shared<AnalogStickView>,
+    // pub left_stick: Rglica<AnalogStickView>,
+    // pub right_stick: Rglica<AnalogStickView>,
 }
 
 impl View for TestView {
     fn setup(&mut self) {
-        // self.set_frame((10, 10, 1000, 500).into());
-        //
+        self.set_frame((10, 10, 1000, 500).into());
+
         // let cat_image = self.image.clone();
         // let mut cat_image = cat_image.borrow_mut();
         // cat_image.image = Image::load(&paths::images().join("cat.jpg"));
@@ -40,7 +41,7 @@ impl View for TestView {
         let mut label = Box::new(Label::new());
         label.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
         label.frame_mut().origin.y = 240.0;
-        self.label = Rglica::from_box(&mut label);
+        self.label = label.to_rglica();
         self.add_subview(label);
 
         // let mut view = ViewBase::new();
@@ -67,7 +68,7 @@ impl View for TestView {
         dpad.frame_mut().size.height = 200.0;
         dpad.frame_mut().origin.y = 300.0;
 
-        self.dpad = Rglica::from_box(&mut dpad);
+        self.dpad = dpad.to_rglica();
 
         self.add_subview(dpad);
 

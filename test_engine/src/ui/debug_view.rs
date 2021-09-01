@@ -7,6 +7,7 @@ use tools::{
     New, Rglica,
 };
 use ui::{complex::IntView, Label, Layout, View, ViewBase};
+use tools::rglica::ToRglica;
 
 #[derive(AsAny)]
 pub struct DebugView {
@@ -23,27 +24,36 @@ pub struct DebugView {
 
 impl View for DebugView {
     fn setup(&mut self) {
-        // self.frame_mut().size.height = 100.0;
-        // self.frame_mut().size.width = 280.0;
-        //
-        // self.add_subview(self.fps_label.clone());
-        // self.add_subview(self.frame_drawn_label.clone());
-        //
-        // self.fps_label.borrow_mut().set_text("fps label");
-        // self.frame_drawn_label
-        //     .borrow_mut()
-        //     .set_text("frame drawn label");
-        //
-        // self.add_subview(self.scale_view.clone());
-        //
-        // self.scale_view.borrow_mut().on_change.subscribe(|val| {
-        //     dbg!(val);
-        // });
-        //
-        // if Platform::MOBILE {
-        //     self.frame_mut().origin.x = 28.0;
-        //     self.frame_mut().origin.y = 28.0;
-        // }
+        self.frame_mut().size.height = 100.0;
+        self.frame_mut().size.width = 280.0;
+
+        let mut fps_label = Box::new(Label::new());
+        self.fps_label = fps_label.to_rglica();
+        self.add_subview(fps_label);
+
+        let mut frame_drawn_label = Box::new(Label::new());
+
+        self.frame_drawn_label = frame_drawn_label.to_rglica();
+
+        self.add_subview(frame_drawn_label);
+
+        self.fps_label.set_text("fps label");
+        self.frame_drawn_label.set_text("frame drawn label");
+
+        let mut scale_view = Box::new(IntView::new());
+
+        self.scale_view = scale_view.to_rglica();
+
+        self.add_subview(scale_view);
+
+        self.scale_view.on_change.subscribe(|val| {
+            dbg!(val);
+        });
+
+        if Platform::MOBILE {
+            self.frame_mut().origin.x = 28.0;
+            self.frame_mut().origin.y = 28.0;
+        }
     }
 
     fn update(&mut self) {

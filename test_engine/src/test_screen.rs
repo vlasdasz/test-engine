@@ -136,9 +136,9 @@ impl Screen for TestScreen {
 
         self.root_view.calculate_absolute_frame();
 
-        self.debug_view.calculate_absolute_frame();
-
         self.debug_view.setup();
+
+        self.debug_view.calculate_absolute_frame();
 
         self.setup_level();
         self.setup_test_view();

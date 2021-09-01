@@ -1,6 +1,7 @@
 use crate::{complex::DrawingView, View, ViewBase};
 use gm::{flat::PointsPath, Color, Point};
 use proc_macro::AsAny;
+use std::borrow::BorrowMut;
 use tools::{
     new,
     refs::{new_shared, Shared},
@@ -43,7 +44,7 @@ impl View for AnalogStickView {
         self.enable_touch();
 
         let mut background = Box::new(DrawingView::new());
-        self.background = Rglica::from_box(&mut background);
+        // self.background = background;
 
         self.background.frame_mut().size = (SIZE, SIZE).into();
 

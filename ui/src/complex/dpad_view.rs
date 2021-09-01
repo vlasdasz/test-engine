@@ -6,6 +6,7 @@ use tools::{
     refs::{new_shared, Shared},
     Event, New, Rglica,
 };
+use tools::rglica::ToRglica;
 
 #[derive(AsAny)]
 pub struct DPadView {
@@ -36,10 +37,10 @@ impl View for DPadView {
         let mut left = Box::new(Button::new());
         let mut right = Box::new(Button::new());
 
-        self.up = Rglica::from_box(&mut up);
-        self.down = Rglica::from_box(&mut down);
-        self.left = Rglica::from_box(&mut left);
-        self.right = Rglica::from_box(&mut right);
+        self.up = up.to_rglica();
+        self.down = down.to_rglica();
+        self.left = left.to_rglica();
+        self.right = right.to_rglica();
 
         self.add_subview(up);
         self.add_subview(down);
