@@ -38,6 +38,20 @@ gles_path = deps_path + "gles31-sys/"
 #soil_path = deps_path + "soil2/"
 this_path = os.path.dirname(os.path.abspath(__file__))
 
+def rm(path):
+    print("Removing: " + path)
+    if os.path.exists(path):
+        if os.path.isfile(path):
+            os.remove(path)
+        else:
+            shutil.rmtree(path)
+
+
+if cleanup:
+    rm(tools_path)
+    rm(gles_path)
+
+
 def run(string):
     print(string)
     if os.system(string):
@@ -66,19 +80,6 @@ if android:
 #clone("soil2", soil_path)
 clone("tools", tools_path)
 clone("gles31-sys", gles_path)
-
-
-def rm(path):
-    if os.path.exists(path):
-        if os.path.isfile(path):
-            os.remove(path)
-        else:
-            shutil.rmtree(path)
-
-
-if cleanup:
-    rm(deps_path)
-    rm(this_path + "/.rdeps")
 
 
 def link_deps():
