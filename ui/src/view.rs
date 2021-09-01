@@ -6,6 +6,7 @@ use proc_macro::New;
 use std::cell::RefCell;
 use tools::refs::Shared;
 use tools::{AsAny, Event, New, Rglica};
+use std::ops::Deref;
 
 pub trait View: AsAny + New {
     fn setup(&mut self) {}
@@ -173,5 +174,12 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
+    }
+}
+
+impl Deref for dyn View {
+    type Target = ViewBase;
+    fn deref(&self) -> &Self::Target {
+        self.view()
     }
 }
