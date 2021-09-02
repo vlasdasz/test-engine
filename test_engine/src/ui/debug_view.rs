@@ -7,7 +7,8 @@ use tools::{
     refs::{new_shared, Shared},
     New, Rglica,
 };
-use ui::{complex::IntView, Label, Layout, View, ViewBase};
+use ui::basic::Placer;
+use ui::{complex::IntView, Label, View, ViewBase};
 
 #[derive(AsAny)]
 pub struct DebugView {
@@ -88,7 +89,7 @@ impl View for DebugView {
     }
 
     fn layout(&mut self) {
-        Layout::distribute_vertically(&self.frame().clone(), self.subviews_mut());
+        Placer::distribute_vertically(&self.frame().clone(), self.subviews_mut());
         self.scale_view.frame_mut().size.width = self.frame().width() / 10.0
     }
 

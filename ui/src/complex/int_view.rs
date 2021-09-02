@@ -1,5 +1,5 @@
-use crate::basic::Button;
-use crate::{Label, Layout, View, ViewBase};
+use crate::basic::{Button, Placer};
+use crate::{Label, View, ViewBase};
 use proc_macro::AsAny;
 use std::cell::RefCell;
 use std::ops::AddAssign;
@@ -50,7 +50,7 @@ impl View for IntView {
     }
 
     fn layout(&mut self) {
-        Layout::distribute_vertically(&self.frame().clone(), self.subviews_mut());
+        Placer::distribute_vertically(&self.frame().clone(), self.subviews_mut());
     }
 
     fn view(&self) -> &ViewBase {

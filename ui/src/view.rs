@@ -1,6 +1,5 @@
 use crate::basic::Placer;
 use crate::input::Touch;
-use crate::Layout;
 use gl_image::Image;
 use gm::{Color, Rect};
 use proc_macro::{AsAny, New};
@@ -53,7 +52,6 @@ pub trait View: AsAny + New {
         view.view_mut()._superview = Rglica::from_ref(self.view());
         view.view_mut()._placer = Placer::make(&view);
         view.setup();
-        view.view_mut().lay = Layout::make(&view);
         self.view_mut()._subviews.push(view);
     }
 
@@ -176,8 +174,6 @@ pub struct ViewBase {
     _touch_id: RefCell<u64>,
 
     _placer: Placer,
-
-    pub lay: Layout,
 }
 
 impl ViewBase {

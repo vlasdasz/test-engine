@@ -112,7 +112,7 @@ impl View for TestView {
     }
 
     fn layout(&mut self) {
-        self.view_mut().lay.br();
+        self.placer().br();
     }
 
     fn view(&self) -> &ViewBase {

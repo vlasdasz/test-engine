@@ -9,6 +9,7 @@ use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
 use sprites::LevelBase;
+use std::ops::DerefMut;
 use std::rc::Rc;
 use tools::{
     new,
@@ -18,8 +19,7 @@ use tools::{
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
-use ui::{View, ViewBase, make_view_on, SubviewsTestView};
-use std::ops::DerefMut;
+use ui::{make_view_on, SubviewsTestView, View, ViewBase};
 
 pub struct TestScreen {
     cursor_position: Point,
@@ -170,13 +170,13 @@ impl Screen for TestScreen {
         // }
 
         TestScreen::update_view(&mut self.root_view);
-        TestScreen::update_view(&mut self.debug_view);
-
         self.root_view.calculate_absolute_frame();
         self.ui_drawer.draw(&mut self.root_view);
 
-        self.debug_view.calculate_absolute_frame();
-        self.ui_drawer.draw(&mut self.debug_view);
+        // TestScreen::update_view(&mut self.debug_view);
+
+        // self.debug_view.calculate_absolute_frame();
+        //  self.ui_drawer.draw(&mut self.debug_view);
 
         self.ui_drawer.reset_viewport();
     }
