@@ -18,7 +18,8 @@ use tools::{
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
-use ui::{View, ViewBase};
+use ui::{View, ViewBase, make_view_on, SubviewsTestView};
+use std::ops::DerefMut;
 
 pub struct TestScreen {
     cursor_position: Point,
@@ -33,7 +34,7 @@ pub struct TestScreen {
 impl TestScreen {
     pub fn on_touch(&mut self, mut touch: Touch) {
         self.root_view.check_touch(&mut touch);
-        self.debug_view.check_touch(&mut touch);
+        //self.debug_view.check_touch(&mut touch);
     }
 
     fn update_view(view: &mut Box<dyn View>) {
@@ -98,7 +99,11 @@ impl TestScreen {
         //         a.borrow_mut().add_impulse(direction);
         //     });
 
-        self.root_view.add_subview(Box::new(view));
+        let mut deb = make_view_on::<SubviewsTestView>(self.root_view.deref_mut());
+
+        deb.frame_mut().set_center((300.0, 300.0).into());
+
+        //self.root_view.add_subview(Box::new(view));
     }
 }
 

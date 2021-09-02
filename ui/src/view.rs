@@ -1,3 +1,4 @@
+use crate::basic::Placer;
 use crate::input::Touch;
 use crate::Layout;
 use gl_image::Image;
@@ -50,6 +51,7 @@ pub trait View: AsAny + New {
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
         view.view_mut()._superview = Rglica::from_ref(self.view());
+        view.view_mut()._placer = Placer::make(&view);
         view.setup();
         view.view_mut().lay = Layout::make(&view);
         self.view_mut()._subviews.push(view);
@@ -150,6 +152,10 @@ pub trait View: AsAny + New {
         None
     }
 
+    fn placer(&mut self) -> &mut Placer {
+        &mut self.view_mut()._placer
+    }
+
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
 }
@@ -168,6 +174,8 @@ pub struct ViewBase {
 
     _on_touch: Event<Touch>,
     _touch_id: RefCell<u64>,
+
+    _placer: Placer,
 
     pub lay: Layout,
 }

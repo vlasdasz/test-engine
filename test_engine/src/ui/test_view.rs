@@ -59,14 +59,11 @@ impl View for TestView {
             COUNTER += 1;
         });
 
-        let mut dpad = Box::new(DPadView::new());
-        dpad.frame_mut().size.width = 280.0;
-        dpad.frame_mut().size.height = 200.0;
-        dpad.frame_mut().origin.y = 300.0;
+        self.dpad = make_view_on(self);
 
-        self.dpad = dpad.to_rglica();
-
-        self.add_subview(dpad);
+        self.dpad.frame_mut().size.width = 280.0;
+        self.dpad.frame_mut().size.height = 200.0;
+        self.dpad.frame_mut().origin.y = 300.0;
 
         self.dpad.set_images(
             Image::load(&paths::images().join("up.png")),
