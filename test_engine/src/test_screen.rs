@@ -3,7 +3,6 @@ use crate::paths;
 use crate::sprites::SpritesDrawer;
 use crate::ui::ui_drawer::UIDrawer;
 use crate::ui::{DebugView, TestView};
-use tools::Boxed;
 use gl_image::Image;
 use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -12,9 +11,9 @@ use gm::{Color, Point, Rect, Size};
 use sprites::LevelBase;
 use std::ops::DerefMut;
 use std::rc::Rc;
+use tools::Boxed;
 use tools::{
-    new,
-    refs::{make_shared, new_shared, Shared},
+    refs::{new_shared, Shared},
     New,
 };
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -75,7 +74,7 @@ impl TestScreen {
     }
 
     fn setup_test_view(&mut self) {
-        let test_view = make_view_on::<TestView>(self.root_view.deref_mut());
+        let _test_view = make_view_on::<TestView>(self.root_view.deref_mut());
 
         // let a = self.level.clone();
         // view.dpad.borrow_mut().on_up.subscribe(move |_| {
@@ -100,10 +99,7 @@ impl TestScreen {
         //         a.borrow_mut().add_impulse(direction);
         //     });
 
-
-
         let mut deb = make_view_on::<SubviewsTestView>(self.root_view.deref_mut());
-
         deb.frame_mut().set_center((300.0, 300.0).into());
 
         //self.root_view.add_subview(Box::new(view));
@@ -177,7 +173,7 @@ impl Screen for TestScreen {
 
         TestScreen::update_view(&mut self.debug_view);
         self.debug_view.calculate_absolute_frame();
-         self.ui_drawer.draw(&mut self.debug_view);
+        self.ui_drawer.draw(&mut self.debug_view);
 
         self.ui_drawer.reset_viewport();
     }

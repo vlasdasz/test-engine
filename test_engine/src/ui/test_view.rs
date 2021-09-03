@@ -4,10 +4,8 @@ use gm::flat::PointsPath;
 use gm::Color;
 use proc_macro::AsAny;
 use proc_macro::Boxed;
-use tools::has_new::new;
-use tools::Boxed;
-use tools::refs::{make_shared, new_shared, Shared};
 use tools::rglica::ToRglica;
+use tools::Boxed;
 use tools::New;
 use tools::Rglica;
 use ui::basic::Button;
@@ -77,23 +75,20 @@ impl View for TestView {
             dbg!("kkk");
         });
 
-        // let mut drawing = DrawingView::new();
-        //
-        // drawing.set_frame((500, 10, 200, 200).into());
-        //
-        // let mut path = PointsPath::new();
-        //
-        // path.add_point((1, 20).into());
-        // path.add_point((100, 30).into());
-        // path.add_point((1, 40).into());
-        // path.add_point((200, 50).into());
-        // path.add_point((1, 60).into());
-        // path.add_point((300, 70).into());
-        //
-        // drawing.add_path(path, Color::GREEN);
-        //
-        // self.add_subview(make_shared(drawing));
-        //
+        let mut drawing = make_view_on::<DrawingView>(self);
+
+        drawing.set_frame((500, 10, 200, 200).into());
+
+        let mut path = PointsPath::new();
+
+        path.add_point((1, 20).into());
+        path.add_point((100, 30).into());
+        path.add_point((1, 40).into());
+        path.add_point((200, 50).into());
+        path.add_point((1, 60).into());
+        path.add_point((300, 70).into());
+
+        drawing.add_path(path, Color::GREEN);
 
         let left_stick = AnalogStickView::boxed();
         self.left_stick = left_stick.to_rglica();

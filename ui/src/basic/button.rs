@@ -1,7 +1,7 @@
 use crate::{View, ViewBase};
 use gl_image::Image;
 use proc_macro::{AsAny, Boxed};
-use tools::{refs::Shared, Event, Rglica};
+use tools::{Event, Rglica};
 
 #[derive(AsAny, Boxed)]
 pub struct Button {

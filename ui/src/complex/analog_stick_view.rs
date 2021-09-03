@@ -2,14 +2,9 @@ use crate::{complex::DrawingView, View, ViewBase};
 use gm::{flat::PointsPath, Color, Point};
 use proc_macro::AsAny;
 use proc_macro::Boxed;
-use std::borrow::BorrowMut;
 use tools::rglica::ToRglica;
 use tools::Boxed;
-use tools::{
-    new,
-    refs::{new_shared, Shared},
-    Event, New, Rglica,
-};
+use tools::{Event, Rglica};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
@@ -95,7 +90,7 @@ impl View for AnalogStickView {
                 this.direction_stick
                     .frame_mut()
                     .set_center(frame.size.center());
-                this.on_direction_change.trigger(&mut Point::DEFAULT);
+                this.on_direction_change.trigger(&Point::DEFAULT);
             } else {
                 this.on_touch_moved(&touch.position);
             }

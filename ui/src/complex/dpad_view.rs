@@ -4,12 +4,7 @@ use proc_macro::AsAny;
 use proc_macro::Boxed;
 use tools::rglica::ToRglica;
 use tools::Boxed;
-use tools::{
-    has_new::new,
-    refs::{new_shared, Shared},
-    Event, New, Rglica,
-};
-use glfw::MouseButton::Button1;
+use tools::{Event, Rglica};
 
 #[derive(AsAny, Boxed)]
 pub struct DPadView {
@@ -35,10 +30,10 @@ impl DPadView {
 
 impl View for DPadView {
     fn setup(&mut self) {
-        let mut up = Button::boxed();
-        let mut down = Button::boxed();
-        let mut left = Button::boxed();
-        let mut right = Button::boxed();
+        let up = Button::boxed();
+        let down = Button::boxed();
+        let left = Button::boxed();
+        let right = Button::boxed();
 
         self.up = up.to_rglica();
         self.down = down.to_rglica();

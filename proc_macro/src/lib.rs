@@ -56,9 +56,9 @@ pub fn derive_boxed(input: TokenStream) -> TokenStream {
 
     let fields = match &input.data {
         Data::Struct(DataStruct {
-                         fields: Fields::Named(fields),
-                         ..
-                     }) => &fields.named,
+            fields: Fields::Named(fields),
+            ..
+        }) => &fields.named,
         _ => panic!("expected a struct with named fields"),
     };
 
@@ -75,5 +75,5 @@ pub fn derive_boxed(input: TokenStream) -> TokenStream {
             }
         }
     })
-        .into()
+    .into()
 }

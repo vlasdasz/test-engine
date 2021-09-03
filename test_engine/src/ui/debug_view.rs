@@ -2,12 +2,7 @@ use chrono::Utc;
 use proc_macro::AsAny;
 use tools::rglica::ToRglica;
 use tools::Boxed;
-use tools::{
-    has_new::new,
-    platform::Platform,
-    refs::{new_shared, Shared},
-    New, Rglica,
-};
+use tools::{has_new::new, platform::Platform, Rglica};
 use ui::basic::Placer;
 use ui::{complex::IntView, Label, View, ViewBase};
 

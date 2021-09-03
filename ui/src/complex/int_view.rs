@@ -1,12 +1,9 @@
 use crate::basic::{Button, Placer};
-use crate::{Label, View, ViewBase, make_view_on};
+use crate::{make_view_on, Label, View, ViewBase};
 use proc_macro::AsAny;
 use proc_macro::Boxed;
-use std::cell::RefCell;
 use std::ops::AddAssign;
-use tools::has_new::new;
-use tools::refs::{new_shared, Shared};
-use tools::{Event, New, Rglica};
+use tools::{Event, Rglica};
 
 #[derive(AsAny, Boxed)]
 pub struct IntView {
@@ -20,7 +17,6 @@ pub struct IntView {
 
 impl View for IntView {
     fn setup(&mut self) {
-
         self.label = make_view_on(self);
         self.up = make_view_on(self);
         self.down = make_view_on(self);
@@ -41,8 +37,7 @@ impl View for IntView {
     }
 
     fn update(&mut self) {
-        self.label
-            .set_text(&self.value.to_string());
+        self.label.set_text(&self.value.to_string());
     }
 
     fn layout(&mut self) {

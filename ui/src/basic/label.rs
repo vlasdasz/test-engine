@@ -1,7 +1,6 @@
 use crate::{Font, ImageView, View, ViewBase};
 use proc_macro::AsAny;
 use proc_macro::Boxed;
-use tools::refs::make_shared;
 use tools::Boxed;
 
 #[derive(AsAny, Boxed)]

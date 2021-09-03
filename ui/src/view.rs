@@ -3,13 +3,10 @@ use crate::input::Touch;
 use gl_image::Image;
 use gm::{Color, Rect};
 use proc_macro::{AsAny, Boxed};
+use std::cell::RefCell;
 use tools::new;
-use std::{
-    cell::RefCell,
-    ops::{Deref, DerefMut},
-};
 use tools::rglica::ToRglica;
-use tools::{refs::Shared, AsAny, Event, New, Boxed, Rglica};
+use tools::{AsAny, Boxed, Event, New, Rglica};
 
 pub trait View: AsAny + Boxed {
     fn setup(&mut self) {}

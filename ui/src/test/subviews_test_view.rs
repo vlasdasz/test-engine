@@ -1,10 +1,7 @@
-use crate::basic::Placer;
-use crate::{make_view_on, Touch, View, ViewBase};
-use gl_image::Image;
-use gm::{Color, Rect};
+use crate::{make_view_on, View, ViewBase};
 use proc_macro::{AsAny, Boxed};
 use std::ops::DerefMut;
-use tools::{Event, Rglica};
+use tools::Rglica;
 
 #[derive(AsAny, Boxed)]
 pub struct SubviewsTestView {
