@@ -24,7 +24,6 @@ use ui::{make_view_on, SubviewsTestView, View, ViewBase};
 pub struct TestScreen {
     cursor_position: Point,
     assets: Rc<Assets>,
-    debug_view: Box<dyn View>,
     root_view: Box<dyn View>,
     level: Shared<LevelBase>,
     ui_drawer: UIDrawer,
@@ -34,7 +33,6 @@ pub struct TestScreen {
 impl TestScreen {
     pub fn on_touch(&mut self, mut touch: Touch) {
         self.root_view.check_touch(&mut touch);
-        self.debug_view.check_touch(&mut touch);
     }
 
     fn update_view(view: &mut Box<dyn View>) {
@@ -74,6 +72,7 @@ impl TestScreen {
     }
 
     fn setup_test_view(&mut self) {
+        make_view_on::<DebugView>(self.root_view.deref_mut());
         let _test_view = make_view_on::<TestView>(self.root_view.deref_mut());
 
         // let a = self.level.clone();
@@ -98,9 +97,6 @@ impl TestScreen {
         //     .subscribe(move |direction| {
         //         a.borrow_mut().add_impulse(direction);
         //     });
-
-        let mut deb = make_view_on::<SubviewsTestView>(self.root_view.deref_mut());
-        deb.frame_mut().set_center((300.0, 300.0).into());
 
         //self.root_view.add_subview(Box::new(view));
     }
@@ -140,9 +136,6 @@ impl Screen for TestScreen {
 
         self.root_view.calculate_absolute_frame();
 
-        self.debug_view.setup();
-        self.debug_view.calculate_absolute_frame();
-
         self.setup_level();
         self.setup_test_view();
     }
@@ -171,10 +164,6 @@ impl Screen for TestScreen {
         self.root_view.calculate_absolute_frame();
         self.ui_drawer.draw(&mut self.root_view);
 
-        TestScreen::update_view(&mut self.debug_view);
-        self.debug_view.calculate_absolute_frame();
-        self.ui_drawer.draw(&mut self.debug_view);
-
         self.ui_drawer.reset_viewport();
     }
 
@@ -196,7 +185,6 @@ impl New for TestScreen {
         TestScreen {
             cursor_position: Point::new(),
             assets: assets.clone(),
-            debug_view: DebugView::boxed(),
             root_view: ViewBase::boxed(),
             level: new_shared(),
             ui_drawer: UIDrawer::new(assets.clone()),

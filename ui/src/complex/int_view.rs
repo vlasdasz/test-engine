@@ -1,5 +1,6 @@
 use crate::basic::{Button, Placer};
 use crate::{make_view_on, Label, View, ViewBase};
+use gl_image::Image;
 use proc_macro::AsAny;
 use proc_macro::Boxed;
 use std::ops::AddAssign;
@@ -13,6 +14,13 @@ pub struct IntView {
     up: Rglica<Button>,
     down: Rglica<Button>,
     pub on_change: Event<i64>,
+}
+
+impl IntView {
+    pub fn set_images(&mut self, up: Image, down: Image) {
+        self.up.image = up.into();
+        self.down.image = down.into();
+    }
 }
 
 impl View for IntView {
@@ -41,7 +49,7 @@ impl View for IntView {
     }
 
     fn layout(&mut self) {
-        Placer::distribute_vertically(&self.frame().clone(), self.subviews_mut());
+        self.placer().distribute_vertically();
     }
 
     fn view(&self) -> &ViewBase {

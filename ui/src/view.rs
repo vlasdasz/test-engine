@@ -55,7 +55,7 @@ pub trait View: AsAny + Boxed {
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
         view.view_mut()._superview = Rglica::from_ref(self.view());
-        view.view_mut()._placer = Placer::make(&view);
+        view.view_mut()._placer = Placer::make(&mut view);
         view.setup();
         self.view_mut()._subviews.push(view);
     }

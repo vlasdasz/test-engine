@@ -71,10 +71,6 @@ impl View for TestView {
             Image::load(&paths::images().join("right.png")),
         );
 
-        self.dpad.on_up.subscribe(|_| {
-            dbg!("kkk");
-        });
-
         let mut drawing = make_view_on::<DrawingView>(self);
 
         drawing.set_frame((500, 10, 200, 200).into());

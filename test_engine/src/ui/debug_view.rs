@@ -4,7 +4,7 @@ use tools::rglica::ToRglica;
 use tools::Boxed;
 use tools::{has_new::new, platform::Platform, Rglica};
 use ui::basic::Placer;
-use ui::{complex::IntView, Label, View, ViewBase};
+use ui::{complex::IntView, make_view_on, Label, View, ViewBase};
 
 #[derive(AsAny)]
 pub struct DebugView {
@@ -12,7 +12,6 @@ pub struct DebugView {
     fps_label: Rglica<Label>,
     frame_drawn_label: Rglica<Label>,
     frame_drawn: u64,
-    scale_view: Rglica<IntView>,
     prev_time: i64,
     min_fps: u64,
     max_fps: u64,
@@ -24,28 +23,11 @@ impl View for DebugView {
         self.frame_mut().size.height = 100.0;
         self.frame_mut().size.width = 280.0;
 
-        let fps_label = Label::boxed();
-        self.fps_label = fps_label.to_rglica();
-        self.add_subview(fps_label);
-
-        let frame_drawn_label = Label::boxed();
-
-        self.frame_drawn_label = frame_drawn_label.to_rglica();
-
-        self.add_subview(frame_drawn_label);
-
+        self.fps_label = make_view_on(self);
         self.fps_label.set_text("fps label");
+
+        self.frame_drawn_label = make_view_on(self);
         self.frame_drawn_label.set_text("frame drawn label");
-
-        let scale_view = IntView::boxed();
-
-        self.scale_view = scale_view.to_rglica();
-
-        self.add_subview(scale_view);
-
-        self.scale_view.on_change.subscribe(|val| {
-            dbg!(val);
-        });
 
         if Platform::MOBILE {
             self.frame_mut().origin.x = 28.0;
@@ -85,8 +67,7 @@ impl View for DebugView {
     }
 
     fn layout(&mut self) {
-        Placer::distribute_vertically(&self.frame().clone(), self.subviews_mut());
-        self.scale_view.frame_mut().size.width = self.frame().width() / 10.0
+        self.placer().distribute_vertically();
     }
 
     fn view(&self) -> &ViewBase {
@@ -105,7 +86,6 @@ impl Boxed for DebugView {
             fps_label: new(),
             frame_drawn_label: new(),
             frame_drawn: 0,
-            scale_view: new(),
             prev_time: Utc::now().timestamp_nanos(),
             min_fps: u64::MAX,
             max_fps: u64::MIN,

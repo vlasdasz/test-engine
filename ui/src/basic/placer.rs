@@ -1,17 +1,20 @@
 use crate::View;
 use gm::Rect;
 use proc_macro::New;
+use std::ops::DerefMut;
 use tools::Rglica;
 
-#[derive(Debug, New)]
+#[derive(New)]
 pub struct Placer {
+    view: Rglica<dyn View>,
     frame: Rglica<Rect>,
     super_frame: Rglica<Rect>,
 }
 
 impl Placer {
-    pub fn make(view: &Box<dyn View>) -> Self {
+    pub fn make(view: &mut Box<dyn View>) -> Self {
         Self {
+            view: Rglica::from_ref(view.deref_mut()),
             frame: Rglica::from_ref(view.frame()),
             super_frame: Rglica::from_ref(view.super_frame()),
         }
@@ -29,14 +32,16 @@ impl Placer {
         self.frame.origin.y = self.super_frame.size.height - self.frame.size.height;
     }
 
-    pub fn distribute_vertically(frame: &Rect, views: &mut [Box<dyn View>]) {
+    pub fn distribute_vertically(&mut self) {
+        let views = self.view.subviews_mut();
+
         if views.is_empty() {
             return;
         }
 
         let mut frames: Vec<&mut Rect> = views.iter_mut().map(|a| a.frame_mut()).collect();
-        let height: f32 = frame.height() / frames.len() as f32;
-        let width = frame.width();
+        let height: f32 = self.frame.height() / frames.len() as f32;
+        let width = self.frame.width();
 
         for i in 0..frames.len() {
             let frame = &mut frames[i];
