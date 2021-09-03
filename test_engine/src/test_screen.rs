@@ -13,9 +13,7 @@ use sprites::Sprite;
 use std::ops::DerefMut;
 use std::rc::Rc;
 use tools::Boxed;
-use tools::{
-    New,
-};
+use tools::New;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
@@ -54,7 +52,7 @@ impl TestScreen {
         level.add_wall((20, 0, 1, 100).into()).set_image(square);
         level.add_wall((-20, 0, 1, 100).into()).set_image(square);
 
-        for i in 0..100 {
+        for i in 0..500 {
             level.add_body((0.1 * i as f32, i * 2, 0.5, 0.5).into());
         }
     }

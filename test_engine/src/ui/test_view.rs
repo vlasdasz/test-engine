@@ -11,6 +11,7 @@ use tools::Rglica;
 use ui::basic::Button;
 use ui::complex::{AnalogStickView, DrawingView};
 use ui::{make_view_on, DPadView, ImageView, Label, View, ViewBase};
+use std::ops::DerefMut;
 
 static mut COUNTER: u32 = 0;
 
@@ -36,7 +37,7 @@ impl View for TestView {
         self.image_view.set_frame((200, 20, 100, 120).into());
         self.add_subview(image_view);
 
-        self.label = self.view_mut().make_view();
+        self.label = make_view_on(self);
 
         self.label
             .set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
@@ -47,7 +48,7 @@ impl View for TestView {
         view.set_frame((10, 20, 50, 50).into());
         view.set_color(Color::WHITE);
 
-        let mut button = make_view_on::<Button>(self);
+        let mut button = make_view_on::<Button>(view.deref_mut());
 
         button.set_frame((10, 10, 20, 20).into());
         button.set_color(Color::RED);

@@ -22,6 +22,7 @@ pub trait Control {
 pub trait Level {
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
+    fn rigid_bodies(&self) -> &RigidBodySet;
 }
 
 pub struct LevelBase {
@@ -79,10 +80,7 @@ impl LevelBase {
         let body_handle = self.rigid_body_set.insert(rigid_body);
         self.collider_set
             .insert_with_parent(collider, body_handle, &mut self.rigid_body_set);
-        let boxed = Box::new(Body::make(
-            sprite,
-            &mut self.rigid_body_set[body_handle],
-        ));
+        let boxed = Box::new(Body::make(sprite, body_handle, self));
         let body = boxed.to_rglica();
         self.sprites.push(boxed);
         body
@@ -117,6 +115,20 @@ impl LevelBase {
         let wall = boxed.to_rglica();
         self.sprites.push(boxed);
         wall
+    }
+}
+
+impl Level for LevelBase {
+    fn level(&self) -> &LevelBase {
+        self
+    }
+
+    fn level_mut(&mut self) -> &mut LevelBase {
+        self
+    }
+
+    fn rigid_bodies(&self) -> &RigidBodySet {
+        &self.rigid_body_set
     }
 }
 
