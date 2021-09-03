@@ -9,11 +9,11 @@ use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
 use sprites::LevelBase;
+use sprites::Sprite;
 use std::ops::DerefMut;
 use std::rc::Rc;
 use tools::Boxed;
 use tools::{
-    refs::{new_shared, Shared},
     New,
 };
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -25,7 +25,7 @@ pub struct TestScreen {
     cursor_position: Point,
     assets: Rc<Assets>,
     root_view: Box<dyn View>,
-    level: Shared<LevelBase>,
+    level: Box<LevelBase>,
     ui_drawer: UIDrawer,
     sprites_drawer: SpritesDrawer,
 }
@@ -43,31 +43,19 @@ impl TestScreen {
     }
 
     fn setup_level(&mut self) {
-        let mut level = self.level.borrow_mut();
+        let level = self.level.deref_mut();
 
         level.setup();
 
         let square = Image::load(&paths::images().join("square.png"));
 
         level.add_sprite((0, 0, 1, 1).into());
+        level.add_wall((0, 0, 100, 1).into()).set_image(square);
+        level.add_wall((20, 0, 1, 100).into()).set_image(square);
+        level.add_wall((-20, 0, 1, 100).into()).set_image(square);
 
-        level
-            .add_collider((0, 0, 100, 1).into())
-            .borrow_mut()
-            .set_image(square);
-
-        level
-            .add_collider((20, 0, 1, 100).into())
-            .borrow_mut()
-            .set_image(square);
-
-        level
-            .add_collider((-20, 0, 1, 100).into())
-            .borrow_mut()
-            .set_image(square);
-
-        for i in 0..500 {
-            level.add_collider((0.1 * i as f32, i * 2, 0.5, 0.5).into());
+        for i in 0..100 {
+            level.add_body((0.1 * i as f32, i * 2, 0.5, 0.5).into());
         }
     }
 
@@ -121,8 +109,8 @@ impl DesktopInput for TestScreen {
         })
     }
 
-    fn on_key_pressed(&self, key: Key, action: Action) {
-        self.level.borrow_mut().on_key_pressed(key, action)
+    fn on_key_pressed(&mut self, key: Key, action: Action) {
+        self.level.on_key_pressed(key, action)
     }
 }
 
@@ -143,7 +131,7 @@ impl Screen for TestScreen {
     fn update(&mut self) {
         GLWrapper::clear();
 
-        let mut level = self.level.borrow_mut();
+        let level = self.level.deref_mut();
 
         level.update();
 
@@ -180,7 +168,7 @@ impl New for TestScreen {
             cursor_position: Point::new(),
             assets: assets.clone(),
             root_view: ViewBase::boxed(),
-            level: new_shared(),
+            level: LevelBase::boxed(),
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: SpritesDrawer::new(assets),
         }

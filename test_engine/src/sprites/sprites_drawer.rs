@@ -2,7 +2,6 @@ use crate::assets::Assets;
 use gm::{Point, Size};
 use sprites::Sprite;
 use std::rc::Rc;
-use tools::refs::Shared;
 
 pub struct SpritesDrawer {
     assets: Rc<Assets>,
@@ -27,9 +26,7 @@ impl SpritesDrawer {
         self.assets.shaders.textured_sprite.set_camera_position(pos);
     }
 
-    pub fn draw(&self, sprite: &Shared<dyn Sprite>) {
-        let sprite = sprite.borrow();
-
+    pub fn draw(&self, sprite: &Box<dyn Sprite>) {
         let mut shader = &self.assets.shaders.sprite;
         let mut buffer = &self.assets.buffers.fullscreen;
 

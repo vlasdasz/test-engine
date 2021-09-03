@@ -3,9 +3,6 @@ use gm::{Color, IntoF32, Point, Size};
 use proc_macro::New;
 
 pub trait Sprite {
-    fn sprite(&self) -> &SpriteBase;
-    fn sprite_mut(&mut self) -> &mut SpriteBase;
-
     fn size(&self) -> Size {
         self.sprite().size
     }
@@ -29,6 +26,9 @@ pub trait Sprite {
     fn set_image(&mut self, image: Image) {
         self.sprite_mut().image = image.into()
     }
+
+    fn sprite(&self) -> &SpriteBase;
+    fn sprite_mut(&mut self) -> &mut SpriteBase;
 }
 
 #[derive(New)]

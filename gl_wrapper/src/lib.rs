@@ -35,7 +35,7 @@ pub mod shader;
 pub trait DesktopInput {
     fn on_cursor_moved(&mut self, position: Point);
     fn on_mouse_key_pressed(&mut self, button: MouseButton, state: Action);
-    fn on_key_pressed(&self, key: glfw::Key, action: glfw::Action);
+    fn on_key_pressed(&mut self, key: glfw::Key, action: glfw::Action);
 }
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
