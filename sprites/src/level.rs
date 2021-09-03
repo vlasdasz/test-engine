@@ -70,7 +70,7 @@ impl LevelBase {
         // for sprite in &self.sprites {
         //     let mut sprite = sprite.borrow_mut();
         //
-        //     let body = &self.rigid_body_set[sprite.rigid_body_handle.unwrap()];
+        //    // let body = &self.rigid_body_set[sprite.rigid_body_handle.unwrap()];
         //
         //     sprite.position.x = body.translation().x;
         //     sprite.position.y = body.translation().y;
@@ -118,11 +118,12 @@ impl LevelBase {
     }
 
     pub fn add_collider(&mut self, sprite: SpriteBase) -> Shared<dyn Sprite> {
-        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
-            .translation(Vector2::new(sprite.position.x, sprite.position.y))
+        let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
+            .translation(Vector2::new(sprite.position().x, sprite.position().y))
             .build();
-        let handle = self.collider_set.insert(collider);
-        let collider = make_shared(Collider::make(sprite, handle));
+        self.collider_set.insert(collider);
+        let collider = self.collider_set.iter_mut().last().unwrap();
+        let collider = make_shared(Collider::make(sprite, collider.1));
         self.sprites.push(collider.clone());
         collider
     }

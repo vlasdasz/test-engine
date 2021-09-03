@@ -1,4 +1,4 @@
-use crate::basic::{Button, Placer};
+use crate::basic::Button;
 use crate::{make_view_on, Label, View, ViewBase};
 use gl_image::Image;
 use proc_macro::AsAny;

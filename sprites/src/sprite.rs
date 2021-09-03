@@ -6,20 +6,20 @@ pub trait Sprite {
     fn sprite(&self) -> &SpriteBase;
     fn sprite_mut(&mut self) -> &mut SpriteBase;
 
-    fn size(&self) -> &Size {
-        &self.sprite().size
+    fn size(&self) -> Size {
+        self.sprite().size
     }
 
-    fn position(&self) -> &Point {
-        &self.sprite().position
+    fn position(&self) -> Point {
+        self.sprite().position
     }
 
     fn rotation(&self) -> f32 {
         self.sprite().rotation
     }
 
-    fn color(&self) -> &Color {
-        &self.sprite().color
+    fn color(&self) -> Color {
+        self.sprite().color
     }
 
     fn image(&self) -> &Option<Image> {
@@ -33,9 +33,9 @@ pub trait Sprite {
 
 #[derive(New)]
 pub struct SpriteBase {
-    pub position: Point,
-    pub size: Size,
-    pub rotation: f32,
+    position: Point,
+    size: Size,
+    rotation: f32,
     pub color: Color,
     pub image: Option<Image>,
 }

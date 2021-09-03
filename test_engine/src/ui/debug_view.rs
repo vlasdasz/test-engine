@@ -1,10 +1,8 @@
 use chrono::Utc;
 use proc_macro::AsAny;
-use tools::rglica::ToRglica;
 use tools::Boxed;
 use tools::{has_new::new, platform::Platform, Rglica};
-use ui::basic::Placer;
-use ui::{complex::IntView, make_view_on, Label, View, ViewBase};
+use ui::{make_view_on, Label, View, ViewBase};
 
 #[derive(AsAny)]
 pub struct DebugView {

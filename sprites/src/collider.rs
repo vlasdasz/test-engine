@@ -1,14 +1,17 @@
 use crate::{Sprite, SpriteBase};
-use rapier2d::prelude::ColliderHandle;
+use tools::Rglica;
 
 pub struct Collider {
     base: SpriteBase,
-    _handle: ColliderHandle,
+    _collider: Rglica<rapier2d::prelude::Collider>,
 }
 
 impl Collider {
-    pub fn make(base: SpriteBase, _handle: ColliderHandle) -> Self {
-        Self { base, _handle }
+    pub fn make(base: SpriteBase, collider: &mut rapier2d::prelude::Collider) -> Self {
+        Self {
+            base,
+            _collider: Rglica::from_ref(collider),
+        }
     }
 }
 

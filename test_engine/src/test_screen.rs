@@ -19,7 +19,7 @@ use tools::{
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
-use ui::{make_view_on, SubviewsTestView, View, ViewBase};
+use ui::{make_view_on, View, ViewBase};
 
 pub struct TestScreen {
     cursor_position: Point,
@@ -65,10 +65,10 @@ impl TestScreen {
             .add_collider((-20, 0, 1, 100).into())
             .borrow_mut()
             .set_image(square);
-        //
-        // for i in 0..500 {
-        //     level.add_rect((0.1 * i as f32, i * 2).into(), Size::square(0.5));
-        // }
+
+        for i in 0..500 {
+            level.add_collider((0.1 * i as f32, i * 2, 0.5, 0.5).into());
+        }
     }
 
     fn setup_test_view(&mut self) {
@@ -153,12 +153,6 @@ impl Screen for TestScreen {
         for sprite in &level.sprites {
             self.sprites_drawer.draw(sprite);
         }
-
-        //
-        // for wall in &level.walls {
-        //     let wall = wall.borrow();
-        //     self.sprites_drawer.draw(&wall);
-        // }
 
         TestScreen::update_view(&mut self.root_view);
         self.root_view.calculate_absolute_frame();
