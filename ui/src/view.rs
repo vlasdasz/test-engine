@@ -33,6 +33,13 @@ pub trait View: AsAny + Boxed {
         self.frame()
     }
 
+    fn super_absolute_frame(&self) -> &Rect {
+        if self.view()._superview.is_ok() {
+            return self.view()._superview.absolute_frame();
+        }
+        return self.absolute_frame();
+    }
+
     fn frame(&self) -> &Rect {
         &self.view()._frame
     }
@@ -71,7 +78,7 @@ pub trait View: AsAny + Boxed {
     fn calculate_absolute_frame(&mut self) {
         let view = self.view_mut();
         view._absolute_frame = view._frame;
-        view._absolute_frame.origin += view.super_frame().origin;
+        view._absolute_frame.origin += view.super_absolute_frame().origin;
         self.layout();
         for view in self.subviews_mut() {
             view.calculate_absolute_frame();

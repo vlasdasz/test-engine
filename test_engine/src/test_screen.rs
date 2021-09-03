@@ -35,7 +35,7 @@ pub struct TestScreen {
 impl TestScreen {
     pub fn on_touch(&mut self, mut touch: Touch) {
         self.root_view.check_touch(&mut touch);
-        //self.debug_view.check_touch(&mut touch);
+        self.debug_view.check_touch(&mut touch);
     }
 
     fn update_view(view: &mut Box<dyn View>) {
@@ -75,7 +75,7 @@ impl TestScreen {
     }
 
     fn setup_test_view(&mut self) {
-        let view = TestView::boxed();
+        let test_view = make_view_on::<TestView>(self.root_view.deref_mut());
 
         // let a = self.level.clone();
         // view.dpad.borrow_mut().on_up.subscribe(move |_| {
@@ -99,6 +99,8 @@ impl TestScreen {
         //     .subscribe(move |direction| {
         //         a.borrow_mut().add_impulse(direction);
         //     });
+
+
 
         let mut deb = make_view_on::<SubviewsTestView>(self.root_view.deref_mut());
 
@@ -143,7 +145,6 @@ impl Screen for TestScreen {
         self.root_view.calculate_absolute_frame();
 
         self.debug_view.setup();
-
         self.debug_view.calculate_absolute_frame();
 
         self.setup_level();
@@ -174,10 +175,9 @@ impl Screen for TestScreen {
         self.root_view.calculate_absolute_frame();
         self.ui_drawer.draw(&mut self.root_view);
 
-        // TestScreen::update_view(&mut self.debug_view);
-
-        // self.debug_view.calculate_absolute_frame();
-        //  self.ui_drawer.draw(&mut self.debug_view);
+        TestScreen::update_view(&mut self.debug_view);
+        self.debug_view.calculate_absolute_frame();
+         self.ui_drawer.draw(&mut self.debug_view);
 
         self.ui_drawer.reset_viewport();
     }
