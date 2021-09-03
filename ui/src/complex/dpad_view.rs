@@ -1,14 +1,17 @@
 use crate::{basic::Button, View, ViewBase};
 use gl_image::Image;
 use proc_macro::AsAny;
+use proc_macro::Boxed;
 use tools::rglica::ToRglica;
+use tools::Boxed;
 use tools::{
     has_new::new,
     refs::{new_shared, Shared},
     Event, New, Rglica,
 };
+use glfw::MouseButton::Button1;
 
-#[derive(AsAny)]
+#[derive(AsAny, Boxed)]
 pub struct DPadView {
     base: ViewBase,
     up: Rglica<Button>,
@@ -32,10 +35,10 @@ impl DPadView {
 
 impl View for DPadView {
     fn setup(&mut self) {
-        let mut up = Box::new(Button::new());
-        let mut down = Box::new(Button::new());
-        let mut left = Box::new(Button::new());
-        let mut right = Box::new(Button::new());
+        let mut up = Button::boxed();
+        let mut down = Button::boxed();
+        let mut left = Button::boxed();
+        let mut right = Button::boxed();
 
         self.up = up.to_rglica();
         self.down = down.to_rglica();
@@ -86,21 +89,5 @@ impl View for DPadView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-}
-
-impl New for DPadView {
-    fn new() -> DPadView {
-        DPadView {
-            base: new(),
-            up: new(),
-            down: new(),
-            left: new(),
-            right: new(),
-            on_up: new(),
-            on_down: new(),
-            on_left: new(),
-            on_right: new(),
-        }
     }
 }

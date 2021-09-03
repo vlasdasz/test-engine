@@ -1,19 +1,20 @@
 use crate::basic::{Button, Placer};
 use crate::{Label, View, ViewBase};
 use proc_macro::AsAny;
+use proc_macro::Boxed;
 use std::cell::RefCell;
 use std::ops::AddAssign;
 use tools::has_new::new;
 use tools::refs::{new_shared, Shared};
-use tools::{Event, New};
+use tools::{Event, New, Rglica};
 
-#[derive(AsAny)]
+#[derive(AsAny, Boxed)]
 pub struct IntView {
     base: ViewBase,
     value: RefCell<i64>,
-    label: Shared<Label>,
-    up: Shared<Button>,
-    down: Shared<Button>,
+    label: Rglica<Label>,
+    up: Rglica<Button>,
+    down: Rglica<Button>,
     pub on_change: Event<i64>,
 }
 
@@ -45,7 +46,6 @@ impl View for IntView {
 
     fn update(&mut self) {
         self.label
-            .borrow_mut()
             .set_text(&self.value.borrow().to_string());
     }
 
@@ -59,18 +59,5 @@ impl View for IntView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-}
-
-impl New for IntView {
-    fn new() -> Self {
-        IntView {
-            base: new(),
-            value: new(),
-            label: new_shared(),
-            up: new_shared(),
-            down: new_shared(),
-            on_change: new(),
-        }
     }
 }

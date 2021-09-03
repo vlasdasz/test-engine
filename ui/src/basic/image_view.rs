@@ -1,9 +1,9 @@
 use crate::{View, ViewBase};
 use gl_image::Image;
 use proc_macro::AsAny;
-use proc_macro::New;
+use proc_macro::Boxed;
 
-#[derive(AsAny, New)]
+#[derive(AsAny, Boxed)]
 pub struct ImageView {
     pub image: Image,
     base: ViewBase,

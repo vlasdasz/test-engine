@@ -1,6 +1,7 @@
 use chrono::Utc;
 use proc_macro::AsAny;
 use tools::rglica::ToRglica;
+use tools::Boxed;
 use tools::{
     has_new::new,
     platform::Platform,
@@ -28,11 +29,11 @@ impl View for DebugView {
         self.frame_mut().size.height = 100.0;
         self.frame_mut().size.width = 280.0;
 
-        let fps_label = Box::new(Label::new());
+        let fps_label = Label::boxed();
         self.fps_label = fps_label.to_rglica();
         self.add_subview(fps_label);
 
-        let frame_drawn_label = Box::new(Label::new());
+        let frame_drawn_label = Label::boxed();
 
         self.frame_drawn_label = frame_drawn_label.to_rglica();
 
@@ -41,7 +42,7 @@ impl View for DebugView {
         self.fps_label.set_text("fps label");
         self.frame_drawn_label.set_text("frame drawn label");
 
-        let scale_view = Box::new(IntView::new());
+        let scale_view = IntView::boxed();
 
         self.scale_view = scale_view.to_rglica();
 
@@ -102,9 +103,9 @@ impl View for DebugView {
     }
 }
 
-impl New for DebugView {
-    fn new() -> Self {
-        DebugView {
+impl Boxed for DebugView {
+    fn boxed() -> Box<Self> {
+        Box::new(DebugView {
             view: new(),
             fps_label: new(),
             frame_drawn_label: new(),
@@ -114,6 +115,6 @@ impl New for DebugView {
             min_fps: u64::MAX,
             max_fps: u64::MIN,
             skipped: 0,
-        }
+        })
     }
 }

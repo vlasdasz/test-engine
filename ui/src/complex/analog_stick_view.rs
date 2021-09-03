@@ -1,8 +1,10 @@
 use crate::{complex::DrawingView, View, ViewBase};
 use gm::{flat::PointsPath, Color, Point};
 use proc_macro::AsAny;
+use proc_macro::Boxed;
 use std::borrow::BorrowMut;
 use tools::rglica::ToRglica;
+use tools::Boxed;
 use tools::{
     new,
     refs::{new_shared, Shared},
@@ -13,7 +15,7 @@ const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
-#[derive(AsAny)]
+#[derive(AsAny, Boxed)]
 pub struct AnalogStickView {
     base: ViewBase,
     direction_stick: Rglica<DrawingView>,
@@ -44,7 +46,7 @@ impl View for AnalogStickView {
 
         self.enable_touch();
 
-        let background = Box::new(DrawingView::new());
+        let background = DrawingView::boxed();
         self.background = background.to_rglica();
 
         self.background.frame_mut().size = (SIZE, SIZE).into();
@@ -62,7 +64,7 @@ impl View for AnalogStickView {
 
         self.add_subview(background);
 
-        let mut direction_stick = Box::new(DrawingView::new());
+        let mut direction_stick = DrawingView::boxed();
 
         direction_stick.set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE).into());
 
@@ -106,16 +108,5 @@ impl View for AnalogStickView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
-    }
-}
-
-impl New for AnalogStickView {
-    fn new() -> Self {
-        Self {
-            base: new(),
-            direction_stick: new(),
-            background: new(),
-            on_direction_change: new(),
-        }
     }
 }

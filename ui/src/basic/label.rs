@@ -1,9 +1,10 @@
 use crate::{Font, ImageView, View, ViewBase};
 use proc_macro::AsAny;
-use proc_macro::New;
+use proc_macro::Boxed;
 use tools::refs::make_shared;
+use tools::Boxed;
 
-#[derive(AsAny, New)]
+#[derive(AsAny, Boxed)]
 pub struct Label {
     font: Font,
     _text: String,
@@ -39,7 +40,8 @@ impl View for Label {
         for letter in text.chars() {
             let glyph = self.font.glyph_for_char(letter);
 
-            let mut glyph_view = ImageView::from_rect(glyph.size.into());
+            let mut glyph_view = ImageView::boxed();
+            glyph_view.frame_mut().size = glyph.size.into();
             glyph_view.image = glyph.image;
 
             glyph_view.set_frame(
@@ -56,7 +58,7 @@ impl View for Label {
 
             advance += glyph.advance as f32;
 
-            self.add_subview(Box::new(glyph_view));
+            self.add_subview(glyph_view);
         }
 
         content_size.width = last_max_x;

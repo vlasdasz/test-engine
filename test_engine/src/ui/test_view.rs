@@ -3,8 +3,9 @@ use gl_image::Image;
 use gm::flat::PointsPath;
 use gm::Color;
 use proc_macro::AsAny;
-use proc_macro::New;
+use proc_macro::Boxed;
 use tools::has_new::new;
+use tools::Boxed;
 use tools::refs::{make_shared, new_shared, Shared};
 use tools::rglica::ToRglica;
 use tools::New;
@@ -15,7 +16,7 @@ use ui::{make_view_on, DPadView, ImageView, Label, View, ViewBase};
 
 static mut COUNTER: u32 = 0;
 
-#[derive(AsAny, New)]
+#[derive(AsAny, Boxed)]
 pub struct TestView {
     base: ViewBase,
     pub data: u128,
@@ -31,7 +32,7 @@ impl View for TestView {
     fn setup(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
-        let image_view = Box::new(ImageView::new());
+        let image_view = ImageView::boxed();
         self.image_view = image_view.to_rglica();
         self.image_view.image = Image::load(&paths::images().join("cat.jpg"));
         self.image_view.set_frame((200, 20, 100, 120).into());
@@ -94,13 +95,13 @@ impl View for TestView {
         // self.add_subview(make_shared(drawing));
         //
 
-        let left_stick = Box::new(AnalogStickView::new());
+        let left_stick = AnalogStickView::boxed();
         self.left_stick = left_stick.to_rglica();
         self.add_subview(left_stick);
         self.left_stick.frame_mut().origin.x = 320.0;
         self.left_stick.frame_mut().origin.y = 300.0;
 
-        let right_stick = Box::new(AnalogStickView::new());
+        let right_stick = AnalogStickView::boxed();
         self.right_stick = right_stick.to_rglica();
         self.add_subview(right_stick);
         self.right_stick.frame_mut().origin.x = 520.0;

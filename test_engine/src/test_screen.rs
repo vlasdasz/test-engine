@@ -3,6 +3,7 @@ use crate::paths;
 use crate::sprites::SpritesDrawer;
 use crate::ui::ui_drawer::UIDrawer;
 use crate::ui::{DebugView, TestView};
+use tools::Boxed;
 use gl_image::Image;
 use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -74,7 +75,7 @@ impl TestScreen {
     }
 
     fn setup_test_view(&mut self) {
-        let view = TestView::new();
+        let view = TestView::boxed();
 
         // let a = self.level.clone();
         // view.dpad.borrow_mut().on_up.subscribe(move |_| {
@@ -199,8 +200,8 @@ impl New for TestScreen {
         TestScreen {
             cursor_position: Point::new(),
             assets: assets.clone(),
-            debug_view: Box::new(DebugView::new()),
-            root_view: Box::new(ViewBase::new()),
+            debug_view: DebugView::boxed(),
+            root_view: ViewBase::boxed(),
             level: new_shared(),
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: SpritesDrawer::new(assets),

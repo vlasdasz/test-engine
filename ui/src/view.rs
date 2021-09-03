@@ -2,15 +2,16 @@ use crate::basic::Placer;
 use crate::input::Touch;
 use gl_image::Image;
 use gm::{Color, Rect};
-use proc_macro::{AsAny, New};
+use proc_macro::{AsAny, Boxed};
+use tools::new;
 use std::{
     cell::RefCell,
     ops::{Deref, DerefMut},
 };
 use tools::rglica::ToRglica;
-use tools::{refs::Shared, AsAny, Event, New, Rglica};
+use tools::{refs::Shared, AsAny, Event, New, Boxed, Rglica};
 
-pub trait View: AsAny + New {
+pub trait View: AsAny + Boxed {
     fn setup(&mut self) {}
 
     fn update(&mut self) {}
@@ -97,15 +98,6 @@ pub trait View: AsAny + New {
         *self.view()._touch_id.borrow_mut() = id;
     }
 
-    fn from_rect(rect: Rect) -> Self
-    where
-        Self: Sized,
-    {
-        let mut new = Self::new();
-        new.set_frame(rect);
-        new
-    }
-
     fn on_touch(&mut self) -> &mut Event<Touch> {
         &mut self.view_mut()._on_touch
     }
@@ -158,7 +150,7 @@ pub trait View: AsAny + New {
     fn view_mut(&mut self) -> &mut ViewBase;
 }
 
-#[derive(AsAny, New)]
+#[derive(AsAny, Boxed)]
 pub struct ViewBase {
     _color: Color,
     _touch_enabled: bool,
@@ -178,7 +170,7 @@ pub struct ViewBase {
 
 impl ViewBase {
     pub fn make_view<T: 'static + View>(&mut self) -> Rglica<T> {
-        let view = Box::new(T::new());
+        let view = T::boxed();
         let rglica = view.to_rglica();
         self.add_subview(view);
         rglica
@@ -196,5 +188,26 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
+    }
+}
+
+impl Default for ViewBase {
+    fn default() -> Self {
+        Self {
+            _color: Color::DEFAULT,
+            _touch_enabled: false,
+
+            _frame: Rect::DEFAULT,
+            _absolute_frame: Rect::DEFAULT,
+
+            _superview: Rglica::new(),
+
+            _subviews: vec![],
+
+            _on_touch: Event::new(),
+            _touch_id: new(),
+
+            _placer: Placer::new(),
+        }
     }
 }

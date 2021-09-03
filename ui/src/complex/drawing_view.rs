@@ -5,9 +5,9 @@ use gl_wrapper::{Buffer, BufferConfig};
 use gm::flat::PointsPath;
 use gm::Color;
 use proc_macro::AsAny;
-use proc_macro::New;
+use proc_macro::Boxed;
 
-#[derive(AsAny, New)]
+#[derive(AsAny, Boxed)]
 pub struct DrawingView {
     base: ViewBase,
     pub paths: Vec<PathData>,
