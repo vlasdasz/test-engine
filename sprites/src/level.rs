@@ -1,5 +1,6 @@
 use rapier2d::na::Vector2;
 use tools::Boxed;
+use tools::New;
 use tools::Rglica;
 use tools::ToRglica;
 
@@ -23,9 +24,11 @@ pub trait Level {
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
     fn rigid_bodies(&self) -> &RigidBodySet;
+    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet;
 }
 
 pub struct LevelBase {
+    pub player: Rglica<Body>,
     pub sprites: Vec<Box<dyn Sprite>>,
 
     rigid_body_set: RigidBodySet,
@@ -45,13 +48,8 @@ pub struct LevelBase {
 
 impl LevelBase {
     pub fn setup(&mut self) {
-        // let player = self.add_rect((0, 10).into(), (17.0 / 6.0, 28.0 / 6.0).into());
-        // self.player = player;
-        // // self.player.borrow_mut().image =
-        // //     Some(Image::load(&crate::te::paths::images().join("frisk.png")));
-        // let body = self.player_body();
-        // body.lock_rotations(true, true);
-        // dbg!(body.mass());
+        self.player = self.add_body((0, 10, 17.0 / 6.0, 28.0 / 6.0).into());
+        self.player.lock_rotations();
     }
 
     pub fn update(&mut self) {
@@ -130,6 +128,10 @@ impl Level for LevelBase {
     fn rigid_bodies(&self) -> &RigidBodySet {
         &self.rigid_body_set
     }
+
+    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet {
+        &mut self.rigid_body_set
+    }
 }
 
 impl Boxed for LevelBase {
@@ -148,6 +150,7 @@ impl Boxed for LevelBase {
             ccd_solver: CCDSolver::new(),
             physics_hooks: (),
             event_handler: (),
+            player: Rglica::new(),
         })
     }
 }

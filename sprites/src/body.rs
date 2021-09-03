@@ -1,4 +1,4 @@
-use crate::{Level, Sprite, SpriteBase};
+use crate::{Control, Level, Sprite, SpriteBase};
 use gm::Point;
 use rapier2d::dynamics::RigidBody;
 use rapier2d::prelude::RigidBodyHandle;
@@ -26,6 +26,14 @@ impl Body {
     fn body(&self) -> &RigidBody {
         &self.level.rigid_bodies()[self.handle]
     }
+
+    fn body_mut(&mut self) -> &mut RigidBody {
+        &mut self.level.rigid_bodies_mut()[self.handle]
+    }
+
+    pub fn lock_rotations(&mut self) {
+        self.body_mut().lock_rotations(true, true);
+    }
 }
 
 impl Sprite for Body {
@@ -43,5 +51,23 @@ impl Sprite for Body {
 
     fn sprite_mut(&mut self) -> &mut SpriteBase {
         &mut self.base
+    }
+}
+
+impl Control for Body {
+    fn jump(&mut self) {
+        todo!()
+    }
+
+    fn go_left(&mut self) {
+        todo!()
+    }
+
+    fn go_right(&mut self) {
+        todo!()
+    }
+
+    fn add_impulse(&mut self, _impulse: &Point) {
+        todo!()
     }
 }

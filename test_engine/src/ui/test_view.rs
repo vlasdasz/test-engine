@@ -4,6 +4,7 @@ use gm::flat::PointsPath;
 use gm::Color;
 use proc_macro::AsAny;
 use proc_macro::Boxed;
+use std::ops::DerefMut;
 use tools::rglica::ToRglica;
 use tools::Boxed;
 use tools::New;
@@ -11,7 +12,6 @@ use tools::Rglica;
 use ui::basic::Button;
 use ui::complex::{AnalogStickView, DrawingView};
 use ui::{make_view_on, DPadView, ImageView, Label, View, ViewBase};
-use std::ops::DerefMut;
 
 static mut COUNTER: u32 = 0;
 
