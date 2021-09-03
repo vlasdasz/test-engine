@@ -85,20 +85,16 @@ impl LevelBase {
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    pub fn on_key_pressed(&mut self, _key: Key, _action: Action) {
-        // if key == Key::A {
-        //     self.go_left()
-        // } else if key == Key::D {
-        //     self.go_right();
-        // } else if key == Key::W {
-        //     self.jump()
-        // } else if key == Key::S {
-        // }
+    pub fn on_key_pressed(&mut self, key: Key, _action: Action) {
+        if key == Key::A {
+            self.player.go_left()
+        } else if key == Key::D {
+            self.player.go_right();
+        } else if key == Key::W {
+            self.player.jump()
+        } else if key == Key::S {
+        }
     }
-
-    // fn player_body(&mut self) -> &mut RigidBody {
-    //     &mut self.rigid_body_set[self.player.borrow().rigid_body_handle.unwrap()]
-    // }
 
     pub fn add_sprite(&mut self, sprite: SpriteBase) {
         self.sprites.push(Box::new(sprite))

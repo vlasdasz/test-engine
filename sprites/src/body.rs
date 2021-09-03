@@ -1,6 +1,7 @@
 use crate::{Control, Level, Sprite, SpriteBase};
 use gm::Point;
 use rapier2d::dynamics::RigidBody;
+use rapier2d::na::Vector2;
 use rapier2d::prelude::RigidBodyHandle;
 use tools::Rglica;
 
@@ -56,18 +57,19 @@ impl Sprite for Body {
 
 impl Control for Body {
     fn jump(&mut self) {
-        todo!()
+        self.body_mut().set_linvel([0.0, 50.0].into(), true)
     }
 
     fn go_left(&mut self) {
-        todo!()
+        self.body_mut().set_linvel([-50.0, 0.0].into(), true)
     }
 
     fn go_right(&mut self) {
-        todo!()
+        self.body_mut().set_linvel([50.0, 0.0].into(), true)
     }
 
-    fn add_impulse(&mut self, _impulse: &Point) {
-        todo!()
+    fn add_impulse(&mut self, impulse: &Point) {
+        self.body_mut()
+            .apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)
     }
 }

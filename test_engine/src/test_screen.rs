@@ -8,12 +8,14 @@ use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
+use sprites::Control;
 use sprites::LevelBase;
 use sprites::Sprite;
 use std::ops::DerefMut;
 use std::rc::Rc;
 use tools::Boxed;
 use tools::New;
+use tools::ToRglica;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::input::Touch;
@@ -59,32 +61,29 @@ impl TestScreen {
 
     fn setup_test_view(&mut self) {
         make_view_on::<DebugView>(self.root_view.deref_mut());
-        let _test_view = make_view_on::<TestView>(self.root_view.deref_mut());
+        let mut view = make_view_on::<TestView>(self.root_view.deref_mut());
 
-        // let a = self.level.clone();
-        // view.dpad.borrow_mut().on_up.subscribe(move |_| {
-        //     a.borrow_mut().jump();
-        // });
-        //
-        // let a = self.level.clone();
-        // view.dpad.borrow_mut().on_left.subscribe(move |_| {
-        //     a.borrow_mut().go_left();
-        // });
-        //
-        // let a = self.level.clone();
-        // view.dpad.borrow_mut().on_right.subscribe(move |_| {
-        //     a.borrow_mut().go_right();
-        // });
-        //
-        // let a = self.level.clone();
-        // view.left_stick
-        //     .borrow_mut()
-        //     .on_direction_change
-        //     .subscribe(move |direction| {
-        //         a.borrow_mut().add_impulse(direction);
-        //     });
+        let mut this = self.level.to_rglica();
+        view.dpad.on_up.subscribe(move |_| {
+            this.player.jump();
+        });
 
-        //self.root_view.add_subview(Box::new(view));
+        let mut this = self.level.to_rglica();
+        view.dpad.on_left.subscribe(move |_| {
+            this.player.go_left();
+        });
+
+        let mut this = self.level.to_rglica();
+        view.dpad.on_right.subscribe(move |_| {
+            this.player.go_right();
+        });
+
+        let mut this = self.level.to_rglica();
+        view.left_stick
+            .on_direction_change
+            .subscribe(move |direction| {
+                this.player.add_impulse(direction);
+            });
     }
 }
 
@@ -133,8 +132,8 @@ impl Screen for TestScreen {
 
         level.update();
 
-        // self.sprites_drawer
-        //     .set_camera_position(&level.player.borrow().position);
+        self.sprites_drawer
+            .set_camera_position(&level.player.position());
 
         for sprite in &level.sprites {
             self.sprites_drawer.draw(sprite);
