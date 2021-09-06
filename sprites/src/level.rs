@@ -1,17 +1,16 @@
-use rapier2d::na::Vector2;
-use tools::Boxed;
-use tools::New;
-use tools::Rglica;
-use tools::ToRglica;
-
-use crate::{Body, Collider, Sprite, SpriteBase};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::Point;
-use rapier2d::prelude::{
-    BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
-    JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
+use rapier2d::{
+    na::Vector2,
+    prelude::{
+        BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
+        JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
+    },
 };
+use tools::{Boxed, New, Rglica, ToRglica};
+
+use crate::{Body, Collider, Sprite, SpriteBase};
 
 pub trait Control {
     fn jump(&mut self);
@@ -21,29 +20,31 @@ pub trait Control {
 }
 
 pub trait Level {
+    fn rigid_bodies(&self) -> &RigidBodySet { &self.level().rigid_body_set }
+
+    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet { &mut self.level_mut().rigid_body_set }
+
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
-    fn rigid_bodies(&self) -> &RigidBodySet;
-    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet;
 }
 
 pub struct LevelBase {
-    pub player: Rglica<Body>,
+    pub player:  Rglica<Body>,
     pub sprites: Vec<Box<dyn Sprite>>,
 
     rigid_body_set: RigidBodySet,
-    collider_set: ColliderSet,
+    collider_set:   ColliderSet,
 
-    gravity: Vector2<f32>,
+    gravity:                Vector2<f32>,
     integration_parameters: IntegrationParameters,
-    physics_pipeline: PhysicsPipeline,
-    island_manager: IslandManager,
-    broad_phase: BroadPhase,
-    narrow_phase: NarrowPhase,
-    joint_set: JointSet,
-    ccd_solver: CCDSolver,
-    physics_hooks: (),
-    event_handler: (),
+    physics_pipeline:       PhysicsPipeline,
+    island_manager:         IslandManager,
+    broad_phase:            BroadPhase,
+    narrow_phase:           NarrowPhase,
+    joint_set:              JointSet,
+    ccd_solver:             CCDSolver,
+    physics_hooks:          (),
+    event_handler:          (),
 }
 
 impl LevelBase {
@@ -96,9 +97,7 @@ impl LevelBase {
         }
     }
 
-    pub fn add_sprite(&mut self, sprite: SpriteBase) {
-        self.sprites.push(Box::new(sprite))
-    }
+    pub fn add_sprite(&mut self, sprite: SpriteBase) { self.sprites.push(Box::new(sprite)) }
 
     pub fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
         let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
@@ -113,40 +112,28 @@ impl LevelBase {
 }
 
 impl Level for LevelBase {
-    fn level(&self) -> &LevelBase {
-        self
-    }
+    fn level(&self) -> &LevelBase { self }
 
-    fn level_mut(&mut self) -> &mut LevelBase {
-        self
-    }
-
-    fn rigid_bodies(&self) -> &RigidBodySet {
-        &self.rigid_body_set
-    }
-
-    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet {
-        &mut self.rigid_body_set
-    }
+    fn level_mut(&mut self) -> &mut LevelBase { self }
 }
 
 impl Boxed for LevelBase {
     fn boxed() -> Box<Self> {
         Box::new(Self {
-            sprites: vec![],
-            rigid_body_set: RigidBodySet::new(),
-            collider_set: ColliderSet::new(),
-            gravity: Vector2::new(0.0, -9.81),
+            sprites:                vec![],
+            rigid_body_set:         RigidBodySet::new(),
+            collider_set:           ColliderSet::new(),
+            gravity:                Vector2::new(0.0, -9.81),
             integration_parameters: IntegrationParameters::default(),
-            physics_pipeline: PhysicsPipeline::new(),
-            island_manager: IslandManager::new(),
-            broad_phase: BroadPhase::new(),
-            narrow_phase: NarrowPhase::new(),
-            joint_set: JointSet::new(),
-            ccd_solver: CCDSolver::new(),
-            physics_hooks: (),
-            event_handler: (),
-            player: Rglica::new(),
+            physics_pipeline:       PhysicsPipeline::new(),
+            island_manager:         IslandManager::new(),
+            broad_phase:            BroadPhase::new(),
+            narrow_phase:           NarrowPhase::new(),
+            joint_set:              JointSet::new(),
+            ccd_solver:             CCDSolver::new(),
+            physics_hooks:          (),
+            event_handler:          (),
+            player:                 Rglica::new(),
         })
     }
 }

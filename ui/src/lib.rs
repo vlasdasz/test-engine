@@ -5,18 +5,15 @@ pub mod test;
 pub mod text;
 pub mod view;
 
-pub use basic::ImageView;
-pub use basic::Label;
+use std::{path::PathBuf, sync::Mutex};
+
+pub use basic::{ImageView, Label};
 pub use complex::DPadView;
 pub use input::Touch;
+use lazy_static::lazy_static;
 pub use test::SubviewsTestView;
 pub use text::{Font, Glyph};
 pub use view::*;
-
-use lazy_static::lazy_static;
-
-use std::path::PathBuf;
-use std::sync::Mutex;
 
 lazy_static! {
     pub static ref DEFAULT_FONT_PATH: Mutex<PathBuf> = Mutex::new(PathBuf::new());

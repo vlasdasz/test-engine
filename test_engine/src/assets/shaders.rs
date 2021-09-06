@@ -1,15 +1,16 @@
-use crate::paths;
 use gl_wrapper::{Shader, ShaderCompiler};
+
+use crate::paths;
 
 pub struct Shaders {
     compiler: ShaderCompiler,
 
-    pub ui: Shader,
-    pub ui_path: Shader,
-    pub ui_texture: Shader,
+    pub ui:            Shader,
+    pub ui_path:       Shader,
+    pub ui_texture:    Shader,
     pub ui_monochrome: Shader,
 
-    pub sprite: Shader,
+    pub sprite:          Shader,
     pub textured_sprite: Shader,
 }
 

@@ -1,23 +1,23 @@
+use std::ffi::c_void;
+
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
+use tools::{array_view::ArrayView, *};
 
 use crate::BufferConfig;
-use std::ffi::c_void;
-use tools::array_view::ArrayView;
-use tools::*;
 
 #[derive(Debug)]
 pub struct Buffer {
     config: &'static BufferConfig,
 
     vertex_data: ArrayView<f32>,
-    indices: Option<ArrayView<u16>>,
+    indices:     Option<ArrayView<u16>>,
 
     vertices_count: i32,
 
-    vertex_array_object: u32,
+    vertex_array_object:  u32,
     vertex_buffer_object: u32,
-    index_buffer_object: u32,
+    index_buffer_object:  u32,
 
     pub draw_mode: u32,
 }

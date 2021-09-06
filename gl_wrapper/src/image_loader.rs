@@ -1,8 +1,8 @@
+use std::ffi::c_void;
+
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
-
 use gm::Size;
-use std::ffi::c_void;
 use tools::*;
 
 pub struct ImageLoader;

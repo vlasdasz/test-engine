@@ -6,14 +6,17 @@ mod sprites;
 mod test_screen;
 mod ui;
 
-pub use crate::test_screen::TestScreen;
-use ::ui::input::touch::Event;
-use ::ui::Touch;
+use std::{
+    os::raw::{c_float, c_int, c_ulong},
+    ptr,
+};
+
+use ::ui::{input::touch::Event, Touch};
 use gl_wrapper::Screen;
 use gm::Size;
-use std::os::raw::{c_float, c_int, c_ulong};
-use std::ptr;
 use tools::New;
+
+pub use crate::test_screen::TestScreen;
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]
@@ -48,9 +51,9 @@ pub extern "C" fn update_screen() {
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     unsafe {
         SCREEN.as_mut().unwrap().on_touch(Touch {
-            id: id.into(),
+            id:       id.into(),
             position: (x * 2.0, y * 2.0).into(),
-            event: Event::from_int(event),
+            event:    Event::from_int(event),
         })
     }
 }

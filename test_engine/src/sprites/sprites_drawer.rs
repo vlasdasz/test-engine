@@ -1,16 +1,16 @@
-use crate::assets::Assets;
+use std::rc::Rc;
+
 use gm::{Point, Size};
 use sprites::Sprite;
-use std::rc::Rc;
+
+use crate::assets::Assets;
 
 pub struct SpritesDrawer {
     assets: Rc<Assets>,
 }
 
 impl SpritesDrawer {
-    pub fn new(assets: Rc<Assets>) -> Self {
-        Self { assets }
-    }
+    pub fn new(assets: Rc<Assets>) -> Self { Self { assets } }
 
     pub fn set_resolution(&self, size: &Size) {
         self.assets.shaders.sprite.enable();

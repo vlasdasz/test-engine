@@ -1,6 +1,5 @@
-use cfg_if::cfg_if;
-
 pub use buffer::{Buffer, BufferConfig};
+use cfg_if::cfg_if;
 pub use gl_info::GLInfo;
 pub use gl_wrapper::GLWrapper;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]

@@ -1,39 +1,34 @@
-use crate::assets::Assets;
-use crate::paths;
-use crate::sprites::SpritesDrawer;
-use crate::ui::ui_drawer::UIDrawer;
-use crate::ui::{DebugView, TestView};
+use std::{ops::DerefMut, rc::Rc};
+
 use gl_image::Image;
 use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
-use sprites::Control;
-use sprites::LevelBase;
-use sprites::Sprite;
-use std::ops::DerefMut;
-use std::rc::Rc;
-use tools::Boxed;
-use tools::New;
-use tools::ToRglica;
+use sprites::{Control, LevelBase, Sprite};
+use tools::{Boxed, New, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
-use ui::input::Touch;
-use ui::{make_view_on, View, ViewBase};
+use ui::{input::Touch, make_view_on, View, ViewBase};
+
+use crate::{
+    assets::Assets,
+    paths,
+    sprites::SpritesDrawer,
+    ui::{ui_drawer::UIDrawer, DebugView, TestView},
+};
 
 pub struct TestScreen {
     cursor_position: Point,
-    assets: Rc<Assets>,
-    root_view: Box<dyn View>,
-    level: Box<LevelBase>,
-    ui_drawer: UIDrawer,
-    sprites_drawer: SpritesDrawer,
+    assets:          Rc<Assets>,
+    root_view:       Box<dyn View>,
+    level:           Box<LevelBase>,
+    ui_drawer:       UIDrawer,
+    sprites_drawer:  SpritesDrawer,
 }
 
 impl TestScreen {
-    pub fn on_touch(&mut self, mut touch: Touch) {
-        self.root_view.check_touch(&mut touch);
-    }
+    pub fn on_touch(&mut self, mut touch: Touch) { self.root_view.check_touch(&mut touch); }
 
     fn update_view(view: &mut Box<dyn View>) {
         view.update();
@@ -92,17 +87,17 @@ impl DesktopInput for TestScreen {
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;
         self.on_touch(Touch {
-            id: 1,
+            id:       1,
             position: self.cursor_position,
-            event: Event::Moved,
+            event:    Event::Moved,
         });
     }
 
     fn on_mouse_key_pressed(&mut self, _button: glfw::MouseButton, state: Action) {
         self.on_touch(Touch {
-            id: 1,
+            id:       1,
             position: self.cursor_position,
-            event: Event::from_state(ButtonState::from_glfw(state)),
+            event:    Event::from_state(ButtonState::from_glfw(state)),
         })
     }
 
@@ -163,11 +158,11 @@ impl New for TestScreen {
         let assets = Assets::init();
         TestScreen {
             cursor_position: Point::new(),
-            assets: assets.clone(),
-            root_view: ViewBase::boxed(),
-            level: LevelBase::boxed(),
-            ui_drawer: UIDrawer::new(assets.clone()),
-            sprites_drawer: SpritesDrawer::new(assets),
+            assets:          assets.clone(),
+            root_view:       ViewBase::boxed(),
+            level:           LevelBase::boxed(),
+            ui_drawer:       UIDrawer::new(assets.clone()),
+            sprites_drawer:  SpritesDrawer::new(assets),
         }
     }
 }

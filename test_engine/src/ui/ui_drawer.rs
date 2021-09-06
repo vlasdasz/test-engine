@@ -1,15 +1,18 @@
-use crate::assets::Assets;
+use std::rc::Rc;
+
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
 use gm::{Color, Rect, Size};
-use std::rc::Rc;
-use tools::new;
-use tools::platform::Platform;
-use ui::complex::{DrawingView, PathData};
-use ui::View;
+use tools::{new, platform::Platform};
+use ui::{
+    complex::{DrawingView, PathData},
+    View,
+};
+
+use crate::assets::Assets;
 
 pub struct UIDrawer {
-    pub assets: Rc<Assets>,
+    pub assets:      Rc<Assets>,
     pub window_size: Size,
 }
 
@@ -21,9 +24,7 @@ impl UIDrawer {
         }
     }
 
-    pub fn set_size(&mut self, size: &Size) {
-        self.window_size = size.clone();
-    }
+    pub fn set_size(&mut self, size: &Size) { self.window_size = size.clone(); }
 }
 
 impl UIDrawer {
@@ -49,9 +50,7 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn reset_viewport(&self) {
-        self.set_viewport(&self.window_size.into());
-    }
+    pub fn reset_viewport(&self) { self.set_viewport(&self.window_size.into()); }
 
     fn set_viewport(&self, rect: &Rect) {
         const SCALE: f32 = if Platform::MAC { 2.0 } else { 1.0 };

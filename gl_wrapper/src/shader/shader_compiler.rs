@@ -7,17 +7,18 @@ if #[cfg(any(target_os="ios", target_os="android"))] {
     extern crate gl;
 }}
 
-use crate::{GLInfo, Shader};
+use std::{collections::HashMap, ffi::CString, fs, path::PathBuf};
+
 use guard::guard;
-use std::collections::HashMap;
-use std::ffi::CString;
-use std::fs;
-use std::path::PathBuf;
-use tools::regex::{find_match, find_matches};
-use tools::*;
+use tools::{
+    regex::{find_match, find_matches},
+    *,
+};
+
+use crate::{GLInfo, Shader};
 
 pub struct ShaderCompiler {
-    path: PathBuf,
+    path:    PathBuf,
     gl_info: GLInfo,
 }
 

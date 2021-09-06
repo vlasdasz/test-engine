@@ -1,29 +1,28 @@
-use crate::paths;
-use gl_image::Image;
-use gm::flat::PointsPath;
-use gm::Color;
-use proc_macro::AsAny;
-use proc_macro::Boxed;
 use std::ops::DerefMut;
-use tools::rglica::ToRglica;
-use tools::Boxed;
-use tools::New;
-use tools::Rglica;
-use ui::basic::Button;
-use ui::complex::{AnalogStickView, DrawingView};
-use ui::{make_view_on, DPadView, ImageView, Label, View, ViewBase};
+
+use gl_image::Image;
+use gm::{flat::PointsPath, Color};
+use proc_macro::{AsAny, Boxed};
+use tools::{rglica::ToRglica, Boxed, New, Rglica};
+use ui::{
+    basic::Button,
+    complex::{AnalogStickView, DrawingView},
+    make_view_on, DPadView, ImageView, Label, View, ViewBase,
+};
+
+use crate::paths;
 
 static mut COUNTER: u32 = 0;
 
 #[derive(AsAny, Boxed)]
 pub struct TestView {
-    base: ViewBase,
-    pub data: u128,
-    pub clicks: u128,
-    pub image_view: Rglica<ImageView>,
-    pub label: Rglica<Label>,
-    pub dpad: Rglica<DPadView>,
-    pub left_stick: Rglica<AnalogStickView>,
+    base:            ViewBase,
+    pub data:        u128,
+    pub clicks:      u128,
+    pub image_view:  Rglica<ImageView>,
+    pub label:       Rglica<Label>,
+    pub dpad:        Rglica<DPadView>,
+    pub left_stick:  Rglica<AnalogStickView>,
     pub right_stick: Rglica<AnalogStickView>,
 }
 
@@ -100,19 +99,11 @@ impl View for TestView {
         self.right_stick.frame_mut().origin.y = 300.0;
     }
 
-    fn update(&mut self) {
-        self.data += 1;
-    }
+    fn update(&mut self) { self.data += 1; }
 
-    fn layout(&mut self) {
-        self.placer().br();
-    }
+    fn layout(&mut self) { self.placer().br(); }
 
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
+    fn view(&self) -> &ViewBase { &self.base }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
 }

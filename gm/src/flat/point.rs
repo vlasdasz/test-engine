@@ -1,20 +1,17 @@
-use proc_macro::New;
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
+
+use proc_macro::New;
 
 pub trait IntoF32 {
     fn into_f32(self) -> f32;
 }
 
 impl IntoF32 for i32 {
-    fn into_f32(self) -> f32 {
-        self as f32
-    }
+    fn into_f32(self) -> f32 { self as f32 }
 }
 
 impl IntoF32 for f32 {
-    fn into_f32(self) -> f32 {
-        self
-    }
+    fn into_f32(self) -> f32 { self }
 }
 
 #[derive(Copy, Clone, Debug, New)]
@@ -26,15 +23,9 @@ pub struct Point {
 impl Point {
     pub const DEFAULT: Point = Point { x: 0.0, y: 0.0 };
 
-    pub fn angle(&self) -> f32 {
-        self.y.atan2(self.x)
-    }
-    pub fn is_zero(&self) -> bool {
-        self.x == 0.0 && self.y == 0.0
-    }
-    pub fn length(&self) -> f32 {
-        (self.x * self.x + self.y * self.y).sqrt()
-    }
+    pub fn angle(&self) -> f32 { self.y.atan2(self.x) }
+    pub fn is_zero(&self) -> bool { self.x == 0.0 && self.y == 0.0 }
+    pub fn length(&self) -> f32 { (self.x * self.x + self.y * self.y).sqrt() }
 }
 
 impl Point {
@@ -42,21 +33,13 @@ impl Point {
         self.x = -self.x;
         self.y = -self.y;
     }
-    pub fn invert_x(&mut self) {
-        self.x = -self.x
-    }
-    pub fn invert_y(&mut self) {
-        self.y = -self.y
-    }
+    pub fn invert_x(&mut self) { self.x = -self.x }
+    pub fn invert_y(&mut self) { self.y = -self.y }
 }
 
 impl Point {
-    pub fn normalized(self) -> Point {
-        self.with_length(1.0)
-    }
-    pub fn normalize(&mut self) {
-        self.set_length(1.0)
-    }
+    pub fn normalized(self) -> Point { self.with_length(1.0) }
+    pub fn normalize(&mut self) { self.set_length(1.0) }
 }
 
 impl Point {
@@ -99,9 +82,7 @@ impl AddAssign for Point {
 
 impl Add for Point {
     type Output = Point;
-    fn add(self, rhs: Point) -> Point {
-        (self.x + rhs.x, self.y + rhs.y).into()
-    }
+    fn add(self, rhs: Point) -> Point { (self.x + rhs.x, self.y + rhs.y).into() }
 }
 
 impl SubAssign for Point {
@@ -113,16 +94,12 @@ impl SubAssign for Point {
 
 impl Sub for &Point {
     type Output = Point;
-    fn sub(self, rhs: &Point) -> Point {
-        (self.x - rhs.x, self.y - rhs.y).into()
-    }
+    fn sub(self, rhs: &Point) -> Point { (self.x - rhs.x, self.y - rhs.y).into() }
 }
 
 impl Mul<f32> for Point {
     type Output = Point;
-    fn mul(self, rhs: f32) -> Point {
-        (self.x * rhs, self.y * rhs).into()
-    }
+    fn mul(self, rhs: f32) -> Point { (self.x * rhs, self.y * rhs).into() }
 }
 
 impl<X: IntoF32, Y: IntoF32> From<(X, Y)> for Point {

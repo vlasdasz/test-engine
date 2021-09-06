@@ -1,11 +1,12 @@
-use crate::assets::{Buffers, Fonts, Images, Shaders};
 use std::rc::Rc;
+
+use crate::assets::{Buffers, Fonts, Images, Shaders};
 
 pub struct Assets {
     pub buffers: Buffers,
     pub shaders: Shaders,
-    pub images: Images,
-    pub fonts: Fonts,
+    pub images:  Images,
+    pub fonts:   Fonts,
 }
 
 impl Assets {
@@ -13,8 +14,8 @@ impl Assets {
         Rc::new(Assets {
             buffers: Buffers::init(),
             shaders: Shaders::init(),
-            images: Images::init(),
-            fonts: Fonts::init(),
+            images:  Images::init(),
+            fonts:   Fonts::init(),
         })
     }
 }

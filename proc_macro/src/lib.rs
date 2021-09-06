@@ -1,9 +1,8 @@
 extern crate proc_macro;
 
-use syn::{parse_macro_input, Data, DataStruct, DeriveInput, Fields};
-
 use proc_macro::TokenStream;
 use quote::quote;
+use syn::{parse_macro_input, Data, DataStruct, DeriveInput, Fields};
 
 #[proc_macro_derive(AsAny)]
 pub fn derive_as_any(input: TokenStream) -> TokenStream {

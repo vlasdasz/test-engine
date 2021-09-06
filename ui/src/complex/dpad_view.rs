@@ -1,21 +1,19 @@
-use crate::{basic::Button, View, ViewBase};
 use gl_image::Image;
-use proc_macro::AsAny;
-use proc_macro::Boxed;
-use tools::rglica::ToRglica;
-use tools::Boxed;
-use tools::{Event, Rglica};
+use proc_macro::{AsAny, Boxed};
+use tools::{rglica::ToRglica, Boxed, Event, Rglica};
+
+use crate::{basic::Button, View, ViewBase};
 
 #[derive(AsAny, Boxed)]
 pub struct DPadView {
-    base: ViewBase,
-    up: Rglica<Button>,
-    down: Rglica<Button>,
-    left: Rglica<Button>,
-    right: Rglica<Button>,
-    pub on_up: Event,
-    pub on_down: Event,
-    pub on_left: Event,
+    base:         ViewBase,
+    up:           Rglica<Button>,
+    down:         Rglica<Button>,
+    left:         Rglica<Button>,
+    right:        Rglica<Button>,
+    pub on_up:    Event,
+    pub on_down:  Event,
+    pub on_left:  Event,
     pub on_right: Event,
 }
 
@@ -78,11 +76,7 @@ impl View for DPadView {
             .set_frame((third * 2.0, half, third, half).into());
     }
 
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
+    fn view(&self) -> &ViewBase { &self.base }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
 }

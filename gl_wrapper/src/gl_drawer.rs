@@ -1,13 +1,14 @@
-use crate::{GLLoader, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, Window, WindowEvent};
 use gm::{Point, Size};
 use tools::new;
 
+use crate::{GLLoader, Screen};
+
 pub struct GLDrawer<ScreenT: Screen> {
     window: Window,
     events: std::sync::mpsc::Receiver<(f64, WindowEvent)>,
-    size: Size,
+    size:   Size,
     screen: ScreenT,
 }
 
@@ -22,9 +23,7 @@ impl<ScreenT: Screen> GLDrawer<ScreenT> {
         }
     }
 
-    pub fn update(&mut self) {
-        self.screen.update();
-    }
+    pub fn update(&mut self) { self.screen.update(); }
 
     pub fn start_main_loop(&mut self) {
         self.screen.init();
@@ -55,7 +54,7 @@ impl<ScreenT: Screen> GLDrawer<ScreenT> {
                     }
                     glfw::WindowEvent::Size(width, height) => {
                         self.screen.set_size(Size {
-                            width: width as f32,
+                            width:  width as f32,
                             height: height as f32,
                         });
                     }

@@ -3,9 +3,9 @@ use gm::{Point, Size};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Glyph {
-    pub ch: char,
-    pub size: Size,
-    pub image: Image,
+    pub ch:      char,
+    pub size:    Size,
+    pub image:   Image,
     pub advance: u32,
     pub bearing: Point,
 }
@@ -15,7 +15,7 @@ impl Glyph {
         Glyph {
             ch,
             size: Size {
-                width: image.size.width / 2.0,
+                width:  image.size.width / 2.0,
                 height: image.size.height / 2.0,
             },
             image,
@@ -27,11 +27,7 @@ impl Glyph {
         }
     }
 
-    pub fn y_max(&self) -> f32 {
-        self.bearing.y
-    }
+    pub fn y_max(&self) -> f32 { self.bearing.y }
 
-    pub fn y_min(&self) -> f32 {
-        self.bearing.y - self.image.size.height
-    }
+    pub fn y_min(&self) -> f32 { self.bearing.y - self.image.size.height }
 }

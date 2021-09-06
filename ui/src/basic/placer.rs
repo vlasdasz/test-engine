@@ -1,21 +1,23 @@
-use crate::View;
+use std::ops::DerefMut;
+
 use gm::Rect;
 use proc_macro::New;
-use std::ops::DerefMut;
 use tools::Rglica;
+
+use crate::View;
 
 #[derive(New)]
 pub struct Placer {
-    view: Rglica<dyn View>,
-    frame: Rglica<Rect>,
+    view:        Rglica<dyn View>,
+    frame:       Rglica<Rect>,
     super_frame: Rglica<Rect>,
 }
 
 impl Placer {
     pub fn make(view: &mut Box<dyn View>) -> Self {
         Self {
-            view: Rglica::from_ref(view.deref_mut()),
-            frame: Rglica::from_ref(view.frame()),
+            view:        Rglica::from_ref(view.deref_mut()),
+            frame:       Rglica::from_ref(view.frame()),
             super_frame: Rglica::from_ref(view.super_frame()),
         }
     }

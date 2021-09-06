@@ -1,13 +1,14 @@
-use crate::{View, ViewBase};
 use gl_image::Image;
 use proc_macro::{AsAny, Boxed};
 use tools::{Event, Rglica};
 
+use crate::{View, ViewBase};
+
 #[derive(AsAny, Boxed)]
 pub struct Button {
-    base: ViewBase,
+    base:       ViewBase,
     pub on_tap: Event,
-    pub image: Option<Image>,
+    pub image:  Option<Image>,
 }
 
 impl View for Button {
@@ -21,15 +22,9 @@ impl View for Button {
         });
     }
 
-    fn image(&self) -> Option<Image> {
-        self.image
-    }
+    fn image(&self) -> Option<Image> { self.image }
 
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
+    fn view(&self) -> &ViewBase { &self.base }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
 }

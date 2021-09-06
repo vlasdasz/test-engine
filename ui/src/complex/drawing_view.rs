@@ -1,15 +1,15 @@
-use crate::complex::path_data::DrawMode;
-use crate::complex::PathData;
-use crate::{View, ViewBase};
 use gl_wrapper::{Buffer, BufferConfig};
-use gm::flat::PointsPath;
-use gm::Color;
-use proc_macro::AsAny;
-use proc_macro::Boxed;
+use gm::{flat::PointsPath, Color};
+use proc_macro::{AsAny, Boxed};
+
+use crate::{
+    complex::{path_data::DrawMode, PathData},
+    View, ViewBase,
+};
 
 #[derive(AsAny, Boxed)]
 pub struct DrawingView {
-    base: ViewBase,
+    base:      ViewBase,
     pub paths: Vec<PathData>,
 }
 
@@ -21,13 +21,9 @@ impl DrawingView {
 }
 
 impl View for DrawingView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
+    fn view(&self) -> &ViewBase { &self.base }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
 }
 
 fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {

@@ -1,24 +1,18 @@
-use crate::{View, ViewBase};
 use gl_image::Image;
-use proc_macro::AsAny;
-use proc_macro::Boxed;
+use proc_macro::{AsAny, Boxed};
+
+use crate::{View, ViewBase};
 
 #[derive(AsAny, Boxed)]
 pub struct ImageView {
     pub image: Image,
-    base: ViewBase,
+    base:      ViewBase,
 }
 
 impl View for ImageView {
-    fn image(&self) -> Option<Image> {
-        self.image.into()
-    }
+    fn image(&self) -> Option<Image> { self.image.into() }
 
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
+    fn view(&self) -> &ViewBase { &self.base }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
 }
