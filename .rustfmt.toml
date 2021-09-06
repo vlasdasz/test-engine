@@ -3,3 +3,5 @@ group_imports = "StdExternalCrate"
 fn_single_line = true
 format_strings = true
 struct_field_align_threshold = 100
+use_field_init_shorthand = true
+wrap_comments = true

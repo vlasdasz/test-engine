@@ -5,7 +5,7 @@ use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
-use sprites::{Control, LevelBase, Sprite};
+use sprites::{Control, LevelBase, Sprite, Level};
 use tools::{Boxed, New, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
@@ -22,7 +22,7 @@ pub struct TestScreen {
     cursor_position: Point,
     assets:          Rc<Assets>,
     root_view:       Box<dyn View>,
-    level:           Box<LevelBase>,
+    level:           Box<dyn Level>,
     ui_drawer:       UIDrawer,
     sprites_drawer:  SpritesDrawer,
 }
@@ -38,6 +38,9 @@ impl TestScreen {
     }
 
     fn setup_level(&mut self) {
+
+        self.level = LevelBase::boxed();
+
         let level = self.level.deref_mut();
 
         level.setup();
@@ -60,24 +63,24 @@ impl TestScreen {
 
         let mut this = self.level.to_rglica();
         view.dpad.on_up.subscribe(move |_| {
-            this.player.jump();
+            this.player().jump();
         });
 
         let mut this = self.level.to_rglica();
         view.dpad.on_left.subscribe(move |_| {
-            this.player.go_left();
+            this.player().go_left();
         });
 
         let mut this = self.level.to_rglica();
         view.dpad.on_right.subscribe(move |_| {
-            this.player.go_right();
+            this.player().go_right();
         });
 
         let mut this = self.level.to_rglica();
         view.left_stick
             .on_direction_change
             .subscribe(move |direction| {
-                this.player.add_impulse(direction);
+                this.player().add_impulse(direction);
             });
     }
 }
@@ -125,12 +128,13 @@ impl Screen for TestScreen {
 
         let level = self.level.deref_mut();
 
+        level.level_mut().update_physics();
         level.update();
 
         self.sprites_drawer
-            .set_camera_position(&level.player.position());
+            .set_camera_position(&level.player().position());
 
-        for sprite in &level.sprites {
+        for sprite in level.sprites() {
             self.sprites_drawer.draw(sprite);
         }
 
