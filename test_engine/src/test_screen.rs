@@ -5,7 +5,7 @@ use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
-use sprites::{Control, LevelBase, Sprite, Level};
+use sprites::{Control, Level, LevelBase, Sprite};
 use tools::{Boxed, New, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
@@ -38,7 +38,6 @@ impl TestScreen {
     }
 
     fn setup_level(&mut self) {
-
         self.level = LevelBase::boxed();
 
         let level = self.level.deref_mut();

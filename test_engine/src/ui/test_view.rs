@@ -32,7 +32,7 @@ impl View for TestView {
 
         let image_view = ImageView::boxed();
         self.image_view = image_view.to_rglica();
-        self.image_view.image = Image::load(&paths::images().join("cat.jpg"));
+        self.image_view.image = Image::load(&paths::images().join("cat.png"));
         self.image_view.set_frame((200, 20, 100, 120).into());
         self.add_subview(image_view);
 
