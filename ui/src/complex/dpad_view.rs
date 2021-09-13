@@ -45,22 +45,22 @@ impl View for DPadView {
 
         let mut a = Rglica::from_ref(self);
         self.up.on_tap.subscribe(move |_| {
-            a.on_up.trigger(&());
+            a.on_up.trigger(());
         });
 
         let mut a = Rglica::from_ref(self);
         self.down.on_tap.subscribe(move |_| {
-            a.on_down.trigger(&());
+            a.on_down.trigger(());
         });
 
         let mut a = Rglica::from_ref(self);
         self.left.on_tap.subscribe(move |_| {
-            a.on_left.trigger(&());
+            a.on_left.trigger(());
         });
 
         let mut a = Rglica::from_ref(self);
         self.right.on_tap.subscribe(move |_| {
-            a.on_right.trigger(&());
+            a.on_right.trigger(());
         });
     }
 

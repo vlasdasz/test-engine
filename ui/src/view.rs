@@ -67,7 +67,7 @@ pub trait View: AsAny + Boxed {
 
     fn touch_enabled(&self) -> bool { self.view()._touch_enabled }
 
-    fn handle_touch(&mut self, touch: &Touch) { self.view_mut()._on_touch.trigger(touch); }
+    fn handle_touch(&mut self, touch: &Touch) { self.view_mut()._on_touch.trigger(touch.clone()); }
 
     fn touch_id(&self) -> u64 { self.view()._touch_id.borrow().clone() }
 

@@ -1,12 +1,14 @@
 use std::{ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+use gl_wrapper::GLDrawer;
 use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Rect, Size};
 use sprites::{Control, Level, LevelBase, Sprite};
-use tools::{Boxed, New, ToRglica};
+use tools::{new, Boxed, New, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::{input::Touch, make_view_on, View, ViewBase};
@@ -23,6 +25,8 @@ pub struct TestScreen {
     assets:          Rc<Assets>,
     root_view:       Box<dyn View>,
     level:           Box<dyn Level>,
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
     sprites_drawer:  SpritesDrawer,
 }
@@ -79,8 +83,34 @@ impl TestScreen {
         view.left_stick
             .on_direction_change
             .subscribe(move |direction| {
-                this.player().add_impulse(direction);
+                this.player().add_impulse(&direction);
             });
+    }
+
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    fn setup_events(&mut self) {
+        let mut this = Rglica::from_ref(self);
+        self.drawer
+            .on_key_pressed
+            .subscribe(move |a| this.on_key_pressed(a.0, a.1));
+
+        let mut this = Rglica::from_ref(self);
+        self.drawer
+            .on_mouse_click
+            .subscribe(move |a| this.on_mouse_click(a.0, a.1));
+
+        let mut this = Rglica::from_ref(self);
+        self.drawer
+            .on_cursor_moved
+            .subscribe(move |a| this.on_cursor_moved(a));
+
+        let mut this = Rglica::from_ref(self);
+        self.drawer
+            .on_size_changed
+            .subscribe(move |size| this.set_size(size));
+
+        let mut this = Rglica::from_ref(self);
+        self.drawer.on_frame_drawn.subscribe(move |_| this.update());
     }
 }
 
@@ -95,7 +125,7 @@ impl DesktopInput for TestScreen {
         });
     }
 
-    fn on_mouse_key_pressed(&mut self, _button: glfw::MouseButton, state: Action) {
+    fn on_mouse_click(&mut self, _button: glfw::MouseButton, state: Action) {
         self.on_touch(Touch {
             id:       1,
             position: self.cursor_position,
@@ -113,6 +143,9 @@ impl DesktopInput for TestScreen {}
 
 impl Screen for TestScreen {
     fn init(&mut self) {
+        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        self.setup_events();
+
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
@@ -151,6 +184,9 @@ impl Screen for TestScreen {
         self.sprites_drawer.set_camera_position(&(0, 0).into());
         self.update();
     }
+
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    fn start_main_loop(&mut self) { self.drawer.start_main_loop() }
 }
 
 impl New for TestScreen {
@@ -158,14 +194,18 @@ impl New for TestScreen {
         let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
         *font_path = paths::fonts().join("SF.otf");
         drop(font_path);
-        let assets = Assets::init();
+        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        let drawer: GLDrawer = new();
+        let assets = Rc::new(Assets::new());
         TestScreen {
-            cursor_position: Point::new(),
-            assets:          assets.clone(),
-            root_view:       ViewBase::boxed(),
-            level:           LevelBase::boxed(),
-            ui_drawer:       UIDrawer::new(assets.clone()),
-            sprites_drawer:  SpritesDrawer::new(assets),
+            cursor_position: new(),
+            assets: assets.clone(),
+            root_view: ViewBase::boxed(),
+            level: LevelBase::boxed(),
+            #[cfg(not(any(target_os = "ios", target_os = "android")))]
+            drawer,
+            ui_drawer: UIDrawer::new(assets.clone()),
+            sprites_drawer: SpritesDrawer::new(assets),
         }
     }
 }

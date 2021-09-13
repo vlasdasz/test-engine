@@ -1,7 +1,13 @@
-use gl_wrapper::GLDrawer;
+use gl_wrapper::Screen;
 use test_engine::TestScreen;
+
+use crate::tools::New;
 
 extern crate proc_macro;
 extern crate tools;
 
-fn main() { GLDrawer::<TestScreen>::with_size((1200, 600).into()).start_main_loop(); }
+fn main() {
+    let mut screen = TestScreen::new();
+    screen.init();
+    screen.start_main_loop();
+}

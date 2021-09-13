@@ -33,7 +33,7 @@ pub mod shader;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 pub trait DesktopInput {
     fn on_cursor_moved(&mut self, position: Point);
-    fn on_mouse_key_pressed(&mut self, button: MouseButton, state: Action);
+    fn on_mouse_click(&mut self, button: MouseButton, state: Action);
     fn on_key_pressed(&mut self, key: glfw::Key, action: glfw::Action);
 }
 
@@ -44,4 +44,6 @@ pub trait Screen: New + DesktopInput {
     fn init(&mut self);
     fn update(&mut self);
     fn set_size(&mut self, size: Size);
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    fn start_main_loop(&mut self);
 }

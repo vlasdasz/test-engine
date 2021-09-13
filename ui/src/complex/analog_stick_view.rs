@@ -29,7 +29,7 @@ impl AnalogStickView {
             .frame_mut()
             .set_center(vector + frame.size.center());
 
-        self.on_direction_change.trigger(&mut (vector * 0.1));
+        self.on_direction_change.trigger(vector * 0.1);
     }
 }
 
@@ -88,7 +88,7 @@ impl View for AnalogStickView {
                 this.direction_stick
                     .frame_mut()
                     .set_center(frame.size.center());
-                this.on_direction_change.trigger(&Point::DEFAULT);
+                this.on_direction_change.trigger(Point::DEFAULT);
             } else {
                 this.on_touch_moved(&touch.position);
             }

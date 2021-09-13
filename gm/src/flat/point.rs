@@ -14,6 +14,10 @@ impl IntoF32 for f32 {
     fn into_f32(self) -> f32 { self }
 }
 
+impl IntoF32 for f64 {
+    fn into_f32(self) -> f32 { self as f32 }
+}
+
 #[derive(Copy, Clone, Debug, New)]
 pub struct Point {
     pub x: f32,

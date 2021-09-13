@@ -42,7 +42,7 @@ impl ButtonState {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Event {
     Began,
     Moved,
@@ -68,7 +68,7 @@ impl Event {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Touch {
     pub id:       u64,
     pub position: Point,

@@ -17,7 +17,7 @@ impl View for Button {
         let mut this = Rglica::from_ref(self);
         self.on_touch().subscribe(move |touch| {
             if touch.is_began() {
-                this.on_tap.trigger(&());
+                this.on_tap.trigger(());
             }
         });
     }
