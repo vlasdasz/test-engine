@@ -1,7 +1,6 @@
 pub use buffer::{Buffer, BufferConfig};
 use cfg_if::cfg_if;
 pub use gl_info::GLInfo;
-pub use gl_wrapper::GLWrapper;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, MouseButton};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -9,6 +8,8 @@ use gm::Point;
 use gm::Size;
 pub use shader::{Shader, ShaderCompiler};
 use tools::New;
+
+pub use crate::gl_wrapper::GLWrapper;
 
 #[macro_use]
 pub mod gl_debug;
@@ -41,9 +42,8 @@ pub trait DesktopInput {
 pub trait DesktopInput {}
 
 pub trait Screen: New + DesktopInput {
-    fn init(&mut self);
     fn update(&mut self);
-    fn set_size(&mut self, size: Size);
+    fn set_size(&mut self, size: Size) -> &mut Self;
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     fn start_main_loop(&mut self);
 }

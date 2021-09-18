@@ -7,7 +7,7 @@ extern crate proc_macro;
 extern crate tools;
 
 fn main() {
-    let mut screen = TestScreen::new();
-    screen.init();
-    screen.start_main_loop();
+    TestScreen::new()
+        .set_size((1000, 800).into())
+        .start_main_loop();
 }

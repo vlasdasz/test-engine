@@ -51,6 +51,10 @@ impl GLDrawer {
             self.window.swap_buffers();
         }
     }
+
+    pub fn set_size(&mut self, size: Size) {
+        self.window.set_size(size.width as i32, size.height as i32)
+    }
 }
 
 impl New for GLDrawer {

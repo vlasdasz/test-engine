@@ -6,7 +6,7 @@ use gl_wrapper::GLDrawer;
 use gl_wrapper::{DesktopInput, GLWrapper, Screen};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
-use gm::{Color, Point, Rect, Size};
+use gm::{Color, Point, Size};
 use sprites::{Control, Level, LevelBase, Sprite};
 use tools::{new, Boxed, New, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -105,12 +105,27 @@ impl TestScreen {
             .subscribe(move |a| this.on_cursor_moved(a));
 
         let mut this = Rglica::from_ref(self);
-        self.drawer
-            .on_size_changed
-            .subscribe(move |size| this.set_size(size));
+        self.drawer.on_size_changed.subscribe(move |size| {
+            this.set_size(size);
+        });
 
         let mut this = Rglica::from_ref(self);
         self.drawer.on_frame_drawn.subscribe(move |_| this.update());
+    }
+
+    fn init(&mut self) {
+        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        self.setup_events();
+
+        GLWrapper::enable_blend();
+        GLWrapper::set_clear_color(&Color::GRAY);
+
+        self.root_view.calculate_absolute_frame();
+
+        self.setup_level();
+        self.setup_test_view();
+
+        self.set_size((500, 500).into());
     }
 }
 
@@ -142,19 +157,6 @@ impl DesktopInput for TestScreen {
 impl DesktopInput for TestScreen {}
 
 impl Screen for TestScreen {
-    fn init(&mut self) {
-        #[cfg(not(any(target_os = "ios", target_os = "android")))]
-        self.setup_events();
-
-        GLWrapper::enable_blend();
-        GLWrapper::set_clear_color(&Color::GRAY);
-
-        self.root_view.calculate_absolute_frame();
-
-        self.setup_level();
-        self.setup_test_view();
-    }
-
     fn update(&mut self) {
         GLWrapper::clear();
 
@@ -177,12 +179,15 @@ impl Screen for TestScreen {
         self.ui_drawer.reset_viewport();
     }
 
-    fn set_size(&mut self, size: Size) {
-        self.ui_drawer.set_size(&size);
-        self.root_view.set_frame(Rect::from(size));
+    fn set_size(&mut self, size: Size) -> &mut Self {
+        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        self.drawer.set_size(size);
+        self.ui_drawer.set_size(size);
+        self.root_view.set_frame(size.into());
         self.sprites_drawer.set_resolution(&size);
         self.sprites_drawer.set_camera_position(&(0, 0).into());
         self.update();
+        self
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -197,7 +202,7 @@ impl New for TestScreen {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer: GLDrawer = new();
         let assets = Rc::new(Assets::new());
-        TestScreen {
+        let mut screen = TestScreen {
             cursor_position: new(),
             assets: assets.clone(),
             root_view: ViewBase::boxed(),
@@ -206,6 +211,9 @@ impl New for TestScreen {
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: SpritesDrawer::new(assets),
-        }
+        };
+
+        screen.init();
+        screen
     }
 }

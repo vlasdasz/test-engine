@@ -24,7 +24,7 @@ impl UIDrawer {
         }
     }
 
-    pub fn set_size(&mut self, size: &Size) { self.window_size = size.clone(); }
+    pub fn set_size(&mut self, size: Size) { self.window_size = size }
 }
 
 impl UIDrawer {
