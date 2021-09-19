@@ -6,6 +6,9 @@ mod sprites;
 mod test_screen;
 mod ui;
 
+pub use tools;
+pub use gl_wrapper;
+
 use std::{
     os::raw::{c_float, c_int, c_ulong},
     ptr,

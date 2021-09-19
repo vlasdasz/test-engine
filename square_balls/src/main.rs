@@ -1,10 +1,6 @@
 use gl_wrapper::Screen;
 use test_engine::TestScreen;
-
-use crate::tools::New;
-
-extern crate proc_macro;
-extern crate tools;
+use tools::has_new::New;
 
 fn main() {
     TestScreen::new()
