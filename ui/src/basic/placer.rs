@@ -45,8 +45,7 @@ impl Placer {
         let height: f32 = self.frame.height() / frames.len() as f32;
         let width = self.frame.width();
 
-        for i in 0..frames.len() {
-            let frame = &mut frames[i];
+        for (i, frame) in frames.iter_mut().enumerate() {
             frame.origin.x = 0.0;
             frame.origin.y = i as f32 * height;
             frame.size.width = width;

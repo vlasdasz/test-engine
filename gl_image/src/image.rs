@@ -1,8 +1,9 @@
-use std::{ffi::c_void, path::PathBuf};
+use std::ffi::c_void;
 
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::Size;
 use image::GenericImageView;
+use std::path::Path;
 use tools::{new, New};
 
 #[derive(Copy, Clone, Debug)]
@@ -17,11 +18,11 @@ impl Image {
         self.gl_handle == u32::MAX
     }
 
-    pub fn load(path: &PathBuf) -> Image {
+    pub fn load(path: &Path) -> Image {
         Image::load_with_image(path)
     }
 
-    pub fn load_with_image(path: &PathBuf) -> Image {
+    pub fn load_with_image(path: &Path) -> Image {
         let image = image::open(path).expect(&format!("Failed to open image {:?}", path));
 
         let dimensions = image.dimensions();
