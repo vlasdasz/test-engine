@@ -10,9 +10,9 @@ const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
 #[derive(AsAny, Boxed)]
 pub struct AnalogStickView {
-    base:                    ViewBase,
-    direction_stick:         Rglica<DrawingView>,
-    background:              Rglica<DrawingView>,
+    base: ViewBase,
+    direction_stick: Rglica<DrawingView>,
+    background: Rglica<DrawingView>,
     pub on_direction_change: Event<Point>,
 }
 
@@ -23,7 +23,7 @@ impl AnalogStickView {
 
         let vector = (touch - &center).trimmed(max_lenght);
 
-        let frame = self.frame().clone();
+        let frame = *self.frame();
 
         self.direction_stick
             .frame_mut()
@@ -44,7 +44,7 @@ impl View for AnalogStickView {
 
         self.background.frame_mut().size = (SIZE, SIZE).into();
 
-        let frame = self.frame().clone();
+        let frame = *self.frame();
         self.background.add_path(
             PointsPath::circle_with(frame.size.center(), frame.size.width),
             Color::BLACK,
@@ -84,7 +84,7 @@ impl View for AnalogStickView {
         let mut this = Rglica::from_ref(self);
         self.on_touch().subscribe(move |touch| {
             if touch.is_ended() {
-                let frame = this.frame().clone();
+                let frame = *this.frame();
                 this.direction_stick
                     .frame_mut()
                     .set_center(frame.size.center());
@@ -95,7 +95,11 @@ impl View for AnalogStickView {
         });
     }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

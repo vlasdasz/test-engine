@@ -5,8 +5,8 @@ use gm::{Point, Rect, Size};
 
 const RECT: Rect = Rect {
     origin: Point { x: -1.0, y: -1.0 },
-    size:   Size {
-        width:  2.0,
+    size: Size {
+        width: 2.0,
         height: 2.0,
     },
 };
@@ -45,8 +45,8 @@ const IMAGE_VERTICES: &[f32; 16] = &[
 ];
 
 pub struct Buffers {
-    pub fullscreen:         Buffer,
-    pub fullscreen_image:   Buffer,
+    pub fullscreen: Buffer,
+    pub fullscreen_image: Buffer,
     pub fullscreen_outline: Buffer,
 }
 

@@ -11,13 +11,13 @@ pub struct Buffer {
     config: &'static BufferConfig,
 
     vertex_data: ArrayView<f32>,
-    indices:     Option<ArrayView<u16>>,
+    indices: Option<ArrayView<u16>>,
 
     vertices_count: i32,
 
-    vertex_array_object:  u32,
+    vertex_array_object: u32,
     vertex_buffer_object: u32,
-    index_buffer_object:  u32,
+    index_buffer_object: u32,
 
     pub draw_mode: u32,
 }
@@ -106,7 +106,7 @@ impl Buffer {
                 self.draw_mode,
                 indices.size as i32,
                 GLC!(UNSIGNED_SHORT),
-                0 as *const c_void
+                std::ptr::null::<c_void>()
             )
         } else {
             GL!(DrawArrays, self.draw_mode, 0, self.vertices_count)

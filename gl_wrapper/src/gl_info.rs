@@ -11,10 +11,10 @@ use tools::{regex::find_match, *};
 
 #[derive(Debug)]
 pub struct GLInfo {
-    pub is_gles:             bool,
-    pub gl_version:          String,
-    pub major_version:       u8,
-    pub glsl_version:        String,
+    pub is_gles: bool,
+    pub gl_version: String,
+    pub major_version: u8,
+    pub glsl_version: String,
     pub glsl_version_number: u16,
 }
 
@@ -50,12 +50,12 @@ impl GLInfo {
         let ch = glsl_version.chars().next().unwrap();
         let major_version = ch.to_string().parse::<u8>().unwrap();
 
-        return GLInfo {
+        GLInfo {
             is_gles,
             gl_version,
             major_version,
             glsl_version,
             glsl_version_number,
-        };
+        }
     }
 }

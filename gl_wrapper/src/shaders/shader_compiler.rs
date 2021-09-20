@@ -7,6 +7,7 @@ if #[cfg(any(target_os="ios", target_os="android"))] {
     extern crate gl;
 }}
 
+use std::path::Path;
 use std::{collections::HashMap, ffi::CString, fs, path::PathBuf};
 
 use guard::guard;
@@ -18,7 +19,7 @@ use tools::{
 use crate::{GLInfo, Shader};
 
 pub struct ShaderCompiler {
-    path:    PathBuf,
+    path: PathBuf,
     gl_info: GLInfo,
 }
 
@@ -41,7 +42,7 @@ impl ShaderCompiler {
         result + "\n"
     }
 
-    fn check_programm_error(&self, path: &PathBuf, program: u32) {
+    fn check_programm_error(&self, path: &Path, program: u32) {
         let mut success: GLT!(GLint) = 1;
 
         GL!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
@@ -76,8 +77,8 @@ impl ShaderCompiler {
     }
 
     fn unfold_includes(&self, mut code: String) -> String {
-        const QUOTES_QUERY: &'static str = r#"(("[^ "]+"))"#;
-        const INCLUDE_QUERY: &'static str = r#"#include (("[^ "]+"))"#;
+        const QUOTES_QUERY: &str = r#"(("[^ "]+"))"#;
+        const INCLUDE_QUERY: &str = r#"#include (("[^ "]+"))"#;
         let includes = find_matches(&code, INCLUDE_QUERY);
         let mut files: HashMap<String, String> = HashMap::new();
         for include in includes {
@@ -97,7 +98,7 @@ impl ShaderCompiler {
 
         let shader = GL!(CreateShader, kind);
 
-        let c_code = CString::new(code.clone()).unwrap();
+        let c_code = CString::new(code).unwrap();
         let code_ptr = c_code.as_ptr();
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
         GL!(CompileShader, shader);
@@ -107,7 +108,7 @@ impl ShaderCompiler {
         shader
     }
 
-    pub fn compile(&self, path: &PathBuf) -> Shader {
+    pub fn compile(&self, path: &Path) -> Shader {
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 

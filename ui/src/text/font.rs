@@ -1,16 +1,17 @@
-use std::{ffi::c_void, fs, ops::Range, path::PathBuf};
+use std::{ffi::c_void, fs, ops::Range};
 
 use gl_image::Image;
 use gm::Size;
 use tools::{new, New};
 
 use crate::{Glyph, DEFAULT_FONT};
+use std::path::Path;
 
 fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     let (metrics, bitmap) = font.rasterize(symbol, size);
 
     let size = Size {
-        width:  metrics.width as f32,
+        width: metrics.width as f32,
         height: metrics.height as f32,
     };
 
@@ -21,8 +22,8 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 
 #[derive(Clone, Debug)]
 pub struct Font {
-    pub size:           u32,
-    pub height:         f32,
+    pub size: u32,
+    pub height: f32,
     pub baseline_shift: f32,
 
     glyphs: Vec<Glyph>,
@@ -31,14 +32,14 @@ pub struct Font {
 impl Font {
     pub fn invalid() -> Self {
         Font {
-            size:           0,
-            height:         0.0,
+            size: 0,
+            height: 0.0,
             baseline_shift: 0.0,
-            glyphs:         vec![],
+            glyphs: vec![],
         }
     }
 
-    pub fn new(path: &PathBuf, size: u32) -> Result<Font, &'static str> {
+    pub fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
         let data = fs::read(path).unwrap();
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
@@ -49,7 +50,7 @@ impl Font {
 
         for symbol in (Range {
             start: 0 as char,
-            end:   127 as char,
+            end: 127 as char,
         }) {
             let glyph = render_glyph(&font, symbol, size as f32);
             if y_max < glyph.y_max() {
@@ -73,7 +74,9 @@ impl Font {
         })
     }
 
-    pub fn is_invalid(&self) -> bool { self.glyphs.is_empty() }
+    pub fn is_invalid(&self) -> bool {
+        self.glyphs.is_empty()
+    }
 }
 
 impl Font {
@@ -86,5 +89,7 @@ impl Font {
 }
 
 impl New for Font {
-    fn new() -> Self { DEFAULT_FONT.lock().unwrap().clone() }
+    fn new() -> Self {
+        DEFAULT_FONT.lock().unwrap().clone()
+    }
 }

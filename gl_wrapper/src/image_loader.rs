@@ -18,6 +18,7 @@ fn mode_for_channels(channels: u32) -> u32 {
 }
 
 impl ImageLoader {
+    #[allow(clippy::not_unsafe_ptr_arg_deref)]
     pub fn load(data: *const c_void, size: Size, channels: u32) -> u32 {
         let mut id = u32::MAX;
 

@@ -9,18 +9,8 @@ pub struct Color {
 }
 
 impl Color {
-    pub fn make(r: f32, g: f32, b: f32) -> Color { Color { r, g, b, a: 1.0 } }
-
-    pub fn to_string(&self) -> String {
-        String::new()
-            + "r: "
-            + &self.r.to_string()
-            + "g: "
-            + &self.g.to_string()
-            + "b: "
-            + &self.b.to_string()
-            + "a: "
-            + &self.a.to_string()
+    pub fn make(r: f32, g: f32, b: f32) -> Color {
+        Color { r, g, b, a: 1.0 }
     }
 
     pub const BLACK: Color = Color {

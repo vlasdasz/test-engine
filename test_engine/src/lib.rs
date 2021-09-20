@@ -2,12 +2,12 @@
 
 mod assets;
 mod paths;
+mod screen;
 mod sprites;
-mod test_screen;
 mod ui;
 
-pub use tools;
 pub use gl_wrapper;
+pub use tools;
 
 use std::{
     os::raw::{c_float, c_int, c_ulong},
@@ -15,22 +15,21 @@ use std::{
 };
 
 use ::ui::{input::touch::Event, Touch};
-use gl_wrapper::Screen;
 use gm::Size;
 use tools::New;
 
-pub use crate::test_screen::TestScreen;
+pub use crate::screen::Screen;
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]
 extern crate mashup;
 
-static mut SCREEN: *mut TestScreen = ptr::null_mut();
+static mut SCREEN: *mut Screen = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        SCREEN = Box::into_raw(Box::new(TestScreen::new()));
+        SCREEN = Box::into_raw(Box::new(Screen::new()));
     }
 }
 
@@ -52,9 +51,9 @@ pub extern "C" fn update_screen() {
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     unsafe {
         SCREEN.as_mut().unwrap().on_touch(Touch {
-            id:       id.into(),
+            id,
             position: (x * 2.0, y * 2.0).into(),
-            event:    Event::from_int(event),
+            event: Event::from_int(event),
         })
     }
 }

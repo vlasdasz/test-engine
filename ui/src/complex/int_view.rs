@@ -8,11 +8,11 @@ use crate::{basic::Button, make_view_on, Label, View, ViewBase};
 
 #[derive(AsAny, Boxed)]
 pub struct IntView {
-    base:          ViewBase,
-    value:         i64,
-    label:         Rglica<Label>,
-    up:            Rglica<Button>,
-    down:          Rglica<Button>,
+    base: ViewBase,
+    value: i64,
+    label: Rglica<Label>,
+    up: Rglica<Button>,
+    down: Rglica<Button>,
     pub on_change: Event<i64>,
 }
 
@@ -44,11 +44,19 @@ impl View for IntView {
         });
     }
 
-    fn update(&mut self) { self.label.set_text(&self.value.to_string()); }
+    fn update(&mut self) {
+        self.label.set_text(&self.value.to_string());
+    }
 
-    fn layout(&mut self) { self.placer().distribute_vertically(); }
+    fn layout(&mut self) {
+        self.placer().distribute_vertically();
+    }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

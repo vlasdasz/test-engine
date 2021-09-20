@@ -7,15 +7,19 @@ use tools::{new, New};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Image {
-    pub size:     Size,
+    pub size: Size,
     pub channels: u32,
-    gl_handle:    u32,
+    gl_handle: u32,
 }
 
 impl Image {
-    pub fn is_invalid(&self) -> bool { self.gl_handle == u32::MAX }
+    pub fn is_invalid(&self) -> bool {
+        self.gl_handle == u32::MAX
+    }
 
-    pub fn load(path: &PathBuf) -> Image { Image::load_with_image(path) }
+    pub fn load(path: &PathBuf) -> Image {
+        Image::load_with_image(path)
+    }
 
     pub fn load_with_image(path: &PathBuf) -> Image {
         let image = image::open(path).expect(&format!("Failed to open image {:?}", path));
@@ -27,7 +31,7 @@ impl Image {
         let channels = image.color().channel_count();
 
         let size = Size {
-            width:  dimensions.0 as f32,
+            width: dimensions.0 as f32,
             height: dimensions.1 as f32,
         };
 
@@ -43,16 +47,20 @@ impl Image {
         }
     }
 
-    pub fn is_monochrome(&self) -> bool { self.channels == 1 }
+    pub fn is_monochrome(&self) -> bool {
+        self.channels == 1
+    }
 
-    pub fn bind(&self) { GLWrapper::bind_image(self.gl_handle) }
+    pub fn bind(&self) {
+        GLWrapper::bind_image(self.gl_handle)
+    }
 }
 
 impl New for Image {
     fn new() -> Image {
         Image {
-            size:      new(),
-            channels:  0,
+            size: new(),
+            channels: 0,
             gl_handle: u32::MAX,
         }
     }

@@ -10,7 +10,9 @@ pub struct SpritesDrawer {
 }
 
 impl SpritesDrawer {
-    pub fn new(assets: Rc<Assets>) -> Self { Self { assets } }
+    pub fn new(assets: Rc<Assets>) -> Self {
+        Self { assets }
+    }
 
     pub fn set_resolution(&self, size: &Size) {
         self.assets.shaders.sprite.enable();
@@ -26,7 +28,7 @@ impl SpritesDrawer {
         self.assets.shaders.textured_sprite.set_camera_position(pos);
     }
 
-    pub fn draw(&self, sprite: &Box<dyn Sprite>) {
+    pub fn draw(&self, sprite: &dyn Sprite) {
         let mut shader = &self.assets.shaders.sprite;
         let mut buffer = &self.assets.buffers.fullscreen;
 

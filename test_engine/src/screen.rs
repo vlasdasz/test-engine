@@ -3,7 +3,7 @@ use std::{ops::DerefMut, rc::Rc};
 use gl_image::Image;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::GLDrawer;
-use gl_wrapper::{DesktopInput, GLWrapper, Screen};
+use gl_wrapper::GLWrapper;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
@@ -19,20 +19,23 @@ use crate::{
     sprites::SpritesDrawer,
     ui::{ui_drawer::UIDrawer, DebugView, TestView},
 };
+use std::ops::Deref;
 
-pub struct TestScreen {
+pub struct Screen {
     cursor_position: Point,
-    assets:          Rc<Assets>,
-    root_view:       Box<dyn View>,
-    level:           Box<dyn Level>,
+    assets: Rc<Assets>,
+    root_view: Box<dyn View>,
+    level: Box<dyn Level>,
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    drawer:          GLDrawer,
-    ui_drawer:       UIDrawer,
-    sprites_drawer:  SpritesDrawer,
+    drawer: GLDrawer,
+    ui_drawer: UIDrawer,
+    sprites_drawer: SpritesDrawer,
 }
 
-impl TestScreen {
-    pub fn on_touch(&mut self, mut touch: Touch) { self.root_view.check_touch(&mut touch); }
+impl Screen {
+    pub fn on_touch(&mut self, mut touch: Touch) {
+        self.root_view.check_touch(&mut touch);
+    }
 
     fn update_view(view: &mut Box<dyn View>) {
         view.update();
@@ -130,21 +133,21 @@ impl TestScreen {
 }
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
-impl DesktopInput for TestScreen {
+impl Screen {
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;
         self.on_touch(Touch {
-            id:       1,
+            id: 1,
             position: self.cursor_position,
-            event:    Event::Moved,
+            event: Event::Moved,
         });
     }
 
     fn on_mouse_click(&mut self, _button: glfw::MouseButton, state: Action) {
         self.on_touch(Touch {
-            id:       1,
+            id: 1,
             position: self.cursor_position,
-            event:    Event::from_state(ButtonState::from_glfw(state)),
+            event: Event::from_state(ButtonState::from_glfw(state)),
         })
     }
 
@@ -153,11 +156,8 @@ impl DesktopInput for TestScreen {
     }
 }
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
-impl DesktopInput for TestScreen {}
-
-impl Screen for TestScreen {
-    fn update(&mut self) {
+impl Screen {
+    pub fn update(&mut self) {
         GLWrapper::clear();
 
         let level = self.level.deref_mut();
@@ -169,17 +169,17 @@ impl Screen for TestScreen {
             .set_camera_position(&level.player().position());
 
         for sprite in level.sprites() {
-            self.sprites_drawer.draw(sprite);
+            self.sprites_drawer.draw(sprite.deref());
         }
 
-        TestScreen::update_view(&mut self.root_view);
+        Screen::update_view(&mut self.root_view);
         self.root_view.calculate_absolute_frame();
         self.ui_drawer.draw(&mut self.root_view);
 
         self.ui_drawer.reset_viewport();
     }
 
-    fn set_size(&mut self, size: Size) -> &mut Self {
+    pub fn set_size(&mut self, size: Size) -> &mut Self {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
         self.ui_drawer.set_size(size);
@@ -191,18 +191,20 @@ impl Screen for TestScreen {
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn start_main_loop(&mut self) { self.drawer.start_main_loop() }
+    pub fn start_main_loop(&mut self) {
+        self.drawer.start_main_loop()
+    }
 }
 
-impl New for TestScreen {
-    fn new() -> TestScreen {
+impl New for Screen {
+    fn new() -> Self {
         let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
         *font_path = paths::fonts().join("SF.otf");
         drop(font_path);
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer: GLDrawer = new();
         let assets = Rc::new(Assets::new());
-        let mut screen = TestScreen {
+        let mut screen = Self {
             cursor_position: new(),
             assets: assets.clone(),
             root_view: ViewBase::boxed(),

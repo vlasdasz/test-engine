@@ -7,12 +7,12 @@ use crate::{make_view_on, View, ViewBase};
 
 #[derive(AsAny, Boxed)]
 pub struct SubviewsTestView {
-    base:   ViewBase,
-    first:  Rglica<ViewBase>,
+    base: ViewBase,
+    first: Rglica<ViewBase>,
     second: Rglica<ViewBase>,
-    third:  Rglica<ViewBase>,
-    forth:  Rglica<ViewBase>,
-    fifth:  Rglica<ViewBase>,
+    third: Rglica<ViewBase>,
+    forth: Rglica<ViewBase>,
+    fifth: Rglica<ViewBase>,
 }
 
 impl View for SubviewsTestView {
@@ -40,7 +40,11 @@ impl View for SubviewsTestView {
         self.fifth.placer().at_center();
     }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }
