@@ -2,7 +2,7 @@ use glfw::{Action, Key, MouseButton};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, Window};
 use gm::{Point, Size};
-use tools::{new, Event, New};
+use tools::{new, Event};
 
 use crate::{gl_loader::GLFWEvents, GLLoader};
 
@@ -57,9 +57,9 @@ impl GLDrawer {
     }
 }
 
-impl New for GLDrawer {
-    fn new() -> Self {
-        let loader: GLLoader = new();
+impl GLDrawer {
+    pub fn new(size: Size) -> Self {
+        let loader = GLLoader::new(size);
         Self {
             window:          loader.window,
             events:          loader.events,

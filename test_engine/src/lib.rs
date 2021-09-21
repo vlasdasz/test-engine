@@ -15,7 +15,6 @@ use ::ui::{input::touch::Event, Touch};
 pub use gl_wrapper;
 use gm::Size;
 pub use tools;
-use tools::New;
 
 pub use crate::screen::Screen;
 
@@ -28,7 +27,7 @@ static mut SCREEN: *mut Screen = ptr::null_mut();
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        SCREEN = Box::into_raw(Box::new(Screen::new()));
+        SCREEN = Box::into_raw(Box::new(Screen::new((0, 0).into())));
     }
 }
 

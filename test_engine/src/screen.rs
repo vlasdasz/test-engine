@@ -116,7 +116,7 @@ impl Screen {
         self.drawer.on_frame_drawn.subscribe(move |_| this.update());
     }
 
-    fn init(&mut self) {
+    fn init(&mut self, size: Size) {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.setup_events();
 
@@ -128,7 +128,7 @@ impl Screen {
         self.setup_level();
         self.setup_test_view();
 
-        self.set_size((500, 500).into());
+        self.set_size(size);
     }
 }
 
@@ -198,13 +198,13 @@ impl Screen {
     pub fn start_main_loop(&mut self) { self.drawer.start_main_loop() }
 }
 
-impl New for Screen {
-    fn new() -> Self {
+impl Screen {
+    pub fn new(size: Size) -> Self {
         let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
         *font_path = paths::fonts().join("SF.otf");
         drop(font_path);
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
-        let drawer: GLDrawer = new();
+        let drawer = GLDrawer::new(size);
         let assets = Rc::new(Assets::new());
         let mut screen = Self {
             cursor_position: new(),
@@ -217,7 +217,7 @@ impl New for Screen {
             sprites_drawer: SpritesDrawer::new(assets),
         };
 
-        screen.init();
+        screen.init(size);
         screen
     }
 }

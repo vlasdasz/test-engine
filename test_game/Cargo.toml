@@ -1,11 +1,11 @@
 [package]
-name = "square_balls"
+name = "test_game"
 version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2018"
 
 [[bin]]
-name = "square_balls"
+name = "test_game"
 
 [dependencies]
 gl_wrapper = { path = "../gl_wrapper" }

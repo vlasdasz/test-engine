@@ -6,8 +6,8 @@ members = [
     "test",
     "sprites",
     "gl_image",
+    "test_game",
     "proc_macro",
     "gl_wrapper",
     "test_engine",
-    "square_balls",
 ]
