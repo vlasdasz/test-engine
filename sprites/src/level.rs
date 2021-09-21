@@ -8,7 +8,7 @@ use rapier2d::{
         JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
     },
 };
-use tools::{Boxed, New, Rglica, ToRglica};
+use tools::{New, Rglica, ToRglica};
 
 use crate::{Body, Collider, Sprite, SpriteBase};
 
@@ -20,7 +20,7 @@ pub trait Control {
 }
 
 pub trait Level {
-    fn setup(&mut self);
+    fn setup(&mut self) {}
 
     fn update(&mut self) {}
 
@@ -56,16 +56,18 @@ pub struct LevelBase {
     rigid_body_set: RigidBodySet,
     collider_set:   ColliderSet,
 
-    gravity:                Vector2<f32>,
+    gravity:          Vector2<f32>,
+    physics_pipeline: PhysicsPipeline,
+    island_manager:   IslandManager,
+    broad_phase:      BroadPhase,
+    narrow_phase:     NarrowPhase,
+    joint_set:        JointSet,
+    ccd_solver:       CCDSolver,
+
+    physics_hooks: (),
+    event_handler: (),
+
     integration_parameters: IntegrationParameters,
-    physics_pipeline:       PhysicsPipeline,
-    island_manager:         IslandManager,
-    broad_phase:            BroadPhase,
-    narrow_phase:           NarrowPhase,
-    joint_set:              JointSet,
-    ccd_solver:             CCDSolver,
-    physics_hooks:          (),
-    event_handler:          (),
 }
 
 impl LevelBase {
@@ -128,33 +130,29 @@ impl LevelBase {
 }
 
 impl Level for LevelBase {
-    fn setup(&mut self) {
-        self.player = self.add_body((0, 10, 17.0 / 6.0, 28.0 / 6.0).into());
-        self.player.lock_rotations();
-    }
-
     fn level(&self) -> &LevelBase { self }
-
     fn level_mut(&mut self) -> &mut LevelBase { self }
 }
 
-impl Boxed for LevelBase {
-    fn boxed() -> Box<Self> {
-        Box::new(Self {
-            sprites:                vec![],
-            rigid_body_set:         RigidBodySet::new(),
-            collider_set:           ColliderSet::new(),
-            gravity:                Vector2::new(0.0, -9.81),
+impl New for LevelBase {
+    fn new() -> Self {
+        Self {
+            sprites:          vec![],
+            rigid_body_set:   RigidBodySet::new(),
+            collider_set:     ColliderSet::new(),
+            gravity:          Vector2::new(0.0, -9.81),
+            physics_pipeline: PhysicsPipeline::new(),
+            island_manager:   IslandManager::new(),
+            broad_phase:      BroadPhase::new(),
+            narrow_phase:     NarrowPhase::new(),
+            joint_set:        JointSet::new(),
+            ccd_solver:       CCDSolver::new(),
+
+            physics_hooks: (),
+            event_handler: (),
+            player:        Rglica::new(),
+
             integration_parameters: IntegrationParameters::default(),
-            physics_pipeline:       PhysicsPipeline::new(),
-            island_manager:         IslandManager::new(),
-            broad_phase:            BroadPhase::new(),
-            narrow_phase:           NarrowPhase::new(),
-            joint_set:              JointSet::new(),
-            ccd_solver:             CCDSolver::new(),
-            physics_hooks:          (),
-            event_handler:          (),
-            player:                 Rglica::new(),
-        })
+        }
     }
 }

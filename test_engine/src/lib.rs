@@ -1,11 +1,5 @@
 #![allow(dead_code)]
 
-mod assets;
-mod paths;
-mod screen;
-mod sprites;
-mod ui;
-
 use std::{
     os::raw::{c_float, c_int, c_ulong},
     ptr,
@@ -17,6 +11,15 @@ use gm::Size;
 pub use tools;
 
 pub use crate::screen::Screen;
+
+mod assets;
+pub mod paths;
+mod screen;
+mod sprites_drawer;
+mod ui;
+
+pub use gl_image::Image;
+pub use sprites::{Level, LevelBase, Sprite};
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]
