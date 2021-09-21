@@ -109,7 +109,7 @@ impl Screen {
 
         let mut this = Rglica::from_ref(self);
         self.drawer.on_size_changed.subscribe(move |size| {
-            this.set_size(size);
+            this.on_size_changed(size);
         });
 
         let mut this = Rglica::from_ref(self);
@@ -179,15 +179,19 @@ impl Screen {
         self.ui_drawer.reset_viewport();
     }
 
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn set_size(&mut self, size: Size) -> &mut Self {
-        #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
+        self.on_size_changed(size);
+        self
+    }
+
+    fn on_size_changed(&mut self, size: Size) {
         self.ui_drawer.set_size(size);
         self.root_view.set_frame(size.into());
         self.sprites_drawer.set_resolution(&size);
         self.sprites_drawer.set_camera_position(&(0, 0).into());
         self.update();
-        self
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]

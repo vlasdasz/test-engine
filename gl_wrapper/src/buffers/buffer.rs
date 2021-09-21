@@ -8,8 +8,6 @@ use crate::BufferConfig;
 
 #[derive(Debug)]
 pub struct Buffer {
-    config: &'static BufferConfig,
-
     vertex_data: ArrayView<f32>,
     indices:     Option<ArrayView<u16>>,
 
@@ -84,7 +82,6 @@ impl Buffer {
         GL!(BindVertexArray, 0);
 
         Buffer {
-            config,
             vertex_data,
             vertices_count,
             indices,
