@@ -5,14 +5,14 @@ use ui::{make_view_on, Label, View, ViewBase};
 
 #[derive(AsAny)]
 pub struct DebugView {
-    view: ViewBase,
-    fps_label: Rglica<Label>,
+    view:              ViewBase,
+    fps_label:         Rglica<Label>,
     frame_drawn_label: Rglica<Label>,
-    frame_drawn: u64,
-    prev_time: i64,
-    min_fps: u64,
-    max_fps: u64,
-    skipped: u64,
+    frame_drawn:       u64,
+    prev_time:         i64,
+    min_fps:           u64,
+    max_fps:           u64,
+    skipped:           u64,
 }
 
 impl View for DebugView {
@@ -63,30 +63,24 @@ impl View for DebugView {
         ));
     }
 
-    fn layout(&mut self) {
-        self.placer().distribute_vertically();
-    }
+    fn layout(&mut self) { self.placer().distribute_vertically(); }
 
-    fn view(&self) -> &ViewBase {
-        &self.view
-    }
+    fn view(&self) -> &ViewBase { &self.view }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.view
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.view }
 }
 
 impl Boxed for DebugView {
     fn boxed() -> Box<Self> {
         Box::new(DebugView {
-            view: new(),
-            fps_label: new(),
+            view:              new(),
+            fps_label:         new(),
             frame_drawn_label: new(),
-            frame_drawn: 0,
-            prev_time: Utc::now().timestamp_nanos(),
-            min_fps: u64::MAX,
-            max_fps: u64::MIN,
-            skipped: 0,
+            frame_drawn:       0,
+            prev_time:         Utc::now().timestamp_nanos(),
+            min_fps:           u64::MAX,
+            max_fps:           u64::MIN,
+            skipped:           0,
         })
     }
 }

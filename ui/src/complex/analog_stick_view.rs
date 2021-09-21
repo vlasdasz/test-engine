@@ -10,9 +10,9 @@ const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
 #[derive(AsAny, Boxed)]
 pub struct AnalogStickView {
-    base: ViewBase,
-    direction_stick: Rglica<DrawingView>,
-    background: Rglica<DrawingView>,
+    base:                    ViewBase,
+    direction_stick:         Rglica<DrawingView>,
+    background:              Rglica<DrawingView>,
     pub on_direction_change: Event<Point>,
 }
 
@@ -95,11 +95,7 @@ impl View for AnalogStickView {
         });
     }
 
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
+    fn view(&self) -> &ViewBase { &self.base }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
 }

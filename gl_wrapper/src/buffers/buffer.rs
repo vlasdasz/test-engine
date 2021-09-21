@@ -11,13 +11,13 @@ pub struct Buffer {
     config: &'static BufferConfig,
 
     vertex_data: ArrayView<f32>,
-    indices: Option<ArrayView<u16>>,
+    indices:     Option<ArrayView<u16>>,
 
     vertices_count: i32,
 
-    vertex_array_object: u32,
+    vertex_array_object:  u32,
     vertex_buffer_object: u32,
-    index_buffer_object: u32,
+    index_buffer_object:  u32,
 
     pub draw_mode: u32,
 }

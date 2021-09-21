@@ -5,7 +5,5 @@ pub struct TestModel {
 }
 
 impl New for TestModel {
-    fn new() -> Self {
-        TestModel { data: 0 }
-    }
+    fn new() -> Self { TestModel { data: 0 } }
 }

@@ -6,16 +6,15 @@ mod screen;
 mod sprites;
 mod ui;
 
-pub use gl_wrapper;
-pub use tools;
-
 use std::{
     os::raw::{c_float, c_int, c_ulong},
     ptr,
 };
 
 use ::ui::{input::touch::Event, Touch};
+pub use gl_wrapper;
 use gm::Size;
+pub use tools;
 use tools::New;
 
 pub use crate::screen::Screen;
@@ -51,9 +50,9 @@ pub extern "C" fn update_screen() {
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     unsafe {
         SCREEN.as_mut().unwrap().on_touch(Touch {
-            id,
+            id:       id.into(),
             position: (x * 2.0, y * 2.0).into(),
-            event: Event::from_int(event),
+            event:    Event::from_int(event),
         })
     }
 }

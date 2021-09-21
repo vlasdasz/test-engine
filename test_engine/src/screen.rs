@@ -1,4 +1,7 @@
-use std::{ops::DerefMut, rc::Rc};
+use std::{
+    ops::{Deref, DerefMut},
+    rc::Rc,
+};
 
 use gl_image::Image;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -19,23 +22,20 @@ use crate::{
     sprites::SpritesDrawer,
     ui::{ui_drawer::UIDrawer, DebugView, TestView},
 };
-use std::ops::Deref;
 
 pub struct Screen {
     cursor_position: Point,
-    assets: Rc<Assets>,
-    root_view: Box<dyn View>,
-    level: Box<dyn Level>,
+    assets:          Rc<Assets>,
+    root_view:       Box<dyn View>,
+    level:           Box<dyn Level>,
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    drawer: GLDrawer,
-    ui_drawer: UIDrawer,
-    sprites_drawer: SpritesDrawer,
+    drawer:          GLDrawer,
+    ui_drawer:       UIDrawer,
+    sprites_drawer:  SpritesDrawer,
 }
 
 impl Screen {
-    pub fn on_touch(&mut self, mut touch: Touch) {
-        self.root_view.check_touch(&mut touch);
-    }
+    pub fn on_touch(&mut self, mut touch: Touch) { self.root_view.check_touch(&mut touch); }
 
     fn update_view(view: &mut Box<dyn View>) {
         view.update();
@@ -137,17 +137,17 @@ impl Screen {
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;
         self.on_touch(Touch {
-            id: 1,
+            id:       1,
             position: self.cursor_position,
-            event: Event::Moved,
+            event:    Event::Moved,
         });
     }
 
     fn on_mouse_click(&mut self, _button: glfw::MouseButton, state: Action) {
         self.on_touch(Touch {
-            id: 1,
+            id:       1,
             position: self.cursor_position,
-            event: Event::from_state(ButtonState::from_glfw(state)),
+            event:    Event::from_state(ButtonState::from_glfw(state)),
         })
     }
 
@@ -191,9 +191,7 @@ impl Screen {
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    pub fn start_main_loop(&mut self) {
-        self.drawer.start_main_loop()
-    }
+    pub fn start_main_loop(&mut self) { self.drawer.start_main_loop() }
 }
 
 impl New for Screen {

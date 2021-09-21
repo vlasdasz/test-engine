@@ -16,13 +16,13 @@ static mut COUNTER: u32 = 0;
 
 #[derive(AsAny, Boxed)]
 pub struct TestView {
-    base: ViewBase,
-    pub data: u128,
-    pub clicks: u128,
-    pub image_view: Rglica<ImageView>,
-    pub label: Rglica<Label>,
-    pub dpad: Rglica<DPadView>,
-    pub left_stick: Rglica<AnalogStickView>,
+    base:            ViewBase,
+    pub data:        u128,
+    pub clicks:      u128,
+    pub image_view:  Rglica<ImageView>,
+    pub label:       Rglica<Label>,
+    pub dpad:        Rglica<DPadView>,
+    pub left_stick:  Rglica<AnalogStickView>,
     pub right_stick: Rglica<AnalogStickView>,
 }
 
@@ -99,19 +99,11 @@ impl View for TestView {
         self.right_stick.frame_mut().origin.y = 300.0;
     }
 
-    fn update(&mut self) {
-        self.data += 1;
-    }
+    fn update(&mut self) { self.data += 1; }
 
-    fn layout(&mut self) {
-        self.placer().br();
-    }
+    fn layout(&mut self) { self.placer().br(); }
 
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
+    fn view(&self) -> &ViewBase { &self.base }
 
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
+    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
 }

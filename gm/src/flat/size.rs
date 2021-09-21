@@ -4,18 +4,14 @@ use crate::{IntoF32, Point};
 
 #[derive(Copy, Clone, Debug, New)]
 pub struct Size {
-    pub width: f32,
+    pub width:  f32,
     pub height: f32,
 }
 
 impl Size {
-    pub fn square(side: f32) -> Size {
-        (side, side).into()
-    }
+    pub fn square(side: f32) -> Size { (side, side).into() }
 
-    pub fn is_negative(&self) -> bool {
-        self.width < 0.0 || self.height < 0.0
-    }
+    pub fn is_negative(&self) -> bool { self.width < 0.0 || self.height < 0.0 }
 
     pub fn center(&self) -> Point {
         Point {
@@ -28,7 +24,7 @@ impl Size {
 impl<W: IntoF32, H: IntoF32> From<(W, H)> for Size {
     fn from(tup: (W, H)) -> Self {
         Self {
-            width: tup.0.into_f32(),
+            width:  tup.0.into_f32(),
             height: tup.1.into_f32(),
         }
     }

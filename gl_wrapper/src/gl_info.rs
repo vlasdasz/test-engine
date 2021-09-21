@@ -11,10 +11,10 @@ use tools::{regex::find_match, *};
 
 #[derive(Debug)]
 pub struct GLInfo {
-    pub is_gles: bool,
-    pub gl_version: String,
-    pub major_version: u8,
-    pub glsl_version: String,
+    pub is_gles:             bool,
+    pub gl_version:          String,
+    pub major_version:       u8,
+    pub glsl_version:        String,
     pub glsl_version_number: u16,
 }
 

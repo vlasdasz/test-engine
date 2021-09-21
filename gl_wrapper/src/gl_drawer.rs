@@ -7,13 +7,13 @@ use tools::{new, Event, New};
 use crate::{gl_loader::GLFWEvents, GLLoader};
 
 pub struct GLDrawer {
-    window: Window,
-    events: GLFWEvents,
-    pub on_frame_drawn: Event,
+    window:              Window,
+    events:              GLFWEvents,
+    pub on_frame_drawn:  Event,
     pub on_cursor_moved: Event<Point>,
     pub on_size_changed: Event<Size>,
-    pub on_mouse_click: Event<(MouseButton, Action)>,
-    pub on_key_pressed: Event<(Key, Action)>,
+    pub on_mouse_click:  Event<(MouseButton, Action)>,
+    pub on_key_pressed:  Event<(Key, Action)>,
 }
 
 impl GLDrawer {
@@ -61,13 +61,13 @@ impl New for GLDrawer {
     fn new() -> Self {
         let loader: GLLoader = new();
         Self {
-            window: loader.window,
-            events: loader.events,
-            on_frame_drawn: new(),
+            window:          loader.window,
+            events:          loader.events,
+            on_frame_drawn:  new(),
             on_cursor_moved: new(),
             on_size_changed: new(),
-            on_mouse_click: new(),
-            on_key_pressed: new(),
+            on_mouse_click:  new(),
+            on_key_pressed:  new(),
         }
     }
 }

@@ -70,21 +70,15 @@ impl Event {
 
 #[derive(Copy, Clone, Debug)]
 pub struct Touch {
-    pub id: u64,
+    pub id:       u64,
     pub position: Point,
-    pub event: Event,
+    pub event:    Event,
 }
 
 impl Touch {
-    pub fn is_began(&self) -> bool {
-        self.event == Event::Began
-    }
+    pub fn is_began(&self) -> bool { self.event == Event::Began }
 
-    pub fn is_moved(&self) -> bool {
-        self.event == Event::Moved
-    }
+    pub fn is_moved(&self) -> bool { self.event == Event::Moved }
 
-    pub fn is_ended(&self) -> bool {
-        self.event == Event::Ended
-    }
+    pub fn is_ended(&self) -> bool { self.event == Event::Ended }
 }
