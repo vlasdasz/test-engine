@@ -179,8 +179,8 @@ impl Screen {
         self.ui_drawer.reset_viewport();
     }
 
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn set_size(&mut self, size: Size) -> &mut Self {
+        #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
         self.on_size_changed(size);
         self
