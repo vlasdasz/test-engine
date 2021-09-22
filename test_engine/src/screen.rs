@@ -22,6 +22,10 @@ use crate::{
     ui::{ui_drawer::UIDrawer, DebugView, TestView},
 };
 
+pub trait GameView: View {
+    fn attach_level(level: &mut dyn Level);
+}
+
 pub struct Screen {
     cursor_position: Point,
     assets:          Rc<Assets>,
