@@ -3,8 +3,6 @@ use gl_wrapper::{Shader, ShaderCompiler};
 use crate::paths;
 
 pub struct Shaders {
-    compiler: ShaderCompiler,
-
     pub ui:            Shader,
     pub ui_path:       Shader,
     pub ui_texture:    Shader,
@@ -27,8 +25,6 @@ impl Shaders {
         let textured_sprite = compiler.compile(&paths::shaders::sprites().join("textured_sprite"));
 
         Shaders {
-            compiler,
-
             ui,
             ui_path,
             ui_texture,

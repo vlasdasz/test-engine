@@ -1,5 +1,3 @@
-use std::ops::DerefMut;
-
 use gm::Rect;
 use proc_macro::New;
 use tools::Rglica;
@@ -14,9 +12,9 @@ pub struct Placer {
 }
 
 impl Placer {
-    pub fn make(view: &mut Box<dyn View>) -> Self {
+    pub fn make(view: &mut (dyn View + 'static)) -> Self {
         Self {
-            view:        Rglica::from_ref(view.deref_mut()),
+            view:        Rglica::from_ref(view),
             frame:       Rglica::from_ref(view.frame()),
             super_frame: Rglica::from_ref(view.super_frame()),
         }

@@ -1,4 +1,5 @@
-#![allow(dead_code)]
+#![allow(incomplete_features)]
+#![feature(trait_upcasting)]
 
 use std::{
     os::raw::{c_float, c_int, c_ulong},

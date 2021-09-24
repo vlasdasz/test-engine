@@ -1,7 +1,4 @@
-use std::{
-    ops::{Deref, DerefMut},
-    rc::Rc,
-};
+use std::{ops::DerefMut, rc::Rc};
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::GLDrawer;
@@ -9,28 +6,23 @@ use gl_wrapper::GLWrapper;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
-use sprites::{Control, Level, Sprite};
+use sprites::Level;
 use tools::{new, Boxed, New, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
-use ui::{input::Touch, make_view_on, View, ViewBase};
+use ui::{input::Touch, View, ViewBase};
 
-use crate::{
-    assets::Assets,
-    paths,
-    sprites_drawer::SpritesDrawer,
-    ui::{ui_drawer::UIDrawer, DebugView, TestView},
-};
+use crate::{assets::Assets, paths, sprites_drawer::SpritesDrawer, ui::ui_drawer::UIDrawer};
 
 pub trait GameView: View {
-    fn attach_level(level: &mut dyn Level);
+    fn level(&self) -> &dyn Level;
+    fn level_mut(&mut self) -> &mut dyn Level;
 }
 
 pub struct Screen {
     cursor_position: Point,
-    assets:          Rc<Assets>,
     root_view:       Box<dyn View>,
-    level:           Option<Box<dyn Level>>,
+    view:            Rglica<dyn GameView>,
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
@@ -40,52 +32,46 @@ pub struct Screen {
 impl Screen {
     pub fn on_touch(&mut self, mut touch: Touch) { self.root_view.check_touch(&mut touch); }
 
-    pub fn set_level(&mut self, mut level: Box<dyn Level>) -> &mut Self {
-        level.setup();
-        self.level = Some(level);
-        self.setup_test_view();
-        self
+    pub fn set_view(&mut self, view: Box<dyn GameView>) {
+        self.view = view.to_rglica();
+        self.root_view.add_subview(view);
     }
 
-    fn update_view(view: &mut Box<dyn View>) {
+    fn update_view(view: &mut dyn View) {
         view.update();
         for view in view.subviews_mut() {
-            Self::update_view(view);
+            Self::update_view(view.deref_mut());
         }
     }
 
-    fn setup_test_view(&mut self) {
-        make_view_on::<DebugView>(self.root_view.deref_mut());
-        let mut view = make_view_on::<TestView>(self.root_view.deref_mut());
+    // fn setup_test_view(&mut self) {
+    //     make_view_on::<DebugView>(self.root_view.deref_mut());
+    //     let mut view = make_view_on::<TestView>(self.root_view.deref_mut());
 
-        if self.level.is_none() {
-            return;
-        }
-
-        let level = self.level.as_ref().unwrap();
-
-        let mut this = level.to_rglica();
-        view.dpad.on_up.subscribe(move |_| {
-            this.player().jump();
-        });
-
-        let mut this = level.to_rglica();
-        view.dpad.on_left.subscribe(move |_| {
-            this.player().go_left();
-        });
-
-        let mut this = level.to_rglica();
-        view.dpad.on_right.subscribe(move |_| {
-            this.player().go_right();
-        });
-
-        let mut this = level.to_rglica();
-        view.left_stick
-            .on_direction_change
-            .subscribe(move |direction| {
-                this.player().add_impulse(&direction);
-            });
-    }
+    // let level = self.level.as_ref().unwrap();
+    //
+    // let mut this = level.to_rglica();
+    // view.dpad.on_up.subscribe(move |_| {
+    //     this.player().jump();
+    // });
+    //
+    // let mut this = level.to_rglica();
+    // view.dpad.on_left.subscribe(move |_| {
+    //     this.player().go_left();
+    // });
+    //
+    // let mut this = level.to_rglica();
+    // view.dpad.on_right.subscribe(move |_| {
+    //     this.player().go_right();
+    // });
+    //
+    // let mut this = level.to_rglica();
+    // view.left_stick
+    //     .on_direction_change
+    //     .subscribe(move |direction| {
+    //         this.player().add_impulse(&direction);
+    //     });
+    // }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     fn setup_events(&mut self) {
@@ -146,7 +132,7 @@ impl Screen {
     }
 
     fn on_key_pressed(&mut self, key: Key, action: Action) {
-        self.level.as_mut().unwrap().on_key_pressed(key, action)
+        self.view.level_mut().on_key_pressed(key, action)
     }
 }
 
@@ -154,29 +140,27 @@ impl Screen {
     pub fn update(&mut self) {
         GLWrapper::clear();
 
-        if self.level.is_some() {
-            self.update_level();
-        }
+        self.update_level();
 
-        Screen::update_view(&mut self.root_view);
+        Screen::update_view(self.root_view.deref_mut());
         self.root_view.calculate_absolute_frame();
-        self.ui_drawer.draw(&mut self.root_view);
+        self.ui_drawer.draw(self.root_view.deref_mut());
 
         self.ui_drawer.reset_viewport();
     }
 
     fn update_level(&mut self) {
-        let level = self.level.as_mut().unwrap().deref_mut();
-
-        level.level_mut().update_physics();
-        level.update();
-
-        self.sprites_drawer
-            .set_camera_position(&level.player().position());
-
-        for sprite in level.sprites() {
-            self.sprites_drawer.draw(sprite.deref());
-        }
+        // let level = self.level.as_mut().unwrap().deref_mut();
+        //
+        // level.level_mut().update_physics();
+        // level.update();
+        //
+        // self.sprites_drawer
+        //     .set_camera_position(&level.player().position());
+        //
+        // for sprite in level.sprites() {
+        //     self.sprites_drawer.draw(sprite.deref());
+        // }
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
@@ -208,9 +192,8 @@ impl Screen {
         let assets = Rc::new(Assets::new());
         let mut screen = Self {
             cursor_position: new(),
-            assets: assets.clone(),
             root_view: ViewBase::boxed(),
-            level: None,
+            view: new(),
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),

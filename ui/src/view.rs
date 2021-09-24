@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::{cell::RefCell, ops::DerefMut};
 
 use gl_image::Image;
 use gm::{Color, Rect};
@@ -42,7 +42,7 @@ pub trait View: AsAny + Boxed {
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
         view.view_mut()._superview = Rglica::from_ref(self.view());
-        view.view_mut()._placer = Placer::make(&mut view);
+        view.view_mut()._placer = Placer::make(view.deref_mut());
         view.setup();
         self.view_mut()._subviews.push(view);
     }

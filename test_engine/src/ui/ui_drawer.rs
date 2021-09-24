@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
@@ -28,7 +28,7 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn draw(&self, view: &mut Box<dyn View>) {
+    pub fn draw(&self, view: &mut dyn View) {
         if let Some(image) = view.image() {
             self.draw_image_in_rect(&image, view.absolute_frame(), view.color());
         }
@@ -44,7 +44,7 @@ impl UIDrawer {
         }
 
         for view in view.subviews_mut() {
-            self.draw(view)
+            self.draw(view.deref_mut())
         }
     }
 }

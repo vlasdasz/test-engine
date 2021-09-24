@@ -1,7 +1,6 @@
 use std::rc::Rc;
 
 use gm::{Point, Size};
-use sprites::Sprite;
 
 use crate::assets::Assets;
 
@@ -26,24 +25,24 @@ impl SpritesDrawer {
         self.assets.shaders.textured_sprite.set_camera_position(pos);
     }
 
-    pub fn draw(&self, sprite: &dyn Sprite) {
-        let mut shader = &self.assets.shaders.sprite;
-        let mut buffer = &self.assets.buffers.fullscreen;
-
-        if let Some(image) = sprite.image() {
-            shader = &self.assets.shaders.textured_sprite;
-            buffer = &self.assets.buffers.fullscreen_image;
-            image.bind();
-        } else {
-        }
-
-        shader.enable();
-
-        shader.set_size(&sprite.size());
-        shader.set_position(&sprite.position());
-        shader.set_rotation(sprite.rotation());
-        shader.set_color(&sprite.color());
-
-        buffer.draw();
-    }
+    // pub fn draw(&self, sprite: &dyn Sprite) {
+    //     let mut shader = &self.assets.shaders.sprite;
+    //     let mut buffer = &self.assets.buffers.fullscreen;
+    //
+    //     if let Some(image) = sprite.image() {
+    //         shader = &self.assets.shaders.textured_sprite;
+    //         buffer = &self.assets.buffers.fullscreen_image;
+    //         image.bind();
+    //     } else {
+    //     }
+    //
+    //     shader.enable();
+    //
+    //     shader.set_size(&sprite.size());
+    //     shader.set_position(&sprite.position());
+    //     shader.set_rotation(sprite.rotation());
+    //     shader.set_color(&sprite.color());
+    //
+    //     buffer.draw();
+    // }
 }
