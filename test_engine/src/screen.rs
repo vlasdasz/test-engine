@@ -10,9 +10,12 @@ use sprites::Level;
 use tools::{new, Boxed, New, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
-use ui::{input::Touch, View, ViewBase};
+use ui::{input::Touch, make_view_on, View, ViewBase};
 
-use crate::{assets::Assets, paths, sprites_drawer::SpritesDrawer, ui::ui_drawer::UIDrawer};
+use crate::{
+    assets::Assets, debug_view::DebugView, paths, sprites_drawer::SpritesDrawer,
+    ui_drawer::UIDrawer,
+};
 
 pub trait GameView: View {
     fn level(&self) -> &dyn Level;
@@ -32,9 +35,15 @@ pub struct Screen {
 impl Screen {
     pub fn on_touch(&mut self, mut touch: Touch) { self.root_view.check_touch(&mut touch); }
 
-    pub fn set_view(&mut self, view: Box<dyn GameView>) {
+    pub fn add_view(mut self, view: Box<dyn GameView>) -> Self {
         self.view = view.to_rglica();
         self.root_view.add_subview(view);
+        self
+    }
+
+    pub fn add_debug_view(mut self) -> Self {
+        make_view_on::<DebugView>(self.root_view.deref_mut());
+        self
     }
 
     fn update_view(view: &mut dyn View) {
@@ -45,7 +54,6 @@ impl Screen {
     }
 
     // fn setup_test_view(&mut self) {
-    //     make_view_on::<DebugView>(self.root_view.deref_mut());
     //     let mut view = make_view_on::<TestView>(self.root_view.deref_mut());
 
     // let level = self.level.as_ref().unwrap();

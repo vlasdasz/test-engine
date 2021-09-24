@@ -6,21 +6,25 @@ use std::{
     ptr,
 };
 
-use ::ui::{input::touch::Event, Touch};
+pub use gl_image;
 pub use gl_wrapper;
+pub use gm;
 use gm::Size;
 pub use tools;
+pub use ui;
 
 pub use crate::screen::Screen;
 
 mod assets;
+pub mod debug_view;
 pub mod paths;
-mod screen;
+pub mod screen;
 mod sprites_drawer;
-mod ui;
+pub mod ui_drawer;
 
 pub use gl_image::Image;
 pub use sprites::{Level, LevelBase, Sprite};
+use ui::{input::touch::Event, Touch};
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]

@@ -1,22 +1,26 @@
-use std::ops::DerefMut;
+use std::ops::{Deref, DerefMut};
 
-use gl_image::Image;
-use gm::{flat::PointsPath, Color};
-use proc_macro::{AsAny, Boxed};
-use tools::{rglica::ToRglica, Boxed, New, Rglica};
-use ui::{
-    basic::Button,
-    complex::{AnalogStickView, DrawingView},
-    make_view_on, DPadView, ImageView, Label, View, ViewBase,
+use proc_macro::AsAny;
+use test_engine::{
+    gm::{flat::PointsPath, Color},
+    screen::GameView,
+    ui::{
+        basic::Button,
+        complex::{AnalogStickView, DrawingView},
+        make_view_on, DPadView, ImageView, Label, View, ViewBase,
+    },
+    Image, Level,
 };
+use tools::{new, rglica::ToRglica, Boxed, New, Rglica};
 
-use crate::paths;
+use crate::test_level::TestLevel;
 
 static mut COUNTER: u32 = 0;
 
-#[derive(AsAny, Boxed)]
+#[derive(AsAny)]
 pub struct TestView {
     base:            ViewBase,
+    level:           Box<TestLevel>,
     pub data:        u128,
     pub clicks:      u128,
     pub image_view:  Rglica<ImageView>,
@@ -32,7 +36,7 @@ impl View for TestView {
 
         let image_view = ImageView::boxed();
         self.image_view = image_view.to_rglica();
-        self.image_view.image = Image::load(&paths::images().join("cat.png"));
+        self.image_view.image = Image::load(&test_engine::paths::images().join("cat.png"));
         self.image_view.set_frame((200, 20, 100, 120).into());
         self.add_subview(image_view);
 
@@ -65,10 +69,10 @@ impl View for TestView {
         self.dpad.frame_mut().origin.y = 300.0;
 
         self.dpad.set_images(
-            Image::load(&paths::images().join("up.png")),
-            Image::load(&paths::images().join("down.png")),
-            Image::load(&paths::images().join("left.png")),
-            Image::load(&paths::images().join("right.png")),
+            Image::load(&test_engine::paths::images().join("up.png")),
+            Image::load(&test_engine::paths::images().join("down.png")),
+            Image::load(&test_engine::paths::images().join("left.png")),
+            Image::load(&test_engine::paths::images().join("right.png")),
         );
 
         let mut drawing = make_view_on::<DrawingView>(self);
@@ -106,4 +110,25 @@ impl View for TestView {
     fn view(&self) -> &ViewBase { &self.base }
 
     fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+}
+
+impl GameView for TestView {
+    fn level(&self) -> &dyn Level { self.level.deref() }
+    fn level_mut(&mut self) -> &mut dyn Level { self.level.deref_mut() }
+}
+
+impl Boxed for TestView {
+    fn boxed() -> Box<Self> {
+        Box::new(Self {
+            base:        Default::default(),
+            level:       TestLevel::boxed(),
+            data:        0,
+            clicks:      0,
+            image_view:  new(),
+            label:       new(),
+            dpad:        new(),
+            left_stick:  new(),
+            right_stick: new(),
+        })
+    }
 }

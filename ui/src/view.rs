@@ -1,9 +1,12 @@
-use std::{cell::RefCell, ops::DerefMut};
+use std::{
+    cell::RefCell,
+    ops::{Deref, DerefMut},
+};
 
 use gl_image::Image;
 use gm::{Color, Rect};
 use proc_macro::{AsAny, Boxed};
-use tools::{new, rglica::ToRglica, AsAny, Boxed, Event, New, Rglica};
+use tools::{new, rglica::ToRglica, Address, AsAny, Boxed, Event, New, Rglica};
 
 use crate::{basic::Placer, input::Touch};
 
@@ -49,7 +52,21 @@ pub trait View: AsAny + Boxed {
 
     fn remove_all_subviews(&mut self) { self.view_mut()._subviews.clear() }
 
+    fn remove_from_superview(&mut self) {
+        let mut superview = self.view()._superview.clone();
+
+        let index = superview
+            .subviews()
+            .iter()
+            .position(|view| view.deref().address() == (&self).address())
+            .unwrap();
+
+        superview.remove_subview_at(index);
+    }
+
     fn subviews(&self) -> &[Box<dyn View>] { &self.view()._subviews }
+
+    fn remove_subview_at(&mut self, index: usize) { self.view_mut()._subviews.remove(index); }
 
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>] { &mut self.view_mut()._subviews }
 
@@ -127,7 +144,7 @@ pub struct ViewBase {
     _frame:          Rect,
     _absolute_frame: Rect,
 
-    _superview: Rglica<ViewBase>,
+    _superview: Rglica<dyn View>,
 
     _subviews: Vec<Box<dyn View>>,
 
