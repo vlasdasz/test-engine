@@ -1,6 +1,3 @@
-#![allow(incomplete_features)]
-#![feature(trait_upcasting)]
-
 use std::{
     os::raw::{c_float, c_int, c_ulong},
     ptr,
@@ -11,6 +8,7 @@ pub use gl_wrapper;
 pub use gm;
 use gm::Size;
 pub use tools;
+use tools::new;
 pub use ui;
 
 pub use crate::screen::Screen;
@@ -35,7 +33,7 @@ static mut SCREEN: *mut Screen = ptr::null_mut();
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        SCREEN = Box::into_raw(Box::new(Screen::new((0, 0).into())));
+        SCREEN = Box::into_raw(Box::new(Screen::new(new())));
     }
 }
 
