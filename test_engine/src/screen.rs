@@ -37,7 +37,7 @@ impl Screen {
 
     pub fn add_view(mut self, view: Box<dyn GameView>) -> Self {
         self.view = view.to_rglica();
-        //self.root_view.add_subview(view);
+        self.root_view.add_subview(view);
         self
     }
 
