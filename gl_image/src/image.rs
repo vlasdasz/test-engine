@@ -18,7 +18,7 @@ impl Image {
     pub fn load(path: &Path) -> Image { Image::load_with_image(path) }
 
     pub fn load_with_image(path: &Path) -> Image {
-        let image = image::open(path).expect(&format!("Failed to open image {:?}", path));
+        let image = image::open(path).unwrap_or_else(|_| panic!("Failed to open image {:?}", path));
 
         let dimensions = image.dimensions();
 

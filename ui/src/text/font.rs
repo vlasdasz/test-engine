@@ -78,9 +78,7 @@ impl Font {
 
 impl Font {
     pub fn glyph_for_char(&self, ch: char) -> &Glyph {
-        if self.glyphs.is_empty() {
-            panic!("Font is not initialized");
-        }
+        debug_assert!(!self.glyphs.is_empty(), "Font is not initialized");
         &self.glyphs[ch as usize]
     }
 }
