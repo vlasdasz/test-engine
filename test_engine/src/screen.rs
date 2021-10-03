@@ -1,4 +1,7 @@
-use std::{ops::DerefMut, rc::Rc};
+use std::{
+    ops::{Deref, DerefMut},
+    rc::Rc,
+};
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::GLDrawer;
@@ -6,7 +9,7 @@ use gl_wrapper::GLWrapper;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
-use sprites::Level;
+use sprites::{Level, Sprite};
 use tools::{new, Boxed, New, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
@@ -52,34 +55,6 @@ impl Screen {
             Self::update_view(view.deref_mut());
         }
     }
-
-    // fn setup_test_view(&mut self) {
-    //     let mut view = make_view_on::<TestView>(self.root_view.deref_mut());
-
-    // let level = self.level.as_ref().unwrap();
-    //
-    // let mut this = level.to_rglica();
-    // view.dpad.on_up.subscribe(move |_| {
-    //     this.player().jump();
-    // });
-    //
-    // let mut this = level.to_rglica();
-    // view.dpad.on_left.subscribe(move |_| {
-    //     this.player().go_left();
-    // });
-    //
-    // let mut this = level.to_rglica();
-    // view.dpad.on_right.subscribe(move |_| {
-    //     this.player().go_right();
-    // });
-    //
-    // let mut this = level.to_rglica();
-    // view.left_stick
-    //     .on_direction_change
-    //     .subscribe(move |direction| {
-    //         this.player().add_impulse(&direction);
-    //     });
-    // }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     fn setup_events(&mut self) {
@@ -158,17 +133,21 @@ impl Screen {
     }
 
     fn update_level(&mut self) {
-        // let level = self.level.as_mut().unwrap().deref_mut();
-        //
-        // level.level_mut().update_physics();
-        // level.update();
-        //
-        // self.sprites_drawer
-        //     .set_camera_position(&level.player().position());
-        //
-        // for sprite in level.sprites() {
-        //     self.sprites_drawer.draw(sprite.deref());
-        // }
+        if self.view.is_null() {
+            return;
+        }
+
+        let level = self.view.level_mut();
+
+        level.level_mut().update_physics();
+        level.update();
+
+        self.sprites_drawer
+            .set_camera_position(level.player().position());
+
+        for sprite in level.sprites() {
+            self.sprites_drawer.draw(sprite.deref());
+        }
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
@@ -182,7 +161,7 @@ impl Screen {
         self.ui_drawer.set_size(size);
         self.root_view.set_frame(size.into());
         self.sprites_drawer.set_resolution(&size);
-        self.sprites_drawer.set_camera_position(&(0, 0).into());
+        self.sprites_drawer.set_camera_position((0, 0).into());
         self.update();
     }
 

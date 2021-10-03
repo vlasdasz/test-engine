@@ -52,7 +52,7 @@ impl Shader {
 
     pub fn set_rotation(&self, angle: f32) { GL!(Uniform1f, self.rotation, angle) }
 
-    pub fn set_camera_position(&self, pos: &Point) {
+    pub fn set_camera_position(&self, pos: Point) {
         GL!(Uniform2fv, self.camera_position, 1, &pos.x)
     }
 

@@ -30,6 +30,41 @@ pub struct TestView {
     pub right_stick: Rglica<AnalogStickView>,
 }
 
+impl TestView {
+    fn setup_level(&mut self) {
+        self.level.setup();
+
+        // fn setup_test_view(&mut self) {
+        //     let mut view =
+        // make_view_on::<TestView>(self.root_view.deref_mut());
+
+        // let level = self.level.as_ref().unwrap();
+        //
+        // let mut this = level.to_rglica();
+        // view.dpad.on_up.subscribe(move |_| {
+        //     this.player().jump();
+        // });
+        //
+        // let mut this = level.to_rglica();
+        // view.dpad.on_left.subscribe(move |_| {
+        //     this.player().go_left();
+        // });
+        //
+        // let mut this = level.to_rglica();
+        // view.dpad.on_right.subscribe(move |_| {
+        //     this.player().go_right();
+        // });
+        //
+        // let mut this = level.to_rglica();
+        // view.left_stick
+        //     .on_direction_change
+        //     .subscribe(move |direction| {
+        //         this.player().add_impulse(&direction);
+        //     });
+        // }
+    }
+}
+
 impl View for TestView {
     fn setup(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
@@ -101,6 +136,8 @@ impl View for TestView {
         self.add_subview(right_stick);
         self.right_stick.frame_mut().origin.x = 520.0;
         self.right_stick.frame_mut().origin.y = 300.0;
+
+        self.setup_level();
     }
 
     fn update(&mut self) { self.data += 1 }
