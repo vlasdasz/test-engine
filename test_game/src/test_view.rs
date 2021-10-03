@@ -103,9 +103,9 @@ impl View for TestView {
         self.right_stick.frame_mut().origin.y = 300.0;
     }
 
-    fn update(&mut self) { self.data += 1; }
+    fn update(&mut self) { self.data += 1 }
 
-    fn layout(&mut self) { self.placer().br(); }
+    fn layout(&mut self) { self.placer().br() }
 
     fn view(&self) -> &ViewBase { &self.base }
 
@@ -120,7 +120,7 @@ impl GameView for TestView {
 impl Boxed for TestView {
     fn boxed() -> Box<Self> {
         Box::new(Self {
-            base:        Default::default(),
+            base:        ViewBase::default(),
             level:       TestLevel::boxed(),
             data:        0,
             clicks:      0,

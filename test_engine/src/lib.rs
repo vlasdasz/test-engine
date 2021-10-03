@@ -1,4 +1,5 @@
 #![feature(trait_upcasting)]
+#![feature(option_result_unwrap_unchecked)]
 #![allow(incomplete_features)]
 
 use std::{
@@ -43,21 +44,24 @@ pub extern "C" fn create_screen() {
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_float, height: c_float) {
     unsafe {
-        SCREEN.as_mut().unwrap().set_size(Size { width, height });
+        SCREEN
+            .as_mut()
+            .unwrap_unchecked()
+            .set_size(Size { width, height });
     }
 }
 
 #[no_mangle]
 pub extern "C" fn update_screen() {
     unsafe {
-        SCREEN.as_mut().unwrap().update();
+        SCREEN.as_mut().unwrap_unchecked().update();
     }
 }
 
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     unsafe {
-        SCREEN.as_mut().unwrap().on_touch(Touch {
+        SCREEN.as_mut().unwrap_unchecked().on_touch(Touch {
             id:       id.into(),
             position: (x * 2.0, y * 2.0).into(),
             event:    Event::from_int(event),
