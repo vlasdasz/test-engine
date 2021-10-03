@@ -345,7 +345,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2545JX4S8U;
-				EXCLUDED_ARCHS = armv7;
+				EXCLUDED_ARCHS = arm64;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
 				INFOPLIST_FILE = TestEngine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -357,6 +357,7 @@
 					"\"$(SRCROOT)/../../target/universal/release\"/**",
 					"$(SDKROOT)/usr/lib/swift",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -373,7 +374,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2545JX4S8U;
-				EXCLUDED_ARCHS = armv7;
+				EXCLUDED_ARCHS = arm64;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
 				INFOPLIST_FILE = TestEngine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -385,7 +386,7 @@
 					"\"$(SRCROOT)/../../target/universal/release\"/**",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
