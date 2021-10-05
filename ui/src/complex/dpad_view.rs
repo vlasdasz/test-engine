@@ -1,10 +1,10 @@
 use gl_image::Image;
-use proc_macro::{AsAny, Boxed};
+use proc_macro::Boxed;
 use tools::{rglica::ToRglica, Boxed, Event, Rglica};
 
 use crate::{basic::Button, View, ViewBase};
 
-#[derive(AsAny, Boxed)]
+#[derive(Boxed)]
 pub struct DPadView {
     base:         ViewBase,
     up:           Rglica<Button>,

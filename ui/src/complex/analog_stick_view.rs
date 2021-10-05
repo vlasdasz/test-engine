@@ -1,5 +1,5 @@
 use gm::{flat::PointsPath, Color, Point};
-use proc_macro::{AsAny, Boxed};
+use proc_macro::Boxed;
 use tools::{rglica::ToRglica, Boxed, Event, Rglica};
 
 use crate::{complex::DrawingView, View, ViewBase};
@@ -8,7 +8,7 @@ const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
-#[derive(AsAny, Boxed)]
+#[derive(Boxed)]
 pub struct AnalogStickView {
     base:                    ViewBase,
     direction_stick:         Rglica<DrawingView>,

@@ -1,12 +1,12 @@
 use std::ops::AddAssign;
 
 use gl_image::Image;
-use proc_macro::{AsAny, Boxed};
+use proc_macro::Boxed;
 use tools::{Event, Rglica};
 
 use crate::{basic::Button, make_view_on, Label, View, ViewBase};
 
-#[derive(AsAny, Boxed)]
+#[derive(Boxed)]
 pub struct IntView {
     base:          ViewBase,
     value:         i64,

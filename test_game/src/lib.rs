@@ -51,6 +51,7 @@ pub extern "C" fn update_screen() {
 
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
+    #[allow(clippy::useless_conversion)]
     unsafe {
         SCREEN.as_mut().unwrap_unchecked().on_touch(Touch {
             id:       id.into(),

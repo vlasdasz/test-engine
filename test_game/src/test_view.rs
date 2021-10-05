@@ -1,6 +1,5 @@
 use std::ops::{Deref, DerefMut};
 
-use proc_macro::AsAny;
 use test_engine::{
     gm::{flat::PointsPath, Color},
     screen::GameView,
@@ -18,7 +17,6 @@ use crate::test_level::TestLevel;
 
 static mut COUNTER: u32 = 0;
 
-#[derive(AsAny)]
 pub struct TestView {
     base:            ViewBase,
     level:           Box<TestLevel>,

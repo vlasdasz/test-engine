@@ -5,12 +5,12 @@ use std::{
 
 use gl_image::Image;
 use gm::{Color, Rect};
-use proc_macro::{AsAny, Boxed};
-use tools::{new, rglica::ToRglica, Address, AsAny, Boxed, Event, New, Rglica};
+use proc_macro::Boxed;
+use tools::{new, rglica::ToRglica, Address, Boxed, Event, New, Rglica};
 
-use crate::{basic::Placer, input::Touch};
+use crate::{basic::Placer, complex::PathData, input::Touch};
 
-pub trait View: AsAny + Boxed {
+pub trait View: Boxed {
     fn setup(&mut self) {}
 
     fn update(&mut self) {}
@@ -128,6 +128,8 @@ pub trait View: AsAny + Boxed {
         false
     }
 
+    fn paths(&self) -> Option<&[PathData]> { None }
+
     fn image(&self) -> Option<Image> { None }
 
     fn placer(&mut self) -> &mut Placer { &mut self.view_mut()._placer }
@@ -136,7 +138,7 @@ pub trait View: AsAny + Boxed {
     fn view_mut(&mut self) -> &mut ViewBase;
 }
 
-#[derive(AsAny, Boxed)]
+#[derive(Boxed)]
 pub struct ViewBase {
     _color:         Color,
     _touch_enabled: bool,

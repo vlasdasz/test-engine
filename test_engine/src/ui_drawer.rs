@@ -4,10 +4,7 @@ use gl_image::Image;
 use gl_wrapper::GLWrapper;
 use gm::{Color, Rect, Size};
 use tools::{new, platform::Platform};
-use ui::{
-    complex::{DrawingView, PathData},
-    View,
-};
+use ui::{complex::PathData, View};
 
 use crate::assets::Assets;
 
@@ -37,9 +34,9 @@ impl UIDrawer {
 
         self.draw_rect(view.absolute_frame(), &Color::TURQUOISE);
 
-        if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
-            for path in &drawing_view.paths {
-                self.draw_path_in_rect(path, drawing_view.absolute_frame());
+        if let Some(paths) = view.paths() {
+            for path in paths {
+                self.draw_path_in_rect(path, view.absolute_frame());
             }
         }
 
