@@ -4,6 +4,7 @@ use proc_macro::AsAny;
 use test_engine::{
     gm::{flat::PointsPath, Color},
     screen::GameView,
+    sprites::Control,
     ui::{
         basic::Button,
         complex::{AnalogStickView, DrawingView},
@@ -34,34 +35,28 @@ impl TestView {
     fn setup_level(&mut self) {
         self.level.setup();
 
-        // fn setup_test_view(&mut self) {
-        //     let mut view =
-        // make_view_on::<TestView>(self.root_view.deref_mut());
+        let mut level = self.level.to_rglica();
 
-        // let level = self.level.as_ref().unwrap();
-        //
-        // let mut this = level.to_rglica();
-        // view.dpad.on_up.subscribe(move |_| {
-        //     this.player().jump();
-        // });
-        //
-        // let mut this = level.to_rglica();
-        // view.dpad.on_left.subscribe(move |_| {
-        //     this.player().go_left();
-        // });
-        //
-        // let mut this = level.to_rglica();
-        // view.dpad.on_right.subscribe(move |_| {
-        //     this.player().go_right();
-        // });
-        //
-        // let mut this = level.to_rglica();
-        // view.left_stick
-        //     .on_direction_change
-        //     .subscribe(move |direction| {
-        //         this.player().add_impulse(&direction);
-        //     });
-        // }
+        let mut lvl = level.clone();
+        self.dpad.on_up.subscribe(move |_| {
+            lvl.player().jump();
+        });
+
+        let mut lvl = level.clone();
+        self.dpad.on_left.subscribe(move |_| {
+            lvl.player().go_left();
+        });
+
+        let mut lvl = level.clone();
+        self.dpad.on_right.subscribe(move |_| {
+            lvl.player().go_right();
+        });
+
+        self.left_stick
+            .on_direction_change
+            .subscribe(move |direction| {
+                level.player().add_impulse(&direction);
+            });
     }
 }
 
