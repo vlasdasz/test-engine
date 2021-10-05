@@ -1,6 +1,7 @@
+use proc_macro::New;
 use test_engine::{Image, Level, LevelBase, Sprite};
-use tools::{Boxed, New};
 
+#[derive(New)]
 pub struct TestLevel {
     base: LevelBase,
 }
@@ -25,12 +26,4 @@ impl Level for TestLevel {
     fn level(&self) -> &LevelBase { &self.base }
 
     fn level_mut(&mut self) -> &mut LevelBase { &mut self.base }
-}
-
-impl Boxed for TestLevel {
-    fn boxed() -> Box<Self> {
-        Box::new(Self {
-            base: LevelBase::new(),
-        })
-    }
 }

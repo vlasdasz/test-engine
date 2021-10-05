@@ -1,4 +1,4 @@
-use std::ops::{Deref, DerefMut};
+use std::ops::DerefMut;
 
 use test_engine::{
     gm::{flat::PointsPath, Color},
@@ -19,7 +19,7 @@ static mut COUNTER: u32 = 0;
 
 pub struct TestView {
     base:            ViewBase,
-    level:           Box<TestLevel>,
+    level:           TestLevel,
     pub data:        u128,
     pub clicks:      u128,
     pub image_view:  Rglica<ImageView>,
@@ -31,9 +31,7 @@ pub struct TestView {
 
 impl TestView {
     fn setup_level(&mut self) {
-        self.level.setup();
-
-        let mut level = self.level.to_rglica();
+        let mut level = Rglica::from_ref(&self.level);
 
         let mut lvl = level.clone();
         self.dpad.on_up.subscribe(move |_| {
@@ -143,15 +141,15 @@ impl View for TestView {
 }
 
 impl GameView for TestView {
-    fn level(&self) -> &dyn Level { self.level.deref() }
-    fn level_mut(&mut self) -> &mut dyn Level { self.level.deref_mut() }
+    fn level(&self) -> &dyn Level { &self.level }
+    fn level_mut(&mut self) -> &mut dyn Level { &mut self.level }
 }
 
 impl Boxed for TestView {
     fn boxed() -> Box<Self> {
         Box::new(Self {
             base:        ViewBase::default(),
-            level:       TestLevel::boxed(),
+            level:       TestLevel::new(),
             data:        0,
             clicks:      0,
             image_view:  new(),
