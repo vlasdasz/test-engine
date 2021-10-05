@@ -7,6 +7,10 @@ edition = "2018"
 [[bin]]
 name = "test_game"
 
+[lib]
+name = "test_game"
+crate-type = ["rlib", "staticlib"]
+
 [dependencies]
 gl_wrapper = { path = "../gl_wrapper" }
 proc_macro = { path = "../proc_macro" }

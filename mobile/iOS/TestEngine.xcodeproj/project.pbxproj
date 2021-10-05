@@ -19,7 +19,7 @@
 		D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC26261C457000B81CFB /* libswiftSystem.tbd */; };
 		D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
 		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
-		D1AAD83526AEDBF1008B86C5 /* libtest_engine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AAD83426AEDBF1008B86C5 /* libtest_engine.a */; };
+		D1B10DE4270C86C5008D85D2 /* libtest_game.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B10DE3270C86C5008D85D2 /* libtest_game.a */; };
 		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +41,7 @@
 		D180CC26261C457000B81CFB /* libswiftSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftSystem.tbd; path = usr/lib/swift/libswiftSystem.tbd; sourceTree = SDKROOT; };
 		D180CC27261C457000B81CFB /* libSystem_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem_asan.tbd; path = usr/lib/libSystem_asan.tbd; sourceTree = SDKROOT; };
 		D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B_asan.tbd; path = usr/lib/libSystem.B_asan.tbd; sourceTree = SDKROOT; };
-		D1AAD83426AEDBF1008B86C5 /* libtest_engine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_engine.a; path = ../../../target/universal/release/libtest_engine.a; sourceTree = "<group>"; };
+		D1B10DE3270C86C5008D85D2 /* libtest_game.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_game.a; path = ../../../target/universal/release/libtest_game.a; sourceTree = "<group>"; };
 		D1D524F3261BB078005C1426 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -55,8 +55,8 @@
 				D180CC2B261C457000B81CFB /* libswiftSystem_Foundation.tbd in Frameworks */,
 				D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */,
 				D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */,
+				D1B10DE4270C86C5008D85D2 /* libtest_game.a in Frameworks */,
 				D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */,
-				D1AAD83526AEDBF1008B86C5 /* libtest_engine.a in Frameworks */,
 				D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */,
 				D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */,
 			);
@@ -90,7 +90,7 @@
 				D14901F72617215B0044E630 /* test_engine.h */,
 				D1411E7D2617166700F3F18B /* AppDelegate.h */,
 				D1411E7E2617166700F3F18B /* AppDelegate.m */,
-				D1AAD83426AEDBF1008B86C5 /* libtest_engine.a */,
+				D1B10DE3270C86C5008D85D2 /* libtest_game.a */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
 				D1411E8E2617166800F3F18B /* Info.plist */,
