@@ -132,7 +132,7 @@ pub trait View: Boxed {
 
     fn image(&self) -> Option<Image> { None }
 
-    fn placer(&mut self) -> &mut Placer { &mut self.view_mut()._placer }
+    fn place(&mut self) -> &mut Placer { &mut self.view_mut()._placer }
 
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;

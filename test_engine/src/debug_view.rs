@@ -61,7 +61,7 @@ impl View for DebugView {
         ));
     }
 
-    fn layout(&mut self) { self.placer().distribute_vertically(); }
+    fn layout(&mut self) { self.place().distribute_vertically(); }
 
     fn view(&self) -> &ViewBase { &self.view }
 

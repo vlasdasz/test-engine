@@ -135,7 +135,7 @@ impl View for TestView {
 
     fn update(&mut self) { self.data += 1 }
 
-    fn layout(&mut self) { self.placer().br() }
+    fn layout(&mut self) { self.place().br() }
 
     fn view(&self) -> &ViewBase { &self.base }
 

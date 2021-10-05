@@ -33,11 +33,11 @@ impl View for SubviewsTestView {
     }
 
     fn layout(&mut self) {
-        self.first.placer().at_center();
-        self.second.placer().at_center();
-        self.third.placer().at_center();
-        self.forth.placer().at_center();
-        self.fifth.placer().at_center();
+        self.first.place().at_center();
+        self.second.place().at_center();
+        self.third.place().at_center();
+        self.forth.place().at_center();
+        self.fifth.place().at_center();
     }
 
     fn view(&self) -> &ViewBase { &self.base }

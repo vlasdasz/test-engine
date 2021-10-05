@@ -1,6 +1,6 @@
 use gm::Rect;
 use proc_macro::New;
-use tools::Rglica;
+use tools::{new, Rglica};
 
 use crate::View;
 
@@ -22,9 +22,19 @@ impl Placer {
 }
 
 impl Placer {
+    pub fn as_background(&mut self) {
+        self.frame.origin = new();
+        self.frame.size = self.super_frame.size;
+    }
+
     pub fn at_center(&mut self) {
         self.frame.origin.x = self.super_frame.width() / 2.0 - self.frame.width() / 2.0;
         self.frame.origin.y = self.super_frame.height() / 2.0 - self.frame.height() / 2.0;
+    }
+
+    pub fn lb(&mut self) {
+        self.frame.origin.x = 0.0;
+        self.frame.origin.y = self.super_frame.size.height - self.frame.size.height;
     }
 
     pub fn br(&mut self) {

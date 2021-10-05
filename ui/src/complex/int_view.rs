@@ -46,7 +46,7 @@ impl View for IntView {
 
     fn update(&mut self) { self.label.set_text(&self.value.to_string()); }
 
-    fn layout(&mut self) { self.placer().distribute_vertically(); }
+    fn layout(&mut self) { self.place().distribute_vertically(); }
 
     fn view(&self) -> &ViewBase { &self.base }
 
