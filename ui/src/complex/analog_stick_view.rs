@@ -13,6 +13,7 @@ pub struct AnalogStickView {
     direction_stick:         Rglica<DrawingView>,
     background:              Rglica<DrawingView>,
     pub on_direction_change: Event<Point>,
+    pub flaccid:             bool,
 }
 
 impl AnalogStickView {
@@ -83,6 +84,9 @@ impl View for AnalogStickView {
         let mut this = Rglica::from_ref(self);
         self.on_touch().subscribe(move |touch| {
             if touch.is_ended() {
+                if this.flaccid {
+                    return;
+                }
                 let frame = *this.frame();
                 this.direction_stick
                     .frame_mut()
