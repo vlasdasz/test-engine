@@ -1,11 +1,10 @@
 use std::ops::DerefMut;
 
-use proc_macro::Boxed;
 use tools::Rglica;
 
 use crate::{make_view_on, View, ViewBase};
 
-#[derive(Boxed)]
+#[derive(Default)]
 pub struct SubviewsTestView {
     base:   ViewBase,
     first:  Rglica<ViewBase>,

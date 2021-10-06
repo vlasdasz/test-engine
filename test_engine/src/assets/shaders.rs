@@ -12,8 +12,8 @@ pub struct Shaders {
     pub textured_sprite: Shader,
 }
 
-impl Shaders {
-    pub fn init() -> Shaders {
+impl Default for Shaders {
+    fn default() -> Shaders {
         let compiler = ShaderCompiler::new(paths::shaders::include());
 
         let ui = compiler.compile(&paths::shaders::ui().join("ui"));

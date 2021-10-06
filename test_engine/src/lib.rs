@@ -1,6 +1,7 @@
+#![allow(incomplete_features)]
 #![feature(trait_upcasting)]
 #![feature(option_result_unwrap_unchecked)]
-#![allow(incomplete_features)]
+#![feature(default_free_fn)]
 
 pub use gl_image;
 pub use gl_wrapper;

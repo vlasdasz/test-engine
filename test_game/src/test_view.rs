@@ -11,12 +11,13 @@ use test_engine::{
     },
     Image, Level,
 };
-use tools::{new, rglica::ToRglica, Boxed, New, Rglica};
+use tools::{rglica::ToRglica, Boxed, Rglica};
 
 use crate::test_level::TestLevel;
 
 static mut COUNTER: u32 = 0;
 
+#[derive(Default)]
 pub struct TestView {
     base:            ViewBase,
     level:           TestLevel,
@@ -105,7 +106,7 @@ impl View for TestView {
 
         drawing.set_frame((500, 10, 200, 200).into());
 
-        let mut path = PointsPath::new();
+        let mut path = PointsPath::default();
 
         path.add_point((1, 20).into());
         path.add_point((100, 30).into());
@@ -133,7 +134,7 @@ impl View for TestView {
 
     fn update(&mut self) { self.data += 1 }
 
-    fn layout(&mut self) { self.place().br() }
+    fn layout(&mut self) { self.place().bottom_right() }
 
     fn view(&self) -> &ViewBase { &self.base }
 
@@ -143,20 +144,4 @@ impl View for TestView {
 impl GameView for TestView {
     fn level(&self) -> &dyn Level { &self.level }
     fn level_mut(&mut self) -> &mut dyn Level { &mut self.level }
-}
-
-impl Boxed for TestView {
-    fn boxed() -> Box<Self> {
-        Box::new(Self {
-            base:        ViewBase::default(),
-            level:       TestLevel::new(),
-            data:        0,
-            clicks:      0,
-            image_view:  new(),
-            label:       new(),
-            dpad:        new(),
-            left_stick:  new(),
-            right_stick: new(),
-        })
-    }
 }

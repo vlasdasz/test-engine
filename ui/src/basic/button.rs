@@ -1,10 +1,9 @@
 use gl_image::Image;
-use proc_macro::Boxed;
 use tools::{Event, Rglica};
 
 use crate::{View, ViewBase};
 
-#[derive(Boxed)]
+#[derive(Default)]
 pub struct Button {
     base:       ViewBase,
     pub on_tap: Event,

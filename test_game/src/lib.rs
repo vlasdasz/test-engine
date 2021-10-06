@@ -1,7 +1,9 @@
-#![feature(option_result_unwrap_unchecked)]
 #![allow(incomplete_features)]
+#![feature(option_result_unwrap_unchecked)]
+#![feature(default_free_fn)]
 
 use std::{
+    default::default,
     os::raw::{c_float, c_int, c_ulong},
     ptr,
 };
@@ -11,7 +13,7 @@ use test_engine::{
     ui::{input::touch::Event, Touch},
     Screen,
 };
-use tools::{new, Boxed};
+use tools::Boxed;
 
 use crate::test_view::TestView;
 
@@ -25,7 +27,7 @@ pub extern "C" fn create_screen() {
     dbg!("gome");
     unsafe {
         SCREEN = Box::into_raw(Box::new(
-            Screen::new(new())
+            Screen::new(default())
                 .add_view(TestView::boxed())
                 .add_debug_view(),
         ));

@@ -1,6 +1,4 @@
-use tools::{new, New};
-
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Color {
     pub r: f32,
     pub g: f32,
@@ -116,16 +114,5 @@ impl Color {
     pub fn random() -> Color {
         use rand::Rng;
         Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
-    }
-}
-
-impl New for Color {
-    fn new() -> Color {
-        Color {
-            r: new(),
-            g: new(),
-            b: new(),
-            a: new(),
-        }
     }
 }

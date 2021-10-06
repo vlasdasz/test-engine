@@ -1,3 +1,5 @@
+#![feature(default_free_fn)]
+
 pub mod basic;
 pub mod complex;
 pub mod input;

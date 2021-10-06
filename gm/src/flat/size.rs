@@ -1,8 +1,6 @@
-use proc_macro::New;
-
 use crate::{IntoF32, Point};
 
-#[derive(Copy, Clone, Debug, New)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Size {
     pub width:  f32,
     pub height: f32,

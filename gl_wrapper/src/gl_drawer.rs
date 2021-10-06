@@ -1,8 +1,10 @@
+use std::default::default;
+
 use glfw::{Action, Key, MouseButton};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, Window};
 use gm::{Point, Size};
-use tools::{new, Event};
+use tools::Event;
 
 use crate::{gl_loader::GLFWEvents, GLLoader};
 
@@ -63,11 +65,11 @@ impl GLDrawer {
         Self {
             window:          loader.window,
             events:          loader.events,
-            on_frame_drawn:  new(),
-            on_cursor_moved: new(),
-            on_size_changed: new(),
-            on_mouse_click:  new(),
-            on_key_pressed:  new(),
+            on_frame_drawn:  default(),
+            on_cursor_moved: default(),
+            on_size_changed: default(),
+            on_mouse_click:  default(),
+            on_key_pressed:  default(),
         }
     }
 }

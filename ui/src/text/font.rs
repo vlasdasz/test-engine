@@ -1,8 +1,7 @@
-use std::{ffi::c_void, fs, ops::Range, path::Path};
+use std::{default::default, ffi::c_void, fs, ops::Range, path::Path};
 
 use gl_image::Image;
 use gm::Size;
-use tools::{new, New};
 
 use crate::{Glyph, DEFAULT_FONT};
 
@@ -16,7 +15,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 
     let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1);
 
-    Glyph::new(symbol, image, 20, new())
+    Glyph::new(symbol, image, 20, default())
 }
 
 #[derive(Clone, Debug)]
@@ -83,6 +82,6 @@ impl Font {
     }
 }
 
-impl New for Font {
-    fn new() -> Self { DEFAULT_FONT.lock().unwrap().clone() }
+impl Default for Font {
+    fn default() -> Self { DEFAULT_FONT.lock().unwrap().clone() }
 }

@@ -1,13 +1,12 @@
 use gl_wrapper::{Buffer, BufferConfig};
 use gm::{flat::PointsPath, Color};
-use proc_macro::Boxed;
 
 use crate::{
     complex::{path_data::DrawMode, PathData},
     View, ViewBase,
 };
 
-#[derive(Boxed)]
+#[derive(Default)]
 pub struct DrawingView {
     base:      ViewBase,
     pub paths: Vec<PathData>,

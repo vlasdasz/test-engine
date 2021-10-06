@@ -1,5 +1,7 @@
+use std::default::default;
+
 use chrono::Utc;
-use tools::{has_new::new, platform::Platform, Boxed, Rglica};
+use tools::{platform::Platform, Boxed, Rglica};
 use ui::{make_view_on, Label, View, ViewBase};
 
 pub struct DebugView {
@@ -61,7 +63,10 @@ impl View for DebugView {
         ));
     }
 
-    fn layout(&mut self) { self.place().distribute_vertically(); }
+    fn layout(&mut self) {
+        self.place().top_left_margin(10);
+        self.place().subviews_vertically();
+    }
 
     fn view(&self) -> &ViewBase { &self.view }
 
@@ -71,9 +76,9 @@ impl View for DebugView {
 impl Boxed for DebugView {
     fn boxed() -> Box<Self> {
         Box::new(DebugView {
-            view:              new(),
-            fps_label:         new(),
-            frame_drawn_label: new(),
+            view:              default(),
+            fps_label:         default(),
+            frame_drawn_label: default(),
             frame_drawn:       0,
             prev_time:         Utc::now().timestamp_nanos(),
             min_fps:           u64::MAX,

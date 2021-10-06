@@ -50,8 +50,8 @@ pub struct Buffers {
     pub fullscreen_outline: Buffer,
 }
 
-impl Buffers {
-    pub fn init() -> Buffers {
+impl Default for Buffers {
+    fn default() -> Buffers {
         let fullscreen = Buffer::make(
             &BufferConfig::_2,
             FULLSCREEN_VERT.into(),

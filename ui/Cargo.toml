@@ -16,7 +16,6 @@ lazy_static = "1.4.0"
 gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
-proc_macro = { path = "../proc_macro" }
 
 tools = { path = "../.rdeps/tools" }
 

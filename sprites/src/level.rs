@@ -1,3 +1,5 @@
+use std::default::default;
+
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::Point;
@@ -8,7 +10,7 @@ use rapier2d::{
         JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
     },
 };
-use tools::{New, Rglica, ToRglica};
+use tools::{Rglica, ToRglica};
 
 use crate::{Body, Collider, Sprite, SpriteBase};
 
@@ -134,8 +136,8 @@ impl Level for LevelBase {
     fn level_mut(&mut self) -> &mut LevelBase { self }
 }
 
-impl New for LevelBase {
-    fn new() -> Self {
+impl Default for LevelBase {
+    fn default() -> Self {
         Self {
             sprites:          vec![],
             rigid_body_set:   RigidBodySet::new(),
@@ -150,7 +152,7 @@ impl New for LevelBase {
 
             physics_hooks: (),
             event_handler: (),
-            player:        Rglica::new(),
+            player:        default(),
 
             integration_parameters: IntegrationParameters::default(),
         }

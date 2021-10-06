@@ -1,4 +1,5 @@
 use std::{
+    default::default,
     ops::{Deref, DerefMut},
     rc::Rc,
 };
@@ -10,7 +11,7 @@ use gl_wrapper::GLWrapper;
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
 use sprites::{Level, Sprite};
-use tools::{new, Boxed, New, Rglica, ToRglica};
+use tools::{Boxed, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::{input::Touch, make_view_on, View, ViewBase};
@@ -177,11 +178,11 @@ impl Screen {
         drop(font_path);
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(size);
-        let assets = Rc::new(Assets::new());
+        let assets = Rc::new(Assets::default());
         let mut screen = Self {
-            cursor_position: new(),
+            cursor_position: default(),
             root_view: ViewBase::boxed(),
-            view: new(),
+            view: default(),
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),

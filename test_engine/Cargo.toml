@@ -18,7 +18,6 @@ ui = { path = "../ui" }
 sprites = { path = "../sprites" }
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
-proc_macro = { path = "../proc_macro" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14.0"

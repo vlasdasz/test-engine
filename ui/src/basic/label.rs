@@ -1,9 +1,8 @@
-use proc_macro::Boxed;
 use tools::Boxed;
 
 use crate::{Font, ImageView, View, ViewBase};
 
-#[derive(Boxed)]
+#[derive(Default)]
 pub struct Label {
     font:  Font,
     _text: String,

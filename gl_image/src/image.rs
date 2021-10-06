@@ -1,9 +1,8 @@
-use std::{ffi::c_void, path::Path};
+use std::{default::default, ffi::c_void, path::Path};
 
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::Size;
 use image::GenericImageView;
-use tools::{new, New};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Image {
@@ -48,10 +47,10 @@ impl Image {
     pub fn bind(&self) { GLWrapper::bind_image(self.gl_handle) }
 }
 
-impl New for Image {
-    fn new() -> Image {
+impl Default for Image {
+    fn default() -> Image {
         Image {
-            size:      new(),
+            size:      default(),
             channels:  0,
             gl_handle: u32::MAX,
         }

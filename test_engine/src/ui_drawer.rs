@@ -1,9 +1,9 @@
-use std::{ops::DerefMut, rc::Rc};
+use std::{default::default, ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
 use gm::{Color, Rect, Size};
-use tools::{new, platform::Platform};
+use tools::platform::Platform;
 use ui::{complex::PathData, View};
 
 use crate::assets::Assets;
@@ -17,7 +17,7 @@ impl UIDrawer {
     pub fn new(assets: Rc<Assets>) -> UIDrawer {
         UIDrawer {
             assets,
-            window_size: new(),
+            window_size: default(),
         }
     }
 

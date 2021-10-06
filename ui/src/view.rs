@@ -1,12 +1,12 @@
 use std::{
     cell::RefCell,
+    default::default,
     ops::{Deref, DerefMut},
 };
 
 use gl_image::Image;
 use gm::{Color, Rect};
-use proc_macro::Boxed;
-use tools::{new, rglica::ToRglica, Address, Boxed, Event, New, Rglica};
+use tools::{rglica::ToRglica, Address, Boxed, Event, Rglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch};
 
@@ -138,7 +138,6 @@ pub trait View: Boxed {
     fn view_mut(&mut self) -> &mut ViewBase;
 }
 
-#[derive(Boxed)]
 pub struct ViewBase {
     _color:         Color,
     _touch_enabled: bool,
@@ -184,14 +183,14 @@ impl Default for ViewBase {
             _frame:          Rect::DEFAULT,
             _absolute_frame: Rect::DEFAULT,
 
-            _superview: Rglica::new(),
+            _superview: default(),
 
             _subviews: vec![],
 
-            _on_touch: Event::new(),
-            _touch_id: new(),
+            _on_touch: default(),
+            _touch_id: default(),
 
-            _placer: Placer::new(),
+            _placer: default(),
         }
     }
 }

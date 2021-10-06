@@ -1,10 +1,11 @@
-use gm::Rect;
-use proc_macro::New;
-use tools::{new, Rglica};
+use std::default::default;
+
+use gm::{IntoF32, Rect};
+use tools::Rglica;
 
 use crate::View;
 
-#[derive(New)]
+#[derive(Default)]
 pub struct Placer {
     view:        Rglica<dyn View>,
     frame:       Rglica<Rect>,
@@ -23,7 +24,7 @@ impl Placer {
 
 impl Placer {
     pub fn as_background(&mut self) {
-        self.frame.origin = new();
+        self.frame.origin = default();
         self.frame.size = self.super_frame.size;
     }
 
@@ -32,17 +33,28 @@ impl Placer {
         self.frame.origin.y = self.super_frame.height() / 2.0 - self.frame.height() / 2.0;
     }
 
-    pub fn lb(&mut self) {
+    pub fn top_left_margin(&mut self, margin: impl IntoF32) {
+        self.frame.origin.x = margin.into_f32();
+        self.frame.origin.y = margin.into_f32();
+    }
+
+    pub fn bottom_left(&mut self) {
         self.frame.origin.x = 0.0;
         self.frame.origin.y = self.super_frame.size.height - self.frame.size.height;
     }
 
-    pub fn br(&mut self) {
+    pub fn bottom_left_margin(&mut self, margin: impl IntoF32) {
+        self.frame.origin.x = margin.into_f32();
+        self.frame.origin.y =
+            self.super_frame.size.height - self.frame.size.height - margin.into_f32();
+    }
+
+    pub fn bottom_right(&mut self) {
         self.frame.origin.x = self.super_frame.size.width - self.frame.size.width;
         self.frame.origin.y = self.super_frame.size.height - self.frame.size.height;
     }
 
-    pub fn distribute_vertically(&mut self) {
+    pub fn subviews_vertically(&mut self) {
         let views = self.view.subviews_mut();
 
         if views.is_empty() {

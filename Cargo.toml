@@ -7,7 +7,6 @@ members = [
     "sprites",
     "gl_image",
     "test_game",
-    "proc_macro",
     "gl_wrapper",
     "test_engine",
 ]

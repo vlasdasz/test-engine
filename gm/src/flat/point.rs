@@ -1,8 +1,6 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
-use proc_macro::New;
-
-pub trait IntoF32 {
+pub trait IntoF32: Copy {
     fn into_f32(self) -> f32;
 }
 
@@ -18,7 +16,7 @@ impl IntoF32 for f64 {
     fn into_f32(self) -> f32 { self as f32 }
 }
 
-#[derive(Copy, Clone, Debug, New)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Point {
     pub x: f32,
     pub y: f32,

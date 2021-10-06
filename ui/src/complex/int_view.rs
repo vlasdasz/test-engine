@@ -1,12 +1,11 @@
 use std::ops::AddAssign;
 
 use gl_image::Image;
-use proc_macro::Boxed;
 use tools::{Event, Rglica};
 
 use crate::{basic::Button, make_view_on, Label, View, ViewBase};
 
-#[derive(Boxed)]
+#[derive(Default)]
 pub struct IntView {
     base:          ViewBase,
     value:         i64,
@@ -46,7 +45,7 @@ impl View for IntView {
 
     fn update(&mut self) { self.label.set_text(&self.value.to_string()); }
 
-    fn layout(&mut self) { self.place().distribute_vertically(); }
+    fn layout(&mut self) { self.place().subviews_vertically(); }
 
     fn view(&self) -> &ViewBase { &self.base }
 

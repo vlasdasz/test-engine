@@ -1,6 +1,5 @@
 use gl_image::Image;
 use gm::{Color, IntoF32, Point, Size};
-use proc_macro::New;
 
 pub trait Sprite {
     fn size(&self) -> Size { self.sprite().size }
@@ -19,7 +18,6 @@ pub trait Sprite {
     fn sprite_mut(&mut self) -> &mut SpriteBase;
 }
 
-#[derive(New)]
 pub struct SpriteBase {
     position:  Point,
     size:      Size,

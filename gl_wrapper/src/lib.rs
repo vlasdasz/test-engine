@@ -1,3 +1,5 @@
+#![feature(default_free_fn)]
+
 pub use buffers::{Buffer, BufferConfig};
 use cfg_if::cfg_if;
 pub use gl_info::GLInfo;
