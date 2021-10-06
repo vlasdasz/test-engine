@@ -7,17 +7,17 @@ use crate::View;
 
 #[derive(Default)]
 pub struct Placer {
-    view:        Rglica<dyn View>,
-    frame:       Rglica<Rect>,
-    super_frame: Rglica<Rect>,
+    view:    Rglica<dyn View>,
+    frame:   Rglica<Rect>,
+    s_frame: Rglica<Rect>,
 }
 
 impl Placer {
     pub fn make(view: &mut (dyn View + 'static)) -> Self {
         Self {
-            view:        Rglica::from_ref(view),
-            frame:       Rglica::from_ref(view.frame()),
-            super_frame: Rglica::from_ref(view.super_frame()),
+            view:    Rglica::from_ref(view),
+            frame:   Rglica::from_ref(view.frame()),
+            s_frame: Rglica::from_ref(view.super_frame()),
         }
     }
 }
@@ -25,12 +25,12 @@ impl Placer {
 impl Placer {
     pub fn as_background(&mut self) {
         self.frame.origin = default();
-        self.frame.size = self.super_frame.size;
+        self.frame.size = self.s_frame.size;
     }
 
     pub fn at_center(&mut self) {
-        self.frame.origin.x = self.super_frame.width() / 2.0 - self.frame.width() / 2.0;
-        self.frame.origin.y = self.super_frame.height() / 2.0 - self.frame.height() / 2.0;
+        self.frame.origin.x = self.s_frame.width() / 2.0 - self.frame.width() / 2.0;
+        self.frame.origin.y = self.s_frame.height() / 2.0 - self.frame.height() / 2.0;
     }
 
     pub fn top_left_margin(&mut self, margin: impl IntoF32) {
@@ -40,18 +40,22 @@ impl Placer {
 
     pub fn bottom_left(&mut self) {
         self.frame.origin.x = 0.0;
-        self.frame.origin.y = self.super_frame.size.height - self.frame.size.height;
+        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height;
     }
 
     pub fn bottom_left_margin(&mut self, margin: impl IntoF32) {
         self.frame.origin.x = margin.into_f32();
-        self.frame.origin.y =
-            self.super_frame.size.height - self.frame.size.height - margin.into_f32();
+        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height - margin.into_f32();
     }
 
     pub fn bottom_right(&mut self) {
-        self.frame.origin.x = self.super_frame.size.width - self.frame.size.width;
-        self.frame.origin.y = self.super_frame.size.height - self.frame.size.height;
+        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width;
+        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height;
+    }
+
+    pub fn bottom_right_margin(&mut self, margin: impl IntoF32) {
+        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width - margin.into_f32();
+        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height - margin.into_f32();
     }
 
     pub fn subviews_vertically(&mut self) {

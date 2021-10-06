@@ -93,9 +93,9 @@ impl Sub for &Point {
     fn sub(self, rhs: &Point) -> Point { (self.x - rhs.x, self.y - rhs.y).into() }
 }
 
-impl Mul<f32> for Point {
+impl<T: IntoF32> Mul<T> for Point {
     type Output = Point;
-    fn mul(self, rhs: f32) -> Point { (self.x * rhs, self.y * rhs).into() }
+    fn mul(self, rhs: T) -> Point { (self.x * rhs.into_f32(), self.y * rhs.into_f32()).into() }
 }
 
 impl<X: IntoF32, Y: IntoF32> From<(X, Y)> for Point {

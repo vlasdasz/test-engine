@@ -26,6 +26,8 @@ pub trait Level {
 
     fn update(&mut self) {}
 
+    fn set_gravity(&mut self, g: Point) { self.level_mut().gravity = Vector2::new(g.x, g.y) }
+
     fn player(&mut self) -> &mut Rglica<Body> { &mut self.level_mut().player }
 
     fn sprites(&self) -> &[Box<dyn Sprite>] { &self.level().sprites }
