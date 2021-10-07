@@ -8,8 +8,8 @@ use crate::{
 
 #[derive(Default)]
 pub struct DrawingView {
-    base:      ViewBase,
-    pub paths: Vec<PathData>,
+    base:  ViewBase,
+    paths: Vec<PathData>,
 }
 
 impl DrawingView {
@@ -17,6 +17,8 @@ impl DrawingView {
         self.paths
             .push(initialize_path_data(path, color, DrawMode::Fill))
     }
+
+    pub fn remove_all_paths(&mut self) { self.paths.clear() }
 }
 
 impl View for DrawingView {

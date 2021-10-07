@@ -2,20 +2,10 @@ use std::default::default;
 
 use crate::{IntoF32, Point, Size};
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Rect {
     pub origin: Point,
     pub size:   Size,
-}
-
-impl Rect {
-    pub const DEFAULT: Rect = Rect {
-        origin: Point { x: 0.0, y: 0.0 },
-        size:   Size {
-            width:  0.0,
-            height: 0.0,
-        },
-    };
 }
 
 impl Rect {
@@ -35,6 +25,15 @@ impl Rect {
     pub fn width(&self) -> f32 { self.size.width }
 
     pub fn height(&self) -> f32 { self.size.height }
+
+    pub fn square(&self) -> Size {
+        let side = if self.size.height < self.size.width {
+            self.size.height
+        } else {
+            self.size.width
+        };
+        (side, side).into()
+    }
 }
 
 impl Rect {

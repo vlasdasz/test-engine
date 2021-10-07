@@ -1,6 +1,5 @@
 use std::{
     cell::RefCell,
-    default::default,
     ops::{Deref, DerefMut},
 };
 
@@ -136,8 +135,18 @@ pub trait View: Boxed {
 
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
+
+    fn with_frame(frame: Rect) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        let mut new = Self::boxed();
+        new.set_frame(frame);
+        new
+    }
 }
 
+#[derive(Default)]
 pub struct ViewBase {
     _color:         Color,
     _touch_enabled: bool,
@@ -162,35 +171,25 @@ impl ViewBase {
         self.add_subview(view);
         rglica
     }
+
+    pub fn make_view_with<T: 'static + View>(&mut self, frame: Rect) -> Rglica<T> {
+        let view = T::with_frame(frame);
+        let rglica = view.to_rglica();
+        self.add_subview(view);
+        rglica
+    }
 }
 
 pub fn make_view_on<T: 'static + View>(view: &mut dyn View) -> Rglica<T> {
     view.view_mut().make_view()
 }
 
+pub fn make_view_with_frame<T: 'static + View>(frame: Rect, view: &mut dyn View) -> Rglica<T> {
+    view.view_mut().make_view_with(frame)
+}
+
 impl View for ViewBase {
     fn view(&self) -> &ViewBase { self }
 
     fn view_mut(&mut self) -> &mut Self { self }
-}
-
-impl Default for ViewBase {
-    fn default() -> Self {
-        Self {
-            _color:         Color::DEFAULT,
-            _touch_enabled: false,
-
-            _frame:          Rect::DEFAULT,
-            _absolute_frame: Rect::DEFAULT,
-
-            _superview: default(),
-
-            _subviews: vec![],
-
-            _on_touch: default(),
-            _touch_id: default(),
-
-            _placer: default(),
-        }
-    }
 }

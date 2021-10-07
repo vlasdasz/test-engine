@@ -1,9 +1,11 @@
-pub mod button;
-pub mod image_view;
-pub mod label;
-pub mod placer;
-
 pub use button::Button;
+pub use circle::Circle;
 pub use image_view::ImageView;
 pub use label::Label;
-pub use placer::Placer;
+
+pub use crate::placer::Placer;
+
+pub mod button;
+pub mod circle;
+pub mod image_view;
+pub mod label;

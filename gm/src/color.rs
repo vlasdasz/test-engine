@@ -94,8 +94,6 @@ impl Color {
         a: 0.0,
     };
 
-    pub const DEFAULT: Color = Color::CLEAR;
-
     pub const ALL: [Color; 12] = [
         Color::BLACK,
         Color::WHITE,

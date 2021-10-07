@@ -5,9 +5,9 @@ use test_engine::{
     screen::GameView,
     sprites::Control,
     ui::{
-        basic::Button,
+        basic::{Button, Circle},
         complex::{AnalogStickView, DrawingView},
-        make_view_on, DPadView, ImageView, Label, View, ViewBase,
+        make_view_on, make_view_with_frame, DPadView, ImageView, Label, View, ViewBase,
     },
     Image, Level,
 };
@@ -19,15 +19,15 @@ static mut COUNTER: u32 = 0;
 
 #[derive(Default)]
 pub struct TestView {
-    base:            ViewBase,
-    level:           TestLevel,
-    pub data:        u128,
-    pub clicks:      u128,
-    pub image_view:  Rglica<ImageView>,
-    pub label:       Rglica<Label>,
-    pub dpad:        Rglica<DPadView>,
-    pub left_stick:  Rglica<AnalogStickView>,
-    pub right_stick: Rglica<AnalogStickView>,
+    base:        ViewBase,
+    level:       TestLevel,
+    data:        u128,
+    image_view:  Rglica<ImageView>,
+    label:       Rglica<Label>,
+    dpad:        Rglica<DPadView>,
+    left_stick:  Rglica<AnalogStickView>,
+    right_stick: Rglica<AnalogStickView>,
+    circle:      Rglica<Circle>,
 }
 
 impl TestView {
@@ -129,12 +129,19 @@ impl View for TestView {
         self.right_stick.frame_mut().origin.x = 520.0;
         self.right_stick.frame_mut().origin.y = 300.0;
 
+        self.circle = make_view_with_frame((50, 50).into(), self);
+        self.circle.set_color(Color::GREEN);
+
         self.setup_level();
     }
 
     fn update(&mut self) { self.data += 1 }
 
-    fn layout(&mut self) { self.place().bottom_right() }
+    fn layout(&mut self) {
+        self.place().bottom_right();
+        self.frame_mut().size.width = self.super_frame().size.width;
+        self.circle.place().bottom_right_margin(20);
+    }
 
     fn view(&self) -> &ViewBase { &self.base }
 
