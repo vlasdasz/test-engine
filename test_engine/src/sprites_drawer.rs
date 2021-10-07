@@ -9,7 +9,9 @@ pub struct SpritesDrawer {
 }
 
 impl SpritesDrawer {
-    pub fn new(assets: Rc<Assets>) -> Self { Self { assets } }
+    pub fn new(assets: Rc<Assets>) -> Self {
+        Self { assets }
+    }
 
     pub fn set_resolution(&self, size: &Size) {
         self.assets.shaders.sprite.enable();

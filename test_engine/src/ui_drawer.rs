@@ -21,7 +21,9 @@ impl UIDrawer {
         }
     }
 
-    pub fn set_size(&mut self, size: Size) { self.window_size = size }
+    pub fn set_size(&mut self, size: Size) {
+        self.window_size = size
+    }
 }
 
 impl UIDrawer {
@@ -47,7 +49,9 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    pub fn reset_viewport(&self) { self.set_viewport(&self.window_size.into()); }
+    pub fn reset_viewport(&self) {
+        self.set_viewport(&self.window_size.into());
+    }
 
     fn set_viewport(&self, rect: &Rect) {
         const SCALE: f32 = if Platform::MAC { 2.0 } else { 1.0 };

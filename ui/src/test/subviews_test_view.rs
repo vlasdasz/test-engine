@@ -39,7 +39,11 @@ impl View for SubviewsTestView {
         self.fifth.place().at_center();
     }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

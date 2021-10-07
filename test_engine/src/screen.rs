@@ -37,7 +37,9 @@ pub struct Screen {
 }
 
 impl Screen {
-    pub fn on_touch(&mut self, mut touch: Touch) { self.root_view.check_touch(&mut touch); }
+    pub fn on_touch(&mut self, mut touch: Touch) {
+        self.root_view.check_touch(&mut touch);
+    }
 
     pub fn add_view(mut self, view: Box<dyn GameView>) -> Self {
         self.view = view.to_rglica();
@@ -168,7 +170,9 @@ impl Screen {
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    pub fn start_main_loop(&mut self) { self.drawer.start_main_loop() }
+    pub fn start_main_loop(&mut self) {
+        self.drawer.start_main_loop()
+    }
 }
 
 impl Screen {

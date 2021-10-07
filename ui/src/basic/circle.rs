@@ -22,9 +22,15 @@ impl Circle {
 }
 
 impl View for Circle {
-    fn setup(&mut self) { self.drawing = make_view_on(self); }
+    fn setup(&mut self) {
+        self.drawing = make_view_on(self);
+    }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

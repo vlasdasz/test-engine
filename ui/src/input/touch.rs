@@ -76,9 +76,15 @@ pub struct Touch {
 }
 
 impl Touch {
-    pub fn is_began(&self) -> bool { self.event == Event::Began }
+    pub fn is_began(&self) -> bool {
+        self.event == Event::Began
+    }
 
-    pub fn is_moved(&self) -> bool { self.event == Event::Moved }
+    pub fn is_moved(&self) -> bool {
+        self.event == Event::Moved
+    }
 
-    pub fn is_ended(&self) -> bool { self.event == Event::Ended }
+    pub fn is_ended(&self) -> bool {
+        self.event == Event::Ended
+    }
 }

@@ -36,25 +36,39 @@ impl Shader {
         }
     }
 
-    pub fn enable(&self) { GL!(UseProgram, self.program) }
+    pub fn enable(&self) {
+        GL!(UseProgram, self.program)
+    }
 
-    pub fn set_color(&self, color: &Color) { GL!(Uniform4fv, self.color, 1, &color.r) }
+    pub fn set_color(&self, color: &Color) {
+        GL!(Uniform4fv, self.color, 1, &color.r)
+    }
 
-    pub fn set_size(&self, size: &Size) { GL!(Uniform2fv, self.size, 1, &size.width) }
+    pub fn set_size(&self, size: &Size) {
+        GL!(Uniform2fv, self.size, 1, &size.width)
+    }
 
-    pub fn set_selected(&self, selected: bool) { GL!(Uniform1i, self.selected, selected.into()) }
+    pub fn set_selected(&self, selected: bool) {
+        GL!(Uniform1i, self.selected, selected.into())
+    }
 
     pub fn set_resolution(&self, resolution: &Size) {
         GL!(Uniform2fv, self.resolution, 1, &resolution.width)
     }
 
-    pub fn set_position(&self, point: &Point) { GL!(Uniform2fv, self.position, 1, &point.x) }
+    pub fn set_position(&self, point: &Point) {
+        GL!(Uniform2fv, self.position, 1, &point.x)
+    }
 
-    pub fn set_rotation(&self, angle: f32) { GL!(Uniform1f, self.rotation, angle) }
+    pub fn set_rotation(&self, angle: f32) {
+        GL!(Uniform1f, self.rotation, angle)
+    }
 
     pub fn set_camera_position(&self, pos: Point) {
         GL!(Uniform2fv, self.camera_position, 1, &pos.x)
     }
 
-    pub fn set_flip(&self, flip: bool) { GL!(Uniform1i, self.flip, flip.into()) }
+    pub fn set_flip(&self, flip: bool) {
+        GL!(Uniform1i, self.flip, flip.into())
+    }
 }

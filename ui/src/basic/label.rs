@@ -10,9 +10,13 @@ pub struct Label {
 }
 
 impl Label {
-    pub fn text(&self) -> &str { &self._text }
+    pub fn text(&self) -> &str {
+        &self._text
+    }
 
-    pub fn set_text(&mut self, text: &str) { self._text = text.into() }
+    pub fn set_text(&mut self, text: &str) {
+        self._text = text.into()
+    }
 }
 
 impl View for Label {
@@ -68,7 +72,11 @@ impl View for Label {
         self.set_frame(frame);
     }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

@@ -43,7 +43,9 @@ impl BufferConfig {
 }
 
 impl BufferConfig {
-    pub fn size(&self) -> u8 { self.vertex_size }
+    pub fn size(&self) -> u8 {
+        self.vertex_size
+    }
     pub fn set_pointers(&self) {
         const GLFLOAT_SIZE: u8 = std::mem::size_of::<GLT!(GLfloat)>() as u8;
         for i in 0..self.size {

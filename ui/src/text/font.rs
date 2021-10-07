@@ -72,7 +72,9 @@ impl Font {
         })
     }
 
-    pub fn is_invalid(&self) -> bool { self.glyphs.is_empty() }
+    pub fn is_invalid(&self) -> bool {
+        self.glyphs.is_empty()
+    }
 }
 
 impl Font {
@@ -83,5 +85,7 @@ impl Font {
 }
 
 impl Default for Font {
-    fn default() -> Self { DEFAULT_FONT.lock().unwrap().clone() }
+    fn default() -> Self {
+        DEFAULT_FONT.lock().unwrap().clone()
+    }
 }

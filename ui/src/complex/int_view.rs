@@ -43,11 +43,19 @@ impl View for IntView {
         });
     }
 
-    fn update(&mut self) { self.label.set_text(&self.value.to_string()); }
+    fn update(&mut self) {
+        self.label.set_text(&self.value.to_string());
+    }
 
-    fn layout(&mut self) { self.place().subviews_vertically(); }
+    fn layout(&mut self) {
+        self.place().subviews_vertically();
+    }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

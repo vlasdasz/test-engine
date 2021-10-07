@@ -27,7 +27,11 @@ impl Glyph {
         }
     }
 
-    pub fn y_max(&self) -> f32 { self.bearing.y }
+    pub fn y_max(&self) -> f32 {
+        self.bearing.y
+    }
 
-    pub fn y_min(&self) -> f32 { self.bearing.y - self.image.size.height }
+    pub fn y_min(&self) -> f32 {
+        self.bearing.y - self.image.size.height
+    }
 }

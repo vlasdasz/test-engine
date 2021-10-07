@@ -22,7 +22,11 @@ impl Level for TestLevel {
         }
     }
 
-    fn level(&self) -> &LevelBase { &self.base }
+    fn level(&self) -> &LevelBase {
+        &self.base
+    }
 
-    fn level_mut(&mut self) -> &mut LevelBase { &mut self.base }
+    fn level_mut(&mut self) -> &mut LevelBase {
+        &mut self.base
+    }
 }

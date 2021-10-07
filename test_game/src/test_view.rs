@@ -6,7 +6,7 @@ use test_engine::{
     sprites::Control,
     ui::{
         basic::{Button, Circle},
-        complex::{AnalogStickView, DrawingView},
+        complex::{AnalogStickView, DrawingView, Slider},
         make_view_on, make_view_with_frame, DPadView, ImageView, Label, View, ViewBase,
     },
     Image, Level,
@@ -19,15 +19,17 @@ static mut COUNTER: u32 = 0;
 
 #[derive(Default)]
 pub struct TestView {
-    base:        ViewBase,
-    level:       TestLevel,
-    data:        u128,
-    image_view:  Rglica<ImageView>,
-    label:       Rglica<Label>,
-    dpad:        Rglica<DPadView>,
-    left_stick:  Rglica<AnalogStickView>,
-    right_stick: Rglica<AnalogStickView>,
-    circle:      Rglica<Circle>,
+    base:          ViewBase,
+    level:         TestLevel,
+    data:          u128,
+    image_view:    Rglica<ImageView>,
+    label:         Rglica<Label>,
+    dpad:          Rglica<DPadView>,
+    left_stick:    Rglica<AnalogStickView>,
+    right_stick:   Rglica<AnalogStickView>,
+    circle:        Rglica<Circle>,
+    slider:        Rglica<Slider>,
+    _slider_label: Rglica<Label>,
 }
 
 impl TestView {
@@ -54,6 +56,12 @@ impl TestView {
             .subscribe(move |direction| {
                 level.player().add_impulse(&direction);
             });
+    }
+}
+
+impl TestView {
+    fn setup_slider(&mut self) {
+        self.slider = make_view_with_frame((50, 280).into(), self);
     }
 }
 
@@ -132,23 +140,36 @@ impl View for TestView {
         self.circle = make_view_with_frame((50, 50).into(), self);
         self.circle.set_color(Color::GREEN);
 
+        self.setup_slider();
+
         self.setup_level();
     }
 
-    fn update(&mut self) { self.data += 1 }
+    fn update(&mut self) {
+        self.data += 1
+    }
 
     fn layout(&mut self) {
         self.place().bottom_right();
         self.frame_mut().size.width = self.super_frame().size.width;
         self.circle.place().bottom_right_margin(20);
+        self.slider.place().top_right_margin(20);
     }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }
 
 impl GameView for TestView {
-    fn level(&self) -> &dyn Level { &self.level }
-    fn level_mut(&mut self) -> &mut dyn Level { &mut self.level }
+    fn level(&self) -> &dyn Level {
+        &self.level
+    }
+    fn level_mut(&mut self) -> &mut dyn Level {
+        &mut self.level
+    }
 }

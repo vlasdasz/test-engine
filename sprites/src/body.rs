@@ -23,11 +23,17 @@ impl Body {
         }
     }
 
-    fn body(&self) -> &RigidBody { &self.level.rigid_bodies()[self.handle] }
+    fn body(&self) -> &RigidBody {
+        &self.level.rigid_bodies()[self.handle]
+    }
 
-    fn body_mut(&mut self) -> &mut RigidBody { &mut self.level.rigid_bodies_mut()[self.handle] }
+    fn body_mut(&mut self) -> &mut RigidBody {
+        &mut self.level.rigid_bodies_mut()[self.handle]
+    }
 
-    pub fn lock_rotations(&mut self) { self.body_mut().lock_rotations(true, true); }
+    pub fn lock_rotations(&mut self) {
+        self.body_mut().lock_rotations(true, true);
+    }
 }
 
 impl Sprite for Body {
@@ -35,19 +41,31 @@ impl Sprite for Body {
         (self.body().translation().x, self.body().translation().y).into()
     }
 
-    fn rotation(&self) -> f32 { self.body().rotation().angle() }
+    fn rotation(&self) -> f32 {
+        self.body().rotation().angle()
+    }
 
-    fn sprite(&self) -> &SpriteBase { &self.base }
+    fn sprite(&self) -> &SpriteBase {
+        &self.base
+    }
 
-    fn sprite_mut(&mut self) -> &mut SpriteBase { &mut self.base }
+    fn sprite_mut(&mut self) -> &mut SpriteBase {
+        &mut self.base
+    }
 }
 
 impl Control for Body {
-    fn jump(&mut self) { self.body_mut().set_linvel([0.0, 50.0].into(), true) }
+    fn jump(&mut self) {
+        self.body_mut().set_linvel([0.0, 50.0].into(), true)
+    }
 
-    fn go_left(&mut self) { self.body_mut().set_linvel([-50.0, 0.0].into(), true) }
+    fn go_left(&mut self) {
+        self.body_mut().set_linvel([-50.0, 0.0].into(), true)
+    }
 
-    fn go_right(&mut self) { self.body_mut().set_linvel([50.0, 0.0].into(), true) }
+    fn go_right(&mut self) {
+        self.body_mut().set_linvel([50.0, 0.0].into(), true)
+    }
 
     fn add_impulse(&mut self, impulse: &Point) {
         self.body_mut()

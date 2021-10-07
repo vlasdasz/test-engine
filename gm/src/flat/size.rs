@@ -7,9 +7,13 @@ pub struct Size {
 }
 
 impl Size {
-    pub fn square(side: f32) -> Size { (side, side).into() }
+    pub fn square(side: f32) -> Size {
+        (side, side).into()
+    }
 
-    pub fn is_negative(&self) -> bool { self.width < 0.0 || self.height < 0.0 }
+    pub fn is_negative(&self) -> bool {
+        self.width < 0.0 || self.height < 0.0
+    }
 
     pub fn center(&self) -> Point {
         Point {

@@ -38,6 +38,16 @@ impl Placer {
         self.frame.origin.y = margin.into_f32();
     }
 
+    pub fn top_right(&mut self) {
+        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width;
+        self.frame.origin.y = 0.0;
+    }
+
+    pub fn top_right_margin(&mut self, margin: impl IntoF32) {
+        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width - margin.into_f32();
+        self.frame.origin.y = margin.into_f32();
+    }
+
     pub fn bottom_left(&mut self) {
         self.frame.origin.x = 0.0;
         self.frame.origin.y = self.s_frame.size.height - self.frame.size.height;

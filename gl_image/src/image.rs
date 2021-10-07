@@ -12,9 +12,13 @@ pub struct Image {
 }
 
 impl Image {
-    pub fn is_invalid(&self) -> bool { self.gl_handle == u32::MAX }
+    pub fn is_invalid(&self) -> bool {
+        self.gl_handle == u32::MAX
+    }
 
-    pub fn load(path: &Path) -> Image { Image::load_with_image(path) }
+    pub fn load(path: &Path) -> Image {
+        Image::load_with_image(path)
+    }
 
     pub fn load_with_image(path: &Path) -> Image {
         let image = image::open(path).unwrap_or_else(|_| panic!("Failed to open image {:?}", path));
@@ -42,9 +46,13 @@ impl Image {
         }
     }
 
-    pub fn is_monochrome(&self) -> bool { self.channels == 1 }
+    pub fn is_monochrome(&self) -> bool {
+        self.channels == 1
+    }
 
-    pub fn bind(&self) { GLWrapper::bind_image(self.gl_handle) }
+    pub fn bind(&self) {
+        GLWrapper::bind_image(self.gl_handle)
+    }
 }
 
 impl Default for Image {

@@ -21,9 +21,15 @@ impl View for Button {
         });
     }
 
-    fn image(&self) -> Option<Image> { self.image }
+    fn image(&self) -> Option<Image> {
+        self.image
+    }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

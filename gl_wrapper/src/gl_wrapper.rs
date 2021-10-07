@@ -11,13 +11,21 @@ impl GLWrapper {
         GL!(BindTexture, GLC!(TEXTURE_2D), id);
     }
 
-    pub fn set_clear_color(color: &Color) { GL!(ClearColor, color.r, color.g, color.b, color.a) }
+    pub fn set_clear_color(color: &Color) {
+        GL!(ClearColor, color.r, color.g, color.b, color.a)
+    }
 
-    pub fn clear() { GL!(Clear, GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT)) }
+    pub fn clear() {
+        GL!(Clear, GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT))
+    }
 
-    pub fn enable_depth_test() { GL!(Enable, GLC!(DEPTH_TEST)) }
+    pub fn enable_depth_test() {
+        GL!(Enable, GLC!(DEPTH_TEST))
+    }
 
-    pub fn disable_depth_test() { GL!(Disable, GLC!(DEPTH_TEST)) }
+    pub fn disable_depth_test() {
+        GL!(Disable, GLC!(DEPTH_TEST))
+    }
 
     pub fn set_viewport(window_height: f32, scale: &'static f32, rect: &Rect) {
         GL!(

@@ -26,24 +26,38 @@ pub trait Level {
 
     fn update(&mut self) {}
 
-    fn set_gravity(&mut self, g: Point) { self.level_mut().gravity = Vector2::new(g.x, g.y) }
+    fn set_gravity(&mut self, g: Point) {
+        self.level_mut().gravity = Vector2::new(g.x, g.y)
+    }
 
-    fn player(&mut self) -> &mut Rglica<Body> { &mut self.level_mut().player }
+    fn player(&mut self) -> &mut Rglica<Body> {
+        &mut self.level_mut().player
+    }
 
-    fn sprites(&self) -> &[Box<dyn Sprite>] { &self.level().sprites }
+    fn sprites(&self) -> &[Box<dyn Sprite>] {
+        &self.level().sprites
+    }
 
-    fn rigid_bodies(&self) -> &RigidBodySet { &self.level().rigid_body_set }
+    fn rigid_bodies(&self) -> &RigidBodySet {
+        &self.level().rigid_body_set
+    }
 
-    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet { &mut self.level_mut().rigid_body_set }
+    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet {
+        &mut self.level_mut().rigid_body_set
+    }
 
-    fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> { self.level_mut().add_body(sprite) }
+    fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
+        self.level_mut().add_body(sprite)
+    }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     fn on_key_pressed(&mut self, key: Key, action: Action) {
         self.level_mut().on_key_pressed(key, action)
     }
 
-    fn add_sprite(&mut self, sprite: SpriteBase) { self.level_mut().add_sprite(sprite) }
+    fn add_sprite(&mut self, sprite: SpriteBase) {
+        self.level_mut().add_sprite(sprite)
+    }
 
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
         self.level_mut().add_wall(sprite)
@@ -119,7 +133,9 @@ impl LevelBase {
         }
     }
 
-    pub fn add_sprite(&mut self, sprite: SpriteBase) { self.sprites.push(Box::new(sprite)) }
+    pub fn add_sprite(&mut self, sprite: SpriteBase) {
+        self.sprites.push(Box::new(sprite))
+    }
 
     pub fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
         let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
@@ -134,8 +150,12 @@ impl LevelBase {
 }
 
 impl Level for LevelBase {
-    fn level(&self) -> &LevelBase { self }
-    fn level_mut(&mut self) -> &mut LevelBase { self }
+    fn level(&self) -> &LevelBase {
+        self
+    }
+    fn level_mut(&mut self) -> &mut LevelBase {
+        self
+    }
 }
 
 impl Default for LevelBase {

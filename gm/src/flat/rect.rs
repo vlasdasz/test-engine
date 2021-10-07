@@ -9,7 +9,9 @@ pub struct Rect {
 }
 
 impl Rect {
-    pub fn max_x(&self) -> f32 { self.origin.x + self.size.width }
+    pub fn max_x(&self) -> f32 {
+        self.origin.x + self.size.width
+    }
 
     pub fn contains(&self, point: &Point) -> bool {
         point.x >= self.origin.x
@@ -18,13 +20,21 @@ impl Rect {
             && point.y <= self.origin.y + self.size.height
     }
 
-    pub fn x(&self) -> f32 { self.origin.x }
+    pub fn x(&self) -> f32 {
+        self.origin.x
+    }
 
-    pub fn y(&self) -> f32 { self.origin.y }
+    pub fn y(&self) -> f32 {
+        self.origin.y
+    }
 
-    pub fn width(&self) -> f32 { self.size.width }
+    pub fn width(&self) -> f32 {
+        self.size.width
+    }
 
-    pub fn height(&self) -> f32 { self.size.height }
+    pub fn height(&self) -> f32 {
+        self.size.height
+    }
 
     pub fn square(&self) -> Size {
         let side = if self.size.height < self.size.width {

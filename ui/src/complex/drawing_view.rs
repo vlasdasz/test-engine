@@ -18,15 +18,23 @@ impl DrawingView {
             .push(initialize_path_data(path, color, DrawMode::Fill))
     }
 
-    pub fn remove_all_paths(&mut self) { self.paths.clear() }
+    pub fn remove_all_paths(&mut self) {
+        self.paths.clear()
+    }
 }
 
 impl View for DrawingView {
-    fn paths(&self) -> Option<&[PathData]> { Some(&self.paths) }
+    fn paths(&self) -> Option<&[PathData]> {
+        Some(&self.paths)
+    }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }
 
 fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {

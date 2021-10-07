@@ -20,9 +20,13 @@ impl PointsPath {
 }
 
 impl PointsPath {
-    pub fn add_point(&mut self, point: Point) { self.points.push(point) }
+    pub fn add_point(&mut self, point: Point) {
+        self.points.push(point)
+    }
 
-    pub fn clear(&mut self) { self.points.clear() }
+    pub fn clear(&mut self) {
+        self.points.clear()
+    }
 }
 
 fn point_on_circle(radius: f32, angle: f32, center: &Point) -> Point {

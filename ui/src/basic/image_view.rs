@@ -9,9 +9,15 @@ pub struct ImageView {
 }
 
 impl View for ImageView {
-    fn image(&self) -> Option<Image> { self.image.into() }
+    fn image(&self) -> Option<Image> {
+        self.image.into()
+    }
 
-    fn view(&self) -> &ViewBase { &self.base }
+    fn view(&self) -> &ViewBase {
+        &self.base
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.base }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.base
+    }
 }

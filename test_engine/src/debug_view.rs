@@ -68,9 +68,13 @@ impl View for DebugView {
         self.place().subviews_vertically();
     }
 
-    fn view(&self) -> &ViewBase { &self.view }
+    fn view(&self) -> &ViewBase {
+        &self.view
+    }
 
-    fn view_mut(&mut self) -> &mut ViewBase { &mut self.view }
+    fn view_mut(&mut self) -> &mut ViewBase {
+        &mut self.view
+    }
 }
 
 impl Boxed for DebugView {
