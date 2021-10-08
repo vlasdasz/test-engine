@@ -2,7 +2,7 @@ use std::default::default;
 
 use chrono::Utc;
 use tools::{platform::Platform, Boxed, Rglica};
-use ui::{make_view_on, Label, View, ViewBase};
+use ui::{init_view_on, Label, View, ViewBase};
 
 pub struct DebugView {
     view:              ViewBase,
@@ -20,10 +20,10 @@ impl View for DebugView {
         self.frame_mut().size.height = 100.0;
         self.frame_mut().size.width = 280.0;
 
-        self.fps_label = make_view_on(self);
+        self.fps_label = init_view_on(self);
         self.fps_label.set_text("fps label");
 
-        self.frame_drawn_label = make_view_on(self);
+        self.frame_drawn_label = init_view_on(self);
         self.frame_drawn_label.set_text("frame drawn label");
 
         if Platform::MOBILE {

@@ -14,7 +14,7 @@ use sprites::{Level, Sprite};
 use tools::{Boxed, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
-use ui::{input::Touch, make_view_on, View, ViewBase};
+use ui::{init_view_on, input::Touch, View, ViewBase};
 
 use crate::{
     assets::Assets, debug_view::DebugView, paths, sprites_drawer::SpritesDrawer,
@@ -49,7 +49,7 @@ impl Screen {
     }
 
     pub fn add_debug_view(mut self) -> Self {
-        make_view_on::<DebugView>(self.root_view.deref_mut());
+        init_view_on::<DebugView>(self.root_view.deref_mut());
         self
     }
 

@@ -1,7 +1,7 @@
 use gm::{flat::PointsPath, Color, Rect};
 use tools::Rglica;
 
-use crate::{complex::DrawingView, make_view_on, View, ViewBase};
+use crate::{complex::DrawingView, init_view_on, View, ViewBase};
 
 #[derive(Default)]
 pub struct Circle {
@@ -23,7 +23,7 @@ impl Circle {
 
 impl View for Circle {
     fn setup(&mut self) {
-        self.drawing = make_view_on(self);
+        self.drawing = init_view_on(self);
     }
 
     fn view(&self) -> &ViewBase {

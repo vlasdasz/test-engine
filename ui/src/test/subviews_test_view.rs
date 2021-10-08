@@ -2,7 +2,7 @@ use std::ops::DerefMut;
 
 use tools::Rglica;
 
-use crate::{make_view_on, View, ViewBase};
+use crate::{init_view_on, View, ViewBase};
 
 #[derive(Default)]
 pub struct SubviewsTestView {
@@ -18,11 +18,11 @@ impl View for SubviewsTestView {
     fn setup(&mut self) {
         self.frame_mut().size = (120, 120).into();
 
-        self.first = make_view_on(self);
-        self.second = make_view_on(self.first.deref_mut());
-        self.third = make_view_on(self.second.deref_mut());
-        self.forth = make_view_on(self.third.deref_mut());
-        self.fifth = make_view_on(self.forth.deref_mut());
+        self.first = init_view_on(self);
+        self.second = init_view_on(self.first.deref_mut());
+        self.third = init_view_on(self.second.deref_mut());
+        self.forth = init_view_on(self.third.deref_mut());
+        self.fifth = init_view_on(self.forth.deref_mut());
 
         self.first.frame_mut().size = (100, 100).into();
         self.second.frame_mut().size = (90, 90).into();

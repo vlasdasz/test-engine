@@ -1,4 +1,4 @@
-use std::ops::{Deref, DerefMut};
+use std::ops::Deref;
 
 use test_engine::{
     gm::{flat::PointsPath, Color},
@@ -7,11 +7,12 @@ use test_engine::{
     ui::{
         basic::{Button, Circle},
         complex::{AnalogStickView, DrawingView, Slider},
-        make_view_on, make_view_with_frame, DPadView, ImageView, Label, View, ViewBase,
+        init_view_on, init_view_with_frame, make_view_on, DPadView, ImageView, Label, View,
+        ViewBase,
     },
     Image, Level,
 };
-use tools::{rglica::ToRglica, Boxed, Rglica};
+use tools::Rglica;
 
 use crate::test_level::TestLevel;
 
@@ -26,7 +27,6 @@ pub struct TestView {
     label:        Rglica<Label>,
     dpad:         Rglica<DPadView>,
     left_stick:   Rglica<AnalogStickView>,
-    right_stick:  Rglica<AnalogStickView>,
     circle:       Rglica<Circle>,
     slider:       Rglica<Slider>,
     slider_label: Rglica<Label>,
@@ -61,8 +61,8 @@ impl TestView {
 
 impl TestView {
     fn setup_slider(&mut self) {
-        self.slider = make_view_with_frame((50, 280).into(), self);
-        self.slider_label = make_view_with_frame((50, 50).into(), self);
+        self.slider = init_view_with_frame((50, 280).into(), self);
+        self.slider_label = init_view_with_frame((50, 50).into(), self);
         self.slider_label.set_text("hello");
 
         let mut label = self.slider_label.clone();
@@ -77,75 +77,62 @@ impl View for TestView {
     fn setup(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
-        let image_view = ImageView::boxed();
-        self.image_view = image_view.to_rglica();
-        self.image_view.image = Image::load(&test_engine::paths::images().join("cat.png"));
-        self.image_view.set_frame((200, 20, 100, 120).into());
-        self.add_subview(image_view);
-
-        self.label = make_view_on(self);
-
-        self.label
-            .set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
-        self.label.frame_mut().origin.y = 240.0;
-
-        let mut view = make_view_on::<ViewBase>(self);
-
-        view.set_frame((10, 20, 50, 50).into());
-        view.set_color(Color::WHITE);
-
-        let mut button = make_view_on::<Button>(view.deref_mut());
-
-        button.set_frame((10, 10, 20, 20).into());
-        button.set_color(Color::RED);
-
-        let mut label = self.label.clone();
-        button.on_tap.subscribe(move |_| unsafe {
-            label.set_text(&format!("kok: {}", COUNTER));
-            COUNTER += 1;
+        self.image_view = make_view_on(self, |view: &mut ImageView| {
+            view.image = Image::load(&test_engine::paths::images().join("cat.png"));
+            view.set_frame((200, 20, 100, 120).into());
         });
 
-        self.dpad = make_view_on(self);
+        self.label = make_view_on(self, |view: &mut Label| {
+            view.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
+            view.frame_mut().origin.y = 240.0;
+        });
 
-        self.dpad.frame_mut().size.width = 280.0;
-        self.dpad.frame_mut().size.height = 200.0;
-        self.dpad.frame_mut().origin.y = 300.0;
+        let mut label = self.label.clone();
+        make_view_on(self, |view: &mut ViewBase| {
+            view.set_frame((10, 20, 50, 50).into());
+            view.set_color(Color::WHITE);
 
-        self.dpad.set_images(
-            Image::load(&test_engine::paths::images().join("up.png")),
-            Image::load(&test_engine::paths::images().join("down.png")),
-            Image::load(&test_engine::paths::images().join("left.png")),
-            Image::load(&test_engine::paths::images().join("right.png")),
-        );
+            make_view_on(view, |button: &mut Button| {
+                button.set_frame((10, 10, 20, 20).into());
+                button.set_color(Color::RED);
+                button.on_tap.subscribe(move |_| unsafe {
+                    label.set_text(&format!("kok: {}", COUNTER));
+                    COUNTER += 1;
+                });
+            });
+        });
 
-        let mut drawing = make_view_on::<DrawingView>(self);
+        self.dpad = make_view_on(self, |dpad: &mut DPadView| {
+            dpad.frame_mut().size = (280, 200).into();
+            dpad.frame_mut().origin.y = 300.0;
 
-        drawing.set_frame((500, 10, 200, 200).into());
+            dpad.set_images(
+                Image::load(&test_engine::paths::images().join("up.png")),
+                Image::load(&test_engine::paths::images().join("down.png")),
+                Image::load(&test_engine::paths::images().join("left.png")),
+                Image::load(&test_engine::paths::images().join("right.png")),
+            );
+        });
 
-        let mut path = PointsPath::default();
+        make_view_on(self, |drawing: &mut DrawingView| {
+            drawing.set_frame((500, 10, 200, 200).into());
 
-        path.add_point((1, 20).into());
-        path.add_point((100, 30).into());
-        path.add_point((1, 40).into());
-        path.add_point((200, 50).into());
-        path.add_point((1, 60).into());
-        path.add_point((300, 70).into());
+            let mut path = PointsPath::default();
 
-        drawing.add_path(path, Color::GREEN);
+            path.add_point((1, 20).into());
+            path.add_point((100, 30).into());
+            path.add_point((1, 40).into());
+            path.add_point((200, 50).into());
+            path.add_point((1, 60).into());
+            path.add_point((300, 70).into());
 
-        let left_stick = AnalogStickView::boxed();
-        self.left_stick = left_stick.to_rglica();
-        self.add_subview(left_stick);
-        self.left_stick.frame_mut().origin.x = 320.0;
-        self.left_stick.frame_mut().origin.y = 300.0;
+            drawing.add_path(path, Color::GREEN);
+        });
 
-        let right_stick = AnalogStickView::boxed();
-        self.right_stick = right_stick.to_rglica();
-        self.add_subview(right_stick);
-        self.right_stick.frame_mut().origin.x = 520.0;
-        self.right_stick.frame_mut().origin.y = 300.0;
+        self.left_stick = init_view_on(self);
+        self.left_stick.frame_mut().origin = (320, 300).into();
 
-        self.circle = make_view_with_frame((50, 50).into(), self);
+        self.circle = init_view_with_frame((50, 50).into(), self);
         self.circle.set_color(Color::GREEN);
 
         self.setup_slider();

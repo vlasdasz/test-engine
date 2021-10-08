@@ -227,12 +227,23 @@ impl ViewBase {
     }
 }
 
-pub fn make_view_on<T: 'static + View>(view: &mut dyn View) -> Rglica<T> {
+pub fn init_view_on<T: 'static + View>(view: &mut dyn View) -> Rglica<T> {
     view.view_mut().make_view()
 }
 
-pub fn make_view_with_frame<T: 'static + View>(frame: Rect, view: &mut dyn View) -> Rglica<T> {
+pub fn init_view_with_frame<T: 'static + View>(frame: Rect, view: &mut dyn View) -> Rglica<T> {
     view.view_mut().make_view_with(frame)
+}
+
+pub fn make_view_on<T: 'static + View>(
+    view: &mut dyn View,
+    make: impl FnOnce(&mut T),
+) -> Rglica<T> {
+    let new = T::boxed();
+    let mut result = new.to_rglica();
+    view.add_subview(new);
+    make(result.deref_mut());
+    result
 }
 
 impl View for ViewBase {

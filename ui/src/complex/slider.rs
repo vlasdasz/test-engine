@@ -1,7 +1,7 @@
 use gm::Color;
 use tools::{Event, Rglica};
 
-use crate::{basic::Circle, make_view_on, View, ViewBase};
+use crate::{basic::Circle, init_view_on, View, ViewBase};
 
 #[derive(Default)]
 pub struct Slider {
@@ -37,7 +37,7 @@ impl Slider {
 
 impl View for Slider {
     fn setup(&mut self) {
-        self.circle = make_view_on(self);
+        self.circle = init_view_on(self);
         let mut circle = self.circle.clone();
         circle.set_frame(self.frame().square().into());
         circle.set_color(Color::BLUE);

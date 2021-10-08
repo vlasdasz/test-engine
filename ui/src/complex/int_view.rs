@@ -3,7 +3,7 @@ use std::ops::AddAssign;
 use gl_image::Image;
 use tools::{Event, Rglica};
 
-use crate::{basic::Button, make_view_on, Label, View, ViewBase};
+use crate::{basic::Button, init_view_on, Label, View, ViewBase};
 
 #[derive(Default)]
 pub struct IntView {
@@ -24,9 +24,9 @@ impl IntView {
 
 impl View for IntView {
     fn setup(&mut self) {
-        self.label = make_view_on(self);
-        self.up = make_view_on(self);
-        self.down = make_view_on(self);
+        self.label = init_view_on(self);
+        self.up = init_view_on(self);
+        self.down = init_view_on(self);
 
         let mut this = Rglica::from_ref(self);
         self.up.on_tap.subscribe(move |_| {
