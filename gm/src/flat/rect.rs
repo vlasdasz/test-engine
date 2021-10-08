@@ -10,14 +10,18 @@ pub struct Rect {
 
 impl Rect {
     pub fn max_x(&self) -> f32 {
-        self.origin.x + self.size.width
+        self.x() + self.width()
+    }
+
+    pub fn max_y(&self) -> f32 {
+        self.y() + self.height()
     }
 
     pub fn contains(&self, point: &Point) -> bool {
-        point.x >= self.origin.x
-            && point.y >= self.origin.y
-            && point.x <= self.origin.x + self.size.width
-            && point.y <= self.origin.y + self.size.height
+        point.x >= self.x()
+            && point.y >= self.y()
+            && point.x <= self.x() + self.width()
+            && point.y <= self.y() + self.height()
     }
 
     pub fn x(&self) -> f32 {
@@ -37,19 +41,27 @@ impl Rect {
     }
 
     pub fn square(&self) -> Size {
-        let side = if self.size.height < self.size.width {
-            self.size.height
+        let side = if self.height() < self.width() {
+            self.height()
         } else {
-            self.size.width
+            self.width()
         };
         (side, side).into()
     }
 }
 
 impl Rect {
+    pub fn center(&self) -> Point {
+        (
+            self.x() + self.width() / 2.0,
+            self.y() + self.height() / 2.0,
+        )
+            .into()
+    }
+
     pub fn set_center(&mut self, center: Point) {
-        self.origin.x = center.x - self.size.width / 2.0;
-        self.origin.y = center.y - self.size.height / 2.0;
+        self.origin.x = center.x - self.width() / 2.0;
+        self.origin.y = center.y - self.height() / 2.0;
     }
 }
 

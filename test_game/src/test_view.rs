@@ -1,4 +1,4 @@
-use std::ops::DerefMut;
+use std::ops::{Deref, DerefMut};
 
 use test_engine::{
     gm::{flat::PointsPath, Color},
@@ -19,17 +19,17 @@ static mut COUNTER: u32 = 0;
 
 #[derive(Default)]
 pub struct TestView {
-    base:          ViewBase,
-    level:         TestLevel,
-    data:          u128,
-    image_view:    Rglica<ImageView>,
-    label:         Rglica<Label>,
-    dpad:          Rglica<DPadView>,
-    left_stick:    Rglica<AnalogStickView>,
-    right_stick:   Rglica<AnalogStickView>,
-    circle:        Rglica<Circle>,
-    slider:        Rglica<Slider>,
-    _slider_label: Rglica<Label>,
+    base:         ViewBase,
+    level:        TestLevel,
+    data:         u128,
+    image_view:   Rglica<ImageView>,
+    label:        Rglica<Label>,
+    dpad:         Rglica<DPadView>,
+    left_stick:   Rglica<AnalogStickView>,
+    right_stick:  Rglica<AnalogStickView>,
+    circle:       Rglica<Circle>,
+    slider:       Rglica<Slider>,
+    slider_label: Rglica<Label>,
 }
 
 impl TestView {
@@ -62,6 +62,14 @@ impl TestView {
 impl TestView {
     fn setup_slider(&mut self) {
         self.slider = make_view_with_frame((50, 280).into(), self);
+        self.slider_label = make_view_with_frame((50, 50).into(), self);
+        self.slider_label.set_text("hello");
+
+        let mut label = self.slider_label.clone();
+        self.slider.on_change.subscribe(move |value| {
+            label.set_text(value.to_string())
+            //dbg!(value);
+        });
     }
 }
 
@@ -154,6 +162,7 @@ impl View for TestView {
         self.frame_mut().size.width = self.super_frame().size.width;
         self.circle.place().bottom_right_margin(20);
         self.slider.place().top_right_margin(20);
+        self.slider_label.place().at_bottom(self.slider.deref(), 20);
     }
 
     fn view(&self) -> &ViewBase {

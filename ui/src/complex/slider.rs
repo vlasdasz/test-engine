@@ -5,10 +5,10 @@ use crate::{basic::Circle, make_view_on, View, ViewBase};
 
 #[derive(Default)]
 pub struct Slider {
-    base:      ViewBase,
-    circle:    Rglica<Circle>,
-    value:     f32,
-    on_change: Event<f32>,
+    base:          ViewBase,
+    circle:        Rglica<Circle>,
+    value:         f32,
+    pub on_change: Event<f32>,
 }
 
 impl Slider {

@@ -14,7 +14,7 @@ impl Label {
         &self._text
     }
 
-    pub fn set_text(&mut self, text: &str) {
+    pub fn set_text(&mut self, text: impl Into<String>) {
         self._text = text.into()
     }
 }

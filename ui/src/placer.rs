@@ -28,9 +28,8 @@ impl Placer {
         self.frame.size = self.s_frame.size;
     }
 
-    pub fn at_center(&mut self) {
-        self.frame.origin.x = self.s_frame.width() / 2.0 - self.frame.width() / 2.0;
-        self.frame.origin.y = self.s_frame.height() / 2.0 - self.frame.height() / 2.0;
+    pub fn center_in_superview(&mut self) {
+        self.frame.set_center(self.s_frame.center());
     }
 
     pub fn top_left_margin(&mut self, margin: impl IntoF32) {
@@ -66,6 +65,15 @@ impl Placer {
     pub fn bottom_right_margin(&mut self, margin: impl IntoF32) {
         self.frame.origin.x = self.s_frame.size.width - self.frame.size.width - margin.into_f32();
         self.frame.origin.y = self.s_frame.size.height - self.frame.size.height - margin.into_f32();
+    }
+
+    pub fn at_center(&mut self, view: &dyn View) {
+        self.frame.set_center(view.frame().center())
+    }
+
+    pub fn at_bottom(&mut self, view: &dyn View, margin: impl IntoF32) {
+        self.at_center(view);
+        self.frame.origin.y = view.frame().max_y() + margin.into_f32();
     }
 
     pub fn subviews_vertically(&mut self) {

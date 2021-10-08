@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
-pub trait IntoF32: Copy {
+pub trait IntoF32: Copy + Sized {
     fn into_f32(self) -> f32;
 }
 
