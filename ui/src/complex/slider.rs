@@ -20,7 +20,8 @@ impl Slider {
             if touch.is_ended() {
                 return;
             }
-            let value = dbg!(1.0 - dbg!(touch.position.y) - this.frame().size.height);
+            dbg!(touch.position);
+            let value = 1.0 - touch.position.y - this.frame().size.height;
             this.value = value;
             this.on_change.trigger(value);
         });

@@ -24,6 +24,10 @@ pub trait View: Boxed {
         self.view_mut()._color = color
     }
 
+    fn superview(&self) -> Rglica<dyn View> {
+        self.view()._superview.clone()
+    }
+
     fn super_frame(&self) -> &Rect {
         if self.view()._superview.is_ok() {
             return self.view()._superview.frame();
@@ -75,15 +79,14 @@ pub trait View: Boxed {
     }
 
     fn remove_from_superview(&mut self) {
-        let mut superview = self.view()._superview.clone();
-
-        let index = superview
+        let index = self
+            .superview()
             .subviews()
             .iter()
             .position(|view| view.deref().address() == (&self).address())
             .unwrap();
 
-        superview.remove_subview_at(index);
+        self.superview().remove_subview_at(index);
     }
 
     fn subviews(&self) -> &[Box<dyn View>] {
