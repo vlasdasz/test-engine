@@ -1,7 +1,7 @@
 use std::ops::Deref;
 
 use test_engine::{
-    gm::{flat::PointsPath, Color},
+    gm::Color,
     screen::GameView,
     sprites::Control,
     ui::{
@@ -116,17 +116,19 @@ impl View for TestView {
 
         make_view_on(self, |drawing: &mut DrawingView| {
             drawing.set_frame((500, 10, 200, 200).into());
-
-            let mut path = PointsPath::default();
-
-            path.add_point((1, 20).into());
-            path.add_point((100, 30).into());
-            path.add_point((1, 40).into());
-            path.add_point((200, 50).into());
-            path.add_point((1, 60).into());
-            path.add_point((300, 70).into());
-
-            drawing.add_path(path, Color::GREEN);
+            drawing.add_path(
+                vec![
+                    (1, 20).into(),
+                    (100, 30).into(),
+                    (1, 40).into(),
+                    (200, 50).into(),
+                    (1, 60).into(),
+                    (1, 20).into(),
+                    (300, 70).into(),
+                ]
+                .into(),
+                Color::GREEN,
+            );
         });
 
         self.left_stick = init_view_on(self);

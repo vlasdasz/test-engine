@@ -24,6 +24,10 @@ impl PointsPath {
         self.points.push(point)
     }
 
+    pub fn add_points(&mut self, points: impl IntoIterator<Item = Point>) {
+        self.points.extend(points)
+    }
+
     pub fn clear(&mut self) {
         self.points.clear()
     }
@@ -35,4 +39,10 @@ fn point_on_circle(radius: f32, angle: f32, center: &Point) -> Point {
         (radius / 2.0) * angle.sin() + center.y,
     )
         .into()
+}
+
+impl From<Vec<Point>> for PointsPath {
+    fn from(vec: Vec<Point>) -> Self {
+        Self { points: vec }
+    }
 }
