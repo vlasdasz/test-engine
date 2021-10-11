@@ -24,7 +24,6 @@ static mut SCREEN: *mut Screen = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn create_screen() {
-    dbg!("gome");
     unsafe {
         SCREEN = Box::into_raw(Box::new(
             Screen::new(default())

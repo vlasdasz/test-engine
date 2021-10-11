@@ -32,11 +32,11 @@ impl View for SubviewsTestView {
     }
 
     fn layout(&mut self) {
-        self.first.place().center_in_superview();
-        self.second.place().center_in_superview();
-        self.third.place().center_in_superview();
-        self.forth.place().center_in_superview();
-        self.fifth.place().center_in_superview();
+        self.first.place().center();
+        self.second.place().center();
+        self.third.place().center();
+        self.forth.place().center();
+        self.fifth.place().center();
     }
 
     fn view(&self) -> &ViewBase {

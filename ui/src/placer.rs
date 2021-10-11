@@ -28,8 +28,17 @@ impl Placer {
         self.frame.size = self.s_frame.size;
     }
 
-    pub fn center_in_superview(&mut self) {
-        self.frame.set_center(self.s_frame.center());
+    pub fn center_hor(&mut self) {
+        self.frame.origin.x = self.s_width() / 2.0 + self.width() / 2.0;
+    }
+
+    pub fn center_ver(&mut self) {
+        self.frame.origin.y = self.s_height() / 2.0 - self.height() / 2.0;
+    }
+
+    pub fn center(&mut self) {
+        self.center_hor();
+        self.center_ver();
     }
 
     pub fn top_left_margin(&mut self, margin: impl IntoF32) {
@@ -38,33 +47,38 @@ impl Placer {
     }
 
     pub fn top_right(&mut self) {
-        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width;
+        self.frame.origin.x = self.s_width() - self.width();
         self.frame.origin.y = 0.0;
     }
 
     pub fn top_right_margin(&mut self, margin: impl IntoF32) {
-        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width - margin.into_f32();
+        self.frame.origin.x = self.s_width() - self.width() - margin.into_f32();
         self.frame.origin.y = margin.into_f32();
     }
 
     pub fn bottom_left(&mut self) {
         self.frame.origin.x = 0.0;
-        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height;
+        self.frame.origin.y = self.s_height() - self.height();
     }
 
     pub fn bottom_left_margin(&mut self, margin: impl IntoF32) {
         self.frame.origin.x = margin.into_f32();
-        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height - margin.into_f32();
+        self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
     }
 
     pub fn bottom_right(&mut self) {
-        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width;
-        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height;
+        self.frame.origin.x = self.s_width() - self.width();
+        self.frame.origin.y = self.s_height() - self.height();
     }
 
     pub fn bottom_right_margin(&mut self, margin: impl IntoF32) {
-        self.frame.origin.x = self.s_frame.size.width - self.frame.size.width - margin.into_f32();
-        self.frame.origin.y = self.s_frame.size.height - self.frame.size.height - margin.into_f32();
+        self.frame.origin.x = self.s_width() - self.width() - margin.into_f32();
+        self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
+    }
+
+    pub fn right(&mut self) {
+        self.center_ver();
+        self.frame.origin.x = self.s_width() - self.width();
     }
 
     pub fn at_center(&mut self, view: &dyn View) {
@@ -93,5 +107,23 @@ impl Placer {
             frame.size.width = width;
             frame.size.height = height;
         }
+    }
+}
+
+impl Placer {
+    fn width(&self) -> f32 {
+        self.frame.width()
+    }
+
+    fn height(&self) -> f32 {
+        self.frame.height()
+    }
+
+    fn s_width(&self) -> f32 {
+        self.s_frame.width()
+    }
+
+    fn s_height(&self) -> f32 {
+        self.s_frame.height()
     }
 }

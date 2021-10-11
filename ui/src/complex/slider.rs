@@ -50,6 +50,10 @@ impl View for Slider {
         self.setup_touch();
     }
 
+    fn layout(&mut self) {
+        self.circle.frame_mut().size = (self.frame().width(), self.frame().width()).into();
+    }
+
     fn view(&self) -> &ViewBase {
         &self.base
     }

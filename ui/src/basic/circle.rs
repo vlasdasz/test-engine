@@ -7,10 +7,12 @@ use crate::{complex::DrawingView, init_view_on, View, ViewBase};
 pub struct Circle {
     base:    ViewBase,
     drawing: Rglica<DrawingView>,
+    color:   Color,
 }
 
 impl Circle {
     pub fn set_color(&mut self, color: Color) {
+        self.color = color;
         self.drawing.remove_all_paths();
         let frame: Rect = self.frame().square().into();
         self.drawing.set_frame(frame);
@@ -24,6 +26,10 @@ impl Circle {
 impl View for Circle {
     fn setup(&mut self) {
         self.drawing = init_view_on(self);
+    }
+
+    fn layout(&mut self) {
+        self.set_color(self.color);
     }
 
     fn view(&self) -> &ViewBase {
