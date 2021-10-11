@@ -1,53 +1,53 @@
 use gm::Color;
-use tools::{Event, Rglica};
+use tools::{math::clamped_by, Event, Rglica};
 
 use crate::{basic::Circle, init_view_on, View, ViewBase};
 
 #[derive(Default)]
 pub struct Slider {
-    base:          ViewBase,
-    circle:        Rglica<Circle>,
-    value:         f32,
-    pub on_change: Event<f32>,
+    base:           ViewBase,
+    circle:         Rglica<Circle>,
+    value:          f32,
+    pub multiplier: f32,
+    pub on_change:  Event<f32>,
 }
 
 impl Slider {
     fn setup_touch(&mut self) {
-        self.circle.enable_touch();
+        self.enable_touch();
 
         let mut this = Rglica::from_ref(self);
-        self.circle.on_touch().subscribe(move |touch| {
+        self.on_touch().subscribe(move |touch| {
             if touch.is_ended() {
                 return;
             }
-            dbg!(touch.position);
-            let value = 1.0 - touch.position.y - this.frame().size.height;
+
+            let half_circle = this.circle.frame().height() / 2.0;
+            let y_pos = clamped_by(
+                half_circle,
+                this.frame().height() - half_circle,
+                touch.position.y,
+            );
+
+            this.circle.frame_mut().origin.y = y_pos - half_circle;
+
+            let value = 1.0 - (y_pos - half_circle) / (this.frame().height() - half_circle * 2.0);
+            let value = value * this.multiplier;
             this.value = value;
             this.on_change.trigger(value);
         });
-    }
-
-    fn set_slider_position(&mut self) {
-        let size = self.circle.frame().size.width;
-
-        let frame = (0, self.frame().size.height * (1.0 - self.value), size, size).into();
-
-        self.circle.set_frame(frame);
     }
 }
 
 impl View for Slider {
     fn setup(&mut self) {
+        self.multiplier = 1.0;
         self.circle = init_view_on(self);
         let mut circle = self.circle.clone();
         circle.set_frame(self.frame().square().into());
         circle.set_color(Color::BLUE);
 
         self.setup_touch();
-    }
-
-    fn layout(&mut self) {
-        self.set_slider_position()
     }
 
     fn view(&self) -> &ViewBase {

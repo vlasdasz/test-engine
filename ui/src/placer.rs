@@ -1,7 +1,7 @@
 use std::default::default;
 
-use gm::{IntoF32, Rect};
-use tools::Rglica;
+use gm::Rect;
+use tools::{math::IntoF32, Rglica};
 
 use crate::View;
 

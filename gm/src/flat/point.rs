@@ -1,26 +1,6 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
-pub trait IntoF32: Copy + Sized {
-    fn into_f32(self) -> f32;
-}
-
-impl IntoF32 for i32 {
-    fn into_f32(self) -> f32 {
-        self as f32
-    }
-}
-
-impl IntoF32 for f32 {
-    fn into_f32(self) -> f32 {
-        self
-    }
-}
-
-impl IntoF32 for f64 {
-    fn into_f32(self) -> f32 {
-        self as f32
-    }
-}
+use tools::math::IntoF32;
 
 #[derive(Copy, Clone, Default, Debug)]
 pub struct Point {

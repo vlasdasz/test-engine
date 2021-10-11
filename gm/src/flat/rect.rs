@@ -1,6 +1,8 @@
 use std::default::default;
 
-use crate::{IntoF32, Point, Size};
+use tools::math::IntoF32;
+
+use crate::{Point, Size};
 
 #[derive(Copy, Clone, Default, Debug)]
 pub struct Rect {

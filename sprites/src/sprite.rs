@@ -1,5 +1,6 @@
 use gl_image::Image;
-use gm::{Color, IntoF32, Point, Size};
+use gm::{Color, Point, Size};
+use tools::math::IntoF32;
 
 pub trait Sprite {
     fn size(&self) -> Size {

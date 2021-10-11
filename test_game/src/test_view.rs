@@ -62,14 +62,15 @@ impl TestView {
 impl TestView {
     fn setup_slider(&mut self) {
         self.slider = init_view_with_frame((50, 280).into(), self);
+        self.slider.multiplier = 10.0;
+
         self.slider_label = init_view_with_frame((50, 50).into(), self);
         self.slider_label.set_text("hello");
 
         let mut label = self.slider_label.clone();
-        self.slider.on_change.subscribe(move |value| {
-            label.set_text(value.to_string())
-            //dbg!(value);
-        });
+        self.slider
+            .on_change
+            .subscribe(move |value| label.set_text(value.to_string()));
     }
 }
 

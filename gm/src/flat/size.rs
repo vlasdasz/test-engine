@@ -1,4 +1,6 @@
-use crate::{IntoF32, Point};
+use tools::math::IntoF32;
+
+use crate::Point;
 
 #[derive(Copy, Clone, Default, Debug)]
 pub struct Size {
