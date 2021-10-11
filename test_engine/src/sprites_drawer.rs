@@ -1,6 +1,7 @@
 use std::rc::Rc;
 
 use gm::{Point, Size};
+use tools::math::IntoF32;
 
 use crate::{assets::Assets, Sprite};
 
@@ -9,8 +10,20 @@ pub struct SpritesDrawer {
 }
 
 impl SpritesDrawer {
-    pub fn new(assets: Rc<Assets>) -> Self {
-        Self { assets }
+    pub fn new(assets: Rc<Assets>) -> Rc<Self> {
+        let new = Self { assets };
+        new.set_scale(1);
+        Rc::new(new)
+    }
+
+    pub fn set_scale(&self, scale: impl IntoF32) {
+        self.assets.shaders.sprite.enable();
+        self.assets.shaders.sprite.set_scale(scale.into_f32());
+        self.assets.shaders.textured_sprite.enable();
+        self.assets
+            .shaders
+            .textured_sprite
+            .set_scale(scale.into_f32());
     }
 
     pub fn set_resolution(&self, size: &Size) {
@@ -35,7 +48,6 @@ impl SpritesDrawer {
             shader = &self.assets.shaders.textured_sprite;
             buffer = &self.assets.buffers.fullscreen_image;
             image.bind();
-        } else {
         }
 
         shader.enable();

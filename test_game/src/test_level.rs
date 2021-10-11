@@ -8,6 +8,9 @@ pub struct TestLevel {
 impl Level for TestLevel {
     fn setup(&mut self) {
         self.base.player = self.add_body((0, 10, 17.0 / 6.0, 28.0 / 6.0).into());
+        self.base
+            .player
+            .set_image(Image::load(&test_engine::paths::images().join("frisk.png")));
         self.base.player.lock_rotations();
 
         let square = Image::load(&test_engine::paths::images().join("square.png"));

@@ -12,7 +12,7 @@ use test_engine::{
     },
     Image, Level,
 };
-use tools::Rglica;
+use tools::{Event, Rglica};
 
 use crate::test_level::TestLevel;
 
@@ -30,6 +30,7 @@ pub struct TestView {
     circle:       Rglica<Circle>,
     slider:       Rglica<Slider>,
     slider_label: Rglica<Label>,
+    set_scale:    Event<f32>,
 }
 
 impl TestView {
@@ -62,15 +63,16 @@ impl TestView {
 impl TestView {
     fn setup_slider(&mut self) {
         self.slider = init_view_with_frame((50, 280).into(), self);
-        self.slider.multiplier = 10.0;
+        self.slider.multiplier = 50.0;
 
         self.slider_label = init_view_with_frame((50, 50).into(), self);
         self.slider_label.set_text("hello");
 
-        let mut label = self.slider_label.clone();
-        self.slider
-            .on_change
-            .subscribe(move |value| label.set_text(value.to_string()));
+        let mut this = Rglica::from_ref(self);
+        self.slider.on_change.subscribe(move |value| {
+            this.slider_label.set_text(value.to_string());
+            this.set_scale.trigger(value);
+        });
     }
 }
 
@@ -170,5 +172,8 @@ impl GameView for TestView {
     }
     fn level_mut(&mut self) -> &mut dyn Level {
         &mut self.level
+    }
+    fn set_scale(&mut self) -> &mut Event<f32> {
+        &mut self.set_scale
     }
 }

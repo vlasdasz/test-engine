@@ -24,6 +24,7 @@ use crate::{
 pub trait GameView: View {
     fn level(&self) -> &dyn Level;
     fn level_mut(&mut self) -> &mut dyn Level;
+    fn set_scale(&mut self) -> &mut tools::Event<f32>;
 }
 
 pub struct Screen {
@@ -33,7 +34,7 @@ pub struct Screen {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
-    sprites_drawer:  SpritesDrawer,
+    sprites_drawer:  Rc<SpritesDrawer>,
 }
 
 impl Screen {
@@ -41,7 +42,11 @@ impl Screen {
         self.root_view.check_touch(&mut touch);
     }
 
-    pub fn add_view(mut self, view: Box<dyn GameView>) -> Self {
+    pub fn add_view(mut self, mut view: Box<dyn GameView>) -> Self {
+        let drawer = self.sprites_drawer.clone();
+        view.set_scale().subscribe(move |scale| {
+            drawer.set_scale(scale);
+        });
         self.view = view.to_rglica();
         self.root_view.add_subview(view);
         self.view.level_mut().setup();
@@ -146,11 +151,12 @@ impl Screen {
         level.level_mut().update_physics();
         level.update();
 
-        self.sprites_drawer
-            .set_camera_position(level.player().position());
+        let drawer = self.sprites_drawer.deref();
+
+        drawer.set_camera_position(level.player().position());
 
         for sprite in level.sprites() {
-            self.sprites_drawer.draw(sprite.deref());
+            drawer.draw(sprite.deref());
         }
     }
 

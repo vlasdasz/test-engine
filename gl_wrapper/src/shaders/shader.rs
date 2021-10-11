@@ -4,15 +4,17 @@ use gm::{Color, Point, Size};
 use tools::*;
 
 pub struct Shader {
-    program:         u32,
-    color:           i32,
-    size:            i32,
-    selected:        i32,
-    resolution:      i32,
-    position:        i32,
-    rotation:        i32,
+    program:    u32,
+    color:      i32,
+    size:       i32,
+    selected:   i32,
+    resolution: i32,
+    position:   i32,
+    rotation:   i32,
+    flip:       i32,
+    scale:      i32,
+
     camera_position: i32,
-    flip:            i32,
 }
 
 fn get_uniform(program: u32, lit: &str) -> i32 {
@@ -31,8 +33,9 @@ impl Shader {
             resolution: get_uniform(program, "resolution"),
             position: get_uniform(program, "position"),
             rotation: get_uniform(program, "rotation"),
-            camera_position: get_uniform(program, "camera_position"),
             flip: get_uniform(program, "flip"),
+            scale: get_uniform(program, "scale"),
+            camera_position: get_uniform(program, "camera_position"),
         }
     }
 
@@ -70,5 +73,9 @@ impl Shader {
 
     pub fn set_flip(&self, flip: bool) {
         GL!(Uniform1i, self.flip, flip.into())
+    }
+
+    pub fn set_scale(&self, scale: f32) {
+        GL!(Uniform1f, self.scale, scale)
     }
 }
