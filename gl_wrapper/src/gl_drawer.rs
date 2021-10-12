@@ -6,11 +6,12 @@ use glfw::{Context, Window};
 use gm::{Point, Size};
 use tools::Event;
 
-use crate::{gl_loader::GLFWEvents, GLLoader};
+use crate::{gl_loader::GLFWEvents, monitor::Monitor, GLLoader};
 
 pub struct GLDrawer {
     window:              Window,
     events:              GLFWEvents,
+    pub monitors:        Vec<Monitor>,
     pub on_frame_drawn:  Event,
     pub on_cursor_moved: Event<Point>,
     pub on_size_changed: Event<Size>,
@@ -63,8 +64,10 @@ impl GLDrawer {
     pub fn new(size: Size) -> Self {
         let loader = GLLoader::new(size);
         Self {
-            window:          loader.window,
-            events:          loader.events,
+            window:   loader.window,
+            events:   loader.events,
+            monitors: loader.monitors,
+
             on_frame_drawn:  default(),
             on_cursor_moved: default(),
             on_size_changed: default(),

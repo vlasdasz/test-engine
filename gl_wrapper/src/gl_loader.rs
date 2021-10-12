@@ -12,8 +12,9 @@ use crate::monitor::Monitor;
 pub type GLFWEvents = std::sync::mpsc::Receiver<(f64, WindowEvent)>;
 
 pub struct GLLoader {
-    pub window: Window,
-    pub events: GLFWEvents,
+    pub window:   Window,
+    pub events:   GLFWEvents,
+    pub monitors: Vec<Monitor>,
 }
 
 impl GLLoader {
@@ -23,7 +24,7 @@ impl GLLoader {
         let monitors: Vec<Monitor> =
             glfw.with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect());
 
-        dbg!(monitors);
+        dbg!(&monitors);
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
@@ -46,6 +47,10 @@ impl GLLoader {
 
         window.make_current();
 
-        GLLoader { window, events }
+        GLLoader {
+            window,
+            events,
+            monitors,
+        }
     }
 }
