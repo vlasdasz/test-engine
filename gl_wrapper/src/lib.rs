@@ -25,4 +25,5 @@ pub mod buffers;
 pub mod gl_info;
 pub mod gl_wrapper;
 pub mod image_loader;
+pub mod monitor;
 pub mod shaders;
