@@ -12,6 +12,7 @@ name = "test_game"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
+serde_json = "1.0.68"
 gl_wrapper = { path = "../gl_wrapper" }
 test_engine = { path = "../test_engine" }
 

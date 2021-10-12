@@ -13,7 +13,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
         height: metrics.height as f32,
     };
 
-    let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1);
+    let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1, None);
 
     Glyph::new(symbol, image, 20, default())
 }

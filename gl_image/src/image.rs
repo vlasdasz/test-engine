@@ -1,14 +1,20 @@
-use std::{default::default, ffi::c_void, path::Path};
+use std::{
+    default::default,
+    ffi::c_void,
+    path::{Path, PathBuf},
+};
 
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::Size;
 use image::GenericImageView;
+use serde::Serialize;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct Image {
     pub size:     Size,
     pub channels: u32,
     gl_handle:    u32,
+    path:         Option<PathBuf>,
 }
 
 impl Image {
@@ -17,16 +23,10 @@ impl Image {
     }
 
     pub fn load(path: &Path) -> Image {
-        Image::load_with_image(path)
-    }
-
-    pub fn load_with_image(path: &Path) -> Image {
         let image = image::open(path).unwrap_or_else(|_| panic!("Failed to open image {:?}", path));
 
         let dimensions = image.dimensions();
-
         let data = image.as_bytes();
-
         let channels = image.color().channel_count();
 
         let size = Size {
@@ -34,15 +34,21 @@ impl Image {
             height: dimensions.1 as f32,
         };
 
-        Image::from(data.as_ptr() as *const c_void, size, channels as u32)
+        Image::from(
+            data.as_ptr() as *const c_void,
+            size,
+            channels as u32,
+            Some(path.into()),
+        )
     }
 
-    pub fn from(data: *const c_void, size: Size, channels: u32) -> Image {
+    pub fn from(data: *const c_void, size: Size, channels: u32, path: Option<PathBuf>) -> Image {
         let gl_handle = ImageLoader::load(data, size, channels);
         Image {
             size,
             channels,
             gl_handle,
+            path,
         }
     }
 
@@ -61,6 +67,7 @@ impl Default for Image {
             size:      default(),
             channels:  0,
             gl_handle: u32::MAX,
+            path:      default(),
         }
     }
 }

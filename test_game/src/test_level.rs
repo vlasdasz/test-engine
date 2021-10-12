@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use test_engine::{Image, Level, LevelBase, Sprite};
 
 #[derive(Default)]
@@ -16,9 +18,16 @@ impl Level for TestLevel {
         let square = Image::load(&test_engine::paths::images().join("square.png"));
 
         self.add_sprite((0, 0, 1, 1).into());
-        self.add_wall((0, 0, 100, 1).into()).set_image(square);
-        self.add_wall((20, 0, 1, 100).into()).set_image(square);
+        self.add_wall((0, 0, 100, 1).into())
+            .set_image(square.clone());
+        self.add_wall((20, 0, 1, 100).into())
+            .set_image(square.clone());
         self.add_wall((-20, 0, 1, 100).into()).set_image(square);
+
+        println!(
+            "{}",
+            serde_json::to_string_pretty(self.base.player.deref()).unwrap()
+        );
 
         for i in 0..500 {
             self.add_body((0.1 * i as f32, i * 2, 0.5, 0.5).into());

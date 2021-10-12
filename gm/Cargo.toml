@@ -10,4 +10,5 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 rand = "0.8.3"
+serde = { version = "1.0.130", features = ["derive"] }
 tools = { path = "../.rdeps/tools" }

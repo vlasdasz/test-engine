@@ -40,7 +40,7 @@ impl View for Label {
 
             let mut glyph_view = ImageView::boxed();
             glyph_view.frame_mut().size = glyph.size;
-            glyph_view.image = glyph.image;
+            glyph_view.image = glyph.image.clone();
 
             glyph_view.set_frame(
                 (

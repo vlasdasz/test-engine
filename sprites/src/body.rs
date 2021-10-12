@@ -1,5 +1,6 @@
 use gm::Point;
 use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
+use serde::{ser::SerializeStruct, Serialize, Serializer};
 use tools::Rglica;
 
 use crate::{Control, Level, Sprite, SpriteBase};
@@ -70,5 +71,23 @@ impl Control for Body {
     fn add_impulse(&mut self, impulse: &Point) {
         self.body_mut()
             .apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)
+    }
+}
+
+impl Serialize for Body {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut s = serializer.serialize_struct("Body", 5)?;
+        let sprite = self.sprite();
+
+        s.serialize_field("position", &sprite.position())?;
+        s.serialize_field("size", &sprite.size())?;
+        s.serialize_field("rotation", &sprite.rotation())?;
+        s.serialize_field("color", &sprite.color)?;
+        s.serialize_field("image", &sprite.image)?;
+
+        s.end()
     }
 }

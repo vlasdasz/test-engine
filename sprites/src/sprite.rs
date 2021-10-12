@@ -1,5 +1,6 @@
 use gl_image::Image;
 use gm::{Color, Point, Size};
+use serde::{ser::SerializeStruct, Serialize, Serializer};
 use tools::math::IntoF32;
 
 pub trait Sprite {
@@ -37,6 +38,24 @@ pub struct SpriteBase {
     rotation:  f32,
     pub color: Color,
     pub image: Option<Image>,
+}
+
+impl Serialize for dyn Sprite {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut s = serializer.serialize_struct("Sprite", 5)?;
+        let sprite = self.sprite();
+
+        s.serialize_field("position", &sprite.position)?;
+        s.serialize_field("size", &sprite.size)?;
+        s.serialize_field("rotation", &sprite.rotation)?;
+        s.serialize_field("color", &sprite.color)?;
+        s.serialize_field("image", &sprite.image)?;
+
+        s.end()
+    }
 }
 
 impl Sprite for SpriteBase {

@@ -10,7 +10,7 @@ pub struct ImageView {
 
 impl View for ImageView {
     fn image(&self) -> Option<Image> {
-        self.image.into()
+        self.image.clone().into()
     }
 
     fn view(&self) -> &ViewBase {

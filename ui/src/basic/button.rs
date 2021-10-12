@@ -22,7 +22,7 @@ impl View for Button {
     }
 
     fn image(&self) -> Option<Image> {
-        self.image
+        self.image.clone()
     }
 
     fn view(&self) -> &ViewBase {

@@ -21,7 +21,7 @@ gl_wrapper = { path = "../gl_wrapper" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14.0"
-glfw = "0.41.0"
+glfw = "0.42.0"
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 mashup = "0.1.12"

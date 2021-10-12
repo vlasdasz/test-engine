@@ -1,8 +1,9 @@
+use serde::Serialize;
 use tools::math::IntoF32;
 
 use crate::Point;
 
-#[derive(Copy, Clone, Default, Debug)]
+#[derive(Copy, Clone, Default, Debug, Serialize)]
 pub struct Size {
     pub width:  f32,
     pub height: f32,
