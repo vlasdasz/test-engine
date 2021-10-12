@@ -29,14 +29,9 @@ impl Image {
         let data = image.as_bytes();
         let channels = image.color().channel_count();
 
-        let size = Size {
-            width:  dimensions.0 as f32,
-            height: dimensions.1 as f32,
-        };
-
         Image::from(
             data.as_ptr() as *const c_void,
-            size,
+            (dimensions.0, dimensions.1).into(),
             channels as u32,
             Some(path.into()),
         )
