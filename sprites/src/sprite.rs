@@ -32,6 +32,7 @@ pub trait Sprite {
     fn sprite_mut(&mut self) -> &mut SpriteBase;
 }
 
+#[derive(Serialize)]
 pub struct SpriteBase {
     position:  Point,
     size:      Size,

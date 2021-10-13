@@ -79,15 +79,8 @@ impl Serialize for Body {
     where
         S: Serializer,
     {
-        let mut s = serializer.serialize_struct("Body", 5)?;
-        let sprite = self.sprite();
-
-        s.serialize_field("position", &sprite.position())?;
-        s.serialize_field("size", &sprite.size())?;
-        s.serialize_field("rotation", &sprite.rotation())?;
-        s.serialize_field("color", &sprite.color)?;
-        s.serialize_field("image", &sprite.image)?;
-
+        let mut s = serializer.serialize_struct("Body", 1)?;
+        s.serialize_field("base", self.sprite());
         s.end()
     }
 }
