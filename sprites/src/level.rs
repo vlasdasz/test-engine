@@ -10,7 +10,7 @@ use rapier2d::{
         JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
     },
 };
-use serde::{Serialize, Serializer};
+use serde::{ser::SerializeStruct, Serialize, Serializer};
 use tools::{Rglica, ToRglica};
 
 use crate::{Body, Collider, Sprite, SpriteBase};
@@ -183,7 +183,24 @@ impl Default for LevelBase {
 }
 
 impl Serialize for LevelBase {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
-        todo!()
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let s = serializer.serialize_struct("Level", 1)?;
+
+        for sprite in &self.sprites {
+            if let Some(body) = sprite.as_any().downcast_ref::<Body>() {
+                dbg!("Body");
+                dbg!(body.sprite());
+            }
+            if let Some(collider) = sprite.as_any().downcast_ref::<Collider>() {
+                dbg!("Sprite");
+                dbg!(collider.sprite());
+            }
+        }
+
+        //s.serialize_field("base", self.sprite());
+        s.end()
     }
 }

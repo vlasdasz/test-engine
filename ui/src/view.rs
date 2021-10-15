@@ -205,8 +205,7 @@ pub struct ViewBase {
     _absolute_frame: Rect,
 
     _superview: Rglica<dyn View>,
-
-    _subviews: Vec<Box<dyn View>>,
+    _subviews:  Vec<Box<dyn View>>,
 
     _on_touch: Event<Touch>,
     _touch_id: RefCell<u64>,

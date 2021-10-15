@@ -1,7 +1,9 @@
+use std::any::Any;
+
 use gm::Point;
 use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
 use serde::{ser::SerializeStruct, Serialize, Serializer};
-use tools::Rglica;
+use tools::{as_any::AsAny, Rglica};
 
 use crate::{Control, Level, Sprite, SpriteBase};
 
@@ -55,6 +57,12 @@ impl Sprite for Body {
     }
 }
 
+impl AsAny for Body {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+}
+
 impl Control for Body {
     fn jump(&mut self) {
         self.body_mut().set_linvel([0.0, 50.0].into(), true)
@@ -80,7 +88,7 @@ impl Serialize for Body {
         S: Serializer,
     {
         let mut s = serializer.serialize_struct("Body", 1)?;
-        s.serialize_field("base", self.sprite());
+        s.serialize_field("base", self.sprite())?;
         s.end()
     }
 }

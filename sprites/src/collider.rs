@@ -1,5 +1,11 @@
+use std::any::Any;
+
+use serde::Serialize;
+use tools::as_any::AsAny;
+
 use crate::{Sprite, SpriteBase};
 
+#[derive(Serialize)]
 pub struct Collider {
     base: SpriteBase,
 }
@@ -11,6 +17,12 @@ impl Sprite for Collider {
 
     fn sprite_mut(&mut self) -> &mut SpriteBase {
         &mut self.base
+    }
+}
+
+impl AsAny for Collider {
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
