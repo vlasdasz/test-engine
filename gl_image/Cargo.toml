@@ -2,7 +2,7 @@
 name = "gl_image"
 version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "gl_image"
