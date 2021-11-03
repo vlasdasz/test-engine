@@ -7,60 +7,6 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug example 'wrapper'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--example=wrapper",
-                    "--package=tools"
-                ],
-                "filter": {
-                    "name": "wrapper",
-                    "kind": "example"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug example 'event'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--example=event",
-                    "--package=tools"
-                ],
-                "filter": {
-                    "name": "event",
-                    "kind": "example"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug example 'paths'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--example=paths",
-                    "--package=tools"
-                ],
-                "filter": {
-                    "name": "paths",
-                    "kind": "example"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
             "name": "Debug executable 'test'",
             "cargo": {
                 "args": [
@@ -74,7 +20,8 @@
                 }
             },
             "args": [],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "sudo": true
         },
         {
             "type": "lldb",

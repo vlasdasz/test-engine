@@ -1,3 +1,6 @@
+
+
+
 use std::borrow::Borrow;
 
 use tools::Address;
@@ -22,4 +25,8 @@ fn main() {
     dbg!(number.borrow().address());
 
     print_number(&number);
+
+    let sudo = sudo::check();
+
+    dbg!(sudo);
 }

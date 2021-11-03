@@ -9,6 +9,8 @@ name = "test"
 
 [dependencies]
 
+sudo = "0.6.0"
+
 gm = { path = "../gm" }
 
 gl_wrapper = { path = "../gl_wrapper" }
