@@ -1,6 +1,5 @@
 #![allow(incomplete_features)]
 #![feature(trait_upcasting)]
-#![feature(option_result_unwrap_unchecked)]
 #![feature(default_free_fn)]
 
 pub use gl_image;

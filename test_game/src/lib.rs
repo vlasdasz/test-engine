@@ -1,5 +1,4 @@
 #![allow(incomplete_features)]
-#![feature(option_result_unwrap_unchecked)]
 #![feature(default_free_fn)]
 
 use std::{

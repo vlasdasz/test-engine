@@ -1,6 +1,3 @@
-
-
-
 use std::borrow::Borrow;
 
 use tools::Address;
