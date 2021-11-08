@@ -7,9 +7,9 @@ use std::{
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::Size;
 use image::GenericImageView;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Image {
     pub size:     Size,
     pub channels: u32,

@@ -2,7 +2,7 @@ use std::any::Any;
 
 use gl_image::Image;
 use gm::{Color, Point, Size};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use tools::{as_any::AsAny, math::IntoF32};
 
 pub trait Sprite: AsAny {
@@ -34,7 +34,7 @@ pub trait Sprite: AsAny {
     fn sprite_mut(&mut self) -> &mut SpriteBase;
 }
 
-#[derive(Default, Debug, Serialize)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct SpriteBase {
     position:  Point,
     size:      Size,

@@ -1,10 +1,11 @@
 use std::default::default;
 
+use serde::{Deserialize, Serialize};
 use tools::math::IntoF32;
 
 use crate::{Point, Size};
 
-#[derive(Copy, Clone, Default, Debug)]
+#[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
 pub struct Rect {
     pub origin: Point,
     pub size:   Size,

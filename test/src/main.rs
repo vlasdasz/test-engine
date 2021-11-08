@@ -1,29 +1,36 @@
-use std::borrow::Borrow;
+use std::fmt::Debug;
 
-use tools::Address;
+use erased_serde::serialize_trait_object;
+use gm::Rect;
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-fn print_number(num: &u32) {
-    dbg!(num);
-    dbg!(num.address());
+trait Sokol: DeserializeOwned + erased_serde::Serialize + Debug {
+    fn frame(&self) -> &Rect;
 }
 
-#[derive(Default, Debug)]
-struct Sok(String, u32);
+#[derive(Debug, Serialize, Deserialize)]
+struct Borba {
+    frame: Rect,
+}
 
-impl Sok {}
+serialize_trait_object!(Sokol);
+
+impl Sokol for Borba {
+    fn frame(&self) -> &Rect {
+        &self.frame
+    }
+}
 
 fn main() {
-    let spesen: Sok = Default::default();
+    let data: Vec<Box<dyn Sokol>> = vec![Box::new(Borba {
+        frame: (1, 2, 3, 4).into(),
+    })];
 
-    dbg!(spesen);
+    let stre = serde_json::to_string(&data).unwrap();
 
-    let number: u32 = 5544;
+    println!("{}", stre);
 
-    dbg!(number.borrow().address());
-
-    print_number(&number);
-
-    let sudo = sudo::check();
-
-    dbg!(sudo);
+    let data: Vec<Box<dyn Sokol>> = serde_json::from_str(&stre).unwrap();
+    //
+    // println!("{}", serde_json::to_string(&data).unwrap());
 }

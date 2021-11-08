@@ -1,9 +1,9 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use tools::math::IntoF32;
 
-#[derive(Copy, Clone, Default, Debug, Serialize)]
+#[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
