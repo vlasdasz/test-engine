@@ -1,10 +1,10 @@
 use std::fmt::Debug;
 
-use erased_serde::serialize_trait_object;
 use gm::Rect;
 use serde::{Deserialize, Serialize};
 
-trait Sokol: erased_serde::Serialize + Debug {
+#[typetag::serde(tag = "sokol")]
+trait Sokol: Debug {
     fn frame(&self) -> &Rect;
 }
 
@@ -13,8 +13,7 @@ struct Borba {
     frame: Rect,
 }
 
-serialize_trait_object!(Sokol);
-
+#[typetag::serde(name = "borba")]
 impl Sokol for Borba {
     fn frame(&self) -> &Rect {
         &self.frame
@@ -30,7 +29,7 @@ fn main() {
 
     println!("{}", stre);
 
-    // let data: Vec<Box<dyn Sokol>> = serde_json::from_str(&stre).unwrap();
-    //
-    // println!("{}", serde_json::to_string(&data).unwrap());
+    let data: Vec<Box<dyn Sokol>> = serde_json::from_str(&stre).unwrap();
+
+    println!("{}", serde_json::to_string(&data).unwrap());
 }
