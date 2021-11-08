@@ -5,6 +5,7 @@ use gm::{Color, Point, Size};
 use serde::{Deserialize, Serialize};
 use tools::{as_any::AsAny, math::IntoF32};
 
+#[typetag::serde(tag = "Sprite")]
 pub trait Sprite: AsAny {
     fn size(&self) -> Size {
         self.sprite().size
@@ -43,6 +44,7 @@ pub struct SpriteBase {
     pub image: Option<Image>,
 }
 
+#[typetag::serde(name = "SpriteBase")]
 impl Sprite for SpriteBase {
     fn sprite(&self) -> &SpriteBase {
         self

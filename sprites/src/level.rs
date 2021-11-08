@@ -187,6 +187,11 @@ impl Serialize for LevelBase {
     where
         S: Serializer,
     {
+
+        let sprites = serde_json::to_string(&self.sprites).unwrap();
+
+        dbg!(sprites);
+
         let s = serializer.serialize_struct("Level", 1)?;
 
         for sprite in &self.sprites {

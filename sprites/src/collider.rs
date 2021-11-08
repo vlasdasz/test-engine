@@ -1,15 +1,17 @@
 use std::any::Any;
 
 use serde::Serialize;
+use serde::Deserialize;
 use tools::as_any::AsAny;
 
 use crate::{Sprite, SpriteBase};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Collider {
     base: SpriteBase,
 }
 
+#[typetag::serde(name = "Collider")]
 impl Sprite for Collider {
     fn sprite(&self) -> &SpriteBase {
         &self.base

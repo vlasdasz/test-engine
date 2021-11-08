@@ -3,9 +3,8 @@
 mod body;
 mod collider;
 mod level;
-mod rigid;
-mod rigid_handle;
 mod sprite;
+mod rigid_handle;
 
 pub use body::Body;
 pub use collider::Collider;

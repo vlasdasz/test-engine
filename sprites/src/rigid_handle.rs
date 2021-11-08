@@ -4,6 +4,12 @@ pub struct RigidHandle {
     pub handle: RigidBodyHandle,
 }
 
+impl From<RigidBodyHandle> for RigidHandle {
+    fn from(handle: RigidBodyHandle) -> Self {
+        Self { handle }
+    }
+}
+
 impl Default for RigidHandle {
     fn default() -> Self {
         Self {

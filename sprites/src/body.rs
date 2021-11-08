@@ -2,14 +2,18 @@ use std::any::Any;
 
 use gm::Point;
 use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
-use serde::{ser::SerializeStruct, Serialize, Serializer};
+use serde::{Deserialize, Serialize};
 use tools::{as_any::AsAny, Rglica};
 
 use crate::{Control, Level, Sprite, SpriteBase};
+use crate::rigid_handle::RigidHandle;
 
+#[derive(Deserialize, Serialize)]
 pub struct Body {
     base:   SpriteBase,
-    handle: RigidBodyHandle,
+    #[serde(skip)]
+    handle: RigidHandle,
+    #[serde(skip)]
     level:  Rglica<dyn Level>,
 }
 
@@ -21,17 +25,17 @@ impl Body {
     ) -> Self {
         Self {
             base,
-            handle,
+            handle: handle.into(),
             level: Rglica::from_ref(level),
         }
     }
 
     fn body(&self) -> &RigidBody {
-        &self.level.rigid_bodies()[self.handle]
+        &self.level.rigid_bodies()[self.handle.handle]
     }
 
     fn body_mut(&mut self) -> &mut RigidBody {
-        &mut self.level.rigid_bodies_mut()[self.handle]
+        &mut self.level.rigid_bodies_mut()[self.handle.handle]
     }
 
     pub fn lock_rotations(&mut self) {
@@ -39,6 +43,7 @@ impl Body {
     }
 }
 
+#[typetag::serde(name = "Body")]
 impl Sprite for Body {
     fn position(&self) -> Point {
         (self.body().translation().x, self.body().translation().y).into()
@@ -79,16 +84,5 @@ impl Control for Body {
     fn add_impulse(&mut self, impulse: &Point) {
         self.body_mut()
             .apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)
-    }
-}
-
-impl Serialize for Body {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut s = serializer.serialize_struct("Body", 1)?;
-        s.serialize_field("base", self.sprite())?;
-        s.end()
     }
 }
