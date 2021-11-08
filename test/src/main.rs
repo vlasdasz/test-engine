@@ -2,9 +2,9 @@ use std::fmt::Debug;
 
 use erased_serde::serialize_trait_object;
 use gm::Rect;
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 
-trait Sokol: DeserializeOwned + erased_serde::Serialize + Debug {
+trait Sokol: erased_serde::Serialize + Debug {
     fn frame(&self) -> &Rect;
 }
 
@@ -30,7 +30,7 @@ fn main() {
 
     println!("{}", stre);
 
-    let data: Vec<Box<dyn Sokol>> = serde_json::from_str(&stre).unwrap();
+    // let data: Vec<Box<dyn Sokol>> = serde_json::from_str(&stre).unwrap();
     //
     // println!("{}", serde_json::to_string(&data).unwrap());
 }
