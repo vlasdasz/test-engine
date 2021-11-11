@@ -1,4 +1,5 @@
 use std::default::default;
+use std::ops::Deref;
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
@@ -10,7 +11,7 @@ use rapier2d::{
         JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
     },
 };
-use serde::{ser::SerializeStruct, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, ser::SerializeStruct, Serialize, Serializer};
 use tools::{Rglica, ToRglica};
 
 use crate::{Body, Collider, Sprite, SpriteBase};
@@ -187,25 +188,15 @@ impl Serialize for LevelBase {
     where
         S: Serializer,
     {
-
-        let sprites = serde_json::to_string(&self.sprites).unwrap();
-
-        dbg!(sprites);
-
-        let s = serializer.serialize_struct("Level", 1)?;
-
-        for sprite in &self.sprites {
-            if let Some(body) = sprite.as_any().downcast_ref::<Body>() {
-                dbg!("Body");
-                dbg!(body.sprite());
-            }
-            if let Some(collider) = sprite.as_any().downcast_ref::<Collider>() {
-                dbg!("Sprite");
-                dbg!(collider.sprite());
-            }
-        }
-
-        //s.serialize_field("base", self.sprite());
+        let mut s = serializer.serialize_struct("Level", 2)?;
+        s.serialize_field("sprites", &self.sprites)?;
+        s.serialize_field("player", self.player.deref())?;
         s.end()
+    }
+}
+
+impl<'a> Deserialize<'a> for LevelBase {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'a> {
+        todo!()
     }
 }

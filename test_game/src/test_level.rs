@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use test_engine::{Image, Level, LevelBase, Sprite};
 
 #[derive(Default)]
@@ -24,14 +22,11 @@ impl Level for TestLevel {
             .set_image(square.clone());
         self.add_wall((-20, 0, 1, 100).into()).set_image(square);
 
-        println!(
-            "{}",
-            serde_json::to_string_pretty(self.base.player.deref()).unwrap()
-        );
-
-        for i in 0..500 {
+        for i in 0..5 {
             self.add_body((0.1 * i as f32, i * 2, 0.5, 0.5).into());
         }
+
+        println!("{}", serde_json::to_string(&self.base).unwrap());
     }
 
     fn level(&self) -> &LevelBase {
