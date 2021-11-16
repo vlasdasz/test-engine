@@ -71,3 +71,13 @@ impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Spri
         }
     }
 }
+
+impl<W: IntoF32, H: IntoF32> From<(W, H)> for SpriteBase {
+    fn from(data: (W, H)) -> Self {
+        Self {
+            size: (data.0, data.1).into(),
+            color: Color::random(),
+            ..Default::default()
+        }
+    }
+}

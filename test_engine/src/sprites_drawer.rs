@@ -5,6 +5,7 @@ use tools::math::IntoF32;
 
 use crate::{assets::Assets, Sprite};
 
+#[derive(Default)]
 pub struct SpritesDrawer {
     assets: Rc<Assets>,
 }

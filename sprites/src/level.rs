@@ -196,7 +196,7 @@ impl Serialize for LevelBase {
 }
 
 impl<'a> Deserialize<'a> for LevelBase {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'a> {
+    fn deserialize<D>(_deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'a> {
         todo!()
     }
 }

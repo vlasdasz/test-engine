@@ -8,6 +8,7 @@ use ui::{complex::PathData, View};
 
 use crate::assets::Assets;
 
+#[derive(Default)]
 pub struct UIDrawer {
     pub assets:      Rc<Assets>,
     pub window_size: Size,

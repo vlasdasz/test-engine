@@ -28,6 +28,7 @@ pub trait GameView: View {
 }
 
 pub struct Screen {
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     cursor_position: Point,
     root_view:       Box<dyn View>,
     view:            Rglica<dyn GameView>,
@@ -190,6 +191,7 @@ impl Screen {
         let drawer = GLDrawer::new(size);
         let assets = Rc::new(Assets::default());
         let mut screen = Self {
+            #[cfg(not(any(target_os = "ios", target_os = "android")))]
             cursor_position: default(),
             root_view: ViewBase::boxed(),
             view: default(),

@@ -41,5 +41,26 @@
             "args": [],
             "cwd": "${workspaceFolder}"
         },
-    ]
+    ],
+    "tasks": [
+		{
+			"type": "cargo",
+			"command": "build",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "rust: cargo build"
+		},
+		{
+			"type": "cargo",
+			"command": "run",
+            "singleInstanceOnly": true,
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "rust: cargo run"
+		}
+	]
 }
