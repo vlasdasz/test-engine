@@ -36,6 +36,7 @@ pub struct Screen {
     drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
     sprites_drawer:  Rc<dyn SpritesDrawer>,
+    fps: u64
 }
 
 impl Screen {

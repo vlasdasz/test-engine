@@ -5,7 +5,6 @@
 pub use gl_image;
 pub use gl_wrapper;
 pub use gm;
-pub use proc_macro;
 pub use sprites;
 pub use tools;
 pub use ui;

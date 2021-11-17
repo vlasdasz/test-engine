@@ -10,9 +10,16 @@ pub struct DebugView {
     frame_drawn_label: Rglica<Label>,
     frame_drawn:       u64,
     prev_time:         i64,
+    fps:               u64,
     min_fps:           u64,
     max_fps:           u64,
     skipped:           u64,
+}
+
+impl DebugView {
+    pub fn set_fps(&mut self, fps: u64) {
+        self.fps = fps;
+    }
 }
 
 impl View for DebugView {
@@ -85,6 +92,7 @@ impl Boxed for DebugView {
             frame_drawn_label: default(),
             frame_drawn:       0,
             prev_time:         Utc::now().timestamp_nanos(),
+            fps:               0,
             min_fps:           u64::MAX,
             max_fps:           u64::MIN,
             skipped:           0,
