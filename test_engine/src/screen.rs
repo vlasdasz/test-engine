@@ -123,7 +123,12 @@ impl Screen {
     }
 
     fn on_key_pressed(&mut self, key: Key, action: Action) {
-        self.view.level_mut().on_key_pressed(key, action)
+        if action != Action::Press {
+            return;
+        }
+        self.view
+            .level_mut()
+            .on_key_pressed(key.get_name().unwrap_or_else(|| "unknown".into()))
     }
 }
 

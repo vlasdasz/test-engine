@@ -1,7 +1,5 @@
 use std::{default::default, ops::Deref, rc::Rc};
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
-use glfw::{Action, Key};
 use gm::Point;
 use rapier2d::{
     na::Vector2,
@@ -51,11 +49,6 @@ pub trait Level {
         self.level_mut().add_body(sprite)
     }
 
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    fn on_key_pressed(&mut self, key: Key, action: Action) {
-        self.level_mut().on_key_pressed(key, action)
-    }
-
     fn add_sprite(&mut self, sprite: SpriteBase) {
         self.level_mut().add_sprite(sprite)
     }
@@ -67,6 +60,8 @@ pub trait Level {
     fn set_camera_rotation(&mut self, angle: f32) {
         self.drawer().set_camera_rotation(angle)
     }
+
+    fn on_key_pressed(&mut self, _key: String) {}
 
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
@@ -128,18 +123,6 @@ impl LevelBase {
         let body = boxed.to_rglica();
         self.sprites.push(boxed);
         body
-    }
-
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    pub fn on_key_pressed(&mut self, key: Key, _action: Action) {
-        if key == Key::A {
-            self.player.go_left()
-        } else if key == Key::D {
-            self.player.go_right();
-        } else if key == Key::W {
-            self.player.jump()
-        } else if key == Key::S {
-        }
     }
 
     pub fn add_sprite(&mut self, sprite: SpriteBase) {

@@ -18,6 +18,3 @@ gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }
 
 tools = { path = "../.rdeps/tools" }
-
-[target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
-glfw = "0.42.0"

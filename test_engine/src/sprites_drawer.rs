@@ -21,7 +21,6 @@ impl TESpritesDrawer {
 
 impl SpritesDrawer for TESpritesDrawer {
     fn set_scale(&self, scale: f32) {
-        dbg!(&scale);
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_scale(scale.into_f32());
         self.assets.shaders.textured_sprite.enable();
