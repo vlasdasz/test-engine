@@ -1,7 +1,6 @@
 use std::any::Any;
 
-use serde::Serialize;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use tools::as_any::AsAny;
 
 use crate::{Sprite, SpriteBase};

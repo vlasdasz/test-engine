@@ -10,21 +10,21 @@ use gl_wrapper::GLWrapper;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
-use sprites::{Level, Sprite};
+use sprites::{Level, Sprite, SpritesDrawer};
 use tools::{Boxed, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::{init_view_on, input::Touch, View, ViewBase};
 
 use crate::{
-    assets::Assets, debug_view::DebugView, paths, sprites_drawer::SpritesDrawer,
+    assets::Assets, debug_view::DebugView, paths, sprites_drawer::TESpritesDrawer,
     ui_drawer::UIDrawer,
 };
 
 pub trait GameView: View {
     fn level(&self) -> &dyn Level;
     fn level_mut(&mut self) -> &mut dyn Level;
-    fn set_scale(&mut self) -> &mut tools::Event<f32>;
+    fn set_drawer(&mut self, drawer: Rc<dyn SpritesDrawer>);
 }
 
 pub struct Screen {
@@ -35,7 +35,7 @@ pub struct Screen {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
-    sprites_drawer:  Rc<SpritesDrawer>,
+    sprites_drawer:  Rc<dyn SpritesDrawer>,
 }
 
 impl Screen {
@@ -45,9 +45,7 @@ impl Screen {
 
     pub fn add_view(mut self, mut view: Box<dyn GameView>) -> Self {
         let drawer = self.sprites_drawer.clone();
-        view.set_scale().subscribe(move |scale| {
-            drawer.set_scale(scale);
-        });
+        view.set_drawer(drawer.clone());
         self.view = view.to_rglica();
         self.root_view.add_subview(view);
         self.view.level_mut().setup();
@@ -198,7 +196,7 @@ impl Screen {
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),
-            sprites_drawer: SpritesDrawer::new(assets),
+            sprites_drawer: TESpritesDrawer::new(assets),
         };
 
         screen.init(size);

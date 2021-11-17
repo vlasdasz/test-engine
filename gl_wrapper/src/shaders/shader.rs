@@ -14,6 +14,7 @@ pub struct Shader {
     flip:       i32,
     scale:      i32,
 
+    camera_rotation: i32,
     camera_position: i32,
 }
 
@@ -35,6 +36,7 @@ impl Shader {
             rotation: get_uniform(program, "rotation"),
             flip: get_uniform(program, "flip"),
             scale: get_uniform(program, "scale"),
+            camera_rotation: get_uniform(program, "camera_rotation"),
             camera_position: get_uniform(program, "camera_position"),
         }
     }
@@ -65,6 +67,10 @@ impl Shader {
 
     pub fn set_rotation(&self, angle: f32) {
         GL!(Uniform1f, self.rotation, angle)
+    }
+
+    pub fn set_camera_rotation(&self, angle: f32) {
+        GL!(Uniform1f, self.camera_rotation, angle)
     }
 
     pub fn set_camera_position(&self, pos: Point) {

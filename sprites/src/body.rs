@@ -5,8 +5,7 @@ use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
 use serde::{Deserialize, Serialize};
 use tools::{as_any::AsAny, Rglica};
 
-use crate::{Control, Level, Sprite, SpriteBase};
-use crate::rigid_handle::RigidHandle;
+use crate::{rigid_handle::RigidHandle, Control, Level, Sprite, SpriteBase};
 
 #[derive(Deserialize, Serialize)]
 pub struct Body {

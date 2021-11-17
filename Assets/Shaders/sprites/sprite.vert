@@ -5,10 +5,9 @@ layout (location = 0) in vec2 vertex_position;
 
 uniform vec2 size;
 uniform vec2 position;
-uniform vec2 camera_position;
-
-uniform float scale;
 uniform float rotation;
+uniform float camera_rotation;
+uniform vec2 camera_position;
 
 uniform vec2 resolution;
 
@@ -23,11 +22,11 @@ void main() {
 
     gl_Position.xy += position - camera_position;
 
+    gl_Position *= rotation_z_matrix(camera_rotation);
+
     gl_Position.x *= resolution.y / resolution.x;
 
-    float multiplyer = resolution.y / 10.0;
-    gl_Position.xy /= multiplyer;
-
-    gl_Position.xy *= scale;
+    float scale = resolution.y / 10.0;
+    gl_Position.xy /= scale;
 
 }

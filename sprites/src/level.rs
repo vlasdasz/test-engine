@@ -1,5 +1,4 @@
-use std::default::default;
-use std::ops::Deref;
+use std::{default::default, ops::Deref, rc::Rc};
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
@@ -11,10 +10,10 @@ use rapier2d::{
         JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
     },
 };
-use serde::{Deserialize, Deserializer, ser::SerializeStruct, Serialize, Serializer};
+use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use tools::{Rglica, ToRglica};
 
-use crate::{Body, Collider, Sprite, SpriteBase};
+use crate::{Body, Collider, Sprite, SpriteBase, SpritesDrawer, sprites_drawer::DummyDrawer};
 
 pub trait Control {
     fn jump(&mut self);
@@ -65,13 +64,19 @@ pub trait Level {
         self.level_mut().add_wall(sprite)
     }
 
+    fn set_camera_rotation(&mut self, angle: f32) {
+        self.drawer().set_camera_rotation(angle)
+    }
+
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
+    fn drawer(&self) -> &dyn SpritesDrawer;
 }
 
 pub struct LevelBase {
     pub player:  Rglica<Body>,
     pub sprites: Vec<Box<dyn Sprite>>,
+    pub drawer: Rc<dyn SpritesDrawer>,
 
     rigid_body_set: RigidBodySet,
     collider_set:   ColliderSet,
@@ -158,6 +163,9 @@ impl Level for LevelBase {
     fn level_mut(&mut self) -> &mut LevelBase {
         self
     }
+    fn drawer(&self) -> &dyn SpritesDrawer {
+        self.drawer.deref()
+    }
 }
 
 impl Default for LevelBase {
@@ -165,6 +173,8 @@ impl Default for LevelBase {
         Self {
             sprites:          vec![],
             rigid_body_set:   RigidBodySet::new(),
+            drawer: Rc::new(DummyDrawer::default()),
+
             collider_set:     ColliderSet::new(),
             gravity:          Vector2::new(0.0, -9.81),
             physics_pipeline: PhysicsPipeline::new(),
@@ -196,7 +206,10 @@ impl Serialize for LevelBase {
 }
 
 impl<'a> Deserialize<'a> for LevelBase {
-    fn deserialize<D>(_deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'a> {
+    fn deserialize<D>(_deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'a>,
+    {
         todo!()
     }
 }
