@@ -24,7 +24,7 @@ use crate::{
 pub trait GameView: View {
     fn level(&self) -> &dyn Level;
     fn level_mut(&mut self) -> &mut dyn Level;
-    fn set_drawer(&mut self, drawer: Rc<dyn SpritesDrawer>);
+    fn set_drawer(&mut self, _drawer: Rc<dyn SpritesDrawer>) {}
 }
 
 pub struct Screen {

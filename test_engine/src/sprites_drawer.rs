@@ -25,10 +25,7 @@ impl SpritesDrawer for TESpritesDrawer {
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_scale(scale.into_f32());
         self.assets.shaders.textured_sprite.enable();
-        self.assets
-            .shaders
-            .textured_sprite
-            .set_scale(scale);
+        self.assets.shaders.textured_sprite.set_scale(scale);
     }
 
     fn set_resolution(&self, size: &Size) {
@@ -43,7 +40,10 @@ impl SpritesDrawer for TESpritesDrawer {
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_camera_rotation(angle);
         self.assets.shaders.textured_sprite.enable();
-        self.assets.shaders.textured_sprite.set_camera_rotation(angle);
+        self.assets
+            .shaders
+            .textured_sprite
+            .set_camera_rotation(angle);
     }
 
     fn set_camera_position(&self, pos: Point) {

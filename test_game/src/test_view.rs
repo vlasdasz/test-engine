@@ -173,7 +173,4 @@ impl GameView for TestView {
     fn level_mut(&mut self) -> &mut dyn Level {
         &mut self.level
     }
-    fn set_scale(&mut self) -> &mut Event<f32> {
-        &mut self.set_scale
-    }
 }

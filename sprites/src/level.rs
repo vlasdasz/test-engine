@@ -13,7 +13,7 @@ use rapier2d::{
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use tools::{Rglica, ToRglica};
 
-use crate::{Body, Collider, Sprite, SpriteBase, SpritesDrawer, sprites_drawer::DummyDrawer};
+use crate::{sprites_drawer::DummyDrawer, Body, Collider, Sprite, SpriteBase, SpritesDrawer};
 
 pub trait Control {
     fn jump(&mut self);
@@ -70,13 +70,15 @@ pub trait Level {
 
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
-    fn drawer(&self) -> &dyn SpritesDrawer;
+    fn drawer(&self) -> &dyn SpritesDrawer {
+        todo!()
+    }
 }
 
 pub struct LevelBase {
     pub player:  Rglica<Body>,
     pub sprites: Vec<Box<dyn Sprite>>,
-    pub drawer: Rc<dyn SpritesDrawer>,
+    pub drawer:  Rc<dyn SpritesDrawer>,
 
     rigid_body_set: RigidBodySet,
     collider_set:   ColliderSet,
@@ -171,9 +173,9 @@ impl Level for LevelBase {
 impl Default for LevelBase {
     fn default() -> Self {
         Self {
-            sprites:          vec![],
-            rigid_body_set:   RigidBodySet::new(),
-            drawer: Rc::new(DummyDrawer::default()),
+            sprites:        vec![],
+            rigid_body_set: RigidBodySet::new(),
+            drawer:         Rc::new(DummyDrawer::default()),
 
             collider_set:     ColliderSet::new(),
             gravity:          Vector2::new(0.0, -9.81),

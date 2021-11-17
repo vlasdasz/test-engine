@@ -11,5 +11,4 @@ pub use body::Body;
 pub use collider::Collider;
 pub use level::{Control, Level, LevelBase};
 pub use sprite::{Sprite, SpriteBase};
-pub use sprites_drawer::SpritesDrawer;
-pub use sprites_drawer::DummyDrawer;
+pub use sprites_drawer::{DummyDrawer, SpritesDrawer};
