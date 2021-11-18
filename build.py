@@ -60,7 +60,7 @@ def run(string):
 
 def clone(rep, destination = ""):
     if not os.path.exists(destination):
-        run("git clone --recursive https://github.com/vladasz/" + rep + " " + destination)
+        run("git clone --recursive https://github.com/vlodas/" + rep + " " + destination)
 
 
 def setup_android():
