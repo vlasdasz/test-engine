@@ -1,7 +1,7 @@
 use std::default::default;
 
 use serde::{Deserialize, Serialize};
-use tools::math::IntoF32;
+use tools::IntoF32;
 
 use crate::{Point, Size};
 

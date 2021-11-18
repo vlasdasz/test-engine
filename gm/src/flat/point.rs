@@ -1,7 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
 use serde::{Deserialize, Serialize};
-use tools::math::IntoF32;
+use tools::IntoF32;
 
 #[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
 pub struct Point {

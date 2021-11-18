@@ -36,7 +36,7 @@ pub struct Screen {
     drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
     sprites_drawer:  Rc<dyn SpritesDrawer>,
-    fps: u64
+    _fps:            u64,
 }
 
 impl Screen {
@@ -203,6 +203,7 @@ impl Screen {
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: TESpritesDrawer::new(assets),
+            _fps: Default::default(),
         };
 
         screen.init(size);

@@ -1,7 +1,7 @@
 use std::default::default;
 
 use chrono::Utc;
-use tools::{platform::Platform, Boxed, Rglica};
+use tools::{platform::Platform, Boxed, Property, Rglica};
 use ui::{init_view_on, Label, View, ViewBase};
 
 pub struct DebugView {
@@ -10,15 +10,15 @@ pub struct DebugView {
     frame_drawn_label: Rglica<Label>,
     frame_drawn:       u64,
     prev_time:         i64,
-    fps:               u64,
     min_fps:           u64,
     max_fps:           u64,
     skipped:           u64,
+    pub fps:           Property<u64>,
 }
 
 impl DebugView {
     pub fn set_fps(&mut self, fps: u64) {
-        self.fps = fps;
+        *self.fps = fps;
     }
 }
 
@@ -92,7 +92,7 @@ impl Boxed for DebugView {
             frame_drawn_label: default(),
             frame_drawn:       0,
             prev_time:         Utc::now().timestamp_nanos(),
-            fps:               0,
+            fps:               Default::default(),
             min_fps:           u64::MAX,
             max_fps:           u64::MIN,
             skipped:           0,
