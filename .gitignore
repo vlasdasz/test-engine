@@ -107,3 +107,4 @@ tools
 .rdeps
 
 NDK/
+temp/

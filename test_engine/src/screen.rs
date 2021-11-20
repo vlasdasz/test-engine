@@ -4,6 +4,7 @@ use std::{
     rc::Rc,
 };
 
+use chrono::Utc;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::GLDrawer;
 use gl_wrapper::GLWrapper;
@@ -31,12 +32,15 @@ pub struct Screen {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     cursor_position: Point,
     root_view:       Box<dyn View>,
+    debug_view:      Rglica<DebugView>,
     view:            Rglica<dyn GameView>,
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
     sprites_drawer:  Rc<dyn SpritesDrawer>,
-    _fps:            u64,
+    fps:             u64,
+    prev_time:       i64,
+    frame_time:      f64,
 }
 
 impl Screen {
@@ -54,7 +58,8 @@ impl Screen {
     }
 
     pub fn add_debug_view(mut self) -> Self {
-        init_view_on::<DebugView>(self.root_view.deref_mut());
+        self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
+        //dbg!(&self.debug_view);
         self
     }
 
@@ -134,7 +139,23 @@ impl Screen {
 }
 
 impl Screen {
+    fn calculate_fps(&mut self) {
+        let now = Utc::now().timestamp_nanos();
+
+        let interval = now - self.prev_time;
+        self.prev_time = now;
+
+        self.frame_time = interval as f64 / 1000000000.0;
+        self.fps = (1.0 / self.frame_time as f64) as u64;
+
+        if self.debug_view.is_ok() {
+            self.debug_view.fps.set(self.fps);
+        }
+    }
+
     pub fn update(&mut self) {
+        self.calculate_fps();
+
         GLWrapper::clear();
 
         self.update_level();
@@ -198,12 +219,15 @@ impl Screen {
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             cursor_position: default(),
             root_view: ViewBase::boxed(),
+            debug_view: Default::default(),
             view: default(),
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: TESpritesDrawer::new(assets),
-            _fps: Default::default(),
+            fps: Default::default(),
+            prev_time: Default::default(),
+            frame_time: Default::default(),
         };
 
         screen.init(size);

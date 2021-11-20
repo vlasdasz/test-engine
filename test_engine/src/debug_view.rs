@@ -1,6 +1,5 @@
 use std::default::default;
 
-use chrono::Utc;
 use tools::{platform::Platform, Boxed, Property, Rglica};
 use ui::{init_view_on, Label, View, ViewBase};
 
@@ -9,17 +8,7 @@ pub struct DebugView {
     fps_label:         Rglica<Label>,
     frame_drawn_label: Rglica<Label>,
     frame_drawn:       u64,
-    prev_time:         i64,
-    min_fps:           u64,
-    max_fps:           u64,
-    skipped:           u64,
     pub fps:           Property<u64>,
-}
-
-impl DebugView {
-    pub fn set_fps(&mut self, fps: u64) {
-        *self.fps = fps;
-    }
 }
 
 impl View for DebugView {
@@ -37,37 +26,19 @@ impl View for DebugView {
             self.frame_mut().origin.x = 28.0;
             self.frame_mut().origin.y = 28.0;
         }
+
+        let mut this = Rglica::from_ref(self);
+        self.fps.on_set.subscribe(move |_| {
+            let fps = this.fps.copy();
+            dbg!(fps);
+            this.fps_label.set_text(format!("FPS: {}", fps));
+        });
     }
 
     fn update(&mut self) {
         self.frame_drawn += 1;
         self.frame_drawn_label
-            .set_text(&format!("Frame drawn: {}", self.frame_drawn));
-
-        let now = Utc::now().timestamp_nanos();
-
-        let interval = now - self.prev_time;
-        self.prev_time = now;
-
-        let frame_time = interval as f64 / 1000000000.0;
-        let fps = (1.0 / frame_time as f64) as u64;
-
-        if self.skipped > 100 {
-            if fps < self.min_fps {
-                self.min_fps = fps
-            }
-
-            if fps > self.max_fps {
-                self.max_fps = fps;
-            }
-        } else {
-            self.skipped += 1;
-        }
-
-        self.fps_label.set_text(&format!(
-            "FPS: {} min: {} max: {}",
-            fps, self.min_fps, self.max_fps
-        ));
+            .set_text(format!("Frame drawn: {}", self.frame_drawn));
     }
 
     fn layout(&mut self) {
@@ -91,11 +62,7 @@ impl Boxed for DebugView {
             fps_label:         default(),
             frame_drawn_label: default(),
             frame_drawn:       0,
-            prev_time:         Utc::now().timestamp_nanos(),
             fps:               Default::default(),
-            min_fps:           u64::MAX,
-            max_fps:           u64::MIN,
-            skipped:           0,
         })
     }
 }
