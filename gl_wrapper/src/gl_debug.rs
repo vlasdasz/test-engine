@@ -58,7 +58,7 @@ macro_rules! check_gl_error {
         if err != GL_NO_ERROR {
             println!(
                 "{} OpenGL Error with code: {}",
-                format_code_location!(file!(), function!(), line!()),
+                tools::format_code_location!(file!(), tools::function!(), line!()),
                 err
             );
         }
