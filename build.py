@@ -66,9 +66,10 @@ def clone(rep, destination = ""):
 def setup_android():
     if os.path.isdir("NDK"):
         return
+    print(os.environ["NDK_HOME"])
     run("mkdir NDK")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi")
-    ndk_home = "${ANDROID_HOME}/ndk/22.1.7171670"
+    ndk_home = os.environ["NDK_HOME"]
     run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
     run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
 
@@ -77,7 +78,6 @@ if android:
     setup_android()
 
 
-#clone("soil2", soil_path)
 clone("tools", tools_path)
 clone("gles31-sys", gles_path)
 

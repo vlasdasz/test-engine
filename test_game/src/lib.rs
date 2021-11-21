@@ -3,7 +3,8 @@
 
 use std::{
     default::default,
-    os::raw::{c_float, c_int, c_ulong},
+    ffi::{CStr, CString},
+    os::raw::{c_char, c_float, c_int, c_ulong},
     ptr,
 };
 
@@ -59,4 +60,17 @@ pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
             event:    Event::from_int(event),
         })
     }
+}
+
+#[no_mangle]
+pub extern "C" fn rust_greeting(to: *const c_char) -> *mut c_char {
+    let c_str = unsafe { CStr::from_ptr(to) };
+    let recipient = match c_str.to_str() {
+        Err(_) => "there",
+        Ok(string) => string,
+    };
+
+    CString::new("Hello ".to_owned() + recipient)
+        .unwrap()
+        .into_raw()
 }
