@@ -63,15 +63,20 @@ def clone(rep, destination = ""):
         run("git clone --recursive https://github.com/vlodas/" + rep + " " + destination)
 
 
+def ndk_home():
+    if os.environ["NDK_HOME"] is not None:
+        return os.environ["NDK_HOME"]
+    return "${ANDROID_HOME}/ndk/22.1.7171670"
+
+
 def setup_android():
     if os.path.isdir("NDK"):
         return
-    print(os.environ["NDK_HOME"])
     run("mkdir NDK")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi")
-    ndk_home = os.environ["NDK_HOME"]
-    run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
-    run(ndk_home + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
+    ndk = ndk_home()
+    run(ndk + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
+    run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
 
 
 if android:
