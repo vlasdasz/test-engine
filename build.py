@@ -64,7 +64,7 @@ def clone(rep, destination = ""):
 
 
 def ndk_home():
-    if os.environ["NDK_HOME"] is not None:
+    if "NDK_HOME" in os.environ:
         return os.environ["NDK_HOME"]
     return "${ANDROID_HOME}/ndk/22.1.7171670"
 
