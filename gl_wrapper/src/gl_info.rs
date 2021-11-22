@@ -25,10 +25,10 @@ impl GLInfo {
         use std::ffi::CStr;
         let full_gl_version = GL!(GetString, id);
         cfg_if::cfg_if! {
-            if #[cfg(
-                any(
-                 all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")),
-                 target_os = "android"))] {
+            if #[cfg(all(target_os = "android", target_arch = "x86"))]{
+                type CPath = *const i8;
+            }
+            else if #[cfg(target_os = "android")] {
                 type CPath = *const u8;
             }
             else {
