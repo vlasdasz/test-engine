@@ -31,6 +31,9 @@ impl GLInfo {
             else if #[cfg(target_os = "android")] {
                 type CPath = *const u8;
             }
+            else if #[cfg(target_arch = "arm")] {
+                type CPath = *const u8;
+            }
             else {
                 type CPath = *const i8;
             }
