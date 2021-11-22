@@ -16,10 +16,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        RustGreetings g = new RustGreetings();
+        String r = "figok2" + g.sayHello("world");
 
-//        RustGreetings g = new RustGreetings();
-//        String r = g.sayHello("world");
-
-        Log.d("fergel", "pazd");
+        Log.d("fergel", r);
     }
 }
