@@ -14,7 +14,12 @@ pub struct Shaders {
 
 impl Default for Shaders {
     fn default() -> Shaders {
+
+        error!("Creating shaders");
+
         let compiler = ShaderCompiler::new(paths::shaders::include());
+
+        error!("created compiler");
 
         let ui = compiler.compile(&paths::shaders::ui().join("ui"));
         let ui_path = compiler.compile(&paths::shaders::ui().join("ui_path"));
@@ -23,6 +28,8 @@ impl Default for Shaders {
 
         let sprite = compiler.compile(&paths::shaders::sprites().join("sprite"));
         let textured_sprite = compiler.compile(&paths::shaders::sprites().join("textured_sprite"));
+
+        error!("shaders created");
 
         Shaders {
             ui,

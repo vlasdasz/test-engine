@@ -117,10 +117,12 @@ impl ShaderCompiler {
         let frag_path = path.with_extension("frag");
 
         guard!(let Ok(vert_code) = fs::read_to_string(&vert_path) else {
+            error!("Failed to read vertex shader file: {:?}", vert_path);
             panic!("Failed to read vertex shader file: {:?}", vert_path)
         });
 
         guard!(let Ok(frag_code) = fs::read_to_string(&frag_path) else {
+            error!("Failed to read vertex shader file: {:?}", vert_path);
             panic!("Failed to read fragment shader file: {:?}", frag_path)
         });
 

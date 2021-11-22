@@ -24,3 +24,5 @@ pub use sprites::{Level, LevelBase, Sprite};
 #[cfg(any(target_os = "ios", target_os = "android"))]
 #[macro_use]
 extern crate mashup;
+
+#[macro_use] extern crate log;

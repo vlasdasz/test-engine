@@ -14,6 +14,8 @@ pub mod gl_debug;
 #[macro_use]
 extern crate mashup;
 
+#[macro_use] extern crate log;
+
 cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
     pub mod gl_drawer;
     pub mod gl_loader;

@@ -209,12 +209,15 @@ impl Screen {
 
 impl Screen {
     pub fn new(size: Size) -> Self {
+        error!("sokol");
         let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
         *font_path = paths::fonts().join("SF.otf");
         drop(font_path);
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(size);
+        error!("creating assets");
         let assets = Rc::new(Assets::default());
+        error!("constructing screen");
         let mut screen = Self {
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             cursor_position: default(),
@@ -229,6 +232,8 @@ impl Screen {
             prev_time: Default::default(),
             frame_time: Default::default(),
         };
+
+        error!("krita");
 
         screen.init(size);
         screen

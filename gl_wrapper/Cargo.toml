@@ -9,6 +9,7 @@ name = "gl_wrapper"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
+log = "0.4.14"
 guard = "0.5.0"
 cfg-if = "1.0.0"
 

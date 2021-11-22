@@ -10,23 +10,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        GLES30.glEnable(0);
-       // GLES30.glGenVertexArrays(1, 1);
-        //setup();
+        setup();
     }
 
     @Override
     public void onDrawFrame(GL10 unused) {
-        //update();
+        update();
     }
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        //setScreenSize(width, height);
+        setScreenSize(width, height);
     }
 
-//    public native void setup();
-//    public native void update();
-//    public native void setScreenSize(int width, int height);
+    public native void setup();
+    public native void update();
+    public native void setScreenSize(int width, int height);
 
 }

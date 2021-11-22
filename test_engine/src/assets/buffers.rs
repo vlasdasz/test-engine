@@ -52,6 +52,7 @@ pub struct Buffers {
 
 impl Default for Buffers {
     fn default() -> Buffers {
+        error!("creating buffers");
         let fullscreen = Buffer::make(
             &BufferConfig::_2,
             FULLSCREEN_VERT.into(),
@@ -72,6 +73,8 @@ impl Default for Buffers {
             Some(INDICES.into()),
             GLC!(LINE_LOOP),
         );
+
+        error!("buffers created");
 
         Buffers {
             fullscreen,
