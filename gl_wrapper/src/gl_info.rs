@@ -24,21 +24,7 @@ impl GLInfo {
     fn get_string(id: u32) -> String {
         use std::ffi::CStr;
         let full_gl_version = GL!(GetString, id);
-        cfg_if::cfg_if! {
-            if #[cfg(all(target_os = "android", target_arch = "x86"))]{
-                type CPath = *const i8;
-            }
-            else if #[cfg(target_os = "android")] {
-                type CPath = *const u8;
-            }
-            else if #[cfg(target_arch = "arm")] {
-                type CPath = *const u8;
-            }
-            else {
-                type CPath = *const i8;
-            }
-        };
-        let c_str: &CStr = unsafe { CStr::from_ptr(full_gl_version as CPath) };
+        let c_str: &CStr = unsafe { CStr::from_ptr(full_gl_version as _) };
         c_str.to_str().unwrap().to_string()
     }
 
