@@ -26,9 +26,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    sourceSets.main {
-        jniLibs.srcDir '/Users/vladas/.rdeps/test_engine/target/aarch64-linux-android/release'
-    }
+
+//    sourceSets.main {
+//        fsdfds.srcDir '/Users/vladas/.rdeps/test_engine/target/aarch64-linux-android/release'
+//    }
 }
 
 dependencies {

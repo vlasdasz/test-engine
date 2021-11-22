@@ -108,3 +108,5 @@ tools
 
 NDK/
 temp/
+
+/jniLibs/
