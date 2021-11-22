@@ -62,7 +62,6 @@ impl GLDrawer {
 
 impl GLDrawer {
     pub fn new(size: Size) -> Self {
-
         error!("Creating GLDrawer");
 
         let loader = GLLoader::new(size);

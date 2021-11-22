@@ -25,4 +25,5 @@ pub use sprites::{Level, LevelBase, Sprite};
 #[macro_use]
 extern crate mashup;
 
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;

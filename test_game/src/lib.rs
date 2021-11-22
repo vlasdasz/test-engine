@@ -21,11 +21,10 @@ mod test_level;
 mod test_view;
 
 #[cfg(target_os = "android")]
-#[macro_use] extern crate log;
-
+#[macro_use]
+extern crate log;
 
 static mut SCREEN: *mut Screen = ptr::null_mut();
-
 
 #[no_mangle]
 pub extern "C" fn create_screen() {
@@ -86,23 +85,25 @@ pub extern "C" fn rust_greeting(to: *const c_char) -> *mut c_char {
 pub mod android {
     extern crate android_logger;
 
-use log::Level;
-use android_logger::{Config,FilterBuilder};
+    use android_logger::{Config, FilterBuilder};
+    use log::Level;
 
-fn native_activity_create() {
-    android_logger::init_once(
-        Config::default()
-            .with_min_level(Level::Trace) // limit log level
-            .with_tag("mytag") // logs will show under mytag tag
-            .with_filter( // configure messages for specific crate
-                FilterBuilder::new()
-                    .parse("debug,hello::crate=error")
-                    .build())
-    );
+    fn native_activity_create() {
+        android_logger::init_once(
+            Config::default()
+                .with_min_level(Level::Trace) // limit log level
+                .with_tag("mytag") // logs will show under mytag tag
+                .with_filter(
+                    // configure messages for specific crate
+                    FilterBuilder::new()
+                        .parse("debug,hello::crate=error")
+                        .build(),
+                ),
+        );
 
-    trace!("this is a verbose {}", "message");
-    error!("this is printed by default");
-}
+        trace!("this is a verbose {}", "message");
+        error!("this is printed by default");
+    }
     extern crate jni;
 
     use self::jni::{
@@ -135,10 +136,8 @@ fn native_activity_create() {
     }
 
     #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setup(
-        _: JNIEnv,
-        _: JClass) {
-            native_activity_create();
-            create_screen();
+    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setup(_: JNIEnv, _: JClass) {
+        native_activity_create();
+        create_screen();
     }
 }

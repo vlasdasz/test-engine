@@ -14,7 +14,6 @@ pub struct Shaders {
 
 impl Default for Shaders {
     fn default() -> Shaders {
-
         error!("Creating shaders");
 
         let compiler = ShaderCompiler::new(paths::shaders::include());
