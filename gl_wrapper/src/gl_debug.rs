@@ -56,6 +56,11 @@ macro_rules! check_gl_error {
     () => {{
         let err = glGetError();
         if err != GL_NO_ERROR {
+            error!(
+                "{} OpenGL Error with code: {}",
+                tools::format_code_location!(file!(), tools::function!(), line!()),
+                err
+            );
             println!(
                 "{} OpenGL Error with code: {}",
                 tools::format_code_location!(file!(), tools::function!(), line!()),

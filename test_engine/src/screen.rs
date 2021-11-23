@@ -100,12 +100,15 @@ impl Screen {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.setup_events();
 
+
+        
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
         self.root_view.calculate_absolute_frame();
 
         self.set_size(size);
+
     }
 }
 
@@ -236,6 +239,9 @@ impl Screen {
         error!("krita");
 
         screen.init(size);
+
+        error!("ooo");
+
         screen
     }
 }

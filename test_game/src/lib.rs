@@ -31,8 +31,8 @@ pub extern "C" fn create_screen() {
     unsafe {
         SCREEN = Box::into_raw(Box::new(
             Screen::new(default())
-                .add_view(TestView::boxed())
-                .add_debug_view(),
+               // .add_view(TestView::boxed())
+              //  .add_debug_view(),
         ));
     }
 }
@@ -104,47 +104,32 @@ pub mod android {
         trace!("this is a verbose {}", "message");
         error!("this is printed by default");
     }
-    extern crate jni;
 
-    use self::jni::{
-        objects::{JClass, JString},
-        sys::jstring,
-        JNIEnv,
-    };
+    use android_ndk_sys::jobject;
+    use android_ndk_sys::JNIEnv;
+    use android_ndk_sys::jclass;
     use super::*;
 
     #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_RustGreetings_greeting(
-        env: JNIEnv,
-        _: JClass,
-        java_pattern: JString,
-    ) -> jstring {
-        // Our Java companion code might pass-in "world" as a string, hence the name.
-        let world = rust_greeting(
-            env.get_string(java_pattern)
-                .expect("invalid pattern string")
-                .as_ptr(),
-        );
-        // Retake pointer so that we can use it below and allow memory to be freed when
-        // it goes out of scope.
-        let world_ptr = CString::from_raw(world);
-        let output = env
-            .new_string(world_ptr.to_str().unwrap())
-            .expect("Couldn't create java string!");
-
-        output.into_inner()
-    }
-
-    #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setup(_: JNIEnv, _: JClass) {
+    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setup(_: JNIEnv, _: jclass) {
         create_screen();
     }
 
     #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setAssetManager(_: JNIEnv, _: JClass, asset_manager: *mut android_ndk_sys::AAssetManager) {
+    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setAssetManager(env: JNIEnv, _: jclass, asset_manager: jobject) {
         native_activity_create();
         error!("figma?");
         error!("skibel {:?}", asset_manager);
-        tools::file::ASSET_MANAGER = asset_manager;
+        tools::file::set_asset_manager(env, asset_manager);
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setScreenSize(_: JNIEnv, _: jclass, width: c_int, height: c_int) {
+        set_screen_size(width as _, height as _);
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_update(_: JNIEnv, _: jclass) {
+        update_screen();
     }
 }

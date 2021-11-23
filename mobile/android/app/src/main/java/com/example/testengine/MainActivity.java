@@ -8,6 +8,10 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
     static {
@@ -22,6 +26,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         asset_manager = getResources().getAssets();
+
+
+        try {
+
+            Log.d("test_engine", asset_manager.toString());
+
+
+            String[] fonts = asset_manager.list("Fonts");
+
+            Log.d("test_engine", Arrays.toString(fonts));
+
+            for(String name:fonts){
+                Log.d("test_engine", name);
+            }
+            InputStream file = asset_manager.open("Shaders/ui/ui.vert");
+            Log.d("test_engine", file.toString());
+            Log.d("test_engine", "izi opened");
+        }
+        catch(IOException e) {
+            Log.d("test_engine", "axenfurt");
+            Log.d("test_engine", e.toString());
+        }
+
+
+        //Log.d("spes", asset_manager);
+
         setAssetManager(asset_manager);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
