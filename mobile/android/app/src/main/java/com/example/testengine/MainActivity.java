@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        asset_manager = getResources().getAssets();
+        setAssetManager(asset_manager);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -28,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
         gLView = new MyGLSurfaceView(this);
         setContentView(gLView);
 
-        asset_manager = getResources().getAssets();
-        //setAssetManager(asset_manager);
     }
+
+    public native void setAssetManager(AssetManager assetManager);
 
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {

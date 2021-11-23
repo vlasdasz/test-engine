@@ -22,3 +22,4 @@ tools = { path = "../.rdeps/tools" }
 [target.'cfg(target_os="android")'.dependencies]
 jni = { version = "0.19", default-features = false }
 android_logger = "0.10"
+android-ndk-sys = "0.2.0"

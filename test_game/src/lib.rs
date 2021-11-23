@@ -92,7 +92,7 @@ pub mod android {
         android_logger::init_once(
             Config::default()
                 .with_min_level(Level::Trace) // limit log level
-                .with_tag("mytag") // logs will show under mytag tag
+                .with_tag("test_engine") // logs will show under mytag tag
                 .with_filter(
                     // configure messages for specific crate
                     FilterBuilder::new()
@@ -137,7 +137,14 @@ pub mod android {
 
     #[no_mangle]
     pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setup(_: JNIEnv, _: JClass) {
-        native_activity_create();
         create_screen();
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setAssetManager(_: JNIEnv, _: JClass, asset_manager: *mut android_ndk_sys::AAssetManager) {
+        native_activity_create();
+        error!("figma?");
+        error!("skibel {:?}", asset_manager);
+        tools::file::ASSET_MANAGER = asset_manager;
     }
 }

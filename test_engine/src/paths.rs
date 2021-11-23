@@ -8,6 +8,8 @@ pub fn home() -> PathBuf {
 pub fn root() -> PathBuf {
     #[cfg(not(target_os = "ios"))]
     return home().join(".rdeps/test_engine");
+    #[cfg(target_os = "android")]
+    return Default::default();
     #[cfg(target_os = "ios")]
     return std::env::current_exe()
         .unwrap_or_default()
@@ -17,7 +19,10 @@ pub fn root() -> PathBuf {
 }
 
 pub fn assets() -> PathBuf {
-    root().join("Assets")
+    #[cfg(target_os = "android")]
+    return Default::default();
+    #[cfg(not(target_os = "android"))]
+    return root().join("Assets");
 }
 
 pub fn images() -> PathBuf {

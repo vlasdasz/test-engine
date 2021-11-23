@@ -1,7 +1,6 @@
 use cfg_if::cfg_if;
 
-cfg_if! {
-if #[cfg(any(target_os="ios", target_os="android"))] {
+cfg_if! { if #[cfg(any(target_os="ios", target_os="android"))] {
     use gles31_sys::*;
 } else {
     extern crate gl;
@@ -13,8 +12,8 @@ use std::{
     fs,
     path::{Path, PathBuf},
 };
+use tools::file::File;
 
-use guard::guard;
 use tools::{
     regex::{find_match, find_matches},
     *,
@@ -116,15 +115,21 @@ impl ShaderCompiler {
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 
-        guard!(let Ok(vert_code) = fs::read_to_string(&vert_path) else {
-            error!("Failed to read vertex shader file: {:?}", vert_path);
-            panic!("Failed to read vertex shader file: {:?}", vert_path)
-        });
+        let vert_code = match File::read_to_string(&vert_path) {
+            Ok(code) => code,
+            Err(error) => {
+                error!("Failed to read vertex file: {:?} {}", vert_path, error);
+                panic!("Failed to read vertex file: {:?} {}", vert_path, error);
+            }
+        };
 
-        guard!(let Ok(frag_code) = fs::read_to_string(&frag_path) else {
-            error!("Failed to read vertex shader file: {:?}", vert_path);
-            panic!("Failed to read fragment shader file: {:?}", frag_path)
-        });
+        let frag_code = match File::read_to_string(&frag_path) {
+            Ok(code) => code,
+            Err(error) => {
+                error!("Failed to read fragment file: {:?} {}", vert_path, error);
+                panic!("Failed to read fragment file: {:?} {}", vert_path, error);
+            }
+        };
 
         let vert = self.compile_shader(vert_path, vert_code, GLC!(VERTEX_SHADER));
         let frag = self.compile_shader(frag_path, frag_code, GLC!(FRAGMENT_SHADER));

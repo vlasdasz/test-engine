@@ -142,8 +142,8 @@ if ios:
 elif android:
     os.environ["CARGO_CFG_TARGET_OS"] = "android"
     run("cargo build --target aarch64-linux-android --release --lib")
-    run("cargo build --target armv7-linux-androideabi --release --lib")
-    run("cargo build --target i686-linux-android --release --lib")
+    # run("cargo build --target armv7-linux-androideabi --release --lib")
+    # run("cargo build --target i686-linux-android --release --lib")
 
     run("mkdir -p mobile/android/app/src/main/jniLibs/")
     run("mkdir -p mobile/android/app/src/main/jniLibs/arm64-v8a")
