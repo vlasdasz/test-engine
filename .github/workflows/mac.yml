@@ -8,11 +8,11 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  NDK_HOME: ${ANDROID_HOME}/ndk/21.3.6528147/
 
 jobs:
   build:
     runs-on: macos-latest
-    #runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: Mac
