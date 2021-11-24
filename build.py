@@ -158,4 +158,4 @@ elif android:
         print("exists")
 else:
     os.environ["CARGO_CFG_TARGET_OS"] = "desktop"
-    run("cargo build -p test_game")
+    run("cargo build")
