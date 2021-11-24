@@ -1,5 +1,3 @@
-#![feature(default_free_fn)]
-
 use std::{path::PathBuf, sync::Mutex};
 
 pub use basic::{ImageView, Label};
@@ -17,6 +15,9 @@ pub mod placer;
 pub mod test;
 pub mod text;
 pub mod view;
+
+#[macro_use]
+extern crate log;
 
 lazy_static! {
     pub static ref DEFAULT_FONT_PATH: Mutex<PathBuf> = Mutex::new(PathBuf::new());

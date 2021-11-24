@@ -60,7 +60,7 @@ impl Screen {
     pub fn add_debug_view(mut self) -> Self {
         error!("Debug: {:?}", self.root_view.frame());
 
-        //self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
+        self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
         //dbg!(&self.debug_view);
 
         let mut subvo = SubviewsTestView::boxed();
@@ -158,9 +158,9 @@ impl Screen {
         self.frame_time = interval as f64 / 1000000000.0;
         self.fps = (1.0 / self.frame_time as f64) as u64;
 
-        if self.debug_view.is_ok() {
-            self.debug_view.fps.set(self.fps);
-        }
+        // if self.debug_view.is_ok() {
+        //     self.debug_view.fps.set(self.fps);
+        // }
     }
 
     pub fn update(&mut self) {

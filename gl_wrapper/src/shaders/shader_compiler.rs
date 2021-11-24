@@ -88,7 +88,7 @@ impl ShaderCompiler {
         for include in includes {
             let file_name = find_match(&include, QUOTES_QUERY).replace("\"", "");
             let file_path = self.path.join(file_name);
-            let include_code = File::read_to_string(file_path).unwrap();
+            let include_code = File::read_to_string(file_path);
             files.insert(include, include_code);
         }
         for (include, include_code) in files {
@@ -129,21 +129,8 @@ impl ShaderCompiler {
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 
-        let vert_code = match File::read_to_string(&vert_path) {
-            Ok(code) => code,
-            Err(error) => {
-                error!("Failed to read vertex file: {:?} {}", vert_path, error);
-                panic!("Failed to read vertex file: {:?} {}", vert_path, error);
-            }
-        };
-
-        let frag_code = match File::read_to_string(&frag_path) {
-            Ok(code) => code,
-            Err(error) => {
-                error!("Failed to read fragment file: {:?} {}", vert_path, error);
-                panic!("Failed to read fragment file: {:?} {}", vert_path, error);
-            }
-        };
+        let vert_code = File::read_to_string(&vert_path);
+        let frag_code = File::read_to_string(&frag_path);
 
         let vert = self.compile_shader(vert_path, vert_code, GLC!(VERTEX_SHADER));
         let frag = self.compile_shader(frag_path, frag_code, GLC!(FRAGMENT_SHADER));

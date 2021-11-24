@@ -1,5 +1,3 @@
-use std::default::default;
-
 use gm::Rect;
 use tools::{math::IntoF32, Rglica};
 
@@ -24,12 +22,12 @@ impl Placer {
 
 impl Placer {
     pub fn as_background(&mut self) {
-        self.frame.origin = default();
+        self.frame.origin = Default::default();
         self.frame.size = self.s_frame.size;
     }
 
     pub fn center_hor(&mut self) {
-        self.frame.origin.x = self.s_width() / 2.0 + self.width() / 2.0;
+        self.frame.origin.x = self.s_width() / 2.0 - self.width() / 2.0;
     }
 
     pub fn center_ver(&mut self) {
