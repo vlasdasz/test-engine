@@ -1,5 +1,5 @@
-#![feature(default_free_fn)]
-
 mod image;
+#[macro_use]
+extern crate log;
 
 pub use self::image::Image;

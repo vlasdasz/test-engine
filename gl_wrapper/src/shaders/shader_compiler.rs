@@ -9,7 +9,6 @@ cfg_if! { if #[cfg(any(target_os="ios", target_os="android"))] {
 use std::{
     collections::HashMap,
     ffi::CString,
-    fs,
     path::{Path, PathBuf},
 };
 

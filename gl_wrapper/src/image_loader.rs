@@ -9,9 +9,9 @@ pub struct ImageLoader;
 
 fn mode_for_channels(channels: u32) -> u32 {
     match channels {
-        #[cfg(target_os = "ios")]
+        #[cfg(any(target_os = "ios", target_os = "android"))]
         1 => GLC!(LUMINANCE),
-        #[cfg(not(target_os = "ios"))]
+        #[cfg(not(any(target_os = "ios", target_os = "android")))]
         1 => GLC!(RED),
         _ => GLC!(RGBA),
     }

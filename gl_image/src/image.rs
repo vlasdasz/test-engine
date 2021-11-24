@@ -1,5 +1,4 @@
 use std::{
-    default::default,
     ffi::c_void,
     path::{Path, PathBuf},
 };
@@ -8,6 +7,7 @@ use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::Size;
 use image::GenericImageView;
 use serde::{Deserialize, Serialize};
+use tools::file::File;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Image {
@@ -23,7 +23,10 @@ impl Image {
     }
 
     pub fn load(path: &Path) -> Image {
-        let image = image::open(path).unwrap_or_else(|_| panic!("Failed to open image {:?}", path));
+        let image = image::load_from_memory(&File::read(path)).unwrap_or_else(|_| {
+            error!("Failed to open image {:?}", path);
+            panic!();
+        });
 
         let dimensions = image.dimensions();
         let data = image.as_bytes();
@@ -59,10 +62,10 @@ impl Image {
 impl Default for Image {
     fn default() -> Image {
         Image {
-            size:      default(),
+            size:      Default::default(),
             channels:  0,
             gl_handle: u32::MAX,
-            path:      default(),
+            path:      Default::default(),
         }
     }
 }

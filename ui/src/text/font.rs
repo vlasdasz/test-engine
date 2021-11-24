@@ -1,4 +1,4 @@
-use std::{ffi::c_void, fs, ops::Range, path::Path};
+use std::{ffi::c_void, ops::Range, path::Path};
 
 use gl_image::Image;
 use gm::Size;
