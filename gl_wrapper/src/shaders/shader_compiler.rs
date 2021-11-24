@@ -12,9 +12,9 @@ use std::{
     fs,
     path::{Path, PathBuf},
 };
-use tools::file::File;
 
 use tools::{
+    file::File,
     regex::{find_match, find_matches},
     *,
 };
@@ -98,7 +98,6 @@ impl ShaderCompiler {
     }
 
     fn compile_shader(&self, path: PathBuf, code: String, kind: GLT!(GLenum)) -> u32 {
-
         error!("Compiling {:?}", path);
 
         let code = self.version() + "\n" + &self.unfold_includes(code);
@@ -125,9 +124,7 @@ impl ShaderCompiler {
     }
 
     pub fn compile(&self, path: &Path) -> Shader {
-
-        error!("Compiling: {:?}" , path);
-
+        error!("Compiling: {:?}", path);
 
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
@@ -139,7 +136,6 @@ impl ShaderCompiler {
                 panic!("Failed to read vertex file: {:?} {}", vert_path, error);
             }
         };
-
 
         let frag_code = match File::read_to_string(&frag_path) {
             Ok(code) => code,
@@ -153,7 +149,6 @@ impl ShaderCompiler {
         let frag = self.compile_shader(frag_path, frag_code, GLC!(FRAGMENT_SHADER));
 
         let program = GL!(CreateProgram);
-
 
         GL!(AttachShader, program, vert);
         GL!(AttachShader, program, frag);

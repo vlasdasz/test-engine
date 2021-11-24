@@ -15,7 +15,7 @@ use sprites::{Level, Sprite, SpritesDrawer};
 use tools::{Boxed, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
-use ui::{init_view_on, input::Touch, View, ViewBase};
+use ui::{init_view_on, input::Touch, make_view_on, SubviewsTestView, View, ViewBase};
 
 use crate::{
     assets::Assets, debug_view::DebugView, paths, sprites_drawer::TESpritesDrawer,
@@ -58,8 +58,18 @@ impl Screen {
     }
 
     pub fn add_debug_view(mut self) -> Self {
-        self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
+        error!("Debug: {:?}", self.root_view.frame());
+
+        //self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
         //dbg!(&self.debug_view);
+
+        let mut subvo = SubviewsTestView::boxed();
+        self.root_view.add_subview(subvo);
+
+        make_view_on(self.root_view.deref_mut(), |view: &mut SubviewsTestView| {
+            view.frame_mut().origin = (400, 400).into();
+        });
+
         self
     }
 
@@ -100,15 +110,12 @@ impl Screen {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.setup_events();
 
-
-        
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
         self.root_view.calculate_absolute_frame();
 
         self.set_size(size);
-
     }
 }
 
@@ -193,6 +200,7 @@ impl Screen {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
         self.on_size_changed(size);
+        error!("Debug: {:?}", self.root_view.frame());
         self
     }
 

@@ -31,8 +31,8 @@ pub extern "C" fn create_screen() {
     unsafe {
         SCREEN = Box::into_raw(Box::new(
             Screen::new(default())
-               // .add_view(TestView::boxed())
-              //  .add_debug_view(),
+                // .add_view(TestView::boxed())
+                .add_debug_view(),
         ));
     }
 }
@@ -105,9 +105,8 @@ pub mod android {
         error!("this is printed by default");
     }
 
-    use android_ndk_sys::jobject;
-    use android_ndk_sys::JNIEnv;
-    use android_ndk_sys::jclass;
+    use android_ndk_sys::{jclass, jobject, JNIEnv};
+
     use super::*;
 
     #[no_mangle]
@@ -116,7 +115,11 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setAssetManager(env: JNIEnv, _: jclass, asset_manager: jobject) {
+    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setAssetManager(
+        env: JNIEnv,
+        _: jclass,
+        asset_manager: jobject,
+    ) {
         native_activity_create();
         error!("figma?");
         error!("skibel {:?}", asset_manager);
@@ -124,7 +127,12 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setScreenSize(_: JNIEnv, _: jclass, width: c_int, height: c_int) {
+    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setScreenSize(
+        _: JNIEnv,
+        _: jclass,
+        width: c_int,
+        height: c_int,
+    ) {
         set_screen_size(width as _, height as _);
     }
 
