@@ -50,22 +50,18 @@ macro_rules! check_gl_error {
 #[macro_export]
 macro_rules! check_gl_error {
     () => {{
-        let err = glGetError();
-        if err != GL_NO_ERROR {
+        let gl_error = glGetError();
+        if gl_error != GL_NO_ERROR {
             error!(
-                "{} OpenGL Error with code: {}",
-                tools::format_code_location!(file!(), tools::function!(), line!()),
-                err
+                "OpenGL Error with code: {}",
+                gl_error
             );
-            println!(
-                "{} OpenGL Error with code: {}",
-                tools::format_code_location!(file!(), tools::function!(), line!()),
-                err
-            );
+            dbg!(gl_error);
         }
     }};
 }
 
+//TODO: poll errors
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 #[macro_export]
 macro_rules! GL_SILENT {

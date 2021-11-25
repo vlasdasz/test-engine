@@ -123,10 +123,10 @@ impl Buffer {
 impl Drop for Buffer {
     fn drop(&mut self) {
         //TODO: Check errors
-        GL!(DeleteBuffers, 1, &self.vertex_buffer_object);
+        GL_SILENT!(DeleteBuffers, 1, &self.vertex_buffer_object);
         if self.index_buffer_object != u32::MAX {
-            GL!(DeleteBuffers, 1, &self.index_buffer_object);
+            GL_SILENT!(DeleteBuffers, 1, &self.index_buffer_object);
         }
-        GL!(DeleteVertexArrays, 1, &self.vertex_array_object);
+        GL_SILENT!(DeleteVertexArrays, 1, &self.vertex_array_object);
     }
 }
