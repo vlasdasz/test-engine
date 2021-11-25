@@ -5,7 +5,6 @@ extern crate glfw;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, OpenGlProfileHint::Core, Window, WindowEvent};
 use gm::Size;
-use tools::*;
 
 use crate::monitor::Monitor;
 

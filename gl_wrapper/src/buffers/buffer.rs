@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
-use tools::{array_view::ArrayView, get_last_method_path};
+use tools::array_view::ArrayView;
 
 use crate::BufferConfig;
 
@@ -122,6 +122,7 @@ impl Buffer {
 
 impl Drop for Buffer {
     fn drop(&mut self) {
+        //TODO: Check errors
         GL!(DeleteBuffers, 1, &self.vertex_buffer_object);
         if self.index_buffer_object != u32::MAX {
             GL!(DeleteBuffers, 1, &self.index_buffer_object);

@@ -59,7 +59,7 @@ impl Screen {
 
     pub fn add_debug_view(mut self) -> Self {
         self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
-        dbg!(self.debug_view.is_ok());
+        dbg!(&self.debug_view);
         dbg!((&self).address());
         self
     }
@@ -94,6 +94,7 @@ impl Screen {
         });
 
         let mut this = self.to_rglica();
+        dbg!(&this);
         self.drawer.on_frame_drawn.subscribe(move |_| this.update());
     }
 
@@ -192,6 +193,8 @@ impl Screen {
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
+        dbg!(&self.debug_view);
+        dbg!((&self).address());
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
         self.on_size_changed(size);
@@ -209,7 +212,7 @@ impl Screen {
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn start_main_loop(&mut self) {
-        dbg!(self.debug_view.is_ok());
+        dbg!(&self.debug_view);
         dbg!((&self).address());
         self.drawer.start_main_loop()
     }

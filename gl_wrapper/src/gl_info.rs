@@ -7,7 +7,7 @@ if #[cfg(any(target_os="ios", target_os="android"))] {
     extern crate gl;
 }}
 
-use tools::{regex::find_match, *};
+use tools::regex::find_match;
 
 #[derive(Debug)]
 pub struct GLInfo {

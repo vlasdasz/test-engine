@@ -26,7 +26,7 @@ impl Level for TestLevel {
             self.add_body((0.1 * i as f32, i * 2, 0.5, 0.5).into());
         }
 
-        println!("{}", serde_json::to_string(&self.base).unwrap());
+        // dbg!("{}", serde_json::to_string(&self.base).unwrap());
     }
 
     fn level(&self) -> &LevelBase {

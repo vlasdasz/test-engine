@@ -15,7 +15,6 @@ use std::{
 use tools::{
     file::File,
     regex::{find_match, find_matches},
-    *,
 };
 
 use crate::{GLInfo, Shader};
@@ -47,8 +46,9 @@ impl ShaderCompiler {
     fn check_programm_error(&self, path: &Path, program: u32) {
         let mut success: GLT!(GLint) = 1;
 
-        GL!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
-        GL!(GetError); //^ returns invalid errors on android?
+        GL_SILENT!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
+        //         ^ returns invalid errors everywhere
+        GL!(GetError);
 
         if success != 0 {
             return;

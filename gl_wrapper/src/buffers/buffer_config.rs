@@ -1,6 +1,5 @@
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
-use tools::*;
 
 #[derive(Debug)]
 pub struct BufferConfig {

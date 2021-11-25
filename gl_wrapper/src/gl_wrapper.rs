@@ -1,7 +1,6 @@
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
 use gm::{Color, Rect};
-use tools::*;
 
 pub struct GLWrapper;
 

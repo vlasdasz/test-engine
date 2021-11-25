@@ -10,3 +10,5 @@ members = [
     "gl_wrapper",
     "test_engine",
 ]
+
+ default-members = ["test_game"]

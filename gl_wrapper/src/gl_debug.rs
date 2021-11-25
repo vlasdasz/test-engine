@@ -39,13 +39,9 @@ macro_rules! GLC {
 #[macro_export]
 macro_rules! check_gl_error {
     () => {{
-        let err = gl::GetError();
-        if err != gl::NO_ERROR {
-            println!(
-                "{} OpenGL Error with code: {}",
-                tools::format_code_location!(file!(), tools::function!(), line!()),
-                err
-            );
+        let gl_error = gl::GetError();
+        if gl_error != gl::NO_ERROR {
+            dbg!(gl_error);
         }
     }};
 }
@@ -68,6 +64,48 @@ macro_rules! check_gl_error {
             );
         }
     }};
+}
+
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[macro_export]
+macro_rules! GL_SILENT {
+    ($call:ident) => {
+        unsafe {
+            gl::$call()
+        }
+    };
+    ($call:ident, $($args:expr), *) => {
+        unsafe {
+            gl::$call($($args,)*)
+        }
+    };
+}
+
+#[cfg(any(target_os = "ios", target_os = "android"))]
+#[macro_export]
+macro_rules! GL_SILENT {
+    ($call:ident) => {
+        unsafe {
+            mashup! {
+                gl["GL"] = gl $call;
+            }
+            let function = gl! {
+                "GL"
+            };
+            function()
+        }
+    };
+    ($call:ident, $($args:expr), *) => {
+        unsafe {
+            mashup! {
+                gl2["GL2"] = gl $call;
+            }
+            let function = gl2! {
+                "GL2"
+            };
+            function($($args,)*)
+        }
+    };
 }
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
