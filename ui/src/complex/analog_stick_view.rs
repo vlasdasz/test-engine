@@ -81,7 +81,7 @@ impl View for AnalogStickView {
 
         self.add_subview(direction_stick);
 
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.on_touch().subscribe(move |touch| {
             if touch.is_ended() {
                 if this.flaccid {

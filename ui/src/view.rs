@@ -252,7 +252,6 @@ impl View for ViewBase {
     fn view(&self) -> &ViewBase {
         self
     }
-    
 
     fn view_mut(&mut self) -> &mut Self {
         self

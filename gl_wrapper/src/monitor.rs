@@ -1,6 +1,6 @@
 use gm::Size;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Monitor {
     pub name: String,
 

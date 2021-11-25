@@ -1,5 +1,5 @@
 use gm::Color;
-use tools::{math::clamped_by, Event, Rglica};
+use tools::{math::clamped_by, Event, Rglica, ToRglica};
 
 use crate::{basic::Circle, init_view_on, View, ViewBase};
 
@@ -16,7 +16,7 @@ impl Slider {
     fn setup_touch(&mut self) {
         self.enable_touch();
 
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.on_touch().subscribe(move |touch| {
             if touch.is_ended() {
                 return;

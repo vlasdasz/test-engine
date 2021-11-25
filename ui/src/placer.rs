@@ -1,5 +1,5 @@
 use gm::Rect;
-use tools::{math::IntoF32, Rglica};
+use tools::{math::IntoF32, Rglica, ToRglica};
 
 use crate::View;
 
@@ -13,9 +13,9 @@ pub struct Placer {
 impl Placer {
     pub fn make(view: &mut (dyn View + 'static)) -> Self {
         Self {
-            view:    Rglica::from_ref(view),
-            frame:   Rglica::from_ref(view.frame()),
-            s_frame: Rglica::from_ref(view.super_frame()),
+            view:    view.to_rglica(),
+            frame:   view.frame().to_rglica(),
+            s_frame: view.super_frame().to_rglica(),
         }
     }
 }

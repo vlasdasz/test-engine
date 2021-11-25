@@ -1,5 +1,5 @@
 use gl_image::Image;
-use tools::{Event, Rglica};
+use tools::{Event, ToRglica};
 
 use crate::{View, ViewBase};
 
@@ -13,7 +13,7 @@ pub struct Button {
 impl View for Button {
     fn setup(&mut self) {
         self.enable_touch();
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.on_touch().subscribe(move |touch| {
             if touch.is_began() {
                 this.on_tap.trigger(());

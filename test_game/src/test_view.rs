@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{borrow::BorrowMut, ops::Deref};
 
 use test_engine::{
     gm::Color,
@@ -12,7 +12,7 @@ use test_engine::{
     },
     Image, Level,
 };
-use tools::{Event, Rglica};
+use tools::{Event, Rglica, ToRglica};
 
 use crate::test_level::TestLevel;
 
@@ -35,7 +35,7 @@ pub struct TestView {
 
 impl TestView {
     fn setup_level(&mut self) {
-        let mut level = Rglica::from_ref(&self.level);
+        let mut level = self.level.borrow_mut().to_rglica();
 
         let mut lvl = level.clone();
         self.dpad.on_up.subscribe(move |_| {
@@ -68,7 +68,7 @@ impl TestView {
         self.slider_label = init_view_with_frame((50, 50).into(), self);
         self.slider_label.set_text("hello");
 
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.slider.on_change.subscribe(move |value| {
             this.slider_label.set_text(value.to_string());
             this.set_scale.trigger(value);

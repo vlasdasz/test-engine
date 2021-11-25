@@ -12,7 +12,7 @@ use gl_wrapper::GLWrapper;
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
 use sprites::{Level, Sprite, SpritesDrawer};
-use tools::{Boxed, Rglica, ToRglica};
+use tools::{Address, Boxed, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::{init_view_on, input::Touch, View, ViewBase};
@@ -48,7 +48,7 @@ impl Screen {
         self.root_view.check_touch(&mut touch);
     }
 
-    pub fn add_view(mut self, mut view: Box<dyn GameView>) -> Self {
+    pub fn set_view(mut self, mut view: Box<dyn GameView>) -> Self {
         let drawer = self.sprites_drawer.clone();
         view.set_drawer(drawer.clone());
         self.view = view.to_rglica();
@@ -59,7 +59,8 @@ impl Screen {
 
     pub fn add_debug_view(mut self) -> Self {
         self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
-        //dbg!(&self.debug_view);
+        dbg!(self.debug_view.is_ok());
+        dbg!((&self).address());
         self
     }
 
@@ -72,27 +73,27 @@ impl Screen {
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     fn setup_events(&mut self) {
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.drawer
             .on_key_pressed
             .subscribe(move |a| this.on_key_pressed(a.0, a.1));
 
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.drawer
             .on_mouse_click
             .subscribe(move |a| this.on_mouse_click(a.0, a.1));
 
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.drawer
             .on_cursor_moved
             .subscribe(move |a| this.on_cursor_moved(a));
 
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.drawer.on_size_changed.subscribe(move |size| {
             this.on_size_changed(size);
         });
 
-        let mut this = Rglica::from_ref(self);
+        let mut this = self.to_rglica();
         self.drawer.on_frame_drawn.subscribe(move |_| this.update());
     }
 
@@ -148,9 +149,13 @@ impl Screen {
         self.frame_time = interval as f64 / 1000000000.0;
         self.fps = (1.0 / self.frame_time as f64) as u64;
 
-        // if self.debug_view.is_ok() {
-        //     self.debug_view.fps.set(self.fps);
-        // }
+        //  dbg!(self.debug_view.get().is_ok());
+
+        if self.debug_view.is_ok() {
+            dbg!("milisok");
+            self.debug_view.fps.set(self.fps);
+        } else {
+        }
     }
 
     pub fn update(&mut self) {
@@ -204,13 +209,15 @@ impl Screen {
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn start_main_loop(&mut self) {
+        dbg!(self.debug_view.is_ok());
+        dbg!((&self).address());
         self.drawer.start_main_loop()
     }
 }
 
 impl Screen {
     pub fn new(size: Size) -> Self {
-        error!("sokol");
+        dbg!("sokol");
         let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
         *font_path = paths::fonts().join("SF.otf");
         drop(font_path);

@@ -1,6 +1,6 @@
 use std::default::default;
 
-use tools::{platform::Platform, Boxed, Property, Rglica};
+use tools::{platform::Platform, Boxed, Property, Rglica, ToRglica};
 use ui::{init_view_on, Label, View, ViewBase};
 
 pub struct DebugView {
@@ -27,7 +27,8 @@ impl View for DebugView {
             self.frame_mut().origin.y = 28.0;
         }
 
-        let mut this = Rglica::from_ref(self);
+        dbg!("sinka");
+        let mut this = self.to_rglica();
         self.fps.on_set.subscribe(move |_| {
             let fps = this.fps.copy();
             dbg!(fps);
@@ -57,6 +58,7 @@ impl View for DebugView {
 
 impl Boxed for DebugView {
     fn boxed() -> Box<Self> {
+        dbg!("krito");
         Box::new(DebugView {
             view:              default(),
             fps_label:         default(),

@@ -8,7 +8,7 @@ use crate::test_view::TestView;
 
 fn main() {
     Screen::new((1000, 600).into())
-        .add_view(TestView::boxed())
+        .set_view(TestView::boxed())
         .add_debug_view()
         .start_main_loop();
 }
