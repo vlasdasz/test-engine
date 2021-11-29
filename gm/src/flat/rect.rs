@@ -1,5 +1,3 @@
-use std::default::default;
-
 use serde::{Deserialize, Serialize};
 use tools::IntoF32;
 
@@ -71,7 +69,7 @@ impl Rect {
 impl From<Size> for Rect {
     fn from(size: Size) -> Self {
         Rect {
-            origin: default(),
+            origin: Default::default(),
             size,
         }
     }
@@ -89,7 +87,7 @@ impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Rect
 impl<W: IntoF32, H: IntoF32> From<(W, H)> for Rect {
     fn from(tup: (W, H)) -> Self {
         Self {
-            origin: default(),
+            origin: Default::default(),
             size:   (tup.0, tup.1).into(),
         }
     }

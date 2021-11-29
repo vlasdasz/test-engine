@@ -1,5 +1,4 @@
 use std::{
-    default::default,
     ops::{Deref, DerefMut},
     rc::Rc,
 };
@@ -52,7 +51,7 @@ impl Screen {
         let drawer = self.sprites_drawer.clone();
         view.set_drawer(drawer.clone());
         self.view = view.to_rglica();
-        self.root_view.add_subview(view);
+        // self.root_view.add_subview(view);
         self.view.level_mut().setup();
         self
     }
@@ -216,10 +215,10 @@ impl Screen {
         let assets = Rc::new(Assets::default());
         let mut screen = Self {
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
-            cursor_position: default(),
+            cursor_position: Default::default(),
             root_view: ViewBase::boxed(),
             debug_view: Default::default(),
-            view: default(),
+            view: Default::default(),
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),

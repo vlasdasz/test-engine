@@ -1,4 +1,4 @@
-use std::{default::default, ops::DerefMut, rc::Rc};
+use std::{ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
@@ -18,7 +18,7 @@ impl UIDrawer {
     pub fn new(assets: Rc<Assets>) -> UIDrawer {
         UIDrawer {
             assets,
-            window_size: default(),
+            window_size: Default::default(),
         }
     }
 

@@ -1,5 +1,3 @@
-use std::default::default;
-
 use glfw::{Action, Key, MouseButton};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, Window};
@@ -81,11 +79,11 @@ impl GLDrawer {
             events:   loader.events,
             monitors: loader.monitors,
 
-            on_frame_drawn:  default(),
-            on_cursor_moved: default(),
-            on_size_changed: default(),
-            on_mouse_click:  default(),
-            on_key_pressed:  default(),
+            on_frame_drawn:  Default::default(),
+            on_cursor_moved: Default::default(),
+            on_size_changed: Default::default(),
+            on_mouse_click:  Default::default(),
+            on_key_pressed:  Default::default(),
         }
     }
 }

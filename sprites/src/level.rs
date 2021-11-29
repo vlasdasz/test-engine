@@ -1,4 +1,4 @@
-use std::{default::default, ops::Deref, rc::Rc};
+use std::{ops::Deref, rc::Rc};
 
 use gm::Point;
 use rapier2d::{
@@ -171,7 +171,7 @@ impl Default for LevelBase {
 
             physics_hooks: (),
             event_handler: (),
-            player:        default(),
+            player:        Default::default(),
 
             integration_parameters: IntegrationParameters::default(),
         }

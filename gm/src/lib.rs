@@ -1,5 +1,3 @@
-#![feature(default_free_fn)]
-
 pub mod color;
 pub mod flat;
 pub mod volume;

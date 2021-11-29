@@ -1,5 +1,3 @@
-use std::default::default;
-
 use tools::{platform::Platform, Boxed, Property, Rglica, ToRglica};
 use ui::{init_view_on, Label, View, ViewBase};
 
@@ -58,9 +56,9 @@ impl Boxed for DebugView {
     fn boxed() -> Box<Self> {
         dbg!("krito");
         Box::new(DebugView {
-            view:              default(),
-            fps_label:         default(),
-            frame_drawn_label: default(),
+            view:              Default::default(),
+            fps_label:         Default::default(),
+            frame_drawn_label: Default::default(),
             frame_drawn:       0,
             fps:               Default::default(),
         })
