@@ -51,7 +51,7 @@ impl Screen {
         let drawer = self.sprites_drawer.clone();
         view.set_drawer(drawer.clone());
         self.view = view.to_rglica();
-        // self.root_view.add_subview(view);
+        self.root_view.add_subview(view);
         self.view.level_mut().setup();
         self
     }
