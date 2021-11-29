@@ -27,11 +27,9 @@ impl View for DebugView {
             self.frame_mut().origin.y = 28.0;
         }
 
-        dbg!("sinka");
         let mut this = self.to_rglica();
         self.fps.on_set.subscribe(move |_| {
             let fps = this.fps.copy();
-            dbg!(fps);
             this.fps_label.set_text(format!("FPS: {}", fps));
         });
     }

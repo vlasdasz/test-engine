@@ -59,8 +59,6 @@ impl Screen {
 
     pub fn add_debug_view(mut self) -> Self {
         self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
-        dbg!(&self.debug_view);
-        dbg!((&self).address());
         self
     }
 
@@ -94,19 +92,14 @@ impl Screen {
         });
 
         let mut this = self.to_rglica();
-        dbg!(&this);
         self.drawer.on_frame_drawn.subscribe(move |_| this.update());
     }
 
     fn init(&mut self, size: Size) {
-        #[cfg(not(any(target_os = "ios", target_os = "android")))]
-        self.setup_events();
-
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
         self.root_view.calculate_absolute_frame();
-
         self.set_size(size);
     }
 }
@@ -150,12 +143,8 @@ impl Screen {
         self.frame_time = interval as f64 / 1000000000.0;
         self.fps = (1.0 / self.frame_time as f64) as u64;
 
-        //  dbg!(self.debug_view.get().is_ok());
-
         if self.debug_view.is_ok() {
-            dbg!("milisok");
             self.debug_view.fps.set(self.fps);
-        } else {
         }
     }
 
@@ -212,23 +201,19 @@ impl Screen {
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn start_main_loop(&mut self) {
-        dbg!(&self.debug_view);
-        dbg!((&self).address());
+        self.setup_events();
         self.drawer.start_main_loop()
     }
 }
 
 impl Screen {
     pub fn new(size: Size) -> Self {
-        dbg!("sokol");
         let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
         *font_path = paths::fonts().join("SF.otf");
         drop(font_path);
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(size);
-        error!("creating assets");
         let assets = Rc::new(Assets::default());
-        error!("constructing screen");
         let mut screen = Self {
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             cursor_position: default(),
@@ -244,11 +229,7 @@ impl Screen {
             frame_time: Default::default(),
         };
 
-        error!("krita");
-
         screen.init(size);
-
-        error!("ooo");
 
         screen
     }
