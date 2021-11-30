@@ -43,7 +43,16 @@ pub struct Screen {
 }
 
 impl Screen {
+
+    fn add_view_at(&mut self, point: Point) {
+        let mut view = ViewBase::dummy();
+        view.frame_mut().origin = point;
+        self.root_view.add_subview(view);
+    }
+
     pub fn on_touch(&mut self, mut touch: Touch) {
+        error!("{:?}", touch);
+        self.add_view_at(touch.position);
         self.root_view.check_touch(&mut touch);
     }
 

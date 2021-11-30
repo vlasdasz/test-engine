@@ -10,7 +10,7 @@ use test_engine::{
 };
 use tools::Boxed;
 
-use crate::test_view::TestView;
+use crate::test_view::TestGameView;
 
 mod test_level;
 mod test_view;
@@ -26,7 +26,7 @@ pub extern "C" fn create_screen() {
     unsafe {
         SCREEN = Box::into_raw(Box::new(
             Screen::new(Default::default())
-                .set_view(TestView::boxed())
+                .set_view(TestGameView::boxed())
                 .add_debug_view(),
         ));
     }
@@ -118,5 +118,10 @@ pub mod android {
     #[no_mangle]
     pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_update(_: JNIEnv, _: jclass) {
         update_screen();
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_onTouch(_: JNIEnv, _: jclass, id: c_ulong, x: c_float, y: c_float, event: c_int) {
+        on_touch(id, x, y, event)
     }
 }

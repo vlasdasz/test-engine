@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -18,39 +19,11 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("test_game");
     }
 
-    private MyGLSurfaceView gLView;
-    private AssetManager asset_manager = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        asset_manager = getResources().getAssets();
-
-
-        try {
-
-            Log.d("test_engine", asset_manager.toString());
-
-
-            String[] fonts = asset_manager.list("Fonts");
-
-            Log.d("test_engine", Arrays.toString(fonts));
-
-            for(String name:fonts){
-                Log.d("test_engine", name);
-            }
-            InputStream file = asset_manager.open("Shaders/ui/ui.vert");
-            Log.d("test_engine", file.toString());
-            Log.d("test_engine", "izi opened");
-        }
-        catch(IOException e) {
-            Log.d("test_engine", "axenfurt");
-            Log.d("test_engine", e.toString());
-        }
-
-
-        //Log.d("spes", asset_manager);
+        AssetManager asset_manager = getResources().getAssets();
 
         setAssetManager(asset_manager);
 
@@ -58,21 +31,37 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        gLView = new MyGLSurfaceView(this);
+        MyGLSurfaceView gLView = new MyGLSurfaceView(this);
         setContentView(gLView);
+    }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int actionIndex = event.getActionIndex();
+        int actionId = event.getPointerId(actionIndex);
+        int actionMasked = event.getActionMasked();
+        switch (actionMasked) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:{
+                onTouch(actionId, event.getX(actionIndex) / 2, event.getY(actionIndex) / 2, 0);
+                return true;
+            }
+            case MotionEvent.ACTION_MOVE:{
+                for(int i = 0; i < event.getPointerCount(); i++){
+                    onTouch(event.getPointerId(i), event.getX(i) / 2, event.getY(i) / 2, 1);
+                }
+                return true;
+            }
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP: {
+                onTouch(actionId, event.getX(actionIndex) / 2, event.getY(actionIndex) / 2, 2);
+                return true;
+            }
+        }
+        return super.onTouchEvent(event);
     }
 
     public native void setAssetManager(AssetManager assetManager);
+    public native void onTouch(int id, float x, float y, int event);
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        RustGreetings g = new RustGreetings();
-//        String r = "figok2" + g.sayHello("world");
-//
-//        Log.d("fergel", r);
-//    }
 }

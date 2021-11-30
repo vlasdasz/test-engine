@@ -227,6 +227,13 @@ impl ViewBase {
         self.add_subview(view);
         rglica
     }
+
+    pub fn dummy() -> Box<Self> {
+        let mut dummy = Self::default();
+        dummy.set_color(Color::random());
+        dummy.frame_mut().size = (10, 10).into();
+        Box::new(dummy)
+    }
 }
 
 pub fn init_view_on<T: 'static + View>(view: &mut dyn View) -> Rglica<T> {

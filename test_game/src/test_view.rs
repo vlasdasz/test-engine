@@ -19,7 +19,7 @@ use crate::test_level::TestLevel;
 static mut COUNTER: u32 = 0;
 
 #[derive(Default)]
-pub struct TestView {
+pub struct TestGameView {
     base:         ViewBase,
     level:        TestLevel,
     data:         u128,
@@ -33,7 +33,7 @@ pub struct TestView {
     set_scale:    Event<f32>,
 }
 
-impl TestView {
+impl TestGameView {
     fn setup_level(&mut self) {
         let mut level = self.level.borrow_mut().to_rglica();
 
@@ -52,6 +52,8 @@ impl TestView {
             lvl.player().go_right();
         });
 
+        self.dpad.on_down.panic_if_empty = false;
+
         self.left_stick
             .on_direction_change
             .subscribe(move |direction| {
@@ -60,7 +62,7 @@ impl TestView {
     }
 }
 
-impl TestView {
+impl TestGameView {
     fn setup_slider(&mut self) {
         self.slider = init_view_with_frame((50, 280).into(), self);
         self.slider.multiplier = 50.0;
@@ -76,7 +78,7 @@ impl TestView {
     }
 }
 
-impl View for TestView {
+impl View for TestGameView {
     fn setup(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
@@ -166,7 +168,7 @@ impl View for TestView {
     }
 }
 
-impl GameView for TestView {
+impl GameView for TestGameView {
     fn level(&self) -> &dyn Level {
         &self.level
     }
