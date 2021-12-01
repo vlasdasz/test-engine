@@ -43,7 +43,6 @@ pub struct Screen {
 }
 
 impl Screen {
-
     fn add_view_at(&mut self, point: Point) {
         let mut view = ViewBase::dummy();
         view.frame_mut().origin = point;

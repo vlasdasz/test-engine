@@ -121,7 +121,14 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_onTouch(_: JNIEnv, _: jclass, id: c_ulong, x: c_float, y: c_float, event: c_int) {
+    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_onTouch(
+        _: JNIEnv,
+        _: jclass,
+        id: c_ulong,
+        x: c_float,
+        y: c_float,
+        event: c_int,
+    ) {
         on_touch(id, x, y, event)
     }
 }

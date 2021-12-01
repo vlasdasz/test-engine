@@ -23,6 +23,7 @@ impl GLLoader {
         let monitors: Vec<Monitor> =
             glfw.with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect());
 
+        error!("{:?}", monitors);
         dbg!(&monitors);
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));

@@ -97,34 +97,20 @@ impl ShaderCompiler {
     }
 
     fn compile_shader(&self, path: PathBuf, code: String, kind: GLT!(GLenum)) -> u32 {
-        error!("Compiling {:?}", path);
-
         let code = self.version() + "\n" + &self.unfold_includes(code);
-
-        error!("includes ok");
-
         let shader = GL!(CreateShader, kind);
-
-        error!("CreateShader ok");
 
         let c_code = CString::new(code).unwrap();
         let code_ptr = c_code.as_ptr();
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
-        error!("ShaderSource ok");
         GL!(CompileShader, shader);
 
-        error!("CompileShader ok");
-
         self.check_programm_error(&path, shader);
-
-        error!("check_programm_error ok");
 
         shader
     }
 
     pub fn compile(&self, path: &Path) -> Shader {
-        error!("Compiling: {:?}", path);
-
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 
@@ -147,8 +133,6 @@ impl ShaderCompiler {
 
         GL!(DeleteShader, vert);
         GL!(DeleteShader, frag);
-
-        error!("Finished compiling {:?}", path);
 
         Shader::new(program)
     }
