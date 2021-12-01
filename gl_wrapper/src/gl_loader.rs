@@ -1,8 +1,5 @@
-extern crate gl;
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
 extern crate glfw;
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, OpenGlProfileHint::Core, Window, WindowEvent};
 use gm::Size;
 
@@ -23,7 +20,6 @@ impl GLLoader {
         let monitors: Vec<Monitor> =
             glfw.with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect());
 
-        error!("{:?}", monitors);
         dbg!(&monitors);
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
