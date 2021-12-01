@@ -10,6 +10,10 @@ pub struct Size {
 }
 
 impl Size {
+    pub fn diagonal(&self) -> f32 {
+        (self.width * self.width + self.height * self.height).sqrt()
+    }
+
     pub fn square(side: f32) -> Size {
         (side, side).into()
     }

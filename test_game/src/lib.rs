@@ -58,7 +58,6 @@ pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     }
 }
 
-/// Expose the JNI interface for android below
 #[cfg(target_os = "android")]
 #[allow(non_snake_case)]
 pub mod android {
@@ -67,7 +66,7 @@ pub mod android {
     use android_logger::{Config, FilterBuilder};
     use log::Level;
 
-    fn native_activity_create() {
+    fn setup_logger() {
         android_logger::init_once(
             Config::default()
                 .with_min_level(Level::Trace) // limit log level
@@ -99,9 +98,6 @@ pub mod android {
         _: jclass,
         asset_manager: jobject,
     ) {
-        native_activity_create();
-        error!("figma?");
-        error!("skibel {:?}", asset_manager);
         tools::file::set_asset_manager(env, asset_manager);
     }
 
@@ -130,5 +126,21 @@ pub mod android {
         event: c_int,
     ) {
         on_touch(id, x, y, event)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setMonitor(
+        _: JNIEnv,
+        _: jclass,
+        ppi: c_int,
+        scale: c_float,
+        refresh_rate: c_int,
+        resolutionX: c_int,
+        resolutionY: c_int,
+        width: c_float,
+        height: c_float,
+        diagonal: c_float,
+    ) {
+        setup_logger();
     }
 }

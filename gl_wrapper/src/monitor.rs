@@ -10,6 +10,31 @@ pub struct Monitor {
 
     pub resolution:    Size,
     pub physical_size: Size,
+
+    pub diagonal: f32,
+}
+
+#[cfg(any(target_os = "ios", target_os = "android"))]
+impl Monitor {
+    fn new(
+        name: String,
+        ppi: u32,
+        scale: f32,
+        refresh_rate: u32,
+        resolution: Size,
+        physical_size: Size,
+        diagonal: f32,
+    ) -> Monitor {
+        Self {
+            name,
+            ppi,
+            scale,
+            refresh_rate,
+            resolution,
+            physical_size,
+            diagonal,
+        }
+    }
 }
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -28,6 +53,8 @@ impl From<&glfw::Monitor> for Monitor {
 
         let ppi = (resolution.height / tools::mm_to_inch(physical_size.height)) as u32;
 
+        let diagonal = tools::mm_to_inch(physical_size.diagonal());
+
         Self {
             name,
             ppi,
@@ -35,6 +62,7 @@ impl From<&glfw::Monitor> for Monitor {
             refresh_rate,
             resolution,
             physical_size,
+            diagonal,
         }
     }
 }

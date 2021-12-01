@@ -29,10 +29,6 @@ android {
     sourceSets {
         main.assets.srcDirs += '../../../../test_engine/Assets'
     }
-
-//    sourceSets.main {
-//        fsdfds.srcDir '/Users/vladas/.rdeps/test_engine/target/aarch64-linux-android/release'
-//    }
 }
 
 dependencies {

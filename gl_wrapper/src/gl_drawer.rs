@@ -73,17 +73,18 @@ impl GLDrawer {
     pub fn new(size: Size) -> Self {
         error!("Creating GLDrawer");
 
-        let loader = GLLoader::new(size);
+        let mut loader = GLLoader::new(size);
+        let monitors = loader.monitors();
         Self {
-            window:   loader.window,
-            events:   loader.events,
-            monitors: loader.monitors,
+            window: loader.window,
+            events: loader.events,
+            monitors,
 
-            on_frame_drawn:  Default::default(),
+            on_frame_drawn: Default::default(),
             on_cursor_moved: Default::default(),
             on_size_changed: Default::default(),
-            on_mouse_click:  Default::default(),
-            on_key_pressed:  Default::default(),
+            on_mouse_click: Default::default(),
+            on_key_pressed: Default::default(),
         }
     }
 }
