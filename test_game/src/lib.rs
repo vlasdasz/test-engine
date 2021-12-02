@@ -16,7 +16,6 @@ use crate::test_view::TestGameView;
 mod test_level;
 mod test_view;
 
-#[cfg(target_os = "android")]
 #[macro_use]
 extern crate log;
 
@@ -32,7 +31,10 @@ pub extern "C" fn create_screen() {
                 .add_debug_view(),
         ));
 
-        SCREEN.as_mut().unwrap().add_monitor(MONITOR.as_ref().unwrap().clone());
+        SCREEN
+            .as_mut()
+            .unwrap()
+            .add_monitor(MONITOR.as_ref().unwrap().clone());
     }
 }
 
@@ -59,6 +61,35 @@ pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
             position: (x * 2.0, y * 2.0).into(),
             event:    Event::from_int(event),
         })
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn set_monitor(
+    ppi: c_int,
+    scale: c_float,
+    refresh_rate: c_int,
+    resolution_x: c_int,
+    resolution_y: c_int,
+    width: c_float,
+    height: c_float,
+    diagonal: c_float,
+) {
+    let monitor = Monitor::new(
+        "Phone screen".into(),
+        ppi as _,
+        scale,
+        refresh_rate as _,
+        (resolution_x, resolution_y).into(),
+        (width, height).into(),
+        diagonal as _,
+    );
+
+    error!("{:?}", &monitor);
+    dbg!(&monitor);
+
+    unsafe {
+        MONITOR = Box::into_raw(Box::new(monitor));
     }
 }
 
@@ -146,21 +177,15 @@ pub mod android {
         height: c_float,
         diagonal: c_float,
     ) {
-
-        error!("miska");
-
-        let monitor = Monitor::new(
-            "Android screen".into(),
-            ppi as _,
+        set_monitor(
+            ppi,
             scale,
-            refresh_rate as _,
-            (resolutionX, resolutionY).into(),
-            (width, height).into(),
-            diagonal as _,
-        );
-
-        error!("{:?}", &monitor);
-
-        MONITOR = Box::into_raw(Box::new(monitor));
+            refresh_rate,
+            resolutionX,
+            resolutionY,
+            width,
+            height,
+            diagonal,
+        )
     }
 }

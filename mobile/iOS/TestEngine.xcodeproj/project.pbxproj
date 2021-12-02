@@ -358,7 +358,7 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
+				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEnginef";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -387,7 +387,7 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEngine";
+				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEnginef";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

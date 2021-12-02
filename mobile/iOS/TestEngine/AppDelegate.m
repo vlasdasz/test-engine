@@ -21,6 +21,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setup];
+//    void setMonitor(int ppi,
+//                    float scale,
+//                    int refresh_rate,
+//                    int resolutionX,
+//                    int resolutionY,
+//                    float width,
+//                    float height,
+//                    float diagonal);
+    
+    
+    set_monitor(326,
+                1,
+                60,
+                200,
+                200,
+                300,
+                300,
+                7);
     create_screen();
 }
 

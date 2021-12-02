@@ -14,7 +14,6 @@ pub struct Monitor {
     pub diagonal: f32,
 }
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
 impl Monitor {
     pub fn new(
         name: String,
