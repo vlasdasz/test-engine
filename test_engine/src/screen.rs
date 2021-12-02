@@ -3,10 +3,11 @@ use std::{
     rc::Rc,
 };
 
+use cfg_if::cfg_if;
 use chrono::Utc;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::GLDrawer;
-use gl_wrapper::GLWrapper;
+use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
@@ -36,6 +37,7 @@ pub struct Screen {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     drawer:          GLDrawer,
     ui_drawer:       UIDrawer,
+    monitor:         Monitor,
     sprites_drawer:  Rc<dyn SpritesDrawer>,
     fps:             u64,
     prev_time:       i64,
@@ -43,6 +45,10 @@ pub struct Screen {
 }
 
 impl Screen {
+    pub fn add_monitor(&mut self, monitor: Monitor) {
+        self.monitor = monitor
+    }
+
     fn add_view_at(&mut self, point: Point) {
         let mut view = ViewBase::dummy();
         view.frame_mut().origin = point;
@@ -103,6 +109,12 @@ impl Screen {
     }
 
     fn init(&mut self, size: Size) {
+        cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
+            let monitor = self.drawer.monitors.first().expect("BUG: failed to get monitor").clone();
+            self.monitor = monitor;
+            dbg!(&self.monitor);
+        }}
+
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
@@ -231,6 +243,7 @@ impl Screen {
             drawer,
             ui_drawer: UIDrawer::new(assets.clone()),
             sprites_drawer: TESpritesDrawer::new(assets),
+            monitor: Default::default(),
             fps: Default::default(),
             prev_time: Default::default(),
             frame_time: Default::default(),

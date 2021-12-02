@@ -56,17 +56,6 @@ impl GLDrawer {
     pub fn set_size(&mut self, size: Size) {
         self.window.set_size(size.width as i32, size.height as i32)
     }
-
-    pub fn monitor(&self) -> &Monitor {
-        self.monitors.first().unwrap_or_else(|| {
-            error!("Failed to get monitor");
-            panic!();
-        })
-    }
-
-    pub fn scale(&self) -> f32 {
-        self.monitor().scale
-    }
 }
 
 impl GLDrawer {

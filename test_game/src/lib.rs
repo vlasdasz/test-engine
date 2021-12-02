@@ -3,6 +3,7 @@ use std::{
     ptr,
 };
 
+use gl_wrapper::monitor::Monitor;
 use test_engine::{
     gm::Size,
     ui::{input::touch::Event, Touch},
@@ -20,6 +21,7 @@ mod test_view;
 extern crate log;
 
 static mut SCREEN: *mut Screen = ptr::null_mut();
+static mut MONITOR: *mut Monitor = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn create_screen() {
@@ -29,6 +31,8 @@ pub extern "C" fn create_screen() {
                 .set_view(TestGameView::boxed())
                 .add_debug_view(),
         ));
+
+        SCREEN.as_mut().unwrap().add_monitor(MONITOR.as_ref().unwrap().clone());
     }
 }
 
@@ -64,15 +68,15 @@ pub mod android {
     extern crate android_logger;
 
     use android_logger::{Config, FilterBuilder};
+    use gl_wrapper::monitor::Monitor;
     use log::Level;
 
     fn setup_logger() {
         android_logger::init_once(
             Config::default()
-                .with_min_level(Level::Trace) // limit log level
-                .with_tag("test_engine") // logs will show under mytag tag
+                .with_min_level(Level::Trace)
+                .with_tag("test_engine")
                 .with_filter(
-                    // configure messages for specific crate
                     FilterBuilder::new()
                         .parse("debug,hello::crate=error")
                         .build(),
@@ -80,7 +84,7 @@ pub mod android {
         );
 
         trace!("this is a verbose {}", "message");
-        error!("this is printed by default");
+        error!("setup_logger");
     }
 
     use android_ndk_sys::{jclass, jobject, JNIEnv};
@@ -98,6 +102,7 @@ pub mod android {
         _: jclass,
         asset_manager: jobject,
     ) {
+        setup_logger();
         tools::file::set_asset_manager(env, asset_manager);
     }
 
@@ -141,6 +146,21 @@ pub mod android {
         height: c_float,
         diagonal: c_float,
     ) {
-        setup_logger();
+
+        error!("miska");
+
+        let monitor = Monitor::new(
+            "Android screen".into(),
+            ppi as _,
+            scale,
+            refresh_rate as _,
+            (resolutionX, resolutionY).into(),
+            (width, height).into(),
+            diagonal as _,
+        );
+
+        error!("{:?}", &monitor);
+
+        MONITOR = Box::into_raw(Box::new(monitor));
     }
 }

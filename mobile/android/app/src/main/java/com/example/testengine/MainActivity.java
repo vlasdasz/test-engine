@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getMonitor();
         setAssetManager(getResources().getAssets());
         setContentView(new MyGLSurfaceView(this));
+        getMonitor();
     }
 
     @Override
@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
         int refresh_rate = (int)display.getRefreshRate();
         int resolutionX = metrics.widthPixels;
         int resolutionY = metrics.heightPixels;
-        float width = (float)sizeX;
-        float height = (float)sizeY;
+        float width = (float)(sizeX * 25.4);
+        float height = (float)(sizeY * 25.4);
         float diagonal = (float)screenInches;
 
         setMonitor(ppi, scale, refresh_rate, resolutionX, resolutionY, width, height, diagonal);

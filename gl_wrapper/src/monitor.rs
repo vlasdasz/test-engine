@@ -1,6 +1,6 @@
 use gm::Size;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Monitor {
     pub name: String,
 
@@ -16,7 +16,7 @@ pub struct Monitor {
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 impl Monitor {
-    fn new(
+    pub fn new(
         name: String,
         ppi: u32,
         scale: f32,
