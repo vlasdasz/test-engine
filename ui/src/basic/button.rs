@@ -1,7 +1,7 @@
 use gl_image::Image;
-use tools::{Event, ToRglica};
+use tools::Event;
 
-use crate::{View, ViewBase};
+use crate::{Touch, View, ViewBase};
 
 #[derive(Default)]
 pub struct Button {
@@ -11,14 +11,14 @@ pub struct Button {
 }
 
 impl View for Button {
+    fn handle_touch(&mut self, touch: &Touch) {
+        if touch.is_began() {
+            self.on_tap.trigger(());
+        }
+    }
+
     fn setup(&mut self) {
         self.enable_touch();
-        let mut this = self.to_rglica();
-        self.on_touch().subscribe(move |touch| {
-            if touch.is_began() {
-                this.on_tap.trigger(());
-            }
-        });
     }
 
     fn image(&self) -> Option<Image> {

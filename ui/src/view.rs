@@ -4,17 +4,17 @@ use std::{
 };
 
 use gl_image::Image;
-use gm::{Color, Rect};
-use tools::{rglica::ToRglica, Address, Boxed, Event, Rglica};
+use gm::{Color, Point, Rect};
+use tools::{rglica::ToRglica, Address, Boxed, Rglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch};
 
 pub trait View: Boxed {
     fn setup(&mut self) {}
 
-    fn update(&mut self) {}
-
     fn layout(&mut self) {}
+
+    fn handle_touch(&mut self, _: &Touch) {}
 
     fn color(&self) -> &Color {
         &self.view()._color
@@ -54,14 +54,19 @@ pub trait View: Boxed {
         self.view_mut()._frame = rect
     }
 
-    // compiler panic =\
-    // fn width(&self) -> f32 {
-    //     self.frame().size.width
-    // }
-    //
-    // fn height(&self) -> f32 {
-    //     self.frame().size.height
-    // }
+    fn add_view_at(&mut self, point: Point) {
+        let mut view = ViewBase::dummy();
+        view.frame_mut().origin = point;
+        self.add_subview(view);
+    }
+
+    fn width(&self) -> f32 {
+        self.frame().size.width
+    }
+
+    fn height(&self) -> f32 {
+        self.frame().size.height
+    }
 
     fn absolute_frame(&self) -> &Rect {
         &self.view()._absolute_frame
@@ -119,20 +124,12 @@ pub trait View: Boxed {
         self.view()._touch_enabled
     }
 
-    fn handle_touch(&mut self, touch: &Touch) {
-        self.view_mut()._on_touch.trigger(*touch);
-    }
-
     fn touch_id(&self) -> u64 {
         *self.view()._touch_id.borrow()
     }
 
     fn set_touch_id(&self, id: u64) {
         *self.view()._touch_id.borrow_mut() = id;
-    }
-
-    fn on_touch(&mut self) -> &mut Event<Touch> {
-        &mut self.view_mut()._on_touch
     }
 
     fn check_touch(&mut self, touch: &mut Touch) -> bool {
@@ -207,7 +204,6 @@ pub struct ViewBase {
     _superview: Rglica<dyn View>,
     _subviews:  Vec<Box<dyn View>>,
 
-    _on_touch: Event<Touch>,
     _touch_id: RefCell<u64>,
 
     _placer: Placer,

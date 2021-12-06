@@ -15,12 +15,11 @@ impl Label {
     }
 
     pub fn set_text(&mut self, text: impl Into<String>) {
-        self._text = text.into()
+        self._text = text.into();
+        self.set_letters();
     }
-}
 
-impl View for Label {
-    fn update(&mut self) {
+    fn set_letters(&mut self) {
         self.remove_all_subviews();
 
         if self._text.is_empty() {
@@ -71,7 +70,9 @@ impl View for Label {
 
         self.set_frame(frame);
     }
+}
 
+impl View for Label {
     fn view(&self) -> &ViewBase {
         &self.base
     }

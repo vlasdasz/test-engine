@@ -32,15 +32,13 @@ impl View for DebugView {
         });
     }
 
-    fn update(&mut self) {
-        self.frame_drawn += 1;
-        self.frame_drawn_label
-            .set_text(format!("Frame drawn: {}", self.frame_drawn));
-    }
-
     fn layout(&mut self) {
         self.place().top_left_margin(10);
         self.place().subviews_vertically();
+
+        self.frame_drawn += 1;
+        self.frame_drawn_label
+            .set_text(format!("Frame drawn: {}", self.frame_drawn));
     }
 
     fn view(&self) -> &ViewBase {

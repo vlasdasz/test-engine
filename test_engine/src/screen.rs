@@ -49,15 +49,9 @@ impl Screen {
         self.monitor = monitor
     }
 
-    fn add_view_at(&mut self, point: Point) {
-        let mut view = ViewBase::dummy();
-        view.frame_mut().origin = point;
-        self.root_view.add_subview(view);
-    }
-
     pub fn on_touch(&mut self, mut touch: Touch) {
         error!("{:?}", touch);
-        self.add_view_at(touch.position);
+        // self.add_view_at(touch.position);
         self.root_view.check_touch(&mut touch);
     }
 
@@ -73,13 +67,6 @@ impl Screen {
     pub fn add_debug_view(mut self) -> Self {
         self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
         self
-    }
-
-    fn update_view(view: &mut dyn View) {
-        view.update();
-        for view in view.subviews_mut() {
-            Self::update_view(view.deref_mut());
-        }
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -174,7 +161,6 @@ impl Screen {
 
         self.update_level();
 
-        Screen::update_view(self.root_view.deref_mut());
         self.root_view.calculate_absolute_frame();
         self.ui_drawer.draw(self.root_view.deref_mut());
 

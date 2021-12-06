@@ -1,7 +1,7 @@
 use gm::{flat::PointsPath, Color, Point};
 use tools::{rglica::ToRglica, Boxed, Event, Rglica};
 
-use crate::{complex::DrawingView, View, ViewBase};
+use crate::{complex::DrawingView, Touch, View, ViewBase};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
@@ -80,22 +80,21 @@ impl View for AnalogStickView {
         self.direction_stick = direction_stick.to_rglica();
 
         self.add_subview(direction_stick);
+    }
 
-        let mut this = self.to_rglica();
-        self.on_touch().subscribe(move |touch| {
-            if touch.is_ended() {
-                if this.flaccid {
-                    return;
-                }
-                let frame = *this.frame();
-                this.direction_stick
-                    .frame_mut()
-                    .set_center(frame.size.center());
-                this.on_direction_change.trigger(Point::DEFAULT);
-            } else {
-                this.on_touch_moved(&touch.position);
+    fn handle_touch(&mut self, touch: &Touch) {
+        if touch.is_ended() {
+            if self.flaccid {
+                return;
             }
-        });
+            let frame = *self.frame();
+            self.direction_stick
+                .frame_mut()
+                .set_center(frame.size.center());
+            self.on_direction_change.trigger(Point::DEFAULT);
+        } else {
+            self.on_touch_moved(&touch.position);
+        }
     }
 
     fn view(&self) -> &ViewBase {

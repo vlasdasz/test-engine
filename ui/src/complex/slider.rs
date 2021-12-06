@@ -1,7 +1,7 @@
 use gm::Color;
-use tools::{math::clamped_by, Event, Rglica, ToRglica};
+use tools::{math::clamped_by, Event, Rglica};
 
-use crate::{basic::Circle, init_view_on, View, ViewBase};
+use crate::{basic::Circle, init_view_on, Touch, View, ViewBase};
 
 #[derive(Default)]
 pub struct Slider {
@@ -15,27 +15,6 @@ pub struct Slider {
 impl Slider {
     fn setup_touch(&mut self) {
         self.enable_touch();
-
-        let mut this = self.to_rglica();
-        self.on_touch().subscribe(move |touch| {
-            if touch.is_ended() {
-                return;
-            }
-
-            let half_circle = this.circle.frame().height() / 2.0;
-            let y_pos = clamped_by(
-                half_circle,
-                this.frame().height() - half_circle,
-                touch.position.y,
-            );
-
-            this.circle.frame_mut().origin.y = y_pos - half_circle;
-
-            let value = 1.0 - (y_pos - half_circle) / (this.frame().height() - half_circle * 2.0);
-            let value = value * this.multiplier;
-            this.value = value;
-            this.on_change.trigger(value);
-        });
     }
 }
 
@@ -52,6 +31,26 @@ impl View for Slider {
 
     fn layout(&mut self) {
         self.circle.frame_mut().size = (self.frame().width(), self.frame().width()).into();
+    }
+
+    fn handle_touch(&mut self, touch: &Touch) {
+        if touch.is_ended() {
+            return;
+        }
+
+        let half_circle = self.circle.frame().height() / 2.0;
+        let y_pos = clamped_by(
+            half_circle,
+            self.frame().height() - half_circle,
+            touch.position.y,
+        );
+
+        self.circle.frame_mut().origin.y = y_pos - half_circle;
+
+        let value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
+        let value = value * self.multiplier;
+        self.value = value;
+        self.on_change.trigger(value);
     }
 
     fn view(&self) -> &ViewBase {

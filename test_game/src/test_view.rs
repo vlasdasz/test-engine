@@ -22,7 +22,6 @@ static mut COUNTER: u32 = 0;
 pub struct TestGameView {
     base:         ViewBase,
     level:        TestLevel,
-    data:         u128,
     image_view:   Rglica<ImageView>,
     label:        Rglica<Label>,
     dpad:         Rglica<DPadView>,
@@ -147,13 +146,9 @@ impl View for TestGameView {
         self.setup_level();
     }
 
-    fn update(&mut self) {
-        self.data += 1
-    }
-
     fn layout(&mut self) {
         self.place().bottom_right();
-        self.frame_mut().size.width = self.super_frame().size.width;
+        self.frame_mut().size.width = self.super_frame().width();
         self.circle.place().bottom_right_margin(20);
         self.slider.place().top_right_margin(20);
         self.slider_label.place().at_bottom(self.slider.deref(), 20);

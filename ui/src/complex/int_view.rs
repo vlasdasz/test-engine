@@ -43,12 +43,9 @@ impl View for IntView {
         });
     }
 
-    fn update(&mut self) {
-        self.label.set_text(&self.value.to_string());
-    }
-
     fn layout(&mut self) {
         self.place().subviews_vertically();
+        self.label.set_text(&self.value.to_string());
     }
 
     fn view(&self) -> &ViewBase {
