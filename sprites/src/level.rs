@@ -1,4 +1,4 @@
-use std::{ops::Deref, rc::Rc};
+use std::{ops::Deref, rc::Rc, borrow::Borrow};
 
 use gm::{flat::point::Direction, Point};
 use rapier2d::{
@@ -21,10 +21,11 @@ pub trait Control {
     fn add_impulse(&mut self, impulse: &Point);
 
     fn move_by_key(&mut self, key: String) {
+        dbg!(&key);
         match key.as_ref() {
             "a" => self.go_left(),
             "d" => self.go_right(),
-            "w" => self.jump(),
+            "w" | " " => self.jump(),
             "s" => self.go_down(),
             _ => {}
         }
@@ -46,6 +47,11 @@ pub trait Level {
     fn update(&mut self) {}
 
     fn on_key_pressed(&mut self, _: String) {}
+
+    fn gravity(&self) -> Point {
+        let gravity = self.level().gravity.borrow();
+        (gravity[0], gravity[1]).into()
+    }
 
     fn set_gravity(&mut self, g: Point) {
         self.level_mut().gravity = Vector2::new(g.x, g.y)

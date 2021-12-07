@@ -67,6 +67,12 @@ impl AsAny for Body {
     }
 }
 
+impl Body {
+    fn _gravity(&self) -> Point {
+        self.level.gravity()
+    }
+}
+
 impl Control for Body {
     fn jump(&mut self) {
         self.body_mut().set_linvel([0.0, 50.0].into(), true)

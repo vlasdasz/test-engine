@@ -133,9 +133,18 @@ impl Screen {
         if action != Action::Press {
             return;
         }
+
         self.view
             .level_mut()
-            .on_key_pressed(key.get_name().unwrap_or_else(|| "unknown".into()))
+            .on_key_pressed(key.get_name().unwrap_or_else({
+                || {
+                    match key {
+                        Key::Space => " ",
+                        _ => "unknown",
+                    }
+                    .into()
+                }
+            }))
     }
 }
 
