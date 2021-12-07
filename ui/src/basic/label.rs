@@ -43,8 +43,8 @@ impl Label {
 
             glyph_view.set_frame(
                 (
-                    advance + glyph.bearing.x,
-                    0, //content_size.height - glyph.bearing.y + self.font.baseline_shift,
+                    advance,// + glyph.bearing.x,
+                    content_size.height - glyph.bearing.y + self.font.baseline_shift,
                     glyph.size.width,
                     glyph.size.height,
                 )

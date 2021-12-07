@@ -16,7 +16,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 
     let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1, None);
 
-    Glyph::new(symbol, image, 20, Default::default())
+    Glyph::new(symbol, image, metrics.advance_width as _, (metrics.bounds.xmin, metrics.bounds.height).into())
 }
 
 #[derive(Clone, Debug)]

@@ -6,12 +6,12 @@ pub struct Glyph {
     pub ch:      char,
     pub size:    Size,
     pub image:   Image,
-    pub advance: u32,
+    pub advance: f32,
     pub bearing: Point,
 }
 
 impl Glyph {
-    pub fn new(ch: char, image: Image, advance: u32, bearing: Point) -> Glyph {
+    pub fn new(ch: char, image: Image, advance: f32, bearing: Point) -> Glyph {
         Glyph {
             ch,
             size: Size {
@@ -19,7 +19,7 @@ impl Glyph {
                 height: image.size.height / 2.0,
             },
             image,
-            advance: advance / 2,
+            advance: advance / 2.0,
             bearing: Point {
                 x: bearing.x / 2.0,
                 y: bearing.y / 2.0,
