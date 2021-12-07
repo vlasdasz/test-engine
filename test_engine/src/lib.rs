@@ -10,7 +10,7 @@ pub use ui;
 
 pub use crate::screen::Screen;
 
-mod assets;
+pub mod assets;
 pub mod debug_view;
 pub mod paths;
 pub mod screen;

@@ -1,6 +1,6 @@
 use std::{ops::Deref, rc::Rc};
 
-use gm::Point;
+use gm::{flat::point::Direction, Point};
 use rapier2d::{
     na::Vector2,
     prelude::{
@@ -17,13 +17,35 @@ pub trait Control {
     fn jump(&mut self);
     fn go_left(&mut self);
     fn go_right(&mut self);
+    fn go_down(&mut self);
     fn add_impulse(&mut self, impulse: &Point);
+
+    fn move_by_key(&mut self, key: String) {
+        match key.as_ref() {
+            "a" => self.go_left(),
+            "d" => self.go_right(),
+            "w" => self.jump(),
+            "s" => self.go_down(),
+            _ => {}
+        }
+    }
+
+    fn move_by_direction(&mut self, direction: Direction) {
+        match direction {
+            Direction::Up => self.jump(),
+            Direction::Down => self.go_down(),
+            Direction::Left => self.go_left(),
+            Direction::Right => self.go_right(),
+        }
+    }
 }
 
 pub trait Level {
     fn setup(&mut self) {}
 
     fn update(&mut self) {}
+
+    fn on_key_pressed(&mut self, _: String) {}
 
     fn set_gravity(&mut self, g: Point) {
         self.level_mut().gravity = Vector2::new(g.x, g.y)
@@ -60,8 +82,6 @@ pub trait Level {
     fn set_camera_rotation(&mut self, angle: f32) {
         self.drawer().set_camera_rotation(angle)
     }
-
-    fn on_key_pressed(&mut self, _key: String) {}
 
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;

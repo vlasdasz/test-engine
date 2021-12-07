@@ -33,7 +33,7 @@ impl View for Slider {
         self.circle.frame_mut().size = (self.frame().width(), self.frame().width()).into();
     }
 
-    fn handle_touch(&mut self, touch: &Touch) {
+    fn on_touch(&mut self, touch: &Touch) {
         if touch.is_ended() {
             return;
         }

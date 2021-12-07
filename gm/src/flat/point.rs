@@ -3,6 +3,13 @@ use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 use serde::{Deserialize, Serialize};
 use tools::IntoF32;
 
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
 #[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
 pub struct Point {
     pub x: f32,
@@ -15,9 +22,11 @@ impl Point {
     pub fn angle(&self) -> f32 {
         self.y.atan2(self.x)
     }
+
     pub fn is_zero(&self) -> bool {
         self.x == 0.0 && self.y == 0.0
     }
+
     pub fn length(&self) -> f32 {
         (self.x * self.x + self.y * self.y).sqrt()
     }
@@ -28,9 +37,11 @@ impl Point {
         self.x = -self.x;
         self.y = -self.y;
     }
+
     pub fn invert_x(&mut self) {
         self.x = -self.x
     }
+
     pub fn invert_y(&mut self) {
         self.y = -self.y
     }
@@ -40,6 +51,7 @@ impl Point {
     pub fn normalized(self) -> Point {
         self.with_length(1.0)
     }
+
     pub fn normalize(&mut self) {
         self.set_length(1.0)
     }
@@ -53,17 +65,20 @@ impl Point {
             y: self.y * ratio,
         }
     }
+
     pub fn set_length(&mut self, l: f32) {
         let ratio = l / self.length();
         self.x *= ratio;
         self.y *= ratio;
     }
+
     pub fn trim(&mut self, max_length: f32) {
         if self.length() < max_length {
             return;
         }
         self.set_length(max_length)
     }
+
     pub fn trimmed(mut self, max_length: f32) -> Point {
         self.trim(max_length);
         self

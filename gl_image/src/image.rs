@@ -22,9 +22,9 @@ impl Image {
         self.gl_handle == u32::MAX
     }
 
-    pub fn load(path: &Path) -> Image {
-        let image = image::load_from_memory(&File::read(path)).unwrap_or_else(|_| {
-            error!("Failed to open image {:?}", path);
+    pub fn load(path: impl AsRef<Path>) -> Image {
+        let image = image::load_from_memory(&File::read(path.as_ref())).unwrap_or_else(|_| {
+            error!("Failed to open image {:?}", path.as_ref());
             panic!();
         });
 
@@ -36,7 +36,7 @@ impl Image {
             data.as_ptr() as *const c_void,
             (dimensions.0, dimensions.1).into(),
             channels as u32,
-            Some(path.into()),
+            Some(path.as_ref().into()),
         )
     }
 
@@ -67,5 +67,11 @@ impl Default for Image {
             gl_handle: u32::MAX,
             path:      Default::default(),
         }
+    }
+}
+
+impl<T: AsRef<Path>> From<T> for Image {
+    fn from(path: T) -> Self {
+        Self::load(path)
     }
 }

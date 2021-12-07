@@ -11,7 +11,7 @@ pub struct Button {
 }
 
 impl View for Button {
-    fn handle_touch(&mut self, touch: &Touch) {
+    fn on_touch(&mut self, touch: &Touch) {
         if touch.is_began() {
             self.on_tap.trigger(());
         }

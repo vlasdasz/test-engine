@@ -80,6 +80,10 @@ impl Control for Body {
         self.body_mut().set_linvel([50.0, 0.0].into(), true)
     }
 
+    fn go_down(&mut self) {
+        self.body_mut().set_linvel([0.0, -50.0].into(), true)
+    }
+
     fn add_impulse(&mut self, impulse: &Point) {
         self.body_mut()
             .apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)

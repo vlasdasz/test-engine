@@ -1,6 +1,7 @@
 use std::{borrow::BorrowMut, ops::Deref};
 
 use test_engine::{
+    assets::Assets,
     gm::Color,
     screen::GameView,
     sprites::Control,
@@ -10,7 +11,7 @@ use test_engine::{
         init_view_on, init_view_with_frame, make_view_on, DPadView, ImageView, Label, View,
         ViewBase,
     },
-    Image, Level,
+    Level,
 };
 use tools::{Event, Rglica, ToRglica};
 
@@ -37,21 +38,9 @@ impl TestGameView {
         let mut level = self.level.borrow_mut().to_rglica();
 
         let mut lvl = level.clone();
-        self.dpad.on_up.subscribe(move |_| {
-            lvl.player().jump();
-        });
-
-        let mut lvl = level.clone();
-        self.dpad.on_left.subscribe(move |_| {
-            lvl.player().go_left();
-        });
-
-        let mut lvl = level.clone();
-        self.dpad.on_right.subscribe(move |_| {
-            lvl.player().go_right();
-        });
-
-        self.dpad.on_down.panic_if_empty = false;
+        self.dpad
+            .on_press
+            .subscribe(move |direction| lvl.player().move_by_direction(direction));
 
         self.left_stick
             .on_direction_change
@@ -59,9 +48,7 @@ impl TestGameView {
                 level.player().add_impulse(&direction);
             });
     }
-}
 
-impl TestGameView {
     fn setup_slider(&mut self) {
         self.slider = init_view_with_frame((50, 280).into(), self);
         self.slider.multiplier = 50.0;
@@ -75,14 +62,12 @@ impl TestGameView {
             this.set_scale.trigger(value);
         });
     }
-}
 
-impl View for TestGameView {
-    fn setup(&mut self) {
+    fn setup_ui(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
         self.image_view = make_view_on(self, |view: &mut ImageView| {
-            view.image = Image::load(&test_engine::paths::images().join("cat.png"));
+            view.image = Assets::image("cat.png");
             view.set_frame((200, 20, 100, 120).into());
         });
 
@@ -111,10 +96,10 @@ impl View for TestGameView {
             dpad.frame_mut().origin.y = 300.0;
 
             dpad.set_images(
-                Image::load(&test_engine::paths::images().join("up.png")),
-                Image::load(&test_engine::paths::images().join("down.png")),
-                Image::load(&test_engine::paths::images().join("left.png")),
-                Image::load(&test_engine::paths::images().join("right.png")),
+                Assets::image("up.png"),
+                Assets::image("down.png"),
+                Assets::image("left.png"),
+                Assets::image("right.png"),
             );
         });
 
@@ -142,7 +127,12 @@ impl View for TestGameView {
         self.circle.set_color(Color::GREEN);
 
         self.setup_slider();
+    }
+}
 
+impl View for TestGameView {
+    fn setup(&mut self) {
+        self.setup_ui();
         self.setup_level();
     }
 

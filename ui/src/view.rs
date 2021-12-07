@@ -14,7 +14,7 @@ pub trait View: Boxed {
 
     fn layout(&mut self) {}
 
-    fn handle_touch(&mut self, _: &Touch) {}
+    fn on_touch(&mut self, _: &Touch) {}
 
     fn color(&self) -> &Color {
         &self.view()._color
@@ -136,7 +136,7 @@ pub trait View: Boxed {
         if self.touch_enabled() {
             if touch.is_moved() && self.touch_id() == touch.id {
                 touch.position -= self.absolute_frame().origin;
-                self.handle_touch(touch);
+                self.on_touch(touch);
                 return true;
             }
 
@@ -147,14 +147,14 @@ pub trait View: Boxed {
             if touch.is_ended() && self.touch_id() == touch.id {
                 touch.position -= self.absolute_frame().origin;
                 self.set_touch_id(0);
-                self.handle_touch(touch);
+                self.on_touch(touch);
                 return true;
             }
 
             if self.absolute_frame().contains(&touch.position) {
                 touch.position -= self.absolute_frame().origin;
                 self.set_touch_id(touch.id);
-                self.handle_touch(touch);
+                self.on_touch(touch);
                 return true;
             }
         }

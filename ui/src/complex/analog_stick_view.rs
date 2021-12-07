@@ -82,7 +82,7 @@ impl View for AnalogStickView {
         self.add_subview(direction_stick);
     }
 
-    fn handle_touch(&mut self, touch: &Touch) {
+    fn on_touch(&mut self, touch: &Touch) {
         if touch.is_ended() {
             if self.flaccid {
                 return;

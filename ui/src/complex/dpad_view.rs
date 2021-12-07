@@ -1,7 +1,8 @@
 use gl_image::Image;
-use tools::{rglica::ToRglica, Boxed, Event, Rglica};
+use gm::flat::point::Direction;
+use tools::{Event, Rglica, ToRglica};
 
-use crate::{basic::Button, View, ViewBase};
+use crate::{basic::Button, init_view_on, View, ViewBase};
 
 #[derive(Default)]
 pub struct DPadView {
@@ -10,10 +11,7 @@ pub struct DPadView {
     down:         Rglica<Button>,
     left:         Rglica<Button>,
     right:        Rglica<Button>,
-    pub on_up:    Event,
-    pub on_down:  Event,
-    pub on_left:  Event,
-    pub on_right: Event,
+    pub on_press: Event<Direction>,
 }
 
 impl DPadView {
@@ -27,40 +25,30 @@ impl DPadView {
 
 impl View for DPadView {
     fn setup(&mut self) {
-        let up = Button::boxed();
-        let down = Button::boxed();
-        let left = Button::boxed();
-        let right = Button::boxed();
+        self.up = init_view_on(self);
+        self.down = init_view_on(self);
+        self.left = init_view_on(self);
+        self.right = init_view_on(self);
 
-        self.up = up.to_rglica();
-        self.down = down.to_rglica();
-        self.left = left.to_rglica();
-        self.right = right.to_rglica();
+        let mut this = self.to_rglica();
+        self.up
+            .on_tap
+            .subscribe(move |_| this.on_press.trigger(Direction::Up));
 
-        self.add_subview(up);
-        self.add_subview(down);
-        self.add_subview(left);
-        self.add_subview(right);
+        let mut this = self.to_rglica();
+        self.down
+            .on_tap
+            .subscribe(move |_| this.on_press.trigger(Direction::Down));
 
-        let mut a = self.to_rglica();
-        self.up.on_tap.subscribe(move |_| {
-            a.on_up.trigger(());
-        });
+        let mut this = self.to_rglica();
+        self.left
+            .on_tap
+            .subscribe(move |_| this.on_press.trigger(Direction::Left));
 
-        let mut a = self.to_rglica();
-        self.down.on_tap.subscribe(move |_| {
-            a.on_down.trigger(());
-        });
-
-        let mut a = self.to_rglica();
-        self.left.on_tap.subscribe(move |_| {
-            a.on_left.trigger(());
-        });
-
-        let mut a = self.to_rglica();
-        self.right.on_tap.subscribe(move |_| {
-            a.on_right.trigger(());
-        });
+        let mut this = self.to_rglica();
+        self.right
+            .on_tap
+            .subscribe(move |_| this.on_press.trigger(Direction::Right));
     }
 
     fn layout(&mut self) {
