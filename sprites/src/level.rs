@@ -1,4 +1,4 @@
-use std::{ops::Deref, rc::Rc, borrow::Borrow};
+use std::{borrow::Borrow, ops::Deref, rc::Rc};
 
 use gm::{flat::point::Direction, Point};
 use rapier2d::{
@@ -21,7 +21,6 @@ pub trait Control {
     fn add_impulse(&mut self, impulse: &Point);
 
     fn move_by_key(&mut self, key: String) {
-        dbg!(&key);
         match key.as_ref() {
             "a" => self.go_left(),
             "d" => self.go_right(),
