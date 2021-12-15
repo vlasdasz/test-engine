@@ -103,7 +103,10 @@ impl AddAssign for Point {
 impl<T: Add<Output = T> + Copy> Add for &PointBase<T> {
     type Output = PointBase<T>;
     fn add(self, rhs: &Self::Output) -> Self::Output {
-        Self::Output { x: self.x + rhs.x, y: self.y + rhs.y }
+        Self::Output {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
     }
 }
 
@@ -117,7 +120,10 @@ impl SubAssign for Point {
 impl<T: Sub<Output = T> + Copy> Sub for &PointBase<T> {
     type Output = PointBase<T>;
     fn sub(self, rhs: &Self::Output) -> Self::Output {
-        Self::Output { x: self.x - rhs.x, y: self.y - rhs.y }
+        Self::Output {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
     }
 }
 

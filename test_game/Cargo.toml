@@ -12,13 +12,13 @@ name = "test_game"
 crate-type = ["rlib", "staticlib", "dylib"]
 
 [dependencies]
-log = "0.4.14"
-serde_json = "1.0.68"
+log = "0"
+serde_json = "1"
 gl_wrapper = { path = "../gl_wrapper" }
 test_engine = { path = "../test_engine" }
 
 tools = { path = "../.rdeps/tools" }
 
 [target.'cfg(target_os="android")'.dependencies]
-android_logger = "0.10"
-android-ndk-sys = "0.2.0"
+android_logger = "0"
+android-ndk-sys = "0"

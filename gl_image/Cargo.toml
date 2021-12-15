@@ -9,10 +9,10 @@ name = "gl_image"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-log = "0.4.14"
-image = "0.23.14"
-cfg-if = "1.0.0"
-serde = { version = "1.0.130", features = ["derive"] }
+log = "0"
+image = "0"
+cfg-if = "1"
+serde = { version = "1", features = ["derive"] }
 
 
 gm = { path = "../gm" }

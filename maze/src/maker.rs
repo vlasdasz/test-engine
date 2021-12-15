@@ -1,27 +1,28 @@
 use gm::flat::point::PointBase;
-
-use crate::Grid;
-use crate::Cell;
 use rand::seq::SliceRandom;
+
+use crate::{Cell, Grid};
 
 type Point = PointBase<i32>;
 
 #[derive(Debug)]
 struct Maker {
-    size: Point,
+    size:        Point,
     current_pos: Point,
-    stack: Vec<Point>,
-    grid: Grid
+    stack:       Vec<Point>,
+    grid:        Grid,
 }
 
 impl Maker {
-
     fn new(width: usize, height: usize) -> Self {
         Self {
-            size: Point { x: width as _, y: height as _ },
+            size:        Point {
+                x: width as _,
+                y: height as _,
+            },
             current_pos: Default::default(),
-            stack: Default::default(),
-            grid: vec![vec![Cell::default(); width]; height]
+            stack:       Default::default(),
+            grid:        vec![vec![Cell::default(); width]; height],
         }
     }
 
@@ -29,7 +30,6 @@ impl Maker {
         self.current_mut().visited = true;
 
         while self.has_unvisited() {
-
             let unvisited = self.unvisited_neighbours();
 
             if unvisited.is_empty() {
@@ -41,15 +41,14 @@ impl Maker {
 
             dbg!(&unvisited);
 
-            let next = unvisited.choose(&mut rand::thread_rng()).unwrap().clone();
+            let next = *unvisited.choose(&mut rand::thread_rng()).unwrap();
 
             self.stack.push(self.current_pos);
 
             self.remove_walls(next);
-            
+
             self.current_pos = next;
             self.at_mut(next).visited = true;
-            
         }
     }
 
@@ -80,7 +79,7 @@ impl Maker {
                 }
             }
         }
-        return false;
+        false
     }
 
     fn unvisited_neighbours(&self) -> Vec<Point> {
@@ -90,7 +89,7 @@ impl Maker {
             Point { x: 0, y: -1 },
             Point { x: 1, y: 0 },
             Point { x: 0, y: 1 },
-            Point { x: -1, y: 0 },            
+            Point { x: -1, y: 0 },
         ];
 
         for neigh in NEIGH {
@@ -113,20 +112,16 @@ impl Maker {
         if current.x < pos.x {
             self.at_mut(current).rigth = false;
             self.at_mut(pos).left = false;
-        }
-        else if current.x > pos.x {
+        } else if current.x > pos.x {
             self.at_mut(current).left = false;
             self.at_mut(pos).rigth = false;
-        }
-        else if current.y < pos.y {
+        } else if current.y < pos.y {
             self.at_mut(current).down = false;
             self.at_mut(pos).up = false;
-        }
-        else if current.y > pos.y {
+        } else if current.y > pos.y {
             self.at_mut(current).up = false;
             self.at_mut(pos).down = false;
-        }
-        else {
+        } else {
             panic!("BUG");
         }
     }
