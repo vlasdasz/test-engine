@@ -1,12 +1,15 @@
+
 use gm::flat::point::PointBase;
 use rand::seq::SliceRandom;
 
 use crate::{Cell, Grid};
+use tokio::sync::mpsc::{self, Receiver};
+
 
 type Point = PointBase<i32>;
 
 #[derive(Debug)]
-struct Maker {
+pub struct Maker {
     size:        Point,
     current_pos: Point,
     stack:       Vec<Point>,
@@ -14,7 +17,7 @@ struct Maker {
 }
 
 impl Maker {
-    fn new(width: usize, height: usize) -> Self {
+    pub fn new(width: usize, height: usize) -> Self {
         Self {
             size:        Point {
                 x: width as _,
@@ -26,7 +29,10 @@ impl Maker {
         }
     }
 
-    fn generate(&mut self) {
+    pub fn generate(&mut self) -> Receiver<Grid> {
+
+        let (sender, receiver) = mpsc::channel::<Grid>(1);
+
         self.current_mut().visited = true;
 
         while self.has_unvisited() {
@@ -45,15 +51,20 @@ impl Maker {
 
             self.stack.push(self.current_pos);
 
+            sender.send(self.grid.clone());
+
             self.remove_walls(next);
 
             self.current_pos = next;
             self.at_mut(next).visited = true;
         }
+
+        receiver
     }
 
     fn make(mut self) -> Grid {
         self.generate();
+        dbg!("goneroted");
         self.grid
     }
 }

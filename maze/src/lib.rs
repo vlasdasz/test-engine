@@ -1,5 +1,5 @@
 pub mod cell;
-mod maker;
+pub mod maker;
 
 use cell::Cell;
 
