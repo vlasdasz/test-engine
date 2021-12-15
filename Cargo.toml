@@ -4,6 +4,7 @@ members = [
     "gm",
     "ui",
     "test",
+    "maze",
     "sprites",
     "gl_image",
     "test_game",

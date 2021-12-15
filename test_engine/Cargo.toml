@@ -17,6 +17,7 @@ tools = { path = "../.rdeps/tools" }
 
 gm = { path = "../gm" }
 ui = { path = "../ui" }
+maze = { path = "../maze" }
 sprites = { path = "../sprites" }
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }

@@ -1,0 +1,15 @@
+[package]
+name = "maze"
+version = "0.1.0"
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2021"
+
+[lib]
+name = "maze"
+crate-type = ["rlib", "staticlib"]
+
+[dependencies]
+gm = { path = "../gm" }
+tools = { path = "../.rdeps/tools" }
+
+rand = "0.8.4"

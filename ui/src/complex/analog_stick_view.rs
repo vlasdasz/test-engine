@@ -27,7 +27,7 @@ impl AnalogStickView {
 
         self.direction_stick
             .frame_mut()
-            .set_center(vector + frame.size.center());
+            .set_center(&vector + &frame.size.center());
 
         self.on_direction_change.trigger(vector * 0.1);
     }

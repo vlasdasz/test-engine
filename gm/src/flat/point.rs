@@ -11,10 +11,12 @@ pub enum Direction {
 }
 
 #[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
-pub struct Point {
-    pub x: f32,
-    pub y: f32,
+pub struct PointBase<T> {
+    pub x: T,
+    pub y: T,
 }
+
+pub type Point = PointBase<f32>;
 
 impl Point {
     pub const DEFAULT: Point = Point { x: 0.0, y: 0.0 };
@@ -85,6 +87,12 @@ impl Point {
     }
 }
 
+impl PointBase<i32> {
+    pub fn is_negative(&self) -> bool {
+        self.x < 0 || self.y < 0
+    }
+}
+
 impl AddAssign for Point {
     fn add_assign(&mut self, rhs: Point) {
         self.x += rhs.x;
@@ -92,10 +100,10 @@ impl AddAssign for Point {
     }
 }
 
-impl Add for Point {
-    type Output = Point;
-    fn add(self, rhs: Point) -> Point {
-        (self.x + rhs.x, self.y + rhs.y).into()
+impl<T: Add<Output = T> + Copy> Add for &PointBase<T> {
+    type Output = PointBase<T>;
+    fn add(self, rhs: &Self::Output) -> Self::Output {
+        Self::Output { x: self.x + rhs.x, y: self.y + rhs.y }
     }
 }
 
@@ -106,10 +114,10 @@ impl SubAssign for Point {
     }
 }
 
-impl Sub for &Point {
-    type Output = Point;
-    fn sub(self, rhs: &Point) -> Point {
-        (self.x - rhs.x, self.y - rhs.y).into()
+impl<T: Sub<Output = T> + Copy> Sub for &PointBase<T> {
+    type Output = PointBase<T>;
+    fn sub(self, rhs: &Self::Output) -> Self::Output {
+        Self::Output { x: self.x - rhs.x, y: self.y - rhs.y }
     }
 }
 

@@ -12,7 +12,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 use glfw::{Action, Key};
 use gm::{Color, Point, Size};
 use sprites::{Level, Sprite, SpritesDrawer};
-use tools::{Address, Boxed, Rglica, ToRglica};
+use tools::{Boxed, Rglica, ToRglica};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use ui::input::touch::{ButtonState, Event};
 use ui::{init_view_on, input::Touch, View, ViewBase};
@@ -196,8 +196,6 @@ impl Screen {
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
-        dbg!(&self.debug_view);
-        dbg!((&self).address());
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
         self.on_size_changed(size);

@@ -7,6 +7,7 @@ pub use gm;
 pub use sprites;
 pub use tools;
 pub use ui;
+pub use maze;
 
 pub use crate::screen::Screen;
 
