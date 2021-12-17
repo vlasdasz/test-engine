@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,7 +20,7 @@
 		D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
 		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
 		D1B10DE4270C86C5008D85D2 /* libtest_game.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B10DE3270C86C5008D85D2 /* libtest_game.a */; };
-		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; };
+		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -358,9 +358,9 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEnginef";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -387,9 +387,9 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "vladas-software.TestEnginef";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
