@@ -21,21 +21,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setup];
-//    void setMonitor(int ppi,
-//                    float scale,
-//                    int refresh_rate,
-//                    int resolutionX,
-//                    int resolutionY,
-//                    float width,
-//                    float height,
-//                    float diagonal);
     
-    
+    CGRect screen = [[UIScreen mainScreen] bounds];
+
     set_monitor(326,
-                1,
+                [UIScreen mainScreen].scale,
                 60,
-                200,
-                200,
+                screen.size.width,
+                screen.size.height,
                 300,
                 300,
                 7);

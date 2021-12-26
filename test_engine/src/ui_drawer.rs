@@ -3,7 +3,6 @@ use std::{ops::DerefMut, rc::Rc};
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
 use gm::{Color, Rect, Size};
-use tools::platform::Platform;
 use ui::{complex::PathData, View};
 
 use crate::assets::Assets;
@@ -12,6 +11,7 @@ use crate::assets::Assets;
 pub struct UIDrawer {
     pub assets:      Rc<Assets>,
     pub window_size: Size,
+    scale:           f32,
 }
 
 impl UIDrawer {
@@ -19,7 +19,12 @@ impl UIDrawer {
         UIDrawer {
             assets,
             window_size: Default::default(),
+            scale: 1.0,
         }
+    }
+
+    pub fn set_scale(&mut self, scale: f32) {
+        self.scale = scale
     }
 
     pub fn set_size(&mut self, size: Size) {
@@ -55,8 +60,7 @@ impl UIDrawer {
     }
 
     fn set_viewport(&self, rect: &Rect) {
-        const SCALE: f32 = if Platform::MAC { 2.0 } else { 1.0 };
-        GLWrapper::set_viewport(self.window_size.height, &SCALE, rect);
+        GLWrapper::set_viewport(self.window_size.height, &self.scale, rect);
     }
 }
 

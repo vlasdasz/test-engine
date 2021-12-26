@@ -52,7 +52,6 @@ impl View for DebugView {
 
 impl Boxed for DebugView {
     fn boxed() -> Box<Self> {
-        dbg!("krito");
         Box::new(DebugView {
             view:              Default::default(),
             fps_label:         Default::default(),

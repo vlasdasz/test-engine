@@ -1,10 +1,8 @@
-
 use gm::flat::point::PointBase;
 use rand::seq::SliceRandom;
-
-use crate::{Cell, Grid};
 use tokio::sync::mpsc::{self, Receiver};
 
+use crate::{Cell, Grid};
 
 type Point = PointBase<i32>;
 
@@ -30,7 +28,6 @@ impl Maker {
     }
 
     pub fn generate(&mut self) -> Receiver<Grid> {
-
         let (sender, receiver) = mpsc::channel::<Grid>(1);
 
         self.current_mut().visited = true;

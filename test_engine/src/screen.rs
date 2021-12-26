@@ -46,12 +46,12 @@ pub struct Screen {
 
 impl Screen {
     pub fn add_monitor(&mut self, monitor: Monitor) {
-        self.monitor = monitor
+        self.monitor = monitor;
+        self.ui_drawer.set_scale(self.monitor.scale);
     }
 
     pub fn on_touch(&mut self, mut touch: Touch) {
         error!("{:?}", touch);
-        // self.add_view_at(touch.position);
         self.root_view.check_touch(&mut touch);
     }
 
@@ -99,6 +99,7 @@ impl Screen {
         cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
             let monitor = self.drawer.monitors.first().expect("BUG: failed to get monitor").clone();
             self.monitor = monitor;
+            self.ui_drawer.set_scale(self.monitor.scale);
             dbg!(&self.monitor);
         }}
 
