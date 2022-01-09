@@ -108,7 +108,7 @@ print(platform.uname())
 def linux_setup():
     print("Lin setup")
     run("sudo apt update")
-    run("sudo apt install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
+    run("sudo apt -y install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
     link_deps()
 
 
