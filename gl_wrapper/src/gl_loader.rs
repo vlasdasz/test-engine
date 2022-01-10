@@ -19,6 +19,12 @@ impl GLLoader {
     pub fn new(size: Size) -> GLLoader {
         let mut glfw = glfw::init(glfw::LOG_ERRORS).unwrap();
 
+        dbg!(&size);
+
+        let size = adjust_size(&mut glfw, size);
+
+        dbg!(&size);
+
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(Core));
@@ -48,7 +54,21 @@ impl GLLoader {
     }
 
     pub fn monitors(&mut self) -> Vec<Monitor> {
-        self.glfw
-            .with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect())
+        get_monitors(&mut self.glfw)
     }
+}
+
+#[cfg(unix)]
+fn adjust_size(size: Size) -> Size {
+    size
+}
+
+#[cfg(windows)]
+fn adjust_size(glfw: &mut Glfw, size: Size) -> Size {
+    let monitor = get_monitors(glfw).pop().unwrap();
+    size * monitor.scale
+}
+
+fn get_monitors(glfw: &mut Glfw) -> Vec<Monitor> {
+    glfw.with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect())
 }

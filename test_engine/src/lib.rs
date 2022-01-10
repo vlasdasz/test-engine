@@ -16,7 +16,8 @@ pub mod debug_view;
 pub mod paths;
 pub mod screen;
 mod sprites_drawer;
-pub mod ui_drawer;
+mod ui_drawer;
+pub mod ui_layer;
 
 pub use gl_image::Image;
 pub use sprites::{Level, LevelBase, Sprite};

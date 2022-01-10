@@ -1,3 +1,5 @@
+use std::ops::Mul;
+
 use serde::{Deserialize, Serialize};
 use tools::IntoF32;
 
@@ -36,5 +38,12 @@ impl<W: IntoF32, H: IntoF32> From<(W, H)> for Size {
             width:  tup.0.into_f32(),
             height: tup.1.into_f32(),
         }
+    }
+}
+
+impl<T: IntoF32> Mul<T> for Size {
+    type Output = Size;
+    fn mul(self, rhs: T) -> Self::Output {
+        (self.width * rhs.into_f32(), self.height * rhs.into_f32()).into()
     }
 }

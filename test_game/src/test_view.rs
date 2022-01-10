@@ -3,7 +3,6 @@ use std::{borrow::BorrowMut, ops::Deref};
 use test_engine::{
     assets::Assets,
     gm::Color,
-    screen::GameView,
     sprites::Control,
     ui::{
         basic::{Button, Circle},
@@ -11,6 +10,7 @@ use test_engine::{
         init_view_on, init_view_with_frame, make_view_on, DPadView, ImageView, Label, View,
         ViewBase,
     },
+    ui_layer::GameView,
     Level,
 };
 use tools::{Event, Rglica, ToRglica};

@@ -23,6 +23,7 @@ cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
 }}
 
 pub mod buffers;
+pub mod events;
 pub mod gl_info;
 pub mod gl_wrapper;
 pub mod image_loader;

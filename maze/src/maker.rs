@@ -28,6 +28,7 @@ impl Maker {
     }
 
     pub fn generate(&mut self) -> Receiver<Grid> {
+        #![allow(unused_must_use)]
         let (sender, receiver) = mpsc::channel::<Grid>(1);
 
         self.current_mut().visited = true;

@@ -7,8 +7,10 @@ use tools::Boxed;
 use crate::test_view::TestGameView;
 
 fn main() {
-    Screen::new((1000, 600).into())
-        .set_view(TestGameView::boxed())
-        .add_debug_view()
-        .start_main_loop();
+    let mut screen = Screen::new((1000, 600).into());
+
+    screen.ui.set_view(TestGameView::boxed());
+    screen.ui.add_debug_view();
+
+    screen.start_main_loop();
 }

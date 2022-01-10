@@ -25,16 +25,14 @@ static mut MONITOR: *mut Monitor = ptr::null_mut();
 #[no_mangle]
 pub extern "C" fn create_screen() {
     unsafe {
-        SCREEN = Box::into_raw(Box::new(
-            Screen::new(Default::default())
-                .set_view(TestGameView::boxed())
-                .add_debug_view(),
-        ));
+        let mut screen = Box::new(Screen::new(Default::default()));
 
-        SCREEN
-            .as_mut()
-            .unwrap()
-            .add_monitor(MONITOR.as_ref().unwrap().clone());
+        screen.ui.set_view(TestGameView::boxed());
+        screen.ui.add_debug_view();
+
+        screen.add_monitor(MONITOR.as_ref().unwrap().clone());
+
+        SCREEN = Box::into_raw(screen);
     }
 }
 
@@ -56,7 +54,7 @@ pub extern "C" fn update_screen() {
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     #[allow(clippy::useless_conversion)]
     unsafe {
-        SCREEN.as_mut().unwrap().on_touch(Touch {
+        SCREEN.as_mut().unwrap().ui.on_touch(Touch {
             id:       id.into(),
             position: (x * 2.0, y * 2.0).into(),
             event:    Event::from_int(event),

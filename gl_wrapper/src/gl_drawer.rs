@@ -1,20 +1,15 @@
-use glfw::{Action, Key, MouseButton};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, Window};
-use gm::{Point, Size};
-use tools::Event;
+use gm::Size;
+use tools::Rglica;
 
-use crate::{gl_loader::GLFWEvents, monitor::Monitor, GLLoader};
+use crate::{events::Events, gl_loader::GLFWEvents, monitor::Monitor, GLLoader};
 
 pub struct GLDrawer {
-    window:              Window,
-    events:              GLFWEvents,
-    pub monitors:        Vec<Monitor>,
-    pub on_frame_drawn:  Event,
-    pub on_cursor_moved: Event<Point>,
-    pub on_size_changed: Event<Size>,
-    pub on_mouse_click:  Event<(MouseButton, Action)>,
-    pub on_key_pressed:  Event<(Key, Action)>,
+    window:       Window,
+    gl_events:    GLFWEvents,
+    events:       Rglica<Events>,
+    pub monitors: Vec<Monitor>,
 }
 
 impl GLDrawer {
@@ -27,28 +22,28 @@ impl GLDrawer {
         while !self.window.should_close() {
             self.window.glfw.poll_events();
 
-            for (_, event) in glfw::flush_messages(&self.events) {
+            for (_, event) in glfw::flush_messages(&self.gl_events) {
                 match event {
                     glfw::WindowEvent::Key(key, _, action, _) => {
                         if key == glfw::Key::Escape {
                             self.window.set_should_close(true)
                         }
-                        self.on_key_pressed.trigger((key, action))
+                        self.events.on_key_pressed.trigger((key, action))
                     }
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
-                        self.on_cursor_moved.trigger((xpos, ypos).into())
+                        self.events.on_cursor_moved.trigger((xpos, ypos).into())
                     }
                     glfw::WindowEvent::Size(width, height) => {
-                        self.on_size_changed.trigger((width, height).into())
+                        self.events.on_size_changed.trigger((width, height).into())
                     }
                     glfw::WindowEvent::MouseButton(btn, action, _) => {
-                        self.on_mouse_click.trigger((btn, action))
+                        self.events.on_mouse_click.trigger((btn, action))
                     }
                     _ => {}
                 }
             }
 
-            self.on_frame_drawn.trigger(());
+            self.events.on_frame_drawn.trigger(());
             self.window.swap_buffers();
         }
     }
@@ -59,21 +54,17 @@ impl GLDrawer {
 }
 
 impl GLDrawer {
-    pub fn new(size: Size) -> Self {
+    pub fn new(size: Size, events: Rglica<Events>) -> Self {
         error!("Creating GLDrawer");
 
         let mut loader = GLLoader::new(size);
         let monitors = loader.monitors();
         Self {
             window: loader.window,
-            events: loader.events,
-            monitors,
+            gl_events: loader.events,
+            events,
 
-            on_frame_drawn: Default::default(),
-            on_cursor_moved: Default::default(),
-            on_size_changed: Default::default(),
-            on_mouse_click: Default::default(),
-            on_key_pressed: Default::default(),
+            monitors,
         }
     }
 }
