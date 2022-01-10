@@ -54,16 +54,13 @@ impl GLDrawer {
 }
 
 impl GLDrawer {
-    pub fn new(size: Size, events: Rglica<Events>) -> Self {
-        error!("Creating GLDrawer");
-
-        let mut loader = GLLoader::new(size);
+    pub fn new(events: Rglica<Events>) -> Self {
+        let mut loader = GLLoader::default();
         let monitors = loader.monitors();
         Self {
             window: loader.window,
             gl_events: loader.events,
             events,
-
             monitors,
         }
     }

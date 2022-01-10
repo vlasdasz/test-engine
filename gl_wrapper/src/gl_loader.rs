@@ -3,7 +3,6 @@
 extern crate glfw;
 
 use glfw::{Context, Glfw, OpenGlProfileHint::Core, Window, WindowEvent};
-use gm::Size;
 
 use crate::monitor::Monitor;
 
@@ -15,15 +14,9 @@ pub struct GLLoader {
     pub events: GLFWEvents,
 }
 
-impl GLLoader {
-    pub fn new(size: Size) -> GLLoader {
+impl Default for GLLoader {
+    fn default() -> Self {
         let mut glfw = glfw::init(glfw::LOG_ERRORS).unwrap();
-
-        dbg!(&size);
-
-        let size = adjust_size(&mut glfw, size);
-
-        dbg!(&size);
 
         glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
@@ -33,12 +26,7 @@ impl GLLoader {
         glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
 
         let (mut window, events) = glfw
-            .create_window(
-                size.width as u32,
-                size.height as u32,
-                "Test Engine",
-                glfw::WindowMode::Windowed,
-            )
+            .create_window(500, 500, "Test Engine", glfw::WindowMode::Windowed)
             .expect("Failed to create GLFW window.");
 
         GL!(load_with, |symbol| window.get_proc_address(symbol)
@@ -52,23 +40,11 @@ impl GLLoader {
             events,
         }
     }
+}
 
+impl GLLoader {
     pub fn monitors(&mut self) -> Vec<Monitor> {
-        get_monitors(&mut self.glfw)
+        self.glfw
+            .with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect())
     }
-}
-
-#[cfg(unix)]
-fn adjust_size(_glfw: &mut Glfw, size: Size) -> Size {
-    size
-}
-
-#[cfg(windows)]
-fn adjust_size(glfw: &mut Glfw, size: Size) -> Size {
-    let monitor = get_monitors(glfw).pop().unwrap();
-    size * monitor.scale
-}
-
-fn get_monitors(glfw: &mut Glfw) -> Vec<Monitor> {
-    glfw.with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect())
 }

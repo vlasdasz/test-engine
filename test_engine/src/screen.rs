@@ -56,7 +56,20 @@ impl Screen {
         GLWrapper::set_clear_color(&Color::GRAY);
 
         self.ui.root_view.calculate_absolute_frame();
+
+        let size = Screen::adjust_size(self.monitor.clone(), size);
+
         self.set_size(size);
+    }
+
+    #[cfg(windows)]
+    fn adjust_size(monitor: Monitor, size: Size) -> Size {
+        size * monitor.scale
+    }
+
+    #[cfg(unix)]
+    fn adjust_size(_monitor: Monitor, size: Size) -> Size {
+        size
     }
 }
 
@@ -108,6 +121,7 @@ impl Screen {
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
+        dbg!(&size);
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
         self.on_size_changed(size);
@@ -139,7 +153,7 @@ impl Screen {
         let events = Box::new(Events::default());
 
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
-        let drawer = GLDrawer::new(size, events.to_rglica());
+        let drawer = GLDrawer::new(events.to_rglica());
         let assets = Rc::new(Assets::default());
         let sprites_drawer = TESpritesDrawer::new(assets.clone());
 
