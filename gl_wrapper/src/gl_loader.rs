@@ -59,7 +59,7 @@ impl GLLoader {
 }
 
 #[cfg(unix)]
-fn adjust_size(size: Size) -> Size {
+fn adjust_size(_glfw: &mut Glfw, size: Size) -> Size {
     size
 }
 
