@@ -6,14 +6,14 @@ use gl_wrapper::events::Events;
 use glfw::{Action, Key};
 use gm::Point;
 use sprites::{Level, SpritesDrawer};
-use tools::{Rglica, ToRglica};
+use tools::{Boxed, Rglica, ToRglica};
 use ui::{
     init_view_on,
     input::touch::{ButtonState, Event},
-    Touch, View,
+    Touch, View, ViewBase,
 };
 
-use crate::{debug_view::DebugView, ui_drawer::UIDrawer};
+use crate::{assets::Assets, debug_view::DebugView, ui_drawer::UIDrawer};
 
 pub trait GameView: View {
     fn level(&self) -> &dyn Level;
@@ -38,6 +38,25 @@ pub struct UILayer {
     pub fps:        u64,
     pub prev_time:  i64,
     pub frame_time: f64,
+}
+
+impl UILayer {
+    pub fn new(assets: Rc<Assets>, sprites_drawer: Rc<dyn SpritesDrawer>) -> Self {
+        Self {
+            #[cfg(not(any(target_os = "ios", target_os = "android")))]
+            cursor_position: Default::default(),
+            root_view: ViewBase::boxed(),
+            debug_view: Default::default(),
+            view: Default::default(),
+            sprites_drawer,
+            drawer: UIDrawer::new(assets),
+            #[cfg(not(any(target_os = "ios", target_os = "android")))]
+            events: Default::default(),
+            fps: Default::default(),
+            prev_time: Default::default(),
+            frame_time: Default::default(),
+        }
+    }
 }
 
 impl UILayer {

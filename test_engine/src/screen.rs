@@ -10,12 +10,9 @@ use gl_wrapper::{events::Events, GLDrawer};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{Color, Size};
 use sprites::{Sprite, SpritesDrawer};
-use tools::{Boxed, ToRglica};
-use ui::ViewBase;
+use tools::ToRglica;
 
-use crate::{
-    assets::Assets, paths, sprites_drawer::TESpritesDrawer, ui_drawer::UIDrawer, ui_layer::UILayer,
-};
+use crate::{assets::Assets, paths, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 
 pub struct Screen {
     pub ui: UILayer,
@@ -146,30 +143,11 @@ impl Screen {
         let assets = Rc::new(Assets::default());
         let sprites_drawer = TESpritesDrawer::new(assets.clone());
 
-        let ui = UILayer {
-            #[cfg(not(any(target_os = "ios", target_os = "android")))]
-            cursor_position:
-                Default::default(),
-            root_view:
-                ViewBase::boxed(),
-            debug_view:
-                Default::default(),
-            view:
-                Default::default(),
-            sprites_drawer:
-                sprites_drawer.clone(),
-            drawer:
-                UIDrawer::new(assets),
-            #[cfg(not(any(target_os = "ios", target_os = "android")))]
-            events:                                                                     events
-                .to_rglica(),
-            fps:
-                Default::default(),
-            prev_time:
-                Default::default(),
-            frame_time:
-                Default::default(),
-        };
+        let mut ui = UILayer::new(assets, sprites_drawer.clone());
+
+        cfg_if! {if #[cfg(not(any(target_os = "ios", target_os = "android")))] {
+            ui.events = events.to_rglica();
+        }}
 
         let mut screen = Self {
             ui,
