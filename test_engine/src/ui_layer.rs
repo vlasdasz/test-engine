@@ -1,6 +1,8 @@
 use std::{ops::DerefMut, rc::Rc};
 
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::events::Events;
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::Point;
 use sprites::{Level, SpritesDrawer};
@@ -30,6 +32,7 @@ pub struct UILayer {
 
     pub drawer: UIDrawer,
 
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub events: Rglica<Events>,
 
     pub fps:        u64,

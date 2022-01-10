@@ -6,8 +6,8 @@ use std::{
 use cfg_if::cfg_if;
 use chrono::Utc;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
-use gl_wrapper::GLDrawer;
-use gl_wrapper::{events::Events, monitor::Monitor, GLWrapper};
+use gl_wrapper::{events::Events, GLDrawer};
+use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{Color, Size};
 use sprites::{Sprite, SpritesDrawer};
 use tools::{Boxed, ToRglica};
@@ -20,6 +20,7 @@ use crate::{
 pub struct Screen {
     pub ui: UILayer,
 
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub events: Box<Events>,
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
@@ -140,6 +141,7 @@ impl Screen {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let events = Box::new(Events::default());
 
+        #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(size, events.to_rglica());
         let assets = Rc::new(Assets::default());
         let sprites_drawer = TESpritesDrawer::new(assets.clone());
@@ -158,6 +160,7 @@ impl Screen {
                 sprites_drawer.clone(),
             drawer:
                 UIDrawer::new(assets),
+            #[cfg(not(any(target_os = "ios", target_os = "android")))]
             events:                                                                     events
                 .to_rglica(),
             fps:
@@ -170,6 +173,7 @@ impl Screen {
 
         let mut screen = Self {
             ui,
+            #[cfg(not(any(target_os = "ios", target_os = "android")))]
             events,
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             drawer,
