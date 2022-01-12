@@ -15,14 +15,14 @@ use test_engine::{
 };
 use tools::{Event, Rglica, ToRglica};
 
-use crate::test_level::TestLevel;
+use crate::test_game_level::TestGameLevel;
 
 static mut COUNTER: u32 = 0;
 
 #[derive(Default)]
 pub struct TestGameView {
     base:         ViewBase,
-    level:        TestLevel,
+    level:        TestGameLevel,
     image_view:   Rglica<ImageView>,
     label:        Rglica<Label>,
     dpad:         Rglica<DPadView>,

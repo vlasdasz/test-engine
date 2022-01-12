@@ -11,10 +11,10 @@ use test_engine::{
 };
 use tools::Boxed;
 
-use crate::test_view::TestGameView;
+use crate::test_game_view::TestGameView;
 
-mod test_level;
-mod test_view;
+mod test_game_level;
+mod test_game_view;
 
 #[macro_use]
 extern crate log;

@@ -1,11 +1,11 @@
 use test_engine::{assets::Assets, sprites::Control, Level, LevelBase, Sprite};
 
 #[derive(Default)]
-pub struct TestLevel {
+pub struct TestGameLevel {
     base: LevelBase,
 }
 
-impl Level for TestLevel {
+impl Level for TestGameLevel {
     fn setup(&mut self) {
         self.base.player = self.add_body((0, 10, 17.0 / 6.0, 28.0 / 6.0).into());
         self.base.player.set_image(Assets::image("frisk.png"));
