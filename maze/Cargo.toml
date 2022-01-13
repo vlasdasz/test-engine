@@ -9,9 +9,9 @@ name = "maze"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-tokio = "1"
+tokio = "1.15"
 
 gm = { path = "../gm" }
 tools = { path = "../.rdeps/tools" }
 
-rand = "0"
+rand = "0.8"

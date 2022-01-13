@@ -57,6 +57,9 @@ pub trait Level {
     }
 
     fn player(&mut self) -> &mut Rglica<Body> {
+        if self.level().player.is_null() {
+            panic!("Getting null player from Level");
+        }
         &mut self.level_mut().player
     }
 

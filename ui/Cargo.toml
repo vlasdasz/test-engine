@@ -9,9 +9,9 @@ name = "ui"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-log = "0"
-fontdue = "0"
-lazy_static = "1"
+log = "0.4"
+fontdue = "0.6"
+lazy_static = "1.4"
 
 gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }
@@ -20,9 +20,9 @@ gl_wrapper = { path = "../gl_wrapper" }
 tools = { path = "../.rdeps/tools" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
-gl = "0"
-glfw = "0"
+gl = "0.14"
+glfw = "0.43"
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
-mashup = "0"
+mashup = "0.1"
 gles31-sys = { path = "../.rdeps/gles31-sys" }

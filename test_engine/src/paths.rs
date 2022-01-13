@@ -1,8 +1,9 @@
-use std::{env, path::PathBuf};
+use std::path::PathBuf;
 
-#[allow(deprecated)]
+use home::home_dir;
+
 pub fn home() -> PathBuf {
-    env::home_dir().unwrap_or_default()
+    home_dir().unwrap_or_default()
 }
 
 pub fn root() -> PathBuf {

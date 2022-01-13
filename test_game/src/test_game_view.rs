@@ -35,6 +35,8 @@ pub struct TestGameView {
 
 impl TestGameView {
     fn setup_level(&mut self) {
+        self.level.setup();
+
         let mut level = self.level.borrow_mut().to_rglica();
 
         let mut lvl = level.clone();

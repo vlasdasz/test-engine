@@ -7,6 +7,11 @@ use tools::Boxed;
 use crate::test_game_view::TestGameView;
 
 fn main() {
+
+    let five = 5;
+
+    println!("Hello: {five}");
+
     let mut screen = Screen::new((1000, 600).into());
 
     screen.ui.set_view(TestGameView::boxed());
