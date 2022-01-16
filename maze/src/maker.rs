@@ -27,41 +27,44 @@ impl Maker {
         }
     }
 
-    pub fn generate(&mut self) -> Receiver<Grid> {
-        #![allow(unused_must_use)]
+    pub fn generate() -> Receiver<Grid> {
         let (sender, receiver) = mpsc::channel::<Grid>(1);
 
-        self.current_mut().visited = true;
+        tokio::spawn(async move {
+            let mut maker = Maker::new(50, 50);
 
-        while self.has_unvisited() {
-            let unvisited = self.unvisited_neighbours();
+            maker.current_mut().visited = true;
 
-            if unvisited.is_empty() {
-                if let Some(pop) = self.stack.pop() {
-                    self.current_pos = pop;
+            while maker.has_unvisited() {
+                let unvisited = maker.unvisited_neighbours();
+
+                if unvisited.is_empty() {
+                    if let Some(pop) = maker.stack.pop() {
+                        maker.current_pos = pop;
+                    }
+                    continue;
                 }
-                continue;
+
+                dbg!(&unvisited);
+
+                let next = *unvisited.choose(&mut rand::thread_rng()).unwrap();
+
+                maker.stack.push(maker.current_pos);
+
+                sender.send(maker.grid.clone()).await.unwrap();
+
+                maker.remove_walls(next);
+
+                maker.current_pos = next;
+                maker.at_mut(next).visited = true;
             }
-
-            dbg!(&unvisited);
-
-            let next = *unvisited.choose(&mut rand::thread_rng()).unwrap();
-
-            self.stack.push(self.current_pos);
-
-            sender.send(self.grid.clone());
-
-            self.remove_walls(next);
-
-            self.current_pos = next;
-            self.at_mut(next).visited = true;
-        }
+        });
 
         receiver
     }
 
-    fn make(mut self) -> Grid {
-        self.generate();
+    fn make(self) -> Grid {
+        //self.generate();
         dbg!("goneroted");
         self.grid
     }

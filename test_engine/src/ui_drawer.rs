@@ -40,7 +40,6 @@ impl UIDrawer {
 
 impl UIDrawer {
     pub fn draw(&self, view: &mut dyn View) {
-
         view.update();
 
         if let Some(image) = view.image() {
