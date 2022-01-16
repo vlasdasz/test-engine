@@ -94,15 +94,15 @@ impl Maker {
     fn unvisited_neighbours(&self) -> Vec<Point> {
         let mut result = vec![];
 
-        const NEIGH: &[Point; 4] = &[
+        const NEIGHBOURS: &[Point; 4] = &[
             Point { x: 0, y: -1 },
             Point { x: 1, y: 0 },
             Point { x: 0, y: 1 },
             Point { x: -1, y: 0 },
         ];
 
-        for neigh in NEIGH {
-            let pos = &self.current_pos + neigh;
+        for neighbor in NEIGHBOURS {
+            let pos = &self.current_pos + neighbor;
             if pos.is_negative() || self.at(pos).visited {
                 continue;
             }

@@ -152,12 +152,19 @@ impl Screen {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let events = Box::new(Events::default());
 
+        dbg!("smik");
+
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(events.to_rglica());
+        dbg!("smik");
         let assets = Rc::new(Assets::default());
+        dbg!("smik");
         let sprites_drawer = TESpritesDrawer::new(assets.clone());
 
+        dbg!("smik");
+
         let mut ui = UILayer::new(assets, sprites_drawer.clone());
+
 
         cfg_if! {if #[cfg(not(any(target_os = "ios", target_os = "android")))] {
             ui.events = events.to_rglica();

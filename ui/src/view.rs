@@ -16,6 +16,8 @@ pub trait View: Boxed {
 
     fn on_touch(&mut self, _: &Touch) {}
 
+    fn update(&mut self) {}
+
     fn color(&self) -> &Color {
         &self.view()._color
     }
