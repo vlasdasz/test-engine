@@ -2,17 +2,13 @@ use std::any::Any;
 
 use gm::Point;
 use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
-use serde::{Deserialize, Serialize};
 use tools::{as_any::AsAny, Rglica};
 
 use crate::{rigid_handle::RigidHandle, Control, Level, Sprite, SpriteBase};
 
-#[derive(Deserialize, Serialize)]
 pub struct Body {
     base:   SpriteBase,
-    #[serde(skip)]
     handle: RigidHandle,
-    #[serde(skip)]
     level:  Rglica<dyn Level>,
 }
 
@@ -42,7 +38,6 @@ impl Body {
     }
 }
 
-#[typetag::serde(name = "Body")]
 impl Sprite for Body {
     fn position(&self) -> Point {
         (self.body().translation().x, self.body().translation().y).into()

@@ -1,6 +1,9 @@
+use std::time::Duration;
+
 use gm::flat::point::PointBase;
 use rand::seq::SliceRandom;
 use tokio::sync::mpsc::{self, Receiver};
+use tokio::time::sleep;
 
 use crate::{Cell, Grid};
 
@@ -31,6 +34,9 @@ impl Maker {
         let (sender, receiver) = mpsc::channel::<Grid>(1);
 
         tokio::spawn(async move {
+
+            sleep(Duration::from_secs(1)).await;
+
             let mut maker = Maker::new(50, 50);
 
             maker.current_mut().visited = true;
@@ -45,8 +51,6 @@ impl Maker {
                     continue;
                 }
 
-                dbg!(&unvisited);
-
                 let next = *unvisited.choose(&mut rand::thread_rng()).unwrap();
 
                 maker.stack.push(maker.current_pos);
@@ -57,6 +61,8 @@ impl Maker {
 
                 maker.current_pos = next;
                 maker.at_mut(next).visited = true;
+
+                sleep(Duration::from_secs(1)).await;
             }
         });
 

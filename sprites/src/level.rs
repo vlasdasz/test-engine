@@ -8,7 +8,6 @@ use rapier2d::{
         JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
     },
 };
-use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use tools::{Rglica, ToRglica};
 
 use crate::{sprites_drawer::DummyDrawer, Body, Collider, Sprite, SpriteBase, SpritesDrawer};
@@ -81,6 +80,10 @@ pub trait Level {
 
     fn add_sprite(&mut self, sprite: SpriteBase) {
         self.level_mut().add_sprite(sprite)
+    }
+
+    fn remove_sprite(&mut self, address: u64) {
+        self.level_mut().remove_sprite(address)
     }
 
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
@@ -157,6 +160,10 @@ impl LevelBase {
         self.sprites.push(Box::new(sprite))
     }
 
+    pub fn remove_sprite(&mut self, address: u64) {
+        //self.sp
+    }
+
     pub fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
         let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
             .translation(Vector2::new(sprite.position().x, sprite.position().y))
@@ -203,26 +210,5 @@ impl Default for LevelBase {
 
             integration_parameters: IntegrationParameters::default(),
         }
-    }
-}
-
-impl Serialize for LevelBase {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut s = serializer.serialize_struct("Level", 2)?;
-        s.serialize_field("sprites", &self.sprites)?;
-        s.serialize_field("player", self.player.deref())?;
-        s.end()
-    }
-}
-
-impl<'a> Deserialize<'a> for LevelBase {
-    fn deserialize<D>(_deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'a>,
-    {
-        todo!()
     }
 }

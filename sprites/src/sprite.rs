@@ -2,10 +2,8 @@ use std::any::Any;
 
 use gl_image::Image;
 use gm::{Color, Point, Size};
-use serde::{Deserialize, Serialize};
 use tools::{as_any::AsAny, math::IntoF32};
 
-#[typetag::serde(tag = "Sprite")]
 pub trait Sprite: AsAny {
     fn size(&self) -> Size {
         self.sprite().size
@@ -31,11 +29,15 @@ pub trait Sprite: AsAny {
         self.sprite_mut().image = image.into()
     }
 
+    fn remove(&self) {
+        //self.level
+    }
+
     fn sprite(&self) -> &SpriteBase;
     fn sprite_mut(&mut self) -> &mut SpriteBase;
 }
 
-#[derive(Default, Debug, Serialize, Deserialize)]
+#[derive(Default, Debug)]
 pub struct SpriteBase {
     position:  Point,
     size:      Size,
@@ -44,7 +46,6 @@ pub struct SpriteBase {
     pub image: Option<Image>,
 }
 
-#[typetag::serde(name = "SpriteBase")]
 impl Sprite for SpriteBase {
     fn sprite(&self) -> &SpriteBase {
         self
