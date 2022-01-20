@@ -1,44 +1,10 @@
-use std::{borrow::Borrow, ops::Deref, rc::Rc};
+use std::borrow::Borrow;
 
-use gm::{flat::point::Direction, Point};
-use rapier2d::{
-    na::Vector2,
-    prelude::{
-        BroadPhase, CCDSolver, ColliderBuilder, ColliderSet, IntegrationParameters, IslandManager,
-        JointSet, NarrowPhase, PhysicsPipeline, RigidBodyBuilder, RigidBodySet,
-    },
-};
-use tools::{Rglica, ToRglica};
+use gm::Point;
+use rapier2d::{na::Vector2, prelude::RigidBodySet};
+use tools::Rglica;
 
-use crate::{sprites_drawer::DummyDrawer, Body, Collider, Sprite, SpriteBase, SpritesDrawer};
-
-pub trait Control {
-    fn jump(&mut self);
-    fn go_left(&mut self);
-    fn go_right(&mut self);
-    fn go_down(&mut self);
-    fn add_impulse(&mut self, impulse: &Point);
-
-    fn move_by_key(&mut self, key: String) {
-        match key.as_ref() {
-            "a" => self.go_left(),
-            "d" => self.go_right(),
-            "w" | " " => self.jump(),
-            "s" => self.go_down(),
-            _ => {}
-        }
-    }
-
-    fn move_by_direction(&mut self, direction: Direction) {
-        match direction {
-            Direction::Up => self.jump(),
-            Direction::Down => self.go_down(),
-            Direction::Left => self.go_left(),
-            Direction::Right => self.go_right(),
-        }
-    }
-}
-
+use crate::{Body, Collider, LevelBase, Sprite, SpriteBase, SpritesDrawer};
 pub trait Level {
     fn setup(&mut self) {}
 
@@ -67,11 +33,11 @@ pub trait Level {
     }
 
     fn rigid_bodies(&self) -> &RigidBodySet {
-        &self.level().rigid_body_set
+        &self.level().sets.rigid_body
     }
 
     fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet {
-        &mut self.level_mut().rigid_body_set
+        &mut self.level_mut().sets.rigid_body
     }
 
     fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
@@ -98,117 +64,5 @@ pub trait Level {
     fn level_mut(&mut self) -> &mut LevelBase;
     fn drawer(&self) -> &dyn SpritesDrawer {
         todo!()
-    }
-}
-
-pub struct LevelBase {
-    pub player:  Rglica<Body>,
-    pub sprites: Vec<Box<dyn Sprite>>,
-    pub drawer:  Rc<dyn SpritesDrawer>,
-
-    rigid_body_set: RigidBodySet,
-    collider_set:   ColliderSet,
-
-    gravity:          Vector2<f32>,
-    physics_pipeline: PhysicsPipeline,
-    island_manager:   IslandManager,
-    broad_phase:      BroadPhase,
-    narrow_phase:     NarrowPhase,
-    joint_set:        JointSet,
-    ccd_solver:       CCDSolver,
-
-    physics_hooks: (),
-    event_handler: (),
-
-    integration_parameters: IntegrationParameters,
-}
-
-impl LevelBase {
-    pub fn update_physics(&mut self) {
-        self.physics_pipeline.step(
-            &self.gravity,
-            &self.integration_parameters,
-            &mut self.island_manager,
-            &mut self.broad_phase,
-            &mut self.narrow_phase,
-            &mut self.rigid_body_set,
-            &mut self.collider_set,
-            &mut self.joint_set,
-            &mut self.ccd_solver,
-            &self.physics_hooks,
-            &self.event_handler,
-        );
-    }
-
-    pub fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
-        let rigid_body = RigidBodyBuilder::new_dynamic()
-            .translation(Vector2::new(sprite.position().x, sprite.position().y))
-            .build();
-        let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
-            .restitution(0.7)
-            .build();
-        let body_handle = self.rigid_body_set.insert(rigid_body);
-        self.collider_set
-            .insert_with_parent(collider, body_handle, &mut self.rigid_body_set);
-        let boxed = Box::new(Body::make(sprite, body_handle, self));
-        let body = boxed.to_rglica();
-        self.sprites.push(boxed);
-        body
-    }
-
-    pub fn add_sprite(&mut self, sprite: SpriteBase) {
-        self.sprites.push(Box::new(sprite))
-    }
-
-    pub fn remove_sprite(&mut self, address: u64) {
-        //self.sp
-    }
-
-    pub fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
-        let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
-            .translation(Vector2::new(sprite.position().x, sprite.position().y))
-            .build();
-        self.collider_set.insert(collider);
-        let boxed = Box::<Collider>::new(sprite.into());
-        let wall = boxed.to_rglica();
-        self.sprites.push(boxed);
-        wall
-    }
-}
-
-impl Level for LevelBase {
-    fn level(&self) -> &LevelBase {
-        self
-    }
-    fn level_mut(&mut self) -> &mut LevelBase {
-        self
-    }
-    fn drawer(&self) -> &dyn SpritesDrawer {
-        self.drawer.deref()
-    }
-}
-
-impl Default for LevelBase {
-    fn default() -> Self {
-        Self {
-            sprites:        vec![],
-            rigid_body_set: RigidBodySet::new(),
-            drawer:         Rc::new(DummyDrawer::default()),
-
-            collider_set:     ColliderSet::new(),
-            gravity:          Vector2::new(0.0, -9.81),
-            physics_pipeline: PhysicsPipeline::new(),
-            island_manager:   IslandManager::new(),
-            broad_phase:      BroadPhase::new(),
-            narrow_phase:     NarrowPhase::new(),
-            joint_set:        JointSet::new(),
-            ccd_solver:       CCDSolver::new(),
-
-            physics_hooks: (),
-            event_handler: (),
-            player:        Default::default(),
-
-            integration_parameters: IntegrationParameters::default(),
-        }
     }
 }

@@ -4,7 +4,7 @@ use gm::Point;
 use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
 use tools::{as_any::AsAny, Rglica};
 
-use crate::{rigid_handle::RigidHandle, Control, Level, Sprite, SpriteBase};
+use crate::{control::Control, rigid_handle::RigidHandle, Level, Sprite, SpriteBase};
 
 pub struct Body {
     base:   SpriteBase,
