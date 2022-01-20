@@ -1,8 +1,10 @@
-use std::any::Any;
+use std::{any::Any, ops::{DerefMut, Deref}};
 
 use gl_image::Image;
 use gm::{Color, Point, Size};
-use tools::{as_any::AsAny, math::IntoF32};
+use tools::{as_any::AsAny, math::IntoF32, Rglica, Address, ToRglica};
+
+use crate::Level;
 
 pub trait Sprite: AsAny {
     fn size(&self) -> Size {
@@ -29,8 +31,17 @@ pub trait Sprite: AsAny {
         self.sprite_mut().image = image.into()
     }
 
-    fn remove(&self) {
-        //self.level
+    fn remove(&mut self) {
+        let address = self.to_rglica().address();
+        self.level_mut().remove_sprite(address);
+    }
+
+    fn level(&self) -> &dyn Level {
+        self.sprite().level.deref()
+    }
+
+    fn level_mut(&mut self) -> &mut dyn Level {
+        self.sprite_mut().level.deref_mut()
     }
 
     fn sprite(&self) -> &SpriteBase;
@@ -42,6 +53,8 @@ pub struct SpriteBase {
     position:  Point,
     size:      Size,
     rotation:  f32,
+    level:     Rglica<dyn Level>,
+
     pub color: Color,
     pub image: Option<Image>,
 }

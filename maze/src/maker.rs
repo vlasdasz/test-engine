@@ -2,8 +2,10 @@ use std::time::Duration;
 
 use gm::flat::point::PointBase;
 use rand::seq::SliceRandom;
-use tokio::sync::mpsc::{self, Receiver};
-use tokio::time::sleep;
+use tokio::{
+    sync::mpsc::{self, Receiver},
+    time::sleep,
+};
 
 use crate::{Cell, Grid};
 
@@ -34,7 +36,6 @@ impl Maker {
         let (sender, receiver) = mpsc::channel::<Grid>(1);
 
         tokio::spawn(async move {
-
             sleep(Duration::from_secs(1)).await;
 
             let mut maker = Maker::new(50, 50);
