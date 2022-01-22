@@ -43,25 +43,10 @@ impl Buffer {
         GL!(GenBuffers, 1, &mut vertex_buffer_object);
         GL!(BindBuffer, GLC!(ARRAY_BUFFER), vertex_buffer_object);
 
-        cfg_if::cfg_if! {
-            if #[cfg(any(target_os="ios", target_os="android"))] {
-                cfg_if::cfg_if! {
-                    if #[cfg(target_pointer_width = "64")] {
-                        type VertexSize = i64;
-                    } else {
-                        type VertexSize = i32;
-                    }
-                };
-            }
-            else {
-                type VertexSize = isize;
-            }
-        };
-
         GL!(
             BufferData,
             GLC!(ARRAY_BUFFER),
-            (vertex_data.size * std::mem::size_of::<GLT!(GLfloat)>()) as VertexSize,
+            (vertex_data.size * std::mem::size_of::<GLT!(GLfloat)>()) as _,
             vertex_data.data as *const c_void,
             GLC!(STATIC_DRAW)
         );
@@ -72,7 +57,7 @@ impl Buffer {
             GL!(
                 BufferData,
                 GLC!(ELEMENT_ARRAY_BUFFER),
-                (indices.size * std::mem::size_of::<GLT!(GLushort)>()) as VertexSize,
+                (indices.size * std::mem::size_of::<GLT!(GLushort)>()) as _,
                 indices.data as *const c_void,
                 GLC!(STATIC_DRAW)
             );
