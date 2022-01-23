@@ -2,7 +2,7 @@ use std::any::Any;
 
 use gm::Point;
 use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
-use tools::{as_any::AsAny, Rglica};
+use rtools::{as_any::AsAny, Rglica};
 
 use crate::{control::Control, rigid_handle::RigidHandle, Level, Sprite, SpriteBase};
 

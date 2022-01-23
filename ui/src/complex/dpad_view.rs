@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::flat::point::Direction;
-use tools::{Event, Rglica, ToRglica};
+use rtools::{Event, Rglica, ToRglica};
 
 use crate::{basic::Button, init_view_on, View, ViewBase};
 

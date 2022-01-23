@@ -50,9 +50,9 @@ impl From<&glfw::Monitor> for Monitor {
         let size = monitor.get_physical_size();
         let physical_size: Size = (size.0, size.1).into();
 
-        let ppi = (resolution.height / tools::mm_to_inch(physical_size.height)) as u32;
+        let ppi = (resolution.height / rtools::mm_to_inch(physical_size.height)) as u32;
 
-        let diagonal = tools::mm_to_inch(physical_size.diagonal());
+        let diagonal = rtools::mm_to_inch(physical_size.diagonal());
 
         Self {
             name,

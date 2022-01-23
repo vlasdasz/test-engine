@@ -1,7 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
+use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
-use tools::IntoF32;
 
 pub enum Direction {
     Up,

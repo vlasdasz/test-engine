@@ -18,4 +18,4 @@ gm = { path = "../gm" }
 gl_wrapper = { path = "../gl_wrapper" }
 test_engine = { path = "../test_engine" }
 
-tools = { path = "../.rdeps/tools" }
+rtools = { path = "../.rdeps/tools" }

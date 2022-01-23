@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
 use gm::{Point, Size};
+use rtools::math::IntoF32;
 use sprites::SpritesDrawer;
-use tools::math::IntoF32;
 
 use crate::{assets::Assets, Sprite};
 

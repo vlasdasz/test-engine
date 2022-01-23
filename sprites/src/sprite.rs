@@ -5,7 +5,7 @@ use std::{
 
 use gl_image::Image;
 use gm::{Color, Point, Size};
-use tools::{as_any::AsAny, math::IntoF32, Address, Rglica, ToRglica};
+use rtools::{as_any::AsAny, Address, IntoF32, Rglica, ToRglica};
 
 use crate::Level;
 
@@ -81,8 +81,8 @@ impl AsAny for SpriteBase {
 impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteBase {
     fn from(data: (X, Y, W, H)) -> Self {
         Self {
-            position: (data.0, data.1).into(),
-            size: (data.2, data.3).into(),
+            position: (data.0.into_f32(), data.1.into_f32()).into(),
+            size: (data.2.into_f32(), data.3.into_f32()).into(),
             color: Color::random(),
             ..Default::default()
         }
@@ -92,7 +92,7 @@ impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Spri
 impl<W: IntoF32, H: IntoF32> From<(W, H)> for SpriteBase {
     fn from(data: (W, H)) -> Self {
         Self {
-            size: (data.0, data.1).into(),
+            size: (data.0.into_f32(), data.1.into_f32()).into(),
             color: Color::random(),
             ..Default::default()
         }

@@ -6,8 +6,8 @@ use std::{
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::Size;
 use image::GenericImageView;
+use rtools::file::File;
 use serde::{Deserialize, Serialize};
-use tools::file::File;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Image {

@@ -13,7 +13,7 @@ log = "0.4"
 cfg-if = "1.0"
 
 gm = { path = "../gm" }
-tools = { path = "../.rdeps/tools" }
+rtools = { path = "../.rdeps/tools" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14"

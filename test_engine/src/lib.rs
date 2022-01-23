@@ -5,8 +5,8 @@ pub use gl_image;
 pub use gl_wrapper;
 pub use gm;
 pub use maze;
+pub use rtools;
 pub use sprites;
-pub use tools;
 pub use ui;
 
 pub use crate::screen::Screen;

@@ -1,5 +1,5 @@
 use gm::Rect;
-use tools::{math::IntoF32, Rglica, ToRglica};
+use rtools::{math::IntoF32, Rglica, ToRglica};
 
 use crate::View;
 

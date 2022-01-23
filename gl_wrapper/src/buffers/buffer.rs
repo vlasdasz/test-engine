@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
-use tools::array_view::ArrayView;
+use rtools::array_view::ArrayView;
 
 use crate::BufferConfig;
 

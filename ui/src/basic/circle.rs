@@ -1,5 +1,5 @@
 use gm::{flat::PointsPath, Color, Rect};
-use tools::Rglica;
+use rtools::Rglica;
 
 use crate::{complex::DrawingView, init_view_on, View, ViewBase};
 

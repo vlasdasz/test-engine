@@ -9,8 +9,8 @@ use chrono::Utc;
 use gl_wrapper::{events::Events, GLDrawer};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{Color, Size};
+use rtools::ToRglica;
 use sprites::{Sprite, SpritesDrawer};
-use tools::ToRglica;
 
 use crate::{assets::Assets, paths, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 

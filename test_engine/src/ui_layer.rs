@@ -5,8 +5,8 @@ use gl_wrapper::events::Events;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
 use gm::Point;
+use rtools::{Boxed, Rglica, ToRglica};
 use sprites::{Level, SpritesDrawer};
-use tools::{Boxed, Rglica, ToRglica};
 use ui::{
     init_view_on,
     input::touch::{ButtonState, Event},

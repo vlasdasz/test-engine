@@ -1,4 +1,4 @@
-use tools::{platform::Platform, Boxed, Property, Rglica, ToRglica};
+use rtools::{platform::Platform, Boxed, Property, Rglica, ToRglica};
 use ui::{init_view_on, Label, View, ViewBase};
 
 pub struct DebugView {

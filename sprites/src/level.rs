@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 
 use gm::Point;
 use rapier2d::{na::Vector2, prelude::RigidBodySet};
-use tools::Rglica;
+use rtools::Rglica;
 
 use crate::{Body, Collider, LevelBase, Sprite, SpriteBase, SpritesDrawer};
 pub trait Level {

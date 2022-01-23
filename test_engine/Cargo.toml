@@ -14,7 +14,7 @@ home = "0.5"
 cfg-if = "1.0"
 chrono = "0.4"
 
-tools = { path = "../.rdeps/tools" }
+rtools = { path = "../.rdeps/tools" }
 
 gm = { path = "../gm" }
 ui = { path = "../ui" }

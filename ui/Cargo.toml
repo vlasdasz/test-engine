@@ -17,7 +17,7 @@ gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
 
-tools = { path = "../.rdeps/tools" }
+rtools = { path = "../.rdeps/tools" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14"

@@ -7,7 +7,7 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline, RigidBodyBuilder,
     },
 };
-use tools::{Rglica, ToRglica};
+use rtools::{Rglica, ToRglica};
 
 use crate::{
     sets::Sets, sprites_drawer::DummyDrawer, Body, Collider, Level, Sprite, SpriteBase,

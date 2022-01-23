@@ -1,6 +1,6 @@
 use std::ops::DerefMut;
 
-use tools::Rglica;
+use rtools::Rglica;
 
 use crate::{init_view_on, View, ViewBase};
 

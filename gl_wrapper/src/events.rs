@@ -2,7 +2,7 @@
 
 use glfw::{Action, Key, MouseButton};
 use gm::{Point, Size};
-use tools::Event;
+use rtools::Event;
 
 #[derive(Default)]
 pub struct Events {
