@@ -23,12 +23,12 @@ impl UIDrawer {
         }
     }
 
-    #[cfg(windows)]
+    #[cfg(any(windows, target_os = "linux"))]
     pub fn set_scale(&mut self, _scale: f32) {
         self.scale = 1.0
     }
 
-    #[cfg(unix)]
+    #[cfg(target_os = "macos")]
     pub fn set_scale(&mut self, scale: f32) {
         self.scale = scale
     }

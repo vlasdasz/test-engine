@@ -62,12 +62,12 @@ impl Screen {
         self.set_size(size);
     }
 
-    #[cfg(windows)]
+    #[cfg(any(windows, target_os = "linux"))]
     fn adjust_size(monitor: Monitor, size: Size) -> Size {
         size * monitor.scale
     }
 
-    #[cfg(unix)]
+    #[cfg(target_os = "macos")]
     fn adjust_size(_monitor: Monitor, size: Size) -> Size {
         size
     }
