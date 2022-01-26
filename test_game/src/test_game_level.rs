@@ -1,6 +1,6 @@
 use test_engine::{assets::Assets, sprites::Control, Level, LevelBase, Sprite};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct TestGameLevel {
     base: LevelBase,
 }

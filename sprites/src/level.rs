@@ -1,11 +1,14 @@
-use std::borrow::Borrow;
+use std::{borrow::Borrow, fmt::Debug};
 
 use gm::Point;
-use rapier2d::{na::Vector2, prelude::RigidBodySet};
-use rtools::Rglica;
+use rapier2d::{
+    na::Vector2,
+    prelude::{ColliderBuilder, RigidBodySet},
+};
+use rtools::{Rglica, ToRglica};
 
 use crate::{Body, Collider, LevelBase, Sprite, SpriteBase, SpritesDrawer};
-pub trait Level {
+pub trait Level: Debug {
     fn setup(&mut self) {}
 
     fn update(&mut self) {}
@@ -22,9 +25,7 @@ pub trait Level {
     }
 
     fn player(&mut self) -> &mut Rglica<Body> {
-        if self.level().player.is_null() {
-            panic!("Getting null player from Level");
-        }
+        debug_assert!(self.level().player.is_ok());
         &mut self.level_mut().player
     }
 
@@ -41,19 +42,24 @@ pub trait Level {
     }
 
     fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
-        self.level_mut().add_body(sprite)
+        Body::make(sprite, self.level_mut())
     }
 
     fn add_sprite(&mut self, sprite: SpriteBase) {
-        self.level_mut().add_sprite(sprite)
+        self.level_mut().sprites.push(Box::new(sprite))
     }
 
-    fn remove_sprite(&mut self, address: u64) {
-        self.level_mut().remove_sprite(address)
-    }
+    fn remove_sprite(&mut self, _address: u64) {}
 
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
-        self.level_mut().add_wall(sprite)
+        let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
+            .translation(Vector2::new(sprite.position().x, sprite.position().y))
+            .build();
+        self.level_mut().sets.collider.insert(collider);
+        let boxed = Box::<Collider>::new(sprite.into());
+        let wall = boxed.to_rglica();
+        self.level_mut().sprites.push(boxed);
+        wall
     }
 
     fn set_camera_rotation(&mut self, angle: f32) {

@@ -1,28 +1,53 @@
 use std::any::Any;
 
 use gm::Point;
-use rapier2d::{dynamics::RigidBody, na::Vector2, prelude::RigidBodyHandle};
-use rtools::{as_any::AsAny, Rglica};
+use rapier2d::{
+    dynamics::RigidBody,
+    na::Vector2,
+    prelude::{ColliderBuilder, RigidBodyBuilder},
+};
+use rtools::{as_any::AsAny, Rglica, ToRglica};
 
 use crate::{control::Control, rigid_handle::RigidHandle, Level, Sprite, SpriteBase};
 
 pub struct Body {
-    base:   SpriteBase,
+    sprite: SpriteBase,
     handle: RigidHandle,
     level:  Rglica<dyn Level>,
 }
 
 impl Body {
-    pub fn make(
-        base: SpriteBase,
-        handle: RigidBodyHandle,
-        level: &mut (impl Level + 'static),
-    ) -> Self {
-        Self {
-            base,
-            handle: handle.into(),
+    pub fn make(sprite: SpriteBase, level: &mut (impl Level + 'static)) -> Rglica<Self> {
+        let level_base = level.level_mut();
+
+        let rigid_body = RigidBodyBuilder::new_dynamic()
+            .translation(Vector2::new(sprite.position().x, sprite.position().y))
+            .build();
+        let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
+            .restitution(0.7)
+            .build();
+
+        let body_handle = level_base.sets.rigid_body.insert(rigid_body);
+        level_base.sets.collider.insert_with_parent(
+            collider,
+            body_handle,
+            &mut level_base.sets.rigid_body,
+        );
+
+        #[allow(clippy::drop_ref)]
+        drop(level_base);
+
+        let boxed = Box::new(Self {
+            sprite,
+            handle: body_handle.into(),
             level: Rglica::from_ref(level),
-        }
+        });
+
+        let body = boxed.to_rglica();
+
+        level.level_mut().sprites.push(boxed);
+
+        body
     }
 
     fn body(&self) -> &RigidBody {
@@ -48,11 +73,11 @@ impl Sprite for Body {
     }
 
     fn sprite(&self) -> &SpriteBase {
-        &self.base
+        &self.sprite
     }
 
     fn sprite_mut(&mut self) -> &mut SpriteBase {
-        &mut self.base
+        &mut self.sprite
     }
 }
 
