@@ -17,4 +17,6 @@ jobs:
         with:
           submodules: true
       - name: linux
-        run: cargo build
+        run:
+          - ./linux_deps.sh 
+          - cargo build
