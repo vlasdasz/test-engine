@@ -17,4 +17,4 @@ jobs:
         with:
           submodules: true
       - name: linux
-        run: python3 build.py
+        run: cargo build

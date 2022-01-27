@@ -17,4 +17,4 @@ jobs:
         with:
           submodules: true
       - name: windows
-        run: py build.py
+        run: cargo build
