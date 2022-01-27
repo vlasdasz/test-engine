@@ -16,5 +16,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: iOS
-        run: python3 build.py ios
+      - name: Install deps
+        run: |
+          chmod +x ios_deps.sh
+          ./ios_deps.sh
+      - name: Build
+        run: |
+          cargo lipo --release
+          cd mobile/iOS
+          xcodebuild -showsdks
+          xcodebuild -sdk iphonesimulator -scheme TestEngine build
