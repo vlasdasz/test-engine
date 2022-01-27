@@ -14,7 +14,7 @@ home = "0.5"
 cfg-if = "1.0"
 chrono = "0.4"
 
-rtools = { path = "../.rdeps/tools" }
+rtools = { path = "../rtools" }
 
 gm = { path = "../gm" }
 ui = { path = "../ui" }
@@ -29,4 +29,4 @@ glfw = "0.43"
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 mashup = "0.1"
-gles31-sys = { path = "../.rdeps/gles31-sys" }
+gles31-sys = { path = "../gles31-sys" }

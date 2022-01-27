@@ -12,6 +12,6 @@ crate-type = ["rlib", "staticlib"]
 tokio = "1.15"
 
 gm = { path = "../gm" }
-rtools = { path = "../.rdeps/tools" }
+rtools = { path = "../rtools" }
 
 rand = "0.8"

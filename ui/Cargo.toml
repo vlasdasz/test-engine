@@ -17,7 +17,7 @@ gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }
 gl_wrapper = { path = "../gl_wrapper" }
 
-rtools = { path = "../.rdeps/tools" }
+rtools = { path = "../rtools" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14"
@@ -25,4 +25,4 @@ glfw = "0.43"
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 mashup = "0.1"
-gles31-sys = { path = "../.rdeps/gles31-sys" }
+gles31-sys = { path = "../gles31-sys" }

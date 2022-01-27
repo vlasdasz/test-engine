@@ -12,7 +12,6 @@ is_linux   = platform.system() == "Linux"
 unix = is_mac or is_linux
 
 ios = False
-cleanup = False
 android = False
 
 if len(sys.argv) > 1:
@@ -20,8 +19,6 @@ if len(sys.argv) > 1:
         ios = True
     if sys.argv[1] == "android":
         android = True
-    if sys.argv[1] == "cleanup":
-        cleanup = True
 
 
 def _get_home():
@@ -31,12 +28,9 @@ def _get_home():
     
 
 home = _get_home()
-deps_path = home + "/.rdeps/"
-
-tools_path = deps_path + "tools/"
-gles_path = deps_path + "gles31-sys/"
 
 this_path = os.path.dirname(os.path.abspath(__file__))
+
 
 def rm(path):
     print("Removing: " + path)
@@ -47,20 +41,10 @@ def rm(path):
             shutil.rmtree(path)
 
 
-if cleanup:
-    rm(tools_path)
-    rm(gles_path)
-
-
 def run(string):
     print(string)
     if os.system(string):
         raise Exception("Shell script has failed")
-
-
-def clone(rep, destination = ""):
-    if not os.path.exists(destination):
-        run("git clone --recursive https://github.com/vlodas/" + rep + " " + destination)
 
 
 def ndk_home():
@@ -89,46 +73,14 @@ if android:
     setup_android()
 
 
-clone("tools", tools_path)
-clone("gles31-sys", gles_path)
-
-
-def link_deps():
-    try:
-        print("Symlimk: " + deps_path + " to: " + this_path + "/.rdeps")
-        os.symlink(deps_path, this_path + "/.rdeps")
-    except FileExistsError:
-        print("exists")
-
 print("Arch:")
 print(platform.uname())
 
 
-
-def linux_setup():
+if is_linux:
     print("Lin setup")
     run("sudo apt update")
     run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
-    link_deps()
-
-
-def windows_setup():
-    print("Win setup")
-    link_deps()
-
-
-def mac_setup():
-    print("Mac setup")
-    link_deps()
-
-if is_windows:
-    windows_setup()
-elif is_mac:
-    mac_setup()
-elif is_linux:
-    linux_setup()
-else:
-    print("Unknown os")
 
 
 if ios:

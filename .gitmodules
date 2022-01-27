@@ -1,0 +1,6 @@
+[submodule "rtools"]
+	path = rtools
+	url = https://github.com/VladasZ/rtools
+[submodule "gles31-sys"]
+	path = gles31-sys
+	url = https://github.com/VladasZ/gles31-sys
