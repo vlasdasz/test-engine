@@ -1,2 +1,2 @@
-sudo apt update
-sudo apt install -y libxrandr-dev
+apt update
+apt install -y libxrandr-dev
