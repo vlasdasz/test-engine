@@ -13,8 +13,8 @@ use crate::{sets::Sets, sprites_drawer::DummyDrawer, Body, Level, Sprite, Sprite
 
 pub struct LevelBase {
     pub player: Rglica<Body>,
-
-    pub(crate) drawer:  Rc<dyn SpritesDrawer>,
+    pub drawer:  Rc<dyn SpritesDrawer>,
+    
     pub(crate) sprites: Vec<Box<dyn Sprite>>,
     pub(crate) sets:    Sets,
     pub(crate) gravity: Vector2<f32>,
