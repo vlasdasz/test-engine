@@ -19,6 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: true2
+          submodules: true
       - name: linux arm
         run: python3 build.py cleanup
