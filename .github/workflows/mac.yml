@@ -14,5 +14,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Mac
         run: python3 build.py

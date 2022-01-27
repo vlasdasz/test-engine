@@ -14,5 +14,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
       - name: windows
         run: py build.py
