@@ -33,6 +33,11 @@ impl UIDrawer {
         self.scale = scale
     }
 
+    #[cfg(any(target_os = "ios", target_os = "android"))]
+    pub fn set_scale(&mut self, scale: f32) {
+        self.scale = scale
+    }
+
     pub fn set_size(&mut self, size: Size) {
         self.window_size = size
     }
