@@ -17,6 +17,8 @@ jobs:
         with:
           submodules: true
       - name: Install deps
-        run: sudo ./linux_deps.sh 
+        run: |
+          chmod +x linux_deps.sh 
+          sudo linux_deps.sh 
       - name: Build
         run:  cargo build
