@@ -19,6 +19,6 @@ jobs:
       - name: Install deps
         run: |
           chmod +x linux_deps.sh 
-          sudo linux_deps.sh 
+          sudo ./linux_deps.sh 
       - name: Build
         run:  cargo build
