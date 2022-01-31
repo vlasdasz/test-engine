@@ -85,7 +85,7 @@ impl ShaderCompiler {
         let includes = find_matches(&code, INCLUDE_QUERY);
         let mut files: HashMap<String, String> = HashMap::new();
         for include in includes {
-            let file_name = find_match(&include, QUOTES_QUERY).replace("\"", "");
+            let file_name = find_match(&include, QUOTES_QUERY).replace('\"', "");
             let file_path = self.path.join(file_name);
             let include_code = File::read_to_string(file_path);
             files.insert(include, include_code);

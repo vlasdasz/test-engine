@@ -38,6 +38,7 @@ impl View for DrawingView {
 }
 
 fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {
+    #![allow(clippy::needless_borrow)]
     // #[cfg(any(target_os = "ios", target_os = "android"))]
     // use gles31_sys::GL_LINE_STRIP;
 

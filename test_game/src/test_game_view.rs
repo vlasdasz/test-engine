@@ -1,6 +1,6 @@
 use std::{borrow::BorrowMut, ops::Deref};
 
-use rtools::{Event, Rglica, ToRglica};
+use rtools::{Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
     gm::Color,
@@ -30,7 +30,6 @@ pub struct TestGameView {
     circle:       Rglica<Circle>,
     slider:       Rglica<Slider>,
     slider_label: Rglica<Label>,
-    set_scale:    Event<f32>,
 }
 
 impl TestGameView {
@@ -61,7 +60,7 @@ impl TestGameView {
         let mut this = self.to_rglica();
         self.slider.on_change.subscribe(move |value| {
             this.slider_label.set_text(value.to_string());
-            this.set_scale.trigger(value);
+            this.drawer().set_scale(value);
         });
     }
 

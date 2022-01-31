@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, fmt::Debug};
+use std::{borrow::Borrow, fmt::Debug, ops::Deref, rc::Rc};
 
 use gm::Point;
 use rapier2d::{
@@ -68,7 +68,12 @@ pub trait Level: Debug {
 
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
+
     fn drawer(&self) -> &dyn SpritesDrawer {
-        todo!()
+        self.level().drawer.deref()
+    }
+
+    fn set_drawer(&mut self, drawer: Rc<dyn SpritesDrawer>) {
+        self.level_mut().drawer = drawer
     }
 }

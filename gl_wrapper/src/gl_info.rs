@@ -33,7 +33,7 @@ impl GLInfo {
         let is_gles = version.contains("ES");
         let gl_version = find_match(&version, GLInfo::GL_QUERY);
         let mut glsl_version = gl_version.clone();
-        glsl_version = glsl_version.replace(".", "");
+        glsl_version = glsl_version.replace('.', "");
         glsl_version += "0";
         let glsl_version_number = glsl_version.parse::<u16>().unwrap();
         let ch = glsl_version.chars().next().unwrap();
