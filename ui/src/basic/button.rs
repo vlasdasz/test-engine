@@ -1,7 +1,7 @@
 use gl_image::Image;
 use rtools::Event;
 
-use crate::{Touch, View, ViewBase};
+use crate::{view_base::ViewBase, Touch, View};
 
 #[derive(Default)]
 pub struct Button {

@@ -3,15 +3,15 @@ use std::{borrow::BorrowMut, ops::Deref};
 use rtools::{Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
+    game_view::GameView,
     gm::Color,
     sprites::Control,
     ui::{
         basic::{Button, Circle},
         complex::{AnalogStickView, DrawingView, Slider},
-        init_view_on, init_view_with_frame, make_view_on, DPadView, ImageView, Label, View,
-        ViewBase,
+        view_base::{init_view_on, init_view_with_frame, make_view_on, ViewBase},
+        DPadView, ImageView, Label, View,
     },
-    ui_layer::GameView,
     Level,
 };
 

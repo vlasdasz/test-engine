@@ -1,7 +1,11 @@
 use gm::{flat::PointsPath, Color, Rect};
 use rtools::Rglica;
 
-use crate::{complex::DrawingView, init_view_on, View, ViewBase};
+use crate::{
+    complex::DrawingView,
+    view_base::{init_view_on, ViewBase},
+    View,
+};
 
 #[derive(Default)]
 pub struct Circle {

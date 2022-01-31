@@ -3,7 +3,8 @@ use gm::{flat::PointsPath, Color};
 
 use crate::{
     complex::{path_data::DrawMode, PathData},
-    View, ViewBase,
+    view_base::ViewBase,
+    View,
 };
 
 #[derive(Default)]

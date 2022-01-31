@@ -1,13 +1,10 @@
-use std::{
-    cell::RefCell,
-    ops::{Deref, DerefMut},
-};
+use std::ops::{Deref, DerefMut};
 
 use gl_image::Image;
 use gm::{Color, Point, Rect};
-use rtools::{rglica::ToRglica, Address, Boxed, Rglica};
+use rtools::{Address, Boxed, Rglica};
 
-use crate::{basic::Placer, complex::PathData, input::Touch};
+use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};
 
 pub trait View: Boxed {
     fn setup(&mut self) {}
@@ -19,41 +16,41 @@ pub trait View: Boxed {
     fn update(&mut self) {}
 
     fn color(&self) -> &Color {
-        &self.view()._color
+        &self.view().color
     }
 
     fn set_color(&mut self, color: Color) {
-        self.view_mut()._color = color
+        self.view_mut().color = color
     }
 
     fn superview(&self) -> Rglica<dyn View> {
-        self.view()._superview.clone()
+        self.view().superview.clone()
     }
 
     fn super_frame(&self) -> &Rect {
-        if self.view()._superview.is_ok() {
-            return self.view()._superview.frame();
+        if self.view().superview.is_ok() {
+            return self.view().superview.frame();
         }
         self.frame()
     }
 
     fn super_absolute_frame(&self) -> &Rect {
-        if self.view()._superview.is_ok() {
-            return self.view()._superview.absolute_frame();
+        if self.view().superview.is_ok() {
+            return self.view().superview.absolute_frame();
         }
         self.absolute_frame()
     }
 
     fn frame(&self) -> &Rect {
-        &self.view()._frame
+        &self.view().frame
     }
 
     fn frame_mut(&mut self) -> &mut Rect {
-        &mut self.view_mut()._frame
+        &mut self.view_mut().frame
     }
 
     fn set_frame(&mut self, rect: Rect) {
-        self.view_mut()._frame = rect
+        self.view_mut().frame = rect
     }
 
     fn add_view_at(&mut self, point: Point) {
@@ -71,18 +68,18 @@ pub trait View: Boxed {
     }
 
     fn absolute_frame(&self) -> &Rect {
-        &self.view()._absolute_frame
+        &self.view().absolute_frame
     }
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
-        view.view_mut()._superview = Rglica::from_ref(self.view());
-        view.view_mut()._placer = Placer::make(view.deref_mut());
+        view.view_mut().superview = Rglica::from_ref(self.view());
+        view.view_mut().placer = Placer::make(view.deref_mut());
         view.setup();
-        self.view_mut()._subviews.push(view);
+        self.view_mut().subviews.push(view);
     }
 
     fn remove_all_subviews(&mut self) {
-        self.view_mut()._subviews.clear()
+        self.view_mut().subviews.clear()
     }
 
     fn remove_from_superview(&mut self) {
@@ -97,21 +94,21 @@ pub trait View: Boxed {
     }
 
     fn subviews(&self) -> &[Box<dyn View>] {
-        &self.view()._subviews
+        &self.view().subviews
     }
 
     fn remove_subview_at(&mut self, index: usize) {
-        self.view_mut()._subviews.remove(index);
+        self.view_mut().subviews.remove(index);
     }
 
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
-        &mut self.view_mut()._subviews
+        &mut self.view_mut().subviews
     }
 
     fn calculate_absolute_frame(&mut self) {
         let view = self.view_mut();
-        view._absolute_frame = view._frame;
-        view._absolute_frame.origin += view.super_absolute_frame().origin;
+        view.absolute_frame = view.frame;
+        view.absolute_frame.origin += view.super_absolute_frame().origin;
         self.layout();
         for view in self.subviews_mut() {
             view.calculate_absolute_frame();
@@ -119,19 +116,19 @@ pub trait View: Boxed {
     }
 
     fn enable_touch(&mut self) {
-        self.view_mut()._touch_enabled = true
+        self.view_mut().touch_enabled = true
     }
 
     fn touch_enabled(&self) -> bool {
-        self.view()._touch_enabled
+        self.view().touch_enabled
     }
 
     fn touch_id(&self) -> u64 {
-        *self.view()._touch_id.borrow()
+        *self.view().touch_id.borrow()
     }
 
     fn set_touch_id(&self, id: u64) {
-        *self.view()._touch_id.borrow_mut() = id;
+        *self.view().touch_id.borrow_mut() = id;
     }
 
     fn check_touch(&mut self, touch: &mut Touch) -> bool {
@@ -179,7 +176,7 @@ pub trait View: Boxed {
     }
 
     fn place(&mut self) -> &mut Placer {
-        &mut self.view_mut()._placer
+        &mut self.view_mut().placer
     }
 
     fn view(&self) -> &ViewBase;
@@ -192,73 +189,5 @@ pub trait View: Boxed {
         let mut new = Self::boxed();
         new.set_frame(frame);
         new
-    }
-}
-
-#[derive(Default)]
-pub struct ViewBase {
-    _color:         Color,
-    _touch_enabled: bool,
-
-    _frame:          Rect,
-    _absolute_frame: Rect,
-
-    _superview: Rglica<dyn View>,
-    _subviews:  Vec<Box<dyn View>>,
-
-    _touch_id: RefCell<u64>,
-
-    _placer: Placer,
-}
-
-impl ViewBase {
-    pub fn make_view<T: 'static + View>(&mut self) -> Rglica<T> {
-        let view = T::boxed();
-        let rglica = view.to_rglica();
-        self.add_subview(view);
-        rglica
-    }
-
-    pub fn make_view_with<T: 'static + View>(&mut self, frame: Rect) -> Rglica<T> {
-        let view = T::with_frame(frame);
-        let rglica = view.to_rglica();
-        self.add_subview(view);
-        rglica
-    }
-
-    pub fn dummy() -> Box<Self> {
-        let mut dummy = Self::default();
-        dummy.set_color(Color::random());
-        dummy.frame_mut().size = (10, 10).into();
-        Box::new(dummy)
-    }
-}
-
-pub fn init_view_on<T: 'static + View>(view: &mut dyn View) -> Rglica<T> {
-    view.view_mut().make_view()
-}
-
-pub fn init_view_with_frame<T: 'static + View>(frame: Rect, view: &mut dyn View) -> Rglica<T> {
-    view.view_mut().make_view_with(frame)
-}
-
-pub fn make_view_on<T: 'static + View>(
-    view: &mut dyn View,
-    make: impl FnOnce(&mut T),
-) -> Rglica<T> {
-    let new = T::boxed();
-    let mut result = new.to_rglica();
-    view.add_subview(new);
-    make(result.deref_mut());
-    result
-}
-
-impl View for ViewBase {
-    fn view(&self) -> &ViewBase {
-        self
-    }
-
-    fn view_mut(&mut self) -> &mut Self {
-        self
     }
 }

@@ -6,25 +6,14 @@ use gl_wrapper::events::Events;
 use glfw::{Action, Key};
 use gm::Point;
 use rtools::{Boxed, Rglica, ToRglica};
-use sprites::{Level, SpritesDrawer};
+use sprites::SpritesDrawer;
 use ui::{
-    init_view_on,
     input::touch::{ButtonState, Event},
-    Touch, View, ViewBase,
+    view_base::{init_view_on, ViewBase},
+    Touch, View,
 };
 
-use crate::{assets::Assets, debug_view::DebugView, ui_drawer::UIDrawer};
-
-pub trait GameView: View {
-    fn level(&self) -> &dyn Level;
-    fn level_mut(&mut self) -> &mut dyn Level;
-    fn set_drawer(&mut self, drawer: Rc<dyn SpritesDrawer>) {
-        self.level_mut().set_drawer(drawer)
-    }
-    fn drawer(&self) -> &dyn SpritesDrawer {
-        self.level().drawer()
-    }
-}
+use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
 
 pub struct UILayer {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]

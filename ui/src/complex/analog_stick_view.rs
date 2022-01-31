@@ -1,7 +1,7 @@
 use gm::{flat::PointsPath, Color, Point};
 use rtools::{rglica::ToRglica, Boxed, Event, Rglica};
 
-use crate::{complex::DrawingView, Touch, View, ViewBase};
+use crate::{complex::DrawingView, view_base::ViewBase, Touch, View};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;

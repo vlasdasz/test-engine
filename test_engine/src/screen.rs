@@ -151,22 +151,15 @@ impl Screen {
 
 impl Screen {
     pub fn new(size: Size) -> Self {
-        let mut font_path = ui::DEFAULT_FONT_PATH.lock().unwrap();
-        *font_path = paths::fonts().join("SF.otf");
-        drop(font_path);
+        ui::set_default_font_path(paths::fonts().join("SF.otf"));
+
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let events = Box::new(Events::default());
 
-        dbg!("smik");
-
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(events.to_rglica());
-        dbg!("smik");
         let assets = Rc::new(Assets::default());
-        dbg!("smik");
         let sprites_drawer = TESpritesDrawer::new(assets.clone());
-
-        dbg!("smik");
 
         let mut ui = UILayer::new(assets, sprites_drawer.clone());
 

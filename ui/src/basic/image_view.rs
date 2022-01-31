@@ -1,6 +1,6 @@
 use gl_image::Image;
 
-use crate::{View, ViewBase};
+use crate::{view_base::ViewBase, View};
 
 #[derive(Default)]
 pub struct ImageView {

@@ -2,7 +2,11 @@ use gl_image::Image;
 use gm::flat::point::Direction;
 use rtools::{Event, Rglica, ToRglica};
 
-use crate::{basic::Button, init_view_on, View, ViewBase};
+use crate::{
+    basic::Button,
+    view_base::{init_view_on, ViewBase},
+    View,
+};
 
 #[derive(Default)]
 pub struct DPadView {

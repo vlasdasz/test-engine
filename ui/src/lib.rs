@@ -15,12 +15,18 @@ pub mod placer;
 pub mod test;
 pub mod text;
 pub mod view;
+pub mod view_base;
 
 #[macro_use]
 extern crate log;
 
 lazy_static! {
-    pub static ref DEFAULT_FONT_PATH: Mutex<PathBuf> = Mutex::new(PathBuf::new());
-    pub static ref DEFAULT_FONT: Mutex<Font> =
+    pub(crate) static ref DEFAULT_FONT_PATH: Mutex<PathBuf> = Mutex::new(PathBuf::new());
+    pub(crate) static ref DEFAULT_FONT: Mutex<Font> =
         Mutex::new(Font::new(&DEFAULT_FONT_PATH.lock().unwrap(), 48).unwrap());
+}
+
+pub fn set_default_font_path(font: PathBuf) {
+    let mut font_path = DEFAULT_FONT_PATH.lock().unwrap();
+    *font_path = font;
 }

@@ -4,15 +4,15 @@ use gm::Point;
 use rapier2d::{
     dynamics::RigidBody,
     na::Vector2,
-    prelude::{ColliderBuilder, RigidBodyBuilder},
+    prelude::{ColliderBuilder, RigidBodyBuilder, RigidBodyHandle},
 };
 use rtools::{as_any::AsAny, Rglica, ToRglica};
 
-use crate::{control::Control, rigid_handle::RigidHandle, Level, Sprite, SpriteBase};
+use crate::{control::Control, Level, Sprite, SpriteBase};
 
 pub struct Body {
     sprite: SpriteBase,
-    handle: RigidHandle,
+    handle: RigidBodyHandle,
     level:  Rglica<dyn Level>,
 }
 
@@ -39,7 +39,7 @@ impl Body {
 
         let boxed = Box::new(Self {
             sprite,
-            handle: body_handle.into(),
+            handle: body_handle,
             level: Rglica::from_ref(level),
         });
 
@@ -51,11 +51,11 @@ impl Body {
     }
 
     fn body(&self) -> &RigidBody {
-        &self.level.rigid_bodies()[self.handle.handle]
+        &self.level.rigid_bodies()[self.handle]
     }
 
     fn body_mut(&mut self) -> &mut RigidBody {
-        &mut self.level.rigid_bodies_mut()[self.handle.handle]
+        &mut self.level.rigid_bodies_mut()[self.handle]
     }
 
     pub fn lock_rotations(&mut self) {

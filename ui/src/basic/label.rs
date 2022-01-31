@@ -1,6 +1,6 @@
 use rtools::Boxed;
 
-use crate::{Font, ImageView, View, ViewBase};
+use crate::{view_base::ViewBase, Font, ImageView, View};
 
 #[derive(Default)]
 pub struct Label {

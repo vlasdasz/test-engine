@@ -1,5 +1,8 @@
 use rtools::{platform::Platform, Boxed, Property, Rglica, ToRglica};
-use ui::{init_view_on, Label, View, ViewBase};
+use ui::{
+    view_base::{init_view_on, ViewBase},
+    Label, View,
+};
 
 pub struct DebugView {
     view:              ViewBase,

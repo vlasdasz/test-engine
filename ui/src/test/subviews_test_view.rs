@@ -2,7 +2,10 @@ use std::ops::DerefMut;
 
 use rtools::Rglica;
 
-use crate::{init_view_on, View, ViewBase};
+use crate::{
+    view_base::{init_view_on, ViewBase},
+    View,
+};
 
 #[derive(Default)]
 pub struct SubviewsTestView {

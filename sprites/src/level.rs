@@ -49,8 +49,6 @@ pub trait Level: Debug {
         self.level_mut().sprites.push(Box::new(sprite))
     }
 
-    fn remove_sprite(&mut self, _address: u64) {}
-
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
         let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
             .translation(Vector2::new(sprite.position().x, sprite.position().y))

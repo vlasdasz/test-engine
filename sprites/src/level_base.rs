@@ -19,12 +19,12 @@ pub struct LevelBase {
     pub(crate) sets:    Sets,
     pub(crate) gravity: Vector2<f32>,
 
-    physics_pipeline: PhysicsPipeline,
-    island_manager:   IslandManager,
-    broad_phase:      BroadPhase,
-    narrow_phase:     NarrowPhase,
-    joint_set:        JointSet,
-    ccd_solver:       CCDSolver,
+    pub(crate) physics_pipeline: PhysicsPipeline,
+    pub(crate) island_manager:   IslandManager,
+    pub(crate) broad_phase:      BroadPhase,
+    pub(crate) narrow_phase:     NarrowPhase,
+    pub(crate) joint_set:        JointSet,
+    pub(crate) ccd_solver:       CCDSolver,
 
     physics_hooks: (),
     event_handler: (),
@@ -48,6 +48,8 @@ impl LevelBase {
             &self.event_handler,
         );
     }
+
+    pub(crate) fn _remove(&mut self, _sprite: &dyn Sprite) {}
 }
 
 impl Level for LevelBase {
