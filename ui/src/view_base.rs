@@ -1,7 +1,4 @@
-use std::{
-    cell::RefCell,
-    ops::{DerefMut},
-};
+use std::ops::DerefMut;
 
 use gm::{Color, Rect};
 use rtools::{Rglica, ToRglica};
@@ -20,7 +17,7 @@ pub struct ViewBase {
     pub(crate) superview: Rglica<dyn View>,
     pub(crate) subviews:  Vec<Box<dyn View>>,
 
-    pub(crate) touch_id: RefCell<u64>,
+    pub(crate) touch_id: u64,
 
     pub(crate) placer: Placer,
 }
@@ -36,9 +33,9 @@ impl ViewBase {
 
 pub fn init_view_on<T: 'static + View>(parent: &mut dyn View) -> Rglica<T> {
     let view = T::boxed();
-    let rglica = view.to_rglica();
+    let result = view.to_rglica();
     parent.add_subview(view);
-    rglica
+    result
 }
 
 pub fn init_view_with_frame<T: 'static + View>(frame: Rect, parent: &mut dyn View) -> Rglica<T> {

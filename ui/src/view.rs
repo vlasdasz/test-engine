@@ -124,11 +124,11 @@ pub trait View: Boxed {
     }
 
     fn touch_id(&self) -> u64 {
-        *self.view().touch_id.borrow()
+        self.view().touch_id
     }
 
-    fn set_touch_id(&self, id: u64) {
-        *self.view().touch_id.borrow_mut() = id;
+    fn set_touch_id(&mut self, id: u64) {
+        self.view_mut().touch_id = id;
     }
 
     fn check_touch(&mut self, touch: &mut Touch) -> bool {
