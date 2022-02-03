@@ -1,3 +1,6 @@
 [submodule "rtools"]
 	path = rtools
 	url = git@github.com:VladasZ/rtools.git
+[submodule "gles31-sys"]
+	path = gles31-sys
+	url = https://github.com/Mersive-Technologies/gles31-sys.git

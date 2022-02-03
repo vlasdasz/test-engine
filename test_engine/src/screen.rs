@@ -73,7 +73,7 @@ impl Screen {
     }
 
     #[cfg(any(target_os = "ios", target_os = "android"))]
-    fn adjust_size(monitor: Monitor, size: Size) -> Size {
+    fn adjust_size(_monitor: Monitor, size: Size) -> Size {
         size
     }
 }
