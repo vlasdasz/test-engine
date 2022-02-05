@@ -50,13 +50,13 @@ def ndk_home():
 def setup_android():
     if os.path.isdir("NDK"):
         return
-    run("mkdir NDK")
+    # run("mkdir NDK")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
-    ndk = ndk_home()
+    # ndk = ndk_home()
 
-    run(ndk + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
-    run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
-    run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch x86 --install-dir NDK/x86")
+    # run(ndk + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
+    # run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
+    # run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch x86 --install-dir NDK/x86")
 
 
 if android:
