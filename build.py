@@ -41,7 +41,10 @@ def run(string):
 def ndk_home():
     if "NDK_HOME" in os.environ:
         return os.environ["NDK_HOME"]
-    return "${ANDROID_HOME}/ndk/22.1.7171670"
+    if "ANDROID_HOME" in os.environ:
+        return os.environ["ANDROID_HOME"] + "/ndk/22.1.7171670"
+    return "/Users/vladas/Library/Android/sdk/ndk/23.1.7779620/"
+    raise Exception("No NDK path env variables")
 
 
 def setup_android():
@@ -50,14 +53,10 @@ def setup_android():
     run("mkdir NDK")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
     ndk = ndk_home()
-    if is_windows:
-        run("py " + ndk + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
-        run("py " + ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
-        run("py " + ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch x86 --install-dir NDK/x86")
-    else:
-        run(ndk + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
-        run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
-        run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch x86 --install-dir NDK/x86")
+
+    run(ndk + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
+    run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
+    run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch x86 --install-dir NDK/x86")
 
 
 if android:
