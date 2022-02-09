@@ -91,7 +91,7 @@ impl View for AnalogStickView {
             self.direction_stick
                 .frame_mut()
                 .set_center(frame.size.center());
-            self.on_direction_change.trigger(Point::DEFAULT);
+            self.on_direction_change.trigger(Point::default());
         } else {
             self.on_touch_moved(&touch.position);
         }

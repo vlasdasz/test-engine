@@ -56,7 +56,11 @@ impl UILayer {
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
         error!("{:?}", touch);
-        self.root_view.check_touch(&mut touch);
+        if !self.root_view.check_touch(&mut touch) {
+            if touch.is_began() {
+                self.view.pass_touch_to_level(touch)
+            }
+        }
     }
 
     pub fn set_view(&mut self, mut view: Box<dyn GameView>) {
@@ -67,7 +71,7 @@ impl UILayer {
     }
 
     pub fn add_debug_view(&mut self) {
-        self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut());
+        self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut())
     }
 }
 
@@ -79,7 +83,7 @@ impl UILayer {
             id:       1,
             position: self.cursor_position,
             event:    Event::Moved,
-        });
+        })
     }
 
     fn on_mouse_click(&mut self, _button: glfw::MouseButton, state: Action) {
@@ -123,6 +127,6 @@ impl UILayer {
         let mut this = self.to_rglica();
         self.events
             .on_cursor_moved
-            .subscribe(move |a| this.on_cursor_moved(a));
+            .subscribe(move |a| this.on_cursor_moved(a))
     }
 }

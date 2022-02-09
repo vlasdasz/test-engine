@@ -1,4 +1,4 @@
-use test_engine::{assets::Assets, sprites::Control, Level, LevelBase, Sprite};
+use test_engine::{assets::Assets, gm::Point, sprites::Control, Level, LevelBase, Sprite};
 
 #[derive(Default, Debug)]
 pub struct TestGameLevel {
@@ -27,6 +27,10 @@ impl Level for TestGameLevel {
 
     fn on_key_pressed(&mut self, key: String) {
         self.player().move_by_key(key)
+    }
+
+    fn on_touch(&mut self, pos: Point) {
+        dbg!(pos);
     }
 
     fn level(&self) -> &LevelBase {

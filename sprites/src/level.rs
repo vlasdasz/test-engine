@@ -15,6 +15,29 @@ pub trait Level: Debug {
 
     fn on_key_pressed(&mut self, _: String) {}
 
+    fn on_touch(&mut self, _: Point) {}
+
+    fn convert_touch(&mut self, pos: Point) {
+        let mut pos = pos;
+        let size = self.drawer().resolution() / self.drawer().scale();
+
+        pos.x -= size.width / 2.0;
+        pos.y -= size.height / 2.0;
+        pos.y = -pos.y;
+        //pos /= 10;
+
+        self.on_touch(pos)
+
+        // Point pos = touch;
+        // auto size = Screen::size / Screen::render_scale();
+        // pos.x -= size.width / 2;
+        // pos.y -= size.height / 2;
+        // pos.y = -pos.y;
+        // pos /= 10;
+        // pos += _player->position();
+        // return pos;
+    }
+
     fn gravity(&self) -> Point {
         let gravity = self.level().gravity.borrow();
         (gravity[0], gravity[1]).into()

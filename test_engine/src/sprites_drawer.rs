@@ -8,18 +8,32 @@ use crate::{assets::Assets, Sprite};
 
 #[derive(Default)]
 pub struct TESpritesDrawer {
-    assets: Rc<Assets>,
+    scale:      f32,
+    resolution: Size,
+    assets:     Rc<Assets>,
 }
 
 impl TESpritesDrawer {
     pub fn new(assets: Rc<Assets>) -> Rc<Self> {
-        let new = Self { assets };
+        let new = Self {
+            scale: 0.0,
+            resolution: (0, 0).into(),
+            assets,
+        };
         new.set_scale(1.0);
         Rc::new(new)
     }
 }
 
 impl SpritesDrawer for TESpritesDrawer {
+    fn scale(&self) -> f32 {
+        self.scale
+    }
+
+    fn resolution(&self) -> Size {
+        self.resolution
+    }
+
     fn set_scale(&self, scale: f32) {
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_scale(scale.into_f32());

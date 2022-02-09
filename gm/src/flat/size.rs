@@ -1,4 +1,4 @@
-use std::ops::Mul;
+use std::ops::{Div, Mul};
 
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
@@ -45,5 +45,12 @@ impl<T: IntoF32> Mul<T> for Size {
     type Output = Size;
     fn mul(self, rhs: T) -> Self::Output {
         (self.width * rhs.into_f32(), self.height * rhs.into_f32()).into()
+    }
+}
+
+impl<T: IntoF32> Div<T> for Size {
+    type Output = Size;
+    fn div(self, rhs: T) -> Self::Output {
+        (self.width / rhs.into_f32(), self.height / rhs.into_f32()).into()
     }
 }

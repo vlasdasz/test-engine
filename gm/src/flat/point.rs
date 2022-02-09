@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
+use std::ops::{Add, AddAssign, DivAssign, Mul, Sub, SubAssign};
 
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
@@ -19,14 +19,8 @@ pub struct PointBase<T> {
 pub type Point = PointBase<f32>;
 
 impl Point {
-    pub const DEFAULT: Point = Point { x: 0.0, y: 0.0 };
-
     pub fn angle(&self) -> f32 {
         self.y.atan2(self.x)
-    }
-
-    pub fn is_zero(&self) -> bool {
-        self.x == 0.0 && self.y == 0.0
     }
 
     pub fn length(&self) -> f32 {
@@ -131,6 +125,13 @@ impl<T: IntoF32> Mul<T> for Point {
     type Output = Point;
     fn mul(self, rhs: T) -> Point {
         (self.x * rhs.into_f32(), self.y * rhs.into_f32()).into()
+    }
+}
+
+impl<T: IntoF32> DivAssign<T> for Point {
+    fn div_assign(&mut self, rhs: T) {
+        self.x = self.x / rhs.into_f32();
+        self.y = self.y / rhs.into_f32();
     }
 }
 

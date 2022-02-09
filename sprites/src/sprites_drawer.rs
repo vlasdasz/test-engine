@@ -3,6 +3,8 @@ use gm::{Point, Size};
 use crate::Sprite;
 
 pub trait SpritesDrawer {
+    fn scale(&self) -> f32;
+    fn resolution(&self) -> Size;
     fn set_scale(&self, scale: f32);
     fn set_resolution(&self, size: &Size);
     fn set_camera_rotation(&self, angle: f32);
@@ -14,6 +16,12 @@ pub trait SpritesDrawer {
 pub struct DummyDrawer {}
 
 impl SpritesDrawer for DummyDrawer {
+    fn scale(&self) -> f32 {
+        todo!()
+    }
+    fn resolution(&self) -> Size {
+        todo!()
+    }
     fn set_scale(&self, _scale: f32) {
         todo!()
     }

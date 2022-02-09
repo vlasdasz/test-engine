@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use sprites::{Level, SpritesDrawer};
-use ui::View;
+use ui::{Touch, View};
 
 pub trait GameView: View {
     fn level(&self) -> &dyn Level;
@@ -11,5 +11,8 @@ pub trait GameView: View {
     }
     fn drawer(&self) -> &dyn SpritesDrawer {
         self.level().drawer()
+    }
+    fn pass_touch_to_level(&mut self, touch: Touch) {
+        self.level_mut().convert_touch(touch.position)
     }
 }
