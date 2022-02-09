@@ -15,14 +15,14 @@ use test_engine::{
     Level,
 };
 
-use crate::test_game_level::TestGameLevel;
+use crate::test_level::TestLevel;
 
 static mut COUNTER: u32 = 0;
 
 #[derive(Default)]
-pub struct TestGameView {
+pub struct TestView {
     base:         ViewBase,
-    level:        TestGameLevel,
+    level:        TestLevel,
     image_view:   Rglica<ImageView>,
     label:        Rglica<Label>,
     dpad:         Rglica<DPadView>,
@@ -32,7 +32,7 @@ pub struct TestGameView {
     slider_label: Rglica<Label>,
 }
 
-impl TestGameView {
+impl TestView {
     fn setup_level(&mut self) {
         self.level.setup();
 
@@ -131,7 +131,7 @@ impl TestGameView {
     }
 }
 
-impl View for TestGameView {
+impl View for TestView {
     fn setup(&mut self) {
         self.setup_ui();
         self.setup_level();
@@ -154,7 +154,7 @@ impl View for TestGameView {
     }
 }
 
-impl GameView for TestGameView {
+impl GameView for TestView {
     fn level(&self) -> &dyn Level {
         &self.level
     }

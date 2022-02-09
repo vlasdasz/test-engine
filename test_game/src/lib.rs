@@ -11,10 +11,10 @@ use test_engine::{
     Screen,
 };
 
-use crate::test_game_view::TestGameView;
+use crate::test_view::TestView;
 
-mod test_game_level;
-mod test_game_view;
+mod test_level;
+mod test_view;
 
 #[macro_use]
 extern crate log;
@@ -27,7 +27,7 @@ pub extern "C" fn create_screen() {
     unsafe {
         let mut screen = Box::new(Screen::new(Default::default()));
 
-        screen.ui.set_view(TestGameView::boxed());
+        screen.ui.set_view(TestView::boxed());
         screen.ui.add_debug_view();
 
         screen.add_monitor(MONITOR.as_ref().unwrap().clone());

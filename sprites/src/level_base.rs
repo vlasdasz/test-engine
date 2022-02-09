@@ -1,4 +1,4 @@
-use std::{fmt::Debug, ops::Deref};
+use std::{fmt::Debug, ops::DerefMut};
 
 use rapier2d::{
     na::Vector2,
@@ -59,8 +59,8 @@ impl Level for LevelBase {
     fn level_mut(&mut self) -> &mut LevelBase {
         self
     }
-    fn drawer(&self) -> &dyn SpritesDrawer {
-        self.drawer.deref()
+    fn drawer(&mut self) -> &mut dyn SpritesDrawer {
+        self.drawer.deref_mut()
     }
 }
 

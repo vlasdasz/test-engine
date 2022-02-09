@@ -18,7 +18,7 @@ impl Default for GLLoader {
     fn default() -> Self {
         let mut glfw = glfw::init(glfw::LOG_ERRORS).unwrap();
 
-        glfw.window_hint(glfw::WindowHint::Samples(Some(16)));
+        glfw.window_hint(glfw::WindowHint::Samples(16.into()));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(Core));
 

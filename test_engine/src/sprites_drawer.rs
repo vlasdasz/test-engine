@@ -15,7 +15,7 @@ pub struct TESpritesDrawer {
 
 impl TESpritesDrawer {
     pub fn new(assets: Rc<Assets>) -> Box<Self> {
-        let new = Self {
+        let mut new = Self {
             scale: 0.0,
             resolution: (0, 0).into(),
             assets,
@@ -34,14 +34,16 @@ impl SpritesDrawer for TESpritesDrawer {
         self.resolution
     }
 
-    fn set_scale(&self, scale: f32) {
+    fn set_scale(&mut self, scale: f32) {
+        self.scale = scale;
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_scale(scale.into_f32());
         self.assets.shaders.textured_sprite.enable();
         self.assets.shaders.textured_sprite.set_scale(scale);
     }
 
-    fn set_resolution(&self, size: &Size) {
+    fn set_resolution(&mut self, size: &Size) {
+        self.resolution = *size;
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_resolution(size);
         self.assets.shaders.textured_sprite.enable();

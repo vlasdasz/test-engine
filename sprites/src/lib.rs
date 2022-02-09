@@ -15,4 +15,4 @@ pub use level::Level;
 pub use level_base::LevelBase;
 pub use sprite::Sprite;
 pub use sprite_base::SpriteBase;
-pub use sprites_drawer::{DummyDrawer, SpritesDrawer};
+pub use sprites_drawer::SpritesDrawer;

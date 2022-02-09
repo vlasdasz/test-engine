@@ -69,7 +69,7 @@ impl UILayer {
     }
 
     pub fn add_debug_view(&mut self) {
-        self.debug_view = init_view_on::<DebugView>(self.root_view.deref_mut())
+        self.debug_view = init_view_on(self.root_view.deref_mut())
     }
 }
 

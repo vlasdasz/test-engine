@@ -1,11 +1,11 @@
 use test_engine::{assets::Assets, gm::Point, sprites::Control, Level, LevelBase, Sprite};
 
 #[derive(Default, Debug)]
-pub struct TestGameLevel {
+pub struct TestLevel {
     base: LevelBase,
 }
 
-impl Level for TestGameLevel {
+impl Level for TestLevel {
     fn setup(&mut self) {
         self.base.player = self.add_body((0, 10, 17.0 / 6.0, 28.0 / 6.0).into());
         self.base.player.set_image(Assets::image("frisk.png"));
@@ -30,7 +30,7 @@ impl Level for TestGameLevel {
     }
 
     fn on_touch(&mut self, pos: Point) {
-        dbg!(pos);
+        self.add_body((pos, (1, 1).into()).into());
     }
 
     fn level(&self) -> &LevelBase {

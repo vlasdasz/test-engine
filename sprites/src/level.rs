@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, fmt::Debug, ops::Deref};
+use std::{borrow::Borrow, fmt::Debug, ops::DerefMut};
 
 use gm::Point;
 use rapier2d::{
@@ -24,7 +24,9 @@ pub trait Level: Debug {
         pos.x -= size.width / 2.0;
         pos.y -= size.height / 2.0;
         pos.y = -pos.y;
-        //pos /= 10;
+        pos /= 10;
+
+        pos += self.player().position();
 
         self.on_touch(pos)
 
@@ -90,8 +92,8 @@ pub trait Level: Debug {
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
 
-    fn drawer(&self) -> &dyn SpritesDrawer {
-        self.level().drawer.deref()
+    fn drawer(&mut self) -> &mut dyn SpritesDrawer {
+        self.level_mut().drawer.deref_mut()
     }
 
     fn set_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
