@@ -1,4 +1,4 @@
-use std::{fmt::Debug, ops::Deref, rc::Rc};
+use std::{fmt::Debug, ops::Deref};
 
 use rapier2d::{
     na::Vector2,
@@ -9,11 +9,11 @@ use rapier2d::{
 };
 use rtools::Rglica;
 
-use crate::{sets::Sets, sprites_drawer::DummyDrawer, Body, Level, Sprite, SpritesDrawer};
+use crate::{sets::Sets, Body, Level, Sprite, SpritesDrawer};
 
 pub struct LevelBase {
     pub player: Rglica<Body>,
-    pub drawer: Rc<dyn SpritesDrawer>,
+    pub drawer: Rglica<dyn SpritesDrawer>,
 
     pub(crate) sprites: Vec<Box<dyn Sprite>>,
     pub(crate) sets:    Sets,
@@ -68,7 +68,7 @@ impl Default for LevelBase {
     fn default() -> Self {
         Self {
             sprites: vec![],
-            drawer:  Rc::new(DummyDrawer::default()),
+            drawer:  Rglica::default(),
 
             sets:             Sets::default(),
             gravity:          Vector2::new(0.0, -9.81),

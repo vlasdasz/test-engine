@@ -14,14 +14,14 @@ pub struct TESpritesDrawer {
 }
 
 impl TESpritesDrawer {
-    pub fn new(assets: Rc<Assets>) -> Rc<Self> {
+    pub fn new(assets: Rc<Assets>) -> Box<Self> {
         let new = Self {
             scale: 0.0,
             resolution: (0, 0).into(),
             assets,
         };
         new.set_scale(1.0);
-        Rc::new(new)
+        Box::new(new)
     }
 }
 

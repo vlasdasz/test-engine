@@ -22,7 +22,7 @@ pub struct UILayer {
     pub debug_view:      Rglica<DebugView>,
     pub view:            Rglica<dyn GameView>,
 
-    pub sprites_drawer: Rc<dyn SpritesDrawer>,
+    pub sprites_drawer: Rglica<dyn SpritesDrawer>,
 
     pub drawer: UIDrawer,
 
@@ -35,7 +35,7 @@ pub struct UILayer {
 }
 
 impl UILayer {
-    pub fn new(assets: Rc<Assets>, sprites_drawer: Rc<dyn SpritesDrawer>) -> Self {
+    pub fn new(assets: Rc<Assets>, sprites_drawer: Rglica<dyn SpritesDrawer>) -> Self {
         Self {
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             cursor_position: Default::default(),
@@ -56,10 +56,8 @@ impl UILayer {
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
         error!("{:?}", touch);
-        if !self.root_view.check_touch(&mut touch) {
-            if touch.is_began() {
-                self.view.pass_touch_to_level(touch)
-            }
+        if !self.root_view.check_touch(&mut touch) && touch.is_began() {
+            self.view.pass_touch_to_level(touch)
         }
     }
 

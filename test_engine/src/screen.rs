@@ -23,7 +23,7 @@ pub struct Screen {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     drawer:         GLDrawer,
     monitor:        Monitor,
-    sprites_drawer: Rc<dyn SpritesDrawer>,
+    sprites_drawer: Box<dyn SpritesDrawer>,
 }
 
 impl Screen {
@@ -159,9 +159,9 @@ impl Screen {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(events.to_rglica());
         let assets = Rc::new(Assets::default());
-        let sprites_drawer = TESpritesDrawer::new(assets.clone());
+        let sprites_drawer: Box<dyn SpritesDrawer> = TESpritesDrawer::new(assets.clone());
 
-        let mut ui = UILayer::new(assets, sprites_drawer.clone());
+        let mut ui = UILayer::new(assets, sprites_drawer.to_rglica());
 
         cfg_if! {if #[cfg(not(any(target_os = "ios", target_os = "android")))] {
             ui.events = events.to_rglica();
