@@ -14,6 +14,7 @@ pub use crate::screen::Screen;
 pub mod assets;
 pub mod debug_view;
 pub mod game_view;
+pub mod level_view;
 pub mod paths;
 pub mod screen;
 mod sprites_drawer;

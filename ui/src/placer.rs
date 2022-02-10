@@ -74,6 +74,15 @@ impl Placer {
         self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
     }
 
+    pub fn left_half(&mut self) {
+        *self.frame = (0, 0, self.s_width() / 2.0, self.s_height()).into();
+    }
+
+    pub fn right_half(&mut self) {
+        let half_w = self.s_width() / 2.0;
+        *self.frame = (half_w, 0, half_w, self.s_height()).into();
+    }
+
     pub fn right(&mut self) {
         self.center_ver();
         self.frame.origin.x = self.s_width() - self.width();

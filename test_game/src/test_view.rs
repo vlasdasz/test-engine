@@ -8,7 +8,7 @@ use test_engine::{
     sprites::Control,
     ui::{
         basic::{Button, Circle},
-        complex::{AnalogStickView, DrawingView, Slider},
+        complex::{AnalogStickView, DrawingView, LabeledView, Slider},
         view_base::{init_view_on, init_view_with_frame, make_view_on, ViewBase},
         DPadView, ImageView, Label, View,
     },
@@ -25,6 +25,7 @@ pub struct TestView {
     level:        TestLevel,
     image_view:   Rglica<ImageView>,
     label:        Rglica<Label>,
+    labeled:      Rglica<LabeledView>,
     dpad:         Rglica<DPadView>,
     left_stick:   Rglica<AnalogStickView>,
     circle:       Rglica<Circle>,
@@ -75,6 +76,13 @@ impl TestView {
         self.label = make_view_on(self, |view: &mut Label| {
             view.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
             view.frame_mut().origin.y = 240.0;
+        });
+
+        self.labeled = make_view_on(self, |view: &mut LabeledView| {
+            view.set_label("Label:");
+            view.set_value(1000001);
+            view.frame_mut().origin.y = 120.0;
+            view.frame_mut().size = (200, 50).into();
         });
 
         let mut label = self.label.clone();
