@@ -20,7 +20,7 @@ impl Level for TestLevel {
             .set_image(square.clone());
         self.add_wall((-20, 0, 1, 100).into()).set_image(square);
 
-        for i in 0..500 {
+        for i in 0..50 {
             self.add_body((0.1 * i as f32, i * 2, 0.5, 0.5).into());
         }
     }

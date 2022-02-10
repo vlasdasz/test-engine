@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, DivAssign, Mul, MulAssign, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
@@ -132,6 +132,13 @@ impl<T: IntoF32> MulAssign<T> for Point {
     fn mul_assign(&mut self, rhs: T) {
         self.x *= rhs.into_f32();
         self.y *= rhs.into_f32();
+    }
+}
+
+impl<T: IntoF32> Div<T> for Point {
+    type Output = Point;
+    fn div(self, rhs: T) -> Point {
+        (self.x / rhs.into_f32(), self.y / rhs.into_f32()).into()
     }
 }
 
