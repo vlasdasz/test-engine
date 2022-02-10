@@ -43,21 +43,19 @@ def ndk_home():
         return os.environ["NDK_HOME"]
     if "ANDROID_HOME" in os.environ:
         return os.environ["ANDROID_HOME"] + "/ndk/22.1.7171670"
-    return "/Users/vladas/Library/Android/sdk/ndk/23.1.7779620/"
+    return "/Users/vladas/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin"
     raise Exception("No NDK path env variables")
 
 
 def setup_android():
-    if os.path.isdir("NDK"):
-        return
-    # run("mkdir NDK")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
-    # ndk = ndk_home()
-
-    # run(ndk + "/build/tools/make_standalone_toolchain.py --api 21 --arch arm64 --install-dir NDK/arm64")
-    # run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch arm --install-dir NDK/arm")
-    # run(ndk + "/build/tools/make_standalone_toolchain.py --api 19 --arch x86 --install-dir NDK/x86")
-
+    print("skigal")
+    print(this_path)
+    print(ndk_home())
+    try:
+        os.symlink(ndk_home(), this_path + "/NDK")
+    except FileExistsError:
+        print("NDK symlink exists")
 
 if android:
     setup_android()
@@ -99,5 +97,4 @@ elif android:
     except FileExistsError:
         print("exists")
 else:
-    os.environ["CARGO_CFG_TARGET_OS"] = "desktop"
     run("cargo build")

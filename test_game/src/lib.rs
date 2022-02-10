@@ -124,7 +124,7 @@ pub mod android {
 
     #[no_mangle]
     pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setup(_: JNIEnv, _: jclass) {
-        create_screen();
+        create_screen(0, 0);
     }
 
     #[no_mangle]
