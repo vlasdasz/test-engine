@@ -27,17 +27,18 @@
     set_monitor(326,
                 [UIScreen mainScreen].scale,
                 60,
-                screen.size.width,
-                screen.size.height,
+                self.view.frame.size.width,
+                self.view.frame.size.height,
                 300,
                 300,
                 7);
-    create_screen();
+    
+    create_screen(screen.size.width, screen.size.height);
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    set_screen_size(self.view.frame.size.width * 2, self.view.frame.size.height * 2);
+    set_screen_size(self.view.frame.size.width, self.view.frame.size.height);
 }
 
 - (void)update {

@@ -46,6 +46,8 @@ impl Screen {
     }
 
     fn init(&mut self, size: Size) {
+        dbg!(&size);
+
         cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
             let monitor = self.drawer.monitors.first().expect("BUG: failed to get monitor").clone();
             self.add_monitor(monitor);
@@ -62,17 +64,12 @@ impl Screen {
         self.set_size(size);
     }
 
-    #[cfg(any(windows, target_os = "linux"))]
+    #[cfg(not(target_os = "macos"))]
     fn adjust_size(monitor: Monitor, size: Size) -> Size {
-        size * monitor.scale
+        dbg!(size * monitor.scale)
     }
 
     #[cfg(target_os = "macos")]
-    fn adjust_size(_monitor: Monitor, size: Size) -> Size {
-        size
-    }
-
-    #[cfg(any(target_os = "ios", target_os = "android"))]
     fn adjust_size(_monitor: Monitor, size: Size) -> Size {
         size
     }

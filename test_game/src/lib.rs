@@ -6,7 +6,6 @@ use std::{
 use gl_wrapper::monitor::Monitor;
 use rtools::Boxed;
 use test_engine::{
-    gm::Size,
     ui::{input::touch::Event, Touch},
     Screen,
 };
@@ -23,9 +22,9 @@ static mut SCREEN: *mut Screen = ptr::null_mut();
 static mut MONITOR: *mut Monitor = ptr::null_mut();
 
 #[no_mangle]
-pub extern "C" fn create_screen() {
+pub extern "C" fn create_screen(width: c_int, height: c_int) {
     unsafe {
-        let mut screen = Box::new(Screen::new(Default::default()));
+        let mut screen = Box::new(Screen::new((width, height).into()));
 
         screen.ui.set_view(TestView::boxed());
         screen.ui.add_debug_view();
@@ -37,16 +36,19 @@ pub extern "C" fn create_screen() {
 }
 
 #[no_mangle]
-pub extern "C" fn set_screen_size(width: c_float, height: c_float) {
+pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
     unsafe {
-        SCREEN.as_mut().unwrap().set_size(Size { width, height });
+        SCREEN
+            .as_mut()
+            .unwrap_unchecked()
+            .set_size((width, height).into());
     }
 }
 
 #[no_mangle]
 pub extern "C" fn update_screen() {
     unsafe {
-        SCREEN.as_mut().unwrap().update();
+        SCREEN.as_mut().unwrap_unchecked().update();
     }
 }
 
@@ -54,9 +56,9 @@ pub extern "C" fn update_screen() {
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     #[allow(clippy::useless_conversion)]
     unsafe {
-        SCREEN.as_mut().unwrap().ui.on_touch(Touch {
+        SCREEN.as_mut().unwrap_unchecked().ui.on_touch(Touch {
             id:       id.into(),
-            position: (x * 2.0, y * 2.0).into(),
+            position: (x, y).into(),
             event:    Event::from_int(event),
         })
     }
