@@ -134,7 +134,7 @@ impl Screen {
     fn on_size_changed(&mut self, size: Size) {
         self.ui.drawer.set_size(size);
         self.ui.root_view.set_frame(size.into());
-        self.sprites_drawer.set_resolution(&size);
+        self.sprites_drawer.set_resolution(size);
         self.sprites_drawer.set_camera_position((0, 0).into());
         self.update();
     }

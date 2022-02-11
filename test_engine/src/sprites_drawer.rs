@@ -42,8 +42,8 @@ impl SpritesDrawer for TESpritesDrawer {
         self.assets.shaders.textured_sprite.set_scale(scale);
     }
 
-    fn set_resolution(&mut self, size: &Size) {
-        self.resolution = *size;
+    fn set_resolution(&mut self, size: Size) {
+        self.resolution = size;
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_resolution(size);
         self.assets.shaders.textured_sprite.enable();
@@ -80,10 +80,11 @@ impl SpritesDrawer for TESpritesDrawer {
 
         shader.enable();
 
-        shader.set_size(&sprite.size());
-        shader.set_position(&sprite.position());
+        shader.set_selected(sprite.is_selected());
+        shader.set_size(sprite.size());
+        shader.set_position(sprite.position());
         shader.set_rotation(sprite.rotation());
-        shader.set_color(&sprite.color());
+        shader.set_color(sprite.color());
 
         buffer.draw();
     }

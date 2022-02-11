@@ -87,10 +87,13 @@ impl PointBase<i32> {
     }
 }
 
-impl AddAssign for Point {
-    fn add_assign(&mut self, rhs: Point) {
-        self.x += rhs.x;
-        self.y += rhs.y
+impl<T: Add<Output = T>> Add for PointBase<T> {
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self {
+        Self {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
     }
 }
 
@@ -104,10 +107,20 @@ impl<T: Add<Output = T> + Copy> Add for &PointBase<T> {
     }
 }
 
-impl SubAssign for Point {
-    fn sub_assign(&mut self, rhs: Point) {
-        self.x -= rhs.x;
-        self.y -= rhs.y
+impl AddAssign for Point {
+    fn add_assign(&mut self, rhs: Point) {
+        self.x += rhs.x;
+        self.y += rhs.y
+    }
+}
+
+impl<T: Sub<Output = T>> Sub for PointBase<T> {
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
     }
 }
 
@@ -118,6 +131,13 @@ impl<T: Sub<Output = T> + Copy> Sub for &PointBase<T> {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
         }
+    }
+}
+
+impl SubAssign for Point {
+    fn sub_assign(&mut self, rhs: Point) {
+        self.x -= rhs.x;
+        self.y -= rhs.y
     }
 }
 

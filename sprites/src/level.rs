@@ -34,6 +34,15 @@ pub trait Level: Debug {
         self.on_touch(pos)
     }
 
+    fn sprite_at(&self, point: Point) -> Option<Rglica<dyn Sprite>> {
+        for bx in self.sprites() {
+            if bx.sprite().contains(point) {
+                return bx.to_rglica().into();
+            }
+        }
+        None
+    }
+
     fn gravity(&self) -> Point {
         let gravity = self.level().gravity.borrow();
         (gravity[0], gravity[1]).into()
@@ -43,7 +52,12 @@ pub trait Level: Debug {
         self.level_mut().gravity = Vector2::new(g.x, g.y)
     }
 
-    fn player(&mut self) -> &mut Rglica<Body> {
+    fn player(&self) -> &Rglica<Body> {
+        debug_assert!(self.level().player.is_ok());
+        &self.level().player
+    }
+
+    fn player_mut(&mut self) -> &mut Rglica<Body> {
         debug_assert!(self.level().player.is_ok());
         &mut self.level_mut().player
     }

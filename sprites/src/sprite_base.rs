@@ -6,15 +6,25 @@ use rtools::{as_any::AsAny, IntoF32, Rglica};
 
 use crate::{Level, Sprite};
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct SpriteBase {
-    pub(crate) position: Point,
-    pub(crate) size:     Size,
-    pub(crate) rotation: f32,
-    pub(crate) level:    Rglica<dyn Level>,
+    pub(crate) position:    Point,
+    pub(crate) size:        Size,
+    pub(crate) rotation:    f32,
+    pub(crate) level:       Rglica<dyn Level>,
+    pub(crate) is_selected: bool,
 
     pub color: Color,
     pub image: Option<Image>,
+}
+
+impl SpriteBase {
+    pub fn contains(&self, point: Point) -> bool {
+        point.x >= self.position.x - self.size.width
+            && point.x <= self.position.x + self.size.width
+            && point.y >= self.position.y - self.size.height
+            && point.y <= self.position.y + self.size.height
+    }
 }
 
 impl Sprite for SpriteBase {

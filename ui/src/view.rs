@@ -15,8 +15,8 @@ pub trait View: Boxed {
 
     fn update(&mut self) {}
 
-    fn color(&self) -> &Color {
-        &self.view().color
+    fn color(&self) -> Color {
+        self.view().color
     }
 
     fn set_color(&mut self, color: Color) {

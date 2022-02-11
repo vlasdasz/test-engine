@@ -42,12 +42,12 @@ impl TestView {
         let mut lvl = level.clone();
         self.dpad
             .on_press
-            .subscribe(move |direction| lvl.player().move_by_direction(direction));
+            .subscribe(move |direction| lvl.player_mut().move_by_direction(direction));
 
         self.left_stick
             .on_direction_change
             .subscribe(move |direction| {
-                level.player().add_impulse(&direction);
+                level.player_mut().add_impulse(&direction);
             });
     }
 

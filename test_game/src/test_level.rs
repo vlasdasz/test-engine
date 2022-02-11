@@ -1,8 +1,10 @@
+use rtools::Rglica;
 use test_engine::{assets::Assets, gm::Point, sprites::Control, Level, LevelBase, Sprite};
 
 #[derive(Default, Debug)]
 pub struct TestLevel {
-    base: LevelBase,
+    base:            LevelBase,
+    selected_sprite: Option<Rglica<dyn Sprite>>,
 }
 
 impl Level for TestLevel {
@@ -26,11 +28,17 @@ impl Level for TestLevel {
     }
 
     fn on_key_pressed(&mut self, key: String) {
-        self.player().move_by_key(key)
+        self.player_mut().move_by_key(key)
     }
 
     fn on_touch(&mut self, pos: Point) {
-        self.add_body((pos, (1, 1).into()).into());
+        if let Some(mut sprite) = self.sprite_at(pos) {
+            sprite.set_selected(true);
+            if let Some(mut old) = self.selected_sprite.clone() {
+                old.set_selected(false);
+            }
+            self.selected_sprite = sprite.into();
+        }
     }
 
     fn level(&self) -> &LevelBase {

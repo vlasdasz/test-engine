@@ -44,11 +44,11 @@ impl Shader {
         GL!(UseProgram, self.program)
     }
 
-    pub fn set_color(&self, color: &Color) {
+    pub fn set_color(&self, color: Color) {
         GL!(Uniform4fv, self.color, 1, &color.r)
     }
 
-    pub fn set_size(&self, size: &Size) {
+    pub fn set_size(&self, size: Size) {
         GL!(Uniform2fv, self.size, 1, &size.width)
     }
 
@@ -56,11 +56,11 @@ impl Shader {
         GL!(Uniform1i, self.selected, selected.into())
     }
 
-    pub fn set_resolution(&self, resolution: &Size) {
+    pub fn set_resolution(&self, resolution: Size) {
         GL!(Uniform2fv, self.resolution, 1, &resolution.width)
     }
 
-    pub fn set_position(&self, point: &Point) {
+    pub fn set_position(&self, point: Point) {
         GL!(Uniform2fv, self.position, 1, &point.x)
     }
 

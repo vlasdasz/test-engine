@@ -31,6 +31,14 @@ pub trait Sprite: AsAny {
         self.sprite_mut().image = image.into()
     }
 
+    fn is_selected(&self) -> bool {
+        self.sprite().is_selected
+    }
+
+    fn set_selected(&mut self, selected: bool) {
+        self.sprite_mut().is_selected = selected
+    }
+
     fn remove(&mut self) {}
 
     fn level(&self) -> &dyn Level {

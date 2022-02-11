@@ -53,7 +53,7 @@ impl UIDrawer {
 
         self.fill_rect(view.absolute_frame(), view.color());
 
-        self.draw_rect(view.absolute_frame(), &Color::TURQUOISE);
+        self.draw_rect(view.absolute_frame(), Color::TURQUOISE);
 
         if let Some(paths) = view.paths() {
             for path in paths {
@@ -78,21 +78,21 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
-    fn fill_rect(&self, rect: &Rect, color: &Color) {
+    fn fill_rect(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);
         self.assets.buffers.fullscreen.draw();
     }
 
-    fn draw_rect(&self, rect: &Rect, color: &Color) {
+    fn draw_rect(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);
         self.assets.buffers.fullscreen_outline.draw();
     }
 
-    fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: &Color) {
+    fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: Color) {
         if image.is_invalid() {
             return;
         }
@@ -118,8 +118,8 @@ impl UIDrawer {
     pub fn draw_path_in_rect(&self, path: &PathData, rect: &Rect) {
         self.set_viewport(rect);
         self.assets.shaders.ui_path.enable();
-        self.assets.shaders.ui_path.set_color(&path.color);
-        self.assets.shaders.ui_path.set_size(&rect.size);
+        self.assets.shaders.ui_path.set_color(path.color);
+        self.assets.shaders.ui_path.set_size(rect.size);
         path.buffer.draw();
     }
 }
