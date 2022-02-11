@@ -118,3 +118,9 @@ impl Color {
         Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
     }
 }
+
+impl ToString for Color {
+    fn to_string(&self) -> String {
+        format!("r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
+    }
+}

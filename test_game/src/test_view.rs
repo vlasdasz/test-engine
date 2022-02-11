@@ -5,6 +5,7 @@ use test_engine::{
     assets::Assets,
     game_view::GameView,
     gm::Color,
+    sprite_view::SpriteView,
     sprites::Control,
     ui::{
         basic::{Button, Circle},
@@ -29,6 +30,7 @@ pub struct TestView {
     dpad:         Rglica<DPadView>,
     left_stick:   Rglica<AnalogStickView>,
     circle:       Rglica<Circle>,
+    sprite:       Rglica<SpriteView>,
     slider:       Rglica<Slider>,
     slider_label: Rglica<Label>,
 }
@@ -52,10 +54,10 @@ impl TestView {
     }
 
     fn setup_slider(&mut self) {
-        self.slider = init_view_with_frame((50, 280).into(), self);
+        self.slider = init_view_with_frame(self, (50, 280).into());
         self.slider.multiplier = 50.0;
 
-        self.slider_label = init_view_with_frame((50, 50).into(), self);
+        self.slider_label = init_view_with_frame(self, (50, 50).into());
         self.slider_label.set_text("hello");
 
         let mut this = self.to_rglica();
@@ -84,6 +86,14 @@ impl TestView {
             view.frame_mut().origin.y = 120.0;
             view.frame_mut().size = (200, 50).into();
         });
+
+        self.sprite = init_view_with_frame(self, (400, 180).into());
+
+        let mut this = self.to_rglica();
+        self.level
+            .level_mut()
+            .on_sprite_selected
+            .subscribe(move |sprite| this.sprite.set_sprite(sprite));
 
         let mut label = self.label.clone();
         make_view_on(self, |view: &mut ViewBase| {
@@ -132,7 +142,7 @@ impl TestView {
         self.left_stick = init_view_on(self);
         self.left_stick.frame_mut().origin = (320, 300).into();
 
-        self.circle = init_view_with_frame((50, 50).into(), self);
+        self.circle = init_view_with_frame(self, (50, 50).into());
         self.circle.set_color(Color::GREEN);
 
         self.setup_slider();
@@ -151,6 +161,7 @@ impl View for TestView {
         self.circle.place().bottom_right_margin(20);
         self.slider.place().top_right_margin(20);
         self.slider_label.place().at_bottom(self.slider.deref(), 20);
+        self.sprite.place().top_right();
     }
 
     fn view(&self) -> &ViewBase {

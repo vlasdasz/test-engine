@@ -54,3 +54,9 @@ impl<T: IntoF32> Div<T> for Size {
         (self.width / rhs.into_f32(), self.height / rhs.into_f32()).into()
     }
 }
+
+impl ToString for Size {
+    fn to_string(&self) -> String {
+        format!("width: {}, height: {}", self.width, self.height)
+    }
+}

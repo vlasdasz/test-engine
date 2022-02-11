@@ -17,6 +17,7 @@ pub mod game_view;
 pub mod level_view;
 pub mod paths;
 pub mod screen;
+pub mod sprite_view;
 mod sprites_drawer;
 mod ui_drawer;
 pub mod ui_layer;

@@ -177,3 +177,9 @@ impl<X: IntoF32, Y: IntoF32> From<(X, Y)> for Point {
         }
     }
 }
+
+impl<T: ToString> ToString for PointBase<T> {
+    fn to_string(&self) -> String {
+        format!("x: {}, y: {}", self.x.to_string(), self.y.to_string())
+    }
+}

@@ -34,6 +34,7 @@ impl Level for TestLevel {
     fn on_touch(&mut self, pos: Point) {
         if let Some(mut sprite) = self.sprite_at(pos) {
             sprite.set_selected(true);
+            self.level_mut().on_sprite_selected.trigger(sprite.clone());
             if let Some(mut old) = self.selected_sprite.clone() {
                 old.set_selected(false);
             }

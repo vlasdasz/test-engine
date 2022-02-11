@@ -7,13 +7,15 @@ use rapier2d::{
         PhysicsPipeline,
     },
 };
-use rtools::Rglica;
+use rtools::{Event, Rglica};
 
 use crate::{sets::Sets, Body, Level, Sprite, SpritesDrawer};
 
 pub struct LevelBase {
     pub player: Rglica<Body>,
     pub drawer: Rglica<dyn SpritesDrawer>,
+
+    pub on_sprite_selected: Event<Rglica<dyn Sprite>>,
 
     pub(crate) sprites: Vec<Box<dyn Sprite>>,
     pub(crate) sets:    Sets,
@@ -69,6 +71,8 @@ impl Default for LevelBase {
         Self {
             sprites: vec![],
             drawer:  Rglica::default(),
+
+            on_sprite_selected: Event::default(),
 
             sets:             Sets::default(),
             gravity:          Vector2::new(0.0, -9.81),

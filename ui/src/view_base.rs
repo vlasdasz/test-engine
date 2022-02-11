@@ -38,7 +38,7 @@ pub fn init_view_on<T: 'static + View>(parent: &mut dyn View) -> Rglica<T> {
     result
 }
 
-pub fn init_view_with_frame<T: 'static + View>(frame: Rect, parent: &mut dyn View) -> Rglica<T> {
+pub fn init_view_with_frame<T: 'static + View>(parent: &mut dyn View, frame: Rect) -> Rglica<T> {
     let mut view: Rglica<T> = init_view_on(parent);
     view.set_frame(frame);
     view
