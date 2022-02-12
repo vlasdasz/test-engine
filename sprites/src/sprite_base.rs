@@ -1,10 +1,8 @@
-use std::any::Any;
-
 use gl_image::Image;
 use gm::{Color, Point, Size};
-use rtools::{as_any::AsAny, IntoF32, Rglica};
+use rtools::{IntoF32, Rglica};
 
-use crate::{Level, Sprite};
+use crate::Level;
 
 #[derive(Default)]
 pub struct SpriteBase {
@@ -18,30 +16,21 @@ pub struct SpriteBase {
     pub image: Option<Image>,
 }
 
-impl SpriteBase {
-    pub fn contains(&self, point: Point) -> bool {
-        point.x >= self.position.x - self.size.width
-            && point.x <= self.position.x + self.size.width
-            && point.y >= self.position.y - self.size.height
-            && point.y <= self.position.y + self.size.height
-    }
-}
-
-impl Sprite for SpriteBase {
-    fn sprite(&self) -> &SpriteBase {
-        self
-    }
-
-    fn sprite_mut(&mut self) -> &mut SpriteBase {
-        self
-    }
-}
-
-impl AsAny for SpriteBase {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
+// impl Sprite for SpriteBase {
+//     fn sprite(&self) -> &SpriteBase {
+//         self
+//     }
+//
+//     fn sprite_mut(&mut self) -> &mut SpriteBase {
+//         self
+//     }
+// }
+//
+// impl AsAny for SpriteBase {
+//     fn as_any(&self) -> &dyn Any {
+//         self
+//     }
+// }
 
 impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteBase {
     fn from(data: (X, Y, W, H)) -> Self {

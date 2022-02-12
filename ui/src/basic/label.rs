@@ -19,6 +19,10 @@ impl Label {
         self.set_letters();
     }
 
+    pub fn clear(&mut self) {
+        self.set_text("")
+    }
+
     fn set_letters(&mut self) {
         self.remove_all_subviews();
 

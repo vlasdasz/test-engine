@@ -21,9 +21,9 @@ impl Body {
         let level_base = level.level_mut();
 
         let rigid_body = RigidBodyBuilder::new_dynamic()
-            .translation(Vector2::new(sprite.position().x, sprite.position().y))
+            .translation(Vector2::new(sprite.position.x, sprite.position.y))
             .build();
-        let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
+        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
             .restitution(0.7)
             .build();
 

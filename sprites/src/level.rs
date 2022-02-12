@@ -36,7 +36,7 @@ pub trait Level: Debug {
 
     fn sprite_at(&self, point: Point) -> Option<Rglica<dyn Sprite>> {
         for bx in self.sprites() {
-            if bx.sprite().contains(point) {
+            if bx.contains(point) {
                 return bx.to_rglica().into();
             }
         }
@@ -78,13 +78,13 @@ pub trait Level: Debug {
         Body::make(sprite, self.level_mut())
     }
 
-    fn add_sprite(&mut self, sprite: SpriteBase) {
-        self.level_mut().sprites.push(Box::new(sprite))
-    }
+    // fn add_sprite(&mut self, sprite: SpriteBase) {
+    //     self.level_mut().sprites.push(Box::new(sprite))
+    // }
 
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
-        let collider = ColliderBuilder::cuboid(sprite.size().width, sprite.size().height)
-            .translation(Vector2::new(sprite.position().x, sprite.position().y))
+        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
+            .translation(Vector2::new(sprite.position.x, sprite.position.y))
             .build();
         self.level_mut().sets.collider.insert(collider);
         let boxed = Box::<Collider>::new(sprite.into());

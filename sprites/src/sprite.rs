@@ -19,6 +19,15 @@ pub trait Sprite: AsAny {
         self.sprite().rotation
     }
 
+    fn contains(&self, point: Point) -> bool {
+        let pos = self.position();
+        let size = self.size();
+        point.x >= pos.x - size.width
+            && point.x <= pos.x + size.width
+            && point.y >= pos.y - size.height
+            && point.y <= pos.y + size.height
+    }
+
     fn color(&self) -> Color {
         self.sprite().color
     }

@@ -20,6 +20,10 @@ impl LabeledView {
     pub fn set_value(&mut self, value: impl ToString) {
         self.value.set_text(value)
     }
+
+    pub fn clear(&mut self) {
+        self.value.clear()
+    }
 }
 
 impl View for LabeledView {

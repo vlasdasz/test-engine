@@ -15,7 +15,6 @@ impl Level for TestLevel {
 
         let square = Assets::image("square.png");
 
-        self.add_sprite((0, 0, 1, 1).into());
         self.add_wall((0, 0, 100, 1).into())
             .set_image(square.clone());
         self.add_wall((20, 0, 1, 100).into())
@@ -39,6 +38,15 @@ impl Level for TestLevel {
                 old.set_selected(false);
             }
             self.selected_sprite = sprite.into();
+            return;
+        }
+
+        if let Some(mut sprite) = self.selected_sprite.clone() {
+            sprite.set_selected(false);
+            self.selected_sprite = None;
+            self.level_mut()
+                .on_sprite_selected
+                .trigger(Rglica::default());
         }
     }
 
