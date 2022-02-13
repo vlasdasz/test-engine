@@ -46,11 +46,7 @@ impl View for SpriteView {
     }
 
     fn update(&mut self) {
-        // if self.sprite.is_null() {
-        //     return;
-        // }
-        // self.set_sprite(self.sprite.clone());
-        //dbg!(&self.sprite.deref());
+        self.set_sprite(self.sprite.clone());
     }
 
     fn view(&self) -> &ViewBase {

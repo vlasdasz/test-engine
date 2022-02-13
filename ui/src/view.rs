@@ -107,6 +107,7 @@ pub trait View: Boxed {
 
     fn calculate_absolute_frame(&mut self) {
         let view = self.view_mut();
+        view.update();
         view.absolute_frame = view.frame;
         view.absolute_frame.origin += view.super_absolute_frame().origin;
         self.layout();

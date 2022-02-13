@@ -4,18 +4,18 @@ use crate::{view_base::ViewBase, Font, ImageView, View};
 
 #[derive(Default)]
 pub struct Label {
-    font:  Font,
-    _text: String,
-    base:  ViewBase,
+    font: Font,
+    text: String,
+    base: ViewBase,
 }
 
 impl Label {
     pub fn text(&self) -> &str {
-        &self._text
+        &self.text
     }
 
     pub fn set_text(&mut self, text: impl ToString) {
-        self._text = text.to_string();
+        self.text = text.to_string();
         self.set_letters();
     }
 
@@ -26,7 +26,7 @@ impl Label {
     fn set_letters(&mut self) {
         self.remove_all_subviews();
 
-        if self._text.is_empty() {
+        if self.text.is_empty() {
             return;
         }
 
@@ -36,7 +36,7 @@ impl Label {
 
         content_size.height = self.font.height;
 
-        let text = self._text.clone();
+        let text = self.text.clone();
 
         for letter in text.chars() {
             let glyph = self.font.glyph_for_char(letter);
