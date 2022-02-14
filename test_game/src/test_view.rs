@@ -87,7 +87,7 @@ impl TestView {
             view.frame_mut().size = (200, 50).into();
         });
 
-        self.sprite = init_view_with_frame(self, (400, 180).into());
+        self.sprite = init_view_with_frame(self, (500, 180).into());
 
         let mut this = self.to_rglica();
         self.level

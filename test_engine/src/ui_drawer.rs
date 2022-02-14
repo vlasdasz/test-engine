@@ -44,6 +44,13 @@ impl UIDrawer {
 }
 
 impl UIDrawer {
+    pub fn update(&self, view: &mut dyn View) {
+        view.update();
+        for view in view.subviews_mut() {
+            self.update(view.deref_mut());
+        }
+    }
+
     pub fn draw(&self, view: &mut dyn View) {
         if let Some(image) = view.image() {
             self.draw_image_in_rect(&image, view.absolute_frame(), view.color());

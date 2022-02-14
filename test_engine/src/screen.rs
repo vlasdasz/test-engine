@@ -57,7 +57,7 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
-        self.ui.root_view.calculate_absolute_frame();
+        self.ui.root_view.calculate_frames();
 
         let size = Screen::adjust_size(self.monitor.clone(), size);
 
@@ -97,7 +97,8 @@ impl Screen {
 
         self.update_level();
 
-        self.ui.root_view.calculate_absolute_frame();
+        self.ui.drawer.update(self.ui.root_view.deref_mut());
+        self.ui.root_view.calculate_frames();
         self.ui.drawer.draw(self.ui.root_view.deref_mut());
 
         self.ui.drawer.reset_viewport();
