@@ -20,10 +20,10 @@ pub struct DPadView {
 
 impl DPadView {
     pub fn set_images(&mut self, up: Image, down: Image, left: Image, right: Image) {
-        self.up.image = up.into();
-        self.down.image = down.into();
-        self.left.image = left.into();
-        self.right.image = right.into();
+        self.up.set_image(up);
+        self.down.set_image(down);
+        self.left.set_image(left);
+        self.right.set_image(right);
     }
 }
 

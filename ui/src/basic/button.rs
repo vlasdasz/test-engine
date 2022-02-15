@@ -5,24 +5,29 @@ use crate::{view_base::ViewBase, Touch, View};
 
 #[derive(Default)]
 pub struct Button {
-    base:       ViewBase,
+    base:  ViewBase,
+    image: Option<Image>,
+
     pub on_tap: Event,
-    pub image:  Option<Image>,
 }
 
 impl View for Button {
+    fn setup(&mut self) {
+        self.enable_touch();
+    }
+
     fn on_touch(&mut self, touch: &Touch) {
         if touch.is_began() {
             self.on_tap.trigger(());
         }
     }
 
-    fn setup(&mut self) {
-        self.enable_touch();
-    }
-
     fn image(&self) -> Option<Image> {
         self.image.clone()
+    }
+
+    fn set_image(&mut self, image: Image) {
+        self.image = image.into()
     }
 
     fn view(&self) -> &ViewBase {

@@ -21,8 +21,8 @@ pub struct IntView {
 
 impl IntView {
     pub fn set_images(&mut self, up: Image, down: Image) {
-        self.up.image = up.into();
-        self.down.image = down.into();
+        self.up.set_image(up);
+        self.down.set_image(down);
     }
 }
 

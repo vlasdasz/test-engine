@@ -175,6 +175,8 @@ pub trait View: Boxed {
         None
     }
 
+    fn set_image(&mut self, _: Image) {}
+
     fn place(&mut self) -> &mut Placer {
         &mut self.view_mut().placer
     }

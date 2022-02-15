@@ -1,18 +1,25 @@
-use rtools::Rglica;
+use rtools::{Rglica, ToRglica};
 use sprites::Sprite;
 use ui::{
+    basic::Button,
     complex::LabeledView,
     view_base::{init_view_on, ViewBase},
     View,
 };
 
+use crate::assets::Assets;
+
 #[derive(Default)]
 pub struct SpriteView {
-    base:     ViewBase,
+    base: ViewBase,
+
     position: Rglica<LabeledView>,
     size:     Rglica<LabeledView>,
     color:    Rglica<LabeledView>,
-    sprite:   Rglica<dyn Sprite>,
+
+    delete_button: Rglica<Button>,
+
+    sprite: Rglica<dyn Sprite>,
 }
 
 impl SpriteView {
@@ -28,6 +35,21 @@ impl SpriteView {
         self.size.set_value(sprite.size());
         self.color.set_value(sprite.color());
     }
+
+    fn setup_delete_button(&mut self) {
+        self.delete_button = init_view_on(self);
+        self.delete_button.set_image(Assets::image("delete.png"));
+
+        self.delete_button.set_frame((100, 100).into());
+
+        let mut this = self.to_rglica();
+        self.delete_button.on_tap.subscribe(move |_| {
+            if this.sprite.is_ok() {
+                this.sprite.remove();
+                this.set_sprite(Rglica::default());
+            }
+        });
+    }
 }
 
 impl View for SpriteView {
@@ -39,6 +61,8 @@ impl View for SpriteView {
         self.position.set_label("position:");
         self.size.set_label("size:");
         self.color.set_label("color:");
+
+        self.setup_delete_button();
     }
 
     fn layout(&mut self) {
