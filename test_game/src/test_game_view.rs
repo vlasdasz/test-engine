@@ -8,34 +8,29 @@ use test_engine::{
     sprite_view::SpriteView,
     sprites::Control,
     ui::{
-        basic::{Button, Circle},
-        complex::{AnalogStickView, DrawingView, LabeledView, Slider},
+        complex::{AnalogStickView, DrawingView, Slider},
+        test::test_view::TestView,
         view_base::{init_view_on, init_view_with_frame, make_view_on, ViewBase},
-        DPadView, ImageView, Label, View,
+        DPadView, Label, View,
     },
     Level,
 };
 
-use crate::test_level::TestLevel;
+use crate::test_game_level::TestGameLevel;
 
-static mut COUNTER: u32 = 0;
-
-#[derive(Default)]
-pub struct TestView {
+#[derive(Default, Debug)]
+pub struct TestGameView {
     base:         ViewBase,
-    level:        TestLevel,
-    image_view:   Rglica<ImageView>,
-    label:        Rglica<Label>,
-    labeled:      Rglica<LabeledView>,
+    level:        TestGameLevel,
     dpad:         Rglica<DPadView>,
     left_stick:   Rglica<AnalogStickView>,
-    circle:       Rglica<Circle>,
     sprite:       Rglica<SpriteView>,
     slider:       Rglica<Slider>,
     slider_label: Rglica<Label>,
+    test_view:    Rglica<TestView>,
 }
 
-impl TestView {
+impl TestGameView {
     fn setup_level(&mut self) {
         self.level.setup();
 
@@ -70,23 +65,6 @@ impl TestView {
     fn setup_ui(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
-        self.image_view = make_view_on(self, |view: &mut ImageView| {
-            view.image = Assets::image("cat.png");
-            view.set_frame((200, 20, 100, 120).into());
-        });
-
-        self.label = make_view_on(self, |view: &mut Label| {
-            view.set_text("ti stragadag stragadag4naja stragadag stragadag stragadakt4ka");
-            view.frame_mut().origin.y = 240.0;
-        });
-
-        self.labeled = make_view_on(self, |view: &mut LabeledView| {
-            view.set_label("Label:");
-            view.set_value(1000001);
-            view.frame_mut().origin.y = 120.0;
-            view.frame_mut().size = (200, 50).into();
-        });
-
         self.sprite = init_view_with_frame(self, (500, 180).into());
 
         let mut this = self.to_rglica();
@@ -94,21 +72,6 @@ impl TestView {
             .level_mut()
             .on_sprite_selected
             .subscribe(move |sprite| this.sprite.set_sprite(sprite));
-
-        let mut label = self.label.clone();
-        make_view_on(self, |view: &mut ViewBase| {
-            view.set_frame((10, 20, 50, 50).into());
-            view.set_color(Color::WHITE);
-
-            make_view_on(view, |button: &mut Button| {
-                button.set_frame((10, 10, 20, 20).into());
-                button.set_color(Color::RED);
-                button.on_tap.subscribe(move |_| unsafe {
-                    label.set_text(&format!("kok: {}", COUNTER));
-                    COUNTER += 1;
-                });
-            });
-        });
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (280, 200).into();
@@ -142,26 +105,24 @@ impl TestView {
         self.left_stick = init_view_on(self);
         self.left_stick.frame_mut().origin = (320, 300).into();
 
-        self.circle = init_view_with_frame(self, (50, 50).into());
-        self.circle.set_color(Color::GREEN);
-
         self.setup_slider();
+
+        self.test_view = init_view_with_frame(self, (280, 280).into());
     }
 }
 
-impl View for TestView {
+impl View for TestGameView {
     fn setup(&mut self) {
         self.setup_ui();
         self.setup_level();
     }
 
     fn layout(&mut self) {
-        self.place().bottom_right();
-        self.frame_mut().size.width = self.super_frame().width();
-        self.circle.place().bottom_right_margin(20);
+        self.place().as_background();
         self.slider.place().top_right_margin(20);
         self.slider_label.place().at_bottom(self.slider.deref(), 20);
         self.sprite.place().top_right();
+        self.test_view.place().bottom_right_margin(20);
     }
 
     fn view(&self) -> &ViewBase {
@@ -173,7 +134,7 @@ impl View for TestView {
     }
 }
 
-impl GameView for TestView {
+impl GameView for TestGameView {
     fn level(&self) -> &dyn Level {
         &self.level
     }

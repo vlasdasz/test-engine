@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::Point;
 
-#[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
+#[derive(Copy, Clone, Default, Debug, Serialize, Deserialize)]
 pub struct Size {
     pub width:  f32,
     pub height: f32,
@@ -18,6 +18,14 @@ impl Size {
 
     pub fn square(side: f32) -> Size {
         (side, side).into()
+    }
+
+    pub fn is_valid(&self) -> bool {
+        self.width > 0.0 || self.height > 0.0
+    }
+
+    pub fn is_invalid(&self) -> bool {
+        !self.is_valid()
     }
 
     pub fn is_negative(&self) -> bool {

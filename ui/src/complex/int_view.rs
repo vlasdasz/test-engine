@@ -9,7 +9,7 @@ use crate::{
     Label, View,
 };
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct IntView {
     base:          ViewBase,
     value:         i64,
@@ -48,7 +48,7 @@ impl View for IntView {
     }
 
     fn layout(&mut self) {
-        self.place().subviews_vertically();
+        self.place().all_vertically();
         self.label.set_text(&self.value.to_string());
     }
 

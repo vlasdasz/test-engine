@@ -7,7 +7,7 @@ use crate::{
     View,
 };
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SubviewsTestView {
     base:   ViewBase,
     first:  Rglica<ViewBase>,
@@ -19,27 +19,19 @@ pub struct SubviewsTestView {
 
 impl View for SubviewsTestView {
     fn setup(&mut self) {
-        self.frame_mut().size = (120, 120).into();
-
         self.first = init_view_on(self);
         self.second = init_view_on(self.first.deref_mut());
         self.third = init_view_on(self.second.deref_mut());
         self.forth = init_view_on(self.third.deref_mut());
         self.fifth = init_view_on(self.forth.deref_mut());
-
-        self.first.frame_mut().size = (100, 100).into();
-        self.second.frame_mut().size = (90, 90).into();
-        self.third.frame_mut().size = (80, 80).into();
-        self.forth.frame_mut().size = (70, 70).into();
-        self.fifth.frame_mut().size = (60, 60).into();
     }
 
     fn layout(&mut self) {
-        self.first.place().center();
-        self.second.place().center();
-        self.third.place().center();
-        self.forth.place().center();
-        self.fifth.place().center();
+        self.first.place().background_margin(10);
+        self.second.place().background_margin(10);
+        self.third.place().background_margin(10);
+        self.forth.place().background_margin(10);
+        self.fifth.place().background_margin(10);
     }
 
     fn view(&self) -> &ViewBase {

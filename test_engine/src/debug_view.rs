@@ -1,9 +1,10 @@
-use rtools::{platform::Platform, Boxed, Property, Rglica, ToRglica};
+use rtools::{platform::Platform, Property, Rglica, ToRglica};
 use ui::{
     view_base::{init_view_on, ViewBase},
     Label, View,
 };
 
+#[derive(Default, Debug)]
 pub struct DebugView {
     view:              ViewBase,
     fps_label:         Rglica<Label>,
@@ -37,7 +38,7 @@ impl View for DebugView {
 
     fn layout(&mut self) {
         self.place().top_left_margin(10);
-        self.place().subviews_vertically();
+        self.place().all_vertically();
 
         self.frame_drawn += 1;
         self.frame_drawn_label
@@ -50,17 +51,5 @@ impl View for DebugView {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.view
-    }
-}
-
-impl Boxed for DebugView {
-    fn boxed() -> Box<Self> {
-        Box::new(DebugView {
-            view:              Default::default(),
-            fps_label:         Default::default(),
-            frame_drawn_label: Default::default(),
-            frame_drawn:       0,
-            fps:               Default::default(),
-        })
     }
 }

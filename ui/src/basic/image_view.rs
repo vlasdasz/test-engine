@@ -2,7 +2,7 @@ use gl_image::Image;
 
 use crate::{view_base::ViewBase, View};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ImageView {
     pub image: Image,
     base:      ViewBase,

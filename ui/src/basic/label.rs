@@ -2,7 +2,7 @@ use rtools::Boxed;
 
 use crate::{view_base::ViewBase, Font, ImageView, View};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Label {
     font: Font,
     text: String,
@@ -39,6 +39,11 @@ impl Label {
         let text = self.text.clone();
 
         for letter in text.chars() {
+            if letter == ' ' {
+                advance += 10.0;
+                continue;
+            }
+
             let glyph = self.font.glyph_for_char(letter);
 
             let mut glyph_view = ImageView::boxed();

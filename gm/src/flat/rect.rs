@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{Point, Size};
 
-#[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
+#[derive(Copy, Clone, Default, Debug, Serialize, Deserialize)]
 pub struct Rect {
     pub origin: Point,
     pub size:   Size,
@@ -63,6 +63,10 @@ impl Rect {
     pub fn set_center(&mut self, center: Point) {
         self.origin.x = center.x - self.width() / 2.0;
         self.origin.y = center.y - self.height() / 2.0;
+    }
+
+    pub fn with_zero_origin(&self) -> Rect {
+        (0, 0, self.size.width, self.size.height).into()
     }
 }
 

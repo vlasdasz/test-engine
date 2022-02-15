@@ -65,6 +65,7 @@ impl Font {
             if y_min > glyph.y_min() {
                 y_min = glyph.y_min()
             }
+
             glyphs.push(glyph);
         }
 

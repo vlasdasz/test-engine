@@ -7,7 +7,7 @@ use crate::{
     View,
 };
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Circle {
     base:    ViewBase,
     drawing: Rglica<DrawingView>,

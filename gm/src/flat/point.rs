@@ -10,7 +10,7 @@ pub enum Direction {
     Right,
 }
 
-#[derive(Copy, Clone, Default, Debug, Deserialize, Serialize)]
+#[derive(Copy, Clone, Default, Debug, Serialize, Deserialize)]
 pub struct PointBase<T> {
     pub x: T,
     pub y: T,

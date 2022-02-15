@@ -9,7 +9,7 @@ use ui::{
 
 use crate::assets::Assets;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SpriteView {
     base: ViewBase,
 
@@ -66,7 +66,7 @@ impl View for SpriteView {
     }
 
     fn layout(&mut self) {
-        self.place().subviews_vertically()
+        self.place().all_vertically()
     }
 
     fn update(&mut self) {

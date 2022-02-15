@@ -3,7 +3,7 @@ use rtools::Event;
 
 use crate::{view_base::ViewBase, Touch, View};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Button {
     base:  ViewBase,
     image: Option<Image>,

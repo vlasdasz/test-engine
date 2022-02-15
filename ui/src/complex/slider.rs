@@ -7,7 +7,7 @@ use crate::{
     Touch, View,
 };
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Slider {
     base:           ViewBase,
     circle:         Rglica<Circle>,

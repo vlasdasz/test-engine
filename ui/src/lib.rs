@@ -4,7 +4,6 @@ pub use basic::{ImageView, Label};
 pub use complex::DPadView;
 pub use input::Touch;
 use lazy_static::lazy_static;
-pub use test::SubviewsTestView;
 pub use text::{Font, Glyph};
 pub use view::*;
 

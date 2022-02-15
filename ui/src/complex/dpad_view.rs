@@ -8,7 +8,7 @@ use crate::{
     View,
 };
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct DPadView {
     base:         ViewBase,
     up:           Rglica<Button>,

@@ -7,7 +7,7 @@ use crate::{
     View,
 };
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct DrawingView {
     base:  ViewBase,
     paths: Vec<PathData>,

@@ -1,4 +1,7 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    fmt::Debug,
+    ops::{Deref, DerefMut},
+};
 
 use gl_image::Image;
 use gm::{Color, Point, Rect};
@@ -6,7 +9,7 @@ use rtools::{Address, Boxed, Rglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};
 
-pub trait View: Boxed {
+pub trait View: Boxed + Debug {
     fn setup(&mut self) {}
 
     fn layout(&mut self) {}

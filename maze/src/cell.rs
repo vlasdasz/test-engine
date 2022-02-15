@@ -1,4 +1,4 @@
-#[derive(Clone, Copy, Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Cell {
     pub up:      bool,
     pub down:    bool,

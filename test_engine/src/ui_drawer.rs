@@ -84,6 +84,7 @@ impl UIDrawer {
 
 impl UIDrawer {
     fn fill_rect(&self, rect: &Rect, color: Color) {
+        debug_assert!(rect.size.is_valid());
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);
@@ -91,6 +92,7 @@ impl UIDrawer {
     }
 
     fn draw_rect(&self, rect: &Rect, color: Color) {
+        debug_assert!(rect.size.is_valid());
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);
@@ -98,11 +100,10 @@ impl UIDrawer {
     }
 
     fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: Color) {
-        if image.is_invalid() {
-            return;
-        }
+        debug_assert!(rect.size.is_valid());
 
-        if rect.size.is_negative() {
+        if image.is_invalid() {
+            dbg!("Invalid image");
             return;
         }
 
@@ -121,6 +122,7 @@ impl UIDrawer {
 
 impl UIDrawer {
     pub fn draw_path_in_rect(&self, path: &PathData, rect: &Rect) {
+        debug_assert!(rect.size.is_valid());
         self.set_viewport(rect);
         self.assets.shaders.ui_path.enable();
         self.assets.shaders.ui_path.set_color(path.color);

@@ -7,7 +7,7 @@ const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct AnalogStickView {
     base:                    ViewBase,
     direction_stick:         Rglica<DrawingView>,

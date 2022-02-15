@@ -1,11 +1,11 @@
 use std::ops::DerefMut;
 
 use gm::{Color, Rect};
-use rtools::{Rglica, ToRglica};
+use rtools::{IntoF32, Rglica, ToRglica};
 
 use crate::{basic::Placer, View};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ViewBase {
     pub(crate) color: Color,
 
@@ -60,5 +60,14 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
+    }
+}
+
+impl<W: IntoF32, H: IntoF32> From<(W, H)> for Box<dyn View> {
+    fn from(data: (W, H)) -> Self {
+        Box::new(ViewBase {
+            frame: (data.0, data.1).into(),
+            ..Default::default()
+        })
     }
 }

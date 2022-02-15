@@ -5,7 +5,7 @@ use crate::{
     Label, View,
 };
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct LabeledView {
     base:  ViewBase,
     label: Rglica<Label>,
