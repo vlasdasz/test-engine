@@ -132,19 +132,15 @@ impl Placer {
         }
     }
 
-    pub fn all_vertically_with_ratio<T: IntoF32, const N: usize>(&mut self, ratio: &[T; N]) {
-        if self.view.subviews().len() != ratio.len() {
+    pub fn all_vertically_with_ratio<T: IntoF32, const N: usize>(&mut self, ratio: [T; N]) {
+        if self.subviews().len() != ratio.len() {
             panic!("Invalid ratio len");
         }
 
         let total_ratio: f32 = ratio.iter().map(|a| a.into_f32()).sum();
+        let total_ratio = 1.0 / total_ratio;
 
-        let mut subs: Vec<_> = self
-            .view
-            .subviews_mut()
-            .iter()
-            .map(|a| a.to_rglica())
-            .collect();
+        let mut subs: Vec<_> = self.subviews_mut().iter().map(|a| a.to_rglica()).collect();
 
         for (i, view) in subs.iter_mut().enumerate() {
             let is_first = i == 0;
@@ -152,25 +148,18 @@ impl Placer {
             let y_pos = if is_first {
                 0.0
             } else {
-                self.view.subviews()[prev_index].frame().max_y()
+                self.subviews()[prev_index].frame().max_y()
             };
-            *view.frame_mut() = (
-                0,
-                y_pos,
-                self.view.width(),
-                ratio[i].into_f32() * self.view.height() * total_ratio,
-            )
-                .into();
+            view.set_frame(
+                (
+                    0,
+                    y_pos,
+                    self.width(),
+                    ratio[i].into_f32() * self.height() * total_ratio,
+                )
+                    .into(),
+            );
         }
-
-        // auto tuple = std::forward_as_tuple(views...);
-        // auto total_ratio = 1.0f / cu::container::summ(ratio);
-        // cu::static_for<size>([&](auto i) {
-        //     constexpr bool is_first = i == 0;
-        //     auto y_pos = is_first ? 0 : std::get<is_first ? 0 : i -
-        // 1>(tuple)->max_y();     std::get<i>(tuple)->edit_frame() =
-        //         { 0, y_pos, _frame.size.width, ratio[i] * _frame.size.height
-        // * total_ratio, }; });
     }
 }
 
@@ -189,6 +178,14 @@ impl Placer {
 
     fn s_height(&self) -> f32 {
         self.s_frame.height()
+    }
+
+    fn subviews(&self) -> &[Box<dyn View>] {
+        self.view.subviews()
+    }
+
+    fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
+        self.view.subviews_mut()
     }
 }
 

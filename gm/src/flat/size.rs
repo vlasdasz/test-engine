@@ -1,9 +1,12 @@
-use std::ops::{Div, Mul};
+use std::{
+    borrow::Borrow,
+    ops::{Div, Mul},
+};
 
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
-use crate::Point;
+use crate::{Point, Rect};
 
 #[derive(Copy, Clone, Default, Debug, Serialize, Deserialize)]
 pub struct Size {
@@ -37,6 +40,16 @@ impl Size {
             x: self.width / 2.0,
             y: self.height / 2.0,
         }
+    }
+
+    pub fn fit_in(&self, rect: impl Borrow<Rect>) -> Rect {
+        let rect = rect.borrow();
+        let ratio = rect.size.height / self.height;
+        let size = *self * ratio;
+
+        let x = rect.x() + rect.width() / 2.0 - size.width / 2.0;
+
+        (x, rect.y(), size.width, size.height).into()
     }
 }
 

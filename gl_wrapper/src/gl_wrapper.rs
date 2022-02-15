@@ -1,3 +1,5 @@
+use std::borrow::Borrow;
+
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
 use gm::{Color, Rect};
@@ -26,7 +28,8 @@ impl GLWrapper {
         GL!(Disable, GLC!(DEPTH_TEST))
     }
 
-    pub fn set_viewport(window_height: f32, scale: &f32, rect: &Rect) {
+    pub fn set_viewport(window_height: f32, scale: &f32, rect: impl Borrow<Rect>) {
+        let rect = rect.borrow();
         if rect.size.is_invalid() {
             return;
         }

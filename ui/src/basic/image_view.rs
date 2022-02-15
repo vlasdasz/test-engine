@@ -4,13 +4,17 @@ use crate::{view_base::ViewBase, View};
 
 #[derive(Default, Debug)]
 pub struct ImageView {
-    pub image: Image,
-    base:      ViewBase,
+    image: Image,
+    base:  ViewBase,
 }
 
 impl View for ImageView {
     fn image(&self) -> Option<Image> {
         self.image.clone().into()
+    }
+
+    fn set_image(&mut self, image: Image) {
+        self.image = image
     }
 
     fn view(&self) -> &ViewBase {

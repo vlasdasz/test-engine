@@ -1,4 +1,4 @@
-use std::{ops::DerefMut, rc::Rc};
+use std::{borrow::Borrow, ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
@@ -77,7 +77,7 @@ impl UIDrawer {
         self.set_viewport(&self.window_size.into());
     }
 
-    fn set_viewport(&self, rect: &Rect) {
+    fn set_viewport(&self, rect: impl Borrow<Rect>) {
         GLWrapper::set_viewport(self.window_size.height, &self.scale, rect);
     }
 }
@@ -114,7 +114,7 @@ impl UIDrawer {
             self.assets.shaders.ui_texture.enable();
         }
 
-        self.set_viewport(rect);
+        self.set_viewport(image.size.fit_in(rect));
         image.bind();
         self.assets.buffers.fullscreen_image.draw();
     }

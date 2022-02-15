@@ -96,12 +96,12 @@ pub trait View: Boxed + Debug {
         self.superview().remove_subview_at(index);
     }
 
-    fn subviews(&self) -> &[Box<dyn View>] {
-        &self.view().subviews
-    }
-
     fn remove_subview_at(&mut self, index: usize) {
         self.view_mut().subviews.remove(index);
+    }
+
+    fn subviews(&self) -> &[Box<dyn View>] {
+        &self.view().subviews
     }
 
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {

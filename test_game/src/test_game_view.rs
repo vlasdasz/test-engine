@@ -107,7 +107,8 @@ impl TestGameView {
 
         self.setup_slider();
 
-        self.test_view = init_view_with_frame(self, (280, 280).into());
+        self.test_view = init_view_with_frame(self, (280, 400).into());
+        self.test_view.set_image(Assets::image("cat.png"));
     }
 }
 
