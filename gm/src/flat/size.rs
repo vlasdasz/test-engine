@@ -46,9 +46,7 @@ impl Size {
         let rect = rect.borrow();
         let ratio = rect.size.height / self.height;
         let size = *self * ratio;
-
         let x = rect.x() + rect.width() / 2.0 - size.width / 2.0;
-
         (x, rect.y(), size.width, size.height).into()
     }
 }

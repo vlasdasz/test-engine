@@ -27,11 +27,11 @@ impl View for SubviewsTestView {
     }
 
     fn layout(&mut self) {
-        self.first.place().background_margin(4);
-        self.second.place().background_margin(4);
-        self.third.place().background_margin(4);
-        self.forth.place().background_margin(4);
-        self.fifth.place().background_margin(4);
+        self.first.place().background_margin(2);
+        self.second.place().background_margin(2);
+        self.third.place().background_margin(2);
+        self.forth.place().background_margin(2);
+        self.fifth.place().background_margin(2);
     }
 
     fn view(&self) -> &ViewBase {

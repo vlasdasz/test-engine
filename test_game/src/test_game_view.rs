@@ -4,11 +4,10 @@ use rtools::{Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
     game_view::GameView,
-    gm::Color,
     sprite_view::SpriteView,
     sprites::Control,
     ui::{
-        complex::{AnalogStickView, DrawingView, Slider},
+        complex::{AnalogStickView, Slider},
         test::test_view::TestView,
         view_base::{init_view_on, init_view_with_frame, make_view_on, ViewBase},
         DPadView, Label, View,
@@ -75,7 +74,6 @@ impl TestGameView {
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (280, 200).into();
-            dpad.frame_mut().origin.y = 300.0;
 
             dpad.set_images(
                 Assets::image("up.png"),
@@ -85,30 +83,13 @@ impl TestGameView {
             );
         });
 
-        make_view_on(self, |drawing: &mut DrawingView| {
-            drawing.set_frame((500, 10, 200, 200).into());
-            drawing.add_path(
-                vec![
-                    (1, 20).into(),
-                    (100, 30).into(),
-                    (1, 40).into(),
-                    (200, 50).into(),
-                    (1, 60).into(),
-                    (1, 20).into(),
-                    (300, 70).into(),
-                ]
-                .into(),
-                Color::GREEN,
-            );
-        });
-
         self.left_stick = init_view_on(self);
-        self.left_stick.frame_mut().origin = (320, 300).into();
 
         self.setup_slider();
 
         self.test_view = init_view_with_frame(self, (280, 400).into());
         self.test_view.set_image(Assets::image("cat.png"));
+        self.test_view.set_button_image(Assets::image("square.png"));
     }
 }
 
@@ -120,10 +101,15 @@ impl View for TestGameView {
 
     fn layout(&mut self) {
         self.place().as_background();
-        self.slider.place().top_right_margin(20);
+        self.slider.place().top_right_margin(5);
         self.slider_label.place().at_bottom(self.slider.deref(), 20);
         self.sprite.place().top_right();
+
         self.test_view.place().bottom_right_margin(20);
+        self.test_view.place().proportional_height(0.4);
+
+        self.dpad.place().bottom_left_margin(5);
+        self.left_stick.place().at_right(self.dpad.deref(), 10);
     }
 
     fn view(&self) -> &ViewBase {

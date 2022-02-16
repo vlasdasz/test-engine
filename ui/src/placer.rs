@@ -108,6 +108,11 @@ impl Placer {
         self.frame.origin.y = view.frame().max_y() + margin.into_f32();
     }
 
+    pub fn at_right(&mut self, view: &dyn View, margin: impl IntoF32) {
+        self.at_center(view);
+        self.frame.origin.x = view.frame().max_x() + margin.into_f32();
+    }
+
     pub fn all_vertically(&mut self) {
         let views = self.view.subviews_mut();
 
@@ -160,6 +165,12 @@ impl Placer {
                     .into(),
             );
         }
+    }
+}
+
+impl Placer {
+    pub fn proportional_height(&mut self, ratio: impl IntoF32) {
+        self.frame.size.height = self.s_height() * ratio.into_f32()
     }
 }
 
