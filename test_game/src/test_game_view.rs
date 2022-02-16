@@ -8,13 +8,13 @@ use test_engine::{
     sprites::Control,
     ui::{
         complex::{AnalogStickView, Slider},
+        placer::Anchor,
         test::test_view::TestView,
         view_base::{init_view_on, init_view_with_frame, make_view_on, ViewBase},
         DPadView, Label, View,
     },
     Level,
 };
-use test_engine::ui::placer::Anchor;
 
 use crate::test_game_level::TestGameLevel;
 
@@ -109,7 +109,9 @@ impl View for TestGameView {
         self.test_view.place().proportional_height(0.8);
 
         self.dpad.place().bottom_left_margin(5);
-        self.left_stick.place().anchor(self.dpad.deref(), Anchor::Right, Anchor::Bot, 20);
+        self.left_stick
+            .place()
+            .anchor(self.dpad.deref(), Anchor::Right, Anchor::Bot, 20);
     }
 
     fn view(&self) -> &ViewBase {
