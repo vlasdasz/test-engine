@@ -14,6 +14,7 @@ use test_engine::{
     },
     Level,
 };
+use test_engine::ui::placer::Anchor;
 
 use crate::test_game_level::TestGameLevel;
 
@@ -40,11 +41,9 @@ impl TestGameView {
             .on_press
             .subscribe(move |direction| lvl.player_mut().move_by_direction(direction));
 
-        self.left_stick
-            .on_direction_change
-            .subscribe(move |direction| {
-                level.player_mut().add_impulse(&direction);
-            });
+        self.left_stick.on_direction_change.subscribe(move |direction| {
+            level.player_mut().add_impulse(&direction);
+        });
     }
 
     fn setup_slider(&mut self) {
@@ -106,10 +105,11 @@ impl View for TestGameView {
         self.sprite.place().top_right();
 
         self.test_view.place().bottom_right_margin(20);
-        self.test_view.place().proportional_height(0.4);
+        self.test_view.place().proportional_width(0.28);
+        self.test_view.place().proportional_height(0.8);
 
         self.dpad.place().bottom_left_margin(5);
-        self.left_stick.place().at_right(self.dpad.deref(), 10);
+        self.left_stick.place().anchor(self.dpad.deref(), Anchor::Right, Anchor::Bot, 20);
     }
 
     fn view(&self) -> &ViewBase {

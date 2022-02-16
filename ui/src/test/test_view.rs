@@ -5,7 +5,7 @@ use rtools::{Rglica, ToRglica};
 use crate::{
     basic::Button,
     complex::DrawingView,
-    test::subviews_test_view::SubviewsTestView,
+    test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
     view_base::{init_view_on, make_view_on, ViewBase},
     ImageView, Label, View,
 };
@@ -18,6 +18,7 @@ pub struct TestView {
     image:    Rglica<ImageView>,
     subviews: Rglica<SubviewsTestView>,
     drawing:  Rglica<DrawingView>,
+    layout:   Rglica<LayoutView>,
 
     label_value: u64,
 }
@@ -63,6 +64,8 @@ impl View for TestView {
                 Color::GREEN,
             );
         });
+
+        self.layout = init_view_on(self);
     }
 
     fn layout(&mut self) {

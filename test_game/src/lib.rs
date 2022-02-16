@@ -107,11 +107,7 @@ pub mod android {
             Config::default()
                 .with_min_level(Level::Trace)
                 .with_tag("test_engine")
-                .with_filter(
-                    FilterBuilder::new()
-                        .parse("debug,hello::crate=error")
-                        .build(),
-                ),
+                .with_filter(FilterBuilder::new().parse("debug,hello::crate=error").build()),
         );
 
         trace!("this is a verbose {}", "message");

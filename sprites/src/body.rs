@@ -28,11 +28,10 @@ impl Body {
             .build();
 
         let body_handle = level_base.sets.rigid_body.insert(rigid_body);
-        level_base.sets.collider.insert_with_parent(
-            collider,
-            body_handle,
-            &mut level_base.sets.rigid_body,
-        );
+        level_base
+            .sets
+            .collider
+            .insert_with_parent(collider, body_handle, &mut level_base.sets.rigid_body);
 
         #[allow(clippy::drop_ref)]
         drop(level_base);

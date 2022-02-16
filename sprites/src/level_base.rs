@@ -3,8 +3,7 @@ use std::{fmt::Debug, ops::DerefMut};
 use rapier2d::{
     na::Vector2,
     prelude::{
-        BroadPhase, CCDSolver, IntegrationParameters, IslandManager, JointSet, NarrowPhase,
-        PhysicsPipeline,
+        BroadPhase, CCDSolver, IntegrationParameters, IslandManager, JointSet, NarrowPhase, PhysicsPipeline,
     },
 };
 use rtools::{Event, Rglica};

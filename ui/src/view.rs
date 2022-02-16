@@ -62,6 +62,22 @@ pub trait View: Boxed + Debug {
         self.add_subview(view);
     }
 
+    fn x(&self) -> f32 {
+        self.frame().origin.x
+    }
+
+    fn y(&self) -> f32 {
+        self.frame().origin.y
+    }
+
+    fn max_x(&self) -> f32 {
+        self.frame().max_x()
+    }
+
+    fn max_y(&self) -> f32 {
+        self.frame().max_y()
+    }
+
     fn width(&self) -> f32 {
         self.frame().size.width
     }

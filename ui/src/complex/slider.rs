@@ -43,11 +43,7 @@ impl View for Slider {
         }
 
         let half_circle = self.circle.frame().height() / 2.0;
-        let y_pos = clamped_by(
-            half_circle,
-            self.frame().height() - half_circle,
-            touch.position.y,
-        );
+        let y_pos = clamped_by(half_circle, self.frame().height() - half_circle, touch.position.y);
 
         self.circle.frame_mut().origin.y = y_pos - half_circle;
 

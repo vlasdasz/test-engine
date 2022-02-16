@@ -5,6 +5,25 @@ use rtools::{math::IntoF32, Rglica, ToRglica};
 
 use crate::View;
 
+pub enum Anchor {
+    Top,
+    Bot,
+
+    Left,
+    Right,
+
+    Center,
+}
+
+impl Anchor {
+    pub fn is_vertical(&self) -> bool {
+        matches!(self, Anchor::Top | Anchor::Bot)
+    }
+    pub fn is_horizontal(&self) -> bool {
+        matches!(self, Anchor::Left | Anchor::Right)
+    }
+}
+
 #[derive(Default)]
 pub struct Placer {
     view:    Rglica<dyn View>,
@@ -30,11 +49,7 @@ impl Placer {
     pub fn background_margin(&mut self, margin: impl IntoF32) {
         let margin = margin.into_f32();
         self.frame.origin = (margin, margin).into();
-        self.frame.size = (
-            self.s_width() - margin * 2.0,
-            self.s_height() - margin * 2.0,
-        )
-            .into();
+        self.frame.size = (self.s_width() - margin * 2.0, self.s_height() - margin * 2.0).into();
     }
 
     pub fn center_hor(&mut self) {
@@ -166,9 +181,58 @@ impl Placer {
             );
         }
     }
+
+    pub fn anchor(&mut self, view: &dyn View, anchor: Anchor, position: Anchor, margin: impl IntoF32) {
+        let margin = margin.into_f32();
+
+        match anchor {
+            Anchor::Top => {
+                self.frame.origin.y = view.y() - margin - self.height();
+            }
+            Anchor::Bot => {
+                self.frame.origin.y = view.max_y() + margin;
+            }
+            Anchor::Left => {
+                self.frame.origin.x = view.x() - margin - self.width();
+            }
+            Anchor::Right => {
+                self.frame.origin.x = view.max_x() + margin;
+            }
+            Anchor::Center => {
+                self.frame.origin.x = view.x() - view.height() / 2.0 + self.height() / 2.0;
+                self.frame.origin.y = view.y() - view.width() / 2.0 + self.width() / 2.0;
+            }
+        }
+
+        match position {
+            Anchor::Top => {
+                self.frame.origin.y = view.y();
+            }
+            Anchor::Bot => {
+                self.frame.origin.y = view.max_y() - self.height();
+            }
+            Anchor::Left => {
+                self.frame.origin.x = view.x();
+            }
+            Anchor::Right => {
+                self.frame.origin.x = view.max_x() - self.width();
+            }
+            Anchor::Center => {
+                if anchor.is_horizontal() {
+                    self.frame.origin.y = view.y() + view.height() / 2.0 - self.height() / 2.0;
+                } else {
+                    self.frame.origin.x = view.x() + view.width() / 2.0 - self.width() / 2.0;
+                }
+            }
+        }
+    }
 }
 
 impl Placer {
+    pub fn proportional_width(&mut self, ratio: impl IntoF32) {
+        self.frame.size.width = self.s_width() * ratio.into_f32()
+    }
+
     pub fn proportional_height(&mut self, ratio: impl IntoF32) {
         self.frame.size.height = self.s_height() * ratio.into_f32()
     }

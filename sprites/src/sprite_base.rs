@@ -16,22 +16,6 @@ pub struct SpriteBase {
     pub image: Option<Image>,
 }
 
-// impl Sprite for SpriteBase {
-//     fn sprite(&self) -> &SpriteBase {
-//         self
-//     }
-//
-//     fn sprite_mut(&mut self) -> &mut SpriteBase {
-//         self
-//     }
-// }
-//
-// impl AsAny for SpriteBase {
-//     fn as_any(&self) -> &dyn Any {
-//         self
-//     }
-// }
-
 impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteBase {
     fn from(data: (X, Y, W, H)) -> Self {
         Self {

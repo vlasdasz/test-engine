@@ -15,10 +15,8 @@ impl Level for TestGameLevel {
 
         let square = Assets::image("square.png");
 
-        self.add_wall((0, 0, 100, 1).into())
-            .set_image(square.clone());
-        self.add_wall((20, 0, 1, 100).into())
-            .set_image(square.clone());
+        self.add_wall((0, 0, 100, 1).into()).set_image(square.clone());
+        self.add_wall((20, 0, 1, 100).into()).set_image(square.clone());
         self.add_wall((-20, 0, 1, 100).into()).set_image(square);
 
         for i in 0..50 {
@@ -44,9 +42,7 @@ impl Level for TestGameLevel {
         if let Some(mut sprite) = self.selected_sprite.clone() {
             sprite.set_selected(false);
             self.selected_sprite = None;
-            self.level_mut()
-                .on_sprite_selected
-                .trigger(Rglica::default());
+            self.level_mut().on_sprite_selected.trigger(Rglica::default());
         }
     }
 

@@ -55,10 +55,7 @@ impl SpritesDrawer for TESpritesDrawer {
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_camera_rotation(angle);
         self.assets.shaders.textured_sprite.enable();
-        self.assets
-            .shaders
-            .textured_sprite
-            .set_camera_rotation(angle);
+        self.assets.shaders.textured_sprite.set_camera_rotation(angle);
     }
 
     fn set_camera_position(&self, pos: Point) {

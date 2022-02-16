@@ -44,10 +44,7 @@ pub fn init_view_with_frame<T: 'static + View>(parent: &mut dyn View, frame: Rec
     view
 }
 
-pub fn make_view_on<T: 'static + View>(
-    parent: &mut dyn View,
-    make: impl FnOnce(&mut T),
-) -> Rglica<T> {
+pub fn make_view_on<T: 'static + View>(parent: &mut dyn View, make: impl FnOnce(&mut T)) -> Rglica<T> {
     let mut view: Rglica<T> = init_view_on(parent);
     make(view.deref_mut());
     view
