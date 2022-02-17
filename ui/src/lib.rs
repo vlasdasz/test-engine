@@ -7,6 +7,7 @@ use lazy_static::lazy_static;
 pub use text::{Font, Glyph};
 pub use view::*;
 
+mod as_view;
 pub mod basic;
 pub mod complex;
 pub mod input;
@@ -15,7 +16,6 @@ pub mod test;
 pub mod text;
 pub mod view;
 pub mod view_base;
-mod as_view;
 
 #[macro_use]
 extern crate log;
