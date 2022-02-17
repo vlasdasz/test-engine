@@ -26,8 +26,6 @@ pub struct TestGameView {
     left_stick: Rglica<AnalogStickView>,
     sprite:     Rglica<SpriteView>,
     slider:     Rglica<LabeledSlider>,
-    // slider:       Rglica<Slider>,
-    // slider_label: Rglica<Label>,
     test_view:  Rglica<TestView>,
 }
 

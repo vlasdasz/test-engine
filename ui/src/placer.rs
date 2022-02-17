@@ -1,9 +1,15 @@
-use std::fmt::{Debug, Formatter};
+use std::{
+    borrow::Borrow,
+    fmt::{Debug, Formatter},
+    ops::DerefMut,
+};
+use std::borrow::BorrowMut;
 
 use gm::Rect;
-use rtools::{math::IntoF32, Rglica, ToRglica};
+use rtools::{math::IntoF32, Boxed, Rglica, ToRglica};
 
-use crate::View;
+use crate::{complex::LabeledSlider, View};
+use crate::as_view::AsView;
 
 pub enum Anchor {
     Top,
@@ -129,6 +135,7 @@ impl Placer {
     }
 
     pub fn all_vertically(&mut self) {
+
         let views = self.view.subviews_mut();
 
         if views.is_empty() {
@@ -269,3 +276,90 @@ impl Debug for Placer {
         0.fmt(f)
     }
 }
+
+pub fn spok() {
+    let vika: Box<dyn View> = LabeledSlider::boxed();
+    let vika2: Box<dyn View> = LabeledSlider::boxed();
+
+    let vika3: Box<dyn View> = LabeledSlider::boxed();
+    let vika4: Box<dyn View> = LabeledSlider::boxed();
+
+    let mut skoko: [Rglica<dyn View>; 2] = [vika.to_rglica(), vika2.to_rglica()];
+
+    let mut sporro: [Box<dyn View>; 2] = [vika3, vika4];
+
+    sporro.len();
+
+
+    let skloka: &mut [Box<dyn View>] = &mut sporro;
+
+    let sik = vec![1];
+
+    sik.len();
+
+
+    // place_vertically(&orro);
+
+    //place_vertically(sporro);
+
+    //place_vertically(skoko);
+
+    //plouce(skloka);
+
+    place_vertically([vika.to_rglica(), vika2.to_rglica()]);
+
+    place_vertically(skloka);
+    place_vertically(sporro);
+}
+
+
+
+pub fn place_vertically<T, I>(views: I)
+where
+    T: AsView,
+    I: IntoIterator<Item = T>,
+{
+
+    for mut view in views {
+        dbg!(view.as_view().frame());
+    }
+
+    // if views.is_empty() {
+    //     return;
+    // }
+
+    // let last = views.last_mut().unwrap();
+    //
+    // if views.len() == 1 {
+    //     views.last_mut().unwrap().place().as_background();
+    //     return;
+    // }
+
+    // let mut frames: Vec<&mut Rect> = views.iter_mut().map(|a| a.frame_mut()).collect();
+    // let height: f32 = self.frame.height() / frames.len() as f32;
+    // let width = self.frame.width();
+    //
+    // for (i, frame) in frames.iter_mut().enumerate() {
+    //     frame.origin.x = 0.0;
+    //     frame.origin.y = i as f32 * height;
+    //     frame.size.width = width;
+    //     frame.size.height = height;
+    // }
+
+}
+
+
+//
+// pub fn place_vertically<T, A>(mut arr: A)
+//     where
+//         T: AsView,
+//         A: AsMut<[T]>,
+// {
+//
+//     dbg!(arr.len());
+//
+//     for view in arr.as_mut() {
+//         dbg!(view.as_view().frame());
+//     }
+//
+// }

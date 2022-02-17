@@ -66,7 +66,9 @@ impl View for SpriteView {
     }
 
     fn layout(&mut self) {
-        self.place().all_vertically()
+        self.place().all_vertically();
+
+        let spok = [self.position.clone(), self.size.clone(), self.color.clone()];
     }
 
     fn update(&mut self) {

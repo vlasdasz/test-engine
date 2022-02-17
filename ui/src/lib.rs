@@ -15,6 +15,7 @@ pub mod test;
 pub mod text;
 pub mod view;
 pub mod view_base;
+mod as_view;
 
 #[macro_use]
 extern crate log;
