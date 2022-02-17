@@ -9,7 +9,7 @@ use rtools::{Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 use ui::{
     input::touch::{ButtonState, Event},
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     Touch, View,
 };
 
@@ -69,7 +69,7 @@ impl UILayer {
     }
 
     pub fn add_debug_view(&mut self) {
-        self.debug_view = init_view_on(self.root_view.deref_mut())
+        self.debug_view = add_view(self.root_view.deref_mut())
     }
 }
 

@@ -7,11 +7,11 @@ use test_engine::{
     sprite_view::SpriteView,
     sprites::Control,
     ui::{
-        complex::{AnalogStickView, Slider},
+        complex::{AnalogStickView, LabeledSlider},
         placer::Anchor,
         test::test_view::TestView,
-        view_base::{init_view_on, init_view_with_frame, make_view_on, ViewBase},
-        DPadView, Label, View,
+        view_base::{add_view, add_view_with_frame, make_view_on, ViewBase},
+        DPadView, View,
     },
     Level,
 };
@@ -20,14 +20,15 @@ use crate::test_game_level::TestGameLevel;
 
 #[derive(Default, Debug)]
 pub struct TestGameView {
-    base:         ViewBase,
-    level:        TestGameLevel,
-    dpad:         Rglica<DPadView>,
-    left_stick:   Rglica<AnalogStickView>,
-    sprite:       Rglica<SpriteView>,
-    slider:       Rglica<Slider>,
-    slider_label: Rglica<Label>,
-    test_view:    Rglica<TestView>,
+    base:       ViewBase,
+    level:      TestGameLevel,
+    dpad:       Rglica<DPadView>,
+    left_stick: Rglica<AnalogStickView>,
+    sprite:     Rglica<SpriteView>,
+    slider:     Rglica<LabeledSlider>,
+    // slider:       Rglica<Slider>,
+    // slider_label: Rglica<Label>,
+    test_view:  Rglica<TestView>,
 }
 
 impl TestGameView {
@@ -47,15 +48,11 @@ impl TestGameView {
     }
 
     fn setup_slider(&mut self) {
-        self.slider = init_view_with_frame(self, (50, 280).into());
-        self.slider.multiplier = 50.0;
-
-        self.slider_label = init_view_with_frame(self, (50, 50).into());
-        self.slider_label.set_text("hello");
+        self.slider = add_view_with_frame(self, (50, 280).into());
+        self.slider.set_multiplier(50.0);
 
         let mut this = self.to_rglica();
         self.slider.on_change.subscribe(move |value| {
-            this.slider_label.set_text(value.to_string());
             this.drawer().set_scale(value);
         });
     }
@@ -63,7 +60,7 @@ impl TestGameView {
     fn setup_ui(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
-        self.sprite = init_view_with_frame(self, (500, 180).into());
+        self.sprite = add_view_with_frame(self, (500, 180).into());
 
         let mut this = self.to_rglica();
         self.level
@@ -72,7 +69,7 @@ impl TestGameView {
             .subscribe(move |sprite| this.sprite.set_sprite(sprite));
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
-            dpad.frame_mut().size = (280, 200).into();
+            dpad.frame_mut().size = (200, 150).into();
 
             dpad.set_images(
                 Assets::image("up.png"),
@@ -82,11 +79,11 @@ impl TestGameView {
             );
         });
 
-        self.left_stick = init_view_on(self);
+        self.left_stick = add_view(self);
 
         self.setup_slider();
 
-        self.test_view = init_view_with_frame(self, (280, 400).into());
+        self.test_view = add_view_with_frame(self, (280, 400).into());
         self.test_view.set_image(Assets::image("cat.png"));
         self.test_view.set_button_image(Assets::image("square.png"));
     }
@@ -100,8 +97,12 @@ impl View for TestGameView {
 
     fn layout(&mut self) {
         self.place().as_background();
-        self.slider.place().top_right_margin(5);
-        self.slider_label.place().at_bottom(self.slider.deref(), 20);
+
+        self.slider.place().proportional_height(0.5);
+        self.slider
+            .place()
+            .anchor(self.dpad.deref(), Anchor::Top, Anchor::Left, 10);
+
         self.sprite.place().top_right();
 
         self.test_view.place().bottom_right_margin(20);

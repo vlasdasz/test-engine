@@ -5,7 +5,7 @@ use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     Label, View,
 };
 
@@ -28,9 +28,9 @@ impl IntView {
 
 impl View for IntView {
     fn setup(&mut self) {
-        self.label = init_view_on(self);
-        self.up = init_view_on(self);
-        self.down = init_view_on(self);
+        self.label = add_view(self);
+        self.up = add_view(self);
+        self.down = add_view(self);
 
         let mut this = self.to_rglica();
         self.up.on_tap.subscribe(move |_| {

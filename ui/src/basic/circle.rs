@@ -3,7 +3,7 @@ use rtools::Rglica;
 
 use crate::{
     complex::DrawingView,
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     View,
 };
 
@@ -29,7 +29,7 @@ impl Circle {
 
 impl View for Circle {
     fn setup(&mut self) {
-        self.drawing = init_view_on(self);
+        self.drawing = add_view(self);
     }
 
     fn layout(&mut self) {

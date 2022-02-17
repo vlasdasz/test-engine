@@ -3,7 +3,7 @@ use sprites::Sprite;
 use ui::{
     basic::Button,
     complex::LabeledView,
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     View,
 };
 
@@ -37,7 +37,7 @@ impl SpriteView {
     }
 
     fn setup_delete_button(&mut self) {
-        self.delete_button = init_view_on(self);
+        self.delete_button = add_view(self);
         self.delete_button.set_image(Assets::image("delete.png"));
 
         self.delete_button.set_frame((100, 100).into());
@@ -54,9 +54,9 @@ impl SpriteView {
 
 impl View for SpriteView {
     fn setup(&mut self) {
-        self.position = init_view_on(self);
-        self.size = init_view_on(self);
-        self.color = init_view_on(self);
+        self.position = add_view(self);
+        self.size = add_view(self);
+        self.color = add_view(self);
 
         self.position.set_label("position:");
         self.size.set_label("size:");

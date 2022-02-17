@@ -4,7 +4,7 @@ use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     View,
 };
 
@@ -29,10 +29,10 @@ impl DPadView {
 
 impl View for DPadView {
     fn setup(&mut self) {
-        self.up = init_view_on(self);
-        self.down = init_view_on(self);
-        self.left = init_view_on(self);
-        self.right = init_view_on(self);
+        self.up = add_view(self);
+        self.down = add_view(self);
+        self.left = add_view(self);
+        self.right = add_view(self);
 
         let mut this = self.to_rglica();
         self.up

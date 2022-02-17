@@ -4,7 +4,7 @@ use rtools::{Boxed, Rglica, ToRglica};
 
 use crate::{
     placer::Anchor,
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     Font, ImageView, View,
 };
 
@@ -30,7 +30,7 @@ impl View for LayoutView {
             self.add_subview(view);
         }
 
-        self.central = init_view_on(self);
+        self.central = add_view(self);
         self.central.frame.size = (40, 40).into();
     }
 

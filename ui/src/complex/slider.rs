@@ -3,34 +3,34 @@ use rtools::{math::clamped_by, Event, Rglica};
 
 use crate::{
     basic::Circle,
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     Touch, View,
 };
 
 #[derive(Default, Debug)]
 pub struct Slider {
-    base:           ViewBase,
-    circle:         Rglica<Circle>,
-    value:          f32,
-    pub multiplier: f32,
-    pub on_change:  Event<f32>,
+    base:          ViewBase,
+    circle:        Rglica<Circle>,
+    value:         f32,
+    multiplier:    f32,
+    pub on_change: Event<f32>,
 }
 
 impl Slider {
-    fn setup_touch(&mut self) {
-        self.enable_touch();
+    pub fn set_multiplier(&mut self, multiplier: f32) {
+        self.multiplier = multiplier
     }
 }
 
 impl View for Slider {
     fn setup(&mut self) {
         self.multiplier = 1.0;
-        self.circle = init_view_on(self);
+        self.circle = add_view(self);
         let mut circle = self.circle.clone();
         circle.set_frame(self.frame().square().into());
         circle.set_color(Color::BLUE);
 
-        self.setup_touch();
+        self.enable_touch();
     }
 
     fn layout(&mut self) {

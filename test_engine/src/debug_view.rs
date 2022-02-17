@@ -1,6 +1,6 @@
 use rtools::{platform::Platform, Property, Rglica, ToRglica};
 use ui::{
-    view_base::{init_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     Label, View,
 };
 
@@ -18,10 +18,10 @@ impl View for DebugView {
         self.frame_mut().size.height = 100.0;
         self.frame_mut().size.width = 280.0;
 
-        self.fps_label = init_view_on(self);
+        self.fps_label = add_view(self);
         self.fps_label.set_text("fps label");
 
-        self.frame_drawn_label = init_view_on(self);
+        self.frame_drawn_label = add_view(self);
         self.frame_drawn_label.set_text("frame drawn label");
 
         if Platform::MOBILE {

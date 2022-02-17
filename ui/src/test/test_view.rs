@@ -6,7 +6,7 @@ use crate::{
     basic::Button,
     complex::DrawingView,
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
-    view_base::{init_view_on, make_view_on, ViewBase},
+    view_base::{add_view, make_view_on, ViewBase},
     ImageView, Label, View,
 };
 
@@ -35,10 +35,10 @@ impl TestView {
 
 impl View for TestView {
     fn setup(&mut self) {
-        self.label = init_view_on(self);
+        self.label = add_view(self);
         self.label.set_text("Hello label!");
 
-        self.button = init_view_on(self);
+        self.button = add_view(self);
         let mut this = self.to_rglica();
         self.button.on_tap.subscribe(move |_| {
             let val = this.label_value;
@@ -46,9 +46,9 @@ impl View for TestView {
             this.label_value += 1;
         });
 
-        self.image = init_view_on(self);
+        self.image = add_view(self);
 
-        self.subviews = init_view_on(self);
+        self.subviews = add_view(self);
 
         self.drawing = make_view_on(self, |drawing: &mut DrawingView| {
             drawing.add_path(
@@ -65,7 +65,7 @@ impl View for TestView {
             );
         });
 
-        self.layout = init_view_on(self);
+        self.layout = add_view(self);
     }
 
     fn layout(&mut self) {
