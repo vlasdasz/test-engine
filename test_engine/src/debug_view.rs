@@ -37,7 +37,7 @@ impl View for DebugView {
     }
 
     fn layout(&mut self) {
-        self.place().top_left_margin(10);
+        self.place().top_left(10);
         self.place().all_vertically();
 
         self.frame_drawn += 1;

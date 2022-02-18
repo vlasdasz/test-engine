@@ -41,7 +41,7 @@ impl SpriteView {
         self.delete_button = add_view(self);
         self.delete_button.set_image(Assets::image("delete.png"));
 
-        self.delete_button.set_frame((100, 100).into());
+        self.delete_button.set_frame((20, 20).into());
 
         let mut this = self.to_rglica();
         self.delete_button.on_tap.subscribe(move |_| {
@@ -68,6 +68,7 @@ impl View for SpriteView {
 
     fn layout(&mut self) {
         place_vertically([self.position, self.size, self.color]);
+        self.delete_button.place().top_left(0);
     }
 
     fn update(&mut self) {

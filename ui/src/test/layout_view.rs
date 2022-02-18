@@ -1,5 +1,3 @@
-use std::ops::DerefMut;
-
 use rtools::{Boxed, Rglica, ToRglica};
 
 use crate::{
@@ -35,7 +33,7 @@ impl View for LayoutView {
     }
 
     fn layout(&mut self) {
-        let c = self.central.deref_mut();
+        let mut c = self.central;
         let s = &mut self.satellites;
 
         c.place().center();

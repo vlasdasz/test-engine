@@ -1,6 +1,6 @@
 use std::{
     fmt::{Debug, Formatter},
-    ops::DerefMut,
+    ops::{Deref, DerefMut},
 };
 
 use gm::Rect;
@@ -68,37 +68,22 @@ impl Placer {
         self.center_ver();
     }
 
-    pub fn top_left_margin(&mut self, margin: impl IntoF32) {
+    pub fn top_left(&mut self, margin: impl IntoF32) {
         self.frame.origin.x = margin.into_f32();
         self.frame.origin.y = margin.into_f32();
     }
 
-    pub fn top_right(&mut self) {
-        self.frame.origin.x = self.s_width() - self.width();
-        self.frame.origin.y = 0.0;
-    }
-
-    pub fn top_right_margin(&mut self, margin: impl IntoF32) {
+    pub fn top_right(&mut self, margin: impl IntoF32) {
         self.frame.origin.x = self.s_width() - self.width() - margin.into_f32();
         self.frame.origin.y = margin.into_f32();
     }
 
-    pub fn bottom_left(&mut self) {
-        self.frame.origin.x = 0.0;
-        self.frame.origin.y = self.s_height() - self.height();
-    }
-
-    pub fn bottom_left_margin(&mut self, margin: impl IntoF32) {
+    pub fn bottom_left(&mut self, margin: impl IntoF32) {
         self.frame.origin.x = margin.into_f32();
         self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
     }
 
-    pub fn bottom_right(&mut self) {
-        self.frame.origin.x = self.s_width() - self.width();
-        self.frame.origin.y = self.s_height() - self.height();
-    }
-
-    pub fn bottom_right_margin(&mut self, margin: impl IntoF32) {
+    pub fn bottom_right(&mut self, margin: impl IntoF32) {
         self.frame.origin.x = self.s_width() - self.width() - margin.into_f32();
         self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
     }
@@ -165,7 +150,13 @@ impl Placer {
         }
     }
 
-    pub fn anchor(&mut self, view: &dyn View, anchor: Anchor, position: Anchor, margin: impl IntoF32) {
+    pub fn anchor(
+        &mut self,
+        view: impl Deref<Target = impl View + ?Sized>,
+        anchor: Anchor,
+        position: Anchor,
+        margin: impl IntoF32,
+    ) {
         let margin = margin.into_f32();
 
         match anchor {

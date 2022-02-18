@@ -1,4 +1,4 @@
-use std::{borrow::BorrowMut, ops::Deref};
+use std::borrow::BorrowMut;
 
 use rtools::{Rglica, ToRglica};
 use test_engine::{
@@ -95,21 +95,21 @@ impl View for TestGameView {
     fn layout(&mut self) {
         self.place().as_background();
 
-        self.dpad.place().bottom_left_margin(5);
+        self.dpad.place().bottom_left(5);
         self.left_stick
             .place()
-            .anchor(self.dpad.deref(), Anchor::Right, Anchor::Bot, 20);
+            .anchor(self.dpad, Anchor::Right, Anchor::Bot, 20);
 
         self.slider.place().proportional_height(0.5);
         self.slider
             .place()
-            .anchor(self.dpad.deref(), Anchor::Top, Anchor::Left, 10);
+            .anchor(self.dpad, Anchor::Top, Anchor::Left, 10);
 
-        // self.sprite.place().anchor(self.slider.deref())
+        self.sprite
+            .place()
+            .anchor(self.slider, Anchor::Right, Anchor::Bot, 10);
 
-        //speserglica(self.slider);
-
-        self.test_view.place().bottom_right_margin(20);
+        self.test_view.place().bottom_right(20);
         self.test_view.place().proportional_width(0.28);
         self.test_view.place().proportional_height(0.8);
     }
@@ -131,9 +131,3 @@ impl GameView for TestGameView {
         &mut self.level
     }
 }
-
-// fn speserglica<T: View + ?Sized, D: Deref<Target = T>, R: Borrow<D>>(view: R)
-// {     let view = view.borrow().deref();
-//
-//     dbg!(view.frame());
-// }
