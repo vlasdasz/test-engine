@@ -25,7 +25,7 @@ pub struct SpriteView {
 
 impl SpriteView {
     pub fn set_sprite(&mut self, sprite: Rglica<dyn Sprite>) {
-        self.sprite = sprite.clone();
+        self.sprite = sprite;
         if sprite.is_null() {
             self.position.clear();
             self.size.clear();
@@ -67,14 +67,14 @@ impl View for SpriteView {
     }
 
     fn layout(&mut self) {
-        place_vertically([self.position.clone(), self.size.clone(), self.color.clone()]);
+        place_vertically([self.position, self.size, self.color]);
     }
 
     fn update(&mut self) {
         if self.sprite.is_null() {
             return;
         }
-        self.set_sprite(self.sprite.clone());
+        self.set_sprite(self.sprite);
     }
 
     fn view(&self) -> &ViewBase {

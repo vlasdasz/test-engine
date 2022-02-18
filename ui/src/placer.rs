@@ -274,7 +274,7 @@ where
 
     let super_frame = *last.superview().frame();
 
-    let height: f32 = super_frame.height() / views.len() as f32;
+    let height = super_frame.height() / views.len() as f32;
     let width = super_frame.width();
 
     for (i, frame) in views.iter_mut().map(|a| a.frame_mut()).enumerate() {

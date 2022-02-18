@@ -26,7 +26,7 @@ impl View for Slider {
     fn setup(&mut self) {
         self.multiplier = 1.0;
         self.circle = add_view(self);
-        let mut circle = self.circle.clone();
+        let mut circle = self.circle;
         circle.set_frame(self.frame().square().into());
         circle.set_color(Color::BLUE);
 

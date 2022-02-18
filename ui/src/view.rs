@@ -27,7 +27,7 @@ pub trait View: Boxed + Debug {
     }
 
     fn superview(&self) -> Rglica<dyn View> {
-        self.view().superview.clone()
+        self.view().superview
     }
 
     fn super_frame(&self) -> &Rect {

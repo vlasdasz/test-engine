@@ -35,10 +35,9 @@ impl TestGameView {
 
         let mut level = self.level.borrow_mut().to_rglica();
 
-        let mut lvl = level.clone();
         self.dpad
             .on_press
-            .subscribe(move |direction| lvl.player_mut().move_by_direction(direction));
+            .subscribe(move |direction| level.player_mut().move_by_direction(direction));
 
         self.left_stick.on_direction_change.subscribe(move |direction| {
             level.player_mut().add_impulse(&direction);
@@ -47,7 +46,7 @@ impl TestGameView {
 
     fn setup_slider(&mut self) {
         self.slider = add_view_with_frame(self, (50, 280).into());
-        self.slider.set_multiplier(50.0);
+        self.slider.set_multiplier(10.0);
 
         let mut this = self.to_rglica();
         self.slider.on_change.subscribe(move |value| {
@@ -96,21 +95,23 @@ impl View for TestGameView {
     fn layout(&mut self) {
         self.place().as_background();
 
+        self.dpad.place().bottom_left_margin(5);
+        self.left_stick
+            .place()
+            .anchor(self.dpad.deref(), Anchor::Right, Anchor::Bot, 20);
+
         self.slider.place().proportional_height(0.5);
         self.slider
             .place()
             .anchor(self.dpad.deref(), Anchor::Top, Anchor::Left, 10);
 
-        self.sprite.place().top_right();
+        // self.sprite.place().anchor(self.slider.deref())
+
+        //speserglica(self.slider);
 
         self.test_view.place().bottom_right_margin(20);
         self.test_view.place().proportional_width(0.28);
         self.test_view.place().proportional_height(0.8);
-
-        self.dpad.place().bottom_left_margin(5);
-        self.left_stick
-            .place()
-            .anchor(self.dpad.deref(), Anchor::Right, Anchor::Bot, 20);
     }
 
     fn view(&self) -> &ViewBase {
@@ -130,3 +131,9 @@ impl GameView for TestGameView {
         &mut self.level
     }
 }
+
+// fn speserglica<T: View + ?Sized, D: Deref<Target = T>, R: Borrow<D>>(view: R)
+// {     let view = view.borrow().deref();
+//
+//     dbg!(view.frame());
+// }

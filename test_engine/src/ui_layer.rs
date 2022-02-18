@@ -62,8 +62,7 @@ impl UILayer {
     }
 
     pub fn set_view(&mut self, mut view: Box<dyn GameView>) {
-        let drawer = self.sprites_drawer.clone();
-        view.set_drawer(drawer.clone());
+        view.set_drawer(self.sprites_drawer);
         self.view = view.to_rglica();
         self.root_view.add_subview(view);
     }

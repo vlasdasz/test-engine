@@ -31,15 +31,15 @@ impl Level for TestGameLevel {
     fn on_touch(&mut self, pos: Point) {
         if let Some(mut sprite) = self.sprite_at(pos) {
             sprite.set_selected(true);
-            self.level_mut().on_sprite_selected.trigger(sprite.clone());
-            if let Some(mut old) = self.selected_sprite.clone() {
+            self.level_mut().on_sprite_selected.trigger(sprite);
+            if let Some(mut old) = self.selected_sprite {
                 old.set_selected(false);
             }
             self.selected_sprite = sprite.into();
             return;
         }
 
-        if let Some(mut sprite) = self.selected_sprite.clone() {
+        if let Some(mut sprite) = self.selected_sprite {
             sprite.set_selected(false);
             self.selected_sprite = None;
             self.level_mut().on_sprite_selected.trigger(Rglica::default());
