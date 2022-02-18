@@ -120,7 +120,7 @@ impl Placer {
         place_vertically(self.view.subviews_mut());
     }
 
-    pub fn all_vertically_with_ratio<T: IntoF32, const N: usize>(&mut self, ratio: [T; N]) {
+    pub fn all_vertically_with_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) {
         if self.subviews().len() != ratio.len() {
             panic!("Invalid ratio len");
         }
