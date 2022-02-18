@@ -1,17 +1,12 @@
 use std::{
-    borrow::{Borrow, BorrowMut},
     fmt::{Debug, Formatter},
     ops::DerefMut,
 };
 
 use gm::Rect;
-use rtools::{math::IntoF32, Boxed, Rglica, ToRglica};
+use rtools::{math::IntoF32, Rglica, ToRglica};
 
-use crate::{
-    as_view::{AsView},
-    complex::LabeledSlider,
-    View,
-};
+use crate::View;
 
 pub enum Anchor {
     Top,
@@ -138,28 +133,6 @@ impl Placer {
 
     pub fn all_vertically(&mut self) {
         place_vertically(self.view.subviews_mut());
-
-        let views = self.view.subviews_mut();
-
-        if views.is_empty() {
-            return;
-        }
-
-        if views.len() == 1 {
-            views.last_mut().unwrap().place().as_background();
-            return;
-        }
-
-        let mut frames: Vec<&mut Rect> = views.iter_mut().map(|a| a.frame_mut()).collect();
-        let height: f32 = self.frame.height() / frames.len() as f32;
-        let width = self.frame.width();
-
-        for (i, frame) in frames.iter_mut().enumerate() {
-            frame.origin.x = 0.0;
-            frame.origin.y = i as f32 * height;
-            frame.size.width = width;
-            frame.size.height = height;
-        }
     }
 
     pub fn all_vertically_with_ratio<T: IntoF32, const N: usize>(&mut self, ratio: [T; N]) {
@@ -280,95 +253,34 @@ impl Debug for Placer {
     }
 }
 
-pub fn spok() {
-    let vika: Box<dyn View> = LabeledSlider::boxed();
-    let vika2: Box<dyn View> = LabeledSlider::boxed();
-
-    let vika3: Box<dyn View> = LabeledSlider::boxed();
-    let vika4: Box<dyn View> = LabeledSlider::boxed();
-
-    let mut skoko: [Rglica<dyn View>; 2] = [vika.to_rglica(), vika2.to_rglica()];
-
-    let mut sporro: [Box<dyn View>; 2] = [vika3, vika4];
-
-    sporro.len();
-
-    let skloka: &mut [Box<dyn View>] = &mut sporro;
-
-    let sik = vec![1];
-
-    sik.len();
-
-    place_vertically([vika.to_rglica(), vika2.to_rglica()]);
-
-    place_vertically(skloka);
-
-    place_vertically(sporro);
-    place_vertically(skoko);
-}
-
-// pub fn place_vertically2<T, Iter, In>(mut views: In)
-// where
-//     T: AsView,
-//     Iter: HasIterMut<Item = T> + ?Sized,
-//     In: AsMut<Iter>,
-// {
-//
-//     let views = views.as_mut().iter_mut();
-//
-
-    // let mut frames: Vec<&mut Rect> = views.map(|a| a.as_view().frame_mut()).collect();
-    //
-    // // let height: f32 = frame.height();
-    // // frames.len() as f32;
-    // // let width = frame.width();
-    //
-    // for (i, frame) in frames.iter_mut().enumerate() {
-    //     frame.origin.x = 0.0;
-    //     // frame.origin.y = i as f32 * height;
-    //     // frame.size.width = width;
-    //     // frame.size.height = height;
-    // }
-// }
-
-
-pub fn place_vertically<T, A>(mut views: A)
-    where
-        T: AsView,
-        A: AsMut<[T]>,
+pub fn place_vertically<T, Ref, Arr>(mut views: Arr)
+where
+    T: View + ?Sized,
+    Ref: DerefMut<Target = T>,
+    Arr: AsMut<[Ref]>,
 {
-
     let views = views.as_mut();
-
-    dbg!(views.len());
-
-    for view in views.as_mut() {
-        dbg!(view.as_view().frame());
-    }
-
 
     if views.is_empty() {
         return;
     }
 
+    let mut last = views.last_mut().unwrap().to_rglica();
 
-    let last = views.last_mut().unwrap().as_view();
-    //
-    // if views.len() == 1 {
-    //     last.place().as_background();
-    //     return;
-    // }
+    if views.len() == 1 {
+        last.place().as_background();
+        return;
+    }
 
+    let super_frame = *last.superview().frame();
 
+    let height: f32 = super_frame.height() / views.len() as f32;
+    let width = super_frame.width();
 
-    // let mut frames: Vec<&mut Rect> = views.iter_mut().map(|a| a.frame_mut()).collect();
-    // let height: f32 = self.frame.height() / frames.len() as f32;
-    // let width = self.frame.width();
-    //
-    // for (i, frame) in frames.iter_mut().enumerate() {
-    //     frame.origin.x = 0.0;
-    //     frame.origin.y = i as f32 * height;
-    //     frame.size.width = width;
-    //     frame.size.height = height;
-    // }
+    for (i, frame) in views.iter_mut().map(|a| a.frame_mut()).enumerate() {
+        frame.origin.x = 0.0;
+        frame.origin.y = i as f32 * height;
+        frame.size.width = width;
+        frame.size.height = height;
+    }
 }

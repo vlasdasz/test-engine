@@ -9,7 +9,6 @@ use lazy_static::lazy_static;
 pub use text::{Font, Glyph};
 pub use view::*;
 
-mod as_view;
 pub mod basic;
 pub mod complex;
 pub mod input;

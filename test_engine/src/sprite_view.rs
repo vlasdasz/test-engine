@@ -3,6 +3,7 @@ use sprites::Sprite;
 use ui::{
     basic::Button,
     complex::LabeledView,
+    placer::place_vertically,
     view_base::{add_view, ViewBase},
     View,
 };
@@ -66,9 +67,7 @@ impl View for SpriteView {
     }
 
     fn layout(&mut self) {
-        self.place().all_vertically();
-
-        let spok = [self.position.clone(), self.size.clone(), self.color.clone()];
+        place_vertically([self.position.clone(), self.size.clone(), self.color.clone()]);
     }
 
     fn update(&mut self) {
