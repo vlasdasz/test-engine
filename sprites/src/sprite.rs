@@ -48,7 +48,9 @@ pub trait Sprite: AsAny {
         self.sprite_mut().is_selected = selected
     }
 
-    fn remove(&mut self) {}
+    fn remove(&mut self) {
+        let _level = self.level_mut().level_mut();
+    }
 
     fn level(&self) -> &dyn Level {
         self.sprite().level.deref()

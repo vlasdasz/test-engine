@@ -55,9 +55,7 @@ impl SpriteView {
 
 impl View for SpriteView {
     fn setup(&mut self) {
-        self.position = add_view(self);
-        self.size = add_view(self);
-        self.color = add_view(self);
+        (self.position, self.size, self.color) = (add_view(self), add_view(self), add_view(self));
 
         self.position.set_label("position:");
         self.size.set_label("size:");

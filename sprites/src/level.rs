@@ -8,6 +8,7 @@ use rapier2d::{
 use rtools::{Rglica, ToRglica};
 
 use crate::{Body, Collider, LevelBase, Sprite, SpriteBase, SpritesDrawer};
+
 pub trait Level: Debug {
     fn setup(&mut self) {}
 
@@ -77,10 +78,6 @@ pub trait Level: Debug {
     fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
         Body::make(sprite, self.level_mut())
     }
-
-    // fn add_sprite(&mut self, sprite: SpriteBase) {
-    //     self.level_mut().sprites.push(Box::new(sprite))
-    // }
 
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
         let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
