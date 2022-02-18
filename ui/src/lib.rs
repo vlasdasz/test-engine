@@ -1,3 +1,5 @@
+#![feature(exact_size_is_empty)]
+
 use std::{path::PathBuf, sync::Mutex};
 
 pub use basic::{ImageView, Label};
