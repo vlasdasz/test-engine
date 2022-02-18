@@ -11,6 +11,7 @@ crate-type = ["rlib", "staticlib"]
 [dependencies]
 log = "0.4"
 fontdue = "0.6"
+derivative = "2.2"
 lazy_static = "1.4"
 
 gm = { path = "../gm" }

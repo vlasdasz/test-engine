@@ -1,11 +1,13 @@
 use std::ops::DerefMut;
 
+use derivative::Derivative;
 use gm::{Color, Rect};
 use rtools::{IntoF32, Rglica, ToRglica};
 
 use crate::{basic::Placer, View};
 
-#[derive(Default, Debug)]
+#[derive(Derivative, Default)]
+#[derivative(Debug)]
 pub struct ViewBase {
     pub(crate) color: Color,
 
@@ -14,6 +16,7 @@ pub struct ViewBase {
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) superview: Rglica<dyn View>,
     pub(crate) subviews:  Vec<Box<dyn View>>,
 
