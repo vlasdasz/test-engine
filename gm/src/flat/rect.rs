@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{Point, Size};
 
-#[derive(Copy, Clone, Default, Debug, Serialize, Deserialize)]
+#[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Rect {
     pub origin: Point,
     pub size:   Size,

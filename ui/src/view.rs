@@ -1,11 +1,8 @@
-use std::{
-    fmt::Debug,
-    ops::{Deref, DerefMut},
-};
+use std::{fmt::Debug, ops::DerefMut};
 
 use gl_image::Image;
 use gm::{Color, Point, Rect};
-use rtools::{Address, Boxed, Rglica};
+use rtools::{Boxed, Rglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};
 
@@ -24,6 +21,16 @@ pub trait View: Boxed + Debug {
 
     fn set_color(&mut self, color: Color) {
         self.view_mut().color = color
+    }
+
+    fn root_view(&self) -> Rglica<dyn View> {
+        let mut root = self.superview();
+        loop {
+            if root.superview().is_null() {
+                return root;
+            }
+            root = root.superview();
+        }
     }
 
     fn superview(&self) -> Rglica<dyn View> {
@@ -106,7 +113,7 @@ pub trait View: Boxed + Debug {
             .superview()
             .subviews()
             .iter()
-            .position(|view| view.deref().address() == (&self).address())
+            .position(|view| view.view() == self.view())
             .unwrap();
 
         self.superview().remove_subview_at(index);
@@ -210,5 +217,11 @@ pub trait View: Boxed + Debug {
         let mut new = Self::boxed();
         new.set_frame(frame);
         new
+    }
+}
+
+impl PartialEq for dyn View {
+    fn eq(&self, other: &Self) -> bool {
+        self.view() == other.view()
     }
 }

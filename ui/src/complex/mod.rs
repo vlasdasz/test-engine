@@ -1,3 +1,4 @@
+mod alert;
 mod analog_stick_view;
 mod dpad_view;
 mod drawing_view;
@@ -7,6 +8,7 @@ mod labeled_view;
 mod path_data;
 mod slider;
 
+pub use alert::Alert;
 pub use analog_stick_view::AnalogStickView;
 pub use dpad_view::DPadView;
 pub use drawing_view::DrawingView;

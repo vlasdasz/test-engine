@@ -2,11 +2,11 @@ use std::ops::DerefMut;
 
 use derivative::Derivative;
 use gm::{Color, Rect};
-use rtools::{IntoF32, Rglica, ToRglica};
+use rtools::{Boxed, IntoF32, Rglica, ToRglica};
 
-use crate::{basic::Placer, View};
+use crate::{basic::Placer, complex::Alert, View};
 
-#[derive(Derivative, Default)]
+#[derive(Default, Derivative)]
 #[derivative(Debug)]
 pub struct ViewBase {
     pub(crate) color: Color,
@@ -14,14 +14,17 @@ pub struct ViewBase {
     pub(crate) touch_enabled: bool,
 
     pub(crate) frame:          Rect,
+    #[derivative(Debug = "ignore")]
     pub(crate) absolute_frame: Rect,
 
     #[derivative(Debug = "ignore")]
     pub(crate) superview: Rglica<dyn View>,
+    #[derivative(Debug = "ignore")]
     pub(crate) subviews:  Vec<Box<dyn View>>,
 
     pub(crate) touch_id: u64,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) placer: Placer,
 }
 
@@ -53,6 +56,12 @@ pub fn make_view_on<T: 'static + View>(parent: &mut dyn View, make: impl FnOnce(
     view
 }
 
+pub fn alert(view: &mut dyn View, message: impl ToString) {
+    let mut alert = Alert::boxed();
+    alert.set_message(message);
+    view.root_view().add_subview(alert);
+}
+
 impl View for ViewBase {
     fn view(&self) -> &ViewBase {
         self
@@ -69,5 +78,14 @@ impl<W: IntoF32, H: IntoF32> From<(W, H)> for Box<dyn View> {
             frame: (data.0, data.1).into(),
             ..Default::default()
         })
+    }
+}
+
+impl PartialEq for ViewBase {
+    fn eq(&self, other: &Self) -> bool {
+        self.frame == other.frame
+            && self.absolute_frame == other.absolute_frame
+            && self.color == other.color
+            && self.touch_enabled == other.touch_enabled
     }
 }

@@ -1,9 +1,12 @@
+use derivative::Derivative;
 use rtools::Boxed;
 
 use crate::{view_base::ViewBase, Font, ImageView, View};
 
-#[derive(Default, Debug)]
+#[derive(Default, Derivative)]
+#[derivative(Debug)]
 pub struct Label {
+    #[derivative(Debug = "ignore")]
     font: Font,
     text: String,
     base: ViewBase,

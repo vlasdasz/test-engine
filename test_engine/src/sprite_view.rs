@@ -1,10 +1,12 @@
+use std::ops::DerefMut;
+
 use rtools::{Rglica, ToRglica};
 use sprites::Sprite;
 use ui::{
     basic::Button,
     complex::LabeledView,
     placer::place_vertically,
-    view_base::{add_view, ViewBase},
+    view_base::{add_view, alert, ViewBase},
     View,
 };
 
@@ -49,6 +51,8 @@ impl SpriteView {
                 this.sprite.remove();
                 this.set_sprite(Rglica::default());
             }
+
+            alert(this.deref_mut(), "Sprote");
         });
     }
 }

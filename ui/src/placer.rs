@@ -1,7 +1,4 @@
-use std::{
-    fmt::{Debug, Formatter},
-    ops::{Deref, DerefMut},
-};
+use std::ops::{Deref, DerefMut};
 
 use gm::Rect;
 use rtools::{math::IntoF32, Rglica, ToRglica};
@@ -235,12 +232,6 @@ impl Placer {
 
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
         self.view.subviews_mut()
-    }
-}
-
-impl Debug for Placer {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        0.fmt(f)
     }
 }
 

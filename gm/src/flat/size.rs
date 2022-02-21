@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{Point, Rect};
 
-#[derive(Copy, Clone, Default, Debug, Serialize, Deserialize)]
+#[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Size {
     pub width:  f32,
     pub height: f32,
