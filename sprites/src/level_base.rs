@@ -68,25 +68,25 @@ impl Level for LevelBase {
 impl Default for LevelBase {
     fn default() -> Self {
         Self {
-            sprites: vec![],
-            drawer:  Rglica::default(),
+            sprites: Default::default(),
+            drawer:  Default::default(),
 
-            on_sprite_selected: Event::default(),
+            on_sprite_selected: Default::default(),
 
-            sets:             Sets::default(),
+            sets:             Default::default(),
             gravity:          Vector2::new(0.0, -9.81),
-            physics_pipeline: PhysicsPipeline::new(),
+            physics_pipeline: Default::default(),
             island_manager:   IslandManager::new(),
             broad_phase:      BroadPhase::new(),
             narrow_phase:     NarrowPhase::new(),
             joint_set:        JointSet::new(),
             ccd_solver:       CCDSolver::new(),
 
-            physics_hooks: (),
-            event_handler: (),
+            physics_hooks: Default::default(),
+            event_handler: Default::default(),
             player:        Default::default(),
 
-            integration_parameters: IntegrationParameters::default(),
+            integration_parameters: Default::default(),
         }
     }
 }

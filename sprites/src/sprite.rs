@@ -49,7 +49,7 @@ pub trait Sprite: AsAny {
     }
 
     fn remove(&mut self) {
-        let _level = self.level_mut().level_mut();
+        // let _level = self.level_mut().level_mut();
     }
 
     fn level(&self) -> &dyn Level {

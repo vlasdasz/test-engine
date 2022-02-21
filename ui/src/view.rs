@@ -2,7 +2,7 @@ use std::{fmt::Debug, ops::DerefMut};
 
 use gl_image::Image;
 use gm::{Color, Point, Rect};
-use rtools::{Boxed, Rglica};
+use rtools::{address::Address, Boxed, Rglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};
 
@@ -121,7 +121,7 @@ pub trait View: Boxed + Debug {
             .superview()
             .subviews()
             .iter()
-            .position(|view| view.view() == self.view())
+            .position(|view| self.address() == view.address())
             .unwrap();
 
         self.superview().remove_subview_at(index);
@@ -225,11 +225,5 @@ pub trait View: Boxed + Debug {
         let mut new = Self::boxed();
         new.set_frame(frame);
         new
-    }
-}
-
-impl PartialEq for dyn View {
-    fn eq(&self, other: &Self) -> bool {
-        self.view() == other.view()
     }
 }

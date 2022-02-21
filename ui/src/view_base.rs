@@ -82,12 +82,3 @@ impl<W: IntoF32, H: IntoF32> From<(W, H)> for Box<dyn View> {
         })
     }
 }
-
-impl PartialEq for ViewBase {
-    fn eq(&self, other: &Self) -> bool {
-        self.frame == other.frame
-            && self.absolute_frame == other.absolute_frame
-            && self.color == other.color
-            && self.touch_enabled == other.touch_enabled
-    }
-}
