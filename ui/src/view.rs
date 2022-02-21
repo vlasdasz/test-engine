@@ -2,7 +2,7 @@ use std::{fmt::Debug, ops::DerefMut};
 
 use gl_image::Image;
 use gm::{Color, Point, Rect};
-use rtools::{address::Address, Boxed, Rglica};
+use rtools::{address::Address, Boxed, Rglica, ToRglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};
 
@@ -31,7 +31,7 @@ pub trait View: Boxed + Debug {
         self.view_mut().is_hidden = hidden
     }
 
-    fn root_view(&self) -> Rglica<dyn View> {
+    fn root_view(&self) -> Rglica<ViewBase> {
         let mut root = self.superview();
         loop {
             if root.superview().is_null() {
@@ -41,7 +41,7 @@ pub trait View: Boxed + Debug {
         }
     }
 
-    fn superview(&self) -> Rglica<dyn View> {
+    fn superview(&self) -> Rglica<ViewBase> {
         self.view().superview
     }
 
@@ -106,7 +106,7 @@ pub trait View: Boxed + Debug {
     }
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
-        view.view_mut().superview = Rglica::from_ref(self.view());
+        view.view_mut().superview = self.view().to_rglica();
         view.view_mut().placer = Placer::make(view.deref_mut());
         view.setup();
         self.view_mut().subviews.push(view);

@@ -20,7 +20,7 @@ pub struct ViewBase {
     pub(crate) absolute_frame: Rect,
 
     #[derivative(Debug = "ignore")]
-    pub(crate) superview: Rglica<dyn View>,
+    pub(crate) superview: Rglica<ViewBase>,
     #[derivative(Debug = "ignore")]
     pub(crate) subviews:  Vec<Box<dyn View>>,
 

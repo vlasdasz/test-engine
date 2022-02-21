@@ -79,7 +79,8 @@ pub trait Level: Debug {
         Body::make(sprite, self.level_mut())
     }
 
-    fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Collider> {
+    fn add_wall(&mut self, mut sprite: SpriteBase) -> Rglica<Collider> {
+        sprite.level = Rglica::from_ref(self.level());
         let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
             .translation(Vector2::new(sprite.position.x, sprite.position.y))
             .build();
@@ -92,6 +93,10 @@ pub trait Level: Debug {
 
     fn set_camera_rotation(&mut self, angle: f32) {
         self.drawer().set_camera_rotation(angle)
+    }
+
+    fn remove(&mut self, sprite: u64) {
+        self.level_mut().remove(sprite)
     }
 
     fn level(&self) -> &LevelBase;

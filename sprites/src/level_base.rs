@@ -1,4 +1,7 @@
-use std::{fmt::Debug, ops::DerefMut};
+use std::{
+    fmt::Debug,
+    ops::{Deref, DerefMut},
+};
 
 use rapier2d::{
     na::Vector2,
@@ -6,7 +9,7 @@ use rapier2d::{
         BroadPhase, CCDSolver, IntegrationParameters, IslandManager, JointSet, NarrowPhase, PhysicsPipeline,
     },
 };
-use rtools::{Event, Rglica};
+use rtools::{address::Address, Event, Rglica};
 
 use crate::{sets::Sets, Body, Level, Sprite, SpritesDrawer};
 
@@ -50,7 +53,14 @@ impl LevelBase {
         );
     }
 
-    pub(crate) fn _remove(&mut self, _sprite: &dyn Sprite) {}
+    pub(crate) fn remove(&mut self, sprite: u64) {
+        let index = self.sprites.iter().position(|a| a.address() == sprite).unwrap();
+
+        let sprite = self.sprites[index].deref();
+
+        dbg!(index);
+        dbg!(sprite);
+    }
 }
 
 impl Level for LevelBase {

@@ -10,10 +10,10 @@ use rtools::{as_any::AsAny, Rglica, ToRglica};
 
 use crate::{control::Control, Level, Sprite, SpriteBase};
 
+#[derive(Debug)]
 pub struct Body {
     sprite: SpriteBase,
     handle: RigidBodyHandle,
-    level:  Rglica<dyn Level>,
 }
 
 impl Body {
@@ -37,9 +37,8 @@ impl Body {
         drop(level_base);
 
         let boxed = Box::new(Self {
-            sprite,
+            sprite: sprite.with_level(level),
             handle: body_handle,
-            level: Rglica::from_ref(level),
         });
 
         let body = boxed.to_rglica();
@@ -50,11 +49,12 @@ impl Body {
     }
 
     fn body(&self) -> &RigidBody {
-        &self.level.rigid_bodies()[self.handle]
+        &self.level().rigid_bodies()[self.handle]
     }
 
     fn body_mut(&mut self) -> &mut RigidBody {
-        &mut self.level.rigid_bodies_mut()[self.handle]
+        let handle = self.handle;
+        &mut self.level_mut().rigid_bodies_mut()[handle]
     }
 
     pub fn lock_rotations(&mut self) {
@@ -88,7 +88,7 @@ impl AsAny for Body {
 
 impl Body {
     fn _gravity(&self) -> Point {
-        self.level.gravity()
+        self.level().gravity()
     }
 }
 

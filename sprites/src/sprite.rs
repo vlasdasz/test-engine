@@ -1,12 +1,15 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    fmt::Debug,
+    ops::{Deref, DerefMut},
+};
 
 use gl_image::Image;
 use gm::{Color, Point, Size};
-use rtools::as_any::AsAny;
+use rtools::{address::Address, as_any::AsAny};
 
 use crate::{Level, SpriteBase};
 
-pub trait Sprite: AsAny {
+pub trait Sprite: AsAny + Debug {
     fn size(&self) -> Size {
         self.sprite().size
     }
@@ -49,14 +52,17 @@ pub trait Sprite: AsAny {
     }
 
     fn remove(&mut self) {
-        // let _level = self.level_mut().level_mut();
+        let address = self.address();
+        self.level_mut().remove(address);
     }
 
     fn level(&self) -> &dyn Level {
+        debug_assert!(self.sprite().level.is_ok(), "Null Level");
         self.sprite().level.deref()
     }
 
     fn level_mut(&mut self) -> &mut dyn Level {
+        debug_assert!(self.sprite().level.is_ok(), "Null Level");
         self.sprite_mut().level.deref_mut()
     }
 

@@ -4,6 +4,7 @@ use rtools::as_any::AsAny;
 
 use crate::{Sprite, SpriteBase};
 
+#[derive(Debug)]
 pub struct Collider {
     base: SpriteBase,
 }
