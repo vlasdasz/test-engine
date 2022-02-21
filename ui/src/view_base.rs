@@ -13,6 +13,8 @@ pub struct ViewBase {
 
     pub(crate) touch_enabled: bool,
 
+    pub(crate) is_hidden: bool,
+
     pub(crate) frame:          Rect,
     #[derivative(Debug = "ignore")]
     pub(crate) absolute_frame: Rect,

@@ -28,6 +28,7 @@ pub struct SpriteView {
 impl SpriteView {
     pub fn set_sprite(&mut self, sprite: Rglica<dyn Sprite>) {
         self.sprite = sprite;
+        self.delete_button.set_hidden(sprite.is_null());
         if sprite.is_null() {
             self.position.clear();
             self.size.clear();
@@ -42,6 +43,7 @@ impl SpriteView {
     fn setup_delete_button(&mut self) {
         self.delete_button = add_view(self);
         self.delete_button.set_image(Assets::image("delete.png"));
+        self.delete_button.set_hidden(true);
 
         self.delete_button.set_frame((20, 20).into());
 

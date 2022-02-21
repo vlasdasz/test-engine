@@ -23,6 +23,14 @@ pub trait View: Boxed + Debug {
         self.view_mut().color = color
     }
 
+    fn is_hidden(&self) -> bool {
+        self.view().is_hidden
+    }
+
+    fn set_hidden(&mut self, hidden: bool) {
+        self.view_mut().is_hidden = hidden
+    }
+
     fn root_view(&self) -> Rglica<dyn View> {
         let mut root = self.superview();
         loop {
