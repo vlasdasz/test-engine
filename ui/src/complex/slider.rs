@@ -1,5 +1,5 @@
 use gm::Color;
-use rtools::{math::clamped_by, Event, Rglica};
+use rtools::{math::clamped_by, Event, Rglica, IntoF32};
 
 use crate::{
     basic::Circle,
@@ -17,8 +17,8 @@ pub struct Slider {
 }
 
 impl Slider {
-    pub fn set_multiplier(&mut self, multiplier: f32) {
-        self.multiplier = multiplier
+    pub fn set_multiplier(&mut self, multiplier: impl IntoF32) {
+        self.multiplier = multiplier.into_f32()
     }
 }
 
