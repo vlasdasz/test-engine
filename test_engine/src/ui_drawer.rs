@@ -88,7 +88,6 @@ impl UIDrawer {
 
 impl UIDrawer {
     fn fill_rect(&self, rect: &Rect, color: Color) {
-        debug_assert!(rect.size.is_valid());
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);
@@ -96,7 +95,6 @@ impl UIDrawer {
     }
 
     fn draw_rect(&self, rect: &Rect, color: Color) {
-        debug_assert!(rect.size.is_valid());
         self.set_viewport(rect);
         self.assets.shaders.ui.enable();
         self.assets.shaders.ui.set_color(color);

@@ -8,7 +8,7 @@ pub fn home() -> PathBuf {
 
 pub fn root() -> PathBuf {
     #[cfg(not(target_os = "ios"))]
-    return home().join("test_engine");
+    return home().join("game_name/test_engine");
     #[cfg(target_os = "android")]
     return Default::default();
     #[cfg(target_os = "ios")]

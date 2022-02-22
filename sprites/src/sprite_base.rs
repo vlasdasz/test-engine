@@ -1,5 +1,5 @@
 use gl_image::Image;
-use gm::{Color, Point, Size};
+use gm::{Color, Point, Rect, Size};
 use rtools::{IntoF32, Rglica, ToRglica};
 
 use crate::{Level, LevelBase};
@@ -34,11 +34,11 @@ impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Spri
     }
 }
 
-impl From<(Point, Size)> for SpriteBase {
-    fn from(data: (Point, Size)) -> Self {
+impl From<Rect> for SpriteBase {
+    fn from(rect: Rect) -> Self {
         Self {
-            position: data.0,
-            size: data.1,
+            position: rect.origin,
+            size: rect.size,
             color: Color::random(),
             ..Default::default()
         }
