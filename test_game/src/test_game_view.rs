@@ -33,14 +33,14 @@ impl TestGameView {
     fn setup_level(&mut self) {
         self.level.setup();
 
-        let mut level = self.level.borrow_mut().to_rglica();
+        let level = self.level.borrow_mut().to_rglica();
 
         self.dpad
             .on_press
-            .subscribe(move |direction| level.player_mut().move_by_direction(direction));
+            .subscribe(move |direction| level.player().move_by_direction(direction));
 
         self.left_stick.on_direction_change.subscribe(move |direction| {
-            level.player_mut().add_impulse(&direction);
+            level.player().add_impulse(&direction);
         });
     }
 

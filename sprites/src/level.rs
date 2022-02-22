@@ -50,14 +50,9 @@ pub trait Level: Debug {
         self.level_mut().gravity = Vector2::new(g.x, g.y)
     }
 
-    fn player(&self) -> &Rglica<Body> {
+    fn player(&self) -> Rglica<Body> {
         debug_assert!(self.level().player.is_ok());
-        &self.level().player
-    }
-
-    fn player_mut(&mut self) -> &mut Rglica<Body> {
-        debug_assert!(self.level().player.is_ok());
-        &mut self.level_mut().player
+        self.level().player
     }
 
     fn sprites(&self) -> &[Box<dyn Sprite>] {

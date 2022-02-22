@@ -25,7 +25,7 @@ impl Level for TestGameLevel {
     }
 
     fn on_key_pressed(&mut self, key: String) {
-        self.player_mut().move_by_key(key)
+        self.player().move_by_key(key)
     }
 
     fn on_touch(&mut self, pos: Point) {

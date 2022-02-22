@@ -1,5 +1,5 @@
 use gm::Color;
-use rtools::{math::clamped_by, Event, Rglica, IntoF32};
+use rtools::{math::clamped_by, Event, IntoF32, Rglica};
 
 use crate::{
     basic::Circle,
