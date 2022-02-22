@@ -5,6 +5,7 @@ use std::{
 
 use gl_image::Image;
 use gm::{Color, Point, Size};
+use rapier2d::{geometry::ColliderHandle, prelude::RigidBodyHandle};
 use rtools::{address::Address, as_any::AsAny};
 
 use crate::{Level, SpriteBase};
@@ -41,6 +42,14 @@ pub trait Sprite: AsAny + Debug {
 
     fn set_image(&mut self, image: Image) {
         self.sprite_mut().image = image.into()
+    }
+
+    fn rigid_body_handle(&self) -> Option<RigidBodyHandle> {
+        None
+    }
+
+    fn collider_handle(&self) -> Option<ColliderHandle> {
+        None
     }
 
     fn is_selected(&self) -> bool {

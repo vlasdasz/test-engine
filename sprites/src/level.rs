@@ -1,13 +1,10 @@
 use std::{borrow::Borrow, fmt::Debug, ops::DerefMut};
 
 use gm::Point;
-use rapier2d::{
-    na::Vector2,
-    prelude::{ColliderBuilder, RigidBodySet},
-};
+use rapier2d::{na::Vector2, prelude::RigidBodySet};
 use rtools::{Rglica, ToRglica};
 
-use crate::{Body, Collider, LevelBase, Sprite, SpriteBase, SpritesDrawer};
+use crate::{Body, LevelBase, Sprite, SpriteBase, SpritesDrawer, Wall};
 
 pub trait Level: Debug {
     fn setup(&mut self) {}
@@ -79,16 +76,8 @@ pub trait Level: Debug {
         Body::make(sprite, self.level_mut())
     }
 
-    fn add_wall(&mut self, mut sprite: SpriteBase) -> Rglica<Collider> {
-        sprite.level = Rglica::from_ref(self.level());
-        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
-            .translation(Vector2::new(sprite.position.x, sprite.position.y))
-            .build();
-        self.level_mut().sets.collider.insert(collider);
-        let boxed = Box::<Collider>::new(sprite.into());
-        let wall = boxed.to_rglica();
-        self.level_mut().sprites.push(boxed);
-        wall
+    fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Wall> {
+        Wall::make(sprite, self.level_mut())
     }
 
     fn set_camera_rotation(&mut self, angle: f32) {

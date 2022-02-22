@@ -71,6 +71,10 @@ impl Sprite for Body {
         self.body().rotation().angle()
     }
 
+    fn rigid_body_handle(&self) -> Option<RigidBodyHandle> {
+        self.handle.into()
+    }
+
     fn sprite(&self) -> &SpriteBase {
         &self.sprite
     }

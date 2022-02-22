@@ -58,8 +58,25 @@ impl LevelBase {
 
         let sprite = self.sprites[index].deref();
 
-        dbg!(index);
-        dbg!(sprite);
+        if let Some(collider) = sprite.collider_handle() {
+            self.sets.collider.remove(
+                collider,
+                &mut self.island_manager,
+                &mut self.sets.rigid_body,
+                true,
+            );
+        }
+
+        if let Some(rigid_body) = sprite.rigid_body_handle() {
+            self.sets.rigid_body.remove(
+                rigid_body,
+                &mut self.island_manager,
+                &mut self.sets.collider,
+                &mut self.joint_set,
+            );
+        }
+
+        self.sprites.remove(index);
     }
 }
 
