@@ -36,6 +36,10 @@ pub trait Sprite: AsAny + Debug {
         self.sprite().color
     }
 
+    fn set_color(&mut self, color: Color) {
+        self.sprite_mut().color = color
+    }
+
     fn image(&self) -> &Option<Image> {
         &self.sprite().image
     }
