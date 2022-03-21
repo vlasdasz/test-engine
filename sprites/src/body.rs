@@ -98,23 +98,23 @@ impl Body {
 
 impl Control for Body {
     fn jump(&mut self) {
-        self.body_mut().set_linvel([0.0, 50.0].into(), true)
+        self.add_impulse((0, -100).into());
     }
 
     fn go_left(&mut self) {
-        self.body_mut().set_linvel([-50.0, 0.0].into(), true)
+        self.add_impulse((-100, 0).into());
     }
 
     fn go_right(&mut self) {
-        self.body_mut().set_linvel([50.0, 0.0].into(), true)
+        self.add_impulse((100, 0).into());
     }
 
     fn go_down(&mut self) {
-        self.body_mut().set_linvel([0.0, -50.0].into(), true)
+        self.add_impulse((0, 100).into());
     }
 
-    fn add_impulse(&mut self, impulse: &Point) {
+    fn add_impulse(&mut self, impulse: Point) {
         self.body_mut()
-            .apply_force(Vector2::new(impulse.x * 1000.0, impulse.y * -1000.0), true)
+            .apply_force([impulse.x * 1000.0, impulse.y * -1000.0].into(), true)
     }
 }

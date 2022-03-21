@@ -5,7 +5,7 @@ pub trait Control {
     fn go_left(&mut self);
     fn go_right(&mut self);
     fn go_down(&mut self);
-    fn add_impulse(&mut self, impulse: &Point);
+    fn add_impulse(&mut self, impulse: Point);
 
     fn move_by_key(&mut self, key: String) {
         match key.as_ref() {

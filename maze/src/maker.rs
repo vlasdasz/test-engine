@@ -42,7 +42,7 @@ impl Maker {
 
             maker.current_mut().visited = true;
 
-            while maker.has_unvisited() {
+            while dbg!(maker.has_unvisited()) {
                 let unvisited = maker.unvisited_neighbours();
 
                 if unvisited.is_empty() {
@@ -71,8 +71,6 @@ impl Maker {
     }
 
     fn make(self) -> Grid {
-        //self.generate();
-        dbg!("goneroted");
         self.grid
     }
 }
@@ -102,6 +100,7 @@ impl Maker {
     }
 
     fn unvisited_neighbours(&self) -> Vec<Point> {
+
         let mut result = vec![];
 
         const NEIGHBOURS: &[Point; 4] = &[
