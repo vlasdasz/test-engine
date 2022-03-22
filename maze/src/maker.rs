@@ -100,7 +100,6 @@ impl Maker {
     }
 
     fn unvisited_neighbours(&self) -> Vec<Point> {
-
         let mut result = vec![];
 
         const NEIGHBOURS: &[Point; 4] = &[

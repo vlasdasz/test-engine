@@ -40,7 +40,7 @@ impl TestGameView {
             .subscribe(move |direction| level.player().move_by_direction(direction));
 
         self.left_stick.on_direction_change.subscribe(move |direction| {
-            level.player().add_impulse(&direction);
+            level.player().add_impulse(direction);
         });
     }
 
