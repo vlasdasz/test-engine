@@ -4,10 +4,9 @@ use std::{
 };
 
 use gl_wrapper::monitor::Monitor;
-use rtools::Boxed;
 use test_engine::{
+    app::App,
     ui::{input::touch::Event, Touch},
-    Screen,
 };
 
 use crate::test_game_view::TestGameView;
@@ -18,37 +17,27 @@ mod test_game_view;
 #[macro_use]
 extern crate log;
 
-static mut SCREEN: *mut Screen = ptr::null_mut();
-static mut MONITOR: *mut Monitor = ptr::null_mut();
+static mut APP: *mut App<TestGameView> = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn create_screen(width: c_int, height: c_int) {
-    unsafe {
-        let mut screen = Box::new(Screen::new((width, height).into()));
-
-        screen.ui.set_view(TestGameView::boxed());
-        screen.ui.add_debug_view();
-
-        screen.add_monitor(MONITOR.as_ref().unwrap().clone());
-
-        SCREEN = Box::into_raw(screen);
-    }
+    unsafe { APP.as_mut().unwrap_unchecked().create_screen(width, height) }
 }
 
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
-    unsafe {
-        SCREEN
-            .as_mut()
-            .unwrap_unchecked()
-            .set_size((width, height).into());
-    }
+    unsafe { APP.as_mut().unwrap_unchecked().set_screen_size(width, height) }
 }
 
 #[no_mangle]
 pub extern "C" fn update_screen() {
     unsafe {
-        SCREEN.as_mut().unwrap_unchecked().update();
+        APP.as_mut()
+            .unwrap_unchecked()
+            .screen
+            .as_mut()
+            .unwrap_unchecked()
+            .update();
     }
 }
 
@@ -56,11 +45,17 @@ pub extern "C" fn update_screen() {
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
     #[allow(clippy::useless_conversion)]
     unsafe {
-        SCREEN.as_mut().unwrap_unchecked().ui.on_touch(Touch {
-            id:       id.into(),
-            position: (x, y).into(),
-            event:    Event::from_int(event),
-        })
+        APP.as_mut()
+            .unwrap_unchecked()
+            .screen
+            .as_mut()
+            .unwrap_unchecked()
+            .ui
+            .on_touch(Touch {
+                id:       id.into(),
+                position: (x, y).into(),
+                event:    Event::from_int(event),
+            })
     }
 }
 
@@ -89,7 +84,8 @@ pub extern "C" fn set_monitor(
     dbg!(&monitor);
 
     unsafe {
-        MONITOR = Box::into_raw(Box::new(monitor));
+        APP = Box::into_raw(Box::new(App::<TestGameView>::default()));
+        APP.as_mut().unwrap_unchecked().monitor = monitor;
     }
 }
 

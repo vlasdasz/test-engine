@@ -1,5 +1,6 @@
 #![allow(incomplete_features)]
 #![feature(trait_upcasting)]
+#![feature(core_ffi_c)]
 
 pub use gl_image;
 pub use gl_wrapper;
@@ -11,6 +12,7 @@ pub use ui;
 
 pub use crate::screen::Screen;
 
+pub mod app;
 pub mod assets;
 pub mod debug_view;
 pub mod game_view;
