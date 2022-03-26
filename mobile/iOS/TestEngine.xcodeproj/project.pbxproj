@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D100A8AA27EF2B8800254154 /* TestEngineController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100A8A927EF2B8800254154 /* TestEngineController.m */; };
 		D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1411E8A2617166800F3F18B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
 		D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D100A8A827EF2B8800254154 /* TestEngineController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEngineController.h; sourceTree = "<group>"; };
+		D100A8A927EF2B8800254154 /* TestEngineController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEngineController.m; sourceTree = "<group>"; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1411E7D2617166700F3F18B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D1411E7E2617166700F3F18B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 				D14901F72617215B0044E630 /* test_engine.h */,
 				D1411E7D2617166700F3F18B /* AppDelegate.h */,
 				D1411E7E2617166700F3F18B /* AppDelegate.m */,
+				D100A8A827EF2B8800254154 /* TestEngineController.h */,
+				D100A8A927EF2B8800254154 /* TestEngineController.m */,
 				D1B10DE3270C86C5008D85D2 /* libtest_game.a */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
@@ -207,6 +212,7 @@
 			files = (
 				D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */,
 				D1411E902617166800F3F18B /* main.m in Sources */,
+				D100A8AA27EF2B8800254154 /* TestEngineController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
