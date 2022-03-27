@@ -43,7 +43,6 @@ def ndk_home():
         return os.environ["NDK_HOME"]
     if "ANDROID_HOME" in os.environ:
         return os.environ["ANDROID_HOME"] + "/ndk/22.1.7171670"
-    return "/Users/vladas/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin"
     raise Exception("No NDK path env variables")
 
 
