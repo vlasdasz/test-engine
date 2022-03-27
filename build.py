@@ -42,7 +42,7 @@ def ndk_home():
     if "NDK_HOME" in os.environ:
         return os.environ["NDK_HOME"]
     if "ANDROID_HOME" in os.environ:
-        return os.environ["ANDROID_HOME"] + "/ndk/22.1.7171670"
+        return os.environ["ANDROID_HOME"] + "/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64"
     raise Exception("No NDK path env variables")
 
 
@@ -56,7 +56,6 @@ def setup_android():
         os.symlink(ndk_home(), this_path + "/NDK")
     except FileExistsError:
         print("NDK symlink exists")
-    exit(0)
 
 if android:
     setup_android()
