@@ -3,19 +3,12 @@ use std::{
     ptr,
 };
 
-use gl_wrapper::monitor::Monitor;
-use test_engine::{
-    app::App,
-    ui::{input::touch::Event, Touch},
-};
+use test_engine::app::App;
 
 use crate::test_game_view::TestGameView;
 
 mod test_game_level;
 mod test_game_view;
-
-#[macro_use]
-extern crate log;
 
 static mut APP: *mut App<TestGameView> = ptr::null_mut();
 
@@ -31,32 +24,12 @@ pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
 
 #[no_mangle]
 pub extern "C" fn update_screen() {
-    unsafe {
-        APP.as_mut()
-            .unwrap_unchecked()
-            .screen
-            .as_mut()
-            .unwrap_unchecked()
-            .update();
-    }
+    unsafe { APP.as_mut().unwrap_unchecked().update_screen() }
 }
 
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
-    #[allow(clippy::useless_conversion)]
-    unsafe {
-        APP.as_mut()
-            .unwrap_unchecked()
-            .screen
-            .as_mut()
-            .unwrap_unchecked()
-            .ui
-            .on_touch(Touch {
-                id:       id.into(),
-                position: (x, y).into(),
-                event:    Event::from_int(event),
-            })
-    }
+    unsafe { APP.as_mut().unwrap_unchecked().on_touch(id, x, y, event) }
 }
 
 #[no_mangle]
@@ -70,22 +43,18 @@ pub extern "C" fn set_monitor(
     height: c_float,
     diagonal: c_float,
 ) {
-    let monitor = Monitor::new(
-        "Phone screen".into(),
-        ppi as _,
-        scale,
-        refresh_rate as _,
-        (resolution_x, resolution_y).into(),
-        (width, height).into(),
-        diagonal as _,
-    );
-
-    error!("{:?}", &monitor);
-    dbg!(&monitor);
-
     unsafe {
         APP = Box::into_raw(Box::new(App::<TestGameView>::default()));
-        APP.as_mut().unwrap_unchecked().monitor = monitor;
+        APP.as_mut().unwrap_unchecked().set_monitor(
+            ppi,
+            scale,
+            refresh_rate,
+            resolution_x,
+            resolution_y,
+            width,
+            height,
+            diagonal,
+        );
     }
 }
 
