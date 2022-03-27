@@ -22,4 +22,7 @@ jobs:
       - name: debo
         run: |
           echo kwak
+          echo /usr/local/lib/android/sdk/ndk/22.1.7171670
           ls /usr/local/lib/android/sdk/ndk/22.1.7171670
+          echo /usr/local/lib/android/sdk/ndk/22.1.7171670/prebuilt
+          ls /usr/local/lib/android/sdk/ndk/22.1.7171670/prebuilt
