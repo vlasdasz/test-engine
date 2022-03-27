@@ -10,6 +10,10 @@ use crate::test_game_view::TestGameView;
 mod test_game_level;
 mod test_game_view;
 
+#[cfg(target_os = "android")]
+#[macro_use]
+extern crate log;
+
 static mut APP: *mut App<TestGameView> = ptr::null_mut();
 
 #[no_mangle]
