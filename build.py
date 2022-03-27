@@ -51,10 +51,12 @@ def setup_android():
     print("skigal")
     print(this_path)
     print(ndk_home())
+    run("ls " + ndk_home())
     try:
         os.symlink(ndk_home(), this_path + "/NDK")
     except FileExistsError:
         print("NDK symlink exists")
+    exit(0)
 
 if android:
     setup_android()
