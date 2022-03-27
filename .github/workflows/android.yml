@@ -28,8 +28,14 @@ jobs:
           echo /usr/local/lib/android/sdk/ndk/22.1.7171670/prebuilt
           ls /usr/local/lib/android/sdk/ndk/22.1.7171670/prebuilt
           echo =====
+          echo /usr/local/lib/android/sdk/ndk/22.1.7171670/prebuilt/android-arm64
+          ls /usr/local/lib/android/sdk/ndk/22.1.7171670/prebuilt/android-arm64
+          echo =====
           echo /usr/local/lib/android/sdk/ndk/22.1.7171670/toolchains
           ls /usr/local/lib/android/sdk/ndk/22.1.7171670/toolchains
+          echo =====
+          echo /usr/local/lib/android/sdk/ndk/22.1.7171670/toolchains/llvm
+          ls /usr/local/lib/android/sdk/ndk/22.1.7171670/toolchains/llvm
           echo =====
           echo /usr/local/lib/android/sdk/ndk/22.1.7171670/ndk-build
           ls /usr/local/lib/android/sdk/ndk/22.1.7171670/ndk-build
