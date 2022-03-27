@@ -19,3 +19,7 @@ jobs:
           submodules: true
       - name: android
         run: python3 build.py android
+      - name: debo
+        run: 
+          - echo kwak
+          - ls /usr/local/lib/android/sdk/ndk/22.1.7171670
