@@ -5,14 +5,15 @@ use std::{
 };
 
 use gl_wrapper::monitor::Monitor;
+use rtools::Unwrap;
 use tokio::runtime::Runtime;
 use ui::{input::touch::Event, Touch};
 
 use crate::{game_view::GameView, Screen};
 
 pub struct App<T> {
-    pub screen:  Option<Screen>,
-    pub monitor: Monitor,
+    pub screen:  Unwrap<Screen>,
+    pub monitor: Unwrap<Monitor>,
     runtime:     Runtime,
     _view:       PhantomData<T>,
 }
@@ -33,19 +34,18 @@ impl<T: GameView + 'static> App<T> {
 
     pub fn set_screen_size(&mut self, width: c_int, height: c_int) {
         self.runtime.block_on(async {
-            self.screen.as_mut().unwrap().set_size((width, height).into());
+            self.screen.set_size((width, height).into());
         });
     }
 
     pub fn update_screen(&mut self) {
-        self.runtime
-            .block_on(async { self.screen.as_mut().unwrap().update() });
+        self.runtime.block_on(async { self.screen.update() });
     }
 
     pub fn on_touch(&mut self, id: c_ulong, x: c_float, y: c_float, event: c_int) {
         #[allow(clippy::useless_conversion)]
         self.runtime.block_on(async {
-            self.screen.as_mut().unwrap().ui.on_touch(Touch {
+            self.screen.ui.on_touch(Touch {
                 id:       id.into(),
                 position: (x, y).into(),
                 event:    Event::from_int(event),
@@ -78,7 +78,7 @@ impl<T: GameView + 'static> App<T> {
         error!("{:?}", &monitor);
         dbg!(&monitor);
 
-        self.monitor = monitor;
+        self.monitor = monitor.into();
     }
 }
 

@@ -1,5 +1,10 @@
 use rtools::Rglica;
-use test_engine::{assets::Assets, gm::Point, sprites::Control, Level, LevelBase, Sprite};
+use test_engine::{
+    assets::Assets,
+    gm::Point,
+    sprites::{Control, Player},
+    Level, LevelBase, Sprite,
+};
 
 #[derive(Default, Debug)]
 pub struct TestGameLevel {
@@ -9,7 +14,8 @@ pub struct TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        self.base.player = self.add_body((0, 10, 17.0 / 6.0, 28.0 / 6.0).into());
+        self.base.player = Player::make((0, 10, 17.0 / 16.0, 28.0 / 16.0).into(), self.level_mut()).into();
+
         self.base.player.set_image(Assets::image("frisk.png"));
         self.base.player.lock_rotations();
 

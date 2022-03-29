@@ -9,12 +9,12 @@ use rapier2d::{
         BroadPhase, CCDSolver, IntegrationParameters, IslandManager, JointSet, NarrowPhase, PhysicsPipeline,
     },
 };
-use rtools::{address::Address, Event, Rglica};
+use rtools::{address::Address, Event, Rglica, Unwrap};
 
-use crate::{sets::Sets, Body, Level, Sprite, SpritesDrawer};
+use crate::{sets::Sets, Level, Player, Sprite, SpritesDrawer};
 
 pub struct LevelBase {
-    pub player: Rglica<Body>,
+    pub player: Unwrap<Player>,
     pub drawer: Rglica<dyn SpritesDrawer>,
 
     pub on_sprite_selected: Event<Rglica<dyn Sprite>>,

@@ -9,7 +9,7 @@ use chrono::Utc;
 use gl_wrapper::{events::Events, GLDrawer};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{Color, Size};
-use rtools::ToRglica;
+use rtools::{ToRglica, Unwrap};
 use sprites::{Sprite, SpritesDrawer};
 
 use crate::{assets::Assets, paths, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
@@ -22,13 +22,13 @@ pub struct Screen {
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     drawer:         GLDrawer,
-    monitor:        Monitor,
+    monitor:        Unwrap<Monitor>,
     sprites_drawer: Box<dyn SpritesDrawer>,
 }
 
 impl Screen {
     pub fn add_monitor(&mut self, monitor: Monitor) {
-        self.monitor = monitor;
+        self.monitor = monitor.into();
         self.ui.drawer.set_scale(self.monitor.scale);
     }
 
@@ -121,6 +121,8 @@ impl Screen {
         for sprite in level.sprites() {
             drawer.draw(sprite.deref());
         }
+
+        drawer.draw(level.player().deref().deref());
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
