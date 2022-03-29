@@ -42,7 +42,7 @@ impl Maker {
 
             maker.current_mut().visited = true;
 
-            while dbg!(maker.has_unvisited()) {
+            while maker.has_unvisited() {
                 let unvisited = maker.unvisited_neighbours();
 
                 if unvisited.is_empty() {

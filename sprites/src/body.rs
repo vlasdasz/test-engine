@@ -3,21 +3,23 @@ use std::any::Any;
 use gm::Point;
 use rapier2d::{
     dynamics::RigidBody,
+    geometry::{Collider, ColliderHandle},
     na::Vector2,
     prelude::{ColliderBuilder, RigidBodyBuilder, RigidBodyHandle},
 };
-use rtools::{as_any::AsAny, Rglica, ToRglica};
+use rtools::as_any::AsAny;
 
 use crate::{control::Control, Level, Sprite, SpriteBase};
 
 #[derive(Debug)]
 pub struct Body {
-    sprite: SpriteBase,
-    handle: RigidBodyHandle,
+    sprite:          SpriteBase,
+    rigid_handle:    RigidBodyHandle,
+    collider_handle: ColliderHandle,
 }
 
 impl Body {
-    pub fn make(sprite: SpriteBase, level: &mut (impl Level + 'static)) -> Rglica<Self> {
+    pub fn make(sprite: SpriteBase, level: &mut (impl Level + 'static)) -> Self {
         let level_base = level.level_mut();
 
         let rigid_body = RigidBodyBuilder::new_dynamic()
@@ -27,34 +29,37 @@ impl Body {
             .restitution(0.7)
             .build();
 
-        let body_handle = level_base.sets.rigid_body.insert(rigid_body);
-        level_base
-            .sets
-            .collider
-            .insert_with_parent(collider, body_handle, &mut level_base.sets.rigid_body);
+        let rigid_handle = level_base.sets.rigid_body.insert(rigid_body);
 
-        #[allow(clippy::drop_ref)]
-        drop(level_base);
+        let collider_handle = level_base.sets.collider.insert_with_parent(
+            collider,
+            rigid_handle,
+            &mut level_base.sets.rigid_body,
+        );
 
-        let boxed = Box::new(Self {
+        Self {
             sprite: sprite.with_level(level),
-            handle: body_handle,
-        });
-
-        let body = boxed.to_rglica();
-
-        level.level_mut().sprites.push(boxed);
-
-        body
+            rigid_handle,
+            collider_handle,
+        }
     }
 
-    fn body(&self) -> &RigidBody {
-        &self.level().rigid_bodies()[self.handle]
+    pub fn body(&self) -> &RigidBody {
+        &self.level().rigid_bodies()[self.rigid_handle]
     }
 
-    fn body_mut(&mut self) -> &mut RigidBody {
-        let handle = self.handle;
+    pub fn body_mut(&mut self) -> &mut RigidBody {
+        let handle = self.rigid_handle;
         &mut self.level_mut().rigid_bodies_mut()[handle]
+    }
+
+    pub fn collider(&self) -> &Collider {
+        &self.level().colliders()[self.collider_handle]
+    }
+
+    pub fn collider_mut(&mut self) -> &mut Collider {
+        let handle = self.collider_handle;
+        &mut self.level_mut().colliders_mut()[handle]
     }
 
     pub fn lock_rotations(&mut self) {
@@ -72,7 +77,11 @@ impl Sprite for Body {
     }
 
     fn rigid_body_handle(&self) -> Option<RigidBodyHandle> {
-        self.handle.into()
+        self.rigid_handle.into()
+    }
+
+    fn collider_handle(&self) -> Option<ColliderHandle> {
+        self.collider_handle.into()
     }
 
     fn sprite(&self) -> &SpriteBase {
@@ -96,21 +105,22 @@ impl Body {
     }
 }
 
+const FORCE: f32 = 10.0;
 impl Control for Body {
     fn jump(&mut self) {
-        self.add_impulse((0, -100).into());
+        self.add_impulse((0, -FORCE).into());
     }
 
     fn go_left(&mut self) {
-        self.add_impulse((-100, 0).into());
+        self.add_impulse((-FORCE, 0).into());
     }
 
     fn go_right(&mut self) {
-        self.add_impulse((100, 0).into());
+        self.add_impulse((FORCE, 0).into());
     }
 
     fn go_down(&mut self) {
-        self.add_impulse((0, 100).into());
+        self.add_impulse((0, FORCE).into());
     }
 
     fn add_impulse(&mut self, impulse: Point) {

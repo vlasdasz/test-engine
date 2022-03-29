@@ -9,6 +9,7 @@ name = "sprites"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
+derive_more = "0.99"
 rapier2d = { version = "0.11", features = [ "parallel", "simd-stable" ] }
 
 gm = { path = "../gm" }

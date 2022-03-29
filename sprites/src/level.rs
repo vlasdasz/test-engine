@@ -1,7 +1,10 @@
 use std::{borrow::Borrow, fmt::Debug, ops::DerefMut};
 
 use gm::Point;
-use rapier2d::{na::Vector2, prelude::RigidBodySet};
+use rapier2d::{
+    na::Vector2,
+    prelude::{ColliderSet, RigidBodySet},
+};
 use rtools::{Rglica, ToRglica};
 
 use crate::{Body, LevelBase, Sprite, SpriteBase, SpritesDrawer, Wall};
@@ -67,8 +70,19 @@ pub trait Level: Debug {
         &mut self.level_mut().sets.rigid_body
     }
 
+    fn colliders(&self) -> &ColliderSet {
+        &self.level().sets.collider
+    }
+
+    fn colliders_mut(&mut self) -> &mut ColliderSet {
+        &mut self.level_mut().sets.collider
+    }
+
     fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
-        Body::make(sprite, self.level_mut())
+        let body = Box::new(Body::make(sprite, self.level_mut()));
+        let result = body.to_rglica();
+        self.level_mut().sprites.push(body);
+        result
     }
 
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Wall> {
