@@ -86,6 +86,10 @@ pub trait Level: Debug {
         &self.level().sprites
     }
 
+    fn sprites_mut(&mut self) -> &mut [Box<dyn Sprite>] {
+        &mut self.level_mut().sprites
+    }
+
     fn rigid_bodies(&self) -> &RigidBodySet {
         &self.level().sets.rigid_body
     }

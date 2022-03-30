@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use gm::Point;
 use rapier2d::{
     dynamics::RigidBody,
@@ -7,7 +5,7 @@ use rapier2d::{
     na::Vector2,
     prelude::{ColliderBuilder, RigidBodyBuilder, RigidBodyHandle},
 };
-use rtools::as_any::AsAny;
+use rtools::ToRglica;
 
 use crate::{control::Control, Level, Sprite, SpriteBase};
 
@@ -68,6 +66,12 @@ impl Body {
 }
 
 impl Sprite for Body {
+    fn update(&mut self) {
+        let mut this = self.to_rglica();
+        this.sprite_mut().position = self.position();
+        this.sprite_mut().rotation = self.rotation();
+    }
+
     fn position(&self) -> Point {
         (self.body().translation().x, self.body().translation().y).into()
     }
@@ -90,12 +94,6 @@ impl Sprite for Body {
 
     fn sprite_mut(&mut self) -> &mut SpriteBase {
         &mut self.sprite
-    }
-}
-
-impl AsAny for Body {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }
 

@@ -2,7 +2,7 @@ use gl_image::Image;
 use gm::{Color, Point, Rect, Size};
 use rtools::{IntoF32, Rglica, ToRglica};
 
-use crate::{Level, LevelBase};
+use crate::{Level, LevelBase, Sprite};
 
 #[derive(Default, Debug)]
 pub struct SpriteBase {
@@ -42,5 +42,15 @@ impl From<Rect> for SpriteBase {
             color: Color::random(),
             ..Default::default()
         }
+    }
+}
+
+impl Sprite for SpriteBase {
+    fn sprite(&self) -> &SpriteBase {
+        self
+    }
+
+    fn sprite_mut(&mut self) -> &mut SpriteBase {
+        self
     }
 }

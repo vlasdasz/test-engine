@@ -1,10 +1,8 @@
-use std::any::Any;
-
 use rapier2d::{
     na::Vector2,
     prelude::{ColliderBuilder, ColliderHandle},
 };
-use rtools::{as_any::AsAny, Rglica, ToRglica};
+use rtools::{Rglica, ToRglica};
 
 use crate::{Level, Sprite, SpriteBase};
 
@@ -39,11 +37,5 @@ impl Sprite for Wall {
 
     fn sprite_mut(&mut self) -> &mut SpriteBase {
         &mut self.base
-    }
-}
-
-impl AsAny for Wall {
-    fn as_any(&self) -> &dyn Any {
-        self
     }
 }

@@ -6,11 +6,13 @@ use std::{
 use gl_image::Image;
 use gm::{Color, Point, Size};
 use rapier2d::{geometry::ColliderHandle, prelude::RigidBodyHandle};
-use rtools::{address::Address, as_any::AsAny};
+use rtools::address::Address;
 
 use crate::{Level, SpriteBase};
 
-pub trait Sprite: AsAny + Debug {
+pub trait Sprite: Debug {
+    fn update(&mut self) {}
+
     fn size(&self) -> Size {
         self.sprite().size
     }
@@ -77,6 +79,10 @@ pub trait Sprite: AsAny + Debug {
     fn level_mut(&mut self) -> &mut dyn Level {
         debug_assert!(self.sprite().level.is_ok(), "Null Level");
         self.sprite_mut().level.deref_mut()
+    }
+
+    fn draw(&self) {
+        self.level().drawer().draw(self.sprite())
     }
 
     fn sprite(&self) -> &SpriteBase;

@@ -118,11 +118,13 @@ impl Screen {
 
         drawer.set_camera_position(level.player().position());
 
-        for sprite in level.sprites() {
-            drawer.draw(sprite.deref());
+        for sprite in level.sprites_mut() {
+            sprite.update();
+            sprite.draw();
         }
 
-        drawer.draw(level.player().deref().deref());
+        level.player().update();
+        level.player().draw();
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
