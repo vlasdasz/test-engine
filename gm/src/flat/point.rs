@@ -23,6 +23,11 @@ impl Point {
         self.y.atan2(self.x)
     }
 
+    pub fn angle_to(&self, point: Point) -> f32 {
+        let target = point - *self;
+        target.angle()
+    }
+
     pub fn length(&self) -> f32 {
         (self.x * self.x + self.y * self.y).sqrt()
     }

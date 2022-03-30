@@ -18,7 +18,7 @@ impl Player {
         body.lock_rotations();
         body.collider_mut().set_restitution(0.0);
 
-        let mut weapon: SpriteBase = (0, 0, 5, 0.28).into();
+        let mut weapon: SpriteBase = (0, 0, 2365.0 / 1000.0, 854.0 / 1000.0).into();
         weapon.level = level.level().to_rglica();
 
         Player { body, weapon }
@@ -28,6 +28,7 @@ impl Player {
 impl Sprite for Player {
     fn update(&mut self) {
         self.body.update();
+        self.weapon.rotation = self.position().angle_to(self.level().cursor_position());
         self.weapon.position = self.body.position();
     }
 
