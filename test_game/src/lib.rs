@@ -63,7 +63,6 @@ pub mod android {
     extern crate android_logger;
 
     use android_logger::{Config, FilterBuilder};
-    use gl_wrapper::monitor::Monitor;
     use log::Level;
 
     fn setup_logger() {
@@ -81,11 +80,6 @@ pub mod android {
     use android_ndk_sys::{jclass, jobject, JNIEnv};
 
     use super::*;
-
-    #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setup(_: JNIEnv, _: jclass) {
-        create_screen(0, 0);
-    }
 
     #[no_mangle]
     pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setAssetManager(
