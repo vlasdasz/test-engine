@@ -30,16 +30,16 @@ impl SpritesDrawer for TESpritesDrawer {
         self.scale
     }
 
-    fn resolution(&self) -> Size {
-        self.resolution
-    }
-
     fn set_scale(&mut self, scale: f32) {
         self.scale = scale;
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_scale(scale.into_f32());
         self.assets.shaders.textured_sprite.enable();
         self.assets.shaders.textured_sprite.set_scale(scale);
+    }
+
+    fn resolution(&self) -> Size {
+        self.resolution
     }
 
     fn set_resolution(&mut self, size: Size) {

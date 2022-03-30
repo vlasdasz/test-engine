@@ -8,10 +8,10 @@ pub trait GameView: View {
     fn set_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
         self.level_mut().set_drawer(drawer)
     }
-    fn drawer(&mut self) -> &mut dyn SpritesDrawer {
-        self.level_mut().drawer()
-    }
     fn pass_touch_to_level(&mut self, touch: Touch) {
-        self.level_mut().convert_touch(touch.position)
+        self.level_mut().set_cursor_position(touch.position);
+        if touch.is_began() {
+            self.level_mut().add_touch(touch.position)
+        }
     }
 }

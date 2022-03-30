@@ -3,6 +3,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
+use gm::Point;
 use rapier2d::{
     na::Vector2,
     prelude::{
@@ -16,6 +17,8 @@ use crate::{sets::Sets, Level, Player, Sprite, SpritesDrawer};
 pub struct LevelBase {
     pub player: Unwrap<Player>,
     pub drawer: Rglica<dyn SpritesDrawer>,
+
+    pub cursor_position: Point,
 
     pub on_sprite_selected: Event<Rglica<dyn Sprite>>,
 
@@ -86,10 +89,16 @@ impl Level for LevelBase {
     fn level(&self) -> &LevelBase {
         self
     }
+
     fn level_mut(&mut self) -> &mut LevelBase {
         self
     }
-    fn drawer(&mut self) -> &mut dyn SpritesDrawer {
+
+    fn drawer(&self) -> &dyn SpritesDrawer {
+        self.drawer.deref()
+    }
+
+    fn drawer_mut(&mut self) -> &mut dyn SpritesDrawer {
         self.drawer.deref_mut()
     }
 }
@@ -99,6 +108,8 @@ impl Default for LevelBase {
         Self {
             sprites: Default::default(),
             drawer:  Default::default(),
+
+            cursor_position: Default::default(),
 
             on_sprite_selected: Default::default(),
 

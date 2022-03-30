@@ -1,4 +1,8 @@
-use std::{borrow::Borrow, fmt::Debug, ops::DerefMut};
+use std::{
+    borrow::Borrow,
+    fmt::Debug,
+    ops::{Deref, DerefMut},
+};
 
 use gm::Point;
 use rapier2d::{
@@ -16,9 +20,21 @@ pub trait Level: Debug {
 
     fn on_key_pressed(&mut self, _: String) {}
 
+    fn cursor_position(&self) -> Point {
+        self.level().cursor_position
+    }
+
+    fn set_cursor_position(&mut self, pos: Point) {
+        self.level_mut().cursor_position = self.convert_touch(pos)
+    }
+
     fn on_touch(&mut self, _: Point) {}
 
-    fn convert_touch(&mut self, pos: Point) {
+    fn add_touch(&mut self, pos: Point) {
+        self.on_touch(self.convert_touch(pos))
+    }
+
+    fn convert_touch(&self, pos: Point) -> Point {
         let mut pos = pos;
         let size = self.drawer().resolution();
 
@@ -32,7 +48,7 @@ pub trait Level: Debug {
 
         pos += self.player().position();
 
-        self.on_touch(pos)
+        pos
     }
 
     fn sprite_at(&self, point: Point) -> Option<Rglica<dyn Sprite>> {
@@ -42,6 +58,14 @@ pub trait Level: Debug {
             }
         }
         None
+    }
+
+    fn scale(&self) -> f32 {
+        self.drawer().scale()
+    }
+
+    fn set_scale(&mut self, scale: f32) {
+        self.drawer_mut().set_scale(scale)
     }
 
     fn gravity(&self) -> Point {
@@ -100,7 +124,11 @@ pub trait Level: Debug {
     fn level(&self) -> &LevelBase;
     fn level_mut(&mut self) -> &mut LevelBase;
 
-    fn drawer(&mut self) -> &mut dyn SpritesDrawer {
+    fn drawer(&self) -> &dyn SpritesDrawer {
+        self.level().drawer.deref()
+    }
+
+    fn drawer_mut(&mut self) -> &mut dyn SpritesDrawer {
         self.level_mut().drawer.deref_mut()
     }
 

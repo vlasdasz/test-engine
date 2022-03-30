@@ -50,7 +50,7 @@ impl TestGameView {
 
         let mut this = self.to_rglica();
         self.slider.on_change.subscribe(move |value| {
-            this.drawer().set_scale(value);
+            this.level_mut().drawer_mut().set_scale(value);
         });
     }
 

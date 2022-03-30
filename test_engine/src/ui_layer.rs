@@ -56,7 +56,7 @@ impl UILayer {
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
         error!("{:?}", touch);
-        if !self.root_view.check_touch(&mut touch) && touch.is_began() {
+        if !self.root_view.check_touch(&mut touch) {
             self.view.pass_touch_to_level(touch)
         }
     }
