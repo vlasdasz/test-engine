@@ -51,7 +51,6 @@ impl Screen {
         cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
             let monitor = self.drawer.monitors.first().expect("BUG: failed to get monitor").clone();
             self.add_monitor(monitor);
-            dbg!(&self.monitor);
         }}
 
         GLWrapper::enable_blend();
@@ -59,9 +58,10 @@ impl Screen {
 
         self.ui.root_view.calculate_frames();
 
-        let size = Screen::adjust_size(self.monitor.clone(), size);
-
-        self.set_size(size);
+        cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
+            let size = Screen::adjust_size(self.monitor.clone(), size);
+            self.set_size(size);
+        }}
     }
 
     #[cfg(not(target_os = "macos"))]

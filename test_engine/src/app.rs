@@ -12,21 +12,20 @@ use ui::{input::touch::Event, Touch};
 use crate::{game_view::GameView, Screen};
 
 pub struct App<T> {
-    pub screen:  Unwrap<Screen>,
-    pub monitor: Unwrap<Monitor>,
-    runtime:     Runtime,
-    _view:       PhantomData<T>,
+    pub screen: Unwrap<Screen>,
+    runtime:    Runtime,
+    _view:      PhantomData<T>,
 }
 
 impl<T: GameView + 'static> App<T> {
-    pub fn create_screen(&mut self, width: c_int, height: c_int) {
+    fn create_screen(&mut self, monitor: Monitor) {
         self.runtime.block_on(async {
-            let mut screen = Screen::new((width, height).into());
+            let mut screen = Screen::new(monitor.resolution);
 
             screen.ui.set_view(T::boxed());
             screen.ui.add_debug_view();
 
-            screen.add_monitor(self.monitor.clone());
+            screen.add_monitor(monitor);
 
             self.screen = screen.into();
         });
@@ -78,7 +77,7 @@ impl<T: GameView + 'static> App<T> {
         error!("{:?}", &monitor);
         dbg!(&monitor);
 
-        self.monitor = monitor.into();
+        self.create_screen(monitor);
     }
 }
 
@@ -86,7 +85,6 @@ impl<T: GameView> Default for App<T> {
     fn default() -> Self {
         Self {
             screen:  Default::default(),
-            monitor: Default::default(),
             runtime: tokio::runtime::Runtime::new().unwrap(),
             _view:   Default::default(),
         }

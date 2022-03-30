@@ -1,8 +1,6 @@
 
 #include <stdint.h>
 
-void create_screen(int width, int height);
-
 void set_screen_size(int width, int height);
 
 void update_screen(void);
