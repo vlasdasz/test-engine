@@ -16,7 +16,6 @@ use ui::{
 use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
 
 pub struct UILayer {
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub cursor_position: Point,
     pub root_view:       Box<dyn View>,
     pub debug_view:      Rglica<DebugView>,
@@ -37,7 +36,6 @@ pub struct UILayer {
 impl UILayer {
     pub fn new(assets: Rc<Assets>, sprites_drawer: Rglica<dyn SpritesDrawer>) -> Self {
         Self {
-            #[cfg(not(any(target_os = "ios", target_os = "android")))]
             cursor_position: Default::default(),
             root_view: ViewBase::boxed(),
             debug_view: Default::default(),
