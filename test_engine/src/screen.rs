@@ -111,10 +111,11 @@ impl Screen {
 
         let level = self.ui.view.level_mut();
 
-        level.set_cursor_position(self.ui.cursor_position);
 
         level.level_mut().update_physics();
         level.update();
+
+        level.set_cursor_position(self.ui.cursor_position);
 
         let drawer = self.sprites_drawer.deref();
 
