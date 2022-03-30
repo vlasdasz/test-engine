@@ -17,6 +17,7 @@ impl Level for TestGameLevel {
         self.base.player = Player::make((0, 10, 17.0 / 16.0, 28.0 / 16.0).into(), self.level_mut()).into();
 
         self.base.player.set_image(Assets::image("frisk.png"));
+        self.base.player.weapon.set_image(Assets::image("frisk.png"));
 
         let square = Assets::image("square.png");
 

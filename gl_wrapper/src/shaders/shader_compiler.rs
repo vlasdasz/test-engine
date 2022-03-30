@@ -138,6 +138,6 @@ impl ShaderCompiler {
         GL!(DeleteShader, vert);
         GL!(DeleteShader, frag);
 
-        Shader::new(program)
+        Shader::new(program, path.to_string_lossy().into())
     }
 }

@@ -27,9 +27,12 @@ impl Player {
 
 impl Sprite for Player {
     fn update(&mut self) {
+        let cursor = self.level().cursor_position();
         self.body.update();
-        self.weapon.rotation = self.position().angle_to(self.level().cursor_position());
+        self.weapon.rotation = self.position().angle_to(cursor);
         self.weapon.position = self.body.position();
+        self.image_mut().unwrap().flipped = cursor.x < self.position().x;
+        self.weapon.image_mut().unwrap().flipped_y = cursor.x < self.position().x;
     }
 
     fn position(&self) -> Point {

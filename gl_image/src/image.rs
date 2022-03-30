@@ -11,10 +11,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Image {
-    pub size:     Size,
-    pub channels: u32,
-    gl_handle:    u32,
-    path:         Option<PathBuf>,
+    pub size:      Size,
+    pub channels:  u32,
+    pub flipped:   bool,
+    pub flipped_y: bool,
+    gl_handle:     u32,
+    path:          Option<PathBuf>,
 }
 
 impl Image {
@@ -45,6 +47,8 @@ impl Image {
         Image {
             size,
             channels,
+            flipped: false,
+            flipped_y: false,
             gl_handle,
             path,
         }
@@ -64,6 +68,8 @@ impl Default for Image {
         Image {
             size:      Default::default(),
             channels:  0,
+            flipped:   false,
+            flipped_y: false,
             gl_handle: u32::MAX,
             path:      Default::default(),
         }

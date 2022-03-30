@@ -42,8 +42,12 @@ pub trait Sprite: Debug {
         self.sprite_mut().color = color
     }
 
-    fn image(&self) -> &Option<Image> {
-        &self.sprite().image
+    fn image(&self) -> Option<&Image> {
+        self.sprite().image.as_ref()
+    }
+
+    fn image_mut(&mut self) -> Option<&mut Image> {
+        self.sprite_mut().image.as_mut()
     }
 
     fn set_image(&mut self, image: Image) {
