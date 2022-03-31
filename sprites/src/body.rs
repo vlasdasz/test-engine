@@ -80,6 +80,11 @@ impl Sprite for Body {
         self.body().rotation().angle()
     }
 
+    fn set_rotation(&mut self, rotation: f32) {
+        self.sprite.rotation = rotation;
+        self.body_mut().set_rotation(rotation, true);
+    }
+
     fn rigid_body_handle(&self) -> Option<RigidBodyHandle> {
         self.rigid_handle.into()
     }
@@ -106,7 +111,7 @@ impl Body {
 const FORCE: f32 = 10.0;
 impl Control for Body {
     fn jump(&mut self) {
-        self.add_impulse((0, -FORCE).into());
+        self.add_impulse((0, FORCE).into());
     }
 
     fn go_left(&mut self) {
@@ -118,11 +123,11 @@ impl Control for Body {
     }
 
     fn go_down(&mut self) {
-        self.add_impulse((0, FORCE).into());
+        self.add_impulse((0, -FORCE).into());
     }
 
     fn add_impulse(&mut self, impulse: Point) {
         self.body_mut()
-            .apply_force([impulse.x * 1000.0, impulse.y * -1000.0].into(), true)
+            .apply_force([impulse.x * 1000.0, impulse.y * 1000.0].into(), true)
     }
 }

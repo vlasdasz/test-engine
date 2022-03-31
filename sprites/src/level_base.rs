@@ -20,7 +20,7 @@ pub struct LevelBase {
 
     pub cursor_position: Point,
 
-    pub on_tap: Event<Point>,
+    pub on_tap:             Event<Point>,
     pub on_sprite_selected: Event<Rglica<dyn Sprite>>,
 
     pub(crate) sprites: Vec<Box<dyn Sprite>>,
@@ -112,7 +112,7 @@ impl Default for LevelBase {
 
             cursor_position: Default::default(),
 
-            on_tap: Default::default(),
+            on_tap:             Default::default(),
             on_sprite_selected: Default::default(),
 
             sets:             Default::default(),

@@ -17,7 +17,10 @@ impl Player {
         body.lock_rotations();
         body.collider_mut().set_restitution(0.0);
 
-        Player { body, weapon: Weapon::new(level) }
+        Player {
+            body,
+            weapon: Weapon::new(level),
+        }
     }
 }
 

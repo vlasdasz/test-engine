@@ -50,7 +50,7 @@ impl Level for TestGameLevel {
         }
 
         let mut this = self.to_rglica();
-        self.base.on_tap.subscribe(move |pos| this.on_touch(pos) );
+        self.base.on_tap.subscribe(move |pos| this.on_touch(pos));
     }
 
     fn on_key_pressed(&mut self, key: String) {
