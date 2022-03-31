@@ -28,10 +28,9 @@ pub trait Level: Debug {
         self.level_mut().cursor_position = self.convert_touch(pos)
     }
 
-    fn on_touch(&mut self, _: Point) {}
-
     fn add_touch(&mut self, pos: Point) {
-        self.on_touch(self.convert_touch(pos))
+        let pos = self.convert_touch(pos);
+        self.level_mut().on_tap.trigger(pos);
     }
 
     fn convert_touch(&self, pos: Point) -> Point {

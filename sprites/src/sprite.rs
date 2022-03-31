@@ -25,6 +25,10 @@ pub trait Sprite: Debug {
         self.sprite().rotation
     }
 
+    fn set_rotation(&mut self, rotation: f32) {
+        self.sprite_mut().rotation = rotation
+    }
+
     fn contains(&self, point: Point) -> bool {
         let pos = self.position();
         let size = self.size();
