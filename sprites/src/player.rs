@@ -1,14 +1,13 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::Point;
-use rtools::ToRglica;
 
-use crate::{Body, Level, Sprite, SpriteBase};
+use crate::{Body, Level, Sprite, SpriteBase, Weapon};
 
 #[derive(Debug)]
 pub struct Player {
     body:       Body,
-    pub weapon: SpriteBase,
+    pub weapon: Weapon,
 }
 
 impl Player {
@@ -18,10 +17,7 @@ impl Player {
         body.lock_rotations();
         body.collider_mut().set_restitution(0.0);
 
-        let mut weapon: SpriteBase = (0, 0, 2365.0 / 1000.0, 854.0 / 1000.0).into();
-        weapon.level = level.level().to_rglica();
-
-        Player { body, weapon }
+        Player { body, weapon: Weapon::new(level) }
     }
 }
 

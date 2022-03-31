@@ -8,6 +8,7 @@ mod sprite;
 mod sprite_base;
 mod sprites_drawer;
 mod wall;
+mod weapon;
 
 pub use body::Body;
 pub use control::Control;
@@ -18,3 +19,4 @@ pub use sprite::Sprite;
 pub use sprite_base::SpriteBase;
 pub use sprites_drawer::SpritesDrawer;
 pub use wall::Wall;
+pub use weapon::Weapon;
