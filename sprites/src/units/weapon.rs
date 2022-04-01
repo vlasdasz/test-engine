@@ -12,6 +12,7 @@ use crate::{Control, Level, Sprite, SpriteBase};
 #[derive(Debug)]
 pub struct Weapon {
     sprite:           SpriteBase,
+    pub bullet_speed: f32,
     pub bullet_image: Option<Image>,
 }
 
@@ -21,16 +22,21 @@ impl Weapon {
         sprite.level = level.level().to_rglica();
         Self {
             sprite,
+            bullet_speed: 1.0,
             bullet_image: None,
         }
     }
 
     pub fn shoot_at(&mut self, pos: Point) {
+        let vector = (pos - self.position()).normalized();
+        let pos = self.position() + vector * 2;
+
+        let impulse = vector * self.bullet_speed;
+
         let mut body = self.level_mut().add_body((pos.x, pos.y, 0.8, 0.15).into());
         body.set_rotation(self.rotation());
-        let mut impulse = pos - self.position();
-        impulse /= 10;
         body.add_impulse(impulse);
+
         if let Some(image) = &self.bullet_image {
             body.set_image(image.clone())
         }
