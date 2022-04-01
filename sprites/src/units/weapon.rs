@@ -7,13 +7,14 @@ use gl_image::Image;
 use gm::Point;
 use rtools::ToRglica;
 
-use crate::{Control, Level, Sprite, SpriteBase};
+use crate::{Level, Sprite, SpriteBase};
 
 #[derive(Debug)]
 pub struct Weapon {
-    sprite:           SpriteBase,
-    pub bullet_speed: f32,
-    pub bullet_image: Option<Image>,
+    sprite:              SpriteBase,
+    pub(crate) velocity: Point,
+    pub bullet_speed:    f32,
+    pub bullet_image:    Option<Image>,
 }
 
 impl Weapon {
@@ -22,6 +23,7 @@ impl Weapon {
         sprite.level = level.level().to_rglica();
         Self {
             sprite,
+            velocity: Default::default(),
             bullet_speed: 1.0,
             bullet_image: None,
         }
@@ -29,13 +31,13 @@ impl Weapon {
 
     pub fn shoot_at(&mut self, pos: Point) {
         let vector = (pos - self.position()).normalized();
-        let pos = self.position() + vector * 2;
+        let pos = self.position() + vector * 3.2;
 
-        let impulse = vector * self.bullet_speed;
+        let vel = vector * self.bullet_speed + self.velocity;
 
         let mut body = self.level_mut().add_body((pos.x, pos.y, 0.8, 0.15).into());
         body.set_rotation(self.rotation());
-        body.add_impulse(impulse);
+        body.set_velocity(vel);
 
         if let Some(image) = &self.bullet_image {
             body.set_image(image.clone())

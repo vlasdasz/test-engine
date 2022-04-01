@@ -1,24 +1,20 @@
 use std::ops::{Deref, DerefMut};
 
+use gl_image::Image;
 use gm::Point;
 
-use crate::{Body, Level, Sprite, SpriteBase, Weapon};
+use crate::{Level, Sprite, SpriteBase, Unit, Weapon};
 
 #[derive(Debug)]
 pub struct Player {
-    body:       Body,
+    unit:       Unit,
     pub weapon: Weapon,
 }
 
 impl Player {
-    pub fn make(sprite: SpriteBase, level: &mut (impl Level + 'static)) -> Self {
-        let mut body = Body::make(sprite, level);
-
-        body.lock_rotations();
-        body.collider_mut().set_restitution(0.0);
-
+    pub fn make(image: Image, level: &mut (impl Level + 'static)) -> Self {
         Player {
-            body,
+            unit:   Unit::make(image, level),
             weapon: Weapon::new(level),
         }
     }
@@ -27,44 +23,46 @@ impl Player {
 impl Sprite for Player {
     fn update(&mut self) {
         let cursor = self.level().cursor_position();
-        self.body.update();
+        self.unit.update();
         self.weapon.rotation = self.position().angle_to(cursor);
-        self.weapon.position = self.body.position();
+        self.weapon.position = self.unit.position();
+        self.weapon.velocity = self.velocity();
+
         self.image_mut().unwrap().flipped = cursor.x < self.position().x;
         self.weapon.image_mut().unwrap().flipped_y = cursor.x < self.position().x;
     }
 
     fn position(&self) -> Point {
-        self.body.position()
+        self.unit.position()
     }
 
     fn rotation(&self) -> f32 {
-        self.body.rotation()
+        self.unit.rotation()
     }
 
     fn draw(&self) {
-        self.body.draw();
+        self.unit.draw();
         self.weapon.draw();
     }
 
     fn sprite(&self) -> &SpriteBase {
-        self.body.sprite()
+        self.unit.sprite()
     }
 
     fn sprite_mut(&mut self) -> &mut SpriteBase {
-        self.body.sprite_mut()
+        self.unit.sprite_mut()
     }
 }
 
 impl Deref for Player {
-    type Target = Body;
-    fn deref(&self) -> &Body {
-        &self.body
+    type Target = Unit;
+    fn deref(&self) -> &Unit {
+        &self.unit
     }
 }
 
 impl DerefMut for Player {
-    fn deref_mut(&mut self) -> &mut Body {
-        &mut self.body
+    fn deref_mut(&mut self) -> &mut Unit {
+        &mut self.unit
     }
 }

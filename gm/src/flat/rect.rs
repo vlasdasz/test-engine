@@ -92,3 +92,12 @@ impl<W: IntoF32, H: IntoF32> From<(W, H)> for Rect {
         }
     }
 }
+
+impl<X: IntoF32, Y: IntoF32> From<(X, Y, Size)> for Rect {
+    fn from(tup: (X, Y, Size)) -> Self {
+        Self {
+            origin: (tup.0, tup.1).into(),
+            size:   tup.2,
+        }
+    }
+}

@@ -60,6 +60,15 @@ impl Body {
         &mut self.level_mut().colliders_mut()[handle]
     }
 
+    pub fn velocity(&self) -> Point {
+        let vel = self.body().linvel();
+        (vel.x, vel.y).into()
+    }
+
+    pub fn set_velocity(&mut self, vel: Point) {
+        self.body_mut().set_linvel([vel.x, vel.y].into(), true)
+    }
+
     pub fn lock_rotations(&mut self) {
         self.body_mut().lock_rotations(true, true);
     }

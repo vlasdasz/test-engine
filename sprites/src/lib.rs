@@ -16,5 +16,5 @@ pub use level_base::LevelBase;
 pub use sprite::Sprite;
 pub use sprite_base::SpriteBase;
 pub use sprites_drawer::SpritesDrawer;
-pub use units::{Player, Weapon};
+pub use units::{Player, Unit, Weapon};
 pub use wall::Wall;
