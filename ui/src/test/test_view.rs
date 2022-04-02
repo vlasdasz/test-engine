@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::Color;
-use rtools::{Rglica, ToRglica};
+use rtools::{Animation, Rglica, ToRglica, Unwrap};
 
 use crate::{
     basic::Button,
@@ -19,6 +19,9 @@ pub struct TestView {
     subviews: Rglica<SubviewsTestView>,
     drawing:  Rglica<DrawingView>,
     layout:   Rglica<LayoutView>,
+    animated: Rglica<ImageView>,
+
+    animation: Unwrap<Animation>,
 
     label_value: u64,
 }
@@ -30,6 +33,10 @@ impl TestView {
 
     pub fn set_button_image(&mut self, image: Image) {
         self.button.set_image(image)
+    }
+
+    pub fn set_animation_image(&mut self, image: Image) {
+        self.animated.set_image(image)
     }
 }
 
@@ -66,10 +73,16 @@ impl View for TestView {
         });
 
         self.layout = add_view(self);
+
+        self.animated = add_view(self);
+        self.animated.frame_mut().size = (100, 100).into();
+
+        self.animation = Animation::new(0, 400, 10).into();
     }
 
     fn layout(&mut self) {
         self.place().all_vertically();
+        self.animated.frame_mut().origin.y = self.animation.value()
     }
 
     fn view(&self) -> &ViewBase {

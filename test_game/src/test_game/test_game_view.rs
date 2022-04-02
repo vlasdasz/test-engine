@@ -83,6 +83,7 @@ impl TestGameView {
         self.test_view = add_view_with_frame(self, (280, 400).into());
         self.test_view.set_image(Assets::image("cat.png"));
         self.test_view.set_button_image(Assets::image("square.png"));
+        self.test_view.set_animation_image(Assets::image("palm.png"));
     }
 }
 
