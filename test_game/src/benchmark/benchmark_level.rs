@@ -30,8 +30,8 @@ impl BenchmarkLevel {
         self.right_wall = self.add_wall((40, 0, 10, 100).into());
         self.right_wall.set_image(square);
 
-        self.left_animation = Animation::new(-50, -40, 5);
-        self.right_animation = Animation::new(50, 40, 5);
+        self.left_animation = Animation::new(-60, -55, 10);
+        self.right_animation = Animation::new(60, 55, 10);
         self.floor_animation = Animation::new(-10, 0, 4);
     }
 }
