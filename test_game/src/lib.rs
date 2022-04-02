@@ -5,16 +5,16 @@ use std::{
 
 use test_engine::app::App;
 
-use crate::test_game_view::TestGameView;
+use crate::benchmark::BenchmarkView;
 
-mod test_game_level;
-mod test_game_view;
+mod benchmark;
+mod test_game;
 
 #[cfg(target_os = "android")]
 #[macro_use]
 extern crate log;
 
-static mut APP: *mut App<TestGameView> = ptr::null_mut();
+static mut APP: *mut App<BenchmarkView> = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
@@ -43,7 +43,7 @@ pub extern "C" fn set_monitor(
     diagonal: c_float,
 ) {
     unsafe {
-        APP = Box::into_raw(Box::new(App::<TestGameView>::default()));
+        APP = Box::into_raw(Box::new(App::default()));
         APP.as_mut().unwrap_unchecked().set_monitor(
             ppi,
             scale,

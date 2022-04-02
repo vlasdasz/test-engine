@@ -16,7 +16,7 @@ use test_engine::{
     Level,
 };
 
-use crate::test_game_level::TestGameLevel;
+use crate::test_game::test_game_level::TestGameLevel;
 
 #[derive(Default, Debug)]
 pub struct TestGameView {
