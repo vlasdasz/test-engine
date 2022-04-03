@@ -2,13 +2,15 @@ use std::{fmt::Debug, ops::Deref};
 
 use gm::Point;
 use rapier2d::{
+    geometry::ContactEvent,
     na::Vector2,
+    parry::partitioning::IndexedData,
     prelude::{
         BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters, IslandManager, JointSet,
         NarrowPhase, PhysicsPipeline,
     },
 };
-use rtools::{address::Address, Event, Rglica, Unwrap};
+use rtools::{address::Address, Event, Rglica, ToRglica, Unwrap};
 
 use crate::{sets::Sets, Player, Sprite, SpritesDrawer};
 
@@ -34,8 +36,6 @@ pub struct LevelBase {
     pub(crate) joint_set:        JointSet,
     pub(crate) ccd_solver:       CCDSolver,
 
-    physics_hooks: (),
-
     integration_parameters: IntegrationParameters,
 }
 
@@ -57,18 +57,39 @@ impl LevelBase {
             &mut self.sets.collider,
             &mut self.joint_set,
             &mut self.ccd_solver,
-            &self.physics_hooks,
+            &(),
             &event_handler,
         );
 
         while let Ok(contact_event) = contact_recv.try_recv() {
-            // Handle the contact event.
-            println!("Received contact event: {:?}", contact_event);
+            if let ContactEvent::Started(a, b) = contact_event {
+                for sprite in &self.colliding_sprites {
+                    let handle = sprite.collider_handle().unwrap();
 
-            for sprite in &self.colliding_sprites {
-                dbg!(sprite.collider_handle());
+                    let other_index = if a.index() == handle.index() {
+                        b
+                    } else if b.index() == handle.index() {
+                        a
+                    } else {
+                        panic!()
+                    };
+
+                    if let Some(other) = self.sprite_with_index(other_index.index()) {
+                        sprite.to_rglica().sprite_mut().on_collision.trigger(other);
+                    }
+                }
             }
         }
+    }
+
+    fn sprite_with_index(&self, index: usize) -> Option<Rglica<dyn Sprite>> {
+        self.sprites
+            .iter()
+            .find(|a| match a.collider_handle() {
+                Some(handle) => handle.index() == index,
+                None => false,
+            })
+            .map(|a| a.to_rglica())
     }
 
     pub(crate) fn remove(&mut self, sprite: u64) {
@@ -120,8 +141,7 @@ impl Default for LevelBase {
             joint_set:        JointSet::new(),
             ccd_solver:       CCDSolver::new(),
 
-            physics_hooks: Default::default(),
-            player:        Default::default(),
+            player: Default::default(),
 
             integration_parameters: Default::default(),
         }

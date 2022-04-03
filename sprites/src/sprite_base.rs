@@ -1,19 +1,25 @@
+use derivative::Derivative;
 use gl_image::Image;
 use gm::{Color, Point, Rect, Size};
-use rtools::{IntoF32, Rglica};
+use rtools::{Event, IntoF32, Rglica};
 
 use crate::{Level, Sprite};
 
-#[derive(Default, Debug)]
+#[derive(Default, Derivative)]
+#[derivative(Debug)]
 pub struct SpriteBase {
     pub(crate) position:    Point,
     pub(crate) size:        Size,
     pub(crate) rotation:    f32,
+    #[derivative(Debug = "ignore")]
     pub(crate) level:       Rglica<dyn Level>,
     pub(crate) is_selected: bool,
 
+    pub tag:   String,
     pub color: Color,
     pub image: Option<Image>,
+
+    pub on_collision: Event<Rglica<dyn Sprite>>,
 }
 
 impl SpriteBase {

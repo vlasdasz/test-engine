@@ -10,6 +10,7 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 crossbeam = "0.8.1"
+derivative = "2.2"
 rapier2d = { version = "0.11", features = [ "parallel", "simd-stable" ] }
 
 gm = { path = "../gm" }

@@ -38,6 +38,7 @@ impl Weapon {
         let mut body = self.level_mut().add_body((pos.x, pos.y, 0.8, 0.15).into());
         body.set_rotation(self.rotation());
         body.set_velocity(vel);
+        body.sprite_mut().tag = "bullet".into();
 
         if let Some(image) = &self.bullet_image {
             body.set_image(image.clone())
