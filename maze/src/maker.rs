@@ -3,7 +3,7 @@ use std::time::Duration;
 use gm::flat::point::PointBase;
 use rand::seq::SliceRandom;
 use tokio::{
-    sync::mpsc::{self, Receiver},
+    sync::mpsc::{self, UnboundedReceiver},
     time::sleep,
 };
 
@@ -32,8 +32,8 @@ impl Maker {
         }
     }
 
-    pub fn generate() -> Receiver<Grid> {
-        let (sender, receiver) = mpsc::channel::<Grid>(1);
+    pub fn generate() -> UnboundedReceiver<Grid> {
+        let (sender, receiver) = mpsc::unbounded_channel::<Grid>();
 
         tokio::spawn(async move {
             sleep(Duration::from_secs(1)).await;
@@ -56,14 +56,14 @@ impl Maker {
 
                 maker.stack.push(maker.current_pos);
 
-                sender.send(maker.grid.clone()).await.unwrap();
+                sender.send(maker.grid.clone()).unwrap();
 
                 maker.remove_walls(next);
 
                 maker.current_pos = next;
                 maker.at_mut(next).visited = true;
 
-                sleep(Duration::from_millis(200)).await;
+                sleep(Duration::from_millis(50)).await;
             }
         });
 

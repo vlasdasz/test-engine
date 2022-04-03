@@ -8,7 +8,7 @@ use gm::{Color, Point, Size};
 use rapier2d::{geometry::ColliderHandle, prelude::RigidBodyHandle};
 use rtools::address::Address;
 
-use crate::{Level, SpriteBase};
+use crate::{Level, LevelBase, SpriteBase};
 
 pub trait Sprite: Debug {
     fn update(&mut self) {}
@@ -79,12 +79,12 @@ pub trait Sprite: Debug {
         self.level_mut().remove(address);
     }
 
-    fn level(&self) -> &dyn Level {
+    fn level(&self) -> &LevelBase {
         debug_assert!(self.sprite().level.is_ok(), "Null Level");
         self.sprite().level.deref()
     }
 
-    fn level_mut(&mut self) -> &mut dyn Level {
+    fn level_mut(&mut self) -> &mut LevelBase {
         debug_assert!(self.sprite().level.is_ok(), "Null Level");
         self.sprite_mut().level.deref_mut()
     }

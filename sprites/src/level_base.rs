@@ -7,7 +7,8 @@ use gm::Point;
 use rapier2d::{
     na::Vector2,
     prelude::{
-        BroadPhase, CCDSolver, IntegrationParameters, IslandManager, JointSet, NarrowPhase, PhysicsPipeline,
+        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters, IslandManager, JointSet,
+        NarrowPhase, PhysicsPipeline,
     },
 };
 use rtools::{address::Address, Event, Rglica, Unwrap};
@@ -23,6 +24,8 @@ pub struct LevelBase {
     pub on_tap:             Event<Point>,
     pub on_sprite_selected: Event<Rglica<dyn Sprite>>,
 
+    pub(crate) colliding_sprites: Vec<Rglica<dyn Sprite>>,
+
     pub(crate) sprites: Vec<Box<dyn Sprite>>,
     pub(crate) sets:    Sets,
     pub(crate) gravity: Vector2<f32>,
@@ -35,7 +38,6 @@ pub struct LevelBase {
     pub(crate) ccd_solver:       CCDSolver,
 
     physics_hooks: (),
-    event_handler: (),
 
     integration_parameters: IntegrationParameters,
 }
@@ -43,6 +45,10 @@ pub struct LevelBase {
 impl LevelBase {
     pub fn update_physics(&mut self) {
         //  self.integration_parameters.dt = 0.5;
+
+        let (contact_send, contact_recv) = crossbeam::channel::unbounded();
+        let (intersection_send, _intersection_recv) = crossbeam::channel::unbounded();
+        let event_handler = ChannelEventCollector::new(intersection_send, contact_send);
 
         self.physics_pipeline.step(
             &self.gravity,
@@ -55,8 +61,18 @@ impl LevelBase {
             &mut self.joint_set,
             &mut self.ccd_solver,
             &self.physics_hooks,
-            &self.event_handler,
+            &event_handler,
         );
+
+        while let Ok(contact_event) = contact_recv.try_recv() {
+            // Handle the contact event.
+            println!("Received contact event: {:?}", contact_event);
+
+            for sprite in &self.colliding_sprites {
+                dbg!(sprite.collider_handle());
+            }
+
+        }
     }
 
     pub(crate) fn remove(&mut self, sprite: u64) {
@@ -107,6 +123,8 @@ impl Level for LevelBase {
 impl Default for LevelBase {
     fn default() -> Self {
         Self {
+            colliding_sprites: Default::default(),
+
             sprites: Default::default(),
             drawer:  Default::default(),
 
@@ -125,7 +143,6 @@ impl Default for LevelBase {
             ccd_solver:       CCDSolver::new(),
 
             physics_hooks: Default::default(),
-            event_handler: Default::default(),
             player:        Default::default(),
 
             integration_parameters: Default::default(),

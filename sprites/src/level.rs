@@ -105,10 +105,14 @@ pub trait Level: Debug {
         &mut self.level_mut().sets.collider
     }
 
+    fn add_sprite(&mut self, sprite: Box<dyn Sprite>) {
+        self.level_mut().sprites.push(sprite)
+    }
+
     fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
         let body = Box::new(Body::make(sprite, self.level_mut()));
         let result = body.to_rglica();
-        self.level_mut().sprites.push(body);
+        self.add_sprite(body);
         result
     }
 
