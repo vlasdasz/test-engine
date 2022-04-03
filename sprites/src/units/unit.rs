@@ -1,9 +1,8 @@
 use std::ops::{Deref, DerefMut};
 
 use gl_image::Image;
-use rapier2d::geometry::ColliderHandle;
-use rapier2d::prelude::ActiveEvents;
-use rtools::ToRglica;
+use rapier2d::{geometry::ColliderHandle, prelude::ActiveEvents};
+use rtools::{Rglica, ToRglica};
 
 use crate::{Body, Level, Sprite, SpriteBase};
 
@@ -17,11 +16,11 @@ impl Unit {
         self.collider_mut()
             .set_active_events(ActiveEvents::CONTACT_EVENTS);
 
-        let mut level = self.level().to_rglica();
-        level.colliding_sprites.push((self as &dyn Sprite).to_rglica());
+        let rglica = (self as &dyn Sprite).to_rglica();
+        self.level_mut().base_mut().colliding_sprites.push(rglica);
     }
 
-    pub fn make(image: Image, level: &mut (impl Level + 'static)) -> Unit {
+    pub fn make(image: Image, level: Rglica<dyn Level>) -> Unit {
         let size = image.size.fit_height(2);
         let mut body = Body::make((0, 10, size.width, size.height).into(), level);
 

@@ -5,7 +5,7 @@ use std::{
 
 use gl_image::Image;
 use gm::Point;
-use rtools::ToRglica;
+use rtools::Rglica;
 
 use crate::{Level, Sprite, SpriteBase};
 
@@ -18,9 +18,9 @@ pub struct Weapon {
 }
 
 impl Weapon {
-    pub fn new(level: &mut (impl Level + 'static)) -> Self {
+    pub fn new(level: Rglica<dyn Level>) -> Self {
         let mut sprite: SpriteBase = (0, 0, 2365.0 / 1000.0, 854.0 / 1000.0).into();
-        sprite.level = level.level().to_rglica();
+        sprite.level = level;
         Self {
             sprite,
             velocity: Default::default(),

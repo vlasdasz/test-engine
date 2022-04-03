@@ -2,6 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use gl_image::Image;
 use gm::Point;
+use rtools::Rglica;
 
 use crate::{Level, Sprite, SpriteBase, Unit, Weapon};
 
@@ -12,7 +13,7 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn make(image: Image, level: &mut (impl Level + 'static)) -> Self {
+    pub fn make(image: Image, level: Rglica<dyn Level>) -> Self {
         Player {
             unit:   Unit::make(image, level),
             weapon: Weapon::new(level),

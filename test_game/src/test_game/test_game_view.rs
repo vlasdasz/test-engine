@@ -61,7 +61,7 @@ impl TestGameView {
 
         let mut this = self.to_rglica();
         self.level
-            .level_mut()
+            .base_mut()
             .on_sprite_selected
             .subscribe(move |sprite| this.sprite.set_sprite(sprite));
 

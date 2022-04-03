@@ -1,4 +1,4 @@
-use rtools::{Animation, Rglica};
+use rtools::{Animation, Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
     sprites::{Player, Wall},
@@ -7,7 +7,7 @@ use test_engine::{
 
 #[derive(Debug, Default)]
 pub struct BenchmarkLevel {
-    level:             LevelBase,
+    base:              LevelBase,
     left_wall:         Rglica<Wall>,
     right_wall:        Rglica<Wall>,
     floor:             Rglica<Wall>,
@@ -38,10 +38,10 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        self.level.player = Player::make(Assets::image("frisk.png"), self.level_mut()).into();
-        self.level.player.weapon.set_image(Assets::image("ak.png"));
-        self.level.player.weapon.bullet_image = Assets::image("bullet.png").into();
-        self.level.player.weapon.bullet_speed = 100.0;
+        self.base.player = Player::make(Assets::image("frisk.png"), self.rglica()).into();
+        self.base.player.weapon.set_image(Assets::image("ak.png"));
+        self.base.player.weapon.bullet_image = Assets::image("bullet.png").into();
+        self.base.player.weapon.bullet_speed = 100.0;
         self.set_scale(1.2);
         self.make_walls();
     }
@@ -54,11 +54,15 @@ impl Level for BenchmarkLevel {
         // self.floor.set_y(self.floor_animation.value());
     }
 
-    fn level(&self) -> &LevelBase {
-        &self.level
+    fn base(&self) -> &LevelBase {
+        &self.base
     }
 
-    fn level_mut(&mut self) -> &mut LevelBase {
-        &mut self.level
+    fn base_mut(&mut self) -> &mut LevelBase {
+        &mut self.base
+    }
+
+    fn rglica(&self) -> Rglica<dyn Level> {
+        (self as &dyn Level).to_rglica()
     }
 }

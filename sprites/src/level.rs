@@ -21,16 +21,16 @@ pub trait Level: Debug {
     fn on_key_pressed(&mut self, _: String) {}
 
     fn cursor_position(&self) -> Point {
-        self.level().cursor_position
+        self.base().cursor_position
     }
 
     fn set_cursor_position(&mut self, pos: Point) {
-        self.level_mut().cursor_position = self.convert_touch(pos)
+        self.base_mut().cursor_position = self.convert_touch(pos)
     }
 
     fn add_touch(&mut self, pos: Point) {
         let pos = self.convert_touch(pos);
-        self.level_mut().on_tap.trigger(pos);
+        self.base_mut().on_tap.trigger(pos);
     }
 
     fn convert_touch(&self, pos: Point) -> Point {
@@ -68,56 +68,56 @@ pub trait Level: Debug {
     }
 
     fn gravity(&self) -> Point {
-        let gravity = self.level().gravity.borrow();
+        let gravity = self.base().gravity.borrow();
         (gravity[0], gravity[1]).into()
     }
 
     fn set_gravity(&mut self, g: Point) {
-        self.level_mut().gravity = Vector2::new(g.x, g.y)
+        self.base_mut().gravity = Vector2::new(g.x, g.y)
     }
 
     fn player(&self) -> Rglica<Player> {
-        debug_assert!(self.level().player.is_ok());
-        self.level().player.to_rglica()
+        debug_assert!(self.base().player.is_ok());
+        self.base().player.to_rglica()
     }
 
     fn sprites(&self) -> &[Box<dyn Sprite>] {
-        &self.level().sprites
+        &self.base().sprites
     }
 
     fn sprites_mut(&mut self) -> &mut [Box<dyn Sprite>] {
-        &mut self.level_mut().sprites
+        &mut self.base_mut().sprites
     }
 
     fn rigid_bodies(&self) -> &RigidBodySet {
-        &self.level().sets.rigid_body
+        &self.base().sets.rigid_body
     }
 
     fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet {
-        &mut self.level_mut().sets.rigid_body
+        &mut self.base_mut().sets.rigid_body
     }
 
     fn colliders(&self) -> &ColliderSet {
-        &self.level().sets.collider
+        &self.base().sets.collider
     }
 
     fn colliders_mut(&mut self) -> &mut ColliderSet {
-        &mut self.level_mut().sets.collider
+        &mut self.base_mut().sets.collider
     }
 
     fn add_sprite(&mut self, sprite: Box<dyn Sprite>) {
-        self.level_mut().sprites.push(sprite)
+        self.base_mut().sprites.push(sprite)
     }
 
     fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
-        let body = Box::new(Body::make(sprite, self.level_mut()));
+        let body = Box::new(Body::make(sprite, self.rglica()));
         let result = body.to_rglica();
         self.add_sprite(body);
         result
     }
 
     fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Wall> {
-        Wall::make(sprite, self.level_mut())
+        Wall::make(sprite, self.rglica())
     }
 
     fn set_camera_rotation(&mut self, angle: f32) {
@@ -125,21 +125,22 @@ pub trait Level: Debug {
     }
 
     fn remove(&mut self, sprite: u64) {
-        self.level_mut().remove(sprite)
+        self.base_mut().remove(sprite)
     }
 
-    fn level(&self) -> &LevelBase;
-    fn level_mut(&mut self) -> &mut LevelBase;
+    fn base(&self) -> &LevelBase;
+    fn base_mut(&mut self) -> &mut LevelBase;
+    fn rglica(&self) -> Rglica<dyn Level>;
 
     fn drawer(&self) -> &dyn SpritesDrawer {
-        self.level().drawer.deref()
+        self.base().drawer.deref()
     }
 
     fn drawer_mut(&mut self) -> &mut dyn SpritesDrawer {
-        self.level_mut().drawer.deref_mut()
+        self.base_mut().drawer.deref_mut()
     }
 
     fn set_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
-        self.level_mut().drawer = drawer
+        self.base_mut().drawer = drawer
     }
 }

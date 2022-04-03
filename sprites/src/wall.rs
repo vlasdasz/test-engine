@@ -14,15 +14,15 @@ pub struct Wall {
 }
 
 impl Wall {
-    pub fn make(mut sprite: SpriteBase, level: &mut (impl Level + 'static)) -> Rglica<Self> {
-        sprite.level = Rglica::from_ref(level.level());
+    pub fn make(mut sprite: SpriteBase, mut level: Rglica<dyn Level>) -> Rglica<Self> {
+        sprite.level = level;
         let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
             .translation(Vector2::new(sprite.position.x, sprite.position.y))
             .build();
-        let handle = level.level_mut().sets.collider.insert(collider);
+        let handle = level.base_mut().sets.collider.insert(collider);
         let boxed = Box::new(Wall { base: sprite, handle });
         let wall = boxed.to_rglica();
-        level.level_mut().sprites.push(boxed);
+        level.base_mut().sprites.push(boxed);
         wall
     }
 

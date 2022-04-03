@@ -1,7 +1,4 @@
-use std::{
-    fmt::Debug,
-    ops::{Deref, DerefMut},
-};
+use std::{fmt::Debug, ops::Deref};
 
 use gm::Point;
 use rapier2d::{
@@ -13,7 +10,7 @@ use rapier2d::{
 };
 use rtools::{address::Address, Event, Rglica, Unwrap};
 
-use crate::{sets::Sets, Level, Player, Sprite, SpritesDrawer};
+use crate::{sets::Sets, Player, Sprite, SpritesDrawer};
 
 pub struct LevelBase {
     pub player: Unwrap<Player>,
@@ -71,7 +68,6 @@ impl LevelBase {
             for sprite in &self.colliding_sprites {
                 dbg!(sprite.collider_handle());
             }
-
         }
     }
 
@@ -99,24 +95,6 @@ impl LevelBase {
         }
 
         self.sprites.remove(index);
-    }
-}
-
-impl Level for LevelBase {
-    fn level(&self) -> &LevelBase {
-        self
-    }
-
-    fn level_mut(&mut self) -> &mut LevelBase {
-        self
-    }
-
-    fn drawer(&self) -> &dyn SpritesDrawer {
-        self.drawer.deref()
-    }
-
-    fn drawer_mut(&mut self) -> &mut dyn SpritesDrawer {
-        self.drawer.deref_mut()
     }
 }
 

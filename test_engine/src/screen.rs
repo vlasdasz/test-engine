@@ -111,7 +111,7 @@ impl Screen {
 
         let level = self.ui.view.level_mut();
 
-        level.level_mut().update_physics();
+        level.base_mut().update_physics();
         level.update();
 
         level.set_cursor_position(self.ui.cursor_position);

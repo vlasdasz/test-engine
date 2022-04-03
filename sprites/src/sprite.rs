@@ -1,14 +1,11 @@
-use std::{
-    fmt::Debug,
-    ops::{Deref, DerefMut},
-};
+use std::fmt::Debug;
 
 use gl_image::Image;
 use gm::{Color, Point, Size};
 use rapier2d::{geometry::ColliderHandle, prelude::RigidBodyHandle};
-use rtools::address::Address;
+use rtools::{address::Address, Rglica};
 
-use crate::{Level, LevelBase, SpriteBase};
+use crate::{Level, SpriteBase};
 
 pub trait Sprite: Debug {
     fn update(&mut self) {}
@@ -79,14 +76,14 @@ pub trait Sprite: Debug {
         self.level_mut().remove(address);
     }
 
-    fn level(&self) -> &LevelBase {
+    fn level(&self) -> &Rglica<dyn Level> {
         debug_assert!(self.sprite().level.is_ok(), "Null Level");
-        self.sprite().level.deref()
+        &self.sprite().level
     }
 
-    fn level_mut(&mut self) -> &mut LevelBase {
+    fn level_mut(&mut self) -> &mut Rglica<dyn Level> {
         debug_assert!(self.sprite().level.is_ok(), "Null Level");
-        self.sprite_mut().level.deref_mut()
+        &mut self.sprite_mut().level
     }
 
     fn draw(&self) {

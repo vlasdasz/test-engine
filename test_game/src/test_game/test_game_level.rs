@@ -16,7 +16,7 @@ impl TestGameLevel {
     fn on_touch(&mut self, pos: Point) {
         if let Some(mut sprite) = self.sprite_at(pos) {
             sprite.set_selected(true);
-            self.level_mut().on_sprite_selected.trigger(sprite);
+            self.base_mut().on_sprite_selected.trigger(sprite);
             if let Some(mut old) = self.selected_sprite {
                 old.set_selected(false);
             }
@@ -27,14 +27,14 @@ impl TestGameLevel {
         if let Some(mut sprite) = self.selected_sprite {
             sprite.set_selected(false);
             self.selected_sprite = None;
-            self.level_mut().on_sprite_selected.trigger(Rglica::default());
+            self.base_mut().on_sprite_selected.trigger(Rglica::default());
         }
     }
 }
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        self.base.player = Player::make(Assets::image("frisk.png"), self.level_mut()).into();
+        self.base.player = Player::make(Assets::image("frisk.png"), self.rglica()).into();
         self.base.player.weapon.set_image(Assets::image("frisk.png"));
 
         let square = Assets::image("square.png");
@@ -55,11 +55,15 @@ impl Level for TestGameLevel {
         self.player().move_by_key(key)
     }
 
-    fn level(&self) -> &LevelBase {
+    fn base(&self) -> &LevelBase {
         &self.base
     }
 
-    fn level_mut(&mut self) -> &mut LevelBase {
+    fn base_mut(&mut self) -> &mut LevelBase {
         &mut self.base
+    }
+
+    fn rglica(&self) -> Rglica<dyn Level> {
+        (self as &dyn Level).to_rglica()
     }
 }

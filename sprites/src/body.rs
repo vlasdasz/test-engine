@@ -5,7 +5,7 @@ use rapier2d::{
     na::Vector2,
     prelude::{ColliderBuilder, RigidBodyBuilder, RigidBodyHandle},
 };
-use rtools::ToRglica;
+use rtools::{Rglica, ToRglica};
 
 use crate::{control::Control, Level, Sprite, SpriteBase};
 
@@ -17,8 +17,8 @@ pub struct Body {
 }
 
 impl Body {
-    pub fn make(sprite: SpriteBase, level: &mut (impl Level + 'static)) -> Self {
-        let level_base = level.level_mut();
+    pub fn make(sprite: SpriteBase, mut level: Rglica<dyn Level>) -> Self {
+        let level_base = level.base_mut();
 
         let rigid_body = RigidBodyBuilder::new_dynamic()
             .translation(Vector2::new(sprite.position.x, sprite.position.y))

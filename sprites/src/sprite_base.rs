@@ -1,15 +1,15 @@
 use gl_image::Image;
 use gm::{Color, Point, Rect, Size};
-use rtools::{IntoF32, Rglica, ToRglica};
+use rtools::{IntoF32, Rglica};
 
-use crate::{Level, LevelBase, Sprite};
+use crate::{Level, Sprite};
 
 #[derive(Default, Debug)]
 pub struct SpriteBase {
     pub(crate) position:    Point,
     pub(crate) size:        Size,
     pub(crate) rotation:    f32,
-    pub(crate) level:       Rglica<LevelBase>,
+    pub(crate) level:       Rglica<dyn Level>,
     pub(crate) is_selected: bool,
 
     pub color: Color,
@@ -17,8 +17,8 @@ pub struct SpriteBase {
 }
 
 impl SpriteBase {
-    pub(crate) fn with_level<T: Level + ?Sized>(mut self, level: &T) -> Self {
-        self.level = level.level().to_rglica();
+    pub(crate) fn with_level(mut self, level: Rglica<dyn Level>) -> Self {
+        self.level = level;
         self
     }
 }
