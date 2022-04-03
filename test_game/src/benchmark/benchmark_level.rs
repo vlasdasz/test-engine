@@ -1,4 +1,4 @@
-use rtools::{Animation, Rglica, ToRglica};
+use rtools::{Animation, Rglica, ToRglica, Unwrap};
 use test_engine::{
     assets::Assets,
     sprites::{Player, Wall},
@@ -14,6 +14,7 @@ pub struct BenchmarkLevel {
     left_animation:    Animation,
     right_animation:   Animation,
     floor_animation:   Animation,
+    pub player:        Rglica<Player>,
     pub bullets_count: u64,
 }
 
@@ -38,16 +39,20 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        self.base.player = Player::make(Assets::image("frisk.png"), self.rglica()).into();
-        self.base.player.weapon.set_image(Assets::image("ak.png"));
-        self.base.player.weapon.bullet_image = Assets::image("bullet.png").into();
-        self.base.player.weapon.bullet_speed = 100.0;
+        let player: Box<Player> = Player::make(Assets::image("frisk.png"), self.rglica()).into();
+
+        self.player = player.to_rglica();
+        self.base.player = Unwrap::from_box(player);
+
+        self.player.weapon.set_image(Assets::image("ak.png"));
+        self.player.weapon.bullet_image = Assets::image("bullet.png").into();
+        self.player.weapon.bullet_speed = 100.0;
         self.set_scale(1.2);
         self.make_walls();
     }
 
     fn update(&mut self) {
-        self.player().weapon.shoot_at((10, 5).into());
+        self.player.weapon.shoot_at((10, 5).into());
         self.bullets_count += 1;
         self.left_wall.set_x(self.left_animation.value());
         self.right_wall.set_x(self.right_animation.value());

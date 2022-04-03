@@ -1,5 +1,3 @@
-use std::borrow::BorrowMut;
-
 use rtools::{Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
@@ -33,14 +31,13 @@ impl TestGameView {
     fn setup_level(&mut self) {
         self.level.setup();
 
-        let level = self.level.borrow_mut().to_rglica();
-
+        let mut player = self.level.player;
         self.dpad
             .on_press
-            .subscribe(move |direction| level.player().move_by_direction(direction));
+            .subscribe(move |direction| player.move_by_direction(direction));
 
         self.left_stick.on_direction_change.subscribe(move |direction| {
-            level.player().add_impulse(direction);
+            player.add_impulse(direction);
         });
     }
 

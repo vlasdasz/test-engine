@@ -11,7 +11,7 @@ use rapier2d::{
 };
 use rtools::{Rglica, ToRglica};
 
-use crate::{Body, LevelBase, Player, Sprite, SpriteBase, SpritesDrawer, Wall};
+use crate::{Body, LevelBase, Sprite, SpriteBase, SpritesDrawer, Wall};
 
 pub trait Level: Debug {
     fn setup(&mut self) {}
@@ -78,7 +78,7 @@ pub trait Level: Debug {
         self.base_mut().gravity = Vector2::new(g.x, g.y)
     }
 
-    fn player(&self) -> Rglica<Player> {
+    fn player(&self) -> Rglica<dyn Sprite> {
         debug_assert!(self.base().player.is_ok());
         self.base().player.to_rglica()
     }

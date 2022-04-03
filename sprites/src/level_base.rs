@@ -12,10 +12,10 @@ use rapier2d::{
 };
 use rtools::{address::Address, Event, Rglica, ToRglica, Unwrap};
 
-use crate::{sets::Sets, Player, Sprite, SpritesDrawer};
+use crate::{sets::Sets, Sprite, SpritesDrawer};
 
 pub struct LevelBase {
-    pub player: Unwrap<Player>,
+    pub player: Unwrap<dyn Sprite>,
     pub drawer: Rglica<dyn SpritesDrawer>,
 
     pub cursor_position: Point,

@@ -5,7 +5,10 @@ use std::{
 
 use test_engine::app::App;
 
+#[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
+#[allow(unused_imports)]
+use crate::test_game::TestGameView;
 
 mod benchmark;
 mod test_game;
@@ -14,7 +17,7 @@ mod test_game;
 #[macro_use]
 extern crate log;
 
-static mut APP: *mut App<BenchmarkView> = ptr::null_mut();
+static mut APP: *mut App<TestGameView> = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {

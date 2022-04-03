@@ -1,4 +1,4 @@
-use rtools::{Rglica, ToRglica};
+use rtools::{Rglica, ToRglica, Unwrap};
 use test_engine::{
     assets::Assets,
     gm::Point,
@@ -10,6 +10,7 @@ use test_engine::{
 pub struct TestGameLevel {
     base:            LevelBase,
     selected_sprite: Option<Rglica<dyn Sprite>>,
+    pub player:      Rglica<Player>,
 }
 
 impl TestGameLevel {
@@ -34,8 +35,12 @@ impl TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        self.base.player = Player::make(Assets::image("frisk.png"), self.rglica()).into();
-        self.base.player.weapon.set_image(Assets::image("frisk.png"));
+        let player: Box<Player> = Player::make(Assets::image("frisk.png"), self.rglica()).into();
+
+        self.player = player.to_rglica();
+        self.base.player = Unwrap::from_box(player);
+
+        self.player.weapon.set_image(Assets::image("frisk.png"));
 
         let square = Assets::image("square.png");
 
@@ -52,7 +57,7 @@ impl Level for TestGameLevel {
     }
 
     fn on_key_pressed(&mut self, key: String) {
-        self.player().move_by_key(key)
+        self.player.move_by_key(key)
     }
 
     fn base(&self) -> &LevelBase {
