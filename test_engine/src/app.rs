@@ -5,9 +5,10 @@ use std::{
 };
 
 use gl_wrapper::monitor::Monitor;
+use gm::volume::GyroData;
 use rtools::Unwrap;
 use tokio::runtime::Runtime;
-use ui::{input::touch::Event, Touch};
+use ui::{input::touch::TouchEvent, Touch};
 
 use crate::{game_view::GameView, Screen};
 
@@ -47,8 +48,14 @@ impl<T: GameView + 'static> App<T> {
             self.screen.ui.on_touch(Touch {
                 id:       id.into(),
                 position: (x, y).into(),
-                event:    Event::from_int(event),
+                event:    TouchEvent::from_int(event),
             })
+        });
+    }
+
+    pub fn set_gyro(&mut self, pitch: c_float, roll: c_float, yaw: c_float) {
+        self.runtime.block_on(async {
+            self.screen.on_gyro_changed(GyroData { pitch, roll, yaw });
         });
     }
 

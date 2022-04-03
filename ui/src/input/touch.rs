@@ -43,13 +43,13 @@ impl ButtonState {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub enum Event {
+pub enum TouchEvent {
     Began,
     Moved,
     Ended,
 }
 
-impl Event {
+impl TouchEvent {
     pub fn from_state(state: ButtonState) -> Self {
         match state {
             ButtonState::Up => Self::Ended,
@@ -58,11 +58,11 @@ impl Event {
         }
     }
 
-    pub fn from_int(event: i32) -> Event {
+    pub fn from_int(event: i32) -> TouchEvent {
         match event {
-            0 => Event::Began,
-            1 => Event::Moved,
-            2 => Event::Ended,
+            0 => TouchEvent::Began,
+            1 => TouchEvent::Moved,
+            2 => TouchEvent::Ended,
             _ => unreachable!("Invalid value for touch event"),
         }
     }
@@ -72,19 +72,19 @@ impl Event {
 pub struct Touch {
     pub id:       u64,
     pub position: Point,
-    pub event:    Event,
+    pub event:    TouchEvent,
 }
 
 impl Touch {
     pub fn is_began(&self) -> bool {
-        self.event == Event::Began
+        self.event == TouchEvent::Began
     }
 
     pub fn is_moved(&self) -> bool {
-        self.event == Event::Moved
+        self.event == TouchEvent::Moved
     }
 
     pub fn is_ended(&self) -> bool {
-        self.event == Event::Ended
+        self.event == TouchEvent::Ended
     }
 }

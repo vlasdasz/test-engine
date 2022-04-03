@@ -8,14 +8,14 @@ use chrono::Utc;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::{events::Events, GLDrawer};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
-use gm::{Color, Size};
+use gm::{volume::GyroData, Color, Size};
 use rtools::{ToRglica, Unwrap};
 use sprites::{Sprite, SpritesDrawer};
 
 use crate::{assets::Assets, paths, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 
 pub struct Screen {
-    pub ui: UILayer,
+    pub ui: Box<UILayer>,
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub events: Box<Events>,
@@ -144,6 +144,10 @@ impl Screen {
         self.sprites_drawer.set_resolution(size);
         self.sprites_drawer.set_camera_position((0, 0).into());
         self.update();
+    }
+
+    pub(crate) fn on_gyro_changed(&mut self, gyro: GyroData) {
+        self.ui.view.level_mut().on_gyro_changed(gyro)
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]

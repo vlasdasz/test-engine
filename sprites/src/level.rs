@@ -4,7 +4,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::Point;
+use gm::{volume::GyroData, Point};
 use rapier2d::{
     na::Vector2,
     prelude::{ColliderSet, RigidBodySet},
@@ -19,6 +19,8 @@ pub trait Level: Debug {
     fn update(&mut self) {}
 
     fn on_key_pressed(&mut self, _: String) {}
+
+    fn on_gyro_changed(&mut self, _: GyroData) {}
 
     fn cursor_position(&self) -> Point {
         self.base().cursor_position
@@ -105,8 +107,11 @@ pub trait Level: Debug {
         &mut self.base_mut().sets.collider
     }
 
-    fn add_sprite(&mut self, sprite: Box<dyn Sprite>) {
-        self.base_mut().sprites.push(sprite)
+    fn add_sprite(&mut self, mut sprite: Box<dyn Sprite>) -> Rglica<dyn Sprite> {
+        let rglica = sprite.to_rglica();
+        sprite.sprite_mut().level = self.rglica();
+        self.base_mut().sprites.push(sprite);
+        rglica
     }
 
     fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {

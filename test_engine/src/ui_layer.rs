@@ -8,7 +8,7 @@ use gm::Point;
 use rtools::{Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 use ui::{
-    input::touch::{ButtonState, Event},
+    input::touch::{ButtonState, TouchEvent},
     view_base::{add_view, ViewBase},
     Touch, View,
 };
@@ -34,8 +34,8 @@ pub struct UILayer {
 }
 
 impl UILayer {
-    pub fn new(assets: Rc<Assets>, sprites_drawer: Rglica<dyn SpritesDrawer>) -> Self {
-        Self {
+    pub fn new(assets: Rc<Assets>, sprites_drawer: Rglica<dyn SpritesDrawer>) -> Box<Self> {
+        Box::new(Self {
             cursor_position: Default::default(),
             root_view: ViewBase::boxed(),
             debug_view: Default::default(),
@@ -47,7 +47,7 @@ impl UILayer {
             fps: Default::default(),
             prev_time: Default::default(),
             frame_time: Default::default(),
-        }
+        })
     }
 }
 
@@ -78,7 +78,7 @@ impl UILayer {
         self.on_touch(Touch {
             id:       1,
             position: self.cursor_position,
-            event:    Event::Moved,
+            event:    TouchEvent::Moved,
         })
     }
 
@@ -86,7 +86,7 @@ impl UILayer {
         self.on_touch(Touch {
             id:       1,
             position: self.cursor_position,
-            event:    Event::from_state(ButtonState::from_glfw(state)),
+            event:    TouchEvent::from_state(ButtonState::from_glfw(state)),
         })
     }
 

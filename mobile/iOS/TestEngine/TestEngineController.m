@@ -6,15 +6,18 @@
 //
 
 #import <GLKit/GLKit.h>
-#include <OpenGLES/ES3/gl.h>
+#import <OpenGLES/ES3/gl.h>
+#import <CoreMotion/CoreMotion.h>
 
 #import "TestEngineController.h"
 
-#include "test_engine.h"
+#import "test_engine.h"
+
 
 
 @interface TestEngineController ()
-
+@property (nonatomic) CMMotionManager* motion;
+@property (nonatomic) NSTimer* timer;
 @end
 
 @implementation TestEngineController
@@ -24,7 +27,7 @@
     [self setup];
     
     CGRect screen = [[UIScreen mainScreen] bounds];
-
+    
     set_monitor(326,
                 [UIScreen mainScreen].scale,
                 60,
@@ -32,7 +35,7 @@
                 screen.size.height,
                 300,
                 300,
-                7);    
+                7);
 }
 
 - (void)viewDidLayoutSubviews {
@@ -41,6 +44,11 @@
 }
 
 - (void)update {
+    CMAttitude *gyro = self.motion.deviceMotion.attitude;
+    if (gyro != nil) {
+        set_gyro(gyro.pitch, gyro.roll, gyro.yaw);
+    }
+    
     update_screen();
 }
 
@@ -55,7 +63,7 @@
     } else {
         NSLog(@"%s", "kEAGLRenderingAPIOpenGLES3");
     }
-
+    
     NSLog(@"%@", context);
     [EAGLContext setCurrentContext:context];
     GLKView* view = (GLKView*)self.view;
@@ -64,6 +72,45 @@
     view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
     view.drawableStencilFormat = GLKViewDrawableStencilFormat8;
     view.multipleTouchEnabled = true;
+    
+    [self startGyro];
+}
+
+- (void)startGyro {
+    self.motion = [CMMotionManager new];
+    
+    if (!self.motion.isGyroAvailable) {
+        return;
+    }
+    
+    self.motion.gyroUpdateInterval = 1.0 / 60.0;
+    [self.motion startGyroUpdates];
+    [self.motion startDeviceMotionUpdates];
+
+//
+//    if motion.isGyroAvailable {
+//               self.motion.gyroUpdateInterval = 1.0 / 60.0
+//               self.motion.startGyroUpdates()
+//
+//               // Configure a timer to fetch the accelerometer data.
+//
+//               self.timer = Timer(fire: Date(), interval: (1.0/60.0),
+//
+//               repeats: true, block: { (timer) in
+//   // Get the gyro data.
+//                   if let data = self.motion.gyroData {
+//                       let x = data.rotationRate.x
+//                       let y = data.rotationRate.y
+//                       let z = data.rotationRate.z
+//                       print("gyro works")
+//               // Use the gyroscope data in your app.
+//                   }
+//                   print("outloop")
+//               })
+//
+//         // Add the timer to the current run loop.
+//               RunLoop.current.add(self.timer, forMode: RunLoop.Mode.default)
+//           }
 }
 
 - (void)process_touch:(UITouch*)touch event:(int)event {
