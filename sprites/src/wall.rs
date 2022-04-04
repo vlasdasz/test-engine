@@ -1,7 +1,7 @@
-use gm::{Point, Rect};
+use gm::{Rect};
 use rapier2d::{
     na::Vector2,
-    prelude::{Collider, ColliderBuilder},
+    prelude::{ColliderBuilder},
 };
 use rtools::{IntoF32, Rglica};
 
@@ -13,15 +13,6 @@ pub struct Wall {
 }
 
 impl Wall {
-    pub fn collider(&self) -> &Collider {
-        &self.level().colliders()[self.data.collider_handle.unwrap()]
-    }
-
-    pub fn collider_mut(&mut self) -> &mut Collider {
-        let handle = self.data.collider_handle.unwrap();
-        &mut self.level_mut().colliders_mut()[handle]
-    }
-
     pub fn set_x(&mut self, x: impl IntoF32) {
         let mut pos = self.position();
         pos.x = x.into_f32();
@@ -33,18 +24,9 @@ impl Wall {
         pos.y = y.into_f32();
         self.set_position(pos);
     }
-
-    pub fn set_position(&mut self, pos: Point) {
-        self.collider_mut().set_position([pos.x, pos.y].into())
-    }
 }
 
 impl Sprite for Wall {
-    fn position(&self) -> Point {
-        let pos = self.collider().position().translation;
-        (pos.x, pos.y).into()
-    }
-
     fn data(&self) -> &SpriteData {
         &self.data
     }

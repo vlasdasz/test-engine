@@ -22,17 +22,17 @@ impl BenchmarkLevel {
     fn make_walls(&mut self) {
         let square = Assets::image("square.png");
 
-        let floor = Wall::make((0, 0, 100, 4).into(), self.rglica());
+        let floor = Wall::make((0, 0, 100, 10).into(), self.rglica());
         self.floor = floor.to_rglica();
         self.floor.set_image(square.clone());
         self.add_sprite(floor);
 
-        let left_wall = Wall::make((0, 0, 100, 4).into(), self.rglica());
+        let left_wall = Wall::make((-40, 0, 10, 100).into(), self.rglica());
         self.left_wall = left_wall.to_rglica();
         self.left_wall.set_image(square.clone());
         self.add_sprite(left_wall);
 
-        let right_wall = Wall::make((0, 0, 100, 4).into(), self.rglica());
+        let right_wall = Wall::make((40, 0, 10, 100).into(), self.rglica());
         self.right_wall = right_wall.to_rglica();
         self.right_wall.set_image(square);
         self.add_sprite(right_wall);
@@ -55,7 +55,7 @@ impl Level for BenchmarkLevel {
         self.player.weapon.set_image(Assets::image("ak.png"));
         self.player.weapon.bullet_image = Assets::image("bullet.png").into();
         self.player.weapon.bullet_speed = 100.0;
-        self.set_scale(1.2);
+        self.set_scale(1.0);
         self.make_walls();
     }
 
@@ -64,7 +64,6 @@ impl Level for BenchmarkLevel {
         self.bullets_count += 1;
         self.left_wall.set_x(self.left_animation.value());
         self.right_wall.set_x(self.right_animation.value());
-        // self.floor.set_y(self.floor_animation.value());
     }
 
     fn base(&self) -> &LevelBase {
