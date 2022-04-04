@@ -1,27 +1,19 @@
-use gm::Point;
+use gm::{Point, Rect};
 use rapier2d::{
     na::Vector2,
     prelude::{Collider, ColliderBuilder, ColliderHandle},
 };
-use rtools::{IntoF32, Rglica, ToRglica};
+use rtools::{IntoF32, Rglica};
 
-use crate::{Level, Sprite, SpriteBase};
+use crate::{Level, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Wall {
-    base:   SpriteBase,
+    base:   SpriteData,
     handle: ColliderHandle,
 }
 
 impl Wall {
-    pub fn make(sprite: SpriteBase, mut level: Rglica<dyn Level>) -> Box<Self> {
-        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
-            .translation(Vector2::new(sprite.position.x, sprite.position.y))
-            .build();
-        let handle = level.base_mut().sets.collider.insert(collider);
-        Box::new(Wall { base: sprite, handle })
-    }
-
     pub fn collider(&self) -> &Collider {
         &self.level().colliders()[self.handle]
     }
@@ -49,12 +41,6 @@ impl Wall {
 }
 
 impl Sprite for Wall {
-    fn update(&mut self) {
-        let mut this = self.to_rglica();
-        this.sprite_mut().position = self.position();
-        this.sprite_mut().rotation = self.rotation();
-    }
-
     fn position(&self) -> Point {
         let pos = self.collider().position().translation;
         (pos.x, pos.y).into()
@@ -64,11 +50,24 @@ impl Sprite for Wall {
         self.handle.into()
     }
 
-    fn sprite(&self) -> &SpriteBase {
+    fn data(&self) -> &SpriteData {
         &self.base
     }
 
-    fn sprite_mut(&mut self) -> &mut SpriteBase {
+    fn data_mut(&mut self) -> &mut SpriteData {
         &mut self.base
+    }
+
+    fn make(rect: Rect, mut level: Rglica<dyn Level>) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        let mut sprite = SpriteData::from(rect);
+        sprite.level = level;
+        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
+            .translation(Vector2::new(sprite.position.x, sprite.position.y))
+            .build();
+        let handle = level.base_mut().sets.collider.insert(collider);
+        Box::new(Wall { base: sprite, handle })
     }
 }

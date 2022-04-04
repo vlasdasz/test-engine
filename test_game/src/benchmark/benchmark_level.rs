@@ -45,9 +45,11 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        let player: Box<Player> = Player::make(Assets::image("frisk.png"), self.rglica()).into();
+        let player = Player::make((0, 0, 1, 1).into(), self.rglica());
 
         self.player = player.to_rglica();
+        self.player.set_image(Assets::image("frisk.png"));
+
         self.base.player = Unwrap::from_box(player);
 
         self.player.weapon.set_image(Assets::image("ak.png"));

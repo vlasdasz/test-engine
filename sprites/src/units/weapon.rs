@@ -4,31 +4,20 @@ use std::{
 };
 
 use gl_image::Image;
-use gm::Point;
+use gm::{Point, Rect};
 use rtools::Rglica;
 
-use crate::{Body, Level, Sprite, SpriteBase};
+use crate::{Body, Level, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Weapon {
-    sprite:              SpriteBase,
+    sprite:              SpriteData,
     pub(crate) velocity: Point,
     pub bullet_speed:    f32,
     pub bullet_image:    Option<Image>,
 }
 
 impl Weapon {
-    pub fn new(level: Rglica<dyn Level>) -> Self {
-        let mut sprite: SpriteBase = (0, 0, 2365.0 / 1000.0, 854.0 / 1000.0).into();
-        sprite.level = level;
-        Self {
-            sprite,
-            velocity: Default::default(),
-            bullet_speed: 1.0,
-            bullet_image: None,
-        }
-    }
-
     pub fn shoot_at(&mut self, pos: Point) {
         let vector = (pos - self.position()).normalized();
         let pos = self.position() + vector * 3.2;
@@ -41,7 +30,7 @@ impl Weapon {
 
         body.set_rotation(self.rotation());
         body.set_velocity(vel);
-        body.sprite_mut().tag = "bullet".into();
+        body.data_mut().tag = "bullet".into();
 
         if let Some(image) = &self.bullet_image {
             body.set_image(image.clone())
@@ -50,24 +39,38 @@ impl Weapon {
 }
 
 impl Sprite for Weapon {
-    fn sprite(&self) -> &SpriteBase {
+    fn data(&self) -> &SpriteData {
         &self.sprite
     }
 
-    fn sprite_mut(&mut self) -> &mut SpriteBase {
+    fn data_mut(&mut self) -> &mut SpriteData {
         &mut self.sprite
+    }
+
+    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        let mut sprite = SpriteData::from(rect);
+        sprite.level = level;
+        Box::new(Self {
+            sprite,
+            velocity: Default::default(),
+            bullet_speed: 1.0,
+            bullet_image: None,
+        })
     }
 }
 
 impl Deref for Weapon {
-    type Target = SpriteBase;
-    fn deref(&self) -> &SpriteBase {
+    type Target = SpriteData;
+    fn deref(&self) -> &SpriteData {
         &self.sprite
     }
 }
 
 impl DerefMut for Weapon {
-    fn deref_mut(&mut self) -> &mut SpriteBase {
+    fn deref_mut(&mut self) -> &mut SpriteData {
         &mut self.sprite
     }
 }

@@ -1,10 +1,10 @@
 use std::ops::{Deref, DerefMut};
 
-use gl_image::Image;
+use gm::Rect;
 use rapier2d::{geometry::ColliderHandle, prelude::ActiveEvents};
 use rtools::{Rglica, ToRglica};
 
-use crate::{Body, Level, Sprite, SpriteBase};
+use crate::{Body, Level, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Unit {
@@ -19,19 +19,6 @@ impl Unit {
         let rglica = (self as &dyn Sprite).to_rglica();
         self.level_mut().base_mut().colliding_sprites.push(rglica);
     }
-
-    pub fn make(image: Image, level: Rglica<dyn Level>) -> Unit {
-        let size = image.size.fit_height(2);
-        let mut body = Body::make((0, 10, size.width, size.height).into(), level);
-
-        body.lock_rotations();
-        body.collider_mut().set_restitution(0.0);
-        body.set_image(image);
-
-        Unit {
-            body: Box::into_inner(body),
-        }
-    }
 }
 
 impl Sprite for Unit {
@@ -43,12 +30,26 @@ impl Sprite for Unit {
         self.body.collider_handle()
     }
 
-    fn sprite(&self) -> &SpriteBase {
-        self.body.sprite()
+    fn data(&self) -> &SpriteData {
+        self.body.data()
     }
 
-    fn sprite_mut(&mut self) -> &mut SpriteBase {
-        self.body.sprite_mut()
+    fn data_mut(&mut self) -> &mut SpriteData {
+        self.body.data_mut()
+    }
+
+    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        let mut body = Body::make(rect, level);
+
+        body.lock_rotations();
+        body.collider_mut().set_restitution(0.0);
+
+        Box::new(Unit {
+            body: Box::into_inner(body),
+        })
     }
 }
 

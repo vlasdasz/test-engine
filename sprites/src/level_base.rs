@@ -75,7 +75,7 @@ impl LevelBase {
                     };
 
                     if let Some(other) = self.sprite_with_index(other_index.index()) {
-                        sprite.to_rglica().sprite_mut().on_collision.trigger(other);
+                        sprite.to_rglica().data_mut().on_collision.trigger(other);
                     }
                 }
             }

@@ -1,47 +1,22 @@
-use gm::Point;
+use gm::{Point, Rect};
 use rapier2d::{
     dynamics::RigidBody,
     geometry::{Collider, ColliderHandle},
     na::Vector2,
     prelude::{ColliderBuilder, RigidBodyBuilder, RigidBodyHandle},
 };
-use rtools::{Rglica, ToRglica};
+use rtools::Rglica;
 
-use crate::{control::Control, Level, Sprite, SpriteBase};
+use crate::{control::Control, Level, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Body {
-    sprite:          SpriteBase,
+    sprite:          SpriteData,
     rigid_handle:    RigidBodyHandle,
     collider_handle: ColliderHandle,
 }
 
 impl Body {
-    pub fn make(sprite: SpriteBase, mut level: Rglica<dyn Level>) -> Box<Self> {
-        let level_base = level.base_mut();
-
-        let rigid_body = RigidBodyBuilder::new_dynamic()
-            .translation(Vector2::new(sprite.position.x, sprite.position.y))
-            .build();
-        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
-            .restitution(0.7)
-            .build();
-
-        let rigid_handle = level_base.sets.rigid_body.insert(rigid_body);
-
-        let collider_handle = level_base.sets.collider.insert_with_parent(
-            collider,
-            rigid_handle,
-            &mut level_base.sets.rigid_body,
-        );
-
-        Box::new(Self {
-            sprite: sprite.with_level(level),
-            rigid_handle,
-            collider_handle,
-        })
-    }
-
     pub fn body(&self) -> &RigidBody {
         &self.level().rigid_bodies()[self.rigid_handle]
     }
@@ -75,12 +50,6 @@ impl Body {
 }
 
 impl Sprite for Body {
-    fn update(&mut self) {
-        let mut this = self.to_rglica();
-        this.sprite_mut().position = self.position();
-        this.sprite_mut().rotation = self.rotation();
-    }
-
     fn position(&self) -> Point {
         (self.body().translation().x, self.body().translation().y).into()
     }
@@ -102,12 +71,43 @@ impl Sprite for Body {
         self.collider_handle.into()
     }
 
-    fn sprite(&self) -> &SpriteBase {
+    fn data(&self) -> &SpriteData {
         &self.sprite
     }
 
-    fn sprite_mut(&mut self) -> &mut SpriteBase {
+    fn data_mut(&mut self) -> &mut SpriteData {
         &mut self.sprite
+    }
+
+    fn make(rect: Rect, mut level: Rglica<dyn Level>) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        let mut sprite = SpriteData::from(rect);
+        sprite.level = level;
+
+        let level_base = level.base_mut();
+
+        let rigid_body = RigidBodyBuilder::new_dynamic()
+            .translation(Vector2::new(sprite.position.x, sprite.position.y))
+            .build();
+        let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
+            .restitution(0.7)
+            .build();
+
+        let rigid_handle = level_base.sets.rigid_body.insert(rigid_body);
+
+        let collider_handle = level_base.sets.collider.insert_with_parent(
+            collider,
+            rigid_handle,
+            &mut level_base.sets.rigid_body,
+        );
+
+        Box::new(Self {
+            sprite: sprite.with_level(level),
+            rigid_handle,
+            collider_handle,
+        })
     }
 }
 

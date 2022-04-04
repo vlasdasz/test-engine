@@ -7,7 +7,7 @@ use crate::{Level, Sprite};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
-pub struct SpriteBase {
+pub struct SpriteData {
     pub(crate) position:    Point,
     pub(crate) size:        Size,
     pub(crate) rotation:    f32,
@@ -22,14 +22,14 @@ pub struct SpriteBase {
     pub on_collision: Event<Rglica<dyn Sprite>>,
 }
 
-impl SpriteBase {
+impl SpriteData {
     pub(crate) fn with_level(mut self, level: Rglica<dyn Level>) -> Self {
         self.level = level;
         self
     }
 }
 
-impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteBase {
+impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteData {
     fn from(data: (X, Y, W, H)) -> Self {
         Self {
             position: (data.0.into_f32(), data.1.into_f32()).into(),
@@ -40,7 +40,7 @@ impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Spri
     }
 }
 
-impl From<Rect> for SpriteBase {
+impl From<Rect> for SpriteData {
     fn from(rect: Rect) -> Self {
         Self {
             position: rect.origin,
@@ -51,12 +51,21 @@ impl From<Rect> for SpriteBase {
     }
 }
 
-impl Sprite for SpriteBase {
-    fn sprite(&self) -> &SpriteBase {
+impl Sprite for SpriteData {
+    fn data(&self) -> &SpriteData {
         self
     }
 
-    fn sprite_mut(&mut self) -> &mut SpriteBase {
+    fn data_mut(&mut self) -> &mut SpriteData {
         self
+    }
+
+    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        let mut sprite = SpriteData::from(rect);
+        sprite.level = level;
+        Box::new(sprite)
     }
 }

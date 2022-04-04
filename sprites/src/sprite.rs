@@ -1,29 +1,29 @@
 use std::fmt::Debug;
 
 use gl_image::Image;
-use gm::{Color, Point, Size};
+use gm::{Color, Point, Rect, Size};
 use rapier2d::{geometry::ColliderHandle, prelude::RigidBodyHandle};
 use rtools::{address::Address, Rglica};
 
-use crate::{Level, SpriteBase};
+use crate::{Level, SpriteData};
 
 pub trait Sprite: Debug {
     fn update(&mut self) {}
 
     fn size(&self) -> Size {
-        self.sprite().size
+        self.data().size
     }
 
     fn position(&self) -> Point {
-        self.sprite().position
+        self.data().position
     }
 
     fn rotation(&self) -> f32 {
-        self.sprite().rotation
+        self.data().rotation
     }
 
     fn set_rotation(&mut self, rotation: f32) {
-        self.sprite_mut().rotation = rotation
+        self.data_mut().rotation = rotation
     }
 
     fn contains(&self, point: Point) -> bool {
@@ -36,23 +36,23 @@ pub trait Sprite: Debug {
     }
 
     fn color(&self) -> Color {
-        self.sprite().color
+        self.data().color
     }
 
     fn set_color(&mut self, color: Color) {
-        self.sprite_mut().color = color
+        self.data_mut().color = color
     }
 
     fn image(&self) -> Option<&Image> {
-        self.sprite().image.as_ref()
+        self.data().image.as_ref()
     }
 
     fn image_mut(&mut self) -> Option<&mut Image> {
-        self.sprite_mut().image.as_mut()
+        self.data_mut().image.as_mut()
     }
 
     fn set_image(&mut self, image: Image) {
-        self.sprite_mut().image = image.into()
+        self.data_mut().image = image.into()
     }
 
     fn rigid_body_handle(&self) -> Option<RigidBodyHandle> {
@@ -64,11 +64,11 @@ pub trait Sprite: Debug {
     }
 
     fn is_selected(&self) -> bool {
-        self.sprite().is_selected
+        self.data().is_selected
     }
 
     fn set_selected(&mut self, selected: bool) {
-        self.sprite_mut().is_selected = selected
+        self.data_mut().is_selected = selected
     }
 
     fn remove(&mut self) {
@@ -77,19 +77,22 @@ pub trait Sprite: Debug {
     }
 
     fn level(&self) -> &Rglica<dyn Level> {
-        debug_assert!(self.sprite().level.is_ok(), "Null Level");
-        &self.sprite().level
+        debug_assert!(self.data().level.is_ok(), "Null Level");
+        &self.data().level
     }
 
     fn level_mut(&mut self) -> &mut Rglica<dyn Level> {
-        debug_assert!(self.sprite().level.is_ok(), "Null Level");
-        &mut self.sprite_mut().level
+        debug_assert!(self.data().level.is_ok(), "Null Level");
+        &mut self.data_mut().level
     }
 
     fn draw(&self) {
-        self.level().drawer().draw(self.sprite())
+        self.level().drawer().draw(self.data())
     }
 
-    fn sprite(&self) -> &SpriteBase;
-    fn sprite_mut(&mut self) -> &mut SpriteBase;
+    fn data(&self) -> &SpriteData;
+    fn data_mut(&mut self) -> &mut SpriteData;
+    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    where
+        Self: Sized;
 }

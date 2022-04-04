@@ -107,23 +107,9 @@ pub trait Level: Debug {
         &mut self.base_mut().sets.collider
     }
 
-    fn add_sprite(&mut self, mut sprite: Box<dyn Sprite>) -> Rglica<dyn Sprite> {
-        let rglica = sprite.to_rglica();
-        sprite.sprite_mut().level = self.rglica();
+    fn add_sprite(&mut self, sprite: Box<dyn Sprite>) {
         self.base_mut().sprites.push(sprite);
-        rglica
     }
-
-    // fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
-    //     let body = Box::new(Body::make(sprite, self.rglica()));
-    //     let result = body.to_rglica();
-    //     self.add_sprite(body);
-    //     result
-    // }
-    //
-    // fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Wall> {
-    //     Wall::make(sprite, self.rglica())
-    // }
 
     fn set_camera_rotation(&mut self, angle: f32) {
         self.drawer().set_camera_rotation(angle)
@@ -132,10 +118,6 @@ pub trait Level: Debug {
     fn remove(&mut self, sprite: u64) {
         self.base_mut().remove(sprite)
     }
-
-    fn base(&self) -> &LevelBase;
-    fn base_mut(&mut self) -> &mut LevelBase;
-    fn rglica(&self) -> Rglica<dyn Level>;
 
     fn drawer(&self) -> &dyn SpritesDrawer {
         self.base().drawer.deref()
@@ -148,4 +130,8 @@ pub trait Level: Debug {
     fn set_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
         self.base_mut().drawer = drawer
     }
+
+    fn base(&self) -> &LevelBase;
+    fn base_mut(&mut self) -> &mut LevelBase;
+    fn rglica(&self) -> Rglica<dyn Level>;
 }

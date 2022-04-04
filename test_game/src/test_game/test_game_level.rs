@@ -35,9 +35,10 @@ impl TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        let player: Box<Player> = Player::make(Assets::image("frisk.png"), self.rglica()).into();
+        let player = Player::make((0, 0, 1, 1).into(), self.rglica());
 
         self.player = player.to_rglica();
+        self.player.set_image(Assets::image("frisk.png"));
         self.base.player = Unwrap::from_box(player);
 
         self.player.weapon.set_image(Assets::image("frisk.png"));
@@ -53,7 +54,7 @@ impl Level for TestGameLevel {
         self.add_sprite(wall);
 
         let mut wall = Wall::make((-20, 0, 1, 100).into(), self.rglica());
-        wall.set_image(square.clone());
+        wall.set_image(square);
         self.add_sprite(wall);
 
         for i in 0..50 {

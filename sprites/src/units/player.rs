@@ -1,10 +1,9 @@
 use std::ops::{Deref, DerefMut};
 
-use gl_image::Image;
-use gm::Point;
+use gm::{Point, Rect};
 use rtools::Rglica;
 
-use crate::{Level, Sprite, SpriteBase, Unit, Weapon};
+use crate::{Level, Sprite, SpriteData, Unit, Weapon};
 
 #[derive(Debug)]
 pub struct Player {
@@ -12,19 +11,9 @@ pub struct Player {
     pub weapon: Weapon,
 }
 
-impl Player {
-    pub fn make(image: Image, level: Rglica<dyn Level>) -> Self {
-        Player {
-            unit:   Unit::make(image, level),
-            weapon: Weapon::new(level),
-        }
-    }
-}
-
 impl Sprite for Player {
     fn update(&mut self) {
         let cursor = self.level().cursor_position();
-        self.unit.update();
         self.weapon.rotation = self.position().angle_to(cursor);
         self.weapon.position = self.unit.position();
         self.weapon.velocity = self.velocity();
@@ -46,12 +35,22 @@ impl Sprite for Player {
         self.weapon.draw();
     }
 
-    fn sprite(&self) -> &SpriteBase {
-        self.unit.sprite()
+    fn data(&self) -> &SpriteData {
+        self.unit.data()
     }
 
-    fn sprite_mut(&mut self) -> &mut SpriteBase {
-        self.unit.sprite_mut()
+    fn data_mut(&mut self) -> &mut SpriteData {
+        self.unit.data_mut()
+    }
+
+    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        Box::new(Player {
+            unit:   *Unit::make(rect, level),
+            weapon: *Weapon::make(rect, level),
+        })
     }
 }
 
