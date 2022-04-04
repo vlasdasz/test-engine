@@ -35,6 +35,8 @@ impl Weapon {
         if let Some(image) = &self.bullet_image {
             body.set_image(image.clone())
         }
+
+        self.level.add_sprite(body);
     }
 }
 

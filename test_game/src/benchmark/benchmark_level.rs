@@ -45,7 +45,7 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        let player = Player::make((0, 0, 1, 1).into(), self.rglica());
+        let player = Player::make((0, 5, 2, 2).into(), self.rglica());
 
         self.player = player.to_rglica();
         self.player.set_image(Assets::image("frisk.png"));

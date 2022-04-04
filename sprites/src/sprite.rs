@@ -27,7 +27,7 @@ pub trait Sprite: Debug {
 
     fn rotation(&self) -> f32 {
         if self.data().rigid_handle.is_some() {
-            return self.rigid_body().rotation().angle()
+            return self.rigid_body().rotation().angle();
         }
         self.data().rotation
     }
@@ -35,8 +35,7 @@ pub trait Sprite: Debug {
     fn set_rotation(&mut self, rotation: f32) {
         if self.data().rigid_handle.is_some() {
             self.rigid_body_mut().set_rotation(rotation, true);
-        }
-        else {
+        } else {
             self.data_mut().rotation = rotation
         }
     }
