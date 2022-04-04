@@ -1,9 +1,7 @@
 use gm::{Point, Rect};
 use rapier2d::{
-    dynamics::RigidBody,
-    geometry::{Collider, ColliderHandle},
     na::Vector2,
-    prelude::{ColliderBuilder, RigidBodyBuilder, RigidBodyHandle},
+    prelude::{ColliderBuilder, RigidBodyBuilder},
 };
 use rtools::Rglica;
 
@@ -11,64 +9,40 @@ use crate::{control::Control, Level, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Body {
-    sprite:          SpriteData,
-    rigid_handle:    RigidBodyHandle,
-    collider_handle: ColliderHandle,
+    sprite: SpriteData,
 }
 
 impl Body {
-    pub fn body(&self) -> &RigidBody {
-        &self.level().rigid_bodies()[self.rigid_handle]
-    }
-
-    pub fn body_mut(&mut self) -> &mut RigidBody {
-        let handle = self.rigid_handle;
-        &mut self.level_mut().rigid_bodies_mut()[handle]
-    }
-
-    pub fn collider(&self) -> &Collider {
-        &self.level().colliders()[self.collider_handle]
-    }
-
-    pub fn collider_mut(&mut self) -> &mut Collider {
-        let handle = self.collider_handle;
-        &mut self.level_mut().colliders_mut()[handle]
-    }
-
     pub fn velocity(&self) -> Point {
-        let vel = self.body().linvel();
+        let vel = self.rigid_body().linvel();
         (vel.x, vel.y).into()
     }
 
     pub fn set_velocity(&mut self, vel: Point) {
-        self.body_mut().set_linvel([vel.x, vel.y].into(), true)
+        self.rigid_body_mut().set_linvel([vel.x, vel.y].into(), true)
     }
 
     pub fn lock_rotations(&mut self) {
-        self.body_mut().lock_rotations(true, true);
+        self.rigid_body_mut().lock_rotations(true, true);
     }
 }
 
 impl Sprite for Body {
     fn position(&self) -> Point {
-        (self.body().translation().x, self.body().translation().y).into()
+        (
+            self.rigid_body().translation().x,
+            self.rigid_body().translation().y,
+        )
+            .into()
     }
 
     fn rotation(&self) -> f32 {
-        self.body().rotation().angle()
+        self.rigid_body().rotation().angle()
     }
 
     fn set_rotation(&mut self, rotation: f32) {
         self.sprite.rotation = rotation;
-        self.body_mut().set_rotation(rotation, true);
-    }
-
-    fn rigid_body_handle(&self) -> Option<RigidBodyHandle> {
-        self.rigid_handle.into()
-    }
-
-    fn collider_handle(&self) -> Option<ColliderHandle> {
-        self.collider_handle.into()
+        self.rigid_body_mut().set_rotation(rotation, true);
     }
 
     fn data(&self) -> &SpriteData {
@@ -103,17 +77,12 @@ impl Sprite for Body {
             &mut level_base.sets.rigid_body,
         );
 
+        sprite.collider_handle = collider_handle.into();
+        sprite.rigid_handle = rigid_handle.into();
+
         Box::new(Self {
             sprite: sprite.with_level(level),
-            rigid_handle,
-            collider_handle,
         })
-    }
-}
-
-impl Body {
-    fn _gravity(&self) -> Point {
-        self.level().gravity()
     }
 }
 
@@ -136,7 +105,7 @@ impl Control for Body {
     }
 
     fn add_impulse(&mut self, impulse: Point) {
-        self.body_mut()
+        self.rigid_body_mut()
             .apply_force([impulse.x * 1000.0, impulse.y * 1000.0].into(), true)
     }
 }

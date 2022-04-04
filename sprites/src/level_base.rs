@@ -64,7 +64,7 @@ impl LevelBase {
         while let Ok(contact_event) = contact_recv.try_recv() {
             if let ContactEvent::Started(a, b) = contact_event {
                 for sprite in &self.colliding_sprites {
-                    let handle = sprite.collider_handle().unwrap();
+                    let handle = sprite.data().collider_handle.unwrap();
 
                     let other_index = if a.index() == handle.index() {
                         b
@@ -85,7 +85,7 @@ impl LevelBase {
     fn sprite_with_index(&self, index: usize) -> Option<Rglica<dyn Sprite>> {
         self.sprites
             .iter()
-            .find(|a| match a.collider_handle() {
+            .find(|a| match a.data().collider_handle {
                 Some(handle) => handle.index() == index,
                 None => false,
             })
@@ -97,7 +97,7 @@ impl LevelBase {
 
         let sprite = self.sprites[index].deref();
 
-        if let Some(collider) = sprite.collider_handle() {
+        if let Some(collider) = sprite.data().collider_handle {
             self.sets.collider.remove(
                 collider,
                 &mut self.island_manager,
@@ -106,7 +106,7 @@ impl LevelBase {
             );
         }
 
-        if let Some(rigid_body) = sprite.rigid_body_handle() {
+        if let Some(rigid_body) = sprite.data().rigid_handle {
             self.sets.rigid_body.remove(
                 rigid_body,
                 &mut self.island_manager,

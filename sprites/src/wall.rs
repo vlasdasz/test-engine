@@ -1,7 +1,7 @@
 use gm::{Point, Rect};
 use rapier2d::{
     na::Vector2,
-    prelude::{Collider, ColliderBuilder, ColliderHandle},
+    prelude::{Collider, ColliderBuilder},
 };
 use rtools::{IntoF32, Rglica};
 
@@ -9,17 +9,16 @@ use crate::{Level, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Wall {
-    base:   SpriteData,
-    handle: ColliderHandle,
+    data: SpriteData,
 }
 
 impl Wall {
     pub fn collider(&self) -> &Collider {
-        &self.level().colliders()[self.handle]
+        &self.level().colliders()[self.data.collider_handle.unwrap()]
     }
 
     pub fn collider_mut(&mut self) -> &mut Collider {
-        let handle = self.handle;
+        let handle = self.data.collider_handle.unwrap();
         &mut self.level_mut().colliders_mut()[handle]
     }
 
@@ -46,16 +45,12 @@ impl Sprite for Wall {
         (pos.x, pos.y).into()
     }
 
-    fn collider_handle(&self) -> Option<ColliderHandle> {
-        self.handle.into()
-    }
-
     fn data(&self) -> &SpriteData {
-        &self.base
+        &self.data
     }
 
     fn data_mut(&mut self) -> &mut SpriteData {
-        &mut self.base
+        &mut self.data
     }
 
     fn make(rect: Rect, mut level: Rglica<dyn Level>) -> Box<Self>
@@ -67,7 +62,7 @@ impl Sprite for Wall {
         let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
             .translation(Vector2::new(sprite.position.x, sprite.position.y))
             .build();
-        let handle = level.base_mut().sets.collider.insert(collider);
-        Box::new(Wall { base: sprite, handle })
+        sprite.collider_handle = level.base_mut().sets.collider.insert(collider).into();
+        Box::new(Wall { data: sprite })
     }
 }

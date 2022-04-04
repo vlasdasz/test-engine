@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use gl_image::Image;
 use gm::{Color, Point, Rect, Size};
-use rapier2d::{geometry::ColliderHandle, prelude::RigidBodyHandle};
+use rapier2d::{geometry::Collider, prelude::RigidBody};
 use rtools::{address::Address, Rglica};
 
 use crate::{Level, SpriteData};
@@ -24,6 +24,24 @@ pub trait Sprite: Debug {
 
     fn set_rotation(&mut self, rotation: f32) {
         self.data_mut().rotation = rotation
+    }
+
+    fn rigid_body(&self) -> &RigidBody {
+        &self.level().rigid_bodies()[self.data().rigid_handle.unwrap()]
+    }
+
+    fn rigid_body_mut(&mut self) -> &mut RigidBody {
+        let handle = self.data().rigid_handle.unwrap();
+        &mut self.level_mut().rigid_bodies_mut()[handle]
+    }
+
+    fn collider(&self) -> &Collider {
+        &self.level().colliders()[self.data().collider_handle.unwrap()]
+    }
+
+    fn collider_mut(&mut self) -> &mut Collider {
+        let handle = self.data().collider_handle.unwrap();
+        &mut self.level_mut().colliders_mut()[handle]
     }
 
     fn contains(&self, point: Point) -> bool {
@@ -53,14 +71,6 @@ pub trait Sprite: Debug {
 
     fn set_image(&mut self, image: Image) {
         self.data_mut().image = image.into()
-    }
-
-    fn rigid_body_handle(&self) -> Option<RigidBodyHandle> {
-        None
-    }
-
-    fn collider_handle(&self) -> Option<ColliderHandle> {
-        None
     }
 
     fn is_selected(&self) -> bool {

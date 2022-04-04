@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::Rect;
-use rapier2d::{geometry::ColliderHandle, prelude::ActiveEvents};
+use rapier2d::prelude::ActiveEvents;
 use rtools::{Rglica, ToRglica};
 
 use crate::{Body, Level, Sprite, SpriteData};
@@ -24,10 +24,6 @@ impl Unit {
 impl Sprite for Unit {
     fn update(&mut self) {
         self.body.update()
-    }
-
-    fn collider_handle(&self) -> Option<ColliderHandle> {
-        self.body.collider_handle()
     }
 
     fn data(&self) -> &SpriteData {

@@ -1,6 +1,7 @@
 use derivative::Derivative;
 use gl_image::Image;
 use gm::{Color, Point, Rect, Size};
+use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use rtools::{Event, IntoF32, Rglica};
 
 use crate::{Level, Sprite};
@@ -14,6 +15,9 @@ pub struct SpriteData {
     #[derivative(Debug = "ignore")]
     pub(crate) level:       Rglica<dyn Level>,
     pub(crate) is_selected: bool,
+
+    pub(crate) rigid_handle:    Option<RigidBodyHandle>,
+    pub(crate) collider_handle: Option<ColliderHandle>,
 
     pub tag:   String,
     pub color: Color,
