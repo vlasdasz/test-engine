@@ -28,23 +28,6 @@ impl Body {
 }
 
 impl Sprite for Body {
-    fn position(&self) -> Point {
-        (
-            self.rigid_body().translation().x,
-            self.rigid_body().translation().y,
-        )
-            .into()
-    }
-
-    fn rotation(&self) -> f32 {
-        self.rigid_body().rotation().angle()
-    }
-
-    fn set_rotation(&mut self, rotation: f32) {
-        self.sprite.rotation = rotation;
-        self.rigid_body_mut().set_rotation(rotation, true);
-    }
-
     fn data(&self) -> &SpriteData {
         &self.sprite
     }

@@ -15,15 +15,30 @@ pub trait Sprite: Debug {
     }
 
     fn position(&self) -> Point {
+        if self.data().rigid_handle.is_some() {
+            return (
+                self.rigid_body().translation().x,
+                self.rigid_body().translation().y,
+            )
+                .into();
+        }
         self.data().position
     }
 
     fn rotation(&self) -> f32 {
+        if self.data().rigid_handle.is_some() {
+            return self.rigid_body().rotation().angle()
+        }
         self.data().rotation
     }
 
     fn set_rotation(&mut self, rotation: f32) {
-        self.data_mut().rotation = rotation
+        if self.data().rigid_handle.is_some() {
+            self.rigid_body_mut().set_rotation(rotation, true);
+        }
+        else {
+            self.data_mut().rotation = rotation
+        }
     }
 
     fn rigid_body(&self) -> &RigidBody {
