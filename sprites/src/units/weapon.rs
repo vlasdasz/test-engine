@@ -7,7 +7,7 @@ use gl_image::Image;
 use gm::Point;
 use rtools::Rglica;
 
-use crate::{Level, Sprite, SpriteBase};
+use crate::{Body, Level, Sprite, SpriteBase};
 
 #[derive(Debug)]
 pub struct Weapon {
@@ -35,7 +35,10 @@ impl Weapon {
 
         let vel = vector * self.bullet_speed + self.velocity;
 
-        let mut body = self.level_mut().add_body((pos.x, pos.y, 0.8, 0.15).into());
+        //let mut body = self.level_mut().add_body((pos.x, pos.y, 0.8, 0.15).into());
+
+        let mut body = Body::make((pos.x, pos.y, 0.8, 0.15).into(), self.level);
+
         body.set_rotation(self.rotation());
         body.set_velocity(vel);
         body.sprite_mut().tag = "bullet".into();

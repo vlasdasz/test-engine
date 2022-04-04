@@ -11,7 +11,7 @@ use rapier2d::{
 };
 use rtools::{Rglica, ToRglica};
 
-use crate::{Body, LevelBase, Sprite, SpriteBase, SpritesDrawer, Wall};
+use crate::{LevelBase, Sprite, SpritesDrawer};
 
 pub trait Level: Debug {
     fn setup(&mut self) {}
@@ -114,16 +114,16 @@ pub trait Level: Debug {
         rglica
     }
 
-    fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
-        let body = Box::new(Body::make(sprite, self.rglica()));
-        let result = body.to_rglica();
-        self.add_sprite(body);
-        result
-    }
-
-    fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Wall> {
-        Wall::make(sprite, self.rglica())
-    }
+    // fn add_body(&mut self, sprite: SpriteBase) -> Rglica<Body> {
+    //     let body = Box::new(Body::make(sprite, self.rglica()));
+    //     let result = body.to_rglica();
+    //     self.add_sprite(body);
+    //     result
+    // }
+    //
+    // fn add_wall(&mut self, sprite: SpriteBase) -> Rglica<Wall> {
+    //     Wall::make(sprite, self.rglica())
+    // }
 
     fn set_camera_rotation(&mut self, angle: f32) {
         self.drawer().set_camera_rotation(angle)

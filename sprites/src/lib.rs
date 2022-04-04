@@ -1,3 +1,5 @@
+#![feature(box_into_inner)]
+
 mod body;
 mod control;
 mod level;

@@ -17,7 +17,7 @@ pub struct Body {
 }
 
 impl Body {
-    pub fn make(sprite: SpriteBase, mut level: Rglica<dyn Level>) -> Self {
+    pub fn make(sprite: SpriteBase, mut level: Rglica<dyn Level>) -> Box<Self> {
         let level_base = level.base_mut();
 
         let rigid_body = RigidBodyBuilder::new_dynamic()
@@ -35,11 +35,11 @@ impl Body {
             &mut level_base.sets.rigid_body,
         );
 
-        Self {
+        Box::new(Self {
             sprite: sprite.with_level(level),
             rigid_handle,
             collider_handle,
-        }
+        })
     }
 
     pub fn body(&self) -> &RigidBody {

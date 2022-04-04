@@ -2,7 +2,7 @@ use rtools::{Rglica, ToRglica, Unwrap};
 use test_engine::{
     assets::Assets,
     gm::Point,
-    sprites::{Control, Player},
+    sprites::{Body, Control, Player, Wall},
     Level, LevelBase, Sprite,
 };
 
@@ -44,12 +44,21 @@ impl Level for TestGameLevel {
 
         let square = Assets::image("square.png");
 
-        self.add_wall((0, 0, 100, 1).into()).set_image(square.clone());
-        self.add_wall((20, 0, 1, 100).into()).set_image(square.clone());
-        self.add_wall((-20, 0, 1, 100).into()).set_image(square);
+        let mut wall = Wall::make((0, 0, 100, 1).into(), self.rglica());
+        wall.set_image(square.clone());
+        self.add_sprite(wall);
+
+        let mut wall = Wall::make((20, 0, 1, 100).into(), self.rglica());
+        wall.set_image(square.clone());
+        self.add_sprite(wall);
+
+        let mut wall = Wall::make((-20, 0, 1, 100).into(), self.rglica());
+        wall.set_image(square.clone());
+        self.add_sprite(wall);
 
         for i in 0..50 {
-            self.add_body((0.1 * i as f32, i * 2, 0.5, 0.5).into());
+            let body = Body::make((0.1 * i as f32, i * 2, 0.5, 0.5).into(), self.rglica());
+            self.add_sprite(body);
         }
 
         let mut this = self.to_rglica();

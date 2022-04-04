@@ -28,7 +28,9 @@ impl Unit {
         body.collider_mut().set_restitution(0.0);
         body.set_image(image);
 
-        Unit { body }
+        Unit {
+            body: Box::into_inner(body),
+        }
     }
 }
 
@@ -37,12 +39,12 @@ impl Sprite for Unit {
         self.body.update()
     }
 
-    fn sprite(&self) -> &SpriteBase {
-        self.body.sprite()
-    }
-
     fn collider_handle(&self) -> Option<ColliderHandle> {
         self.body.collider_handle()
+    }
+
+    fn sprite(&self) -> &SpriteBase {
+        self.body.sprite()
     }
 
     fn sprite_mut(&mut self) -> &mut SpriteBase {
