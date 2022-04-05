@@ -28,6 +28,7 @@ pub struct SpriteData {
 
 impl SpriteData {
     pub(crate) fn with_level(mut self, level: Rglica<dyn Level>) -> Self {
+        debug_assert!(level.is_ok());
         self.level = level;
         self
     }
@@ -68,8 +69,6 @@ impl Sprite for SpriteData {
     where
         Self: Sized,
     {
-        let mut sprite = SpriteData::from(rect);
-        sprite.level = level;
-        Box::new(sprite)
+        Box::new(SpriteData::from(rect).with_level(level))
     }
 }

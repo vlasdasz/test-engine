@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ops::Deref};
 
-use gm::Point;
+use gm::{Point, Rect};
 use rapier2d::{
     geometry::ContactEvent,
     na::Vector2,
@@ -10,12 +10,11 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline,
     },
 };
-use rtools::{address::Address, Event, Rglica, ToRglica, Unwrap};
+use rtools::{address::Address, Event, Rglica, ToRglica};
 
-use crate::{sets::Sets, Sprite, SpritesDrawer};
+use crate::{sets::Sets, Level, Sprite, SpritesDrawer};
 
 pub struct LevelBase {
-    pub player: Unwrap<dyn Sprite>,
     pub drawer: Rglica<dyn SpritesDrawer>,
 
     pub cursor_position: Point,
@@ -141,8 +140,6 @@ impl Default for LevelBase {
             joint_set:        JointSet::new(),
             ccd_solver:       CCDSolver::new(),
 
-            player: Default::default(),
-
             integration_parameters: Default::default(),
         }
     }
@@ -152,4 +149,11 @@ impl Debug for LevelBase {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         "LevelBase".fmt(f)
     }
+}
+
+pub fn add_sprite<T: 'static + Sprite>(rect: impl Into<Rect>, level: &mut dyn Level) -> Rglica<T> {
+    let sprite = T::make(rect.into(), level.rglica());
+    let result = sprite.to_rglica();
+    level.add_sprite(sprite);
+    result
 }

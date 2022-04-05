@@ -8,9 +8,10 @@ use crate::{assets::Assets, Sprite};
 
 #[derive(Default)]
 pub struct TESpritesDrawer {
-    scale:      f32,
-    resolution: Size,
-    assets:     Rc<Assets>,
+    scale:           f32,
+    resolution:      Size,
+    camera_posotion: Point,
+    assets:          Rc<Assets>,
 }
 
 impl TESpritesDrawer {
@@ -19,6 +20,7 @@ impl TESpritesDrawer {
             scale: 0.0,
             resolution: (0, 0).into(),
             assets,
+            camera_posotion: Default::default(),
         };
         new.set_scale(1.0);
         Box::new(new)
@@ -58,7 +60,12 @@ impl SpritesDrawer for TESpritesDrawer {
         self.assets.shaders.textured_sprite.set_camera_rotation(angle);
     }
 
-    fn set_camera_position(&self, pos: Point) {
+    fn camera_position(&self) -> Point {
+        self.camera_posotion
+    }
+
+    fn set_camera_position(&mut self, pos: Point) {
+        self.camera_posotion = pos;
         self.assets.shaders.sprite.enable();
         self.assets.shaders.sprite.set_camera_position(pos);
         self.assets.shaders.textured_sprite.enable();

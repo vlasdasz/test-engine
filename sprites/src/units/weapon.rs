@@ -24,8 +24,6 @@ impl Weapon {
 
         let vel = vector * self.bullet_speed + self.velocity;
 
-        //let mut body = self.level_mut().add_body((pos.x, pos.y, 0.8, 0.15).into());
-
         let mut body = Body::make((pos.x, pos.y, 0.8, 0.15).into(), self.level);
 
         body.set_rotation(self.rotation());
@@ -36,7 +34,7 @@ impl Weapon {
             body.set_image(image.clone())
         }
 
-        self.level.add_sprite(body);
+        self.level_mut().add_sprite(body);
     }
 }
 
@@ -53,11 +51,9 @@ impl Sprite for Weapon {
     where
         Self: Sized,
     {
-        let mut sprite = SpriteData::from(rect);
-        sprite.level = level;
         Box::new(Self {
-            sprite,
-            velocity: Default::default(),
+            sprite:       SpriteData::from(rect).with_level(level),
+            velocity:     Default::default(),
             bullet_speed: 1.0,
             bullet_image: None,
         })

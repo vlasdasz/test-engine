@@ -8,6 +8,7 @@ pub trait SpritesDrawer {
     fn resolution(&self) -> Size;
     fn set_resolution(&mut self, size: Size);
     fn set_camera_rotation(&self, angle: f32);
-    fn set_camera_position(&self, pos: Point);
+    fn camera_position(&self) -> Point;
+    fn set_camera_position(&mut self, pos: Point);
     fn draw(&self, sprite: &dyn Sprite);
 }

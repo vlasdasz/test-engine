@@ -28,8 +28,7 @@ pub trait Sprite: Debug {
     fn set_position(&mut self, pos: Point) {
         if self.data().collider_handle.is_some() {
             self.collider_mut().set_position([pos.x, pos.y].into());
-        }
-        else if self.data().rigid_handle.is_some() {
+        } else if self.data().rigid_handle.is_some() {
             self.rigid_body_mut().set_position([pos.x, pos.y].into(), true)
         }
         self.data_mut().position = pos;

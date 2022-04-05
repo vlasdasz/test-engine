@@ -1,8 +1,5 @@
-use gm::{Rect};
-use rapier2d::{
-    na::Vector2,
-    prelude::{ColliderBuilder},
-};
+use gm::Rect;
+use rapier2d::{na::Vector2, prelude::ColliderBuilder};
 use rtools::{IntoF32, Rglica};
 
 use crate::{Level, Sprite, SpriteData};
@@ -40,11 +37,12 @@ impl Sprite for Wall {
         Self: Sized,
     {
         let mut sprite = SpriteData::from(rect);
-        sprite.level = level;
         let collider = ColliderBuilder::cuboid(sprite.size.width, sprite.size.height)
             .translation(Vector2::new(sprite.position.x, sprite.position.y))
             .build();
         sprite.collider_handle = level.base_mut().sets.collider.insert(collider).into();
-        Box::new(Wall { data: sprite })
+        Box::new(Wall {
+            data: sprite.with_level(level),
+        })
     }
 }

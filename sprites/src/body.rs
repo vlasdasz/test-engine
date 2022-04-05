@@ -41,7 +41,6 @@ impl Sprite for Body {
         Self: Sized,
     {
         let mut sprite = SpriteData::from(rect);
-        sprite.level = level;
 
         let level_base = level.base_mut();
 

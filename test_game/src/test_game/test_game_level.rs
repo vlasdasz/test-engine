@@ -1,8 +1,8 @@
-use rtools::{Rglica, ToRglica, Unwrap};
+use rtools::{Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
     gm::Point,
-    sprites::{Body, Control, Player, Wall},
+    sprites::{add_sprite, Body, Control, Player, Wall},
     Level, LevelBase, Sprite,
 };
 
@@ -35,27 +35,16 @@ impl TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        let player = Player::make((0, 5, 2, 2).into(), self.rglica());
-
-        self.player = player.to_rglica();
+        self.player = add_sprite((0, 5, 2, 2), self);
         self.player.set_image(Assets::image("frisk.png"));
-        self.base.player = Unwrap::from_box(player);
 
         self.player.weapon.set_image(Assets::image("frisk.png"));
 
         let square = Assets::image("square.png");
 
-        let mut wall = Wall::make((0, 0, 100, 1).into(), self.rglica());
-        wall.set_image(square.clone());
-        self.add_sprite(wall);
-
-        let mut wall = Wall::make((20, 0, 1, 100).into(), self.rglica());
-        wall.set_image(square.clone());
-        self.add_sprite(wall);
-
-        let mut wall = Wall::make((-20, 0, 1, 100).into(), self.rglica());
-        wall.set_image(square);
-        self.add_sprite(wall);
+        add_sprite::<Wall>((0, 0, 100, 1), self).set_image(square.clone());
+        add_sprite::<Wall>((20, 0, 1, 100), self).set_image(square.clone());
+        add_sprite::<Wall>((-20, 0, 1, 100), self).set_image(square);
 
         for i in 0..50 {
             let body = Body::make((0.1 * i as f32, i * 2, 0.5, 0.5).into(), self.rglica());
@@ -64,6 +53,11 @@ impl Level for TestGameLevel {
 
         let mut this = self.to_rglica();
         self.base.on_tap.subscribe(move |pos| this.on_touch(pos));
+    }
+
+    fn update(&mut self) {
+        let pos = self.player.position();
+        self.drawer_mut().set_camera_position(pos);
     }
 
     fn on_key_pressed(&mut self, key: String) {

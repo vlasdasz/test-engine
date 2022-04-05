@@ -1,3 +1,6 @@
+#![allow(incomplete_features)]
+#![feature(explicit_generic_args_with_impl_trait)]
+
 use std::{
     os::raw::{c_float, c_int, c_ulong},
     ptr,

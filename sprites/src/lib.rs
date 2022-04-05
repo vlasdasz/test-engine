@@ -14,7 +14,7 @@ mod wall;
 pub use body::Body;
 pub use control::Control;
 pub use level::Level;
-pub use level_base::LevelBase;
+pub use level_base::{add_sprite, LevelBase};
 pub use sprite::Sprite;
 pub use sprite_data::SpriteData;
 pub use sprites_drawer::SpritesDrawer;

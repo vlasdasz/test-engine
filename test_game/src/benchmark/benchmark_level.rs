@@ -1,7 +1,7 @@
-use rtools::{Animation, Rglica, ToRglica, Unwrap};
+use rtools::{Animation, Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
-    sprites::{Player, Wall},
+    sprites::{add_sprite, Player, Wall},
     Level, LevelBase, Sprite,
 };
 
@@ -45,16 +45,14 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        let player = Player::make((0, 5, 2, 2).into(), self.rglica());
+        self.player = add_sprite((0, 5, 2, 2), self);
 
-        self.player = player.to_rglica();
         self.player.set_image(Assets::image("frisk.png"));
-
-        self.base.player = Unwrap::from_box(player);
 
         self.player.weapon.set_image(Assets::image("ak.png"));
         self.player.weapon.bullet_image = Assets::image("bullet.png").into();
         self.player.weapon.bullet_speed = 100.0;
+
         self.set_scale(1.0);
         self.make_walls();
     }

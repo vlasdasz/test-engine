@@ -1,7 +1,4 @@
-use std::{
-    ops::{Deref, DerefMut},
-    rc::Rc,
-};
+use std::{ops::DerefMut, rc::Rc};
 
 use cfg_if::cfg_if;
 use chrono::Utc;
@@ -116,17 +113,10 @@ impl Screen {
 
         level.set_cursor_position(self.ui.cursor_position);
 
-        let drawer = self.sprites_drawer.deref();
-
-        drawer.set_camera_position(level.player().position());
-
         for sprite in level.sprites_mut() {
             sprite.update();
             sprite.draw();
         }
-
-        level.player().update();
-        level.player().draw();
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {

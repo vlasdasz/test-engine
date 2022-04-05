@@ -47,7 +47,7 @@ pub trait Level: Debug {
         pos *= 2;
         pos /= self.drawer().scale();
 
-        pos += self.player().position();
+        pos += self.drawer().camera_position();
 
         pos
     }
@@ -76,11 +76,6 @@ pub trait Level: Debug {
 
     fn set_gravity(&mut self, g: Point) {
         self.base_mut().gravity = Vector2::new(g.x, g.y)
-    }
-
-    fn player(&self) -> Rglica<dyn Sprite> {
-        debug_assert!(self.base().player.is_ok());
-        self.base().player.to_rglica()
     }
 
     fn sprites(&self) -> &[Box<dyn Sprite>] {
