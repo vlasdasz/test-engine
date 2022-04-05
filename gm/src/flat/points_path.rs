@@ -41,8 +41,10 @@ fn point_on_circle(radius: f32, angle: f32, center: &Point) -> Point {
         .into()
 }
 
-impl From<Vec<Point>> for PointsPath {
-    fn from(vec: Vec<Point>) -> Self {
-        Self { points: vec }
+impl<T: Into<Point> + Copy> From<Vec<T>> for PointsPath {
+    fn from(vec: Vec<T>) -> Self {
+        Self {
+            points: vec.iter().map(|a| (*a).into()).collect(),
+        }
     }
 }

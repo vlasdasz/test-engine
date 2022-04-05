@@ -42,7 +42,7 @@ impl TestGameView {
     }
 
     fn setup_slider(&mut self) {
-        self.slider = add_view_with_frame(self, (50, 280).into());
+        self.slider = add_view_with_frame(self, (50, 280));
         self.slider.set_multiplier(10.0);
 
         let mut this = self.to_rglica();
@@ -54,7 +54,7 @@ impl TestGameView {
     fn setup_ui(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
-        self.sprite = add_view_with_frame(self, (500, 180).into());
+        self.sprite = add_view_with_frame(self, (500, 180));
 
         let mut this = self.to_rglica();
         self.level
@@ -77,7 +77,7 @@ impl TestGameView {
 
         self.setup_slider();
 
-        self.test_view = add_view_with_frame(self, (280, 400).into());
+        self.test_view = add_view_with_frame(self, (280, 400));
         self.test_view.set_image(Assets::image("cat.png"));
         self.test_view.set_button_image(Assets::image("square.png"));
         self.test_view.set_animation_image(Assets::image("palm.png"));

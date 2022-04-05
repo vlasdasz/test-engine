@@ -59,15 +59,7 @@ impl View for TestView {
 
         self.drawing = make_view_on(self, |drawing: &mut DrawingView| {
             drawing.add_path(
-                vec![
-                    (20, 20).into(),
-                    (30, 20).into(),
-                    (20, 40).into(),
-                    (30, 50).into(),
-                    (1, 60).into(),
-                    (1, 20).into(),
-                ]
-                .into(),
+                vec![(20, 20), (30, 20), (20, 40), (30, 50), (1, 60), (1, 20)],
                 Color::GREEN,
             );
         });
