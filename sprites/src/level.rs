@@ -106,6 +106,10 @@ pub trait Level: Debug {
         self.base_mut().sprites.push(sprite);
     }
 
+    fn set_camera_position(&mut self, pos: Point) {
+        self.drawer_mut().set_camera_position(pos)
+    }
+
     fn set_camera_rotation(&mut self, angle: f32) {
         self.drawer().set_camera_rotation(angle)
     }
