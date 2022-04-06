@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 
-use crate::Point;
+use crate::flat::Point;
 
 #[derive(Default, Debug)]
 pub struct PointsPath {

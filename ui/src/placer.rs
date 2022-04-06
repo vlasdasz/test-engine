@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::Rect;
+use gm::flat::Rect;
 use rtools::{math::IntoF32, Rglica, ToRglica};
 
 use crate::View;

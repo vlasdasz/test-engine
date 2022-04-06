@@ -1,4 +1,4 @@
-use gm::{flat::point::Direction, Point};
+use gm::flat::{Direction, Point};
 
 pub trait Control {
     fn jump(&mut self);

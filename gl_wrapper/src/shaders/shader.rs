@@ -1,6 +1,9 @@
 #[cfg(any(target_os = "ios", target_os = "android"))]
 use gles31_sys::*;
-use gm::{Color, Point, Size};
+use gm::{
+    flat::{Point, Size},
+    Color,
+};
 
 #[derive(Debug)]
 pub struct Shader {

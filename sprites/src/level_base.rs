@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ops::Deref};
 
-use gm::{Point, Rect};
+use gm::flat::{Point, Rect};
 use rapier2d::{
     geometry::ContactEvent,
     na::Vector2,

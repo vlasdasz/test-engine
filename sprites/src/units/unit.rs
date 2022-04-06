@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::Rect;
+use gm::flat::Rect;
 use rapier2d::prelude::ActiveEvents;
 use rtools::{Rglica, ToRglica};
 

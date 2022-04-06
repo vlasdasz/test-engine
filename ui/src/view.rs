@@ -1,7 +1,10 @@
 use std::{fmt::Debug, ops::DerefMut};
 
 use gl_image::Image;
-use gm::{Color, Point, Rect};
+use gm::{
+    flat::{Point, Rect},
+    Color,
+};
 use rtools::{address::Address, Boxed, Rglica, ToRglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};

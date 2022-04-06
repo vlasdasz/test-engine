@@ -1,6 +1,9 @@
 use derivative::Derivative;
 use gl_image::Image;
-use gm::{Color, Point, Rect, Size};
+use gm::{
+    flat::{Point, Rect, Shape},
+    Color,
+};
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use rtools::{Event, IntoF32, Rglica};
 
@@ -10,7 +13,7 @@ use crate::{Level, Sprite};
 #[derivative(Debug)]
 pub struct SpriteData {
     pub(crate) position:    Point,
-    pub(crate) size:        Size,
+    pub(crate) shape:       Shape,
     pub(crate) rotation:    f32,
     #[derivative(Debug = "ignore")]
     pub(crate) level:       Rglica<dyn Level>,
@@ -38,7 +41,7 @@ impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Spri
     fn from(data: (X, Y, W, H)) -> Self {
         Self {
             position: (data.0.into_f32(), data.1.into_f32()).into(),
-            size: (data.2.into_f32(), data.3.into_f32()).into(),
+            shape: (data.2.into_f32(), data.3.into_f32()).into(),
             color: Color::random(),
             ..Default::default()
         }
@@ -49,7 +52,7 @@ impl From<Rect> for SpriteData {
     fn from(rect: Rect) -> Self {
         Self {
             position: rect.origin,
-            size: rect.size,
+            shape: rect.size.into(),
             color: Color::random(),
             ..Default::default()
         }

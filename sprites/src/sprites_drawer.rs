@@ -1,4 +1,4 @@
-use gm::{Point, Size};
+use gm::flat::{Point, Size};
 
 use crate::Sprite;
 

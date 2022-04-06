@@ -1,9 +1,11 @@
-pub mod point;
-pub mod points_path;
-pub mod rect;
-pub mod size;
+mod point;
+mod points_path;
+mod rect;
+mod shape;
+mod size;
 
-pub use point::Point;
+pub use point::{Direction, Point, PointBase};
 pub use points_path::PointsPath;
 pub use rect::Rect;
+pub use shape::Shape;
 pub use size::Size;

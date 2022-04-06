@@ -1,6 +1,6 @@
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Context, Window};
-use gm::Size;
+use gm::flat::Size;
 use rtools::Rglica;
 
 use crate::{events::Events, gl_loader::GLFWEvents, monitor::Monitor, GLLoader};

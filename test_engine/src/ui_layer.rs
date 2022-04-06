@@ -4,7 +4,7 @@ use std::{ops::DerefMut, rc::Rc};
 use gl_wrapper::events::Events;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::{Action, Key};
-use gm::Point;
+use gm::flat::Point;
 use rtools::{Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 use ui::{

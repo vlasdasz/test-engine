@@ -1,7 +1,7 @@
 #![cfg(not(any(target_os = "ios", target_os = "android")))]
 
 use glfw::{Action, Key, MouseButton};
-use gm::{Point, Size};
+use gm::flat::{Point, Size};
 use rtools::Event;
 
 #[derive(Default)]

@@ -1,4 +1,7 @@
-use gm::{flat::PointsPath, Color, Rect};
+use gm::{
+    flat::{PointsPath, Rect},
+    Color,
+};
 use rtools::Rglica;
 
 use crate::{

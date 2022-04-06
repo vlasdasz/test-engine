@@ -1,7 +1,7 @@
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
-use crate::{Point, Size};
+use crate::flat::{Point, Size};
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Rect {

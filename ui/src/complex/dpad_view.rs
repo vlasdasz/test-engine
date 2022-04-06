@@ -1,5 +1,5 @@
 use gl_image::Image;
-use gm::flat::point::Direction;
+use gm::flat::Direction;
 use rtools::{Event, Rglica, ToRglica};
 
 use crate::{

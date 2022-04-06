@@ -6,7 +6,7 @@ use std::{
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
-use crate::{Point, Rect};
+use crate::flat::{Point, Rect};
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Size {

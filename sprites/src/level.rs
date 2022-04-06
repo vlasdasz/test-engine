@@ -4,7 +4,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{volume::GyroData, Point};
+use gm::{flat::Point, volume::GyroData};
 use rapier2d::{
     na::Vector2,
     prelude::{ColliderSet, RigidBodySet},

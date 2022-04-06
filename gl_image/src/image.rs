@@ -4,7 +4,7 @@ use std::{
 };
 
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
-use gm::Size;
+use gm::flat::Size;
 use image::GenericImageView;
 use rtools::file::File;
 use serde::{Deserialize, Serialize};

@@ -1,7 +1,7 @@
 use rtools::{Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
-    gm::Point,
+    gm::flat::Point,
     sprites::{add_sprite, Body, Control, Player, Wall},
     Level, LevelBase, Sprite,
 };

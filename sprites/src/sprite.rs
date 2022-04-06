@@ -1,7 +1,10 @@
 use std::fmt::Debug;
 
 use gl_image::Image;
-use gm::{Color, Point, Rect, Size};
+use gm::{
+    flat::{Point, Rect, Size},
+    Color,
+};
 use rapier2d::{geometry::Collider, prelude::RigidBody};
 use rtools::{address::Address, Rglica};
 
@@ -11,7 +14,7 @@ pub trait Sprite: Debug {
     fn update(&mut self) {}
 
     fn size(&self) -> Size {
-        self.data().size
+        self.data().shape.size()
     }
 
     fn position(&self) -> Point {

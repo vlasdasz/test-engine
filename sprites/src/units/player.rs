@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::{Point, Rect};
+use gm::flat::{Point, Rect};
 use rtools::Rglica;
 
 use crate::{Level, Sprite, SpriteData, Unit, Weapon};

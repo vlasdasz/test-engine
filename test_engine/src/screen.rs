@@ -5,7 +5,7 @@ use chrono::Utc;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use gl_wrapper::{events::Events, GLDrawer};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
-use gm::{volume::GyroData, Color, Size};
+use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{ToRglica, Unwrap};
 use sprites::SpritesDrawer;
 

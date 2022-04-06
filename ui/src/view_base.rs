@@ -1,7 +1,7 @@
 use std::ops::DerefMut;
 
 use derivative::Derivative;
-use gm::{Color, Rect};
+use gm::{flat::Rect, Color};
 use rtools::{Boxed, IntoF32, Rglica, ToRglica};
 
 use crate::{basic::Placer, complex::Alert, View};

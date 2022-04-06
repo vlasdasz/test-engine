@@ -1,4 +1,4 @@
-use gm::Size;
+use gm::flat::Size;
 
 #[derive(Clone, Debug)]
 pub struct Monitor {

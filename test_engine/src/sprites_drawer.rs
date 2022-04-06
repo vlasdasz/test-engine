@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use gm::{Point, Size};
+use gm::flat::{Point, Size};
 use rtools::math::IntoF32;
 use sprites::SpritesDrawer;
 

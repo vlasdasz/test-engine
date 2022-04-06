@@ -4,7 +4,7 @@ use std::{
 };
 
 use gl_image::Image;
-use gm::{Point, Rect};
+use gm::flat::{Point, Rect};
 use rtools::Rglica;
 
 use crate::{Body, Level, Sprite, SpriteData};

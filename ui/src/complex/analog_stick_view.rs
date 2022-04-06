@@ -1,4 +1,7 @@
-use gm::{flat::PointsPath, Color, Point};
+use gm::{
+    flat::{Point, PointsPath},
+    Color,
+};
 use rtools::{rglica::ToRglica, Boxed, Event, Rglica};
 
 use crate::{complex::DrawingView, view_base::ViewBase, Touch, View};

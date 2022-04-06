@@ -2,7 +2,10 @@ use std::{borrow::Borrow, ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
-use gm::{Color, Rect, Size};
+use gm::{
+    flat::{Rect, Size},
+    Color,
+};
 use ui::{complex::PathData, View};
 
 use crate::assets::Assets;

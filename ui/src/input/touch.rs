@@ -1,6 +1,6 @@
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use glfw::Action;
-use gm::Point;
+use gm::flat::Point;
 
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use crate::input::touch::MouseButton::Undefined;
