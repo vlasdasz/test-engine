@@ -1,9 +1,16 @@
-use crate::flat::Size;
+use crate::flat::{Point, ProcessPoints, Size};
 
 #[derive(Debug, Copy, Clone)]
 pub enum Shape {
     Rect(Size),
     Circle(f32),
+    Triangle(Point, Point, Point),
+}
+
+impl Shape {
+    pub fn triangle(a: impl Into<Point>, b: impl Into<Point>, c: impl Into<Point>) -> Self {
+        Self::Triangle(a.into(), b.into(), c.into())
+    }
 }
 
 impl Shape {
@@ -11,6 +18,7 @@ impl Shape {
         match self {
             Self::Rect(size) => *size,
             Self::Circle(r) => (*r, *r).into(),
+            Self::Triangle(a, b, c) => vec![a, b, c].size() / 2.0,
         }
     }
 
@@ -18,6 +26,7 @@ impl Shape {
         match self {
             Self::Rect(size) => size.width,
             Self::Circle(r) => *r,
+            Self::Triangle(a, b, c) => vec![a, b, c].width() / 2.0,
         }
     }
 
@@ -25,6 +34,7 @@ impl Shape {
         match self {
             Self::Rect(size) => size.height,
             Self::Circle(r) => *r,
+            Self::Triangle(a, b, c) => vec![a, b, c].height() / 2.0,
         }
     }
 }

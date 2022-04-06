@@ -1,8 +1,8 @@
 use gm::flat::{Point, Shape};
-use rapier2d::{na::Vector2, prelude::ColliderBuilder};
+use rapier2d::na::Vector2;
 use rtools::{IntoF32, Rglica};
 
-use crate::{Level, Sprite, SpriteData};
+use crate::{Level, Sprite, SpriteData, ToCollider};
 
 #[derive(Debug)]
 pub struct Wall {
@@ -32,14 +32,12 @@ impl Sprite for Wall {
         &mut self.data
     }
 
-    fn make(shape: Shape, position: Point, mut level: Rglica<dyn Level>) -> Box<Self>
-    where
-        Self: Sized,
-    {
-        let mut sprite = SpriteData::make(shape, position);
-        let collider = ColliderBuilder::cuboid(sprite.shape.width(), sprite.shape.height())
-            .translation(Vector2::new(sprite.position.x, sprite.position.y))
+    fn make(shape: Shape, position: Point, mut level: Rglica<dyn Level>) -> Box<Self> {
+        let collider = shape
+            .to_collider()
+            .translation(Vector2::new(position.x, position.y))
             .build();
+        let mut sprite = SpriteData::make(shape, position);
         sprite.collider_handle = level.base_mut().sets.collider.insert(collider).into();
         Box::new(Wall {
             data: sprite.with_level(level),

@@ -52,7 +52,7 @@ impl Level for BenchmarkLevel {
     }
 
     fn update(&mut self) {
-        self.player.weapon.shoot_at((10, 15).into());
+        self.player.weapon.shoot_at((10, 15));
         self.bullets_count += 1;
         self.left_wall.set_x(self.left_animation.value());
         self.right_wall.set_x(self.right_animation.value());

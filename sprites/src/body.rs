@@ -1,11 +1,8 @@
 use gm::flat::{Point, Shape};
-use rapier2d::{
-    na::Vector2,
-    prelude::{ColliderBuilder, RigidBodyBuilder},
-};
+use rapier2d::{na::Vector2, prelude::RigidBodyBuilder};
 use rtools::Rglica;
 
-use crate::{control::Control, Level, Sprite, SpriteData};
+use crate::{control::Control, Level, Sprite, SpriteData, ToCollider};
 
 #[derive(Debug)]
 pub struct Body {
@@ -48,12 +45,7 @@ impl Sprite for Body {
             .translation(Vector2::new(position.x, position.y))
             .build();
 
-        let collider = match shape {
-            Shape::Rect(size) => ColliderBuilder::cuboid(size.width, size.height),
-            Shape::Circle(r) => ColliderBuilder::ball(r),
-        };
-
-        let collider = collider.restitution(0.7).build();
+        let collider = shape.to_collider().restitution(0.7).build();
 
         let level_base = level.base_mut();
 
