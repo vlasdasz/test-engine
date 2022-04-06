@@ -151,7 +151,11 @@ impl Debug for LevelBase {
     }
 }
 
-pub fn add_sprite<T: 'static + Sprite>(shape: impl Into<Shape>, position: impl Into<Point>, level: &mut dyn Level) -> Rglica<T> {
+pub fn add_sprite<T: 'static + Sprite>(
+    shape: impl Into<Shape>,
+    position: impl Into<Point>,
+    level: &mut dyn Level,
+) -> Rglica<T> {
     let sprite = T::make(shape.into(), position.into(), level.rglica());
     let result = sprite.to_rglica();
     level.add_sprite(sprite);

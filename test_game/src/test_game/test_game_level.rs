@@ -47,7 +47,7 @@ impl Level for TestGameLevel {
         add_sprite::<Wall>((1, 100), (-20, 0), self).set_image(square);
 
         for i in 0..50 {
-            add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2, ), self);
+            add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2), self);
         }
 
         let mut this = self.to_rglica();

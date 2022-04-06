@@ -30,7 +30,6 @@ pub struct SpriteData {
 }
 
 impl SpriteData {
-
     pub fn make(shape: Shape, position: Point) -> Self {
         Self {
             position,

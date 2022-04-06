@@ -7,7 +7,7 @@ use gl_image::Image;
 use gm::flat::{Point, Shape};
 use rtools::Rglica;
 
-use crate::{Body, Level, Sprite, SpriteData};
+use crate::{add_sprite, Body, Level, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Weapon {
@@ -20,21 +20,19 @@ pub struct Weapon {
 impl Weapon {
     pub fn shoot_at(&mut self, pos: Point) {
         let vector = (pos - self.position()).normalized();
-        let pos = self.position() + vector * 3.2;
+        let pos = self.position() + vector * 4;
 
         let vel = vector * self.bullet_speed + self.velocity;
 
-        let mut body = Body::make((0.8, 0.15).into(), pos, self.level);
+        let mut bullet = add_sprite::<Body>(0.5, pos, self.level.deref_mut());
 
-        body.set_rotation(self.rotation());
-        body.set_velocity(vel);
-        body.data_mut().tag = "bullet".into();
+        bullet.set_rotation(self.rotation());
+        bullet.set_velocity(vel);
+        bullet.data_mut().tag = "bullet".into();
 
         if let Some(image) = &self.bullet_image {
-            body.set_image(image.clone())
+            bullet.set_image(image.clone())
         }
-
-        self.level_mut().add_sprite(body);
     }
 }
 

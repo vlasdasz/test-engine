@@ -25,6 +25,10 @@ impl Body {
     pub fn lock_rotations(&mut self) {
         self.rigid_body_mut().lock_rotations(true, true);
     }
+
+    pub fn unlock_rotation(&mut self) {
+        self.rigid_body_mut().lock_rotations(false, true);
+    }
 }
 
 impl Sprite for Body {
@@ -44,9 +48,12 @@ impl Sprite for Body {
             .translation(Vector2::new(position.x, position.y))
             .build();
 
-        let collider = ColliderBuilder::cuboid(shape.width(), shape.height())
-            .restitution(0.7)
-            .build();
+        let collider = match shape {
+            Shape::Rect(size) => ColliderBuilder::cuboid(size.width, size.height),
+            Shape::Circle(r) => ColliderBuilder::ball(r),
+        };
+
+        let collider = collider.restitution(0.7).build();
 
         let level_base = level.base_mut();
 

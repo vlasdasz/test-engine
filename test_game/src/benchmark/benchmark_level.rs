@@ -52,10 +52,18 @@ impl Level for BenchmarkLevel {
     }
 
     fn update(&mut self) {
-        self.player.weapon.shoot_at((10, 5).into());
+        self.player.weapon.shoot_at((10, 15).into());
         self.bullets_count += 1;
         self.left_wall.set_x(self.left_animation.value());
         self.right_wall.set_x(self.right_animation.value());
+    }
+
+    fn on_key_pressed(&mut self, key: String) {
+        if key == "-" {
+            self.set_scale(self.scale() / 2.0);
+        } else if key == "=" {
+            self.set_scale(self.scale() * 2.0);
+        }
     }
 
     fn base(&self) -> &LevelBase {

@@ -2,10 +2,9 @@ use std::fmt::Debug;
 
 use gl_image::Image;
 use gm::{
-    flat::{Point, Size},
+    flat::{Point, Shape, Size},
     Color,
 };
-use gm::flat::Shape;
 use rapier2d::{geometry::Collider, prelude::RigidBody};
 use rtools::{address::Address, Rglica};
 
