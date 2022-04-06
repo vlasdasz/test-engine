@@ -1,7 +1,7 @@
 use derivative::Derivative;
 use gl_image::Image;
 use gm::{
-    flat::{Point, Rect, Shape},
+    flat::{Point, Shape},
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
@@ -30,6 +30,16 @@ pub struct SpriteData {
 }
 
 impl SpriteData {
+
+    pub fn make(shape: Shape, position: Point) -> Self {
+        Self {
+            position,
+            shape,
+            color: Color::random(),
+            ..Default::default()
+        }
+    }
+
     pub(crate) fn with_level(mut self, level: Rglica<dyn Level>) -> Self {
         debug_assert!(level.is_ok());
         self.level = level;
@@ -48,17 +58,6 @@ impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Spri
     }
 }
 
-impl From<Rect> for SpriteData {
-    fn from(rect: Rect) -> Self {
-        Self {
-            position: rect.origin,
-            shape: rect.size.into(),
-            color: Color::random(),
-            ..Default::default()
-        }
-    }
-}
-
 impl Sprite for SpriteData {
     fn data(&self) -> &SpriteData {
         self
@@ -68,10 +67,10 @@ impl Sprite for SpriteData {
         self
     }
 
-    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized,
     {
-        Box::new(SpriteData::from(rect).with_level(level))
+        Box::new(SpriteData::make(shape, position).with_level(level))
     }
 }

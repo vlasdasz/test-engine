@@ -1,4 +1,4 @@
-use gm::flat::Rect;
+use gm::flat::{Point, Shape};
 use rapier2d::{na::Vector2, prelude::ColliderBuilder};
 use rtools::{IntoF32, Rglica};
 
@@ -32,11 +32,11 @@ impl Sprite for Wall {
         &mut self.data
     }
 
-    fn make(rect: Rect, mut level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, mut level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized,
     {
-        let mut sprite = SpriteData::from(rect);
+        let mut sprite = SpriteData::make(shape, position);
         let collider = ColliderBuilder::cuboid(sprite.shape.width(), sprite.shape.height())
             .translation(Vector2::new(sprite.position.x, sprite.position.y))
             .build();

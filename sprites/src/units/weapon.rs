@@ -4,7 +4,7 @@ use std::{
 };
 
 use gl_image::Image;
-use gm::flat::{Point, Rect};
+use gm::flat::{Point, Shape};
 use rtools::Rglica;
 
 use crate::{Body, Level, Sprite, SpriteData};
@@ -24,7 +24,7 @@ impl Weapon {
 
         let vel = vector * self.bullet_speed + self.velocity;
 
-        let mut body = Body::make((pos.x, pos.y, 0.8, 0.15).into(), self.level);
+        let mut body = Body::make((0.8, 0.15).into(), pos, self.level);
 
         body.set_rotation(self.rotation());
         body.set_velocity(vel);
@@ -47,12 +47,12 @@ impl Sprite for Weapon {
         &mut self.sprite
     }
 
-    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized,
     {
         Box::new(Self {
-            sprite:       SpriteData::from(rect).with_level(level),
+            sprite:       SpriteData::make(shape, position).with_level(level),
             velocity:     Default::default(),
             bullet_speed: 1.0,
             bullet_image: None,

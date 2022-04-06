@@ -35,20 +35,19 @@ impl TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        self.player = add_sprite((0, 5, 2, 2), self);
+        self.player = add_sprite((2, 2), (0, 5), self);
         self.player.set_image(Assets::image("frisk.png"));
 
         self.player.weapon.set_image(Assets::image("frisk.png"));
 
         let square = Assets::image("square.png");
 
-        add_sprite::<Wall>((0, 0, 100, 1), self).set_image(square.clone());
-        add_sprite::<Wall>((20, 0, 1, 100), self).set_image(square.clone());
-        add_sprite::<Wall>((-20, 0, 1, 100), self).set_image(square);
+        add_sprite::<Wall>((100, 1), (0, 0), self).set_image(square.clone());
+        add_sprite::<Wall>((1, 100), (20, 0), self).set_image(square.clone());
+        add_sprite::<Wall>((1, 100), (-20, 0), self).set_image(square);
 
         for i in 0..50 {
-            let body = Body::make((0.1 * i as f32, i * 2, 0.5, 0.5).into(), self.rglica());
-            self.add_sprite(body);
+            add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2, ), self);
         }
 
         let mut this = self.to_rglica();

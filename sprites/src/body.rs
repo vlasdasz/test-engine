@@ -1,4 +1,4 @@
-use gm::flat::{Point, Rect};
+use gm::flat::{Point, Shape};
 use rapier2d::{
     na::Vector2,
     prelude::{ColliderBuilder, RigidBodyBuilder},
@@ -36,15 +36,15 @@ impl Sprite for Body {
         &mut self.sprite
     }
 
-    fn make(rect: Rect, mut level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, mut level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized,
     {
         let rigid_body = RigidBodyBuilder::new_dynamic()
-            .translation(Vector2::new(rect.origin.x, rect.origin.y))
+            .translation(Vector2::new(position.x, position.y))
             .build();
 
-        let collider = ColliderBuilder::cuboid(rect.size.width, rect.size.height)
+        let collider = ColliderBuilder::cuboid(shape.width(), shape.height())
             .restitution(0.7)
             .build();
 
@@ -58,7 +58,7 @@ impl Sprite for Body {
             &mut level_base.sets.rigid_body,
         );
 
-        let mut sprite = SpriteData::from(rect);
+        let mut sprite = SpriteData::make(shape, position);
 
         sprite.collider_handle = collider_handle.into();
         sprite.rigid_handle = rigid_handle.into();

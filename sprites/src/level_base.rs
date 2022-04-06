@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ops::Deref};
 
-use gm::flat::{Point, Rect};
+use gm::flat::{Point, Shape};
 use rapier2d::{
     geometry::ContactEvent,
     na::Vector2,
@@ -151,8 +151,8 @@ impl Debug for LevelBase {
     }
 }
 
-pub fn add_sprite<T: 'static + Sprite>(rect: impl Into<Rect>, level: &mut dyn Level) -> Rglica<T> {
-    let sprite = T::make(rect.into(), level.rglica());
+pub fn add_sprite<T: 'static + Sprite>(shape: impl Into<Shape>, position: impl Into<Point>, level: &mut dyn Level) -> Rglica<T> {
+    let sprite = T::make(shape.into(), position.into(), level.rglica());
     let result = sprite.to_rglica();
     level.add_sprite(sprite);
     result

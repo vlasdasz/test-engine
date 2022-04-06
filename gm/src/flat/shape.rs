@@ -1,6 +1,6 @@
 use crate::flat::Size;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub enum Shape {
     Rect(Size),
     Circle(f32),

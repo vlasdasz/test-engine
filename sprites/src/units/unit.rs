@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::flat::Rect;
+use gm::flat::{Point, Shape};
 use rapier2d::prelude::ActiveEvents;
 use rtools::{Rglica, ToRglica};
 
@@ -34,11 +34,11 @@ impl Sprite for Unit {
         self.body.data_mut()
     }
 
-    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized,
     {
-        let mut body = Body::make(rect, level);
+        let mut body = Body::make(shape, position, level);
 
         body.lock_rotations();
         body.collider_mut().set_restitution(0.0);

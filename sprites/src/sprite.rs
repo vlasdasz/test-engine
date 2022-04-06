@@ -2,9 +2,10 @@ use std::fmt::Debug;
 
 use gl_image::Image;
 use gm::{
-    flat::{Point, Rect, Size},
+    flat::{Point, Size},
     Color,
 };
+use gm::flat::Shape;
 use rapier2d::{geometry::Collider, prelude::RigidBody};
 use rtools::{address::Address, Rglica};
 
@@ -128,7 +129,7 @@ pub trait Sprite: Debug {
 
     fn data(&self) -> &SpriteData;
     fn data_mut(&mut self) -> &mut SpriteData;
-    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized;
 }

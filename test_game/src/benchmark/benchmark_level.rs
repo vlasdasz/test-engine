@@ -22,20 +22,14 @@ impl BenchmarkLevel {
     fn make_walls(&mut self) {
         let square = Assets::image("square.png");
 
-        let floor = Wall::make((0, 0, 100, 10).into(), self.rglica());
-        self.floor = floor.to_rglica();
+        self.floor = add_sprite((100, 10), (0, 0), self);
         self.floor.set_image(square.clone());
-        self.add_sprite(floor);
 
-        let left_wall = Wall::make((-40, 0, 10, 100).into(), self.rglica());
-        self.left_wall = left_wall.to_rglica();
+        self.left_wall = add_sprite((10, 100), (-40, 0), self);
         self.left_wall.set_image(square.clone());
-        self.add_sprite(left_wall);
 
-        let right_wall = Wall::make((40, 0, 10, 100).into(), self.rglica());
-        self.right_wall = right_wall.to_rglica();
+        self.right_wall = add_sprite((10, 100), (40, 0), self);
         self.right_wall.set_image(square);
-        self.add_sprite(right_wall);
 
         self.left_animation = Animation::new(-60, -55, 10);
         self.right_animation = Animation::new(60, 55, 10);
@@ -45,7 +39,7 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        self.player = add_sprite((0, 5, 2, 2), self);
+        self.player = add_sprite((2, 2), (0, 5), self);
 
         self.player.set_image(Assets::image("frisk.png"));
 

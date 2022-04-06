@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::flat::{Point, Rect};
+use gm::flat::{Point, Shape};
 use rtools::Rglica;
 
 use crate::{Level, Sprite, SpriteData, Unit, Weapon};
@@ -43,13 +43,13 @@ impl Sprite for Player {
         self.unit.data_mut()
     }
 
-    fn make(rect: Rect, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized,
     {
         Box::new(Player {
-            unit:   *Unit::make(rect, level),
-            weapon: *Weapon::make(rect, level),
+            unit:   *Unit::make(shape, position, level),
+            weapon: *Weapon::make(shape, position, level),
         })
     }
 }
