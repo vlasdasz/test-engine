@@ -89,6 +89,11 @@ impl Placer {
         self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
     }
 
+    pub fn bottom_center(&mut self, margin: impl IntoF32) {
+        self.center_hor();
+        self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
+    }
+
     pub fn left_half(&mut self) {
         *self.frame = (0, 0, self.s_width() / 2.0, self.s_height()).into();
     }

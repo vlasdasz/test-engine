@@ -2,10 +2,13 @@ use rtools::Rglica;
 use sprites::{Level, SpritesDrawer};
 use ui::{Touch, View};
 
+use crate::ui_layer::UILayer;
+
 pub trait GameView: View {
     fn level(&self) -> &dyn Level;
     fn level_mut(&mut self) -> &mut dyn Level;
-    fn set_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
+    fn set_ui(&mut self, ui: Rglica<UILayer>);
+    fn set_sprites_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
         self.level_mut().set_drawer(drawer)
     }
     fn pass_touch_to_level(&mut self, touch: Touch) {

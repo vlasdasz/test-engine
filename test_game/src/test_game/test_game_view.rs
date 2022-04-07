@@ -1,20 +1,22 @@
-use rtools::{Rglica, ToRglica};
+use rtools::{Boxed, Rglica, ToRglica};
 use test_engine::{
     assets::Assets,
     game_view::GameView,
     sprite_view::SpriteView,
     sprites::Control,
     ui::{
+        basic::Button,
         complex::{AnalogStickView, LabeledSlider},
         placer::Anchor,
         test::test_view::TestView,
         view_base::{add_view, add_view_with_frame, make_view_on, ViewBase},
         DPadView, View,
     },
+    ui_layer::UILayer,
     Level,
 };
 
-use crate::test_game::test_game_level::TestGameLevel;
+use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView};
 
 #[derive(Default, Debug)]
 pub struct TestGameView {
@@ -25,6 +27,10 @@ pub struct TestGameView {
     sprite:     Rglica<SpriteView>,
     slider:     Rglica<LabeledSlider>,
     test_view:  Rglica<TestView>,
+
+    to_benchmark: Rglica<Button>,
+
+    ui: Rglica<UILayer>,
 }
 
 impl TestGameView {
@@ -84,6 +90,14 @@ impl TestGameView {
         self.test_view.set_button_image(Assets::image("square.png"));
         self.test_view
             .set_animation_image(Assets::image("palm.png"));
+
+        self.to_benchmark = add_view(self);
+        self.to_benchmark.set_text("Benchmark");
+        self.to_benchmark.frame_mut().size = (120, 20).into();
+        let mut this = self.to_rglica();
+        self.to_benchmark.on_tap.subscribe(move |_| {
+            this.ui.set_view(BenchmarkView::boxed());
+        });
     }
 }
 
@@ -113,6 +127,8 @@ impl View for TestGameView {
         self.test_view.place().bottom_right(20);
         self.test_view.place().proportional_width(0.28);
         self.test_view.place().proportional_height(0.8);
+
+        self.to_benchmark.place().bottom_center(10);
     }
 
     fn view(&self) -> &ViewBase {
@@ -130,5 +146,9 @@ impl GameView for TestGameView {
     }
     fn level_mut(&mut self) -> &mut dyn Level {
         &mut self.level
+    }
+
+    fn set_ui(&mut self, ui: Rglica<UILayer>) {
+        self.ui = ui
     }
 }
