@@ -63,7 +63,8 @@ impl View for DPadView {
         self.up.set_frame((third, 0, third, half).into());
         self.down.set_frame((third, half, third, half).into());
         self.left.set_frame((0, half, third, half).into());
-        self.right.set_frame((third * 2.0, half, third, half).into());
+        self.right
+            .set_frame((third * 2.0, half, third, half).into());
     }
 
     fn view(&self) -> &ViewBase {

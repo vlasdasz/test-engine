@@ -4,7 +4,7 @@ use rtools::{Animation, Rglica, ToRglica, Unwrap};
 
 use crate::{
     basic::Button,
-    complex::DrawingView,
+    complex::{DrawingView, TableView},
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
     view_base::{add_view, make_view_on, ViewBase},
     ImageView, Label, View,
@@ -20,6 +20,7 @@ pub struct TestView {
     drawing:  Rglica<DrawingView>,
     layout:   Rglica<LayoutView>,
     animated: Rglica<ImageView>,
+    table:    Rglica<TableView<String>>,
 
     animation: Unwrap<Animation>,
 
@@ -70,6 +71,10 @@ impl View for TestView {
         self.animated.frame_mut().size = (100, 100).into();
 
         self.animation = Animation::new(0, 400, 10).into();
+
+        self.table = add_view(self);
+        self.table
+            .set_data(vec!["spika".into(), "rglica".into(), "sokol".into()]);
     }
 
     fn layout(&mut self) {

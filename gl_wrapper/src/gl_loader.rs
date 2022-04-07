@@ -29,11 +29,16 @@ impl Default for GLLoader {
             .create_window(500, 500, "Test Engine", glfw::WindowMode::Windowed)
             .expect("Failed to create GLFW window.");
 
-        GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
+        GL!(load_with, |symbol| window.get_proc_address(symbol)
+            as *const _);
 
         window.make_current();
 
-        GLLoader { glfw, window, events }
+        GLLoader {
+            glfw,
+            window,
+            events,
+        }
     }
 }
 

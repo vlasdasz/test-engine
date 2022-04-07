@@ -24,7 +24,11 @@ static mut APP: *mut App<TestGameView> = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
-    unsafe { APP.as_mut().unwrap_unchecked().set_screen_size(width, height) }
+    unsafe {
+        APP.as_mut()
+            .unwrap_unchecked()
+            .set_screen_size(width, height)
+    }
 }
 
 #[no_mangle]
@@ -81,7 +85,11 @@ pub mod android {
             Config::default()
                 .with_min_level(Level::Trace)
                 .with_tag("test_engine")
-                .with_filter(FilterBuilder::new().parse("debug,hello::crate=error").build()),
+                .with_filter(
+                    FilterBuilder::new()
+                        .parse("debug,hello::crate=error")
+                        .build(),
+                ),
         );
 
         trace!("this is a verbose {}", "message");

@@ -1,4 +1,5 @@
-#![feature(exact_size_is_empty)]
+#![allow(incomplete_features)]
+#![feature(trait_upcasting)]
 
 use std::{path::PathBuf, sync::Mutex};
 

@@ -1,15 +1,19 @@
 use derivative::Derivative;
-use rtools::Boxed;
+use rtools::{Boxed, Rglica};
 
-use crate::{view_base::ViewBase, Font, ImageView, View};
+use crate::{
+    view_base::{add_view, ViewBase},
+    Font, ImageView, View,
+};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
 pub struct Label {
     #[derivative(Debug = "ignore")]
-    font: Font,
-    text: String,
-    base: ViewBase,
+    font:    Font,
+    text:    String,
+    base:    ViewBase,
+    content: Rglica<ViewBase>,
 }
 
 impl Label {
@@ -27,7 +31,7 @@ impl Label {
     }
 
     fn set_letters(&mut self) {
-        self.remove_all_subviews();
+        self.content.remove_all_subviews();
 
         if self.text.is_empty() {
             return;
@@ -37,7 +41,7 @@ impl Label {
         let mut advance: f32 = 0.0;
         let mut content_size = self.base.frame().size;
 
-        content_size.height = self.font.height;
+        content_size.height = self.font.height / 2.0;
 
         let text = self.text.clone();
 
@@ -67,24 +71,24 @@ impl Label {
 
             advance += glyph.advance as f32;
 
-            self.add_subview(glyph_view);
+            self.content.add_subview(glyph_view);
         }
 
         content_size.width = last_max_x;
 
-        let frame = (
-            self.view().frame().origin.x,
-            self.view().frame().origin.y,
-            content_size.width,
-            content_size.height,
-        )
-            .into();
-
-        self.set_frame(frame);
+        self.content.frame_mut().size = content_size;
     }
 }
 
 impl View for Label {
+    fn setup(&mut self) {
+        self.content = add_view(self);
+    }
+
+    fn layout(&mut self) {
+        self.content.place().center();
+    }
+
     fn view(&self) -> &ViewBase {
         &self.base
     }

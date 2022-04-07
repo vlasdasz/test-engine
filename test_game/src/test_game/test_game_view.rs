@@ -36,9 +36,11 @@ impl TestGameView {
             .on_press
             .subscribe(move |direction| player.move_by_direction(direction));
 
-        self.left_stick.on_direction_change.subscribe(move |direction| {
-            player.add_impulse(direction);
-        });
+        self.left_stick
+            .on_direction_change
+            .subscribe(move |direction| {
+                player.add_impulse(direction);
+            });
     }
 
     fn setup_slider(&mut self) {
@@ -80,7 +82,8 @@ impl TestGameView {
         self.test_view = add_view_with_frame(self, (280, 400));
         self.test_view.set_image(Assets::image("cat.png"));
         self.test_view.set_button_image(Assets::image("square.png"));
-        self.test_view.set_animation_image(Assets::image("palm.png"));
+        self.test_view
+            .set_animation_image(Assets::image("palm.png"));
     }
 }
 

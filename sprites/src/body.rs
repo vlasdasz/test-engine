@@ -16,7 +16,8 @@ impl Body {
     }
 
     pub fn set_velocity(&mut self, vel: Point) {
-        self.rigid_body_mut().set_linvel([vel.x, vel.y].into(), true)
+        self.rigid_body_mut()
+            .set_linvel([vel.x, vel.y].into(), true)
     }
 
     pub fn lock_rotations(&mut self) {

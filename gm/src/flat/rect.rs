@@ -53,7 +53,11 @@ impl Rect {
 
 impl Rect {
     pub fn center(&self) -> Point {
-        (self.x() + self.width() / 2.0, self.y() + self.height() / 2.0).into()
+        (
+            self.x() + self.width() / 2.0,
+            self.y() + self.height() / 2.0,
+        )
+            .into()
     }
 
     pub fn set_center(&mut self, center: Point) {

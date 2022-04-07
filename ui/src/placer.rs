@@ -49,7 +49,11 @@ impl Placer {
     pub fn background_margin(&mut self, margin: impl IntoF32) {
         let margin = margin.into_f32();
         self.frame.origin = (margin, margin).into();
-        self.frame.size = (self.s_width() - margin * 2.0, self.s_height() - margin * 2.0).into();
+        self.frame.size = (
+            self.s_width() - margin * 2.0,
+            self.s_height() - margin * 2.0,
+        )
+            .into();
     }
 
     pub fn center_hor(&mut self) {
