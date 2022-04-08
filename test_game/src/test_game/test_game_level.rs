@@ -66,7 +66,7 @@ impl Level for TestGameLevel {
     fn update(&mut self) {
         let pos = self.player.position();
         self.set_camera_position(pos);
-        self.player.weapon.shoot_at((5, 5));
+        // self.player.weapon.shoot_at((5, 5));
     }
 
     fn on_key_pressed(&mut self, key: String) {
