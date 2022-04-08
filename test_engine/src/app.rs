@@ -2,6 +2,7 @@ use std::{
     ffi::{c_float, c_int},
     marker::PhantomData,
     os::raw::c_ulong,
+    path::{Path, PathBuf},
 };
 
 use gl_wrapper::monitor::Monitor;
@@ -19,9 +20,9 @@ pub struct App<T> {
 }
 
 impl<T: GameView + 'static> App<T> {
-    fn create_screen(&mut self, monitor: Monitor) {
+    fn create_screen(&mut self, assets_path: &Path, monitor: Monitor) {
         self.runtime.block_on(async {
-            let mut screen = Screen::new(monitor.resolution);
+            let mut screen = Screen::new(assets_path, monitor.resolution);
 
             screen.ui.set_view(T::boxed());
             screen.ui.add_debug_view();
@@ -84,7 +85,7 @@ impl<T: GameView + 'static> App<T> {
         error!("{:?}", &monitor);
         dbg!(&monitor);
 
-        self.create_screen(monitor);
+        self.create_screen(&PathBuf::new(), monitor);
     }
 }
 

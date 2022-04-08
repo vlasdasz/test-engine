@@ -8,8 +8,6 @@ use ui::{
     View,
 };
 
-use crate::assets::Assets;
-
 #[derive(Default, Debug)]
 pub struct SpriteView {
     base: ViewBase,
@@ -40,7 +38,7 @@ impl SpriteView {
 
     fn setup_delete_button(&mut self) {
         self.delete_button = add_view(self);
-        self.delete_button.set_image(Assets::image("delete.png"));
+        //self.delete_button.set_image(Assets::image("delete.png"));
         self.delete_button.set_hidden(true);
 
         self.delete_button.set_frame((20, 20).into());

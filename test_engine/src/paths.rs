@@ -1,58 +1,73 @@
-use std::path::PathBuf;
+use std::{
+    path::{Path, PathBuf},
+    rc::Rc,
+};
 
 use home::home_dir;
 
 pub fn home() -> PathBuf {
-    home_dir().unwrap_or_default()
+    home_dir().unwrap()
 }
 
-pub fn root() -> PathBuf {
-    #[cfg(not(target_os = "ios"))]
-    return home().join("game_name/test_engine");
-    #[cfg(target_os = "android")]
-    return Default::default();
-    #[cfg(target_os = "ios")]
-    return std::env::current_exe()
-        .unwrap_or_default()
-        .parent()
-        .unwrap()
-        .to_path_buf();
+pub struct Paths {
+    pub assets:  PathBuf,
+    pub images:  PathBuf,
+    pub fonts:   PathBuf,
+    pub shaders: ShaderPaths,
 }
 
-pub fn assets() -> PathBuf {
-    #[cfg(target_os = "android")]
-    return Default::default();
-    #[cfg(not(target_os = "android"))]
-    return root().join("Assets");
+impl Paths {
+    pub fn new(root: &Path) -> Rc<Self> {
+        let root = Self::root(root);
+        let assets = Self::assets(&root);
+        Rc::new(Self {
+            assets:  assets.clone(),
+            images:  assets.join("Images"),
+            fonts:   assets.join("Fonts"),
+            shaders: ShaderPaths::with_assets(&assets),
+        })
+    }
 }
 
-pub fn images() -> PathBuf {
-    assets().join("Images")
+impl Paths {
+    fn root(_base: &Path) -> PathBuf {
+        #[cfg(not(target_os = "ios"))]
+        return _base.into();
+        #[cfg(target_os = "android")]
+        return Default::default();
+        #[cfg(target_os = "ios")]
+        return std::env::current_exe()
+            .unwrap_or_default()
+            .parent()
+            .unwrap()
+            .to_path_buf();
+    }
+
+    pub fn assets(root: &Path) -> PathBuf {
+        #[cfg(target_os = "android")]
+        return Default::default();
+        #[cfg(not(target_os = "android"))]
+        return root.join("Assets");
+    }
 }
-pub fn fonts() -> PathBuf {
-    assets().join("Fonts")
+
+pub struct ShaderPaths {
+    pub ui:        PathBuf,
+    pub sprites:   PathBuf,
+    pub isometric: PathBuf,
+    pub include:   PathBuf,
+    pub test:      PathBuf,
 }
 
-pub mod shaders {
-    use std::path::PathBuf;
-
-    pub fn root() -> PathBuf {
-        super::assets().join("Shaders")
-    }
-
-    pub fn ui() -> PathBuf {
-        root().join("ui")
-    }
-    pub fn sprites() -> PathBuf {
-        root().join("sprites")
-    }
-    pub fn isometric() -> PathBuf {
-        root().join("isometric")
-    }
-    pub fn include() -> PathBuf {
-        root().join("include")
-    }
-    pub fn test() -> PathBuf {
-        root().join("test")
+impl ShaderPaths {
+    fn with_assets(assets: &Path) -> Self {
+        let root = assets.join("Shaders");
+        Self {
+            ui:        root.join("ui"),
+            sprites:   root.join("sprites"),
+            isometric: root.join("isometric"),
+            include:   root.join("include"),
+            test:      root.join("test"),
+        }
     }
 }

@@ -6,7 +6,6 @@ use sprites::SpritesDrawer;
 
 use crate::{assets::Assets, Sprite};
 
-#[derive(Default)]
 pub struct TESpritesDrawer {
     scale:           f32,
     resolution:      Size,

@@ -25,9 +25,9 @@ pub struct ShaderCompiler {
 }
 
 impl ShaderCompiler {
-    pub fn new(path: PathBuf) -> ShaderCompiler {
+    pub fn new(path: &Path) -> ShaderCompiler {
         ShaderCompiler {
-            path,
+            path:    path.into(),
             gl_info: GLInfo::get(),
         }
     }

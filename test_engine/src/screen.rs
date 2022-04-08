@@ -1,4 +1,4 @@
-use std::{ops::DerefMut, rc::Rc};
+use std::{ops::DerefMut, path::Path, rc::Rc};
 
 use cfg_if::cfg_if;
 use chrono::Utc;
@@ -9,7 +9,7 @@ use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{ToRglica, Unwrap};
 use sprites::SpritesDrawer;
 
-use crate::{assets::Assets, paths, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
+use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 
 pub struct Screen {
     pub ui: Box<UILayer>,
@@ -148,15 +148,21 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: Size) -> Self {
-        ui::set_default_font_path(paths::fonts().join("SF.otf"));
+    pub fn new(assets_path: &Path, size: Size) -> Self {
+        let mut assets = Assets::new(assets_path);
+
+        ui::set_default_font_path(assets.paths.fonts.join("SF.otf"));
 
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let events = Box::new(Events::default());
 
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         let drawer = GLDrawer::new(events.to_rglica());
-        let assets = Rc::new(Assets::default());
+
+        assets.init_gl_data();
+
+        let assets = Rc::new(assets);
+
         let sprites_drawer: Box<dyn SpritesDrawer> = TESpritesDrawer::new(assets.clone());
 
         let mut ui = UILayer::new(assets, sprites_drawer.to_rglica());

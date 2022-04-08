@@ -2,7 +2,7 @@
 #![feature(explicit_generic_args_with_impl_trait)]
 
 use rtools::Boxed;
-use test_engine::Screen;
+use test_engine::{paths::home, Screen};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -13,7 +13,7 @@ mod benchmark;
 mod test_game;
 
 fn main() {
-    let mut screen = Screen::new((1000, 600).into());
+    let mut screen = Screen::new(&home().join("game_name/test_engine"), (1000, 600).into());
 
     screen.ui.set_view(TestGameView::boxed());
     screen.ui.add_debug_view();

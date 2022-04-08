@@ -25,6 +25,7 @@ impl Image {
     }
 
     pub fn load(path: impl AsRef<Path>) -> Image {
+        dbg!(path.as_ref());
         let image = image::load_from_memory(&File::read(path.as_ref())).unwrap_or_else(|_| {
             error!("Failed to open image {:?}", path.as_ref());
             panic!();

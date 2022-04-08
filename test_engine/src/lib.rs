@@ -1,6 +1,7 @@
 #![allow(incomplete_features)]
 #![feature(trait_upcasting)]
 #![feature(core_ffi_c)]
+#![feature(const_trait_impl)]
 
 pub use gl_image;
 pub use gl_wrapper;
