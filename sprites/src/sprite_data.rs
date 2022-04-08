@@ -30,15 +30,6 @@ pub struct SpriteData {
 }
 
 impl SpriteData {
-    pub fn make(shape: Shape, position: Point) -> Self {
-        Self {
-            position,
-            shape,
-            color: Color::random(),
-            ..Default::default()
-        }
-    }
-
     pub(crate) fn with_level(mut self, level: Rglica<dyn Level>) -> Self {
         debug_assert!(level.is_ok());
         self.level = level;
@@ -70,6 +61,11 @@ impl Sprite for SpriteData {
     where
         Self: Sized,
     {
-        Box::new(SpriteData::make(shape, position).with_level(level))
+        Box::new(Self {
+            shape,
+            position,
+            level,
+            ..Default::default()
+        })
     }
 }

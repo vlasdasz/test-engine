@@ -50,7 +50,7 @@ impl Sprite for Weapon {
         Self: Sized,
     {
         Box::new(Self {
-            sprite:       SpriteData::make(shape, position).with_level(level),
+            sprite:       *SpriteData::make(shape, position, level),
             velocity:     Default::default(),
             bullet_speed: 1.0,
             bullet_image: None,

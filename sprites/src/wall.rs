@@ -37,10 +37,8 @@ impl Sprite for Wall {
             .to_collider()
             .translation(Vector2::new(position.x, position.y))
             .build();
-        let mut sprite = SpriteData::make(shape, position);
+        let mut sprite = SpriteData::make(shape, position, level);
         sprite.collider_handle = level.base_mut().sets.collider.insert(collider).into();
-        Box::new(Wall {
-            data: sprite.with_level(level),
-        })
+        Box::new(Wall { data: *sprite })
     }
 }

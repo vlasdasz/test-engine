@@ -58,7 +58,7 @@ impl Sprite for Body {
             &mut level_base.sets.rigid_body,
         );
 
-        let mut sprite = SpriteData::make(shape, position);
+        let mut sprite = SpriteData::make(shape, position, level);
 
         sprite.collider_handle = collider_handle.into();
         sprite.rigid_handle = rigid_handle.into();
