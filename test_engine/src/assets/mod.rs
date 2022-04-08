@@ -1,27 +1,31 @@
 mod buffers;
-mod images;
+mod image_manager;
 mod shaders;
 
 use std::{path::Path, rc::Rc};
 
 pub use buffers::Buffers;
+use gl_image::Image;
+pub use image_manager::ImageManager;
 use rtools::Unwrap;
 pub use shaders::Shaders;
 
-use crate::{assets::images::Images, paths::Paths};
+use crate::paths::Paths;
 
 pub struct Assets {
     pub paths:   Rc<Paths>,
-    pub images:  Unwrap<Images>,
     pub buffers: Unwrap<Buffers>,
     pub shaders: Unwrap<Shaders>,
 }
 
 impl Assets {
     pub fn new(root_path: &Path) -> Self {
+        let paths = Paths::new(root_path);
+
+        Image::set_path(&paths.images);
+
         Self {
-            paths:   Paths::new(root_path),
-            images:  Default::default(),
+            paths,
             buffers: Default::default(),
             shaders: Default::default(),
         }

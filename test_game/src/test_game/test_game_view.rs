@@ -1,5 +1,6 @@
 use rtools::{Boxed, Rglica, ToRglica};
 use test_engine::{
+    assets::ImageManager,
     game_view::GameView,
     sprite_view::SpriteView,
     sprites::Control,
@@ -12,7 +13,7 @@ use test_engine::{
         DPadView, View,
     },
     ui_layer::UILayer,
-    Level,
+    Image, Level,
 };
 
 use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView};
@@ -72,12 +73,12 @@ impl TestGameView {
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (200, 150).into();
 
-            // dpad.set_images(
-            //     Assets::image("up.png"),
-            //     Assets::image("down.png"),
-            //     Assets::image("left.png"),
-            //     Assets::image("right.png"),
-            // );
+            dpad.set_images(
+                Image::get("up.png"),
+                Image::get("down.png"),
+                Image::get("left.png"),
+                Image::get("right.png"),
+            );
         });
 
         self.left_stick = add_view(self);
@@ -85,10 +86,9 @@ impl TestGameView {
         self.setup_slider();
 
         self.test_view = add_view_with_frame(self, (280, 400));
-        //self.test_view.set_image(Assets::image("cat.png"));
-        //self.test_view.set_button_image(Assets::image("square.png"));
-        // self.test_view
-        //     .set_animation_image(Assets::image("palm.png"));
+        self.test_view.set_image(Image::get("cat.png"));
+        self.test_view.set_button_image(Image::get("square.png"));
+        self.test_view.set_animation_image(Image::get("palm.png"));
 
         self.to_benchmark = add_view(self);
         self.to_benchmark.set_text("Benchmark");
@@ -149,11 +149,5 @@ impl GameView for TestGameView {
 
     fn set_ui(&mut self, ui: Rglica<UILayer>) {
         self.ui = ui
-    }
-}
-
-impl Drop for TestGameView {
-    fn drop(&mut self) {
-        dbg!("hellof");
     }
 }
