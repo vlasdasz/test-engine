@@ -20,6 +20,10 @@ impl Body {
             .set_linvel([vel.x, vel.y].into(), true)
     }
 
+    pub fn set_restitution(&mut self, res: f32) {
+        self.collider_mut().set_restitution(res)
+    }
+
     pub fn lock_rotations(&mut self) {
         self.rigid_body_mut().lock_rotations(true, true);
     }
@@ -46,7 +50,7 @@ impl Sprite for Body {
             .translation(Vector2::new(position.x, position.y))
             .build();
 
-        let collider = shape.to_collider().restitution(0.7).build();
+        let collider = shape.to_collider().build();
 
         let level_base = level.base_mut();
 

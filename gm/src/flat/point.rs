@@ -174,7 +174,7 @@ impl<T: IntoF32> DivAssign<T> for Point {
     }
 }
 
-impl<X: IntoF32, Y: IntoF32> From<(X, Y)> for Point {
+impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y)> for Point {
     fn from(tup: (X, Y)) -> Self {
         Self {
             x: tup.0.into_f32(),

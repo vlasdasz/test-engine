@@ -1,3 +1,5 @@
+#![feature(const_trait_impl)]
+
 extern crate core;
 
 pub mod color;

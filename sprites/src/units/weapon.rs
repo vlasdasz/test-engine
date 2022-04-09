@@ -24,10 +24,11 @@ impl Weapon {
 
         let vel = vector * self.bullet_speed + self.velocity;
 
-        let mut bullet = add_sprite::<Body>(0.5, pos, self.level.deref_mut());
+        let mut bullet = add_sprite::<Body>(2.5, pos, self.level.deref_mut());
 
         bullet.set_rotation(self.rotation());
         bullet.set_velocity(vel);
+        bullet.set_restitution(2.0);
         bullet.data_mut().tag = "bullet".into();
 
         if let Some(image) = &self.bullet_image {

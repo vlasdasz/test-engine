@@ -36,9 +36,7 @@ impl Maker {
         let (sender, receiver) = mpsc::unbounded_channel::<Grid>();
 
         tokio::spawn(async move {
-            sleep(Duration::from_secs(1)).await;
-
-            let mut maker = Maker::new(50, 50);
+            let mut maker = Maker::new(3, 3);
 
             maker.current_mut().visited = true;
 
@@ -63,7 +61,7 @@ impl Maker {
                 maker.current_pos = next;
                 maker.at_mut(next).visited = true;
 
-                sleep(Duration::from_millis(5)).await;
+                sleep(Duration::from_millis(1000)).await;
             }
         });
 
