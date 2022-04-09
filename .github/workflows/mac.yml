@@ -17,4 +17,4 @@ jobs:
         with:
           submodules: true
       - name: Mac
-        run: cargo build
+        run: arch -arm64 cargo build
