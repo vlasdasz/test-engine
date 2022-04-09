@@ -15,14 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: true
-      - name: Install deps
-        run: |
-          chmod +x ios_deps.sh
-          ./ios_deps.sh
+          submodules: recursive
       - name: Build
-        run: |
-          cargo lipo --release
-          cd mobile/iOS
-          xcodebuild -showsdks
-          xcodebuild -sdk iphonesimulator -scheme TestEngine build
+        run: python3 build.py ios

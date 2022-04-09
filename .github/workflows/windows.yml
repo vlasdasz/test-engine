@@ -15,6 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: true
+          submodules: recursive
       - name: windows
         run: cargo build
