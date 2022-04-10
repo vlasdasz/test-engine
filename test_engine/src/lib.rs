@@ -3,6 +3,7 @@
 #![feature(core_ffi_c)]
 #![feature(const_trait_impl)]
 
+pub use audio;
 pub use gl_image;
 pub use gl_wrapper;
 pub use gm;

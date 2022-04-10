@@ -12,6 +12,7 @@ pub fn home() -> PathBuf {
 pub struct Paths {
     pub assets:  PathBuf,
     pub images:  PathBuf,
+    pub sounds:  PathBuf,
     pub fonts:   PathBuf,
     pub shaders: ShaderPaths,
 }
@@ -23,6 +24,7 @@ impl Paths {
         Rc::new(Self {
             assets:  assets.clone(),
             images:  assets.join("Images"),
+            sounds:  assets.join("Sounds"),
             fonts:   assets.join("Fonts"),
             shaders: ShaderPaths::with_assets(&assets),
         })

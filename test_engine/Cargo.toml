@@ -21,6 +21,7 @@ rtools = { path = "../rtools" }
 gm = { path = "../deps/gm" }
 ui = { path = "../deps/ui" }
 maze = { path = "../deps/maze" }
+audio = { path = "../deps/audio" }
 sprites = { path = "../deps/sprites" }
 gl_image = { path = "../deps/gl_image" }
 gl_wrapper = { path = "../deps/gl_wrapper" }

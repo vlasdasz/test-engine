@@ -3,6 +3,7 @@ mod shaders;
 
 use std::{path::Path, rc::Rc};
 
+use audio::Sound;
 pub use buffers::Buffers;
 use gl_image::Image;
 use rtools::{data_manager::DataManager, Unwrap};
@@ -21,6 +22,7 @@ impl Assets {
         let paths = Paths::new(root_path);
 
         Image::set_path(&paths.images);
+        Sound::set_path(&paths.sounds);
 
         Self {
             paths,

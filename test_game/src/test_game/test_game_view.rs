@@ -1,5 +1,9 @@
-use rtools::{data_manager::DataManager, Boxed, Rglica, ToRglica};
+use rtools::{
+    data_manager::{DataManager, Handle},
+    Boxed, Rglica, ToRglica,
+};
 use test_engine::{
+    audio::Sound,
     game_view::GameView,
     sprite_view::SpriteView,
     sprites::Control,
@@ -28,6 +32,9 @@ pub struct TestGameView {
     test_view:  Rglica<TestView>,
 
     to_benchmark: Rglica<Button>,
+
+    play:  Rglica<Button>,
+    sound: Handle<Sound>,
 
     ui: Rglica<UILayer>,
 }
@@ -96,6 +103,15 @@ impl TestGameView {
         self.to_benchmark.on_tap.subscribe(move |_| {
             this.ui.set_view(BenchmarkView::boxed());
         });
+
+        let this = self.to_rglica();
+        self.play = make_view_on(self, |play: &mut Button| {
+            play.set_text("Play sound");
+            play.frame_mut().size = (120, 20).into();
+            play.on_tap.subscribe(move |_| this.sound.play());
+        });
+
+        self.sound = Sound::get("retro.wav");
     }
 }
 
@@ -127,6 +143,10 @@ impl View for TestGameView {
         self.test_view.place().proportional_height(0.8);
 
         self.to_benchmark.place().bottom_center(10);
+
+        self.play
+            .place()
+            .anchor(self.to_benchmark, Anchor::Top, Anchor::Center, 10);
     }
 
     fn view(&self) -> &ViewBase {
