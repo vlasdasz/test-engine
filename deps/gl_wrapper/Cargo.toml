@@ -1,24 +1,19 @@
 [package]
-name = "ui"
+name = "gl_wrapper"
 version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
 
 [lib]
-name = "ui"
+name = "gl_wrapper"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 log = "0.4"
-fontdue = "0.6"
-derivative = "2.2"
-lazy_static = "1.4"
+cfg-if = "1.0"
 
 gm = { path = "../gm" }
-gl_image = { path = "../gl_image" }
-gl_wrapper = { path = "../gl_wrapper" }
-
-rtools = { path = "../rtools" }
+rtools = { path = "../../rtools" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14"
@@ -26,4 +21,4 @@ glfw = "0.43"
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 mashup = "0.1"
-gles31-sys = { path = "../gles31-sys" }
+gles31-sys = { path = "../../gles31-sys" }

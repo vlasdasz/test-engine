@@ -1,15 +1,14 @@
 [workspace]
 
 members = [
-    "gm",
-    "ui",
-    "test",
-    "maze",
-    "sprites",
-    "gl_image",
     "test_game",
-    "gl_wrapper",
     "test_engine",
+    "deps/gm",
+    "deps/ui",
+    "deps/maze",
+    "deps/sprites",
+    "deps/gl_image",
+    "deps/gl_wrapper",
 ]
 
 default-members = ["test_game"]
