@@ -78,7 +78,7 @@ impl SpritesDrawer for TESpritesDrawer {
         let mut shader = &self.assets.shaders.sprite;
         let mut buffer = &self.assets.buffers.fullscreen;
 
-        if sprite.image().is_some() {
+        if sprite.image().is_ok() {
             shader = &self.assets.shaders.textured_sprite;
             buffer = &self.assets.buffers.fullscreen_image;
         }
@@ -90,7 +90,7 @@ impl SpritesDrawer for TESpritesDrawer {
         shader.set_position(sprite.position());
         shader.set_rotation(sprite.rotation());
 
-        if let Some(image) = sprite.image() {
+        if let Some(image) = sprite.image().get() {
             shader.set_flipped(image.flipped);
             shader.set_flipped_y(image.flipped_y);
             image.bind();

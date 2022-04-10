@@ -2,7 +2,7 @@ use std::{ffi::c_void, ops::Range, path::Path};
 
 use gl_image::Image;
 use gm::flat::Size;
-use rtools::file::File;
+use rtools::{file::File, misc::hash};
 
 use crate::{Glyph, DEFAULT_FONT};
 
@@ -14,7 +14,13 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
         height: metrics.height as f32,
     };
 
-    let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1, None);
+    let image = Image::from(
+        bitmap.as_ptr() as *const c_void,
+        size,
+        1,
+        hash(symbol),
+        None,
+    );
 
     Glyph::new(
         symbol,

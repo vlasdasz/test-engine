@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::Color;
-use rtools::{Animation, Rglica, ToRglica, Unwrap};
+use rtools::{data_manager::Handle, Animation, Rglica, ToRglica, Unwrap};
 
 use crate::{
     basic::Button,
@@ -28,15 +28,15 @@ pub struct TestView {
 }
 
 impl TestView {
-    pub fn set_image(&mut self, image: Image) {
+    pub fn set_image(&mut self, image: Handle<Image>) {
         self.image.set_image(image)
     }
 
-    pub fn set_button_image(&mut self, image: Image) {
+    pub fn set_button_image(&mut self, image: Handle<Image>) {
         self.button.set_image(image)
     }
 
-    pub fn set_animation_image(&mut self, image: Image) {
+    pub fn set_animation_image(&mut self, image: Handle<Image>) {
         self.animated.set_image(image)
     }
 }

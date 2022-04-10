@@ -22,13 +22,13 @@ impl BenchmarkLevel {
         let square = Image::get("square.png");
 
         self.floor = add_sprite((100, 10), (0, 0), self);
-        self.floor.set_image(square.clone());
+        self.floor.set_image(square);
 
         self.left_wall = add_sprite((10, 100), (-40, 0), self);
-        self.left_wall.set_image(square.clone());
+        self.left_wall.set_image(square);
 
         self.right_wall = add_sprite((10, 100), (40, 0), self);
-        self.right_wall.set_image(square.clone());
+        self.right_wall.set_image(square);
 
         self.left_animation = Animation::new(-60, -55, 10);
         self.right_animation = Animation::new(60, 55, 10);
@@ -40,10 +40,10 @@ impl Level for BenchmarkLevel {
     fn setup(&mut self) {
         self.player = add_sprite((2, 2), (0, 5), self);
 
-        self.player.set_image(Image::get("frisk.png").clone());
+        self.player.set_image(Image::get("frisk.png"));
 
-        self.player.weapon.set_image(Image::get("ak.png").clone());
-        self.player.weapon.bullet_image = Image::get("bullet.png").clone().into();
+        self.player.weapon.set_image(Image::get("ak.png"));
+        self.player.weapon.bullet_image = Image::get("bullet.png");
         self.player.weapon.bullet_speed = 100.0;
 
         self.set_scale(1.0);

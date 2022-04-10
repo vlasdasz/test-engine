@@ -6,7 +6,7 @@ use gm::{
     Color,
 };
 use rapier2d::{geometry::Collider, prelude::RigidBody};
-use rtools::{address::Address, Rglica};
+use rtools::{address::Address, data_manager::Handle, Rglica};
 
 use crate::{Level, SpriteData};
 
@@ -88,16 +88,16 @@ pub trait Sprite: Debug {
         self.data_mut().color = color
     }
 
-    fn image(&self) -> Option<&Image> {
-        self.data().image.as_ref()
+    fn image(&self) -> Handle<Image> {
+        self.data().image
     }
 
-    fn image_mut(&mut self) -> Option<&mut Image> {
-        self.data_mut().image.as_mut()
-    }
+    // fn image_mut(&mut self) -> Option<&mut Image> {
+    //     self.data_mut().image.as_mut()
+    // }
 
-    fn set_image(&mut self, image: Image) {
-        self.data_mut().image = image.into()
+    fn set_image(&mut self, image: Handle<Image>) {
+        self.data_mut().image = image
     }
 
     fn is_selected(&self) -> bool {

@@ -58,8 +58,8 @@ impl UIDrawer {
             return;
         }
 
-        if let Some(image) = view.image() {
-            self.draw_image_in_rect(&image, view.absolute_frame(), view.color());
+        if let Some(image) = view.image().get() {
+            self.draw_image_in_rect(image, view.absolute_frame(), view.color());
         }
 
         self.fill_rect(view.absolute_frame(), view.color());

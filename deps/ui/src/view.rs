@@ -5,7 +5,7 @@ use gm::{
     flat::{Point, Rect},
     Color,
 };
-use rtools::{address::Address, Boxed, Rglica, ToRglica};
+use rtools::{address::Address, data_manager::Handle, Boxed, Rglica, ToRglica};
 
 use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};
 
@@ -208,11 +208,11 @@ pub trait View: Boxed + Debug {
         None
     }
 
-    fn image(&self) -> Option<Image> {
-        None
+    fn image(&self) -> Handle<Image> {
+        Handle::default()
     }
 
-    fn set_image(&mut self, _: Image) {}
+    fn set_image(&mut self, _: Handle<Image>) {}
 
     fn place(&mut self) -> &mut Placer {
         &mut self.view_mut().placer

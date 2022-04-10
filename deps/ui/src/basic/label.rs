@@ -55,7 +55,7 @@ impl Label {
 
             let mut glyph_view = ImageView::boxed();
             glyph_view.frame_mut().size = glyph.size;
-            glyph_view.set_image(glyph.image.clone());
+            glyph_view.set_image(glyph.image);
 
             glyph_view.set_frame(
                 (

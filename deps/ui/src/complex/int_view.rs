@@ -1,7 +1,7 @@
 use std::ops::AddAssign;
 
 use gl_image::Image;
-use rtools::{Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,
@@ -20,7 +20,7 @@ pub struct IntView {
 }
 
 impl IntView {
-    pub fn set_images(&mut self, up: Image, down: Image) {
+    pub fn set_images(&mut self, up: Handle<Image>, down: Handle<Image>) {
         self.up.set_image(up);
         self.down.set_image(down);
     }

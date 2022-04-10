@@ -38,27 +38,25 @@ impl Level for TestGameLevel {
     fn setup(&mut self) {
         let square = Image::get("square.png");
 
-        add_sprite::<Wall>((100, 5), (0, 0), self).set_image(square.clone());
-        add_sprite::<Wall>((5, 100), (60, 0), self).set_image(square.clone());
-        add_sprite::<Wall>((5, 100), (-60, 0), self).set_image(square.clone());
+        add_sprite::<Wall>((100, 5), (0, 0), self).set_image(square);
+        add_sprite::<Wall>((5, 100), (60, 0), self).set_image(square);
+        add_sprite::<Wall>((5, 100), (-60, 0), self).set_image(square);
 
         add_sprite::<Body>(
             Shape::triangle((-10, -10), (10, -10), (-10, 10)),
             (0, 50),
             self,
         )
-        .set_image(Image::get("triangle.png").clone());
+        .set_image(Image::get("triangle.png"));
 
         for i in 0..50 {
             add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2), self);
         }
 
         self.player = add_sprite((2, 2), (0, 5), self);
-        self.player.set_image(Image::get("frisk.png").clone());
+        self.player.set_image(Image::get("frisk.png"));
 
-        self.player
-            .weapon
-            .set_image(Image::get("frisk.png").clone());
+        self.player.weapon.set_image(Image::get("frisk.png"));
 
         let mut this = self.to_rglica();
         self.base.on_tap.subscribe(move |pos| this.on_touch(pos));

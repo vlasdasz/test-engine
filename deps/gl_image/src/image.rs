@@ -6,10 +6,13 @@ use std::{
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::flat::Size;
 use image::GenericImageView;
-use rtools::{data_manager::LoadFromPath, file::File};
+use rtools::{
+    data_manager::{DataManager, Handle, LoadFromPath},
+    file::File,
+};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Image {
     pub size:      Size,
     pub channels:  u32,
@@ -24,7 +27,7 @@ impl Image {
         self.gl_handle == u32::MAX
     }
 
-    pub fn from(data: *const c_void, size: Size, channels: u32, path: Option<PathBuf>) -> Image {
+    fn load_to_gl(data: *const c_void, size: Size, channels: u32, path: Option<PathBuf>) -> Image {
         let gl_handle = ImageLoader::load(data, size, channels);
         Image {
             size,
@@ -34,6 +37,16 @@ impl Image {
             gl_handle,
             path,
         }
+    }
+
+    pub fn from(
+        data: *const c_void,
+        size: Size,
+        channels: u32,
+        hash: u64,
+        path: Option<PathBuf>,
+    ) -> Handle<Image> {
+        Image::add_with_hash(hash, Self::load_to_gl(data, size, channels, path))
     }
 
     pub fn is_monochrome(&self) -> bool {
@@ -56,7 +69,7 @@ impl LoadFromPath for Image {
         let data = image.as_bytes();
         let channels = image.color().channel_count();
 
-        Image::from(
+        Image::load_to_gl(
             data.as_ptr() as *const c_void,
             (dimensions.0, dimensions.1).into(),
             channels as u32,

@@ -5,7 +5,7 @@ use std::{
 
 use gl_image::Image;
 use gm::flat::{Point, Shape};
-use rtools::Rglica;
+use rtools::{data_manager::Handle, Rglica};
 
 use crate::{add_sprite, Body, Level, Sprite, SpriteData};
 
@@ -14,7 +14,7 @@ pub struct Weapon {
     sprite:              SpriteData,
     pub(crate) velocity: Point,
     pub bullet_speed:    f32,
-    pub bullet_image:    Option<Image>,
+    pub bullet_image:    Handle<Image>,
 }
 
 impl Weapon {
@@ -30,10 +30,7 @@ impl Weapon {
         bullet.set_velocity(vel);
         bullet.set_restitution(2.0);
         bullet.data_mut().tag = "bullet".into();
-
-        if let Some(image) = &self.bullet_image {
-            bullet.set_image(image.clone())
-        }
+        bullet.set_image(self.bullet_image);
     }
 }
 
@@ -54,7 +51,7 @@ impl Sprite for Weapon {
             sprite:       *SpriteData::make(shape, position, level),
             velocity:     Default::default(),
             bullet_speed: 1.0,
-            bullet_image: None,
+            bullet_image: Default::default(),
         })
     }
 }

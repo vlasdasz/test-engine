@@ -73,10 +73,10 @@ impl TestGameView {
             dpad.frame_mut().size = (200, 150).into();
 
             dpad.set_images(
-                Image::get("up.png").clone(),
-                Image::get("down.png").clone(),
-                Image::get("left.png").clone(),
-                Image::get("right.png").clone(),
+                Image::get("up.png"),
+                Image::get("down.png"),
+                Image::get("left.png"),
+                Image::get("right.png"),
             );
         });
 
@@ -85,11 +85,9 @@ impl TestGameView {
         self.setup_slider();
 
         self.test_view = add_view_with_frame(self, (280, 400));
-        self.test_view.set_image(Image::get("cat.png").clone());
-        self.test_view
-            .set_button_image(Image::get("square.png").clone());
-        self.test_view
-            .set_animation_image(Image::get("palm.png").clone());
+        self.test_view.set_image(Image::get("cat.png"));
+        self.test_view.set_button_image(Image::get("square.png"));
+        self.test_view.set_animation_image(Image::get("palm.png"));
 
         self.to_benchmark = add_view(self);
         self.to_benchmark.set_text("Benchmark");

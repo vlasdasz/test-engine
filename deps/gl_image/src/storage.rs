@@ -4,7 +4,7 @@ use std::{
     ptr,
 };
 
-use rtools::data_manager::{DataManager, DataStorage};
+use rtools::data_manager::{DataManager, DataStorage, Managed};
 
 use crate::Image;
 
@@ -13,9 +13,11 @@ type ImageStorage = DataStorage<Image>;
 static mut PATH: *const PathBuf = ptr::null_mut();
 static mut IMAGE_STORAGE: *mut ImageStorage = ptr::null_mut();
 
+impl Managed for Image {}
+
 impl DataManager<Image> for Image {
-    fn path() -> PathBuf {
-        unsafe { PATH.as_ref().unwrap().clone() }
+    fn path() -> &'static Path {
+        unsafe { PATH.as_ref().unwrap() }
     }
 
     fn set_path(path: &Path) {

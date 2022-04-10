@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::flat::Direction;
-use rtools::{Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,
@@ -19,7 +19,13 @@ pub struct DPadView {
 }
 
 impl DPadView {
-    pub fn set_images(&mut self, up: Image, down: Image, left: Image, right: Image) {
+    pub fn set_images(
+        &mut self,
+        up: Handle<Image>,
+        down: Handle<Image>,
+        left: Handle<Image>,
+        right: Handle<Image>,
+    ) {
         self.up.set_image(up);
         self.down.set_image(down);
         self.left.set_image(left);

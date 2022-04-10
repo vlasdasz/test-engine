@@ -21,7 +21,7 @@ impl View for LayoutView {
             let str: String = format!("{:X}", i);
             let ch = str.chars().last().unwrap();
             let mut view = ImageView::boxed();
-            let image = font.glyph_for_char(ch).image.clone();
+            let image = font.glyph_for_char(ch).image;
             view.set_image(image);
             view.frame_mut().size = (10, 10).into();
             self.satellites.push(view.to_rglica());

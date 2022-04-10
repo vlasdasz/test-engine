@@ -5,7 +5,7 @@ use gm::{
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
-use rtools::{Event, IntoF32, Rglica};
+use rtools::{data_manager::Handle, Event, IntoF32, Rglica};
 
 use crate::{Level, Sprite};
 
@@ -24,7 +24,7 @@ pub struct SpriteData {
 
     pub tag:   String,
     pub color: Color,
-    pub image: Option<Image>,
+    pub image: Handle<Image>,
 
     pub on_collision: Event<Rglica<dyn Sprite>>,
 }

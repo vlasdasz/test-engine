@@ -1,5 +1,5 @@
 use gl_image::Image;
-use rtools::{Event, Rglica};
+use rtools::{data_manager::Handle, Event, Rglica};
 
 use crate::{
     view_base::{add_view, ViewBase},
@@ -9,7 +9,7 @@ use crate::{
 #[derive(Default, Debug)]
 pub struct Button {
     base:  ViewBase,
-    image: Option<Image>,
+    image: Handle<Image>,
     label: Rglica<Label>,
 
     pub on_tap: Event,
@@ -42,12 +42,12 @@ impl View for Button {
         }
     }
 
-    fn image(&self) -> Option<Image> {
-        self.image.clone()
+    fn image(&self) -> Handle<Image> {
+        self.image
     }
 
-    fn set_image(&mut self, image: Image) {
-        self.image = image.into()
+    fn set_image(&mut self, image: Handle<Image>) {
+        self.image = image
     }
 
     fn view(&self) -> &ViewBase {
