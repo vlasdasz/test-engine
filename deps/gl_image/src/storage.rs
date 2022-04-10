@@ -1,33 +1,35 @@
 use std::{
-    ops::DerefMut,
+    default::Default,
     path::{Path, PathBuf},
-    sync::Mutex,
+    ptr,
 };
 
-use lazy_static::lazy_static;
 use rtools::data_manager::{DataManager, DataStorage};
 
 use crate::Image;
 
 type ImageStorage = DataStorage<Image>;
 
-lazy_static! {
-    static ref PATH: Mutex<PathBuf> = Mutex::new(PathBuf::new());
-    static ref IMAGE_STORAGE: Mutex<ImageStorage> = Mutex::new(ImageStorage::default());
-}
+static mut PATH: *const PathBuf = ptr::null_mut();
+static mut IMAGE_STORAGE: *mut ImageStorage = ptr::null_mut();
 
 impl DataManager<Image> for Image {
     fn path() -> PathBuf {
-        PATH.lock().unwrap().clone()
+        unsafe { PATH.as_ref().unwrap().clone() }
     }
 
     fn set_path(path: &Path) {
-        let mut p = PATH.lock().unwrap();
-        *p = path.into();
+        unsafe {
+            PATH = Box::into_raw(Box::new(path.to_path_buf()));
+        }
     }
 
-    fn storage(a: &mut dyn FnMut(&mut ImageStorage)) {
-        let mut storage = IMAGE_STORAGE.lock().unwrap();
-        a(storage.deref_mut());
+    fn storage() -> &'static mut DataStorage<Image> {
+        unsafe {
+            if IMAGE_STORAGE.is_null() {
+                IMAGE_STORAGE = Box::into_raw(Box::new(Default::default()));
+            }
+            IMAGE_STORAGE.as_mut().unwrap()
+        }
     }
 }

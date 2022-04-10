@@ -1,6 +1,8 @@
-use std::{fs::File, io::BufReader};
+use std::{fs::File, io::BufReader, path::Path};
 
+use audio::Sound;
 use rodio::{source::Source, Decoder, OutputStream};
+use rtools::data_manager::LoadFromPath;
 
 fn main() {
     // Get a output stream handle to the default physical sound device
@@ -16,4 +18,9 @@ fn main() {
     // The sound plays in a separate audio thread,
     // so we need to keep the main thread alive while it's playing.
     std::thread::sleep(std::time::Duration::from_secs(500));
+
+    let sound = Sound::load(Path::new(
+        "/Users/vladas/Downloads/Electrochok - Adam Park.mp3",
+    ));
+    sound.play();
 }
