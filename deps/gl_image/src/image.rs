@@ -6,7 +6,7 @@ use std::{
 use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
 use gm::flat::Size;
 use image::GenericImageView;
-use rtools::file::File;
+use rtools::{data_manager::LoadFromPath, file::File};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -22,24 +22,6 @@ pub struct Image {
 impl Image {
     pub fn is_invalid(&self) -> bool {
         self.gl_handle == u32::MAX
-    }
-
-    pub fn load(path: impl AsRef<Path>) -> Image {
-        let image = image::load_from_memory(&File::read(path.as_ref())).unwrap_or_else(|_| {
-            error!("Failed to open image {:?}", path.as_ref());
-            panic!();
-        });
-
-        let dimensions = image.dimensions();
-        let data = image.as_bytes();
-        let channels = image.color().channel_count();
-
-        Image::from(
-            data.as_ptr() as *const c_void,
-            (dimensions.0, dimensions.1).into(),
-            channels as u32,
-            Some(path.as_ref().into()),
-        )
     }
 
     pub fn from(data: *const c_void, size: Size, channels: u32, path: Option<PathBuf>) -> Image {
@@ -63,6 +45,26 @@ impl Image {
     }
 }
 
+impl LoadFromPath for Image {
+    fn load(path: &Path) -> Image {
+        let image = image::load_from_memory(&File::read(path)).unwrap_or_else(|_| {
+            error!("Failed to open image {:?}", path);
+            panic!();
+        });
+
+        let dimensions = image.dimensions();
+        let data = image.as_bytes();
+        let channels = image.color().channel_count();
+
+        Image::from(
+            data.as_ptr() as *const c_void,
+            (dimensions.0, dimensions.1).into(),
+            channels as u32,
+            Some(path.into()),
+        )
+    }
+}
+
 impl Default for Image {
     fn default() -> Image {
         Image {
@@ -78,6 +80,6 @@ impl Default for Image {
 
 impl<T: AsRef<Path>> From<T> for Image {
     fn from(path: T) -> Self {
-        Self::load(path)
+        Self::load(path.as_ref())
     }
 }

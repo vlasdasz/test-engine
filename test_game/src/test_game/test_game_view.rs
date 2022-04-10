@@ -1,6 +1,5 @@
-use rtools::{Boxed, Rglica, ToRglica};
+use rtools::{data_manager::DataManager, Boxed, Rglica, ToRglica};
 use test_engine::{
-    assets::ImageManager,
     game_view::GameView,
     sprite_view::SpriteView,
     sprites::Control,

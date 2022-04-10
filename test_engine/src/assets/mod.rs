@@ -1,13 +1,11 @@
 mod buffers;
-mod image_manager;
 mod shaders;
 
 use std::{path::Path, rc::Rc};
 
 pub use buffers::Buffers;
 use gl_image::Image;
-pub use image_manager::ImageManager;
-use rtools::Unwrap;
+use rtools::{data_manager::DataManager, Unwrap};
 pub use shaders::Shaders;
 
 use crate::paths::Paths;
