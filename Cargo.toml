@@ -6,6 +6,7 @@ members = [
     "deps/gm",
     "deps/ui",
     "deps/maze",
+    "deps/audio",
     "deps/sprites",
     "deps/gl_image",
     "deps/gl_wrapper",
