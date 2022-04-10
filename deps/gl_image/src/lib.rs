@@ -1,5 +1,5 @@
 mod image;
-mod storage;
+mod managed;
 
 #[macro_use]
 extern crate log;

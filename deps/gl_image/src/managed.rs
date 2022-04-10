@@ -8,10 +8,8 @@ use rtools::data_manager::{DataManager, DataStorage, Managed};
 
 use crate::Image;
 
-type ImageStorage = DataStorage<Image>;
-
 static mut PATH: *const PathBuf = ptr::null_mut();
-static mut IMAGE_STORAGE: *mut ImageStorage = ptr::null_mut();
+static mut STORAGE: *mut DataStorage<Image> = ptr::null_mut();
 
 impl Managed for Image {}
 
@@ -28,10 +26,10 @@ impl DataManager<Image> for Image {
 
     fn storage() -> &'static mut DataStorage<Image> {
         unsafe {
-            if IMAGE_STORAGE.is_null() {
-                IMAGE_STORAGE = Box::into_raw(Box::new(Default::default()));
+            if STORAGE.is_null() {
+                STORAGE = Box::into_raw(Box::new(Default::default()));
             }
-            IMAGE_STORAGE.as_mut().unwrap()
+            STORAGE.as_mut().unwrap()
         }
     }
 }
