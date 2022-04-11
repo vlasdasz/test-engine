@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use gm::flat::{Point, Shape};
 use rapier2d::{na::Vector2, prelude::RigidBodyBuilder};
 use rtools::Rglica;
@@ -94,5 +96,18 @@ impl Control for Body {
     fn add_impulse(&mut self, impulse: Point) {
         self.rigid_body_mut()
             .apply_force([impulse.x * 1000.0, impulse.y * 1000.0].into(), true)
+    }
+}
+
+impl Deref for Body {
+    type Target = SpriteData;
+    fn deref(&self) -> &SpriteData {
+        &self.sprite
+    }
+}
+
+impl DerefMut for Body {
+    fn deref_mut(&mut self) -> &mut SpriteData {
+        &mut self.sprite
     }
 }

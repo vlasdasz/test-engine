@@ -1,6 +1,10 @@
 use test_engine::{
+    audio::Sound,
     gm::flat::{Point, Shape},
-    rtools::{data_manager::DataManager, Rglica, ToRglica},
+    rtools::{
+        data_manager::{DataManager, Handle},
+        Rglica, ToRglica,
+    },
     sprites::{add_sprite, Body, Control, Player, Wall},
     Image, Level, LevelBase, Sprite,
 };
@@ -9,6 +13,7 @@ use test_engine::{
 pub struct TestGameLevel {
     base:            LevelBase,
     selected_sprite: Option<Rglica<dyn Sprite>>,
+    collision_sound: Handle<Sound>,
     pub player:      Rglica<Player>,
 }
 
@@ -50,11 +55,20 @@ impl Level for TestGameLevel {
         .set_image(Image::get("triangle.png"));
 
         for i in 0..50 {
-            add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2), self);
+            add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2), self).set_image(square);
         }
 
         self.player = add_sprite((2, 2), (0, 5), self);
         self.player.set_image(Image::get("frisk.png"));
+
+        self.player.enable_collision_detection();
+
+        let mut this = self.to_rglica();
+        self.player.on_collision.subscribe(move |_sprite| {
+            this.collision_sound.play();
+        });
+
+        self.collision_sound = Sound::get("pek.wav");
 
         self.player.weapon.set_image(Image::get("frisk.png"));
 
@@ -65,7 +79,6 @@ impl Level for TestGameLevel {
     fn update(&mut self) {
         let pos = self.player.position();
         self.set_camera_position(pos);
-        // self.player.weapon.shoot_at((5, 5));
     }
 
     fn on_key_pressed(&mut self, key: String) {
