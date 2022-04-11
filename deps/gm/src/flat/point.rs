@@ -16,6 +16,12 @@ pub struct PointBase<T> {
     pub y: T,
 }
 
+impl<T> PointBase<T> {
+    pub fn make(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
 pub type Point = PointBase<f32>;
 
 impl Point {

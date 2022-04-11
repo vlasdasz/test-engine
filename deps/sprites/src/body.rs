@@ -22,10 +22,6 @@ impl Body {
             .set_linvel([vel.x, vel.y].into(), true)
     }
 
-    pub fn set_restitution(&mut self, res: f32) {
-        self.collider_mut().set_restitution(res)
-    }
-
     pub fn lock_rotations(&mut self) {
         self.rigid_body_mut().lock_rotations(true, true);
     }

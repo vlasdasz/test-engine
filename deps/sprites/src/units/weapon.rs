@@ -28,7 +28,7 @@ impl Weapon {
 
         bullet.set_rotation(self.rotation());
         bullet.set_velocity(vel);
-        bullet.set_restitution(2.0);
+        bullet.set_restitution(1.0);
         bullet.data_mut().tag = "bullet".into();
         bullet.set_image(self.bullet_image);
     }

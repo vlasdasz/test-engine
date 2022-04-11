@@ -127,9 +127,7 @@ impl Placer {
     }
 
     pub fn all_vertically_with_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) {
-        if self.subviews().len() != ratio.len() {
-            panic!("Invalid ratio len");
-        }
+        debug_assert!(self.subviews().len() == ratio.len());
 
         let total_ratio: f32 = ratio.iter().map(|a| a.into_f32()).sum();
         let total_ratio = 1.0 / total_ratio;

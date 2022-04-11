@@ -65,10 +65,10 @@ impl LevelBase {
                 for sprite in &self.colliding_sprites {
                     let handle = sprite.data().collider_handle.unwrap();
 
-                    let other_index = if a.index() == handle.index() {
-                        b
-                    } else if b.index() == handle.index() {
+                    let other_index = if b.index() == handle.index() {
                         a
+                    } else if a.index() == handle.index() {
+                        b
                     } else {
                         panic!()
                     };

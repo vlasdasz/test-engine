@@ -38,6 +38,7 @@ impl Maker {
 
         tokio::spawn(async move {
             let mut maker = Maker::new(width, height);
+            maker.add_missing_side();
 
             maker.current_mut().visited = true;
 
@@ -72,6 +73,16 @@ impl Maker {
 }
 
 impl Maker {
+    fn add_missing_side(&mut self) {
+        for i in 0..self.size.height {
+            self.grid[0][i as usize].left = true;
+        }
+
+        for i in 0..self.size.width {
+            self.grid[i as usize][0].bottom = true;
+        }
+    }
+
     fn current_mut(&mut self) -> &mut Cell {
         self.at_mut(self.current_pos)
     }
@@ -123,17 +134,17 @@ impl Maker {
         let current = self.current_pos;
 
         if current.x < pos.x {
-            self.at_mut(current).rigth = false;
+            self.at_mut(current).right = false;
             self.at_mut(pos).left = false;
         } else if current.x > pos.x {
             self.at_mut(current).left = false;
-            self.at_mut(pos).rigth = false;
-        } else if current.y < pos.y {
-            self.at_mut(current).down = false;
-            self.at_mut(pos).up = false;
+            self.at_mut(pos).right = false;
         } else if current.y > pos.y {
-            self.at_mut(current).up = false;
-            self.at_mut(pos).down = false;
+            self.at_mut(current).bottom = false;
+            self.at_mut(pos).top = false;
+        } else if current.y < pos.y {
+            self.at_mut(current).top = false;
+            self.at_mut(pos).bottom = false;
         } else {
             panic!("BUG");
         }

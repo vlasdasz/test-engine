@@ -42,15 +42,29 @@ pub trait Sprite: Debug {
         if self.data().rigid_handle.is_some() {
             return self.rigid_body().rotation().angle();
         }
+        if self.data().collider_handle.is_some() {
+            return self.collider().rotation().angle();
+        }
         self.data().rotation
     }
 
     fn set_rotation(&mut self, rotation: f32) {
         if self.data().rigid_handle.is_some() {
             self.rigid_body_mut().set_rotation(rotation, true);
+        }
+        if self.data().collider_handle.is_some() {
+            self.collider_mut().set_rotation(rotation);
         } else {
             self.data_mut().rotation = rotation
         }
+    }
+
+    fn restitution(&mut self) -> f32 {
+        self.collider().restitution()
+    }
+
+    fn set_restitution(&mut self, res: f32) {
+        self.collider_mut().set_restitution(res)
     }
 
     fn rigid_body(&self) -> &RigidBody {

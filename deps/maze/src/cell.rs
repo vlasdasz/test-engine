@@ -7,25 +7,25 @@ pub enum CellSide {
 
 #[derive(Copy, Clone, Debug)]
 pub struct Cell {
-    pub up:      bool,
-    pub down:    bool,
+    pub top:     bool,
+    pub bottom:  bool,
     pub left:    bool,
-    pub rigth:   bool,
+    pub right:   bool,
     pub visited: bool,
 }
 
 impl Cell {
     pub fn all_sides(&self, mut action: impl FnMut(CellSide)) {
-        if self.up {
+        if self.top {
             action(CellSide::Up)
         }
-        if self.down {
+        if self.bottom {
             action(CellSide::Down)
         }
         if self.left {
             action(CellSide::Left)
         }
-        if self.rigth {
+        if self.right {
             action(CellSide::Right)
         }
     }
@@ -34,10 +34,10 @@ impl Cell {
 impl Default for Cell {
     fn default() -> Self {
         Self {
-            up:      true,
-            down:    true,
-            left:    true,
-            rigth:   true,
+            top:     true,
+            bottom:  false,
+            left:    false,
+            right:   true,
             visited: false,
         }
     }
