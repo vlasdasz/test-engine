@@ -15,7 +15,7 @@ pub struct DebugView {
 
 impl View for DebugView {
     fn setup(&mut self) {
-        self.frame_mut().size = (100, 280).into();
+        self.frame_mut().size = (280, 100).into();
 
         self.fps_label = add_view(self);
         self.fps_label.set_text("fps label");
