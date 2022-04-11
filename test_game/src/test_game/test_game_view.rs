@@ -104,7 +104,7 @@ impl TestGameView {
             this.ui.set_view(BenchmarkView::boxed());
         });
 
-        let this = self.to_rglica();
+        let mut this = self.to_rglica();
         self.play = make_view_on(self, |play: &mut Button| {
             play.set_text("Play sound");
             play.frame_mut().size = (120, 20).into();
