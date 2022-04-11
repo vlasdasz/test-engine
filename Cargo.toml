@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "rtools",
     "test_game",
     "test_engine",
     "deps/gm",

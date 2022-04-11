@@ -1,8 +1,7 @@
 #![allow(incomplete_features)]
 #![feature(explicit_generic_args_with_impl_trait)]
 
-use rtools::Boxed;
-use test_engine::{paths::home, Screen};
+use test_engine::{paths::home, rtools::Boxed, Screen};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;

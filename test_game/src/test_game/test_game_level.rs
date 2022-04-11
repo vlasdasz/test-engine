@@ -1,6 +1,6 @@
-use rtools::{data_manager::DataManager, Rglica, ToRglica};
 use test_engine::{
     gm::flat::{Point, Shape},
+    rtools::{data_manager::DataManager, Rglica, ToRglica},
     sprites::{add_sprite, Body, Control, Player, Wall},
     Image, Level, LevelBase, Sprite,
 };

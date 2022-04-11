@@ -1,10 +1,10 @@
-use rtools::{
-    data_manager::{DataManager, Handle},
-    Boxed, Rglica, ToRglica,
-};
 use test_engine::{
     audio::Sound,
     game_view::GameView,
+    rtools::{
+        data_manager::{DataManager, Handle},
+        Boxed, Rglica, ToRglica,
+    },
     sprite_view::SpriteView,
     sprites::Control,
     ui::{

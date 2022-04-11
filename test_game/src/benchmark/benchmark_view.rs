@@ -1,6 +1,6 @@
-use rtools::{Boxed, Rglica, ToRglica};
 use test_engine::{
     game_view::GameView,
+    rtools::{Boxed, Rglica, ToRglica},
     ui::{
         basic::Button,
         view_base::{add_view, ViewBase},

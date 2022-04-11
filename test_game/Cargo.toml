@@ -13,11 +13,7 @@ crate-type = ["rlib", "staticlib", "dylib"]
 
 [dependencies]
 log = "0.4"
-serde_json = "1.0"
-gl_wrapper = { path = "../deps/gl_wrapper" }
 test_engine = { path = "../test_engine" }
-
-rtools = { path = "../rtools" }
 
 [target.'cfg(target_os="android")'.dependencies]
 android_logger = "0.10"

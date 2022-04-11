@@ -1,5 +1,5 @@
-use rtools::{data_manager::DataManager, Animation, Rglica, ToRglica};
 use test_engine::{
+    rtools::{data_manager::DataManager, Animation, Rglica, ToRglica},
     sprites::{add_sprite, Player, Wall},
     Image, Level, LevelBase, Sprite,
 };
