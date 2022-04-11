@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use gm::flat::PointBase;
+use gm::flat::{PointBase, SizeBase};
 use rand::seq::SliceRandom;
 use tokio::{
     sync::mpsc::{self, UnboundedReceiver},
@@ -9,11 +9,12 @@ use tokio::{
 
 use crate::{Cell, Grid};
 
+type Size = SizeBase<i32>;
 type Point = PointBase<i32>;
 
 #[derive(Debug)]
 pub struct Maker {
-    size:        Point,
+    size:        Size,
     current_pos: Point,
     stack:       Vec<Point>,
     grid:        Grid,
@@ -22,21 +23,21 @@ pub struct Maker {
 impl Maker {
     pub fn new(width: usize, height: usize) -> Self {
         Self {
-            size:        Point {
-                x: width as _,
-                y: height as _,
+            size:        Size {
+                width:  width as _,
+                height: height as _,
             },
             current_pos: Default::default(),
             stack:       Default::default(),
-            grid:        vec![vec![Cell::default(); width]; height],
+            grid:        vec![vec![Cell::default(); height]; width],
         }
     }
 
-    pub fn generate() -> UnboundedReceiver<Grid> {
+    pub fn generate(width: usize, height: usize) -> UnboundedReceiver<Grid> {
         let (sender, receiver) = mpsc::unbounded_channel::<Grid>();
 
         tokio::spawn(async move {
-            let mut maker = Maker::new(3, 3);
+            let mut maker = Maker::new(width, height);
 
             maker.current_mut().visited = true;
 
@@ -56,20 +57,17 @@ impl Maker {
 
                 sender.send(maker.grid.clone()).unwrap();
 
+                sleep(Duration::from_millis(5)).await;
+
                 maker.remove_walls(next);
 
                 maker.current_pos = next;
                 maker.at_mut(next).visited = true;
-
-                sleep(Duration::from_millis(1000)).await;
             }
+            sender.send(maker.grid.clone()).unwrap();
         });
 
         receiver
-    }
-
-    fn make(self) -> Grid {
-        self.grid
     }
 }
 
@@ -109,10 +107,10 @@ impl Maker {
 
         for neighbor in NEIGHBOURS {
             let pos = &self.current_pos + neighbor;
-            if pos.is_negative() || self.at(pos).visited {
+            if pos.x >= self.size.width || pos.y >= self.size.height {
                 continue;
             }
-            if pos.x >= self.size.x - 1 || pos.y >= self.size.y - 1 {
+            if pos.is_negative() || self.at(pos).visited {
                 continue;
             }
             result.push(pos);
@@ -140,8 +138,4 @@ impl Maker {
             panic!("BUG");
         }
     }
-}
-
-pub fn make(width: usize, height: usize) -> Grid {
-    Maker::new(width, height).make()
 }

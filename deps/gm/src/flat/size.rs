@@ -9,10 +9,12 @@ use serde::{Deserialize, Serialize};
 use crate::flat::{Point, Rect};
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct Size {
-    pub width:  f32,
-    pub height: f32,
+pub struct SizeBase<T> {
+    pub width:  T,
+    pub height: T,
 }
+
+pub type Size = SizeBase<f32>;
 
 impl Size {
     pub fn diagonal(&self) -> f32 {

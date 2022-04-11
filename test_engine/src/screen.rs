@@ -43,8 +43,6 @@ impl Screen {
     }
 
     fn init(&mut self, size: Size) {
-        dbg!(&size);
-
         cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
             let monitor = self.drawer.monitors.first().expect("BUG: failed to get monitor").clone();
             self.add_monitor(monitor);
@@ -120,7 +118,6 @@ impl Screen {
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
-        dbg!(&size);
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
         self.drawer.set_size(size);
         self.on_size_changed(size);
