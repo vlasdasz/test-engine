@@ -107,6 +107,7 @@ tools
 .rdeps
 
 NDK/
+ndk/
 temp/
 extern/
 

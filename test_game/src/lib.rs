@@ -107,7 +107,7 @@ pub mod android {
         asset_manager: jobject,
     ) {
         setup_logger();
-        rtools::file::set_asset_manager(env, asset_manager);
+        test_engine::rtools::file::set_asset_manager(env, asset_manager);
     }
 
     #[no_mangle]

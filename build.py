@@ -2,8 +2,10 @@
 
 import os
 import sys
+import glob
 import shutil
 import platform
+import urllib.request
 
 is_windows = platform.system() == "Windows"
 is_mac     = platform.system() == "Darwin"
@@ -20,14 +22,17 @@ if len(sys.argv) > 1:
     if sys.argv[1] == "android":
         android = True
 
+mobile = ios or android
+desktop = not mobile
 
-def _get_home():
+
+def get_home():
     if "HOME" in os.environ:
         return os.environ["HOME"]
     return os.path.expanduser("~")
     
 
-home = _get_home()
+home = get_home()
 
 this_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -38,48 +43,48 @@ def run(string):
         raise Exception("Shell script has failed")
 
 
-def ndk_home():
-    if "NDK_HOME" in os.environ:
-        return os.environ["NDK_HOME"]
-    if "ANDROID_HOME" in os.environ:
-        return os.environ["ANDROID_HOME"] + "/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64"
-    raise Exception("No NDK path env variables")
-
-
 def setup_android():
+
+    if os.path.isdir("ndk"):
+        print("NDK directory already exists")
+        return
+
+    bin = this_path + "/ndk/bin"
+
+    run("mkdir ndk")
+
+    print("Downloading NDK")
+    urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-linux-x86_64.zip", "ndk/ndk.zip")
+
+    print("Unpacking NDK")
+    shutil.unpack_archive("ndk/ndk.zip", "ndk")
+
+    print("Symlink NDK bin")
+    os.symlink(this_path + "/ndk/android-ndk-r22b/toolchains/llvm/prebuilt/linux-x86_64/bin", bin)
+
+    print("Symlink clang")
+    shutil.copyfile(bin + "/aarch64-linux-android21-clang", 
+                    bin + "/aarch64-linux-android-clang")
+    shutil.copyfile(bin + "/aarch64-linux-android21-clang++", 
+                    bin + "/aarch64-linux-android-clang++")
+
+    shutil.copyfile(bin + "/armv7a-linux-androideabi21-clang", 
+                    bin + "/arm-linux-androideabi-clang")
+    shutil.copyfile(bin + "/armv7a-linux-androideabi21-clang++", 
+                    bin + "/arm-linux-androideabi-clang++")
+
+    for file in glob.glob(bin + "/*"):
+        run("sudo chmod +x " + file)
+
+    os.environ["PATH"] += ":" + bin
+    os.environ["NDK_INCLUDE_DIR"] = this_path + "/ndk/android-ndk-r22b/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include"
+
+    print("Add rust targets")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
-    print("skigal")
-    print(this_path)
-    print(ndk_home())
-    try:
-        os.symlink(ndk_home(), this_path + "/NDK")
-    except FileExistsError:
-        print("NDK symlink exists")
-
-if android:
-    setup_android()
 
 
-print("Arch:")
-print(platform.uname())
+def build_android():
 
-
-if is_linux:
-    print("Lin setup")
-    run("sudo apt update")
-    run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev")
-
-
-if ios:
-    os.environ["CARGO_CFG_TARGET_OS"] = "ios"
-    run("rustup target add aarch64-apple-ios x86_64-apple-ios ")
-    run("cargo install cargo-lipo")
-    run("cargo lipo --release")
-    os.chdir("mobile/iOS")
-    run("xcodebuild -showsdks")
-    run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
-elif android:
-    os.environ["CARGO_CFG_TARGET_OS"] = "android"
     run("cargo build --target aarch64-linux-android --release --lib")
     run("cargo build --target armv7-linux-androideabi --release --lib")
     run("cargo build --target i686-linux-android --release --lib")
@@ -95,5 +100,29 @@ elif android:
         os.symlink(this_path + "/target/i686-linux-android/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/x86/libtest_game.so")
     except FileExistsError:
         print("exists")
+
+
+def build_ios():
+    run("rustup target add aarch64-apple-ios x86_64-apple-ios ")
+    run("cargo install cargo-lipo")
+    run("cargo lipo --release")
+    os.chdir("mobile/iOS")
+    run("xcodebuild -showsdks")
+    run("xcodebuild -sdk iphonesimulator -scheme TestEngine build")
+
+
+print("Arch:")
+print(platform.uname())
+
+if is_linux and desktop:
+    print("Lin setup")
+    run("sudo apt update")
+    run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev")
+                                                  
+if ios:
+    build_ios()
+elif android:
+    setup_android()
+    build_android()
 else:
     run("cargo build")
