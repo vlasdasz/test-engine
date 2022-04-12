@@ -58,8 +58,8 @@ def setup_android():
         urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-linux-x86_64.zip", "ndk/ndk.zip")
         shutil.unpack_archive("ndk/ndk.zip", "ndk")
     elif is_mac:
-       run("brew install p7zip")
-       urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-darwin-x86_64.zip", "ndk/ndk.dmg")
+        run("brew install p7zip")
+        urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-darwin-x86_64.zip", "ndk/ndk.dmg")
         run("7z x ndk/ndk.dmg -ondk/")
 
     toolchains = "/ndk/android-ndk-r22b/toolchains/"
