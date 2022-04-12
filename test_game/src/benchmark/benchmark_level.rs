@@ -24,10 +24,10 @@ impl BenchmarkLevel {
         self.floor = add_sprite((100, 10), (0, 0), self);
         self.floor.set_image(square);
 
-        self.left_wall = add_sprite((10, 100), (-40, 0), self);
+        self.left_wall = add_sprite((10, 200), (-40, 0), self);
         self.left_wall.set_image(square);
 
-        self.right_wall = add_sprite((10, 100), (40, 0), self);
+        self.right_wall = add_sprite((10, 200), (40, 0), self);
         self.right_wall.set_image(square);
 
         self.left_animation = Animation::new(-60, -55, 10);
@@ -45,6 +45,7 @@ impl Level for BenchmarkLevel {
         self.player.weapon.set_image(Image::get("ak.png"));
         self.player.weapon.bullet_image = Image::get("bullet.png");
         self.player.weapon.bullet_speed = 100.0;
+        self.player.weapon.bullet_shape = (1, 0.28).into();
 
         self.set_scale(1.0);
         self.make_walls();

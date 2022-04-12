@@ -25,7 +25,6 @@ impl Slider {
 impl View for Slider {
     fn setup(&mut self) {
         self.multiplier = 1.0;
-        dbg!(self.frame());
 
         let radius = self.width();
         self.circle = add_boxed(self, CircleView::with_radius(radius));

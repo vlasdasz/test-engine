@@ -60,6 +60,7 @@ impl Level for TestGameLevel {
 
         self.player = add_sprite((2, 2), (0, 5), self);
         self.player.set_image(Image::get("frisk.png"));
+        self.player.weapon.set_image(Image::get("ak.png"));
 
         self.player.enable_collision_detection();
 
@@ -70,7 +71,6 @@ impl Level for TestGameLevel {
 
         self.collision_sound = Sound::get("pek.wav");
 
-        self.player.weapon.set_image(Image::get("frisk.png"));
 
         let mut this = self.to_rglica();
         self.base.on_tap.subscribe(move |pos| this.on_touch(pos));

@@ -28,8 +28,6 @@ impl LabeledSlider {
 
 impl View for LabeledSlider {
     fn setup(&mut self) {
-        dbg!(self.frame());
-
         let frames = self.place().frames_for_ratio([1, 5]);
 
         self.label = add_view_with_frame(self, frames[0]);
