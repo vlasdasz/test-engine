@@ -2,15 +2,15 @@ use gm::Color;
 use rtools::{math::clamped_by, Event, IntoF32, Rglica};
 
 use crate::{
-    basic::Circle,
-    view_base::{add_view, ViewBase},
+    basic::CircleView,
+    view_base::{add_boxed, ViewBase},
     Touch, View,
 };
 
 #[derive(Default, Debug)]
 pub struct Slider {
     base:          ViewBase,
-    circle:        Rglica<Circle>,
+    circle:        Rglica<CircleView>,
     value:         f32,
     multiplier:    f32,
     pub on_change: Event<f32>,
@@ -25,16 +25,14 @@ impl Slider {
 impl View for Slider {
     fn setup(&mut self) {
         self.multiplier = 1.0;
-        self.circle = add_view(self);
-        let mut circle = self.circle;
-        circle.set_frame(self.frame().square().into());
-        circle.set_color(Color::BLUE);
+        dbg!(self.frame());
+
+        let radius = self.width();
+        self.circle = add_boxed(self, CircleView::with_radius(radius));
+
+        self.circle.set_color(Color::BLUE);
 
         self.enable_touch();
-    }
-
-    fn layout(&mut self) {
-        self.circle.frame_mut().size = (self.frame().width(), self.frame().width()).into();
     }
 
     fn on_touch(&mut self, touch: &Touch) {

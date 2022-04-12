@@ -126,31 +126,32 @@ impl Placer {
         place_vertically(self.view.subviews_mut());
     }
 
-    pub fn all_vertically_with_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) {
-        debug_assert!(self.subviews().len() == ratio.len());
+    pub fn frames_for_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) -> [Rect; N] {
+        let mut result: [Rect; N] = [Default::default(); N];
 
         let total_ratio: f32 = ratio.iter().map(|a| a.into_f32()).sum();
         let total_ratio = 1.0 / total_ratio;
+        let mut prev_y = 0.0;
 
-        let mut subs: Vec<_> = self.subviews_mut().iter().map(|a| a.to_rglica()).collect();
+        for (i, frame) in result.iter_mut().enumerate() {
+            *frame = (
+                0,
+                if i == 0 { 0.0 } else { prev_y },
+                self.width(),
+                ratio[i].into_f32() * self.height() * total_ratio,
+            )
+                .into();
+            prev_y = frame.max_y()
+        }
 
-        for (i, view) in subs.iter_mut().enumerate() {
-            let is_first = i == 0;
-            let prev_index = if is_first { 0 } else { i - 1 };
-            let y_pos = if is_first {
-                0.0
-            } else {
-                self.subviews()[prev_index].frame().max_y()
-            };
-            view.set_frame(
-                (
-                    0,
-                    y_pos,
-                    self.width(),
-                    ratio[i].into_f32() * self.height() * total_ratio,
-                )
-                    .into(),
-            );
+        result
+    }
+
+    pub fn all_vertically_with_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) {
+        debug_assert!(self.subviews().len() == ratio.len());
+        let frames = self.frames_for_ratio(ratio);
+        for (view, rect) in self.subviews_mut().iter_mut().zip(frames) {
+            view.set_frame(rect)
         }
     }
 

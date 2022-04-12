@@ -2,7 +2,7 @@ use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
     complex::Slider,
-    view_base::{add_view, ViewBase},
+    view_base::{add_view_with_frame, ViewBase},
     Label, View,
 };
 
@@ -28,15 +28,15 @@ impl LabeledSlider {
 
 impl View for LabeledSlider {
     fn setup(&mut self) {
-        self.label = add_view(self);
-        self.slider = add_view(self);
+        dbg!(self.frame());
+
+        let frames = self.place().frames_for_ratio([1, 5]);
+
+        self.label = add_view_with_frame(self, frames[0]);
+        self.slider = add_view_with_frame(self, frames[1]);
 
         let mut this = self.to_rglica();
         self.slider.on_change.subscribe(move |a| this.on_change(a));
-    }
-
-    fn layout(&mut self) {
-        self.place().all_vertically_with_ratio([1, 5])
     }
 
     fn view(&self) -> &ViewBase {

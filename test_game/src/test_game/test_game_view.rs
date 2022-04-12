@@ -23,13 +23,13 @@ use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView};
 
 #[derive(Default, Debug)]
 pub struct TestGameView {
-    base:       ViewBase,
-    level:      TestGameLevel,
-    dpad:       Rglica<DPadView>,
-    left_stick: Rglica<AnalogStickView>,
-    sprite:     Rglica<SpriteView>,
-    slider:     Rglica<LabeledSlider>,
-    test_view:  Rglica<TestView>,
+    base:         ViewBase,
+    level:        TestGameLevel,
+    dpad:         Rglica<DPadView>,
+    left_stick:   Rglica<AnalogStickView>,
+    sprote_view:  Rglica<SpriteView>,
+    scale_slider: Rglica<LabeledSlider>,
+    test_view:    Rglica<TestView>,
 
     to_benchmark: Rglica<Button>,
 
@@ -56,11 +56,11 @@ impl TestGameView {
     }
 
     fn setup_slider(&mut self) {
-        self.slider = add_view_with_frame(self, (50, 280));
-        self.slider.set_multiplier(10.0);
+        self.scale_slider = add_view_with_frame(self, (50, 280));
+        self.scale_slider.set_multiplier(10.0);
 
         let mut this = self.to_rglica();
-        self.slider.on_change.subscribe(move |value| {
+        self.scale_slider.on_change.subscribe(move |value| {
             this.level_mut().drawer_mut().set_scale(value);
         });
     }
@@ -68,13 +68,13 @@ impl TestGameView {
     fn setup_ui(&mut self) {
         self.set_frame((10, 10, 1000, 500).into());
 
-        self.sprite = add_view_with_frame(self, (500, 180));
+        self.sprote_view = add_view_with_frame(self, (500, 180));
 
         let mut this = self.to_rglica();
         self.level
             .base_mut()
             .on_sprite_selected
-            .subscribe(move |sprite| this.sprite.set_sprite(sprite));
+            .subscribe(move |sprite| this.sprote_view.set_sprite(sprite));
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (200, 150).into();
@@ -129,14 +129,14 @@ impl View for TestGameView {
             .place()
             .anchor(self.dpad, Anchor::Right, Anchor::Bot, 20);
 
-        self.slider.place().proportional_height(0.5);
-        self.slider
+        self.scale_slider.place().proportional_height(0.5);
+        self.scale_slider
             .place()
             .anchor(self.dpad, Anchor::Top, Anchor::Left, 10);
 
-        self.sprite
+        self.sprote_view
             .place()
-            .anchor(self.slider, Anchor::Right, Anchor::Bot, 10);
+            .anchor(self.scale_slider, Anchor::Right, Anchor::Bot, 10);
 
         self.test_view.place().bottom_right(20);
         self.test_view.place().proportional_width(0.28);

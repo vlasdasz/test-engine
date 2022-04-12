@@ -21,6 +21,7 @@ pub mod view_base;
 
 #[macro_use]
 extern crate log;
+extern crate core;
 
 lazy_static! {
     pub(crate) static ref DEFAULT_FONT_PATH: Mutex<PathBuf> = Mutex::new(PathBuf::new());
