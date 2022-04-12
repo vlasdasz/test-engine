@@ -54,13 +54,21 @@ def setup_android():
     run("mkdir ndk")
 
     print("Downloading NDK")
-    urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-linux-x86_64.zip", "ndk/ndk.zip")
+    if is_linux:
+        urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-linux-x86_64.zip", "ndk/ndk.zip")
+        shutil.unpack_archive("ndk/ndk.zip", "ndk")
+    elif is_mac:
+       run("brew install p7zip")
+       urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-darwin-x86_64.zip", "ndk/ndk.dmg")
+        run("7z x ndk/ndk.dmg -ondk/")
 
-    print("Unpacking NDK")
-    shutil.unpack_archive("ndk/ndk.zip", "ndk")
+    toolchains = "/ndk/android-ndk-r22b/toolchains/"
 
     print("Symlink NDK bin")
-    os.symlink(this_path + "/ndk/android-ndk-r22b/toolchains/llvm/prebuilt/linux-x86_64/bin", bin)
+    if is_linux:
+        os.symlink(this_path + toolchains + "llvm/prebuilt/linux-x86_64/bin", bin)
+    elif is_mac:
+        os.symlink(this_path + toolchains + "llvm/prebuilt/darwin-x86_64/bin", bin)
 
     print("Symlink clang")
     shutil.copyfile(bin + "/aarch64-linux-android21-clang", 
@@ -77,7 +85,7 @@ def setup_android():
         run("sudo chmod +x " + file)
 
     os.environ["PATH"] += ":" + bin
-    os.environ["NDK_INCLUDE_DIR"] = this_path + "/ndk/android-ndk-r22b/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include"
+    os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/linux-x86_64/sysroot/usr/include"
 
     print("Add rust targets")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
