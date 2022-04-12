@@ -71,7 +71,6 @@ impl Level for TestGameLevel {
 
         self.collision_sound = Sound::get("pek.wav");
 
-
         let mut this = self.to_rglica();
         self.base.on_tap.subscribe(move |pos| this.on_touch(pos));
     }

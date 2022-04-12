@@ -58,7 +58,7 @@ impl Maker {
 
                 sender.send(maker.grid.clone()).unwrap();
 
-                sleep(Duration::from_millis(5)).await;
+                sleep(Duration::from_millis(1)).await;
 
                 maker.remove_walls(next);
 

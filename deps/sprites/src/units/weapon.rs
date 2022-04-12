@@ -15,7 +15,7 @@ pub struct Weapon {
     pub(crate) velocity: Point,
     pub bullet_speed:    f32,
     pub bullet_image:    Handle<Image>,
-    pub bullet_shape:     Shape,
+    pub bullet_shape:    Shape,
 }
 
 impl Weapon {
@@ -53,7 +53,7 @@ impl Sprite for Weapon {
             velocity:     Default::default(),
             bullet_speed: 1.0,
             bullet_image: Default::default(),
-            bullet_shape:  (1, 1).into(),
+            bullet_shape: (1, 1).into(),
         })
     }
 }

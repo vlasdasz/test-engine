@@ -106,10 +106,6 @@ pub trait Sprite: Debug {
         self.data().image
     }
 
-    // fn image_mut(&mut self) -> Option<&mut Image> {
-    //     self.data_mut().image.as_mut()
-    // }
-
     fn set_image(&mut self, image: Handle<Image>) {
         self.data_mut().image = image
     }
