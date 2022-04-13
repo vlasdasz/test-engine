@@ -53,24 +53,20 @@ def setup_android():
 
     run("mkdir ndk")
 
+    platform = "linux-x86_64" if is_linux else "darwin-x86_64"
+
     print("Downloading NDK")
-    if is_linux:
-        urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-linux-x86_64.zip", "ndk/ndk.zip")
-        shutil.unpack_archive("ndk/ndk.zip", "ndk")
-    elif is_mac:
-        urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-darwin-x86_64.zip", "ndk/ndk.zip")
-        shutil.unpack_archive("ndk/ndk.zip", "ndk")
+
+    urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-" + platform + ".zip", "ndk/ndk.zip")
+    shutil.unpack_archive("ndk/ndk.zip", "ndk")
 
     toolchains = "/ndk/android-ndk-r22b/toolchains/"
 
     print("Symlink NDK bin")
-    if is_linux:
-        os.symlink(this_path + toolchains + "llvm/prebuilt/linux-x86_64/bin", bin)
-        os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/linux-x86_64/sysroot/usr/include"
-    elif is_mac:
-        os.symlink(this_path + toolchains + "llvm/prebuilt/darwin-x86_64/bin", bin)
-        os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/darwin-x86_64/sysroot/usr/include"
 
+    os.symlink(this_path + toolchains + "llvm/prebuilt/" + platform + "/bin", bin)
+    os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/" + platform + "/sysroot/usr/include"
+    
     print("Symlink clang")
     shutil.copyfile(bin + "/aarch64-linux-android21-clang", 
                     bin + "/aarch64-linux-android-clang")
@@ -94,8 +90,8 @@ def setup_android():
 def build_android():
 
     run("cargo build --target aarch64-linux-android --release --lib")
-    run("cargo build --target armv7-linux-androideabi --release --lib")
-    run("cargo build --target i686-linux-android --release --lib")
+    # run("cargo build --target armv7-linux-androideabi --release --lib")
+    # run("cargo build --target i686-linux-android --release --lib")
 
     run("mkdir -p mobile/android/app/src/main/jniLibs/")
     run("mkdir -p mobile/android/app/src/main/jniLibs/arm64-v8a")
@@ -104,8 +100,8 @@ def build_android():
 
     try:
         os.symlink(this_path + "/target/aarch64-linux-android/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/arm64-v8a/libtest_game.so")
-        os.symlink(this_path + "/target/armv7-linux-androideabi/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/armeabi-v7a/libtest_game.so")
-        os.symlink(this_path + "/target/i686-linux-android/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/x86/libtest_game.so")
+        # os.symlink(this_path + "/target/armv7-linux-androideabi/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/armeabi-v7a/libtest_game.so")
+        # os.symlink(this_path + "/target/i686-linux-android/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/x86/libtest_game.so")
     except FileExistsError:
         print("exists")
 
