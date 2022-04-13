@@ -3,7 +3,7 @@ use std::{ops::DerefMut, path::Path, rc::Rc};
 use cfg_if::cfg_if;
 use chrono::Utc;
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
-use gl_wrapper::{events::Events, GLDrawer};
+use gl_wrapper::{events::Events, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{ToRglica, Unwrap};
@@ -18,7 +18,7 @@ pub struct Screen {
     pub events: Box<Events>,
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    drawer:         GLDrawer,
+    glfw:           GLFWManager,
     monitor:        Unwrap<Monitor>,
     sprites_drawer: Box<dyn SpritesDrawer>,
 }
@@ -44,7 +44,7 @@ impl Screen {
 
     fn init(&mut self, size: Size) {
         cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
-            let monitor = self.drawer.monitors.first().expect("BUG: failed to get monitor").clone();
+            let monitor = self.glfw.monitors.first().expect("BUG: failed to get monitor").clone();
             self.add_monitor(monitor);
         }}
 
@@ -119,7 +119,7 @@ impl Screen {
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
-        self.drawer.set_size(size);
+        self.glfw.set_size(size);
         self.on_size_changed(size);
         error!("Debug: {:?}", self.ui.root_view.frame());
         self
@@ -140,7 +140,7 @@ impl Screen {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn start_main_loop(&mut self) {
         self.setup_events();
-        self.drawer.start_main_loop()
+        self.glfw.start_main_loop()
     }
 }
 
@@ -154,7 +154,7 @@ impl Screen {
         let events = Box::new(Events::default());
 
         #[cfg(not(any(target_os = "ios", target_os = "android")))]
-        let drawer = GLDrawer::new(events.to_rglica());
+        let glfw = GLFWManager::new(events.to_rglica());
 
         assets.init_gl_data();
 
@@ -173,7 +173,7 @@ impl Screen {
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
             events,
             #[cfg(not(any(target_os = "ios", target_os = "android")))]
-            drawer,
+            glfw,
             sprites_drawer,
             monitor: Default::default(),
         };

@@ -16,9 +16,9 @@ extern crate mashup;
 extern crate log;
 
 cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
-    pub mod gl_drawer;
+    pub mod glfw_manager;
     pub mod gl_loader;
-    pub use gl_drawer::GLDrawer;
+    pub use glfw_manager::GLFWManager;
     pub use gl_loader::GLLoader;
 }}
 

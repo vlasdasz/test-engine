@@ -5,14 +5,14 @@ use rtools::Rglica;
 
 use crate::{events::Events, gl_loader::GLFWEvents, monitor::Monitor, GLLoader};
 
-pub struct GLDrawer {
+pub struct GLFWManager {
     window:       Window,
     gl_events:    GLFWEvents,
     events:       Rglica<Events>,
     pub monitors: Vec<Monitor>,
 }
 
-impl GLDrawer {
+impl GLFWManager {
     pub fn start_main_loop(&mut self) {
         self.window.set_key_polling(true);
         self.window.set_size_polling(true);
@@ -53,7 +53,7 @@ impl GLDrawer {
     }
 }
 
-impl GLDrawer {
+impl GLFWManager {
     pub fn new(events: Rglica<Events>) -> Self {
         let mut loader = GLLoader::default();
         let monitors = loader.monitors();
