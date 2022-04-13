@@ -2,6 +2,7 @@
 
 import os
 import sys
+import glob
 import shutil
 import platform
 
@@ -12,14 +13,7 @@ is_linux   = platform.system() == "Linux"
 unix = is_mac or is_linux
 
 ios = False
-android = False
-
-if len(sys.argv) > 1:
-    if sys.argv[1] == "ios":
-        ios = True
-    if sys.argv[1] == "android":
-        android = True
-
+android = True
 
 def _get_home():
     if "HOME" in os.environ:
@@ -47,14 +41,30 @@ def ndk_home():
 
 
 def setup_android():
-    run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
-    print("skigal")
-    print(this_path)
+
     print(ndk_home())
+
+    run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
     try:
         os.symlink(ndk_home(), this_path + "/NDK")
     except FileExistsError:
         print("NDK symlink exists")
+
+    bin = this_path + "/NDK/bin"
+
+    shutil.copyfile(bin + "/aarch64-linux-android21-clang++", 
+                    bin + "/aarch64-linux-android-clang++")
+
+    shutil.copyfile(bin + "/llvm-ar", 
+                    bin + "/aarch64-linux-android-ar")
+
+    os.environ["PATH"] += ":" + bin
+    
+    for file in glob.glob(bin + "/*"):
+        run("sudo chmod +x " + file)
+
+
+
 
 if android:
     setup_android()
