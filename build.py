@@ -45,13 +45,15 @@ def run(string):
 
 def setup_android():
 
-    platform = "linux-x86_64" if is_linux else "darwin-x86_64"
+    platform = "linux" if is_linux else "darwin"
+    arch_platform = platform + "-x86_64"
     bin = this_path + "/ndk/bin"
     version = "r22b"
+    api_level = "21"
 
     toolchains = "/ndk/android-ndk-" + version + "/toolchains/"
 
-    os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/" + platform + "/sysroot/usr/include"
+    os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/" + arch_platform + "/sysroot/usr/include"
     os.environ["PATH"] += ":" + bin
 
     if os.path.isdir("ndk"):
@@ -62,22 +64,29 @@ def setup_android():
 
     print("Downloading NDK")
 
-    urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-" + version + "-" + platform + ".zip", "ndk/ndk.zip")
+    urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-" + version + "-" + arch_platform + ".zip", "ndk/ndk.zip")
     shutil.unpack_archive("ndk/ndk.zip", "ndk")
 
     print("Symlink NDK bin")
 
-    os.symlink(this_path + toolchains + "llvm/prebuilt/" + platform + "/bin", bin)
+    os.symlink(this_path + toolchains + "llvm/prebuilt/" + arch_platform + "/bin", bin)
     
     print("Symlink clang")
-    shutil.copyfile(bin + "/aarch64-linux-android21-clang", 
-                    bin + "/aarch64-linux-android-clang")
-    shutil.copyfile(bin + "/aarch64-linux-android21-clang++", 
-                    bin + "/aarch64-linux-android-clang++")
 
-    shutil.copyfile(bin + "/armv7a-linux-androideabi21-clang", 
+    # run("rm " + bin + "/clang")
+    # shutil.copyfile(bin + "/clang-14", 
+    #                 bin + "/clang")
+
+    shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang", 
+                    bin + "/aarch64-linux-android-clang")
+    shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang++", 
+                    bin + "/aarch64-linux-android-clang++")
+    shutil.copyfile(bin + "/llvm-ar", 
+                    bin + "/aarch64-linux-android-ar")
+
+    shutil.copyfile(bin + "/armv7a-linux-androideabi" + api_level + "-clang", 
                     bin + "/arm-linux-androideabi-clang")
-    shutil.copyfile(bin + "/armv7a-linux-androideabi21-clang++", 
+    shutil.copyfile(bin + "/armv7a-linux-androideabi" + api_level + "-clang++", 
                     bin + "/arm-linux-androideabi-clang++")
 
     for file in glob.glob(bin + "/*"):

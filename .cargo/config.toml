@@ -1,0 +1,15 @@
+[target.aarch64-linux-android]
+ar = "ndk/bin/aarch64-linux-android-ar"
+linker = "ndk/bin/aarch64-linux-android-clang"
+
+[target.armv7-linux-androideabi]
+ar = "ndk/bin/armv7a-linux-androideabi-ar"
+linker = "ndk/bin/armv7a-linux-androideabi21-clang"
+
+[target.i686-linux-android]
+ar = "ndk/bin/i686-linux-android-ar"
+linker = "ndk/bin/i686-linux-android21-clang"
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe"
+rustflags = ["-Zshare-generics=off"]
