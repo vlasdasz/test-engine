@@ -47,7 +47,9 @@ def setup_android():
 
     platform = "linux-x86_64" if is_linux else "darwin-x86_64"
     bin = this_path + "/ndk/bin"
-    toolchains = "/ndk/android-ndk-r22b/toolchains/"
+    version = "r22b"
+
+    toolchains = "/ndk/android-ndk-" + version + "/toolchains/"
 
     os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/" + platform + "/sysroot/usr/include"
     os.environ["PATH"] += ":" + bin
@@ -60,7 +62,7 @@ def setup_android():
 
     print("Downloading NDK")
 
-    urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-" + platform + ".zip", "ndk/ndk.zip")
+    urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-" + version + "-" + platform + ".zip", "ndk/ndk.zip")
     shutil.unpack_archive("ndk/ndk.zip", "ndk")
 
     print("Symlink NDK bin")
@@ -105,7 +107,7 @@ def build_android():
 
 
 def build_ios():
-    run("rustup target add aarch64-apple-ios x86_64-apple-ios ")
+    run("rustup target add aarch64-apple-ios x86_64-apple-ios")
     run("cargo install cargo-lipo")
     run("cargo lipo --release")
     os.chdir("mobile/iOS")
