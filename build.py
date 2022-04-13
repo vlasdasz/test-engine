@@ -45,27 +45,27 @@ def run(string):
 
 def setup_android():
 
+    platform = "linux-x86_64" if is_linux else "darwin-x86_64"
+    bin = this_path + "/ndk/bin"
+    toolchains = "/ndk/android-ndk-r22b/toolchains/"
+
+    os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/" + platform + "/sysroot/usr/include"
+    os.environ["PATH"] += ":" + bin
+
     if os.path.isdir("ndk"):
         print("NDK directory already exists")
         return
 
-    bin = this_path + "/ndk/bin"
-
     run("mkdir ndk")
-
-    platform = "linux-x86_64" if is_linux else "darwin-x86_64"
 
     print("Downloading NDK")
 
     urllib.request.urlretrieve("https://dl.google.com/android/repository/android-ndk-r22b-" + platform + ".zip", "ndk/ndk.zip")
     shutil.unpack_archive("ndk/ndk.zip", "ndk")
 
-    toolchains = "/ndk/android-ndk-r22b/toolchains/"
-
     print("Symlink NDK bin")
 
     os.symlink(this_path + toolchains + "llvm/prebuilt/" + platform + "/bin", bin)
-    os.environ["NDK_INCLUDE_DIR"] = this_path + toolchains + "llvm/prebuilt/" + platform + "/sysroot/usr/include"
     
     print("Symlink clang")
     shutil.copyfile(bin + "/aarch64-linux-android21-clang", 
@@ -80,8 +80,6 @@ def setup_android():
 
     for file in glob.glob(bin + "/*"):
         run("sudo chmod +x " + file)
-
-    os.environ["PATH"] += ":" + bin
  
     print("Add rust targets")
     run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
