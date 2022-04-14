@@ -3,6 +3,9 @@
 
 use test_engine::{paths::home, rtools::Boxed, Screen};
 
+#[macro_use]
+extern crate log;
+
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
 #[allow(unused_imports)]
@@ -12,7 +15,7 @@ mod benchmark;
 mod test_game;
 
 fn main() {
-    let mut screen = Screen::new(&home().join("mazepa/test_engine"), (1000, 600).into());
+    let mut screen = Screen::new(&home().join("test_engine"), (1000, 600).into());
 
     screen.ui.set_view(TestGameView::boxed());
     screen.ui.add_debug_view();

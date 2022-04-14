@@ -67,9 +67,11 @@ pub fn make_view_on<T: 'static + View>(
     parent: &mut dyn View,
     make: impl FnOnce(&mut T),
 ) -> Rglica<T> {
-    let mut view = T::boxed();
-    make(view.deref_mut());
-    add_boxed(parent, view)
+    let view = T::boxed();
+    let mut rglica = view.to_rglica();
+    add_boxed(parent, view);
+    make(rglica.deref_mut());
+    rglica
 }
 
 pub fn alert(view: &mut dyn View, message: impl ToString) {

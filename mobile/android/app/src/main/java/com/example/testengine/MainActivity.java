@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setAssetManager(getResources().getAssets());
         setContentView(new MyGLSurfaceView(this));
-        getMonitor();
     }
 
     @Override
@@ -75,38 +74,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
-    void getMonitor() {
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
-        double sizeX = metrics.widthPixels / metrics.xdpi;
-        double sizeY = metrics.heightPixels / metrics.ydpi;
-
-        double x = Math.pow(sizeX, 2);
-        double y = Math.pow(sizeY, 2);
-        double screenInches = Math.sqrt(x + y);
-
-        int ppi = metrics.densityDpi;
-        float scale = (int)metrics.density;
-        int refresh_rate = (int)display.getRefreshRate();
-        int resolutionX = metrics.widthPixels;
-        int resolutionY = metrics.heightPixels;
-        float width = (float)(sizeX * 25.4);
-        float height = (float)(sizeY * 25.4);
-        float diagonal = (float)screenInches;
-
-        setMonitor(ppi, scale, refresh_rate, resolutionX, resolutionY, width, height, diagonal);
-    }
-
     public native void setAssetManager(AssetManager assetManager);
     public native void onTouch(int id, float x, float y, int event);
-    public native void setMonitor(int ppi,
-                                  float scale,
-                                  int refresh_rate,
-                                  int resolutionX,
-                                  int resolutionY,
-                                  float width,
-                                  float height,
-                                  float diagonal);
 
 }

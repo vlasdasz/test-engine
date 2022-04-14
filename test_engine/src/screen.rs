@@ -162,7 +162,11 @@ impl Screen {
 
         let sprites_drawer: Box<dyn SpritesDrawer> = TESpritesDrawer::new(assets.clone());
 
+        error!("Sprites Drawer: OK");
+
         let mut ui = UILayer::new(assets, sprites_drawer.to_rglica());
+
+        error!("UILayer: OK");
 
         cfg_if! {if #[cfg(not(any(target_os = "ios", target_os = "android")))] {
             ui.events = events.to_rglica();

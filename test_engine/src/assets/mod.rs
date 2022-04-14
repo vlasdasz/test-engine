@@ -33,6 +33,8 @@ impl Assets {
 
     pub fn init_gl_data(&mut self) {
         self.buffers = Buffers::default().into();
+        error!("Buffers: OK");
         self.shaders = Shaders::new(&self.paths).into();
+        error!("Shaders: OK");
     }
 }

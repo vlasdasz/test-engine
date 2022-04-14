@@ -26,7 +26,10 @@ impl DPadView {
         left: Handle<Image>,
         right: Handle<Image>,
     ) {
+        error!("set_images");
+        error!("{}", format!("{:?}", self.up));
         self.up.set_image(up);
+        error!("UP: OK");
         self.down.set_image(down);
         self.left.set_image(left);
         self.right.set_image(right);
@@ -35,7 +38,10 @@ impl DPadView {
 
 impl View for DPadView {
     fn setup(&mut self) {
+        dbg!("Hello?");
+        error!("Setup");
         self.up = add_view(self);
+        error!("UP: OK");
         self.down = add_view(self);
         self.left = add_view(self);
         self.right = add_view(self);
@@ -44,6 +50,8 @@ impl View for DPadView {
         self.up
             .on_tap
             .subscribe(move |_| this.on_press.trigger(Direction::Up));
+
+        error!("on_tap: OK");
 
         let mut this = self.to_rglica();
         self.down

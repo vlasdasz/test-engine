@@ -16,7 +16,6 @@ use crate::test_game::TestGameView;
 mod benchmark;
 mod test_game;
 
-#[cfg(target_os = "android")]
 #[macro_use]
 extern crate log;
 
@@ -45,6 +44,7 @@ pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
 pub extern "C" fn set_gyro(pitch: c_float, roll: c_float, yaw: c_float) {
     unsafe { APP.as_mut().unwrap_unchecked().set_gyro(pitch, roll, yaw) }
 }
+
 #[no_mangle]
 pub extern "C" fn set_monitor(
     ppi: c_int,
@@ -91,7 +91,6 @@ pub mod android {
                 ),
         );
 
-        trace!("this is a verbose {}", "message");
         error!("setup_logger");
     }
 
@@ -137,7 +136,7 @@ pub mod android {
     }
 
     #[no_mangle]
-    pub unsafe extern "C" fn Java_com_example_testengine_MainActivity_setMonitor(
+    pub unsafe extern "C" fn Java_com_example_testengine_MyGLRenderer_setMonitor(
         _: JNIEnv,
         _: jclass,
         ppi: c_int,

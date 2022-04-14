@@ -40,20 +40,13 @@ pub struct Font {
 }
 
 impl Font {
-    pub fn invalid() -> Self {
-        Font {
-            size:           0,
-            height:         0.0,
-            baseline_shift: 0.0,
-            glyphs:         vec![],
-        }
-    }
-
     pub fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
         error!("New font {:?}", path);
 
         let data = File::read(path);
+        error!("File::read");
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
+        error!("fontdue::Font::from_bytes");
 
         let mut glyphs = Vec::with_capacity(128);
 
@@ -79,16 +72,14 @@ impl Font {
         let baseline_position = y_min.abs();
         let baseline_shift = height / 2.0 - baseline_position;
 
+        error!("Font OK");
+
         Ok(Font {
             size,
             height,
             baseline_shift,
             glyphs,
         })
-    }
-
-    pub fn is_invalid(&self) -> bool {
-        self.glyphs.is_empty()
     }
 }
 
