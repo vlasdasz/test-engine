@@ -28,11 +28,12 @@ impl GLWrapper {
         GL!(Disable, GLC!(DEPTH_TEST))
     }
 
-    pub fn set_viewport(window_height: f32, scale: &f32, rect: impl Borrow<Rect>) {
+    pub fn set_viewport(window_height: f32, scale: f32, rect: impl Borrow<Rect>) {
         let rect = rect.borrow();
         if rect.size.is_invalid() {
             return;
         }
+        let scale = adjust_scale(scale);
         GL!(
             Viewport,
             (rect.origin.x * scale) as i32,
@@ -46,4 +47,14 @@ impl GLWrapper {
         GL!(Enable, GLC!(BLEND));
         GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
     }
+}
+
+#[cfg(target_os = "android")]
+fn adjust_scale(_scale: f32) -> f32 {
+    1.0
+}
+
+#[cfg(not(target_os = "android"))]
+fn adjust_scale(scale: f32) -> f32 {
+    scale
 }

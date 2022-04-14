@@ -38,7 +38,6 @@ impl DPadView {
 
 impl View for DPadView {
     fn setup(&mut self) {
-        dbg!("Hello?");
         error!("Setup");
         self.up = add_view(self);
         error!("UP: OK");

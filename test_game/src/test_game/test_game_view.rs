@@ -1,6 +1,7 @@
 use test_engine::{
     audio::Sound,
     game_view::GameView,
+    gm::Color,
     rtools::{
         data_manager::{DataManager, Handle},
         Boxed, Rglica, ToRglica,
@@ -13,7 +14,7 @@ use test_engine::{
         placer::Anchor,
         test::test_view::TestView,
         view_base::{add_view, add_view_with_frame, make_view_on, ViewBase},
-        DPadView, View,
+        DPadView, Touch, View,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -125,12 +126,17 @@ impl TestGameView {
 }
 
 impl View for TestGameView {
+    fn on_touch(&mut self, touch: &Touch) {
+        error!("{}", format!("{:?}", &touch.position));
+        let mut view = ViewBase::with_frame((touch.position.x, touch.position.y, 5, 5).into());
+        view.set_color(Color::random());
+        self.add_subview(view);
+    }
+
     fn setup(&mut self) {
-        error!("TestGameView:");
+        self.enable_touch();
         self.setup_ui();
-        error!("UI: OK");
         self.setup_level();
-        error!("Level: OK");
     }
 
     fn layout(&mut self) {

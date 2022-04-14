@@ -84,7 +84,7 @@ impl UIDrawer {
     }
 
     fn set_viewport(&self, rect: impl Borrow<Rect>) {
-        GLWrapper::set_viewport(self.window_size.height, &self.scale, rect);
+        GLWrapper::set_viewport(self.window_size.height, self.scale, rect);
     }
 }
 
