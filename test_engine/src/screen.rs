@@ -42,7 +42,7 @@ impl Screen {
         self.events.on_frame_drawn.subscribe(move |_| this.update());
     }
 
-    fn init(&mut self, size: Size) {
+    fn init(&mut self, _size: Size) {
         cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
             let monitor = self.glfw.monitors.first().expect("BUG: failed to get monitor").clone();
             self.add_monitor(monitor);
@@ -54,12 +54,12 @@ impl Screen {
         self.ui.root_view.calculate_frames();
 
         cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
-            let size = Screen::adjust_size(self.monitor.clone(), size);
+            let size = Screen::adjust_size(self.monitor.clone(), _size);
             self.set_size(size);
         }}
     }
 
-    #[cfg(not(target_os = "macos"))]
+    #[cfg(not(any(target_os = "ios", target_os = "android", target_os = "macos")))]
     fn adjust_size(monitor: Monitor, size: Size) -> Size {
         dbg!(size * monitor.scale)
     }

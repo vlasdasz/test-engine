@@ -35,8 +35,6 @@ impl Paths {
     fn root(_base: &Path) -> PathBuf {
         #[cfg(not(target_os = "ios"))]
         return _base.into();
-        #[cfg(target_os = "android")]
-        return Default::default();
         #[cfg(target_os = "ios")]
         return std::env::current_exe()
             .unwrap_or_default()
@@ -45,11 +43,11 @@ impl Paths {
             .to_path_buf();
     }
 
-    pub fn assets(root: &Path) -> PathBuf {
+    pub fn assets(_root: &Path) -> PathBuf {
         #[cfg(target_os = "android")]
         return Default::default();
         #[cfg(not(target_os = "android"))]
-        return root.join("Assets");
+        return _root.join("Assets");
     }
 }
 

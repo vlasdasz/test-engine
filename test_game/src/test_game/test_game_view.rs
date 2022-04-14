@@ -1,7 +1,6 @@
 use test_engine::{
     audio::Sound,
     game_view::GameView,
-    gm::Color,
     rtools::{
         data_manager::{DataManager, Handle},
         Boxed, Rglica, ToRglica,
@@ -14,7 +13,7 @@ use test_engine::{
         placer::Anchor,
         test::test_view::TestView,
         view_base::{add_view, add_view_with_frame, make_view_on, ViewBase},
-        DPadView, Touch, View,
+        DPadView, View,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -76,12 +75,9 @@ impl TestGameView {
             .base_mut()
             .on_sprite_selected
             .subscribe(move |sprite| this.sprote_view.set_sprite(sprite));
-        error!("on_sprite_selected.subscribe: OK");
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (200, 150).into();
-
-            error!("Frame: OK");
 
             dpad.set_images(
                 Image::get("up.png"),
@@ -89,15 +85,11 @@ impl TestGameView {
                 Image::get("left.png"),
                 Image::get("right.png"),
             );
-
-            error!("Images: OK");
         });
-        error!("Dpad: OK");
 
         self.left_stick = add_view(self);
 
         self.setup_slider();
-        error!("Slider: OK");
 
         self.test_view = add_view_with_frame(self, (280, 400));
         self.test_view.set_image(Image::get("cat.png"));
@@ -112,8 +104,6 @@ impl TestGameView {
             this.ui.set_view(BenchmarkView::boxed());
         });
 
-        error!("to_benchmark: OK");
-
         let mut this = self.to_rglica();
         self.play = make_view_on(self, |play: &mut Button| {
             play.set_text("Play sound");
@@ -126,15 +116,7 @@ impl TestGameView {
 }
 
 impl View for TestGameView {
-    fn on_touch(&mut self, touch: &Touch) {
-        error!("{}", format!("{:?}", &touch.position));
-        let mut view = ViewBase::with_frame((touch.position.x, touch.position.y, 5, 5).into());
-        view.set_color(Color::random());
-        self.add_subview(view);
-    }
-
     fn setup(&mut self) {
-        self.enable_touch();
         self.setup_ui();
         self.setup_level();
     }
@@ -160,7 +142,7 @@ impl View for TestGameView {
         self.test_view.place().proportional_width(0.28);
         self.test_view.place().proportional_height(0.8);
 
-        self.to_benchmark.place().bottom_center(10);
+        self.to_benchmark.place().bottom_center(20);
 
         self.play
             .place()

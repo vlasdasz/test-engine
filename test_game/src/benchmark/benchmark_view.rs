@@ -40,7 +40,7 @@ impl View for BenchmarkView {
 
     fn layout(&mut self) {
         self.place().as_background();
-        self.to_test.place().bottom_center(10);
+        self.to_test.place().bottom_center(20);
         self.bullets_label.place().top_right(10);
     }
 

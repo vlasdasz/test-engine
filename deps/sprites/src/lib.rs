@@ -1,6 +1,8 @@
 #![feature(box_into_inner)]
 #![feature(explicit_generic_args_with_impl_trait)]
 
+#[macro_use]
+extern crate log;
 extern crate core;
 
 mod body;

@@ -1,22 +1,27 @@
 use std::{
     ffi::{c_float, c_int},
     marker::PhantomData,
-    os::raw::c_ulong,
     path::{Path, PathBuf},
 };
 
+use cfg_if::cfg_if;
 use gl_wrapper::monitor::Monitor;
 use gm::volume::GyroData;
 use rtools::Unwrap;
-use tokio::runtime::Runtime;
+use tokio::{
+    runtime::Runtime,
+    sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
+};
 use ui::{input::touch::TouchEvent, Touch};
 
 use crate::{game_view::GameView, Screen};
 
 pub struct App<T> {
-    pub screen: Unwrap<Screen>,
-    runtime:    Runtime,
-    _view:      PhantomData<T>,
+    pub screen:      Unwrap<Screen>,
+    runtime:         Runtime,
+    _view:           PhantomData<T>,
+    _touch_sender:   UnboundedSender<Touch>,
+    _touch_receiver: UnboundedReceiver<Touch>,
 }
 
 impl<T: GameView + 'static> App<T> {
@@ -40,18 +45,31 @@ impl<T: GameView + 'static> App<T> {
     }
 
     pub fn update_screen(&mut self) {
-        self.runtime.block_on(async { self.screen.update() });
+        self.runtime.block_on(async {
+            #[cfg(target_os = "android")]
+            while let Ok(touch) = self._touch_receiver.try_recv() {
+                self.screen.ui.on_touch(touch);
+            }
+            self.screen.update();
+        });
     }
 
-    pub fn on_touch(&mut self, id: c_ulong, x: c_float, y: c_float, event: c_int) {
-        #[allow(clippy::useless_conversion)]
-        self.runtime.block_on(async {
-            self.screen.ui.on_touch(Touch {
-                id:       id.into(),
-                position: (x, y).into(),
-                event:    TouchEvent::from_int(event),
-            })
-        });
+    pub fn on_touch(&mut self, id: u64, x: c_float, y: c_float, event: c_int) {
+        let touch = Touch {
+            id,
+            position: (x, y).into(),
+            event: TouchEvent::from_int(event),
+        };
+
+        cfg_if! {if #[cfg(target_os="android")] {
+            if let Err(err) = self._touch_sender.send(touch) {
+                error!("Error sending touch: {:?}", err);
+            }
+        } else {
+            self.runtime.block_on(async {
+                self.screen.ui.on_touch(touch);
+            });
+        }};
     }
 
     pub fn set_gyro(&mut self, pitch: c_float, roll: c_float, yaw: c_float) {
@@ -91,10 +109,13 @@ impl<T: GameView + 'static> App<T> {
 
 impl<T: GameView> Default for App<T> {
     fn default() -> Self {
+        let (_touch_sender, _touch_receiver) = unbounded_channel::<Touch>();
         Self {
-            screen:  Default::default(),
+            screen: Default::default(),
             runtime: tokio::runtime::Runtime::new().unwrap(),
-            _view:   Default::default(),
+            _view: Default::default(),
+            _touch_sender,
+            _touch_receiver,
         }
     }
 }
