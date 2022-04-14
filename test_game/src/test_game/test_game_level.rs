@@ -41,6 +41,8 @@ impl TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
+        error!("setuo TestGameLevel");
+
         let square = Image::get("square.png");
 
         add_sprite::<Wall>((100, 5), (0, 0), self).set_image(square);

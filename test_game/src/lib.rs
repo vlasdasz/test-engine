@@ -23,6 +23,7 @@ static mut APP: *mut App<TestGameView> = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
+    error!("set_screen_size");
     unsafe {
         APP.as_mut()
             .unwrap_unchecked()
@@ -132,7 +133,7 @@ pub mod android {
         y: c_float,
         event: c_int,
     ) {
-        on_touch(id, x, y, event)
+        on_touch(id + 1, x, y, event)
     }
 
     #[no_mangle]
