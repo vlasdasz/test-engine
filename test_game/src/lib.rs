@@ -38,7 +38,11 @@ pub extern "C" fn update_screen() {
 
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
-    unsafe { APP.as_mut().unwrap_unchecked().on_touch(id, x, y, event) }
+    unsafe {
+        APP.as_mut()
+            .unwrap_unchecked()
+            .on_touch(id as _, x, y, event)
+    }
 }
 
 #[no_mangle]
