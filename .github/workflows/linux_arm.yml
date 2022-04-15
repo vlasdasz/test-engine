@@ -21,4 +21,4 @@ jobs:
         with:
           submodules: true
       - name: linux arm
-        run: cargo build
+        run: python3 build.py
