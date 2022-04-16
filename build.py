@@ -72,11 +72,6 @@ def setup_android():
     os.symlink(this_path + toolchains + "llvm/prebuilt/" + arch_platform + "/bin", bin)
     
     print("Symlink clang")
-
-    # run("rm " + bin + "/clang")
-    # shutil.copyfile(bin + "/clang-14", 
-    #                 bin + "/clang")
-
     shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang", 
                     bin + "/aarch64-linux-android-clang")
     shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang++", 
@@ -108,7 +103,9 @@ def build_android():
     run("mkdir -p mobile/android/app/src/main/jniLibs/x86")
 
     try:
-        os.symlink(this_path + "/target/aarch64-linux-android/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/arm64-v8a/libtest_game.so")
+        os.symlink(this_path + "/target/aarch64-linux-android/release/libtest_game.so",
+                   "mobile/android/app/src/main/jniLibs/arm64-v8a/libtest_game.so")
+
         # os.symlink(this_path + "/target/armv7-linux-androideabi/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/armeabi-v7a/libtest_game.so")
         # os.symlink(this_path + "/target/i686-linux-android/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/x86/libtest_game.so")
     except FileExistsError:

@@ -17,4 +17,4 @@ jobs:
         with:
           submodules: recursive
       - name: Mac
-        run: arch -arm64 cargo build
+        run: cargo build
