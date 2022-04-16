@@ -30,7 +30,9 @@ if is_mac:
 import distro
 
 is_fedora = distro.id() == "fedora"
+is_arch = "arch" in distro.id()
 
+print("Distro: " + distro.id())
 
 if len(sys.argv) > 1:
     if sys.argv[1] == "ios":
@@ -141,6 +143,8 @@ if is_linux and desktop:
     if is_fedora:
         run("sudo dnf update")
         run("sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel alsa-lib-devel-1.2.6.1-3.fc34.aarch64")
+    elif is_arch:
+        print("Arch")
     else:
         run("sudo apt update")
         run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev")
