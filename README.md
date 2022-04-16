@@ -5,6 +5,7 @@
 [MAC1]: https://github.com/vladasz/test_engine/actions/workflows/mac.yml/badge.svg
 [UBU1]: https://github.com/vladasz/test_engine/actions/workflows/ubuntu.yml/badge.svg
 [FED1]: https://github.com/vladasz/test_engine/actions/workflows/fedora.yml/badge.svg
+[ARC1]: https://github.com/vladasz/test_engine/actions/workflows/arch.yml/badge.svg
 [WIN1]: https://github.com/vladasz/test_engine/actions/workflows/windows.yml/badge.svg
 [IOSS1]: https://github.com/vladasz/test_engine/actions/workflows/ios.yml/badge.svg
 [ANDR1]: https://github.com/vladasz/test_engine/actions/workflows/android.yml/badge.svg
@@ -13,6 +14,7 @@
 [LMAC]: https://github.com/VladasZ/test_engine/actions/workflows/mac.yml
 [LUBU]: https://github.com/VladasZ/test_engine/actions/workflows/ubuntu.yml
 [LFED]: https://github.com/VladasZ/test_engine/actions/workflows/fedora.yml
+[LARC]: https://github.com/VladasZ/test_engine/actions/workflows/arch.yml
 [LWIN]: https://github.com/VladasZ/test_engine/actions/workflows/windows.yml
 [LIOSD]: https://github.com/VladasZ/test_engine/actions/workflows/ios.yml
 [ANDR]: https://github.com/VladasZ/test_engine/actions/workflows/android.yml
@@ -25,6 +27,7 @@ Desktop:
 
 [![Ubu][UBU1]][LUBU]
 [![Fed][FED1]][LFED]
+[![Arc][ARC1]][LARC]
 
 Mobile:
 
