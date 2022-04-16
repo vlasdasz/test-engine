@@ -45,6 +45,9 @@ def run(string):
 
 def setup_android():
 
+    print("Add rust targets")
+    run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
+
     platform = "linux" if is_linux else "darwin"
     arch_platform = platform + "-x86_64"
     bin = this_path + "/ndk/bin"
@@ -86,9 +89,6 @@ def setup_android():
 
     for file in glob.glob(bin + "/*"):
         run("sudo chmod +x " + file)
- 
-    print("Add rust targets")
-    run("rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android")
 
 
 def build_android():

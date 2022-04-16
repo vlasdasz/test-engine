@@ -33,8 +33,9 @@ impl View for LabeledSlider {
         self.label = add_view_with_frame(self, frames[0]);
         self.slider = add_view_with_frame(self, frames[1]);
 
-        let mut this = self.to_rglica();
-        self.slider.on_change.subscribe(move |a| this.on_change(a));
+        self.slider
+            .on_change
+            .subscribe(self.to_rglica(), move |a, mut this| this.on_change(a));
     }
 
     fn view(&self) -> &ViewBase {

@@ -1,5 +1,5 @@
 use gm::Color;
-use rtools::{Rglica, ToRglica};
+use rtools::Rglica;
 
 use crate::{
     basic::Button,
@@ -35,10 +35,11 @@ impl View for Alert {
         self.ok_button.set_text("OK");
         self.ok_button.frame_mut().size = (100, 50).into();
 
-        let mut this = self.to_rglica();
-        self.ok_button
-            .on_tap
-            .subscribe(move |_| this.remove_from_superview());
+        // let mut this = self.to_rglica();
+        //  self.ok_button
+        //      .on_tap
+        //      .subscribe_with(self.to_rglica().clone(), move |_, mut this|
+        // this.remove_from_superview());
     }
 
     fn layout(&mut self) {

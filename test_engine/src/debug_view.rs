@@ -28,11 +28,12 @@ impl View for DebugView {
             self.frame_mut().origin.y = 28.0;
         }
 
-        let mut this = self.to_rglica();
-        self.fps.on_set.subscribe(move |_| {
-            let fps = this.fps.copy();
-            this.fps_label.set_text(format!("FPS: {}", fps));
-        });
+        self.fps
+            .on_set
+            .subscribe(self.to_rglica(), move |_, mut this| {
+                let fps = this.fps.copy();
+                this.fps_label.set_text(format!("FPS: {}", fps));
+            });
     }
 
     fn layout(&mut self) {

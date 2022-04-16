@@ -12,11 +12,11 @@ const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
 #[derive(Default, Debug)]
 pub struct AnalogStickView {
-    base:                    ViewBase,
-    direction_stick:         Rglica<DrawingView>,
-    background:              Rglica<DrawingView>,
-    pub on_direction_change: Event<Point>,
-    pub flaccid:             bool,
+    base:            ViewBase,
+    direction_stick: Rglica<DrawingView>,
+    background:      Rglica<DrawingView>,
+    pub on_change:   Event<Point>,
+    pub flaccid:     bool,
 }
 
 impl AnalogStickView {
@@ -32,7 +32,7 @@ impl AnalogStickView {
             .frame_mut()
             .set_center(vector + frame.size.center());
 
-        self.on_direction_change.trigger(vector * 0.1);
+        self.on_change.trigger(vector * 0.1);
     }
 }
 
@@ -94,7 +94,7 @@ impl View for AnalogStickView {
             self.direction_stick
                 .frame_mut()
                 .set_center(frame.size.center());
-            self.on_direction_change.trigger(Point::default());
+            self.on_change.trigger(Point::default());
         } else {
             self.on_touch_moved(&touch.position);
         }

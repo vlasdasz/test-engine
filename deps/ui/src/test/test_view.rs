@@ -47,12 +47,13 @@ impl View for TestView {
         self.label.set_text("Hello label!");
 
         self.button = add_view(self);
-        let mut this = self.to_rglica();
-        self.button.on_tap.subscribe(move |_| {
-            let val = this.label_value;
-            this.label.set_text(format!("Hello label! {}", val));
-            this.label_value += 1;
-        });
+        self.button
+            .on_tap
+            .subscribe(self.to_rglica(), move |_, mut this| {
+                let val = this.label_value;
+                this.label.set_text(format!("Hello label! {}", val));
+                this.label_value += 1;
+            });
 
         self.image = add_view(self);
 

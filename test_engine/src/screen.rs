@@ -33,13 +33,15 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        let mut this = self.to_rglica();
-        self.events.on_size_changed.subscribe(move |size| {
-            this.on_size_changed(size);
-        });
+        self.events
+            .on_size_changed
+            .subscribe(self.to_rglica(), move |size, mut this| {
+                this.on_size_changed(size);
+            });
 
-        let mut this = self.to_rglica();
-        self.events.on_frame_drawn.subscribe(move |_| this.update());
+        self.events
+            .on_frame_drawn
+            .subscribe(self.to_rglica(), move |_, mut this| this.update());
     }
 
     fn init(&mut self, _size: Size) {

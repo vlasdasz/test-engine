@@ -30,10 +30,11 @@ impl View for BenchmarkView {
         self.to_test = add_view(self);
         self.to_test.set_text("Test");
         self.to_test.frame_mut().size = (120, 20).into();
-        let mut this = self.to_rglica();
-        self.to_test.on_tap.subscribe(move |_| {
-            this.ui.set_view(TestGameView::boxed());
-        });
+        self.to_test
+            .on_tap
+            .subscribe(self.to_rglica(), move |_, mut this| {
+                this.ui.set_view(TestGameView::boxed());
+            });
 
         self.bullets_label = add_view(self);
     }

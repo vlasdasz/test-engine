@@ -66,15 +66,17 @@ impl Level for TestGameLevel {
 
         self.player.enable_collision_detection();
 
-        let mut this = self.to_rglica();
-        self.player.on_collision.subscribe(move |_sprite| {
-            this.collision_sound.play();
-        });
+        self.player
+            .on_collision
+            .subscribe(self.to_rglica(), move |_, mut this| {
+                this.collision_sound.play();
+            });
 
         self.collision_sound = Sound::get("pek.wav");
 
-        let mut this = self.to_rglica();
-        self.base.on_tap.subscribe(move |pos| this.on_touch(pos));
+        self.base
+            .on_tap
+            .subscribe(self.to_rglica(), move |pos, mut this| this.on_touch(pos));
     }
 
     fn update(&mut self) {

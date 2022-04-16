@@ -45,27 +45,29 @@ impl View for DPadView {
         self.left = add_view(self);
         self.right = add_view(self);
 
-        let mut this = self.to_rglica();
-        self.up
-            .on_tap
-            .subscribe(move |_| this.on_press.trigger(Direction::Up));
+        self.up.on_tap.subscribe(self.to_rglica(), move |_, this| {
+            this.on_press.trigger(Direction::Up)
+        });
 
         error!("on_tap: OK");
 
-        let mut this = self.to_rglica();
         self.down
             .on_tap
-            .subscribe(move |_| this.on_press.trigger(Direction::Down));
+            .subscribe(self.to_rglica(), move |_, this| {
+                this.on_press.trigger(Direction::Down)
+            });
 
-        let mut this = self.to_rglica();
         self.left
             .on_tap
-            .subscribe(move |_| this.on_press.trigger(Direction::Left));
+            .subscribe(self.to_rglica(), move |_, this| {
+                this.on_press.trigger(Direction::Left)
+            });
 
-        let mut this = self.to_rglica();
         self.right
             .on_tap
-            .subscribe(move |_| this.on_press.trigger(Direction::Right));
+            .subscribe(self.to_rglica(), move |_, this| {
+                this.on_press.trigger(Direction::Right)
+            });
     }
 
     fn layout(&mut self) {

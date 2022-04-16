@@ -23,13 +23,15 @@ use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView};
 
 #[derive(Default, Debug)]
 pub struct TestGameView {
-    base:         ViewBase,
-    level:        TestGameLevel,
-    dpad:         Rglica<DPadView>,
-    left_stick:   Rglica<AnalogStickView>,
-    sprote_view:  Rglica<SpriteView>,
-    scale_slider: Rglica<LabeledSlider>,
-    test_view:    Rglica<TestView>,
+    base:        ViewBase,
+    level:       TestGameLevel,
+    dpad:        Rglica<DPadView>,
+    left_stick:  Rglica<AnalogStickView>,
+    sprote_view: Rglica<SpriteView>,
+    test_view:   Rglica<TestView>,
+
+    _ui_scale_slider:  Rglica<LabeledSlider>,
+    game_scale_slider: Rglica<LabeledSlider>,
 
     to_benchmark: Rglica<Button>,
 
@@ -43,26 +45,28 @@ impl TestGameView {
     fn setup_level(&mut self) {
         self.level.setup();
 
-        let mut player = self.level.player;
         self.dpad
             .on_press
-            .subscribe(move |direction| player.move_by_direction(direction));
+            .subscribe(self.level.player, move |dir, mut player| {
+                player.move_by_direction(dir)
+            });
 
         self.left_stick
-            .on_direction_change
-            .subscribe(move |direction| {
-                player.add_impulse(direction);
+            .on_change
+            .subscribe(self.level.player, move |dir, mut player| {
+                player.add_impulse(dir);
             });
     }
 
-    fn setup_slider(&mut self) {
-        self.scale_slider = add_view_with_frame(self, (50, 280));
-        self.scale_slider.set_multiplier(10.0);
+    fn setup_sliders(&mut self) {
+        self.game_scale_slider = add_view_with_frame(self, (50, 280));
+        self.game_scale_slider.set_multiplier(10.0);
 
-        let mut this = self.to_rglica();
-        self.scale_slider.on_change.subscribe(move |value| {
-            this.level_mut().drawer_mut().set_scale(value);
-        });
+        self.game_scale_slider
+            .on_change
+            .subscribe(self.to_rglica(), move |value, mut this| {
+                this.level_mut().drawer_mut().set_scale(value);
+            });
     }
 
     fn setup_ui(&mut self) {
@@ -70,11 +74,12 @@ impl TestGameView {
 
         self.sprote_view = add_view_with_frame(self, (500, 180));
 
-        let mut this = self.to_rglica();
         self.level
-            .base_mut()
+            .base()
             .on_sprite_selected
-            .subscribe(move |sprite| this.sprote_view.set_sprite(sprite));
+            .subscribe(self.to_rglica(), move |sprite, mut this| {
+                this.sprote_view.set_sprite(sprite)
+            });
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (200, 150).into();
@@ -89,7 +94,7 @@ impl TestGameView {
 
         self.left_stick = add_view(self);
 
-        self.setup_slider();
+        self.setup_sliders();
 
         self.test_view = add_view_with_frame(self, (280, 400));
         self.test_view.set_image(Image::get("cat.png"));
@@ -99,17 +104,19 @@ impl TestGameView {
         self.to_benchmark = add_view(self);
         self.to_benchmark.set_text("Benchmark");
         self.to_benchmark.frame_mut().size = (120, 20).into();
-        let mut this = self.to_rglica();
-        self.to_benchmark.on_tap.subscribe(move |_| {
-            this.ui.set_view(BenchmarkView::boxed());
-        });
+        self.to_benchmark
+            .on_tap
+            .subscribe(self.to_rglica(), move |_, mut this| {
+                this.ui.set_view(BenchmarkView::boxed());
+            });
 
-        let mut this = self.to_rglica();
         self.play = make_view_on(self, |play: &mut Button| {
             play.set_text("Play sound");
             play.frame_mut().size = (120, 20).into();
-            play.on_tap.subscribe(move |_| this.sound.play());
         });
+        self.play
+            .on_tap
+            .subscribe(self.to_rglica(), move |_, mut this| this.sound.play());
 
         self.sound = Sound::get("retro.wav");
     }
@@ -129,14 +136,14 @@ impl View for TestGameView {
             .place()
             .anchor(self.dpad, Anchor::Right, Anchor::Bot, 20);
 
-        self.scale_slider.place().proportional_height(0.5);
-        self.scale_slider
+        self.game_scale_slider.place().proportional_height(0.5);
+        self.game_scale_slider
             .place()
             .anchor(self.dpad, Anchor::Top, Anchor::Left, 10);
 
         self.sprote_view
             .place()
-            .anchor(self.scale_slider, Anchor::Right, Anchor::Bot, 10);
+            .anchor(self.game_scale_slider, Anchor::Right, Anchor::Bot, 10);
 
         self.test_view.place().bottom_right(20);
         self.test_view.place().proportional_width(0.28);

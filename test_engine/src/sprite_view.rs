@@ -43,13 +43,14 @@ impl SpriteView {
 
         self.delete_button.set_frame((20, 20).into());
 
-        let mut this = self.to_rglica();
-        self.delete_button.on_tap.subscribe(move |_| {
-            if this.sprite.is_ok() {
-                this.sprite.remove();
-                this.set_sprite(Rglica::default());
-            }
-        });
+        self.delete_button
+            .on_tap
+            .subscribe(self.to_rglica(), move |_, mut this| {
+                if this.sprite.is_ok() {
+                    this.sprite.remove();
+                    this.set_sprite(Rglica::default());
+                }
+            });
     }
 }
 

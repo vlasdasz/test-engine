@@ -114,20 +114,20 @@ impl UILayer {
     }
 
     pub fn setup_events(&mut self) {
-        let mut this = self.to_rglica();
-
         self.events
             .on_key_pressed
-            .subscribe(move |a| this.on_key_pressed(a.0, a.1));
+            .subscribe(self.to_rglica(), move |a, mut this| {
+                this.on_key_pressed(a.0, a.1)
+            });
 
-        let mut this = self.to_rglica();
         self.events
             .on_mouse_click
-            .subscribe(move |a| this.on_mouse_click(a.0, a.1));
+            .subscribe(self.to_rglica(), move |a, mut this| {
+                this.on_mouse_click(a.0, a.1)
+            });
 
-        let mut this = self.to_rglica();
         self.events
             .on_cursor_moved
-            .subscribe(move |a| this.on_cursor_moved(a))
+            .subscribe(self.to_rglica(), move |a, mut this| this.on_cursor_moved(a))
     }
 }
