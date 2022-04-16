@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::Color;
-use rtools::{data_manager::Handle, Animation, Rglica, ToRglica, Unwrap};
+use rtools::{data_manager::Handle, Animation, Rglica, Unwrap};
 
 use crate::{
     basic::Button,
@@ -47,13 +47,11 @@ impl View for TestView {
         self.label.set_text("Hello label!");
 
         self.button = add_view(self);
-        self.button
-            .on_tap
-            .subscribe(self.to_rglica(), move |_, mut this| {
-                let val = this.label_value;
-                this.label.set_text(format!("Hello label! {}", val));
-                this.label_value += 1;
-            });
+        self.button.on_tap.set(self, move |_, this| {
+            let val = this.label_value;
+            this.label.set_text(format!("Hello label! {}", val));
+            this.label_value += 1;
+        });
 
         self.image = add_view(self);
 

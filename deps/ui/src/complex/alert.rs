@@ -35,10 +35,10 @@ impl View for Alert {
         self.ok_button.set_text("OK");
         self.ok_button.frame_mut().size = (100, 50).into();
 
-        // let mut this = self.to_rglica();
+        // let this = self.to_rglica();
         //  self.ok_button
         //      .on_tap
-        //      .subscribe_with(self.to_rglica().clone(), move |_, mut this|
+        //      .subscribe_with(self.to_rglica().clone(), move |_, this|
         // this.remove_from_superview());
     }
 

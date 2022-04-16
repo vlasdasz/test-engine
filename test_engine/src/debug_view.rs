@@ -1,4 +1,4 @@
-use rtools::{platform::Platform, Property, Rglica, ToRglica};
+use rtools::{platform::Platform, Property, Rglica};
 use ui::{
     view_base::{add_view, ViewBase},
     Label, View,
@@ -28,12 +28,10 @@ impl View for DebugView {
             self.frame_mut().origin.y = 28.0;
         }
 
-        self.fps
-            .on_set
-            .subscribe(self.to_rglica(), move |_, mut this| {
-                let fps = this.fps.copy();
-                this.fps_label.set_text(format!("FPS: {}", fps));
-            });
+        self.fps.on_set.set(self, move |_, this| {
+            let fps = this.fps.copy();
+            this.fps_label.set_text(format!("FPS: {}", fps));
+        });
     }
 
     fn layout(&mut self) {

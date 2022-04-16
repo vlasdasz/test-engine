@@ -3,7 +3,7 @@ use test_engine::{
     game_view::GameView,
     rtools::{
         data_manager::{DataManager, Handle},
-        Boxed, Rglica, ToRglica,
+        Boxed, Rglica,
     },
     sprite_view::SpriteView,
     sprites::Control,
@@ -47,13 +47,13 @@ impl TestGameView {
 
         self.dpad
             .on_press
-            .subscribe(self.level.player, move |dir, mut player| {
+            .set(&self.level.player, move |dir, player| {
                 player.move_by_direction(dir)
             });
 
         self.left_stick
             .on_change
-            .subscribe(self.level.player, move |dir, mut player| {
+            .set(&self.level.player, move |dir, player| {
                 player.add_impulse(dir);
             });
     }
@@ -64,8 +64,8 @@ impl TestGameView {
 
         self.game_scale_slider
             .on_change
-            .subscribe(self.to_rglica(), move |value, mut this| {
-                this.level_mut().drawer_mut().set_scale(value);
+            .set(self, move |scale, this| {
+                this.level_mut().drawer_mut().set_scale(scale);
             });
     }
 
@@ -77,7 +77,7 @@ impl TestGameView {
         self.level
             .base()
             .on_sprite_selected
-            .subscribe(self.to_rglica(), move |sprite, mut this| {
+            .set(self, move |sprite, this| {
                 this.sprote_view.set_sprite(sprite)
             });
 
@@ -104,19 +104,15 @@ impl TestGameView {
         self.to_benchmark = add_view(self);
         self.to_benchmark.set_text("Benchmark");
         self.to_benchmark.frame_mut().size = (120, 20).into();
-        self.to_benchmark
-            .on_tap
-            .subscribe(self.to_rglica(), move |_, mut this| {
-                this.ui.set_view(BenchmarkView::boxed());
-            });
+        self.to_benchmark.on_tap.set(self, move |_, this| {
+            this.ui.set_view(BenchmarkView::boxed());
+        });
 
         self.play = make_view_on(self, |play: &mut Button| {
             play.set_text("Play sound");
             play.frame_mut().size = (120, 20).into();
         });
-        self.play
-            .on_tap
-            .subscribe(self.to_rglica(), move |_, mut this| this.sound.play());
+        self.play.on_tap.set(self, move |_, this| this.sound.play());
 
         self.sound = Sound::get("retro.wav");
     }

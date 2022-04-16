@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::flat::Direction;
-use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Event, Rglica};
 
 use crate::{
     basic::Button,
@@ -45,29 +45,23 @@ impl View for DPadView {
         self.left = add_view(self);
         self.right = add_view(self);
 
-        self.up.on_tap.subscribe(self.to_rglica(), move |_, this| {
-            this.on_press.trigger(Direction::Up)
-        });
+        self.up
+            .on_tap
+            .set(self, move |_, this| this.on_press.trigger(Direction::Up));
 
         error!("on_tap: OK");
 
         self.down
             .on_tap
-            .subscribe(self.to_rglica(), move |_, this| {
-                this.on_press.trigger(Direction::Down)
-            });
+            .set(self, move |_, this| this.on_press.trigger(Direction::Down));
 
         self.left
             .on_tap
-            .subscribe(self.to_rglica(), move |_, this| {
-                this.on_press.trigger(Direction::Left)
-            });
+            .set(self, move |_, this| this.on_press.trigger(Direction::Left));
 
         self.right
             .on_tap
-            .subscribe(self.to_rglica(), move |_, this| {
-                this.on_press.trigger(Direction::Right)
-            });
+            .set(self, move |_, this| this.on_press.trigger(Direction::Right));
     }
 
     fn layout(&mut self) {

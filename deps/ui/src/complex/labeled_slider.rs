@@ -1,4 +1,4 @@
-use rtools::{Event, Rglica, ToRglica};
+use rtools::{Event, Rglica};
 
 use crate::{
     complex::Slider,
@@ -35,7 +35,7 @@ impl View for LabeledSlider {
 
         self.slider
             .on_change
-            .subscribe(self.to_rglica(), move |a, mut this| this.on_change(a));
+            .set(self, move |a, this| this.on_change(a));
     }
 
     fn view(&self) -> &ViewBase {

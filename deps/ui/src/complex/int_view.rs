@@ -1,7 +1,7 @@
 use std::ops::AddAssign;
 
 use gl_image::Image;
-use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Event, Rglica};
 
 use crate::{
     basic::Button,
@@ -32,21 +32,17 @@ impl View for IntView {
         self.up = add_view(self);
         self.down = add_view(self);
 
-        self.up
-            .on_tap
-            .subscribe(self.to_rglica(), move |_, mut this| {
-                this.value.add_assign(1);
-                let val = this.value;
-                this.on_change.trigger(val);
-            });
+        self.up.on_tap.set(self, move |_, this| {
+            this.value.add_assign(1);
+            let val = this.value;
+            this.on_change.trigger(val);
+        });
 
-        self.down
-            .on_tap
-            .subscribe(self.to_rglica(), move |_, mut this| {
-                this.value.add_assign(-1);
-                let val = this.value;
-                this.on_change.trigger(val);
-            });
+        self.down.on_tap.set(self, move |_, this| {
+            this.value.add_assign(-1);
+            let val = this.value;
+            this.on_change.trigger(val);
+        });
     }
 
     fn layout(&mut self) {

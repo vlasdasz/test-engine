@@ -1,6 +1,6 @@
 use test_engine::{
     game_view::GameView,
-    rtools::{Boxed, Rglica, ToRglica},
+    rtools::{Boxed, Rglica},
     ui::{
         basic::Button,
         view_base::{add_view, ViewBase},
@@ -30,11 +30,9 @@ impl View for BenchmarkView {
         self.to_test = add_view(self);
         self.to_test.set_text("Test");
         self.to_test.frame_mut().size = (120, 20).into();
-        self.to_test
-            .on_tap
-            .subscribe(self.to_rglica(), move |_, mut this| {
-                this.ui.set_view(TestGameView::boxed());
-            });
+        self.to_test.on_tap.set(self, move |_, this| {
+            this.ui.set_view(TestGameView::boxed());
+        });
 
         self.bullets_label = add_view(self);
     }
