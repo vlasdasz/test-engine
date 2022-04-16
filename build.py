@@ -3,6 +3,7 @@
 import os
 import sys
 import glob
+import distro
 import shutil
 import platform
 import urllib.request
@@ -15,6 +16,9 @@ unix = is_mac or is_linux
 
 ios = False
 android = False
+
+is_fedora = distro.id() == "fedora"
+
 
 if len(sys.argv) > 1:
     if sys.argv[1] == "ios":
@@ -30,7 +34,7 @@ def get_home():
     if "HOME" in os.environ:
         return os.environ["HOME"]
     return os.path.expanduser("~")
-    
+
 
 home = get_home()
 
@@ -73,18 +77,18 @@ def setup_android():
     print("Symlink NDK bin")
 
     os.symlink(this_path + toolchains + "llvm/prebuilt/" + arch_platform + "/bin", bin)
-    
+
     print("Symlink clang")
-    shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang", 
+    shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang",
                     bin + "/aarch64-linux-android-clang")
-    shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang++", 
+    shutil.copyfile(bin + "/aarch64-linux-android" + api_level + "-clang++",
                     bin + "/aarch64-linux-android-clang++")
-    shutil.copyfile(bin + "/llvm-ar", 
+    shutil.copyfile(bin + "/llvm-ar",
                     bin + "/aarch64-linux-android-ar")
 
-    shutil.copyfile(bin + "/armv7a-linux-androideabi" + api_level + "-clang", 
+    shutil.copyfile(bin + "/armv7a-linux-androideabi" + api_level + "-clang",
                     bin + "/arm-linux-androideabi-clang")
-    shutil.copyfile(bin + "/armv7a-linux-androideabi" + api_level + "-clang++", 
+    shutil.copyfile(bin + "/armv7a-linux-androideabi" + api_level + "-clang++",
                     bin + "/arm-linux-androideabi-clang++")
 
     for file in glob.glob(bin + "/*"):
@@ -124,14 +128,16 @@ def build_ios():
 print("Arch:")
 print(platform.uname())
 
+
 if is_linux and desktop:
     print("Lin setup")
-    run("sudo apt update")
-    run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev")
 
-    #  sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel
-    # sudo dnf install alsa-lib-devel-1.2.6.1-3.fc34.aarch64
-    #
+    if is_fedora:
+        run("sudo dnf update")
+        run("sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel alsa-lib-devel-1.2.6.1-3.fc34.aarch64")
+    else:
+        run("sudo apt update")
+        run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev")
 
 if ios:
     build_ios()
