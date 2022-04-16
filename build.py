@@ -128,7 +128,11 @@ if is_linux and desktop:
     print("Lin setup")
     run("sudo apt update")
     run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev")
-                                                  
+
+    #  sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel
+    # sudo dnf install alsa-lib-devel-1.2.6.1-3.fc34.aarch64
+    #
+
 if ios:
     build_ios()
 elif android:
