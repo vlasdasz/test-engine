@@ -3,7 +3,6 @@
 import os
 import sys
 import glob
-import distro
 import shutil
 import platform
 import urllib.request
@@ -16,6 +15,19 @@ unix = is_mac or is_linux
 
 ios = False
 android = False
+
+
+def run(string):
+    print(string)
+    if os.system(string):
+        raise Exception("Shell script has failed")
+
+
+if is_mac:
+    run("pip3 install distro")
+
+
+import distro
 
 is_fedora = distro.id() == "fedora"
 
@@ -39,12 +51,6 @@ def get_home():
 home = get_home()
 
 this_path = os.path.dirname(os.path.abspath(__file__))
-
-
-def run(string):
-    print(string)
-    if os.system(string):
-        raise Exception("Shell script has failed")
 
 
 def setup_android():
