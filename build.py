@@ -142,6 +142,8 @@ print(platform.uname())
 if is_linux and desktop:
     print("Lin setup")
 
+    run("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh")
+
     if is_fedora:
         run("sudo dnf update")
         run("sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel alsa-lib-devel-1.2.6.1-3.fc34.aarch64")
