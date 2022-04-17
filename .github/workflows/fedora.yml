@@ -30,6 +30,7 @@ jobs:
           run: |
             uname -a
             echo ::set-output name=uname::$(uname -a)
+            python3 build.py
 
       - name: Get the output
         # Echo the `uname` output parameter from the `runcmd` step
