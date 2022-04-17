@@ -143,6 +143,7 @@ if is_linux and desktop:
     print("Lin setup")
 
     run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
+    run("source $HOME/.cargo/env")
 
     if is_fedora:
         run("sudo dnf update")
