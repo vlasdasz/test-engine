@@ -5,6 +5,7 @@ import sys
 import glob
 import shutil
 import platform
+import subprocess
 import urllib.request
 
 is_windows = platform.system() == "Windows"
@@ -17,20 +18,23 @@ ios = False
 android = False
 
 
+def get_uname():
+    if unix:
+        return str(subprocess.check_output(['uname', '-a']).lower())
+    else:
+        return ""
+
+
 def run(string):
     print(string)
     if os.system(string):
         raise Exception("Shell script has failed")
 
 
-run("pip3 install distro")
+uname = get_uname()
 
-import distro
-
-is_fedora = distro.id() == "fedora"
-is_arch = "arch" in distro.id()
-
-print("Distro: " + distro.id())
+is_fedora = "fedora" in uname
+is_arch = "arch" in uname
 
 if len(sys.argv) > 1:
     if sys.argv[1] == "ios":
