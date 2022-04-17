@@ -142,7 +142,7 @@ print(platform.uname())
 if is_linux and desktop:
     print("Lin setup")
 
-    run("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh")
+    run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
 
     if is_fedora:
         run("sudo dnf update")
