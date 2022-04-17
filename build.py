@@ -23,9 +23,7 @@ def run(string):
         raise Exception("Shell script has failed")
 
 
-if is_mac:
-    run("pip3 install distro")
-
+run("pip3 install distro")
 
 import distro
 
