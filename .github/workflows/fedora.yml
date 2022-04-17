@@ -20,7 +20,7 @@ jobs:
         id: runcmd
         with:
           arch: aarch64
-          distro: fedora_latest
+          distro: archarm_latest
 
           # Not required, but speeds up builds by storing container images in
           # a GitHub package registry.
