@@ -1,4 +1,4 @@
-name: Arch
+name: Linux
 
 on:
   push:
