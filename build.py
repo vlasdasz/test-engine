@@ -142,9 +142,6 @@ print(platform.uname())
 if is_linux and desktop:
     print("Lin setup")
 
-    run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
-    os.environ["PATH"] += ":" + "$HOME/.cargo/bin"
-
     if is_fedora:
         run("sudo dnf update")
         run("sudo dnf install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel alsa-lib-devel-1.2.6.1-3.fc34.aarch64")
@@ -153,6 +150,10 @@ if is_linux and desktop:
     else:
         run("sudo apt update")
         run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev")
+
+    run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
+    os.environ["PATH"] += ":" + "$HOME/.cargo/bin"
+
 
 if ios:
     build_ios()
