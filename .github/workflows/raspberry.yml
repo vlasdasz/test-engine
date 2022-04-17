@@ -1,4 +1,4 @@
-name: Raspberry Pi
+name: Raspberry
 
 on:
   push:
