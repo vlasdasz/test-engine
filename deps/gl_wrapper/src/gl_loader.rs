@@ -1,4 +1,5 @@
-#![cfg(not(any(target_os = "ios", target_os = "android")))]
+#![cfg(desktop)]
+#![allow(clippy::mismatched_target_os)]
 
 extern crate glfw;
 
@@ -22,7 +23,7 @@ impl Default for GLLoader {
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
         glfw.window_hint(glfw::WindowHint::OpenGlProfile(Core));
 
-        #[cfg(target_os = "macos")]
+        #[cfg(macos)]
         glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
 
         let (mut window, events) = glfw

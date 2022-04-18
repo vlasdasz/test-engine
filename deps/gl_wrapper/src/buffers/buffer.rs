@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 use gles31_sys::*;
 use rtools::array_view::ArrayView;
 

@@ -1,4 +1,5 @@
 #![allow(incomplete_features)]
+#![allow(clippy::mismatched_target_os)]
 #![feature(trait_upcasting)]
 #![feature(core_ffi_c)]
 #![feature(const_trait_impl)]
@@ -28,7 +29,7 @@ pub mod ui_layer;
 pub use gl_image::Image;
 pub use sprites::{Level, LevelBase, Sprite};
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 #[macro_use]
 extern crate mashup;
 

@@ -1,8 +1,10 @@
+#![allow(clippy::mismatched_target_os)]
+
 use std::{ops::DerefMut, path::Path, rc::Rc};
 
 use cfg_if::cfg_if;
 use chrono::Utc;
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 use gl_wrapper::{events::Events, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
@@ -14,10 +16,10 @@ use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 pub struct Screen {
     pub ui: Box<UILayer>,
 
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    #[cfg(desktop)]
     pub events: Box<Events>,
 
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    #[cfg(desktop)]
     glfw:           GLFWManager,
     monitor:        Unwrap<Monitor>,
     sprites_drawer: Box<dyn SpritesDrawer>,
@@ -29,7 +31,7 @@ impl Screen {
         self.ui.drawer.set_scale(self.monitor.scale);
     }
 
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    #[cfg(desktop)]
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
@@ -43,7 +45,7 @@ impl Screen {
     }
 
     fn init(&mut self, _size: Size) {
-        cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
+        cfg_if! { if #[cfg(desktop)] {
             let monitor = self.glfw.monitors.first().expect("BUG: failed to get monitor").clone();
             self.add_monitor(monitor);
         }}
@@ -53,18 +55,18 @@ impl Screen {
 
         self.ui.root_view.calculate_frames();
 
-        cfg_if! { if #[cfg(not(any(target_os="ios", target_os="android")))] {
+        cfg_if! { if #[cfg(desktop)] {
             let size = Screen::adjust_size(self.monitor.clone(), _size);
             self.set_size(size);
         }}
     }
 
-    #[cfg(not(any(target_os = "ios", target_os = "android", target_os = "macos")))]
+    #[cfg(not(any(mobile, macos)))]
     fn adjust_size(monitor: Monitor, size: Size) -> Size {
         dbg!(size * monitor.scale)
     }
 
-    #[cfg(target_os = "macos")]
+    #[cfg(macos)]
     fn adjust_size(_monitor: Monitor, size: Size) -> Size {
         size
     }
@@ -118,7 +120,7 @@ impl Screen {
     }
 
     pub fn set_size(&mut self, size: Size) -> &mut Self {
-        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        #[cfg(desktop)]
         self.glfw.set_size(size);
         self.on_size_changed(size);
         error!("Debug: {:?}", self.ui.root_view.frame());
@@ -137,7 +139,7 @@ impl Screen {
         self.ui.view.level_mut().on_gyro_changed(gyro)
     }
 
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    #[cfg(desktop)]
     pub fn start_main_loop(&mut self) {
         self.setup_events();
         self.glfw.start_main_loop()
@@ -150,10 +152,10 @@ impl Screen {
 
         ui::set_default_font_path(assets.paths.fonts.join("SF.otf"));
 
-        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        #[cfg(desktop)]
         let events = Box::new(Events::default());
 
-        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        #[cfg(desktop)]
         let glfw = GLFWManager::new(events.to_rglica());
 
         assets.init_gl_data();
@@ -164,19 +166,20 @@ impl Screen {
 
         error!("Sprites Drawer: OK");
 
-        let mut ui = UILayer::new(assets, sprites_drawer.to_rglica());
-
         error!("UILayer: OK");
 
-        cfg_if! {if #[cfg(not(any(target_os = "ios", target_os = "android")))] {
+        cfg_if! { if #[cfg(desktop)] {
+            let mut ui = UILayer::new(assets, sprites_drawer.to_rglica());
             ui.events = events.to_rglica();
-        }}
+        } else {
+            let ui = UILayer::new(assets, sprites_drawer.to_rglica());
+        }};
 
         let mut screen = Self {
             ui,
-            #[cfg(not(any(target_os = "ios", target_os = "android")))]
+            #[cfg(desktop)]
             events,
-            #[cfg(not(any(target_os = "ios", target_os = "android")))]
+            #[cfg(desktop)]
             glfw,
             sprites_drawer,
             monitor: Default::default(),

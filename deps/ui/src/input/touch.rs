@@ -1,11 +1,11 @@
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 use glfw::Action;
 use gm::flat::Point;
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 use crate::input::touch::MouseButton::Undefined;
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 pub enum MouseButton {
     Left,
     Right,
@@ -13,7 +13,7 @@ pub enum MouseButton {
     Undefined,
 }
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 impl MouseButton {
     pub fn from_glfw(btn: glfw::MouseButton) -> Self {
         match btn {
@@ -31,7 +31,7 @@ pub enum ButtonState {
     Repeat,
 }
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 impl ButtonState {
     pub fn from_glfw(action: Action) -> Self {
         match action {

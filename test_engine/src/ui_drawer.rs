@@ -1,3 +1,5 @@
+#![allow(clippy::mismatched_target_os)]
+
 use std::{borrow::Borrow, ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
@@ -25,17 +27,17 @@ impl UIDrawer {
         }
     }
 
-    #[cfg(any(windows, target_os = "linux"))]
+    #[cfg(any(windows, linux))]
     pub fn set_scale(&mut self, _scale: f32) {
         self.scale = 1.0
     }
 
-    #[cfg(target_os = "macos")]
+    #[cfg(macos)]
     pub fn set_scale(&mut self, scale: f32) {
         self.scale = scale
     }
 
-    #[cfg(any(target_os = "ios", target_os = "android"))]
+    #[cfg(mobile)]
     pub fn set_scale(&mut self, scale: f32) {
         self.scale = scale
     }

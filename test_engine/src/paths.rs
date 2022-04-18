@@ -1,3 +1,5 @@
+#![allow(clippy::mismatched_target_os)]
+
 use std::{
     path::{Path, PathBuf},
     rc::Rc,
@@ -33,20 +35,20 @@ impl Paths {
 
 impl Paths {
     fn root(_base: &Path) -> PathBuf {
-        #[cfg(not(target_os = "ios"))]
-        return _base.into();
-        #[cfg(target_os = "ios")]
+        #[cfg(ios)]
         return std::env::current_exe()
             .unwrap_or_default()
             .parent()
             .unwrap()
             .to_path_buf();
+        #[cfg(not(ios))]
+        return _base.into();
     }
 
     pub fn assets(_root: &Path) -> PathBuf {
-        #[cfg(target_os = "android")]
+        #[cfg(android)]
         return Default::default();
-        #[cfg(not(target_os = "android"))]
+        #[cfg(not(android))]
         return _root.join("Assets");
     }
 }

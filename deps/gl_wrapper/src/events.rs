@@ -1,4 +1,4 @@
-#![cfg(not(any(target_os = "ios", target_os = "android")))]
+#![cfg(desktop)]
 
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{Point, Size};

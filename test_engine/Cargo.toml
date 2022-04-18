@@ -33,3 +33,6 @@ glfw = "0.43"
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 mashup = "0.1"
 gles31-sys = { path = "../gles31-sys" }
+
+[build-dependencies]
+cfg_aliases = "0.1"

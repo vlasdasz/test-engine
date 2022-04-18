@@ -1,5 +1,5 @@
 use gl_wrapper::{Buffer, BufferConfig, GLC};
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 use gles31_sys::*;
 use gm::flat::{Point, Rect, Size};
 

@@ -16,3 +16,9 @@ pub enum DrawMode {
     Outline,
     Fill,
 }
+
+impl DrawMode {
+    pub fn to_gl(&self) -> u32 {
+        6 //GL_TRIANGLE_FAN
+    }
+}

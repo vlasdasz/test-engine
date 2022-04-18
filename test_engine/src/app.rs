@@ -1,3 +1,5 @@
+#![allow(clippy::mismatched_target_os)]
+
 use std::{
     ffi::{c_float, c_int},
     marker::PhantomData,
@@ -46,7 +48,7 @@ impl<T: GameView + 'static> App<T> {
 
     pub fn update_screen(&mut self) {
         self.runtime.block_on(async {
-            #[cfg(target_os = "android")]
+            #[cfg(android)]
             while let Ok(touch) = self._touch_receiver.try_recv() {
                 self.screen.ui.on_touch(touch);
             }
@@ -61,7 +63,7 @@ impl<T: GameView + 'static> App<T> {
             event: TouchEvent::from_int(event),
         };
 
-        cfg_if! {if #[cfg(target_os="android")] {
+        cfg_if! { if #[cfg(android)] {
             if let Err(err) = self._touch_sender.send(touch) {
                 error!("Error sending touch: {:?}", err);
             }

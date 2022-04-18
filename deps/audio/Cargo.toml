@@ -14,3 +14,6 @@ rtools = { path = "../../rtools" }
 
 [target.'cfg(not(target_os="android"))'.dependencies]
 rodio = "0.15"
+
+[build-dependencies]
+cfg_aliases = "0.1"

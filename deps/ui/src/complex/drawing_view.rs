@@ -39,15 +39,11 @@ impl View for DrawingView {
 }
 
 fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {
-    #![allow(clippy::needless_borrow)]
-    // #[cfg(any(target_os = "ios", target_os = "android"))]
-    // use gles31_sys::GL_LINE_STRIP;
-
     let buffer = Buffer::make(
         &BufferConfig::_2,
         (&path.points).into(),
         None,
-        6, //GLC!(GL_TRIANGLE_FAN), //draw_mode.to_gl(),
+        draw_mode.to_gl(),
     );
 
     PathData {

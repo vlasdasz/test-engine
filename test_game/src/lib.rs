@@ -1,4 +1,5 @@
 #![allow(incomplete_features)]
+#![allow(clippy::mismatched_target_os)]
 #![feature(explicit_generic_args_with_impl_trait)]
 
 use std::{
@@ -76,7 +77,7 @@ pub extern "C" fn set_monitor(
     }
 }
 
-#[cfg(target_os = "android")]
+#[cfg(android)]
 #[allow(non_snake_case)]
 pub mod android {
     extern crate android_logger;

@@ -1,6 +1,8 @@
+#![allow(clippy::mismatched_target_os)]
+
 use std::borrow::Borrow;
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 use gles31_sys::*;
 use gm::{flat::Rect, Color};
 
@@ -49,12 +51,12 @@ impl GLWrapper {
     }
 }
 
-#[cfg(target_os = "android")]
+#[cfg(android)]
 fn adjust_scale(_scale: f32) -> f32 {
     1.0
 }
 
-#[cfg(not(target_os = "android"))]
+#[cfg(not(android))]
 fn adjust_scale(scale: f32) -> f32 {
     scale
 }

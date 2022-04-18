@@ -1,7 +1,6 @@
 use cfg_if::cfg_if;
 
-cfg_if! {
-if #[cfg(any(target_os="ios", target_os="android"))] {
+cfg_if! { if #[cfg(mobile)] {
     use gles31_sys::*;
 } else {
     extern crate gl;

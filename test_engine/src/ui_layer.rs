@@ -1,14 +1,15 @@
 use std::{ops::DerefMut, rc::Rc};
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 use gl_wrapper::events::Events;
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
 use rtools::{Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
+#[cfg(desktop)]
+use ui::input::touch::{ButtonState, TouchEvent};
 use ui::{
-    input::touch::{ButtonState, TouchEvent},
     view_base::{add_view, ViewBase},
     Touch, View,
 };
@@ -25,7 +26,7 @@ pub struct UILayer {
 
     pub drawer: UIDrawer,
 
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    #[cfg(desktop)]
     pub events: Rglica<Events>,
 
     pub fps:        u64,
@@ -42,7 +43,7 @@ impl UILayer {
             view: Default::default(),
             sprites_drawer,
             drawer: UIDrawer::new(assets),
-            #[cfg(not(any(target_os = "ios", target_os = "android")))]
+            #[cfg(desktop)]
             events: Default::default(),
             fps: Default::default(),
             prev_time: Default::default(),
@@ -76,7 +77,7 @@ impl UILayer {
     }
 }
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 impl UILayer {
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;

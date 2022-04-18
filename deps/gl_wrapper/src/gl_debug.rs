@@ -1,4 +1,4 @@
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 #[macro_export]
 macro_rules! GLT {
     ($type:ident) => {
@@ -6,7 +6,7 @@ macro_rules! GLT {
     };
 }
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 #[macro_export]
 macro_rules! GLT {
     ($type:ident) => {
@@ -14,7 +14,7 @@ macro_rules! GLT {
     };
 }
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 #[macro_export]
 macro_rules! GLC {
     ($constant:ident) => {
@@ -22,7 +22,7 @@ macro_rules! GLC {
     };
 }
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 #[macro_export]
 macro_rules! GLC {
     ($constant:ident) => {{
@@ -35,7 +35,7 @@ macro_rules! GLC {
     }};
 }
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 #[macro_export]
 macro_rules! check_gl_error {
     () => {{
@@ -46,7 +46,7 @@ macro_rules! check_gl_error {
     }};
 }
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 #[macro_export]
 macro_rules! check_gl_error {
     () => {{
@@ -59,7 +59,7 @@ macro_rules! check_gl_error {
 }
 
 //TODO: poll errors
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 #[macro_export]
 macro_rules! GL_SILENT {
     ($call:ident) => {
@@ -74,7 +74,7 @@ macro_rules! GL_SILENT {
     };
 }
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 #[macro_export]
 macro_rules! GL_SILENT {
     ($call:ident) => {
@@ -101,7 +101,7 @@ macro_rules! GL_SILENT {
     };
 }
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 #[macro_export]
 macro_rules! GL {
     ($call:ident) => {
@@ -120,7 +120,7 @@ macro_rules! GL {
     };
 }
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 #[macro_export]
 macro_rules! GL {
     ($call:ident) => {

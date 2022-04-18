@@ -36,7 +36,7 @@ impl Monitor {
     }
 }
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(desktop)]
 impl From<&glfw::Monitor> for Monitor {
     fn from(monitor: &glfw::Monitor) -> Self {
         let name = monitor.get_name().unwrap();

@@ -1,3 +1,5 @@
+#![allow(clippy::mismatched_target_os)]
+
 pub use buffers::{Buffer, BufferConfig};
 use cfg_if::cfg_if;
 pub use gl_info::GLInfo;
@@ -8,14 +10,14 @@ pub use crate::gl_wrapper::GLWrapper;
 #[macro_use]
 pub mod gl_debug;
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 #[macro_use]
 extern crate mashup;
 
 #[macro_use]
 extern crate log;
 
-cfg_if! {if #[cfg(not(any(target_os="ios", target_os="android")))] {
+cfg_if! { if #[cfg(desktop)] {
     pub mod glfw_manager;
     pub mod gl_loader;
     pub use glfw_manager::GLFWManager;

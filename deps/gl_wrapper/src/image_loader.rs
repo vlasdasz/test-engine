@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-#[cfg(any(target_os = "ios", target_os = "android"))]
+#[cfg(mobile)]
 use gles31_sys::*;
 use gm::flat::Size;
 
@@ -8,9 +8,9 @@ pub struct ImageLoader;
 
 fn mode_for_channels(channels: u32) -> u32 {
     match channels {
-        #[cfg(any(target_os = "ios", target_os = "android"))]
+        #[cfg(mobile)]
         1 => GLC!(LUMINANCE),
-        #[cfg(not(any(target_os = "ios", target_os = "android")))]
+        #[cfg(desktop)]
         1 => GLC!(RED),
         _ => GLC!(RGBA),
     }
