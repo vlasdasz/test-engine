@@ -52,10 +52,7 @@ pub fn add_view<T: 'static + View>(parent: &mut dyn View) -> Rglica<T> {
     result
 }
 
-pub fn add_view_with_frame<T: 'static + View>(
-    parent: &mut dyn View,
-    frame: impl Into<Rect>,
-) -> Rglica<T> {
+pub fn add_view_with_frame<T: 'static + View>(parent: &mut dyn View, frame: impl Into<Rect>) -> Rglica<T> {
     let mut view = T::boxed();
     view.set_frame(frame.into());
     let result = view.to_rglica();
@@ -63,10 +60,7 @@ pub fn add_view_with_frame<T: 'static + View>(
     result
 }
 
-pub fn make_view_on<T: 'static + View>(
-    parent: &mut dyn View,
-    make: impl FnOnce(&mut T),
-) -> Rglica<T> {
+pub fn make_view_on<T: 'static + View>(parent: &mut dyn View, make: impl FnOnce(&mut T)) -> Rglica<T> {
     let view = T::boxed();
     let mut rglica = view.to_rglica();
     add_boxed(parent, view);

@@ -28,7 +28,7 @@ pub struct Screen {
 impl Screen {
     pub fn add_monitor(&mut self, monitor: Monitor) {
         self.monitor = monitor.into();
-        self.ui.drawer.set_scale(self.monitor.scale);
+        self.ui.drawer.set_screen_scale(self.monitor.scale);
     }
 
     #[cfg(desktop)]
@@ -39,9 +39,7 @@ impl Screen {
             this.on_size_changed(size);
         });
 
-        self.events
-            .on_frame_drawn
-            .set(self, move |_, this| this.update());
+        self.events.on_frame_drawn.set(self, move |_, this| this.update());
     }
 
     fn init(&mut self, _size: Size) {

@@ -17,10 +17,11 @@ use ui::{
 use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
 
 pub struct UILayer {
-    pub cursor_position: Point,
-    pub root_view:       Box<dyn View>,
-    pub debug_view:      Rglica<DebugView>,
-    pub view:            Rglica<dyn GameView>,
+    pub ui_cursor_position: Point,
+    pub cursor_position:    Point,
+    pub root_view:          Box<dyn View>,
+    pub debug_view:         Rglica<DebugView>,
+    pub view:               Rglica<dyn GameView>,
 
     pub sprites_drawer: Rglica<dyn SpritesDrawer>,
 
@@ -32,11 +33,14 @@ pub struct UILayer {
     pub fps:        u64,
     pub prev_time:  i64,
     pub frame_time: f64,
+
+    scale: f32,
 }
 
 impl UILayer {
     pub fn new(assets: Rc<Assets>, sprites_drawer: Rglica<dyn SpritesDrawer>) -> Box<Self> {
         Box::new(Self {
+            ui_cursor_position: Default::default(),
             cursor_position: Default::default(),
             root_view: ViewBase::boxed(),
             debug_view: Default::default(),
@@ -48,6 +52,7 @@ impl UILayer {
             fps: Default::default(),
             prev_time: Default::default(),
             frame_time: Default::default(),
+            scale: 1.0,
         })
     }
 }
@@ -55,9 +60,10 @@ impl UILayer {
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
         error!("{:?}", touch);
-        self.cursor_position = touch.position;
+        let level_touch = touch;
+        touch.position = self.ui_cursor_position;
         if !self.root_view.check_touch(&mut touch) {
-            self.view.pass_touch_to_level(touch)
+            self.view.pass_touch_to_level(level_touch)
         }
     }
 
@@ -72,6 +78,12 @@ impl UILayer {
         self.root_view.add_subview(view);
     }
 
+    pub fn set_scale(&mut self, scale: f32) {
+        self.scale = scale;
+        self.drawer.set_scale(scale);
+        self.root_view.set_frame((self.drawer.window_size / scale).into());
+    }
+
     pub fn add_debug_view(&mut self) {
         self.debug_view = add_view(self.root_view.deref_mut())
     }
@@ -81,6 +93,7 @@ impl UILayer {
 impl UILayer {
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;
+        self.ui_cursor_position = position / self.scale;
         self.on_touch(Touch {
             id:       1,
             position: self.cursor_position,

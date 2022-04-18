@@ -1,3 +1,5 @@
+use std::ops::Mul;
+
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
@@ -53,11 +55,7 @@ impl Rect {
 
 impl Rect {
     pub fn center(&self) -> Point {
-        (
-            self.x() + self.width() / 2.0,
-            self.y() + self.height() / 2.0,
-        )
-            .into()
+        (self.x() + self.width() / 2.0, self.y() + self.height() / 2.0).into()
     }
 
     pub fn set_center(&mut self, center: Point) {
@@ -103,5 +101,19 @@ impl<X: IntoF32, Y: IntoF32> From<(X, Y, Size)> for Rect {
             origin: (tup.0, tup.1).into(),
             size:   tup.2,
         }
+    }
+}
+
+impl<T: IntoF32> Mul<T> for &Rect {
+    type Output = Rect;
+    fn mul(self, rhs: T) -> Rect {
+        let mul = rhs.into_f32();
+        (
+            self.origin.x * mul,
+            self.origin.y * mul,
+            self.size.width * mul,
+            self.size.height * mul,
+        )
+            .into()
     }
 }

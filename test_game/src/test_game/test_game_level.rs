@@ -32,9 +32,7 @@ impl TestGameLevel {
         if let Some(mut sprite) = self.selected_sprite {
             sprite.set_selected(false);
             self.selected_sprite = None;
-            self.base_mut()
-                .on_sprite_selected
-                .trigger(Rglica::default());
+            self.base_mut().on_sprite_selected.trigger(Rglica::default());
         }
     }
 }
@@ -49,12 +47,8 @@ impl Level for TestGameLevel {
         add_sprite::<Wall>((5, 100), (60, 0), self).set_image(square);
         add_sprite::<Wall>((5, 100), (-60, 0), self).set_image(square);
 
-        add_sprite::<Body>(
-            Shape::triangle((-10, -10), (10, -10), (-10, 10)),
-            (0, 50),
-            self,
-        )
-        .set_image(Image::get("triangle.png"));
+        add_sprite::<Body>(Shape::triangle((-10, -10), (10, -10), (-10, 10)), (0, 50), self)
+            .set_image(Image::get("triangle.png"));
 
         for i in 0..50 {
             add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2), self).set_image(square);
@@ -72,9 +66,7 @@ impl Level for TestGameLevel {
 
         self.collision_sound = Sound::get("pek.wav");
 
-        self.base
-            .on_tap
-            .set(self, move |pos, this| this.on_touch(pos));
+        self.base.on_tap.set(self, move |pos, this| this.on_touch(pos));
     }
 
     fn update(&mut self) {

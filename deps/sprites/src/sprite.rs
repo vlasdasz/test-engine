@@ -32,8 +32,7 @@ pub trait Sprite: Debug {
         if self.data().collider_handle.is_some() {
             self.collider_mut().set_position([pos.x, pos.y].into());
         } else if self.data().rigid_handle.is_some() {
-            self.rigid_body_mut()
-                .set_position([pos.x, pos.y].into(), true)
+            self.rigid_body_mut().set_position([pos.x, pos.y].into(), true)
         }
         self.data_mut().position = pos;
     }

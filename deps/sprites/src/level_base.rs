@@ -6,8 +6,8 @@ use rapier2d::{
     na::Vector2,
     parry::partitioning::IndexedData,
     prelude::{
-        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters, IslandManager,
-        JointSet, NarrowPhase, PhysicsPipeline,
+        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters, IslandManager, JointSet,
+        NarrowPhase, PhysicsPipeline,
     },
 };
 use rtools::{address::Address, Event, Rglica, ToRglica};
@@ -92,11 +92,7 @@ impl LevelBase {
     }
 
     pub(crate) fn remove(&mut self, sprite: u64) {
-        let index = self
-            .sprites
-            .iter()
-            .position(|a| a.address() == sprite)
-            .unwrap();
+        let index = self.sprites.iter().position(|a| a.address() == sprite).unwrap();
 
         let sprite = self.sprites[index].deref();
 

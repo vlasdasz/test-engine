@@ -20,9 +20,7 @@ impl Sound {
     pub fn play(&mut self) {
         let cursor = Cursor::new(self.data.clone());
         let input = Decoder::new(cursor).unwrap();
-        self.stream_handle
-            .play_raw(input.convert_samples())
-            .unwrap();
+        self.stream_handle.play_raw(input.convert_samples()).unwrap();
     }
 }
 
@@ -30,8 +28,7 @@ impl LoadFromPath for Sound {
     fn load(path: &Path) -> Self {
         let (_stream, stream_handle) = OutputStream::try_default().unwrap();
 
-        let mut file =
-            File::open(path).unwrap_or_else(|_| panic!("{}", path.to_string_lossy().to_string()));
+        let mut file = File::open(path).unwrap_or_else(|_| panic!("{}", path.to_string_lossy().to_string()));
 
         let mut data = Vec::new();
         file.read_to_end(&mut data).unwrap();

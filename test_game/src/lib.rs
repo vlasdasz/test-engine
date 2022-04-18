@@ -25,11 +25,7 @@ static mut APP: *mut App<TestGameView> = ptr::null_mut();
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
     error!("set_screen_size");
-    unsafe {
-        APP.as_mut()
-            .unwrap_unchecked()
-            .set_screen_size(width, height)
-    }
+    unsafe { APP.as_mut().unwrap_unchecked().set_screen_size(width, height) }
 }
 
 #[no_mangle]
@@ -39,11 +35,7 @@ pub extern "C" fn update_screen() {
 
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
-    unsafe {
-        APP.as_mut()
-            .unwrap_unchecked()
-            .on_touch(id as _, x, y, event)
-    }
+    unsafe { APP.as_mut().unwrap_unchecked().on_touch(id as _, x, y, event) }
 }
 
 #[no_mangle]
@@ -90,11 +82,7 @@ pub mod android {
             Config::default()
                 .with_min_level(Level::Trace)
                 .with_tag("test_engine")
-                .with_filter(
-                    FilterBuilder::new()
-                        .parse("debug,hello::crate=error")
-                        .build(),
-                ),
+                .with_filter(FilterBuilder::new().parse("debug,hello::crate=error").build()),
         );
 
         error!("setup_logger");

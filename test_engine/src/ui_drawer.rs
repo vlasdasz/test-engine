@@ -15,7 +15,9 @@ use crate::assets::Assets;
 pub struct UIDrawer {
     pub assets:      Rc<Assets>,
     pub window_size: Size,
-    scale:           f32,
+
+    scale:        f32,
+    screen_scale: f32,
 }
 
 impl UIDrawer {
@@ -24,20 +26,25 @@ impl UIDrawer {
             assets,
             window_size: Default::default(),
             scale: 1.0,
+            screen_scale: 1.0,
         }
     }
 
     #[cfg(any(windows, linux))]
-    pub fn set_scale(&mut self, _scale: f32) {
-        self.scale = 1.0
+    pub fn set_screen_scale(&mut self, _scale: f32) {
+        self.screen_scale = 1.0
     }
 
     #[cfg(macos)]
-    pub fn set_scale(&mut self, scale: f32) {
-        self.scale = scale
+    pub fn set_screen_scale(&mut self, scale: f32) {
+        self.screen_scale = scale
     }
 
     #[cfg(mobile)]
+    pub fn set_screen_scale(&mut self, scale: f32) {
+        self.screen_scale = scale
+    }
+
     pub fn set_scale(&mut self, scale: f32) {
         self.scale = scale
     }
@@ -82,11 +89,19 @@ impl UIDrawer {
 
 impl UIDrawer {
     pub fn reset_viewport(&self) {
-        self.set_viewport(&self.window_size.into());
+        GLWrapper::set_viewport(
+            self.window_size.height,
+            self.screen_scale,
+            &self.window_size.into(),
+        );
     }
 
     fn set_viewport(&self, rect: impl Borrow<Rect>) {
-        GLWrapper::set_viewport(self.window_size.height, self.scale, rect);
+        GLWrapper::set_viewport(
+            self.window_size.height,
+            self.screen_scale,
+            rect.borrow() * self.scale,
+        );
     }
 }
 
@@ -116,7 +131,7 @@ impl UIDrawer {
             self.assets.shaders.ui_texture.enable();
         }
 
-        self.set_viewport(image.size.fit_in(rect));
+        self.set_viewport(&image.size.fit_in(rect));
         image.bind();
         self.assets.buffers.fullscreen_image.draw();
     }

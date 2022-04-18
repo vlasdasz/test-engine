@@ -30,7 +30,7 @@ pub struct TestGameView {
     sprote_view: Rglica<SpriteView>,
     test_view:   Rglica<TestView>,
 
-    _ui_scale_slider:  Rglica<LabeledSlider>,
+    ui_scale_slider:   Rglica<LabeledSlider>,
     game_scale_slider: Rglica<LabeledSlider>,
 
     to_benchmark: Rglica<Button>,
@@ -45,11 +45,9 @@ impl TestGameView {
     fn setup_level(&mut self) {
         self.level.setup();
 
-        self.dpad
-            .on_press
-            .set(&self.level.player, move |dir, player| {
-                player.move_by_direction(dir)
-            });
+        self.dpad.on_press.set(&self.level.player, move |dir, player| {
+            player.move_by_direction(dir)
+        });
 
         self.left_stick
             .on_change
@@ -60,13 +58,19 @@ impl TestGameView {
 
     fn setup_sliders(&mut self) {
         self.game_scale_slider = add_view_with_frame(self, (50, 280));
-        self.game_scale_slider.set_multiplier(10.0);
+        self.game_scale_slider.set_multiplier(10);
+        self.game_scale_slider.set_start_value(1);
 
-        self.game_scale_slider
-            .on_change
-            .set(self, move |scale, this| {
-                this.level_mut().drawer_mut().set_scale(scale);
-            });
+        self.game_scale_slider.on_change.set(self, move |scale, this| {
+            this.level_mut().drawer_mut().set_scale(scale);
+        });
+
+        self.ui_scale_slider = add_view_with_frame(self, (50, 280));
+        self.ui_scale_slider.set_multiplier(2);
+        self.ui_scale_slider.set_start_value(0.5);
+        self.ui_scale_slider.on_change.set(self, move |scale, this| {
+            this.ui.set_scale(scale);
+        });
     }
 
     fn setup_ui(&mut self) {
@@ -77,9 +81,7 @@ impl TestGameView {
         self.level
             .base()
             .on_sprite_selected
-            .set(self, move |sprite, this| {
-                this.sprote_view.set_sprite(sprite)
-            });
+            .set(self, move |sprite, this| this.sprote_view.set_sprite(sprite));
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (200, 150).into();
@@ -137,9 +139,14 @@ impl View for TestGameView {
             .place()
             .anchor(self.dpad, Anchor::Top, Anchor::Left, 10);
 
+        self.ui_scale_slider.place().proportional_height(0.5);
+        self.ui_scale_slider
+            .place()
+            .anchor(self.game_scale_slider, Anchor::Right, Anchor::Center, 10);
+
         self.sprote_view
             .place()
-            .anchor(self.game_scale_slider, Anchor::Right, Anchor::Bot, 10);
+            .anchor(self.ui_scale_slider, Anchor::Right, Anchor::Bot, 10);
 
         self.test_view.place().bottom_right(20);
         self.test_view.place().proportional_width(0.28);

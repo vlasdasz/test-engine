@@ -1,4 +1,4 @@
-use rtools::{Event, Rglica};
+use rtools::{Event, IntoF32, Rglica};
 
 use crate::{
     complex::Slider,
@@ -16,8 +16,12 @@ pub struct LabeledSlider {
 }
 
 impl LabeledSlider {
-    pub fn set_multiplier(&mut self, multiplier: f32) {
-        self.slider.set_multiplier(multiplier)
+    pub fn set_start_value(&mut self, value: impl IntoF32) {
+        self.slider.start_value = value.into_f32()
+    }
+
+    pub fn set_multiplier(&mut self, multiplier: impl IntoF32) {
+        self.slider.multiplier = multiplier.into_f32()
     }
 
     fn on_change(&mut self, val: f32) {
@@ -33,9 +37,7 @@ impl View for LabeledSlider {
         self.label = add_view_with_frame(self, frames[0]);
         self.slider = add_view_with_frame(self, frames[1]);
 
-        self.slider
-            .on_change
-            .set(self, move |a, this| this.on_change(a));
+        self.slider.on_change.set(self, move |a, this| this.on_change(a));
     }
 
     fn view(&self) -> &ViewBase {

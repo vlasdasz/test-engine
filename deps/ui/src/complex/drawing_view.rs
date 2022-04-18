@@ -39,12 +39,7 @@ impl View for DrawingView {
 }
 
 fn initialize_path_data(path: PointsPath, color: Color, draw_mode: DrawMode) -> PathData {
-    let buffer = Buffer::make(
-        &BufferConfig::_2,
-        (&path.points).into(),
-        None,
-        draw_mode.to_gl(),
-    );
+    let buffer = Buffer::make(&BufferConfig::_2, (&path.points).into(), None, draw_mode.to_gl());
 
     PathData {
         buffer,
