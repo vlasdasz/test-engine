@@ -23,6 +23,10 @@ pub struct Image {
 }
 
 impl Image {
+    pub fn is_valid(&self) -> bool {
+        !self.is_invalid()
+    }
+
     pub fn is_invalid(&self) -> bool {
         self.gl_handle == u32::MAX
     }

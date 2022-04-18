@@ -107,11 +107,7 @@ impl UIDrawer {
 
     fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: Color) {
         debug_assert!(rect.size.is_valid());
-
-        if image.is_invalid() {
-            dbg!("Invalid image");
-            return;
-        }
+        debug_assert!(image.is_valid());
 
         if image.is_monochrome() {
             self.assets.shaders.ui_monochrome.enable();
