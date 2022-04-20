@@ -112,3 +112,5 @@ temp/
 extern/
 
 **/jniLibs/
+
+*.aab

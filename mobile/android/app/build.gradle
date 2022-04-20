@@ -6,10 +6,10 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.testengine"
+        applicationId "com.vladaszakrevskis.testengine"
         minSdk 21
         targetSdk 31
-        versionCode 1
+        versionCode 21
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
