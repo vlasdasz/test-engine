@@ -3,6 +3,7 @@ use test_engine::{
     rtools::{Boxed, Rglica},
     ui::{
         basic::Button,
+        placer::Anchor,
         view_base::{add_view, ViewBase},
         Label, View,
     },
@@ -40,7 +41,9 @@ impl View for BenchmarkView {
     fn layout(&mut self) {
         self.place().as_background();
         self.to_test.place().bottom_center(20);
-        self.bullets_label.place().top_right(10);
+        self.bullets_label
+            .place()
+            .anchor(self.to_test, Anchor::Top, Anchor::Center, 20);
     }
 
     fn update(&mut self) {

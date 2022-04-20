@@ -58,14 +58,15 @@ impl TestGameView {
 
     fn setup_sliders(&mut self) {
         self.game_scale_slider = add_view_with_frame(self, (50, 280));
-
+        self.game_scale_slider.set_start(0.5);
+        self.game_scale_slider.set_finish(10);
         self.game_scale_slider.on_change.set(self, move |scale, this| {
             this.level_mut().drawer_mut().set_scale(scale);
         });
 
         self.ui_scale_slider = add_view_with_frame(self, (50, 280));
         self.ui_scale_slider.set_start(0.2);
-        self.ui_scale_slider.set_finish(1.4);
+        self.ui_scale_slider.set_finish(4);
         self.ui_scale_slider.on_change.set(self, move |scale, this| {
             this.ui.set_scale(scale);
         });
