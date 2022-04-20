@@ -7,20 +7,20 @@ use crate::{
     Touch, View,
 };
 
-#[derive(Default, Debug)]
+#[derive(Debug)]
 pub struct Slider {
-    base:            ViewBase,
-    circle:          Rglica<CircleView>,
-    value:           f32,
-    pub start_value: f32,
-    pub multiplier:  f32,
-    pub on_change:   Event<f32>,
+    base:      ViewBase,
+    circle:    Rglica<CircleView>,
+    raw_value: f32,
+
+    pub on_change: Event<f32>,
+
+    pub start:  f32,
+    pub finish: f32,
 }
 
 impl View for Slider {
     fn setup(&mut self) {
-        self.multiplier = 1.0;
-
         let radius = self.width();
         self.circle = add_boxed(self, CircleView::with_radius(radius));
 
@@ -38,11 +38,11 @@ impl View for Slider {
         let y_pos = clamped_by(half_circle, self.frame().height() - half_circle, touch.position.y);
 
         self.circle.frame_mut().origin.y = y_pos - half_circle;
+        self.raw_value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
 
-        let value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
-        let value = value * self.multiplier;
-        self.value = self.start_value + value;
-        self.on_change.trigger(self.value);
+        let span = self.finish - self.start;
+
+        self.on_change.trigger(self.start + span * self.raw_value);
     }
 
     fn view(&self) -> &ViewBase {
@@ -51,5 +51,19 @@ impl View for Slider {
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
+    }
+}
+
+impl Default for Slider {
+    fn default() -> Self {
+        Self {
+            base:      Default::default(),
+            circle:    Default::default(),
+            raw_value: Default::default(),
+            on_change: Default::default(),
+
+            start:  0.0,
+            finish: 1.0,
+        }
     }
 }

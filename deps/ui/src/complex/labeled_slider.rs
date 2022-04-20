@@ -16,16 +16,16 @@ pub struct LabeledSlider {
 }
 
 impl LabeledSlider {
-    pub fn set_start_value(&mut self, value: impl IntoF32) {
-        self.slider.start_value = value.into_f32()
+    pub fn set_start(&mut self, start: impl IntoF32) {
+        self.slider.start = start.into_f32()
     }
 
-    pub fn set_multiplier(&mut self, multiplier: impl IntoF32) {
-        self.slider.multiplier = multiplier.into_f32()
+    pub fn set_finish(&mut self, finish: impl IntoF32) {
+        self.slider.finish = finish.into_f32()
     }
 
     fn on_change(&mut self, val: f32) {
-        self.label.set_text(val);
+        self.label.set_text(format!("{:.2}", val));
         self.on_change.trigger(val);
     }
 }
@@ -37,7 +37,11 @@ impl View for LabeledSlider {
         self.label = add_view_with_frame(self, frames[0]);
         self.slider = add_view_with_frame(self, frames[1]);
 
-        self.slider.on_change.set(self, move |a, this| this.on_change(a));
+        self.slider.on_change.set(self, move |a, s| s.on_change(a));
+    }
+
+    fn layout(&mut self) {
+        self.place().all_vertically_with_ratio([1, 5]);
     }
 
     fn view(&self) -> &ViewBase {
