@@ -1,6 +1,7 @@
 #![allow(incomplete_features)]
 #![allow(clippy::mismatched_target_os)]
 #![feature(trait_upcasting)]
+#![feature(stmt_expr_attributes)]
 #![feature(core_ffi_c)]
 #![feature(const_trait_impl)]
 

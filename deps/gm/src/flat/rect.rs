@@ -20,7 +20,8 @@ impl Rect {
         self.y() + self.height()
     }
 
-    pub fn contains(&self, point: &Point) -> bool {
+    pub fn contains(&self, point: impl Into<Point>) -> bool {
+        let point = point.into();
         point.x >= self.x()
             && point.y >= self.y()
             && point.x <= self.x() + self.width()

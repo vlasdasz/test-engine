@@ -158,8 +158,8 @@ impl View for TestGameView {
     }
 
     fn update(&mut self) {
-        let pos = self.ui.ui_cursor_position;
-        add_view_with_frame::<ViewBase>(self, (pos.x, pos.y, 5, 5));
+        // let pos = self.ui.ui_cursor_position;
+        // add_view_with_frame::<ViewBase>(self, (pos.x, pos.y, 5, 5));
     }
 
     fn view(&self) -> &ViewBase {

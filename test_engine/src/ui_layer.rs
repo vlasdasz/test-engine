@@ -5,7 +5,7 @@ use gl_wrapper::events::Events;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::{Boxed, Rglica, ToRglica};
+use rtools::{platform::Platform, Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 #[cfg(desktop)]
 use ui::input::touch::{ButtonState, TouchEvent};
@@ -61,7 +61,11 @@ impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
         error!("{:?}", touch);
         let level_touch = touch;
-        touch.position = self.ui_cursor_position;
+        if Platform::DESKTOP {
+            touch.position = self.ui_cursor_position;
+        } else {
+            touch.position = touch.position / self.scale;
+        }
         if !self.root_view.check_touch(&mut touch) {
             self.view.pass_touch_to_level(level_touch)
         }

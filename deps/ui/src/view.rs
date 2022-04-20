@@ -187,7 +187,7 @@ pub trait View: Boxed + Debug {
                 return true;
             }
 
-            if self.absolute_frame().contains(&touch.position) {
+            if self.absolute_frame().contains(touch.position) {
                 touch.position -= self.absolute_frame().origin;
                 self.set_touch_id(touch.id);
                 self.on_touch(touch);

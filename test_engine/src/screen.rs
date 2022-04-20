@@ -43,20 +43,22 @@ impl Screen {
     }
 
     fn init(&mut self, _size: Size) {
-        cfg_if! { if #[cfg(desktop)] {
-            let monitor = self.glfw.monitors.first().expect("BUG: failed to get monitor").clone();
-            self.add_monitor(monitor);
-        }}
+        #[cfg(desktop)]
+        {
+            let m = self.glfw.monitors.first().unwrap().clone();
+            self.add_monitor(m);
+        }
 
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(&Color::GRAY);
 
         self.ui.root_view.calculate_frames();
 
-        cfg_if! { if #[cfg(desktop)] {
+        #[cfg(desktop)]
+        {
             let size = Screen::adjust_size(self.monitor.clone(), _size);
             self.set_size(size);
-        }}
+        }
     }
 
     #[cfg(not(any(mobile, macos)))]
