@@ -136,6 +136,7 @@ impl Screen {
     }
 
     pub(crate) fn on_gyro_changed(&mut self, gyro: GyroData) {
+        error!("GyroData: {:?}", gyro);
         self.ui.view.level_mut().on_gyro_changed(gyro)
     }
 

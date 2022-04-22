@@ -6,10 +6,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use cfg_if::cfg_if;
 use gl_wrapper::monitor::Monitor;
 use gm::volume::GyroData;
-use rtools::Unwrap;
+use rtools::{platform::Platform, Unwrap};
 use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
@@ -24,6 +23,8 @@ pub struct App<T> {
     _view:           PhantomData<T>,
     _touch_sender:   UnboundedSender<Touch>,
     _touch_receiver: UnboundedReceiver<Touch>,
+    _gyro_sender:    UnboundedSender<GyroData>,
+    _gyro_receiver:  UnboundedReceiver<GyroData>,
 }
 
 impl<T: GameView + 'static> App<T> {
@@ -48,9 +49,13 @@ impl<T: GameView + 'static> App<T> {
 
     pub fn update_screen(&mut self) {
         self.runtime.block_on(async {
-            #[cfg(android)]
-            while let Ok(touch) = self._touch_receiver.try_recv() {
-                self.screen.ui.on_touch(touch);
+            if Platform::ANDROID {
+                while let Ok(touch) = self._touch_receiver.try_recv() {
+                    self.screen.ui.on_touch(touch);
+                }
+                while let Ok(gyro) = self._gyro_receiver.try_recv() {
+                    self.screen.on_gyro_changed(gyro);
+                }
             }
             self.screen.update();
         });
@@ -63,7 +68,7 @@ impl<T: GameView + 'static> App<T> {
             event: TouchEvent::from_int(event),
         };
 
-        cfg_if! { if #[cfg(android)] {
+        if Platform::ANDROID {
             if let Err(err) = self._touch_sender.send(touch) {
                 error!("Error sending touch: {:?}", err);
             }
@@ -71,13 +76,21 @@ impl<T: GameView + 'static> App<T> {
             self.runtime.block_on(async {
                 self.screen.ui.on_touch(touch);
             });
-        }};
+        };
     }
 
     pub fn set_gyro(&mut self, pitch: c_float, roll: c_float, yaw: c_float) {
-        self.runtime.block_on(async {
-            self.screen.on_gyro_changed(GyroData { pitch, roll, yaw });
-        });
+        let gyro = GyroData { pitch, roll, yaw };
+
+        if Platform::ANDROID {
+            if let Err(err) = self._gyro_sender.send(gyro) {
+                error!("Error sending gyro: {:?}", err);
+            }
+        } else {
+            self.runtime.block_on(async {
+                self.screen.on_gyro_changed(gyro);
+            });
+        }
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -112,12 +125,15 @@ impl<T: GameView + 'static> App<T> {
 impl<T: GameView> Default for App<T> {
     fn default() -> Self {
         let (_touch_sender, _touch_receiver) = unbounded_channel::<Touch>();
+        let (_gyro_sender, _gyro_receiver) = unbounded_channel::<GyroData>();
         Self {
             screen: Default::default(),
             runtime: tokio::runtime::Runtime::new().unwrap(),
             _view: Default::default(),
             _touch_sender,
             _touch_receiver,
+            _gyro_sender,
+            _gyro_receiver,
         }
     }
 }

@@ -108,20 +108,17 @@ def setup_android():
 def build_android():
 
     run("cargo build --target aarch64-linux-android --release --lib")
-    # run("cargo build --target armv7-linux-androideabi --release --lib")
-    # run("cargo build --target i686-linux-android --release --lib")
+    run("cargo build --target armv7-linux-androideabi --release --lib")
 
     run("mkdir -p mobile/android/app/src/main/jniLibs/")
     run("mkdir -p mobile/android/app/src/main/jniLibs/arm64-v8a")
     run("mkdir -p mobile/android/app/src/main/jniLibs/armeabi-v7a")
-    run("mkdir -p mobile/android/app/src/main/jniLibs/x86")
 
     try:
         os.symlink(this_path + "/target/aarch64-linux-android/release/libtest_game.so",
                    "mobile/android/app/src/main/jniLibs/arm64-v8a/libtest_game.so")
-
-        # os.symlink(this_path + "/target/armv7-linux-androideabi/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/armeabi-v7a/libtest_game.so")
-        # os.symlink(this_path + "/target/i686-linux-android/release/libtest_game.so", "mobile/android/app/src/main/jniLibs/x86/libtest_game.so")
+        os.symlink(this_path + "/target/armv7-linux-androideabi/release/libtest_game.so",
+                   "mobile/android/app/src/main/jniLibs/armeabi-v7a/libtest_game.so")
     except FileExistsError:
         print("exists")
 

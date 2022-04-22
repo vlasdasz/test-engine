@@ -64,7 +64,7 @@ impl UILayer {
         if Platform::DESKTOP {
             touch.position = self.ui_cursor_position;
         } else {
-            touch.position = touch.position / self.scale;
+            touch.position /= self.scale;
         }
         if !self.root_view.check_touch(&mut touch) {
             self.view.pass_touch_to_level(level_touch)
