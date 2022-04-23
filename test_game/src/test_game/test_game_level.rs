@@ -5,7 +5,7 @@ use test_engine::{
         data_manager::{DataManager, Handle},
         Rglica, ToRglica,
     },
-    sprites::{add_sprite, Body, Control, Player, Wall},
+    sprites::{add_sprite, Body, Control, Player, Sepol, Wall},
     Image, Level, LevelBase, Sprite,
 };
 

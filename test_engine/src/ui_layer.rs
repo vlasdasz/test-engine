@@ -11,7 +11,7 @@ use sprites::SpritesDrawer;
 use ui::input::touch::{ButtonState, TouchEvent};
 use ui::{
     view_base::{add_view, ViewBase},
-    Touch, View,
+    Touch, View, ViewSetters,
 };
 
 use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
@@ -85,7 +85,7 @@ impl UILayer {
     pub fn set_scale(&mut self, scale: f32) {
         self.scale = scale;
         self.drawer.set_scale(scale);
-        self.root_view.set_frame((self.drawer.window_size / scale).into());
+        self.root_view.set_frame(self.drawer.window_size / scale);
     }
 
     pub fn add_debug_view(&mut self) {

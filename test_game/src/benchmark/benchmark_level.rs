@@ -1,7 +1,7 @@
 use test_engine::{
     rtools::{data_manager::DataManager, Animation, Rglica, ToRglica},
-    sprites::{add_sprite, Player, Wall},
-    Image, Level, LevelBase, Sprite,
+    sprites::{add_sprite, Player, Sepol, Wall},
+    Image, Level, LevelBase,
 };
 
 #[derive(Debug, Default)]

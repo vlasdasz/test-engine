@@ -28,15 +28,6 @@ pub trait Sprite: Debug {
         self.data().position
     }
 
-    fn set_position(&mut self, pos: Point) {
-        if self.data().collider_handle.is_some() {
-            self.collider_mut().set_position([pos.x, pos.y].into());
-        } else if self.data().rigid_handle.is_some() {
-            self.rigid_body_mut().set_position([pos.x, pos.y].into(), true)
-        }
-        self.data_mut().position = pos;
-    }
-
     fn rotation(&self) -> f32 {
         if self.data().rigid_handle.is_some() {
             return self.rigid_body().rotation().angle();
@@ -47,23 +38,8 @@ pub trait Sprite: Debug {
         self.data().rotation
     }
 
-    fn set_rotation(&mut self, rotation: f32) {
-        if self.data().rigid_handle.is_some() {
-            self.rigid_body_mut().set_rotation(rotation, true);
-        }
-        if self.data().collider_handle.is_some() {
-            self.collider_mut().set_rotation(rotation);
-        } else {
-            self.data_mut().rotation = rotation
-        }
-    }
-
     fn restitution(&mut self) -> f32 {
         self.collider().restitution()
-    }
-
-    fn set_restitution(&mut self, res: f32) {
-        self.collider_mut().set_restitution(res)
     }
 
     fn rigid_body(&self) -> &RigidBody {
@@ -97,24 +73,12 @@ pub trait Sprite: Debug {
         self.data().color
     }
 
-    fn set_color(&mut self, color: Color) {
-        self.data_mut().color = color
-    }
-
     fn image(&self) -> Handle<Image> {
         self.data().image
     }
 
-    fn set_image(&mut self, image: Handle<Image>) {
-        self.data_mut().image = image
-    }
-
     fn is_selected(&self) -> bool {
         self.data().is_selected
-    }
-
-    fn set_selected(&mut self, selected: bool) {
-        self.data_mut().is_selected = selected
     }
 
     fn remove(&mut self) {
@@ -141,4 +105,57 @@ pub trait Sprite: Debug {
     fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
     where
         Self: Sized;
+}
+
+pub trait Sepol {
+    fn set_color(&mut self, color: Color) -> &mut Self;
+    fn set_selected(&mut self, selected: bool) -> &mut Self;
+    fn set_image(&mut self, image: Handle<Image>) -> &mut Self;
+    fn set_restitution(&mut self, res: f32) -> &mut Self;
+    fn set_position(&mut self, pos: Point) -> &mut Self;
+    fn set_rotation(&mut self, rotation: f32) -> &mut Self;
+}
+
+impl<T: ?Sized + Sprite> Sepol for T {
+    fn set_color(&mut self, color: Color) -> &mut Self {
+        self.data_mut().color = color;
+        self
+    }
+
+    fn set_selected(&mut self, selected: bool) -> &mut Self {
+        self.data_mut().is_selected = selected;
+        self
+    }
+
+    fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
+        self.data_mut().image = image;
+        self
+    }
+
+    fn set_restitution(&mut self, res: f32) -> &mut Self {
+        self.collider_mut().set_restitution(res);
+        self
+    }
+
+    fn set_position(&mut self, pos: Point) -> &mut Self {
+        if self.data().collider_handle.is_some() {
+            self.collider_mut().set_position([pos.x, pos.y].into());
+        } else if self.data().rigid_handle.is_some() {
+            self.rigid_body_mut().set_position([pos.x, pos.y].into(), true)
+        }
+        self.data_mut().position = pos;
+        self
+    }
+
+    fn set_rotation(&mut self, rotation: f32) -> &mut Self {
+        if self.data().rigid_handle.is_some() {
+            self.rigid_body_mut().set_rotation(rotation, true);
+        }
+        if self.data().collider_handle.is_some() {
+            self.collider_mut().set_rotation(rotation);
+        } else {
+            self.data_mut().rotation = rotation
+        }
+        self
+    }
 }

@@ -2,6 +2,7 @@ use derivative::Derivative;
 use rtools::{Boxed, Rglica};
 
 use crate::{
+    view::ViewSetters,
     view_base::{add_view, ViewBase},
     Font, ImageView, View,
 };
@@ -57,15 +58,12 @@ impl Label {
             glyph_view.frame_mut().size = glyph.size;
             glyph_view.set_image(glyph.image);
 
-            glyph_view.set_frame(
-                (
-                    advance, // + glyph.bearing.x,
-                    content_size.height - glyph.bearing.y + self.font.baseline_shift,
-                    glyph.size.width,
-                    glyph.size.height,
-                )
-                    .into(),
-            );
+            glyph_view.set_frame((
+                advance, // + glyph.bearing.x,
+                content_size.height - glyph.bearing.y + self.font.baseline_shift,
+                glyph.size.width,
+                glyph.size.height,
+            ));
 
             last_max_x = glyph_view.frame().max_x();
 

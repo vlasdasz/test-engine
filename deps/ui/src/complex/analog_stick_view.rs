@@ -4,7 +4,7 @@ use gm::{
 };
 use rtools::{rglica::ToRglica, Boxed, Event, Rglica};
 
-use crate::{complex::DrawingView, view_base::ViewBase, Touch, View};
+use crate::{complex::DrawingView, view::ViewSetters, view_base::ViewBase, Touch, View};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
@@ -62,7 +62,7 @@ impl View for AnalogStickView {
 
         let mut direction_stick = DrawingView::boxed();
 
-        direction_stick.set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE).into());
+        direction_stick.set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE));
 
         direction_stick.frame_mut().set_center(self.frame().size.center());
 

@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use gm::flat::Rect;
 use rtools::{math::IntoF32, Rglica, ToRglica};
 
-use crate::View;
+use crate::{view::ViewSetters, View};
 
 pub enum Anchor {
     Top,
@@ -147,7 +147,7 @@ impl Placer {
         debug_assert!(self.subviews().len() == ratio.len());
         let frames = self.frames_for_ratio(ratio);
         for (view, rect) in self.subviews_mut().iter_mut().zip(frames) {
-            view.set_frame(rect)
+            view.set_frame(rect);
         }
     }
 

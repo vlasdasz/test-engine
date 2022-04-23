@@ -70,10 +70,6 @@ pub trait View: Boxed + Debug {
         &mut self.view_mut().frame
     }
 
-    fn set_frame(&mut self, rect: Rect) {
-        self.view_mut().frame = rect
-    }
-
     fn add_view_at(&mut self, point: Point) {
         let mut view = ViewBase::dummy();
         view.frame_mut().origin = point;
@@ -228,5 +224,16 @@ pub trait View: Boxed + Debug {
         let mut new = Self::boxed();
         new.set_frame(frame);
         new
+    }
+}
+
+pub trait ViewSetters {
+    fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
+}
+
+impl<V: ?Sized + View, T: DerefMut<Target = V>> ViewSetters for T {
+    fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self {
+        self.view_mut().frame = rect.into();
+        self
     }
 }

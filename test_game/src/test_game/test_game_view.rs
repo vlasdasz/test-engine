@@ -1,3 +1,5 @@
+use std::ops::DerefMut;
+
 use test_engine::{
     audio::Sound,
     game_view::GameView,
@@ -13,7 +15,7 @@ use test_engine::{
         placer::Anchor,
         test::test_view::TestView,
         view_base::{add_view, add_view_with_frame, make_view_on, ViewBase},
-        DPadView, View,
+        DPadView, View, ViewSetters,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -27,7 +29,7 @@ pub struct TestGameView {
     level:       TestGameLevel,
     dpad:        Rglica<DPadView>,
     left_stick:  Rglica<AnalogStickView>,
-    sprote_view: Rglica<SpriteView>,
+    sprite_view: Rglica<SpriteView>,
     test_view:   Rglica<TestView>,
 
     ui_scale_slider:   Rglica<LabeledSlider>,
@@ -73,14 +75,14 @@ impl TestGameView {
     }
 
     fn setup_ui(&mut self) {
-        self.set_frame((10, 10, 1000, 500).into());
+        self.view_mut().set_frame((10, 10, 1000, 500));
 
-        self.sprote_view = add_view_with_frame(self, (500, 180));
+        self.sprite_view = add_view_with_frame(self, (500, 180));
 
         self.level
             .base()
             .on_sprite_selected
-            .set(self, move |sprite, this| this.sprote_view.set_sprite(sprite));
+            .set(self, move |sprite, this| this.sprite_view.set_sprite(sprite));
 
         self.dpad = make_view_on(self, |dpad: &mut DPadView| {
             dpad.frame_mut().size = (200, 150).into();
@@ -143,7 +145,7 @@ impl View for TestGameView {
             .place()
             .anchor(self.game_scale_slider, Anchor::Right, Anchor::Center, 10);
 
-        self.sprote_view
+        self.sprite_view
             .place()
             .anchor(self.ui_scale_slider, Anchor::Right, Anchor::Bot, 10);
 

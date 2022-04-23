@@ -2,7 +2,7 @@ use gm::flat::{Point, Shape};
 use rapier2d::na::Vector2;
 use rtools::{IntoF32, Rglica};
 
-use crate::{Level, Sprite, SpriteData, ToCollider};
+use crate::{sprite::Sepol, Level, Sprite, SpriteData, ToCollider};
 
 #[derive(Debug)]
 pub struct Wall {

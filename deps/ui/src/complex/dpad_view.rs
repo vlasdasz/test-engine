@@ -4,6 +4,7 @@ use rtools::{data_manager::Handle, Event, Rglica};
 
 use crate::{
     basic::Button,
+    view::ViewSetters,
     view_base::{add_view, ViewBase},
     View,
 };
@@ -69,10 +70,10 @@ impl View for DPadView {
         let third = frame.width() / 3.0;
         let half = frame.height() / 2.0;
 
-        self.up.set_frame((third, 0, third, half).into());
-        self.down.set_frame((third, half, third, half).into());
-        self.left.set_frame((0, half, third, half).into());
-        self.right.set_frame((third * 2.0, half, third, half).into());
+        self.up.set_frame((third, 0, third, half));
+        self.down.set_frame((third, half, third, half));
+        self.left.set_frame((0, half, third, half));
+        self.right.set_frame((third * 2.0, half, third, half));
     }
 
     fn view(&self) -> &ViewBase {

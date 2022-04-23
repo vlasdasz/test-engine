@@ -5,7 +5,7 @@ use ui::{
     complex::LabeledView,
     placer::place_vertically,
     view_base::{add_view, ViewBase},
-    View,
+    View, ViewSetters,
 };
 
 #[derive(Default, Debug)]
@@ -41,7 +41,7 @@ impl SpriteView {
         //self.delete_button.set_image(Assets::image("delete.png"));
         self.delete_button.set_hidden(true);
 
-        self.delete_button.set_frame((20, 20).into());
+        self.delete_button.set_frame((20, 20));
 
         self.delete_button.on_tap.set(self, move |_, this| {
             if this.sprite.is_ok() {

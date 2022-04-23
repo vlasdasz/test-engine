@@ -1,6 +1,8 @@
 #![allow(incomplete_features)]
 #![feature(explicit_generic_args_with_impl_trait)]
 
+use std::ops::DerefMut;
+
 use test_engine::{paths::home, rtools::Boxed, Screen};
 
 #[macro_use]
@@ -15,7 +17,7 @@ mod benchmark;
 mod test_game;
 
 fn main() {
-    let mut screen = Screen::new(&home().join("test_engine"), (1000, 600).into());
+    let mut screen = Screen::new(&home().join("mazepa/test_engine"), (1000, 600).into());
 
     screen.ui.set_view(TestGameView::boxed());
     screen.ui.add_debug_view();

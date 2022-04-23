@@ -4,7 +4,7 @@ use derivative::Derivative;
 use gm::{flat::Rect, Color};
 use rtools::{Boxed, IntoF32, Rglica, ToRglica};
 
-use crate::{basic::Placer, complex::Alert, View};
+use crate::{basic::Placer, complex::Alert, view::ViewSetters, View};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
