@@ -7,7 +7,7 @@ use gl_image::Image;
 use gm::flat::{Point, Shape};
 use rtools::{data_manager::Handle, Rglica};
 
-use crate::{level_base::LevelTemplates, sprite::SpriteTemplates, Body, Level, Sprite, SpriteData};
+use crate::{sprite::SpriteTemplates, Body, Level, LevelCreation, Sprite, SpriteData};
 
 #[derive(Debug)]
 pub struct Weapon {

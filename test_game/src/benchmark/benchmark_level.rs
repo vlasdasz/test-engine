@@ -1,6 +1,6 @@
 use test_engine::{
     rtools::{data_manager::DataManager, Animation, Rglica, ToRglica},
-    sprites::{LevelTemplates, Player, SpriteTemplates, Wall},
+    sprites::{LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
 };
 

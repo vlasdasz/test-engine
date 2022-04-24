@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ops::Deref};
 
-use gm::flat::{Point, Shape};
+use gm::flat::Point;
 use rapier2d::{
     geometry::ContactEvent,
     na::Vector2,
@@ -152,22 +152,10 @@ impl Debug for LevelBase {
 }
 
 pub trait LevelTemplates {
-    fn add_sprite<S: 'static + Sprite>(&mut self, _: impl Into<Shape>, _: impl Into<Point>) -> Rglica<S>;
     fn set_gravity(&mut self, g: impl Into<Point>);
 }
 
 impl<T: ?Sized + Level> LevelTemplates for T {
-    fn add_sprite<S: 'static + Sprite>(
-        &mut self,
-        shape: impl Into<Shape>,
-        position: impl Into<Point>,
-    ) -> Rglica<S> {
-        let sprite = S::make(shape.into(), position.into(), self.rglica());
-        let result = sprite.to_rglica();
-        self.base_mut().sprites.push(sprite);
-        result
-    }
-
     fn set_gravity(&mut self, g: impl Into<Point>) {
         let g = g.into();
         self.base_mut().gravity = Vector2::new(g.x, g.y)

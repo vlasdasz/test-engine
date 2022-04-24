@@ -5,7 +5,7 @@ use test_engine::{
         data_manager::{DataManager, Handle},
         Rglica, ToRglica,
     },
-    sprites::{Body, Control, LevelTemplates, Player, SpriteTemplates, Wall},
+    sprites::{Body, Control, LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase, Sprite,
 };
 
@@ -42,6 +42,8 @@ impl Level for TestGameLevel {
         error!("setuo TestGameLevel");
 
         let square = Image::get("square.png");
+
+        self.add_rect((30, 30, 40, 25)).set_image(square);
 
         self.add_sprite::<Wall>((100, 5), (0, 0)).set_image(square);
         self.add_sprite::<Wall>((5, 100), (60, 0)).set_image(square);
