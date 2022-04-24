@@ -6,7 +6,7 @@ use gm::{
     Color,
 };
 use rapier2d::{geometry::Collider, prelude::RigidBody};
-use rtools::{address::Address, data_manager::Handle, Rglica};
+use rtools::{address::Address, data_manager::Handle, IntoF32, Rglica};
 
 use crate::{Level, SpriteData};
 
@@ -108,12 +108,12 @@ pub trait Sprite: Debug {
 }
 
 pub trait SpriteTemplates {
-    fn set_color(&mut self, color: Color) -> &mut Self;
-    fn set_selected(&mut self, selected: bool) -> &mut Self;
-    fn set_image(&mut self, image: Handle<Image>) -> &mut Self;
-    fn set_restitution(&mut self, res: f32) -> &mut Self;
-    fn set_position(&mut self, pos: Point) -> &mut Self;
-    fn set_rotation(&mut self, rotation: f32) -> &mut Self;
+    fn set_color(&mut self, _: Color) -> &mut Self;
+    fn set_selected(&mut self, _: bool) -> &mut Self;
+    fn set_image(&mut self, _: Handle<Image>) -> &mut Self;
+    fn set_restitution(&mut self, _: f32) -> &mut Self;
+    fn set_position(&mut self, _: Point) -> &mut Self;
+    fn set_rotation(&mut self, _: impl IntoF32) -> &mut Self;
 }
 
 impl<T: ?Sized + Sprite> SpriteTemplates for T {
@@ -147,7 +147,8 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         self
     }
 
-    fn set_rotation(&mut self, rotation: f32) -> &mut Self {
+    fn set_rotation(&mut self, rotation: impl IntoF32) -> &mut Self {
+        let rotation = rotation.into_f32();
         if self.data().rigid_handle.is_some() {
             self.rigid_body_mut().set_rotation(rotation, true);
         }
