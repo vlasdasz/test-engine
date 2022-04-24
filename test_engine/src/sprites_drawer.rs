@@ -68,13 +68,11 @@ impl SpritesDrawer for TESpritesDrawer {
     }
 
     fn draw(&self, sprite: &dyn Sprite) {
-        let mut shader = &self.assets.shaders.sprite;
-        let mut buffer = &self.assets.buffers.fullscreen;
-
-        if sprite.image().is_ok() {
-            shader = &self.assets.shaders.image_sprite;
-            buffer = &self.assets.buffers.fullscreen_image;
-        }
+        let (shader, buffer) = if sprite.image().is_ok() {
+            (&self.assets.shaders.image_sprite, &self.assets.buffers.full_image)
+        } else {
+            (&self.assets.shaders.sprite, &self.assets.buffers.full)
+        };
 
         shader
             .enable()

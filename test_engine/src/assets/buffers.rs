@@ -45,29 +45,29 @@ const IMAGE_VERTICES: &[f32; 16] = &[
 ];
 
 pub struct Buffers {
-    pub fullscreen:         Buffer,
-    pub fullscreen_image:   Buffer,
-    pub fullscreen_outline: Buffer,
+    pub full:         Buffer,
+    pub full_image:   Buffer,
+    pub full_outline: Buffer,
 }
 
 impl Default for Buffers {
     fn default() -> Buffers {
         error!("creating buffers");
-        let fullscreen = Buffer::make(
+        let full = Buffer::make(
             &BufferConfig::_2,
             FULLSCREEN_VERT.into(),
             Some(RECT_INDICES.into()),
             GLC!(TRIANGLE_STRIP),
         );
 
-        let fullscreen_image = Buffer::make(
+        let full_image = Buffer::make(
             &BufferConfig::_2_2,
             IMAGE_VERTICES.into(),
             Some(RECT_INDICES.into()),
             GLC!(TRIANGLE_STRIP),
         );
 
-        let fullscreen_outline = Buffer::make(
+        let full_outline = Buffer::make(
             &BufferConfig::_2,
             FULLSCREEN_VERT.into(),
             Some(INDICES.into()),
@@ -77,9 +77,9 @@ impl Default for Buffers {
         error!("buffers created");
 
         Buffers {
-            fullscreen,
-            fullscreen_image,
-            fullscreen_outline,
+            full,
+            full_image,
+            full_outline,
         }
     }
 }

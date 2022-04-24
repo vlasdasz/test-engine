@@ -107,13 +107,13 @@ impl UIDrawer {
     fn fill_rect(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable().set_color(color);
-        self.assets.buffers.fullscreen.draw();
+        self.assets.buffers.full.draw();
     }
 
     fn draw_rect(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable().set_color(color);
-        self.assets.buffers.fullscreen_outline.draw();
+        self.assets.buffers.full_outline.draw();
     }
 
     fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: Color) {
@@ -128,7 +128,7 @@ impl UIDrawer {
 
         self.set_viewport(&image.size.fit_in(rect));
         image.bind();
-        self.assets.buffers.fullscreen_image.draw();
+        self.assets.buffers.full_image.draw();
     }
 }
 
