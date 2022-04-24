@@ -80,9 +80,10 @@ impl Placer {
         self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
     }
 
-    pub fn bottom_right(&mut self, margin: impl IntoF32) {
+    pub fn bottom_right(&mut self, margin: impl IntoF32) -> &mut Self {
         self.frame.origin.x = self.s_width() - self.width() - margin.into_f32();
         self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
+        self
     }
 
     pub fn bottom_center(&mut self, margin: impl IntoF32) {
@@ -204,12 +205,14 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn proportional_width(&mut self, ratio: impl IntoF32) {
-        self.frame.size.width = self.s_width() * ratio.into_f32()
+    pub fn proportional_width(&mut self, ratio: impl IntoF32) -> &mut Self {
+        self.frame.size.width = self.s_width() * ratio.into_f32();
+        self
     }
 
-    pub fn proportional_height(&mut self, ratio: impl IntoF32) {
-        self.frame.size.height = self.s_height() * ratio.into_f32()
+    pub fn proportional_height(&mut self, ratio: impl IntoF32) -> &mut Self {
+        self.frame.size.height = self.s_height() * ratio.into_f32();
+        self
     }
 }
 

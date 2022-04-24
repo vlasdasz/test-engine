@@ -19,7 +19,7 @@ pub use body::Body;
 pub use control::Control;
 pub use level::Level;
 pub use level_base::{add_sprite, LevelBase};
-pub use sprite::{Sepol, Sprite};
+pub use sprite::{Sprite, SpriteSetters};
 pub use sprite_data::SpriteData;
 pub use sprites_drawer::SpritesDrawer;
 pub use to_collider::ToCollider;

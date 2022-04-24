@@ -6,7 +6,7 @@ use crate::{
     basic::Button,
     complex::{DrawingView, TableView},
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
-    view_base::{add_view, make_view_on, ViewBase},
+    view_base::{add_view, ViewBase},
     ImageView, Label, View,
 };
 
@@ -28,16 +28,19 @@ pub struct TestView {
 }
 
 impl TestView {
-    pub fn set_image(&mut self, image: Handle<Image>) {
-        self.image.set_image(image)
+    pub fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
+        self.image.set_image(image);
+        self
     }
 
-    pub fn set_button_image(&mut self, image: Handle<Image>) {
-        self.button.set_image(image)
+    pub fn set_button_image(&mut self, image: Handle<Image>) -> &mut Self {
+        self.button.set_image(image);
+        self
     }
 
-    pub fn set_animation_image(&mut self, image: Handle<Image>) {
-        self.animated.set_image(image)
+    pub fn set_animation_image(&mut self, image: Handle<Image>) -> &mut Self {
+        self.animated.set_image(image);
+        self
     }
 }
 
@@ -57,12 +60,11 @@ impl View for TestView {
 
         self.subviews = add_view(self);
 
-        self.drawing = make_view_on(self, |drawing: &mut DrawingView| {
-            drawing.add_path(
-                vec![(20, 20), (30, 20), (20, 40), (30, 50), (1, 60), (1, 20)],
-                Color::GREEN,
-            );
-        });
+        self.drawing = add_view(self);
+        self.drawing.add_path(
+            vec![(20, 20), (30, 20), (20, 40), (30, 50), (1, 60), (1, 20)],
+            Color::GREEN,
+        );
 
         self.layout = add_view(self);
 

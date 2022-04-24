@@ -22,10 +22,6 @@ pub trait View: Boxed + Debug {
         self.view().color
     }
 
-    fn set_color(&mut self, color: Color) {
-        self.view_mut().color = color
-    }
-
     fn is_hidden(&self) -> bool {
         self.view().is_hidden
     }
@@ -229,11 +225,17 @@ pub trait View: Boxed + Debug {
 
 pub trait ViewSetters {
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
+    fn set_color(&mut self, color: Color) -> &mut Self;
 }
 
-impl<V: ?Sized + View, T: DerefMut<Target = V>> ViewSetters for T {
+impl<T: ?Sized + View> ViewSetters for T {
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self {
         self.view_mut().frame = rect.into();
+        self
+    }
+
+    fn set_color(&mut self, color: Color) -> &mut Self {
+        self.view_mut().color = color;
         self
     }
 }

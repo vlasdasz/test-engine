@@ -26,7 +26,7 @@ impl DPadView {
         down: Handle<Image>,
         left: Handle<Image>,
         right: Handle<Image>,
-    ) {
+    ) -> &mut Self {
         error!("set_images");
         error!("{}", format!("{:?}", self.up));
         self.up.set_image(up);
@@ -34,6 +34,7 @@ impl DPadView {
         self.down.set_image(down);
         self.left.set_image(left);
         self.right.set_image(right);
+        self
     }
 }
 

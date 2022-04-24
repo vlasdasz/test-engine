@@ -5,7 +5,7 @@ use test_engine::{
         data_manager::{DataManager, Handle},
         Rglica, ToRglica,
     },
-    sprites::{add_sprite, Body, Control, Player, Sepol, Wall},
+    sprites::{add_sprite, Body, Control, Player, SpriteSetters, Wall},
     Image, Level, LevelBase, Sprite,
 };
 
@@ -55,11 +55,10 @@ impl Level for TestGameLevel {
         }
 
         self.player = add_sprite((2, 2), (0, 5), self);
-        self.player.set_image(Image::get("frisk.png"));
+        self.player
+            .set_image(Image::get("frisk.png"))
+            .enable_collision_detection();
         self.player.weapon.set_image(Image::get("ak.png"));
-
-        self.player.enable_collision_detection();
-
         self.player.on_collision.set(self, move |_, this| {
             this.collision_sound.play();
         });

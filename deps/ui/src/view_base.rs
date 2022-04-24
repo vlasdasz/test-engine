@@ -1,5 +1,3 @@
-use std::ops::DerefMut;
-
 use derivative::Derivative;
 use gm::{flat::Rect, Color};
 use rtools::{Boxed, IntoF32, Rglica, ToRglica};
@@ -33,8 +31,7 @@ pub struct ViewBase {
 impl ViewBase {
     pub fn dummy() -> Box<Self> {
         let mut dummy = Self::default();
-        dummy.set_color(Color::random());
-        dummy.frame_mut().size = (10, 10).into();
+        dummy.set_frame((5, 5)).set_color(Color::random());
         Box::new(dummy)
     }
 }
@@ -58,14 +55,6 @@ pub fn add_view_with_frame<T: 'static + View>(parent: &mut dyn View, frame: impl
     let result = view.to_rglica();
     parent.add_subview(view);
     result
-}
-
-pub fn make_view_on<T: 'static + View>(parent: &mut dyn View, make: impl FnOnce(&mut T)) -> Rglica<T> {
-    let view = T::boxed();
-    let mut rglica = view.to_rglica();
-    add_boxed(parent, view);
-    make(rglica.deref_mut());
-    rglica
 }
 
 pub fn alert(view: &mut dyn View, message: impl ToString) {

@@ -4,6 +4,7 @@ use rtools::Rglica;
 use crate::{
     basic::Button,
     placer::Anchor,
+    view::ViewSetters,
     view_base::{add_view, ViewBase},
     Label, View,
 };
@@ -24,8 +25,7 @@ impl Alert {
 
 impl View for Alert {
     fn setup(&mut self) {
-        self.frame_mut().size = (280, 140).into();
-        self.set_color(Color::WHITE);
+        self.set_frame((280, 140)).set_color(Color::WHITE);
 
         (self.label, self.ok_button) = (add_view(self), add_view(self));
 

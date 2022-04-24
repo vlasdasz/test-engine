@@ -1,8 +1,6 @@
 #![allow(incomplete_features)]
 #![feature(explicit_generic_args_with_impl_trait)]
 
-use std::ops::DerefMut;
-
 use test_engine::{paths::home, rtools::Boxed, Screen};
 
 #[macro_use]

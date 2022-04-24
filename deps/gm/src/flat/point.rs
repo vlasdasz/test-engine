@@ -155,28 +155,32 @@ impl SubAssign for Point {
 impl<T: IntoF32> Mul<T> for Point {
     type Output = Point;
     fn mul(self, rhs: T) -> Point {
-        (self.x * rhs.into_f32(), self.y * rhs.into_f32()).into()
+        let rhs = rhs.into_f32();
+        (self.x * rhs, self.y * rhs).into()
     }
 }
 
 impl<T: IntoF32> MulAssign<T> for Point {
     fn mul_assign(&mut self, rhs: T) {
-        self.x *= rhs.into_f32();
-        self.y *= rhs.into_f32();
+        let rhs = rhs.into_f32();
+        self.x *= rhs;
+        self.y *= rhs;
     }
 }
 
 impl<T: IntoF32> Div<T> for Point {
     type Output = Point;
     fn div(self, rhs: T) -> Point {
-        (self.x / rhs.into_f32(), self.y / rhs.into_f32()).into()
+        let rhs = rhs.into_f32();
+        (self.x / rhs, self.y / rhs).into()
     }
 }
 
 impl<T: IntoF32> DivAssign<T> for Point {
     fn div_assign(&mut self, rhs: T) {
-        self.x /= rhs.into_f32();
-        self.y /= rhs.into_f32();
+        let rhs = rhs.into_f32();
+        self.x /= rhs;
+        self.y /= rhs;
     }
 }
 

@@ -16,12 +16,12 @@ pub struct Button {
 }
 
 impl Button {
-    pub fn set_text(&mut self, text: impl ToString) {
+    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
         if self.label.is_null() {
             self.label = add_view(self)
         }
-
-        self.label.set_text(text)
+        self.label.set_text(text);
+        self
     }
 }
 
