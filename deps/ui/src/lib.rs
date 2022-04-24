@@ -1,6 +1,7 @@
 #![allow(clippy::mismatched_target_os)]
 #![allow(incomplete_features)]
 #![feature(trait_upcasting)]
+#![feature(specialization)]
 
 use std::{path::PathBuf, sync::Mutex};
 
@@ -9,7 +10,6 @@ pub use complex::DPadView;
 pub use input::Touch;
 use lazy_static::lazy_static;
 pub use text::{Font, Glyph};
-pub use view::*;
 
 pub mod basic;
 pub mod complex;
@@ -17,8 +17,9 @@ pub mod input;
 pub mod placer;
 pub mod test;
 pub mod text;
-pub mod view;
-pub mod view_base;
+mod view;
+
+pub use view::*;
 
 #[macro_use]
 extern crate log;

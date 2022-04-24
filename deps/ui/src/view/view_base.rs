@@ -1,15 +1,19 @@
-use derivative::Derivative;
-use gm::{flat::Rect, Color};
-use rtools::{IntoF32, Rglica};
+use std::cell::RefCell;
 
-use crate::{basic::Placer, view::ViewTemplates, View};
+use derivative::Derivative;
+use gl_image::Image;
+use gm::{flat::Rect, Color};
+use rtools::{data_manager::Handle, Event, IntoF32, Rglica};
+
+use crate::{basic::Placer, view::ViewTemplates, Touch, View};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
 pub struct ViewBase {
     pub(crate) color: Color,
 
-    pub(crate) touch_enabled: bool,
+    pub(crate) touch_enabled: RefCell<bool>,
+    pub(crate) on_touch:      Event<Touch>,
 
     pub(crate) is_hidden: bool,
 
@@ -26,6 +30,8 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     pub(crate) placer: Placer,
+
+    pub(crate) image: Handle<Image>,
 }
 
 impl ViewBase {

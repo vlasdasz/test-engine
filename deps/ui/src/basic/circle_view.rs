@@ -1,7 +1,7 @@
 use gm::{flat::PointsPath, Color};
 use rtools::{Boxed, Rglica};
 
-use crate::{complex::DrawingView, view::ViewTemplates, view_base::ViewBase, View};
+use crate::{complex::DrawingView, view::ViewTemplates, View, ViewBase};
 
 #[derive(Debug)]
 pub struct CircleView {
@@ -27,7 +27,7 @@ impl View for CircleView {
     fn setup(&mut self) {
         let size = (self.radius, self.radius);
         self.drawing = self.add_view_with_frame(size);
-        self.frame_mut().size = size.into();
+        self.set_frame(size);
     }
 
     fn view(&self) -> &ViewBase {

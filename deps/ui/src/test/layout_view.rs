@@ -1,6 +1,6 @@
 use rtools::Rglica;
 
-use crate::{placer::Anchor, view::ViewTemplates, view_base::ViewBase, Font, ImageView, View};
+use crate::{placer::Anchor, view::ViewTemplates, Font, ImageView, View, ViewBase};
 
 #[derive(Default, Debug)]
 pub struct LayoutView {
@@ -19,7 +19,7 @@ impl View for LayoutView {
             let mut view = self.add_view::<ImageView>();
             let image = font.glyph_for_char(ch).image;
             view.set_image(image);
-            view.frame_mut().size = (10, 10).into();
+            view.set_frame((10, 10));
             self.satellites.push(view);
         }
 

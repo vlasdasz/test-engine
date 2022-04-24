@@ -1,7 +1,7 @@
 use gm::Color;
 use rtools::Rglica;
 
-use crate::{basic::Button, placer::Anchor, view::ViewTemplates, view_base::ViewBase, Label, View};
+use crate::{basic::Button, placer::Anchor, view::ViewTemplates, Label, View, ViewBase};
 
 #[derive(Default, Debug)]
 pub struct Alert {
@@ -27,7 +27,7 @@ impl View for Alert {
 
         self.ok_button.set_color(Color::LIGHT_GRAY);
         self.ok_button.set_text("OK");
-        self.ok_button.frame_mut().size = (100, 50).into();
+        self.ok_button.set_frame((100, 50));
 
         // let this = self.to_rglica();
         //  self.ok_button
@@ -39,7 +39,7 @@ impl View for Alert {
     fn layout(&mut self) {
         self.place().center();
         self.label.place().center_hor();
-        self.label.frame_mut().origin.y = 5.0;
+        self.label.set_y(5);
         self.ok_button
             .place()
             .anchor(self.label, Anchor::Bot, Anchor::Center, 20);

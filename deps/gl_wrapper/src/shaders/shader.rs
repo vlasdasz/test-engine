@@ -49,38 +49,45 @@ impl Shader {
         }
     }
 
-    pub fn enable(&self) {
-        GL!(UseProgram, self.program)
+    pub fn enable(&self) -> &Self {
+        GL!(UseProgram, self.program);
+        self
     }
 
-    pub fn set_color(&self, color: Color) {
+    pub fn set_color(&self, color: Color) -> &Self {
         debug_assert!(self.color >= 0, "Invalid shader uniform");
-        GL!(Uniform4fv, self.color, 1, &color.r)
+        GL!(Uniform4fv, self.color, 1, &color.r);
+        self
     }
 
-    pub fn set_size(&self, size: Size) {
+    pub fn set_size(&self, size: Size) -> &Self {
         debug_assert!(self.size >= 0, "Invalid shader uniform");
-        GL!(Uniform2fv, self.size, 1, &size.width)
+        GL!(Uniform2fv, self.size, 1, &size.width);
+        self
     }
 
-    pub fn set_selected(&self, selected: bool) {
+    pub fn set_selected(&self, selected: bool) -> &Self {
         debug_assert!(self.selected >= 0, "Invalid shader uniform");
-        GL!(Uniform1i, self.selected, selected.into())
+        GL!(Uniform1i, self.selected, selected.into());
+        self
     }
 
-    pub fn set_resolution(&self, resolution: Size) {
+    pub fn set_resolution(&self, resolution: Size) -> &Self {
         debug_assert!(self.resolution >= 0, "Invalid shader uniform");
-        GL!(Uniform2fv, self.resolution, 1, &resolution.width)
+        GL!(Uniform2fv, self.resolution, 1, &resolution.width);
+        self
     }
 
-    pub fn set_position(&self, point: Point) {
+    pub fn set_position(&self, point: Point) -> &Self {
         debug_assert!(self.position >= 0, "Invalid shader uniform");
-        GL!(Uniform2fv, self.position, 1, &point.x)
+        GL!(Uniform2fv, self.position, 1, &point.x);
+        self
     }
 
-    pub fn set_rotation(&self, angle: f32) {
+    pub fn set_rotation(&self, angle: f32) -> &Self {
         debug_assert!(self.rotation >= 0, "Invalid shader uniform");
-        GL!(Uniform1f, self.rotation, angle)
+        GL!(Uniform1f, self.rotation, angle);
+        self
     }
 
     pub fn set_camera_rotation(&self, angle: f32) {
@@ -93,18 +100,21 @@ impl Shader {
         GL!(Uniform2fv, self.camera_position, 1, &pos.x)
     }
 
-    pub fn set_flipped(&self, flipper: bool) {
+    pub fn set_flipped(&self, flipper: bool) -> &Self {
         debug_assert!(self.flipped >= 0, "Invalid shader uniform");
-        GL!(Uniform1i, self.flipped, flipper.into())
+        GL!(Uniform1i, self.flipped, flipper.into());
+        self
     }
 
-    pub fn set_flipped_y(&self, flipper: bool) {
+    pub fn set_flipped_y(&self, flipper: bool) -> &Self {
         debug_assert!(self.flipped_y >= 0, "Invalid shader uniform");
-        GL!(Uniform1i, self.flipped_y, flipper.into())
+        GL!(Uniform1i, self.flipped_y, flipper.into());
+        self
     }
 
-    pub fn set_scale(&self, scale: f32) {
+    pub fn set_scale(&self, scale: f32) -> &Self {
         debug_assert!(self.scale >= 0, "Invalid shader uniform");
-        GL!(Uniform1f, self.scale, scale)
+        GL!(Uniform1f, self.scale, scale);
+        self
     }
 }

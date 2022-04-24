@@ -1,6 +1,6 @@
 use rtools::Rglica;
 
-use crate::{view::ViewTemplates, view_base::ViewBase, View};
+use crate::{view::ViewTemplates, View, ViewBase};
 
 #[derive(Default, Debug)]
 pub struct SubviewsTestView {

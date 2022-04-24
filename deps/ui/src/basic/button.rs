@@ -1,12 +1,10 @@
-use gl_image::Image;
-use rtools::{data_manager::Handle, Event, Rglica};
+use rtools::{Event, Rglica};
 
-use crate::{view::ViewTemplates, view_base::ViewBase, Label, Touch, View};
+use crate::{view::ViewTemplates, Label, View, ViewBase, ViewTouch};
 
 #[derive(Default, Debug)]
 pub struct Button {
     base:  ViewBase,
-    image: Handle<Image>,
     label: Rglica<Label>,
 
     pub on_tap: Event,
@@ -24,27 +22,17 @@ impl Button {
 
 impl View for Button {
     fn setup(&mut self) {
-        self.enable_touch()
+        self.on_touch().set(self, |touch, this| {
+            if touch.is_began() {
+                this.on_tap.trigger(())
+            }
+        });
     }
 
     fn layout(&mut self) {
         if self.label.is_ok() {
             self.label.place().as_background()
         }
-    }
-
-    fn on_touch(&mut self, touch: &Touch) {
-        if touch.is_began() {
-            self.on_tap.trigger(())
-        }
-    }
-
-    fn image(&self) -> Handle<Image> {
-        self.image
-    }
-
-    fn set_image(&mut self, image: Handle<Image>) {
-        self.image = image
     }
 
     fn view(&self) -> &ViewBase {

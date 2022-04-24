@@ -1,7 +1,7 @@
 use derivative::Derivative;
 use rtools::Rglica;
 
-use crate::{view::ViewTemplates, view_base::ViewBase, Font, ImageView, View};
+use crate::{view::ViewTemplates, Font, ImageView, View, ViewBase};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
@@ -51,7 +51,6 @@ impl Label {
             let glyph = self.font.glyph_for_char(letter);
 
             let mut glyph_view = self.content.add_view::<ImageView>();
-            glyph_view.frame_mut().size = glyph.size;
             glyph_view.set_image(glyph.image);
 
             glyph_view.set_frame((
@@ -70,7 +69,7 @@ impl Label {
 
         content_size.width = last_max_x;
 
-        self.content.frame_mut().size = content_size;
+        self.content.set_frame(content_size);
     }
 }
 

@@ -33,10 +33,8 @@ impl SpritesDrawer for TESpritesDrawer {
 
     fn set_scale(&mut self, scale: f32) {
         self.scale = scale;
-        self.assets.shaders.sprite.enable();
-        self.assets.shaders.sprite.set_scale(scale.into_f32());
-        self.assets.shaders.textured_sprite.enable();
-        self.assets.shaders.textured_sprite.set_scale(scale);
+        self.assets.shaders.sprite.enable().set_scale(scale.into_f32());
+        self.assets.shaders.image_sprite.enable().set_scale(scale);
     }
 
     fn resolution(&self) -> Size {
@@ -45,18 +43,18 @@ impl SpritesDrawer for TESpritesDrawer {
 
     fn set_resolution(&mut self, size: Size) {
         self.resolution = size;
-        self.assets.shaders.sprite.enable();
-        self.assets.shaders.sprite.set_resolution(size);
-        self.assets.shaders.textured_sprite.enable();
-        self.assets.shaders.textured_sprite.set_resolution(size)
+        self.assets.shaders.sprite.enable().set_resolution(size);
+        self.assets.shaders.image_sprite.enable().set_resolution(size);
     }
 
     fn set_camera_rotation(&self, angle: f32) {
         let angle = angle + std::f32::consts::PI / 2.0;
-        self.assets.shaders.sprite.enable();
-        self.assets.shaders.sprite.set_camera_rotation(angle);
-        self.assets.shaders.textured_sprite.enable();
-        self.assets.shaders.textured_sprite.set_camera_rotation(angle);
+        self.assets.shaders.sprite.enable().set_camera_rotation(angle);
+        self.assets
+            .shaders
+            .image_sprite
+            .enable()
+            .set_camera_rotation(angle);
     }
 
     fn camera_position(&self) -> Point {
@@ -65,10 +63,8 @@ impl SpritesDrawer for TESpritesDrawer {
 
     fn set_camera_position(&mut self, pos: Point) {
         self.camera_posotion = pos;
-        self.assets.shaders.sprite.enable();
-        self.assets.shaders.sprite.set_camera_position(pos);
-        self.assets.shaders.textured_sprite.enable();
-        self.assets.shaders.textured_sprite.set_camera_position(pos);
+        self.assets.shaders.sprite.enable().set_camera_position(pos);
+        self.assets.shaders.image_sprite.enable().set_camera_position(pos);
     }
 
     fn draw(&self, sprite: &dyn Sprite) {
@@ -76,20 +72,19 @@ impl SpritesDrawer for TESpritesDrawer {
         let mut buffer = &self.assets.buffers.fullscreen;
 
         if sprite.image().is_ok() {
-            shader = &self.assets.shaders.textured_sprite;
+            shader = &self.assets.shaders.image_sprite;
             buffer = &self.assets.buffers.fullscreen_image;
         }
 
-        shader.enable();
-
-        shader.set_selected(sprite.is_selected());
-        shader.set_size(sprite.size());
-        shader.set_position(sprite.position());
-        shader.set_rotation(sprite.rotation());
+        shader
+            .enable()
+            .set_selected(sprite.is_selected())
+            .set_size(sprite.size())
+            .set_position(sprite.position())
+            .set_rotation(sprite.rotation());
 
         if let Some(image) = sprite.image().get() {
-            shader.set_flipped(image.flipped);
-            shader.set_flipped_y(image.flipped_y);
+            shader.set_flipped(image.flipped).set_flipped_y(image.flipped_y);
             image.bind();
         } else {
             shader.set_color(sprite.color());

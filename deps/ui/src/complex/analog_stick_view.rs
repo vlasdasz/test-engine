@@ -4,7 +4,7 @@ use gm::{
 };
 use rtools::{Event, Rglica};
 
-use crate::{complex::DrawingView, view::ViewTemplates, view_base::ViewBase, Touch, View};
+use crate::{complex::DrawingView, view::ViewTemplates, View, ViewBase, ViewTouch};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
@@ -28,9 +28,7 @@ impl AnalogStickView {
 
         let frame = *self.frame();
 
-        self.direction_stick
-            .frame_mut()
-            .set_center(vector + frame.size.center());
+        self.direction_stick.set_center(vector + frame.size.center());
 
         self.on_change.trigger(vector * 0.1);
     }
@@ -38,9 +36,20 @@ impl AnalogStickView {
 
 impl View for AnalogStickView {
     fn setup(&mut self) {
-        self.frame_mut().size = (SIZE, SIZE).into();
+        self.set_frame((SIZE, SIZE));
 
-        self.enable_touch();
+        self.on_touch().set(self, |touch, this| {
+            if touch.is_ended() {
+                if this.flaccid {
+                    return;
+                }
+                let frame = *this.frame();
+                this.direction_stick.set_center(frame.size.center());
+                this.on_change.trigger(Point::default());
+            } else {
+                this.on_touch_moved(&touch.position);
+            }
+        });
 
         self.background = self.add_view();
         self.background.set_frame((SIZE, SIZE));
@@ -61,7 +70,7 @@ impl View for AnalogStickView {
 
         direction_stick.set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE));
 
-        direction_stick.frame_mut().set_center(self.frame().size.center());
+        direction_stick.set_center(self.frame().size.center());
 
         let stick_center = direction_stick.frame().size.center();
 
@@ -74,19 +83,6 @@ impl View for AnalogStickView {
             PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
             Color::LIGHT_GRAY,
         );
-    }
-
-    fn on_touch(&mut self, touch: &Touch) {
-        if touch.is_ended() {
-            if self.flaccid {
-                return;
-            }
-            let frame = *self.frame();
-            self.direction_stick.frame_mut().set_center(frame.size.center());
-            self.on_change.trigger(Point::default());
-        } else {
-            self.on_touch_moved(&touch.position);
-        }
     }
 
     fn view(&self) -> &ViewBase {

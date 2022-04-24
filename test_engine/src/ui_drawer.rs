@@ -108,15 +108,13 @@ impl UIDrawer {
 impl UIDrawer {
     fn fill_rect(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
-        self.assets.shaders.ui.enable();
-        self.assets.shaders.ui.set_color(color);
+        self.assets.shaders.ui.enable().set_color(color);
         self.assets.buffers.fullscreen.draw();
     }
 
     fn draw_rect(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
-        self.assets.shaders.ui.enable();
-        self.assets.shaders.ui.set_color(color);
+        self.assets.shaders.ui.enable().set_color(color);
         self.assets.buffers.fullscreen_outline.draw();
     }
 
@@ -125,8 +123,7 @@ impl UIDrawer {
         debug_assert!(image.is_valid());
 
         if image.is_monochrome() {
-            self.assets.shaders.ui_monochrome.enable();
-            self.assets.shaders.ui_monochrome.set_color(color);
+            self.assets.shaders.ui_monochrome.enable().set_color(color);
         } else {
             self.assets.shaders.ui_texture.enable();
         }
@@ -141,9 +138,12 @@ impl UIDrawer {
     pub fn draw_path_in_rect(&self, path: &PathData, rect: &Rect) {
         debug_assert!(rect.size.is_valid());
         self.set_viewport(rect);
-        self.assets.shaders.ui_path.enable();
-        self.assets.shaders.ui_path.set_color(path.color);
-        self.assets.shaders.ui_path.set_size(rect.size);
+        self.assets
+            .shaders
+            .ui_path
+            .enable()
+            .set_color(path.color)
+            .set_size(rect.size);
         path.buffer.draw();
     }
 }

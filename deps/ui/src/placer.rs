@@ -266,10 +266,7 @@ where
     let height = super_frame.height() / views.len() as f32;
     let width = super_frame.width();
 
-    for (i, frame) in views.iter_mut().map(|a| a.frame_mut()).enumerate() {
-        frame.origin.x = 0.0;
-        frame.origin.y = i as f32 * height;
-        frame.size.width = width;
-        frame.size.height = height;
+    for (i, view) in views.iter_mut().enumerate() {
+        view.set_frame((0.0, i as f32 * height, width, height));
     }
 }

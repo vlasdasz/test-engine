@@ -7,8 +7,7 @@ use crate::{
     complex::{DrawingView, TableView},
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
     view::ViewTemplates,
-    view_base::ViewBase,
-    ImageView, Label, View,
+    ImageView, Label, View, ViewBase,
 };
 
 #[derive(Default, Debug)]
@@ -70,7 +69,7 @@ impl View for TestView {
         self.layout = self.add_view();
 
         self.animated = self.add_view();
-        self.animated.frame_mut().size = (100, 100).into();
+        self.animated.set_frame((100, 100));
 
         self.animation = Animation::new(0, 400, 10).into();
 
@@ -81,7 +80,7 @@ impl View for TestView {
 
     fn layout(&mut self) {
         self.place().all_vertically();
-        self.animated.frame_mut().origin.y = self.animation.value()
+        self.animated.set_y(self.animation.value());
     }
 
     fn view(&self) -> &ViewBase {

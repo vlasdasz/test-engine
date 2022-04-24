@@ -5,21 +5,24 @@ use gm::{
     flat::{Point, Rect},
     Color,
 };
-use rtools::{address::Address, data_manager::Handle, Boxed, Rglica, ToRglica};
+use rtools::{address::Address, data_manager::Handle, Boxed, IntoF32, Rglica, ToRglica};
 
 use crate::{
     basic::Placer,
     complex::{Alert, PathData},
-    input::Touch,
-    view_base::ViewBase,
 };
+
+mod view_base;
+mod view_touch;
+mod view_touch_internal;
+
+pub use view_base::ViewBase;
+pub use view_touch::ViewTouch;
 
 pub trait View: Boxed + Debug {
     fn setup(&mut self) {}
 
     fn layout(&mut self) {}
-
-    fn on_touch(&mut self, _: &Touch) {}
 
     fn update(&mut self) {}
 
@@ -29,10 +32,6 @@ pub trait View: Boxed + Debug {
 
     fn is_hidden(&self) -> bool {
         self.view().is_hidden
-    }
-
-    fn set_hidden(&mut self, hidden: bool) {
-        self.view_mut().is_hidden = hidden
     }
 
     fn root_view(&self) -> Rglica<ViewBase> {
@@ -67,13 +66,13 @@ pub trait View: Boxed + Debug {
         &self.view().frame
     }
 
-    fn frame_mut(&mut self) -> &mut Rect {
-        &mut self.view_mut().frame
-    }
+    // fn frame_mut(&mut self) -> &mut Rect {
+    //     &mut self.view_mut().frame
+    // }
 
     fn add_view_at(&mut self, point: Point) {
         let mut view = ViewBase::dummy();
-        view.frame_mut().origin = point;
+        view.set_origin(point);
         self.add_boxed(view);
     }
 
@@ -142,67 +141,13 @@ pub trait View: Boxed + Debug {
         }
     }
 
-    fn enable_touch(&mut self) {
-        self.view_mut().touch_enabled = true
-    }
-
-    fn touch_enabled(&self) -> bool {
-        self.view().touch_enabled
-    }
-
-    fn touch_id(&self) -> u64 {
-        self.view().touch_id
-    }
-
-    fn set_touch_id(&mut self, id: u64) {
-        self.view_mut().touch_id = id;
-    }
-
-    fn check_touch(&mut self, touch: &mut Touch) -> bool {
-        if self.touch_enabled() {
-            if touch.is_moved() && self.touch_id() == touch.id {
-                touch.position -= self.absolute_frame().origin;
-                self.on_touch(touch);
-                return true;
-            }
-
-            if touch.is_moved() {
-                return false;
-            }
-
-            if touch.is_ended() && self.touch_id() == touch.id {
-                touch.position -= self.absolute_frame().origin;
-                self.set_touch_id(0);
-                self.on_touch(touch);
-                return true;
-            }
-
-            if self.absolute_frame().contains(touch.position) {
-                touch.position -= self.absolute_frame().origin;
-                self.set_touch_id(touch.id);
-                self.on_touch(touch);
-                return true;
-            }
-        }
-
-        for view in self.subviews_mut() {
-            if view.check_touch(touch) {
-                return true;
-            }
-        }
-
-        false
-    }
-
     fn paths(&self) -> Option<&[PathData]> {
         None
     }
 
     fn image(&self) -> Handle<Image> {
-        Handle::default()
+        self.view().image
     }
-
-    fn set_image(&mut self, _: Handle<Image>) {}
 
     fn place(&mut self) -> &mut Placer {
         &mut self.view_mut().placer
@@ -222,8 +167,13 @@ pub trait View: Boxed + Debug {
 }
 
 pub trait ViewTemplates {
+    fn set_y(&mut self, y: impl IntoF32) -> &mut Self;
+    fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self;
+    fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_color(&mut self, color: Color) -> &mut Self;
+    fn set_image(&mut self, image: Handle<Image>) -> &mut Self;
+    fn set_hidden(&mut self, hidden: bool) -> &mut Self;
     fn add_view<V: 'static + View>(&mut self) -> Rglica<V>;
     fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V>;
     fn add_boxed(&mut self, view: Box<dyn View>);
@@ -231,6 +181,21 @@ pub trait ViewTemplates {
 }
 
 impl<T: ?Sized + View> ViewTemplates for T {
+    fn set_y(&mut self, y: impl IntoF32) -> &mut Self {
+        self.view_mut().frame.origin.y = y.into_f32();
+        self
+    }
+
+    fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self {
+        self.view_mut().frame.origin = origin.into();
+        self
+    }
+
+    fn set_center(&mut self, center: impl Into<Point>) -> &mut Self {
+        self.view_mut().frame.set_center(center.into());
+        self
+    }
+
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self {
         self.view_mut().frame = rect.into();
         self
@@ -238,6 +203,16 @@ impl<T: ?Sized + View> ViewTemplates for T {
 
     fn set_color(&mut self, color: Color) -> &mut Self {
         self.view_mut().color = color;
+        self
+    }
+
+    fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
+        self.view_mut().image = image;
+        self
+    }
+
+    fn set_hidden(&mut self, hidden: bool) -> &mut Self {
+        self.view_mut().is_hidden = hidden;
         self
     }
 

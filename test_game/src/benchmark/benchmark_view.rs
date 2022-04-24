@@ -1,7 +1,7 @@
 use test_engine::{
     game_view::GameView,
     rtools::{Boxed, Rglica},
-    ui::{basic::Button, placer::Anchor, view_base::ViewBase, Label, View, ViewTemplates},
+    ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewTemplates},
     ui_layer::UILayer,
     Level,
 };
@@ -24,8 +24,7 @@ impl View for BenchmarkView {
         self.level.setup();
 
         self.to_test = self.add_view();
-        self.to_test.set_text("Test");
-        self.to_test.frame_mut().size = (120, 20).into();
+        self.to_test.set_text("Test").set_frame((120, 20));
         self.to_test.on_tap.set(self, |_, this| {
             this.ui.set_view(TestGameView::boxed());
         });

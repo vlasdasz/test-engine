@@ -1,6 +1,6 @@
 use rtools::{Boxed, Rglica};
 
-use crate::{view::ViewTemplates, view_base::ViewBase, Label, View};
+use crate::{view::ViewTemplates, Label, View, ViewBase};
 
 pub trait TableViewData {
     fn make_cell(self) -> Box<dyn TableViewCell<Self>>;

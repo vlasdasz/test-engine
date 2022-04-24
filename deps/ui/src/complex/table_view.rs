@@ -1,6 +1,6 @@
 use std::{fmt::Debug, marker::PhantomData};
 
-use crate::{complex::table_view_cell::TableViewData, view::ViewTemplates, view_base::ViewBase, View};
+use crate::{complex::table_view_cell::TableViewData, view::ViewTemplates, View, ViewBase};
 
 #[derive(Default, Debug)]
 pub struct TableView<T: TableViewData> {

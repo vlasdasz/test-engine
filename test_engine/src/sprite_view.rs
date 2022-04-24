@@ -1,8 +1,7 @@
-use rtools::Rglica;
+use gl_image::Image;
+use rtools::{data_manager::DataManager, Rglica};
 use sprites::Sprite;
-use ui::{
-    basic::Button, complex::LabeledView, placer::place_vertically, view_base::ViewBase, View, ViewTemplates,
-};
+use ui::{basic::Button, complex::LabeledView, placer::place_vertically, View, ViewBase, ViewTemplates};
 
 #[derive(Default, Debug)]
 pub struct SpriteView {
@@ -34,10 +33,10 @@ impl SpriteView {
 
     fn setup_delete_button(&mut self) {
         self.delete_button = self.add_view();
-        //self.delete_button.set_image(Assets::image("delete.png"));
-        self.delete_button.set_hidden(true);
-
-        self.delete_button.set_frame((20, 20));
+        self.delete_button
+            .set_frame((20, 20))
+            .set_hidden(true)
+            .set_image(Image::get("delete.png"));
 
         self.delete_button.on_tap.set(self, |_, this| {
             if this.sprite.is_ok() {

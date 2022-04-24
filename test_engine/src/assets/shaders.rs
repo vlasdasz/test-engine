@@ -8,8 +8,8 @@ pub struct Shaders {
     pub ui_texture:    Shader,
     pub ui_monochrome: Shader,
 
-    pub sprite:          Shader,
-    pub textured_sprite: Shader,
+    pub sprite:       Shader,
+    pub image_sprite: Shader,
 }
 
 impl Shaders {
@@ -26,7 +26,7 @@ impl Shaders {
         let ui_monochrome = compiler.compile(&paths.shaders.ui.join("ui_monochrome"));
 
         let sprite = compiler.compile(&paths.shaders.sprites.join("sprite"));
-        let textured_sprite = compiler.compile(&paths.shaders.sprites.join("textured_sprite"));
+        let image_sprite = compiler.compile(&paths.shaders.sprites.join("textured_sprite"));
 
         error!("shaders created");
 
@@ -37,7 +37,7 @@ impl Shaders {
             ui_monochrome,
 
             sprite,
-            textured_sprite,
+            image_sprite,
         }
     }
 }

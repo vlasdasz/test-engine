@@ -1,6 +1,6 @@
 use rtools::{Event, IntoF32, Rglica};
 
-use crate::{complex::Slider, view::ViewTemplates, view_base::ViewBase, Label, View};
+use crate::{complex::Slider, view::ViewTemplates, Label, View, ViewBase};
 
 #[derive(Default, Debug)]
 pub struct LabeledSlider {
