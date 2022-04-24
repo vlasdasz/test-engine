@@ -1,7 +1,10 @@
 use derivative::Derivative;
 use rtools::Rglica;
 
-use crate::{view::ViewTemplates, Font, ImageView, View, ViewBase};
+use crate::{
+    view::{ViewFrame, ViewTemplates},
+    Font, ImageView, View, ViewBase,
+};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]

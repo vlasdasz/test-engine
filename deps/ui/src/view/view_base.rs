@@ -5,7 +5,11 @@ use gl_image::Image;
 use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Event, IntoF32, Rglica};
 
-use crate::{basic::Placer, view::ViewTemplates, Touch, View};
+use crate::{
+    basic::Placer,
+    view::{ViewFrame, ViewTemplates},
+    Touch, View,
+};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]

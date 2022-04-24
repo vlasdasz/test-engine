@@ -1,7 +1,11 @@
 use gm::Color;
 use rtools::{math::clamped_by, Event, Rglica, ToRglica};
 
-use crate::{basic::CircleView, view::ViewTemplates, View, ViewBase, ViewTouch};
+use crate::{
+    basic::CircleView,
+    view::{ViewFrame, ViewTemplates},
+    View, ViewBase, ViewTouch,
+};
 
 #[derive(Debug)]
 pub struct Slider {

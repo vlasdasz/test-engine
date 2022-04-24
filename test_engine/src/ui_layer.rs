@@ -9,7 +9,7 @@ use rtools::{platform::Platform, Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 #[cfg(desktop)]
 use ui::input::touch::{ButtonState, TouchEvent};
-use ui::{Touch, View, ViewBase, ViewTemplates, ViewTouch};
+use ui::{Touch, View, ViewBase, ViewFrame, ViewTemplates, ViewTouch};
 
 use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
 

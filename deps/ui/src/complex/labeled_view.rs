@@ -1,6 +1,9 @@
 use rtools::Rglica;
 
-use crate::{view::ViewTemplates, Label, View, ViewBase};
+use crate::{
+    view::{ViewFrame, ViewTemplates},
+    Label, View, ViewBase,
+};
 
 #[derive(Default, Debug)]
 pub struct LabeledView {

@@ -5,7 +5,7 @@ use gm::{
     flat::{Point, Rect},
     Color,
 };
-use rtools::{address::Address, data_manager::Handle, Boxed, IntoF32, Rglica, ToRglica};
+use rtools::{address::Address, data_manager::Handle, Boxed, Rglica, ToRglica};
 
 use crate::{
     basic::Placer,
@@ -13,10 +13,12 @@ use crate::{
 };
 
 mod view_base;
+mod view_frame;
 mod view_touch;
 mod view_touch_internal;
 
 pub use view_base::ViewBase;
+pub use view_frame::ViewFrame;
 pub use view_touch::ViewTouch;
 
 pub trait View: Boxed + Debug {
@@ -62,42 +64,10 @@ pub trait View: Boxed + Debug {
         self.absolute_frame()
     }
 
-    fn frame(&self) -> &Rect {
-        &self.view().frame
-    }
-
-    // fn frame_mut(&mut self) -> &mut Rect {
-    //     &mut self.view_mut().frame
-    // }
-
     fn add_view_at(&mut self, point: Point) {
         let mut view = ViewBase::dummy();
         view.set_origin(point);
         self.add_boxed(view);
-    }
-
-    fn x(&self) -> f32 {
-        self.frame().origin.x
-    }
-
-    fn y(&self) -> f32 {
-        self.frame().origin.y
-    }
-
-    fn max_x(&self) -> f32 {
-        self.frame().max_x()
-    }
-
-    fn max_y(&self) -> f32 {
-        self.frame().max_y()
-    }
-
-    fn width(&self) -> f32 {
-        self.frame().size.width
-    }
-
-    fn height(&self) -> f32 {
-        self.frame().size.height
     }
 
     fn absolute_frame(&self) -> &Rect {
@@ -149,28 +119,11 @@ pub trait View: Boxed + Debug {
         self.view().image
     }
 
-    fn place(&mut self) -> &mut Placer {
-        &mut self.view_mut().placer
-    }
-
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
-
-    fn with_frame(frame: Rect) -> Box<Self>
-    where
-        Self: Sized,
-    {
-        let mut new = Self::boxed();
-        new.set_frame(frame);
-        new
-    }
 }
 
 pub trait ViewTemplates {
-    fn set_y(&mut self, y: impl IntoF32) -> &mut Self;
-    fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self;
-    fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
-    fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_color(&mut self, color: Color) -> &mut Self;
     fn set_image(&mut self, image: Handle<Image>) -> &mut Self;
     fn set_hidden(&mut self, hidden: bool) -> &mut Self;
@@ -181,26 +134,6 @@ pub trait ViewTemplates {
 }
 
 impl<T: ?Sized + View> ViewTemplates for T {
-    fn set_y(&mut self, y: impl IntoF32) -> &mut Self {
-        self.view_mut().frame.origin.y = y.into_f32();
-        self
-    }
-
-    fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self {
-        self.view_mut().frame.origin = origin.into();
-        self
-    }
-
-    fn set_center(&mut self, center: impl Into<Point>) -> &mut Self {
-        self.view_mut().frame.set_center(center.into());
-        self
-    }
-
-    fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self {
-        self.view_mut().frame = rect.into();
-        self
-    }
-
     fn set_color(&mut self, color: Color) -> &mut Self {
         self.view_mut().color = color;
         self

@@ -4,7 +4,11 @@ use gm::{
 };
 use rtools::{Event, Rglica};
 
-use crate::{complex::DrawingView, view::ViewTemplates, View, ViewBase, ViewTouch};
+use crate::{
+    complex::DrawingView,
+    view::{ViewFrame, ViewTemplates},
+    View, ViewBase, ViewTouch,
+};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;

@@ -1,6 +1,10 @@
 use rtools::Rglica;
 
-use crate::{placer::Anchor, view::ViewTemplates, Font, ImageView, View, ViewBase};
+use crate::{
+    placer::Anchor,
+    view::{ViewFrame, ViewTemplates},
+    Font, ImageView, View, ViewBase,
+};
 
 #[derive(Default, Debug)]
 pub struct LayoutView {

@@ -6,7 +6,7 @@ use crate::{
     basic::Button,
     complex::{DrawingView, TableView},
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
-    view::ViewTemplates,
+    view::{ViewFrame, ViewTemplates},
     ImageView, Label, View, ViewBase,
 };
 

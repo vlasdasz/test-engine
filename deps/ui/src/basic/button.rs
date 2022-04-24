@@ -1,6 +1,9 @@
 use rtools::{Event, Rglica};
 
-use crate::{view::ViewTemplates, Label, View, ViewBase, ViewTouch};
+use crate::{
+    view::{ViewFrame, ViewTemplates},
+    Label, View, ViewBase, ViewTouch,
+};
 
 #[derive(Default, Debug)]
 pub struct Button {

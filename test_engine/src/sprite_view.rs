@@ -1,7 +1,9 @@
 use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica};
 use sprites::Sprite;
-use ui::{basic::Button, complex::LabeledView, placer::place_vertically, View, ViewBase, ViewTemplates};
+use ui::{
+    basic::Button, complex::LabeledView, placer::place_vertically, View, ViewBase, ViewFrame, ViewTemplates,
+};
 
 #[derive(Default, Debug)]
 pub struct SpriteView {

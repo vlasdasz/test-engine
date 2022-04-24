@@ -1,7 +1,12 @@
 use gm::Color;
 use rtools::Rglica;
 
-use crate::{basic::Button, placer::Anchor, view::ViewTemplates, Label, View, ViewBase};
+use crate::{
+    basic::Button,
+    placer::Anchor,
+    view::{ViewFrame, ViewTemplates},
+    Label, View, ViewBase,
+};
 
 #[derive(Default, Debug)]
 pub struct Alert {

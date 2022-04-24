@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use gm::flat::Rect;
 use rtools::{math::IntoF32, Rglica, ToRglica};
 
-use crate::{view::ViewTemplates, View};
+use crate::{view::ViewFrame, View};
 
 pub enum Anchor {
     Top,
