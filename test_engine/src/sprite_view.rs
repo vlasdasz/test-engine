@@ -1,11 +1,7 @@
 use rtools::Rglica;
 use sprites::Sprite;
 use ui::{
-    basic::Button,
-    complex::LabeledView,
-    placer::place_vertically,
-    view_base::{add_view, ViewBase},
-    View, ViewSetters,
+    basic::Button, complex::LabeledView, placer::place_vertically, view_base::ViewBase, View, ViewSetters,
 };
 
 #[derive(Default, Debug)]
@@ -37,7 +33,7 @@ impl SpriteView {
     }
 
     fn setup_delete_button(&mut self) {
-        self.delete_button = add_view(self);
+        self.delete_button = self.add_view();
         //self.delete_button.set_image(Assets::image("delete.png"));
         self.delete_button.set_hidden(true);
 
@@ -54,7 +50,7 @@ impl SpriteView {
 
 impl View for SpriteView {
     fn setup(&mut self) {
-        (self.position, self.size, self.color) = (add_view(self), add_view(self), add_view(self));
+        (self.position, self.size, self.color) = (self.add_view(), self.add_view(), self.add_view());
 
         self.position.set_label("position:");
         self.size.set_label("size:");

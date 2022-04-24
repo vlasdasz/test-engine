@@ -12,7 +12,7 @@ use test_engine::{
         complex::{AnalogStickView, LabeledSlider},
         placer::Anchor,
         test::test_view::TestView,
-        view_base::{add_view, add_view_with_frame, ViewBase},
+        view_base::ViewBase,
         DPadView, View, ViewSetters,
     },
     ui_layer::UILayer,
@@ -57,13 +57,13 @@ impl TestGameView {
     }
 
     fn setup_sliders(&mut self) {
-        self.game_scale_slider = add_view_with_frame(self, (50, 280));
+        self.game_scale_slider = self.add_view_with_frame((50, 280));
         self.game_scale_slider.set_start(0.5).set_finish(10);
         self.game_scale_slider.on_change.set(self, move |scale, this| {
             this.level_mut().drawer_mut().set_scale(scale);
         });
 
-        self.ui_scale_slider = add_view_with_frame(self, (50, 280));
+        self.ui_scale_slider = self.add_view_with_frame((50, 280));
         self.ui_scale_slider.set_start(0.2).set_finish(4);
         self.ui_scale_slider.on_change.set(self, move |scale, this| {
             this.ui.set_scale(scale);
@@ -73,14 +73,14 @@ impl TestGameView {
     fn setup_ui(&mut self) {
         self.set_frame((10, 10, 1000, 500));
 
-        self.sprite_view = add_view_with_frame(self, (500, 180));
+        self.sprite_view = self.add_view_with_frame((500, 180));
 
         self.level
             .base()
             .on_sprite_selected
             .set(self, move |sprite, this| this.sprite_view.set_sprite(sprite));
 
-        self.dpad = add_view(self);
+        self.dpad = self.add_view();
         self.dpad.set_frame((200, 150)).set_images(
             Image::get("up.png"),
             Image::get("down.png"),
@@ -88,23 +88,23 @@ impl TestGameView {
             Image::get("right.png"),
         );
 
-        self.left_stick = add_view(self);
+        self.left_stick = self.add_view();
 
         self.setup_sliders();
 
-        self.test_view = add_view_with_frame(self, (280, 400));
+        self.test_view = self.add_view_with_frame((280, 400));
         self.test_view
             .set_image(Image::get("cat.png"))
             .set_button_image(Image::get("square.png"))
             .set_animation_image(Image::get("palm.png"));
 
-        self.to_benchmark = add_view(self);
+        self.to_benchmark = self.add_view();
         self.to_benchmark.set_text("Benchmark").set_frame((120, 20));
         self.to_benchmark.on_tap.set(self, move |_, this| {
             this.ui.set_view(BenchmarkView::boxed());
         });
 
-        self.play = add_view(self);
+        self.play = self.add_view();
         self.play.set_text("Play sound").set_frame((120, 20));
         self.play.on_tap.set(self, move |_, this| this.sound.play());
 

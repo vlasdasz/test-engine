@@ -1,13 +1,7 @@
 use gm::Color;
 use rtools::Rglica;
 
-use crate::{
-    basic::Button,
-    placer::Anchor,
-    view::ViewSetters,
-    view_base::{add_view, ViewBase},
-    Label, View,
-};
+use crate::{basic::Button, placer::Anchor, view::ViewSetters, view_base::ViewBase, Label, View};
 
 #[derive(Default, Debug)]
 pub struct Alert {
@@ -27,7 +21,7 @@ impl View for Alert {
     fn setup(&mut self) {
         self.set_frame((280, 140)).set_color(Color::WHITE);
 
-        (self.label, self.ok_button) = (add_view(self), add_view(self));
+        (self.label, self.ok_button) = (self.add_view(), self.add_view());
 
         self.label.set_text(self.message.clone());
 

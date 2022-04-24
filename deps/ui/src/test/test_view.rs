@@ -6,7 +6,8 @@ use crate::{
     basic::Button,
     complex::{DrawingView, TableView},
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
-    view_base::{add_view, ViewBase},
+    view::ViewSetters,
+    view_base::ViewBase,
     ImageView, Label, View,
 };
 
@@ -46,34 +47,34 @@ impl TestView {
 
 impl View for TestView {
     fn setup(&mut self) {
-        self.label = add_view(self);
+        self.label = self.add_view();
         self.label.set_text("Hello label!");
 
-        self.button = add_view(self);
+        self.button = self.add_view();
         self.button.on_tap.set(self, move |_, this| {
             let val = this.label_value;
             this.label.set_text(format!("Hello label! {}", val));
             this.label_value += 1;
         });
 
-        self.image = add_view(self);
+        self.image = self.add_view();
 
-        self.subviews = add_view(self);
+        self.subviews = self.add_view();
 
-        self.drawing = add_view(self);
+        self.drawing = self.add_view();
         self.drawing.add_path(
             vec![(20, 20), (30, 20), (20, 40), (30, 50), (1, 60), (1, 20)],
             Color::GREEN,
         );
 
-        self.layout = add_view(self);
+        self.layout = self.add_view();
 
-        self.animated = add_view(self);
+        self.animated = self.add_view();
         self.animated.frame_mut().size = (100, 100).into();
 
         self.animation = Animation::new(0, 400, 10).into();
 
-        self.table = add_view(self);
+        self.table = self.add_view();
         self.table
             .set_data(vec!["spika".into(), "rglica".into(), "sokol".into()]);
     }

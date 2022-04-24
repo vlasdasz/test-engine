@@ -1,11 +1,6 @@
-use std::ops::DerefMut;
-
 use rtools::Rglica;
 
-use crate::{
-    view_base::{add_view, ViewBase},
-    View,
-};
+use crate::{view::ViewSetters, view_base::ViewBase, View};
 
 #[derive(Default, Debug)]
 pub struct SubviewsTestView {
@@ -19,11 +14,11 @@ pub struct SubviewsTestView {
 
 impl View for SubviewsTestView {
     fn setup(&mut self) {
-        self.first = add_view(self);
-        self.second = add_view(self.first.deref_mut());
-        self.third = add_view(self.second.deref_mut());
-        self.forth = add_view(self.third.deref_mut());
-        self.fifth = add_view(self.forth.deref_mut());
+        self.first = self.add_view();
+        self.second = self.first.add_view();
+        self.third = self.second.add_view();
+        self.forth = self.third.add_view();
+        self.fifth = self.forth.add_view();
     }
 
     fn layout(&mut self) {

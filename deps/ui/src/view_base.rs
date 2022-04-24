@@ -1,8 +1,8 @@
 use derivative::Derivative;
 use gm::{flat::Rect, Color};
-use rtools::{Boxed, IntoF32, Rglica, ToRglica};
+use rtools::{IntoF32, Rglica};
 
-use crate::{basic::Placer, complex::Alert, view::ViewSetters, View};
+use crate::{basic::Placer, view::ViewSetters, View};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
@@ -34,33 +34,6 @@ impl ViewBase {
         dummy.set_frame((5, 5)).set_color(Color::random());
         Box::new(dummy)
     }
-}
-
-pub fn add_boxed<T: 'static + View>(parent: &mut dyn View, view: Box<T>) -> Rglica<T> {
-    let result = view.to_rglica();
-    parent.add_subview(view);
-    result
-}
-
-pub fn add_view<T: 'static + View>(parent: &mut dyn View) -> Rglica<T> {
-    let view = T::boxed();
-    let result = view.to_rglica();
-    parent.add_subview(view);
-    result
-}
-
-pub fn add_view_with_frame<T: 'static + View>(parent: &mut dyn View, frame: impl Into<Rect>) -> Rglica<T> {
-    let mut view = T::boxed();
-    view.set_frame(frame.into());
-    let result = view.to_rglica();
-    parent.add_subview(view);
-    result
-}
-
-pub fn alert(view: &mut dyn View, message: impl ToString) {
-    let mut alert = Alert::boxed();
-    alert.set_message(message);
-    view.root_view().add_subview(alert);
 }
 
 impl View for ViewBase {

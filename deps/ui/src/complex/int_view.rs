@@ -3,11 +3,7 @@ use std::ops::AddAssign;
 use gl_image::Image;
 use rtools::{data_manager::Handle, Event, Rglica};
 
-use crate::{
-    basic::Button,
-    view_base::{add_view, ViewBase},
-    Label, View,
-};
+use crate::{basic::Button, view::ViewSetters, view_base::ViewBase, Label, View};
 
 #[derive(Default, Debug)]
 pub struct IntView {
@@ -28,9 +24,9 @@ impl IntView {
 
 impl View for IntView {
     fn setup(&mut self) {
-        self.label = add_view(self);
-        self.up = add_view(self);
-        self.down = add_view(self);
+        self.label = self.add_view();
+        self.up = self.add_view();
+        self.down = self.add_view();
 
         self.up.on_tap.set(self, move |_, this| {
             this.value.add_assign(1);

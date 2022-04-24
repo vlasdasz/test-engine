@@ -1,4 +1,4 @@
-use std::{ops::DerefMut, rc::Rc};
+use std::rc::Rc;
 
 #[cfg(desktop)]
 use gl_wrapper::events::Events;
@@ -9,10 +9,7 @@ use rtools::{platform::Platform, Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 #[cfg(desktop)]
 use ui::input::touch::{ButtonState, TouchEvent};
-use ui::{
-    view_base::{add_view, ViewBase},
-    Touch, View, ViewSetters,
-};
+use ui::{view_base::ViewBase, Touch, View, ViewSetters};
 
 use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
 
@@ -89,7 +86,7 @@ impl UILayer {
     }
 
     pub fn add_debug_view(&mut self) {
-        self.debug_view = add_view(self.root_view.deref_mut())
+        self.debug_view = self.root_view.add_view();
     }
 }
 

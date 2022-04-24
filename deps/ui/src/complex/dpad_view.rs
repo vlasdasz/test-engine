@@ -2,12 +2,7 @@ use gl_image::Image;
 use gm::flat::Direction;
 use rtools::{data_manager::Handle, Event, Rglica};
 
-use crate::{
-    basic::Button,
-    view::ViewSetters,
-    view_base::{add_view, ViewBase},
-    View,
-};
+use crate::{basic::Button, view::ViewSetters, view_base::ViewBase, View};
 
 #[derive(Default, Debug)]
 pub struct DPadView {
@@ -41,11 +36,11 @@ impl DPadView {
 impl View for DPadView {
     fn setup(&mut self) {
         error!("Setup");
-        self.up = add_view(self);
+        self.up = self.add_view();
         error!("UP: OK");
-        self.down = add_view(self);
-        self.left = add_view(self);
-        self.right = add_view(self);
+        self.down = self.add_view();
+        self.left = self.add_view();
+        self.right = self.add_view();
 
         self.up
             .on_tap

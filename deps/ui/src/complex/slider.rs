@@ -1,11 +1,7 @@
 use gm::Color;
 use rtools::{math::clamped_by, Event, Rglica};
 
-use crate::{
-    basic::CircleView,
-    view_base::{add_boxed, ViewBase},
-    Touch, View,
-};
+use crate::{basic::CircleView, view::ViewSetters, view_base::ViewBase, Touch, View};
 
 #[derive(Debug)]
 pub struct Slider {
@@ -22,7 +18,7 @@ pub struct Slider {
 impl View for Slider {
     fn setup(&mut self) {
         let radius = self.width();
-        self.circle = add_boxed(self, CircleView::with_radius(radius));
+        self.circle = self.add_boxed(CircleView::with_radius(radius));
 
         self.circle.set_color(Color::BLUE);
 

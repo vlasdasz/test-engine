@@ -1,10 +1,6 @@
 use rtools::{Boxed, Rglica, ToRglica};
 
-use crate::{
-    placer::Anchor,
-    view_base::{add_view, ViewBase},
-    Font, ImageView, View,
-};
+use crate::{placer::Anchor, view::ViewSetters, view_base::ViewBase, Font, ImageView, View};
 
 #[derive(Default, Debug)]
 pub struct LayoutView {
@@ -28,7 +24,7 @@ impl View for LayoutView {
             self.add_subview(view);
         }
 
-        self.central = add_view(self);
+        self.central = self.add_view();
         self.central.frame.size = (40, 40).into();
     }
 

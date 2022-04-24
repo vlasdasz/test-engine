@@ -1,8 +1,5 @@
 use rtools::{platform::Platform, Property, Rglica};
-use ui::{
-    view_base::{add_view, ViewBase},
-    Label, View,
-};
+use ui::{view_base::ViewBase, Label, View, ViewSetters};
 
 #[derive(Default, Debug)]
 pub struct DebugView {
@@ -17,10 +14,10 @@ impl View for DebugView {
     fn setup(&mut self) {
         self.frame_mut().size = (280, 100).into();
 
-        self.fps_label = add_view(self);
+        self.fps_label = self.add_view();
         self.fps_label.set_text("fps label");
 
-        self.frame_drawn_label = add_view(self);
+        self.frame_drawn_label = self.add_view();
         self.frame_drawn_label.set_text("frame drawn label");
 
         if Platform::MOBILE {

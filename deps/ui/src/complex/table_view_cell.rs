@@ -1,9 +1,6 @@
 use rtools::{Boxed, Rglica};
 
-use crate::{
-    view_base::{add_view, ViewBase},
-    Label, View,
-};
+use crate::{view::ViewSetters, view_base::ViewBase, Label, View};
 
 pub trait TableViewData {
     fn make_cell(self) -> Box<dyn TableViewCell<Self>>;
@@ -22,7 +19,7 @@ pub struct StringCell {
 
 impl View for StringCell {
     fn setup(&mut self) {
-        self.label = add_view(self);
+        self.label = self.add_view();
         self.label.set_text(self.data.clone());
     }
 

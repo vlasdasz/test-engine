@@ -1,9 +1,6 @@
 use rtools::Rglica;
 
-use crate::{
-    view_base::{add_view, ViewBase},
-    Label, View,
-};
+use crate::{view::ViewSetters, view_base::ViewBase, Label, View};
 
 #[derive(Default, Debug)]
 pub struct LabeledView {
@@ -28,8 +25,8 @@ impl LabeledView {
 
 impl View for LabeledView {
     fn setup(&mut self) {
-        self.label = add_view(self);
-        self.value = add_view(self);
+        self.label = self.add_view();
+        self.value = self.add_view();
     }
 
     fn layout(&mut self) {

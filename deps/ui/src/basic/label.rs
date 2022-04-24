@@ -1,11 +1,7 @@
 use derivative::Derivative;
 use rtools::{Boxed, Rglica};
 
-use crate::{
-    view::ViewSetters,
-    view_base::{add_view, ViewBase},
-    Font, ImageView, View,
-};
+use crate::{view::ViewSetters, view_base::ViewBase, Font, ImageView, View};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
@@ -80,7 +76,7 @@ impl Label {
 
 impl View for Label {
     fn setup(&mut self) {
-        self.content = add_view(self);
+        self.content = self.add_view();
     }
 
     fn layout(&mut self) {

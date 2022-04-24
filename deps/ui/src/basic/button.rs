@@ -1,10 +1,7 @@
 use gl_image::Image;
 use rtools::{data_manager::Handle, Event, Rglica};
 
-use crate::{
-    view_base::{add_view, ViewBase},
-    Label, Touch, View,
-};
+use crate::{view::ViewSetters, view_base::ViewBase, Label, Touch, View};
 
 #[derive(Default, Debug)]
 pub struct Button {
@@ -18,7 +15,7 @@ pub struct Button {
 impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
         if self.label.is_null() {
-            self.label = add_view(self)
+            self.label = self.add_view();
         }
         self.label.set_text(text);
         self

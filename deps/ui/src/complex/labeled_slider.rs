@@ -1,10 +1,6 @@
 use rtools::{Event, IntoF32, Rglica};
 
-use crate::{
-    complex::Slider,
-    view_base::{add_view_with_frame, ViewBase},
-    Label, View,
-};
+use crate::{complex::Slider, view::ViewSetters, view_base::ViewBase, Label, View};
 
 #[derive(Default, Debug)]
 pub struct LabeledSlider {
@@ -36,8 +32,8 @@ impl View for LabeledSlider {
     fn setup(&mut self) {
         let frames = self.place().frames_for_ratio([1, 5]);
 
-        self.label = add_view_with_frame(self, frames[0]);
-        self.slider = add_view_with_frame(self, frames[1]);
+        self.label = self.add_view_with_frame(frames[0]);
+        self.slider = self.add_view_with_frame(frames[1]);
 
         self.slider.on_change.set(self, move |a, s| s.on_change(a));
     }

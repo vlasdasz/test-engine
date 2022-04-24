@@ -7,7 +7,12 @@ use gm::{
 };
 use rtools::{address::Address, data_manager::Handle, Boxed, Rglica, ToRglica};
 
-use crate::{basic::Placer, complex::PathData, input::Touch, view_base::ViewBase};
+use crate::{
+    basic::Placer,
+    complex::{Alert, PathData},
+    input::Touch,
+    view_base::ViewBase,
+};
 
 pub trait View: Boxed + Debug {
     fn setup(&mut self) {}
@@ -226,6 +231,10 @@ pub trait View: Boxed + Debug {
 pub trait ViewSetters {
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_color(&mut self, color: Color) -> &mut Self;
+    fn add_view<V: 'static + View>(&mut self) -> Rglica<V>;
+    fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V>;
+    fn add_boxed<V: 'static + View>(&mut self, view: Box<V>) -> Rglica<V>;
+    fn alert(&mut self, message: impl ToString);
 }
 
 impl<T: ?Sized + View> ViewSetters for T {
@@ -237,5 +246,32 @@ impl<T: ?Sized + View> ViewSetters for T {
     fn set_color(&mut self, color: Color) -> &mut Self {
         self.view_mut().color = color;
         self
+    }
+
+    fn add_view<V: 'static + View>(&mut self) -> Rglica<V> {
+        let view = V::boxed();
+        let result = view.to_rglica();
+        self.add_subview(view);
+        result
+    }
+
+    fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V> {
+        let mut view = V::boxed();
+        view.set_frame(frame.into());
+        let result = view.to_rglica();
+        self.add_subview(view);
+        result
+    }
+
+    fn add_boxed<V: 'static + View>(&mut self, view: Box<V>) -> Rglica<V> {
+        let result = view.to_rglica();
+        self.add_subview(view);
+        result
+    }
+
+    fn alert(&mut self, message: impl ToString) {
+        let mut alert = Alert::boxed();
+        alert.set_message(message);
+        self.root_view().add_subview(alert);
     }
 }
