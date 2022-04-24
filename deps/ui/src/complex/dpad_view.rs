@@ -2,7 +2,7 @@ use gl_image::Image;
 use gm::flat::Direction;
 use rtools::{data_manager::Handle, Event, Rglica};
 
-use crate::{basic::Button, view::ViewSetters, view_base::ViewBase, View};
+use crate::{basic::Button, view::ViewTemplates, view_base::ViewBase, View};
 
 #[derive(Default, Debug)]
 pub struct DPadView {

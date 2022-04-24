@@ -2,7 +2,7 @@ use derivative::Derivative;
 use gm::{flat::Rect, Color};
 use rtools::{IntoF32, Rglica};
 
-use crate::{basic::Placer, view::ViewSetters, View};
+use crate::{basic::Placer, view::ViewTemplates, View};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]

@@ -1,4 +1,4 @@
-use std::{fmt::Debug, ops::DerefMut};
+use std::fmt::Debug;
 
 use gl_image::Image;
 use gm::{
@@ -74,7 +74,7 @@ pub trait View: Boxed + Debug {
     fn add_view_at(&mut self, point: Point) {
         let mut view = ViewBase::dummy();
         view.frame_mut().origin = point;
-        self.add_subview(view);
+        self.add_boxed(view);
     }
 
     fn x(&self) -> f32 {
@@ -103,13 +103,6 @@ pub trait View: Boxed + Debug {
 
     fn absolute_frame(&self) -> &Rect {
         &self.view().absolute_frame
-    }
-
-    fn add_subview(&mut self, mut view: Box<dyn View>) {
-        view.view_mut().superview = self.view().to_rglica();
-        view.view_mut().placer = Placer::make(view.deref_mut());
-        view.setup();
-        self.view_mut().subviews.push(view);
     }
 
     fn remove_all_subviews(&mut self) {
@@ -228,16 +221,16 @@ pub trait View: Boxed + Debug {
     }
 }
 
-pub trait ViewSetters {
+pub trait ViewTemplates {
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_color(&mut self, color: Color) -> &mut Self;
     fn add_view<V: 'static + View>(&mut self) -> Rglica<V>;
     fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V>;
-    fn add_boxed<V: 'static + View>(&mut self, view: Box<V>) -> Rglica<V>;
+    fn add_boxed(&mut self, view: Box<dyn View>);
     fn alert(&mut self, message: impl ToString);
 }
 
-impl<T: ?Sized + View> ViewSetters for T {
+impl<T: ?Sized + View> ViewTemplates for T {
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self {
         self.view_mut().frame = rect.into();
         self
@@ -251,7 +244,7 @@ impl<T: ?Sized + View> ViewSetters for T {
     fn add_view<V: 'static + View>(&mut self) -> Rglica<V> {
         let view = V::boxed();
         let result = view.to_rglica();
-        self.add_subview(view);
+        self.add_boxed(view);
         result
     }
 
@@ -259,19 +252,19 @@ impl<T: ?Sized + View> ViewSetters for T {
         let mut view = V::boxed();
         view.set_frame(frame.into());
         let result = view.to_rglica();
-        self.add_subview(view);
+        self.add_boxed(view);
         result
     }
 
-    fn add_boxed<V: 'static + View>(&mut self, view: Box<V>) -> Rglica<V> {
+    fn add_boxed(&mut self, mut view: Box<dyn View>) {
         let result = view.to_rglica();
-        self.add_subview(view);
-        result
+        view.view_mut().superview = self.view().to_rglica();
+        view.view_mut().placer = Placer::make(result);
+        view.setup();
+        self.view_mut().subviews.push(view);
     }
 
     fn alert(&mut self, message: impl ToString) {
-        let mut alert = Alert::boxed();
-        alert.set_message(message);
-        self.root_view().add_subview(alert);
+        self.root_view().add_view::<Alert>().set_message(message);
     }
 }

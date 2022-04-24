@@ -1,7 +1,7 @@
 use rtools::Rglica;
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, placer::place_vertically, view_base::ViewBase, View, ViewSetters,
+    basic::Button, complex::LabeledView, placer::place_vertically, view_base::ViewBase, View, ViewTemplates,
 };
 
 #[derive(Default, Debug)]

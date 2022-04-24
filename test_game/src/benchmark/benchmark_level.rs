@@ -1,6 +1,6 @@
 use test_engine::{
     rtools::{data_manager::DataManager, Animation, Rglica, ToRglica},
-    sprites::{add_sprite, Player, SpriteSetters, Wall},
+    sprites::{LevelTemplates, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
 };
 
@@ -21,13 +21,13 @@ impl BenchmarkLevel {
     fn make_walls(&mut self) {
         let square = Image::get("square.png");
 
-        self.floor = add_sprite((100, 10), (0, 0), self);
+        self.floor = self.add_sprite((100, 10), (0, 0));
         self.floor.set_image(square);
 
-        self.left_wall = add_sprite((10, 200), (-40, 0), self);
+        self.left_wall = self.add_sprite((10, 200), (-40, 0));
         self.left_wall.set_image(square);
 
-        self.right_wall = add_sprite((10, 200), (40, 0), self);
+        self.right_wall = self.add_sprite((10, 200), (40, 0));
         self.right_wall.set_image(square);
 
         self.left_animation = Animation::new(-60, -55, 10);
@@ -38,7 +38,7 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        self.player = add_sprite((2, 2), (0, 5), self);
+        self.player = self.add_sprite((2, 2), (0, 5));
 
         self.player.set_image(Image::get("frisk.png"));
 

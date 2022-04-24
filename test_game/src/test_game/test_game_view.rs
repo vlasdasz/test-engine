@@ -13,7 +13,7 @@ use test_engine::{
         placer::Anchor,
         test::test_view::TestView,
         view_base::ViewBase,
-        DPadView, View, ViewSetters,
+        DPadView, View, ViewTemplates,
     },
     ui_layer::UILayer,
     Image, Level,

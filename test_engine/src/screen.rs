@@ -10,7 +10,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{ToRglica, Unwrap};
 use sprites::SpritesDrawer;
-use ui::ViewSetters;
+use ui::ViewTemplates;
 
 use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 

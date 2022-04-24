@@ -107,7 +107,7 @@ pub trait Sprite: Debug {
         Self: Sized;
 }
 
-pub trait SpriteSetters {
+pub trait SpriteTemplates {
     fn set_color(&mut self, color: Color) -> &mut Self;
     fn set_selected(&mut self, selected: bool) -> &mut Self;
     fn set_image(&mut self, image: Handle<Image>) -> &mut Self;
@@ -116,7 +116,7 @@ pub trait SpriteSetters {
     fn set_rotation(&mut self, rotation: f32) -> &mut Self;
 }
 
-impl<T: ?Sized + Sprite> SpriteSetters for T {
+impl<T: ?Sized + Sprite> SpriteTemplates for T {
     fn set_color(&mut self, color: Color) -> &mut Self {
         self.data_mut().color = color;
         self

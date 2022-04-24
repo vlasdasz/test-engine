@@ -3,7 +3,7 @@ use std::ops::AddAssign;
 use gl_image::Image;
 use rtools::{data_manager::Handle, Event, Rglica};
 
-use crate::{basic::Button, view::ViewSetters, view_base::ViewBase, Label, View};
+use crate::{basic::Button, view::ViewTemplates, view_base::ViewBase, Label, View};
 
 #[derive(Default, Debug)]
 pub struct IntView {

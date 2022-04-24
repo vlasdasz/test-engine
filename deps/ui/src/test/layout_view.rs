@@ -1,6 +1,6 @@
-use rtools::{Boxed, Rglica, ToRglica};
+use rtools::Rglica;
 
-use crate::{placer::Anchor, view::ViewSetters, view_base::ViewBase, Font, ImageView, View};
+use crate::{placer::Anchor, view::ViewTemplates, view_base::ViewBase, Font, ImageView, View};
 
 #[derive(Default, Debug)]
 pub struct LayoutView {
@@ -16,12 +16,11 @@ impl View for LayoutView {
         for i in 1..=12 {
             let str: String = format!("{:X}", i);
             let ch = str.chars().last().unwrap();
-            let mut view = ImageView::boxed();
+            let mut view = self.add_view::<ImageView>();
             let image = font.glyph_for_char(ch).image;
             view.set_image(image);
             view.frame_mut().size = (10, 10).into();
-            self.satellites.push(view.to_rglica());
-            self.add_subview(view);
+            self.satellites.push(view);
         }
 
         self.central = self.add_view();

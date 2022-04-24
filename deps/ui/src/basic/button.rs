@@ -1,7 +1,7 @@
 use gl_image::Image;
 use rtools::{data_manager::Handle, Event, Rglica};
 
-use crate::{view::ViewSetters, view_base::ViewBase, Label, Touch, View};
+use crate::{view::ViewTemplates, view_base::ViewBase, Label, Touch, View};
 
 #[derive(Default, Debug)]
 pub struct Button {

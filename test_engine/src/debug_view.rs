@@ -1,5 +1,5 @@
 use rtools::{platform::Platform, Property, Rglica};
-use ui::{view_base::ViewBase, Label, View, ViewSetters};
+use ui::{view_base::ViewBase, Label, View, ViewTemplates};
 
 #[derive(Default, Debug)]
 pub struct DebugView {

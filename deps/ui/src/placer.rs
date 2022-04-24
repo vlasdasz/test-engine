@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use gm::flat::Rect;
 use rtools::{math::IntoF32, Rglica, ToRglica};
 
-use crate::{view::ViewSetters, View};
+use crate::{view::ViewTemplates, View};
 
 pub enum Anchor {
     Top,
@@ -32,10 +32,10 @@ pub struct Placer {
 }
 
 impl Placer {
-    pub fn make(view: &mut (dyn View + 'static)) -> Self {
+    pub fn make(view: Rglica<dyn View>) -> Self {
         Self {
-            view:    view.to_rglica(),
-            frame:   view.frame().to_rglica(),
+            view,
+            frame: view.frame().to_rglica(),
             s_frame: view.super_frame().to_rglica(),
         }
     }

@@ -1,6 +1,6 @@
 use std::{fmt::Debug, marker::PhantomData};
 
-use crate::{complex::table_view_cell::TableViewData, view_base::ViewBase, View};
+use crate::{complex::table_view_cell::TableViewData, view::ViewTemplates, view_base::ViewBase, View};
 
 #[derive(Default, Debug)]
 pub struct TableView<T: TableViewData> {
@@ -12,7 +12,7 @@ impl<T: Debug + Default + TableViewData> TableView<T> {
     pub fn set_data(&mut self, data: Vec<T>) {
         self.remove_all_subviews();
         for data in data {
-            self.add_subview(data.make_cell());
+            self.add_boxed(data.make_cell());
         }
     }
 }

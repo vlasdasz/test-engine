@@ -9,7 +9,7 @@ use rtools::{platform::Platform, Boxed, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 #[cfg(desktop)]
 use ui::input::touch::{ButtonState, TouchEvent};
-use ui::{view_base::ViewBase, Touch, View, ViewSetters};
+use ui::{view_base::ViewBase, Touch, View, ViewTemplates};
 
 use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
 
@@ -76,7 +76,7 @@ impl UILayer {
         self.view = view.to_rglica();
         let ui = self.to_rglica();
         self.view.set_ui(ui);
-        self.root_view.add_subview(view);
+        self.root_view.add_boxed(view);
     }
 
     pub fn set_scale(&mut self, scale: f32) {

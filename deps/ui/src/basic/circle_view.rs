@@ -1,7 +1,7 @@
 use gm::{flat::PointsPath, Color};
 use rtools::{Boxed, Rglica};
 
-use crate::{complex::DrawingView, view::ViewSetters, view_base::ViewBase, View};
+use crate::{complex::DrawingView, view::ViewTemplates, view_base::ViewBase, View};
 
 #[derive(Debug)]
 pub struct CircleView {

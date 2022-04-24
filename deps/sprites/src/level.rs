@@ -5,10 +5,7 @@ use std::{
 };
 
 use gm::{flat::Point, volume::GyroData};
-use rapier2d::{
-    na::Vector2,
-    prelude::{ColliderSet, RigidBodySet},
-};
+use rapier2d::prelude::{ColliderSet, RigidBodySet};
 use rtools::{Rglica, ToRglica};
 
 use crate::{LevelBase, Sprite, SpritesDrawer};
@@ -74,10 +71,6 @@ pub trait Level: Debug {
         (gravity[0], gravity[1]).into()
     }
 
-    fn set_gravity(&mut self, g: Point) {
-        self.base_mut().gravity = Vector2::new(g.x, g.y)
-    }
-
     fn sprites(&self) -> &[Box<dyn Sprite>] {
         &self.base().sprites
     }
@@ -100,10 +93,6 @@ pub trait Level: Debug {
 
     fn colliders_mut(&mut self) -> &mut ColliderSet {
         &mut self.base_mut().sets.collider
-    }
-
-    fn add_sprite(&mut self, sprite: Box<dyn Sprite>) {
-        self.base_mut().sprites.push(sprite);
     }
 
     fn set_camera_position(&mut self, pos: Point) {

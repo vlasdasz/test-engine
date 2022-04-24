@@ -151,13 +151,25 @@ impl Debug for LevelBase {
     }
 }
 
-pub fn add_sprite<T: 'static + Sprite>(
-    shape: impl Into<Shape>,
-    position: impl Into<Point>,
-    level: &mut dyn Level,
-) -> Rglica<T> {
-    let sprite = T::make(shape.into(), position.into(), level.rglica());
-    let result = sprite.to_rglica();
-    level.add_sprite(sprite);
-    result
+pub trait LevelTemplates {
+    fn add_sprite<S: 'static + Sprite>(&mut self, _: impl Into<Shape>, _: impl Into<Point>) -> Rglica<S>;
+    fn set_gravity(&mut self, g: impl Into<Point>);
+}
+
+impl<T: ?Sized + Level> LevelTemplates for T {
+    fn add_sprite<S: 'static + Sprite>(
+        &mut self,
+        shape: impl Into<Shape>,
+        position: impl Into<Point>,
+    ) -> Rglica<S> {
+        let sprite = S::make(shape.into(), position.into(), self.rglica());
+        let result = sprite.to_rglica();
+        self.base_mut().sprites.push(sprite);
+        result
+    }
+
+    fn set_gravity(&mut self, g: impl Into<Point>) {
+        let g = g.into();
+        self.base_mut().gravity = Vector2::new(g.x, g.y)
+    }
 }

@@ -2,9 +2,9 @@ use gm::{
     flat::{Point, PointsPath},
     Color,
 };
-use rtools::{rglica::ToRglica, Boxed, Event, Rglica};
+use rtools::{Event, Rglica};
 
-use crate::{complex::DrawingView, view::ViewSetters, view_base::ViewBase, Touch, View};
+use crate::{complex::DrawingView, view::ViewTemplates, view_base::ViewBase, Touch, View};
 
 const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
@@ -42,10 +42,8 @@ impl View for AnalogStickView {
 
         self.enable_touch();
 
-        let background = DrawingView::boxed();
-        self.background = background.to_rglica();
-
-        self.background.frame_mut().size = (SIZE, SIZE).into();
+        self.background = self.add_view();
+        self.background.set_frame((SIZE, SIZE));
 
         let frame = *self.frame();
         self.background.add_path(
@@ -58,9 +56,8 @@ impl View for AnalogStickView {
             Color::WHITE,
         );
 
-        self.add_subview(background);
-
-        let mut direction_stick = DrawingView::boxed();
+        self.direction_stick = self.add_view();
+        let mut direction_stick = self.direction_stick;
 
         direction_stick.set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE));
 
@@ -77,10 +74,6 @@ impl View for AnalogStickView {
             PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
             Color::LIGHT_GRAY,
         );
-
-        self.direction_stick = direction_stick.to_rglica();
-
-        self.add_subview(direction_stick);
     }
 
     fn on_touch(&mut self, touch: &Touch) {
