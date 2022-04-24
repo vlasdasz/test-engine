@@ -3,7 +3,7 @@ use rtools::{math::clamped_by, Event, Rglica, ToRglica};
 
 use crate::{
     basic::CircleView,
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewTouch,
 };
 

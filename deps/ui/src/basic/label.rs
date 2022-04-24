@@ -2,7 +2,7 @@ use derivative::Derivative;
 use rtools::Rglica;
 
 use crate::{
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase,
 };
 

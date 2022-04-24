@@ -2,7 +2,7 @@ use rtools::{Event, IntoF32, Rglica};
 
 use crate::{
     complex::Slider,
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase,
 };
 

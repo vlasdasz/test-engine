@@ -2,7 +2,7 @@ use std::{fmt::Debug, marker::PhantomData};
 
 use crate::{
     complex::table_view_cell::TableViewData,
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewFrame, ViewSubviews},
     View, ViewBase,
 };
 

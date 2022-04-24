@@ -7,7 +7,8 @@ use rtools::{data_manager::Handle, Event, IntoF32, Rglica};
 
 use crate::{
     basic::Placer,
-    view::{ViewFrame, ViewTemplates},
+    complex::PathData,
+    view::{ViewData, ViewFrame},
     Touch, View,
 };
 
@@ -36,6 +37,8 @@ pub struct ViewBase {
     pub(crate) placer: Placer,
 
     pub(crate) image: Handle<Image>,
+
+    pub(crate) paths: Vec<PathData>,
 }
 
 impl ViewBase {

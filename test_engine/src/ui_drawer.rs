@@ -8,7 +8,7 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use ui::{complex::PathData, View};
+use ui::{complex::PathData, View, ViewData, ViewFrame, ViewSubviews};
 
 use crate::assets::Assets;
 
@@ -75,10 +75,8 @@ impl UIDrawer {
 
         self.draw_rect(view.absolute_frame(), Color::TURQUOISE);
 
-        if let Some(paths) = view.paths() {
-            for path in paths {
-                self.draw_path_in_rect(path, view.absolute_frame());
-            }
+        for path in view.paths() {
+            self.draw_path_in_rect(path, view.absolute_frame());
         }
 
         for view in view.subviews_mut() {

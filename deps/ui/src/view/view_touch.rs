@@ -1,6 +1,9 @@
 use rtools::Event;
 
-use crate::{view::view_touch_internal::ViewTouchInternal, Touch, View};
+use crate::{
+    view::{view_touch_internal::ViewTouchInternal, ViewFrame, ViewSubviews},
+    Touch, View,
+};
 
 pub trait ViewTouch {
     fn on_touch(&self) -> &Event<Touch>;

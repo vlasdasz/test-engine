@@ -1,7 +1,7 @@
 use test_engine::{
     game_view::GameView,
     rtools::{Boxed, Rglica},
-    ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewFrame, ViewTemplates},
+    ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewFrame, ViewSubviews},
     ui_layer::UILayer,
     Level,
 };

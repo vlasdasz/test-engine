@@ -1,7 +1,7 @@
 use rtools::{Boxed, Rglica};
 
 use crate::{
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase,
 };
 

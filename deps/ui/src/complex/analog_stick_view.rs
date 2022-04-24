@@ -6,7 +6,7 @@ use rtools::{Event, Rglica};
 
 use crate::{
     complex::DrawingView,
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewTouch,
 };
 

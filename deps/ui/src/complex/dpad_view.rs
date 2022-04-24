@@ -4,7 +4,7 @@ use rtools::{data_manager::Handle, Event, Rglica};
 
 use crate::{
     basic::Button,
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewData, ViewFrame, ViewSubviews},
     View, ViewBase,
 };
 

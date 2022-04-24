@@ -4,7 +4,7 @@ use rtools::Rglica;
 use crate::{
     basic::Button,
     placer::Anchor,
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewData, ViewFrame, ViewSubviews},
     Label, View, ViewBase,
 };
 

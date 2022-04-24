@@ -12,7 +12,7 @@ use test_engine::{
         complex::{AnalogStickView, LabeledSlider},
         placer::Anchor,
         test::test_view::TestView,
-        DPadView, View, ViewBase, ViewFrame, ViewTemplates,
+        DPadView, View, ViewBase, ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,

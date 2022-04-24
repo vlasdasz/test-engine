@@ -1,7 +1,7 @@
 use rtools::{Event, Rglica};
 
 use crate::{
-    view::{ViewFrame, ViewTemplates},
+    view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase, ViewTouch,
 };
 
