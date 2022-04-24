@@ -28,13 +28,13 @@ impl View for IntView {
         self.up = self.add_view();
         self.down = self.add_view();
 
-        self.up.on_tap.set(self, move |_, this| {
+        self.up.on_tap.set(self, |_, this| {
             this.value.add_assign(1);
             let val = this.value;
             this.on_change.trigger(val);
         });
 
-        self.down.on_tap.set(self, move |_, this| {
+        self.down.on_tap.set(self, |_, this| {
             this.value.add_assign(-1);
             let val = this.value;
             this.on_change.trigger(val);

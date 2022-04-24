@@ -44,21 +44,21 @@ impl View for DPadView {
 
         self.up
             .on_tap
-            .set(self, move |_, this| this.on_press.trigger(Direction::Up));
+            .set(self, |_, this| this.on_press.trigger(Direction::Up));
 
         error!("on_tap: OK");
 
         self.down
             .on_tap
-            .set(self, move |_, this| this.on_press.trigger(Direction::Down));
+            .set(self, |_, this| this.on_press.trigger(Direction::Down));
 
         self.left
             .on_tap
-            .set(self, move |_, this| this.on_press.trigger(Direction::Left));
+            .set(self, |_, this| this.on_press.trigger(Direction::Left));
 
         self.right
             .on_tap
-            .set(self, move |_, this| this.on_press.trigger(Direction::Right));
+            .set(self, |_, this| this.on_press.trigger(Direction::Right));
     }
 
     fn layout(&mut self) {

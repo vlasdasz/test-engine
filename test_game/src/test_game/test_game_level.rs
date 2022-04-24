@@ -60,13 +60,13 @@ impl Level for TestGameLevel {
             .set_image(Image::get("frisk.png"))
             .enable_collision_detection();
         self.player.weapon.set_image(Image::get("ak.png"));
-        self.player.on_collision.set(self, move |_, this| {
+        self.player.on_collision.set(self, |_, this| {
             this.collision_sound.play();
         });
 
         self.collision_sound = Sound::get("pek.wav");
 
-        self.base.on_tap.set(self, move |pos, this| this.on_touch(pos));
+        self.base.on_tap.set(self, |pos, this| this.on_touch(pos));
     }
 
     fn update(&mut self) {

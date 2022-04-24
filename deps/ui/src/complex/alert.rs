@@ -32,7 +32,7 @@ impl View for Alert {
         // let this = self.to_rglica();
         //  self.ok_button
         //      .on_tap
-        //      .subscribe_with(self.to_rglica().clone(), move |_, this|
+        //      .subscribe_with(self.to_rglica().clone(), |_, this|
         // this.remove_from_superview());
     }
 

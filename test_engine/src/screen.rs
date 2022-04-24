@@ -36,11 +36,11 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        self.events.on_size_changed.set(self, move |size, this| {
+        self.events.on_size_changed.set(self, |size, this| {
             this.on_size_changed(size);
         });
 
-        self.events.on_frame_drawn.set(self, move |_, this| this.update());
+        self.events.on_frame_drawn.set(self, |_, this| this.update());
     }
 
     fn init(&mut self, _size: Size) {

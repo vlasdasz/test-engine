@@ -51,7 +51,7 @@ impl View for TestView {
         self.label.set_text("Hello label!");
 
         self.button = self.add_view();
-        self.button.on_tap.set(self, move |_, this| {
+        self.button.on_tap.set(self, |_, this| {
             let val = this.label_value;
             this.label.set_text(format!("Hello label! {}", val));
             this.label_value += 1;

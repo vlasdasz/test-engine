@@ -35,7 +35,7 @@ impl View for LabeledSlider {
         self.label = self.add_view_with_frame(frames[0]);
         self.slider = self.add_view_with_frame(frames[1]);
 
-        self.slider.on_change.set(self, move |a, s| s.on_change(a));
+        self.slider.on_change.set(self, |a, s| s.on_change(a));
     }
 
     fn layout(&mut self) {

@@ -45,27 +45,25 @@ impl TestGameView {
     fn setup_level(&mut self) {
         self.level.setup();
 
-        self.dpad.on_press.set(&self.level.player, move |dir, player| {
-            player.move_by_direction(dir)
-        });
+        self.dpad
+            .on_press
+            .set(&self.level.player, |dir, player| player.move_by_direction(dir));
 
-        self.left_stick
-            .on_change
-            .set(&self.level.player, move |dir, player| {
-                player.add_impulse(dir);
-            });
+        self.left_stick.on_change.set(&self.level.player, |dir, player| {
+            player.add_impulse(dir);
+        });
     }
 
     fn setup_sliders(&mut self) {
         self.game_scale_slider = self.add_view_with_frame((50, 280));
         self.game_scale_slider.set_start(0.5).set_finish(10);
-        self.game_scale_slider.on_change.set(self, move |scale, this| {
+        self.game_scale_slider.on_change.set(self, |scale, this| {
             this.level_mut().drawer_mut().set_scale(scale);
         });
 
         self.ui_scale_slider = self.add_view_with_frame((50, 280));
         self.ui_scale_slider.set_start(0.2).set_finish(4);
-        self.ui_scale_slider.on_change.set(self, move |scale, this| {
+        self.ui_scale_slider.on_change.set(self, |scale, this| {
             this.ui.set_scale(scale);
         });
     }
@@ -78,7 +76,7 @@ impl TestGameView {
         self.level
             .base()
             .on_sprite_selected
-            .set(self, move |sprite, this| this.sprite_view.set_sprite(sprite));
+            .set(self, |sprite, this| this.sprite_view.set_sprite(sprite));
 
         self.dpad = self.add_view();
         self.dpad.set_frame((200, 150)).set_images(
@@ -100,13 +98,13 @@ impl TestGameView {
 
         self.to_benchmark = self.add_view();
         self.to_benchmark.set_text("Benchmark").set_frame((120, 20));
-        self.to_benchmark.on_tap.set(self, move |_, this| {
+        self.to_benchmark.on_tap.set(self, |_, this| {
             this.ui.set_view(BenchmarkView::boxed());
         });
 
         self.play = self.add_view();
         self.play.set_text("Play sound").set_frame((120, 20));
-        self.play.on_tap.set(self, move |_, this| this.sound.play());
+        self.play.on_tap.set(self, |_, this| this.sound.play());
 
         self.sound = Sound::get("retro.wav");
     }

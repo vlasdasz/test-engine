@@ -39,7 +39,7 @@ impl SpriteView {
 
         self.delete_button.set_frame((20, 20));
 
-        self.delete_button.on_tap.set(self, move |_, this| {
+        self.delete_button.on_tap.set(self, |_, this| {
             if this.sprite.is_ok() {
                 this.sprite.remove();
                 this.set_sprite(Rglica::default());

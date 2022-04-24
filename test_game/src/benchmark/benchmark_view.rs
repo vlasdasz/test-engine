@@ -26,7 +26,7 @@ impl View for BenchmarkView {
         self.to_test = self.add_view();
         self.to_test.set_text("Test");
         self.to_test.frame_mut().size = (120, 20).into();
-        self.to_test.on_tap.set(self, move |_, this| {
+        self.to_test.on_tap.set(self, |_, this| {
             this.ui.set_view(TestGameView::boxed());
         });
 

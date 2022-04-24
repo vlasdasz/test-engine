@@ -131,14 +131,14 @@ impl UILayer {
     pub fn setup_events(&mut self) {
         self.events
             .on_key_pressed
-            .set(self, move |a, this| this.on_key_pressed(a.0, a.1));
+            .set(self, |a, this| this.on_key_pressed(a.0, a.1));
 
         self.events
             .on_mouse_click
-            .set(self, move |a, this| this.on_mouse_click(a.0, a.1));
+            .set(self, |a, this| this.on_mouse_click(a.0, a.1));
 
         self.events
             .on_cursor_moved
-            .set(self, move |a, this| this.on_cursor_moved(a))
+            .set(self, |a, this| this.on_cursor_moved(a))
     }
 }

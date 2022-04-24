@@ -25,7 +25,7 @@ impl View for DebugView {
             self.frame_mut().origin.y = 28.0;
         }
 
-        self.fps.on_set.set(self, move |_, this| {
+        self.fps.on_set.set(self, |_, this| {
             let fps = this.fps.copy();
             this.fps_label.set_text(format!("FPS: {}", fps));
         });
