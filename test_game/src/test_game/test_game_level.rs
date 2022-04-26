@@ -76,7 +76,7 @@ impl Level for TestGameLevel {
         self.set_camera_position(pos);
     }
 
-    fn on_key_pressed(&mut self, key: String) {
+    fn on_key_pressed(&mut self, key: &str) {
         self.player.move_by_key(key)
     }
 

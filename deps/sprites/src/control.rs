@@ -7,8 +7,8 @@ pub trait Control {
     fn go_down(&mut self);
     fn add_impulse(&mut self, impulse: Point);
 
-    fn move_by_key(&mut self, key: String) {
-        match key.as_ref() {
+    fn move_by_key(&mut self, key: &str) {
+        match key {
             "a" => self.go_left(),
             "d" => self.go_right(),
             "w" | " " => self.jump(),

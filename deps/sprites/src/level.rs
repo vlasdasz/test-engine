@@ -15,7 +15,7 @@ pub trait Level: Debug {
 
     fn update(&mut self) {}
 
-    fn on_key_pressed(&mut self, _: String) {}
+    fn on_key_pressed(&mut self, _: &str) {}
 
     fn on_gyro_changed(&mut self, _: GyroData) {}
 
@@ -60,6 +60,11 @@ pub trait Level: Debug {
 
     fn scale(&self) -> f32 {
         self.drawer().scale()
+    }
+
+    fn multiply_scale(&mut self, mul: f32) {
+        let scale = self.scale() * mul;
+        self.set_scale(scale);
     }
 
     fn set_scale(&mut self, scale: f32) {

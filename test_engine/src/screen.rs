@@ -43,7 +43,7 @@ impl Screen {
         self.events.on_frame_drawn.set(self, |_, this| this.update());
     }
 
-    fn init(&mut self, _size: Size) {
+    fn init(mut self, _size: Size) -> Self {
         #[cfg(desktop)]
         {
             let m = self.glfw.monitors.first().unwrap().clone();
@@ -60,6 +60,8 @@ impl Screen {
             let size = Screen::adjust_size(self.monitor.clone(), _size);
             self.set_size(size);
         }
+
+        self
     }
 
     #[cfg(not(any(mobile, macos)))]
@@ -177,7 +179,7 @@ impl Screen {
             let ui = UILayer::new(assets, sprites_drawer.to_rglica());
         }};
 
-        let mut screen = Self {
+        Self {
             ui,
             #[cfg(desktop)]
             events,
@@ -185,10 +187,7 @@ impl Screen {
             glfw,
             sprites_drawer,
             monitor: Default::default(),
-        };
-
-        screen.init(size);
-
-        screen
+        }
+        .init(size)
     }
 }

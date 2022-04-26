@@ -20,6 +20,7 @@ pub mod app;
 pub mod assets;
 pub mod debug_view;
 pub mod game_view;
+mod keymap;
 pub mod paths;
 pub mod screen;
 pub mod sprite_view;
@@ -28,6 +29,7 @@ mod ui_drawer;
 pub mod ui_layer;
 
 pub use gl_image::Image;
+pub use keymap::*;
 pub use sprites::{Level, LevelBase, Sprite};
 
 #[cfg(mobile)]

@@ -58,14 +58,6 @@ impl Level for BenchmarkLevel {
         self.right_wall.set_x(self.right_animation.value());
     }
 
-    fn on_key_pressed(&mut self, key: String) {
-        if key == "-" {
-            self.set_scale(self.scale() / 2.0);
-        } else if key == "=" {
-            self.set_scale(self.scale() * 2.0);
-        }
-    }
-
     fn base(&self) -> &LevelBase {
         &self.base
     }

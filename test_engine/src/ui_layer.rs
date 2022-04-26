@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{ops::Deref, rc::Rc};
 
 #[cfg(desktop)]
 use gl_wrapper::events::Events;
@@ -11,7 +11,7 @@ use sprites::SpritesDrawer;
 use ui::input::touch::{ButtonState, TouchEvent};
 use ui::{Touch, View, ViewBase, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer};
+use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer, Keymap};
 
 pub struct UILayer {
     pub ui_cursor_position: Point,
@@ -22,6 +22,7 @@ pub struct UILayer {
 
     pub sprites_drawer: Rglica<dyn SpritesDrawer>,
 
+    pub keymap: Rc<Keymap>,
     pub drawer: UIDrawer,
 
     #[cfg(desktop)]
@@ -43,6 +44,7 @@ impl UILayer {
             debug_view: Default::default(),
             view: Default::default(),
             sprites_drawer,
+            keymap: Default::default(),
             drawer: UIDrawer::new(assets),
             #[cfg(desktop)]
             events: Default::default(),
@@ -51,6 +53,21 @@ impl UILayer {
             frame_time: Default::default(),
             scale: 1.0,
         })
+        .setup_keymap()
+    }
+}
+
+impl UILayer {
+    fn setup_keymap(self: Box<Self>) -> Box<Self> {
+        self.keymap.add("-", self.deref(), |this| {
+            this.view.level_mut().multiply_scale(0.8)
+        });
+
+        self.keymap.add("=", self.deref(), |this| {
+            this.view.level_mut().multiply_scale(1.2);
+        });
+
+        self
     }
 }
 
@@ -115,17 +132,18 @@ impl UILayer {
             return;
         }
 
-        self.view
-            .level_mut()
-            .on_key_pressed(key.get_name().unwrap_or_else({
-                || {
-                    match key {
-                        Key::Space => " ",
-                        _ => "unknown",
-                    }
-                    .into()
+        let key = key.get_name().unwrap_or_else({
+            || {
+                match key {
+                    Key::Space => " ",
+                    _ => "unknown",
                 }
-            }))
+                .into()
+            }
+        });
+
+        self.keymap.check(&key);
+        self.view.level_mut().on_key_pressed(&key);
     }
 
     pub fn setup_events(&mut self) {
