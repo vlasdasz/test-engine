@@ -6,7 +6,7 @@ use gl_wrapper::events::Events;
 use glfw::{Action, Key};
 use gm::flat::Point;
 use rtools::{platform::Platform, Boxed, Rglica, ToRglica};
-use sprites::SpritesDrawer;
+use sprites::{Control, Level, Player, SpritesDrawer};
 #[cfg(desktop)]
 use ui::input::touch::{ButtonState, TouchEvent};
 use ui::{Touch, View, ViewBase, ViewFrame, ViewSubviews, ViewTouch};
@@ -58,14 +58,25 @@ impl UILayer {
 }
 
 impl UILayer {
-    fn setup_keymap(self: Box<Self>) -> Box<Self> {
-        self.keymap.add("-", self.deref(), |this| {
-            this.view.level_mut().multiply_scale(0.8)
-        });
+    fn level(&self) -> Rglica<dyn Level> {
+        self.view.level().rglica()
+    }
 
-        self.keymap.add("=", self.deref(), |this| {
-            this.view.level_mut().multiply_scale(1.2);
-        });
+    fn player(&self) -> Rglica<Player> {
+        self.view.player()
+    }
+
+    fn setup_keymap(self: Box<Self>) -> Box<Self> {
+        let s = self.deref();
+
+        self.keymap.add("-", s, |s| s.level().multiply_scale(0.8));
+        self.keymap.add("=", s, |s| s.level().multiply_scale(1.2));
+
+        self.keymap.add("a", s, |s| s.player().go_left());
+        self.keymap.add("d", s, |s| s.player().go_right());
+        self.keymap.add("s", s, |s| s.player().go_down());
+        self.keymap.add("w", s, |s| s.player().jump());
+        self.keymap.add(" ", s, |s| s.player().jump());
 
         self
     }
@@ -86,13 +97,12 @@ impl UILayer {
     }
 
     pub fn set_view(&mut self, mut view: Box<dyn GameView>) {
-        view.set_sprites_drawer(self.sprites_drawer);
         if self.view.is_ok() {
             self.view.remove_from_superview();
         }
         self.view = view.to_rglica();
-        let ui = self.to_rglica();
-        self.view.set_ui(ui);
+        view.set_ui(self.to_rglica());
+        view.set_sprites_drawer(self.sprites_drawer);
         self.root_view.add_boxed(view);
     }
 

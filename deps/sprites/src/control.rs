@@ -7,16 +7,6 @@ pub trait Control {
     fn go_down(&mut self);
     fn add_impulse(&mut self, impulse: Point);
 
-    fn move_by_key(&mut self, key: &str) {
-        match key {
-            "a" => self.go_left(),
-            "d" => self.go_right(),
-            "w" | " " => self.jump(),
-            "s" => self.go_down(),
-            _ => {}
-        }
-    }
-
     fn move_by_direction(&mut self, direction: Direction) {
         match direction {
             Direction::Up => self.jump(),

@@ -1,6 +1,7 @@
 use test_engine::{
     game_view::GameView,
     rtools::{Boxed, Rglica},
+    sprites::Player,
     ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewFrame, ViewSubviews},
     ui_layer::UILayer,
     Level,
@@ -55,6 +56,10 @@ impl View for BenchmarkView {
 }
 
 impl GameView for BenchmarkView {
+    fn player(&self) -> Rglica<Player> {
+        self.level.player
+    }
+
     fn level(&self) -> &dyn Level {
         &self.level
     }

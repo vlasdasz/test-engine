@@ -1,10 +1,11 @@
 use rtools::Rglica;
-use sprites::{Level, SpritesDrawer};
+use sprites::{Level, Player, SpritesDrawer};
 use ui::{Touch, View};
 
 use crate::ui_layer::UILayer;
 
 pub trait GameView: View {
+    fn player(&self) -> Rglica<Player>;
     fn level(&self) -> &dyn Level;
     fn level_mut(&mut self) -> &mut dyn Level;
     fn set_ui(&mut self, _: Rglica<UILayer>) {}

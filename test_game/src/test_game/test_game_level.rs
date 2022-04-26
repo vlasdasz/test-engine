@@ -5,7 +5,7 @@ use test_engine::{
         data_manager::{DataManager, Handle},
         Rglica, ToRglica,
     },
-    sprites::{Body, Control, LevelCreation, Player, SpriteTemplates, Wall},
+    sprites::{Body, LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase, Sprite,
 };
 
@@ -74,10 +74,6 @@ impl Level for TestGameLevel {
     fn update(&mut self) {
         let pos = self.player.position();
         self.set_camera_position(pos);
-    }
-
-    fn on_key_pressed(&mut self, key: &str) {
-        self.player.move_by_key(key)
     }
 
     fn base(&self) -> &LevelBase {

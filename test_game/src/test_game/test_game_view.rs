@@ -6,7 +6,7 @@ use test_engine::{
         Boxed, Rglica,
     },
     sprite_view::SpriteView,
-    sprites::Control,
+    sprites::{Control, Player},
     ui::{
         basic::Button,
         complex::{AnalogStickView, LabeledSlider},
@@ -170,9 +170,14 @@ impl View for TestGameView {
 }
 
 impl GameView for TestGameView {
+    fn player(&self) -> Rglica<Player> {
+        self.level.player
+    }
+
     fn level(&self) -> &dyn Level {
         &self.level
     }
+
     fn level_mut(&mut self) -> &mut dyn Level {
         &mut self.level
     }
