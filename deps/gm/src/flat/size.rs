@@ -1,5 +1,6 @@
 use std::{
     borrow::Borrow,
+    hash::{Hash, Hasher},
     ops::{Div, Mul},
 };
 
@@ -84,5 +85,12 @@ impl<T: IntoF32> Div<T> for Size {
 impl ToString for Size {
     fn to_string(&self) -> String {
         format!("width: {:.2}, height: {:.2}", self.width, self.height)
+    }
+}
+
+impl Hash for Size {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.width.to_bits().hash(state);
+        self.height.to_bits().hash(state);
     }
 }

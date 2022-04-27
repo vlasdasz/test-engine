@@ -3,12 +3,14 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use gl_wrapper::{image_loader::ImageLoader, GLWrapper};
+use gl_wrapper::{buffers::FrameBuffer, image_loader::ImageLoader, GLWrapper};
 use gm::flat::Size;
 use image::GenericImageView;
 use rtools::{
     data_manager::{DataManager, Handle, LoadFromPath},
     file::File,
+    misc::hash,
+    Time,
 };
 use serde::{Deserialize, Serialize};
 
@@ -59,6 +61,31 @@ impl Image {
 
     pub fn bind(&self) {
         GLWrapper::bind_texture(self.gl_handle)
+    }
+}
+
+impl Image {
+    pub fn draw(size: impl Into<Size>, mut draw: impl FnMut()) -> Handle<Image> {
+        let size = size.into();
+        let buffer = FrameBuffer::from(size);
+
+        buffer.bind();
+
+        draw();
+
+        buffer.unbind();
+
+        Image::add_with_hash(
+            hash(Time::now()),
+            Self {
+                size,
+                channels: 4,
+                flipped: false,
+                flipped_y: false,
+                gl_handle: buffer.texture_handle,
+                path: PathBuf::from("drawn").into(),
+            },
+        )
     }
 }
 

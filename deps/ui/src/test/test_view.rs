@@ -1,5 +1,4 @@
 use gl_image::Image;
-use gl_wrapper::{buffers::FrameBuffer, smorgor, GLWrapper};
 use gm::Color;
 use rtools::{data_manager::Handle, Animation, Rglica, Unwrap};
 
@@ -47,18 +46,6 @@ impl TestView {
 
 impl View for TestView {
     fn setup(&mut self) {
-        let buf = FrameBuffer::from((500, 500));
-
-        buf.bind();
-
-        smorgor();
-
-        buf.unbind();
-
-        GLWrapper::set_clear_color(Color::GRAY);
-
-        dbg!(buf);
-
         self.label = self.add_view();
         self.label.set_text("Hello label!");
 

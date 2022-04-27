@@ -8,8 +8,8 @@ use crate::GLWrapper;
 
 #[derive(Debug)]
 pub struct FrameBuffer {
-    buffer_handle:  u32,
-    texture_handle: u32,
+    buffer_handle:      u32,
+    pub texture_handle: u32,
 }
 
 impl FrameBuffer {
@@ -79,8 +79,6 @@ impl<T: Into<Size>> From<T> for FrameBuffer {
         if GL!(CheckFramebufferStatus, GLC!(FRAMEBUFFER)) != GLC!(FRAMEBUFFER_COMPLETE) {
             panic!("Failed to initialize framebuffer")
         }
-
-        dbg!("ollee olee!");
 
         GL!(BindFramebuffer, GLC!(FRAMEBUFFER), 0);
 

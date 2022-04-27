@@ -1,6 +1,10 @@
 use test_engine::{
     audio::Sound,
-    gm::flat::{Point, Shape},
+    gl_wrapper::GLWrapper,
+    gm::{
+        flat::{Point, Shape},
+        Color,
+    },
     rtools::{
         data_manager::{DataManager, Handle},
         Rglica, ToRglica,
@@ -39,11 +43,21 @@ impl TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        error!("setuo TestGameLevel");
+        error!("setup TestGameLevel");
+
+        let drawn = Image::draw((100, 100), || {
+            GLWrapper::set_clear_color(Color::GREEN);
+            GLWrapper::clear();
+            GLWrapper::scissor((5, 5, 20, 20), || {
+                GLWrapper::set_clear_color(Color::TURQUOISE);
+                GLWrapper::clear();
+            });
+            GLWrapper::set_clear_color(Color::GRAY);
+        });
 
         let square = Image::get("square.png");
 
-        self.add_rect((30, 30, 40, 25)).set_image(square);
+        self.add_rect((30, 30, 40, 25)).set_image(drawn);
 
         self.add_sprite::<Wall>((100, 5), (0, 0)).set_image(square);
         self.add_sprite::<Wall>((5, 100), (60, 0)).set_image(square);

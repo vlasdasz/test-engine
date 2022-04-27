@@ -3,12 +3,11 @@
 use std::{ops::DerefMut, path::Path, rc::Rc};
 
 use cfg_if::cfg_if;
-use chrono::Utc;
 #[cfg(desktop)]
 use gl_wrapper::{events::Events, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{ToRglica, Unwrap};
+use rtools::{Time, ToRglica, Unwrap};
 use sprites::SpritesDrawer;
 use ui::ViewFrame;
 
@@ -77,7 +76,7 @@ impl Screen {
 
 impl Screen {
     fn calculate_fps(&mut self) {
-        let now = Utc::now().timestamp_nanos();
+        let now = Time::now();
 
         let interval = now - self.ui.prev_time;
         self.ui.prev_time = now;

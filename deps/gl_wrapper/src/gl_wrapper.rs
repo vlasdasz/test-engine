@@ -11,7 +11,7 @@ pub struct GLWrapper;
 impl GLWrapper {
     pub fn bind_texture(id: u32) {
         debug_assert!(id != u32::MAX, "Invalid texture handle");
-        GL!(BindTexture, GLC!(TEXTURE_2D), 133);
+        GL!(BindTexture, GLC!(TEXTURE_2D), id);
     }
 
     pub fn set_clear_color(color: impl Borrow<Color>) {
@@ -31,19 +31,44 @@ impl GLWrapper {
         GL!(Disable, GLC!(DEPTH_TEST))
     }
 
-    pub fn set_viewport(window_height: f32, scale: f32, rect: impl Into<Rect>) {
+    pub fn set_ui_viewport(window_height: f32, scale: f32, rect: impl Into<Rect>) {
         let rect = rect.into();
         if rect.size.is_invalid() {
             return;
         }
         let scale = adjust_scale(scale);
+
+        Self::set_viewport((
+            rect.origin.x * scale,
+            (window_height - rect.origin.y - rect.size.height) * scale,
+            rect.size.width * scale,
+            rect.size.height * scale,
+        ));
+    }
+
+    pub fn set_viewport(rect: impl Into<Rect>) {
+        let rect = rect.into();
         GL!(
             Viewport,
-            (rect.origin.x * scale) as i32,
-            ((window_height - rect.origin.y - rect.size.height) * scale) as i32,
-            (rect.size.width * scale) as i32,
-            (rect.size.height * scale) as i32
-        )
+            rect.x() as _,
+            rect.y() as _,
+            rect.width() as _,
+            rect.height() as _
+        );
+    }
+
+    pub fn scissor(rect: impl Into<Rect>, mut draw: impl FnMut()) {
+        let rect = rect.into();
+        GL!(Enable, GLC!(SCISSOR_TEST));
+        GL!(
+            Scissor,
+            rect.x() as _,
+            rect.y() as _,
+            rect.width() as _,
+            rect.height() as _
+        );
+        draw();
+        GL!(Disable, GLC!(SCISSOR_TEST));
     }
 
     pub fn enable_blend() {

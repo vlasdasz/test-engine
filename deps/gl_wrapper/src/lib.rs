@@ -3,7 +3,6 @@
 pub use buffers::{Buffer, BufferConfig};
 use cfg_if::cfg_if;
 pub use gl_info::GLInfo;
-use gm::Color;
 pub use shaders::{Shader, ShaderCompiler};
 
 pub use crate::gl_wrapper::GLWrapper;
@@ -32,19 +31,3 @@ pub mod gl_wrapper;
 pub mod image_loader;
 pub mod monitor;
 pub mod shaders;
-
-pub fn smorgor() {
-    #[cfg(mobile)]
-    use gles31_sys::*;
-
-    GLWrapper::set_clear_color(Color::TURQUOISE);
-
-    GLWrapper::clear();
-
-    GL!(Enable, GLC!(SCISSOR_TEST));
-    GL!(Scissor, 10, 10, 100, 100);
-    GLWrapper::set_clear_color(Color::PURPLE);
-    GLWrapper::clear();
-
-    GL!(Disable, GLC!(SCISSOR_TEST));
-}
