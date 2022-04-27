@@ -65,27 +65,26 @@ impl Image {
 }
 
 impl Image {
-    pub fn draw(size: impl Into<Size>, mut draw: impl FnMut()) -> Handle<Image> {
+    pub fn draw(size: impl Into<Size>, mut draw: impl FnMut(&mut Image)) -> Handle<Image> {
         let size = size.into();
         let buffer = FrameBuffer::from(size);
 
         buffer.bind();
 
-        draw();
+        let mut image = Self {
+            size,
+            channels: 4,
+            flipped: false,
+            flipped_y: false,
+            gl_handle: buffer.texture_handle,
+            path: PathBuf::from("drawn").into(),
+        };
+
+        draw(&mut image);
 
         buffer.unbind();
 
-        Image::add_with_hash(
-            hash(Time::now()),
-            Self {
-                size,
-                channels: 4,
-                flipped: false,
-                flipped_y: false,
-                gl_handle: buffer.texture_handle,
-                path: PathBuf::from("drawn").into(),
-            },
-        )
+        Image::add_with_hash(hash(Time::now()), image)
     }
 }
 

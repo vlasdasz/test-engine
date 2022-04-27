@@ -11,7 +11,7 @@ use sprites::{Control, Level, Player, SpritesDrawer};
 use ui::input::touch::{ButtonState, TouchEvent};
 use ui::{Touch, View, ViewBase, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::UIDrawer, Keymap};
+use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::TEUIDrawer, Keymap};
 
 pub struct UILayer {
     pub ui_cursor_position: Point,
@@ -23,7 +23,7 @@ pub struct UILayer {
     pub sprites_drawer: Rglica<dyn SpritesDrawer>,
 
     pub keymap: Rc<Keymap>,
-    pub drawer: UIDrawer,
+    pub drawer: TEUIDrawer,
 
     #[cfg(desktop)]
     pub events: Rglica<Events>,
@@ -45,7 +45,7 @@ impl UILayer {
             view: Default::default(),
             sprites_drawer,
             keymap: Default::default(),
-            drawer: UIDrawer::new(assets),
+            drawer: TEUIDrawer::new(assets),
             #[cfg(desktop)]
             events: Default::default(),
             fps: Default::default(),

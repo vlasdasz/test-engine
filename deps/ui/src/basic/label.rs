@@ -1,8 +1,8 @@
 use derivative::Derivative;
-use fontdue::layout::{CoordinateSystem, Layout, LayoutSettings, TextStyle};
 use rtools::Rglica;
 
 use crate::{
+    basic::label_layout::LabelLayout,
     view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase,
 };
@@ -15,6 +15,8 @@ pub struct Label {
     text:    String,
     base:    ViewBase,
     content: Rglica<ViewBase>,
+    #[derivative(Debug = "ignore")]
+    layout:  LabelLayout,
 }
 
 impl Label {
@@ -23,7 +25,11 @@ impl Label {
     }
 
     pub fn set_text(&mut self, text: impl ToString) {
-        self.text = text.to_string();
+        let text = text.to_string();
+        if self.text == text {
+            return;
+        }
+        self.text = text;
         self.set_letters();
     }
 
@@ -34,19 +40,17 @@ impl Label {
     fn set_letters(&mut self) {
         self.content.remove_all_subviews();
 
-        let font = &self.font.font;
+        if self.text.is_empty() {
+            return;
+        }
 
-        let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
+        self.layout.set_text(&self.font, &self.text);
 
-        let fonts = &[font];
+        dbg!(self.layout.size());
 
-        layout.reset(&LayoutSettings {
-            ..LayoutSettings::default()
-        });
+        dbg!(self.drawer());
 
-        layout.append(fonts, &TextStyle::new(&self.text, 28.0, 0));
-
-        for glyph in layout.glyphs() {
+        for glyph in self.layout.glyphs() {
             let mut view = self.content.add_view::<ImageView>();
             view.set_frame((glyph.x, glyph.y, glyph.width, glyph.height));
             view.set_image(self.font.glyph_for_char(glyph.parent).image);

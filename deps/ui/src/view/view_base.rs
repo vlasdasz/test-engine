@@ -9,7 +9,7 @@ use crate::{
     basic::Placer,
     complex::PathData,
     view::{ViewData, ViewFrame},
-    Touch, View,
+    Touch, UIDrawer, View,
 };
 
 #[derive(Default, Derivative)]
@@ -39,6 +39,8 @@ pub struct ViewBase {
     pub(crate) image: Handle<Image>,
 
     pub(crate) paths: Vec<PathData>,
+
+    pub(crate) drawer: Rglica<dyn UIDrawer>,
 }
 
 impl ViewBase {

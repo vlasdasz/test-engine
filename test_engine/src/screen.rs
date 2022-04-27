@@ -9,7 +9,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{Time, ToRglica, Unwrap};
 use sprites::SpritesDrawer;
-use ui::ViewFrame;
+use ui::{UIDrawer, ViewData, ViewFrame};
 
 use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 
@@ -53,6 +53,7 @@ impl Screen {
         GLWrapper::set_clear_color(Color::GRAY);
 
         self.ui.root_view.calculate_frames();
+        self.ui.root_view.set_drawer(self.ui.drawer.rglica());
 
         #[cfg(desktop)]
         {

@@ -17,8 +17,10 @@ pub mod input;
 pub mod placer;
 pub mod test;
 pub mod text;
+mod ui_drawer;
 mod view;
 
+pub use ui_drawer::UIDrawer;
 pub use view::*;
 
 #[macro_use]

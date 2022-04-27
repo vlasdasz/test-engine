@@ -8,11 +8,12 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use ui::{complex::PathData, View, ViewData, ViewFrame, ViewSubviews};
+use rtools::{Rglica, ToRglica};
+use ui::{complex::PathData, UIDrawer, View, ViewData, ViewFrame, ViewSubviews};
 
 use crate::assets::Assets;
 
-pub struct UIDrawer {
+pub struct TEUIDrawer {
     pub assets:      Rc<Assets>,
     pub window_size: Size,
 
@@ -20,9 +21,9 @@ pub struct UIDrawer {
     screen_scale: f32,
 }
 
-impl UIDrawer {
-    pub fn new(assets: Rc<Assets>) -> UIDrawer {
-        UIDrawer {
+impl TEUIDrawer {
+    pub fn new(assets: Rc<Assets>) -> TEUIDrawer {
+        TEUIDrawer {
             assets,
             window_size: Default::default(),
             scale: 1.0,
@@ -54,7 +55,7 @@ impl UIDrawer {
     }
 }
 
-impl UIDrawer {
+impl TEUIDrawer {
     pub fn update(&self, view: &mut dyn View) {
         view.update();
         for view in view.subviews_mut() {
@@ -68,15 +69,15 @@ impl UIDrawer {
         }
 
         if let Some(image) = view.image().get() {
-            self.draw_image_in_rect(image, view.absolute_frame(), view.color());
+            self.draw_image(image, view.absolute_frame(), view.color());
         }
 
-        self.fill_rect(view.absolute_frame(), view.color());
+        self.fill(view.absolute_frame(), view.color());
 
-        self.draw_rect(view.absolute_frame(), Color::TURQUOISE);
+        self.outline(view.absolute_frame(), Color::TURQUOISE);
 
         for path in view.paths() {
-            self.draw_path_in_rect(path, view.absolute_frame());
+            self.draw_path(path, view.absolute_frame());
         }
 
         for view in view.subviews_mut() {
@@ -85,7 +86,7 @@ impl UIDrawer {
     }
 }
 
-impl UIDrawer {
+impl TEUIDrawer {
     pub fn reset_viewport(&self) {
         GLWrapper::set_ui_viewport(self.window_size.height, self.screen_scale, self.window_size);
     }
@@ -99,20 +100,20 @@ impl UIDrawer {
     }
 }
 
-impl UIDrawer {
-    fn fill_rect(&self, rect: &Rect, color: Color) {
+impl UIDrawer for TEUIDrawer {
+    fn fill(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable().set_color(color);
         self.assets.buffers.full.draw();
     }
 
-    fn draw_rect(&self, rect: &Rect, color: Color) {
+    fn outline(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable().set_color(color);
         self.assets.buffers.full_outline.draw();
     }
 
-    fn draw_image_in_rect(&self, image: &Image, rect: &Rect, color: Color) {
+    fn draw_image(&self, image: &Image, rect: &Rect, color: Color) {
         // debug_assert!(rect.size.is_valid());
         // debug_assert!(image.is_valid());
 
@@ -126,10 +127,8 @@ impl UIDrawer {
         image.bind();
         self.assets.buffers.full_image.draw();
     }
-}
 
-impl UIDrawer {
-    pub fn draw_path_in_rect(&self, path: &PathData, rect: &Rect) {
+    fn draw_path(&self, path: &PathData, rect: &Rect) {
         debug_assert!(rect.size.is_valid());
         self.set_viewport(rect);
         self.assets
@@ -139,5 +138,9 @@ impl UIDrawer {
             .set_color(path.color)
             .set_size(rect.size);
         path.buffer.draw();
+    }
+
+    fn rglica(&self) -> Rglica<dyn UIDrawer> {
+        (self as &dyn UIDrawer).to_rglica()
     }
 }
