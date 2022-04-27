@@ -31,6 +31,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 #[derive(Clone, Debug)]
 pub struct Font {
     pub path:           PathBuf,
+    pub font:           fontdue::Font,
     pub size:           u32,
     pub height:         f32,
     pub baseline_shift: f32,
@@ -75,6 +76,7 @@ impl Font {
 
         Ok(Font {
             path: path.into(),
+            font,
             size,
             height,
             baseline_shift,

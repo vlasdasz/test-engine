@@ -1,6 +1,6 @@
 use derivative::Derivative;
 use fontdue::layout::{CoordinateSystem, Layout, LayoutSettings, TextStyle};
-use rtools::{file::File, Rglica};
+use rtools::Rglica;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews},
@@ -24,19 +24,17 @@ impl Label {
 
     pub fn set_text(&mut self, text: impl ToString) {
         self.text = text.to_string();
-        self.set_shmetters();
+        self.set_letters();
     }
 
     pub fn clear(&mut self) {
         self.set_text("")
     }
 
-    fn set_shmetters(&mut self) {
+    fn set_letters(&mut self) {
         self.content.remove_all_subviews();
 
-        let data = File::read(&self.font.path);
-
-        let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default()).unwrap();
+        let font = &self.font.font;
 
         let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
 
@@ -59,7 +57,7 @@ impl Label {
 impl View for Label {
     fn setup(&mut self) {
         self.content = self.add_view();
-        self.set_shmetters();
+        self.set_letters();
     }
 
     fn layout(&mut self) {

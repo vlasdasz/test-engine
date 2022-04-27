@@ -51,7 +51,7 @@ impl Screen {
         }
 
         GLWrapper::enable_blend();
-        GLWrapper::set_clear_color(&Color::GRAY);
+        GLWrapper::set_clear_color(Color::GRAY);
 
         self.ui.root_view.calculate_frames();
 

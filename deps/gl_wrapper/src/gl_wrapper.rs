@@ -9,12 +9,13 @@ use gm::{flat::Rect, Color};
 pub struct GLWrapper;
 
 impl GLWrapper {
-    pub fn bind_image(id: u32) {
-        debug_assert!(id != u32::MAX, "Invalid image gl_handle");
-        GL!(BindTexture, GLC!(TEXTURE_2D), id);
+    pub fn bind_texture(id: u32) {
+        debug_assert!(id != u32::MAX, "Invalid texture handle");
+        GL!(BindTexture, GLC!(TEXTURE_2D), 133);
     }
 
-    pub fn set_clear_color(color: &Color) {
+    pub fn set_clear_color(color: impl Borrow<Color>) {
+        let color = color.borrow();
         GL!(ClearColor, color.r, color.g, color.b, color.a)
     }
 
@@ -30,8 +31,8 @@ impl GLWrapper {
         GL!(Disable, GLC!(DEPTH_TEST))
     }
 
-    pub fn set_viewport(window_height: f32, scale: f32, rect: impl Borrow<Rect>) {
-        let rect = rect.borrow();
+    pub fn set_viewport(window_height: f32, scale: f32, rect: impl Into<Rect>) {
+        let rect = rect.into();
         if rect.size.is_invalid() {
             return;
         }

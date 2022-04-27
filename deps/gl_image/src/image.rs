@@ -58,7 +58,7 @@ impl Image {
     }
 
     pub fn bind(&self) {
-        GLWrapper::bind_image(self.gl_handle)
+        GLWrapper::bind_texture(self.gl_handle)
     }
 }
 
