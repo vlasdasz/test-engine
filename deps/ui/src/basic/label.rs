@@ -1,5 +1,6 @@
 use derivative::Derivative;
-use rtools::Rglica;
+use fontdue::layout::{CoordinateSystem, Layout, LayoutSettings, TextStyle};
+use rtools::{file::File, Rglica};
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews},
@@ -23,66 +24,46 @@ impl Label {
 
     pub fn set_text(&mut self, text: impl ToString) {
         self.text = text.to_string();
-        self.set_letters();
+        self.set_shmetters();
     }
 
     pub fn clear(&mut self) {
         self.set_text("")
     }
 
-    fn set_letters(&mut self) {
+    fn set_shmetters(&mut self) {
         self.content.remove_all_subviews();
 
-        if self.text.is_empty() {
-            return;
+        let data = File::read(&self.font.path);
+
+        let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default()).unwrap();
+
+        let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
+
+        let fonts = &[font];
+
+        layout.reset(&LayoutSettings {
+            ..LayoutSettings::default()
+        });
+
+        layout.append(fonts, &TextStyle::new(&self.text, 28.0, 0));
+
+        for glyph in layout.glyphs() {
+            let mut view = self.content.add_view::<ImageView>();
+            view.set_frame((glyph.x, glyph.y, glyph.width, glyph.height));
+            view.set_image(self.font.glyph_for_char(glyph.parent).image);
         }
-
-        let mut last_max_x: f32 = 0.0;
-        let mut advance: f32 = 0.0;
-        let mut content_size = self.base.frame().size;
-
-        content_size.height = self.font.height / 2.0;
-
-        let text = self.text.clone();
-
-        for letter in text.chars() {
-            if letter == ' ' {
-                advance += 10.0;
-                continue;
-            }
-
-            let glyph = self.font.glyph_for_char(letter);
-
-            let mut glyph_view = self.content.add_view::<ImageView>();
-            glyph_view.set_image(glyph.image);
-
-            glyph_view.set_frame((
-                advance, // + glyph.bearing.x,
-                content_size.height - glyph.bearing.y + self.font.baseline_shift,
-                glyph.size.width,
-                glyph.size.height,
-            ));
-
-            last_max_x = glyph_view.frame().max_x();
-
-            advance += glyph.advance as f32;
-
-            // self.content.add_subview(glyph_view);
-        }
-
-        content_size.width = last_max_x;
-
-        self.content.set_frame(content_size);
     }
 }
 
 impl View for Label {
     fn setup(&mut self) {
         self.content = self.add_view();
+        self.set_shmetters();
     }
 
     fn layout(&mut self) {
-        self.content.place().center();
+        self.content.place().as_background()
     }
 
     fn view(&self) -> &ViewBase {

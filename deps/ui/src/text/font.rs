@@ -1,4 +1,8 @@
-use std::{ffi::c_void, ops::Range, path::Path};
+use std::{
+    ffi::c_void,
+    ops::Range,
+    path::{Path, PathBuf},
+};
 
 use gl_image::Image;
 use gm::flat::Size;
@@ -26,6 +30,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 
 #[derive(Clone, Debug)]
 pub struct Font {
+    pub path:           PathBuf,
     pub size:           u32,
     pub height:         f32,
     pub baseline_shift: f32,
@@ -69,6 +74,7 @@ impl Font {
         error!("Font OK");
 
         Ok(Font {
+            path: path.into(),
             size,
             height,
             baseline_shift,
