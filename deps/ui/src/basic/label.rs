@@ -46,10 +46,6 @@ impl Label {
 
         self.layout.set_text(&self.font, &self.text);
 
-        dbg!(self.layout.size());
-
-        dbg!(self.drawer());
-
         for glyph in self.layout.glyphs() {
             let mut view = self.content.add_view::<ImageView>();
             view.set_frame((glyph.x, glyph.y, glyph.width, glyph.height));
