@@ -18,8 +18,12 @@ impl Sprite for Player {
         self.weapon.position = self.unit.position();
         self.weapon.velocity = self.velocity();
 
-        self.image().flipped = cursor.x < self.position().x;
-        self.weapon.image().flipped_y = cursor.x < self.position().x;
+        if self.image.is_ok() {
+            self.image().flipped = cursor.x < self.position().x;
+        }
+        if self.weapon.image.is_ok() {
+            self.weapon.image().flipped_y = cursor.x < self.position().x;
+        }
     }
 
     fn position(&self) -> Point {
