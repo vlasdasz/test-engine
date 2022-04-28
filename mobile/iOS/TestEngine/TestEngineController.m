@@ -53,9 +53,7 @@
 }
 
 - (void)setup {
-    
-    self.preferredFramesPerSecond = 60;
-    
+        
     EAGLContext* context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
     
     if (context == nil) {
