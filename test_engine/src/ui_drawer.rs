@@ -69,7 +69,7 @@ impl TEUIDrawer {
         }
 
         if let Some(image) = view.image().get() {
-            self.draw_image(image, view.absolute_frame(), view.color());
+            self.draw_image(image, view.absolute_frame(), view.color(), false);
         }
 
         self.fill(view.absolute_frame(), view.color());
@@ -87,10 +87,6 @@ impl TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    pub fn reset_viewport(&self) {
-        GLWrapper::set_ui_viewport(self.window_size.height, self.screen_scale, self.window_size);
-    }
-
     fn set_viewport(&self, rect: impl Borrow<Rect>) {
         GLWrapper::set_ui_viewport(
             self.window_size.height,
@@ -101,6 +97,10 @@ impl TEUIDrawer {
 }
 
 impl UIDrawer for TEUIDrawer {
+    fn reset_viewport(&self) {
+        GLWrapper::set_ui_viewport(self.window_size.height, self.screen_scale, self.window_size);
+    }
+
     fn fill(&self, rect: &Rect, color: Color) {
         self.set_viewport(rect);
         self.assets.shaders.ui.enable().set_color(color);
@@ -113,17 +113,23 @@ impl UIDrawer for TEUIDrawer {
         self.assets.buffers.full_outline.draw();
     }
 
-    fn draw_image(&self, image: &Image, rect: &Rect, color: Color) {
+    fn draw_image(&self, image: &Image, rect: &Rect, color: Color, raw_frame: bool) {
         // debug_assert!(rect.size.is_valid());
         // debug_assert!(image.is_valid());
 
         if image.is_monochrome() {
-            self.assets.shaders.ui_monochrome.enable().set_color(color);
+            self.assets.shaders.ui_monochrome.enable().set_color(color)
         } else {
-            self.assets.shaders.ui_texture.enable();
+            self.assets.shaders.ui_texture.enable()
         }
+        .set_flipped(image.flipped)
+        .set_flipped_y(image.flipped_y);
 
-        self.set_viewport(&image.size.fit_in(rect));
+        if raw_frame {
+            GLWrapper::set_viewport(*rect);
+        } else {
+            self.set_viewport(&image.size.fit_in(rect));
+        }
         image.bind();
         self.assets.buffers.full_image.draw();
     }

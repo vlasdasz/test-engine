@@ -10,7 +10,6 @@ use rtools::{
     data_manager::{DataManager, Handle, LoadFromPath},
     file::File,
     misc::hash,
-    Time,
 };
 use serde::{Deserialize, Serialize};
 
@@ -65,7 +64,13 @@ impl Image {
 }
 
 impl Image {
-    pub fn draw(size: impl Into<Size>, mut draw: impl FnMut(&mut Image)) -> Handle<Image> {
+    pub fn draw(name: &str, size: impl Into<Size>, mut draw: impl FnMut(&mut Image)) -> Handle<Image> {
+        let hash = hash(name);
+
+        if let Some(image) = Image::handle_with_hash(hash) {
+            return image;
+        }
+
         let size = size.into();
         let buffer = FrameBuffer::from(size);
 
@@ -84,7 +89,7 @@ impl Image {
 
         buffer.unbind();
 
-        Image::add_with_hash(hash(Time::now()), image)
+        Image::add_with_hash(hash, image)
     }
 }
 

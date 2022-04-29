@@ -23,7 +23,7 @@ impl LabelLayout {
             .append(&[&font.font], &TextStyle::new(text, self.size, 0));
     }
 
-    pub(crate) fn _size(&mut self) -> Size {
+    pub(crate) fn size(&mut self) -> Size {
         let last = self.glyphs().last().unwrap();
         (last.x + last.width as f32, last.y + last.height as f32).into()
     }

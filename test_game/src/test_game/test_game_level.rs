@@ -45,7 +45,7 @@ impl Level for TestGameLevel {
     fn setup(&mut self) {
         error!("setup TestGameLevel");
 
-        let drawn = Image::draw((100, 100), |image| {
+        let drawn = Image::draw("test_draw", (100, 100), |image| {
             GLWrapper::set_clear_color(Color::GREEN);
             GLWrapper::clear();
             GLWrapper::scissor((5, 5, 20, 20), || {
