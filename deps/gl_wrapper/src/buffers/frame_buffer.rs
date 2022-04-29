@@ -29,6 +29,9 @@ impl FrameBuffer {
 impl<T: Into<Size>> From<T> for FrameBuffer {
     fn from(size: T) -> Self {
         let size = size.into();
+
+        debug_assert!(size.is_valid(), "Invalid framebuffer size: {:?}", size);
+
         let mut buffer_handle = u32::MAX;
 
         GL!(GenFramebuffers, 1, &mut buffer_handle);

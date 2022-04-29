@@ -27,7 +27,7 @@ impl Size {
     }
 
     pub fn is_valid(&self) -> bool {
-        self.width > 0.0 || self.height > 0.0
+        self.width > 0.0 && self.height > 0.0
     }
 
     pub fn is_invalid(&self) -> bool {

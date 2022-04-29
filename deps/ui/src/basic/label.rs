@@ -2,7 +2,6 @@ use std::ops::Deref;
 
 use derivative::Derivative;
 use gl_image::Image;
-use gl_wrapper::GLWrapper;
 use gm::Color;
 use rtools::{data_manager::DataManager, Rglica, ToRglica};
 
@@ -59,9 +58,6 @@ impl Label {
 
         let mut this = self.to_rglica();
         let image = Image::draw(&self.text, size, move |image| {
-            //            GLWrapper::set_clear_color(Color::WHITE);
-            GLWrapper::clear();
-
             let mut content = ViewBase::default();
             content.set_frame(size);
             let mut fe = this;
@@ -71,13 +67,20 @@ impl Label {
                 let image = fe.font.glyph_for_char(glyph.parent).image;
                 fe.drawer().draw_image(
                     image.deref(),
-                    &(glyph.x, glyph.y, glyph.width, glyph.height).into(),
-                    Color::BLACK,
+                    &(
+                        glyph.x,
+                        size.height - glyph.y - glyph.height as f32 + 10.0,
+                        glyph.width,
+                        glyph.height,
+                    )
+                        .into(),
+                    Color::WHITE,
                     true,
                 );
             }
+
             image.flipped_y = true;
-            //      GLWrapper::set_clear_color(Color::GRAY);
+            image.channels = 1;
             fe.drawer().reset_viewport();
         });
 

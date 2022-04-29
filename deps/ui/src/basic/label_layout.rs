@@ -45,7 +45,7 @@ impl DerefMut for LabelLayout {
 impl Default for LabelLayout {
     fn default() -> Self {
         Self {
-            size:   24.0,
+            size:   64.0,
             layout: Layout::new(CoordinateSystem::PositiveYDown),
         }
     }
