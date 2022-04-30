@@ -33,13 +33,14 @@ impl View for BenchmarkView {
         });
 
         self.bullets_label = self.add_view();
+        self.bullets_label.set_frame((120, 20));
     }
 
     fn layout(&mut self) {
         self.back.place().bottom_center(20);
         self.bullets_label
             .place()
-            .anchor(self.back, Anchor::Top, Anchor::Center, 20);
+            .anchor(self.back, Anchor::Top, Anchor::Center, 10);
     }
 
     fn update(&mut self) {
