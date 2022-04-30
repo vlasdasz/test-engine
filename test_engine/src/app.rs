@@ -1,7 +1,7 @@
 #![allow(clippy::mismatched_target_os)]
 
+use core::ffi::{c_float, c_int};
 use std::{
-    ffi::{c_float, c_int},
     marker::PhantomData,
     path::{Path, PathBuf},
 };
@@ -15,7 +15,7 @@ use tokio::{
 };
 use ui::{input::touch::TouchEvent, Touch};
 
-use crate::{game_view::GameView, Screen};
+use crate::{main_view::MainView, Screen};
 
 pub struct App<T> {
     pub screen:      Unwrap<Screen>,
@@ -27,7 +27,7 @@ pub struct App<T> {
     _gyro_receiver:  UnboundedReceiver<GyroData>,
 }
 
-impl<T: GameView + 'static> App<T> {
+impl<T: MainView + 'static> App<T> {
     fn create_screen(&mut self, assets_path: &Path, monitor: Monitor) {
         self.runtime.block_on(async {
             let mut screen = Screen::new(assets_path, monitor.resolution);
@@ -122,7 +122,7 @@ impl<T: GameView + 'static> App<T> {
     }
 }
 
-impl<T: GameView> Default for App<T> {
+impl<T: MainView> Default for App<T> {
     fn default() -> Self {
         let (_touch_sender, _touch_receiver) = unbounded_channel::<Touch>();
         let (_gyro_sender, _gyro_receiver) = unbounded_channel::<GyroData>();

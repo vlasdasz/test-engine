@@ -1,5 +1,5 @@
 use test_engine::{
-    game_view::GameView,
+    main_view::{HasLevel, MainView},
     rtools::{Boxed, Rglica},
     sprites::Player,
     ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewFrame, ViewSubviews},
@@ -55,7 +55,13 @@ impl View for BenchmarkView {
     }
 }
 
-impl GameView for BenchmarkView {
+impl MainView for BenchmarkView {
+    fn set_ui(&mut self, ui: Rglica<UILayer>) {
+        self.ui = ui
+    }
+}
+
+impl HasLevel for BenchmarkView {
     fn player(&self) -> Rglica<Player> {
         self.level.player
     }
@@ -66,9 +72,5 @@ impl GameView for BenchmarkView {
 
     fn level_mut(&mut self) -> &mut dyn Level {
         &mut self.level
-    }
-
-    fn set_ui(&mut self, ui: Rglica<UILayer>) {
-        self.ui = ui
     }
 }

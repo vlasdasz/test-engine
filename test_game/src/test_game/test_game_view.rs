@@ -1,6 +1,6 @@
 use test_engine::{
     audio::Sound,
-    game_view::GameView,
+    main_view::{HasLevel, MainView},
     rtools::{
         data_manager::{DataManager, Handle},
         Boxed, Rglica,
@@ -169,7 +169,17 @@ impl View for TestGameView {
     }
 }
 
-impl GameView for TestGameView {
+impl MainView for TestGameView {
+    fn set_ui(&mut self, ui: Rglica<UILayer>) {
+        self.ui = ui
+    }
+}
+
+impl HasLevel for TestGameView {
+    fn has_level(&self) -> bool {
+        true
+    }
+
     fn player(&self) -> Rglica<Player> {
         self.level.player
     }
@@ -180,9 +190,5 @@ impl GameView for TestGameView {
 
     fn level_mut(&mut self) -> &mut dyn Level {
         &mut self.level
-    }
-
-    fn set_ui(&mut self, ui: Rglica<UILayer>) {
-        self.ui = ui
     }
 }

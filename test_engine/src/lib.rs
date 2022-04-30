@@ -4,6 +4,7 @@
 #![feature(stmt_expr_attributes)]
 #![feature(core_ffi_c)]
 #![feature(const_trait_impl)]
+#![feature(specialization)]
 
 pub use audio;
 pub use gl_image;
@@ -19,8 +20,8 @@ pub use crate::screen::Screen;
 pub mod app;
 pub mod assets;
 pub mod debug_view;
-pub mod game_view;
 mod keymap;
+pub mod main_view;
 pub mod paths;
 pub mod screen;
 pub mod sprite_view;
@@ -38,3 +39,4 @@ extern crate mashup;
 
 #[macro_use]
 extern crate log;
+extern crate core;

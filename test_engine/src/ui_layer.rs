@@ -11,14 +11,14 @@ use sprites::{Control, Level, Player, SpritesDrawer};
 use ui::input::touch::{ButtonState, TouchEvent};
 use ui::{Touch, View, ViewBase, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::{assets::Assets, debug_view::DebugView, game_view::GameView, ui_drawer::TEUIDrawer, Keymap};
+use crate::{assets::Assets, debug_view::DebugView, main_view::MainView, ui_drawer::TEUIDrawer, Keymap};
 
 pub struct UILayer {
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
     pub root_view:          Box<dyn View>,
     pub debug_view:         Rglica<DebugView>,
-    pub view:               Rglica<dyn GameView>,
+    pub view:               Rglica<dyn MainView>,
 
     pub sprites_drawer: Rglica<dyn SpritesDrawer>,
 
@@ -96,7 +96,7 @@ impl UILayer {
         }
     }
 
-    pub fn set_view(&mut self, mut view: Box<dyn GameView>) {
+    pub fn set_view(&mut self, mut view: Box<dyn MainView>) {
         if self.view.is_ok() {
             self.view.remove_from_superview();
         }

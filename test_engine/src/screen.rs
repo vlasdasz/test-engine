@@ -95,7 +95,9 @@ impl Screen {
 
         GLWrapper::clear();
 
-        self.update_level();
+        if self.ui.view.is_ok() && self.ui.view.has_level() {
+            self.update_level();
+        }
 
         self.ui.drawer.update(self.ui.root_view.deref_mut());
         self.ui.root_view.calculate_frames();
