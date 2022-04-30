@@ -35,11 +35,11 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        self.events.on_size_changed.set(self, |size, this| {
+        self.events.on_size_changed.set(self, |this, size| {
             this.on_size_changed(size);
         });
 
-        self.events.on_frame_drawn.set(self, |_, this| this.update());
+        self.events.on_frame_drawn.set(self, |this, _| this.update());
     }
 
     fn init(mut self, _size: Size) -> Self {
@@ -95,11 +95,14 @@ impl Screen {
 
         GLWrapper::clear();
 
-        if self.ui.view.is_ok() && self.ui.view.has_level() {
+        if self.ui.view.is_ok() && self.ui.view.level().is_ok() {
             self.update_level();
         }
 
         self.ui.drawer.update(self.ui.root_view.deref_mut());
+        if self.ui.view.is_ok() {
+            self.ui.view.place().as_background();
+        }
         self.ui.root_view.calculate_frames();
         self.ui.drawer.draw(self.ui.root_view.deref_mut());
 
@@ -111,7 +114,7 @@ impl Screen {
             return;
         }
 
-        let level = self.ui.view.level_mut();
+        let mut level = self.ui.view.level();
 
         level.base_mut().update_physics();
         level.update();
@@ -142,7 +145,9 @@ impl Screen {
 
     pub(crate) fn on_gyro_changed(&mut self, gyro: GyroData) {
         error!("GyroData: {:?}", gyro);
-        self.ui.view.level_mut().on_gyro_changed(gyro)
+        if self.ui.view.level().is_ok() {
+            self.ui.view.level().on_gyro_changed(gyro)
+        }
     }
 
     #[cfg(desktop)]
@@ -153,7 +158,7 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(assets_path: &Path, size: Size) -> Self {
+    pub fn new(size: impl Into<Size>, assets_path: &Path) -> Self {
         let mut assets = Assets::new(assets_path);
 
         ui::set_default_font_path(assets.paths.fonts.join("SF.otf"));
@@ -190,6 +195,6 @@ impl Screen {
             sprites_drawer,
             monitor: Default::default(),
         }
-        .init(size)
+        .init(size.into())
     }
 }

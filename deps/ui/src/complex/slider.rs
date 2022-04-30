@@ -28,7 +28,7 @@ impl View for Slider {
 
         self.circle.set_color(Color::BLUE);
 
-        self.on_touch().set(self, |touch, this| {
+        self.on_touch().set(self, |this, touch| {
             if touch.is_ended() {
                 return;
             }

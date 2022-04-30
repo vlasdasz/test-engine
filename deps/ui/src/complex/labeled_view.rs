@@ -13,16 +13,19 @@ pub struct LabeledView {
 }
 
 impl LabeledView {
-    pub fn set_label(&mut self, label: impl ToString) {
-        self.label.set_text(label)
+    pub fn set_label(&mut self, label: impl ToString) -> &Self {
+        self.label.set_text(label);
+        self
     }
 
-    pub fn set_value(&mut self, value: impl ToString) {
-        self.value.set_text(value)
+    pub fn set_value(&mut self, value: impl ToString) -> &Self {
+        self.value.set_text(value);
+        self
     }
 
-    pub fn clear(&mut self) {
-        self.value.clear()
+    pub fn clear(&mut self) -> &Self {
+        self.value.clear();
+        self
     }
 }
 

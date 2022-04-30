@@ -25,7 +25,7 @@ impl Button {
 
 impl View for Button {
     fn setup(&mut self) {
-        self.on_touch().set(self, |touch, this| {
+        self.on_touch().set(self, |this, touch| {
             if touch.is_began() {
                 this.on_tap.trigger(())
             }

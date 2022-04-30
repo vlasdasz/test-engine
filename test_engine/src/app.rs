@@ -30,9 +30,9 @@ pub struct App<T> {
 impl<T: MainView + 'static> App<T> {
     fn create_screen(&mut self, assets_path: &Path, monitor: Monitor) {
         self.runtime.block_on(async {
-            let mut screen = Screen::new(assets_path, monitor.resolution);
+            let mut screen = Screen::new(monitor.resolution, assets_path);
 
-            screen.ui.set_view(T::boxed());
+            screen.ui.set_view::<T>();
             screen.ui.add_debug_view();
 
             screen.add_monitor(monitor);

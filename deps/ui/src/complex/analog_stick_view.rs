@@ -42,7 +42,7 @@ impl View for AnalogStickView {
     fn setup(&mut self) {
         self.set_frame((SIZE, SIZE));
 
-        self.on_touch().set(self, |touch, this| {
+        self.on_touch().set(self, |this, touch| {
             if touch.is_ended() {
                 if this.flaccid {
                     return;

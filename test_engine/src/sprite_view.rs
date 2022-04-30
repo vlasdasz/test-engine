@@ -41,7 +41,7 @@ impl SpriteView {
             .set_hidden(true)
             .set_image(Image::get("delete.png"));
 
-        self.delete_button.on_tap.set(self, |_, this| {
+        self.delete_button.on_tap.set(self, |this, _| {
             if this.sprite.is_ok() {
                 this.sprite.remove();
                 this.set_sprite(Rglica::default());

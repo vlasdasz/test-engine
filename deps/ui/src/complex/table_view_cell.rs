@@ -41,7 +41,7 @@ impl View for StringCell {
 
 impl TableViewCell<String> for StringCell {
     fn set_data(&mut self, data: String) {
-        self.label.set_text(data)
+        self.label.set_text(data);
     }
 }
 

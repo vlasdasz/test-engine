@@ -5,31 +5,31 @@ use ui::{Touch, View};
 use crate::ui_layer::UILayer;
 
 pub trait MainView: View + HasLevel {
-    fn set_ui(&mut self, _: Rglica<UILayer>);
+    fn set_ui(&mut self, _: Rglica<UILayer>) {}
 }
 
 pub trait HasLevel {
-    fn has_level(&self) -> bool {
-        false
-    }
     fn player(&self) -> Rglica<Player> {
-        todo!()
+        Default::default()
     }
-    fn level(&self) -> &dyn Level {
-        todo!()
-    }
-    fn level_mut(&mut self) -> &mut dyn Level {
-        todo!()
+
+    fn level(&self) -> Rglica<dyn Level> {
+        Default::default()
     }
 
     fn set_sprites_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
-        self.level_mut().set_drawer(drawer)
+        if self.level().is_ok() {
+            self.level().set_drawer(drawer)
+        }
     }
 
     fn pass_touch_to_level(&mut self, touch: Touch) {
-        self.level_mut().set_cursor_position(touch.position);
+        if self.level().is_null() {
+            return;
+        }
+        self.level().set_cursor_position(touch.position);
         if touch.is_began() {
-            self.level_mut().add_touch(touch.position)
+            self.level().add_touch(touch.position)
         }
     }
 }

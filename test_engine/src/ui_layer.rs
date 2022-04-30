@@ -96,10 +96,11 @@ impl UILayer {
         }
     }
 
-    pub fn set_view(&mut self, mut view: Box<dyn MainView>) {
+    pub fn set_view<T: MainView + 'static>(&mut self) {
         if self.view.is_ok() {
             self.view.remove_from_superview();
         }
+        let mut view: Box<dyn MainView> = T::boxed();
         self.view = view.to_rglica();
         view.set_ui(self.to_rglica());
         view.set_sprites_drawer(self.sprites_drawer);
@@ -153,20 +154,22 @@ impl UILayer {
         });
 
         self.keymap.check(&key);
-        self.view.level_mut().on_key_pressed(&key);
+        if self.view.level().is_ok() {
+            self.view.level().on_key_pressed(&key);
+        }
     }
 
     pub fn setup_events(&mut self) {
         self.events
             .on_key_pressed
-            .set(self, |a, this| this.on_key_pressed(a.0, a.1));
+            .set(self, |this, a| this.on_key_pressed(a.0, a.1));
 
         self.events
             .on_mouse_click
-            .set(self, |a, this| this.on_mouse_click(a.0, a.1));
+            .set(self, |this, a| this.on_mouse_click(a.0, a.1));
 
         self.events
             .on_cursor_moved
-            .set(self, |a, this| this.on_cursor_moved(a))
+            .set(self, |this, a| this.on_cursor_moved(a))
     }
 }

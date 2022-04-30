@@ -3,7 +3,7 @@ use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{
         data_manager::{DataManager, Handle},
-        Boxed, Rglica,
+        Rglica, ToRglica,
     },
     sprite_view::SpriteView,
     sprites::{Control, Player},
@@ -18,7 +18,7 @@ use test_engine::{
     Image, Level,
 };
 
-use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView};
+use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView, UITestView};
 
 #[derive(Default, Debug)]
 pub struct TestGameView {
@@ -33,6 +33,7 @@ pub struct TestGameView {
     game_scale_slider: Rglica<LabeledSlider>,
 
     to_benchmark: Rglica<Button>,
+    to_test:      Rglica<Button>,
 
     play:  Rglica<Button>,
     sound: Handle<Sound>,
@@ -46,9 +47,9 @@ impl TestGameView {
 
         self.dpad
             .on_press
-            .set(&self.level.player, |dir, player| player.move_by_direction(dir));
+            .set(&self.level.player, |player, dir| player.move_by_direction(dir));
 
-        self.left_stick.on_change.set(&self.level.player, |dir, player| {
+        self.left_stick.on_change.set(&self.level.player, |player, dir| {
             player.add_impulse(dir);
         });
     }
@@ -56,13 +57,13 @@ impl TestGameView {
     fn setup_sliders(&mut self) {
         self.game_scale_slider = self.add_view_with_frame((50, 280));
         self.game_scale_slider.set_start(0.5).set_finish(10);
-        self.game_scale_slider.on_change.set(self, |scale, this| {
-            this.level_mut().drawer_mut().set_scale(scale);
+        self.game_scale_slider.on_change.set(self, |this, scale| {
+            this.level().drawer_mut().set_scale(scale);
         });
 
         self.ui_scale_slider = self.add_view_with_frame((50, 280));
         self.ui_scale_slider.set_start(0.2).set_finish(4);
-        self.ui_scale_slider.on_change.set(self, |scale, this| {
+        self.ui_scale_slider.on_change.set(self, |this, scale| {
             this.ui.set_scale(scale);
         });
     }
@@ -75,7 +76,7 @@ impl TestGameView {
         self.level
             .base()
             .on_sprite_selected
-            .set(self, |sprite, this| this.sprite_view.set_sprite(sprite));
+            .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
 
         self.dpad = self.add_view();
         self.dpad.set_frame((200, 150)).set_images(
@@ -97,13 +98,19 @@ impl TestGameView {
 
         self.to_benchmark = self.add_view();
         self.to_benchmark.set_text("Benchmark").set_frame((120, 20));
-        self.to_benchmark.on_tap.set(self, |_, this| {
-            this.ui.set_view(BenchmarkView::boxed());
-        });
+        self.to_benchmark
+            .on_tap
+            .set(self, |this, _| this.ui.set_view::<BenchmarkView>());
+
+        self.to_test = self.add_view();
+        self.to_test.set_text("Test").set_frame((120, 20));
+        self.to_test
+            .on_tap
+            .set(self, |this, _| this.ui.set_view::<UITestView>());
 
         self.play = self.add_view();
         self.play.set_text("Play sound").set_frame((120, 20));
-        self.play.on_tap.set(self, |_, this| this.sound.play());
+        self.play.on_tap.set(self, |this, _| this.sound.play());
 
         self.sound = Sound::get("retro.wav");
     }
@@ -116,8 +123,6 @@ impl View for TestGameView {
     }
 
     fn layout(&mut self) {
-        self.place().as_background();
-
         self.dpad.place().bottom_left(5);
 
         self.left_stick
@@ -150,14 +155,13 @@ impl View for TestGameView {
 
         self.to_benchmark.place().bottom_center(20);
 
-        self.play
+        self.to_test
             .place()
             .anchor(self.to_benchmark, Anchor::Top, Anchor::Center, 10);
-    }
 
-    fn update(&mut self) {
-        // let pos = self.ui.ui_cursor_position;
-        // add_view_with_frame::<ViewBase>(self, (pos.x, pos.y, 5, 5));
+        self.play
+            .place()
+            .anchor(self.to_test, Anchor::Top, Anchor::Center, 10);
     }
 
     fn view(&self) -> &ViewBase {
@@ -176,19 +180,11 @@ impl MainView for TestGameView {
 }
 
 impl HasLevel for TestGameView {
-    fn has_level(&self) -> bool {
-        true
-    }
-
     fn player(&self) -> Rglica<Player> {
         self.level.player
     }
 
-    fn level(&self) -> &dyn Level {
-        &self.level
-    }
-
-    fn level_mut(&mut self) -> &mut dyn Level {
-        &mut self.level
+    fn level(&self) -> Rglica<dyn Level> {
+        (&self.level as &dyn Level).to_rglica()
     }
 }

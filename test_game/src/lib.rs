@@ -14,6 +14,8 @@ use test_engine::app::App;
 use crate::benchmark::BenchmarkView;
 #[allow(unused_imports)]
 use crate::test_game::TestGameView;
+#[allow(unused_imports)]
+use crate::ui_test::UITestView;
 
 mod benchmark;
 mod test_game;

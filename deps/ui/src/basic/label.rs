@@ -28,16 +28,17 @@ impl Label {
         &self.text
     }
 
-    pub fn set_text(&mut self, text: impl ToString) {
+    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
         let text = text.to_string();
         if self.text == text {
-            return;
+            return self;
         }
         self.text = text;
         self.set_letters();
+        self
     }
 
-    pub fn clear(&mut self) {
+    pub fn clear(&mut self) -> &Self {
         self.set_text("")
     }
 

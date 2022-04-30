@@ -1,6 +1,8 @@
+use std::borrow::Borrow;
+
 use test_engine::{
     main_view::{HasLevel, MainView},
-    rtools::{Boxed, Rglica},
+    rtools::{Rglica, ToRglica},
     sprites::Player,
     ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewFrame, ViewSubviews},
     ui_layer::UILayer,
@@ -15,7 +17,7 @@ pub struct BenchmarkView {
     level:         BenchmarkLevel,
     bullets_label: Rglica<Label>,
 
-    to_test: Rglica<Button>,
+    back: Rglica<Button>,
 
     ui: Rglica<UILayer>,
 }
@@ -24,21 +26,20 @@ impl View for BenchmarkView {
     fn setup(&mut self) {
         self.level.setup();
 
-        self.to_test = self.add_view();
-        self.to_test.set_text("Test").set_frame((120, 20));
-        self.to_test.on_tap.set(self, |_, this| {
-            this.ui.set_view(TestGameView::boxed());
+        self.back = self.add_view();
+        self.back.set_text("Back").set_frame((120, 20));
+        self.back.on_tap.set(self, |this, _| {
+            this.ui.set_view::<TestGameView>();
         });
 
         self.bullets_label = self.add_view();
     }
 
     fn layout(&mut self) {
-        self.place().as_background();
-        self.to_test.place().bottom_center(20);
+        self.back.place().bottom_center(20);
         self.bullets_label
             .place()
-            .anchor(self.to_test, Anchor::Top, Anchor::Center, 20);
+            .anchor(self.back, Anchor::Top, Anchor::Center, 20);
     }
 
     fn update(&mut self) {
@@ -66,11 +67,7 @@ impl HasLevel for BenchmarkView {
         self.level.player
     }
 
-    fn level(&self) -> &dyn Level {
-        &self.level
-    }
-
-    fn level_mut(&mut self) -> &mut dyn Level {
-        &mut self.level
+    fn level(&self) -> Rglica<dyn Level> {
+        (self.level.borrow() as &dyn Level).to_rglica()
     }
 }

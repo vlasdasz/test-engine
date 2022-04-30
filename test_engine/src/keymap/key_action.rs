@@ -8,7 +8,7 @@ pub struct KeyAction {
 impl KeyAction {
     pub fn new<Obj: 'static>(key: &str, obj: &Obj, mut action: impl FnMut(&mut Obj) + 'static) -> Self {
         let event = Event::default();
-        event.set(obj, move |_, obj| action(obj));
+        event.set(obj, move |obj, _| action(obj));
         Self {
             key:    key.into(),
             action: event,
