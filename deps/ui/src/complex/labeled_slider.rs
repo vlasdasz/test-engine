@@ -1,4 +1,4 @@
-use rtools::{Event, IntoF32, Rglica};
+use rtools::{Event, IntoF32, Rglica, ToRglica};
 
 use crate::{
     complex::Slider,

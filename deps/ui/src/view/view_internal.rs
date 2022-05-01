@@ -3,16 +3,16 @@ use rtools::Rglica;
 
 use crate::{
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase,
+    View,
 };
 
 pub(crate) trait ViewInternal {
-    fn root_view(&self) -> Rglica<ViewBase>;
+    fn root_view(&self) -> Rglica<dyn View>;
     fn super_absolute_frame(&self) -> &Rect;
 }
 
 impl<T: ?Sized + View> ViewInternal for T {
-    fn root_view(&self) -> Rglica<ViewBase> {
+    fn root_view(&self) -> Rglica<dyn View> {
         let mut root = self.superview();
         loop {
             if root.superview().is_null() {

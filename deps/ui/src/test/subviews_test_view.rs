@@ -1,4 +1,4 @@
-use rtools::Rglica;
+use rtools::{Rglica, ToRglica};
 
 use crate::{
     impl_view, view,

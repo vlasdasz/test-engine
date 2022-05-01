@@ -8,7 +8,7 @@ use crate::{
 };
 
 pub trait ViewSubviews {
-    fn superview(&self) -> Rglica<ViewBase>;
+    fn superview(&self) -> Rglica<dyn View>;
     fn subviews(&self) -> &[Box<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>];
     fn remove_from_superview(&mut self);
@@ -24,7 +24,7 @@ pub trait ViewSubviews {
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
-    fn superview(&self) -> Rglica<ViewBase> {
+    fn superview(&self) -> Rglica<dyn View> {
         self.view().superview
     }
 
@@ -78,7 +78,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn add_boxed(&mut self, mut view: Box<dyn View>) {
         let result = view.to_rglica();
-        view.view_mut().superview = self.view().to_rglica();
+        view.view_mut().superview = self.view().rglica();
         view.view_mut().drawer = self.drawer();
         view.view_mut().placer = Placer::make(result);
         view.setup();

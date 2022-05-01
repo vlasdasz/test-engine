@@ -1,5 +1,5 @@
 use gm::Color;
-use rtools::Rglica;
+use rtools::{Rglica, ToRglica};
 
 use crate::{
     basic::Button,

@@ -1,5 +1,7 @@
 use std::{fmt::Debug, marker::PhantomData};
 
+use rtools::{Rglica, ToRglica};
+
 use crate::{
     complex::table_view_cell::TableViewData,
     view::{ViewFrame, ViewSubviews},
@@ -12,7 +14,7 @@ pub struct TableView<T: TableViewData> {
     _phantom_data: PhantomData<T>,
 }
 
-impl<T: Debug + Default + TableViewData> TableView<T> {
+impl<T: Debug + Default + TableViewData + 'static> TableView<T> {
     pub fn set_data(&mut self, data: Vec<T>) {
         self.remove_all_subviews();
         for data in data {
@@ -21,18 +23,22 @@ impl<T: Debug + Default + TableViewData> TableView<T> {
     }
 }
 
-impl<T: Debug + Default + TableViewData> ViewCallbacks for TableView<T> {
+impl<T: Debug + Default + TableViewData + 'static> ViewCallbacks for TableView<T> {
     fn layout(&mut self) {
         self.place().all_vertically()
     }
 }
 
-impl<T: Debug + Default + TableViewData> View for TableView<T> {
+impl<T: Debug + Default + TableViewData + 'static> View for TableView<T> {
     fn view(&self) -> &ViewBase {
         &self.base
     }
 
     fn view_mut(&mut self) -> &mut ViewBase {
         &mut self.base
+    }
+
+    fn rglica(&self) -> Rglica<dyn View> {
+        (self as &dyn View).to_rglica()
     }
 }

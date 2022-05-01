@@ -1,4 +1,4 @@
-use rtools::{platform::Platform, Property, Rglica};
+use rtools::{platform::Platform, Property, Rglica, ToRglica};
 use ui::{impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews};
 
 #[view]

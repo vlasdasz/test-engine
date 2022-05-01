@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use test_engine::{
     main_view::{HasLevel, MainView},
-    rtools::{Rglica, StaticStorage},
+    rtools::{Rglica, StaticStorage, ToRglica},
     ui::{
         basic::{label::DebugLabel, Button},
         impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,

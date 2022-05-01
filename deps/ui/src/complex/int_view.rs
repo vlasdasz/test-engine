@@ -1,7 +1,7 @@
 use std::ops::AddAssign;
 
 use gl_image::Image;
-use rtools::{data_manager::Handle, Event, Rglica};
+use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,

@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::Color;
-use rtools::{data_manager::Handle, Animation, Rglica, Unwrap};
+use rtools::{data_manager::Handle, Animation, Rglica, ToRglica, Unwrap};
 
 use crate::{
     basic::Button,

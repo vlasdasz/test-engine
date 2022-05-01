@@ -1,5 +1,5 @@
 use gm::{flat::PointsPath, Color};
-use rtools::{Boxed, Rglica};
+use rtools::{Boxed, Rglica, ToRglica};
 
 use crate::{
     complex::DrawingView,

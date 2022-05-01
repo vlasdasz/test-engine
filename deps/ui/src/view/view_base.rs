@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use derivative::Derivative;
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use rtools::{data_manager::Handle, Event, IntoF32, Rglica};
+use rtools::{data_manager::Handle, Event, IntoF32, Rglica, ToRglica};
 
 use crate::{
     basic::Placer,
@@ -27,7 +27,7 @@ pub struct ViewBase {
     pub(crate) absolute_frame: Rect,
 
     #[derivative(Debug = "ignore")]
-    pub(crate) superview: Rglica<ViewBase>,
+    pub(crate) superview: Rglica<dyn View>,
     #[derivative(Debug = "ignore")]
     pub(crate) subviews:  Vec<Box<dyn View>>,
 
@@ -58,6 +58,10 @@ impl View for ViewBase {
 
     fn view_mut(&mut self) -> &mut Self {
         self
+    }
+
+    fn rglica(&self) -> Rglica<dyn View> {
+        (self as &dyn View).to_rglica()
     }
 }
 

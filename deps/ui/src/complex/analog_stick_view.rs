@@ -2,7 +2,7 @@ use gm::{
     flat::{Point, PointsPath},
     Color,
 };
-use rtools::{Event, Rglica};
+use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
     complex::DrawingView,
