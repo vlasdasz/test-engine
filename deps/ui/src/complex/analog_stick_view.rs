@@ -7,7 +7,7 @@ use rtools::{Event, Rglica};
 use crate::{
     complex::DrawingView,
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase, ViewTouch,
+    View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
 const SIZE: f32 = 140.0;
@@ -38,7 +38,7 @@ impl AnalogStickView {
     }
 }
 
-impl View for AnalogStickView {
+impl ViewCallbacks for AnalogStickView {
     fn setup(&mut self) {
         self.set_frame((SIZE, SIZE));
 
@@ -88,7 +88,9 @@ impl View for AnalogStickView {
             Color::LIGHT_GRAY,
         );
     }
+}
 
+impl View for AnalogStickView {
     fn view(&self) -> &ViewBase {
         &self.base
     }

@@ -2,7 +2,7 @@ use rtools::Rglica;
 
 use crate::{
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase,
+    View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -15,7 +15,7 @@ pub struct SubviewsTestView {
     fifth:  Rglica<ViewBase>,
 }
 
-impl View for SubviewsTestView {
+impl ViewCallbacks for SubviewsTestView {
     fn setup(&mut self) {
         self.first = self.add_view();
         self.second = self.first.add_view();
@@ -31,7 +31,9 @@ impl View for SubviewsTestView {
         self.forth.place().background_margin(2);
         self.fifth.place().background_margin(2);
     }
+}
 
+impl View for SubviewsTestView {
     fn view(&self) -> &ViewBase {
         &self.base
     }

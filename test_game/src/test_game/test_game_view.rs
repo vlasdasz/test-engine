@@ -12,7 +12,7 @@ use test_engine::{
         complex::{AnalogStickView, LabeledSlider},
         placer::Anchor,
         test::test_view::TestView,
-        DPadView, View, ViewBase, ViewFrame, ViewSubviews,
+        DPadView, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -116,7 +116,7 @@ impl TestGameView {
     }
 }
 
-impl View for TestGameView {
+impl ViewCallbacks for TestGameView {
     fn setup(&mut self) {
         self.setup_ui();
         self.setup_level();
@@ -163,7 +163,9 @@ impl View for TestGameView {
             .place()
             .anchor(self.to_test, Anchor::Top, Anchor::Center, 10);
     }
+}
 
+impl View for TestGameView {
     fn view(&self) -> &ViewBase {
         &self.base
     }

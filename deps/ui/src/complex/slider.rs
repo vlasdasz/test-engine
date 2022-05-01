@@ -4,7 +4,7 @@ use rtools::{math::clamped_by, Event, Rglica, ToRglica};
 use crate::{
     basic::CircleView,
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase, ViewTouch,
+    View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
 #[derive(Debug)]
@@ -19,7 +19,7 @@ pub struct Slider {
     pub finish: f32,
 }
 
-impl View for Slider {
+impl ViewCallbacks for Slider {
     fn setup(&mut self) {
         let radius = self.width();
         let circle = CircleView::with_radius(radius);
@@ -44,7 +44,9 @@ impl View for Slider {
             this.on_change.trigger(this.start + span * this.raw_value);
         });
     }
+}
 
+impl View for Slider {
     fn view(&self) -> &ViewBase {
         &self.base
     }

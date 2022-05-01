@@ -2,7 +2,7 @@ use rtools::{Event, Rglica};
 
 use crate::{
     view::{ViewFrame, ViewSubviews},
-    Label, View, ViewBase, ViewTouch,
+    Label, View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
 #[derive(Default, Debug)]
@@ -23,7 +23,7 @@ impl Button {
     }
 }
 
-impl View for Button {
+impl ViewCallbacks for Button {
     fn setup(&mut self) {
         self.on_touch().set(self, |this, touch| {
             if touch.is_began() {
@@ -37,7 +37,9 @@ impl View for Button {
             self.label.place().as_background()
         }
     }
+}
 
+impl View for Button {
     fn view(&self) -> &ViewBase {
         &self.base
     }

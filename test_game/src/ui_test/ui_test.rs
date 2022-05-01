@@ -5,7 +5,7 @@ use test_engine::{
     rtools::{Rglica, StaticStorage},
     ui::{
         basic::{label::DebugLabel, Button},
-        Label, View, ViewBase, ViewFrame, ViewSubviews,
+        Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
 };
@@ -20,7 +20,7 @@ pub struct UITestView {
     ui:    Rglica<UILayer>,
 }
 
-impl View for UITestView {
+impl ViewCallbacks for UITestView {
     fn setup(&mut self) {
         DebugLabel::set(true);
 
@@ -41,7 +41,9 @@ impl View for UITestView {
         self.label.place().center();
         self.back.place().bottom_center(20);
     }
+}
 
+impl View for UITestView {
     fn view(&self) -> &ViewBase {
         &self.view
     }

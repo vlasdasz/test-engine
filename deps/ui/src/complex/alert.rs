@@ -5,7 +5,7 @@ use crate::{
     basic::Button,
     placer::Anchor,
     view::{ViewData, ViewFrame, ViewSubviews},
-    Label, View, ViewBase,
+    Label, View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -22,7 +22,7 @@ impl Alert {
     }
 }
 
-impl View for Alert {
+impl ViewCallbacks for Alert {
     fn setup(&mut self) {
         self.set_frame((280, 140)).set_color(Color::WHITE);
 
@@ -49,7 +49,9 @@ impl View for Alert {
             .place()
             .anchor(self.label, Anchor::Bot, Anchor::Center, 20);
     }
+}
 
+impl View for Alert {
     fn view(&self) -> &ViewBase {
         &self.base
     }

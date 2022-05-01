@@ -9,7 +9,7 @@ use crate::{
     basic::label_layout::LabelLayout,
     view,
     view::{ViewData, ViewFrame, ViewSubviews},
-    Font, ImageView, View, ViewBase,
+    Font, ImageView, View, ViewBase, ViewCallbacks,
 };
 
 static_storage!(DebugLabel, bool, false);
@@ -92,7 +92,7 @@ impl Label {
     }
 }
 
-impl View for Label {
+impl ViewCallbacks for Label {
     fn setup(&mut self) {
         self.image = self.add_view();
         self.set_letters();
@@ -104,7 +104,9 @@ impl View for Label {
             dbg!(self.image.frame());
         }
     }
+}
 
+impl View for Label {
     fn view(&self) -> &ViewBase {
         &self.view
     }

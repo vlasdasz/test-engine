@@ -2,15 +2,9 @@ use std::fmt::Debug;
 
 use rtools::Boxed;
 
-use crate::ViewBase;
+use crate::{ViewBase, ViewCallbacks};
 
-pub trait View: Boxed + Debug {
-    fn setup(&mut self) {}
-
-    fn layout(&mut self) {}
-
-    fn update(&mut self) {}
-
+pub trait View: Boxed + Debug + ViewCallbacks {
     fn view(&self) -> &ViewBase;
     fn view_mut(&mut self) -> &mut ViewBase;
 }

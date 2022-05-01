@@ -1,6 +1,8 @@
 #![allow(incomplete_features)]
 #![allow(clippy::module_inception)]
 #![feature(explicit_generic_args_with_impl_trait)]
+#![feature(specialization)]
+#![feature(trait_upcasting)]
 
 use test_engine::{paths::home, Screen};
 

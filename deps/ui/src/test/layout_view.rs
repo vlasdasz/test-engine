@@ -3,7 +3,7 @@ use rtools::Rglica;
 use crate::{
     placer::Anchor,
     view::{ViewData, ViewFrame, ViewSubviews},
-    Font, ImageView, View, ViewBase,
+    Font, ImageView, View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -13,7 +13,7 @@ pub struct LayoutView {
     satellites: Vec<Rglica<ImageView>>,
 }
 
-impl View for LayoutView {
+impl ViewCallbacks for LayoutView {
     fn setup(&mut self) {
         let font = Font::default();
 
@@ -55,7 +55,9 @@ impl View for LayoutView {
         s[10].place().anchor(c, Anchor::Bot, Anchor::Center, 5);
         s[11].place().anchor(c, Anchor::Bot, Anchor::Left, 5);
     }
+}
 
+impl View for LayoutView {
     fn view(&self) -> &ViewBase {
         &self.base
     }

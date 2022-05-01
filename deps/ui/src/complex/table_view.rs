@@ -3,7 +3,7 @@ use std::{fmt::Debug, marker::PhantomData};
 use crate::{
     complex::table_view_cell::TableViewData,
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase,
+    View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -21,11 +21,13 @@ impl<T: Debug + Default + TableViewData> TableView<T> {
     }
 }
 
-impl<T: Debug + Default + TableViewData> View for TableView<T> {
+impl<T: Debug + Default + TableViewData> ViewCallbacks for TableView<T> {
     fn layout(&mut self) {
         self.place().all_vertically()
     }
+}
 
+impl<T: Debug + Default + TableViewData> View for TableView<T> {
     fn view(&self) -> &ViewBase {
         &self.base
     }

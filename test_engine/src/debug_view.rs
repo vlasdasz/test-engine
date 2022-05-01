@@ -1,5 +1,5 @@
 use rtools::{platform::Platform, Property, Rglica};
-use ui::{Label, View, ViewBase, ViewFrame, ViewSubviews};
+use ui::{Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews};
 
 #[derive(Default, Debug)]
 pub struct DebugView {
@@ -10,7 +10,7 @@ pub struct DebugView {
     pub fps:           Property<u64>,
 }
 
-impl View for DebugView {
+impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
         self.set_frame((280, 100));
 
@@ -38,7 +38,9 @@ impl View for DebugView {
         self.frame_drawn_label
             .set_text(format!("Frame drawn: {}", self.frame_drawn));
     }
+}
 
+impl View for DebugView {
     fn view(&self) -> &ViewBase {
         &self.view
     }

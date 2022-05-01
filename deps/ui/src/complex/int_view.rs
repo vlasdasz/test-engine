@@ -6,7 +6,7 @@ use rtools::{data_manager::Handle, Event, Rglica};
 use crate::{
     basic::Button,
     view::{ViewData, ViewFrame, ViewSubviews},
-    Label, View, ViewBase,
+    Label, View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -26,7 +26,7 @@ impl IntView {
     }
 }
 
-impl View for IntView {
+impl ViewCallbacks for IntView {
     fn setup(&mut self) {
         self.label = self.add_view();
         self.up = self.add_view();
@@ -49,7 +49,9 @@ impl View for IntView {
         self.place().all_vertically();
         self.label.set_text(&self.value.to_string());
     }
+}
 
+impl View for IntView {
     fn view(&self) -> &ViewBase {
         &self.base
     }

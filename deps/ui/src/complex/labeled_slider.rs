@@ -3,7 +3,7 @@ use rtools::{Event, IntoF32, Rglica};
 use crate::{
     complex::Slider,
     view::{ViewFrame, ViewSubviews},
-    Label, View, ViewBase,
+    Label, View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -32,7 +32,7 @@ impl LabeledSlider {
     }
 }
 
-impl View for LabeledSlider {
+impl ViewCallbacks for LabeledSlider {
     fn setup(&mut self) {
         let frames = self.place().frames_for_ratio([1, 5]);
 
@@ -45,7 +45,9 @@ impl View for LabeledSlider {
     fn layout(&mut self) {
         self.place().all_vertically_with_ratio([1, 5]);
     }
+}
 
+impl View for LabeledSlider {
     fn view(&self) -> &ViewBase {
         &self.base
     }

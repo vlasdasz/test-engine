@@ -2,6 +2,8 @@
 #![allow(clippy::mismatched_target_os)]
 #![allow(clippy::module_inception)]
 #![feature(explicit_generic_args_with_impl_trait)]
+#![feature(specialization)]
+#![feature(trait_upcasting)]
 
 use std::{
     os::raw::{c_float, c_int, c_ulong},

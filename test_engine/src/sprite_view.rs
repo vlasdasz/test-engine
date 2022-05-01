@@ -2,8 +2,8 @@ use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica};
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, placer::place_vertically, View, ViewBase, ViewData, ViewFrame,
-    ViewSubviews,
+    basic::Button, complex::LabeledView, placer::place_vertically, View, ViewBase, ViewCallbacks, ViewData,
+    ViewFrame, ViewSubviews,
 };
 
 #[derive(Default, Debug)]
@@ -50,7 +50,7 @@ impl SpriteView {
     }
 }
 
-impl View for SpriteView {
+impl ViewCallbacks for SpriteView {
     fn setup(&mut self) {
         (self.position, self.size, self.color) = (self.add_view(), self.add_view(), self.add_view());
 
@@ -72,7 +72,9 @@ impl View for SpriteView {
         }
         self.set_sprite(self.sprite);
     }
+}
 
+impl View for SpriteView {
     fn view(&self) -> &ViewBase {
         &self.base
     }

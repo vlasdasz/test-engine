@@ -2,7 +2,7 @@ use rtools::{Boxed, Rglica};
 
 use crate::{
     view::{ViewFrame, ViewSubviews},
-    Label, View, ViewBase,
+    Label, View, ViewBase, ViewCallbacks,
 };
 
 pub trait TableViewData {
@@ -20,7 +20,7 @@ pub struct StringCell {
     label: Rglica<Label>,
 }
 
-impl View for StringCell {
+impl ViewCallbacks for StringCell {
     fn setup(&mut self) {
         self.label = self.add_view();
         self.label.set_text(self.data.clone());
@@ -29,7 +29,9 @@ impl View for StringCell {
     fn layout(&mut self) {
         self.label.place().as_background()
     }
+}
 
+impl View for StringCell {
     fn view(&self) -> &ViewBase {
         &self.base
     }

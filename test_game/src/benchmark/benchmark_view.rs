@@ -4,7 +4,7 @@ use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
     sprites::Player,
-    ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewFrame, ViewSubviews},
+    ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews},
     ui_layer::UILayer,
     Level,
 };
@@ -22,7 +22,7 @@ pub struct BenchmarkView {
     ui: Rglica<UILayer>,
 }
 
-impl View for BenchmarkView {
+impl ViewCallbacks for BenchmarkView {
     fn setup(&mut self) {
         self.level.setup();
 
@@ -47,7 +47,9 @@ impl View for BenchmarkView {
         self.bullets_label
             .set_text(format!("Bullets: {}", self.level.bullets_count));
     }
+}
 
+impl View for BenchmarkView {
     fn view(&self) -> &ViewBase {
         &self.view
     }

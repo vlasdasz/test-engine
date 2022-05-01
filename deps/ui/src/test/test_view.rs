@@ -7,7 +7,7 @@ use crate::{
     complex::{DrawingView, TableView},
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
     view::{ViewData, ViewFrame, ViewSubviews},
-    ImageView, Label, View, ViewBase,
+    ImageView, Label, View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -44,7 +44,7 @@ impl TestView {
     }
 }
 
-impl View for TestView {
+impl ViewCallbacks for TestView {
     fn setup(&mut self) {
         self.label = self.add_view();
         self.label.set_text("Hello label!");
@@ -82,7 +82,9 @@ impl View for TestView {
         self.place().all_vertically();
         self.animated.set_y(self.animation.value());
     }
+}
 
+impl View for TestView {
     fn view(&self) -> &ViewBase {
         &self.base
     }

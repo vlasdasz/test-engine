@@ -2,7 +2,7 @@ use rtools::Rglica;
 
 use crate::{
     view::{ViewFrame, ViewSubviews},
-    Label, View, ViewBase,
+    Label, View, ViewBase, ViewCallbacks,
 };
 
 #[derive(Default, Debug)]
@@ -29,7 +29,7 @@ impl LabeledView {
     }
 }
 
-impl View for LabeledView {
+impl ViewCallbacks for LabeledView {
     fn setup(&mut self) {
         self.label = self.add_view();
         self.value = self.add_view();
@@ -39,7 +39,9 @@ impl View for LabeledView {
         self.label.place().left_half();
         self.value.place().right_half();
     }
+}
 
+impl View for LabeledView {
     fn view(&self) -> &ViewBase {
         &self.base
     }
