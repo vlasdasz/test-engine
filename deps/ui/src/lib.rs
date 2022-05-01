@@ -21,11 +21,13 @@ mod ui_drawer;
 mod view;
 
 pub use ui_drawer::UIDrawer;
+pub use ui_proc::*;
 pub use view::*;
 
 #[macro_use]
 extern crate log;
 extern crate core;
+pub extern crate ui_proc;
 
 lazy_static! {
     pub(crate) static ref DEFAULT_FONT_PATH: Mutex<PathBuf> = Mutex::new(PathBuf::new());

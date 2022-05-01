@@ -3,23 +3,24 @@ use std::ops::Deref;
 use derivative::Derivative;
 use gl_image::Image;
 use gm::Color;
-use rtools::{data_manager::DataManager, static_storage, Rglica, StaticStorage, ToRglica};
+use rtools::{data_manager::DataManager, static_storage, Rglica, ToRglica};
 
 use crate::{
     basic::label_layout::LabelLayout,
+    view,
     view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase,
 };
 
 static_storage!(DebugLabel, bool, false);
 
+#[view]
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
 pub struct Label {
     #[derivative(Debug = "ignore")]
     font:   Font,
     text:   String,
-    base:   ViewBase,
     #[derivative(Debug = "ignore")]
     layout: LabelLayout,
     image:  Rglica<ImageView>,
@@ -105,10 +106,10 @@ impl View for Label {
     }
 
     fn view(&self) -> &ViewBase {
-        &self.base
+        &self.view
     }
 
     fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
+        &mut self.view
     }
 }

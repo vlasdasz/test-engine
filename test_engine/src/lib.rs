@@ -32,6 +32,7 @@ pub mod ui_layer;
 pub use gl_image::Image;
 pub use keymap::*;
 pub use sprites::{Level, LevelBase, Sprite};
+pub use ui::ui_proc::*;
 
 #[cfg(mobile)]
 #[macro_use]
