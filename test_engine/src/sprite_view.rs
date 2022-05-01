@@ -2,14 +2,13 @@ use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica};
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, placer::place_vertically, View, ViewBase, ViewCallbacks, ViewData,
-    ViewFrame, ViewSubviews,
+    basic::Button, complex::LabeledView, impl_view, placer::place_vertically, view, View, ViewBase,
+    ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
 };
 
+#[view]
 #[derive(Default, Debug)]
 pub struct SpriteView {
-    base: ViewBase,
-
     position: Rglica<LabeledView>,
     size:     Rglica<LabeledView>,
     color:    Rglica<LabeledView>,
@@ -18,6 +17,8 @@ pub struct SpriteView {
 
     sprite: Rglica<dyn Sprite>,
 }
+
+impl_view!(SpriteView);
 
 impl SpriteView {
     pub fn set_sprite(&mut self, sprite: Rglica<dyn Sprite>) {
@@ -71,15 +72,5 @@ impl ViewCallbacks for SpriteView {
             return;
         }
         self.set_sprite(self.sprite);
-    }
-}
-
-impl View for SpriteView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }

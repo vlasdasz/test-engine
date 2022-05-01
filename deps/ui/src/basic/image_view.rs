@@ -1,16 +1,7 @@
-use crate::{View, ViewBase};
+use crate::{impl_view, view, View, ViewBase};
 
+#[view]
 #[derive(Default, Debug)]
-pub struct ImageView {
-    base: ViewBase,
-}
+pub struct ImageView {}
 
-impl View for ImageView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-}
+impl_view!(ImageView);

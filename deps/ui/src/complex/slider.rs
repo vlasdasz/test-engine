@@ -3,13 +3,14 @@ use rtools::{math::clamped_by, Event, Rglica, ToRglica};
 
 use crate::{
     basic::CircleView,
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
+#[view]
 #[derive(Debug)]
 pub struct Slider {
-    base:      ViewBase,
     circle:    Rglica<CircleView>,
     raw_value: f32,
 
@@ -18,6 +19,8 @@ pub struct Slider {
     pub start:  f32,
     pub finish: f32,
 }
+
+impl_view!(Slider);
 
 impl ViewCallbacks for Slider {
     fn setup(&mut self) {
@@ -46,20 +49,10 @@ impl ViewCallbacks for Slider {
     }
 }
 
-impl View for Slider {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-}
-
 impl Default for Slider {
     fn default() -> Self {
         Self {
-            base:      Default::default(),
+            view:      Default::default(),
             circle:    Default::default(),
             raw_value: Default::default(),
             on_change: Default::default(),

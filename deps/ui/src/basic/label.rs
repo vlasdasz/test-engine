@@ -7,7 +7,7 @@ use rtools::{data_manager::DataManager, static_storage, Rglica, ToRglica};
 
 use crate::{
     basic::label_layout::LabelLayout,
-    view,
+    impl_view, view,
     view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase, ViewCallbacks,
 };
@@ -25,6 +25,8 @@ pub struct Label {
     layout: LabelLayout,
     image:  Rglica<ImageView>,
 }
+
+impl_view!(Label);
 
 impl Label {
     pub fn text(&self) -> &str {
@@ -103,15 +105,5 @@ impl ViewCallbacks for Label {
         if *DebugLabel::get() {
             dbg!(self.image.frame());
         }
-    }
-}
-
-impl View for Label {
-    fn view(&self) -> &ViewBase {
-        &self.view
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.view
     }
 }

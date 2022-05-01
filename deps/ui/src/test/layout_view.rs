@@ -1,17 +1,21 @@
 use rtools::Rglica;
 
 use crate::{
+    impl_view,
     placer::Anchor,
+    view,
     view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase, ViewCallbacks,
 };
 
+#[view]
 #[derive(Default, Debug)]
 pub struct LayoutView {
-    base:       ViewBase,
     central:    Rglica<ViewBase>,
     satellites: Vec<Rglica<ImageView>>,
 }
+
+impl_view!(LayoutView);
 
 impl ViewCallbacks for LayoutView {
     fn setup(&mut self) {
@@ -54,15 +58,5 @@ impl ViewCallbacks for LayoutView {
         s[9].place().anchor(c, Anchor::Bot, Anchor::Right, 5);
         s[10].place().anchor(c, Anchor::Bot, Anchor::Center, 5);
         s[11].place().anchor(c, Anchor::Bot, Anchor::Left, 5);
-    }
-}
-
-impl View for LayoutView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }

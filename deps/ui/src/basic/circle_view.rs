@@ -3,17 +3,20 @@ use rtools::{Boxed, Rglica};
 
 use crate::{
     complex::DrawingView,
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks,
 };
 
+#[view]
 #[derive(Debug)]
 pub struct CircleView {
-    base:    ViewBase,
     drawing: Rglica<DrawingView>,
     color:   Color,
     radius:  f32,
 }
+
+impl_view!(CircleView);
 
 impl CircleView {
     pub fn set_color(&mut self, color: Color) {
@@ -35,20 +38,10 @@ impl ViewCallbacks for CircleView {
     }
 }
 
-impl View for CircleView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-}
-
 impl CircleView {
     pub fn with_radius(radius: f32) -> Box<Self> {
         Box::new(Self {
-            base: Default::default(),
+            view: Default::default(),
             drawing: Default::default(),
             color: Default::default(),
             radius,

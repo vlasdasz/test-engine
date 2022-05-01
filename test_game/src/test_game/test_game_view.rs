@@ -10,9 +10,10 @@ use test_engine::{
     ui::{
         basic::Button,
         complex::{AnalogStickView, LabeledSlider},
+        impl_view,
         placer::Anchor,
         test::test_view::TestView,
-        DPadView, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
+        view, DPadView, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -20,9 +21,9 @@ use test_engine::{
 
 use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView, UITestView};
 
+#[view]
 #[derive(Default, Debug)]
 pub struct TestGameView {
-    base:        ViewBase,
     level:       TestGameLevel,
     dpad:        Rglica<DPadView>,
     left_stick:  Rglica<AnalogStickView>,
@@ -40,6 +41,8 @@ pub struct TestGameView {
 
     ui: Rglica<UILayer>,
 }
+
+impl_view!(TestGameView);
 
 impl TestGameView {
     fn setup_level(&mut self) {
@@ -162,16 +165,6 @@ impl ViewCallbacks for TestGameView {
         self.play
             .place()
             .anchor(self.to_test, Anchor::Top, Anchor::Center, 10);
-    }
-}
-
-impl View for TestGameView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }
 

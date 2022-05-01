@@ -6,6 +6,7 @@ use rtools::{Event, Rglica};
 
 use crate::{
     complex::DrawingView,
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks, ViewTouch,
 };
@@ -14,14 +15,16 @@ const SIZE: f32 = 140.0;
 const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
+#[view]
 #[derive(Default, Debug)]
 pub struct AnalogStickView {
-    base:            ViewBase,
     direction_stick: Rglica<DrawingView>,
     background:      Rglica<DrawingView>,
     pub on_change:   Event<Point>,
     pub flaccid:     bool,
 }
+
+impl_view!(AnalogStickView);
 
 impl AnalogStickView {
     fn on_touch_moved(&mut self, touch: &Point) {
@@ -87,15 +90,5 @@ impl ViewCallbacks for AnalogStickView {
             PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
             Color::LIGHT_GRAY,
         );
-    }
-}
-
-impl View for AnalogStickView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }

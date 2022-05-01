@@ -1,16 +1,19 @@
 use rtools::Rglica;
 
 use crate::{
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks,
 };
 
+#[view]
 #[derive(Default, Debug)]
 pub struct LabeledView {
-    base:  ViewBase,
     label: Rglica<Label>,
     value: Rglica<Label>,
 }
+
+impl_view!(LabeledView);
 
 impl LabeledView {
     pub fn set_label(&mut self, label: impl ToString) -> &Self {
@@ -38,15 +41,5 @@ impl ViewCallbacks for LabeledView {
     fn layout(&mut self) {
         self.label.place().left_half();
         self.value.place().right_half();
-    }
-}
-
-impl View for LabeledView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }

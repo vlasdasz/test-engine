@@ -5,14 +5,16 @@ use rtools::{data_manager::Handle, Animation, Rglica, Unwrap};
 use crate::{
     basic::Button,
     complex::{DrawingView, TableView},
+    impl_view,
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
+    view,
     view::{ViewData, ViewFrame, ViewSubviews},
     ImageView, Label, View, ViewBase, ViewCallbacks,
 };
 
+#[view]
 #[derive(Default, Debug)]
 pub struct TestView {
-    base:     ViewBase,
     label:    Rglica<Label>,
     button:   Rglica<Button>,
     image:    Rglica<ImageView>,
@@ -26,6 +28,8 @@ pub struct TestView {
 
     label_value: u64,
 }
+
+impl_view!(TestView);
 
 impl TestView {
     pub fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
@@ -81,15 +85,5 @@ impl ViewCallbacks for TestView {
     fn layout(&mut self) {
         self.place().all_vertically();
         self.animated.set_y(self.animation.value());
-    }
-}
-
-impl View for TestView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }

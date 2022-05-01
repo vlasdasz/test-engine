@@ -4,16 +4,19 @@ use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
     sprites::Player,
-    ui::{basic::Button, placer::Anchor, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews},
+    ui::{
+        basic::Button, impl_view, placer::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewFrame,
+        ViewSubviews,
+    },
     ui_layer::UILayer,
     Level,
 };
 
 use crate::{benchmark::benchmark_level::BenchmarkLevel, TestGameView};
 
+#[view]
 #[derive(Debug, Default)]
 pub struct BenchmarkView {
-    view:          ViewBase,
     level:         BenchmarkLevel,
     bullets_label: Rglica<Label>,
 
@@ -21,6 +24,8 @@ pub struct BenchmarkView {
 
     ui: Rglica<UILayer>,
 }
+
+impl_view!(BenchmarkView);
 
 impl ViewCallbacks for BenchmarkView {
     fn setup(&mut self) {
@@ -46,16 +51,6 @@ impl ViewCallbacks for BenchmarkView {
     fn update(&mut self) {
         self.bullets_label
             .set_text(format!("Bullets: {}", self.level.bullets_count));
-    }
-}
-
-impl View for BenchmarkView {
-    fn view(&self) -> &ViewBase {
-        &self.view
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.view
     }
 }
 

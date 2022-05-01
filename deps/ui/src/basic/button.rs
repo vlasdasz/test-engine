@@ -1,17 +1,20 @@
 use rtools::{Event, Rglica};
 
 use crate::{
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
+#[view]
 #[derive(Default, Debug)]
 pub struct Button {
-    base:  ViewBase,
     label: Rglica<Label>,
 
     pub on_tap: Event,
 }
+
+impl_view!(Button);
 
 impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
@@ -36,15 +39,5 @@ impl ViewCallbacks for Button {
         if self.label.is_ok() {
             self.label.place().as_background()
         }
-    }
-}
-
-impl View for Button {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }

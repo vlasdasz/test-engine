@@ -2,18 +2,21 @@ use rtools::{Event, IntoF32, Rglica};
 
 use crate::{
     complex::Slider,
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks,
 };
 
+#[view]
 #[derive(Default, Debug)]
 pub struct LabeledSlider {
-    base:   ViewBase,
     label:  Rglica<Label>,
     slider: Rglica<Slider>,
 
     pub on_change: Event<f32>,
 }
+
+impl_view!(LabeledSlider);
 
 impl LabeledSlider {
     pub fn set_start(&mut self, start: impl IntoF32) -> &mut Self {
@@ -44,15 +47,5 @@ impl ViewCallbacks for LabeledSlider {
 
     fn layout(&mut self) {
         self.place().all_vertically_with_ratio([1, 5]);
-    }
-}
-
-impl View for LabeledSlider {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }

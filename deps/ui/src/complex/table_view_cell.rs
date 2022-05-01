@@ -1,6 +1,7 @@
 use rtools::{Boxed, Rglica};
 
 use crate::{
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks,
 };
@@ -13,12 +14,14 @@ pub trait TableViewCell<T>: View {
     fn set_data(&mut self, data: T);
 }
 
+#[view]
 #[derive(Debug, Default)]
 pub struct StringCell {
-    base:  ViewBase,
     data:  String,
     label: Rglica<Label>,
 }
+
+impl_view!(StringCell);
 
 impl ViewCallbacks for StringCell {
     fn setup(&mut self) {
@@ -28,16 +31,6 @@ impl ViewCallbacks for StringCell {
 
     fn layout(&mut self) {
         self.label.place().as_background()
-    }
-}
-
-impl View for StringCell {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
     }
 }
 

@@ -3,33 +3,23 @@ use gm::{flat::PointsPath, Color};
 
 use crate::{
     complex::{path_data::DrawMode, PathData},
-    View, ViewBase,
+    impl_view, view, View, ViewBase,
 };
 
+#[view]
 #[derive(Default, Debug)]
-pub struct DrawingView {
-    base: ViewBase,
-}
+pub struct DrawingView {}
+impl_view!(DrawingView);
 
 impl DrawingView {
     pub fn add_path(&mut self, path: impl Into<PointsPath>, color: Color) {
-        self.base
+        self.view
             .paths
             .push(initialize_path_data(path.into(), color, DrawMode::Fill))
     }
 
     pub fn remove_all_paths(&mut self) {
-        self.base.paths.clear()
-    }
-}
-
-impl View for DrawingView {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
+        self.view.paths.clear()
     }
 }
 

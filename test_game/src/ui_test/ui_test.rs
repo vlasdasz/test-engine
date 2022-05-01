@@ -5,20 +5,22 @@ use test_engine::{
     rtools::{Rglica, StaticStorage},
     ui::{
         basic::{label::DebugLabel, Button},
-        Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
+        impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
 };
 
 use crate::TestGameView;
 
+#[view]
 #[derive(Default, Debug)]
 pub struct UITestView {
-    view:  ViewBase,
     label: Rglica<Label>,
     back:  Rglica<Button>,
     ui:    Rglica<UILayer>,
 }
+
+impl_view!(UITestView);
 
 impl ViewCallbacks for UITestView {
     fn setup(&mut self) {
@@ -40,16 +42,6 @@ impl ViewCallbacks for UITestView {
     fn layout(&mut self) {
         self.label.place().center();
         self.back.place().bottom_center(20);
-    }
-}
-
-impl View for UITestView {
-    fn view(&self) -> &ViewBase {
-        &self.view
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.view
     }
 }
 
