@@ -19,4 +19,3 @@ jobs:
           submodules: true
       - name: android
         run: python3 build.py android
-        

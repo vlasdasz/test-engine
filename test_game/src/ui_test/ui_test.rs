@@ -2,8 +2,11 @@ use std::fmt::Debug;
 
 use test_engine::{
     main_view::{HasLevel, MainView},
-    rtools::Rglica,
-    ui::{basic::Button, Label, View, ViewBase, ViewFrame, ViewSubviews},
+    rtools::{Rglica, StaticStorage},
+    ui::{
+        basic::{label::DebugLabel, Button},
+        Label, View, ViewBase, ViewFrame, ViewSubviews,
+    },
     ui_layer::UILayer,
 };
 
@@ -19,6 +22,8 @@ pub struct UITestView {
 
 impl View for UITestView {
     fn setup(&mut self) {
+        DebugLabel::set(true);
+
         self.label = self.add_view();
         self.label
             .set_text("Test Text aa ..324234;dfl*#($U#(*&$*(@#")
@@ -26,9 +31,10 @@ impl View for UITestView {
 
         self.back = self.add_view();
         self.back.set_text("Back").set_frame((120, 20));
-        self.back
-            .on_tap
-            .set(self, |this, _| this.ui.set_view::<TestGameView>());
+        self.back.on_tap.set(self, |this, _| {
+            DebugLabel::set(false);
+            this.ui.set_view::<TestGameView>();
+        });
     }
 
     fn layout(&mut self) {
