@@ -1,16 +1,23 @@
-[workspace]
+[package]
+name = "test_game"
+version = "0.1.0"
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2021"
 
-members = [
-    "rtools",
-    "test_game",
-    "test_engine",
-    "deps/gm",
-    "deps/ui",
-    "deps/maze",
-    "deps/audio",
-    "deps/sprites",
-    "deps/gl_image",
-    "deps/gl_wrapper",
-]
+[[bin]]
+name = "test_game"
 
-default-members = ["test_game"]
+[lib]
+name = "test_game"
+crate-type = ["rlib", "staticlib", "dylib"]
+
+[dependencies]
+log = "0.4"
+test_engine = { path = "test_engine" }
+
+[target.'cfg(target_os="android")'.dependencies]
+android_logger = "0.10"
+android-ndk-sys = "0.2"
+
+[build-dependencies]
+cfg_aliases = "0.1"

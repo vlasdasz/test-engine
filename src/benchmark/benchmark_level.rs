@@ -6,13 +6,15 @@ use test_engine::{
 
 #[derive(Debug, Default)]
 pub struct BenchmarkLevel {
-    base:              LevelBase,
-    left_wall:         Rglica<Wall>,
-    right_wall:        Rglica<Wall>,
-    floor:             Rglica<Wall>,
-    left_animation:    Animation,
-    right_animation:   Animation,
-    floor_animation:   Animation,
+    base:       LevelBase,
+    left_wall:  Rglica<Wall>,
+    right_wall: Rglica<Wall>,
+    floor:      Rglica<Wall>,
+
+    left_animation:  Animation,
+    right_animation: Animation,
+    floor_animation: Animation,
+
     pub player:        Rglica<Player>,
     pub bullets_count: u64,
 }
