@@ -4,7 +4,7 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 
-use test_engine::{paths::home, Screen};
+use test_engine::{net::Request, paths::home, Screen};
 
 #[macro_use]
 extern crate log;
@@ -20,7 +20,16 @@ mod benchmark;
 mod test_game;
 mod ui_test;
 
-fn main() {
+#[tokio::main]
+async fn main() {
+    dbg!("Helloy");
+
+    let req = Request::make("http://127.0.0.1:8000/get_users");
+
+    dbg!(req.call().await.unwrap());
+
+    dbg!("Poka");
+
     let mut screen = Screen::new((1000, 600), &home().join("mazepa/test_engine"));
 
     screen.ui.set_view::<TestGameView>();

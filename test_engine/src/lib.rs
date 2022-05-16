@@ -14,6 +14,7 @@ pub use maze;
 pub use rtools;
 pub use sprites;
 pub use ui;
+pub use net;
 
 pub use crate::screen::Screen;
 

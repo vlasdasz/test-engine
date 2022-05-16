@@ -19,6 +19,7 @@ rtools = { path = "../rtools" }
 
 gm = { path = "../deps/gm" }
 ui = { path = "../deps/ui" }
+net = { path = "../deps/net" }
 maze = { path = "../deps/maze" }
 audio = { path = "../deps/audio" }
 sprites = { path = "../deps/sprites" }
