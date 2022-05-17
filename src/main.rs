@@ -5,7 +5,6 @@
 #![feature(trait_upcasting)]
 
 use test_engine::{paths::home, Screen};
-use test_engine::net::API;
 
 #[macro_use]
 extern crate log;
@@ -23,16 +22,6 @@ mod ui_test;
 
 #[tokio::main]
 async fn main() {
-    dbg!("Helloy");
-
-    let api = API::new("http://127.0.0.1:8000");
-
-    let req = api.request("get_users");
-
-    dbg!(req.call().await.unwrap());
-
-    dbg!("Poka");
-
     let mut screen = Screen::new((1000, 600), &home().join("mazepa/test_engine"));
 
     screen.ui.set_view::<TestGameView>();

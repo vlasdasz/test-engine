@@ -12,6 +12,10 @@ impl API {
 
 impl API {
     pub fn request(&self, url: impl ToString) -> Request {
-        Request::make(format!("{}/{}", self.url, url.to_string()))
+        Request::make(format!("http://{}/{}", self.url, url.to_string()))
     }
+
+    // pub fn goto_moto<T: Deserialize>(&self, url: impl ToString) -> T {
+    //     todo!()
+    // }
 }
