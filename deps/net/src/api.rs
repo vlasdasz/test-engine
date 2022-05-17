@@ -1,3 +1,4 @@
+use serde::de::DeserializeOwned;
 use crate::Request;
 
 pub struct API {
@@ -11,7 +12,7 @@ impl API {
 }
 
 impl API {
-    pub fn request(&self, url: impl ToString) -> Request {
+    pub fn request<T: DeserializeOwned>(&self, url: impl ToString) -> Request<T> {
         Request::make(format!("http://{}/{}", self.url, url.to_string()))
     }
 
