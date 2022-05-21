@@ -3,7 +3,7 @@ use std::ops::Deref;
 use derivative::Derivative;
 use gl_image::Image;
 use gm::Color;
-use rtools::{data_manager::DataManager, static_storage, Rglica, ToRglica};
+use rtools::{data_manager::DataManager, pub_static_storage, Rglica, ToRglica};
 
 use crate::{
     basic::label_layout::LabelLayout,
@@ -12,7 +12,7 @@ use crate::{
     Font, ImageView, View, ViewBase, ViewCallbacks,
 };
 
-static_storage!(DebugLabel, bool, false);
+pub_static_storage!(DebugLabel, bool, false);
 
 #[view]
 #[derive(Default, Derivative)]
