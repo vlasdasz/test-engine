@@ -3,7 +3,8 @@ use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{
         data_manager::{DataManager, Handle},
-        Rglica, ToRglica,
+        misc::sleep,
+        Dispatch, Rglica, ToRglica,
     },
     sprite_view::SpriteView,
     sprites::{Control, Player},
@@ -36,8 +37,9 @@ pub struct TestGameView {
     to_benchmark: Rglica<Button>,
     to_test:      Rglica<Button>,
 
-    play:  Rglica<Button>,
-    sound: Handle<Sound>,
+    play:       Rglica<Button>,
+    sound:      Handle<Sound>,
+    async_task: Rglica<Button>,
 
     ui: Rglica<UILayer>,
 }
@@ -116,6 +118,20 @@ impl TestGameView {
         self.play.on_tap.set(self, |this, _| this.sound.play());
 
         self.sound = Sound::get("retro.wav");
+
+        self.async_task = self.add_view();
+        self.async_task.set_text("Async task").set_frame((120, 20));
+        self.async_task.on_tap.set(self, |_, _| {
+            Dispatch::dispatch(
+                async {
+                    sleep(1);
+                    10
+                },
+                |val| {
+                    dbg!(val);
+                },
+            );
+        });
     }
 }
 
@@ -165,6 +181,10 @@ impl ViewCallbacks for TestGameView {
         self.play
             .place()
             .anchor(self.to_test, Anchor::Top, Anchor::Center, 10);
+
+        self.async_task
+            .place()
+            .anchor(self.play, Anchor::Top, Anchor::Center, 10);
     }
 }
 

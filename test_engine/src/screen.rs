@@ -7,7 +7,7 @@ use cfg_if::cfg_if;
 use gl_wrapper::{events::Events, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{Time, ToRglica, Unwrap};
+use rtools::{Dispatch, Time, ToRglica, Unwrap};
 use sprites::SpritesDrawer;
 use ui::{UIDrawer, ViewData, ViewFrame};
 
@@ -107,6 +107,8 @@ impl Screen {
         self.ui.drawer.draw(self.ui.root_view.deref_mut());
 
         self.ui.drawer.reset_viewport();
+
+        Dispatch::call();
     }
 
     fn update_level(&mut self) {

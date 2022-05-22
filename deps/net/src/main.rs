@@ -21,6 +21,8 @@ async fn main() {
     let users = get_users.get().await.unwrap();
     dbg!(users);
 
+    let sorekok = get_users.get();
+
     register
         .post(User {
             login:    "garmanec".into(),
