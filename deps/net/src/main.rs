@@ -1,6 +1,6 @@
 #![feature(explicit_generic_args_with_impl_trait)]
 
-use net::API;
+use net::{Request, API};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -13,19 +13,19 @@ struct User {
 async fn main() {
     dbg!("Helloy");
 
-    let api = API::new("127.0.0.1:8000");
+    let _api = API::new("127.0.0.1:8000");
 
-    let get_users = api.request::<(), Vec<User>>("get_users");
-    let register = api.request::<User, ()>("register");
+    const GET_USERS: Request<(), Vec<User>> = Request::make("http://127.0.0.1:8000/get_users");
+    const REGISTER: Request<User, ()> = Request::make("http://127.0.0.1:8000/register");
 
-    let users = get_users.get().await.unwrap();
+    let users = GET_USERS.get().await.unwrap();
     dbg!(users);
 
-    let sorekok = get_users.get();
+    let _sorekok = GET_USERS.get();
 
-    register
+    REGISTER
         .post(User {
-            login:    "garmanec".into(),
+            login:    "garmanec 2".into(),
             password: "paraguk4ka!".into(),
         })
         .await
@@ -33,7 +33,7 @@ async fn main() {
 
     dbg!("spisolin");
 
-    let users = get_users.get().await.unwrap();
+    let users = GET_USERS.get().await.unwrap();
     dbg!(users);
 
     dbg!("Poka");

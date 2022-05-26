@@ -1,10 +1,11 @@
+use serde::{Deserialize, Serialize};
 use test_engine::{
     audio::Sound,
     main_view::{HasLevel, MainView},
+    net::DispatchRequest,
     rtools::{
         data_manager::{DataManager, Handle},
-        misc::sleep,
-        Dispatch, Rglica, ToRglica,
+        Rglica, ToRglica,
     },
     sprite_view::SpriteView,
     sprites::{Control, Player},
@@ -21,6 +22,14 @@ use test_engine::{
 };
 
 use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView, UITestView};
+
+#[derive(Debug, Serialize, Deserialize)]
+struct User {
+    login:    String,
+    password: String,
+}
+
+const GET_USERS: DispatchRequest<(), Vec<User>> = DispatchRequest::make("http://127.0.0.1:8000/get_users");
 
 #[view]
 #[derive(Default, Debug)]
@@ -121,16 +130,17 @@ impl TestGameView {
 
         self.async_task = self.add_view();
         self.async_task.set_text("Async task").set_frame((120, 20));
-        self.async_task.on_tap.set(self, |_, _| {
-            Dispatch::dispatch(
-                async {
-                    sleep(1);
-                    10
-                },
-                |val| {
-                    dbg!(val);
-                },
-            );
+        self.async_task.on_tap.set(self, |this, _| {
+            GET_USERS.get(this, |this, error, result| {
+                if let Some(error) = error {
+                    dbg!(error);
+                    return;
+                }
+
+                dbg!(&result);
+
+                this.async_task.set_text(result.first().unwrap().login.clone());
+            });
         });
     }
 }

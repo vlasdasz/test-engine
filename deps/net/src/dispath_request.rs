@@ -1,5 +1,7 @@
+use std::ops::DerefMut;
+
+use rtools::{Dispatch, ToRglica};
 use serde::de::DeserializeOwned;
-use serde_json::from_str;
 
 use crate::Request;
 
@@ -8,7 +10,7 @@ pub struct DispatchRequest<Param, Result> {
 }
 
 impl<R, P> DispatchRequest<R, P> {
-    pub fn make(url: impl ToString) -> Self {
+    pub const fn make(url: &'static str) -> Self {
         Self {
             request: Request::make(url),
         }
@@ -27,10 +29,23 @@ impl<R, P> DispatchRequest<R, P> {
 //         })));
 // }
 
-impl<Result: DeserializeOwned + Default> DispatchRequest<(), Result> {
-    pub async fn get<Obj: 'static>(&self, obj: &Obj, completion: impl Fn(&mut Obj, Option<String>, Result)) {
-
-
-        todo!()
+impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Result> {
+    pub fn get<Obj: 'static>(
+        &'static self,
+        obj: &Obj,
+        completion: impl FnOnce(&mut Obj, Option<String>, Result) + Send + 'static,
+    ) {
+        let mut rglica = obj.to_rglica();
+        Dispatch::dispatch(self.request.get(), move |result| {
+            if result.is_err() {
+                completion(
+                    rglica.deref_mut(),
+                    Some("Request error".into()),
+                    Result::default(),
+                )
+            } else {
+                completion(rglica.deref_mut(), None, result.unwrap())
+            }
+        });
     }
 }
