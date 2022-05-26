@@ -11,10 +11,10 @@ pub use gl_image;
 pub use gl_wrapper;
 pub use gm;
 pub use maze;
+pub use net;
 pub use rtools;
 pub use sprites;
 pub use ui;
-pub use net;
 
 pub use crate::screen::Screen;
 

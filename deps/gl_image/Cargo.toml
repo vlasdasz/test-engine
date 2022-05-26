@@ -17,5 +17,5 @@ serde = { version = "1.0", features = ["derive"] }
 
 
 gm = { path = "../gm" }
-rtools = { path = "../../rtools" }
+rtools = { path = "../rtools" }
 gl_wrapper = { path = "../gl_wrapper" }

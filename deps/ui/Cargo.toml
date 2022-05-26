@@ -20,7 +20,7 @@ gl_wrapper = { path = "../gl_wrapper" }
 
 ui_proc = { path = "ui_proc" }
 
-rtools = { path = "../../rtools" }
+rtools = { path = "../rtools" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14"

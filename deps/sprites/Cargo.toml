@@ -17,4 +17,4 @@ rapier2d = { version = "0.11", features = [ "parallel", "simd-stable" ] }
 gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }
 
-rtools = { path = "../../rtools" }
+rtools = { path = "../rtools" }
