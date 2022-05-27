@@ -15,7 +15,7 @@ pub trait TableViewCell<T>: View {
 }
 
 #[view]
-#[derive(Debug, Default)]
+#[derive(Default, Debug)]
 pub struct StringCell {
     data:  String,
     label: Rglica<Label>,

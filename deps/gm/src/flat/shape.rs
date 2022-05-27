@@ -1,6 +1,6 @@
 use crate::flat::{Point, ProcessPoints, Size};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum Shape {
     Rect(Size),
     Circle(f32),

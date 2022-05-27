@@ -4,7 +4,7 @@ use test_engine::{
     Image, Level, LevelBase,
 };
 
-#[derive(Debug, Default)]
+#[derive(Default, Debug)]
 pub struct BenchmarkLevel {
     base:       LevelBase,
     left_wall:  Rglica<Wall>,

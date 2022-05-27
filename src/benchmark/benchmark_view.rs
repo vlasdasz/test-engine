@@ -15,7 +15,7 @@ use test_engine::{
 use crate::{benchmark::benchmark_level::BenchmarkLevel, TestGameView};
 
 #[view]
-#[derive(Debug, Default)]
+#[derive(Default, Debug)]
 pub struct BenchmarkView {
     level:         BenchmarkLevel,
     bullets_label: Rglica<Label>,

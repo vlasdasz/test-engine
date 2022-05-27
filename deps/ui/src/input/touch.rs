@@ -42,7 +42,7 @@ impl ButtonState {
     }
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum TouchEvent {
     Began,
     Moved,
