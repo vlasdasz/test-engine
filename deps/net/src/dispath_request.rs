@@ -17,18 +17,6 @@ impl<R, P> DispatchRequest<R, P> {
     }
 }
 
-// pub fn set<Obj: 'static>(&self, obj: &Obj, mut action: impl FnMut(&mut Obj,
-// T) + 'static) {     debug_assert!(
-//         self.subscriber.borrow().is_null(),
-//         "Event already has a subscriber"
-//     );
-//     let mut rglica = obj.to_rglica();
-//     self.subscriber
-//         .replace(Unwrap::from_box(Box::new(move |value| {
-//             action(rglica.deref_mut(), value);
-//         })));
-// }
-
 impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Result> {
     pub fn get<Obj: 'static>(
         &'static self,
@@ -36,16 +24,13 @@ impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Resul
         completion: impl FnOnce(&mut Obj, Option<String>, Result) + Send + 'static,
     ) {
         let mut rglica = obj.to_rglica();
-        Dispatch::dispatch(self.request.get(), move |result| {
-            if result.is_err() {
-                completion(
-                    rglica.deref_mut(),
-                    Some("Request error".into()),
-                    Result::default(),
-                )
-            } else {
-                completion(rglica.deref_mut(), None, result.unwrap())
-            }
+        Dispatch::dispatch(self.request.get(), move |result| match result {
+            Ok(val) => completion(rglica.deref_mut(), None, val),
+            Err(_) => completion(
+                rglica.deref_mut(),
+                Some("Request error".into()),
+                Result::default(),
+            ),
         });
     }
 }

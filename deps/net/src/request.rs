@@ -28,7 +28,7 @@ impl<Result: DeserializeOwned> Request<(), Result> {
         get(self.url).await?.text().await
     }
 
-    pub async fn get(&'static self) -> reqwest::Result<Result> {
+    pub async fn get(&self) -> reqwest::Result<Result> {
         let string = self.call().await?;
         let v: Result = from_str(&string).unwrap();
         Ok(v)
