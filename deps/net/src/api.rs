@@ -1,31 +1,19 @@
-// use serde::{de::DeserializeOwned, Serialize};
+use serde::de::DeserializeOwned;
 
-// use crate::Request;
+use crate::DispatchRequest;
 
 pub struct API {
-    _url: String,
+    base: &'static str,
 }
 
 impl API {
-    pub fn new(url: impl ToString) -> Self {
-        Self {
-            _url: url.to_string(),
-        }
+    pub const fn new(base: &'static str) -> Self {
+        Self { base }
     }
 }
 
 impl API {
-    // pub fn request<Result: DeserializeOwned, Param: Serialize>(
-    //     &self,
-    //     url: impl ToString,
-    // ) -> Request<Result, Param> {
-    //
-    //     todo!()
-    //
-    //     //Request::make(format!("http://{}/{}", self.url, url.to_string()))
-    // }
-
-    // pub fn goto_moto<T: Deserialize>(&self, url: impl ToString) -> T {
-    //     todo!()
-    // }
+    pub const fn get<Result: DeserializeOwned>(&self, url: &'static str) -> DispatchRequest<(), Result> {
+        DispatchRequest::make(self.base, url)
+    }
 }

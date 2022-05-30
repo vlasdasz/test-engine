@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use test_engine::{
     audio::Sound,
     main_view::{HasLevel, MainView},
-    net::DispatchRequest,
+    net::{DispatchRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
         Rglica, ToRglica,
@@ -29,7 +29,9 @@ struct User {
     password: String,
 }
 
-const GET_USERS: DispatchRequest<(), Vec<User>> = DispatchRequest::make("http://127.0.0.1:8000/get_users");
+const API: API = API::new("ec2-18-217-89-172.us-east-2.compute.amazonaws.com");
+
+const GET_USERS: DispatchRequest<(), Vec<User>> = API.get("get_users");
 
 #[view]
 #[derive(Default, Debug)]
