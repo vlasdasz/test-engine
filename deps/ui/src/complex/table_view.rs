@@ -34,3 +34,10 @@ pub trait TableViewDataSource {
     fn number_of_cells(&self) -> usize;
     fn cell_for_index(&self, index: usize) -> Box<dyn View>;
 }
+
+#[macro_export]
+macro_rules! data_source {
+    ($source:ident) => {
+        ($source as &mut dyn TableViewDataSource).to_rglica()
+    };
+}

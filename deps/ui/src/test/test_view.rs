@@ -5,7 +5,7 @@ use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
 use crate::{
     basic::Button,
     complex::{DrawingView, StringCell, TableView, TableViewDataSource},
-    impl_view,
+    data_source, impl_view,
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
     view,
     view::{ViewData, ViewFrame, ViewSubviews},
@@ -78,7 +78,7 @@ impl ViewCallbacks for TestView {
         self.animation = Animation::new(0, 400, 10).into();
 
         self.table = self.add_view();
-        self.table.data_source = (self as &mut dyn TableViewDataSource).to_rglica();
+        self.table.data_source = data_source!(self);
         self.table.reload_data();
     }
 
