@@ -1,6 +1,6 @@
-use serde::de::DeserializeOwned;
+use serde::{de::DeserializeOwned, Serialize};
 
-use crate::dispath_request::GetRequest;
+use crate::dispath_request::{GetRequest, PostRequest};
 
 pub struct API {
     base: &'static str,
@@ -15,5 +15,9 @@ impl API {
 impl API {
     pub const fn get<Result: DeserializeOwned>(&self, url: &'static str) -> GetRequest<Result> {
         GetRequest::make(self.base, url)
+    }
+
+    pub const fn post<Param: Serialize>(&self, url: &'static str) -> PostRequest<Param> {
+        PostRequest::make(self.base, url)
     }
 }
