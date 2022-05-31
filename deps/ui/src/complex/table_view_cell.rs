@@ -1,18 +1,10 @@
-use rtools::{Boxed, Rglica, ToRglica};
+use rtools::{Rglica, ToRglica};
 
 use crate::{
     impl_view, view,
     view::{ViewFrame, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks,
 };
-
-pub trait TableViewData {
-    fn make_cell(self) -> Box<dyn TableViewCell<Self>>;
-}
-
-pub trait TableViewCell<T>: View {
-    fn set_data(&mut self, data: T);
-}
 
 #[view]
 #[derive(Default, Debug)]
@@ -34,16 +26,8 @@ impl ViewCallbacks for StringCell {
     }
 }
 
-impl TableViewCell<String> for StringCell {
-    fn set_data(&mut self, data: String) {
-        self.label.set_text(data);
-    }
-}
-
-impl TableViewData for String {
-    fn make_cell(self) -> Box<dyn TableViewCell<Self>> {
-        let mut cell = StringCell::boxed();
-        cell.data = self;
-        cell
+impl StringCell {
+    pub fn set_data(&mut self, data: String) {
+        self.data = data;
     }
 }

@@ -1,44 +1,36 @@
-use std::{fmt::Debug, marker::PhantomData};
+use std::fmt::Debug;
 
 use rtools::{Rglica, ToRglica};
 
 use crate::{
-    complex::table_view_cell::TableViewData,
+    impl_view, view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks,
 };
 
+#[view]
 #[derive(Default, Debug)]
-pub struct TableView<T: TableViewData> {
-    base:          ViewBase,
-    _phantom_data: PhantomData<T>,
+pub struct TableView {
+    pub data_source: Rglica<dyn TableViewDataSource>,
 }
+impl_view!(TableView);
 
-impl<T: Debug + Default + TableViewData + 'static> TableView<T> {
-    pub fn set_data(&mut self, data: Vec<T>) {
+impl TableView {
+    pub fn reload_data(&mut self) {
         self.remove_all_subviews();
-        for data in data {
-            self.add_boxed(data.make_cell());
+        for i in 0..self.data_source.number_of_cells() {
+            self.add_boxed(self.data_source.cell_for_index(i));
         }
     }
 }
 
-impl<T: Debug + Default + TableViewData + 'static> ViewCallbacks for TableView<T> {
+impl ViewCallbacks for TableView {
     fn layout(&mut self) {
         self.place().all_vertically()
     }
 }
 
-impl<T: Debug + Default + TableViewData + 'static> View for TableView<T> {
-    fn view(&self) -> &ViewBase {
-        &self.base
-    }
-
-    fn view_mut(&mut self) -> &mut ViewBase {
-        &mut self.base
-    }
-
-    fn rglica(&self) -> Rglica<dyn View> {
-        (self as &dyn View).to_rglica()
-    }
+pub trait TableViewDataSource {
+    fn number_of_cells(&self) -> usize;
+    fn cell_for_index(&self, index: usize) -> Box<dyn View>;
 }

@@ -19,5 +19,5 @@ pub use labeled_slider::LabeledSlider;
 pub use labeled_view::LabeledView;
 pub use path_data::PathData;
 pub use slider::Slider;
-pub use table_view::TableView;
-pub use table_view_cell::TableViewCell;
+pub use table_view::*;
+pub use table_view_cell::*;

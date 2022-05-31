@@ -1,10 +1,10 @@
 use gl_image::Image;
 use gm::Color;
-use rtools::{data_manager::Handle, Animation, Rglica, ToRglica, Unwrap};
+use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
 
 use crate::{
     basic::Button,
-    complex::{DrawingView, TableView},
+    complex::{DrawingView, StringCell, TableView, TableViewDataSource},
     impl_view,
     test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
     view,
@@ -22,7 +22,7 @@ pub struct TestView {
     drawing:  Rglica<DrawingView>,
     layout:   Rglica<LayoutView>,
     animated: Rglica<ImageView>,
-    table:    Rglica<TableView<String>>,
+    table:    Rglica<TableView>,
 
     animation: Unwrap<Animation>,
 
@@ -78,12 +78,26 @@ impl ViewCallbacks for TestView {
         self.animation = Animation::new(0, 400, 10).into();
 
         self.table = self.add_view();
-        self.table
-            .set_data(vec!["spika".into(), "rglica".into(), "sokol".into()]);
+        self.table.data_source = (self as &mut dyn TableViewDataSource).to_rglica();
+        self.table.reload_data();
     }
 
     fn layout(&mut self) {
         self.place().all_vertically();
         self.animated.set_y(self.animation.value());
+    }
+}
+
+const DATA: &[&'static str; 3] = &["Solole", "Merkele", "Prokol"];
+
+impl TableViewDataSource for TestView {
+    fn number_of_cells(&self) -> usize {
+        DATA.len()
+    }
+
+    fn cell_for_index(&self, index: usize) -> Box<dyn View> {
+        let mut cell = StringCell::boxed();
+        cell.set_data(DATA[index].into());
+        cell
     }
 }
