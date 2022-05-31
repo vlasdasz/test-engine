@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use test_engine::{
     audio::Sound,
     main_view::{HasLevel, MainView},
-    net::{DispatchRequest, API},
+    net::{GetRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
         Rglica, ToRglica,
@@ -31,7 +31,7 @@ struct User {
 
 const API: API = API::new("ec2-18-217-89-172.us-east-2.compute.amazonaws.com");
 
-const GET_USERS: DispatchRequest<(), Vec<User>> = API.get("get_users");
+const GET_USERS: GetRequest<Vec<User>> = API.get("get_users");
 
 #[view]
 #[derive(Default, Debug)]

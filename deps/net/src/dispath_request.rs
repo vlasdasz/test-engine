@@ -34,3 +34,5 @@ impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Resul
         });
     }
 }
+
+pub type GetRequest<T> = DispatchRequest<(), T>;
