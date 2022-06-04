@@ -24,6 +24,8 @@ impl ViewCallbacks for DebugView {
 
         if Platform::MOBILE {
             self.set_origin((28, 28));
+        } else {
+            self.set_origin((10, 10));
         }
 
         self.fps.on_set.set(self, |this, _| {
@@ -33,7 +35,6 @@ impl ViewCallbacks for DebugView {
     }
 
     fn layout(&mut self) {
-        self.place().top_left(10);
         self.place().all_vertically();
 
         self.frame_drawn += 1;

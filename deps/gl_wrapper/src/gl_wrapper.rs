@@ -11,10 +11,13 @@ pub struct GLWrapper;
 
 struct StaticData {
     default_framebuffer_id: i32,
-    clear_color: Color
+    clear_color:            Color,
 }
 
-static mut STATIC_DATA: StaticData = StaticData { default_framebuffer_id: -1, clear_color: Color::CLEAR };
+static mut STATIC_DATA: StaticData = StaticData {
+    default_framebuffer_id: -1,
+    clear_color:            Color::CLEAR,
+};
 
 impl GLWrapper {
     pub fn bind_texture(id: u32) {

@@ -2,8 +2,7 @@ use std::ptr::null;
 
 #[cfg(mobile)]
 use gles31_sys::*;
-use gm::Color;
-use gm::flat::Size;
+use gm::{flat::Size, Color};
 
 use crate::GLWrapper;
 
