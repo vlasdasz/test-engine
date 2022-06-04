@@ -2,6 +2,7 @@ use std::ptr::null;
 
 #[cfg(mobile)]
 use gles31_sys::*;
+use gm::Color;
 use gm::flat::Size;
 
 use crate::GLWrapper;
@@ -73,11 +74,16 @@ impl<T: Into<Size>> From<T> for FrameBuffer {
             0
         );
 
-        GL!(DrawBuffers, 1, &GLC!(COLOR_ATTACHMENT0));
+        // GL!(DrawBuffers, 1, &GLC!(COLOR_ATTACHMENT0));
 
         if GL!(CheckFramebufferStatus, GLC!(FRAMEBUFFER)) != GLC!(FRAMEBUFFER_COMPLETE) {
             panic!("Failed to initialize framebuffer")
         }
+
+        let clear_color = GLWrapper::clear_color();
+        GLWrapper::set_clear_color(Color::CLEAR);
+        GLWrapper::clear();
+        GLWrapper::set_clear_color(clear_color);
 
         GLWrapper::unbind_framebuffer();
 

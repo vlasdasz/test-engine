@@ -9,7 +9,12 @@ use rtools::platform::Platform;
 
 pub struct GLWrapper;
 
-static mut DEFAULT_FRAMEBUFFER_ID: i32 = 0;
+struct StaticData {
+    default_framebuffer_id: i32,
+    clear_color: Color
+}
+
+static mut STATIC_DATA: StaticData = StaticData { default_framebuffer_id: -1, clear_color: Color::CLEAR };
 
 impl GLWrapper {
     pub fn bind_texture(id: u32) {
@@ -17,8 +22,13 @@ impl GLWrapper {
         GL!(BindTexture, GLC!(TEXTURE_2D), id);
     }
 
+    pub fn clear_color() -> Color {
+        unsafe { STATIC_DATA.clear_color }
+    }
+
     pub fn set_clear_color(color: impl Borrow<Color>) {
         let color = color.borrow();
+        unsafe { STATIC_DATA.clear_color = color.clone() };
         GL!(ClearColor, color.r, color.g, color.b, color.a)
     }
 
@@ -83,14 +93,14 @@ impl GLWrapper {
         GL!(
             GetIntegerv,
             GLC!(FRAMEBUFFER_BINDING),
-            &mut DEFAULT_FRAMEBUFFER_ID
+            &mut STATIC_DATA.default_framebuffer_id
         );
-        dbg!(unsafe { DEFAULT_FRAMEBUFFER_ID as u32 });
+        dbg!(unsafe { STATIC_DATA.default_framebuffer_id as u32 });
     }
 
     fn default_framebuffer_id() -> u32 {
         if Platform::IOS {
-            unsafe { DEFAULT_FRAMEBUFFER_ID as u32 }
+            unsafe { STATIC_DATA.default_framebuffer_id as u32 }
         } else {
             0
         }
