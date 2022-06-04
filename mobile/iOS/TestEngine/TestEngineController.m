@@ -20,6 +20,8 @@
 @property (nonatomic) NSTimer* timer;
 @end
 
+BOOL didAppear = false;
+
 @implementation TestEngineController
 
 - (void)viewDidLoad {
@@ -38,12 +40,23 @@
                 7);
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    opengl_ready();
+    didAppear = true;
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     set_screen_size(self.view.frame.size.width, self.view.frame.size.height);
 }
 
 - (void)update {
+    
+    if (!didAppear) {
+        return;
+    }
+    
     CMAttitude *gyro = self.motion.deviceMotion.attitude;
     if (gyro != nil) {
         set_gyro(gyro.pitch, gyro.roll, gyro.yaw);

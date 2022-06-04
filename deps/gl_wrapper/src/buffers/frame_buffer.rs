@@ -18,11 +18,7 @@ impl FrameBuffer {
     }
 
     pub fn unbind(&self) {
-        GL!(BindFramebuffer, GLC!(FRAMEBUFFER), 0);
-    }
-
-    pub fn bind_texture(&self) {
-        GLWrapper::bind_texture(self.texture_handle)
+        GLWrapper::unbind_framebuffer();
     }
 }
 
@@ -83,7 +79,7 @@ impl<T: Into<Size>> From<T> for FrameBuffer {
             panic!("Failed to initialize framebuffer")
         }
 
-        GL!(BindFramebuffer, GLC!(FRAMEBUFFER), 0);
+        GLWrapper::unbind_framebuffer();
 
         Self {
             buffer_handle,

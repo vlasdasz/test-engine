@@ -10,7 +10,7 @@ use std::{
     ptr,
 };
 
-use test_engine::app::App;
+use test_engine::{app::App, gl_wrapper::GLWrapper};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -73,6 +73,11 @@ pub extern "C" fn set_monitor(
             diagonal,
         );
     }
+}
+
+#[no_mangle]
+pub extern "C" fn opengl_ready() {
+    GLWrapper::save_default_framebuffer_id();
 }
 
 #[cfg(android)]

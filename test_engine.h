@@ -17,3 +17,5 @@ void set_monitor(int ppi,
                 float width,
                 float height,
                 float diagonal);
+
+void opengl_ready();

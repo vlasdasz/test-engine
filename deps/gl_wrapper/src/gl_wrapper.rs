@@ -5,8 +5,11 @@ use std::borrow::Borrow;
 #[cfg(mobile)]
 use gles31_sys::*;
 use gm::{flat::Rect, Color};
+use rtools::platform::Platform;
 
 pub struct GLWrapper;
+
+static mut DEFAULT_FRAMEBUFFER_ID: i32 = 0;
 
 impl GLWrapper {
     pub fn bind_texture(id: u32) {
@@ -74,6 +77,27 @@ impl GLWrapper {
     pub fn enable_blend() {
         GL!(Enable, GLC!(BLEND));
         GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
+    }
+
+    pub fn save_default_framebuffer_id() {
+        GL!(
+            GetIntegerv,
+            GLC!(FRAMEBUFFER_BINDING),
+            &mut DEFAULT_FRAMEBUFFER_ID
+        );
+        dbg!(unsafe { DEFAULT_FRAMEBUFFER_ID as u32 });
+    }
+
+    fn default_framebuffer_id() -> u32 {
+        if Platform::IOS {
+            unsafe { DEFAULT_FRAMEBUFFER_ID as u32 }
+        } else {
+            0
+        }
+    }
+
+    pub fn unbind_framebuffer() {
+        GL!(BindFramebuffer, GLC!(FRAMEBUFFER), Self::default_framebuffer_id());
     }
 }
 
