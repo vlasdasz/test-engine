@@ -13,7 +13,7 @@ use test_engine::{
         basic::Button,
         complex::{AnalogStickView, LabeledSlider},
         impl_view,
-        placer::Anchor,
+        layout::Anchor,
         test::test_view::TestView,
         view, DPadView, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
     },

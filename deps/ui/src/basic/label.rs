@@ -3,7 +3,7 @@ use std::ops::Deref;
 use derivative::Derivative;
 use gl_image::Image;
 use gm::Color;
-use rtools::{data_manager::DataManager, pub_static_storage, Rglica, ToRglica};
+use rtools::{data_manager::DataManager, Rglica, ToRglica};
 
 use crate::{
     basic::label_layout::LabelLayout,
@@ -11,8 +11,6 @@ use crate::{
     view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase, ViewCallbacks,
 };
-
-pub_static_storage!(DebugLabel, bool, false);
 
 #[view]
 #[derive(Default, Derivative)]
@@ -102,8 +100,5 @@ impl ViewCallbacks for Label {
 
     fn layout(&mut self) {
         self.image.place().as_background();
-        if *DebugLabel::get() {
-            dbg!(self.image.frame());
-        }
     }
 }

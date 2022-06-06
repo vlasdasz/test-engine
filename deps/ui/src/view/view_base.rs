@@ -6,8 +6,8 @@ use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Event, IntoF32, Rglica, ToRglica};
 
 use crate::{
-    basic::Placer,
     complex::PathData,
+    layout::{NewPlacer, Placer},
     view::{ViewData, ViewFrame},
     Touch, UIDrawer, View,
 };
@@ -35,6 +35,9 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     pub(crate) placer: Placer,
+
+    #[derivative(Debug = "ignore")]
+    pub(crate) new_placer: Option<NewPlacer>,
 
     pub(crate) image: Handle<Image>,
 

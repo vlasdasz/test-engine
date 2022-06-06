@@ -2,7 +2,7 @@ use rtools::{Rglica, ToRglica};
 
 use crate::{
     impl_view,
-    placer::Anchor,
+    layout::Anchor,
     view,
     view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase, ViewCallbacks,

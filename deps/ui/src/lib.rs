@@ -14,7 +14,7 @@ pub use text::{Font, Glyph};
 pub mod basic;
 pub mod complex;
 pub mod input;
-pub mod placer;
+pub mod layout;
 pub mod test;
 pub mod text;
 mod ui_drawer;

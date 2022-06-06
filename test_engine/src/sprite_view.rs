@@ -2,7 +2,7 @@ use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica, ToRglica};
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, impl_view, placer::place_vertically, view, View, ViewBase,
+    basic::Button, complex::LabeledView, impl_view, layout::place_vertically, view, View, ViewBase,
     ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
 };
 

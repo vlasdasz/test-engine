@@ -2,7 +2,7 @@ use gm::flat::{Point, Rect};
 use rtools::{address::Address, Rglica, ToRglica};
 
 use crate::{
-    basic::Placer,
+    layout::Placer,
     view::{view_data::ViewData, Alert, ViewInternal},
     View, ViewBase, ViewFrame,
 };

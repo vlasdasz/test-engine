@@ -5,7 +5,7 @@ use test_engine::{
     rtools::{Rglica, ToRglica},
     sprites::Player,
     ui::{
-        basic::Button, impl_view, placer::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewFrame,
+        basic::Button, impl_view, layout::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewFrame,
         ViewSubviews,
     },
     ui_layer::UILayer,

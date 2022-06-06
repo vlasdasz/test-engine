@@ -15,6 +15,9 @@ pub enum Anchor {
     Left,
     Right,
 
+    Width,
+    Height,
+
     Center,
 }
 
@@ -181,6 +184,7 @@ impl Placer {
                 self.frame.origin.x = view.x() - view.height() / 2.0 + self.height() / 2.0;
                 self.frame.origin.y = view.y() - view.width() / 2.0 + self.width() / 2.0;
             }
+            _ => (),
         }
 
         match position {
@@ -203,6 +207,7 @@ impl Placer {
                     self.frame.origin.x = view.x() + view.width() / 2.0 - self.width() / 2.0;
                 }
             }
+            _ => (),
         }
     }
 }

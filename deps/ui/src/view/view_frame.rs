@@ -2,7 +2,7 @@ use gm::flat::{Point, Rect};
 use rtools::IntoF32;
 
 use crate::{
-    placer::Placer,
+    layout::{NewPlacer, Placer},
     view::{ViewInternal, ViewSubviews},
     View,
 };
@@ -22,7 +22,29 @@ pub trait ViewFrame {
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn place(&mut self) -> &mut Placer;
+    fn new_placer(&self) -> Option<&NewPlacer>;
     fn calculate_frames(&mut self);
+    fn new_layout(&mut self)
+    where
+        Self: View,
+    {
+        let view = self.view_mut();
+        if let Some(placer) = &view.new_placer {
+            for rule in &placer.rules {
+                rule.layout(&mut view.frame, view.superview.frame());
+            }
+        }
+    }
+
+    fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer))
+    where
+        Self: View,
+    {
+        debug_assert!(self.view_mut().new_placer.is_none(), "Double layout");
+        let mut placer = NewPlacer::default();
+        make(&mut placer);
+        self.view_mut().new_placer = placer.into();
+    }
 }
 
 impl<T: ?Sized + View> ViewFrame for T {
@@ -89,11 +111,16 @@ impl<T: ?Sized + View> ViewFrame for T {
         &mut self.view_mut().placer
     }
 
+    fn new_placer(&self) -> Option<&NewPlacer> {
+        self.view().new_placer.as_ref()
+    }
+
     fn calculate_frames(&mut self) {
         let view = self.view_mut();
         view.absolute_frame = view.frame;
         view.absolute_frame.origin += view.super_absolute_frame().origin;
         self.layout();
+        self.new_layout();
         for view in self.subviews_mut() {
             view.calculate_frames();
         }

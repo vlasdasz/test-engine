@@ -4,7 +4,7 @@ use rtools::{Rglica, ToRglica};
 use crate::{
     basic::Button,
     impl_view,
-    placer::Anchor,
+    layout::Anchor,
     view,
     view::{ViewData, ViewFrame, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks,
