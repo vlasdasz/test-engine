@@ -13,6 +13,7 @@ use crate::TestGameView;
 #[derive(Default, Debug)]
 pub struct UITestView {
     container: Rglica<ViewBase>,
+    top_view:  Rglica<ViewBase>,
     test:      Rglica<ViewBase>,
     back:      Rglica<Button>,
     ui:        Rglica<UILayer>,
@@ -25,12 +26,16 @@ impl ViewCallbacks for UITestView {
         self.container = self.add_view();
         self.container.set_frame((200, 200, 280, 280));
 
-        self.test = self.container.add_view();
-        self.test.set_frame((100, 100, 100, 100));
+        self.top_view = self.container.add_view();
+        self.top_view.make_layout(|a| {
+            a.left().top().right().offset(10);
+            a.height().offset(50);
+        });
 
+        self.test = self.container.add_view();
         self.test.make_layout(|a| {
-            a.top().bottom().offset(40);
-            a.left().right().offset(10);
+            a.top().anchor(self.top_view, 20);
+            a.left().right().bottom().offset(10);
         });
 
         self.back = self.add_view();
