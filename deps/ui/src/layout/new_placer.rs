@@ -42,6 +42,10 @@ impl NewPlacer {
         self
     }
 
+    pub fn center(&mut self) {
+        self.rules.push(LayoutRule::make(Anchor::Center, 0))
+    }
+
     pub fn offset(&mut self, offset: impl IntoF32) {
         let pending = self.pending_sides.drain(..);
         self.rules

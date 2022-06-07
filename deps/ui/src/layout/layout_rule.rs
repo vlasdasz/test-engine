@@ -1,5 +1,5 @@
 use gm::flat::Rect;
-use rtools::Rglica;
+use rtools::{IntoF32, Rglica};
 
 use crate::{layout::Anchor, view::ViewFrame, View};
 
@@ -10,10 +10,10 @@ pub(crate) struct LayoutRule {
 }
 
 impl LayoutRule {
-    pub fn make(side: Anchor, offset: f32) -> Self {
+    pub fn make(side: Anchor, offset: impl IntoF32) -> Self {
         Self {
             side,
-            offset,
+            offset: offset.into_f32(),
             view: Rglica::default(),
         }
     }
@@ -42,7 +42,10 @@ impl LayoutRule {
             Anchor::Right => frame.size.width = frame.width() + s_frame.width() - frame.max_x() - self.offset,
             Anchor::Width => frame.size.width = self.offset,
             Anchor::Height => frame.size.height = self.offset,
-            _ => (),
+            Anchor::Center => {
+                frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0;
+                frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0;
+            }
         }
     }
 
