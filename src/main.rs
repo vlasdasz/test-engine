@@ -1,6 +1,5 @@
 #![allow(incomplete_features)]
 #![allow(clippy::module_inception)]
-#![feature(explicit_generic_args_with_impl_trait)]
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 
@@ -22,7 +21,7 @@ mod ui_test;
 
 #[tokio::main]
 async fn main() {
-    let mut screen = Screen::new((1000, 600), &home().join("mazepa/test_engine"));
+    let mut screen = Screen::new((1000, 600), &home().join("test_engine"));
 
     screen.ui.set_view::<TestGameView>();
     screen.ui.add_debug_view();
