@@ -88,6 +88,9 @@ impl Font {
 impl Font {
     pub fn glyph_for_char(&self, ch: char) -> &Glyph {
         debug_assert!(!self.glyphs.is_empty(), "Font is not initialized");
+        if ch > 127 as char {
+            return &self.glyphs['?' as usize];
+        }
         &self.glyphs[ch as usize]
     }
 }

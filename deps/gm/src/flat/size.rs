@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::flat::{Point, Rect};
 
-#[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SizeBase<T> {
     pub width:  T,
     pub height: T,

@@ -88,7 +88,7 @@ impl ViewCallbacks for TestView {
     }
 }
 
-const DATA: &[&'static str; 3] = &["Solole", "Merkele", "Prokol"];
+const DATA: &[&str; 3] = &["Solole", "Merkele", "Prokol"];
 
 impl TableViewDataSource for TestView {
     fn number_of_cells(&self) -> usize {

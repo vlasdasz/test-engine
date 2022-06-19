@@ -31,7 +31,7 @@ impl GLWrapper {
 
     pub fn set_clear_color(color: impl Borrow<Color>) {
         let color = color.borrow();
-        unsafe { STATIC_DATA.clear_color = color.clone() };
+        unsafe { STATIC_DATA.clear_color = *color };
         GL!(ClearColor, color.r, color.g, color.b, color.a)
     }
 
