@@ -1,4 +1,4 @@
-use gm::flat::{Point, Rect};
+use gm::flat::{Point, Rect, Size};
 use rtools::IntoF32;
 
 use crate::{
@@ -21,6 +21,7 @@ pub trait ViewFrame {
     fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self;
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
+    fn set_size(&mut self, size: impl Into<Size>) -> &mut Self;
     fn place(&mut self) -> &mut Placer;
     fn new_placer(&self) -> Option<&NewPlacer>;
     fn calculate_frames(&mut self);
@@ -104,6 +105,11 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self {
         self.view_mut().frame = rect.into();
+        self
+    }
+
+    fn set_size(&mut self, size: impl Into<Size>) -> &mut Self {
+        self.view_mut().frame.size = size.into();
         self
     }
 
