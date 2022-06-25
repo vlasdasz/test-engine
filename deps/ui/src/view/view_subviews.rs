@@ -1,3 +1,5 @@
+use std::ops::DerefMut;
+
 use gm::flat::{Point, Rect};
 use rtools::{address::Address, Rglica, ToRglica};
 
@@ -17,6 +19,7 @@ pub trait ViewSubviews {
     fn remove_all_subviews(&mut self);
 
     fn add_view<V: 'static + View>(&mut self) -> Rglica<V>;
+    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> Rglica<V>;
     fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V>;
     fn add_boxed(&mut self, view: Box<dyn View>);
 
@@ -65,6 +68,14 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let view = V::boxed();
         let result = view.to_rglica();
         self.add_boxed(view);
+        result
+    }
+
+    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> Rglica<V> {
+        let view = V::boxed();
+        let mut result = view.to_rglica();
+        self.add_boxed(view);
+        make(result.deref_mut());
         result
     }
 
