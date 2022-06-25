@@ -50,9 +50,9 @@ impl<Param: Serialize> Request<Param, ()> {
     }
 }
 
-impl<Param: Serialize, Result: DeserializeOwned> Request<Result, Param> {
-    pub async fn fetch(&self, param: impl AsRef<Param>) -> reqwest::Result<Result> {
-        let string = to_string(param.as_ref()).unwrap();
+impl<Param: Serialize, Result: DeserializeOwned> Request<Param, Result> {
+    pub async fn fetch(&self, param: impl Borrow<Param>) -> reqwest::Result<Result> {
+        let string = to_string(param.borrow()).unwrap();
         let client = Client::new();
         let text = client
             .post(&self.full_url())

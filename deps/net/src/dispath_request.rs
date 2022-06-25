@@ -46,6 +46,25 @@ impl<Param: Serialize> DispatchRequest<Param, ()> {
     }
 }
 
+impl<Param, Result> DispatchRequest<Param, Result>
+where
+    Param: Serialize,
+    Result: DeserializeOwned + Default + Sync + Send,
+{
+    pub fn fetch<Obj: 'static>(
+        &'static self,
+        param: impl Borrow<Param> + Send + 'static,
+        obj: &Obj,
+        completion: impl FnOnce(&mut Obj, Option<String>, Result) + Send + 'static,
+    ) {
+        let mut rglica = obj.to_rglica();
+        Dispatch::dispatch(self.request.fetch(param), move |response| match response {
+            Ok(val) => completion(rglica.deref_mut(), None, val),
+            Err(err) => completion(rglica.deref_mut(), error_to_string(err), Result::default()),
+        });
+    }
+}
+
 fn error_to_string(error: impl Borrow<reqwest::Error>) -> Option<String> {
     let error = error.borrow();
     // dbg!(error);
