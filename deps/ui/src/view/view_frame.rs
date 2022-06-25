@@ -31,9 +31,7 @@ pub trait ViewFrame {
     {
         let view = self.view_mut();
         if let Some(placer) = &view.new_placer {
-            for rule in &placer.rules {
-                rule.layout(&mut view.frame, view.superview.frame());
-            }
+            placer.layout(&mut view.frame, view.superview.frame());
         }
     }
 

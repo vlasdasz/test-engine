@@ -18,6 +18,9 @@ pub enum Anchor {
     Width,
     Height,
 
+    CenterH,
+    CenterV,
+
     Center,
 }
 

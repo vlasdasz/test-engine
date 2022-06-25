@@ -14,7 +14,7 @@ impl_view!(DebugView);
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.set_frame((280, 100));
+        self.set_frame((100, 20));
 
         self.fps_label = self.add_view();
         self.fps_label.set_text("fps label");

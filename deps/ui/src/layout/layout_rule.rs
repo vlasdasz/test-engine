@@ -1,12 +1,12 @@
-use gm::flat::Rect;
 use rtools::{IntoF32, Rglica};
 
-use crate::{layout::Anchor, view::ViewFrame, View};
+use crate::{layout::Anchor, View};
 
 pub(crate) struct LayoutRule {
-    side:   Anchor,
-    offset: f32,
-    view:   Rglica<dyn View>,
+    pub(crate) side:   Anchor,
+    pub(crate) offset: f32,
+
+    pub(crate) anchor_view: Rglica<dyn View>,
 }
 
 impl LayoutRule {
@@ -14,45 +14,15 @@ impl LayoutRule {
         Self {
             side,
             offset: offset.into_f32(),
-            view: Rglica::default(),
+            anchor_view: Rglica::default(),
         }
     }
 
-    pub fn anchor(side: Anchor, offset: f32, view: Rglica<dyn View>) -> Self {
-        Self { side, offset, view }
-    }
-
-    pub fn layout(&self, frame: &mut Rect, s_frame: &Rect) {
-        if self.view.is_ok() {
-            self.anchor_layout(frame, self.view.frame())
-        } else {
-            self.simple_layout(frame, s_frame)
-        }
-    }
-}
-
-impl LayoutRule {
-    fn simple_layout(&self, frame: &mut Rect, s_frame: &Rect) {
-        match self.side {
-            Anchor::Top => frame.origin.y = self.offset,
-            Anchor::Bot => {
-                frame.size.height = frame.height() + s_frame.height() - frame.max_y() - self.offset
-            }
-            Anchor::Left => frame.origin.x = self.offset,
-            Anchor::Right => frame.size.width = frame.width() + s_frame.width() - frame.max_x() - self.offset,
-            Anchor::Width => frame.size.width = self.offset,
-            Anchor::Height => frame.size.height = self.offset,
-            Anchor::Center => {
-                frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0;
-                frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0;
-            }
-        }
-    }
-
-    fn anchor_layout(&self, frame: &mut Rect, a_frame: &Rect) {
-        match self.side {
-            Anchor::Top => frame.origin.y = a_frame.max_y() + self.offset,
-            _ => unreachable!("Not implemented yet"),
+    pub fn anchor(side: Anchor, offset: f32, anchor_view: Rglica<dyn View>) -> Self {
+        Self {
+            side,
+            offset,
+            anchor_view,
         }
     }
 }
