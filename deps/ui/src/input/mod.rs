@@ -1,3 +1,10 @@
-pub mod touch;
+mod keyboard;
+mod mouse;
+mod touch;
+mod ui_events;
 
-pub use touch::Touch;
+pub use keyboard::KeyEvent;
+#[cfg(desktop)]
+pub use mouse::{MouseButton, MouseButtonState};
+pub use touch::{Touch, TouchEvent};
+pub use ui_events::UIEvents;

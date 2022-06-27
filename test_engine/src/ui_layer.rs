@@ -1,15 +1,15 @@
-use std::{ops::Deref, rc::Rc};
+use std::rc::Rc;
 
 #[cfg(desktop)]
-use gl_wrapper::global_events::GlobalEvents;
+use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
 use rtools::{platform::Platform, Boxed, Rglica, ToRglica};
-use sprites::{Control, Level, Player, SpritesDrawer};
+use sprites::SpritesDrawer;
 #[cfg(desktop)]
-use ui::input::touch::{ButtonState, TouchEvent};
-use ui::{Touch, View, ViewBase, ViewFrame, ViewSubviews, ViewTouch};
+use ui::input::TouchEvent;
+use ui::{input::UIEvents, Touch, View, ViewBase, ViewFrame, ViewSubviews, ViewTouch};
 
 use crate::{assets::Assets, debug_view::DebugView, main_view::MainView, ui_drawer::TEUIDrawer, Keymap};
 
@@ -48,32 +48,6 @@ impl UILayer {
             frame_time: Default::default(),
             scale: 1.0,
         })
-        .setup_keymap()
-    }
-}
-
-impl UILayer {
-    fn level(&self) -> Rglica<dyn Level> {
-        self.view.level().rglica()
-    }
-
-    fn player(&self) -> Rglica<Player> {
-        self.view.player()
-    }
-
-    fn setup_keymap(self: Box<Self>) -> Box<Self> {
-        let s = self.deref();
-
-        self.keymap.add("-", s, |s| s.level().multiply_scale(0.8));
-        self.keymap.add("=", s, |s| s.level().multiply_scale(1.2));
-
-        self.keymap.add("a", s, |s| s.player().go_left());
-        self.keymap.add("d", s, |s| s.player().go_right());
-        self.keymap.add("s", s, |s| s.player().go_down());
-        self.keymap.add("w", s, |s| s.player().jump());
-        self.keymap.add(" ", s, |s| s.player().jump());
-
-        self
     }
 }
 
@@ -129,25 +103,11 @@ impl UILayer {
         self.on_touch(Touch {
             id:       1,
             position: self.cursor_position,
-            event:    TouchEvent::from_state(ButtonState::from_glfw(state)),
+            event:    ui::input::MouseButtonState::from_glfw(state).into(),
         })
     }
 
-    fn on_key_pressed(&mut self, key: Key, action: Action) {
-        if action != Action::Press {
-            return;
-        }
-
-        let key = key.get_name().unwrap_or_else({
-            || {
-                match key {
-                    Key::Space => " ",
-                    _ => "unknown",
-                }
-                .into()
-            }
-        });
-
+    fn on_key_pressed(&mut self, key: &str) {
         self.keymap.check(&key);
         if self.view.level().is_ok() {
             self.view.level().on_key_pressed(&key);
@@ -155,11 +115,30 @@ impl UILayer {
     }
 
     pub fn setup_events(&mut self) {
-        let events = GlobalEvents::get();
+        let events = GlEvents::get();
 
-        events
-            .on_key_pressed
-            .set(self, |this, a| this.on_key_pressed(a.0, a.1));
+        events.on_key_pressed.set(self, |this, a| {
+            let key = a.0;
+            let action = a.1;
+
+            if action != Action::Press {
+                return;
+            }
+
+            let key = key.get_name().unwrap_or_else({
+                || {
+                    match key {
+                        Key::Space => " ",
+                        _ => "unknown",
+                    }
+                    .into()
+                }
+            });
+
+            this.on_key_pressed(&key);
+
+            UIEvents::get().on_key_pressed.trigger((key, action.into()));
+        });
 
         events
             .on_mouse_click

@@ -13,7 +13,7 @@ use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
 };
-use ui::{input::touch::TouchEvent, Touch};
+use ui::{input::TouchEvent, Touch};
 
 use crate::{main_view::MainView, Screen};
 

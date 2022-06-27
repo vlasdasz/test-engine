@@ -3,7 +3,7 @@
 use std::{ops::DerefMut, path::Path, rc::Rc};
 
 #[cfg(desktop)]
-use gl_wrapper::{global_events::GlobalEvents, GLFWManager};
+use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{Dispatch, Time, ToRglica, Unwrap};
@@ -31,13 +31,11 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        GlobalEvents::get().on_size_changed.set(self, |this, size| {
+        GlEvents::get().on_size_changed.set(self, |this, size| {
             this.on_size_changed(size);
         });
 
-        GlobalEvents::get()
-            .on_frame_drawn
-            .set(self, |this, _| this.update());
+        GlEvents::get().on_frame_drawn.set(self, |this, _| this.update());
     }
 
     fn init(mut self, _size: Size) -> Self {
