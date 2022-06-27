@@ -29,10 +29,16 @@ impl Alert {
 impl ViewCallbacks for Alert {
     fn setup(&mut self) {
         self.set_frame((280, 140)).set_color(Color::WHITE);
+        self.make_layout(|l| l.center());
 
         (self.label, self.ok_button) = (self.add_view(), self.add_view());
 
         self.label.set_text(self.message.clone());
+
+        self.label.make_layout(|l| {
+            l.center_hor();
+            l.top().offset(5);
+        });
 
         self.ok_button.set_color(Color::LIGHT_GRAY);
         self.ok_button.set_text("OK");
@@ -40,11 +46,8 @@ impl ViewCallbacks for Alert {
     }
 
     fn layout(&mut self) {
-        self.place().center();
-        self.label.place().center_hor();
-        self.label.set_y(5);
         self.ok_button
-            .place()
+            .deprecated_place()
             .anchor(self.label, Anchor::Bot, Anchor::Center, 20);
     }
 }

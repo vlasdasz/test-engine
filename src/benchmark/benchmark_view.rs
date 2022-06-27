@@ -32,7 +32,13 @@ impl ViewCallbacks for BenchmarkView {
         self.level.setup();
 
         self.back = self.add_view();
-        self.back.set_text("Back").set_frame((120, 20));
+        self.back.set_text("Back").make_layout(|l| {
+            l.width().offset(120);
+            l.height().offset(20);
+            l.bottom().offset(20);
+            l.center_hor();
+        });
+
         self.back.on_tap.set(self, |this, _| {
             this.ui.set_view::<TestGameView>();
         });
@@ -42,9 +48,8 @@ impl ViewCallbacks for BenchmarkView {
     }
 
     fn layout(&mut self) {
-        self.back.place().bottom_center(20);
         self.bullets_label
-            .place()
+            .deprecated_place()
             .anchor(self.back, Anchor::Top, Anchor::Center, 10);
     }
 

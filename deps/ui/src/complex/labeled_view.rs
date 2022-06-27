@@ -39,7 +39,7 @@ impl ViewCallbacks for LabeledView {
     }
 
     fn layout(&mut self) {
-        self.label.place().left_half();
-        self.value.place().right_half();
+        self.label.deprecated_place().left_half();
+        self.value.deprecated_place().right_half();
     }
 }

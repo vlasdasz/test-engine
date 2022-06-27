@@ -50,15 +50,19 @@ impl NewPlacer {
     }
 
     pub fn center(&mut self) {
-        self.rules.push(LayoutRule::make(Anchor::Center, 0))
+        self.rules.push(Anchor::Center.into())
     }
 
     pub fn center_hor(&mut self) {
-        self.rules.push(LayoutRule::make(Anchor::CenterH, 0))
+        self.rules.push(Anchor::CenterH.into())
     }
 
     pub fn center_ver(&mut self) {
-        self.rules.push(LayoutRule::make(Anchor::CenterV, 0))
+        self.rules.push(Anchor::CenterV.into())
+    }
+
+    pub fn as_background(&mut self) {
+        self.rules.push(Anchor::Background.into())
     }
 
     pub fn offset(&mut self, offset: impl IntoF32) {
@@ -75,6 +79,11 @@ impl NewPlacer {
         let side = self.pending_sides.pop().unwrap();
         self.rules
             .push(LayoutRule::anchor(side, offset.into_f32(), view.rglica()));
+    }
+
+    pub(crate) fn assign_pending(&mut self) {
+        let pending = self.pending_sides.drain(..);
+        self.rules.extend(pending.map(|a| a.into()))
     }
 }
 
@@ -117,6 +126,7 @@ impl NewPlacer {
                 frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0;
                 frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0;
             }
+            Anchor::Background => *frame = s_frame.with_zero_origin(),
         }
     }
 

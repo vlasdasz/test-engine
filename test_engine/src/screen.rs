@@ -97,7 +97,9 @@ impl Screen {
 
         self.ui.drawer.update(self.ui.root_view.deref_mut());
         if self.ui.view.is_ok() {
-            self.ui.view.place().as_background();
+            self.ui
+                .view
+                .set_frame(self.ui.root_view.frame().with_zero_origin());
         }
         self.ui.root_view.calculate_frames();
         self.ui.drawer.draw(self.ui.root_view.deref_mut());

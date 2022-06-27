@@ -95,10 +95,8 @@ impl Label {
 impl ViewCallbacks for Label {
     fn setup(&mut self) {
         self.image = self.add_view();
-        self.set_letters();
-    }
+        self.image.make_layout(|l| l.as_background());
 
-    fn layout(&mut self) {
-        self.image.place().as_background();
+        self.set_letters();
     }
 }

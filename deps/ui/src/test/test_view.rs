@@ -5,9 +5,7 @@ use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
 use crate::{
     basic::Button,
     complex::{DrawingView, StringCell, TableView, TableViewDataSource},
-    data_source, impl_view,
-    test::{layout_view::LayoutView, subviews_test_view::SubviewsTestView},
-    view,
+    data_source, impl_view, view,
     view::{ViewData, ViewFrame, ViewSubviews},
     ImageView, Label, View, ViewBase, ViewCallbacks,
 };
@@ -18,9 +16,7 @@ pub struct TestView {
     label:    Rglica<Label>,
     button:   Rglica<Button>,
     image:    Rglica<ImageView>,
-    subviews: Rglica<SubviewsTestView>,
     drawing:  Rglica<DrawingView>,
-    layout:   Rglica<LayoutView>,
     animated: Rglica<ImageView>,
     table:    Rglica<TableView>,
 
@@ -62,15 +58,11 @@ impl ViewCallbacks for TestView {
 
         self.image = self.add_view();
 
-        self.subviews = self.add_view();
-
         self.drawing = self.add_view();
         self.drawing.add_path(
             vec![(20, 20), (30, 20), (20, 40), (30, 50), (1, 60), (1, 20)],
             Color::GREEN,
         );
-
-        self.layout = self.add_view();
 
         self.animated = self.add_view();
         self.animated.set_frame((100, 100));
@@ -83,7 +75,7 @@ impl ViewCallbacks for TestView {
     }
 
     fn layout(&mut self) {
-        self.place().all_vertically();
+        self.deprecated_place().all_vertically();
         self.animated.set_y(self.animation.value());
     }
 }

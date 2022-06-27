@@ -35,7 +35,7 @@ impl ViewCallbacks for DebugView {
     }
 
     fn layout(&mut self) {
-        self.place().all_vertically();
+        self.deprecated_place().all_vertically();
 
         self.frame_drawn += 1;
         self.frame_drawn_label

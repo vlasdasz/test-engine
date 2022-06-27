@@ -26,7 +26,7 @@ impl TableView {
 
 impl ViewCallbacks for TableView {
     fn layout(&mut self) {
-        self.place().all_vertically()
+        self.deprecated_place().all_vertically()
     }
 }
 

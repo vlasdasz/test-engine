@@ -49,7 +49,7 @@ impl ViewCallbacks for IntView {
     }
 
     fn layout(&mut self) {
-        self.place().all_vertically();
+        self.deprecated_place().all_vertically();
         self.label.set_text(&self.value.to_string());
     }
 }

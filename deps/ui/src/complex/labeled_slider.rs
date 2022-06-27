@@ -37,7 +37,7 @@ impl LabeledSlider {
 
 impl ViewCallbacks for LabeledSlider {
     fn setup(&mut self) {
-        let frames = self.place().frames_for_ratio([1, 5]);
+        let frames = self.deprecated_place().frames_for_ratio([1, 5]);
 
         self.label = self.add_view_with_frame(frames[0]);
         self.slider = self.add_view_with_frame(frames[1]);
@@ -46,6 +46,6 @@ impl ViewCallbacks for LabeledSlider {
     }
 
     fn layout(&mut self) {
-        self.place().all_vertically_with_ratio([1, 5]);
+        self.deprecated_place().all_vertically_with_ratio([1, 5]);
     }
 }

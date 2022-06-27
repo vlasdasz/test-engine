@@ -26,3 +26,9 @@ impl LayoutRule {
         }
     }
 }
+
+impl From<Anchor> for LayoutRule {
+    fn from(anchor: Anchor) -> Self {
+        Self::make(anchor, 0)
+    }
+}

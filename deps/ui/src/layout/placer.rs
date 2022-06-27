@@ -22,6 +22,8 @@ pub enum Anchor {
     CenterV,
 
     Center,
+
+    Background,
 }
 
 impl Anchor {
@@ -268,7 +270,7 @@ where
     let mut last = views.last_mut().unwrap().to_rglica();
 
     if views.len() == 1 {
-        last.place().as_background();
+        last.deprecated_place().as_background();
         return;
     }
 

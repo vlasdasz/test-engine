@@ -22,7 +22,7 @@ pub trait ViewFrame {
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_size(&mut self, size: impl Into<Size>) -> &mut Self;
-    fn place(&mut self) -> &mut Placer;
+    fn deprecated_place(&mut self) -> &mut Placer;
     fn new_placer(&self) -> Option<&NewPlacer>;
     fn calculate_frames(&mut self);
     fn new_layout(&mut self)
@@ -42,6 +42,7 @@ pub trait ViewFrame {
         debug_assert!(self.view_mut().new_placer.is_none(), "Double layout");
         let mut placer = NewPlacer::default();
         make(&mut placer);
+        placer.assign_pending();
         self.view_mut().new_placer = placer.into();
     }
 }
@@ -111,7 +112,7 @@ impl<T: ?Sized + View> ViewFrame for T {
         self
     }
 
-    fn place(&mut self) -> &mut Placer {
+    fn deprecated_place(&mut self) -> &mut Placer {
         &mut self.view_mut().placer
     }
 

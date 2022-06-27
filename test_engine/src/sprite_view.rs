@@ -38,9 +38,12 @@ impl SpriteView {
     fn setup_delete_button(&mut self) {
         self.delete_button = self.add_view();
         self.delete_button
-            .set_frame((20, 20))
             .set_hidden(true)
-            .set_image(Image::get("delete.png"));
+            .set_image(Image::get("delete.png"))
+            .make_layout(|l| {
+                l.width().height().offset(20);
+                l.top().left();
+            });
 
         self.delete_button.on_tap.set(self, |this, _| {
             if this.sprite.is_ok() {
@@ -64,7 +67,6 @@ impl ViewCallbacks for SpriteView {
 
     fn layout(&mut self) {
         place_vertically([self.position, self.size, self.color]);
-        self.delete_button.place().top_left(0);
     }
 
     fn update(&mut self) {

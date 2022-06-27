@@ -95,12 +95,18 @@ impl TestGameView {
             .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
 
         self.dpad = self.add_view();
-        self.dpad.set_frame((200, 150)).set_images(
-            Image::get("up.png"),
-            Image::get("down.png"),
-            Image::get("left.png"),
-            Image::get("right.png"),
-        );
+        self.dpad
+            .set_images(
+                Image::get("up.png"),
+                Image::get("down.png"),
+                Image::get("left.png"),
+                Image::get("right.png"),
+            )
+            .make_layout(|l| {
+                l.width().offset(200);
+                l.height().offset(150);
+                l.bottom().left().offset(5);
+            });
 
         self.left_stick = self.add_view();
 
@@ -154,48 +160,42 @@ impl ViewCallbacks for TestGameView {
     }
 
     fn layout(&mut self) {
-        self.dpad.place().bottom_left(5);
-
         self.left_stick
-            .place()
+            .deprecated_place()
             .anchor(self.dpad, Anchor::Right, Anchor::Bot, 20);
 
-        self.game_scale_slider.place().proportional_height(0.5).anchor(
-            self.dpad,
-            Anchor::Top,
-            Anchor::Left,
-            10,
-        );
+        self.game_scale_slider
+            .deprecated_place()
+            .proportional_height(0.5)
+            .anchor(self.dpad, Anchor::Top, Anchor::Left, 10);
 
-        self.ui_scale_slider.place().proportional_height(0.5).anchor(
-            self.game_scale_slider,
-            Anchor::Right,
-            Anchor::Center,
-            10,
-        );
+        self.ui_scale_slider
+            .deprecated_place()
+            .proportional_height(0.5)
+            .anchor(self.game_scale_slider, Anchor::Right, Anchor::Center, 10);
 
         self.sprite_view
-            .place()
+            .deprecated_place()
             .anchor(self.ui_scale_slider, Anchor::Right, Anchor::Bot, 10);
 
         self.test_view
-            .place()
+            .deprecated_place()
             .bottom_right(20)
             .proportional_width(0.28)
             .proportional_height(0.8);
 
-        self.to_benchmark.place().bottom_center(20);
+        self.to_benchmark.deprecated_place().bottom_center(20);
 
         self.to_test
-            .place()
+            .deprecated_place()
             .anchor(self.to_benchmark, Anchor::Top, Anchor::Center, 10);
 
         self.play
-            .place()
+            .deprecated_place()
             .anchor(self.to_test, Anchor::Top, Anchor::Center, 10);
 
         self.async_task
-            .place()
+            .deprecated_place()
             .anchor(self.play, Anchor::Top, Anchor::Center, 10);
     }
 }
