@@ -2,9 +2,8 @@
 
 use std::{ops::DerefMut, path::Path, rc::Rc};
 
-use cfg_if::cfg_if;
 #[cfg(desktop)]
-use gl_wrapper::{events::Events, GLFWManager};
+use gl_wrapper::{global_events::GlobalEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{Dispatch, Time, ToRglica, Unwrap};
@@ -15,9 +14,6 @@ use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 
 pub struct Screen {
     pub ui: Box<UILayer>,
-
-    #[cfg(desktop)]
-    pub events: Box<Events>,
 
     #[cfg(desktop)]
     glfw:           GLFWManager,
@@ -35,11 +31,13 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        self.events.on_size_changed.set(self, |this, size| {
+        GlobalEvents::get().on_size_changed.set(self, |this, size| {
             this.on_size_changed(size);
         });
 
-        self.events.on_frame_drawn.set(self, |this, _| this.update());
+        GlobalEvents::get()
+            .on_frame_drawn
+            .set(self, |this, _| this.update());
     }
 
     fn init(mut self, _size: Size) -> Self {
@@ -166,10 +164,7 @@ impl Screen {
         ui::set_default_font_path(assets.paths.fonts.join("SF.otf"));
 
         #[cfg(desktop)]
-        let events = Box::new(Events::default());
-
-        #[cfg(desktop)]
-        let glfw = GLFWManager::new(events.to_rglica());
+        let glfw = GLFWManager::new();
 
         assets.init_gl_data();
 
@@ -181,17 +176,10 @@ impl Screen {
 
         error!("UILayer: OK");
 
-        cfg_if! { if #[cfg(desktop)] {
-            let mut ui = UILayer::new(assets, sprites_drawer.to_rglica());
-            ui.events = events.to_rglica();
-        } else {
-            let ui = UILayer::new(assets, sprites_drawer.to_rglica());
-        }};
+        let ui = UILayer::new(assets, sprites_drawer.to_rglica());
 
         Self {
             ui,
-            #[cfg(desktop)]
-            events,
             #[cfg(desktop)]
             glfw,
             sprites_drawer,

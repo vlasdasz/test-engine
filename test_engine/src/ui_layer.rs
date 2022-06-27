@@ -1,7 +1,7 @@
 use std::{ops::Deref, rc::Rc};
 
 #[cfg(desktop)]
-use gl_wrapper::events::Events;
+use gl_wrapper::global_events::GlobalEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
@@ -25,9 +25,6 @@ pub struct UILayer {
     pub keymap: Rc<Keymap>,
     pub drawer: TEUIDrawer,
 
-    #[cfg(desktop)]
-    pub events: Rglica<Events>,
-
     pub fps:        u64,
     pub prev_time:  i64,
     pub frame_time: f64,
@@ -46,8 +43,6 @@ impl UILayer {
             sprites_drawer,
             keymap: Default::default(),
             drawer: TEUIDrawer::new(assets),
-            #[cfg(desktop)]
-            events: Default::default(),
             fps: Default::default(),
             prev_time: Default::default(),
             frame_time: Default::default(),
@@ -160,15 +155,17 @@ impl UILayer {
     }
 
     pub fn setup_events(&mut self) {
-        self.events
+        let events = GlobalEvents::get();
+
+        events
             .on_key_pressed
             .set(self, |this, a| this.on_key_pressed(a.0, a.1));
 
-        self.events
+        events
             .on_mouse_click
             .set(self, |this, a| this.on_mouse_click(a.0, a.1));
 
-        self.events
+        events
             .on_cursor_moved
             .set(self, |this, a| this.on_cursor_moved(a))
     }

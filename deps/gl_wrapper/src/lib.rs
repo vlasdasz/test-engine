@@ -25,9 +25,9 @@ cfg_if! { if #[cfg(desktop)] {
 }}
 
 pub mod buffers;
-pub mod events;
 pub mod gl_info;
 pub mod gl_wrapper;
+pub mod global_events;
 pub mod image_loader;
 pub mod monitor;
 pub mod shaders;

@@ -1,14 +1,12 @@
 #[cfg(desktop)]
 use glfw::{Context, Window};
 use gm::flat::Size;
-use rtools::Rglica;
 
-use crate::{events::Events, gl_loader::GLFWEvents, monitor::Monitor, GLLoader};
+use crate::{gl_loader::GLFWEvents, global_events::GlobalEvents, monitor::Monitor, GLLoader};
 
 pub struct GLFWManager {
     window:       Window,
     gl_events:    GLFWEvents,
-    events:       Rglica<Events>,
     pub monitors: Vec<Monitor>,
 }
 
@@ -22,28 +20,30 @@ impl GLFWManager {
         while !self.window.should_close() {
             self.window.glfw.poll_events();
 
+            let events = GlobalEvents::get();
+
             for (_, event) in glfw::flush_messages(&self.gl_events) {
                 match event {
                     glfw::WindowEvent::Key(key, _, action, _) => {
                         if key == glfw::Key::Escape {
                             self.window.set_should_close(true)
                         }
-                        self.events.on_key_pressed.trigger((key, action))
+                        events.on_key_pressed.trigger((key, action))
                     }
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
-                        self.events.on_cursor_moved.trigger((xpos, ypos).into())
+                        events.on_cursor_moved.trigger((xpos, ypos).into())
                     }
                     glfw::WindowEvent::Size(width, height) => {
-                        self.events.on_size_changed.trigger((width, height).into())
+                        events.on_size_changed.trigger((width, height).into())
                     }
                     glfw::WindowEvent::MouseButton(btn, action, _) => {
-                        self.events.on_mouse_click.trigger((btn, action))
+                        events.on_mouse_click.trigger((btn, action))
                     }
                     _ => {}
                 }
             }
 
-            self.events.on_frame_drawn.trigger(());
+            events.on_frame_drawn.trigger(());
             self.window.swap_buffers();
         }
     }
@@ -54,13 +54,12 @@ impl GLFWManager {
 }
 
 impl GLFWManager {
-    pub fn new(events: Rglica<Events>) -> Self {
+    pub fn new() -> Self {
         let mut loader = GLLoader::default();
         let monitors = loader.monitors();
         Self {
             window: loader.window,
             gl_events: loader.events,
-            events,
             monitors,
         }
     }
