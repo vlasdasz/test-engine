@@ -16,8 +16,6 @@
 		D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC20261C455B00B81CFB /* libSystem.tbd */; };
 		D180CC29261C457000B81CFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC23261C457000B81CFB /* SystemConfiguration.framework */; };
 		D180CC2A261C457000B81CFB /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC24261C457000B81CFB /* libSystem.B.tbd */; };
-		D180CC2B261C457000B81CFB /* libswiftSystem_Foundation.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC25261C457000B81CFB /* libswiftSystem_Foundation.tbd */; };
-		D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC26261C457000B81CFB /* libswiftSystem.tbd */; };
 		D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
 		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
 		D1B6DA7B28039818003C4BF3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */; };
@@ -41,8 +39,6 @@
 		D180CC20261C455B00B81CFB /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
 		D180CC23261C457000B81CFB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D180CC24261C457000B81CFB /* libSystem.B.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B.tbd; path = usr/lib/libSystem.B.tbd; sourceTree = SDKROOT; };
-		D180CC25261C457000B81CFB /* libswiftSystem_Foundation.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftSystem_Foundation.tbd; path = usr/lib/swift/libswiftSystem_Foundation.tbd; sourceTree = SDKROOT; };
-		D180CC26261C457000B81CFB /* libswiftSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftSystem.tbd; path = usr/lib/swift/libswiftSystem.tbd; sourceTree = SDKROOT; };
 		D180CC27261C457000B81CFB /* libSystem_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem_asan.tbd; path = usr/lib/libSystem_asan.tbd; sourceTree = SDKROOT; };
 		D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B_asan.tbd; path = usr/lib/libSystem.B_asan.tbd; sourceTree = SDKROOT; };
 		D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
@@ -58,8 +54,6 @@
 				D1B6DA7B28039818003C4BF3 /* AudioToolbox.framework in Frameworks */,
 				D180CC29261C457000B81CFB /* SystemConfiguration.framework in Frameworks */,
 				D180CC2A261C457000B81CFB /* libSystem.B.tbd in Frameworks */,
-				D180CC2B261C457000B81CFB /* libswiftSystem_Foundation.tbd in Frameworks */,
-				D180CC2C261C457000B81CFB /* libswiftSystem.tbd in Frameworks */,
 				D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */,
 				D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */,
 				D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */,
@@ -111,8 +105,6 @@
 			isa = PBXGroup;
 			children = (
 				D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */,
-				D180CC25261C457000B81CFB /* libswiftSystem_Foundation.tbd */,
-				D180CC26261C457000B81CFB /* libswiftSystem.tbd */,
 				D180CC27261C457000B81CFB /* libSystem_asan.tbd */,
 				D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */,
 				D180CC24261C457000B81CFB /* libSystem.B.tbd */,
@@ -371,7 +363,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -401,7 +393,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
