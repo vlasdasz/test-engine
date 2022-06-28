@@ -1,6 +1,10 @@
+use std::ops::{Deref, DerefMut};
+
 use rtools::{Rglica, ToRglica};
 
-use crate::{impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks};
+use crate::{
+    impl_view, input::UIEvents, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewFrame,
+};
 
 #[view]
 #[derive(Default, Debug)]
@@ -12,5 +16,23 @@ impl_view!(TextField);
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {
         self.label = self.add_view();
+        self.label.make_layout(|l| l.as_background());
+
+        UIEvents::get().on_key_pressed.set(self, |this, event| {
+            this.label.append_text(event.0);
+        });
+    }
+}
+
+impl Deref for TextField {
+    type Target = Label;
+    fn deref(&self) -> &Label {
+        self.label.deref()
+    }
+}
+
+impl DerefMut for TextField {
+    fn deref_mut(&mut self) -> &mut Label {
+        self.label.deref_mut()
     }
 }

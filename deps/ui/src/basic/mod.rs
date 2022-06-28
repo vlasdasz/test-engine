@@ -9,3 +9,4 @@ pub use button::Button;
 pub use circle_view::CircleView;
 pub use image_view::ImageView;
 pub use label::Label;
+pub use text_field::TextField;

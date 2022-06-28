@@ -41,6 +41,11 @@ impl Label {
         self
     }
 
+    pub fn append_text(&mut self, text: impl ToString) -> &mut Self {
+        self.set_text(format!("{}{}", self.text, text.to_string()));
+        self
+    }
+
     pub fn clear(&mut self) -> &Self {
         self.set_text("")
     }
