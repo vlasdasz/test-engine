@@ -6,9 +6,14 @@ use std::{
 
 use gl_image::Image;
 use gm::flat::Size;
-use rtools::{data_manager::LoadFromPath, file::File, misc::hash};
+use rtools::{
+    data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
+    file::File,
+    managed,
+    misc::hash,
+};
 
-use crate::{Glyph, DEFAULT_FONT};
+use crate::Glyph;
 
 fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     let (metrics, bitmap) = font.rasterize(symbol, size);
@@ -40,7 +45,7 @@ pub struct Font {
 }
 
 impl Font {
-    pub fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
+    fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
         error!("New font {:?}", path);
 
         let data = File::read(path);
@@ -86,6 +91,10 @@ impl Font {
 }
 
 impl Font {
+    pub fn default() -> Handle<Self> {
+        Font::get("SF.otf")
+    }
+
     pub fn glyph_for_char(&self, ch: char) -> &Glyph {
         debug_assert!(!self.glyphs.is_empty(), "Font is not initialized");
         if ch > 127 as char {
@@ -101,9 +110,4 @@ impl LoadFromPath for Font {
     }
 }
 
-impl Default for Font {
-    fn default() -> Self {
-        // Font::get("a");
-        DEFAULT_FONT.lock().unwrap().clone()
-    }
-}
+managed!(Font);

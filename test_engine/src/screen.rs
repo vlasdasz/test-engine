@@ -161,8 +161,6 @@ impl Screen {
     pub fn new(size: impl Into<Size>, assets_path: &Path) -> Self {
         let mut assets = Assets::new(assets_path);
 
-        ui::set_default_font_path(assets.paths.fonts.join("SF.otf"));
-
         #[cfg(desktop)]
         let glfw = GLFWManager::new();
 

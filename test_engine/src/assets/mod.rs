@@ -8,6 +8,7 @@ pub use buffers::Buffers;
 use gl_image::Image;
 use rtools::{data_manager::DataManager, Unwrap};
 pub use shaders::Shaders;
+use ui::Font;
 
 use crate::paths::Paths;
 
@@ -23,6 +24,7 @@ impl Assets {
 
         Image::set_path(&paths.images);
         Sound::set_path(&paths.sounds);
+        Font::set_path(&paths.fonts);
 
         Self {
             paths,

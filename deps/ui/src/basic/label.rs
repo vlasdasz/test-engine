@@ -3,7 +3,10 @@ use std::ops::Deref;
 use derivative::Derivative;
 use gl_image::Image;
 use gm::Color;
-use rtools::{data_manager::DataManager, Rglica, ToRglica};
+use rtools::{
+    data_manager::{DataManager, Handle},
+    Rglica, ToRglica,
+};
 
 use crate::{
     basic::label_layout::LabelLayout,
@@ -17,7 +20,7 @@ use crate::{
 #[derivative(Debug)]
 pub struct Label {
     #[derivative(Debug = "ignore")]
-    font:   Font,
+    font:   Handle<Font>,
     text:   String,
     #[derivative(Debug = "ignore")]
     layout: LabelLayout,
@@ -99,6 +102,8 @@ impl Label {
 
 impl ViewCallbacks for Label {
     fn setup(&mut self) {
+        self.font = Font::default();
+
         self.image = self.add_view();
         self.image.make_layout(|l| l.as_background());
 
