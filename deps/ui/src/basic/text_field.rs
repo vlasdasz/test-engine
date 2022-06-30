@@ -24,6 +24,12 @@ impl ViewCallbacks for TextField {
     }
 }
 
+impl Drop for TextField {
+    fn drop(&mut self) {
+        UIEvents::get().on_key_pressed.unsubscribe()
+    }
+}
+
 impl Deref for TextField {
     type Target = Label;
     fn deref(&self) -> &Label {
