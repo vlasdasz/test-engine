@@ -1,26 +1,22 @@
-use std::{
-    ffi::c_void,
-    path::{Path, PathBuf},
-};
+use std::{ffi::c_void, path::Path};
 
 use gl_wrapper::{buffers::FrameBuffer, image_loader::ImageLoader, GLWrapper};
 use gm::flat::Size;
 use image::GenericImageView;
 use rtools::{
-    data_manager::{DataManager, Handle, LoadFromPath},
+    data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
     file::File,
+    managed,
     misc::hash,
 };
-use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct Image {
     pub size:      Size,
     pub channels:  u32,
     pub flipped:   bool,
     pub flipped_y: bool,
     gl_handle:     u32,
-    path:          Option<PathBuf>,
 }
 
 impl Image {
@@ -32,7 +28,7 @@ impl Image {
         self.gl_handle == u32::MAX
     }
 
-    fn load_to_gl(data: *const c_void, size: Size, channels: u32, path: Option<PathBuf>) -> Image {
+    fn load_to_gl(data: *const c_void, size: Size, channels: u32) -> Image {
         let gl_handle = ImageLoader::load(data, size, channels);
         Image {
             size,
@@ -40,18 +36,11 @@ impl Image {
             flipped: false,
             flipped_y: false,
             gl_handle,
-            path,
         }
     }
 
-    pub fn from(
-        data: *const c_void,
-        size: Size,
-        channels: u32,
-        hash: u64,
-        path: Option<PathBuf>,
-    ) -> Handle<Image> {
-        Image::add_with_hash(hash, Self::load_to_gl(data, size, channels, path))
+    pub fn from(data: *const c_void, size: Size, channels: u32, hash: u64) -> Handle<Image> {
+        Image::add_with_hash(hash, Self::load_to_gl(data, size, channels))
     }
 
     pub fn is_monochrome(&self) -> bool {
@@ -82,7 +71,6 @@ impl Image {
             flipped: false,
             flipped_y: false,
             gl_handle: buffer.texture_handle,
-            path: PathBuf::from("drawn").into(),
         };
 
         draw(&mut image);
@@ -92,6 +80,8 @@ impl Image {
         Image::add_with_hash(hash, image)
     }
 }
+
+managed!(Image);
 
 impl LoadFromPath for Image {
     fn load(path: &Path) -> Image {
@@ -108,26 +98,6 @@ impl LoadFromPath for Image {
             data.as_ptr() as *const c_void,
             (dimensions.0, dimensions.1).into(),
             channels as u32,
-            Some(path.into()),
         )
-    }
-}
-
-impl Default for Image {
-    fn default() -> Image {
-        Image {
-            size:      Default::default(),
-            channels:  0,
-            flipped:   false,
-            flipped_y: false,
-            gl_handle: u32::MAX,
-            path:      Default::default(),
-        }
-    }
-}
-
-impl<T: AsRef<Path>> From<T> for Image {
-    fn from(path: T) -> Self {
-        Self::load(path.as_ref())
     }
 }

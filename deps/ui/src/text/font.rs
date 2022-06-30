@@ -6,7 +6,7 @@ use std::{
 
 use gl_image::Image;
 use gm::flat::Size;
-use rtools::{file::File, misc::hash};
+use rtools::{data_manager::LoadFromPath, file::File, misc::hash};
 
 use crate::{Glyph, DEFAULT_FONT};
 
@@ -18,7 +18,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
         height: metrics.height as f32,
     };
 
-    let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1, hash(symbol), None);
+    let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1, hash(symbol));
 
     Glyph::new(
         symbol,
@@ -95,8 +95,15 @@ impl Font {
     }
 }
 
+impl LoadFromPath for Font {
+    fn load(path: &Path) -> Self {
+        Font::new(path, 48).unwrap()
+    }
+}
+
 impl Default for Font {
     fn default() -> Self {
+        // Font::get("a");
         DEFAULT_FONT.lock().unwrap().clone()
     }
 }

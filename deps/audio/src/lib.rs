@@ -1,6 +1,8 @@
-mod managed;
-
 use cfg_if::cfg_if;
+use rtools::{
+    data_manager::{DataManager, DataStorage, Managed},
+    managed,
+};
 
 cfg_if! { if #[cfg(android)] {
     mod android_sound;
@@ -10,3 +12,5 @@ cfg_if! { if #[cfg(android)] {
 }}
 
 pub use sound::Sound;
+
+managed!(Sound);
