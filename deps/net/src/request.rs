@@ -5,7 +5,7 @@ use rtools::Rglica;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
 
-use crate::Method;
+use crate::{Method, NetResult};
 
 pub struct Request<Param, Result> {
     base:    &'static str,
@@ -34,24 +34,22 @@ impl<Result: DeserializeOwned> Request<(), Result> {
         get(&self.full_url()).await?.text().await
     }
 
-    pub async fn get(&self) -> reqwest::Result<Result> {
-        let string = self.call().await?;
-        let v: Result = from_str(&string).unwrap();
-        Ok(v)
+    pub async fn get(&self) -> NetResult<Result> {
+        Ok(from_str(&self.call().await?)?)
     }
 }
 
 impl<Param: Serialize> Request<Param, ()> {
-    pub async fn post(&self, param: impl Borrow<Param>) -> reqwest::Result<()> {
-        let string = to_string(param.borrow()).unwrap();
+    pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
+        let string = to_string(param.borrow())?;
         let client = Client::new();
         client.post(&self.full_url()).body(string).send().await?;
         Ok(())
     }
 }
 
-impl<Param: Serialize, Result: DeserializeOwned> Request<Param, Result> {
-    pub async fn fetch(&self, param: impl Borrow<Param>) -> reqwest::Result<Result> {
+impl<Param: Serialize, Output: DeserializeOwned> Request<Param, Output> {
+    pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let string = to_string(param.borrow()).unwrap();
         let client = Client::new();
         let text = client
@@ -61,6 +59,6 @@ impl<Param: Serialize, Result: DeserializeOwned> Request<Param, Result> {
             .await?
             .text()
             .await?;
-        Ok(from_str(&text).unwrap())
+        Ok(from_str(&text)?)
     }
 }
