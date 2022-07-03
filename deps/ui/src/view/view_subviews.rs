@@ -89,7 +89,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn add_boxed(&mut self, mut view: Box<dyn View>) {
         let result = view.to_rglica();
-        view.view_mut().superview = self.view().rglica();
+        view.view_mut().superview = self.rglica();
         view.view_mut().drawer = self.drawer();
         view.view_mut().placer = Placer::make(result);
         view.setup();

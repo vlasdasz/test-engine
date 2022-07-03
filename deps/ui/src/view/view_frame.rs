@@ -121,11 +121,11 @@ impl<T: ?Sized + View> ViewFrame for T {
     }
 
     fn calculate_frames(&mut self) {
+        self.layout();
+        self.new_layout();
         let view = self.view_mut();
         view.absolute_frame = view.frame;
         view.absolute_frame.origin += view.super_absolute_frame().origin;
-        self.layout();
-        self.new_layout();
         for view in self.subviews_mut() {
             view.calculate_frames();
         }
