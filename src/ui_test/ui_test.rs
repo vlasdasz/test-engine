@@ -29,7 +29,7 @@ impl ViewCallbacks for UITestView {
         self.top_view = self.container.add_view();
         self.top_view.make_layout(|a| {
             a.left().top().right().offset(10);
-            a.height().offset(50);
+            a.height(50);
         });
 
         self.test = self.container.add_view();
@@ -40,8 +40,7 @@ impl ViewCallbacks for UITestView {
 
         self.back = self.add_view();
         self.back.set_text("Back").make_layout(|l| {
-            l.width().offset(120);
-            l.height().offset(20);
+            l.width(120).height(20);
             l.bottom().offset(20);
             l.center_hor();
         });

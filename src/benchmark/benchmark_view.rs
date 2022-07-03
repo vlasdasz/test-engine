@@ -33,8 +33,7 @@ impl ViewCallbacks for BenchmarkView {
 
         self.back = self.add_view();
         self.back.set_text("Back").make_layout(|l| {
-            l.width().offset(120);
-            l.height().offset(20);
+            l.width(120).height(20);
             l.bottom().offset(20);
             l.center_hor();
         });
