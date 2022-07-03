@@ -1,4 +1,4 @@
-use gm::flat::Rect;
+use gm::flat::{Rect, Size};
 use rtools::{IntoF32, Rglica};
 
 use crate::{
@@ -37,14 +37,19 @@ impl NewPlacer {
         self
     }
 
-    pub fn width(&mut self) -> &mut Self {
-        self.pending_sides.push(Anchor::Width);
+    pub fn size(&mut self, size: impl Into<Size>) -> &mut Self {
+        let size = size.into();
+        self.width(size.width).height(size.height)
+    }
+
+    pub fn width(&mut self, w: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Width, w));
         self.has_width = true;
         self
     }
 
-    pub fn height(&mut self) -> &mut Self {
-        self.pending_sides.push(Anchor::Height);
+    pub fn height(&mut self, h: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Height, h));
         self.has_height = true;
         self
     }

@@ -41,8 +41,7 @@ impl SpriteView {
             .set_hidden(true)
             .set_image(Image::get("delete.png"))
             .make_layout(|l| {
-                l.width().height().offset(20);
-                l.top().left();
+                l.width(20).height(20).top().left();
             });
 
         self.delete_button.on_tap.set(self, |this, _| {

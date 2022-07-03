@@ -25,4 +25,10 @@ impl From<serde_json::Error> for Error {
     }
 }
 
+impl ToString for Error {
+    fn to_string(&self) -> String {
+        self.0.clone()
+    }
+}
+
 pub type NetResult<T> = Result<T, Error>;
