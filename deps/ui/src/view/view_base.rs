@@ -6,6 +6,7 @@ use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Event, IntoF32, Rglica, ToRglica};
 
 use crate::{
+    basic::RootView,
     complex::PathData,
     layout::{NewPlacer, Placer},
     view::{ViewData, ViewFrame},
@@ -25,6 +26,9 @@ pub struct ViewBase {
     pub(crate) frame:          Rect,
     #[derivative(Debug = "ignore")]
     pub(crate) absolute_frame: Rect,
+
+    #[derivative(Debug = "ignore")]
+    pub(crate) root_view: Rglica<RootView>,
 
     #[derivative(Debug = "ignore")]
     pub(crate) superview: Rglica<dyn View>,

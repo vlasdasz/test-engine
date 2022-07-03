@@ -1,7 +1,7 @@
 use std::ops::DerefMut;
 
 use gm::flat::{Point, Rect};
-use rtools::{address::Address, Rglica, ToRglica};
+use rtools::{Rglica, ToRglica};
 
 use crate::{
     layout::Placer,
@@ -40,14 +40,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_from_superview(&mut self) {
-        let index = self
-            .superview()
-            .subviews()
-            .iter()
-            .position(|view| self.address() == view.address())
-            .unwrap();
-
-        self.superview().remove_subview_at(index);
+        self.root_view().shedule_remove(self.rglica())
     }
 
     fn remove_subview_at(&mut self, index: usize) {
@@ -88,10 +81,10 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_boxed(&mut self, mut view: Box<dyn View>) {
-        let result = view.to_rglica();
         view.view_mut().superview = self.rglica();
         view.view_mut().drawer = self.drawer();
-        view.view_mut().placer = Placer::make(result);
+        view.view_mut().placer = Placer::make(view.rglica());
+        view.view_mut().root_view = self.root_view();
         view.setup();
         self.view_mut().subviews.push(view);
     }

@@ -1,25 +1,16 @@
 use gm::flat::Rect;
 use rtools::Rglica;
 
-use crate::{
-    view::{ViewFrame, ViewSubviews},
-    View,
-};
+use crate::{basic::RootView, view::ViewFrame, View};
 
 pub(crate) trait ViewInternal {
-    fn root_view(&self) -> Rglica<dyn View>;
+    fn root_view(&self) -> Rglica<RootView>;
     fn super_absolute_frame(&self) -> &Rect;
 }
 
 impl<T: ?Sized + View> ViewInternal for T {
-    fn root_view(&self) -> Rglica<dyn View> {
-        let mut root = self.superview();
-        loop {
-            if root.superview().is_null() {
-                return root;
-            }
-            root = root.superview();
-        }
+    fn root_view(&self) -> Rglica<RootView> {
+        self.view().root_view
     }
 
     fn super_absolute_frame(&self) -> &Rect {

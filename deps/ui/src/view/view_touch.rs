@@ -43,7 +43,7 @@ impl<T: ?Sized + View> ViewTouch for T {
             }
         }
 
-        for view in self.subviews_mut() {
+        for view in self.subviews_mut().iter_mut().rev() {
             if view.check_touch(touch) {
                 return true;
             }

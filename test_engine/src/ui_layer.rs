@@ -5,18 +5,18 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::{platform::Platform, Boxed, Rglica, ToRglica};
+use rtools::{platform::Platform, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
-use ui::{input::UIEvents, Touch, View, ViewBase, ViewFrame, ViewSubviews, ViewTouch};
+use ui::{basic::RootView, input::UIEvents, Touch, ViewFrame, ViewSubviews, ViewTouch};
 
 use crate::{assets::Assets, debug_view::DebugView, main_view::MainView, ui_drawer::TEUIDrawer, Keymap};
 
 pub struct UILayer {
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
-    pub root_view:          Box<dyn View>,
+    pub root_view:          Box<RootView>,
     pub debug_view:         Rglica<DebugView>,
     pub view:               Rglica<dyn MainView>,
 
@@ -37,7 +37,7 @@ impl UILayer {
         Box::new(Self {
             ui_cursor_position: Default::default(),
             cursor_position: Default::default(),
-            root_view: ViewBase::boxed(),
+            root_view: RootView::make_root(),
             debug_view: Default::default(),
             view: Default::default(),
             sprites_drawer,
@@ -63,6 +63,7 @@ impl UILayer {
         if !self.root_view.check_touch(&mut touch) {
             self.view.pass_touch_to_level(level_touch)
         }
+        self.root_view.remove_sheduled();
     }
 
     pub fn set_view<T: MainView + 'static>(&mut self) {
