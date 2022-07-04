@@ -68,13 +68,13 @@ impl TEUIDrawer {
             return;
         }
 
+        self.fill(view.absolute_frame(), view.color());
+
         if let Some(image) = view.image().get() {
             self.draw_image(image, view.absolute_frame(), view.color(), false);
         }
 
-        self.fill(view.absolute_frame(), view.color());
-
-        self.outline(view.absolute_frame(), Color::TURQUOISE);
+        self.outline(view.absolute_frame(), Color::BLUE);
 
         for path in view.paths() {
             self.draw_path(path, view.absolute_frame());

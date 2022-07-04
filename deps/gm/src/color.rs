@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Color {
     pub r: f32,
     pub g: f32,
@@ -116,6 +116,12 @@ impl Color {
     pub fn random() -> Color {
         use rand::Rng;
         Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
+    }
+}
+
+impl Default for Color {
+    fn default() -> Color {
+        Color::WHITE
     }
 }
 
