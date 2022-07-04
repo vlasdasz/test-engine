@@ -1,5 +1,5 @@
 use gl_image::Image;
-use gm::flat::Direction;
+use gm::{flat::Direction, Color};
 use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
 use crate::{
@@ -42,9 +42,9 @@ impl DPadView {
 
 impl ViewCallbacks for DPadView {
     fn setup(&mut self) {
-        error!("Setup");
+        self.set_color(Color::CLEAR);
+
         self.up = self.add_view();
-        error!("UP: OK");
         self.down = self.add_view();
         self.left = self.add_view();
         self.right = self.add_view();
@@ -52,8 +52,6 @@ impl ViewCallbacks for DPadView {
         self.up
             .on_tap
             .set(self, |this, _| this.on_press.trigger(Direction::Up));
-
-        error!("on_tap: OK");
 
         self.down
             .on_tap

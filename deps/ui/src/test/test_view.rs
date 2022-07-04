@@ -17,8 +17,8 @@ pub struct TestView {
     button:   Rglica<Button>,
     image:    Rglica<ImageView>,
     drawing:  Rglica<DrawingView>,
-    animated: Rglica<ImageView>,
     table:    Rglica<TableView>,
+    animated: Rglica<ImageView>,
 
     animation: Unwrap<Animation>,
 
@@ -64,14 +64,14 @@ impl ViewCallbacks for TestView {
             Color::GREEN,
         );
 
-        self.animated = self.add_view();
-        self.animated.set_frame((100, 100));
-
-        self.animation = Animation::new(0, 400, 10).into();
-
         self.table = self.add_view();
         self.table.data_source = data_source!(self);
         self.table.reload_data();
+
+        self.animated = self.add_view();
+        self.animated.set_frame((100, 100));
+
+        self.animation = Animation::new(0, 200, 10).into();
     }
 
     fn layout(&mut self) {

@@ -8,7 +8,7 @@ use crate::{
     complex::DrawingView,
     impl_view, view,
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase, ViewCallbacks, ViewTouch,
+    View, ViewBase, ViewCallbacks, ViewData, ViewTouch,
 };
 
 const SIZE: f32 = 140.0;
@@ -43,7 +43,7 @@ impl AnalogStickView {
 
 impl ViewCallbacks for AnalogStickView {
     fn setup(&mut self) {
-        self.set_frame((SIZE, SIZE));
+        self.set_frame((SIZE, SIZE)).set_color(Color::CLEAR);
 
         self.on_touch().set(self, |this, touch| {
             if touch.is_ended() {
@@ -59,7 +59,7 @@ impl ViewCallbacks for AnalogStickView {
         });
 
         self.background = self.add_view();
-        self.background.set_frame((SIZE, SIZE));
+        self.background.set_frame((SIZE, SIZE)).set_color(Color::CLEAR);
 
         let frame = *self.frame();
         self.background.add_path(
@@ -75,20 +75,21 @@ impl ViewCallbacks for AnalogStickView {
         self.direction_stick = self.add_view();
         let mut direction_stick = self.direction_stick;
 
-        direction_stick.set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE));
-
-        direction_stick.set_center(self.frame().size.center());
+        direction_stick
+            .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE))
+            .set_center(self.frame().size.center())
+            .set_color(Color::CLEAR);
 
         let stick_center = direction_stick.frame().size.center();
 
-        direction_stick.add_path(
-            PointsPath::circle_with(stick_center, STICK_VIEW_SIZE),
-            Color::BLACK,
-        );
-
-        direction_stick.add_path(
-            PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
-            Color::LIGHT_GRAY,
-        );
+        direction_stick
+            .add_path(
+                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE),
+                Color::BLACK,
+            )
+            .add_path(
+                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
+                Color::LIGHT_GRAY,
+            );
     }
 }

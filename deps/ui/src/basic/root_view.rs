@@ -1,6 +1,7 @@
+use gm::Color;
 use rtools::{address::Address, Boxed, Rglica, ToRglica};
 
-use crate::{impl_view, view, view::ViewSubviews, View, ViewBase};
+use crate::{impl_view, view, view::ViewSubviews, View, ViewBase, ViewData};
 
 #[view]
 #[derive(Default, Debug)]
@@ -13,6 +14,7 @@ impl RootView {
     pub fn make_root() -> Box<Self> {
         let mut root = Self::boxed();
         let rg = root.to_rglica();
+        root.set_color(Color::CLEAR);
         root.view_mut().root_view = rg;
         root
     }

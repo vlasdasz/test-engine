@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use test_engine::{
     audio::Sound,
+    gm::Color,
     main_view::{HasLevel, MainView},
     net::{GetRequest, API},
     rtools::{
@@ -15,7 +16,7 @@ use test_engine::{
         impl_view,
         layout::Anchor,
         test::test_view::TestView,
-        view, DPadView, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews,
+        view, DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -71,13 +72,13 @@ impl TestGameView {
     }
 
     fn setup_sliders(&mut self) {
-        self.game_scale_slider = self.add_view_with_frame((50, 280));
+        self.game_scale_slider = self.add_view_with_frame((28, 280));
         self.game_scale_slider.set_start(0.5).set_finish(10);
         self.game_scale_slider.on_change.set(self, |this, scale| {
             this.level().drawer_mut().set_scale(scale);
         });
 
-        self.ui_scale_slider = self.add_view_with_frame((50, 280));
+        self.ui_scale_slider = self.add_view_with_frame((28, 280));
         self.ui_scale_slider.set_start(0.2).set_finish(4);
         self.ui_scale_slider.on_change.set(self, |this, scale| {
             this.ui.set_scale(scale);
@@ -85,9 +86,9 @@ impl TestGameView {
     }
 
     fn setup_ui(&mut self) {
-        self.set_frame((10, 10, 1000, 500));
+        self.set_frame((10, 10, 1000, 500)).set_color(Color::CLEAR);
 
-        self.sprite_view = self.add_view_with_frame((500, 180));
+        self.sprite_view = self.add_view_with_frame((250, 50));
 
         self.level
             .base()
@@ -180,8 +181,8 @@ impl ViewCallbacks for TestGameView {
         self.test_view
             .deprecated_place()
             .bottom_right(20)
-            .proportional_width(0.28)
-            .proportional_height(0.8);
+            .proportional_width(0.18)
+            .proportional_height(0.4);
 
         self.to_benchmark.deprecated_place().bottom_center(20);
 
