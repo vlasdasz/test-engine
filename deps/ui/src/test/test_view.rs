@@ -1,5 +1,6 @@
 use gl_image::Image;
 use gm::Color;
+use gm::flat::PointsPath;
 use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
 
 use crate::{
@@ -60,7 +61,7 @@ impl ViewCallbacks for TestView {
 
         self.drawing = self.add_view();
         self.drawing.add_path(
-            vec![(20, 20), (30, 20), (20, 40), (30, 50), (1, 60), (1, 20)],
+            PointsPath::rounded_rect((0, 0, 100, 40), 15, 50),
             Color::GREEN,
             DrawMode::Outline,
         );

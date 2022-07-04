@@ -114,7 +114,7 @@ impl TestGameView {
                 Image::get("right.png"),
             )
             .make_layout(|l| {
-                l.width(200).height(150);
+                l.width(100).height(80);
                 l.bottom().left().offset(5);
             });
 

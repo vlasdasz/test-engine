@@ -11,8 +11,8 @@ use crate::{
     View, ViewBase, ViewCallbacks, ViewData, ViewTouch,
 };
 
-const SIZE: f32 = 300.0;
-const OUTLINE_WIDTH: f32 = 10.0;
+const SIZE: f32 = 80.0;
+const OUTLINE_WIDTH: f32 = 5.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 const PRECISION: u16 = 50;
 
@@ -95,11 +95,6 @@ impl ViewCallbacks for AnalogStickView {
                 PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH, PRECISION),
                 Color::LIGHT_GRAY,
                 DrawMode::Fill,
-            )
-            .add_path(
-                PointsPath::rounded_rect((0, 0, 100, 100), 20, 5),
-                Color::BLACK,
-                DrawMode::Outline,
             );
     }
 }
