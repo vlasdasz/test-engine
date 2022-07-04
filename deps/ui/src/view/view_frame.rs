@@ -35,7 +35,7 @@ pub trait ViewFrame {
         }
     }
 
-    fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer))
+    fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer)) -> &mut Self
     where
         Self: View,
     {
@@ -44,6 +44,7 @@ pub trait ViewFrame {
         make(&mut placer);
         placer.assign_pending();
         self.view_mut().new_placer = placer.into();
+        self
     }
 }
 

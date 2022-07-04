@@ -30,26 +30,24 @@ impl ViewCallbacks for Alert {
         self.set_color(Color::WHITE)
             .make_layout(|l| l.width(200).height(80).center());
 
-        (self.label, self.ok_button) = (self.add_view(), self.add_view());
-
-        self.label.set_text(self.message.clone());
-
-        self.label.make_layout(|l| {
-            l.left().right().offset(10);
-            l.top().offset(10);
-            l.height(20);
+        self.label = self.make_this(self, |this, v: &mut Label| {
+            v.set_text(this.message.clone()).make_layout(|l| {
+                l.left().right().offset(10);
+                l.top().offset(10);
+                l.height(20);
+            });
         });
 
-        self.ok_button
-            .set_color(Color::LIGHT_GRAY)
-            .set_text("OK")
-            .make_layout(|l| {
-                l.width(50).height(20);
-                l.center_hor();
-                l.bottom().offset(10);
-            });
-        self.ok_button
-            .on_tap
-            .set(self, |this, _| this.remove_from_superview());
+        self.ok_button = self.make_this(self, |this, v: &mut Button| {
+            v.set_color(Color::LIGHT_GRAY)
+                .set_text("OK")
+                .make_layout(|l| {
+                    l.width(50).height(20);
+                    l.center_hor();
+                    l.bottom().offset(10);
+                })
+                .on_tap
+                .set(this, |this, _| this.remove_from_superview());
+        });
     }
 }

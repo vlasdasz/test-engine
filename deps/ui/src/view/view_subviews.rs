@@ -20,6 +20,11 @@ pub trait ViewSubviews {
 
     fn add_view<V: 'static + View>(&mut self) -> Rglica<V>;
     fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> Rglica<V>;
+    fn make_this<Obj: View + 'static, V: 'static + View>(
+        &self,
+        obj: &Obj,
+        make: impl FnOnce(&mut Obj, &mut V),
+    ) -> Rglica<V>;
     fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V>;
     fn add_boxed(&mut self, view: Box<dyn View>);
 
@@ -69,6 +74,19 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let mut result = view.to_rglica();
         self.add_boxed(view);
         make(result.deref_mut());
+        result
+    }
+
+    fn make_this<Obj: View + 'static, V: 'static + View>(
+        &self,
+        obj: &Obj,
+        make: impl FnOnce(&mut Obj, &mut V),
+    ) -> Rglica<V> {
+        let view = V::boxed();
+        let mut result = view.to_rglica();
+        let mut rglica = obj.to_rglica();
+        rglica.add_boxed(view);
+        make(rglica.deref_mut(), result.deref_mut());
         result
     }
 
