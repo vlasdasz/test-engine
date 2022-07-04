@@ -11,6 +11,8 @@ use test_engine::{
     ui_layer::UILayer,
     Level,
 };
+use test_engine::gm::Color;
+use test_engine::ui::ViewData;
 
 use crate::{benchmark::benchmark_level::BenchmarkLevel, TestGameView};
 
@@ -29,6 +31,7 @@ impl_view!(BenchmarkView);
 
 impl ViewCallbacks for BenchmarkView {
     fn setup(&mut self) {
+        self.set_color(Color::CLEAR);
         self.level.setup();
 
         self.back = self.add_view();
