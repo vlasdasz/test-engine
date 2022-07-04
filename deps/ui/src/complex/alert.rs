@@ -35,9 +35,9 @@ impl ViewCallbacks for Alert {
         self.label.set_text(self.message.clone());
 
         self.label.make_layout(|l| {
-            l.width(200).height(20);
-            l.center_hor();
+            l.left().right().offset(10);
             l.top().offset(10);
+            l.height(20);
         });
 
         self.ok_button
