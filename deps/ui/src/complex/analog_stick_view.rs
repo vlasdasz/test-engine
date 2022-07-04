@@ -5,15 +5,16 @@ use gm::{
 use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
-    complex::DrawingView,
+    complex::{DrawMode, DrawingView},
     impl_view, view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks, ViewData, ViewTouch,
 };
 
-const SIZE: f32 = 140.0;
+const SIZE: f32 = 300.0;
 const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
+const PRECISION: u16 = 50;
 
 #[view]
 #[derive(Default, Debug)]
@@ -63,13 +64,15 @@ impl ViewCallbacks for AnalogStickView {
 
         let frame = *self.frame();
         self.background.add_path(
-            PointsPath::circle_with(frame.size.center(), frame.size.width),
+            PointsPath::circle_with(frame.size.center(), frame.size.width, PRECISION),
             Color::BLACK,
+            DrawMode::Fill,
         );
 
         self.background.add_path(
-            PointsPath::circle_with(frame.size.center(), frame.size.width - OUTLINE_WIDTH),
+            PointsPath::circle_with(frame.size.center(), frame.size.width - OUTLINE_WIDTH, PRECISION),
             Color::WHITE,
+            DrawMode::Fill,
         );
 
         self.direction_stick = self.add_view();
@@ -84,12 +87,19 @@ impl ViewCallbacks for AnalogStickView {
 
         direction_stick
             .add_path(
-                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE),
+                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE, PRECISION),
                 Color::BLACK,
+                DrawMode::Fill,
             )
             .add_path(
-                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH),
+                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH, PRECISION),
                 Color::LIGHT_GRAY,
+                DrawMode::Fill,
+            )
+            .add_path(
+                PointsPath::rounded_rect((0, 0, 100, 100), 20, 5),
+                Color::BLACK,
+                DrawMode::Outline,
             );
     }
 }

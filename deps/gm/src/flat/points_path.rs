@@ -1,6 +1,8 @@
 use std::f32::consts::PI;
 
-use crate::flat::Point;
+use rtools::IntoF32;
+
+use crate::flat::{Point, Rect};
 
 #[derive(Default, Debug)]
 pub struct PointsPath {
@@ -8,13 +10,43 @@ pub struct PointsPath {
 }
 
 impl PointsPath {
-    pub fn circle_with(center: Point, radius: f32) -> Self {
+    pub fn circle_with(center: Point, radius: f32, precision: u16) -> Self {
         let mut path = PointsPath::default();
-        let precision = 50;
         let angle_step = PI * 2.0 / precision as f32;
         for i in 0..precision {
             path.add_point(point_on_circle(radius, angle_step * i as f32, &center));
         }
+        path
+    }
+
+    pub fn rounded_rect(rect: impl Into<Rect>, radius: impl IntoF32, precision: u16) -> Self {
+        let mut path = PointsPath::default();
+        let rect = rect.into();
+        let radius = radius.into_f32();
+
+        let a: Point = (rect.x() + radius, rect.y() + radius).into();
+        let b: Point = (rect.max_x() - radius, rect.y() + radius).into();
+        let c: Point = (rect.max_x() - radius, rect.max_y() - radius).into();
+        let d: Point = (rect.x() + radius, rect.max_y() - radius).into();
+
+        let angle_step = PI * 0.5 / precision as f32;
+
+        for i in 0..precision {
+            path.add_point(point_on_circle(radius, -3.0 + angle_step * i as f32, &a));
+        }
+
+        for i in 0..precision {
+            path.add_point(point_on_circle(radius, -1.5 + angle_step * i as f32, &b));
+        }
+
+        for i in 0..precision {
+            path.add_point(point_on_circle(radius, angle_step * i as f32, &c));
+        }
+
+        for i in 0..precision {
+            path.add_point(point_on_circle(radius, 1.5 + angle_step * i as f32, &d));
+        }
+
         path
     }
 }

@@ -17,7 +17,7 @@ pub use drawing_view::DrawingView;
 pub use int_view::IntView;
 pub use labeled_slider::LabeledSlider;
 pub use labeled_view::LabeledView;
-pub use path_data::PathData;
+pub use path_data::{DrawMode, PathData};
 pub use slider::Slider;
 pub use table_view::*;
 pub use table_view_cell::*;

@@ -13,10 +13,10 @@ pub struct DrawingView {}
 impl_view!(DrawingView);
 
 impl DrawingView {
-    pub fn add_path(&mut self, path: impl Into<PointsPath>, color: Color) -> &mut Self {
+    pub fn add_path(&mut self, path: impl Into<PointsPath>, color: Color, mode: DrawMode) -> &mut Self {
         self.view
             .paths
-            .push(initialize_path_data(path.into(), color, DrawMode::Fill));
+            .push(initialize_path_data(path.into(), color, mode));
         self
     }
 

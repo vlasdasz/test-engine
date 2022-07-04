@@ -9,8 +9,6 @@ pub struct PathData {
     pub draw_mode: DrawMode,
 }
 
-impl PathData {}
-
 #[derive(Debug)]
 pub enum DrawMode {
     Outline,
@@ -19,6 +17,9 @@ pub enum DrawMode {
 
 impl DrawMode {
     pub fn to_gl(&self) -> u32 {
-        6 //GL_TRIANGLE_FAN
+        match self {
+            Self::Outline => 2, //GL_LINE_LOOP
+            Self::Fill => 6,    //GL_TRIANGLE_FAN
+        }
     }
 }

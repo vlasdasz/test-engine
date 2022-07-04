@@ -2,7 +2,7 @@ use gm::{flat::PointsPath, Color};
 use rtools::{Boxed, Rglica, ToRglica};
 
 use crate::{
-    complex::DrawingView,
+    complex::{DrawMode, DrawingView},
     impl_view, view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks,
@@ -24,8 +24,9 @@ impl CircleView {
         self.drawing.remove_all_paths();
         let frame = self.frame().with_zero_origin();
         self.drawing.add_path(
-            PointsPath::circle_with(frame.size.center(), frame.size.width),
+            PointsPath::circle_with(frame.size.center(), frame.size.width, 50),
             color,
+            DrawMode::Fill,
         );
     }
 }

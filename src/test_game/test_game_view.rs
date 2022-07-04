@@ -86,6 +86,16 @@ impl TestGameView {
     }
 
     fn setup_ui(&mut self) {
+        self.ui.keymap.add("=", self, |this| {
+            let scale = this.ui.scale() * 1.2;
+            this.ui.set_scale(scale);
+        });
+
+        self.ui.keymap.add("-", self, |this| {
+            let scale = this.ui.scale() * 0.8;
+            this.ui.set_scale(scale);
+        });
+
         self.set_frame((10, 10, 1000, 500)).set_color(Color::CLEAR);
 
         self.sprite_view = self.add_view_with_frame((250, 50));

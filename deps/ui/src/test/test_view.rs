@@ -4,7 +4,7 @@ use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
 
 use crate::{
     basic::Button,
-    complex::{DrawingView, StringCell, TableView, TableViewDataSource},
+    complex::{DrawMode, DrawingView, StringCell, TableView, TableViewDataSource},
     data_source, impl_view, view,
     view::{ViewData, ViewFrame, ViewSubviews},
     ImageView, Label, View, ViewBase, ViewCallbacks,
@@ -62,6 +62,7 @@ impl ViewCallbacks for TestView {
         self.drawing.add_path(
             vec![(20, 20), (30, 20), (20, 40), (30, 50), (1, 60), (1, 20)],
             Color::GREEN,
+            DrawMode::Outline,
         );
 
         self.table = self.add_view();
