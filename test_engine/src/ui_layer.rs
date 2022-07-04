@@ -5,7 +5,7 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::{platform::Platform, Rglica, ToRglica};
+use rtools::{platform::Platform, IntoF32, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
@@ -77,10 +77,14 @@ impl UILayer {
         self.root_view.add_boxed(view);
     }
 
-    pub fn set_scale(&mut self, scale: f32) {
-        self.scale = scale;
-        self.drawer.set_scale(scale);
-        self.root_view.set_frame(self.drawer.window_size / scale);
+    pub fn scale(&self) -> f32 {
+        self.scale
+    }
+
+    pub fn set_scale(&mut self, scale: impl IntoF32) {
+        self.scale = scale.into_f32();
+        self.drawer.set_scale(self.scale);
+        self.root_view.set_frame(self.drawer.window_size / self.scale);
     }
 
     pub fn add_debug_view(&mut self) {
