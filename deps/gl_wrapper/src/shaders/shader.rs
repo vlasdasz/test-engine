@@ -54,7 +54,7 @@ impl Shader {
         self
     }
 
-    pub fn set_color(&self, color: Color) -> &Self {
+    pub fn set_color(&self, color: &Color) -> &Self {
         debug_assert!(self.color >= 0, "Invalid shader uniform");
         GL!(Uniform4fv, self.color, 1, &color.r);
         self

@@ -69,8 +69,8 @@ pub trait Sprite: Debug {
             && point.y <= pos.y + size.height
     }
 
-    fn color(&self) -> Color {
-        self.data().color
+    fn color(&self) -> &Color {
+        &self.data().color
     }
 
     fn image(&self) -> Handle<Image> {

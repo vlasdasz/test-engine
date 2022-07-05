@@ -32,7 +32,7 @@ impl SpriteView {
         }
         self.position.set_value(sprite.position());
         self.size.set_value(sprite.size());
-        self.color.set_value(sprite.color());
+        self.color.set_value(*sprite.color());
     }
 
     fn setup_delete_button(&mut self) {

@@ -5,9 +5,9 @@ use rtools::{data_manager::Handle, IntoF32, Rglica};
 use crate::{complex::PathData, UIDrawer, View};
 
 pub trait ViewData {
-    fn color(&self) -> Color;
+    fn color(&self) -> &Color;
     fn set_color(&mut self, color: Color) -> &mut Self;
-    fn border_color(&self) -> Color;
+    fn border_color(&self) -> &Color;
     fn set_border_color(&mut self, color: Color) -> &mut Self;
     fn corner_radius(&self) -> f32;
     fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self;
@@ -21,8 +21,8 @@ pub trait ViewData {
 }
 
 impl<T: ?Sized + View> ViewData for T {
-    fn color(&self) -> Color {
-        self.view().color
+    fn color(&self) -> &Color {
+        &self.view().color
     }
 
     fn set_color(&mut self, color: Color) -> &mut Self {
@@ -30,8 +30,8 @@ impl<T: ?Sized + View> ViewData for T {
         self
     }
 
-    fn border_color(&self) -> Color {
-        self.view().border_color
+    fn border_color(&self) -> &Color {
+        &self.view().border_color
     }
 
     fn set_border_color(&mut self, color: Color) -> &mut Self {

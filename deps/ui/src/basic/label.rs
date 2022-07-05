@@ -86,7 +86,7 @@ impl Label {
                         glyph.height,
                     )
                         .into(),
-                    Color::WHITE,
+                    &Color::WHITE,
                     true,
                 );
             }
