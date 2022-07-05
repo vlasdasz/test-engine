@@ -1,6 +1,5 @@
 use gl_image::Image;
-use gm::Color;
-use gm::flat::PointsPath;
+use gm::{flat::PointsPath, Color};
 use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
 
 use crate::{

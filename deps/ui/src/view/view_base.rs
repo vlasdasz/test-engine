@@ -3,20 +3,22 @@ use std::cell::RefCell;
 use derivative::Derivative;
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use rtools::{data_manager::Handle, Event, IntoF32, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
 use crate::{
     basic::RootView,
     complex::PathData,
     layout::{NewPlacer, Placer},
-    view::{ViewData, ViewFrame},
     Touch, UIDrawer, View,
 };
 
-#[derive(Default, Derivative)]
+#[derive(Derivative)]
 #[derivative(Debug)]
 pub struct ViewBase {
     pub(crate) color: Color,
+
+    pub(crate) corner_radius: f32,
+    pub(crate) border_color:  Color,
 
     pub(crate) touch_enabled: RefCell<bool>,
     pub(crate) on_touch:      Event<Touch>,
@@ -50,14 +52,6 @@ pub struct ViewBase {
     pub(crate) drawer: Rglica<dyn UIDrawer>,
 }
 
-impl ViewBase {
-    pub fn dummy() -> Box<Self> {
-        let mut dummy = Self::default();
-        dummy.set_frame((5, 5)).set_color(Color::random());
-        Box::new(dummy)
-    }
-}
-
 impl View for ViewBase {
     fn view(&self) -> &ViewBase {
         self
@@ -72,11 +66,26 @@ impl View for ViewBase {
     }
 }
 
-impl<W: IntoF32, H: IntoF32> From<(W, H)> for Box<dyn View> {
-    fn from(data: (W, H)) -> Self {
-        Box::new(ViewBase {
-            frame: (data.0, data.1).into(),
-            ..Default::default()
-        })
+impl Default for ViewBase {
+    fn default() -> Self {
+        Self {
+            color:          Default::default(),
+            corner_radius:  Default::default(),
+            border_color:   Color::BLUE,
+            touch_enabled:  Default::default(),
+            on_touch:       Default::default(),
+            is_hidden:      Default::default(),
+            frame:          Default::default(),
+            absolute_frame: Default::default(),
+            root_view:      Default::default(),
+            superview:      Default::default(),
+            subviews:       Default::default(),
+            touch_id:       Default::default(),
+            placer:         Default::default(),
+            new_placer:     Default::default(),
+            image:          Default::default(),
+            paths:          Default::default(),
+            drawer:         Default::default(),
+        }
     }
 }

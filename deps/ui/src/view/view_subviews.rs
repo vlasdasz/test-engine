@@ -1,7 +1,10 @@
 use std::ops::DerefMut;
 
-use gm::flat::{Point, Rect};
-use rtools::{Rglica, ToRglica};
+use gm::{
+    flat::{Point, Rect},
+    Color,
+};
+use rtools::{Boxed, Rglica, ToRglica};
 
 use crate::{
     layout::Placer,
@@ -53,8 +56,10 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_view_at(&mut self, point: Point) {
-        let mut view = ViewBase::dummy();
-        view.set_origin(point);
+        let mut view = ViewBase::boxed();
+        view.set_frame((5, 5))
+            .set_color(Color::random())
+            .set_origin(point);
         self.add_boxed(view);
     }
 

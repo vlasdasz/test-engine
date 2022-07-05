@@ -74,7 +74,13 @@ impl TEUIDrawer {
             self.draw_image(image, view.absolute_frame(), view.color(), false);
         }
 
-        self.outline(view.absolute_frame(), Color::BLUE);
+        if view.border_color().is_visible() {
+            if view.corner_radius() > 0.0 {
+
+            } else {
+                self.outline(view.absolute_frame(), view.border_color());
+            }
+        }
 
         for path in view.paths() {
             self.draw_path(path, view.absolute_frame());

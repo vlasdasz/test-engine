@@ -1,18 +1,17 @@
 use std::borrow::Borrow;
 
 use test_engine::{
+    gm::Color,
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
     sprites::Player,
     ui::{
-        basic::Button, impl_view, layout::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewFrame,
-        ViewSubviews,
+        basic::Button, impl_view, layout::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewData,
+        ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
     Level,
 };
-use test_engine::gm::Color;
-use test_engine::ui::ViewData;
 
 use crate::{benchmark::benchmark_level::BenchmarkLevel, TestGameView};
 
