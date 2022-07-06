@@ -79,22 +79,26 @@ impl Buffer {
 }
 
 impl Buffer {
-    pub fn draw(&self) {
+    pub fn draw_with_mode(&self, draw_mode: u32) {
         GL!(BindVertexArray, self.vertex_array_object);
 
         if let Some(indices) = &self.indices {
             GL!(
                 DrawElements,
-                self.draw_mode,
+                draw_mode,
                 indices.size as i32,
                 GLC!(UNSIGNED_SHORT),
                 std::ptr::null::<c_void>()
             )
         } else {
-            GL!(DrawArrays, self.draw_mode, 0, self.vertices_count)
+            GL!(DrawArrays, draw_mode, 0, self.vertices_count)
         }
 
         GL!(BindVertexArray, 0);
+    }
+
+    pub fn draw(&self) {
+        self.draw_with_mode(self.draw_mode)
     }
 
     pub fn print(&self) {

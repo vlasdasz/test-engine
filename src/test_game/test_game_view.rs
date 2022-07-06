@@ -134,7 +134,11 @@ impl TestGameView {
 
                 dbg!(&result);
 
-                this.async_task.set_text(result.first().unwrap().login.clone());
+                if let Some(user) = result.first() {
+                    this.async_task.set_text(user.login.clone());
+                } else {
+                    this.async_task.set_text("No response");
+                }
             });
         });
     }

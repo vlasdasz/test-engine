@@ -78,6 +78,10 @@ impl ViewCallbacks for TestView {
     fn layout(&mut self) {
         self.deprecated_place().all_vertically();
         self.animated.set_y(self.animation.value());
+        let radius = self.button.frame().size.height / 2.0;
+        self.button.set_corner_radius(radius);
+        self.button.set_size((radius * 2.0, radius * 2.0));
+        self.button.deprecated_place().center_hor();
     }
 }
 

@@ -76,6 +76,20 @@ impl TEUIDrawer {
             return;
         }
 
+        let needs_stensil = view.corner_radius() > 0.0;
+
+        if needs_stensil {
+            self.set_viewport(view.frame());
+
+            GLWrapper::start_stensil();
+
+            let mut storage = self.round_storage.borrow_mut();
+            let path = self.rounded_path_for_view(view, &mut storage);
+            self.draw_path(path, view.absolute_frame(), DrawMode::Fill.into());
+
+            GLWrapper::draw_stensiled();
+        }
+
         self.fill(view.absolute_frame(), view.color());
 
         if let Some(image) = view.image().get() {
@@ -83,7 +97,7 @@ impl TEUIDrawer {
         }
 
         if view.border_color().is_visible() {
-            if view.corner_radius() > 0.0 {
+            if needs_stensil {
                 self.draw_round_border(view);
             } else {
                 self.outline(view.absolute_frame(), view.border_color());
@@ -91,12 +105,14 @@ impl TEUIDrawer {
         }
 
         for path in view.paths() {
-            self.draw_path(path, view.absolute_frame());
+            self.draw_path(path, view.absolute_frame(), None);
         }
 
         for view in view.subviews_mut() {
             self.draw(view.deref_mut())
         }
+
+        GLWrapper::disable_stensil();
     }
 }
 
@@ -112,7 +128,7 @@ impl TEUIDrawer {
 
 impl TEUIDrawer {
     fn rounded_path_for_view<'a>(&'a self, view: &dyn View, storage: &'a mut RoundStorage) -> &'a PathData {
-        if storage.get_mut(&view.address()).is_some() {
+        if storage.get(&view.address()).is_some() {
             let (path, prev_size) = storage.get_mut(&view.address()).unwrap();
             if *prev_size == view.frame().size {
                 return path;
@@ -166,7 +182,7 @@ impl UIDrawer for TEUIDrawer {
         self.assets.buffers.full_image.draw();
     }
 
-    fn draw_path(&self, path: &PathData, rect: &Rect) {
+    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>) {
         if rect.size.is_invalid() {
             dbg!("invalid rect size");
             return;
@@ -178,13 +194,17 @@ impl UIDrawer for TEUIDrawer {
             .enable()
             .set_color(&path.color)
             .set_size(rect.size);
-        path.buffer.draw();
+        if let Some(mode) = custom_mode {
+            path.buffer.draw_with_mode(mode.to_gl())
+        } else {
+            path.buffer.draw();
+        }
     }
 
     fn draw_round_border(&self, view: &mut dyn View) {
         let mut storage = self.round_storage.borrow_mut();
         let path = self.rounded_path_for_view(view, &mut storage);
-        self.draw_path(path, view.absolute_frame());
+        self.draw_path(path, view.absolute_frame(), None);
     }
 
     fn rglica(&self) -> Rglica<dyn UIDrawer> {

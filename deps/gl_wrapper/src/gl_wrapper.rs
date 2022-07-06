@@ -83,6 +83,26 @@ impl GLWrapper {
         GL!(Disable, GLC!(SCISSOR_TEST));
     }
 
+    pub fn start_stensil() {
+        GL!(Enable, GLC!(STENCIL_TEST));
+        GL!(StencilFunc, GLC!(NEVER), 1, 0xFF);
+        GL!(StencilOp, GLC!(REPLACE), GLC!(KEEP), GLC!(KEEP));
+
+        GL!(Clear, GLC!(STENCIL_BUFFER_BIT));
+
+        GL!(StencilMask, 0xFF);
+        GL!(Clear, GLC!(STENCIL_BUFFER_BIT));
+    }
+
+    pub fn draw_stensiled() {
+        GL!(StencilMask, 0x00);
+        GL!(StencilFunc, GLC!(EQUAL), 1, 0xFF);
+    }
+
+    pub fn disable_stensil() {
+        GL!(Disable, GLC!(STENCIL_TEST));
+    }
+
     pub fn enable_blend() {
         GL!(Enable, GLC!(BLEND));
         GL!(BlendFunc, GLC!(SRC_ALPHA), GLC!(ONE_MINUS_SRC_ALPHA));
