@@ -36,15 +36,10 @@ impl GLWrapper {
     }
 
     pub fn clear() {
-        GL!(Clear, GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT))
-    }
-
-    pub fn enable_depth_test() {
-        GL!(Enable, GLC!(DEPTH_TEST))
-    }
-
-    pub fn disable_depth_test() {
-        GL!(Disable, GLC!(DEPTH_TEST))
+        GL!(
+            Clear,
+            GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT) | GLC!(STENCIL_BUFFER_BIT)
+        )
     }
 
     pub fn set_ui_viewport(window_height: f32, scale: f32, rect: impl Into<Rect>) {

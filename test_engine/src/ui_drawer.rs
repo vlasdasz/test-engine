@@ -110,6 +110,24 @@ impl TEUIDrawer {
     }
 }
 
+impl TEUIDrawer {
+    fn rounded_path_for_view<'a>(&'a self, view: &dyn View, storage: &'a mut RoundStorage) -> &'a PathData {
+        if storage.get_mut(&view.address()).is_some() {
+            let (path, prev_size) = storage.get_mut(&view.address()).unwrap();
+            if *prev_size == view.frame().size {
+                return path;
+            }
+            *path = make_round_border(view);
+            *prev_size = view.frame().size;
+            return path;
+        }
+
+        let path = make_round_border(view);
+        storage.insert(view.address(), (path, view.frame().size));
+        &storage.get(&view.address()).unwrap().0
+    }
+}
+
 impl UIDrawer for TEUIDrawer {
     fn reset_viewport(&self) {
         GLWrapper::set_ui_viewport(self.window_size.height, self.screen_scale, self.window_size);
@@ -165,21 +183,8 @@ impl UIDrawer for TEUIDrawer {
 
     fn draw_round_border(&self, view: &mut dyn View) {
         let mut storage = self.round_storage.borrow_mut();
-
-        if let Some((path, prev_size)) = storage.get_mut(&view.address()) {
-            if *prev_size == view.frame().size {
-                self.draw_path(path, view.absolute_frame());
-                return;
-            }
-            *path = make_round_border(view);
-            *prev_size = view.frame().size;
-            self.draw_path(path, view.absolute_frame());
-            return;
-        }
-
-        let path = make_round_border(view);
-        self.draw_path(&path, view.absolute_frame());
-        storage.insert(view.address(), (path, view.frame().size));
+        let path = self.rounded_path_for_view(view, &mut storage);
+        self.draw_path(path, view.absolute_frame());
     }
 
     fn rglica(&self) -> Rglica<dyn UIDrawer> {
@@ -187,7 +192,7 @@ impl UIDrawer for TEUIDrawer {
     }
 }
 
-fn make_round_border(view: &mut dyn View) -> PathData {
+fn make_round_border(view: &dyn View) -> PathData {
     initialize_path_data(
         PointsPath::rounded_rect(view.frame().size, view.corner_radius(), 5),
         view.border_color(),
