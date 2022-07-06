@@ -64,14 +64,18 @@ impl ViewCallbacks for AnalogStickView {
 
         let frame = *self.frame();
         self.background.add_path(
-            PointsPath::circle_with(frame.size.center(), frame.size.width, PRECISION),
-            Color::BLACK,
+            PointsPath::circle_with(frame.size.center(), frame.size.width / 2.0, PRECISION),
+            &Color::BLACK,
             DrawMode::Fill,
         );
 
         self.background.add_path(
-            PointsPath::circle_with(frame.size.center(), frame.size.width - OUTLINE_WIDTH, PRECISION),
-            Color::WHITE,
+            PointsPath::circle_with(
+                frame.size.center(),
+                (frame.size.width - OUTLINE_WIDTH) / 2.0,
+                PRECISION,
+            ),
+            &Color::WHITE,
             DrawMode::Fill,
         );
 
@@ -87,13 +91,13 @@ impl ViewCallbacks for AnalogStickView {
 
         direction_stick
             .add_path(
-                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE, PRECISION),
-                Color::BLACK,
+                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE / 2.0, PRECISION),
+                &Color::BLACK,
                 DrawMode::Fill,
             )
             .add_path(
-                PointsPath::circle_with(stick_center, STICK_VIEW_SIZE - OUTLINE_WIDTH, PRECISION),
-                Color::LIGHT_GRAY,
+                PointsPath::circle_with(stick_center, (STICK_VIEW_SIZE - OUTLINE_WIDTH) / 2.0, PRECISION),
+                &Color::LIGHT_GRAY,
                 DrawMode::Fill,
             );
     }

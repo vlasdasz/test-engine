@@ -13,7 +13,7 @@ mod table_view_cell;
 pub use alert::Alert;
 pub use analog_stick_view::AnalogStickView;
 pub use dpad_view::DPadView;
-pub use drawing_view::DrawingView;
+pub use drawing_view::{initialize_path_data, DrawingView};
 pub use int_view::IntView;
 pub use labeled_slider::LabeledSlider;
 pub use labeled_view::LabeledView;

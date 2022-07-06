@@ -66,11 +66,7 @@ impl PointsPath {
 }
 
 fn point_on_circle(radius: f32, angle: f32, center: &Point) -> Point {
-    (
-        (radius / 2.0) * angle.cos() + center.x,
-        (radius / 2.0) * angle.sin() + center.y,
-    )
-        .into()
+    (radius * angle.cos() + center.x, radius * angle.sin() + center.y).into()
 }
 
 impl<T: Into<Point> + Copy> From<Vec<T>> for PointsPath {

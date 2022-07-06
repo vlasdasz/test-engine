@@ -70,7 +70,7 @@ impl Default for ViewBase {
     fn default() -> Self {
         Self {
             color:          Default::default(),
-            corner_radius:  Default::default(),
+            corner_radius:  10.0,
             border_color:   Color::BLUE,
             touch_enabled:  Default::default(),
             on_touch:       Default::default(),

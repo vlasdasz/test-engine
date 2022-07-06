@@ -61,7 +61,7 @@ impl ViewCallbacks for TestView {
         self.drawing = self.add_view();
         self.drawing.add_path(
             PointsPath::rounded_rect((0, 0, 100, 40), 15, 50),
-            Color::GREEN,
+            &Color::GREEN,
             DrawMode::Outline,
         );
 

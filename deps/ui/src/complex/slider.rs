@@ -24,7 +24,7 @@ impl_view!(Slider);
 
 impl ViewCallbacks for Slider {
     fn setup(&mut self) {
-        let radius = self.width();
+        let radius = self.width() / 2.0;
         let circle = CircleView::with_radius(radius);
         self.circle = circle.to_rglica();
         self.add_boxed(circle);

@@ -5,19 +5,24 @@ use std::{borrow::Borrow, cell::RefCell, collections::HashMap, ops::DerefMut, rc
 use gl_image::Image;
 use gl_wrapper::GLWrapper;
 use gm::{
-    flat::{Rect, Size},
+    flat::{PointsPath, Rect, Size},
     Color,
 };
 use rtools::{address::Address, Rglica, ToRglica};
-use ui::{complex::PathData, UIDrawer, View, ViewData, ViewFrame, ViewSubviews};
+use ui::{
+    complex::{initialize_path_data, DrawMode, PathData},
+    UIDrawer, View, ViewData, ViewFrame, ViewSubviews,
+};
 
 use crate::assets::Assets;
+
+type RoundStorage = HashMap<u64, (PathData, Size)>;
 
 pub struct TEUIDrawer {
     pub assets:      Rc<Assets>,
     pub window_size: Size,
 
-    round_storage: RefCell<HashMap<u64, (PathData, Size)>>,
+    round_storage: RefCell<RoundStorage>,
 
     scale:        f32,
     screen_scale: f32,
@@ -144,7 +149,10 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn draw_path(&self, path: &PathData, rect: &Rect) {
-        debug_assert!(rect.size.is_valid());
+        if rect.size.is_invalid() {
+            dbg!("invalid rect size");
+            return;
+        }
         self.set_viewport(rect);
         self.assets
             .shaders
@@ -156,14 +164,33 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn draw_round_border(&self, view: &mut dyn View) {
-        if let Some((path, prev_size)) = self.round_storage.borrow_mut().get_mut(&view.address()) {
+        let mut storage = self.round_storage.borrow_mut();
+
+        if let Some((path, prev_size)) = storage.get_mut(&view.address()) {
             if *prev_size == view.frame().size {
                 self.draw_path(path, view.absolute_frame());
+                return;
             }
+            *path = make_round_border(view);
+            *prev_size = view.frame().size;
+            self.draw_path(path, view.absolute_frame());
+            return;
         }
+
+        let path = make_round_border(view);
+        self.draw_path(&path, view.absolute_frame());
+        storage.insert(view.address(), (path, view.frame().size));
     }
 
     fn rglica(&self) -> Rglica<dyn UIDrawer> {
         (self as &dyn UIDrawer).to_rglica()
     }
+}
+
+fn make_round_border(view: &mut dyn View) -> PathData {
+    initialize_path_data(
+        PointsPath::rounded_rect(view.frame().size, view.corner_radius(), 5),
+        view.border_color(),
+        DrawMode::Outline,
+    )
 }

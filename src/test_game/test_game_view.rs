@@ -11,12 +11,8 @@ use test_engine::{
     sprite_view::SpriteView,
     sprites::{Control, Player},
     ui::{
-        basic::Button,
-        complex::{AnalogStickView, LabeledSlider},
-        impl_view,
-        layout::Anchor,
-        test::test_view::TestView,
-        view, DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
+        basic::Button, complex::AnalogStickView, impl_view, layout::Anchor, test::test_view::TestView, view,
+        DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -43,9 +39,6 @@ pub struct TestGameView {
     sprite_view: Rglica<SpriteView>,
     test_view:   Rglica<TestView>,
 
-    ui_scale_slider:   Rglica<LabeledSlider>,
-    game_scale_slider: Rglica<LabeledSlider>,
-
     to_benchmark: Rglica<Button>,
     to_test:      Rglica<Button>,
 
@@ -68,20 +61,6 @@ impl TestGameView {
 
         self.left_stick.on_change.set(&self.level.player, |player, dir| {
             player.add_impulse(dir);
-        });
-    }
-
-    fn setup_sliders(&mut self) {
-        self.game_scale_slider = self.add_view_with_frame((28, 280));
-        self.game_scale_slider.set_start(0.5).set_finish(10);
-        self.game_scale_slider.on_change.set(self, |this, scale| {
-            this.level().drawer_mut().set_scale(scale);
-        });
-
-        self.ui_scale_slider = self.add_view_with_frame((28, 280));
-        self.ui_scale_slider.set_start(0.2).set_finish(4);
-        self.ui_scale_slider.on_change.set(self, |this, scale| {
-            this.ui.set_scale(scale);
         });
     }
 
@@ -119,8 +98,6 @@ impl TestGameView {
             });
 
         self.left_stick = self.add_view();
-
-        self.setup_sliders();
 
         self.test_view = self.add_view_with_frame((280, 400));
         self.test_view
@@ -174,19 +151,10 @@ impl ViewCallbacks for TestGameView {
             .deprecated_place()
             .anchor(self.dpad, Anchor::Right, Anchor::Bot, 20);
 
-        self.game_scale_slider
-            .deprecated_place()
-            .proportional_height(0.5)
-            .anchor(self.dpad, Anchor::Top, Anchor::Left, 10);
-
-        self.ui_scale_slider
-            .deprecated_place()
-            .proportional_height(0.5)
-            .anchor(self.game_scale_slider, Anchor::Right, Anchor::Center, 10);
-
+        self.sprite_view.deprecated_place().bottom_left(10);
         self.sprite_view
             .deprecated_place()
-            .anchor(self.ui_scale_slider, Anchor::Right, Anchor::Bot, 10);
+            .anchor(self.dpad, Anchor::Top, Anchor::Center, 10);
 
         self.test_view
             .deprecated_place()

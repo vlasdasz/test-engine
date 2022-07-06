@@ -25,7 +25,7 @@ impl CircleView {
         let frame = self.frame().with_zero_origin();
         self.drawing.add_path(
             PointsPath::circle_with(frame.size.center(), frame.size.width, 50),
-            color,
+            &color,
             DrawMode::Fill,
         );
     }
