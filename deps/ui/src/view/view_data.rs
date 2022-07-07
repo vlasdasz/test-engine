@@ -6,7 +6,7 @@ use crate::{complex::PathData, UIDrawer, View};
 
 pub trait ViewData {
     fn color(&self) -> &Color;
-    fn set_color(&mut self, color: Color) -> &mut Self;
+    fn set_color(&mut self, color: impl Into<Color>) -> &mut Self;
     fn border_color(&self) -> &Color;
     fn set_border_color(&mut self, color: Color) -> &mut Self;
     fn corner_radius(&self) -> f32;
@@ -15,7 +15,7 @@ pub trait ViewData {
     fn set_image(&mut self, image: Handle<Image>) -> &mut Self;
     fn is_hidden(&self) -> bool;
     fn set_hidden(&mut self, hidden: bool) -> &mut Self;
-    fn drawer(&mut self) -> Rglica<dyn UIDrawer>;
+    fn drawer(&self) -> Rglica<dyn UIDrawer>;
     fn set_drawer(&mut self, _: Rglica<dyn UIDrawer>);
     fn paths(&self) -> &[PathData];
 }
@@ -25,8 +25,8 @@ impl<T: ?Sized + View> ViewData for T {
         &self.view().color
     }
 
-    fn set_color(&mut self, color: Color) -> &mut Self {
-        self.view_mut().color = color;
+    fn set_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.view_mut().color = color.into();
         self
     }
 
@@ -66,8 +66,8 @@ impl<T: ?Sized + View> ViewData for T {
         self
     }
 
-    fn drawer(&mut self) -> Rglica<dyn UIDrawer> {
-        self.view_mut().drawer
+    fn drawer(&self) -> Rglica<dyn UIDrawer> {
+        self.view().drawer
     }
 
     fn set_drawer(&mut self, drawer: Rglica<dyn UIDrawer>) {

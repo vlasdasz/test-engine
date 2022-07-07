@@ -6,6 +6,7 @@ use test_engine::{
     net::{GetRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
+        misc::Apply,
         Rglica, ToRglica,
     },
     sprite_view::SpriteView,
@@ -75,7 +76,7 @@ impl TestGameView {
             this.ui.set_scale(scale);
         });
 
-        self.set_frame((10, 10, 1000, 500)).set_color(Color::CLEAR);
+        self.set_frame((10, 10, 1000, 500));
 
         self.sprite_view = self.add_view_with_frame((250, 50));
 
@@ -140,6 +141,11 @@ impl TestGameView {
                     this.async_task.set_text("No response");
                 }
             });
+        });
+
+        [self.to_benchmark, self.to_test, self.play, self.async_task].apply(|button| {
+            button.set_color(Color::WHITE);
+            button.set_corner_radius(8);
         });
     }
 }

@@ -8,7 +8,7 @@ use crate::{
     complex::{DrawMode, DrawingView},
     impl_view, view,
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase, ViewCallbacks, ViewData, ViewTouch,
+    View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
 const SIZE: f32 = 80.0;
@@ -44,7 +44,7 @@ impl AnalogStickView {
 
 impl ViewCallbacks for AnalogStickView {
     fn setup(&mut self) {
-        self.set_frame((SIZE, SIZE)).set_color(Color::CLEAR);
+        self.set_frame((SIZE, SIZE));
 
         self.on_touch().set(self, |this, touch| {
             if touch.is_ended() {
@@ -60,7 +60,7 @@ impl ViewCallbacks for AnalogStickView {
         });
 
         self.background = self.add_view();
-        self.background.set_frame((SIZE, SIZE)).set_color(Color::CLEAR);
+        self.background.set_frame((SIZE, SIZE));
 
         let frame = *self.frame();
         self.background.add_path(
@@ -84,8 +84,7 @@ impl ViewCallbacks for AnalogStickView {
 
         direction_stick
             .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE))
-            .set_center(self.frame().size.center())
-            .set_color(Color::CLEAR);
+            .set_center(self.frame().size.center());
 
         let stick_center = direction_stick.frame().size.center();
 

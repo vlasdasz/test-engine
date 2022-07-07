@@ -79,11 +79,7 @@ impl<T: Into<Size>> From<T> for FrameBuffer {
             panic!("Failed to initialize framebuffer")
         }
 
-        let clear_color = GLWrapper::clear_color();
-        GLWrapper::set_clear_color(Color::CLEAR);
-        GLWrapper::clear();
-        GLWrapper::set_clear_color(clear_color);
-
+        GLWrapper::clear_with_color(Color::CLEAR);
         GLWrapper::unbind_framebuffer();
 
         Self {

@@ -20,11 +20,12 @@ use crate::{
 #[derivative(Debug)]
 pub struct Label {
     #[derivative(Debug = "ignore")]
-    font:   Handle<Font>,
-    text:   String,
+    font:       Handle<Font>,
+    text:       String,
     #[derivative(Debug = "ignore")]
-    layout: LabelLayout,
-    image:  Rglica<ImageView>,
+    layout:     LabelLayout,
+    image_view: Rglica<ImageView>,
+    text_color: Color,
 }
 
 impl_view!(Label);
@@ -49,18 +50,23 @@ impl Label {
         self
     }
 
+    pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
+        //self.image_view.view_mut().image.color = color.into();
+        self
+    }
+
     pub fn clear(&mut self) -> &Self {
         self.set_text("")
     }
 
     fn set_letters(&mut self) {
         if self.text.is_empty() {
-            self.image.set_image(Default::default());
+            self.image_view.set_image(Default::default());
             return;
         }
 
-        if let Some(image) = Image::handle_with_name(&self.text) {
-            self.image.set_image(image);
+        if let Some(image) = Image::handle_with_name(self.text.clone()) {
+            self.image_view.set_image(image);
             return;
         }
 
@@ -68,16 +74,15 @@ impl Label {
         self.layout.set_text(&self.font, &self.text);
         let size = self.layout.size();
 
-        let mut this = self.to_rglica();
-        let image = Image::draw(&self.text, size, move |image| {
+        let image = Image::draw(self.text.clone(), size, |image| {
+            let drawer = self.drawer();
+
             let mut content = ViewBase::default();
             content.set_frame(size);
-            let mut fe = this;
-            let glyphs = this.layout.glyphs();
 
-            for glyph in glyphs {
-                let image = fe.font.glyph_for_char(glyph.parent).image;
-                fe.drawer().draw_image(
+            for glyph in self.layout.glyphs() {
+                let image = self.font.glyph_for_char(glyph.parent).image;
+                drawer.draw_image(
                     image.deref(),
                     &(
                         glyph.x,
@@ -86,27 +91,27 @@ impl Label {
                         glyph.height,
                     )
                         .into(),
-                    &Color::WHITE,
+                    &Color::WHITE, // See ui_monochrome shader
                     true,
                 );
             }
 
             image.flipped_y = true;
             image.channels = 1;
-            fe.drawer().reset_viewport();
+            drawer.reset_viewport();
         });
 
-        self.image.set_image(image);
+        self.image_view.set_image(image);
     }
 }
 
 impl ViewCallbacks for Label {
     fn setup(&mut self) {
+        self.text_color = Color::GREEN;
         self.font = Font::default();
 
-        self.image = self.add_view();
-        self.image.set_color(Color::CLEAR);
-        self.image.make_layout(|l| l.as_background());
+        self.image_view = self.add_view();
+        self.image_view.make_layout(|l| l.as_background());
 
         self.set_letters();
     }

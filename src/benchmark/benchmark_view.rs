@@ -1,13 +1,12 @@
 use std::borrow::Borrow;
 
 use test_engine::{
-    gm::Color,
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
     sprites::Player,
     ui::{
-        basic::Button, impl_view, layout::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewData,
-        ViewFrame, ViewSubviews,
+        basic::Button, impl_view, layout::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewFrame,
+        ViewSubviews,
     },
     ui_layer::UILayer,
     Level,
@@ -30,7 +29,6 @@ impl_view!(BenchmarkView);
 
 impl ViewCallbacks for BenchmarkView {
     fn setup(&mut self) {
-        self.set_color(Color::CLEAR);
         self.level.setup();
 
         self.back = self.add_view();

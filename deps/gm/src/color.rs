@@ -13,6 +13,10 @@ impl Color {
     pub fn is_visible(&self) -> bool {
         self.a > 0.02
     }
+
+    pub fn with_alpha(&self, alpha: impl IntoF32) -> Self {
+        (self.r, self.g, self.b, alpha.into_f32()).into()
+    }
 }
 
 impl Color {
@@ -54,7 +58,7 @@ impl Color {
 
 impl Default for Color {
     fn default() -> Color {
-        Color::WHITE
+        Color::CLEAR
     }
 }
 

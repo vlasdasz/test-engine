@@ -12,7 +12,7 @@ use crate::{
     Touch, UIDrawer, View,
 };
 
-#[derive(Derivative)]
+#[derive(Default, Derivative)]
 #[derivative(Debug)]
 pub struct ViewBase {
     pub(crate) color: Color,
@@ -63,29 +63,5 @@ impl View for ViewBase {
 
     fn rglica(&self) -> Rglica<dyn View> {
         (self as &dyn View).to_rglica()
-    }
-}
-
-impl Default for ViewBase {
-    fn default() -> Self {
-        Self {
-            color:          Default::default(),
-            corner_radius:  10.0,
-            border_color:   Color::BLUE,
-            touch_enabled:  Default::default(),
-            on_touch:       Default::default(),
-            is_hidden:      Default::default(),
-            frame:          Default::default(),
-            absolute_frame: Default::default(),
-            root_view:      Default::default(),
-            superview:      Default::default(),
-            subviews:       Default::default(),
-            touch_id:       Default::default(),
-            placer:         Default::default(),
-            new_placer:     Default::default(),
-            image:          Default::default(),
-            paths:          Default::default(),
-            drawer:         Default::default(),
-        }
     }
 }

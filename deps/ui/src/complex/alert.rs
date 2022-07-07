@@ -28,6 +28,8 @@ impl Alert {
 impl ViewCallbacks for Alert {
     fn setup(&mut self) {
         self.set_color(Color::WHITE)
+            .set_corner_radius(10)
+            .set_border_color(Color::BLACK)
             .make_layout(|l| l.width(200).height(80).center());
 
         self.label = self.make_this(self, |this, v: &mut Label| {
@@ -39,12 +41,13 @@ impl ViewCallbacks for Alert {
         });
 
         self.ok_button = self.make_this(self, |this, v: &mut Button| {
-            v.set_color(Color::LIGHT_GRAY)
-                .set_text("OK")
+            v.set_text("OK")
+                .set_border_color(Color::GRAY)
+                .set_text_color(Color::BLUE)
                 .make_layout(|l| {
-                    l.width(50).height(20);
+                    l.width(202).height(20);
                     l.center_hor();
-                    l.bottom().offset(10);
+                    l.bottom().offset(-1);
                 })
                 .on_tap
                 .set(this, |this, _| this.remove_from_superview());

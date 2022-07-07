@@ -1,7 +1,7 @@
-use std::{ffi::c_void, path::Path};
+use std::{ffi::c_void, hash::Hash, path::Path};
 
 use gl_wrapper::{buffers::FrameBuffer, image_loader::ImageLoader, GLWrapper};
-use gm::flat::Size;
+use gm::{flat::Size, Color};
 use image::GenericImageView;
 use rtools::{
     data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
@@ -53,7 +53,11 @@ impl Image {
 }
 
 impl Image {
-    pub fn draw(name: &str, size: impl Into<Size>, mut draw: impl FnMut(&mut Image)) -> Handle<Image> {
+    pub fn draw(
+        name: impl ToString + Hash,
+        size: impl Into<Size>,
+        draw: impl FnOnce(&mut Image),
+    ) -> Handle<Image> {
         let hash = hash(name);
 
         if let Some(image) = Image::handle_with_hash(hash) {
@@ -72,6 +76,8 @@ impl Image {
             flipped_y: false,
             gl_handle: buffer.texture_handle,
         };
+
+        GLWrapper::clear_with_color(Color::GREEN);
 
         draw(&mut image);
 

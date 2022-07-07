@@ -1,3 +1,4 @@
+use gm::Color;
 use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
@@ -22,6 +23,11 @@ impl Button {
             self.label.make_layout(|l| l.as_background());
         }
         self.label.set_text(text);
+        self
+    }
+
+    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.label.set_text_color(color);
         self
     }
 }

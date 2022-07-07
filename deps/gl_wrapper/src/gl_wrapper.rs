@@ -1,7 +1,5 @@
 #![allow(clippy::mismatched_target_os)]
 
-use std::borrow::Borrow;
-
 #[cfg(mobile)]
 use gles31_sys::*;
 use gm::{flat::Rect, Color};
@@ -29,9 +27,9 @@ impl GLWrapper {
         unsafe { STATIC_DATA.clear_color }
     }
 
-    pub fn set_clear_color(color: impl Borrow<Color>) {
-        let color = color.borrow();
-        unsafe { STATIC_DATA.clear_color = *color };
+    pub fn set_clear_color(color: impl Into<Color>) {
+        let color = color.into();
+        unsafe { STATIC_DATA.clear_color = color };
         GL!(ClearColor, color.r, color.g, color.b, color.a)
     }
 
@@ -40,6 +38,13 @@ impl GLWrapper {
             Clear,
             GLC!(COLOR_BUFFER_BIT) | GLC!(DEPTH_BUFFER_BIT) | GLC!(STENCIL_BUFFER_BIT)
         )
+    }
+
+    pub fn clear_with_color(color: impl Into<Color>) {
+        let clear_color = Self::clear_color();
+        Self::set_clear_color(color);
+        Self::clear();
+        Self::set_clear_color(clear_color);
     }
 
     pub fn set_ui_viewport(window_height: f32, scale: f32, rect: impl Into<Rect>) {
