@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::flat::Direction;
-use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Apply, Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,
@@ -47,21 +47,16 @@ impl ViewCallbacks for DPadView {
         self.left = self.add_view();
         self.right = self.add_view();
 
-        self.up
-            .on_tap
-            .set(self, |this, _| this.on_press.trigger(Direction::Up));
+        [self.up, self.down, self.left, self.right].apply2(
+            [Direction::Up, Direction::Down, Direction::Left, Direction::Right],
+            |a, direction| {
+                a.on_tap
+                    .set(self, move |this, _| this.on_press.trigger(direction));
+                a.set_corner_radius(5);
+            },
+        );
 
-        self.down
-            .on_tap
-            .set(self, |this, _| this.on_press.trigger(Direction::Down));
-
-        self.left
-            .on_tap
-            .set(self, |this, _| this.on_press.trigger(Direction::Left));
-
-        self.right
-            .on_tap
-            .set(self, |this, _| this.on_press.trigger(Direction::Right));
+        dbg!(self.right.corner_radius());
     }
 
     fn layout(&mut self) {

@@ -6,7 +6,7 @@ use test_engine::{
     net::{GetRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
-        misc::Apply,
+        Apply,
         Rglica, ToRglica,
     },
     sprite_view::SpriteView,

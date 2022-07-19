@@ -6,8 +6,7 @@ use image::GenericImageView;
 use rtools::{
     data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
     file::File,
-    managed,
-    misc::hash,
+    hash, managed,
 };
 
 #[derive(Debug)]

@@ -9,8 +9,7 @@ use gm::flat::Size;
 use rtools::{
     data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
     file::File,
-    managed,
-    misc::hash,
+    hash, managed,
 };
 
 use crate::Glyph;

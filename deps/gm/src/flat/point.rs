@@ -3,6 +3,7 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Copy)]
 pub enum Direction {
     Up,
     Down,
