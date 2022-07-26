@@ -17,6 +17,10 @@ pub struct NewPlacer {
 }
 
 impl NewPlacer {
+    pub fn background(&mut self) -> &mut Self {
+        self.top().bottom().left().right()
+    }
+
     pub fn top(&mut self) -> &mut Self {
         self.pending_sides.push(Anchor::Top);
         self
