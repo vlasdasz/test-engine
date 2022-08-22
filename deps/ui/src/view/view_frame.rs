@@ -2,7 +2,7 @@ use gm::flat::{Point, Rect, Size};
 use rtools::IntoF32;
 
 use crate::{
-    layout::{NewPlacer, Placer},
+    layout::{NewPlacer, Placer, Tiling},
     view::{ViewInternal, ViewSubviews},
     View,
 };
@@ -23,7 +23,6 @@ pub trait ViewFrame {
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_size(&mut self, size: impl Into<Size>) -> &mut Self;
     fn deprecated_place(&mut self) -> &mut Placer;
-    fn new_placer(&self) -> Option<&NewPlacer>;
     fn calculate_frames(&mut self);
     fn new_layout(&mut self)
     where
@@ -33,17 +32,33 @@ pub trait ViewFrame {
         if let Some(placer) = &view.new_placer {
             placer.layout(&mut view.frame, view.superview.frame());
         }
+        if let Some(tiling) = &view.tiling {
+            tiling.layout(&mut view.frame, view.superview.frame(), &mut view.subviews);
+        }
     }
 
     fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer)) -> &mut Self
     where
         Self: View,
     {
+        debug_assert!(self.view_mut().tiling.is_none(), "Layout after tiling");
         debug_assert!(self.view_mut().new_placer.is_none(), "Double layout");
         let mut placer = NewPlacer::default();
         make(&mut placer);
         placer.assign_pending();
         self.view_mut().new_placer = placer.into();
+        self
+    }
+
+    fn make_tiling(&mut self, make: impl FnOnce(&mut Tiling)) -> &mut Self
+    where
+        Self: View,
+    {
+        debug_assert!(self.view_mut().new_placer.is_none(), "Tiling after layout");
+        debug_assert!(self.view_mut().tiling.is_none(), "Double tiling");
+        let mut tiling = Tiling::default();
+        make(&mut tiling);
+        self.view_mut().tiling = tiling.into();
         self
     }
 }
@@ -115,10 +130,6 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn deprecated_place(&mut self) -> &mut Placer {
         &mut self.view_mut().placer
-    }
-
-    fn new_placer(&self) -> Option<&NewPlacer> {
-        self.view().new_placer.as_ref()
     }
 
     fn calculate_frames(&mut self) {

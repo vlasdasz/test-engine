@@ -31,6 +31,10 @@ impl IntView {
 
 impl ViewCallbacks for IntView {
     fn setup(&mut self) {
+        self.make_tiling(|tiling| {
+            tiling.ver();
+        });
+
         self.label = self.add_view();
         self.up = self.add_view();
         self.down = self.add_view();
@@ -49,7 +53,6 @@ impl ViewCallbacks for IntView {
     }
 
     fn layout(&mut self) {
-        self.deprecated_place().all_vertically();
         self.label.set_text(&self.value.to_string());
     }
 }

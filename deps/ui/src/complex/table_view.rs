@@ -25,8 +25,10 @@ impl TableView {
 }
 
 impl ViewCallbacks for TableView {
-    fn layout(&mut self) {
-        self.deprecated_place().all_vertically()
+    fn setup(&mut self) {
+        self.make_tiling(|t| {
+            t.ver();
+        });
     }
 }
 

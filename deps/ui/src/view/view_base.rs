@@ -8,7 +8,7 @@ use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 use crate::{
     basic::RootView,
     complex::PathData,
-    layout::{NewPlacer, Placer},
+    layout::{NewPlacer, Placer, Tiling},
     Touch, UIDrawer, View,
 };
 
@@ -44,6 +44,9 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     pub(crate) new_placer: Option<NewPlacer>,
+
+    #[derivative(Debug = "ignore")]
+    pub(crate) tiling: Option<Tiling>,
 
     pub(crate) image: Handle<Image>,
 

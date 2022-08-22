@@ -2,8 +2,8 @@ use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica, ToRglica};
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, impl_view, layout::place_vertically, view, View, ViewBase,
-    ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
+    basic::Button, complex::LabeledView, impl_view, view, View, ViewBase, ViewCallbacks, ViewData, ViewFrame,
+    ViewSubviews,
 };
 
 #[view]
@@ -55,6 +55,10 @@ impl SpriteView {
 
 impl ViewCallbacks for SpriteView {
     fn setup(&mut self) {
+        self.make_tiling(|t| {
+            t.ver();
+        });
+
         (self.position, self.size, self.color) = (self.add_view(), self.add_view(), self.add_view());
 
         self.position.set_label("position:");
@@ -62,10 +66,6 @@ impl ViewCallbacks for SpriteView {
         self.color.set_label("color:");
 
         self.setup_delete_button();
-    }
-
-    fn layout(&mut self) {
-        place_vertically([self.position, self.size, self.color]);
     }
 
     fn update(&mut self) {

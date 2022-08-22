@@ -1,4 +1,4 @@
-use std::ops::{Deref, DerefMut};
+use std::ops::Deref;
 
 use gm::flat::Rect;
 use rtools::{math::IntoF32, Rglica, ToRglica};
@@ -53,10 +53,6 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn as_background(&mut self) {
-        *self.frame = self.s_frame.with_zero_origin();
-    }
-
     pub fn background_margin(&mut self, margin: impl IntoF32) {
         let margin = margin.into_f32();
         self.frame.origin = (margin, margin).into();
@@ -128,10 +124,6 @@ impl Placer {
     pub fn at_right(&mut self, view: &dyn View, margin: impl IntoF32) {
         self.at_center(view);
         self.frame.origin.x = view.frame().max_x() + margin.into_f32();
-    }
-
-    pub fn all_vertically(&mut self) {
-        place_vertically(self.view.subviews_mut());
     }
 
     pub fn frames_for_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) -> [Rect; N] {
@@ -252,34 +244,5 @@ impl Placer {
 
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
         self.view.subviews_mut()
-    }
-}
-
-pub fn place_vertically<T, Ref, Arr>(mut views: Arr)
-where
-    T: View + ?Sized,
-    Ref: DerefMut<Target = T>,
-    Arr: AsMut<[Ref]>,
-{
-    let views = views.as_mut();
-
-    if views.is_empty() {
-        return;
-    }
-
-    let mut last = views.last_mut().unwrap().to_rglica();
-
-    if views.len() == 1 {
-        last.deprecated_place().as_background();
-        return;
-    }
-
-    let super_frame = *last.superview().frame();
-
-    let height = super_frame.height() / views.len() as f32;
-    let width = super_frame.width();
-
-    for (i, view) in views.iter_mut().enumerate() {
-        view.set_frame((0.0, i as f32 * height, width, height));
     }
 }

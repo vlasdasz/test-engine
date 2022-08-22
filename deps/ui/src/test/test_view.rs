@@ -46,6 +46,10 @@ impl TestView {
 
 impl ViewCallbacks for TestView {
     fn setup(&mut self) {
+        self.make_tiling(|t| {
+            t.ver();
+        });
+
         self.label = self.add_view();
         self.label.set_text("Hello label!");
 
@@ -76,7 +80,6 @@ impl ViewCallbacks for TestView {
     }
 
     fn layout(&mut self) {
-        self.deprecated_place().all_vertically();
         self.animated.set_y(self.animation.value());
         let radius = self.button.frame().size.height / 2.0;
         self.button.set_corner_radius(radius);
