@@ -29,10 +29,10 @@ impl_view!(AnalogStickView);
 
 impl AnalogStickView {
     fn on_touch_moved(&mut self, touch: &Point) {
-        let max_lenght = self.frame().size.height / 2.0;
+        let max_length = self.frame().size.height / 2.0;
         let center = self.frame().size.center();
 
-        let vector = (touch - &center).trimmed(max_lenght);
+        let vector = (touch - &center).trimmed(max_length);
 
         let frame = *self.frame();
 

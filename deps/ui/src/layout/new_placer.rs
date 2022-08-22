@@ -83,7 +83,7 @@ impl NewPlacer {
     pub fn anchor<T: View>(&mut self, view: Rglica<T>, offset: impl IntoF32) {
         debug_assert!(
             self.pending_sides.len() == 1,
-            "Anchor shoud be to exactly one size"
+            "Anchor should be to exactly one size"
         );
         let side = self.pending_sides.pop().unwrap();
         self.rules

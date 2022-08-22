@@ -107,7 +107,7 @@ impl Screen {
         self.ui.drawer.reset_viewport();
 
         Dispatch::call();
-        self.ui.root_view.remove_sheduled();
+        self.ui.root_view.remove_scheduled();
     }
 
     fn update_level(&mut self) {

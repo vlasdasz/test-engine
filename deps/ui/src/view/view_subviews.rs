@@ -48,7 +48,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_from_superview(&mut self) {
-        self.root_view().shedule_remove(self.rglica())
+        self.root_view().schedule_remove(self.rglica())
     }
 
     fn remove_subview_at(&mut self, index: usize) {

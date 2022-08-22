@@ -43,7 +43,7 @@ impl ShaderCompiler {
         result + "\n"
     }
 
-    fn check_programm_error(&self, path: &Path, program: u32) {
+    fn check_program_error(&self, path: &Path, program: u32) {
         let mut success: GLT!(GLint) = 1;
 
         GL_SILENT!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
@@ -109,7 +109,7 @@ impl ShaderCompiler {
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
         GL!(CompileShader, shader);
 
-        self.check_programm_error(&path, shader);
+        self.check_program_error(&path, shader);
 
         shader
     }
@@ -130,7 +130,7 @@ impl ShaderCompiler {
         GL!(AttachShader, program, frag);
         GL!(LinkProgram, program);
 
-        self.check_programm_error(path, program);
+        self.check_program_error(path, program);
 
         GL!(DetachShader, program, vert);
         GL!(DetachShader, program, frag);

@@ -63,7 +63,7 @@ impl UILayer {
         if !self.root_view.check_touch(&mut touch) {
             self.view.pass_touch_to_level(level_touch)
         }
-        self.root_view.remove_sheduled();
+        self.root_view.remove_scheduled();
     }
 
     pub fn set_view<T: MainView + 'static>(&mut self) {

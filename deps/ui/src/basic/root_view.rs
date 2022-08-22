@@ -17,7 +17,7 @@ impl RootView {
         root
     }
 
-    pub fn remove_sheduled(&mut self) {
+    pub fn remove_scheduled(&mut self) {
         if self.to_remove.is_empty() {
             return;
         }
@@ -33,7 +33,7 @@ impl RootView {
         }
     }
 
-    pub(crate) fn shedule_remove(&mut self, view: Rglica<dyn View>) {
+    pub(crate) fn schedule_remove(&mut self, view: Rglica<dyn View>) {
         self.to_remove.push(view)
     }
 }

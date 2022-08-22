@@ -1,7 +1,7 @@
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
-    dispath_request::{GetRequest, PostRequest},
+    dispatch_request::{GetRequest, PostRequest},
     DispatchRequest,
 };
 
