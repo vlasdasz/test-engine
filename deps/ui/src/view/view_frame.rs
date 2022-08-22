@@ -41,7 +41,6 @@ pub trait ViewFrame {
     where
         Self: View,
     {
-        debug_assert!(self.view_mut().tiling.is_none(), "Layout after tiling");
         debug_assert!(self.view_mut().new_placer.is_none(), "Double layout");
         let mut placer = NewPlacer::default();
         make(&mut placer);
@@ -54,7 +53,6 @@ pub trait ViewFrame {
     where
         Self: View,
     {
-        debug_assert!(self.view_mut().new_placer.is_none(), "Tiling after layout");
         debug_assert!(self.view_mut().tiling.is_none(), "Double tiling");
         let mut tiling = Tiling::default();
         make(&mut tiling);
