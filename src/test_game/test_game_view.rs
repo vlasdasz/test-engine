@@ -6,8 +6,7 @@ use test_engine::{
     net::{GetRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
-        Apply,
-        Rglica, ToRglica,
+        Apply, Rglica, ToRglica,
     },
     sprite_view::SpriteView,
     sprites::{Control, Player},
