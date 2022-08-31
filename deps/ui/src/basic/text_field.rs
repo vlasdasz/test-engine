@@ -16,7 +16,7 @@ impl_view!(TextField);
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {
         self.label = self.add_view();
-        self.label.make_layout(|l| l.as_background());
+        self.label.new_placer().as_background();
 
         UIEvents::get().on_key_pressed.set(self, |this, event| {
             this.label.append_text(event.0);

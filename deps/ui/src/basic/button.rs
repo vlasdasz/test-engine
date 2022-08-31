@@ -20,7 +20,7 @@ impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
         if self.label.is_null() {
             self.label = self.add_view();
-            self.label.make_layout(|l| l.as_background());
+            self.label.new_placer().as_background();
         }
         self.label.set_text(text);
         self

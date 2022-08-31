@@ -92,10 +92,7 @@ impl TestGameView {
                 Image::get("left.png"),
                 Image::get("right.png"),
             )
-            .make_layout(|l| {
-                l.width(100).height(80);
-                l.bottom().left().offset(5);
-            });
+            .new_placer().width(100).height(80).bottom().left().offset(5);
 
         self.left_stick = self.add_view();
 

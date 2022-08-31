@@ -58,26 +58,31 @@ impl NewPlacer {
         self
     }
 
-    pub fn center(&mut self) {
-        self.rules.push(Anchor::Center.into())
+    pub fn center(&mut self) -> &mut Self {
+        self.rules.push(Anchor::Center.into());
+        self
     }
 
-    pub fn center_hor(&mut self) {
-        self.rules.push(Anchor::CenterH.into())
+    pub fn center_hor(&mut self) -> &mut Self {
+        self.rules.push(Anchor::CenterH.into());
+        self
     }
 
-    pub fn center_ver(&mut self) {
-        self.rules.push(Anchor::CenterV.into())
+    pub fn center_ver(&mut self) -> &mut Self {
+        self.rules.push(Anchor::CenterV.into());
+        self
     }
 
-    pub fn as_background(&mut self) {
-        self.rules.push(Anchor::Background.into())
+    pub fn as_background(&mut self) -> &mut Self {
+        self.rules.push(Anchor::Background.into());
+        self
     }
 
-    pub fn offset(&mut self, offset: impl IntoF32) {
+    pub fn offset(&mut self, offset: impl IntoF32) -> &mut Self {
         let pending = self.pending_sides.drain(..);
         self.rules
-            .extend(pending.map(|a| LayoutRule::make(a, offset.into_f32())))
+            .extend(pending.map(|a| LayoutRule::make(a, offset.into_f32())));
+        self
     }
 
     pub fn anchor<T: View>(&mut self, view: Rglica<T>, offset: impl IntoF32) {
@@ -90,14 +95,15 @@ impl NewPlacer {
             .push(LayoutRule::anchor(side, offset.into_f32(), view.rglica()));
     }
 
-    pub(crate) fn assign_pending(&mut self) {
+    fn assign_pending(&mut self) {
         let pending = self.pending_sides.drain(..);
         self.rules.extend(pending.map(|a| a.into()))
     }
 }
 
 impl NewPlacer {
-    pub fn layout(&self, frame: &mut Rect, s_frame: &Rect) {
+    pub fn layout(&mut self, frame: &mut Rect, s_frame: &Rect) {
+        self.assign_pending();
         for rule in &self.rules {
             if rule.anchor_view.is_ok() {
                 self.anchor_layout(rule, frame, rule.anchor_view.frame())

@@ -111,7 +111,7 @@ impl ViewCallbacks for Label {
         self.font = Font::default();
 
         self.image_view = self.add_view();
-        self.image_view.make_layout(|l| l.as_background());
+        self.image_view.new_placer().as_background();
 
         self.set_letters();
     }

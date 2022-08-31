@@ -19,7 +19,7 @@ impl ViewCallbacks for StringCell {
     fn setup(&mut self) {
         self.label = self.add_view();
         self.label.set_text(self.data.clone());
-        self.label.make_layout(|l| l.as_background());
+        self.label.new_placer().as_background();
     }
 }
 

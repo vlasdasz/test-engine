@@ -29,23 +29,25 @@ pub trait ViewFrame {
         Self: View,
     {
         let view = self.view_mut();
-        if let Some(placer) = &view.new_placer {
-            placer.layout(&mut view.frame, view.superview.frame());
-        }
+        view.new_placer.layout(&mut view.frame, view.superview.frame());
+
         if let Some(tiling) = &view.tiling {
             tiling.layout(&mut view.frame, view.superview.frame(), &mut view.subviews);
         }
     }
 
-    fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer)) -> &mut Self
+    fn new_placer(&mut self) -> &mut NewPlacer
     where
         Self: View,
     {
-        debug_assert!(self.view_mut().new_placer.is_none(), "Double layout");
-        let mut placer = NewPlacer::default();
-        make(&mut placer);
-        placer.assign_pending();
-        self.view_mut().new_placer = placer.into();
+        &mut self.view_mut().new_placer
+    }
+
+    fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer)) -> &mut Self
+        where
+            Self: View,
+    {
+        make(self.new_placer());
         self
     }
 
