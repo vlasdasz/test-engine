@@ -8,7 +8,7 @@ edition = "2021"
 name = "test_game"
 
 [lib]
-name = "test_game"
+name = "test_game_lib"
 crate-type = ["rlib", "staticlib", "dylib"]
 
 [dependencies]

@@ -184,7 +184,6 @@ impl UIDrawer for TEUIDrawer {
 
     fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>) {
         if rect.size.is_invalid() {
-            dbg!("invalid rect size");
             return;
         }
         self.set_viewport(rect);

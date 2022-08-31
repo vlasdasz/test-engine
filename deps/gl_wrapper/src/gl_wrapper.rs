@@ -50,7 +50,6 @@ impl GLWrapper {
     pub fn set_ui_viewport(window_height: f32, scale: f32, rect: impl Into<Rect>) {
         let rect = rect.into();
         if rect.size.is_invalid() {
-            dbg!("invalid viewport");
             return;
         }
         let scale = adjust_scale(scale);
