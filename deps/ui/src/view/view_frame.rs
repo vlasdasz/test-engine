@@ -1,11 +1,7 @@
 use gm::flat::{Point, Rect, Size};
 use rtools::IntoF32;
 
-use crate::{
-    layout::{NewPlacer, Placer, Tiling},
-    view::{ViewInternal, ViewSubviews},
-    View,
-};
+use crate::View;
 
 pub trait ViewFrame {
     fn frame(&self) -> &Rect;
@@ -22,49 +18,6 @@ pub trait ViewFrame {
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_size(&mut self, size: impl Into<Size>) -> &mut Self;
-    fn deprecated_place(&mut self) -> &mut Placer;
-    fn calculate_frames(&mut self);
-    fn new_layout(&mut self)
-    where
-        Self: View,
-    {
-        if self.superview().is_null() {
-            return;
-        }
-
-        let view = self.view_mut();
-        view.new_placer.layout(&mut view.frame, view.superview.frame());
-
-        if let Some(tiling) = &view.tiling {
-            tiling.layout(&mut view.frame, view.superview.frame(), &mut view.subviews);
-        }
-    }
-
-    fn new_placer(&mut self) -> &mut NewPlacer
-    where
-        Self: View,
-    {
-        &mut self.view_mut().new_placer
-    }
-
-    fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer)) -> &mut Self
-    where
-        Self: View,
-    {
-        make(self.new_placer());
-        self
-    }
-
-    fn make_tiling(&mut self, make: impl FnOnce(&mut Tiling)) -> &mut Self
-    where
-        Self: View,
-    {
-        debug_assert!(self.view_mut().tiling.is_none(), "Double tiling");
-        let mut tiling = Tiling::default();
-        make(&mut tiling);
-        self.view_mut().tiling = tiling.into();
-        self
-    }
 }
 
 impl<T: ?Sized + View> ViewFrame for T {
@@ -130,20 +83,5 @@ impl<T: ?Sized + View> ViewFrame for T {
     fn set_size(&mut self, size: impl Into<Size>) -> &mut Self {
         self.view_mut().frame.size = size.into();
         self
-    }
-
-    fn deprecated_place(&mut self) -> &mut Placer {
-        &mut self.view_mut().placer
-    }
-
-    fn calculate_frames(&mut self) {
-        let view = self.view_mut();
-        view.absolute_frame = view.frame;
-        view.absolute_frame.origin += view.super_absolute_frame().origin;
-        self.layout();
-        self.new_layout();
-        for view in self.subviews_mut() {
-            view.calculate_frames();
-        }
     }
 }

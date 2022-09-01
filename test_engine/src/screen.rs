@@ -8,7 +8,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{Dispatch, Time, ToRglica, Unwrap};
 use sprites::SpritesDrawer;
-use ui::{UIDrawer, ViewData, ViewFrame};
+use ui::{UIDrawer, ViewData, ViewFrame, ViewLayout};
 
 use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
 

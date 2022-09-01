@@ -6,8 +6,8 @@ use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 use crate::{
     basic::Button,
     impl_view, view,
-    view::{ViewData, ViewFrame, ViewSubviews},
-    Label, View, ViewBase, ViewCallbacks,
+    view::{ViewData, ViewSubviews},
+    Label, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
@@ -31,9 +31,7 @@ impl IntView {
 
 impl ViewCallbacks for IntView {
     fn setup(&mut self) {
-        self.make_tiling(|tiling| {
-            tiling.ver();
-        });
+        self.tiling().ver();
 
         self.label = self.add_view();
         self.up = self.add_view();

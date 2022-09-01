@@ -46,7 +46,7 @@ pub struct ViewBase {
     pub(crate) new_placer: NewPlacer,
 
     #[derivative(Debug = "ignore")]
-    pub(crate) tiling: Option<Tiling>,
+    pub(crate) tiling: Tiling,
 
     pub(crate) image: Handle<Image>,
 

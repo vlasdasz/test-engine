@@ -2,8 +2,8 @@ use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica, ToRglica};
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, impl_view, view, View, ViewBase, ViewCallbacks, ViewData, ViewFrame,
-    ViewSubviews,
+    basic::Button, complex::LabeledView, impl_view, view, View, ViewBase, ViewCallbacks, ViewData,
+    ViewLayout, ViewSubviews,
 };
 
 #[view]
@@ -57,9 +57,7 @@ impl SpriteView {
 
 impl ViewCallbacks for SpriteView {
     fn setup(&mut self) {
-        self.make_tiling(|t| {
-            t.ver();
-        });
+        self.tiling().ver();
 
         (self.position, self.size, self.color) = (self.add_view(), self.add_view(), self.add_view());
 

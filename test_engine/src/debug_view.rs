@@ -1,5 +1,5 @@
 use rtools::{platform::Platform, Property, Rglica, ToRglica};
-use ui::{impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewSubviews};
+use ui::{impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews};
 
 #[view]
 #[derive(Default, Debug)]
@@ -14,9 +14,7 @@ impl_view!(DebugView);
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.make_tiling(|t| {
-            t.ver();
-        });
+        self.tiling().ver();
 
         self.set_frame((100, 20));
 

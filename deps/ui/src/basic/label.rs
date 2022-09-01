@@ -12,7 +12,7 @@ use crate::{
     basic::label_layout::LabelLayout,
     impl_view, view,
     view::{ViewData, ViewFrame, ViewSubviews},
-    Font, ImageView, View, ViewBase, ViewCallbacks,
+    Font, ImageView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]

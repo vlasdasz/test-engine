@@ -6,7 +6,7 @@ use test_engine::{
     sprites::Player,
     ui::{
         basic::Button, impl_view, layout::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewFrame,
-        ViewSubviews,
+        ViewLayout, ViewSubviews,
     },
     ui_layer::UILayer,
     Level,

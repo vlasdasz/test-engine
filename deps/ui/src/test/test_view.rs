@@ -7,7 +7,7 @@ use crate::{
     complex::{DrawMode, DrawingView, StringCell, TableView, TableViewDataSource},
     data_source, impl_view, view,
     view::{ViewData, ViewFrame, ViewSubviews},
-    ImageView, Label, View, ViewBase, ViewCallbacks,
+    ImageView, Label, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
@@ -46,9 +46,7 @@ impl TestView {
 
 impl ViewCallbacks for TestView {
     fn setup(&mut self) {
-        self.make_tiling(|t| {
-            t.ver();
-        });
+        self.tiling().ver();
 
         self.label = self.add_view();
         self.label.set_text("Hello label!");

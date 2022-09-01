@@ -2,11 +2,7 @@ use std::fmt::Debug;
 
 use rtools::{Rglica, ToRglica};
 
-use crate::{
-    impl_view, view,
-    view::{ViewFrame, ViewSubviews},
-    View, ViewBase, ViewCallbacks,
-};
+use crate::{impl_view, view, view::ViewSubviews, View, ViewBase, ViewCallbacks, ViewLayout};
 
 #[view]
 #[derive(Default, Debug)]
@@ -26,9 +22,7 @@ impl TableView {
 
 impl ViewCallbacks for TableView {
     fn setup(&mut self) {
-        self.make_tiling(|t| {
-            t.ver();
-        });
+        self.tiling().ver();
     }
 }
 

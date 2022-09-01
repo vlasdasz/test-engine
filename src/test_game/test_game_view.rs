@@ -12,7 +12,7 @@ use test_engine::{
     sprites::{Control, Player},
     ui::{
         basic::Button, complex::AnalogStickView, impl_view, layout::Anchor, test::test_view::TestView, view,
-        DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
+        DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -78,6 +78,7 @@ impl TestGameView {
         self.set_frame((10, 10, 1000, 500));
 
         self.sprite_view = self.add_view_with_frame((250, 50));
+        self.sprite_view.new_placer().bottom().left().offset(10);
 
         self.level
             .base()
@@ -105,7 +106,11 @@ impl TestGameView {
         self.test_view
             .set_image(Image::get("cat.png"))
             .set_button_image(Image::get("square.png"))
-            .set_animation_image(Image::get("palm.png"));
+            .set_animation_image(Image::get("palm.png"))
+            .new_placer()
+            .bottom()
+            .right()
+            .offset(20);
 
         self.to_benchmark = self.add_view();
         self.to_benchmark.set_text("Benchmark").set_frame((120, 20));
@@ -162,14 +167,12 @@ impl ViewCallbacks for TestGameView {
             .deprecated_place()
             .anchor(self.dpad, Anchor::Right, Anchor::Bot, 20);
 
-        self.sprite_view.deprecated_place().bottom_left(10);
         self.sprite_view
             .deprecated_place()
             .anchor(self.dpad, Anchor::Top, Anchor::Center, 10);
 
         self.test_view
             .deprecated_place()
-            .bottom_right(20)
             .proportional_width(0.18)
             .proportional_height(0.4);
 

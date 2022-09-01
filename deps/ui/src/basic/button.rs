@@ -2,9 +2,7 @@ use gm::Color;
 use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
-    impl_view, view,
-    view::{ViewFrame, ViewSubviews},
-    Label, View, ViewBase, ViewCallbacks, ViewTouch,
+    impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch,
 };
 
 #[view]
