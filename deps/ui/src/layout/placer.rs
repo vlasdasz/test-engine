@@ -1,45 +1,25 @@
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
-use gm::flat::Rect;
-use rtools::{math::IntoF32, Rglica, ToRglica};
+use gm::flat::{Rect, Size};
+use rtools::{IntoF32, Rglica, ToRglica};
 
 use crate::{
-    view::{ViewFrame, ViewSubviews},
-    View,
+    layout::{layout_rule::LayoutRule, Anchor, Tiling},
+    view::ViewFrame,
+    View, ViewSubviews,
 };
-
-pub enum Anchor {
-    Top,
-    Bot,
-
-    Left,
-    Right,
-
-    Width,
-    Height,
-
-    CenterH,
-    CenterV,
-
-    Center,
-
-    Background,
-}
-
-impl Anchor {
-    pub fn is_vertical(&self) -> bool {
-        matches!(self, Anchor::Top | Anchor::Bot)
-    }
-    pub fn is_horizontal(&self) -> bool {
-        matches!(self, Anchor::Left | Anchor::Right)
-    }
-}
 
 #[derive(Default)]
 pub struct Placer {
+    pub(crate) rules: Vec<LayoutRule>,
+    pending_sides:    Vec<Anchor>,
+
     view:    Rglica<dyn View>,
     frame:   Rglica<Rect>,
     s_frame: Rglica<Rect>,
+
+    has_width:  bool,
+    has_height: bool,
 }
 
 impl Placer {
@@ -48,180 +28,203 @@ impl Placer {
             view,
             frame: view.frame().to_rglica(),
             s_frame: view.super_frame().to_rglica(),
+            ..Default::default()
         }
     }
 }
 
 impl Placer {
-    // pub fn background_margin(&mut self, margin: impl IntoF32) {
-    //     let margin = margin.into_f32();
-    //     self.frame.origin = (margin, margin).into();
-    //     self.frame.size = (self.s_width() - margin * 2.0, self.s_height() -
-    // margin * 2.0).into(); }
-
-    pub fn center_hor(&mut self) {
-        self.frame.origin.x = self.s_width() / 2.0 - self.width() / 2.0;
+    pub fn background(&mut self) -> &mut Self {
+        self.top().bottom().left().right()
     }
 
-    pub fn center_ver(&mut self) {
-        self.frame.origin.y = self.s_height() / 2.0 - self.height() / 2.0;
+    pub fn top(&mut self) -> &mut Self {
+        self.pending_sides.push(Anchor::Top);
+        self
     }
 
-    pub fn center(&mut self) {
-        self.center_hor();
-        self.center_ver();
+    pub fn bottom(&mut self) -> &mut Self {
+        self.pending_sides.push(Anchor::Bot);
+        self
     }
 
-    pub fn bottom_center(&mut self, margin: impl IntoF32) {
-        self.center_hor();
-        self.frame.origin.y = self.s_height() - self.height() - margin.into_f32();
+    pub fn left(&mut self) -> &mut Self {
+        self.pending_sides.push(Anchor::Left);
+        self
     }
 
-    pub fn left_half(&mut self) {
-        *self.frame = (0, 0, self.s_width() / 2.0, self.s_height()).into();
+    pub fn right(&mut self) -> &mut Self {
+        self.pending_sides.push(Anchor::Right);
+        self
     }
 
-    pub fn right_half(&mut self) {
-        let half_w = self.s_width() / 2.0;
-        *self.frame = (half_w, 0, half_w, self.s_height()).into();
+    pub fn size(&mut self, size: impl Into<Size>) -> &mut Self {
+        let size = size.into();
+        self.width(size.width).height(size.height)
     }
 
-    pub fn right(&mut self) {
-        self.center_ver();
-        self.frame.origin.x = self.s_width() - self.width();
+    pub fn width(&mut self, w: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Width, w));
+        self.has_width = true;
+        self
     }
 
-    pub fn at_center(&mut self, view: &dyn View) {
-        self.frame.set_center(view.frame().center())
+    pub fn height(&mut self, h: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Height, h));
+        self.has_height = true;
+        self
     }
 
-    pub fn at_bottom(&mut self, view: &dyn View, margin: impl IntoF32) {
-        self.at_center(view);
-        self.frame.origin.y = view.frame().max_y() + margin.into_f32();
+    pub fn center(&mut self) -> &mut Self {
+        self.rules.push(Anchor::Center.into());
+        self
     }
 
-    pub fn at_right(&mut self, view: &dyn View, margin: impl IntoF32) {
-        self.at_center(view);
-        self.frame.origin.x = view.frame().max_x() + margin.into_f32();
+    pub fn center_hor(&mut self) -> &mut Self {
+        self.rules.push(Anchor::CenterH.into());
+        self
     }
 
-    pub fn frames_for_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) -> [Rect; N] {
-        let mut result: [Rect; N] = [Default::default(); N];
-
-        let total_ratio: f32 = ratio.iter().map(|a| a.into_f32()).sum();
-        let total_ratio = 1.0 / total_ratio;
-        let mut prev_y = 0.0;
-
-        for (i, frame) in result.iter_mut().enumerate() {
-            *frame = (
-                0,
-                if i == 0 { 0.0 } else { prev_y },
-                self.width(),
-                ratio[i].into_f32() * self.height() * total_ratio,
-            )
-                .into();
-            prev_y = frame.max_y()
-        }
-
-        result
+    pub fn center_ver(&mut self) -> &mut Self {
+        self.rules.push(Anchor::CenterV.into());
+        self
     }
 
-    pub fn all_vertically_with_ratio<const N: usize>(&mut self, ratio: [impl IntoF32; N]) {
-        debug_assert!(self.subviews().len() == ratio.len());
-        let frames = self.frames_for_ratio(ratio);
-        for (view, rect) in self.subviews_mut().iter_mut().zip(frames) {
-            view.set_frame(rect);
-        }
+    pub fn as_background(&mut self) -> &mut Self {
+        self.rules.push(Tiling::Background.into());
+        self
     }
 
-    pub fn anchor(
-        &mut self,
-        view: impl Deref<Target = impl View + ?Sized>,
-        anchor: Anchor,
-        position: Anchor,
-        margin: impl IntoF32,
-    ) {
-        let margin = margin.into_f32();
+    pub fn all_ver(&mut self) -> &mut Self {
+        self.rules.push(Tiling::Vertically.into());
+        self
+    }
 
-        match anchor {
-            Anchor::Top => {
-                self.frame.origin.y = view.y() - margin - self.height();
-            }
-            Anchor::Bot => {
-                self.frame.origin.y = view.max_y() + margin;
-            }
-            Anchor::Left => {
-                self.frame.origin.x = view.x() - margin - self.width();
-            }
-            Anchor::Right => {
-                self.frame.origin.x = view.max_x() + margin;
-            }
-            Anchor::Center => {
-                self.frame.origin.x = view.x() - view.height() / 2.0 + self.height() / 2.0;
-                self.frame.origin.y = view.y() - view.width() / 2.0 + self.width() / 2.0;
-            }
-            _ => (),
-        }
+    pub fn all_hor(&mut self) -> &mut Self {
+        self.rules.push(Tiling::Horizontally.into());
+        self
+    }
 
-        match position {
-            Anchor::Top => {
-                self.frame.origin.y = view.y();
-            }
-            Anchor::Bot => {
-                self.frame.origin.y = view.max_y() - self.height();
-            }
-            Anchor::Left => {
-                self.frame.origin.x = view.x();
-            }
-            Anchor::Right => {
-                self.frame.origin.x = view.max_x() - self.width();
-            }
-            Anchor::Center => {
-                if anchor.is_horizontal() {
-                    self.frame.origin.y = view.y() + view.height() / 2.0 - self.height() / 2.0;
+    pub fn offset(&mut self, offset: impl IntoF32) -> &mut Self {
+        let pending = self.pending_sides.drain(..);
+        self.rules
+            .extend(pending.map(|a| LayoutRule::make(a, offset.into_f32())));
+        self
+    }
+
+    pub fn anchor<T: View>(&mut self, view: Rglica<T>, offset: impl IntoF32) {
+        debug_assert!(
+            self.pending_sides.len() == 1,
+            "Anchor should be to exactly one size"
+        );
+        let side = self.pending_sides.pop().unwrap();
+        self.rules.push(LayoutRule::anchor(side, offset, view.rglica()));
+    }
+
+    fn assign_pending(&mut self) {
+        let pending = self.pending_sides.drain(..);
+        self.rules.extend(pending.map(|a| a.into()))
+    }
+}
+
+impl Placer {
+    pub fn layout(&mut self) {
+        self.assign_pending();
+        let this = self.to_rglica();
+        for rule in &this.rules {
+            if rule.anchor_view.is_ok() {
+                self.anchor_layout(rule)
+            } else {
+                if let Some(tiling) = &rule.tiling {
+                    self.tiling_layout(tiling);
                 } else {
-                    self.frame.origin.x = view.x() + view.width() / 2.0 - self.width() / 2.0;
+                    self.simple_layout(rule)
                 }
             }
-            _ => (),
         }
     }
 }
 
 impl Placer {
-    pub fn proportional_width(&mut self, ratio: impl IntoF32) -> &mut Self {
-        self.frame.size.width = self.s_width() * ratio.into_f32();
-        self
+    fn simple_layout(&mut self, rule: &LayoutRule) {
+        let frame = self.frame.deref_mut();
+        let s_frame = self.s_frame.deref();
+        match rule.side {
+            Anchor::Top => frame.origin.y = rule.offset,
+            Anchor::Bot => {
+                if self.has_height {
+                    frame.origin.y = s_frame.height() - frame.height() - rule.offset
+                } else {
+                    frame.size.height = frame.height() + s_frame.height() - frame.max_y() - rule.offset
+                }
+            }
+            Anchor::Left => frame.origin.x = rule.offset,
+            Anchor::Right => {
+                if self.has_width {
+                    frame.origin.x = s_frame.width() - frame.width() - rule.offset;
+                } else {
+                    frame.size.width = frame.width() + s_frame.width() - frame.max_x() - rule.offset
+                }
+            }
+            Anchor::Width => frame.size.width = rule.offset,
+            Anchor::Height => frame.size.height = rule.offset,
+            Anchor::CenterH => frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0,
+            Anchor::CenterV => frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0,
+            Anchor::Center => {
+                frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0;
+                frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0;
+            }
+        }
     }
 
-    pub fn proportional_height(&mut self, ratio: impl IntoF32) -> &mut Self {
-        self.frame.size.height = self.s_height() * ratio.into_f32();
-        self
+    fn anchor_layout(&mut self, rule: &LayoutRule) {
+        let frame = self.frame.deref_mut();
+        let a_frame = rule.anchor_view.frame();
+        match rule.side {
+            Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
+            _ => unimplemented!(),
+        }
+    }
+
+    fn tiling_layout(&mut self, tiling: &Tiling) {
+        let mut frame = self.frame.clone();
+        let frame = frame.deref_mut();
+        match tiling {
+            Tiling::Background => *frame = self.s_frame.with_zero_origin(),
+            Tiling::Horizontally => {
+                unimplemented!()
+            }
+            Tiling::Vertically => place_vertically(self.view.subviews_mut()),
+        }
     }
 }
 
-impl Placer {
-    fn width(&self) -> f32 {
-        self.frame.width()
+fn place_vertically<T, Ref, Arr>(mut views: Arr)
+where
+    T: View + ?Sized,
+    Ref: DerefMut<Target = T>,
+    Arr: AsMut<[Ref]>,
+{
+    let views = views.as_mut();
+
+    if views.is_empty() {
+        return;
     }
 
-    fn height(&self) -> f32 {
-        self.frame.height()
+    let mut last = views.last_mut().unwrap().to_rglica();
+
+    if views.len() == 1 {
+        let back = last.super_frame().with_zero_origin();
+        last.set_frame(back);
+        return;
     }
 
-    fn s_width(&self) -> f32 {
-        self.s_frame.width()
-    }
+    let super_frame = *last.superview().frame();
 
-    fn s_height(&self) -> f32 {
-        self.s_frame.height()
-    }
+    let height = super_frame.height() / views.len() as f32;
+    let width = super_frame.width();
 
-    fn subviews(&self) -> &[Box<dyn View>] {
-        self.view.subviews()
-    }
-
-    fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
-        self.view.subviews_mut()
+    for (i, view) in views.iter_mut().enumerate() {
+        view.set_frame((0.0, i as f32 * height, width, height));
     }
 }

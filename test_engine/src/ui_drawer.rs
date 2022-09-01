@@ -162,9 +162,6 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn draw_image(&self, image: &Image, rect: &Rect, color: &Color, raw_frame: bool) {
-        // debug_assert!(rect.size.is_valid());
-        // debug_assert!(image.is_valid());
-
         if image.is_monochrome() {
             self.assets.shaders.ui_monochrome.enable().set_color(color)
         } else {

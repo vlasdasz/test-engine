@@ -30,14 +30,14 @@ impl ViewCallbacks for Alert {
         self.set_color(Color::WHITE)
             .set_corner_radius(10)
             .set_border_color(Color::BLACK)
-            .new_placer()
+            .place()
             .width(100)
             .height(80)
             .center();
 
         self.label = self.make_this(self, |this, v: &mut Label| {
             v.set_text(this.message.clone())
-                .new_placer()
+                .place()
                 .left()
                 .right()
                 .offset(10)
@@ -50,7 +50,7 @@ impl ViewCallbacks for Alert {
             v.set_text("OK")
                 .set_border_color(Color::GRAY)
                 .set_text_color(Color::BLUE)
-                .new_placer()
+                .place()
                 .width(202)
                 .height(20)
                 .center_hor()

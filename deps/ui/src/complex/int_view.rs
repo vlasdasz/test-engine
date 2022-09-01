@@ -31,7 +31,7 @@ impl IntView {
 
 impl ViewCallbacks for IntView {
     fn setup(&mut self) {
-        self.tiling().ver();
+        self.place().all_ver();
 
         self.label = self.add_view();
         self.up = self.add_view();
@@ -48,9 +48,5 @@ impl ViewCallbacks for IntView {
             let val = this.value;
             this.on_change.trigger(val);
         });
-    }
-
-    fn layout(&mut self) {
-        self.label.set_text(&self.value.to_string());
     }
 }

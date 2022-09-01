@@ -1,6 +1,6 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout};
+use crate::{impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks};
 
 #[view]
 #[derive(Default, Debug)]
@@ -32,10 +32,5 @@ impl ViewCallbacks for LabeledView {
     fn setup(&mut self) {
         self.label = self.add_view();
         self.value = self.add_view();
-    }
-
-    fn layout(&mut self) {
-        self.label.deprecated_place().left_half();
-        self.value.deprecated_place().right_half();
     }
 }

@@ -14,9 +14,13 @@ impl_view!(DebugView);
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.tiling().ver();
-
-        self.set_frame((100, 20));
+        self.place()
+            .top()
+            .left()
+            .offset(10)
+            .width(200)
+            .height(50)
+            .all_ver();
 
         self.fps_label = self.add_view();
         self.fps_label.set_text("fps label");
@@ -36,7 +40,7 @@ impl ViewCallbacks for DebugView {
         });
     }
 
-    fn layout(&mut self) {
+    fn update(&mut self) {
         self.frame_drawn += 1;
         self.frame_drawn_label
             .set_text(format!("Frame drawn: {}", self.frame_drawn));

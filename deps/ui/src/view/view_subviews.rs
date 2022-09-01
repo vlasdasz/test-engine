@@ -106,8 +106,8 @@ impl<T: ?Sized + View> ViewSubviews for T {
     fn add_boxed(&mut self, mut view: Box<dyn View>) {
         view.view_mut().superview = self.rglica();
         view.view_mut().drawer = self.drawer();
-        view.view_mut().placer = Placer::make(view.rglica());
         view.view_mut().root_view = self.root_view();
+        view.view_mut().placer = Placer::make(view.to_rglica());
         view.setup();
         self.view_mut().subviews.push(view);
     }

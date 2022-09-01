@@ -5,7 +5,7 @@ use rtools::{data_manager::Handle, Apply, Event, Rglica, ToRglica};
 use crate::{
     basic::Button,
     impl_view, view,
-    view::{ViewData, ViewFrame, ViewSubviews},
+    view::{ViewData, ViewSubviews},
     View, ViewBase, ViewCallbacks,
 };
 
@@ -57,16 +57,5 @@ impl ViewCallbacks for DPadView {
         );
 
         dbg!(self.right.corner_radius());
-    }
-
-    fn layout(&mut self) {
-        let frame = self.frame();
-        let third = frame.width() / 3.0;
-        let half = frame.height() / 2.0;
-
-        self.up.set_frame((third, 0, third, half));
-        self.down.set_frame((third, half, third, half));
-        self.left.set_frame((0, half, third, half));
-        self.right.set_frame((third * 2.0, half, third, half));
     }
 }

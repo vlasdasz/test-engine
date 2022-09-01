@@ -46,7 +46,7 @@ impl TestView {
 
 impl ViewCallbacks for TestView {
     fn setup(&mut self) {
-        self.tiling().ver();
+        self.place().all_ver();
 
         self.label = self.add_view();
         self.label.set_text("Hello label!");
@@ -77,12 +77,11 @@ impl ViewCallbacks for TestView {
         self.animation = Animation::new(0, 200, 10).into();
     }
 
-    fn layout(&mut self) {
+    fn update(&mut self) {
         self.animated.set_y(self.animation.value());
         let radius = self.button.frame().size.height / 2.0;
         self.button.set_corner_radius(radius);
         self.button.set_size((radius * 2.0, radius * 2.0));
-        self.button.deprecated_place().center_hor();
     }
 }
 

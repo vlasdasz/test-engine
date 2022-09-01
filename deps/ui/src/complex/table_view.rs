@@ -22,7 +22,7 @@ impl TableView {
 
 impl ViewCallbacks for TableView {
     fn setup(&mut self) {
-        self.tiling().ver();
+        self.place().all_ver();
     }
 }
 

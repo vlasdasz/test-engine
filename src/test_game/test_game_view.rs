@@ -11,8 +11,8 @@ use test_engine::{
     sprite_view::SpriteView,
     sprites::{Control, Player},
     ui::{
-        basic::Button, complex::AnalogStickView, impl_view, layout::Anchor, test::test_view::TestView, view,
-        DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
+        basic::Button, complex::AnalogStickView, impl_view, test::test_view::TestView, view, DPadView, View,
+        ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -78,7 +78,7 @@ impl TestGameView {
         self.set_frame((10, 10, 1000, 500));
 
         self.sprite_view = self.add_view_with_frame((250, 50));
-        self.sprite_view.new_placer().bottom().left().offset(10);
+        self.sprite_view.place().bottom().left().offset(10);
 
         self.level
             .base()
@@ -93,7 +93,7 @@ impl TestGameView {
                 Image::get("left.png"),
                 Image::get("right.png"),
             )
-            .new_placer()
+            .place()
             .width(100)
             .height(80)
             .bottom()
@@ -107,7 +107,7 @@ impl TestGameView {
             .set_image(Image::get("cat.png"))
             .set_button_image(Image::get("square.png"))
             .set_animation_image(Image::get("palm.png"))
-            .new_placer()
+            .place()
             .bottom()
             .right()
             .offset(20);
@@ -160,35 +160,6 @@ impl ViewCallbacks for TestGameView {
     fn setup(&mut self) {
         self.setup_ui();
         self.setup_level();
-    }
-
-    fn layout(&mut self) {
-        self.left_stick
-            .deprecated_place()
-            .anchor(self.dpad, Anchor::Right, Anchor::Bot, 20);
-
-        self.sprite_view
-            .deprecated_place()
-            .anchor(self.dpad, Anchor::Top, Anchor::Center, 10);
-
-        self.test_view
-            .deprecated_place()
-            .proportional_width(0.18)
-            .proportional_height(0.4);
-
-        self.to_benchmark.deprecated_place().bottom_center(20);
-
-        self.to_test
-            .deprecated_place()
-            .anchor(self.to_benchmark, Anchor::Top, Anchor::Center, 10);
-
-        self.play
-            .deprecated_place()
-            .anchor(self.to_test, Anchor::Top, Anchor::Center, 10);
-
-        self.async_task
-            .deprecated_place()
-            .anchor(self.play, Anchor::Top, Anchor::Center, 10);
     }
 }
 

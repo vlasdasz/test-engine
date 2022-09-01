@@ -40,7 +40,7 @@ impl SpriteView {
         self.delete_button
             .set_hidden(true)
             .set_image(Image::get("delete.png"))
-            .new_placer()
+            .place()
             .width(20)
             .height(20)
             .top()
@@ -57,7 +57,7 @@ impl SpriteView {
 
 impl ViewCallbacks for SpriteView {
     fn setup(&mut self) {
-        self.tiling().ver();
+        self.place().all_ver();
 
         (self.position, self.size, self.color) = (self.add_view(), self.add_view(), self.add_view());
 

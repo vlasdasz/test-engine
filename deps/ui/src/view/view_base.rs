@@ -5,12 +5,7 @@ use gl_image::Image;
 use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
-use crate::{
-    basic::RootView,
-    complex::PathData,
-    layout::{NewPlacer, Placer, Tiling},
-    Touch, UIDrawer, View,
-};
+use crate::{basic::RootView, complex::PathData, layout::Placer, Touch, UIDrawer, View};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
@@ -41,12 +36,6 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     pub(crate) placer: Placer,
-
-    #[derivative(Debug = "ignore")]
-    pub(crate) new_placer: NewPlacer,
-
-    #[derivative(Debug = "ignore")]
-    pub(crate) tiling: Tiling,
 
     pub(crate) image: Handle<Image>,
 

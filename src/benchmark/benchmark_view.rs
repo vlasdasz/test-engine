@@ -5,8 +5,8 @@ use test_engine::{
     rtools::{Rglica, ToRglica},
     sprites::Player,
     ui::{
-        basic::Button, impl_view, layout::Anchor, view, Label, View, ViewBase, ViewCallbacks, ViewFrame,
-        ViewLayout, ViewSubviews,
+        basic::Button, impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
+        ViewSubviews,
     },
     ui_layer::UILayer,
     Level,
@@ -34,7 +34,7 @@ impl ViewCallbacks for BenchmarkView {
         self.back = self.add_view();
         self.back
             .set_text("Back")
-            .new_placer()
+            .place()
             .width(120)
             .height(20)
             .bottom()
@@ -47,12 +47,6 @@ impl ViewCallbacks for BenchmarkView {
 
         self.bullets_label = self.add_view();
         self.bullets_label.set_frame((120, 20));
-    }
-
-    fn layout(&mut self) {
-        self.bullets_label
-            .deprecated_place()
-            .anchor(self.back, Anchor::Top, Anchor::Center, 10);
     }
 
     fn update(&mut self) {

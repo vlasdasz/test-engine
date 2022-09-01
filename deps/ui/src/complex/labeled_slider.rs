@@ -1,8 +1,6 @@
 use rtools::{Event, IntoF32, Rglica, ToRglica};
 
-use crate::{
-    complex::Slider, impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout,
-};
+use crate::{complex::Slider, impl_view, view, Label, View, ViewBase, ViewCallbacks};
 
 #[view]
 #[derive(Default, Debug)]
@@ -34,15 +32,6 @@ impl LabeledSlider {
 
 impl ViewCallbacks for LabeledSlider {
     fn setup(&mut self) {
-        let frames = self.deprecated_place().frames_for_ratio([1, 5]);
-
-        self.label = self.add_view_with_frame(frames[0]);
-        self.slider = self.add_view_with_frame(frames[1]);
-
         self.slider.on_change.set(self, |s, a| s.on_change(a));
-    }
-
-    fn layout(&mut self) {
-        self.deprecated_place().all_vertically_with_ratio([1, 5]);
     }
 }
