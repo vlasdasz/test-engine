@@ -32,8 +32,14 @@ impl ViewCallbacks for BenchmarkView {
         self.level.setup();
 
         self.back = self.add_view();
-        self.back.set_text("Back")
-            .new_placer().width(120).height(20).bottom().offset(20).center_hor();
+        self.back
+            .set_text("Back")
+            .new_placer()
+            .width(120)
+            .height(20)
+            .bottom()
+            .offset(20)
+            .center_hor();
 
         self.back.on_tap.set(self, |this, _| {
             this.ui.set_view::<TestGameView>();

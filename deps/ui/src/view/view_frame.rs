@@ -28,6 +28,10 @@ pub trait ViewFrame {
     where
         Self: View,
     {
+        if self.superview().is_null() {
+            return;
+        }
+
         let view = self.view_mut();
         view.new_placer.layout(&mut view.frame, view.superview.frame());
 
@@ -44,8 +48,8 @@ pub trait ViewFrame {
     }
 
     fn make_layout(&mut self, make: impl FnOnce(&mut NewPlacer)) -> &mut Self
-        where
-            Self: View,
+    where
+        Self: View,
     {
         make(self.new_placer());
         self
