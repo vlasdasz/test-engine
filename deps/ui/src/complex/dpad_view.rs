@@ -42,20 +42,16 @@ impl DPadView {
 
 impl ViewCallbacks for DPadView {
     fn setup(&mut self) {
-        self.up = self.add_view();
-        self.down = self.add_view();
-        self.left = self.add_view();
-        self.right = self.add_view();
+        (self.up, self.down, self.left, self.right) =
+            (self.add_view(), self.add_view(), self.add_view(), self.add_view());
 
         [self.up, self.down, self.left, self.right].apply2(
             [Direction::Up, Direction::Down, Direction::Left, Direction::Right],
-            |a, direction| {
-                a.on_tap
+            |view, direction| {
+                view.on_tap
                     .set(self, move |this, _| this.on_press.trigger(direction));
-                a.set_corner_radius(5);
+                view.set_corner_radius(5);
             },
         );
-
-        dbg!(self.right.corner_radius());
     }
 }

@@ -77,8 +77,14 @@ impl TestGameView {
 
         self.set_frame((10, 10, 1000, 500));
 
-        self.sprite_view = self.add_view_with_frame((250, 50));
-        self.sprite_view.place().bottom().left().offset(10);
+        self.sprite_view = self.add_view();
+        self.sprite_view
+            .place()
+            .bottom()
+            .left()
+            .offset(10)
+            .width(250)
+            .height(50);
 
         self.level
             .base()
@@ -102,7 +108,7 @@ impl TestGameView {
 
         self.left_stick = self.add_view();
 
-        self.test_view = self.add_view_with_frame((280, 400));
+        self.test_view = self.add_view();
         self.test_view
             .set_image(Image::get("cat.png"))
             .set_button_image(Image::get("square.png"))
@@ -110,23 +116,35 @@ impl TestGameView {
             .place()
             .bottom()
             .right()
-            .offset(20);
+            .offset(20)
+            .width(280)
+            .height(400);
 
-        self.to_benchmark = self.add_view();
-        self.to_benchmark.set_text("Benchmark").set_frame((120, 20));
-        self.to_benchmark
-            .on_tap
-            .set(self, |this, _| this.ui.set_view::<BenchmarkView>());
+        self.make_this(|this, view: &mut ViewBase| {
+            view.place()
+                .right()
+                .bottom()
+                .offset(10)
+                .width(200)
+                .height(100)
+                .all_ver();
 
-        self.to_test = self.add_view();
-        self.to_test.set_text("Test").set_frame((120, 20));
-        self.to_test
-            .on_tap
-            .set(self, |this, _| this.ui.set_view::<UITestView>());
+            this.to_benchmark = view.add_view();
+            this.to_benchmark.set_text("Benchmark");
+            this.to_benchmark
+                .on_tap
+                .set(this, |this, _| this.ui.set_view::<BenchmarkView>());
 
-        self.play = self.add_view();
-        self.play.set_text("Play sound").set_frame((120, 20));
-        self.play.on_tap.set(self, |this, _| this.sound.play());
+            this.to_test = view.add_view();
+            this.to_test.set_text("Test");
+            this.to_test
+                .on_tap
+                .set(this, |this, _| this.ui.set_view::<UITestView>());
+
+            this.play = view.add_view();
+            this.play.set_text("Play sound");
+            this.play.on_tap.set(this, |this, _| this.sound.play());
+        });
 
         self.sound = Sound::get("retro.wav");
 

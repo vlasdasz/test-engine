@@ -35,7 +35,7 @@ impl ViewCallbacks for Alert {
             .height(80)
             .center();
 
-        self.label = self.make_this(self, |this, v: &mut Label| {
+        self.label = self.make_this(|this, v: &mut Label| {
             v.set_text(this.message.clone())
                 .place()
                 .left()
@@ -46,7 +46,7 @@ impl ViewCallbacks for Alert {
                 .height(20);
         });
 
-        self.ok_button = self.make_this(self, |this, v: &mut Button| {
+        self.ok_button = self.make_this(|this, v: &mut Button| {
             v.set_text("OK")
                 .set_border_color(Color::GRAY)
                 .set_text_color(Color::BLUE)
