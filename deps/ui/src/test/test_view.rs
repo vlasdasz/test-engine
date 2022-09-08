@@ -5,7 +5,7 @@ use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
 use crate::{
     basic::Button,
     complex::{DrawMode, DrawingView, StringCell, TableView, TableViewDataSource},
-    data_source, impl_view, view,
+    data_source, view,
     view::{ViewData, ViewFrame, ViewSubviews},
     ImageView, Label, View, ViewBase, ViewCallbacks, ViewLayout,
 };
@@ -24,8 +24,6 @@ pub struct TestView {
 
     label_value: u64,
 }
-
-impl_view!(TestView);
 
 impl TestView {
     pub fn set_image(&mut self, image: Handle<Image>) -> &mut Self {

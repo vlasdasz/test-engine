@@ -3,7 +3,7 @@ use rtools::{Rglica, ToRglica};
 
 use crate::{
     basic::Button,
-    impl_view, view,
+    view,
     view::{ViewData, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks, ViewLayout,
 };
@@ -15,8 +15,6 @@ pub struct Alert {
     ok_button: Rglica<Button>,
     message:   String,
 }
-
-impl_view!(Alert);
 
 impl Alert {
     pub fn set_message(&mut self, message: impl ToString) {

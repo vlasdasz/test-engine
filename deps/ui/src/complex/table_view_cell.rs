@@ -1,6 +1,6 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout};
+use crate::{view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout};
 
 #[view]
 #[derive(Default, Debug)]
@@ -8,8 +8,6 @@ pub struct StringCell {
     data:  String,
     label: Rglica<Label>,
 }
-
-impl_view!(StringCell);
 
 impl ViewCallbacks for StringCell {
     fn setup(&mut self) {

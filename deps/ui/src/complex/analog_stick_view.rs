@@ -6,7 +6,7 @@ use rtools::{Event, Rglica, ToRglica};
 
 use crate::{
     complex::{DrawMode, DrawingView},
-    impl_view, view,
+    view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks, ViewTouch,
 };
@@ -24,8 +24,6 @@ pub struct AnalogStickView {
     pub on_change:   Event<Point>,
     pub flaccid:     bool,
 }
-
-impl_view!(AnalogStickView);
 
 impl AnalogStickView {
     fn on_touch_moved(&mut self, touch: &Point) {

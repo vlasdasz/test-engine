@@ -3,7 +3,7 @@ use rtools::{Boxed, Rglica, ToRglica};
 
 use crate::{
     complex::{DrawMode, DrawingView},
-    impl_view, view,
+    view,
     view::{ViewFrame, ViewSubviews},
     View, ViewBase, ViewCallbacks,
 };
@@ -15,8 +15,6 @@ pub struct CircleView {
     color:   Color,
     radius:  f32,
 }
-
-impl_view!(CircleView);
 
 impl CircleView {
     pub fn set_color(&mut self, color: Color) {

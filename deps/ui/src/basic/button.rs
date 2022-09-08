@@ -1,9 +1,7 @@
 use gm::Color;
 use rtools::{Event, Rglica, ToRglica};
 
-use crate::{
-    impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch,
-};
+use crate::{view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch};
 
 #[view]
 #[derive(Default, Debug)]
@@ -12,7 +10,6 @@ pub struct Button {
 
     pub on_tap: Event,
 }
-impl_view!(Button);
 
 impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {

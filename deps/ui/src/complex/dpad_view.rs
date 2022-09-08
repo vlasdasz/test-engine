@@ -4,7 +4,7 @@ use rtools::{data_manager::Handle, Apply, Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,
-    impl_view, view,
+    view,
     view::{ViewData, ViewSubviews},
     View, ViewBase, ViewCallbacks,
 };
@@ -18,8 +18,6 @@ pub struct DPadView {
     right:        Rglica<Button>,
     pub on_press: Event<Direction>,
 }
-
-impl_view!(DPadView);
 
 impl DPadView {
     pub fn set_images(

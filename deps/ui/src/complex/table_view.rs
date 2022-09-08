@@ -2,14 +2,13 @@ use std::fmt::Debug;
 
 use rtools::{Rglica, ToRglica};
 
-use crate::{impl_view, view, view::ViewSubviews, View, ViewBase, ViewCallbacks, ViewLayout};
+use crate::{view, view::ViewSubviews, View, ViewBase, ViewCallbacks, ViewLayout};
 
 #[view]
 #[derive(Default, Debug)]
 pub struct TableView {
     pub data_source: Rglica<dyn TableViewDataSource>,
 }
-impl_view!(TableView);
 
 impl TableView {
     pub fn reload_data(&mut self) {

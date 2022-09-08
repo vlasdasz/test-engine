@@ -5,7 +5,7 @@ use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
 use crate::{
     basic::Button,
-    impl_view, view,
+    view,
     view::{ViewData, ViewSubviews},
     Label, View, ViewBase, ViewCallbacks, ViewLayout,
 };
@@ -19,8 +19,6 @@ pub struct IntView {
     down:          Rglica<Button>,
     pub on_change: Event<i64>,
 }
-
-impl_view!(IntView);
 
 impl IntView {
     pub fn set_images(&mut self, up: Handle<Image>, down: Handle<Image>) {

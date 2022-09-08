@@ -2,8 +2,8 @@ use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica, ToRglica};
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, impl_view, view, View, ViewBase, ViewCallbacks, ViewData,
-    ViewLayout, ViewSubviews,
+    basic::Button, complex::LabeledView, view, View, ViewBase, ViewCallbacks, ViewData, ViewLayout,
+    ViewSubviews,
 };
 
 #[view]
@@ -17,8 +17,6 @@ pub struct SpriteView {
 
     sprite: Rglica<dyn Sprite>,
 }
-
-impl_view!(SpriteView);
 
 impl SpriteView {
     pub fn set_sprite(&mut self, sprite: Rglica<dyn Sprite>) {

@@ -1,13 +1,12 @@
 use rtools::{address::Address, Boxed, Rglica, ToRglica};
 
-use crate::{impl_view, view, view::ViewSubviews, View, ViewBase};
+use crate::{view, view::ViewSubviews, View, ViewBase};
 
 #[view]
 #[derive(Default, Debug)]
 pub struct RootView {
     to_remove: Vec<Rglica<dyn View>>,
 }
-impl_view!(RootView);
 
 impl RootView {
     pub fn make_root() -> Box<Self> {

@@ -1,6 +1,6 @@
 use rtools::{Event, IntoF32, Rglica, ToRglica};
 
-use crate::{complex::Slider, impl_view, view, Label, View, ViewBase, ViewCallbacks};
+use crate::{complex::Slider, view, Label, View, ViewBase, ViewCallbacks};
 
 #[view]
 #[derive(Default, Debug)]
@@ -10,8 +10,6 @@ pub struct LabeledSlider {
 
     pub on_change: Event<f32>,
 }
-
-impl_view!(LabeledSlider);
 
 impl LabeledSlider {
     pub fn set_start(&mut self, start: impl IntoF32) -> &mut Self {

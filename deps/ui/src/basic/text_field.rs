@@ -2,16 +2,13 @@ use std::ops::{Deref, DerefMut};
 
 use rtools::{Rglica, ToRglica};
 
-use crate::{
-    impl_view, input::UIEvents, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout,
-};
+use crate::{input::UIEvents, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout};
 
 #[view]
 #[derive(Default, Debug)]
 pub struct TextField {
     label: Rglica<Label>,
 }
-impl_view!(TextField);
 
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {

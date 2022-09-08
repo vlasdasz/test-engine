@@ -10,7 +10,7 @@ use rtools::{
 
 use crate::{
     basic::label_layout::LabelLayout,
-    impl_view, view,
+    view,
     view::{ViewData, ViewFrame, ViewSubviews},
     Font, ImageView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
@@ -27,8 +27,6 @@ pub struct Label {
     image_view: Rglica<ImageView>,
     text_color: Color,
 }
-
-impl_view!(Label);
 
 impl Label {
     pub fn text(&self) -> &str {

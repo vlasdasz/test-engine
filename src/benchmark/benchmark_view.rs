@@ -4,10 +4,7 @@ use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
     sprites::Player,
-    ui::{
-        basic::Button, impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
-        ViewSubviews,
-    },
+    ui::{basic::Button, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews},
     ui_layer::UILayer,
     Level,
 };
@@ -24,8 +21,6 @@ pub struct BenchmarkView {
 
     ui: Rglica<UILayer>,
 }
-
-impl_view!(BenchmarkView);
 
 impl ViewCallbacks for BenchmarkView {
     fn setup(&mut self) {

@@ -4,13 +4,12 @@ use rtools::{Rglica, ToRglica};
 
 use crate::{
     complex::{path_data::DrawMode, PathData},
-    impl_view, view, View, ViewBase,
+    view, View, ViewBase,
 };
 
 #[view]
 #[derive(Default, Debug)]
 pub struct DrawingView {}
-impl_view!(DrawingView);
 
 impl DrawingView {
     pub fn add_path(&mut self, path: impl Into<PointsPath>, color: &Color, mode: DrawMode) -> &mut Self {

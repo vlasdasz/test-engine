@@ -1,21 +1,31 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse::Parser, parse_macro_input, DeriveInput};
+use syn::{parse::Parser, parse_macro_input, Data, DeriveInput, Field, Fields};
 
 #[proc_macro_attribute]
 pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let mut stream = parse_macro_input!(stream as DeriveInput);
 
-    let struct_data = match &mut stream.data {
-        syn::Data::Struct(data) => data,
+    let data = match &mut stream.data {
+        Data::Struct(data) => data,
         _ => panic!("`view` macro has to be used with structs"),
     };
 
-    if let syn::Fields::Named(fields) = &mut struct_data.fields {
+    if let Fields::Named(fields) = &mut data.fields {
         fields
             .named
-            .push(syn::Field::parse_named.parse2(quote! { view: ViewBase }).unwrap());
+            .push(Field::parse_named.parse2(quote! { view: ViewBase }).unwrap());
     }
 
-    quote! { #stream }.into()
+    let name = &stream.ident;
+
+    quote! {
+        #stream
+        impl View for #name {
+            fn view(&self) -> &ViewBase { &self.view }
+            fn view_mut(&mut self) -> &mut ViewBase { &mut self.view }
+            fn rglica(&self) -> Rglica<dyn View> { (self as &dyn View).to_rglica() }
+        }
+    }
+    .into()
 }

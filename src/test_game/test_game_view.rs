@@ -11,8 +11,8 @@ use test_engine::{
     sprite_view::SpriteView,
     sprites::{Control, Player},
     ui::{
-        basic::Button, complex::AnalogStickView, impl_view, test::test_view::TestView, view, DPadView, View,
-        ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
+        basic::Button, complex::AnalogStickView, test::test_view::TestView, view, DPadView, View, ViewBase,
+        ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -48,8 +48,6 @@ pub struct TestGameView {
 
     ui: Rglica<UILayer>,
 }
-
-impl_view!(TestGameView);
 
 impl TestGameView {
     fn setup_level(&mut self) {

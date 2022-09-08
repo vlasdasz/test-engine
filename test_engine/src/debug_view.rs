@@ -1,5 +1,5 @@
 use rtools::{platform::Platform, Property, Rglica, ToRglica};
-use ui::{impl_view, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews};
+use ui::{view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews};
 
 #[view]
 #[derive(Default, Debug)]
@@ -9,8 +9,6 @@ pub struct DebugView {
     frame_drawn:       u64,
     pub fps:           Property<u64>,
 }
-
-impl_view!(DebugView);
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {

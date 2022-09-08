@@ -3,9 +3,7 @@ use std::fmt::Debug;
 use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
-    ui::{
-        basic::Button, impl_view, view, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews,
-    },
+    ui::{basic::Button, view, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews},
     ui_layer::UILayer,
 };
 
@@ -20,8 +18,6 @@ pub struct UITestView {
     back:      Rglica<Button>,
     ui:        Rglica<UILayer>,
 }
-
-impl_view!(UITestView);
 
 impl ViewCallbacks for UITestView {
     fn setup(&mut self) {

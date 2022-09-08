@@ -1,6 +1,6 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{impl_view, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks};
+use crate::{view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks};
 
 #[view]
 #[derive(Default, Debug)]
@@ -8,8 +8,6 @@ pub struct LabeledView {
     label: Rglica<Label>,
     value: Rglica<Label>,
 }
-
-impl_view!(LabeledView);
 
 impl LabeledView {
     pub fn set_label(&mut self, label: impl ToString) -> &Self {
