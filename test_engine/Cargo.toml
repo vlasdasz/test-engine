@@ -15,13 +15,13 @@ cfg-if = "1.0"
 lazy_static = "1.4"
 tokio = { version = "1.15", features = ["full"] }
 
-rtools = { path = "../deps/rtools" }
 
 gm = { path = "../deps/gm" }
 ui = { path = "../deps/ui" }
 net = { path = "../deps/net" }
 maze = { path = "../deps/maze" }
 audio = { path = "../deps/audio" }
+rtools = { path = "../deps/rtools" }
 sprites = { path = "../deps/sprites" }
 gl_image = { path = "../deps/gl_image" }
 gl_wrapper = { path = "../deps/gl_wrapper" }
