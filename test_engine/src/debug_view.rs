@@ -12,13 +12,7 @@ pub struct DebugView {
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.place()
-            .top()
-            .left()
-            .offset(10)
-            .width(200)
-            .height(50)
-            .all_ver();
+        self.place().top().left().val(10).width(200).height(50).all_ver();
 
         self.fps_label = self.add_view();
         self.fps_label.set_text("fps label");

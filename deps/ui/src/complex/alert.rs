@@ -29,8 +29,7 @@ impl ViewCallbacks for Alert {
             .set_corner_radius(10)
             .set_border_color(Color::BLACK)
             .place()
-            .width(100)
-            .height(80)
+            .size(200, 80)
             .center();
 
         self.label = self.make_this(|this, v: &mut Label| {
@@ -38,9 +37,9 @@ impl ViewCallbacks for Alert {
                 .place()
                 .left()
                 .right()
-                .offset(10)
+                .val(10)
                 .top()
-                .offset(10)
+                .val(10)
                 .height(20);
         });
 
@@ -49,11 +48,10 @@ impl ViewCallbacks for Alert {
                 .set_border_color(Color::GRAY)
                 .set_text_color(Color::BLUE)
                 .place()
-                .width(202)
-                .height(20)
+                .size(202, 20)
                 .center_hor()
                 .bottom()
-                .offset(-1);
+                .val(-1);
 
             v.on_tap.set(this, |this, _| this.remove_from_superview());
         });

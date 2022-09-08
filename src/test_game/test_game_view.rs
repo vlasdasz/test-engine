@@ -76,13 +76,7 @@ impl TestGameView {
         self.set_frame((10, 10, 1000, 500));
 
         self.sprite_view = self.add_view();
-        self.sprite_view
-            .place()
-            .bottom()
-            .left()
-            .offset(10)
-            .width(250)
-            .height(50);
+        self.sprite_view.place().bl().val(10).size(250, 50);
 
         self.level
             .base()
@@ -98,11 +92,9 @@ impl TestGameView {
                 Image::get("right.png"),
             )
             .place()
-            .width(100)
-            .height(80)
-            .bottom()
-            .left()
-            .offset(5);
+            .size(100, 80)
+            .bl()
+            .val(5);
 
         self.left_stick = self.add_view();
 
@@ -112,20 +104,12 @@ impl TestGameView {
             .set_button_image(Image::get("square.png"))
             .set_animation_image(Image::get("palm.png"))
             .place()
-            .bottom()
-            .right()
-            .offset(20)
-            .width(280)
-            .height(400);
+            .br()
+            .val(20)
+            .size(280, 400);
 
         self.make_this(|this, view: &mut ViewBase| {
-            view.place()
-                .right()
-                .bottom()
-                .offset(10)
-                .width(200)
-                .height(100)
-                .all_ver();
+            view.place().br().val(10).size(200, 100).all_ver();
 
             this.to_benchmark = view.add_view();
             this.to_benchmark.set_text("Benchmark");
@@ -142,28 +126,29 @@ impl TestGameView {
             this.play = view.add_view();
             this.play.set_text("Play sound");
             this.play.on_tap.set(this, |this, _| this.sound.play());
+
+            this.async_task = view.add_view();
+            this.async_task.set_text("Async task").set_frame((120, 20));
+            this.async_task.on_tap.set(this, |this, _| {
+                GET_USERS.get(this, |this, error, result| {
+                    if let Some(error) = error {
+                        dbg!(&error);
+                        this.alert(error);
+                        return;
+                    }
+
+                    dbg!(&result);
+
+                    if let Some(user) = result.first() {
+                        this.async_task.set_text(user.login.clone());
+                    } else {
+                        this.alert("No response");
+                    }
+                });
+            });
         });
 
         self.sound = Sound::get("retro.wav");
-
-        self.async_task = self.add_view();
-        self.async_task.set_text("Async task").set_frame((120, 20));
-        self.async_task.on_tap.set(self, |this, _| {
-            GET_USERS.get(this, |this, error, result| {
-                if let Some(error) = error {
-                    dbg!(error);
-                    return;
-                }
-
-                dbg!(&result);
-
-                if let Some(user) = result.first() {
-                    this.async_task.set_text(user.login.clone());
-                } else {
-                    this.async_task.set_text("No response");
-                }
-            });
-        });
 
         [self.to_benchmark, self.to_test, self.play, self.async_task].apply(|button| {
             button.set_color(Color::WHITE);

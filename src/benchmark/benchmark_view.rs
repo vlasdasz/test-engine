@@ -33,7 +33,7 @@ impl ViewCallbacks for BenchmarkView {
             .width(120)
             .height(20)
             .bottom()
-            .offset(20)
+            .val(20)
             .center_hor();
 
         self.back.on_tap.set(self, |this, _| {

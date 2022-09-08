@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::flat::{Rect, Size};
+use gm::flat::Rect;
 use rtools::{IntoF32, Rglica, ToRglica};
 
 use crate::{
@@ -58,9 +58,8 @@ impl Placer {
         self
     }
 
-    pub fn size(&mut self, size: impl Into<Size>) -> &mut Self {
-        let size = size.into();
-        self.width(size.width).height(size.height)
+    pub fn size(&mut self, width: impl IntoF32, height: impl IntoF32) -> &mut Self {
+        self.width(width).height(height)
     }
 
     pub fn width(&mut self, w: impl IntoF32) -> &mut Self {
@@ -105,7 +104,7 @@ impl Placer {
         self
     }
 
-    pub fn offset(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn val(&mut self, offset: impl IntoF32) -> &mut Self {
         let pending = self.pending_sides.drain(..);
         self.rules
             .extend(pending.map(|a| LayoutRule::make(a, offset.into_f32())));
@@ -124,6 +123,16 @@ impl Placer {
     fn assign_pending(&mut self) {
         let pending = self.pending_sides.drain(..);
         self.rules.extend(pending.map(|a| a.into()))
+    }
+}
+
+impl Placer {
+    pub fn bl(&mut self) -> &mut Self {
+        self.bottom().left()
+    }
+
+    pub fn br(&mut self) -> &mut Self {
+        self.bottom().right()
     }
 }
 

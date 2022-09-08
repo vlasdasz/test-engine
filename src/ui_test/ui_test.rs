@@ -26,20 +26,20 @@ impl ViewCallbacks for UITestView {
 
         self.top_view = self.container.add_view();
         self.top_view.make_layout(|a| {
-            a.left().top().right().offset(10);
+            a.left().top().right().val(10);
             a.height(50);
         });
 
         self.test = self.container.add_view();
         self.test.make_layout(|a| {
             a.top().anchor(self.top_view, 20);
-            a.left().right().bottom().offset(10);
+            a.left().right().bottom().val(10);
         });
 
         self.back = self.add_view();
         self.back.set_text("Back").make_layout(|l| {
             l.width(120).height(20);
-            l.bottom().offset(20);
+            l.bottom().val(20);
             l.center_hor();
         });
         self.back.on_tap.set(self, |this, _| {
