@@ -14,11 +14,11 @@ pub struct Shaders {
 
 impl Shaders {
     pub fn new(paths: &Paths) -> Shaders {
-        error!("Creating shaders");
+        trace!("Compiling shaders");
 
         let compiler = ShaderCompiler::new(&paths.shaders.include);
 
-        error!("created compiler");
+        trace!("ShaderCompiler: Ok");
 
         let ui = compiler.compile(&paths.shaders.ui.join("ui"));
         let ui_path = compiler.compile(&paths.shaders.ui.join("ui_path"));
@@ -28,7 +28,7 @@ impl Shaders {
         let sprite = compiler.compile(&paths.shaders.sprites.join("sprite"));
         let image_sprite = compiler.compile(&paths.shaders.sprites.join("textured_sprite"));
 
-        error!("shaders created");
+        trace!("Shaders: OK");
 
         Shaders {
             ui,

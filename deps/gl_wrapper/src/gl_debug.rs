@@ -41,7 +41,7 @@ macro_rules! check_gl_error {
     () => {{
         let gl_error = gl::GetError();
         if gl_error != gl::NO_ERROR {
-            dbg!(gl_error);
+            error!("{}", gl_error);
         }
     }};
 }
@@ -53,7 +53,6 @@ macro_rules! check_gl_error {
         let gl_error = glGetError();
         if gl_error != GL_NO_ERROR {
             error!("OpenGL Error with code: {}", gl_error);
-            dbg!(gl_error);
         }
     }};
 }

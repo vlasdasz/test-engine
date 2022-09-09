@@ -45,12 +45,10 @@ pub struct Font {
 
 impl Font {
     fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
-        error!("New font {:?}", path);
+        trace!("Loading font {:?}", path);
 
         let data = File::read(path);
-        error!("File::read");
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
-        error!("fontdue::Font::from_bytes");
 
         let mut glyphs = Vec::with_capacity(128);
 
@@ -76,7 +74,7 @@ impl Font {
         let baseline_position = y_min.abs();
         let baseline_shift = height / 2.0 - baseline_position;
 
-        error!("Font OK");
+        trace!("Font: OK");
 
         Ok(Font {
             path: path.into(),

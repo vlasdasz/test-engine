@@ -8,7 +8,7 @@ use std::{
 
 use gl_wrapper::monitor::Monitor;
 use gm::volume::GyroData;
-use rtools::{platform::Platform, Unwrap};
+use rtools::{init_log, platform::Platform, Unwrap};
 use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
@@ -105,6 +105,10 @@ impl<T: MainView + 'static> App<T> {
         height: c_float,
         diagonal: c_float,
     ) {
+        if Platform::IOS {
+            init_log();
+        }
+
         let monitor = Monitor::new(
             "Phone screen".into(),
             ppi as _,
@@ -115,8 +119,7 @@ impl<T: MainView + 'static> App<T> {
             diagonal as _,
         );
 
-        error!("{:?}", &monitor);
-        dbg!(&monitor);
+        trace!("{:?}", &monitor);
 
         self.create_screen(&PathBuf::new(), monitor);
     }

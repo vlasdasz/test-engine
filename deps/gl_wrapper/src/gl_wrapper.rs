@@ -118,7 +118,9 @@ impl GLWrapper {
             GLC!(FRAMEBUFFER_BINDING),
             &mut STATIC_DATA.default_framebuffer_id
         );
-        dbg!(unsafe { STATIC_DATA.default_framebuffer_id as u32 });
+        trace!("default_framebuffer_id: {}", unsafe {
+            STATIC_DATA.default_framebuffer_id as u32
+        });
     }
 
     fn default_framebuffer_id() -> u32 {

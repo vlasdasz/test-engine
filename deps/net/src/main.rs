@@ -12,8 +12,6 @@ struct User {
 
 #[tokio::main]
 async fn main() {
-    dbg!("Helloy");
-
     // const API: API =
     // API::new("ec2-18-217-89-172.us-east-2.compute.amazonaws.com");
     const API: API = API::new("127.0.0.1");
@@ -27,18 +25,13 @@ async fn main() {
             password: "paraguk4ka!".into(),
         },
         &(),
-        |_, error| {
-            dbg!(error);
-        },
+        |_, error| {},
     );
 
     GET_USERS.get(&(), |_, error, users| {
         if let Some(error) = error {
-            dbg!(error);
             return;
         }
-
-        dbg!(users);
     });
 
     loop {

@@ -76,7 +76,6 @@ impl ShaderCompiler {
 
         let error = error.to_string_lossy().into_owned();
         error!("Failed to compile shader: {:?} error: {}", path, error);
-        error!("Spilkok {}", error);
         panic!("Failed to compile shader: {:?} error: {}", path, error);
     }
 
@@ -103,8 +102,6 @@ impl ShaderCompiler {
 
         let c_code = CString::new(code).unwrap();
 
-        error!("code: {:?}", c_code);
-
         let code_ptr = c_code.as_ptr();
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
         GL!(CompileShader, shader);
@@ -115,6 +112,8 @@ impl ShaderCompiler {
     }
 
     pub fn compile(&self, path: &Path) -> Shader {
+        trace!("Compiling: {:?}", path);
+
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 
@@ -137,6 +136,8 @@ impl ShaderCompiler {
 
         GL!(DeleteShader, vert);
         GL!(DeleteShader, frag);
+
+        trace!("Shader: OK");
 
         Shader::new(program, path.to_string_lossy().into())
     }

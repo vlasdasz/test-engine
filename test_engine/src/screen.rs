@@ -1,24 +1,22 @@
 #![allow(clippy::mismatched_target_os)]
 
-use std::{ops::DerefMut, path::Path, rc::Rc};
+use std::{ops::DerefMut, path::Path};
 
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{Dispatch, Time, ToRglica, Unwrap};
-use sprites::SpritesDrawer;
+use rtools::{Dispatch, Time, Unwrap};
 use ui::{UIDrawer, ViewData, ViewFrame, ViewLayout};
 
-use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_layer::UILayer};
+use crate::{assets::Assets, ui_layer::UILayer};
 
 pub struct Screen {
     pub ui: Box<UILayer>,
 
     #[cfg(desktop)]
-    glfw:           GLFWManager,
-    monitor:        Unwrap<Monitor>,
-    sprites_drawer: Box<dyn SpritesDrawer>,
+    glfw:    GLFWManager,
+    monitor: Unwrap<Monitor>,
 }
 
 impl Screen {
@@ -62,7 +60,7 @@ impl Screen {
 
     #[cfg(not(any(mobile, macos)))]
     fn adjust_size(monitor: Monitor, size: Size) -> Size {
-        dbg!(size * monitor.scale)
+        size * monitor.scale
     }
 
     #[cfg(macos)]
@@ -132,15 +130,15 @@ impl Screen {
         #[cfg(desktop)]
         self.glfw.set_size(size);
         self.on_size_changed(size);
-        error!("Debug: {:?}", self.ui.root_view.frame());
+        trace!("Screen size: {:?}", self.ui.root_view.frame());
         self
     }
 
     fn on_size_changed(&mut self, size: Size) {
         self.ui.drawer.set_size(size);
         self.ui.root_view.set_frame(size);
-        self.sprites_drawer.set_resolution(size);
-        self.sprites_drawer.set_camera_position((0, 0).into());
+        self.ui.sprites_drawer.set_resolution(size);
+        self.ui.sprites_drawer.set_camera_position((0, 0).into());
         self.update();
     }
 
@@ -160,28 +158,23 @@ impl Screen {
 
 impl Screen {
     pub fn new(size: impl Into<Size>, assets_path: &Path) -> Self {
-        let mut assets = Assets::new(assets_path);
+        trace!("Creating screen");
 
         #[cfg(desktop)]
         let glfw = GLFWManager::new();
+        #[cfg(desktop)]
+        trace!("GLFWManager: OK");
 
-        assets.init_gl_data();
+        let assets = Assets::new(assets_path);
+        trace!("Assets: Ok");
 
-        let assets = Rc::new(assets);
-
-        let sprites_drawer: Box<dyn SpritesDrawer> = TESpritesDrawer::new(assets.clone());
-
-        error!("Sprites Drawer: OK");
-
-        error!("UILayer: OK");
-
-        let ui = UILayer::new(assets, sprites_drawer.to_rglica());
+        let ui = UILayer::new(assets);
+        trace!("UILayer: OK");
 
         Self {
             ui,
             #[cfg(desktop)]
             glfw,
-            sprites_drawer,
             monitor: Default::default(),
         }
         .init(size.into())

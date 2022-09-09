@@ -3,10 +3,7 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 
-use test_engine::{paths::home, Screen};
-
-#[macro_use]
-extern crate log;
+use test_engine::{paths::home, rtools::init_log, Screen};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -21,6 +18,8 @@ mod ui_test;
 
 #[tokio::main]
 async fn main() {
+    init_log();
+
     let mut screen = Screen::new((1000, 600), &home().join("test_engine"));
 
     screen.ui.set_view::<TestGameView>();

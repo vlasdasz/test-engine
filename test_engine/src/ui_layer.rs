@@ -11,19 +11,22 @@ use sprites::SpritesDrawer;
 use ui::input::TouchEvent;
 use ui::{basic::RootView, input::UIEvents, Touch, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::{assets::Assets, debug_view::DebugView, main_view::MainView, ui_drawer::TEUIDrawer, Keymap};
+use crate::{
+    assets::Assets, debug_view::DebugView, main_view::MainView, sprites_drawer::TESpritesDrawer,
+    ui_drawer::TEUIDrawer, Keymap,
+};
 
 pub struct UILayer {
+    pub sprites_drawer: Box<dyn SpritesDrawer>,
+    pub drawer:         TEUIDrawer,
+
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
     pub root_view:          Box<RootView>,
     pub debug_view:         Rglica<DebugView>,
     pub view:               Rglica<dyn MainView>,
 
-    pub sprites_drawer: Rglica<dyn SpritesDrawer>,
-
     pub keymap: Rc<Keymap>,
-    pub drawer: TEUIDrawer,
 
     pub fps:        u64,
     pub prev_time:  i64,
@@ -33,27 +36,28 @@ pub struct UILayer {
 }
 
 impl UILayer {
-    pub fn new(assets: Rc<Assets>, sprites_drawer: Rglica<dyn SpritesDrawer>) -> Box<Self> {
+    pub fn new(assets: Rc<Assets>) -> Box<Self> {
         Box::new(Self {
+            sprites_drawer: TESpritesDrawer::new(assets.clone()),
+            drawer:         TEUIDrawer::new(assets),
+
             ui_cursor_position: Default::default(),
-            cursor_position: Default::default(),
-            root_view: RootView::make_root(),
-            debug_view: Default::default(),
-            view: Default::default(),
-            sprites_drawer,
-            keymap: Default::default(),
-            drawer: TEUIDrawer::new(assets),
-            fps: Default::default(),
-            prev_time: Default::default(),
-            frame_time: Default::default(),
-            scale: 1.0,
+            cursor_position:    Default::default(),
+            root_view:          RootView::make_root(),
+            debug_view:         Default::default(),
+            view:               Default::default(),
+            keymap:             Default::default(),
+            fps:                Default::default(),
+            prev_time:          Default::default(),
+            frame_time:         Default::default(),
+            scale:              1.0,
         })
     }
 }
 
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
-        error!("{:?}", touch);
+        // trace!("{:?}", touch);
         let level_touch = touch;
         if Platform::DESKTOP {
             touch.position = self.ui_cursor_position;
@@ -73,7 +77,7 @@ impl UILayer {
         let mut view: Box<dyn MainView> = T::boxed();
         self.view = view.to_rglica();
         view.set_ui(self.to_rglica());
-        view.set_sprites_drawer(self.sprites_drawer);
+        view.set_sprites_drawer(self.sprites_drawer.to_rglica());
         self.root_view.add_boxed(view);
     }
 

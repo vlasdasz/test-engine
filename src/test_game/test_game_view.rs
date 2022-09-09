@@ -1,3 +1,4 @@
+use log::*;
 use serde::{Deserialize, Serialize};
 use test_engine::{
     audio::Sound,
@@ -132,12 +133,12 @@ impl TestGameView {
             this.async_task.on_tap.set(this, |this, _| {
                 GET_USERS.get(this, |this, error, result| {
                     if let Some(error) = error {
-                        dbg!(&error);
+                        error!("{:?}", error);
                         this.alert(error);
                         return;
                     }
 
-                    dbg!(&result);
+                    info!("{:?}", result);
 
                     if let Some(user) = result.first() {
                         this.async_task.set_text(user.login.clone());
