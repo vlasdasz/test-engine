@@ -98,6 +98,7 @@ impl TestGameView {
             .val(5);
 
         self.left_stick = self.add_view();
+        self.place().bl().val(10);
 
         self.test_view = self.add_view();
         self.test_view

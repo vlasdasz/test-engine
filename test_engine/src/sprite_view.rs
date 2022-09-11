@@ -39,8 +39,7 @@ impl SpriteView {
             .set_hidden(true)
             .set_image(Image::get("delete.png"))
             .place()
-            .width(20)
-            .height(20)
+            .size(20, 20)
             .top()
             .left();
 

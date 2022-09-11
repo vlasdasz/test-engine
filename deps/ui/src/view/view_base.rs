@@ -47,24 +47,3 @@ pub struct ViewBase {
 #[view]
 #[derive(Default)]
 pub struct BaseView {}
-
-// impl View for ViewBase {
-//     fn view(&self) -> &ViewBase {
-//         self
-//     }
-//
-//     fn view_mut(&mut self) -> &mut Self {
-//         self
-//     }
-//
-//     fn rglica(&self) -> Rglica<dyn View> {
-//         (self as &dyn View).to_rglica()
-//     }
-// }
-//
-// impl Deref for ViewBase {
-//     type Target = Self;
-//     fn deref(&self) -> &Self::Target {
-//         self
-//     }
-// }

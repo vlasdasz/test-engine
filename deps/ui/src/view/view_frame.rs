@@ -37,27 +37,27 @@ impl<T: ?Sized + View> ViewFrame for T {
     }
 
     fn x(&self) -> f32 {
-        self.frame().origin.x
+        self.frame.origin.x
     }
 
     fn y(&self) -> f32 {
-        self.frame().origin.y
+        self.frame.origin.y
     }
 
     fn max_x(&self) -> f32 {
-        self.frame().max_x()
+        self.frame.max_x()
     }
 
     fn max_y(&self) -> f32 {
-        self.frame().max_y()
+        self.frame.max_y()
     }
 
     fn width(&self) -> f32 {
-        self.frame().size.width
+        self.frame.size.width
     }
 
     fn height(&self) -> f32 {
-        self.frame().size.height
+        self.frame.size.height
     }
 
     fn set_y(&mut self, y: impl IntoF32) -> &mut Self {
