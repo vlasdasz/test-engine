@@ -21,7 +21,6 @@ serde = { version = "1.0", features = ["derive"] }
 test_engine = { path = "test_engine" }
 
 [target.'cfg(target_os="android")'.dependencies]
-android_logger = "0.11"
 android-ndk-sys = "0.2"
 
 [build-dependencies]

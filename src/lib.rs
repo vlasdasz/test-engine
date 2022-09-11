@@ -82,23 +82,9 @@ pub extern "C" fn opengl_ready() {
 #[cfg(android)]
 #[allow(non_snake_case)]
 pub mod android {
-    extern crate android_logger;
-
-    use android_logger::{Config, FilterBuilder};
-    use log::Level;
-
-    fn setup_logger() {
-        android_logger::init_once(
-            Config::default()
-                .with_min_level(Level::Trace)
-                .with_tag("test_engine")
-                .with_filter(FilterBuilder::new().parse("debug,hello::crate=error").build()),
-        );
-
-        error!("setup_logger");
-    }
 
     use android_ndk_sys::{jclass, jobject, JNIEnv};
+    use test_engine::rtools::init_log;
 
     use super::*;
 
@@ -108,7 +94,7 @@ pub mod android {
         _: jclass,
         asset_manager: jobject,
     ) {
-        setup_logger();
+        init_log();
         test_engine::rtools::file::set_asset_manager(env, asset_manager);
     }
 

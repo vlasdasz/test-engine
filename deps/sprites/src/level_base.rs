@@ -6,8 +6,8 @@ use rapier2d::{
     na::Vector2,
     parry::partitioning::IndexedData,
     prelude::{
-        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters,
-        IslandManager, MultibodyJointSet, NarrowPhase, PhysicsPipeline,
+        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters, IslandManager,
+        MultibodyJointSet, NarrowPhase, PhysicsPipeline,
     },
 };
 use rtools::{address::Address, Event, Rglica, ToRglica};
