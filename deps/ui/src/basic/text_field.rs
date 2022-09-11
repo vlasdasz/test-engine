@@ -13,7 +13,7 @@ impl ViewCallbacks for TextField {
         self.label = self.add_view();
         self.label.place().as_background();
 
-        UIEvents::get().on_key_pressed.set(self, |this, event| {
+        UIEvents::get().key_pressed.set(self, |this, event| {
             this.label.append_text(event.0);
         });
     }
@@ -21,6 +21,6 @@ impl ViewCallbacks for TextField {
 
 impl Drop for TextField {
     fn drop(&mut self) {
-        UIEvents::get().on_key_pressed.unsubscribe()
+        UIEvents::get().key_pressed.unsubscribe()
     }
 }

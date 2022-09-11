@@ -9,7 +9,7 @@ use rtools::{platform::Platform, IntoF32, Rglica, ToRglica};
 use sprites::SpritesDrawer;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
-use ui::{basic::RootView, input::UIEvents, Touch, ViewFrame, ViewSubviews, ViewTouch};
+use ui::{basic::RootView, Touch, ViewFrame, ViewSubviews, ViewTouch};
 
 use crate::{
     assets::Assets, debug_view::DebugView, main_view::MainView, sprites_drawer::TESpritesDrawer,
@@ -124,9 +124,9 @@ impl UILayer {
     }
 
     pub fn setup_events(&mut self) {
-        let events = GlEvents::get();
+        let ev = GlEvents::get();
 
-        events.on_key_pressed.set(self, |this, a| {
+        ev.key_pressed.set(self, |this, a| {
             let key = a.0;
             let action = a.1;
 
@@ -146,15 +146,13 @@ impl UILayer {
 
             this.on_key_pressed(&key);
 
-            UIEvents::get().on_key_pressed.trigger((key, action.into()));
+            ui::input::UIEvents::get()
+                .key_pressed
+                .trigger((key, action.into()));
         });
 
-        events
-            .on_mouse_click
-            .set(self, |this, a| this.on_mouse_click(a.0, a.1));
+        ev.mouse_click.set(self, |this, a| this.on_mouse_click(a.0, a.1));
 
-        events
-            .on_cursor_moved
-            .set(self, |this, a| this.on_cursor_moved(a))
+        ev.cursor_moved.set(self, |this, a| this.on_cursor_moved(a))
     }
 }

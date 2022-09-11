@@ -29,11 +29,11 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        GlEvents::get().on_size_changed.set(self, |this, size| {
+        GlEvents::get().size_changed.set(self, |this, size| {
             this.on_size_changed(size);
         });
 
-        GlEvents::get().on_frame_drawn.set(self, |this, _| this.update());
+        GlEvents::get().frame_drawn.set(self, |this, _| this.update());
     }
 
     fn init(mut self, _size: Size) -> Self {

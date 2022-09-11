@@ -28,22 +28,22 @@ impl GLFWManager {
                         if key == glfw::Key::Escape {
                             self.window.set_should_close(true)
                         }
-                        events.on_key_pressed.trigger((key, action))
+                        events.key_pressed.trigger((key, action))
                     }
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
-                        events.on_cursor_moved.trigger((xpos, ypos).into())
+                        events.cursor_moved.trigger((xpos, ypos).into())
                     }
                     glfw::WindowEvent::Size(width, height) => {
-                        events.on_size_changed.trigger((width, height).into())
+                        events.size_changed.trigger((width, height).into())
                     }
                     glfw::WindowEvent::MouseButton(btn, action, _) => {
-                        events.on_mouse_click.trigger((btn, action))
+                        events.mouse_click.trigger((btn, action))
                     }
                     _ => {}
                 }
             }
 
-            events.on_frame_drawn.trigger(());
+            events.frame_drawn.trigger(());
             self.window.swap_buffers();
         }
     }
