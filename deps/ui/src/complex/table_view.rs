@@ -14,7 +14,7 @@ impl TableView {
     pub fn reload_data(&mut self) {
         self.remove_all_subviews();
         for i in 0..self.data_source.number_of_cells() {
-            self.add_boxed(self.data_source.cell_for_index(i));
+            self.add_subview(self.data_source.cell_for_index(i));
         }
     }
 }

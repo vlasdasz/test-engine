@@ -43,7 +43,7 @@ impl UILayer {
 
             ui_cursor_position: Default::default(),
             cursor_position:    Default::default(),
-            root_view:          RootView::make_root(),
+            root_view:          RootView::new(),
             debug_view:         Default::default(),
             view:               Default::default(),
             keymap:             Default::default(),
@@ -78,7 +78,7 @@ impl UILayer {
         self.view = view.to_rglica();
         view.set_ui(self.to_rglica());
         view.set_sprites_drawer(self.sprites_drawer.to_rglica());
-        self.root_view.add_boxed(view);
+        self.root_view.add_subview(view);
     }
 
     pub fn scale(&self) -> f32 {

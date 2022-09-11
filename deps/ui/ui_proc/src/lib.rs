@@ -22,9 +22,18 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     quote! {
         #stream
         impl View for #name {
-            fn view(&self) -> &ViewBase { &self.view }
-            fn view_mut(&mut self) -> &mut ViewBase { &mut self.view }
             fn rglica(&self) -> Rglica<dyn View> { (self as &dyn View).to_rglica() }
+        }
+        impl std::ops::Deref for #name {
+            type Target = ViewBase;
+            fn deref(&self) -> &ViewBase {
+                &self.view
+            }
+        }
+        impl std::ops::DerefMut for #name {
+            fn deref_mut(&mut self) -> &mut ViewBase {
+                &mut self.view
+            }
         }
     }
     .into()

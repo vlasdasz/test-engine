@@ -4,7 +4,7 @@ use rtools::{Boxed, Rglica, ToRglica};
 use crate::{
     complex::{DrawMode, DrawingView},
     view,
-    view::{ViewFrame, ViewSubviews},
+    view::{ViewFrame, ViewLayout, ViewSubviews},
     View, ViewBase, ViewCallbacks,
 };
 
@@ -31,9 +31,10 @@ impl CircleView {
 
 impl ViewCallbacks for CircleView {
     fn setup(&mut self) {
-        let size = (self.radius, self.radius);
-        self.drawing = self.add_view_with_frame(size);
-        self.set_frame(size);
+        let size = self.radius;
+        self.place().size(size, size);
+        self.drawing = self.add_view();
+        self.drawing.place().size(size, size);
     }
 }
 

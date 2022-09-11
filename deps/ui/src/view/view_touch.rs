@@ -12,8 +12,8 @@ pub trait ViewTouch {
 
 impl<T: ?Sized + View> ViewTouch for T {
     fn on_touch(&self) -> &Event<Touch> {
-        self.view().touch_enabled.replace(true);
-        &self.view().on_touch
+        self.touch_enabled.replace(true);
+        &self.on_touch
     }
 
     fn check_touch(&mut self, touch: &mut Touch) -> bool {

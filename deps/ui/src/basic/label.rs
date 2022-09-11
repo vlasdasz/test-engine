@@ -12,7 +12,7 @@ use crate::{
     basic::label_layout::LabelLayout,
     view,
     view::{ViewData, ViewFrame, ViewSubviews},
-    Font, ImageView, View, ViewBase, ViewCallbacks, ViewLayout,
+    BaseView, Font, ImageView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
@@ -75,7 +75,7 @@ impl Label {
         let image = Image::draw(self.text.clone(), size, |image| {
             let drawer = self.drawer();
 
-            let mut content = ViewBase::default();
+            let mut content = BaseView::default();
             content.set_frame(size);
 
             for glyph in self.layout.glyphs() {

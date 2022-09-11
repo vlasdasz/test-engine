@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
-    ui::{basic::Button, view, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews},
+    ui::{basic::Button, view, BaseView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews},
     ui_layer::UILayer,
 };
 
@@ -12,9 +12,9 @@ use crate::TestGameView;
 #[view]
 #[derive(Default, Debug)]
 pub struct UITestView {
-    container: Rglica<ViewBase>,
-    top_view:  Rglica<ViewBase>,
-    test:      Rglica<ViewBase>,
+    container: Rglica<BaseView>,
+    top_view:  Rglica<BaseView>,
+    test:      Rglica<BaseView>,
     back:      Rglica<Button>,
     ui:        Rglica<UILayer>,
 }

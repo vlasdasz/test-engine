@@ -10,12 +10,12 @@ pub(crate) trait ViewInternal {
 
 impl<T: ?Sized + View> ViewInternal for T {
     fn root_view(&self) -> Rglica<RootView> {
-        self.view().root_view
+        self.root_view
     }
 
     fn super_absolute_frame(&self) -> &Rect {
-        if self.view().superview.is_ok() {
-            return self.view().superview.absolute_frame();
+        if self.superview.is_ok() {
+            return self.superview.absolute_frame();
         }
         self.absolute_frame()
     }

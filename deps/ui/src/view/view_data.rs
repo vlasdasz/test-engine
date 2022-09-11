@@ -22,59 +22,59 @@ pub trait ViewData {
 
 impl<T: ?Sized + View> ViewData for T {
     fn color(&self) -> &Color {
-        &self.view().color
+        &self.color
     }
 
     fn set_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.view_mut().color = color.into();
+        self.color = color.into();
         self
     }
 
     fn border_color(&self) -> &Color {
-        &self.view().border_color
+        &self.border_color
     }
 
     fn set_border_color(&mut self, color: Color) -> &mut Self {
-        self.view_mut().border_color = color;
+        self.border_color = color;
         self
     }
 
     fn corner_radius(&self) -> f32 {
-        self.view().corner_radius
+        self.corner_radius
     }
 
     fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self {
-        self.view_mut().corner_radius = radius.into_f32();
+        self.corner_radius = radius.into_f32();
         self
     }
 
     fn image(&self) -> Handle<Image> {
-        self.view().image
+        self.image
     }
 
     fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
-        self.view_mut().image = image;
+        self.image = image;
         self
     }
 
     fn is_hidden(&self) -> bool {
-        self.view().is_hidden
+        self.is_hidden
     }
 
     fn set_hidden(&mut self, hidden: bool) -> &mut Self {
-        self.view_mut().is_hidden = hidden;
+        self.is_hidden = hidden;
         self
     }
 
     fn drawer(&self) -> Rglica<dyn UIDrawer> {
-        self.view().drawer
+        self.drawer
     }
 
     fn set_drawer(&mut self, drawer: Rglica<dyn UIDrawer>) {
-        self.view_mut().drawer = drawer
+        self.drawer = drawer
     }
 
     fn paths(&self) -> &[PathData] {
-        &self.view().paths
+        &self.paths
     }
 }

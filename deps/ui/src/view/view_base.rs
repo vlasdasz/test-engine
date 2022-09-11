@@ -5,7 +5,7 @@ use gl_image::Image;
 use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
-use crate::{basic::RootView, complex::PathData, layout::Placer, Touch, UIDrawer, View};
+use crate::{basic::RootView, complex::PathData, layout::Placer, view, Touch, UIDrawer, View};
 
 #[derive(Default, Derivative)]
 #[derivative(Debug)]
@@ -44,16 +44,27 @@ pub struct ViewBase {
     pub(crate) drawer: Rglica<dyn UIDrawer>,
 }
 
-impl View for ViewBase {
-    fn view(&self) -> &ViewBase {
-        self
-    }
+#[view]
+#[derive(Default)]
+pub struct BaseView {}
 
-    fn view_mut(&mut self) -> &mut Self {
-        self
-    }
-
-    fn rglica(&self) -> Rglica<dyn View> {
-        (self as &dyn View).to_rglica()
-    }
-}
+// impl View for ViewBase {
+//     fn view(&self) -> &ViewBase {
+//         self
+//     }
+//
+//     fn view_mut(&mut self) -> &mut Self {
+//         self
+//     }
+//
+//     fn rglica(&self) -> Rglica<dyn View> {
+//         (self as &dyn View).to_rglica()
+//     }
+// }
+//
+// impl Deref for ViewBase {
+//     type Target = Self;
+//     fn deref(&self) -> &Self::Target {
+//         self
+//     }
+// }

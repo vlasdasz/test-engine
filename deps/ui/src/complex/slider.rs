@@ -25,7 +25,7 @@ impl ViewCallbacks for Slider {
         let radius = self.width() / 2.0;
         let circle = CircleView::with_radius(radius);
         self.circle = circle.to_rglica();
-        self.add_boxed(circle);
+        self.add_subview(circle);
 
         self.circle.set_color(Color::BLUE);
 

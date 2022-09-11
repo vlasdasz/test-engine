@@ -1,15 +1,11 @@
 use std::ops::DerefMut;
 
-use gm::{
-    flat::{Point, Rect},
-    Color,
-};
-use rtools::{Boxed, Rglica, ToRglica};
+use rtools::{Rglica, ToRglica};
 
 use crate::{
     layout::Placer,
     view::{view_data::ViewData, Alert, ViewInternal},
-    View, ViewBase, ViewFrame,
+    View,
 };
 
 pub trait ViewSubviews {
@@ -18,29 +14,27 @@ pub trait ViewSubviews {
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>];
     fn remove_from_superview(&mut self);
     fn remove_subview_at(&mut self, index: usize);
-    fn add_view_at(&mut self, point: Point);
     fn remove_all_subviews(&mut self);
 
     fn add_view<V: 'static + View>(&mut self) -> Rglica<V>;
     fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> Rglica<V>;
-    fn make_this<V: 'static + View>(&self, make: impl FnOnce(&mut Self, &mut V)) -> Rglica<V>;
-    fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V>;
-    fn add_boxed(&mut self, view: Box<dyn View>);
+    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> Rglica<V>;
+    fn add_subview(&mut self, view: Box<dyn View>);
 
     fn alert(&mut self, message: impl ToString);
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
     fn superview(&self) -> Rglica<dyn View> {
-        self.view().superview
+        self.superview
     }
 
     fn subviews(&self) -> &[Box<dyn View>] {
-        &self.view().subviews
+        &self.subviews
     }
 
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>] {
-        &mut self.view_mut().subviews
+        &mut self.subviews
     }
 
     fn remove_from_superview(&mut self) {
@@ -48,60 +42,44 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_subview_at(&mut self, index: usize) {
-        self.view_mut().subviews.remove(index);
-    }
-
-    fn add_view_at(&mut self, point: Point) {
-        let mut view = ViewBase::boxed();
-        view.set_frame((5, 5))
-            .set_color(Color::random())
-            .set_origin(point);
-        self.add_boxed(view);
+        self.subviews.remove(index);
     }
 
     fn remove_all_subviews(&mut self) {
-        self.view_mut().subviews.clear()
+        self.subviews.clear()
     }
 
     fn add_view<V: 'static + View>(&mut self) -> Rglica<V> {
         let view = V::boxed();
         let result = view.to_rglica();
-        self.add_boxed(view);
+        self.add_subview(view);
         result
     }
 
     fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> Rglica<V> {
         let view = V::boxed();
         let mut result = view.to_rglica();
-        self.add_boxed(view);
+        self.add_subview(view);
         make(result.deref_mut());
         result
     }
 
-    fn make_this<V: 'static + View>(&self, make: impl FnOnce(&mut Self, &mut V)) -> Rglica<V> {
+    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> Rglica<V> {
         let view = V::boxed();
         let mut result = view.to_rglica();
         let mut rglica = self.to_rglica();
-        rglica.add_boxed(view);
+        self.add_subview(view);
         make(rglica.deref_mut(), result.deref_mut());
         result
     }
 
-    fn add_view_with_frame<V: 'static + View>(&mut self, frame: impl Into<Rect>) -> Rglica<V> {
-        let mut view = V::boxed();
-        view.set_frame(frame.into());
-        let result = view.to_rglica();
-        self.add_boxed(view);
-        result
-    }
-
-    fn add_boxed(&mut self, mut view: Box<dyn View>) {
-        view.view_mut().superview = self.rglica();
-        view.view_mut().drawer = self.drawer();
-        view.view_mut().root_view = self.root_view();
-        view.view_mut().placer = Placer::make(view.to_rglica());
+    fn add_subview(&mut self, mut view: Box<dyn View>) {
+        view.superview = self.rglica();
+        view.drawer = self.drawer();
+        view.root_view = self.root_view();
+        view.placer = Placer::make(view.to_rglica());
         view.setup();
-        self.view_mut().subviews.push(view);
+        self.subviews.push(view);
     }
 
     fn alert(&mut self, message: impl ToString) {

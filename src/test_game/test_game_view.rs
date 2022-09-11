@@ -1,5 +1,5 @@
-use log::*;
 use serde::{Deserialize, Serialize};
+use tao_log::infov;
 use test_engine::{
     audio::Sound,
     gm::Color,
@@ -12,8 +12,8 @@ use test_engine::{
     sprite_view::SpriteView,
     sprites::{Control, Player},
     ui::{
-        basic::Button, complex::AnalogStickView, test::test_view::TestView, view, DPadView, View, ViewBase,
-        ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
+        basic::Button, complex::AnalogStickView, test::test_view::TestView, view, BaseView, DPadView, View,
+        ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -109,7 +109,7 @@ impl TestGameView {
             .val(20)
             .size(280, 400);
 
-        self.make_this(|this, view: &mut ViewBase| {
+        self.make_this(|this, view: &mut BaseView| {
             view.place().br().val(10).size(200, 100).all_ver();
 
             this.to_benchmark = view.add_view();
@@ -133,12 +133,12 @@ impl TestGameView {
             this.async_task.on_tap.set(this, |this, _| {
                 GET_USERS.get(this, |this, error, result| {
                     if let Some(error) = error {
-                        error!("{:?}", error);
+                        infov!(&error);
                         this.alert(error);
                         return;
                     }
 
-                    info!("{:?}", result);
+                    infov!(&result);
 
                     if let Some(user) = result.first() {
                         this.async_task.set_text(user.login.clone());

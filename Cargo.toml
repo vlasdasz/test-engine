@@ -12,7 +12,8 @@ name = "test_game_lib"
 crate-type = ["rlib", "staticlib", "dylib"]
 
 [dependencies]
-log = { version = "0.4", features = ["kv_unstable"] }
+log = "0.4"
+tao-log = "1.0"
 tokio = { version = "1.15", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 
