@@ -13,7 +13,7 @@ use test_engine::{
     Image, Level, LevelBase, Sprite,
 };
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct TestGameLevel {
     base:            LevelBase,
     selected_sprite: Option<Rglica<dyn Sprite>>,

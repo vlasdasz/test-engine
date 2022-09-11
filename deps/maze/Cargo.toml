@@ -9,7 +9,7 @@ name = "maze"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-tokio = "1.15"
+tokio = "1.21"
 
 gm = { path = "../gm" }
 rtools = { path = "../rtools" }

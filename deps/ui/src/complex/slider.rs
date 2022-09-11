@@ -1,5 +1,6 @@
 use gm::Color;
 use rtools::{math::clamped_by, Event, Rglica, ToRglica};
+use smart_default::SmartDefault;
 
 use crate::{
     basic::CircleView,
@@ -9,25 +10,24 @@ use crate::{
 };
 
 #[view]
-#[derive(Debug)]
+#[derive(SmartDefault)]
 pub struct Slider {
     circle:    Rglica<CircleView>,
     raw_value: f32,
 
     pub on_change: Event<f32>,
 
+    #[default = 0.0]
     pub start:  f32,
+    #[default = 1.0]
     pub finish: f32,
 }
 
 impl ViewCallbacks for Slider {
     fn setup(&mut self) {
         let radius = self.width() / 2.0;
-        let circle = CircleView::with_radius(radius);
-        self.circle = circle.to_rglica();
-        self.add_subview(circle);
-
-        self.circle.set_color(Color::BLUE);
+        self.circle = self.add_view();
+        self.circle.set_radius(radius).set_color(Color::BLUE);
 
         self.on_touch().set(self, |this, touch| {
             if touch.is_ended() {
@@ -44,19 +44,5 @@ impl ViewCallbacks for Slider {
 
             this.on_change.trigger(this.start + span * this.raw_value);
         });
-    }
-}
-
-impl Default for Slider {
-    fn default() -> Self {
-        Self {
-            view:      Default::default(),
-            circle:    Default::default(),
-            raw_value: Default::default(),
-            on_change: Default::default(),
-
-            start:  0.0,
-            finish: 1.0,
-        }
     }
 }

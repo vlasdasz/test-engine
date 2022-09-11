@@ -12,7 +12,7 @@ crate-type = ["rlib", "staticlib"]
 log = "0.4"
 fontdue = "0.6"
 derivative = "2.2"
-lazy_static = "1.4"
+smart-default = "0.6"
 
 gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }

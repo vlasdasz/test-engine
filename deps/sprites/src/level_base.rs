@@ -1,19 +1,21 @@
-use std::{fmt::Debug, ops::Deref};
+use std::ops::Deref;
 
 use gm::flat::Point;
 use rapier2d::{
-    geometry::ContactEvent,
+    dynamics::ImpulseJointSet,
     na::Vector2,
     parry::partitioning::IndexedData,
     prelude::{
-        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters, IslandManager, JointSet,
-        NarrowPhase, PhysicsPipeline,
+        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters,
+        IslandManager, MultibodyJointSet, NarrowPhase, PhysicsPipeline,
     },
 };
 use rtools::{address::Address, Event, Rglica, ToRglica};
+use smart_default::SmartDefault;
 
 use crate::{sets::Sets, Level, Sprite, SpritesDrawer};
 
+#[derive(SmartDefault)]
 pub struct LevelBase {
     pub drawer: Rglica<dyn SpritesDrawer>,
 
@@ -26,13 +28,20 @@ pub struct LevelBase {
 
     pub(crate) sprites: Vec<Box<dyn Sprite>>,
     pub(crate) sets:    Sets,
+
+    #[default(Vector2::new(0.0, -9.81))]
     pub(crate) gravity: Vector2<f32>,
 
     pub(crate) physics_pipeline: PhysicsPipeline,
+
     pub(crate) island_manager:   IslandManager,
+    #[default(BroadPhase::new())]
     pub(crate) broad_phase:      BroadPhase,
+    #[default(NarrowPhase::new())]
     pub(crate) narrow_phase:     NarrowPhase,
-    pub(crate) joint_set:        JointSet,
+    pub(crate) impulse_joints:   ImpulseJointSet,
+    pub(crate) multibody_joints: MultibodyJointSet,
+    #[default(CCDSolver::new())]
     pub(crate) ccd_solver:       CCDSolver,
 
     integration_parameters: IntegrationParameters,
@@ -54,28 +63,30 @@ impl LevelBase {
             &mut self.narrow_phase,
             &mut self.sets.rigid_body,
             &mut self.sets.collider,
-            &mut self.joint_set,
+            &mut self.impulse_joints,
+            &mut self.multibody_joints,
             &mut self.ccd_solver,
             &(),
             &event_handler,
         );
 
         while let Ok(contact_event) = contact_recv.try_recv() {
-            if let ContactEvent::Started(a, b) = contact_event {
-                for sprite in &self.colliding_sprites {
-                    let handle = sprite.data().collider_handle.unwrap();
+            for sprite in &self.colliding_sprites {
+                let handle = sprite.data().collider_handle.unwrap();
 
-                    let other_index = if b.index() == handle.index() {
-                        a
-                    } else if a.index() == handle.index() {
-                        b
-                    } else {
-                        panic!()
-                    };
+                let a = contact_event.collider1;
+                let b = contact_event.collider2;
 
-                    if let Some(other) = self.sprite_with_index(other_index.index()) {
-                        sprite.to_rglica().data_mut().on_collision.trigger(other);
-                    }
+                let other_index = if b.index() == handle.index() {
+                    a
+                } else if a.index() == handle.index() {
+                    b
+                } else {
+                    panic!()
+                };
+
+                if let Some(other) = self.sprite_with_index(other_index.index()) {
+                    sprite.to_rglica().data_mut().on_collision.trigger(other);
                 }
             }
         }
@@ -110,44 +121,13 @@ impl LevelBase {
                 rigid_body,
                 &mut self.island_manager,
                 &mut self.sets.collider,
-                &mut self.joint_set,
+                &mut self.impulse_joints,
+                &mut self.multibody_joints,
+                true,
             );
         }
 
         self.sprites.remove(index);
-    }
-}
-
-impl Default for LevelBase {
-    fn default() -> Self {
-        Self {
-            colliding_sprites: Default::default(),
-
-            sprites: Default::default(),
-            drawer:  Default::default(),
-
-            cursor_position: Default::default(),
-
-            on_tap:             Default::default(),
-            on_sprite_selected: Default::default(),
-
-            sets:             Default::default(),
-            gravity:          Vector2::new(0.0, -9.81),
-            physics_pipeline: Default::default(),
-            island_manager:   IslandManager::new(),
-            broad_phase:      BroadPhase::new(),
-            narrow_phase:     NarrowPhase::new(),
-            joint_set:        JointSet::new(),
-            ccd_solver:       CCDSolver::new(),
-
-            integration_parameters: Default::default(),
-        }
-    }
-}
-
-impl Debug for LevelBase {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        "LevelBase".fmt(f)
     }
 }
 

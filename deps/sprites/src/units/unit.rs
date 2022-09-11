@@ -14,7 +14,7 @@ pub struct Unit {
 impl Unit {
     pub fn enable_collision_detection(&mut self) -> &mut Self {
         self.collider_mut()
-            .set_active_events(ActiveEvents::CONTACT_EVENTS);
+            .set_active_events(ActiveEvents::COLLISION_EVENTS);
 
         let rglica = (self as &dyn Sprite).to_rglica();
         self.level_mut().base_mut().colliding_sprites.push(rglica);

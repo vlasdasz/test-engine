@@ -1,5 +1,5 @@
 use gm::{flat::PointsPath, Color};
-use rtools::{Boxed, Rglica, ToRglica};
+use rtools::{IntoF32, Rglica, ToRglica};
 
 use crate::{
     complex::{DrawMode, DrawingView},
@@ -9,7 +9,7 @@ use crate::{
 };
 
 #[view]
-#[derive(Debug)]
+#[derive(Default)]
 pub struct CircleView {
     drawing: Rglica<DrawingView>,
     color:   Color,
@@ -17,13 +17,23 @@ pub struct CircleView {
 }
 
 impl CircleView {
+    pub fn set_radius(&mut self, radius: impl IntoF32) -> &mut Self {
+        self.radius = radius.into_f32();
+        self.redraw();
+        self
+    }
+
     pub fn set_color(&mut self, color: Color) {
         self.color = color;
+        self.redraw();
+    }
+
+    fn redraw(&mut self) {
         self.drawing.remove_all_paths();
         let frame = self.frame().with_zero_origin();
         self.drawing.add_path(
             PointsPath::circle_with(frame.size.center(), frame.size.width, 50),
-            &color,
+            &self.color,
             DrawMode::Fill,
         );
     }
@@ -31,26 +41,10 @@ impl CircleView {
 
 impl ViewCallbacks for CircleView {
     fn setup(&mut self) {
+        self.radius = 10.0;
         let size = self.radius;
         self.place().size(size, size);
         self.drawing = self.add_view();
         self.drawing.place().size(size, size);
-    }
-}
-
-impl CircleView {
-    pub fn with_radius(radius: f32) -> Box<Self> {
-        Box::new(Self {
-            view: Default::default(),
-            drawing: Default::default(),
-            color: Default::default(),
-            radius,
-        })
-    }
-}
-
-impl Boxed for CircleView {
-    fn boxed() -> Box<Self> {
-        panic!("Initialize CircleView using CircleView::with_radius")
     }
 }

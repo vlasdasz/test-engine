@@ -32,7 +32,7 @@ const API: API = API::new("ec2-18-217-89-172.us-east-2.compute.amazonaws.com");
 const GET_USERS: GetRequest<Vec<User>> = API.get("get_users");
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct TestGameView {
     level:       TestGameLevel,
     dpad:        Rglica<DPadView>,

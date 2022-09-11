@@ -1,6 +1,5 @@
 use std::{
     borrow::Borrow,
-    fmt::Debug,
     ops::{Deref, DerefMut},
 };
 
@@ -10,7 +9,7 @@ use rtools::{Rglica, ToRglica};
 
 use crate::{LevelBase, Sprite, SpritesDrawer};
 
-pub trait Level: Debug {
+pub trait Level {
     fn setup(&mut self) {}
 
     fn update(&mut self) {}
