@@ -127,6 +127,14 @@ impl Placer {
 }
 
 impl Placer {
+    pub fn tl(&mut self) -> &mut Self {
+        self.top().left()
+    }
+
+    pub fn tr(&mut self) -> &mut Self {
+        self.top().right()
+    }
+
     pub fn bl(&mut self) -> &mut Self {
         self.bottom().left()
     }
@@ -200,9 +208,7 @@ impl Placer {
         let frame = frame.deref_mut();
         match tiling {
             Tiling::Background => *frame = self.s_frame.with_zero_origin(),
-            Tiling::Horizontally => {
-                unimplemented!()
-            }
+            Tiling::Horizontally => place_horizontally(self.view.subviews_mut()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut()),
         }
     }
@@ -235,5 +241,35 @@ where
 
     for (i, view) in views.iter_mut().enumerate() {
         view.set_frame((0.0, i as f32 * height, width, height));
+    }
+}
+
+fn place_horizontally<T, Ref, Arr>(mut views: Arr)
+where
+    T: View + ?Sized,
+    Ref: DerefMut<Target = T>,
+    Arr: AsMut<[Ref]>,
+{
+    let views = views.as_mut();
+
+    if views.is_empty() {
+        return;
+    }
+
+    let mut last = views.last_mut().unwrap().to_rglica();
+
+    if views.len() == 1 {
+        let back = last.super_frame().with_zero_origin();
+        last.set_frame(back);
+        return;
+    }
+
+    let super_frame = *last.superview().frame();
+
+    let width = super_frame.width() / views.len() as f32;
+    let height = super_frame.height();
+
+    for (i, view) in views.iter_mut().enumerate() {
+        view.set_frame((i as f32 * width, 0, width, height));
     }
 }

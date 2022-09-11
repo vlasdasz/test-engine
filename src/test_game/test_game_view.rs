@@ -57,10 +57,6 @@ impl TestGameView {
         self.dpad
             .on_press
             .set(&self.level.player, |player, dir| player.move_by_direction(dir));
-
-        self.left_stick.on_change.set(&self.level.player, |player, dir| {
-            player.add_impulse(dir);
-        });
     }
 
     fn setup_ui(&mut self) {
@@ -77,7 +73,7 @@ impl TestGameView {
         self.set_frame((10, 10, 1000, 500));
 
         self.sprite_view = self.add_view();
-        self.sprite_view.place().bl().val(10).size(250, 50);
+        self.sprite_view.place().tr().val(10).size(400, 80);
 
         self.level
             .base()
@@ -98,7 +94,10 @@ impl TestGameView {
             .val(5);
 
         self.left_stick = self.add_view();
-        self.place().bl().val(10);
+        self.left_stick.place().bl().val(10).size(80, 80);
+        self.left_stick.on_change.set(&self.level.player, |player, dir| {
+            player.add_impulse(dir);
+        });
 
         self.test_view = self.add_view();
         self.test_view
@@ -111,7 +110,12 @@ impl TestGameView {
             .size(280, 400);
 
         self.make_this(|this, view: &mut BaseView| {
-            view.place().br().val(10).size(200, 100).all_ver();
+            view.place()
+                .bottom()
+                .val(10)
+                .center_hor()
+                .size(200, 100)
+                .all_ver();
 
             this.to_benchmark = view.add_view();
             this.to_benchmark.set_text("Benchmark");
