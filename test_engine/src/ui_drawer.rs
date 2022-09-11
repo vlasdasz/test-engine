@@ -3,7 +3,7 @@
 use std::{borrow::Borrow, cell::RefCell, collections::HashMap, ops::DerefMut, rc::Rc};
 
 use gl_image::Image;
-use gl_wrapper::GLWrapper;
+use gl_wrapper::{buffers::Buffers, GLWrapper, Shader};
 use gm::{
     flat::{PointsPath, Rect, Size},
     Color,
@@ -19,7 +19,6 @@ use crate::assets::Assets;
 type RoundStorage = HashMap<u64, (PathData, Size)>;
 
 pub struct TEUIDrawer {
-    pub assets:      Rc<Assets>,
     pub window_size: Size,
 
     round_storage: RefCell<RoundStorage>,
@@ -29,13 +28,12 @@ pub struct TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    pub fn new(assets: Rc<Assets>) -> TEUIDrawer {
+    pub fn new() -> TEUIDrawer {
         TEUIDrawer {
-            assets,
-            window_size: Default::default(),
+            window_size:   Default::default(),
             round_storage: Default::default(),
-            scale: 1.0,
-            screen_scale: 1.0,
+            scale:         1.0,
+            screen_scale:  1.0,
         }
     }
 
@@ -79,7 +77,7 @@ impl TEUIDrawer {
         let needs_stensil = view.corner_radius() > 0.0;
 
         if needs_stensil {
-            self.set_viewport(view.frame());
+            GLWrapper::set_viewport(self.convert_viewport(view.frame()));
 
             GLWrapper::start_stensil();
 
@@ -93,7 +91,9 @@ impl TEUIDrawer {
         self.fill(view.absolute_frame(), view.color());
 
         if let Some(image) = view.image().get() {
-            self.draw_image(image, view.absolute_frame(), view.color(), false);
+            let frame = &image.size.fit_in(view.absolute_frame());
+            //self.draw_image(image, &self.convert_viewport(frame),
+            // view.color());
         }
 
         if view.border_color().is_visible() {
@@ -117,12 +117,17 @@ impl TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    fn set_viewport(&self, rect: impl Borrow<Rect>) {
-        GLWrapper::set_ui_viewport(
-            self.window_size.height,
-            self.screen_scale,
-            rect.borrow() * self.scale,
-        );
+    pub fn convert_viewport(&self, rect: impl Borrow<Rect>) -> Rect {
+        let scale = self.screen_scale;
+        let rect = rect.borrow() * self.scale;
+
+        (
+            rect.origin.x * scale,
+            (self.window_size.height - rect.origin.y - rect.size.height) * scale,
+            rect.size.width * scale,
+            rect.size.height * scale,
+        )
+            .into()
     }
 }
 
@@ -146,45 +151,28 @@ impl TEUIDrawer {
 
 impl UIDrawer for TEUIDrawer {
     fn reset_viewport(&self) {
-        GLWrapper::set_ui_viewport(self.window_size.height, self.screen_scale, self.window_size);
+        let frame = self.convert_viewport(&self.window_size.into());
+        GLWrapper::set_viewport(frame);
     }
 
     fn fill(&self, rect: &Rect, color: &Color) {
-        self.set_viewport(rect);
-        self.assets.shaders.ui.enable().set_color(color);
-        self.assets.buffers.full.draw();
+        GLWrapper::set_viewport(self.convert_viewport(rect));
+        Assets::get().shaders.ui.enable().set_color(color);
+        Buffers::get().full.draw();
     }
 
     fn outline(&self, rect: &Rect, color: &Color) {
-        self.set_viewport(rect);
-        self.assets.shaders.ui.enable().set_color(color);
-        self.assets.buffers.full_outline.draw();
-    }
-
-    fn draw_image(&self, image: &Image, rect: &Rect, color: &Color, raw_frame: bool) {
-        if image.is_monochrome() {
-            self.assets.shaders.ui_monochrome.enable().set_color(color)
-        } else {
-            self.assets.shaders.ui_texture.enable()
-        }
-        .set_flipped(image.flipped)
-        .set_flipped_y(image.flipped_y);
-
-        if raw_frame {
-            GLWrapper::set_viewport(*rect);
-        } else {
-            self.set_viewport(&image.size.fit_in(rect));
-        }
-        image.bind();
-        self.assets.buffers.full_image.draw();
+        GLWrapper::set_viewport(self.convert_viewport(rect));
+        Assets::get().shaders.ui.enable().set_color(color);
+        Buffers::get().full_outline.draw();
     }
 
     fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>) {
         if rect.size.is_invalid() {
             return;
         }
-        self.set_viewport(rect);
-        self.assets
+        GLWrapper::set_viewport(self.convert_viewport(rect));
+        Assets::get()
             .shaders
             .ui_path
             .enable()

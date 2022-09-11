@@ -1,8 +1,16 @@
 use std::{ffi::c_void, hash::Hash, path::Path};
 
-use gl_wrapper::{buffers::FrameBuffer, image_loader::ImageLoader, GLWrapper};
-use gm::{flat::Size, Color};
+use gl_wrapper::{
+    buffers::{Buffers, FrameBuffer},
+    image_loader::ImageLoader,
+    GLWrapper, Shader,
+};
+use gm::{
+    flat::{Rect, Size},
+    Color,
+};
 use image::GenericImageView;
+use log::error;
 use rtools::{
     data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
     file::File,
@@ -105,4 +113,19 @@ impl LoadFromPath for Image {
             channels as u32,
         )
     }
+}
+
+pub fn draw_image(image: &Image, rect: &Rect, color: &Color, shader: &Shader, color_shader: &Shader) {
+    if image.is_monochrome() {
+        shader.enable().set_color(color)
+    } else {
+        color_shader.enable()
+    }
+    .set_flipped(image.flipped)
+    .set_flipped_y(image.flipped_y);
+
+    GLWrapper::set_viewport(*rect);
+
+    image.bind();
+    Buffers::get().full_image.draw();
 }

@@ -36,10 +36,10 @@ pub struct UILayer {
 }
 
 impl UILayer {
-    pub fn new(assets: Rc<Assets>) -> Box<Self> {
+    pub fn new() -> Box<Self> {
         Box::new(Self {
-            sprites_drawer: TESpritesDrawer::new(assets.clone()),
-            drawer:         TEUIDrawer::new(assets),
+            sprites_drawer: TESpritesDrawer::new(),
+            drawer:         TEUIDrawer::new(),
 
             ui_cursor_position: Default::default(),
             cursor_position:    Default::default(),

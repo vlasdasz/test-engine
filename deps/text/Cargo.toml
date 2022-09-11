@@ -1,0 +1,18 @@
+[package]
+name = "text"
+version = "0.1.0"
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2021"
+
+[lib]
+name = "text"
+crate-type = ["rlib", "staticlib"]
+
+[dependencies]
+log = "0.4"
+fontdue = "0.7"
+
+gm = { path = "../gm" }
+rtools = { path = "../rtools" }
+gl_image = { path = "../gl_image" }
+

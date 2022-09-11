@@ -69,34 +69,46 @@ impl Rect {
     }
 }
 
-impl From<Size> for Rect {
+impl const From<Size> for Rect {
     fn from(size: Size) -> Self {
         Rect {
-            origin: Default::default(),
+            origin: Point { x: 0.0, y: 0.0 },
             size,
         }
     }
 }
 
-impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for Rect {
+impl<X, Y, W, H> const From<(X, Y, W, H)> for Rect
+where
+    X: ~const IntoF32,
+    Y: ~const IntoF32,
+    W: ~const IntoF32,
+    H: ~const IntoF32,
+{
     fn from(tup: (X, Y, W, H)) -> Self {
         Self {
-            origin: (tup.0, tup.1).into(),
-            size:   (tup.2, tup.3).into(),
+            origin: Point {
+                x: tup.0.into_f32(),
+                y: tup.1.into_f32(),
+            },
+            size:   Size {
+                width:  tup.2.into_f32(),
+                height: tup.3.into_f32(),
+            },
         }
     }
 }
 
-impl<W: IntoF32, H: IntoF32> From<(W, H)> for Rect {
+impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Rect {
     fn from(tup: (W, H)) -> Self {
         Self {
-            origin: Default::default(),
+            origin: Point { x: 0.0, y: 0.0 },
             size:   (tup.0, tup.1).into(),
         }
     }
 }
 
-impl<X: IntoF32, Y: IntoF32> From<(X, Y, Size)> for Rect {
+impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y, Size)> for Rect {
     fn from(tup: (X, Y, Size)) -> Self {
         Self {
             origin: (tup.0, tup.1).into(),

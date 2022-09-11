@@ -1,40 +1,44 @@
-mod buffers;
 mod shaders;
 
-use std::{path::Path, rc::Rc};
+use std::{path::Path, ptr::null_mut, rc::Rc};
 
 use audio::Sound;
-pub use buffers::Buffers;
 use gl_image::Image;
-use rtools::data_manager::DataManager;
+use rtools::{data_manager::DataManager, static_get};
 pub use shaders::Shaders;
-use ui::Font;
+use text::Font;
 
 use crate::paths::Paths;
 
+static mut ASSETS: *const Assets = null_mut();
+
 pub struct Assets {
-    pub buffers: Buffers,
     pub shaders: Shaders,
     pub paths:   Rc<Paths>,
 }
 
 impl Assets {
-    pub fn new(root_path: &Path) -> Rc<Self> {
+    pub fn init(root_path: &Path) {
         let paths = Paths::new(root_path);
 
         Image::set_path(&paths.images);
         Sound::set_path(&paths.sounds);
         Font::set_path(&paths.fonts);
 
-        Rc::new(Self {
-            buffers: Buffers::default(),
-            shaders: Shaders::new(&paths),
-            paths,
-        })
+        unsafe {
+            ASSETS = Box::into_raw(Box::new(Self {
+                shaders: Shaders::new(&paths),
+                paths,
+            }));
+        }
     }
 
-    pub fn init_gl_data(&mut self) {
-        // self.buffers = Buffers::default().into();
-        self.shaders = Shaders::new(&self.paths).into();
+    pub fn get() -> &'static Assets {
+        unsafe {
+            if ASSETS.is_null() {
+                panic!("Assets were not initialized");
+            }
+            ASSETS.as_ref().unwrap_unchecked()
+        }
     }
 }

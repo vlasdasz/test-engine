@@ -165,10 +165,10 @@ impl Screen {
         #[cfg(desktop)]
         trace!("GLFWManager: OK");
 
-        let assets = Assets::new(assets_path);
+        Assets::init(assets_path);
         trace!("Assets: Ok");
 
-        let ui = UILayer::new(assets);
+        let ui = UILayer::new();
         trace!("UILayer: OK");
 
         Self {

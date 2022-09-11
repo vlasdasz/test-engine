@@ -1,6 +1,3 @@
 mod image;
 
-#[macro_use]
-extern crate log;
-
-pub use self::image::Image;
+pub use self::image::{draw_image, Image};

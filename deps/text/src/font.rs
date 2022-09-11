@@ -6,6 +6,7 @@ use std::{
 
 use gl_image::Image;
 use gm::flat::Size;
+use log::trace;
 use rtools::{
     data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
     file::File,

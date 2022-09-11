@@ -47,21 +47,6 @@ impl GLWrapper {
         Self::set_clear_color(clear_color);
     }
 
-    pub fn set_ui_viewport(window_height: f32, scale: f32, rect: impl Into<Rect>) {
-        let rect = rect.into();
-        if rect.size.is_invalid() {
-            return;
-        }
-        let scale = adjust_scale(scale);
-
-        Self::set_viewport((
-            rect.origin.x * scale,
-            (window_height - rect.origin.y - rect.size.height) * scale,
-            rect.size.width * scale,
-            rect.size.height * scale,
-        ));
-    }
-
     pub fn set_viewport(rect: impl Into<Rect>) {
         let rect = rect.into();
         GL!(
@@ -134,14 +119,4 @@ impl GLWrapper {
     pub fn unbind_framebuffer() {
         GL!(BindFramebuffer, GLC!(FRAMEBUFFER), Self::default_framebuffer_id());
     }
-}
-
-#[cfg(android)]
-fn adjust_scale(_scale: f32) -> f32 {
-    1.0
-}
-
-#[cfg(not(android))]
-fn adjust_scale(scale: f32) -> f32 {
-    scale
 }

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use tao_log::infov;
 use test_engine::{
     audio::Sound,
-    gm::Color,
+    gm::{flat::Direction, Color},
     main_view::{HasLevel, MainView},
     net::{GetRequest, API},
     rtools::{
@@ -18,7 +18,6 @@ use test_engine::{
     ui_layer::UILayer,
     Image, Level,
 };
-use test_engine::gm::flat::Direction;
 
 use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView, UITestView};
 
@@ -80,9 +79,9 @@ impl TestGameView {
                 Direction::Left,
             ],
             |key, direction| {
-                self.ui.keymap.add(key, self, move |this| {
-                    this.player().move_by_direction(direction)
-                });
+                self.ui
+                    .keymap
+                    .add(key, self, move |this| this.player().move_by_direction(direction));
             },
         );
 

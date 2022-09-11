@@ -18,6 +18,7 @@ tokio = { version = "1.21", features = ["full"] }
 gm = { path = "../deps/gm" }
 ui = { path = "../deps/ui" }
 net = { path = "../deps/net" }
+text = { path = "../deps/text" }
 maze = { path = "../deps/maze" }
 audio = { path = "../deps/audio" }
 rtools = { path = "../deps/rtools" }

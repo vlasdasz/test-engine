@@ -2,11 +2,14 @@ use std::ops::{Deref, DerefMut};
 
 use fontdue::layout::{CoordinateSystem, Layout, LayoutSettings, TextStyle};
 use gm::flat::Size;
+use smart_default::SmartDefault;
+use text::Font;
 
-use crate::Font;
-
+#[derive(SmartDefault)]
 pub(crate) struct LabelLayout {
+    #[default = 64.0]
     size:   f32,
+    #[default(Layout::new(CoordinateSystem::PositiveYDown))]
     layout: Layout,
 }
 
@@ -39,14 +42,5 @@ impl Deref for LabelLayout {
 impl DerefMut for LabelLayout {
     fn deref_mut(&mut self) -> &mut Layout {
         &mut self.layout
-    }
-}
-
-impl Default for LabelLayout {
-    fn default() -> Self {
-        Self {
-            size:   64.0,
-            layout: Layout::new(CoordinateSystem::PositiveYDown),
-        }
     }
 }

@@ -1,15 +1,11 @@
-use gl_wrapper::{Buffer, BufferConfig, GLC};
 #[cfg(mobile)]
 use gles31_sys::*;
-use gm::flat::{Point, Rect, Size};
+use gm::flat::Rect;
+use rtools::static_get;
 
-const RECT: Rect = Rect {
-    origin: Point { x: -1.0, y: -1.0 },
-    size:   Size {
-        width:  2.0,
-        height: 2.0,
-    },
-};
+use crate::{Buffer, BufferConfig};
+
+const RECT: Rect = (-1, -1, 2, 2).into();
 
 const RECT_INDICES: &[u16; 4] = &[0, 1, 3, 2];
 const INDICES: &[u16; 4] = &[0, 1, 2, 3];
@@ -49,6 +45,8 @@ pub struct Buffers {
     pub full_image:   Buffer,
     pub full_outline: Buffer,
 }
+
+static_get!(Buffers);
 
 impl Default for Buffers {
     fn default() -> Buffers {
