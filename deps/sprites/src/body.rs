@@ -93,7 +93,7 @@ impl Control for Body {
 
     fn add_impulse(&mut self, impulse: Point) {
         self.rigid_body_mut()
-            .add_force([impulse.x * 1000.0, impulse.y * 1000.0].into(), true)
+            .apply_impulse([impulse.x * 100.0, impulse.y * 100.0].into(), true)
     }
 }
 
