@@ -8,6 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		D100A8AA27EF2B8800254154 /* TestEngineController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100A8A927EF2B8800254154 /* TestEngineController.m */; };
+		D1392BE928CE4325000D8CF5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
+		D1392BEA28CE4325000D8CF5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E8F2617166800F3F18B /* main.m */; };
+		D1392BEB28CE4325000D8CF5 /* TestEngineController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100A8A927EF2B8800254154 /* TestEngineController.m */; };
+		D1392BED28CE4325000D8CF5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */; };
+		D1392BEE28CE4325000D8CF5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC23261C457000B81CFB /* SystemConfiguration.framework */; };
+		D1392BEF28CE4325000D8CF5 /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC24261C457000B81CFB /* libSystem.B.tbd */; };
+		D1392BF028CE4325000D8CF5 /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
+		D1392BF128CE4325000D8CF5 /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
+		D1392BF228CE4325000D8CF5 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC20261C455B00B81CFB /* libSystem.tbd */; };
+		D1392BF328CE4325000D8CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; platformFilter = ios; };
+		D1392BF428CE4325000D8CF5 /* libtest_game_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1918C3A28C02F1C00C46568 /* libtest_game_lib.a */; };
+		D1392BF628CE4325000D8CF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
+		D1392BF728CE4325000D8CF5 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = D17B6FB1262EE65200D61876 /* Assets */; };
+		D1392BF828CE4325000D8CF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
 		D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1411E8A2617166800F3F18B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
 		D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
@@ -26,6 +40,8 @@
 /* Begin PBXFileReference section */
 		D100A8A827EF2B8800254154 /* TestEngineController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEngineController.h; sourceTree = "<group>"; };
 		D100A8A927EF2B8800254154 /* TestEngineController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEngineController.m; sourceTree = "<group>"; };
+		D1392BFC28CE4325000D8CF5 /* TestEngine Release.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestEngine Release.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1392BFD28CE4325000D8CF5 /* TestEngine copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TestEngine copy-Info.plist"; path = "/Users/vladas/test_engine/mobile/iOS/TestEngine copy-Info.plist"; sourceTree = "<absolute>"; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1411E7D2617166700F3F18B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D1411E7E2617166700F3F18B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -47,6 +63,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D1392BEC28CE4325000D8CF5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1392BED28CE4325000D8CF5 /* AudioToolbox.framework in Frameworks */,
+				D1392BEE28CE4325000D8CF5 /* SystemConfiguration.framework in Frameworks */,
+				D1392BEF28CE4325000D8CF5 /* libSystem.B.tbd in Frameworks */,
+				D1392BF028CE4325000D8CF5 /* libSystem_asan.tbd in Frameworks */,
+				D1392BF128CE4325000D8CF5 /* libSystem.B_asan.tbd in Frameworks */,
+				D1392BF228CE4325000D8CF5 /* libSystem.tbd in Frameworks */,
+				D1392BF328CE4325000D8CF5 /* OpenGLES.framework in Frameworks */,
+				D1392BF428CE4325000D8CF5 /* libtest_game_lib.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D1411E772617166700F3F18B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -71,6 +102,7 @@
 				D1411E7C2617166700F3F18B /* TestEngine */,
 				D1411E7B2617166700F3F18B /* Products */,
 				D1D524F2261BB078005C1426 /* Frameworks */,
+				D1392BFD28CE4325000D8CF5 /* TestEngine copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -78,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				D1411E7A2617166700F3F18B /* TestEngine.app */,
+				D1392BFC28CE4325000D8CF5 /* TestEngine Release.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,6 +151,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D1392BE628CE4325000D8CF5 /* TestEngine Release */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1392BF928CE4325000D8CF5 /* Build configuration list for PBXNativeTarget "TestEngine Release" */;
+			buildPhases = (
+				D1392BE728CE4325000D8CF5 /* Cargo */,
+				D1392BE828CE4325000D8CF5 /* Sources */,
+				D1392BEC28CE4325000D8CF5 /* Frameworks */,
+				D1392BF528CE4325000D8CF5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TestEngine Release";
+			productName = TestEngine;
+			productReference = D1392BFC28CE4325000D8CF5 /* TestEngine Release.app */;
+			productType = "com.apple.product-type.application";
+		};
 		D1411E792617166700F3F18B /* TestEngine */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D1411E932617166800F3F18B /* Build configuration list for PBXNativeTarget "TestEngine" */;
@@ -163,11 +214,22 @@
 			projectRoot = "";
 			targets = (
 				D1411E792617166700F3F18B /* TestEngine */,
+				D1392BE628CE4325000D8CF5 /* TestEngine Release */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D1392BF528CE4325000D8CF5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1392BF628CE4325000D8CF5 /* LaunchScreen.storyboard in Resources */,
+				D1392BF728CE4325000D8CF5 /* Assets in Resources */,
+				D1392BF828CE4325000D8CF5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D1411E782617166700F3F18B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -199,9 +261,37 @@
 			shellPath = /bin/sh;
 			shellScript = "pwd\n~/.cargo/bin/cargo lipo --release --manifest-path ../../Cargo.toml --verbose\n";
 		};
+		D1392BE728CE4325000D8CF5 /* Cargo */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Cargo;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pwd\n~/.cargo/bin/cargo lipo --release --manifest-path ../../Cargo.toml --verbose\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D1392BE828CE4325000D8CF5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1392BE928CE4325000D8CF5 /* AppDelegate.m in Sources */,
+				D1392BEA28CE4325000D8CF5 /* main.m in Sources */,
+				D1392BEB28CE4325000D8CF5 /* TestEngineController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D1411E762617166700F3F18B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -226,6 +316,64 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D1392BFA28CE4325000D8CF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L363K9J2RM;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
+				INFOPLIST_FILE = "TestEngine copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../target/universal/release\"/**",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D1392BFB28CE4325000D8CF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L363K9J2RM;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
+				INFOPLIST_FILE = "TestEngine copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../target/universal/release\"/**",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		D1411E912617166800F3F18B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -401,6 +549,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D1392BF928CE4325000D8CF5 /* Build configuration list for PBXNativeTarget "TestEngine Release" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1392BFA28CE4325000D8CF5 /* Debug */,
+				D1392BFB28CE4325000D8CF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D1411E752617166700F3F18B /* Build configuration list for PBXProject "TestEngine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
