@@ -6,14 +6,14 @@ use rapier2d::{
     na::Vector2,
     parry::partitioning::IndexedData,
     prelude::{
-        BroadPhase, CCDSolver, ChannelEventCollector, IntegrationParameters, IslandManager,
-        MultibodyJointSet, NarrowPhase, PhysicsPipeline,
+        BroadPhase, CCDSolver, CollisionEvent, IntegrationParameters, IslandManager, MultibodyJointSet,
+        NarrowPhase, PhysicsPipeline,
     },
 };
 use rtools::{address::Address, Event, Rglica, ToRglica};
 use smart_default::SmartDefault;
 
-use crate::{sets::Sets, Level, Sprite, SpritesDrawer};
+use crate::{event_handler::EventHandler, sets::Sets, Level, Sprite, SpritesDrawer};
 
 #[derive(SmartDefault)]
 pub struct LevelBase {
@@ -44,17 +44,13 @@ pub struct LevelBase {
     #[default(CCDSolver::new())]
     pub(crate) ccd_solver:       CCDSolver,
 
+    pub(crate) events: EventHandler,
+
     integration_parameters: IntegrationParameters,
 }
 
 impl LevelBase {
     pub fn update_physics(&mut self) {
-        //  self.integration_parameters.dt = 0.5;
-
-        let (contact_send, contact_recv) = crossbeam::channel::unbounded();
-        let (intersection_send, _intersection_recv) = crossbeam::channel::unbounded();
-        let event_handler = ChannelEventCollector::new(intersection_send, contact_send);
-
         self.physics_pipeline.step(
             &self.gravity,
             &self.integration_parameters,
@@ -67,19 +63,25 @@ impl LevelBase {
             &mut self.multibody_joints,
             &mut self.ccd_solver,
             &(),
-            &event_handler,
+            &self.events.handler,
         );
 
-        while let Ok(contact_event) = contact_recv.try_recv() {
+        self.handle_collisions();
+    }
+
+    fn handle_collisions(&self) {
+        while let Ok(contact) = self.events.intersection.try_recv() {
+            let (a, b) = match contact {
+                CollisionEvent::Started(a, b, _) => (a, b),
+                _ => continue,
+            };
+
             for sprite in &self.colliding_sprites {
                 let handle = sprite.data().collider_handle.unwrap();
 
-                let a = contact_event.collider1;
-                let b = contact_event.collider2;
-
-                let other_index = if b.index() == handle.index() {
+                let other_index = if b == handle {
                     a
-                } else if a.index() == handle.index() {
+                } else if a == handle {
                     b
                 } else {
                     panic!()

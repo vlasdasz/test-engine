@@ -4,6 +4,7 @@ extern crate core;
 
 mod body;
 mod control;
+mod event_handler;
 mod level;
 mod level_base;
 mod level_creation;
