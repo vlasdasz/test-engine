@@ -18,6 +18,7 @@ use test_engine::{
     ui_layer::UILayer,
     Image, Level,
 };
+use test_engine::gm::flat::Direction;
 
 use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView, UITestView};
 
@@ -69,6 +70,21 @@ impl TestGameView {
             let scale = this.ui.scale() * 0.8;
             this.ui.set_scale(scale);
         });
+
+        [" ", "w", "s", "d", "a"].apply2(
+            [
+                Direction::Up,
+                Direction::Up,
+                Direction::Down,
+                Direction::Right,
+                Direction::Left,
+            ],
+            |key, direction| {
+                self.ui.keymap.add(key, self, move |this| {
+                    this.player().move_by_direction(direction)
+                });
+            },
+        );
 
         self.set_frame((10, 10, 1000, 500));
 
