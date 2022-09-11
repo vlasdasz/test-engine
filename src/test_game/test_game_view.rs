@@ -89,9 +89,11 @@ impl TestGameView {
                 Image::get("right.png"),
             )
             .place()
-            .size(100, 80)
-            .bl()
-            .val(5);
+            .size(140, 100)
+            .bottom()
+            .val(10)
+            .left()
+            .val(100);
 
         self.left_stick = self.add_view();
         self.left_stick.place().bl().val(10).size(80, 80);
@@ -114,7 +116,7 @@ impl TestGameView {
                 .bottom()
                 .val(10)
                 .center_hor()
-                .size(200, 100)
+                .size(150, 100)
                 .all_ver();
 
             this.to_benchmark = view.add_view();
