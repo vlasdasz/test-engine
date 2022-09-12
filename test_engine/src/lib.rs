@@ -13,6 +13,7 @@ pub use maze;
 pub use net;
 pub use rtools;
 pub use sprites;
+pub use text;
 pub use ui;
 
 pub use crate::screen::Screen;

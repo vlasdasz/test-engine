@@ -1,20 +1,13 @@
-use std::ops::Deref;
-
 use derivative::Derivative;
-use gl_image::{draw_image, Image};
 use gm::Color;
-use rtools::{
-    data_manager::{DataManager, Handle},
-    Rglica, ToRglica,
-};
+use rtools::{data_manager::Handle, Rglica, ToRglica};
 use smart_default::SmartDefault;
-use text::Font;
+use text::{render_text, Font};
 
 use crate::{
-    basic::label_layout::LabelLayout,
     view,
-    view::{ViewData, ViewFrame, ViewSubviews},
-    BaseView, ImageView, View, ViewBase, ViewCallbacks, ViewLayout,
+    view::{ViewData, ViewSubviews},
+    ImageView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
@@ -24,8 +17,6 @@ pub struct Label {
     #[derivative(Debug = "ignore")]
     font:       Handle<Font>,
     text:       String,
-    #[derivative(Debug = "ignore")]
-    layout:     LabelLayout,
     image_view: Rglica<ImageView>,
     text_color: Color,
     #[default = 64.0]
@@ -62,46 +53,7 @@ impl Label {
     }
 
     fn set_letters(&mut self) {
-        if self.text.is_empty() {
-            self.image_view.set_image(Default::default());
-            return;
-        }
-
-        if let Some(image) = Image::handle_with_name(self.text.clone()) {
-            self.image_view.set_image(image);
-            return;
-        }
-
-        self.layout.clear();
-        self.layout.set_text(&self.font, &self.text);
-        let size = self.layout.size();
-
-        let image = Image::draw(self.text.clone(), size, |image| {
-            let drawer = self.drawer();
-
-            let mut content = BaseView::default();
-            content.set_frame(size);
-
-            for glyph in self.layout.glyphs() {
-                let image = self.font.glyph_for_char(glyph.parent).image;
-                draw_image(
-                    image.deref(),
-                    &(
-                        glyph.x,
-                        size.height - glyph.y - glyph.height as f32 + 10.0,
-                        glyph.width,
-                        glyph.height,
-                    )
-                        .into(),
-                    &Color::WHITE, // See ui_monochrome shader
-                );
-            }
-
-            image.flipped_y = true;
-            image.channels = 1;
-            drawer.reset_viewport();
-        });
-
+        let image = render_text(&self.text, &self.font, self.size);
         self.image_view.set_image(image);
     }
 }
@@ -117,44 +69,3 @@ impl ViewCallbacks for Label {
         self.set_letters();
     }
 }
-
-// fn render_text(text: &str, size: impl Into<Size>) -> Handle<Image> {
-//     if text.is_empty() {
-//         return Default::default();
-//     }
-//
-//     if let Some(image) = Image::handle_with_name(text) {
-//         return image;
-//     }
-//
-//     let layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
-//
-//     // Image::draw(text, size, |image| {
-//     //     let drawer = self.drawer();
-//     //
-//     //     let mut content = BaseView::default();
-//     //     content.set_frame(size);
-//     //
-//     //     for glyph in self.layout.glyphs() {
-//     //         let image = self.font.glyph_for_char(glyph.parent).image;
-//     //         drawer.draw_image(
-//     //             image.deref(),
-//     //             &(
-//     //                 glyph.x,
-//     //                 size.height - glyph.y - glyph.height as f32 + 10.0,
-//     //                 glyph.width,
-//     //                 glyph.height,
-//     //             )
-//     //                 .into(),
-//     //             &Color::WHITE, // See ui_monochrome shader
-//     //             true,
-//     //         );
-//     //     }
-//     //
-//     //     image.flipped_y = true;
-//     //     image.channels = 1;
-//     //     drawer.reset_viewport();
-//     // })
-//
-//     todo!()
-// }

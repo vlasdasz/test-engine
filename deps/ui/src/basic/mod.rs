@@ -2,7 +2,6 @@ mod button;
 mod circle_view;
 mod image_view;
 mod label;
-mod label_layout;
 mod root_view;
 mod text_field;
 

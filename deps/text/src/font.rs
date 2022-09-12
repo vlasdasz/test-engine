@@ -13,7 +13,7 @@ use rtools::{
     hash, managed,
 };
 
-use crate::Glyph;
+use crate::glyph::Glyph;
 
 fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     let (metrics, bitmap) = font.rasterize(symbol, size);

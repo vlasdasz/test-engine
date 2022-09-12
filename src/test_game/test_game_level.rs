@@ -10,6 +10,7 @@ use test_engine::{
         Rglica, ToRglica,
     },
     sprites::{Body, LevelCreation, Player, SpriteTemplates, Wall},
+    text::{render_text, Font},
     Image, Level, LevelBase, Sprite,
 };
 
@@ -58,7 +59,11 @@ impl Level for TestGameLevel {
 
         self.add_rect((30, 30, 40, 25)).set_image(drawn);
 
-        self.add_sprite::<Wall>((100, 5), (0, 0)).set_image(square);
+        self.add_sprite::<Wall>((100, 5), (0, 0)).set_image(render_text(
+            "oo spolokolkok",
+            &Font::default(),
+            64,
+        ));
         self.add_sprite::<Wall>((5, 100), (60, 0)).set_image(square);
         self.add_sprite::<Wall>((5, 100), (-60, 0)).set_image(square);
 

@@ -10,7 +10,6 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 log = "0.4"
-fontdue = "0.7"
 derivative = "2.2"
 smart-default = "0.6"
 
