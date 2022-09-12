@@ -46,30 +46,23 @@ impl ViewCallbacks for TestView {
     fn setup(&mut self) {
         self.place().all_ver();
 
-        self.label = self.add_view();
         self.label.set_text("Hello label!");
 
-        self.button = self.add_view();
         self.button.on_tap.set(self, |this, _| {
             let val = this.label_value;
             this.label.set_text(format!("Hello label! {}", val));
             this.label_value += 1;
         });
 
-        self.image = self.add_view();
-
-        self.drawing = self.add_view();
         self.drawing.add_path(
             PointsPath::rounded_rect((0, 0, 100, 40), 15, 50),
             &Color::GREEN,
             DrawMode::Outline,
         );
 
-        self.table = self.add_view();
         self.table.data_source = data_source!(self);
         self.table.reload_data();
 
-        self.animated = self.add_view();
         self.animated.set_frame((100, 100));
 
         self.animation = Animation::new(0, 200, 10).into();

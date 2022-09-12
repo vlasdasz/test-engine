@@ -37,9 +37,6 @@ impl DPadView {
 
 impl ViewCallbacks for DPadView {
     fn setup(&mut self) {
-        (self.up, self.down, self.left, self.right) =
-            (self.add_view(), self.add_view(), self.add_view(), self.add_view());
-
         [self.up, self.down, self.left, self.right].apply2(
             [Direction::Up, Direction::Down, Direction::Left, Direction::Right],
             |view, direction| {

@@ -60,7 +60,6 @@ impl ViewCallbacks for Label {
         self.text_color = Color::GREEN;
         self.font = Font::default();
 
-        self.image_view = self.add_view();
         self.image_view.place().as_background();
 
         self.set_letters();

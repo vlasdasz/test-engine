@@ -19,10 +19,8 @@ impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
         self.place().top().left().val(10).width(200).height(50).all_ver();
 
-        self.fps_label = self.add_view();
         self.fps_label.set_text("fps label");
 
-        self.frame_drawn_label = self.add_view();
         self.frame_drawn_label.set_text("frame drawn label");
 
         if Platform::MOBILE {

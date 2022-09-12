@@ -29,7 +29,6 @@ impl ViewCallbacks for BenchmarkView {
     fn setup(&mut self) {
         self.level.setup();
 
-        self.back = self.add_view();
         self.back
             .set_text("Back")
             .place()
@@ -43,7 +42,6 @@ impl ViewCallbacks for BenchmarkView {
             this.ui.set_view::<TestGameView>();
         });
 
-        self.bullets_label = self.add_view();
         self.bullets_label.set_frame((120, 20));
     }
 

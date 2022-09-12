@@ -46,11 +46,6 @@ pub struct TestGameView {
     ui_scale:    SubView<IntView>,
     level_scale: SubView<IntView>,
 
-    to_benchmark: SubView<Button>,
-    to_test:      SubView<Button>,
-    play:         SubView<Button>,
-    async_task:   SubView<Button>,
-
     sound: Handle<Sound>,
 
     ui: Rglica<UILayer>,
@@ -93,7 +88,6 @@ impl TestGameView {
 
         self.set_frame((10, 10, 1000, 500));
 
-        self.sprite_view = self.add_view();
         self.sprite_view.place().tr().val(10).size(400, 80);
 
         self.level
@@ -101,7 +95,6 @@ impl TestGameView {
             .on_sprite_selected
             .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
 
-        self.dpad = self.add_view();
         self.dpad
             .set_images(
                 Image::get("up.png"),
@@ -116,13 +109,11 @@ impl TestGameView {
             .left()
             .val(100);
 
-        self.left_stick = self.add_view();
         self.left_stick.place().bl().val(10).size(80, 80);
         self.left_stick.on_change.set(&self.level.player, |player, dir| {
             player.add_impulse(dir);
         });
 
-        self.test_view = self.add_view();
         self.test_view
             .set_image(Image::get("cat.png"))
             .set_button_image(Image::get("square.png"))
@@ -132,7 +123,6 @@ impl TestGameView {
             .val(20)
             .size(280, 400);
 
-        self.ui_scale = self.add_view();
         self.ui_scale.step = 0.1;
         self.ui_scale
             .place()
@@ -147,7 +137,6 @@ impl TestGameView {
             .on_change
             .set(self, |this, val| this.ui.set_scale(val));
 
-        self.level_scale = self.add_view();
         self.level_scale.step = 0.1;
         self.level_scale
             .place()
@@ -163,7 +152,7 @@ impl TestGameView {
             .set(self, |this, val| this.level.set_scale(val));
 
         {
-            let mut view = self.add_view::<BaseView>();
+            let mut view = self.initialize_view::<BaseView>();
 
             view.place()
                 .bottom()
@@ -172,25 +161,25 @@ impl TestGameView {
                 .size(150, 100)
                 .all_ver();
 
-            self.to_benchmark = view.add_view();
-            self.to_benchmark.set_text("Benchmark");
-            self.to_benchmark
+            let mut to_benchmark = view.initialize_view::<Button>();
+            to_benchmark.set_text("Benchmark");
+            to_benchmark
                 .on_tap
                 .set(self, |this, _| this.ui.set_view::<BenchmarkView>());
 
-            self.to_test = view.add_view();
-            self.to_test.set_text("Test");
-            self.to_test
+            let mut to_test = view.initialize_view::<Button>();
+            to_test.set_text("Test");
+            to_test
                 .on_tap
                 .set(self, |this, _| this.ui.set_view::<UITestView>());
 
-            self.play = view.add_view();
-            self.play.set_text("Play sound");
-            self.play.on_tap.set(self, |this, _| this.sound.play());
+            let mut play = view.initialize_view::<Button>();
+            play.set_text("Play sound");
+            play.on_tap.set(self, |this, _| this.sound.play());
 
-            self.async_task = view.add_view();
-            self.async_task.set_text("Async task").set_frame((120, 20));
-            self.async_task.on_tap.set(self, |this, _| {
+            let mut async_task = view.initialize_view::<Button>();
+            async_task.set_text("Async task").set_frame((120, 20));
+            async_task.on_tap.set(self, move |this, _| {
                 GET_USERS.get(this, |this, error, result| {
                     if let Some(error) = error {
                         infov!(&error);
@@ -200,21 +189,21 @@ impl TestGameView {
 
                     infov!(&result);
 
-                    if let Some(user) = result.first() {
-                        this.async_task.set_text(user.login.clone());
+                    if let Some(_user) = result.first() {
+                        // task.set_text(user.login.clone());
                     } else {
                         this.alert("No response");
                     }
                 });
             });
+
+            [to_benchmark, to_test, play, async_task].apply(|button| {
+                button.set_color(Color::WHITE);
+                button.set_corner_radius(8);
+            });
         }
 
         self.sound = Sound::get("retro.wav");
-
-        [self.to_benchmark, self.to_test, self.play, self.async_task].apply(|button| {
-            button.set_color(Color::WHITE);
-            button.set_corner_radius(8);
-        });
     }
 }
 

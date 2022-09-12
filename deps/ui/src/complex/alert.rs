@@ -32,7 +32,6 @@ impl ViewCallbacks for Alert {
             .size(200, 80)
             .center();
 
-        self.label = self.add_view();
         self.label
             .set_text(self.message.clone())
             .place()
@@ -43,7 +42,6 @@ impl ViewCallbacks for Alert {
             .val(10)
             .height(20);
 
-        self.ok_button = self.add_view();
         self.ok_button
             .set_text("OK")
             .set_border_color(Color::GRAY)

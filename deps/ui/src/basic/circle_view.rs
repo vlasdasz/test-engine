@@ -44,7 +44,6 @@ impl ViewCallbacks for CircleView {
         self.radius = 10.0;
         let size = self.radius;
         self.place().size(size, size);
-        self.drawing = self.add_view();
         self.drawing.place().size(size, size);
     }
 }

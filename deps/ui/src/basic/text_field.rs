@@ -12,7 +12,6 @@ pub struct TextField {
 
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {
-        self.label = self.add_view();
         self.label.place().as_background();
 
         UIEvents::get().key_pressed.set(self, |this, event| {

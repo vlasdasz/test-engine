@@ -22,22 +22,18 @@ pub struct UITestView {
 
 impl ViewCallbacks for UITestView {
     fn setup(&mut self) {
-        self.container = self.add_view();
         self.container.set_frame((200, 200, 280, 280));
 
-        self.top_view = self.container.add_view();
         self.top_view.make_layout(|a| {
             a.left().top().right().val(10);
             a.height(50);
         });
 
-        self.test = self.container.add_view();
         self.test.make_layout(|a| {
             a.top().anchor(self.top_view, 20);
             a.left().right().bottom().val(10);
         });
 
-        self.back = self.add_view();
         self.back.set_text("Back").make_layout(|l| {
             l.width(120).height(20);
             l.bottom().val(20);

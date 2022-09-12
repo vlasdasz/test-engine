@@ -19,8 +19,8 @@ const PRECISION: u16 = 50;
 #[view]
 #[derive(Default)]
 pub struct AnalogStickView {
-    direction_stick: SubView<DrawingView>,
     background:      SubView<DrawingView>,
+    direction_stick: SubView<DrawingView>,
     pub on_change:   Event<Point>,
     pub flaccid:     bool,
 }
@@ -57,7 +57,6 @@ impl ViewCallbacks for AnalogStickView {
             }
         });
 
-        self.background = self.add_view();
         self.background.set_frame((SIZE, SIZE));
 
         let frame = *self.frame();
@@ -78,10 +77,10 @@ impl ViewCallbacks for AnalogStickView {
         );
 
         let center = self.frame().size.center();
-        self.direction_stick = self.add_view();
+
         self.direction_stick
-            .set_center(center)
-            .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE));
+            .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE))
+            .set_center(center);
 
         let stick_center = self.direction_stick.frame().size.center();
 

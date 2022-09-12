@@ -13,7 +13,6 @@ pub struct Button {
 
 impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
-        self.label = self.add_view();
         self.label.place().as_background();
         self.label.set_text(text);
         self

@@ -14,7 +14,7 @@ pub trait ViewSubviews {
     fn remove_subview_at(&mut self, index: usize);
     fn remove_all_subviews(&mut self);
 
-    fn add_view<V: 'static + View>(&mut self) -> SubView<V>;
+    fn initialize_view<V: 'static + View>(&mut self) -> SubView<V>;
     fn add_subview(&mut self, view: Box<dyn View>);
 
     fn alert(&mut self, message: impl ToString);
@@ -45,7 +45,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         self.subviews.clear()
     }
 
-    fn add_view<V: 'static + View>(&mut self) -> SubView<V> {
+    fn initialize_view<V: 'static + View>(&mut self) -> SubView<V> {
         let view = V::boxed();
         let result = view.to_rglica();
         self.add_subview(view);
@@ -57,11 +57,12 @@ impl<T: ?Sized + View> ViewSubviews for T {
         view.drawer = self.drawer();
         view.root_view = self.root_view();
         view.placer = Placer::make(view.to_rglica());
+        view.init_views();
         view.setup();
         self.subviews.push(view);
     }
 
     fn alert(&mut self, message: impl ToString) {
-        self.root_view().add_view::<Alert>().set_message(message);
+        self.root_view().initialize_view::<Alert>().set_message(message);
     }
 }

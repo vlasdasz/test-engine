@@ -12,9 +12,9 @@ pub struct RootView {
 impl RootView {
     pub fn new() -> Box<Self> {
         let mut root = Self::boxed();
-        let rg = root.to_rglica();
+        let mut rg = root.to_rglica();
+        rg.init_views();
         root.root_view = rg;
-        root.debug_view = root.add_view();
         root
     }
 

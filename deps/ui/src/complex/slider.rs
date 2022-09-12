@@ -26,7 +26,7 @@ pub struct Slider {
 impl ViewCallbacks for Slider {
     fn setup(&mut self) {
         let radius = self.width() / 2.0;
-        self.circle = self.add_view();
+
         self.circle.set_radius(radius).set_color(Color::BLUE);
 
         self.on_touch().set(self, |this, touch| {

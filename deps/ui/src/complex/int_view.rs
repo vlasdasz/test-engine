@@ -34,8 +34,6 @@ impl ViewCallbacks for IntView {
     fn setup(&mut self) {
         self.place().all_ver();
 
-        (self.label, self.up, self.down) = (self.add_view(), self.add_view(), self.add_view());
-
         self.label.set_text("1.0");
 
         self.up.on_tap.set(self, |this, _| {
