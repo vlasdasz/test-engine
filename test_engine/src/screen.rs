@@ -87,6 +87,8 @@ impl Screen {
     pub fn update(&mut self) {
         self.calculate_fps();
 
+        self.ui.drawer.reset_viewport();
+
         GLWrapper::clear();
 
         if self.ui.view.is_ok() && self.ui.view.level().is_ok() {
@@ -102,9 +104,8 @@ impl Screen {
         self.ui.root_view.calculate_frames();
         self.ui.drawer.draw(self.ui.root_view.deref_mut());
 
-        self.ui.drawer.reset_viewport();
-
         Dispatch::call();
+
         self.ui.root_view.remove_scheduled();
     }
 
