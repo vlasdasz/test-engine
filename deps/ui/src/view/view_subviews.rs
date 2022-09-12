@@ -1,5 +1,3 @@
-use std::ops::DerefMut;
-
 use rtools::{Rglica, ToRglica};
 
 use crate::{
@@ -17,8 +15,6 @@ pub trait ViewSubviews {
     fn remove_all_subviews(&mut self);
 
     fn add_view<V: 'static + View>(&mut self) -> SubView<V>;
-    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> SubView<V>;
-    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> SubView<V>;
     fn add_subview(&mut self, view: Box<dyn View>);
 
     fn alert(&mut self, message: impl ToString);
@@ -53,23 +49,6 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let view = V::boxed();
         let result = view.to_rglica();
         self.add_subview(view);
-        result.into()
-    }
-
-    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> SubView<V> {
-        let view = V::boxed();
-        let mut result = view.to_rglica();
-        self.add_subview(view);
-        make(result.deref_mut());
-        result.into()
-    }
-
-    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> SubView<V> {
-        let view = V::boxed();
-        let mut result = view.to_rglica();
-        let mut rglica = self.to_rglica();
-        self.add_subview(view);
-        make(rglica.deref_mut(), result.deref_mut());
         result.into()
     }
 

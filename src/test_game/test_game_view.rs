@@ -162,7 +162,9 @@ impl TestGameView {
             .on_change
             .set(self, |this, val| this.level.set_scale(val));
 
-        self.make_this(|this, view: &mut BaseView| {
+        {
+            let mut view = self.add_view::<BaseView>();
+
             view.place()
                 .bottom()
                 .val(10)
@@ -170,25 +172,25 @@ impl TestGameView {
                 .size(150, 100)
                 .all_ver();
 
-            this.to_benchmark = view.add_view();
-            this.to_benchmark.set_text("Benchmark");
-            this.to_benchmark
+            self.to_benchmark = view.add_view();
+            self.to_benchmark.set_text("Benchmark");
+            self.to_benchmark
                 .on_tap
-                .set(this, |this, _| this.ui.set_view::<BenchmarkView>());
+                .set(self, |this, _| this.ui.set_view::<BenchmarkView>());
 
-            this.to_test = view.add_view();
-            this.to_test.set_text("Test");
-            this.to_test
+            self.to_test = view.add_view();
+            self.to_test.set_text("Test");
+            self.to_test
                 .on_tap
-                .set(this, |this, _| this.ui.set_view::<UITestView>());
+                .set(self, |this, _| this.ui.set_view::<UITestView>());
 
-            this.play = view.add_view();
-            this.play.set_text("Play sound");
-            this.play.on_tap.set(this, |this, _| this.sound.play());
+            self.play = view.add_view();
+            self.play.set_text("Play sound");
+            self.play.on_tap.set(self, |this, _| this.sound.play());
 
-            this.async_task = view.add_view();
-            this.async_task.set_text("Async task").set_frame((120, 20));
-            this.async_task.on_tap.set(this, |this, _| {
+            self.async_task = view.add_view();
+            self.async_task.set_text("Async task").set_frame((120, 20));
+            self.async_task.on_tap.set(self, |this, _| {
                 GET_USERS.get(this, |this, error, result| {
                     if let Some(error) = error {
                         infov!(&error);
@@ -205,7 +207,7 @@ impl TestGameView {
                     }
                 });
             });
-        });
+        }
 
         self.sound = Sound::get("retro.wav");
 
