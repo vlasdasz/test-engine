@@ -10,7 +10,6 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 log = "0.4"
-derivative = "2.2"
 smart-default = "0.6"
 
 gm = { path = "../gm" }

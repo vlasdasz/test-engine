@@ -1,12 +1,12 @@
 use rtools::{Event, IntoF32, Rglica, ToRglica};
 
-use crate::{complex::Slider, view, Label, View, ViewBase, ViewCallbacks};
+use crate::{complex::Slider, view, Label, SubView, View, ViewBase, ViewCallbacks};
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct LabeledSlider {
-    label:  Rglica<Label>,
-    slider: Rglica<Slider>,
+    label:  SubView<Label>,
+    slider: SubView<Slider>,
 
     pub on_change: Event<f32>,
 }

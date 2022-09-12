@@ -6,7 +6,6 @@ use rtools::Rglica;
 
 use crate::{control::Control, Level, Sprite, SpriteData, ToCollider};
 
-#[derive(Debug)]
 pub struct Body {
     sprite: SpriteData,
 }

@@ -20,7 +20,6 @@ pub use crate::screen::Screen;
 
 pub mod app;
 pub mod assets;
-pub mod debug_view;
 mod keymap;
 pub mod main_view;
 pub mod paths;

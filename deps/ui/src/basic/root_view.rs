@@ -1,11 +1,12 @@
 use rtools::{address::Address, Boxed, Rglica, ToRglica};
 
-use crate::{view, view::ViewSubviews, View, ViewBase};
+use crate::{test::debug_view::DebugView, view, view::ViewSubviews, SubView, View, ViewBase};
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct RootView {
-    to_remove: Vec<Rglica<dyn View>>,
+    pub debug_view: SubView<DebugView>,
+    to_remove:      Vec<Rglica<dyn View>>,
 }
 
 impl RootView {
@@ -13,6 +14,7 @@ impl RootView {
         let mut root = Self::boxed();
         let rg = root.to_rglica();
         root.root_view = rg;
+        root.debug_view = root.add_view();
         root
     }
 

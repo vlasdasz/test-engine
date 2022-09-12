@@ -79,9 +79,7 @@ impl Screen {
         self.ui.frame_time = interval as f64 / 1000000000.0;
         self.ui.fps = (1.0 / self.ui.frame_time as f64) as u64;
 
-        if self.ui.debug_view.is_ok() {
-            self.ui.debug_view.fps.set(self.ui.fps);
-        }
+        self.ui.root_view.debug_view.fps.set(self.ui.fps);
     }
 
     pub fn update(&mut self) {

@@ -4,7 +4,10 @@ use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
     sprites::Player,
-    ui::{basic::Button, view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews},
+    ui::{
+        basic::Button, view, Label, SubView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
+        ViewSubviews,
+    },
     ui_layer::UILayer,
     Level,
 };
@@ -15,9 +18,9 @@ use crate::{benchmark::benchmark_level::BenchmarkLevel, TestGameView};
 #[derive(Default)]
 pub struct BenchmarkView {
     level:         BenchmarkLevel,
-    bullets_label: Rglica<Label>,
+    bullets_label: SubView<Label>,
 
-    back: Rglica<Button>,
+    back: SubView<Button>,
 
     ui: Rglica<UILayer>,
 }

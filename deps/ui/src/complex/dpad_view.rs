@@ -6,16 +6,16 @@ use crate::{
     basic::Button,
     view,
     view::{ViewData, ViewFrame, ViewSubviews},
-    View, ViewBase, ViewCallbacks,
+    SubView, View, ViewBase, ViewCallbacks,
 };
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct DPadView {
-    up:           Rglica<Button>,
-    down:         Rglica<Button>,
-    left:         Rglica<Button>,
-    right:        Rglica<Button>,
+    up:           SubView<Button>,
+    down:         SubView<Button>,
+    left:         SubView<Button>,
+    right:        SubView<Button>,
     pub on_press: Event<Direction>,
 }
 

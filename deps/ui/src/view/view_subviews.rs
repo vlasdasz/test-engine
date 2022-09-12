@@ -5,7 +5,7 @@ use rtools::{Rglica, ToRglica};
 use crate::{
     layout::Placer,
     view::{view_data::ViewData, Alert, ViewInternal},
-    View,
+    SubView, View,
 };
 
 pub trait ViewSubviews {
@@ -16,9 +16,9 @@ pub trait ViewSubviews {
     fn remove_subview_at(&mut self, index: usize);
     fn remove_all_subviews(&mut self);
 
-    fn add_view<V: 'static + View>(&mut self) -> Rglica<V>;
-    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> Rglica<V>;
-    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> Rglica<V>;
+    fn add_view<V: 'static + View>(&mut self) -> SubView<V>;
+    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> SubView<V>;
+    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> SubView<V>;
     fn add_subview(&mut self, view: Box<dyn View>);
 
     fn alert(&mut self, message: impl ToString);
@@ -49,28 +49,28 @@ impl<T: ?Sized + View> ViewSubviews for T {
         self.subviews.clear()
     }
 
-    fn add_view<V: 'static + View>(&mut self) -> Rglica<V> {
+    fn add_view<V: 'static + View>(&mut self) -> SubView<V> {
         let view = V::boxed();
         let result = view.to_rglica();
         self.add_subview(view);
-        result
+        result.into()
     }
 
-    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> Rglica<V> {
+    fn make_view<V: 'static + View>(&mut self, make: impl FnOnce(&mut V)) -> SubView<V> {
         let view = V::boxed();
         let mut result = view.to_rglica();
         self.add_subview(view);
         make(result.deref_mut());
-        result
+        result.into()
     }
 
-    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> Rglica<V> {
+    fn make_this<V: 'static + View>(&mut self, make: impl FnOnce(&mut Self, &mut V)) -> SubView<V> {
         let view = V::boxed();
         let mut result = view.to_rglica();
         let mut rglica = self.to_rglica();
         self.add_subview(view);
         make(rglica.deref_mut(), result.deref_mut());
-        result
+        result.into()
     }
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {

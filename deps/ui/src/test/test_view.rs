@@ -7,18 +7,18 @@ use crate::{
     complex::{DrawMode, DrawingView, StringCell, TableView, TableViewDataSource},
     data_source, view,
     view::{ViewData, ViewFrame, ViewSubviews},
-    ImageView, Label, View, ViewBase, ViewCallbacks, ViewLayout,
+    ImageView, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct TestView {
-    label:    Rglica<Label>,
-    button:   Rglica<Button>,
-    image:    Rglica<ImageView>,
-    drawing:  Rglica<DrawingView>,
-    table:    Rglica<TableView>,
-    animated: Rglica<ImageView>,
+    label:    SubView<Label>,
+    button:   SubView<Button>,
+    image:    SubView<ImageView>,
+    drawing:  SubView<DrawingView>,
+    table:    SubView<TableView>,
+    animated: SubView<ImageView>,
 
     animation: Unwrap<Animation>,
 

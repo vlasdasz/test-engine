@@ -1,12 +1,12 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout};
+use crate::{view, view::ViewSubviews, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout};
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct StringCell {
     data:  String,
-    label: Rglica<Label>,
+    label: SubView<Label>,
 }
 
 impl ViewCallbacks for StringCell {

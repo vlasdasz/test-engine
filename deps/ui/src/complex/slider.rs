@@ -6,13 +6,13 @@ use crate::{
     basic::CircleView,
     view,
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase, ViewCallbacks, ViewTouch,
+    SubView, View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
 #[view]
 #[derive(SmartDefault)]
 pub struct Slider {
-    circle:    Rglica<CircleView>,
+    circle:    SubView<CircleView>,
     raw_value: f32,
 
     pub on_change: Event<f32>,

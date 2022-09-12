@@ -1,11 +1,13 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{input::UIEvents, view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout};
+use crate::{
+    input::UIEvents, view, view::ViewSubviews, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
+};
 
 #[view]
 #[derive(Default)]
 pub struct TextField {
-    label: Rglica<Label>,
+    label: SubView<Label>,
 }
 
 impl ViewCallbacks for TextField {

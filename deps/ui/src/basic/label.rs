@@ -1,4 +1,3 @@
-use derivative::Derivative;
 use gm::Color;
 use rtools::{data_manager::Handle, Rglica, ToRglica};
 use smart_default::SmartDefault;
@@ -7,17 +6,15 @@ use text::{render_text, Font};
 use crate::{
     view,
     view::{ViewData, ViewSubviews},
-    ImageView, View, ViewBase, ViewCallbacks, ViewLayout,
+    ImageView, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
-#[derive(SmartDefault, Derivative)]
-#[derivative(Debug)]
+#[derive(SmartDefault)]
 pub struct Label {
-    #[derivative(Debug = "ignore")]
     font:       Handle<Font>,
     text:       String,
-    image_view: Rglica<ImageView>,
+    image_view: SubView<ImageView>,
     text_color: Color,
     #[default = 64.0]
     size:       f32,

@@ -1,4 +1,3 @@
-use derivative::Derivative;
 use gl_image::Image;
 use gm::{
     flat::{Point, Shape},
@@ -9,13 +8,11 @@ use rtools::{data_manager::Handle, Event, IntoF32, Rglica};
 
 use crate::{Level, Sprite};
 
-#[derive(Default, Derivative)]
-#[derivative(Debug)]
+#[derive(Default)]
 pub struct SpriteData {
     pub(crate) position:    Point,
     pub(crate) shape:       Shape,
     pub(crate) rotation:    f32,
-    #[derivative(Debug = "ignore")]
     pub(crate) level:       Rglica<dyn Level>,
     pub(crate) is_selected: bool,
 

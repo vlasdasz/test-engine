@@ -15,7 +15,7 @@ use test_engine::{
         basic::Button,
         complex::{AnalogStickView, IntView},
         test::test_view::TestView,
-        view, BaseView, DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout,
+        view, BaseView, DPadView, SubView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout,
         ViewSubviews,
     },
     ui_layer::UILayer,
@@ -38,18 +38,18 @@ const GET_USERS: GetRequest<Vec<User>> = API.get("get_users");
 #[derive(Default)]
 pub struct TestGameView {
     level:       TestGameLevel,
-    dpad:        Rglica<DPadView>,
-    left_stick:  Rglica<AnalogStickView>,
-    sprite_view: Rglica<SpriteView>,
-    test_view:   Rglica<TestView>,
+    dpad:        SubView<DPadView>,
+    left_stick:  SubView<AnalogStickView>,
+    sprite_view: SubView<SpriteView>,
+    test_view:   SubView<TestView>,
 
-    ui_scale:    Rglica<IntView>,
-    level_scale: Rglica<IntView>,
+    ui_scale:    SubView<IntView>,
+    level_scale: SubView<IntView>,
 
-    to_benchmark: Rglica<Button>,
-    to_test:      Rglica<Button>,
-    play:         Rglica<Button>,
-    async_task:   Rglica<Button>,
+    to_benchmark: SubView<Button>,
+    to_test:      SubView<Button>,
+    play:         SubView<Button>,
+    async_task:   SubView<Button>,
 
     sound: Handle<Sound>,
 

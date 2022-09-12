@@ -4,7 +4,6 @@ use rtools::{IntoF32, Rglica};
 
 use crate::{sprite::SpriteTemplates, Level, Sprite, SpriteData, ToCollider};
 
-#[derive(Debug)]
 pub struct Wall {
     data: SpriteData,
 }

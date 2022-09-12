@@ -1,11 +1,16 @@
 use rtools::{platform::Platform, Property, Rglica, ToRglica};
-use ui::{view, Label, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews};
+
+use crate::{
+    view,
+    view::{ViewFrame, ViewLayout, ViewSubviews},
+    Label, SubView, View, ViewBase, ViewCallbacks,
+};
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct DebugView {
-    fps_label:         Rglica<Label>,
-    frame_drawn_label: Rglica<Label>,
+    fps_label:         SubView<Label>,
+    frame_drawn_label: SubView<Label>,
     frame_drawn:       u64,
     pub fps:           Property<u64>,
 }

@@ -5,13 +5,13 @@ use crate::{
     complex::{DrawMode, DrawingView},
     view,
     view::{ViewFrame, ViewLayout, ViewSubviews},
-    View, ViewBase, ViewCallbacks,
+    SubView, View, ViewBase, ViewCallbacks,
 };
 
 #[view]
 #[derive(Default)]
 pub struct CircleView {
-    drawing: Rglica<DrawingView>,
+    drawing: SubView<DrawingView>,
     color:   Color,
     radius:  f32,
 }

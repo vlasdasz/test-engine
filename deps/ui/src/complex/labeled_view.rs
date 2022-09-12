@@ -3,14 +3,14 @@ use rtools::{Rglica, ToRglica};
 use crate::{
     view,
     view::{ViewLayout, ViewSubviews},
-    Label, View, ViewBase, ViewCallbacks,
+    Label, SubView, View, ViewBase, ViewCallbacks,
 };
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct LabeledView {
-    label: Rglica<Label>,
-    value: Rglica<Label>,
+    label: SubView<Label>,
+    value: SubView<Label>,
 }
 
 impl LabeledView {

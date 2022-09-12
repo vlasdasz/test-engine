@@ -1,11 +1,9 @@
-use std::fmt::Debug;
-
 use rtools::{Rglica, ToRglica};
 
 use crate::{view, view::ViewSubviews, View, ViewBase, ViewCallbacks, ViewLayout};
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct TableView {
     pub data_source: Rglica<dyn TableViewDataSource>,
 }

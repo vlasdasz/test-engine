@@ -2,18 +2,18 @@ use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica, ToRglica};
 use sprites::Sprite;
 use ui::{
-    basic::Button, complex::LabeledView, view, View, ViewBase, ViewCallbacks, ViewData, ViewLayout,
+    basic::Button, complex::LabeledView, view, SubView, View, ViewBase, ViewCallbacks, ViewData, ViewLayout,
     ViewSubviews,
 };
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct SpriteView {
-    position: Rglica<LabeledView>,
-    size:     Rglica<LabeledView>,
-    color:    Rglica<LabeledView>,
+    position: SubView<LabeledView>,
+    size:     SubView<LabeledView>,
+    color:    SubView<LabeledView>,
 
-    delete_button: Rglica<Button>,
+    delete_button: SubView<Button>,
 
     sprite: Rglica<dyn Sprite>,
 }

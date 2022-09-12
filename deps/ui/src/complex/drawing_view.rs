@@ -8,7 +8,7 @@ use crate::{
 };
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct DrawingView {}
 
 impl DrawingView {

@@ -1,7 +1,4 @@
-use std::{
-    fmt::Debug,
-    ops::{Deref, DerefMut},
-};
+use std::ops::{Deref, DerefMut};
 
 use gl_image::Image;
 use gm::flat::{Point, Shape};
@@ -9,7 +6,6 @@ use rtools::{data_manager::Handle, Rglica};
 
 use crate::{sprite::SpriteTemplates, Body, Level, LevelCreation, Sprite, SpriteData};
 
-#[derive(Debug)]
 pub struct Weapon {
     sprite:              SpriteData,
     pub(crate) velocity: Point,

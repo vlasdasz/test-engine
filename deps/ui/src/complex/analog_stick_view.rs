@@ -8,7 +8,7 @@ use crate::{
     complex::{DrawMode, DrawingView},
     view,
     view::{ViewFrame, ViewSubviews},
-    View, ViewBase, ViewCallbacks, ViewTouch,
+    SubView, View, ViewBase, ViewCallbacks, ViewTouch,
 };
 
 const SIZE: f32 = 80.0;
@@ -17,10 +17,10 @@ const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 const PRECISION: u16 = 50;
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct AnalogStickView {
-    direction_stick: Rglica<DrawingView>,
-    background:      Rglica<DrawingView>,
+    direction_stick: SubView<DrawingView>,
+    background:      SubView<DrawingView>,
     pub on_change:   Event<Point>,
     pub flaccid:     bool,
 }
@@ -77,16 +77,15 @@ impl ViewCallbacks for AnalogStickView {
             DrawMode::Fill,
         );
 
+        let center = self.frame().size.center();
         self.direction_stick = self.add_view();
-        let mut direction_stick = self.direction_stick;
+        self.direction_stick
+            .set_center(center)
+            .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE));
 
-        direction_stick
-            .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE))
-            .set_center(self.frame().size.center());
+        let stick_center = self.direction_stick.frame().size.center();
 
-        let stick_center = direction_stick.frame().size.center();
-
-        direction_stick
+        self.direction_stick
             .add_path(
                 PointsPath::circle_with(stick_center, STICK_VIEW_SIZE / 2.0, PRECISION),
                 &Color::BLACK,

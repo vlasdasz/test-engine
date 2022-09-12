@@ -11,10 +11,7 @@ use sprites::SpritesDrawer;
 use ui::input::TouchEvent;
 use ui::{basic::RootView, Touch, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::{
-    debug_view::DebugView, main_view::MainView, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
-    Keymap,
-};
+use crate::{main_view::MainView, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer, Keymap};
 
 pub struct UILayer {
     pub sprites_drawer: Box<dyn SpritesDrawer>,
@@ -23,7 +20,6 @@ pub struct UILayer {
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
     pub root_view:          Box<RootView>,
-    pub debug_view:         Rglica<DebugView>,
     pub view:               Rglica<dyn MainView>,
 
     pub keymap: Rc<Keymap>,
@@ -44,7 +40,6 @@ impl UILayer {
             ui_cursor_position: Default::default(),
             cursor_position:    Default::default(),
             root_view:          RootView::new(),
-            debug_view:         Default::default(),
             view:               Default::default(),
             keymap:             Default::default(),
             fps:                Default::default(),
@@ -89,10 +84,6 @@ impl UILayer {
         self.scale = scale.into_f32();
         self.drawer.set_scale(self.scale);
         self.root_view.set_frame(self.drawer.window_size / self.scale);
-    }
-
-    pub fn add_debug_view(&mut self) {
-        self.debug_view = self.root_view.add_view();
     }
 }
 

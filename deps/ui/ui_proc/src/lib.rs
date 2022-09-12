@@ -23,6 +23,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         #stream
         impl View for #name {
             fn rglica(&self) -> Rglica<dyn View> { (self as &dyn View).to_rglica() }
+            fn init_views(&mut self) {
+
+            }
         }
         impl std::ops::Deref for #name {
             type Target = ViewBase;

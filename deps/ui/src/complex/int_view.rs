@@ -6,17 +6,17 @@ use crate::{
     basic::Button,
     view,
     view::{ViewData, ViewSubviews},
-    Label, View, ViewBase, ViewCallbacks, ViewLayout,
+    Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
-#[derive(SmartDefault, Debug)]
+#[derive(SmartDefault)]
 pub struct IntView {
     #[default = 1.0]
     value: f32,
-    label: Rglica<Label>,
-    up:    Rglica<Button>,
-    down:  Rglica<Button>,
+    label: SubView<Label>,
+    up:    SubView<Button>,
+    down:  SubView<Button>,
 
     pub on_change: Event<f32>,
     #[default = 1.0]

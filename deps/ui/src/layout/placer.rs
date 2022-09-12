@@ -111,7 +111,7 @@ impl Placer {
         self
     }
 
-    pub fn anchor<T: View>(&mut self, view: Rglica<T>, offset: impl IntoF32) {
+    pub fn anchor<T: View>(&mut self, view: impl Deref<Target = T>, offset: impl IntoF32) {
         debug_assert!(
             self.pending_sides.len() == 1,
             "Anchor should be to exactly one size"

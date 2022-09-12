@@ -6,7 +6,6 @@ use rtools::{Rglica, ToRglica};
 
 use crate::{Body, Level, Sprite, SpriteData};
 
-#[derive(Debug)]
 pub struct Unit {
     body: Body,
 }

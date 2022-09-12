@@ -23,7 +23,6 @@ async fn main() {
     let mut screen = Screen::new((1000, 600), &home().join("test_engine"));
 
     screen.ui.set_view::<TestGameView>();
-    screen.ui.add_debug_view();
 
     screen.start_main_loop();
 }

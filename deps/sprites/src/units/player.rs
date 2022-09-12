@@ -5,7 +5,6 @@ use rtools::Rglica;
 
 use crate::{Level, Sprite, SpriteData, Unit, Weapon};
 
-#[derive(Debug)]
 pub struct Player {
     unit:       Unit,
     pub weapon: Weapon,

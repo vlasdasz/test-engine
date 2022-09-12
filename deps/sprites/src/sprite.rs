@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use gl_image::Image;
 use gm::{
     flat::{Point, Shape, Size},
@@ -10,7 +8,7 @@ use rtools::{address::Address, data_manager::Handle, IntoF32, Rglica};
 
 use crate::{Level, SpriteData};
 
-pub trait Sprite: Debug {
+pub trait Sprite {
     fn update(&mut self) {}
 
     fn size(&self) -> Size {

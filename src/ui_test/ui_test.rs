@@ -1,21 +1,22 @@
-use std::fmt::Debug;
-
 use test_engine::{
     main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
-    ui::{basic::Button, view, BaseView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews},
+    ui::{
+        basic::Button, view, BaseView, SubView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
+        ViewSubviews,
+    },
     ui_layer::UILayer,
 };
 
 use crate::TestGameView;
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct UITestView {
-    container: Rglica<BaseView>,
-    top_view:  Rglica<BaseView>,
-    test:      Rglica<BaseView>,
-    back:      Rglica<Button>,
+    container: SubView<BaseView>,
+    top_view:  SubView<BaseView>,
+    test:      SubView<BaseView>,
+    back:      SubView<Button>,
     ui:        Rglica<UILayer>,
 }
 

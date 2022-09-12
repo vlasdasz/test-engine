@@ -33,7 +33,6 @@ impl<T: MainView + 'static> App<T> {
             let mut screen = Screen::new(monitor.resolution, assets_path);
 
             screen.ui.set_view::<T>();
-            screen.ui.add_debug_view();
 
             screen.add_monitor(monitor);
 

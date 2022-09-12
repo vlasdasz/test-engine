@@ -1,22 +1,20 @@
 use gm::Color;
 use rtools::{Event, Rglica, ToRglica};
 
-use crate::{view, view::ViewSubviews, Label, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch};
+use crate::{view, view::ViewSubviews, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch};
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Button {
-    label: Rglica<Label>,
+    label: SubView<Label>,
 
     pub on_tap: Event,
 }
 
 impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
-        if self.label.is_null() {
-            self.label = self.add_view();
-            self.label.place().as_background();
-        }
+        self.label = self.add_view();
+        self.label.place().as_background();
         self.label.set_text(text);
         self
     }

@@ -5,14 +5,14 @@ use crate::{
     basic::Button,
     view,
     view::{ViewData, ViewSubviews},
-    Label, View, ViewBase, ViewCallbacks, ViewLayout,
+    Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Alert {
-    label:     Rglica<Label>,
-    ok_button: Rglica<Button>,
+    label:     SubView<Label>,
+    ok_button: SubView<Button>,
     message:   String,
 }
 
