@@ -3,7 +3,7 @@ use std::{ffi::c_void, hash::Hash, path::Path};
 use gl_wrapper::{
     buffers::{Buffers, FrameBuffer},
     image_loader::ImageLoader,
-    GLWrapper, Shader,
+    GLWrapper,
 };
 use gm::{
     flat::{Rect, Size},
@@ -16,6 +16,8 @@ use rtools::{
     file::File,
     hash, managed,
 };
+
+use crate::shaders::Shaders;
 
 #[derive(Debug)]
 pub struct Image {
@@ -115,11 +117,13 @@ impl LoadFromPath for Image {
     }
 }
 
-pub fn draw_image(image: &Image, rect: &Rect, color: &Color, shader: &Shader, color_shader: &Shader) {
+pub fn draw_image(image: &Image, rect: &Rect, color: &Color) {
+    let shaders = Shaders::get();
+
     if image.is_monochrome() {
-        shader.enable().set_color(color)
+        shaders.monochrome.enable().set_color(color)
     } else {
-        color_shader.enable()
+        shaders.texture.enable()
     }
     .set_flipped(image.flipped)
     .set_flipped_y(image.flipped_y);

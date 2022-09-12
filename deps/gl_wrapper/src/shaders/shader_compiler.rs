@@ -19,6 +19,7 @@ use rtools::{
 
 use crate::{GLInfo, Shader};
 
+#[derive(Default)]
 pub struct ShaderCompiler {
     path:    PathBuf,
     gl_info: GLInfo,
@@ -28,7 +29,7 @@ impl ShaderCompiler {
     pub fn new(path: &Path) -> ShaderCompiler {
         ShaderCompiler {
             path:    path.into(),
-            gl_info: GLInfo::get(),
+            gl_info: GLInfo::default(),
         }
     }
 
@@ -43,7 +44,7 @@ impl ShaderCompiler {
         result + "\n"
     }
 
-    fn check_program_error(&self, path: &Path, program: u32) {
+    fn check_program_error(&self, program: u32) {
         let mut success: GLT!(GLint) = 1;
 
         GL_SILENT!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
@@ -75,8 +76,7 @@ impl ShaderCompiler {
         );
 
         let error = error.to_string_lossy().into_owned();
-        error!("Failed to compile shader: {:?} error: {}", path, error);
-        panic!("Failed to compile shader: {:?} error: {}", path, error);
+        panic!("Failed to compile shader: {}", error);
     }
 
     fn unfold_includes(&self, mut code: String) -> String {
@@ -96,8 +96,8 @@ impl ShaderCompiler {
         code
     }
 
-    fn compile_shader(&self, path: PathBuf, code: String, kind: GLT!(GLenum)) -> u32 {
-        let code = self.version() + "\n" + &self.unfold_includes(code);
+    fn compile_shader(&self, code: impl ToString, kind: GLT!(GLenum)) -> u32 {
+        let code = self.version() + "\n" + &self.unfold_includes(code.to_string());
         let shader = GL!(CreateShader, kind);
 
         let c_code = CString::new(code).unwrap();
@@ -106,22 +106,14 @@ impl ShaderCompiler {
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
         GL!(CompileShader, shader);
 
-        self.check_program_error(&path, shader);
+        self.check_program_error(shader);
 
         shader
     }
 
-    pub fn compile(&self, path: &Path) -> Shader {
-        trace!("Compiling: {:?}", path);
-
-        let vert_path = path.with_extension("vert");
-        let frag_path = path.with_extension("frag");
-
-        let vert_code = File::read_to_string(&vert_path);
-        let frag_code = File::read_to_string(&frag_path);
-
-        let vert = self.compile_shader(vert_path, vert_code, GLC!(VERTEX_SHADER));
-        let frag = self.compile_shader(frag_path, frag_code, GLC!(FRAGMENT_SHADER));
+    pub fn compile(&self, vert_code: impl ToString, frag_code: impl ToString) -> Shader {
+        let vert = self.compile_shader(vert_code, GLC!(VERTEX_SHADER));
+        let frag = self.compile_shader(frag_code, GLC!(FRAGMENT_SHADER));
 
         let program = GL!(CreateProgram);
 
@@ -129,7 +121,7 @@ impl ShaderCompiler {
         GL!(AttachShader, program, frag);
         GL!(LinkProgram, program);
 
-        self.check_program_error(path, program);
+        self.check_program_error(program);
 
         GL!(DetachShader, program, vert);
         GL!(DetachShader, program, frag);
@@ -139,6 +131,18 @@ impl ShaderCompiler {
 
         trace!("Shader: OK");
 
-        Shader::new(program, path.to_string_lossy().into())
+        Shader::new(program)
+    }
+
+    pub fn compile_path(&self, path: &Path) -> Shader {
+        trace!("Compiling: {:?}", path);
+
+        let vert_path = path.with_extension("vert");
+        let frag_path = path.with_extension("frag");
+
+        let vert_code = File::read_to_string(&vert_path);
+        let frag_code = File::read_to_string(&frag_path);
+
+        self.compile(vert_code, frag_code)
     }
 }

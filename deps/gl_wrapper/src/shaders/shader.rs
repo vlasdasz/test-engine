@@ -7,8 +7,6 @@ use gm::{
 
 #[derive(Debug)]
 pub struct Shader {
-    pub name: String,
-
     program:    u32,
     color:      i32,
     size:       i32,
@@ -31,9 +29,8 @@ fn get_uniform(program: u32, lit: &str) -> i32 {
 }
 
 impl Shader {
-    pub fn new(program: u32, name: String) -> Shader {
+    pub fn new(program: u32) -> Shader {
         Shader {
-            name,
             program,
             color: get_uniform(program, "color"),
             size: get_uniform(program, "size"),

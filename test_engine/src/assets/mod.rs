@@ -4,7 +4,7 @@ use std::{path::Path, ptr::null_mut, rc::Rc};
 
 use audio::Sound;
 use gl_image::Image;
-use rtools::{data_manager::DataManager, static_get};
+use rtools::data_manager::DataManager;
 pub use shaders::Shaders;
 use text::Font;
 

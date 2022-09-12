@@ -84,17 +84,17 @@ impl Label {
 
             for glyph in self.layout.glyphs() {
                 let image = self.font.glyph_for_char(glyph.parent).image;
-                // draw_image(
-                //     image.deref(),
-                //     &(
-                //         glyph.x,
-                //         size.height - glyph.y - glyph.height as f32 + 10.0,
-                //         glyph.width,
-                //         glyph.height,
-                //     )
-                //         .into(),
-                //     &Color::WHITE, // See ui_monochrome shader
-                // );
+                draw_image(
+                    image.deref(),
+                    &(
+                        glyph.x,
+                        size.height - glyph.y - glyph.height as f32 + 10.0,
+                        glyph.width,
+                        glyph.height,
+                    )
+                        .into(),
+                    &Color::WHITE, // See ui_monochrome shader
+                );
             }
 
             image.flipped_y = true;

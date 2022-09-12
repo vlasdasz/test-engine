@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use gl_wrapper::buffers::Buffers;
 use gm::flat::{Point, Size};
 use rtools::math::IntoF32;

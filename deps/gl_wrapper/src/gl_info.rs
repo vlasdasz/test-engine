@@ -26,8 +26,10 @@ impl GLInfo {
         let c_str: &CStr = unsafe { CStr::from_ptr(full_gl_version as _) };
         c_str.to_str().unwrap().to_string()
     }
+}
 
-    pub fn get() -> GLInfo {
+impl Default for GLInfo {
+    fn default() -> Self {
         let version = GLInfo::get_string(GLC!(VERSION));
         let is_gles = version.contains("ES");
         let gl_version = find_match(&version, GLInfo::GL_QUERY);

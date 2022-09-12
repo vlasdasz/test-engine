@@ -1,4 +1,3 @@
-use gl_image::Image;
 use gm::{flat::Rect, Color};
 use rtools::Rglica;
 

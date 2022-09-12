@@ -12,8 +12,8 @@ use ui::input::TouchEvent;
 use ui::{basic::RootView, Touch, ViewFrame, ViewSubviews, ViewTouch};
 
 use crate::{
-    assets::Assets, debug_view::DebugView, main_view::MainView, sprites_drawer::TESpritesDrawer,
-    ui_drawer::TEUIDrawer, Keymap,
+    debug_view::DebugView, main_view::MainView, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
+    Keymap,
 };
 
 pub struct UILayer {

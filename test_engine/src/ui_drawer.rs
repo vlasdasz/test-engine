@@ -1,9 +1,9 @@
 #![allow(clippy::mismatched_target_os)]
 
-use std::{borrow::Borrow, cell::RefCell, collections::HashMap, ops::DerefMut, rc::Rc};
+use std::{borrow::Borrow, cell::RefCell, collections::HashMap, ops::DerefMut};
 
-use gl_image::Image;
-use gl_wrapper::{buffers::Buffers, GLWrapper, Shader};
+use gl_image::draw_image;
+use gl_wrapper::{buffers::Buffers, GLWrapper};
 use gm::{
     flat::{PointsPath, Rect, Size},
     Color,
@@ -92,8 +92,7 @@ impl TEUIDrawer {
 
         if let Some(image) = view.image().get() {
             let frame = &image.size.fit_in(view.absolute_frame());
-            //self.draw_image(image, &self.convert_viewport(frame),
-            // view.color());
+            draw_image(&image, &self.convert_viewport(frame), view.color());
         }
 
         if view.border_color().is_visible() {
