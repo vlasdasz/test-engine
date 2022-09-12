@@ -12,8 +12,11 @@ use test_engine::{
     sprite_view::SpriteView,
     sprites::{Control, Player},
     ui::{
-        basic::Button, complex::AnalogStickView, test::test_view::TestView, view, BaseView, DPadView, View,
-        ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews,
+        basic::Button,
+        complex::{AnalogStickView, IntView},
+        test::test_view::TestView,
+        view, BaseView, DPadView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout,
+        ViewSubviews,
     },
     ui_layer::UILayer,
     Image, Level,
@@ -40,12 +43,15 @@ pub struct TestGameView {
     sprite_view: Rglica<SpriteView>,
     test_view:   Rglica<TestView>,
 
+    ui_scale:    Rglica<IntView>,
+    level_scale: Rglica<IntView>,
+
     to_benchmark: Rglica<Button>,
     to_test:      Rglica<Button>,
+    play:         Rglica<Button>,
+    async_task:   Rglica<Button>,
 
-    play:       Rglica<Button>,
-    sound:      Handle<Sound>,
-    async_task: Rglica<Button>,
+    sound: Handle<Sound>,
 
     ui: Rglica<UILayer>,
 }
@@ -125,6 +131,36 @@ impl TestGameView {
             .br()
             .val(20)
             .size(280, 400);
+
+        self.ui_scale = self.add_view();
+        self.ui_scale.step = 0.1;
+        self.ui_scale
+            .place()
+            .size(28, 120)
+            .left()
+            .val(100)
+            .bottom()
+            .val(140);
+        self.ui_scale
+            .set_images(Image::get("up.png"), Image::get("down.png"));
+        self.ui_scale
+            .on_change
+            .set(self, |this, val| this.ui.set_scale(val));
+
+        self.level_scale = self.add_view();
+        self.level_scale.step = 0.1;
+        self.level_scale
+            .place()
+            .size(28, 120)
+            .left()
+            .val(28)
+            .bottom()
+            .val(140);
+        self.level_scale
+            .set_images(Image::get("up.png"), Image::get("down.png"));
+        self.level_scale
+            .on_change
+            .set(self, |this, val| this.level.set_scale(val));
 
         self.make_this(|this, view: &mut BaseView| {
             view.place()

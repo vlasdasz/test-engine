@@ -1,7 +1,6 @@
-use std::ops::AddAssign;
-
 use gl_image::Image;
 use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
+use smart_default::SmartDefault;
 
 use crate::{
     basic::Button,
@@ -11,13 +10,17 @@ use crate::{
 };
 
 #[view]
-#[derive(Default, Debug)]
+#[derive(SmartDefault, Debug)]
 pub struct IntView {
-    value:         i64,
-    label:         Rglica<Label>,
-    up:            Rglica<Button>,
-    down:          Rglica<Button>,
-    pub on_change: Event<i64>,
+    #[default = 1.0]
+    value: f32,
+    label: Rglica<Label>,
+    up:    Rglica<Button>,
+    down:  Rglica<Button>,
+
+    pub on_change: Event<f32>,
+    #[default = 1.0]
+    pub step:      f32,
 }
 
 impl IntView {
@@ -31,20 +34,20 @@ impl ViewCallbacks for IntView {
     fn setup(&mut self) {
         self.place().all_ver();
 
-        self.label = self.add_view();
-        self.up = self.add_view();
-        self.down = self.add_view();
+        (self.label, self.up, self.down) = (self.add_view(), self.add_view(), self.add_view());
+
+        self.label.set_text("1.0");
 
         self.up.on_tap.set(self, |this, _| {
-            this.value.add_assign(1);
-            let val = this.value;
-            this.on_change.trigger(val);
+            this.value += this.step;
+            this.on_change.trigger(this.value);
+            this.label.set_text(format!("{:.1}", this.value));
         });
 
         self.down.on_tap.set(self, |this, _| {
-            this.value.add_assign(-1);
-            let val = this.value;
-            this.on_change.trigger(val);
+            this.value -= this.step;
+            this.on_change.trigger(this.value);
+            this.label.set_text(format!("{:.1}", this.value));
         });
     }
 }
