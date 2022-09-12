@@ -150,7 +150,12 @@ impl TEUIDrawer {
 
 impl UIDrawer for TEUIDrawer {
     fn reset_viewport(&self) {
-        GLWrapper::set_viewport((0, 0, self.window_size.width, self.window_size.height));
+        GLWrapper::set_viewport((
+            0,
+            0,
+            self.window_size.width * self.screen_scale,
+            self.window_size.height * self.screen_scale,
+        ));
     }
 
     fn fill(&self, rect: &Rect, color: &Color) {
