@@ -10,6 +10,12 @@ pub struct TextField {
     label: SubView<Label>,
 }
 
+impl TextField {
+    pub fn text(&self) -> &str {
+        self.label.text()
+    }
+}
+
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {
         self.label.place().as_background();
