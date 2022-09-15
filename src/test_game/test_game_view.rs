@@ -3,14 +3,13 @@ use tao_log::infov;
 use test_engine::{
     audio::Sound,
     gm::{flat::Direction, Color},
-    main_view::{HasLevel, MainView},
     net::{GetRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
         Apply, Rglica, ToRglica,
     },
     sprite_view::SpriteView,
-    sprites::{Control, Player},
+    sprites::Control,
     ui::{
         basic::Button,
         complex::{AnalogStickView, IntView},
@@ -18,11 +17,10 @@ use test_engine::{
         view, BaseView, DPadView, SubView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout,
         ViewSubviews,
     },
-    ui_layer::UILayer,
-    Image, Level,
+    Image, Screen,
 };
 
-use crate::{test_game::test_game_level::TestGameLevel, BenchmarkView, UITestView};
+use crate::BenchmarkView;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct User {
@@ -37,7 +35,6 @@ const GET_USERS: GetRequest<Vec<User>> = API.get("get_users");
 #[view]
 #[derive(Default)]
 pub struct TestGameView {
-    level:       TestGameLevel,
     dpad:        SubView<DPadView>,
     left_stick:  SubView<AnalogStickView>,
     sprite_view: SubView<SpriteView>,
@@ -47,28 +44,30 @@ pub struct TestGameView {
     level_scale: SubView<IntView>,
 
     sound: Handle<Sound>,
-
-    ui: Rglica<UILayer>,
 }
 
 impl TestGameView {
     fn setup_level(&mut self) {
-        self.level.setup();
-
-        self.dpad
-            .on_press
-            .set(&self.level.player, |player, dir| player.move_by_direction(dir));
+        self.dpad.on_press.sub(|dir| {
+            Screen::current()
+                .ui
+                .level
+                .as_mut()
+                .unwrap()
+                .player()
+                .move_by_direction(dir)
+        });
     }
 
     fn setup_ui(&mut self) {
-        self.ui.keymap.add("=", self, |this| {
-            let scale = this.ui.scale() * 1.2;
-            this.ui.set_scale(scale);
+        Screen::current().ui.keymap.add("=", self, |_| {
+            let scale = Screen::current().ui.scale() * 1.2;
+            Screen::current().ui.set_scale(scale);
         });
 
-        self.ui.keymap.add("-", self, |this| {
-            let scale = this.ui.scale() * 0.8;
-            this.ui.set_scale(scale);
+        Screen::current().ui.keymap.add("-", self, |_| {
+            let scale = Screen::current().ui.scale() * 0.8;
+            Screen::current().ui.set_scale(scale);
         });
 
         [" ", "w", "s", "d", "a"].apply2(
@@ -80,9 +79,11 @@ impl TestGameView {
                 Direction::Left,
             ],
             |key, direction| {
-                self.ui
-                    .keymap
-                    .add(key, self, move |this| this.player().move_by_direction(direction));
+                Screen::current().ui.keymap.add(key, self, move |_| {
+                    if let Some(level) = &mut Screen::current().ui.level {
+                        level.player().move_by_direction(direction)
+                    }
+                });
             },
         );
 
@@ -90,7 +91,11 @@ impl TestGameView {
 
         self.sprite_view.place().tr().val(10).size(400, 80);
 
-        self.level
+        Screen::current()
+            .ui
+            .level
+            .as_mut()
+            .unwrap()
             .base()
             .on_sprite_selected
             .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
@@ -110,8 +115,10 @@ impl TestGameView {
             .val(100);
 
         self.left_stick.place().bl().val(10).size(80, 80);
-        self.left_stick.on_change.set(&self.level.player, |player, dir| {
-            player.add_impulse(dir);
+        self.left_stick.on_change.sub(|dir| {
+            if let Some(level) = &mut Screen::current().ui.level {
+                level.player().add_impulse(dir);
+            }
         });
 
         self.test_view
@@ -135,7 +142,7 @@ impl TestGameView {
             .set_images(Image::get("up.png"), Image::get("down.png"));
         self.ui_scale
             .on_change
-            .set(self, |this, val| this.ui.set_scale(val));
+            .sub(|val| Screen::current().ui.set_scale(val));
 
         self.level_scale.step = 0.1;
         self.level_scale
@@ -149,7 +156,7 @@ impl TestGameView {
             .set_images(Image::get("up.png"), Image::get("down.png"));
         self.level_scale
             .on_change
-            .set(self, |this, val| this.level.set_scale(val));
+            .sub(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));
 
         {
             let mut view = self.initialize_view::<BaseView>();
@@ -165,13 +172,13 @@ impl TestGameView {
             to_benchmark.set_text("Benchmark");
             to_benchmark
                 .on_tap
-                .set(self, |this, _| this.ui.set_view::<BenchmarkView>());
+                .sub(|_| Screen::current().ui.set_view::<BenchmarkView>());
 
             let mut to_test = view.initialize_view::<Button>();
             to_test.set_text("Test");
             to_test
                 .on_tap
-                .set(self, |this, _| this.ui.set_view::<UITestView>());
+                .sub(|_| Screen::current().ui.set_view::<BenchmarkView>());
 
             let mut play = view.initialize_view::<Button>();
             play.set_text("Play sound");
@@ -211,21 +218,5 @@ impl ViewCallbacks for TestGameView {
     fn setup(&mut self) {
         self.setup_ui();
         self.setup_level();
-    }
-}
-
-impl MainView for TestGameView {
-    fn set_ui(&mut self, ui: Rglica<UILayer>) {
-        self.ui = ui
-    }
-}
-
-impl HasLevel for TestGameView {
-    fn player(&self) -> Rglica<Player> {
-        self.level.player
-    }
-
-    fn level(&self) -> Rglica<dyn Level> {
-        (&self.level as &dyn Level).to_rglica()
     }
 }

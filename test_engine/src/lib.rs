@@ -4,6 +4,7 @@
 #![feature(stmt_expr_attributes)]
 #![feature(const_trait_impl)]
 #![feature(specialization)]
+#![feature(let_else)]
 
 pub use audio;
 pub use gl_image;
@@ -21,7 +22,6 @@ pub use crate::screen::Screen;
 pub mod app;
 pub mod assets;
 mod keymap;
-pub mod main_view;
 pub mod paths;
 pub mod screen;
 pub mod sprite_view;

@@ -1,6 +1,10 @@
+use std::ops::DerefMut;
+
 use gm::flat::{Point, Size};
 
 use crate::Sprite;
+
+static mut DRAWER: Option<Box<dyn SpritesDrawer>> = Option::None;
 
 pub trait SpritesDrawer {
     fn scale(&self) -> f32;
@@ -11,4 +15,12 @@ pub trait SpritesDrawer {
     fn camera_position(&self) -> Point;
     fn set_camera_position(&mut self, pos: Point);
     fn draw(&self, sprite: &dyn Sprite);
+}
+
+pub fn set_sprites_drawer(drawer: Box<dyn SpritesDrawer>) {
+    unsafe { DRAWER = drawer.into() }
+}
+
+pub fn get_sprites_drawer() -> &'static mut dyn SpritesDrawer {
+    unsafe { DRAWER.as_mut().unwrap().deref_mut() }
 }

@@ -1,5 +1,4 @@
 use test_engine::{
-    main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
     ui::{
         basic::Button, view, BaseView, SubView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
@@ -8,7 +7,7 @@ use test_engine::{
     ui_layer::UILayer,
 };
 
-use crate::TestGameView;
+use crate::test_game::TestGameView;
 
 #[view]
 #[derive(Default)]
@@ -42,12 +41,5 @@ impl ViewCallbacks for UITestView {
         self.back.on_tap.set(self, |this, _| {
             this.ui.set_view::<TestGameView>();
         });
-    }
-}
-
-impl HasLevel for UITestView {}
-impl MainView for UITestView {
-    fn set_ui(&mut self, ui: Rglica<UILayer>) {
-        self.ui = ui
     }
 }

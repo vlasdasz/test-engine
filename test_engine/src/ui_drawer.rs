@@ -28,90 +28,13 @@ pub struct TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    pub fn new() -> TEUIDrawer {
-        TEUIDrawer {
+    pub fn new() -> Box<TEUIDrawer> {
+        Box::new(TEUIDrawer {
             window_size:   Default::default(),
             round_storage: Default::default(),
             scale:         1.0,
             screen_scale:  1.0,
-        }
-    }
-
-    #[cfg(any(windows, linux))]
-    pub fn set_screen_scale(&mut self, _scale: f32) {
-        self.screen_scale = 1.0
-    }
-
-    #[cfg(macos)]
-    pub fn set_screen_scale(&mut self, scale: f32) {
-        self.screen_scale = scale
-    }
-
-    #[cfg(mobile)]
-    pub fn set_screen_scale(&mut self, scale: f32) {
-        self.screen_scale = scale
-    }
-
-    pub fn set_scale(&mut self, scale: f32) {
-        self.scale = scale
-    }
-
-    pub fn set_size(&mut self, size: Size) {
-        self.window_size = size
-    }
-}
-
-impl TEUIDrawer {
-    pub fn update(&self, view: &mut dyn View) {
-        view.update();
-        for view in view.subviews_mut() {
-            self.update(view.deref_mut());
-        }
-    }
-
-    pub fn draw(&self, view: &mut dyn View) {
-        if view.is_hidden() {
-            return;
-        }
-
-        let needs_stensil = view.corner_radius() > 0.0;
-
-        if needs_stensil {
-            GLWrapper::set_viewport(self.convert_viewport(view.frame()));
-
-            GLWrapper::start_stensil();
-
-            let mut storage = self.round_storage.borrow_mut();
-            let path = self.rounded_path_for_view(view, &mut storage);
-            self.draw_path(path, view.absolute_frame(), DrawMode::Fill.into());
-
-            GLWrapper::draw_stensiled();
-        }
-
-        self.fill(view.absolute_frame(), view.color());
-
-        if let Some(image) = view.image().get() {
-            let frame = &image.size.fit_in(view.absolute_frame());
-            draw_image(&image, &self.convert_viewport(frame), view.color());
-        }
-
-        if view.border_color().is_visible() {
-            if needs_stensil {
-                self.draw_round_border(view);
-            } else {
-                self.outline(view.absolute_frame(), view.border_color());
-            }
-        }
-
-        for path in view.paths() {
-            self.draw_path(path, view.absolute_frame(), None);
-        }
-
-        for view in view.subviews_mut() {
-            self.draw(view.deref_mut())
-        }
-
-        GLWrapper::disable_stensil();
+        })
     }
 }
 
@@ -194,8 +117,87 @@ impl UIDrawer for TEUIDrawer {
         self.draw_path(path, view.absolute_frame(), None);
     }
 
+    #[cfg(any(windows, linux))]
+    fn set_screen_scale(&mut self, _scale: f32) {
+        self.screen_scale = 1.0
+    }
+
+    #[cfg(macos)]
+    fn set_screen_scale(&mut self, scale: f32) {
+        self.screen_scale = scale
+    }
+
+    #[cfg(mobile)]
+    fn set_screen_scale(&mut self, scale: f32) {
+        self.screen_scale = scale
+    }
+
+    fn set_scale(&mut self, scale: f32) {
+        self.scale = scale
+    }
+
+    fn set_size(&mut self, size: Size) {
+        self.window_size = size
+    }
+
     fn rglica(&self) -> Rglica<dyn UIDrawer> {
         (self as &dyn UIDrawer).to_rglica()
+    }
+
+    fn update(&self, view: &mut dyn View) {
+        view.update();
+        for view in view.subviews_mut() {
+            self.update(view.deref_mut());
+        }
+    }
+
+    fn draw(&self, view: &mut dyn View) {
+        if view.is_hidden() {
+            return;
+        }
+
+        let needs_stensil = view.corner_radius() > 0.0;
+
+        if needs_stensil {
+            GLWrapper::set_viewport(self.convert_viewport(view.frame()));
+
+            GLWrapper::start_stensil();
+
+            let mut storage = self.round_storage.borrow_mut();
+            let path = self.rounded_path_for_view(view, &mut storage);
+            self.draw_path(path, view.absolute_frame(), DrawMode::Fill.into());
+
+            GLWrapper::draw_stensiled();
+        }
+
+        self.fill(view.absolute_frame(), view.color());
+
+        if let Some(image) = view.image().get() {
+            let frame = &image.size.fit_in(view.absolute_frame());
+            draw_image(&image, &self.convert_viewport(frame), view.color());
+        }
+
+        if view.border_color().is_visible() {
+            if needs_stensil {
+                self.draw_round_border(view);
+            } else {
+                self.outline(view.absolute_frame(), view.border_color());
+            }
+        }
+
+        for path in view.paths() {
+            self.draw_path(path, view.absolute_frame(), None);
+        }
+
+        for view in view.subviews_mut() {
+            self.draw(view.deref_mut())
+        }
+
+        GLWrapper::disable_stensil();
+    }
+
+    fn window_size(&self) -> &Size {
+        &self.window_size
     }
 }
 

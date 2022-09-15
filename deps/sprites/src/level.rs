@@ -1,13 +1,10 @@
-use std::{
-    borrow::Borrow,
-    ops::{Deref, DerefMut},
-};
+use std::borrow::Borrow;
 
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
 use rtools::{Rglica, ToRglica};
 
-use crate::{LevelBase, Sprite, SpritesDrawer};
+use crate::{get_sprites_drawer, LevelBase, Player, Sprite};
 
 pub trait Level {
     fn setup(&mut self) {}
@@ -33,7 +30,7 @@ pub trait Level {
 
     fn convert_touch(&self, pos: Point) -> Point {
         let mut pos = pos;
-        let size = self.drawer().resolution();
+        let size = get_sprites_drawer().resolution();
 
         pos.x -= size.width / 2.0;
         pos.y -= size.height / 2.0;
@@ -41,9 +38,9 @@ pub trait Level {
         pos /= 10;
 
         pos *= 2;
-        pos /= self.drawer().scale();
+        pos /= get_sprites_drawer().scale();
 
-        pos += self.drawer().camera_position();
+        pos += get_sprites_drawer().camera_position();
 
         pos
     }
@@ -58,7 +55,7 @@ pub trait Level {
     }
 
     fn scale(&self) -> f32 {
-        self.drawer().scale()
+        get_sprites_drawer().scale()
     }
 
     fn multiply_scale(&mut self, mul: f32) {
@@ -67,7 +64,7 @@ pub trait Level {
     }
 
     fn set_scale(&mut self, scale: f32) {
-        self.drawer_mut().set_scale(scale)
+        get_sprites_drawer().set_scale(scale)
     }
 
     fn gravity(&self) -> Point {
@@ -100,27 +97,19 @@ pub trait Level {
     }
 
     fn set_camera_position(&mut self, pos: Point) {
-        self.drawer_mut().set_camera_position(pos)
+        get_sprites_drawer().set_camera_position(pos)
     }
 
     fn set_camera_rotation(&mut self, angle: f32) {
-        self.drawer().set_camera_rotation(angle)
+        get_sprites_drawer().set_camera_rotation(angle)
     }
 
     fn remove(&mut self, sprite: u64) {
         self.base_mut().remove(sprite)
     }
 
-    fn drawer(&self) -> &dyn SpritesDrawer {
-        self.base().drawer.deref()
-    }
-
-    fn drawer_mut(&mut self) -> &mut dyn SpritesDrawer {
-        self.base_mut().drawer.deref_mut()
-    }
-
-    fn set_drawer(&mut self, drawer: Rglica<dyn SpritesDrawer>) {
-        self.base_mut().drawer = drawer
+    fn player(&mut self) -> Rglica<Player> {
+        self.base_mut().player.as_ref().unwrap().to_rglica()
     }
 
     fn base(&self) -> &LevelBase;

@@ -15,7 +15,7 @@ pub mod test;
 mod ui_drawer;
 mod view;
 
-pub use ui_drawer::UIDrawer;
+pub use ui_drawer::*;
 pub use ui_proc::*;
 pub use view::*;
 

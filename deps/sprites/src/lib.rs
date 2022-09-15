@@ -23,7 +23,7 @@ pub use level_base::{LevelBase, LevelTemplates};
 pub use level_creation::LevelCreation;
 pub use sprite::{Sprite, SpriteTemplates};
 pub use sprite_data::SpriteData;
-pub use sprites_drawer::SpritesDrawer;
+pub use sprites_drawer::*;
 pub use to_collider::ToCollider;
 pub use units::{Player, Unit, Weapon};
 pub use wall::Wall;

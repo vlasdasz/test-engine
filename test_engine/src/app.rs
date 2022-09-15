@@ -13,9 +13,9 @@ use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
 };
-use ui::{input::TouchEvent, Touch};
+use ui::{input::TouchEvent, Touch, View};
 
-use crate::{main_view::MainView, Screen};
+use crate::Screen;
 
 pub struct App<T> {
     pub screen:      Unwrap<Screen>,
@@ -27,7 +27,7 @@ pub struct App<T> {
     _gyro_receiver:  UnboundedReceiver<GyroData>,
 }
 
-impl<T: MainView + 'static> App<T> {
+impl<T: View + 'static> App<T> {
     fn create_screen(&mut self, assets_path: &Path, monitor: Monitor) {
         self.runtime.block_on(async {
             let mut screen = Screen::new(monitor.resolution, assets_path);
@@ -36,7 +36,7 @@ impl<T: MainView + 'static> App<T> {
 
             screen.add_monitor(monitor);
 
-            self.screen = screen.into();
+            self.screen = Unwrap::from_box(screen);
         });
     }
 
@@ -124,7 +124,7 @@ impl<T: MainView + 'static> App<T> {
     }
 }
 
-impl<T: MainView> Default for App<T> {
+impl<T: View> Default for App<T> {
     fn default() -> Self {
         let (_touch_sender, _touch_receiver) = unbounded_channel::<Touch>();
         let (_gyro_sender, _gyro_receiver) = unbounded_channel::<GyroData>();

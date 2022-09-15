@@ -4,7 +4,7 @@ use gl_image::Image;
 use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
 
-use crate::{basic::RootView, complex::PathData, layout::Placer, view, Touch, UIDrawer, View};
+use crate::{basic::RootView, complex::PathData, layout::Placer, view, Touch, View};
 
 #[derive(Default)]
 pub struct ViewBase {
@@ -33,8 +33,6 @@ pub struct ViewBase {
     pub(crate) image: Handle<Image>,
 
     pub(crate) paths: Vec<PathData>,
-
-    pub(crate) drawer: Rglica<dyn UIDrawer>,
 }
 
 #[view]

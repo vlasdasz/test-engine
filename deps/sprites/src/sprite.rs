@@ -6,7 +6,7 @@ use gm::{
 use rapier2d::{geometry::Collider, prelude::RigidBody};
 use rtools::{address::Address, data_manager::Handle, IntoF32, Rglica};
 
-use crate::{Level, SpriteData};
+use crate::{get_sprites_drawer, Level, SpriteData};
 
 pub trait Sprite {
     fn update(&mut self) {}
@@ -95,7 +95,7 @@ pub trait Sprite {
     }
 
     fn draw(&self) {
-        self.level().drawer().draw(self.data())
+        get_sprites_drawer().draw(self.data())
     }
 
     fn data(&self) -> &SpriteData;

@@ -3,14 +3,16 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 
-use test_engine::{paths::home, rtools::init_log, Screen};
+use test_engine::{
+    paths::home,
+    rtools::{init_log, Boxed},
+    Screen,
+};
 
-#[allow(unused_imports)]
-use crate::benchmark::BenchmarkView;
-#[allow(unused_imports)]
-use crate::test_game::TestGameView;
-#[allow(unused_imports)]
-use crate::ui_test::UITestView;
+use crate::{
+    benchmark::BenchmarkView,
+    test_game::{TestGameLevel, TestGameView},
+};
 
 mod benchmark;
 mod test_game;
@@ -22,6 +24,7 @@ async fn main() {
 
     let mut screen = Screen::new((1000, 600), &home().join("test_engine"));
 
+    screen.ui.set_level(TestGameLevel::boxed());
     screen.ui.set_view::<TestGameView>();
 
     screen.start_main_loop();

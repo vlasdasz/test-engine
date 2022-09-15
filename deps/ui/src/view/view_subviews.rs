@@ -2,7 +2,7 @@ use rtools::{Rglica, ToRglica};
 
 use crate::{
     layout::Placer,
-    view::{view_data::ViewData, Alert, ViewInternal},
+    view::{Alert, ViewInternal},
     SubView, View,
 };
 
@@ -54,7 +54,6 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
         view.superview = self.rglica();
-        view.drawer = self.drawer();
         view.root_view = self.root_view();
         view.placer = Placer::make(view.to_rglica());
         view.init_views();

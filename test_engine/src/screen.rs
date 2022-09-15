@@ -1,15 +1,18 @@
 #![allow(clippy::mismatched_target_os)]
 
-use std::{ops::DerefMut, path::Path};
+use std::{ops::DerefMut, path::Path, ptr::null_mut};
 
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{Dispatch, Time, Unwrap};
-use ui::{UIDrawer, ViewData, ViewFrame, ViewLayout};
+use rtools::{Dispatch, Time, ToRglica, Unwrap};
+use sprites::{get_sprites_drawer, set_sprites_drawer};
+use ui::{get_ui_drawer, set_ui_drawer, ViewFrame, ViewLayout};
 
-use crate::{assets::Assets, ui_layer::UILayer};
+use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer, ui_layer::UILayer};
+
+static mut SCREEN: *mut Screen = null_mut();
 
 pub struct Screen {
     pub ui: Box<UILayer>,
@@ -22,7 +25,7 @@ pub struct Screen {
 impl Screen {
     pub fn add_monitor(&mut self, monitor: Monitor) {
         self.monitor = monitor.into();
-        self.ui.drawer.set_screen_scale(self.monitor.scale);
+        get_ui_drawer().set_screen_scale(self.monitor.scale);
     }
 
     #[cfg(desktop)]
@@ -47,7 +50,6 @@ impl Screen {
         GLWrapper::set_clear_color(Color::GRAY);
 
         self.ui.root_view.calculate_frames();
-        self.ui.root_view.set_drawer(self.ui.drawer.rglica());
 
         #[cfg(desktop)]
         {
@@ -70,6 +72,15 @@ impl Screen {
 }
 
 impl Screen {
+    pub fn current() -> &'static mut Screen {
+        unsafe {
+            if SCREEN.is_null() {
+                panic!("Assets were not initialized");
+            }
+            SCREEN.as_mut().unwrap()
+        }
+    }
+
     fn calculate_fps(&mut self) {
         let now = Time::now();
 
@@ -85,22 +96,22 @@ impl Screen {
     pub fn update(&mut self) {
         self.calculate_fps();
 
-        self.ui.drawer.reset_viewport();
+        get_ui_drawer().reset_viewport();
 
         GLWrapper::clear();
 
-        if self.ui.view.is_ok() && self.ui.view.level().is_ok() {
+        if self.ui.view.is_ok() && self.ui.level.is_some() {
             self.update_level();
         }
 
-        self.ui.drawer.update(self.ui.root_view.deref_mut());
+        get_ui_drawer().update(self.ui.root_view.deref_mut());
         if self.ui.view.is_ok() {
             self.ui
                 .view
                 .set_frame(self.ui.root_view.frame().with_zero_origin());
         }
         self.ui.root_view.calculate_frames();
-        self.ui.drawer.draw(self.ui.root_view.deref_mut());
+        get_ui_drawer().draw(self.ui.root_view.deref_mut());
 
         Dispatch::call();
 
@@ -108,11 +119,9 @@ impl Screen {
     }
 
     fn update_level(&mut self) {
-        if self.ui.view.is_null() {
+        let Some(level) = &mut self.ui.level else {
             return;
-        }
-
-        let mut level = self.ui.view.level();
+        };
 
         level.base_mut().update_physics();
         level.update();
@@ -134,18 +143,19 @@ impl Screen {
     }
 
     fn on_size_changed(&mut self, size: Size) {
-        self.ui.drawer.set_size(size);
+        get_ui_drawer().set_size(size);
         self.ui.root_view.set_frame(size);
-        self.ui.sprites_drawer.set_resolution(size);
-        self.ui.sprites_drawer.set_camera_position((0, 0).into());
+        get_sprites_drawer().set_resolution(size);
+        get_sprites_drawer().set_camera_position((0, 0).into());
         self.update();
     }
 
     pub(crate) fn on_gyro_changed(&mut self, gyro: GyroData) {
         error!("GyroData: {:?}", gyro);
-        if self.ui.view.level().is_ok() {
-            self.ui.view.level().on_gyro_changed(gyro)
-        }
+        let Some(level) = &mut self.ui.level else {
+            return;
+        };
+        level.on_gyro_changed(gyro);
     }
 
     #[cfg(desktop)]
@@ -156,7 +166,7 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: impl Into<Size>, assets_path: &Path) -> Self {
+    pub fn new(size: impl Into<Size>, assets_path: &Path) -> Box<Self> {
         trace!("Creating screen");
 
         #[cfg(desktop)]
@@ -170,12 +180,26 @@ impl Screen {
         let ui = UILayer::new();
         trace!("UILayer: OK");
 
-        Self {
-            ui,
-            #[cfg(desktop)]
-            glfw,
-            monitor: Default::default(),
+        set_ui_drawer(TEUIDrawer::new());
+        trace!("UIDrawer: OK");
+
+        set_sprites_drawer(TESpritesDrawer::new());
+        trace!("SpritesDrawer: OK");
+
+        let screen = Box::new(
+            Self {
+                ui,
+                #[cfg(desktop)]
+                glfw,
+                monitor: Default::default(),
+            }
+            .init(size.into()),
+        );
+
+        unsafe {
+            SCREEN = screen.to_rglica().as_ptr();
         }
-        .init(size.into())
+
+        screen
     }
 }

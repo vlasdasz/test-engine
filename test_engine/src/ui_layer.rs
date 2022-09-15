@@ -6,21 +6,20 @@ use gl_wrapper::gl_events::GlEvents;
 use glfw::{Action, Key};
 use gm::flat::Point;
 use rtools::{platform::Platform, IntoF32, Rglica, ToRglica};
-use sprites::SpritesDrawer;
+use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
-use ui::{basic::RootView, Touch, ViewFrame, ViewSubviews, ViewTouch};
+use ui::{basic::RootView, get_ui_drawer, Touch, View, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::{main_view::MainView, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer, Keymap};
+use crate::Keymap;
 
 pub struct UILayer {
-    pub sprites_drawer: Box<dyn SpritesDrawer>,
-    pub drawer:         TEUIDrawer,
+    pub level: Option<Box<dyn Level>>,
 
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
     pub root_view:          Box<RootView>,
-    pub view:               Rglica<dyn MainView>,
+    pub view:               Rglica<dyn View>,
 
     pub keymap: Rc<Keymap>,
 
@@ -34,8 +33,7 @@ pub struct UILayer {
 impl UILayer {
     pub fn new() -> Box<Self> {
         Box::new(Self {
-            sprites_drawer: TESpritesDrawer::new(),
-            drawer:         TEUIDrawer::new(),
+            level: Default::default(),
 
             ui_cursor_position: Default::default(),
             cursor_position:    Default::default(),
@@ -60,20 +58,28 @@ impl UILayer {
             touch.position /= self.scale;
         }
         if !self.root_view.check_touch(&mut touch) {
-            self.view.pass_touch_to_level(level_touch)
+            if let Some(level) = &mut self.level {
+                level.set_cursor_position(level_touch.position);
+                if touch.is_began() {
+                    level.add_touch(level_touch.position)
+                }
+            }
         }
         self.root_view.remove_scheduled();
     }
 
-    pub fn set_view<T: MainView + 'static>(&mut self) {
+    pub fn set_view<T: View + 'static>(&mut self) {
         if self.view.is_ok() {
             self.view.remove_from_superview();
         }
-        let mut view: Box<dyn MainView> = T::boxed();
+        let view: Box<dyn View> = T::boxed();
         self.view = view.to_rglica();
-        view.set_ui(self.to_rglica());
-        view.set_sprites_drawer(self.sprites_drawer.to_rglica());
         self.root_view.add_subview(view);
+    }
+
+    pub fn set_level(&mut self, mut level: Box<dyn Level>) {
+        level.setup();
+        self.level = level.into();
     }
 
     pub fn scale(&self) -> f32 {
@@ -82,8 +88,9 @@ impl UILayer {
 
     pub fn set_scale(&mut self, scale: impl IntoF32) {
         self.scale = scale.into_f32();
-        self.drawer.set_scale(self.scale);
-        self.root_view.set_frame(self.drawer.window_size / self.scale);
+        get_ui_drawer().set_scale(self.scale);
+        self.root_view
+            .set_frame(*get_ui_drawer().window_size() / self.scale);
     }
 }
 
@@ -109,8 +116,8 @@ impl UILayer {
 
     fn on_key_pressed(&mut self, key: &str) {
         self.keymap.check(&key);
-        if self.view.level().is_ok() {
-            self.view.level().on_key_pressed(&key);
+        if let Some(level) = &mut self.level {
+            level.on_key_pressed(&key)
         }
     }
 

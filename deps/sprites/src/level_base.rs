@@ -13,11 +13,11 @@ use rapier2d::{
 use rtools::{address::Address, Event, Rglica, ToRglica};
 use smart_default::SmartDefault;
 
-use crate::{event_handler::EventHandler, sets::Sets, Level, Sprite, SpritesDrawer};
+use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
 
 #[derive(SmartDefault)]
 pub struct LevelBase {
-    pub drawer: Rglica<dyn SpritesDrawer>,
+    pub player: Option<Box<Player>>,
 
     pub cursor_position: Point,
 

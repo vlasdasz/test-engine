@@ -38,7 +38,7 @@ impl Assets {
             if ASSETS.is_null() {
                 panic!("Assets were not initialized");
             }
-            ASSETS.as_ref().unwrap_unchecked()
+            ASSETS.as_ref().unwrap()
         }
     }
 }

@@ -1,9 +1,5 @@
-use std::borrow::Borrow;
-
 use test_engine::{
-    main_view::{HasLevel, MainView},
     rtools::{Rglica, ToRglica},
-    sprites::Player,
     ui::{
         basic::Button, view, Label, SubView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
         ViewSubviews,
@@ -12,7 +8,7 @@ use test_engine::{
     Level,
 };
 
-use crate::{benchmark::benchmark_level::BenchmarkLevel, TestGameView};
+use crate::{benchmark::benchmark_level::BenchmarkLevel, test_game::TestGameView};
 
 #[view]
 #[derive(Default)]
@@ -48,21 +44,5 @@ impl ViewCallbacks for BenchmarkView {
     fn update(&mut self) {
         self.bullets_label
             .set_text(format!("Bullets: {}", self.level.bullets_count));
-    }
-}
-
-impl MainView for BenchmarkView {
-    fn set_ui(&mut self, ui: Rglica<UILayer>) {
-        self.ui = ui
-    }
-}
-
-impl HasLevel for BenchmarkView {
-    fn player(&self) -> Rglica<Player> {
-        self.level.player
-    }
-
-    fn level(&self) -> Rglica<dyn Level> {
-        (self.level.borrow() as &dyn Level).to_rglica()
     }
 }

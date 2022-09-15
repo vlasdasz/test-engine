@@ -13,7 +13,6 @@ use test_engine::{app::App, gl_wrapper::GLWrapper};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
-#[allow(unused_imports)]
 use crate::test_game::TestGameView;
 #[allow(unused_imports)]
 use crate::ui_test::UITestView;
@@ -30,22 +29,22 @@ static mut APP: *mut App<TestGameView> = ptr::null_mut();
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
     trace!("set_screen_size");
-    unsafe { APP.as_mut().unwrap_unchecked().set_screen_size(width, height) }
+    unsafe { APP.as_mut().unwrap().set_screen_size(width, height) }
 }
 
 #[no_mangle]
 pub extern "C" fn update_screen() {
-    unsafe { APP.as_mut().unwrap_unchecked().update_screen() }
+    unsafe { APP.as_mut().unwrap().update_screen() }
 }
 
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
-    unsafe { APP.as_mut().unwrap_unchecked().on_touch(id as _, x, y, event) }
+    unsafe { APP.as_mut().unwrap().on_touch(id as _, x, y, event) }
 }
 
 #[no_mangle]
 pub extern "C" fn set_gyro(pitch: c_float, roll: c_float, yaw: c_float) {
-    unsafe { APP.as_mut().unwrap_unchecked().set_gyro(pitch, roll, yaw) }
+    unsafe { APP.as_mut().unwrap().set_gyro(pitch, roll, yaw) }
 }
 
 #[no_mangle]
@@ -61,7 +60,7 @@ pub extern "C" fn set_monitor(
 ) {
     unsafe {
         APP = Box::into_raw(Box::new(App::default()));
-        APP.as_mut().unwrap_unchecked().set_monitor(
+        APP.as_mut().unwrap().set_monitor(
             ppi,
             scale,
             refresh_rate,
