@@ -1,5 +1,3 @@
-#![feature(explicit_generic_args_with_impl_trait)]
-
 use net::{GetRequest, PostRequest, API};
 use rtools::Dispatch;
 use serde::{Deserialize, Serialize};
@@ -25,11 +23,11 @@ async fn main() {
             password: "paraguk4ka!".into(),
         },
         &(),
-        |_, error| {},
+        |_, _error| {},
     );
 
-    GET_USERS.get(&(), |_, error, users| {
-        if let Some(error) = error {
+    GET_USERS.get(&(), |_, error, _users| {
+        if let Some(_error) = error {
             return;
         }
     });
