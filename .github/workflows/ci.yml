@@ -18,6 +18,7 @@ jobs:
           { runner: macOS, os: macos },
           { runner: ubuntu-latest, os: linux },
           { runner: windows-latest, os: windows },
+          { runner: ARM64, os: raspberry },
 
           { runner: macOS, os: ios },
           { runner: ubuntu-latest, os: android }
