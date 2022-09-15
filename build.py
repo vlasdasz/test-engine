@@ -158,4 +158,4 @@ elif android:
     setup_android()
     build_android()
 else:
-    run("cargo build")
+    run("cargo build --all")
