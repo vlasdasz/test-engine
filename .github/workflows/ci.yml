@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         target: [ { runner: macOS, os: ios }, { runner: ubuntu-latest, os: android } ]
-    runs-on: ${{ matrix.os.runner }}
+    runs-on: ${{ matrix.target.runner }}
     steps:
       - uses: actions/checkout@v3
         with:
