@@ -11,23 +11,17 @@ env:
 
 jobs:
 
-  desktop:
+  build:
     strategy:
       matrix:
-        os: [macOS, ubuntu-latest, windows-latest, ARM64]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{secrets.ACCESS_TOKEN}}
-          submodules: recursive
-      - name: build
-        run: python3 build.py
+        target: [
+          { runner: macOS, os: macos },
+          { runner: ubuntu-latest, os: linux },
+          { runner: windows-latest, os: windows },
 
-  mobile:
-    strategy:
-      matrix:
-        target: [ { runner: macOS, os: ios }, { runner: ubuntu-latest, os: android } ]
+          { runner: macOS, os: ios },
+          { runner: ubuntu-latest, os: android }
+        ]
     runs-on: ${{ matrix.target.runner }}
     steps:
       - uses: actions/checkout@v3
