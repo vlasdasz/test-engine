@@ -6,7 +6,7 @@ use std::{ops::DerefMut, path::Path, ptr::null_mut};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{Dispatch, Rglica, Time, ToRglica, Unwrap};
+use rtools::{Boxed, Dispatch, Rglica, Time, ToRglica, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{get_ui_drawer, set_ui_drawer, ViewFrame, ViewLayout};
 
@@ -185,7 +185,7 @@ impl Screen {
         Assets::init(assets_path);
         trace!("Assets: Ok");
 
-        let ui = UILayer::new();
+        let ui = UILayer::boxed();
         trace!("UILayer: OK");
 
         set_ui_drawer(TEUIDrawer::new());

@@ -1,7 +1,11 @@
+use gm::Color;
 use rtools::{Rglica, ToRglica};
 
 use crate::{
-    input::UIEvents, view, view::ViewSubviews, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
+    input::UIEvents,
+    view,
+    view::{ViewData, ViewSubviews, ViewTouch},
+    Label, SubView, Touch, View, ViewBase, ViewCallbacks, ViewLayout,
 };
 
 #[view]
@@ -18,11 +22,29 @@ impl TextField {
 
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {
+        self.enable_touch();
+        self.set_color(Color::LIGHT_GRAY);
         self.label.place().as_background();
+    }
 
-        UIEvents::get().key_pressed.set(self, |this, event| {
-            this.label.append_text(event.0);
-        });
+    fn on_touch(&mut self, touch: &Touch) {
+        if touch.is_began() {
+            self.set_selected(true);
+        }
+    }
+
+    fn on_selection_changed(&mut self, selected: bool) {
+        if selected {
+            UIEvents::get().key_pressed.set(self, |this, event| {
+                if this.is_selected() {
+                    this.label.append_text(event.0);
+                }
+            });
+        } else {
+            UIEvents::get().key_pressed.unsubscribe()
+        }
+
+        self.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
     }
 }
 

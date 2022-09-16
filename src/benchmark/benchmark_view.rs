@@ -1,8 +1,8 @@
 use test_engine::{
     rtools::{Boxed, Rglica, ToRglica},
     ui::{
-        basic::Button, view, Label, SubView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
-        ViewSubviews,
+        basic::{Button, TextField},
+        view, Label, SubView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout, ViewSubviews,
     },
     Screen,
 };
@@ -12,6 +12,9 @@ use crate::test_game::{TestGameLevel, TestGameView};
 #[view]
 #[derive(Default)]
 pub struct BenchmarkView {
+    field1: SubView<TextField>,
+    field2: SubView<TextField>,
+
     bullets_label: SubView<Label>,
 
     back: SubView<Button>,
@@ -19,11 +22,13 @@ pub struct BenchmarkView {
 
 impl ViewCallbacks for BenchmarkView {
     fn setup(&mut self) {
+        self.field1.place().size(100, 20).center();
+        self.field2.place().size(100, 20).center_hor().top().val(100);
+
         self.back
             .set_text("Back")
             .place()
-            .width(120)
-            .height(20)
+            .size(120, 20)
             .bottom()
             .val(20)
             .center_hor();

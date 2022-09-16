@@ -12,6 +12,7 @@ crate-type = ["rlib", "staticlib"]
 log = "0.4"
 home = "0.5"
 cfg-if = "1.0"
+smart-default = "0.6"
 
 tokio = { version = "1.21", features = ["full"] }
 

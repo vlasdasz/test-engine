@@ -6,7 +6,7 @@ use crate::{
     basic::CircleView,
     view,
     view::{ViewFrame, ViewSubviews},
-    SubView, View, ViewBase, ViewCallbacks, ViewTouch,
+    SubView, Touch, View, ViewBase, ViewCallbacks,
 };
 
 #[view]
@@ -28,21 +28,21 @@ impl ViewCallbacks for Slider {
         let radius = self.width() / 2.0;
 
         self.circle.set_radius(radius).set_color(Color::BLUE);
+    }
 
-        self.on_touch().set(self, |this, touch| {
-            if touch.is_ended() {
-                return;
-            }
+    fn on_touch(&mut self, touch: &Touch) {
+        if touch.is_ended() {
+            return;
+        }
 
-            let half_circle = this.circle.frame().height() / 2.0;
-            let y_pos = clamped_by(half_circle, this.frame().height() - half_circle, touch.position.y);
+        let half_circle = self.circle.frame().height() / 2.0;
+        let y_pos = clamped_by(half_circle, self.frame().height() - half_circle, touch.position.y);
 
-            this.circle.set_y(y_pos - half_circle);
-            this.raw_value = 1.0 - (y_pos - half_circle) / (this.height() - half_circle * 2.0);
+        self.circle.set_y(y_pos - half_circle);
+        self.raw_value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
 
-            let span = this.finish - this.start;
+        let span = self.finish - self.start;
 
-            this.on_change.trigger(this.start + span * this.raw_value);
-        });
+        self.on_change.trigger(self.start + span * self.raw_value);
     }
 }

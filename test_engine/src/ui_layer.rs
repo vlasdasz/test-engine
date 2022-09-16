@@ -5,7 +5,8 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::{platform::Platform, IntoF32, Rglica, ToRglica};
+use rtools::{platform::Platform, IntoF32, Rglica, Selectable, ToRglica};
+use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
@@ -13,11 +14,13 @@ use ui::{basic::RootView, get_ui_drawer, Touch, View, ViewFrame, ViewSubviews, V
 
 use crate::Keymap;
 
+#[derive(SmartDefault)]
 pub struct UILayer {
     pub level: Option<Box<dyn Level>>,
 
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
+    #[default(RootView::new())]
     pub root_view:          Box<RootView>,
     pub view:               Rglica<dyn View>,
 
@@ -27,25 +30,10 @@ pub struct UILayer {
     pub prev_time:  i64,
     pub frame_time: f64,
 
+    pub selected_view: Rglica<dyn Selectable>,
+
+    #[default = 1.0]
     scale: f32,
-}
-
-impl UILayer {
-    pub fn new() -> Box<Self> {
-        Box::new(Self {
-            level: Default::default(),
-
-            ui_cursor_position: Default::default(),
-            cursor_position:    Default::default(),
-            root_view:          RootView::new(),
-            view:               Default::default(),
-            keymap:             Default::default(),
-            fps:                Default::default(),
-            prev_time:          Default::default(),
-            frame_time:         Default::default(),
-            scale:              1.0,
-        })
-    }
 }
 
 impl UILayer {

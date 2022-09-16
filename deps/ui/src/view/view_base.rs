@@ -2,9 +2,9 @@ use std::cell::RefCell;
 
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Rglica, ToRglica};
 
-use crate::{basic::RootView, complex::PathData, layout::Placer, view, Touch, View};
+use crate::{basic::RootView, complex::PathData, layout::Placer, view, View};
 
 #[derive(Default)]
 pub struct ViewBase {
@@ -14,7 +14,6 @@ pub struct ViewBase {
     pub(crate) border_color:  Color,
 
     pub(crate) touch_enabled: RefCell<bool>,
-    pub(crate) on_touch:      Event<Touch>,
 
     pub(crate) is_hidden: bool,
 
@@ -33,6 +32,8 @@ pub struct ViewBase {
     pub(crate) image: Handle<Image>,
 
     pub(crate) paths: Vec<PathData>,
+
+    pub(crate) is_selected: bool,
 }
 
 #[view]

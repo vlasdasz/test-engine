@@ -1,7 +1,9 @@
 use gm::Color;
 use rtools::{Event, Rglica, ToRglica};
 
-use crate::{view, view::ViewSubviews, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch};
+use crate::{
+    view, view::ViewSubviews, Label, SubView, Touch, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch,
+};
 
 #[view]
 #[derive(Default)]
@@ -26,10 +28,12 @@ impl Button {
 
 impl ViewCallbacks for Button {
     fn setup(&mut self) {
-        self.on_touch().set(self, |this, touch| {
-            if touch.is_began() {
-                this.on_tap.trigger(())
-            }
-        });
+        self.enable_touch()
+    }
+
+    fn on_touch(&mut self, touch: &Touch) {
+        if touch.is_began() {
+            self.on_tap.trigger(())
+        }
     }
 }

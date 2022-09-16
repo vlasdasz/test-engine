@@ -1,10 +1,19 @@
-use rtools::{static_get, Event};
+use rtools::{static_get, Event, Rglica};
 
-use crate::input::KeyEvent;
+use crate::{input::KeyEvent, View, ViewTouch};
 
 #[derive(Default)]
 pub struct UIEvents {
-    pub key_pressed: Event<(String, KeyEvent)>,
+    pub key_pressed:   Event<(String, KeyEvent)>,
+    pub selected_view: Rglica<dyn View>,
+}
+
+impl UIEvents {
+    pub fn unselect_view(&mut self) {
+        if let Some(view) = self.selected_view.get() {
+            view.set_selected(false)
+        }
+    }
 }
 
 static_get!(UIEvents);
