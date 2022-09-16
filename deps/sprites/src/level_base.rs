@@ -133,6 +133,18 @@ impl LevelBase {
     }
 }
 
+impl Level for LevelBase {
+    fn base(&self) -> &LevelBase {
+        self
+    }
+    fn base_mut(&mut self) -> &mut LevelBase {
+        self
+    }
+    fn rglica(&self) -> Rglica<dyn Level> {
+        (self as &dyn Level).to_rglica()
+    }
+}
+
 pub trait LevelTemplates {
     fn set_gravity(&mut self, g: impl Into<Point>);
 }

@@ -17,7 +17,7 @@ use test_engine::{
         view, BaseView, DPadView, SubView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout,
         ViewSubviews,
     },
-    Image, Screen,
+    Image, LevelBase, Screen,
 };
 
 use crate::{benchmark::BenchmarkLevel, BenchmarkView};
@@ -81,7 +81,9 @@ impl TestGameView {
             |key, direction| {
                 Screen::current().ui.keymap.add(key, self, move |_| {
                     if let Some(level) = &mut Screen::current().ui.level {
-                        level.player().move_by_direction(direction)
+                        if let Some(player) = level.player().get() {
+                            player.move_by_direction(direction)
+                        }
                     }
                 });
             },
@@ -177,9 +179,10 @@ impl TestGameView {
 
             let mut to_test = view.initialize_view::<Button>();
             to_test.set_text("Test");
-            to_test
-                .on_tap
-                .sub(|_| Screen::current().ui.set_view(BenchmarkView::boxed()));
+            to_test.on_tap.sub(|_| {
+                Screen::current().ui.set_level(LevelBase::boxed());
+                Screen::current().ui.set_view(BenchmarkView::boxed());
+            });
 
             let mut play = view.initialize_view::<Button>();
             play.set_text("Play sound");
