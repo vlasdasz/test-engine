@@ -68,11 +68,10 @@ impl UILayer {
         self.root_view.remove_scheduled();
     }
 
-    pub fn set_view<T: View + 'static>(&mut self) {
+    pub fn set_view(&mut self, view: Box<dyn View>) {
         if self.view.is_ok() {
             self.view.remove_from_superview();
         }
-        let view: Box<dyn View> = T::boxed();
         self.view = view.to_rglica();
         self.root_view.add_subview(view);
     }

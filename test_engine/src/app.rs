@@ -1,10 +1,7 @@
 #![allow(clippy::mismatched_target_os)]
 
 use core::ffi::{c_float, c_int};
-use std::{
-    marker::PhantomData,
-    path::{Path, PathBuf},
-};
+use std::path::{Path, PathBuf};
 
 use gl_wrapper::monitor::Monitor;
 use gm::volume::GyroData;
@@ -13,26 +10,23 @@ use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
 };
-use ui::{input::TouchEvent, Touch, View};
+use ui::{input::TouchEvent, Touch};
 
 use crate::Screen;
 
-pub struct App<T> {
+pub struct App {
     pub screen:      Unwrap<Screen>,
     runtime:         Runtime,
-    _view:           PhantomData<T>,
     _touch_sender:   UnboundedSender<Touch>,
     _touch_receiver: UnboundedReceiver<Touch>,
     _gyro_sender:    UnboundedSender<GyroData>,
     _gyro_receiver:  UnboundedReceiver<GyroData>,
 }
 
-impl<T: View + 'static> App<T> {
+impl App {
     fn create_screen(&mut self, assets_path: &Path, monitor: Monitor) {
         self.runtime.block_on(async {
             let mut screen = Screen::new(monitor.resolution, assets_path);
-
-            screen.ui.set_view::<T>();
 
             screen.add_monitor(monitor);
 
@@ -124,14 +118,13 @@ impl<T: View + 'static> App<T> {
     }
 }
 
-impl<T: View> Default for App<T> {
+impl Default for App {
     fn default() -> Self {
         let (_touch_sender, _touch_receiver) = unbounded_channel::<Touch>();
         let (_gyro_sender, _gyro_receiver) = unbounded_channel::<GyroData>();
         Self {
             screen: Default::default(),
             runtime: tokio::runtime::Runtime::new().unwrap(),
-            _view: Default::default(),
             _touch_sender,
             _touch_receiver,
             _gyro_sender,

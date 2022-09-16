@@ -9,7 +9,7 @@ use std::{
     ptr,
 };
 
-use test_engine::{app::App, gl_wrapper::GLWrapper};
+use test_engine::{app::App, gl_wrapper::GLWrapper, rtools::Boxed};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -24,7 +24,7 @@ mod ui_test;
 #[macro_use]
 extern crate log;
 
-static mut APP: *mut App<TestGameView> = ptr::null_mut();
+static mut APP: *mut App = ptr::null_mut();
 
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
@@ -59,8 +59,9 @@ pub extern "C" fn set_monitor(
     diagonal: c_float,
 ) {
     unsafe {
-        APP = Box::into_raw(Box::new(App::default()));
-        APP.as_mut().unwrap().set_monitor(
+        let mut app = App::boxed();
+        app.screen.ui.set_view(TestGameView::boxed());
+        app.set_monitor(
             ppi,
             scale,
             refresh_rate,
@@ -70,6 +71,8 @@ pub extern "C" fn set_monitor(
             height,
             diagonal,
         );
+
+        APP = Box::into_raw(app);
     }
 }
 

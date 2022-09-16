@@ -1,5 +1,5 @@
 use test_engine::{
-    rtools::{Rglica, ToRglica},
+    rtools::{Boxed, Rglica, ToRglica},
     ui::{
         basic::Button, view, BaseView, SubView, View, ViewBase, ViewCallbacks, ViewFrame, ViewLayout,
         ViewSubviews,
@@ -39,7 +39,7 @@ impl ViewCallbacks for UITestView {
             l.center_hor();
         });
         self.back.on_tap.set(self, |this, _| {
-            this.ui.set_view::<TestGameView>();
+            this.ui.set_view(TestGameView::boxed());
         });
     }
 }

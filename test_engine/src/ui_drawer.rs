@@ -189,6 +189,9 @@ impl UIDrawer for TEUIDrawer {
             self.draw_path(path, view.absolute_frame(), None);
         }
 
+        //MARK - Debug frames
+        self.outline(view.absolute_frame(), &Color::TURQUOISE);
+
         for view in view.subviews_mut() {
             self.draw(view.deref_mut())
         }

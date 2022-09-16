@@ -6,7 +6,7 @@ use test_engine::{
     net::{GetRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
-        Apply, Rglica, ToRglica,
+        Apply, Boxed, Rglica, ToRglica,
     },
     sprite_view::SpriteView,
     sprites::Control,
@@ -20,7 +20,7 @@ use test_engine::{
     Image, Screen,
 };
 
-use crate::BenchmarkView;
+use crate::{benchmark::BenchmarkLevel, BenchmarkView};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct User {
@@ -170,15 +170,16 @@ impl TestGameView {
 
             let mut to_benchmark = view.initialize_view::<Button>();
             to_benchmark.set_text("Benchmark");
-            to_benchmark
-                .on_tap
-                .sub(|_| Screen::current().ui.set_view::<BenchmarkView>());
+            to_benchmark.on_tap.sub(|_| {
+                Screen::current().ui.set_level(BenchmarkLevel::boxed());
+                Screen::current().ui.set_view(BenchmarkView::boxed());
+            });
 
             let mut to_test = view.initialize_view::<Button>();
             to_test.set_text("Test");
             to_test
                 .on_tap
-                .sub(|_| Screen::current().ui.set_view::<BenchmarkView>());
+                .sub(|_| Screen::current().ui.set_view(BenchmarkView::boxed()));
 
             let mut play = view.initialize_view::<Button>();
             play.set_text("Play sound");

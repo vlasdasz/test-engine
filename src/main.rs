@@ -25,7 +25,7 @@ async fn main() {
     let mut screen = Screen::new((1000, 600), &home().join("test_engine"));
 
     screen.ui.set_level(TestGameLevel::boxed());
-    screen.ui.set_view::<TestGameView>();
+    screen.ui.set_view(TestGameView::boxed());
 
     screen.start_main_loop();
 }
