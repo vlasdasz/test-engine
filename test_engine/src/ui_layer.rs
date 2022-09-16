@@ -77,9 +77,9 @@ impl UILayer {
         self.root_view.add_subview(view);
     }
 
-    pub fn set_level(&mut self, mut level: Box<dyn Level>) {
-        level.setup();
+    pub fn set_level(&mut self, level: Box<dyn Level>) {
         self.level = level.into();
+        self.level.as_mut().unwrap().setup();
     }
 
     pub fn scale(&self) -> f32 {

@@ -17,7 +17,7 @@ use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
 
 #[derive(SmartDefault)]
 pub struct LevelBase {
-    pub player: Option<Box<Player>>,
+    pub player: Rglica<Player>,
 
     pub cursor_position: Point,
 

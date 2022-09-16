@@ -108,8 +108,8 @@ pub trait Level {
         self.base_mut().remove(sprite)
     }
 
-    fn player(&mut self) -> Rglica<Player> {
-        self.base_mut().player.as_ref().unwrap().to_rglica()
+    fn player(&self) -> Rglica<Player> {
+        self.base().player
     }
 
     fn base(&self) -> &LevelBase;

@@ -19,7 +19,6 @@ pub struct TestGameLevel {
     base:            LevelBase,
     selected_sprite: Option<Rglica<dyn Sprite>>,
     collision_sound: Handle<Sound>,
-    pub player:      Rglica<Player>,
 }
 
 impl TestGameLevel {
@@ -75,12 +74,13 @@ impl Level for TestGameLevel {
                 .set_image(square);
         }
 
-        self.player = self.add_sprite((2, 2), (0, 5));
-        self.player
+        let mut player: Rglica<Player> = self.add_sprite((2, 2), (0, 5));
+        self.base_mut().player = player;
+        player
             .set_image(Image::get("frisk.png"))
             .enable_collision_detection();
-        self.player.weapon.set_image(Image::get("ak.png"));
-        self.player.on_collision.set(self, |this, _| {
+        player.weapon.set_image(Image::get("ak.png"));
+        player.on_collision.set(self, |this, _| {
             this.collision_sound.play();
         });
 
@@ -90,7 +90,7 @@ impl Level for TestGameLevel {
     }
 
     fn update(&mut self) {
-        let pos = self.player.position();
+        let pos = self.player().position();
         self.set_camera_position(pos);
     }
 

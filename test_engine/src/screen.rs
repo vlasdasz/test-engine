@@ -6,8 +6,8 @@ use std::{ops::DerefMut, path::Path, ptr::null_mut};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{Dispatch, Time, ToRglica, Unwrap};
-use sprites::{get_sprites_drawer, set_sprites_drawer};
+use rtools::{Dispatch, Rglica, Time, ToRglica, Unwrap};
+use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{get_ui_drawer, set_ui_drawer, ViewFrame, ViewLayout};
 
 use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer, ui_layer::UILayer};
@@ -23,6 +23,14 @@ pub struct Screen {
 }
 
 impl Screen {
+    pub fn player(&self) -> Rglica<Player> {
+        if let Some(level) = &self.ui.level {
+            level.player()
+        } else {
+            Default::default()
+        }
+    }
+
     pub fn add_monitor(&mut self, monitor: Monitor) {
         self.monitor = monitor.into();
         get_ui_drawer().set_screen_scale(self.monitor.scale);
