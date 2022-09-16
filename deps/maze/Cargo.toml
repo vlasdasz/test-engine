@@ -13,5 +13,3 @@ tokio = "1.21"
 
 gm = { path = "../gm" }
 rtools = { path = "../rtools" }
-
-rand = "0.8"

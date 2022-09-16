@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use gm::flat::{PointBase, SizeBase};
-use rand::seq::SliceRandom;
+use rtools::Random;
 use tokio::{
     sync::mpsc::{self, UnboundedReceiver},
     time::sleep,
@@ -52,7 +52,7 @@ impl Maker {
                     continue;
                 }
 
-                let next = *unvisited.choose(&mut rand::thread_rng()).unwrap();
+                let next = unvisited[usize::random_in(0..unvisited.len())];
 
                 maker.stack.push(maker.current_pos);
 

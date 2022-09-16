@@ -1,4 +1,4 @@
-use rtools::IntoF32;
+use rtools::{IntoF32, Random};
 use serde::{Deserialize, Serialize};
 
 #[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -51,8 +51,7 @@ impl Color {
     ];
 
     pub fn random() -> Color {
-        use rand::Rng;
-        Color::ALL[rand::thread_rng().gen_range(0..Color::ALL.len())]
+        Color::ALL[usize::random_in(0..Color::ALL.len())]
     }
 }
 
