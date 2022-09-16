@@ -40,6 +40,13 @@ impl Label {
         self
     }
 
+    pub fn pop_letter(&mut self) {
+        if !self.text.is_empty() {
+            self.text.pop();
+            self.set_letters();
+        }
+    }
+
     pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
         //self.image_view.view_mut().image.color = color.into();
         self

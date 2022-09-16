@@ -3,7 +3,7 @@ mod mouse;
 mod touch;
 mod ui_events;
 
-pub use keyboard::KeyEvent;
+pub use keyboard::*;
 #[cfg(desktop)]
 pub use mouse::{MouseButton, MouseButtonState};
 pub use touch::{Touch, TouchEvent};

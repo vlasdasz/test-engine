@@ -11,7 +11,7 @@ pub trait Level {
 
     fn update(&mut self) {}
 
-    fn on_key_pressed(&mut self, _: &str) {}
+    fn on_key_pressed(&mut self, _: char) {}
 
     fn on_gyro_changed(&mut self, _: GyroData) {}
 

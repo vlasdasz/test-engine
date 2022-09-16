@@ -60,17 +60,17 @@ impl TestGameView {
     }
 
     fn setup_ui(&mut self) {
-        Screen::current().ui.keymap.add("=", self, |_| {
+        Screen::current().ui.keymap.add('=', self, |_| {
             let scale = Screen::current().ui.scale() * 1.2;
             Screen::current().ui.set_scale(scale);
         });
 
-        Screen::current().ui.keymap.add("-", self, |_| {
+        Screen::current().ui.keymap.add('-', self, |_| {
             let scale = Screen::current().ui.scale() * 0.8;
             Screen::current().ui.set_scale(scale);
         });
 
-        [" ", "w", "s", "d", "a"].apply2(
+        [' ', 'w', 's', 'd', 'a'].apply2(
             [
                 Direction::Up,
                 Direction::Up,
@@ -79,7 +79,7 @@ impl TestGameView {
                 Direction::Left,
             ],
             |key, direction| {
-                Screen::current().ui.keymap.add(key, self, move |_| {
+                Screen::current().ui.keymap.add(*key, self, move |_| {
                     if let Some(level) = &mut Screen::current().ui.level {
                         if let Some(player) = level.player().get() {
                             player.move_by_direction(direction)

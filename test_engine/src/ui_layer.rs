@@ -10,7 +10,12 @@ use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
-use ui::{basic::RootView, get_ui_drawer, Touch, View, ViewFrame, ViewSubviews, ViewTouch};
+use ui::{
+    basic::RootView,
+    get_ui_drawer,
+    input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
+    Touch, View, ViewFrame, ViewSubviews, ViewTouch,
+};
 
 use crate::Keymap;
 
@@ -101,10 +106,10 @@ impl UILayer {
         })
     }
 
-    fn on_key_pressed(&mut self, key: &str) {
-        self.keymap.check(&key);
+    fn on_key_pressed(&mut self, key: char) {
+        self.keymap.check(key);
         if let Some(level) = &mut self.level {
-            level.on_key_pressed(&key)
+            level.on_key_pressed(key)
         }
     }
 
@@ -115,25 +120,31 @@ impl UILayer {
             let key = a.0;
             let action = a.1;
 
-            if action != Action::Press {
-                return;
+            let button = match key {
+                Key::Space => KeyboardButton::Letter(' '),
+                Key::LeftControl | Key::RightControl => ControlButton::Ctrl.into(),
+                Key::LeftAlt | Key::RightAlt => ControlButton::Alt.into(),
+                Key::Delete => ControlButton::Del.into(),
+                Key::Escape => ControlButton::Escape.into(),
+                Key::Backspace => ControlButton::Backspace.into(),
+                _ => match key.get_name() {
+                    Some(name) => name.chars().next().unwrap().into(),
+                    None => ControlButton::Unknown.into(),
+                },
+            };
+
+            let event = KeyEvent {
+                button,
+                state: action.into(),
+            };
+
+            if let Some(char) = event.char() && event.is_press() {
+                this.on_key_pressed(char);
             }
 
-            let key = key.get_name().unwrap_or_else({
-                || {
-                    match key {
-                        Key::Space => " ",
-                        _ => "unknown",
-                    }
-                    .into()
-                }
-            });
-
-            this.on_key_pressed(&key);
-
-            ui::input::UIEvents::get()
-                .key_pressed
-                .trigger((key, action.into()));
+            if !event.is_release() {
+                UIEvents::get().key_pressed.trigger(event);
+            }
         });
 
         ev.mouse_click.set(self, |this, a| this.on_mouse_click(a.0, a.1));

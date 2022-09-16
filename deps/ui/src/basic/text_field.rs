@@ -2,7 +2,7 @@ use gm::Color;
 use rtools::{Rglica, ToRglica};
 
 use crate::{
-    input::UIEvents,
+    input::{ControlButton, KeyboardButton, UIEvents},
     view,
     view::{ViewData, ViewSubviews, ViewTouch},
     Label, SubView, Touch, View, ViewBase, ViewCallbacks, ViewLayout,
@@ -35,9 +35,18 @@ impl ViewCallbacks for TextField {
 
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
-            UIEvents::get().key_pressed.set(self, |this, event| {
+            UIEvents::get().key_pressed.set(self, |this, key| {
                 if this.is_selected() {
-                    this.label.append_text(event.0);
+                    match key.button {
+                        KeyboardButton::Letter(char) => {
+                            this.label.append_text(char);
+                        }
+                        KeyboardButton::Control(control) => {
+                            if let ControlButton::Backspace = control {
+                                this.label.pop_letter();
+                            }
+                        }
+                    };
                 }
             });
         } else {

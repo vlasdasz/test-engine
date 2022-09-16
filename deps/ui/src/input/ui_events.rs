@@ -1,10 +1,10 @@
 use rtools::{static_get, Event, Rglica};
 
-use crate::{input::KeyEvent, View, ViewTouch};
+use crate::{input::keyboard::KeyEvent, View, ViewTouch};
 
 #[derive(Default)]
 pub struct UIEvents {
-    pub key_pressed:   Event<(String, KeyEvent)>,
+    pub key_pressed:   Event<KeyEvent>,
     pub selected_view: Rglica<dyn View>,
 }
 
