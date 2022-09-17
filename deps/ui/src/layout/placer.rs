@@ -103,9 +103,15 @@ impl Placer {
         self.rules.push(Tiling::Horizontally.into());
         self
     }
+}
 
-    pub fn anchor<T: View>(&mut self, view: impl Deref<Target = T>, side: Anchor, offset: impl IntoF32) {
+impl Placer {
+    pub fn anchor(&mut self, view: impl Deref<Target = impl View>, side: Anchor, offset: impl IntoF32) {
         self.rules.push(LayoutRule::anchor(side, offset, view.rglica()));
+    }
+
+    pub fn relative(&mut self, view: impl Deref<Target = impl View>, side: Anchor, ratio: impl IntoF32) {
+        self.rules.push(LayoutRule::relative(side, ratio, view.rglica()))
     }
 }
 
@@ -140,7 +146,11 @@ impl Placer {
         let this = self.to_rglica();
         for rule in &this.rules {
             if rule.anchor_view.is_ok() {
-                self.anchor_layout(rule)
+                if rule.relative {
+                    self.relative_layout(rule)
+                } else {
+                    self.anchor_layout(rule)
+                }
             } else {
                 if let Some(tiling) = &rule.tiling {
                     self.tiling_layout(tiling);
@@ -190,6 +200,16 @@ impl Placer {
         match rule.side {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
             Anchor::Bot => frame.origin.y = a_frame.y() - rule.offset - frame.height(),
+            _ => unimplemented!(),
+        }
+    }
+
+    fn relative_layout(&mut self, rule: &LayoutRule) {
+        let frame = self.frame.deref_mut();
+        let a_frame = rule.anchor_view.frame();
+        match rule.side {
+            Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
+            Anchor::Height => frame.size.height = a_frame.size.height * rule.offset,
             _ => unimplemented!(),
         }
     }

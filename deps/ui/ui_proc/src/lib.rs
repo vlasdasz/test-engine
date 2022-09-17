@@ -28,7 +28,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     quote! {
         #stream
         impl View for #name {
-            fn rglica(&self) -> Rglica<dyn View> { (self as &dyn View).to_rglica() }
+            fn rglica(&self) -> Rglica<dyn View> {
+                (self as &dyn View).to_rglica()
+            }
             fn init_views(&mut self) {
                 #inits
             }
