@@ -96,7 +96,7 @@ pub mod android {
         _: jclass,
         asset_manager: jobject,
     ) {
-        init_log();
+        init_log(false, 4);
         test_engine::rtools::file::set_asset_manager(env, asset_manager);
     }
 
