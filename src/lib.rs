@@ -86,7 +86,6 @@ pub extern "C" fn opengl_ready() {
 pub mod android {
 
     use android_ndk_sys::{jclass, jobject, JNIEnv};
-    use test_engine::rtools::init_log;
 
     use super::*;
 
@@ -96,7 +95,6 @@ pub mod android {
         _: jclass,
         asset_manager: jobject,
     ) {
-        init_log(false, 4);
         test_engine::rtools::file::set_asset_manager(env, asset_manager);
     }
 

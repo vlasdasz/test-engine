@@ -98,10 +98,6 @@ impl App {
         height: c_float,
         diagonal: c_float,
     ) {
-        if Platform::IOS {
-            init_log(false, 4);
-        }
-
         let monitor = Monitor::new(
             "Phone screen".into(),
             ppi as _,
@@ -120,6 +116,8 @@ impl App {
 
 impl Default for App {
     fn default() -> Self {
+        init_log(false, 4);
+
         let (_touch_sender, _touch_receiver) = unbounded_channel::<Touch>();
         let (_gyro_sender, _gyro_receiver) = unbounded_channel::<GyroData>();
         Self {
