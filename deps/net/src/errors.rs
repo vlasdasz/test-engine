@@ -20,8 +20,8 @@ impl From<reqwest::Error> for Error {
 }
 
 impl From<serde_json::Error> for Error {
-    fn from(_: serde_json::Error) -> Self {
-        "Serialization error".into()
+    fn from(err: serde_json::Error) -> Self {
+        format!("Serialization error: {}", err).into()
     }
 }
 

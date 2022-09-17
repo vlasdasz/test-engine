@@ -99,7 +99,7 @@ impl App {
         diagonal: c_float,
     ) {
         if Platform::IOS {
-            init_log();
+            init_log(false, 4);
         }
 
         let monitor = Monitor::new(

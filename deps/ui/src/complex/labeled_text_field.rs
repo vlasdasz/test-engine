@@ -16,6 +16,10 @@ pub struct LabeledTextField {
 }
 
 impl LabeledTextField {
+    pub fn text(&self) -> &str {
+        self.text_field.text()
+    }
+
     pub fn set_title(&mut self, title: impl ToString) -> &mut Self {
         self.label.set_text(title);
         self

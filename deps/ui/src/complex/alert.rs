@@ -10,20 +10,20 @@ use crate::{
 
 #[view]
 #[derive(Default)]
-pub struct Alert {
+pub struct AlertView {
     label:     SubView<Label>,
     ok_button: SubView<Button>,
     message:   String,
 }
 
-impl Alert {
+impl AlertView {
     pub fn set_message(&mut self, message: impl ToString) {
         self.message = message.to_string();
         self.label.set_text(message);
     }
 }
 
-impl ViewCallbacks for Alert {
+impl ViewCallbacks for AlertView {
     fn setup(&mut self) {
         self.place().size(200, 80).center();
         self.set_color(Color::WHITE)

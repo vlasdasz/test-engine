@@ -4,6 +4,7 @@ use reqwest::{get, Client};
 use rtools::Rglica;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
+use tao_log::debugv;
 
 use crate::{Method, NetResult};
 
@@ -52,7 +53,7 @@ impl<Param: Serialize, Output: DeserializeOwned> Request<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let string = to_string(param.borrow()).unwrap();
         let client = Client::new();
-        let text = client.post(&self.full_url()).body(string).send().await?.text().await?;
-        Ok(from_str(&text)?)
+        let body_string = client.post(&self.full_url()).body(string).send().await?.text().await?;
+        Ok(from_str(debugv!(&body_string))?)
     }
 }

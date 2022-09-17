@@ -2,7 +2,7 @@ use rtools::{Rglica, ToRglica};
 
 use crate::{
     layout::Placer,
-    view::{Alert, ViewInternal},
+    view::{AlertView, ViewInternal},
     SubView, View,
 };
 
@@ -62,6 +62,6 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn alert(&mut self, message: impl ToString) {
-        self.root_view().initialize_view::<Alert>().set_message(message);
+        self.root_view().initialize_view::<AlertView>().set_message(message);
     }
 }
