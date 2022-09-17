@@ -25,34 +25,19 @@ impl Alert {
 
 impl ViewCallbacks for Alert {
     fn setup(&mut self) {
+        self.place().size(200, 80).center();
         self.set_color(Color::WHITE)
             .set_corner_radius(10)
-            .set_border_color(Color::BLACK)
-            .place()
-            .size(200, 80)
-            .center();
+            .set_border_color(Color::BLACK);
 
-        self.label
-            .set_text(self.message.clone())
-            .place()
-            .left()
-            .right()
-            .val(10)
-            .top()
-            .val(10)
-            .height(20);
+        self.label.place().lrt(10).h(20);
+        self.label.set_text(self.message.clone());
 
+        self.ok_button.place().size(202, 20).center_hor().b(-1);
         self.ok_button
             .set_text("OK")
             .set_border_color(Color::GRAY)
-            .set_text_color(Color::BLUE)
-            .place()
-            .size(202, 20)
-            .center_hor()
-            .bottom()
-            .val(-1);
-        self.ok_button
-            .on_tap
-            .set(self, |this, _| this.remove_from_superview());
+            .set_text_color(Color::BLUE);
+        self.ok_button.on_tap.set(self, |this, _| this.remove_from_superview());
     }
 }

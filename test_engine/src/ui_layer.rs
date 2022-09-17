@@ -81,8 +81,7 @@ impl UILayer {
     pub fn set_scale(&mut self, scale: impl IntoF32) {
         self.scale = scale.into_f32();
         get_ui_drawer().set_scale(self.scale);
-        self.root_view
-            .set_frame(*get_ui_drawer().window_size() / self.scale);
+        self.root_view.set_frame(*get_ui_drawer().window_size() / self.scale);
     }
 }
 

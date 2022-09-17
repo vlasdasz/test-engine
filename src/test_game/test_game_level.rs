@@ -70,15 +70,12 @@ impl Level for TestGameLevel {
             .set_image(Image::get("triangle.png"));
 
         for i in 0..50 {
-            self.add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2))
-                .set_image(square);
+            self.add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2)).set_image(square);
         }
 
         let mut player: Rglica<Player> = self.add_sprite((2, 2), (0, 5));
         self.base_mut().player = player;
-        player
-            .set_image(Image::get("frisk.png"))
-            .enable_collision_detection();
+        player.set_image(Image::get("frisk.png")).enable_collision_detection();
         player.weapon.set_image(Image::get("ak.png"));
         player.on_collision.set(self, |this, _| {
             this.collision_sound.play();

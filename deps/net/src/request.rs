@@ -52,13 +52,7 @@ impl<Param: Serialize, Output: DeserializeOwned> Request<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let string = to_string(param.borrow()).unwrap();
         let client = Client::new();
-        let text = client
-            .post(&self.full_url())
-            .body(string)
-            .send()
-            .await?
-            .text()
-            .await?;
+        let text = client.post(&self.full_url()).body(string).send().await?.text().await?;
         Ok(from_str(&text)?)
     }
 }

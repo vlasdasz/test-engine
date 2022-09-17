@@ -15,14 +15,6 @@ pub trait ViewLayout {
     {
         &mut self.placer
     }
-
-    fn make_layout(&mut self, make: impl FnOnce(&mut Placer)) -> &mut Self
-    where
-        Self: View,
-    {
-        make(self.place());
-        self
-    }
 }
 
 impl<T: ?Sized + View> ViewLayout for T {

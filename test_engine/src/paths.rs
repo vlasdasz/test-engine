@@ -36,11 +36,7 @@ impl Paths {
 impl Paths {
     fn root(_base: &Path) -> PathBuf {
         #[cfg(ios)]
-        return std::env::current_exe()
-            .unwrap_or_default()
-            .parent()
-            .unwrap()
-            .to_path_buf();
+        return std::env::current_exe().unwrap_or_default().parent().unwrap().to_path_buf();
         #[cfg(not(ios))]
         return _base.into();
     }

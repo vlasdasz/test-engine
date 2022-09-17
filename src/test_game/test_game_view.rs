@@ -48,15 +48,9 @@ pub struct TestGameView {
 
 impl TestGameView {
     fn setup_level(&mut self) {
-        self.dpad.on_press.sub(|dir| {
-            Screen::current()
-                .ui
-                .level
-                .as_mut()
-                .unwrap()
-                .player()
-                .move_by_direction(dir)
-        });
+        self.dpad
+            .on_press
+            .sub(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(dir));
     }
 
     fn setup_ui(&mut self) {
@@ -91,71 +85,44 @@ impl TestGameView {
 
         self.set_frame((10, 10, 1000, 500));
 
-        self.sprite_view.place().tr().val(10).size(400, 80);
+        self.sprite_view.place().tr(10).size(400, 80);
 
-        Screen::current()
-            .ui
-            .level
-            .as_mut()
-            .unwrap()
-            .base()
-            .on_sprite_selected
-            .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
+        if let Some(level) = &Screen::current().ui.level {
+            level
+                .base()
+                .on_sprite_selected
+                .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
+        }
 
-        self.dpad
-            .set_images(
-                Image::get("up.png"),
-                Image::get("down.png"),
-                Image::get("left.png"),
-                Image::get("right.png"),
-            )
-            .place()
-            .size(140, 100)
-            .bottom()
-            .val(10)
-            .left()
-            .val(100);
+        self.dpad.place().size(140, 100).b(10).l(100);
+        self.dpad.set_images(
+            Image::get("up.png"),
+            Image::get("down.png"),
+            Image::get("left.png"),
+            Image::get("right.png"),
+        );
 
-        self.left_stick.place().bl().val(10).size(80, 80);
+        self.left_stick.place().bl(10).size(80, 80);
         self.left_stick.on_change.sub(|dir| {
             if let Some(level) = &mut Screen::current().ui.level {
                 level.player().add_impulse(dir);
             }
         });
 
+        self.test_view.place().br(20).size(280, 400);
         self.test_view
             .set_image(Image::get("cat.png"))
             .set_button_image(Image::get("square.png"))
-            .set_animation_image(Image::get("palm.png"))
-            .place()
-            .br()
-            .val(20)
-            .size(280, 400);
+            .set_animation_image(Image::get("palm.png"));
 
         self.ui_scale.step = 0.1;
-        self.ui_scale
-            .place()
-            .size(28, 120)
-            .left()
-            .val(100)
-            .bottom()
-            .val(140);
-        self.ui_scale
-            .set_images(Image::get("up.png"), Image::get("down.png"));
-        self.ui_scale
-            .on_change
-            .sub(|val| Screen::current().ui.set_scale(val));
+        self.ui_scale.place().size(28, 120).l(100).b(140);
+        self.ui_scale.set_images(Image::get("up.png"), Image::get("down.png"));
+        self.ui_scale.on_change.sub(|val| Screen::current().ui.set_scale(val));
 
         self.level_scale.step = 0.1;
-        self.level_scale
-            .place()
-            .size(28, 120)
-            .left()
-            .val(28)
-            .bottom()
-            .val(140);
-        self.level_scale
-            .set_images(Image::get("up.png"), Image::get("down.png"));
+        self.level_scale.place().size(28, 120).l(28).b(140);
+        self.level_scale.set_images(Image::get("up.png"), Image::get("down.png"));
         self.level_scale
             .on_change
             .sub(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));
@@ -163,12 +130,7 @@ impl TestGameView {
         {
             let mut view = self.initialize_view::<BaseView>();
 
-            view.place()
-                .bottom()
-                .val(10)
-                .center_hor()
-                .size(150, 100)
-                .all_ver();
+            view.place().b(10).center_hor().size(150, 100).all_ver();
 
             let mut to_benchmark = view.initialize_view::<Button>();
             to_benchmark.set_text("Benchmark");

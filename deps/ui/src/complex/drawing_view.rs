@@ -13,9 +13,7 @@ pub struct DrawingView {}
 
 impl DrawingView {
     pub fn add_path(&mut self, path: impl Into<PointsPath>, color: &Color, mode: DrawMode) -> &mut Self {
-        self.view
-            .paths
-            .push(initialize_path_data(path.into(), color, mode));
+        self.view.paths.push(initialize_path_data(path.into(), color, mode));
         self
     }
 

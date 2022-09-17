@@ -40,8 +40,7 @@ impl ViewCallbacks for DPadView {
         [self.up, self.down, self.left, self.right].apply2(
             [Direction::Up, Direction::Down, Direction::Left, Direction::Right],
             |view, direction| {
-                view.on_tap
-                    .set(self, move |this, _| this.on_press.trigger(direction));
+                view.on_tap.set(self, move |this, _| this.on_press.trigger(direction));
                 view.set_corner_radius(5);
             },
         );

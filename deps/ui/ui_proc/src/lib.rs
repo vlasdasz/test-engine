@@ -20,9 +20,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     if let Fields::Named(fields) = &mut data.fields {
         inits = add_inits(&fields);
 
-        fields
-            .named
-            .push(Field::parse_named.parse2(quote! { view: ViewBase }).unwrap());
+        fields.named.push(Field::parse_named.parse2(quote! { view: ViewBase }).unwrap());
     }
 
     let name = &stream.ident;

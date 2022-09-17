@@ -12,7 +12,6 @@ use crate::{
 #[derive(Default)]
 pub struct Placer {
     pub(crate) rules: Vec<LayoutRule>,
-    pending_sides:    Vec<Anchor>,
 
     view:    Rglica<dyn View>,
     frame:   Rglica<Rect>,
@@ -35,40 +34,41 @@ impl Placer {
 
 impl Placer {
     pub fn background(&mut self) -> &mut Self {
-        self.top().bottom().left().right()
+        self.t(0).b(0).l(0).r(0)
     }
 
-    pub fn top(&mut self) -> &mut Self {
-        self.pending_sides.push(Anchor::Top);
+    pub fn t(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Top, offset.into_f32()));
         self
     }
 
-    pub fn bottom(&mut self) -> &mut Self {
-        self.pending_sides.push(Anchor::Bot);
+    pub fn b(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Bot, offset.into_f32()));
         self
     }
 
-    pub fn left(&mut self) -> &mut Self {
-        self.pending_sides.push(Anchor::Left);
+    pub fn l(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Left, offset.into_f32()));
+
         self
     }
 
-    pub fn right(&mut self) -> &mut Self {
-        self.pending_sides.push(Anchor::Right);
+    pub fn r(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::Right, offset.into_f32()));
         self
     }
 
     pub fn size(&mut self, width: impl IntoF32, height: impl IntoF32) -> &mut Self {
-        self.width(width).height(height)
+        self.w(width).h(height)
     }
 
-    pub fn width(&mut self, w: impl IntoF32) -> &mut Self {
+    pub fn w(&mut self, w: impl IntoF32) -> &mut Self {
         self.rules.push(LayoutRule::make(Anchor::Width, w));
         self.has_width = true;
         self
     }
 
-    pub fn height(&mut self, h: impl IntoF32) -> &mut Self {
+    pub fn h(&mut self, h: impl IntoF32) -> &mut Self {
         self.rules.push(LayoutRule::make(Anchor::Height, h));
         self.has_height = true;
         self
@@ -104,49 +104,39 @@ impl Placer {
         self
     }
 
-    pub fn val(&mut self, offset: impl IntoF32) -> &mut Self {
-        let pending = self.pending_sides.drain(..);
-        self.rules
-            .extend(pending.map(|a| LayoutRule::make(a, offset.into_f32())));
-        self
-    }
-
-    pub fn anchor<T: View>(&mut self, view: impl Deref<Target = T>, offset: impl IntoF32) {
-        debug_assert!(
-            self.pending_sides.len() == 1,
-            "Anchor should be to exactly one size"
-        );
-        let side = self.pending_sides.pop().unwrap();
+    pub fn anchor<T: View>(&mut self, view: impl Deref<Target = T>, side: Anchor, offset: impl IntoF32) {
         self.rules.push(LayoutRule::anchor(side, offset, view.rglica()));
-    }
-
-    fn assign_pending(&mut self) {
-        let pending = self.pending_sides.drain(..);
-        self.rules.extend(pending.map(|a| a.into()))
     }
 }
 
 impl Placer {
-    pub fn tl(&mut self) -> &mut Self {
-        self.top().left()
+    pub fn tl(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.t(offset).l(offset)
     }
 
-    pub fn tr(&mut self) -> &mut Self {
-        self.top().right()
+    pub fn tr(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.t(offset).r(offset)
     }
 
-    pub fn bl(&mut self) -> &mut Self {
-        self.bottom().left()
+    pub fn bl(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.b(offset).l(offset)
     }
 
-    pub fn br(&mut self) -> &mut Self {
-        self.bottom().right()
+    pub fn br(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.b(offset).r(offset)
+    }
+
+    pub fn lrt(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.l(offset).r(offset).t(offset)
+    }
+
+    pub fn lrb(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.l(offset).r(offset).b(offset)
     }
 }
 
 impl Placer {
     pub fn layout(&mut self) {
-        self.assign_pending();
         let this = self.to_rglica();
         for rule in &this.rules {
             if rule.anchor_view.is_ok() {
@@ -199,6 +189,7 @@ impl Placer {
         let a_frame = rule.anchor_view.frame();
         match rule.side {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
+            Anchor::Bot => frame.origin.y = a_frame.y() - rule.offset - frame.height(),
             _ => unimplemented!(),
         }
     }

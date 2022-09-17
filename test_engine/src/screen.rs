@@ -114,9 +114,7 @@ impl Screen {
 
         get_ui_drawer().update(self.ui.root_view.deref_mut());
         if self.ui.view.is_ok() {
-            self.ui
-                .view
-                .set_frame(self.ui.root_view.frame().with_zero_origin());
+            self.ui.view.set_frame(self.ui.root_view.frame().with_zero_origin());
         }
         self.ui.root_view.calculate_frames();
         get_ui_drawer().draw(self.ui.root_view.deref_mut());
