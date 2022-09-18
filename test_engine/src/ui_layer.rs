@@ -43,7 +43,9 @@ pub struct UILayer {
 
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
-        trace!("{:?}", touch);
+        if !touch.is_moved() {
+            trace!("{:?}", touch);
+        }
         let level_touch = touch;
         if Platform::DESKTOP {
             touch.position = self.ui_cursor_position;

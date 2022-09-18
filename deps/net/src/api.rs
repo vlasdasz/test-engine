@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+
+use rtools::static_get;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
@@ -5,29 +8,47 @@ use crate::{
     DispatchRequest,
 };
 
+#[derive(Default)]
 pub struct API {
-    base: &'static str,
+    base_url: String,
+    headers:  HashMap<String, String>,
+}
+static_get!(API);
+
+impl API {
+    pub fn base_url() -> &'static str {
+        &Self::get().base_url
+    }
+
+    pub fn set_base_url(url: impl ToString) {
+        Self::get().base_url = url.to_string()
+    }
+
+    pub fn headers() -> &'static HashMap<String, String> {
+        &Self::get().headers
+    }
+
+    pub fn set_token(token: impl ToString) {
+        Self::add_header("token", token)
+    }
+
+    pub fn add_header(key: impl ToString, value: impl ToString) {
+        Self::get().headers.insert(key.to_string(), value.to_string());
+    }
 }
 
 impl API {
-    pub const fn new(base: &'static str) -> Self {
-        Self { base }
-    }
-}
-
-impl API {
-    pub const fn get<Result: DeserializeOwned>(&self, url: &'static str) -> GetRequest<Result> {
-        GetRequest::make(self.base, url)
+    pub fn get_request<Result: DeserializeOwned>(url: &'static str) -> GetRequest<Result> {
+        GetRequest::make(Self::base_url(), url)
     }
 
-    pub const fn post<Param: Serialize>(&self, url: &'static str) -> PostRequest<Param> {
-        PostRequest::make(self.base, url)
+    pub fn post_request<Param: Serialize>(url: &'static str) -> PostRequest<Param> {
+        PostRequest::make(Self::base_url(), url)
     }
 
-    pub const fn fetch<Param: Serialize, Result: DeserializeOwned>(
-        &self,
+    pub fn fetch_request<Param: Serialize, Result: DeserializeOwned>(
         url: &'static str,
     ) -> DispatchRequest<Param, Result> {
-        DispatchRequest::make(self.base, url)
+        DispatchRequest::make(Self::base_url(), url)
     }
 }

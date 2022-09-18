@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use smart_default::SmartDefault;
 use tao_log::infov;
 use test_engine::{
     audio::Sound,
@@ -6,7 +7,7 @@ use test_engine::{
     net::{GetRequest, API},
     rtools::{
         data_manager::{DataManager, Handle},
-        Apply, Boxed, Rglica, ToRglica,
+        static_get, Apply, Boxed, Rglica, ToRglica,
     },
     sprite_view::SpriteView,
     sprites::Control,
@@ -28,9 +29,12 @@ struct User {
     password: String,
 }
 
-const API: API = API::new("ec2-18-217-89-172.us-east-2.compute.amazonaws.com");
-
-const GET_USERS: GetRequest<Vec<User>> = API.get("get_users");
+#[derive(SmartDefault)]
+struct Network {
+    #[default(API::get_request("get_users"))]
+    get_users: GetRequest<Vec<User>>,
+}
+static_get!(Network);
 
 #[view]
 #[derive(Default)]
@@ -153,7 +157,7 @@ impl TestGameView {
             let mut async_task = view.initialize_view::<Button>();
             async_task.set_text("Async task").set_frame((120, 20));
             async_task.on_tap.set(self, move |this, _| {
-                GET_USERS.get(this, |this, error, result| {
+                Network::get().get_users.get(this, |this, error, result| {
                     if let Some(error) = error {
                         infov!(&error);
                         this.alert(error);
@@ -182,6 +186,8 @@ impl TestGameView {
 
 impl ViewCallbacks for TestGameView {
     fn setup(&mut self) {
+        API::set_base_url("ec2-18-217-89-172.us-east-2.compute.amazonaws.com");
+
         self.setup_ui();
         self.setup_level();
     }
