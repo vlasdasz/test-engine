@@ -123,6 +123,7 @@ impl Screen {
 
         self.ui.root_view.remove_scheduled();
 
+        #[cfg(desktop)]
         self.glfw.swap_buffers();
     }
 

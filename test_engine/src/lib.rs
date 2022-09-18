@@ -4,7 +4,6 @@
 #![feature(stmt_expr_attributes)]
 #![feature(const_trait_impl)]
 #![feature(specialization)]
-#![feature(let_else)]
 #![feature(let_chains)]
 
 pub use audio;
