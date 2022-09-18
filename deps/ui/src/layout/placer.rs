@@ -106,6 +106,18 @@ impl Placer {
 }
 
 impl Placer {
+    pub fn max_width(&mut self, w: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::MaxWidth, w));
+        self
+    }
+
+    pub fn max_height(&mut self, h: impl IntoF32) -> &mut Self {
+        self.rules.push(LayoutRule::make(Anchor::MaxHeight, h));
+        self
+    }
+}
+
+impl Placer {
     pub fn anchor(&mut self, view: impl Deref<Target = impl View>, side: Anchor, offset: impl IntoF32) {
         self.rules.push(LayoutRule::anchor(side, offset, view.rglica()));
     }
@@ -116,6 +128,10 @@ impl Placer {
 }
 
 impl Placer {
+    pub fn lr(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.l(offset).r(offset)
+    }
+
     pub fn tl(&mut self, offset: impl IntoF32) -> &mut Self {
         self.t(offset).l(offset)
     }
@@ -191,6 +207,17 @@ impl Placer {
                 frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0;
                 frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0;
             }
+            Anchor::MaxWidth => {
+                if frame.size.width > rule.offset {
+                    frame.size.width = rule.offset
+                }
+            }
+            Anchor::MaxHeight => {
+                if frame.size.height > rule.offset {
+                    frame.size.height = rule.offset
+                }
+            }
+            _ => unimplemented!(),
         }
     }
 
@@ -210,6 +237,7 @@ impl Placer {
         match rule.side {
             Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
             Anchor::Height => frame.size.height = a_frame.size.height * rule.offset,
+            Anchor::Size => frame.size = a_frame.size * rule.offset,
             _ => unimplemented!(),
         }
     }
