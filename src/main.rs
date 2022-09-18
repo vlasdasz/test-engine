@@ -20,7 +20,7 @@ mod ui_test;
 
 #[tokio::main]
 async fn main() {
-    init_log(false, 4);
+    init_log(false, 5);
 
     let mut screen = Screen::new((1000, 600), &home().join("test_engine"));
 

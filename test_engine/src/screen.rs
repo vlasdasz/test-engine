@@ -122,6 +122,8 @@ impl Screen {
         Dispatch::call();
 
         self.ui.root_view.remove_scheduled();
+
+        self.glfw.swap_buffers();
     }
 
     fn update_level(&mut self) {
@@ -144,11 +146,11 @@ impl Screen {
         #[cfg(desktop)]
         self.glfw.set_size(size);
         self.on_size_changed(size);
-        trace!("Screen size: {:?}", self.ui.root_view.frame());
         self
     }
 
     fn on_size_changed(&mut self, size: Size) {
+        trace!("Size changed: {:?}", size);
         get_ui_drawer().set_size(size);
         self.ui.root_view.set_frame(size);
         get_sprites_drawer().set_resolution(size);

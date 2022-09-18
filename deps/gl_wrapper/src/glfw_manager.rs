@@ -11,9 +11,12 @@ pub struct GLFWManager {
 }
 
 impl GLFWManager {
+    pub fn swap_buffers(&mut self) {
+        self.window.swap_buffers();
+    }
+
     pub fn start_main_loop(&mut self) {
         self.window.set_key_polling(true);
-        self.window.set_size_polling(true);
         self.window.set_cursor_pos_polling(true);
         self.window.set_mouse_button_polling(true);
 
@@ -33,9 +36,6 @@ impl GLFWManager {
                     glfw::WindowEvent::CursorPos(xpos, ypos) => {
                         events.cursor_moved.trigger((xpos, ypos).into())
                     }
-                    glfw::WindowEvent::Size(width, height) => {
-                        events.size_changed.trigger((width, height).into())
-                    }
                     glfw::WindowEvent::MouseButton(btn, action, _) => {
                         events.mouse_click.trigger((btn, action))
                     }
@@ -44,7 +44,6 @@ impl GLFWManager {
             }
 
             events.frame_drawn.trigger(());
-            self.window.swap_buffers();
         }
     }
 

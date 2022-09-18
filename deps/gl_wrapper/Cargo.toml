@@ -17,7 +17,7 @@ rtools = { path = "../rtools" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14"
-glfw = "0.43"
+glfw = "0.45"
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 mashup = "0.1"
