@@ -1,4 +1,4 @@
-use ui::{view, SubView, ViewCallbacks, ViewLayout};
+use ui::{view, SubView, ViewCallbacks};
 
 use crate::Label;
 
@@ -12,7 +12,7 @@ pub struct StringCell {
 impl ViewCallbacks for StringCell {
     fn setup(&mut self) {
         self.label.set_text(self.data.clone());
-        self.label.place().as_background();
+        self.label.place.as_background();
     }
 }
 

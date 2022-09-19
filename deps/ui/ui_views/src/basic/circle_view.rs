@@ -1,6 +1,6 @@
 use gm::{flat::PointsPath, Color};
 use rtools::IntoF32;
-use ui::{view, DrawMode, SubView, ViewCallbacks, ViewFrame, ViewLayout};
+use ui::{view, DrawMode, SubView, ViewCallbacks, ViewFrame};
 
 use crate::DrawingView;
 
@@ -39,7 +39,7 @@ impl ViewCallbacks for CircleView {
     fn setup(&mut self) {
         self.radius = 10.0;
         let size = self.radius;
-        self.place().size(size, size);
-        self.drawing.place().size(size, size);
+        self.place.size(size, size);
+        self.drawing.place.size(size, size);
     }
 }

@@ -1,33 +1,33 @@
-use ui::{view, SubView, ViewCallbacks, ViewLayout};
+use ui::{view, SubView, ViewCallbacks};
 
 use crate::Label;
 
 #[view]
 #[derive(Default)]
 pub struct LabeledView {
-    label: SubView<Label>,
-    value: SubView<Label>,
+    title: SubView<Label>,
+    text:  SubView<Label>,
 }
 
 impl LabeledView {
-    pub fn set_label(&mut self, label: impl ToString) -> &Self {
-        self.label.set_text(label);
+    pub fn set_title(&mut self, label: impl ToString) -> &Self {
+        self.title.set_text(label);
         self
     }
 
-    pub fn set_value(&mut self, value: impl ToString) -> &Self {
-        self.value.set_text(value);
+    pub fn set_text(&mut self, value: impl ToString) -> &Self {
+        self.text.set_text(value);
         self
     }
 
     pub fn clear(&mut self) -> &Self {
-        self.value.clear();
+        self.text.clear();
         self
     }
 }
 
 impl ViewCallbacks for LabeledView {
     fn setup(&mut self) {
-        self.place().all_hor();
+        self.place.all_hor();
     }
 }

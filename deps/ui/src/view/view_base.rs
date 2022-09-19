@@ -28,7 +28,7 @@ pub struct ViewBase {
 
     pub(crate) touch_id: u64,
 
-    pub(crate) placer: Placer,
+    pub place: Placer,
 
     pub(crate) image: Handle<Image>,
 

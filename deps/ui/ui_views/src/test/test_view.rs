@@ -1,7 +1,7 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use rtools::{data_manager::Handle, Animation, Boxed, ToRglica, Unwrap};
-use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewLayout};
+use rtools::{data_manager::Handle, Animation, Boxed, Unwrap};
+use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::{data_source, Button, DrawingView, ImageView, Label, StringCell, TableView, TableViewDataSource};
 
@@ -39,7 +39,7 @@ impl TestView {
 
 impl ViewCallbacks for TestView {
     fn setup(&mut self) {
-        self.place().all_ver();
+        self.place.all_ver();
 
         self.label.set_text("Hello label!");
 

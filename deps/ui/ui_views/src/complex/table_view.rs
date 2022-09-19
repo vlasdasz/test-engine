@@ -1,5 +1,5 @@
 use rtools::Rglica;
-use ui::{view, View, ViewCallbacks, ViewLayout, ViewSubviews};
+use ui::{view, View, ViewCallbacks, ViewSubviews};
 
 #[view]
 #[derive(Default)]
@@ -18,7 +18,7 @@ impl TableView {
 
 impl ViewCallbacks for TableView {
     fn setup(&mut self) {
-        self.place().all_ver();
+        self.place.all_ver();
     }
 }
 
@@ -29,7 +29,8 @@ pub trait TableViewDataSource {
 
 #[macro_export]
 macro_rules! data_source {
-    ($source:ident) => {
+    ($source:ident) => {{
+        use rtools::ToRglica;
         ($source as &mut dyn TableViewDataSource).to_rglica()
-    };
+    }};
 }

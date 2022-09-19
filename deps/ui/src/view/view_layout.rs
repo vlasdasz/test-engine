@@ -1,4 +1,4 @@
-use crate::{layout::Placer, view::view_internal::ViewInternal, View, ViewSubviews};
+use crate::{view::view_internal::ViewInternal, View, ViewSubviews};
 
 pub trait ViewLayout {
     fn calculate_frames(&mut self);
@@ -6,14 +6,7 @@ pub trait ViewLayout {
     where
         Self: View,
     {
-        self.place().layout();
-    }
-
-    fn place(&mut self) -> &mut Placer
-    where
-        Self: View,
-    {
-        &mut self.placer
+        self.place.layout();
     }
 }
 

@@ -1,7 +1,7 @@
 use gm::Color;
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
-    view, SubView, Touch, ViewCallbacks, ViewData, ViewLayout, ViewTouch,
+    view, SubView, Touch, ViewCallbacks, ViewData, ViewTouch,
 };
 
 use crate::Label;
@@ -22,7 +22,7 @@ impl ViewCallbacks for TextField {
     fn setup(&mut self) {
         self.enable_touch();
         self.set_color(Color::LIGHT_GRAY);
-        self.label.place().as_background();
+        self.label.place.as_background();
     }
 
     fn on_touch(&mut self, touch: &Touch) {

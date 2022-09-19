@@ -1,5 +1,5 @@
 use rtools::{platform::Platform, Property};
-use ui::{view, SubView, ViewCallbacks, ViewFrame, ViewLayout};
+use ui::{view, SubView, ViewCallbacks, ViewFrame};
 
 use crate::Label;
 
@@ -14,7 +14,7 @@ pub struct DebugView {
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.place().tl(10).size(200, 50).all_ver();
+        self.place.tl(10).size(200, 50).all_ver();
 
         self.fps_label.set_text("fps label");
 

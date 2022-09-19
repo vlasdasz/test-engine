@@ -1,7 +1,7 @@
 use gl_image::Image;
 use rtools::{data_manager::DataManager, Rglica};
 use sprites::Sprite;
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout};
+use ui::{view, SubView, ViewCallbacks, ViewData};
 use ui_views::{Button, LabeledView};
 
 #[view]
@@ -26,13 +26,13 @@ impl SpriteView {
             self.color.clear();
             return;
         }
-        self.position.set_value(sprite.position());
-        self.size.set_value(sprite.size());
-        self.color.set_value(*sprite.color());
+        self.position.set_text(sprite.position());
+        self.size.set_text(sprite.size());
+        self.color.set_text(*sprite.color());
     }
 
     fn setup_delete_button(&mut self) {
-        self.delete_button.place().size(20, 20).tl(0);
+        self.delete_button.place.size(20, 20).tl(0);
         self.delete_button.set_hidden(true).set_image(Image::get("delete.png"));
 
         self.delete_button.on_tap.set(self, |this, _| {
@@ -46,11 +46,11 @@ impl SpriteView {
 
 impl ViewCallbacks for SpriteView {
     fn setup(&mut self) {
-        self.place().all_ver();
+        self.place.all_ver();
 
-        self.position.set_label("position:");
-        self.size.set_label("size:");
-        self.color.set_label("color:");
+        self.position.set_title("position:");
+        self.size.set_title("size:");
+        self.color.set_title("color:");
 
         self.setup_delete_button();
     }

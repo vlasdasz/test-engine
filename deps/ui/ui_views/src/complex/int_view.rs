@@ -1,7 +1,7 @@
 use gl_image::Image;
 use rtools::{data_manager::Handle, Event};
 use smart_default::SmartDefault;
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout};
+use ui::{view, SubView, ViewCallbacks, ViewData};
 
 use crate::{Button, Label};
 
@@ -28,7 +28,7 @@ impl IntView {
 
 impl ViewCallbacks for IntView {
     fn setup(&mut self) {
-        self.place().all_ver();
+        self.place.all_ver();
 
         self.label.set_text("1.0");
 

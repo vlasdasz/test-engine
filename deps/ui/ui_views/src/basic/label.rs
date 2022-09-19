@@ -2,7 +2,7 @@ use gm::Color;
 use rtools::data_manager::Handle;
 use smart_default::SmartDefault;
 use text::{render_text, Font};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout};
+use ui::{view, SubView, ViewCallbacks, ViewData};
 
 use crate::ImageView;
 
@@ -64,7 +64,7 @@ impl ViewCallbacks for Label {
         self.text_color = Color::GREEN;
         self.font = Font::default();
 
-        self.image_view.place().as_background();
+        self.image_view.place.as_background();
 
         self.set_letters();
     }

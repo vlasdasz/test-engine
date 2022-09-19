@@ -11,7 +11,7 @@ use test_engine::{
     sprites::Control,
     view, Image, LevelBase, Screen,
 };
-use ui::{BaseView, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews};
+use ui::{BaseView, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 use ui_views::{test_view::TestView, Alert, AnalogStickView, Button, DPadView, IntView};
 
 use crate::{benchmark::BenchmarkLevel, BenchmarkView};
@@ -80,7 +80,7 @@ impl TestGameView {
             },
         );
 
-        self.sprite_view.place().tr(10).size(400, 80);
+        self.sprite_view.place.tr(10).size(400, 80);
 
         if let Some(level) = &Screen::current().ui.level {
             level
@@ -89,7 +89,7 @@ impl TestGameView {
                 .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
         }
 
-        self.dpad.place().size(140, 100).b(10).l(100);
+        self.dpad.place.size(140, 100).b(10).l(100);
         self.dpad.set_images(
             Image::get("up.png"),
             Image::get("down.png"),
@@ -97,26 +97,26 @@ impl TestGameView {
             Image::get("right.png"),
         );
 
-        self.left_stick.place().bl(10).size(80, 80);
+        self.left_stick.place.bl(10).size(80, 80);
         self.left_stick.on_change.sub(|dir| {
             if let Some(level) = &mut Screen::current().ui.level {
                 level.player().add_impulse(dir);
             }
         });
 
-        self.test_view.place().br(20).size(280, 400);
+        self.test_view.place.br(20).size(280, 400);
         self.test_view
             .set_image(Image::get("cat.png"))
             .set_button_image(Image::get("square.png"))
             .set_animation_image(Image::get("palm.png"));
 
         self.ui_scale.step = 0.1;
-        self.ui_scale.place().size(28, 120).l(100).b(140);
+        self.ui_scale.place.size(28, 120).l(100).b(140);
         self.ui_scale.set_images(Image::get("up.png"), Image::get("down.png"));
         self.ui_scale.on_change.sub(|val| Screen::current().ui.set_scale(val));
 
         self.level_scale.step = 0.1;
-        self.level_scale.place().size(28, 120).l(28).b(140);
+        self.level_scale.place.size(28, 120).l(28).b(140);
         self.level_scale.set_images(Image::get("up.png"), Image::get("down.png"));
         self.level_scale
             .on_change
@@ -125,7 +125,7 @@ impl TestGameView {
         {
             let mut view = self.initialize_view::<BaseView>();
 
-            view.place().b(10).center_hor().size(150, 100).all_ver();
+            view.place.b(10).center_hor().size(150, 100).all_ver();
 
             let mut to_benchmark = view.initialize_view::<Button>();
             to_benchmark.set_text("Benchmark");

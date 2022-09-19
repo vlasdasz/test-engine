@@ -1,6 +1,6 @@
 use gm::Color;
 use rtools::Event;
-use ui::{view, SubView, Touch, ViewCallbacks, ViewLayout, ViewTouch};
+use ui::{view, SubView, Touch, ViewCallbacks, ViewTouch};
 
 use crate::Label;
 
@@ -14,7 +14,7 @@ pub struct Button {
 
 impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
-        self.label.place().as_background();
+        self.label.place.as_background();
         self.label.set_text(text);
         self
     }
