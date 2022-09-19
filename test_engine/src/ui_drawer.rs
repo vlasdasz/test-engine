@@ -13,8 +13,7 @@ use smart_default::SmartDefault;
 use ui::{DrawMode, PathData, UIAnimation, UIDrawer, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
 use ui_views::initialize_path_data;
 
-use crate::assets::Assets;
-use crate::Screen;
+use crate::{assets::Assets, Screen};
 
 type RoundStorage = HashMap<u64, (PathData, Size)>;
 
@@ -125,12 +124,12 @@ impl UIDrawer for TEUIDrawer {
         self.screen_scale = 1.0
     }
 
-    #[cfg(any(windows, linux))]
-    fn set_screen_scale(&mut self, _scale: f32) {
-        self.screen_scale = 1.0
+    #[cfg(macos)]
+    fn set_screen_scale(&mut self, scale: f32) {
+        self.screen_scale = scale
     }
 
-    #[cfg(macos)]
+    #[cfg(mobile)]
     fn set_screen_scale(&mut self, scale: f32) {
         self.screen_scale = scale
     }

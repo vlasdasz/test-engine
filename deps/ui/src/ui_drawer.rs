@@ -6,7 +6,7 @@ use gm::{
 };
 use rtools::{address::Address, Rglica};
 
-use crate::{view::ViewSubviews, DrawMode, PathData, View, UIAnimation};
+use crate::{view::ViewSubviews, DrawMode, PathData, UIAnimation, View};
 
 static mut DRAWER: Option<Box<dyn UIDrawer>> = Option::None;
 
