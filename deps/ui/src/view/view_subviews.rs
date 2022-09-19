@@ -12,8 +12,6 @@ pub trait ViewSubviews {
 
     fn initialize_view<V: 'static + View>(&mut self) -> SubView<V>;
     fn add_subview(&mut self, view: Box<dyn View>);
-
-    fn alert(&mut self, message: impl ToString);
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -54,10 +52,5 @@ impl<T: ?Sized + View> ViewSubviews for T {
         view.init_views();
         view.setup();
         self.subviews.push(view);
-    }
-
-    fn alert(&mut self, _message: impl ToString) {
-        //FIXME: -
-        //self.root_view().initialize_view::<AlertView>().set_message(message);
     }
 }

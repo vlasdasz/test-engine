@@ -5,7 +5,7 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::{Point, Size};
-use rtools::{platform::Platform, IntoF32};
+use rtools::{platform::Platform, IntoF32, ToRglica};
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
@@ -65,6 +65,7 @@ impl UILayer {
         let Some(view) = get_ui_drawer().next_view() else {
             return;
         };
+        get_ui_drawer().set_root_view(view.to_rglica());
         self.view = view;
         self.view.set_size(self.screen_size);
         self.view.init_views();

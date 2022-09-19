@@ -1,24 +1,33 @@
 use gm::Color;
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout, ViewSubviews};
+use rtools::Boxed;
+use ui::{get_ui_drawer, view, SubView, ViewCallbacks, ViewData, ViewLayout, ViewSubviews};
 
 use crate::{Button, Label};
 
 #[view]
 #[derive(Default)]
-pub struct AlertView {
+pub struct Alert {
     label:     SubView<Label>,
     ok_button: SubView<Button>,
     message:   String,
 }
 
-impl AlertView {
+impl Alert {
+    pub fn show(message: impl ToString) {
+        let mut alert = Self::boxed();
+        alert.message = message.to_string();
+        get_ui_drawer().root_view().add_subview(alert);
+    }
+}
+
+impl Alert {
     pub fn set_message(&mut self, message: impl ToString) {
         self.message = message.to_string();
         self.label.set_text(message);
     }
 }
 
-impl ViewCallbacks for AlertView {
+impl ViewCallbacks for Alert {
     fn setup(&mut self) {
         self.place().size(200, 80).center();
         self.set_color(Color::WHITE)
@@ -34,5 +43,7 @@ impl ViewCallbacks for AlertView {
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
         self.ok_button.on_tap.set(self, |this, _| this.remove_from_superview());
+
+        self.set_message(self.message.clone());
     }
 }

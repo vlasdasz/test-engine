@@ -25,6 +25,9 @@ pub trait UIDrawer {
     fn window_size(&self) -> &Size;
     fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
 
+    fn root_view(&mut self) -> &mut dyn View;
+    fn set_root_view(&mut self, view: Rglica<dyn View>);
+
     fn next_view(&mut self) -> Option<Box<dyn View>>;
     fn set_next_view(&mut self, view: Box<dyn View>);
 

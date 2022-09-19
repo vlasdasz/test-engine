@@ -57,6 +57,7 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
 
+        get_ui_drawer().set_root_view(self.ui.view.to_rglica());
         self.ui.view.init_views();
         self.ui.view.setup();
         self.ui.view.calculate_frames();

@@ -10,7 +10,7 @@ mod slider;
 mod table_view;
 mod table_view_cell;
 
-pub use alert::AlertView;
+pub use alert::Alert;
 pub use analog_stick_view::AnalogStickView;
 pub use dpad_view::DPadView;
 pub use drawing_view::{initialize_path_data, DrawingView};

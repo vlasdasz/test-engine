@@ -12,7 +12,7 @@ use test_engine::{
     view, Image, LevelBase, Screen,
 };
 use ui::{BaseView, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews};
-use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
+use ui_views::{test_view::TestView, Alert, AnalogStickView, Button, DPadView, IntView};
 
 use crate::{benchmark::BenchmarkLevel, BenchmarkView};
 
@@ -148,10 +148,10 @@ impl TestGameView {
             let mut async_task = view.initialize_view::<Button>();
             async_task.set_text("Async task").set_frame((120, 20));
             async_task.on_tap.set(self, move |this, _| {
-                Network::get().get_users.get(this, |this, error, result| {
+                Network::get().get_users.get(this, |_, error, result| {
                     if let Some(error) = error {
                         infov!(&error);
-                        this.alert(error);
+                        Alert::show(error);
                         return;
                     }
 
@@ -160,7 +160,7 @@ impl TestGameView {
                     if let Some(_user) = result.first() {
                         // task.set_text(user.login.clone());
                     } else {
-                        this.alert("No response");
+                        Alert::show("No response");
                     }
                 });
             });

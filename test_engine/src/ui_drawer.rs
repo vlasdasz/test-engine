@@ -28,6 +28,7 @@ pub struct TEUIDrawer {
     #[default = 1.0]
     screen_scale: f32,
 
+    root_view: Rglica<dyn View>,
     next_view: Option<Box<dyn View>>,
 
     views_to_remove: Vec<Rglica<dyn View>>,
@@ -192,6 +193,14 @@ impl UIDrawer for TEUIDrawer {
         }
 
         GLWrapper::disable_stensil();
+    }
+
+    fn root_view(&mut self) -> &mut dyn View {
+        self.root_view.deref_mut()
+    }
+
+    fn set_root_view(&mut self, view: Rglica<dyn View>) {
+        self.root_view = view
     }
 
     fn next_view(&mut self) -> Option<Box<dyn View>> {

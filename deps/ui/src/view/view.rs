@@ -2,11 +2,15 @@ use std::ops::{Deref, DerefMut};
 
 use rtools::{Boxed, Rglica};
 
-use crate::{ViewBase, ViewCallbacks};
+use crate::{get_ui_drawer, ViewBase, ViewCallbacks};
 
 pub trait View: Boxed + ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
     fn init_views(&mut self);
     fn rglica(&self) -> Rglica<dyn View>;
+
+    fn root_view(&self) -> &mut dyn View {
+        get_ui_drawer().root_view()
+    }
 }
 
 #[derive(Default)]
