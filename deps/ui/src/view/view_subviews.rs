@@ -11,7 +11,7 @@ pub trait ViewSubviews {
     fn remove_all_subviews(&mut self);
 
     fn initialize_view<V: 'static + View>(&mut self) -> SubView<V>;
-    fn add_subview(&mut self, view: Box<dyn View>);
+    fn add_subview(&mut self, view: Box<dyn View>) -> Rglica<dyn View>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -46,11 +46,13 @@ impl<T: ?Sized + View> ViewSubviews for T {
         result.into()
     }
 
-    fn add_subview(&mut self, mut view: Box<dyn View>) {
+    fn add_subview(&mut self, mut view: Box<dyn View>) -> Rglica<dyn View> {
         view.superview = self.rglica();
         view.place = Placer::make(view.to_rglica());
         view.init_views();
         view.setup();
+        let res = view.to_rglica();
         self.subviews.push(view);
+        res
     }
 }

@@ -114,8 +114,8 @@ impl Screen {
             self.update_level();
         }
 
-        get_ui_drawer().update(self.ui.view.deref_mut());
         self.ui.view.calculate_frames();
+        get_ui_drawer().update(self.ui.view.deref_mut());
         get_ui_drawer().draw(self.ui.view.deref_mut());
 
         Dispatch::call();

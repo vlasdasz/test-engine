@@ -148,6 +148,10 @@ impl Placer {
         self.b(offset).r(offset)
     }
 
+    pub fn tlb(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.t(offset).l(offset).b(offset)
+    }
+
     pub fn lrt(&mut self, offset: impl IntoF32) -> &mut Self {
         self.l(offset).r(offset).t(offset)
     }

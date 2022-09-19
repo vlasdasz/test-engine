@@ -28,6 +28,10 @@ impl API {
         &Self::get().headers
     }
 
+    pub fn clear_headers() {
+        Self::get().headers.clear()
+    }
+
     pub fn set_token(token: impl ToString) {
         Self::add_header("token", token)
     }

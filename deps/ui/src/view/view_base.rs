@@ -7,7 +7,7 @@ use gl_image::Image;
 use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Rglica, ToRglica};
 
-use crate::{layout::Placer, PathData, View};
+use crate::{layout::Placer, view::view_animation::UIAnimation, PathData, View};
 
 #[derive(Default)]
 pub struct ViewBase {
@@ -35,6 +35,8 @@ pub struct ViewBase {
     pub paths: Vec<PathData>,
 
     pub(crate) is_selected: bool,
+
+    pub(crate) animations: Vec<UIAnimation>,
 }
 
 #[derive(Default)]

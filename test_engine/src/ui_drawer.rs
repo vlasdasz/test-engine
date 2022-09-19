@@ -10,7 +10,7 @@ use gm::{
 };
 use rtools::{address::Address, Rglica, ToRglica};
 use smart_default::SmartDefault;
-use ui::{DrawMode, PathData, UIDrawer, View, ViewData, ViewFrame, ViewSubviews};
+use ui::{DrawMode, PathData, UIDrawer, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
 use ui_views::initialize_path_data;
 
 use crate::assets::Assets;
@@ -142,6 +142,7 @@ impl UIDrawer for TEUIDrawer {
 
     fn update(&self, view: &mut dyn View) {
         view.update();
+        view.commit_animations();
         for view in view.subviews_mut() {
             self.update(view.deref_mut());
         }
