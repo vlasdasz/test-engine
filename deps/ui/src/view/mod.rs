@@ -1,7 +1,5 @@
 #![allow(clippy::module_inception)]
 
-use crate::{complex::AlertView, view::view_internal::ViewInternal};
-
 mod view;
 mod view_base;
 mod view_callbacks;

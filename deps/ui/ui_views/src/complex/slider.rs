@@ -1,13 +1,9 @@
 use gm::Color;
-use rtools::{math::clamped_by, Event, Rglica, ToRglica};
+use rtools::{math::clamped_by, Event};
 use smart_default::SmartDefault;
+use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame};
 
-use crate::{
-    basic::CircleView,
-    view,
-    view::{ViewFrame, ViewSubviews},
-    SubView, Touch, View, ViewBase, ViewCallbacks,
-};
+use crate::CircleView;
 
 #[view]
 #[derive(SmartDefault)]

@@ -8,7 +8,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{Boxed, Dispatch, Rglica, Time, ToRglica, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
-use ui::{get_ui_drawer, set_ui_drawer, ViewFrame, ViewLayout};
+use ui::{get_ui_drawer, set_ui_drawer, View, ViewFrame, ViewLayout};
 
 use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer, ui_layer::UILayer};
 
@@ -47,7 +47,7 @@ impl Screen {
         GlEvents::get().frame_drawn.set(self, |this, _| this.update());
     }
 
-    fn init(mut self, _size: Size) -> Self {
+    fn init(&mut self, _size: Size) {
         #[cfg(desktop)]
         {
             let m = self.glfw.monitors.first().unwrap().clone();
@@ -57,15 +57,15 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
 
-        self.ui.root_view.calculate_frames();
+        self.ui.view.init_views();
+        self.ui.view.setup();
+        self.ui.view.calculate_frames();
 
         #[cfg(desktop)]
         {
             let size = Screen::adjust_size(self.monitor.clone(), _size);
             self.set_size(size);
         }
-
-        self
     }
 
     #[cfg(not(any(mobile, macos)))]
@@ -98,7 +98,8 @@ impl Screen {
         self.ui.frame_time = interval as f64 / 1000000000.0;
         self.ui.fps = (1.0 / self.ui.frame_time as f64) as u64;
 
-        self.ui.root_view.debug_view.fps.set(self.ui.fps);
+        // FIXME: -
+        //self.ui.root_view.debug_view.fps.set(self.ui.fps);
     }
 
     pub fn update(&mut self) {
@@ -108,23 +109,22 @@ impl Screen {
 
         GLWrapper::clear();
 
-        if self.ui.view.is_ok() && self.ui.level.is_some() {
+        if self.ui.level.is_some() {
             self.update_level();
         }
 
-        get_ui_drawer().update(self.ui.root_view.deref_mut());
-        if self.ui.view.is_ok() {
-            self.ui.view.set_frame(self.ui.root_view.frame().with_zero_origin());
-        }
-        self.ui.root_view.calculate_frames();
-        get_ui_drawer().draw(self.ui.root_view.deref_mut());
+        get_ui_drawer().update(self.ui.view.deref_mut());
+        self.ui.view.calculate_frames();
+        get_ui_drawer().draw(self.ui.view.deref_mut());
 
         Dispatch::call();
 
-        self.ui.root_view.remove_scheduled();
+        get_ui_drawer().remove_scheduled();
 
         #[cfg(desktop)]
         self.glfw.swap_buffers();
+
+        self.ui.init_next_view();
     }
 
     fn update_level(&mut self) {
@@ -146,6 +146,7 @@ impl Screen {
     pub fn set_size(&mut self, size: Size) -> &mut Self {
         #[cfg(desktop)]
         self.glfw.set_size(size);
+        self.ui.screen_size = size;
         self.on_size_changed(size);
         self
     }
@@ -153,7 +154,8 @@ impl Screen {
     fn on_size_changed(&mut self, size: Size) {
         trace!("Size changed: {:?}", size);
         get_ui_drawer().set_size(size);
-        self.ui.root_view.set_frame(size);
+        self.ui.view.set_frame(size);
+        self.ui.screen_size = size;
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
         self.update();
@@ -175,7 +177,7 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: impl Into<Size>, assets_path: &Path) -> Box<Self> {
+    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Box<dyn View>) -> Box<Self> {
         trace!("Creating screen");
 
         #[cfg(desktop)]
@@ -186,28 +188,27 @@ impl Screen {
         Assets::init(assets_path);
         trace!("Assets: Ok");
 
-        let ui = UILayer::boxed();
+        let ui = UILayer::new(size.clone(), view);
         trace!("UILayer: OK");
 
-        set_ui_drawer(TEUIDrawer::new());
+        set_ui_drawer(TEUIDrawer::boxed());
         trace!("UIDrawer: OK");
 
         set_sprites_drawer(TESpritesDrawer::new());
         trace!("SpritesDrawer: OK");
 
-        let screen = Box::new(
-            Self {
-                ui,
-                #[cfg(desktop)]
-                glfw,
-                monitor: Default::default(),
-            }
-            .init(size.into()),
-        );
+        let mut screen = Box::new(Self {
+            ui,
+            #[cfg(desktop)]
+            glfw,
+            monitor: Default::default(),
+        });
 
         unsafe {
             SCREEN = screen.to_rglica().as_ptr();
         }
+
+        screen.init(size.into());
 
         screen
     }

@@ -2,7 +2,7 @@ use gl_image::Image;
 use gm::Color;
 use rtools::{data_manager::Handle, IntoF32};
 
-use crate::{complex::PathData, View};
+use crate::{PathData, View};
 
 pub trait ViewData {
     fn color(&self) -> &Color;

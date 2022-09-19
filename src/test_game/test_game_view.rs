@@ -1,3 +1,4 @@
+use rtools::{static_get, Apply, Boxed};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
 use tao_log::infov;
@@ -5,21 +6,13 @@ use test_engine::{
     audio::Sound,
     gm::{flat::Direction, Color},
     net::{GetRequest, API},
-    rtools::{
-        data_manager::{DataManager, Handle},
-        static_get, Apply, Boxed, Rglica, ToRglica,
-    },
+    rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
-    ui::{
-        basic::Button,
-        complex::{AnalogStickView, IntView},
-        test::test_view::TestView,
-        view, BaseView, DPadView, SubView, View, ViewBase, ViewCallbacks, ViewData, ViewFrame, ViewLayout,
-        ViewSubviews,
-    },
-    Image, LevelBase, Screen,
+    view, Image, LevelBase, Screen,
 };
+use ui::{BaseView, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews};
+use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
 
 use crate::{benchmark::BenchmarkLevel, BenchmarkView};
 
@@ -86,8 +79,6 @@ impl TestGameView {
                 });
             },
         );
-
-        self.set_frame((10, 10, 1000, 500));
 
         self.sprite_view.place().tr(10).size(400, 80);
 

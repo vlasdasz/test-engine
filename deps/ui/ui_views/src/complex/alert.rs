@@ -1,12 +1,7 @@
 use gm::Color;
-use rtools::{Rglica, ToRglica};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout, ViewSubviews};
 
-use crate::{
-    basic::Button,
-    view,
-    view::{ViewData, ViewSubviews},
-    Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
-};
+use crate::{Button, Label};
 
 #[view]
 #[derive(Default)]

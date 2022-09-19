@@ -1,13 +1,12 @@
 use std::string::String;
 
 use test_engine::{
-    rtools::{Boxed, Random, Rglica, ToRglica},
-    ui::{
-        basic::Button, complex::LabeledTextField, layout::Anchor, view, SubView, View, ViewBase,
-        ViewCallbacks, ViewLayout, ViewSubviews,
-    },
-    Screen,
+    rtools::{Boxed, Random},
+    ui::{layout::Anchor, SubView},
+    view, Screen,
 };
+use ui::{ViewCallbacks, ViewLayout};
+use ui_views::{Button, LabeledTextField};
 
 use crate::test_game::{TestGameLevel, TestGameView};
 

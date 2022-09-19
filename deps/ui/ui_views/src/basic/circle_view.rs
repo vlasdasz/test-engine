@@ -1,12 +1,8 @@
 use gm::{flat::PointsPath, Color};
-use rtools::{IntoF32, Rglica, ToRglica};
+use rtools::IntoF32;
+use ui::{view, DrawMode, SubView, ViewCallbacks, ViewFrame, ViewLayout};
 
-use crate::{
-    complex::{DrawMode, DrawingView},
-    view,
-    view::{ViewFrame, ViewLayout, ViewSubviews},
-    SubView, View, ViewBase, ViewCallbacks,
-};
+use crate::DrawingView;
 
 #[view]
 #[derive(Default)]

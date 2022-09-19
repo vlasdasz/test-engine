@@ -1,6 +1,7 @@
-use rtools::{Event, IntoF32, Rglica, ToRglica};
+use rtools::{Event, IntoF32};
+use ui::{view, SubView, ViewCallbacks};
 
-use crate::{complex::Slider, view, view::ViewSubviews, Label, SubView, View, ViewBase, ViewCallbacks};
+use crate::{Label, Slider};
 
 #[view]
 #[derive(Default)]

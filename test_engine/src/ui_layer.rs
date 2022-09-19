@@ -4,30 +4,25 @@ use std::rc::Rc;
 use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
-use gm::flat::Point;
-use rtools::{platform::Platform, IntoF32, Rglica, Selectable, ToRglica};
-use smart_default::SmartDefault;
+use gm::flat::{Point, Size};
+use rtools::{platform::Platform, IntoF32};
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
 use ui::{
-    basic::RootView,
     get_ui_drawer,
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
-    Touch, View, ViewFrame, ViewSubviews, ViewTouch,
+    Touch, View, ViewFrame, ViewLayout, ViewTouch,
 };
 
 use crate::Keymap;
 
-#[derive(SmartDefault)]
 pub struct UILayer {
     pub level: Option<Box<dyn Level>>,
 
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
-    #[default(RootView::new())]
-    pub root_view:          Box<RootView>,
-    pub view:               Rglica<dyn View>,
+    pub view:               Box<dyn View>,
 
     pub keymap: Rc<Keymap>,
 
@@ -35,9 +30,8 @@ pub struct UILayer {
     pub prev_time:  i64,
     pub frame_time: f64,
 
-    pub selected_view: Rglica<dyn Selectable>,
+    pub screen_size: Size,
 
-    #[default = 1.0]
     scale: f32,
 }
 
@@ -52,7 +46,7 @@ impl UILayer {
         } else {
             touch.position /= self.scale;
         }
-        if !self.root_view.check_touch(&mut touch) {
+        if !self.view.check_touch(&mut touch) {
             if let Some(level) = &mut self.level {
                 level.set_cursor_position(level_touch.position);
                 if touch.is_began() {
@@ -60,15 +54,22 @@ impl UILayer {
                 }
             }
         }
-        self.root_view.remove_scheduled();
+        get_ui_drawer().remove_scheduled();
     }
 
     pub fn set_view(&mut self, view: Box<dyn View>) {
-        if self.view.is_ok() {
-            self.view.remove_from_superview();
-        }
-        self.view = view.to_rglica();
-        self.root_view.add_subview(view);
+        get_ui_drawer().set_next_view(view);
+    }
+
+    pub(crate) fn init_next_view(&mut self) {
+        let Some(view) = get_ui_drawer().next_view() else {
+            return;
+        };
+        self.view = view;
+        self.view.set_size(self.screen_size);
+        self.view.init_views();
+        self.view.setup();
+        self.view.calculate_frames();
     }
 
     pub fn set_level(&mut self, level: Box<dyn Level>) {
@@ -83,7 +84,7 @@ impl UILayer {
     pub fn set_scale(&mut self, scale: impl IntoF32) {
         self.scale = scale.into_f32();
         get_ui_drawer().set_scale(self.scale);
-        self.root_view.set_frame(*get_ui_drawer().window_size() / self.scale);
+        self.view.set_frame(*get_ui_drawer().window_size() / self.scale);
     }
 }
 
@@ -151,5 +152,27 @@ impl UILayer {
         ev.mouse_click.set(self, |this, a| this.on_mouse_click(a.0, a.1));
 
         ev.cursor_moved.set(self, |this, a| this.on_cursor_moved(a))
+    }
+}
+
+impl UILayer {
+    pub fn new(size: impl Into<Size>, view: Box<dyn View>) -> Box<Self> {
+        Box::new(Self {
+            level: Default::default(),
+
+            ui_cursor_position: Default::default(),
+            cursor_position: Default::default(),
+            view,
+
+            keymap: Default::default(),
+
+            fps: Default::default(),
+            prev_time: Default::default(),
+            frame_time: Default::default(),
+
+            screen_size: size.into(),
+
+            scale: 1.0,
+        })
     }
 }

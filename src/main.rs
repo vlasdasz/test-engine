@@ -22,10 +22,9 @@ mod ui_test;
 async fn main() {
     init_log(false, 4);
 
-    let mut screen = Screen::new((1000, 600), &home().join("test_engine"));
+    let mut screen = Screen::new((1000, 600), &home().join("test_engine"), TestGameView::boxed());
 
     screen.ui.set_level(TestGameLevel::boxed());
-    screen.ui.set_view(TestGameView::boxed());
 
     screen.start_main_loop();
 }

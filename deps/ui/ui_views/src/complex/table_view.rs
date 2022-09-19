@@ -1,6 +1,5 @@
-use rtools::{Rglica, ToRglica};
-
-use crate::{view, view::ViewSubviews, View, ViewBase, ViewCallbacks, ViewLayout};
+use rtools::Rglica;
+use ui::{view, View, ViewCallbacks, ViewLayout, ViewSubviews};
 
 #[view]
 #[derive(Default)]

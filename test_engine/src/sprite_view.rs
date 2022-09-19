@@ -1,10 +1,8 @@
 use gl_image::Image;
-use rtools::{data_manager::DataManager, Rglica, ToRglica};
+use rtools::{data_manager::DataManager, Rglica};
 use sprites::Sprite;
-use ui::{
-    basic::Button, complex::LabeledView, view, SubView, View, ViewBase, ViewCallbacks, ViewData, ViewLayout,
-    ViewSubviews,
-};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout};
+use ui_views::{Button, LabeledView};
 
 #[view]
 #[derive(Default)]

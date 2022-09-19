@@ -1,10 +1,7 @@
-use rtools::{platform::Platform, Property, Rglica, ToRglica};
+use rtools::{platform::Platform, Property};
+use ui::{view, SubView, ViewCallbacks, ViewFrame, ViewLayout};
 
-use crate::{
-    view,
-    view::{ViewFrame, ViewLayout, ViewSubviews},
-    Label, SubView, View, ViewBase, ViewCallbacks,
-};
+use crate::Label;
 
 #[view]
 #[derive(Default)]

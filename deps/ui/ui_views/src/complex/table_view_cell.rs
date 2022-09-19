@@ -1,6 +1,6 @@
-use rtools::{Rglica, ToRglica};
+use ui::{view, SubView, ViewCallbacks, ViewLayout};
 
-use crate::{view, view::ViewSubviews, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout};
+use crate::Label;
 
 #[view]
 #[derive(Default)]

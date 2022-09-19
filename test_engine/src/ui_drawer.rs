@@ -9,33 +9,28 @@ use gm::{
     Color,
 };
 use rtools::{address::Address, Rglica, ToRglica};
-use ui::{
-    complex::{initialize_path_data, DrawMode, PathData},
-    UIDrawer, View, ViewData, ViewFrame, ViewSubviews,
-};
+use smart_default::SmartDefault;
+use ui::{DrawMode, PathData, UIDrawer, View, ViewData, ViewFrame, ViewSubviews};
+use ui_views::initialize_path_data;
 
 use crate::assets::Assets;
 
 type RoundStorage = HashMap<u64, (PathData, Size)>;
 
+#[derive(SmartDefault)]
 pub struct TEUIDrawer {
     pub window_size: Size,
 
     round_storage: RefCell<RoundStorage>,
 
+    #[default = 1.0]
     scale:        f32,
+    #[default = 1.0]
     screen_scale: f32,
-}
 
-impl TEUIDrawer {
-    pub fn new() -> Box<TEUIDrawer> {
-        Box::new(TEUIDrawer {
-            window_size:   Default::default(),
-            round_storage: Default::default(),
-            scale:         1.0,
-            screen_scale:  1.0,
-        })
-    }
+    next_view: Option<Box<dyn View>>,
+
+    views_to_remove: Vec<Rglica<dyn View>>,
 }
 
 impl TEUIDrawer {
@@ -199,8 +194,20 @@ impl UIDrawer for TEUIDrawer {
         GLWrapper::disable_stensil();
     }
 
+    fn next_view(&mut self) -> Option<Box<dyn View>> {
+        self.next_view.take()
+    }
+
+    fn set_next_view(&mut self, view: Box<dyn View>) {
+        self.next_view = view.into()
+    }
+
     fn window_size(&self) -> &Size {
         &self.window_size
+    }
+
+    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>> {
+        &mut self.views_to_remove
     }
 }
 

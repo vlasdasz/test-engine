@@ -1,12 +1,7 @@
-use rtools::{Rglica, ToRglica};
-use ui_proc::view;
+use rtools::ToRglica;
+use ui::{layout::Anchor, view, SubView, ViewCallbacks, ViewLayout};
 
-use crate::{
-    basic::TextField,
-    layout::Anchor,
-    view::{ViewLayout, ViewSubviews},
-    Label, SubView, View, ViewBase, ViewCallbacks,
-};
+use crate::{Label, TextField};
 
 #[view]
 #[derive(Default)]

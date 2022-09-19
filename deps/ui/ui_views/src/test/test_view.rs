@@ -1,14 +1,9 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use rtools::{data_manager::Handle, Animation, Boxed, Rglica, ToRglica, Unwrap};
+use rtools::{data_manager::Handle, Animation, Boxed, ToRglica, Unwrap};
+use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewLayout};
 
-use crate::{
-    basic::Button,
-    complex::{DrawMode, DrawingView, StringCell, TableView, TableViewDataSource},
-    data_source, view,
-    view::{ViewData, ViewFrame, ViewSubviews},
-    ImageView, Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
-};
+use crate::{data_source, Button, DrawingView, ImageView, Label, StringCell, TableView, TableViewDataSource};
 
 #[view]
 #[derive(Default)]

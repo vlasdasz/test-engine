@@ -19,7 +19,11 @@ smart-default = "0.6"
 tokio = { version = "1.21", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 
+rtools = { path = "deps/rtools" }
 test_engine = { path = "test_engine" }
+
+ui = { path = "deps/ui" }
+ui_views = { path = "deps/ui/ui_views" }
 
 [target.'cfg(target_os="android")'.dependencies]
 android-ndk-sys = "0.2"

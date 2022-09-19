@@ -10,7 +10,7 @@ use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
 };
-use ui::{input::TouchEvent, Touch};
+use ui::{input::TouchEvent, Touch, View};
 
 use crate::Screen;
 
@@ -24,9 +24,9 @@ pub struct App {
 }
 
 impl App {
-    fn create_screen(&mut self, assets_path: &Path, monitor: Monitor) {
+    fn create_screen(&mut self, assets_path: &Path, monitor: Monitor, view: Box<dyn View>) {
         self.runtime.block_on(async {
-            let mut screen = Screen::new(monitor.resolution, assets_path);
+            let mut screen = Screen::new(monitor.resolution, assets_path, view);
 
             screen.add_monitor(monitor);
 
@@ -97,6 +97,7 @@ impl App {
         width: c_float,
         height: c_float,
         diagonal: c_float,
+        view: Box<dyn View>,
     ) {
         let monitor = Monitor::new(
             "Phone screen".into(),
@@ -110,7 +111,7 @@ impl App {
 
         trace!("{:?}", &monitor);
 
-        self.create_screen(&PathBuf::new(), monitor);
+        self.create_screen(&PathBuf::new(), monitor, view);
     }
 }
 

@@ -17,7 +17,6 @@ smart-default = "0.6"
 tokio = { version = "1.21", features = ["full"] }
 
 gm = { path = "../deps/gm" }
-ui = { path = "../deps/ui" }
 net = { path = "../deps/net" }
 text = { path = "../deps/text" }
 maze = { path = "../deps/maze" }
@@ -26,6 +25,9 @@ rtools = { path = "../deps/rtools" }
 sprites = { path = "../deps/sprites" }
 gl_image = { path = "../deps/gl_image" }
 gl_wrapper = { path = "../deps/gl_wrapper" }
+
+ui = { path = "../deps/ui" }
+ui_views = { path = "../deps/ui/ui_views" }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = "0.14"

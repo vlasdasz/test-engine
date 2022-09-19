@@ -1,0 +1,16 @@
+[package]
+name = "ui_views"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ui = { path = ".." }
+#ui_proc = { path = "../ui_proc" }
+
+gm = { path = "../../gm" }
+text = { path = "../../text" }
+rtools = { path = "../../rtools" }
+gl_image = { path = "../../gl_image" }
+gl_wrapper = { path = "../../gl_wrapper" }
+
+smart-default = "0.6"

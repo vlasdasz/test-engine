@@ -1,13 +1,9 @@
 use gl_image::Image;
 use gm::flat::Direction;
-use rtools::{data_manager::Handle, Apply, Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Apply, Event};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame};
 
-use crate::{
-    basic::Button,
-    view,
-    view::{ViewData, ViewFrame, ViewSubviews},
-    SubView, View, ViewBase, ViewCallbacks,
-};
+use crate::Button;
 
 #[view]
 #[derive(Default)]

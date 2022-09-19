@@ -2,14 +2,10 @@ use gm::{
     flat::{Point, PointsPath},
     Color,
 };
-use rtools::{Event, Rglica, ToRglica};
+use rtools::Event;
+use ui::{view, DrawMode, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
 
-use crate::{
-    complex::{DrawMode, DrawingView},
-    view,
-    view::{ViewFrame, ViewSubviews},
-    SubView, Touch, View, ViewBase, ViewCallbacks, ViewTouch,
-};
+use crate::DrawingView;
 
 const SIZE: f32 = 80.0;
 const OUTLINE_WIDTH: f32 = 5.0;

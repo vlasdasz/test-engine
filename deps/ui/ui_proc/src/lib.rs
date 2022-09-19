@@ -20,29 +20,33 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     if let Fields::Named(fields) = &mut data.fields {
         inits = add_inits(&fields);
 
-        fields.named.push(Field::parse_named.parse2(quote! { view: ViewBase }).unwrap());
+        fields
+            .named
+            .push(Field::parse_named.parse2(quote! { view: ui::ViewBase }).unwrap());
     }
 
     let name = &stream.ident;
 
     quote! {
         #stream
-        impl View for #name {
-            fn rglica(&self) -> Rglica<dyn View> {
-                (self as &dyn View).to_rglica()
+        impl ui::View for #name {
+            fn rglica(&self) -> rtools::Rglica<dyn ui::View> {
+                use rtools::ToRglica;
+                (self as &dyn ui::View).to_rglica()
             }
             fn init_views(&mut self) {
+                use ui::ViewSubviews;
                 #inits
             }
         }
         impl std::ops::Deref for #name {
-            type Target = ViewBase;
-            fn deref(&self) -> &ViewBase {
+            type Target = ui::ViewBase;
+            fn deref(&self) -> &ui::ViewBase {
                 &self.view
             }
         }
         impl std::ops::DerefMut for #name {
-            fn deref_mut(&mut self) -> &mut ViewBase {
+            fn deref_mut(&mut self) -> &mut ui::ViewBase {
                 &mut self.view
             }
         }

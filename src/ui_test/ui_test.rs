@@ -1,11 +1,11 @@
 use test_engine::{
-    rtools::{Boxed, Rglica, ToRglica},
-    ui::{
-        basic::Button, layout::Anchor, view, BaseView, SubView, View, ViewBase, ViewCallbacks, ViewFrame,
-        ViewLayout, ViewSubviews,
-    },
+    rtools::{Boxed, Rglica},
+    ui::layout::Anchor,
     ui_layer::UILayer,
+    view,
 };
+use ui::{BaseView, SubView, ViewCallbacks, ViewFrame, ViewLayout};
+use ui_views::Button;
 
 use crate::test_game::TestGameView;
 

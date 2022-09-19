@@ -1,12 +1,10 @@
 use gm::Color;
-use rtools::{Rglica, ToRglica};
-
-use crate::{
+use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
-    view,
-    view::{ViewData, ViewSubviews, ViewTouch},
-    Label, SubView, Touch, View, ViewBase, ViewCallbacks, ViewLayout,
+    view, SubView, Touch, ViewCallbacks, ViewData, ViewLayout, ViewTouch,
 };
+
+use crate::Label;
 
 #[view]
 #[derive(Default)]

@@ -1,13 +1,9 @@
 use gl_image::Image;
-use rtools::{data_manager::Handle, Event, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Event};
 use smart_default::SmartDefault;
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout};
 
-use crate::{
-    basic::Button,
-    view,
-    view::{ViewData, ViewSubviews},
-    Label, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
-};
+use crate::{Button, Label};
 
 #[view]
 #[derive(SmartDefault)]

@@ -1,9 +1,8 @@
 use gm::Color;
-use rtools::{Event, Rglica, ToRglica};
+use rtools::Event;
+use ui::{view, SubView, Touch, ViewCallbacks, ViewLayout, ViewTouch};
 
-use crate::{
-    view, view::ViewSubviews, Label, SubView, Touch, View, ViewBase, ViewCallbacks, ViewLayout, ViewTouch,
-};
+use crate::Label;
 
 #[view]
 #[derive(Default)]

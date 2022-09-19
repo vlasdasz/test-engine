@@ -1,10 +1,6 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{
-    layout::Placer,
-    view::{AlertView, ViewInternal},
-    SubView, View,
-};
+use crate::{get_ui_drawer, layout::Placer, SubView, View};
 
 pub trait ViewSubviews {
     fn superview(&self) -> Rglica<dyn View>;
@@ -34,7 +30,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_from_superview(&mut self) {
-        self.root_view().schedule_remove(self.rglica())
+        get_ui_drawer().schedule_remove(self.rglica())
     }
 
     fn remove_subview_at(&mut self, index: usize) {
@@ -54,14 +50,14 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn add_subview(&mut self, mut view: Box<dyn View>) {
         view.superview = self.rglica();
-        view.root_view = self.root_view();
         view.placer = Placer::make(view.to_rglica());
         view.init_views();
         view.setup();
         self.subviews.push(view);
     }
 
-    fn alert(&mut self, message: impl ToString) {
-        self.root_view().initialize_view::<AlertView>().set_message(message);
+    fn alert(&mut self, _message: impl ToString) {
+        //FIXME: -
+        //self.root_view().initialize_view::<AlertView>().set_message(message);
     }
 }

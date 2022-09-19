@@ -1,13 +1,10 @@
 use gm::Color;
-use rtools::{data_manager::Handle, Rglica, ToRglica};
+use rtools::data_manager::Handle;
 use smart_default::SmartDefault;
 use text::{render_text, Font};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewLayout};
 
-use crate::{
-    view,
-    view::{ViewData, ViewSubviews},
-    ImageView, SubView, View, ViewBase, ViewCallbacks, ViewLayout,
-};
+use crate::ImageView;
 
 #[view]
 #[derive(SmartDefault)]

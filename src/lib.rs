@@ -60,7 +60,6 @@ pub extern "C" fn set_monitor(
 ) {
     unsafe {
         let mut app = App::boxed();
-        app.screen.ui.set_view(TestGameView::boxed());
         app.set_monitor(
             ppi,
             scale,
@@ -70,6 +69,7 @@ pub extern "C" fn set_monitor(
             width,
             height,
             diagonal,
+            TestGameView::boxed(),
         );
 
         APP = Box::into_raw(app);

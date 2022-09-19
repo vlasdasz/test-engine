@@ -3,18 +3,15 @@
 #![feature(trait_upcasting)]
 #![feature(specialization)]
 
-pub use basic::{ImageView, Label};
-pub use complex::DPadView;
 pub use input::Touch;
 
-pub mod basic;
-pub mod complex;
 pub mod input;
 pub mod layout;
-pub mod test;
+mod path_data;
 mod ui_drawer;
 mod view;
 
+pub use path_data::*;
 pub use ui_drawer::*;
 pub use ui_proc::*;
 pub use view::*;

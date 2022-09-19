@@ -4,12 +4,9 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use rtools::Rglica;
+use rtools::{address::Address, Rglica};
 
-use crate::{
-    complex::{DrawMode, PathData},
-    View,
-};
+use crate::{view::ViewSubviews, DrawMode, PathData, View};
 
 static mut DRAWER: Option<Box<dyn UIDrawer>> = Option::None;
 
@@ -26,6 +23,30 @@ pub trait UIDrawer {
     fn draw(&self, view: &mut dyn View);
     fn rglica(&self) -> Rglica<dyn UIDrawer>;
     fn window_size(&self) -> &Size;
+    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
+
+    fn next_view(&mut self) -> Option<Box<dyn View>>;
+    fn set_next_view(&mut self, view: Box<dyn View>);
+
+    fn remove_scheduled(&mut self) {
+        if self.views_to_remove().is_empty() {
+            return;
+        }
+        let to_remove = self.views_to_remove().drain(..);
+        for view in to_remove {
+            let index = view
+                .superview()
+                .subviews()
+                .iter()
+                .position(|sub| view.address() == sub.address())
+                .unwrap();
+            view.superview().remove_subview_at(index);
+        }
+    }
+
+    fn schedule_remove(&mut self, view: Rglica<dyn View>) {
+        self.views_to_remove().push(view)
+    }
 }
 
 pub fn set_ui_drawer(drawer: Box<dyn UIDrawer>) {
