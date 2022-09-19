@@ -47,7 +47,7 @@ impl Screen {
         GlEvents::get().frame_drawn.set(self, |this, _| this.update());
     }
 
-    fn init(&mut self, _size: Size) {
+    fn init(&mut self, _size: Size, mut view: Box<dyn View>) {
         #[cfg(desktop)]
         {
             let m = self.glfw.monitors.first().unwrap().clone();
@@ -57,10 +57,13 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
 
-        get_ui_drawer().set_root_view(self.ui.view.to_rglica());
-        self.ui.view.init_views();
-        self.ui.view.setup();
-        self.ui.view.calculate_frames();
+        view.init_views();
+        view.setup();
+        view.calculate_frames();
+
+        *get_ui_drawer().root_view() = view;
+
+        // get_ui_drawer().set_root_view(self.ui.view.to_rglica());
 
         #[cfg(desktop)]
         {
@@ -114,9 +117,11 @@ impl Screen {
             self.update_level();
         }
 
-        self.ui.view.calculate_frames();
-        get_ui_drawer().update(self.ui.view.deref_mut());
-        get_ui_drawer().draw(self.ui.view.deref_mut());
+        let view = get_ui_drawer().root_view();
+
+        view.calculate_frames();
+        get_ui_drawer().update(view.deref_mut());
+        get_ui_drawer().draw(view.deref_mut());
 
         Dispatch::call();
 
@@ -155,7 +160,7 @@ impl Screen {
     fn on_size_changed(&mut self, size: Size) {
         trace!("Size changed: {:?}", size);
         get_ui_drawer().set_size(size);
-        self.ui.view.set_frame(size);
+        get_ui_drawer().root_view().set_frame(size);
         self.ui.screen_size = size;
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
@@ -189,7 +194,7 @@ impl Screen {
         Assets::init(assets_path);
         trace!("Assets: Ok");
 
-        let ui = UILayer::new(size.clone(), view);
+        let ui = UILayer::new(size.clone());
         trace!("UILayer: OK");
 
         set_ui_drawer(TEUIDrawer::boxed());
@@ -209,7 +214,7 @@ impl Screen {
             SCREEN = screen.to_rglica().as_ptr();
         }
 
-        screen.init(size.into());
+        screen.init(size.into(), view);
 
         screen
     }

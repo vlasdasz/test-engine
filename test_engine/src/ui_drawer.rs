@@ -8,12 +8,15 @@ use gm::{
     flat::{PointsPath, Rect, Size},
     Color,
 };
-use rtools::{address::Address, Rglica, ToRglica};
+use rtools::{address::Address, Boxed, Rglica, ToRglica};
 use smart_default::SmartDefault;
-use ui::{DrawMode, PathData, UIAnimation, UIDrawer, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
+use ui::{
+    BaseView, DrawMode, PathData, UIAnimation, UIDrawer, View, ViewAnimation, ViewData, ViewFrame,
+    ViewSubviews,
+};
 use ui_views::initialize_path_data;
 
-use crate::{assets::Assets, Screen};
+use crate::assets::Assets;
 
 type RoundStorage = HashMap<u64, (PathData, Size)>;
 
@@ -28,10 +31,12 @@ pub struct TEUIDrawer {
     #[default = 1.0]
     screen_scale: f32,
 
-    root_view: Rglica<dyn View>,
+    #[default(BaseView::boxed())]
+    root_view: Box<dyn View>,
     next_view: Option<Box<dyn View>>,
 
     views_to_remove: Vec<Rglica<dyn View>>,
+    view_to_replace: Rglica<dyn View>,
 
     animations: Vec<UIAnimation>,
 }
@@ -70,6 +75,10 @@ impl TEUIDrawer {
 }
 
 impl UIDrawer for TEUIDrawer {
+    fn view_to_replace(&self) -> Rglica<dyn View> {
+        self.view_to_replace
+    }
+
     fn animations(&mut self) -> &mut Vec<UIAnimation> {
         &mut self.animations
     }
@@ -210,16 +219,12 @@ impl UIDrawer for TEUIDrawer {
         &mut self.views_to_remove
     }
 
-    fn replace_view(&mut self, view: Box<dyn View>) {
-        Screen::current().ui.replace_view(view)
+    fn replace_view(&mut self, view: Rglica<dyn View>) {
+        self.view_to_replace = view
     }
 
-    fn root_view(&mut self) -> &mut dyn View {
-        self.root_view.deref_mut()
-    }
-
-    fn set_root_view(&mut self, view: Rglica<dyn View>) {
-        self.root_view = view
+    fn root_view(&mut self) -> &mut Box<dyn View> {
+        &mut self.root_view
     }
 
     fn next_view(&mut self) -> Option<Box<dyn View>> {

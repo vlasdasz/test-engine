@@ -14,7 +14,7 @@ use ui::input::TouchEvent;
 use ui::{
     get_ui_drawer,
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
-    Touch, View, ViewFrame, ViewLayout, ViewTouch,
+    Touch, ViewFrame, ViewLayout, ViewTouch,
 };
 
 use crate::Keymap;
@@ -24,7 +24,6 @@ pub struct UILayer {
 
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
-    pub view:               Box<dyn View>,
 
     pub keymap: Rc<Keymap>,
 
@@ -48,7 +47,7 @@ impl UILayer {
         } else {
             touch.position /= self.scale;
         }
-        if !self.view.check_touch(&mut touch) {
+        if !get_ui_drawer().root_view().check_touch(&mut touch) {
             if let Some(level) = &mut self.level {
                 level.set_cursor_position(level_touch.position);
                 if touch.is_began() {
@@ -59,25 +58,16 @@ impl UILayer {
         get_ui_drawer().remove_scheduled();
     }
 
-    pub fn set_view(&mut self, view: Box<dyn View>) {
-        get_ui_drawer().set_next_view(view);
-    }
-
-    /// Hard replace view without initialization
-    pub fn replace_view(&mut self, view: Box<dyn View>) {
-        self.view = view;
-    }
-
     pub(crate) fn init_next_view(&mut self) {
         let Some(view) = get_ui_drawer().next_view() else {
             return;
         };
-        get_ui_drawer().set_root_view(view.to_rglica());
-        self.view = view;
-        self.view.set_size(self.screen_size);
-        self.view.init_views();
-        self.view.setup();
-        self.view.calculate_frames();
+        let mut rg = view.to_rglica();
+        *get_ui_drawer().root_view() = view;
+        rg.set_size(self.screen_size);
+        rg.init_views();
+        rg.setup();
+        rg.calculate_frames();
     }
 
     pub fn set_level(&mut self, level: Box<dyn Level>) {
@@ -92,7 +82,9 @@ impl UILayer {
     pub fn set_scale(&mut self, scale: impl IntoF32) {
         self.scale = scale.into_f32();
         get_ui_drawer().set_scale(self.scale);
-        self.view.set_frame(*get_ui_drawer().window_size() / self.scale);
+        get_ui_drawer()
+            .root_view()
+            .set_frame(*get_ui_drawer().window_size() / self.scale);
     }
 }
 
@@ -164,18 +156,17 @@ impl UILayer {
 }
 
 impl UILayer {
-    pub fn new(size: impl Into<Size>, view: Box<dyn View>) -> Box<Self> {
+    pub fn new(size: impl Into<Size>) -> Box<Self> {
         Box::new(Self {
             level: Default::default(),
 
             ui_cursor_position: Default::default(),
-            cursor_position: Default::default(),
-            view,
+            cursor_position:    Default::default(),
 
             keymap: Default::default(),
 
-            fps: Default::default(),
-            prev_time: Default::default(),
+            fps:        Default::default(),
+            prev_time:  Default::default(),
             frame_time: Default::default(),
 
             screen_size: size.into(),

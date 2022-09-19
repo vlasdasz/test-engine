@@ -1,10 +1,5 @@
-use test_engine::{
-    rtools::{Boxed, Rglica},
-    ui::layout::Anchor,
-    ui_layer::UILayer,
-    view,
-};
-use ui::{BaseView, SubView, ViewCallbacks, ViewFrame};
+use test_engine::{rtools::Boxed, ui::layout::Anchor, view};
+use ui::{get_ui_drawer, BaseView, SubView, ViewCallbacks, ViewFrame};
 use ui_views::Button;
 
 use crate::test_game::TestGameView;
@@ -16,7 +11,6 @@ pub struct UITestView {
     top_view:  SubView<BaseView>,
     test:      SubView<BaseView>,
     back:      SubView<Button>,
-    ui:        Rglica<UILayer>,
 }
 
 impl ViewCallbacks for UITestView {
@@ -29,8 +23,8 @@ impl ViewCallbacks for UITestView {
 
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 
-        self.back.on_tap.set(self, |this, _| {
-            this.ui.set_view(TestGameView::boxed());
+        self.back.on_tap.sub(|_| {
+            get_ui_drawer().set_next_view(TestGameView::boxed());
         });
     }
 }

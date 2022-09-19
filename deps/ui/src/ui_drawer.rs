@@ -23,16 +23,37 @@ pub trait UIDrawer {
     fn draw(&self, view: &mut dyn View);
     fn rglica(&self) -> Rglica<dyn UIDrawer>;
     fn window_size(&self) -> &Size;
-    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
-    fn replace_view(&mut self, view: Box<dyn View>);
 
-    fn root_view(&mut self) -> &mut dyn View;
-    fn set_root_view(&mut self, view: Rglica<dyn View>);
+    fn root_view(&mut self) -> &mut Box<dyn View>;
 
     fn next_view(&mut self) -> Option<Box<dyn View>>;
     fn set_next_view(&mut self, view: Box<dyn View>);
 
     fn animations(&mut self) -> &mut Vec<UIAnimation>;
+
+    fn replace_view(&mut self, view: Rglica<dyn View>);
+    fn view_to_replace(&self) -> Rglica<dyn View>;
+
+    fn replace_scheduled(&mut self) {
+        let mut view = self.view_to_replace();
+        if view.is_null() {
+            return;
+        }
+
+        let mut superview = view.superview();
+
+        let index = view.subviews().iter().position(|sub| view.address() == sub.address()).unwrap();
+        view.superview = Default::default();
+        let view = superview.remove_subview_at(index);
+
+        *self.root_view() = view;
+    }
+
+    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
+
+    fn schedule_remove(&mut self, view: Rglica<dyn View>) {
+        self.views_to_remove().push(view)
+    }
 
     fn remove_scheduled(&mut self) {
         if self.views_to_remove().is_empty() {
@@ -48,10 +69,6 @@ pub trait UIDrawer {
                 .unwrap();
             view.superview().remove_subview_at(index);
         }
-    }
-
-    fn schedule_remove(&mut self, view: Rglica<dyn View>) {
-        self.views_to_remove().push(view)
     }
 }
 
