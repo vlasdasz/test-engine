@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use rtools::{Animation, Event, Rglica};
 
-use crate::View;
+use crate::{get_ui_drawer, View};
 
 type Action = Box<dyn FnMut(&mut dyn View, f32)>;
 
@@ -54,24 +54,24 @@ impl<T: ?Sized + View> ViewAnimation for T {
         animation: Animation,
         action: impl FnMut(&mut dyn View, f32) + 'static,
     ) -> &mut Self {
-        self.animations.push(UIAnimation::new(view, animation, action));
+        get_ui_drawer().animations().push(UIAnimation::new(view, animation, action));
         self
     }
 
     fn add_animation(&mut self, anim: UIAnimation) {
-        self.animations.push(anim)
+        get_ui_drawer().animations().push(anim)
     }
 
     fn commit_animations(&mut self) {
-        if self.animations.is_empty() {
+        if get_ui_drawer().animations().is_empty() {
             return;
         }
-        for animation in &mut self.animations {
+        for animation in get_ui_drawer().animations() {
             animation.commit();
             if animation.finished() {
                 animation.on_finish.trigger(())
             }
         }
-        self.animations.retain(|a| !a.finished())
+        get_ui_drawer().animations().retain(|a| !a.finished())
     }
 }

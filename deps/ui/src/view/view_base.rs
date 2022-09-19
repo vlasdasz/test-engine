@@ -35,8 +35,6 @@ pub struct ViewBase {
     pub paths: Vec<PathData>,
 
     pub(crate) is_selected: bool,
-
-    pub(crate) animations: Vec<UIAnimation>,
 }
 
 #[derive(Default)]

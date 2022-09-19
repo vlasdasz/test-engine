@@ -1,3 +1,5 @@
+//! Represents UI elements
+
 use std::rc::Rc;
 
 #[cfg(desktop)]
@@ -59,6 +61,11 @@ impl UILayer {
 
     pub fn set_view(&mut self, view: Box<dyn View>) {
         get_ui_drawer().set_next_view(view);
+    }
+
+    /// Hard replace view without initialization
+    pub fn replace_view(&mut self, view: Box<dyn View>) {
+        self.view = view;
     }
 
     pub(crate) fn init_next_view(&mut self) {

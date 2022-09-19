@@ -10,10 +10,11 @@ use gm::{
 };
 use rtools::{address::Address, Rglica, ToRglica};
 use smart_default::SmartDefault;
-use ui::{DrawMode, PathData, UIDrawer, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
+use ui::{DrawMode, PathData, UIAnimation, UIDrawer, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
 use ui_views::initialize_path_data;
 
 use crate::assets::Assets;
+use crate::Screen;
 
 type RoundStorage = HashMap<u64, (PathData, Size)>;
 
@@ -32,6 +33,8 @@ pub struct TEUIDrawer {
     next_view: Option<Box<dyn View>>,
 
     views_to_remove: Vec<Rglica<dyn View>>,
+
+    animations: Vec<UIAnimation>,
 }
 
 impl TEUIDrawer {
@@ -68,6 +71,10 @@ impl TEUIDrawer {
 }
 
 impl UIDrawer for TEUIDrawer {
+    fn animations(&mut self) -> &mut Vec<UIAnimation> {
+        &mut self.animations
+    }
+
     fn reset_viewport(&self) {
         GLWrapper::set_viewport((
             0,
@@ -118,12 +125,12 @@ impl UIDrawer for TEUIDrawer {
         self.screen_scale = 1.0
     }
 
-    #[cfg(macos)]
-    fn set_screen_scale(&mut self, scale: f32) {
-        self.screen_scale = scale
+    #[cfg(any(windows, linux))]
+    fn set_screen_scale(&mut self, _scale: f32) {
+        self.screen_scale = 1.0
     }
 
-    #[cfg(mobile)]
+    #[cfg(macos)]
     fn set_screen_scale(&mut self, scale: f32) {
         self.screen_scale = scale
     }
@@ -134,10 +141,6 @@ impl UIDrawer for TEUIDrawer {
 
     fn set_size(&mut self, size: Size) {
         self.window_size = size
-    }
-
-    fn rglica(&self) -> Rglica<dyn UIDrawer> {
-        (self as &dyn UIDrawer).to_rglica()
     }
 
     fn update(&self, view: &mut dyn View) {
@@ -196,6 +199,22 @@ impl UIDrawer for TEUIDrawer {
         GLWrapper::disable_stensil();
     }
 
+    fn rglica(&self) -> Rglica<dyn UIDrawer> {
+        (self as &dyn UIDrawer).to_rglica()
+    }
+
+    fn window_size(&self) -> &Size {
+        &self.window_size
+    }
+
+    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>> {
+        &mut self.views_to_remove
+    }
+
+    fn replace_view(&mut self, view: Box<dyn View>) {
+        Screen::current().ui.replace_view(view)
+    }
+
     fn root_view(&mut self) -> &mut dyn View {
         self.root_view.deref_mut()
     }
@@ -210,14 +229,6 @@ impl UIDrawer for TEUIDrawer {
 
     fn set_next_view(&mut self, view: Box<dyn View>) {
         self.next_view = view.into()
-    }
-
-    fn window_size(&self) -> &Size {
-        &self.window_size
-    }
-
-    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>> {
-        &mut self.views_to_remove
     }
 }
 

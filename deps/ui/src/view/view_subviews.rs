@@ -7,7 +7,7 @@ pub trait ViewSubviews {
     fn subviews(&self) -> &[Box<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Box<dyn View>];
     fn remove_from_superview(&mut self);
-    fn remove_subview_at(&mut self, index: usize);
+    fn remove_subview_at(&mut self, index: usize) -> Box<dyn View>;
     fn remove_all_subviews(&mut self);
 
     fn initialize_view<V: 'static + View>(&mut self) -> SubView<V>;
@@ -31,8 +31,8 @@ impl<T: ?Sized + View> ViewSubviews for T {
         get_ui_drawer().schedule_remove(self.rglica())
     }
 
-    fn remove_subview_at(&mut self, index: usize) {
-        self.subviews.remove(index);
+    fn remove_subview_at(&mut self, index: usize) -> Box<dyn View> {
+        self.subviews.remove(index)
     }
 
     fn remove_all_subviews(&mut self) {

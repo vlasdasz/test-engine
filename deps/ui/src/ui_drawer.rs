@@ -6,7 +6,7 @@ use gm::{
 };
 use rtools::{address::Address, Rglica};
 
-use crate::{view::ViewSubviews, DrawMode, PathData, View};
+use crate::{view::ViewSubviews, DrawMode, PathData, View, UIAnimation};
 
 static mut DRAWER: Option<Box<dyn UIDrawer>> = Option::None;
 
@@ -24,12 +24,15 @@ pub trait UIDrawer {
     fn rglica(&self) -> Rglica<dyn UIDrawer>;
     fn window_size(&self) -> &Size;
     fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
+    fn replace_view(&mut self, view: Box<dyn View>);
 
     fn root_view(&mut self) -> &mut dyn View;
     fn set_root_view(&mut self, view: Rglica<dyn View>);
 
     fn next_view(&mut self) -> Option<Box<dyn View>>;
     fn set_next_view(&mut self, view: Box<dyn View>);
+
+    fn animations(&mut self) -> &mut Vec<UIAnimation>;
 
     fn remove_scheduled(&mut self) {
         if self.views_to_remove().is_empty() {
