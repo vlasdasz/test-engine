@@ -1,5 +1,6 @@
 use gm::Color;
 use ui::{
+    get_ui_drawer,
     input::{ControlButton, KeyboardButton, UIEvents},
     view, SubView, Touch, ViewCallbacks, ViewData, ViewTouch,
 };
@@ -33,6 +34,7 @@ impl ViewCallbacks for TextField {
 
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
+            *get_ui_drawer().open_keyboard() = true;
             UIEvents::get().key_pressed.set(self, |this, key| {
                 if this.is_selected() {
                     match key.button {
@@ -48,6 +50,7 @@ impl ViewCallbacks for TextField {
                 }
             });
         } else {
+            *get_ui_drawer().close_keyboard() = true;
             UIEvents::get().key_pressed.unsubscribe()
         }
 

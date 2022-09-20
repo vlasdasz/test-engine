@@ -37,6 +37,9 @@ pub struct TEUIDrawer {
     views_to_remove: Vec<Rglica<dyn View>>,
 
     animations: Vec<UIAnimation>,
+
+    open_keyboard:  bool,
+    close_keyboard: bool,
 }
 
 impl TEUIDrawer {
@@ -215,6 +218,14 @@ impl UIDrawer for TEUIDrawer {
 
     fn root_view(&mut self) -> &mut dyn View {
         self.root_view.deref_mut()
+    }
+
+    fn open_keyboard(&mut self) -> &mut bool {
+        &mut self.open_keyboard
+    }
+
+    fn close_keyboard(&mut self) -> &mut bool {
+        &mut self.close_keyboard
     }
 }
 

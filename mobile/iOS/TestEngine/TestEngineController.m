@@ -18,6 +18,7 @@
 @interface TestEngineController ()
 @property (nonatomic) CMMotionManager* motion;
 @property (nonatomic) NSTimer* timer;
+@property (nonatomic) UITextField* text_field;
 @end
 
 BOOL didAppear = false;
@@ -26,6 +27,17 @@ BOOL didAppear = false;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.text_field = [[UITextField alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
+    [self.text_field setBackgroundColor: UIColor.greenColor];
+    self.text_field.text = @"A";
+    [self.text_field setHidden:YES];
+    [self.view addSubview: self.text_field];
+    
+    [self.text_field addTarget:self
+                  action:@selector(textFieldDidChange:)
+        forControlEvents:UIControlEventEditingChanged];
+    
     [self setup];
     
     CGRect screen = [[UIScreen mainScreen] bounds];
@@ -51,6 +63,20 @@ BOOL didAppear = false;
     set_screen_size(self.view.frame.size.width, self.view.frame.size.height);
 }
 
+- (void)textFieldDidChange:(UITextField*)field {
+    
+    if (field.text.length == 0) {
+        NSLog(@"backspace");
+        add_key(0, Backspace);
+    } else {
+        char letter = [field.text cStringUsingEncoding: NSUTF8StringEncoding][1];
+        NSLog(@"%c", letter);
+        add_key(letter, Letter);
+    }
+        
+    self.text_field.text = @"A";
+}
+
 - (void)update {
     
     if (!didAppear) {
@@ -62,7 +88,21 @@ BOOL didAppear = false;
         set_gyro(gyro.pitch, gyro.roll, gyro.yaw);
     }
     
-    update_screen();
+    enum TestEngineAction action = update_screen();
+    
+    switch (action) {
+        case OpenKeyboard:
+            NSLog(@"Open");
+            [self.text_field becomeFirstResponder];
+            break;
+        case CloseKeyboard:
+            [self.text_field resignFirstResponder];
+            NSLog(@"Close");
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)setup {
@@ -149,4 +189,5 @@ BOOL didAppear = false;
         [self process_touch:touch event:2];
     }
 }
+
 @end

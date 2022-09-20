@@ -10,7 +10,10 @@ use rtools::{Dispatch, Rglica, Time, ToRglica, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{get_ui_drawer, set_ui_drawer, View, ViewFrame, ViewLayout};
 
-use crate::{assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer, ui_layer::UILayer};
+use crate::{
+    app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
+    ui_layer::UILayer,
+};
 
 static mut SCREEN: *mut Screen = null_mut();
 
@@ -44,7 +47,9 @@ impl Screen {
             this.on_size_changed(size);
         });
 
-        GlEvents::get().frame_drawn.set(self, |this, _| this.update());
+        GlEvents::get().frame_drawn.set(self, |this, _| {
+            this.update();
+        });
     }
 
     fn init(&mut self, _size: Size, view: Box<dyn View>) {
@@ -100,7 +105,7 @@ impl Screen {
         //self.ui.root_view.debug_view.fps.set(self.ui.fps);
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self) -> TestEngineAction {
         self.calculate_fps();
 
         get_ui_drawer().reset_viewport();
@@ -123,6 +128,17 @@ impl Screen {
 
         #[cfg(desktop)]
         self.glfw.swap_buffers();
+
+        // TODO: tis ugly
+        if *get_ui_drawer().close_keyboard() {
+            *get_ui_drawer().close_keyboard() = false;
+            TestEngineAction::CloseKeyboard
+        } else if *get_ui_drawer().open_keyboard() {
+            *get_ui_drawer().open_keyboard() = false;
+            TestEngineAction::OpenKeyboard
+        } else {
+            TestEngineAction::None
+        }
     }
 
     fn update_level(&mut self) {

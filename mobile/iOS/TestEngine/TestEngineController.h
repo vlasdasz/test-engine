@@ -9,8 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestEngineController : GLKViewController
-
+@interface TestEngineController : GLKViewController <UITextFieldDelegate>
 @end
 
 NS_ASSUME_NONNULL_END

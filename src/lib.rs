@@ -9,7 +9,10 @@ use std::{
     ptr,
 };
 
-use test_engine::{app::App, gl_wrapper::GLWrapper};
+use test_engine::{
+    app::{App, TestEngineAction},
+    gl_wrapper::GLWrapper,
+};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -33,7 +36,7 @@ pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
 }
 
 #[no_mangle]
-pub extern "C" fn update_screen() {
+pub extern "C" fn update_screen() -> TestEngineAction {
     unsafe { APP.as_mut().unwrap().update_screen() }
 }
 

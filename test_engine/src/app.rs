@@ -10,9 +10,25 @@ use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
 };
-use ui::{input::TouchEvent, Touch, View};
+use ui::{
+    input::{ControlButton, KeyEvent, KeyState, KeyboardButton, TouchEvent, UIEvents},
+    Touch, View,
+};
 
 use crate::Screen;
+
+#[repr(C)]
+pub enum TestEngineAction {
+    None = 0,
+    OpenKeyboard = 1,
+    CloseKeyboard = 2,
+}
+
+#[repr(C)]
+pub enum MobileKeyEvent {
+    Letter = 0,
+    Backspace = 1,
+}
 
 pub struct App {
     pub screen:      Unwrap<Screen>,
@@ -40,7 +56,7 @@ impl App {
         });
     }
 
-    pub fn update_screen(&mut self) {
+    pub fn update_screen(&mut self) -> TestEngineAction {
         self.runtime.block_on(async {
             if Platform::ANDROID {
                 while let Ok(touch) = self._touch_receiver.try_recv() {
@@ -50,8 +66,8 @@ impl App {
                     self.screen.on_gyro_changed(gyro);
                 }
             }
-            self.screen.update();
-        });
+            self.screen.update()
+        })
     }
 
     pub fn on_touch(&mut self, id: u64, x: c_float, y: c_float, event: c_int) {
@@ -84,6 +100,20 @@ impl App {
                 self.screen.on_gyro_changed(gyro);
             });
         }
+    }
+
+    pub fn add_key(&mut self, ch: u8, event: MobileKeyEvent) {
+        self.runtime.block_on(async {
+            let button = match event {
+                MobileKeyEvent::Letter => KeyboardButton::Letter(ch as char),
+                MobileKeyEvent::Backspace => ControlButton::Backspace.into(),
+            };
+            let event = KeyEvent {
+                button,
+                state: KeyState::Press,
+            };
+            UIEvents::get().key_pressed.trigger(event);
+        });
     }
 
     #[allow(clippy::too_many_arguments)]

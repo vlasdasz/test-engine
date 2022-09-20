@@ -1,9 +1,20 @@
 
 #include <stdint.h>
 
+enum TestEngineAction {
+    None = 0,
+    OpenKeyboard = 1,
+    CloseKeyboard = 2
+};
+
+enum KeyEvent {
+    Letter = 0,
+    Backspace = 1,
+};
+
 void set_screen_size(int width, int height);
 
-void update_screen(void);
+enum TestEngineAction update_screen(void);
 
 void on_touch(unsigned long long id, float x, float y, int event);
 
@@ -18,4 +29,6 @@ void set_monitor(int ppi,
                 float height,
                 float diagonal);
 
-void opengl_ready();
+void add_key(char key, enum KeyEvent event);
+
+void opengl_ready(void);
