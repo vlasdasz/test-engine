@@ -1,5 +1,4 @@
 use gm::Color;
-use rtools::Boxed;
 use ui::{get_ui_drawer, view, SubView, ViewCallbacks, ViewData, ViewSubviews};
 
 use crate::{Button, Label};
@@ -14,7 +13,7 @@ pub struct Alert {
 
 impl Alert {
     pub fn show(message: impl ToString) {
-        let mut alert = Self::boxed();
+        let mut alert = Self::new();
         alert.message = message.to_string();
         get_ui_drawer().root_view().add_subview(alert);
     }

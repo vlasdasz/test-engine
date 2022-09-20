@@ -3,11 +3,8 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 
-use test_engine::{
-    paths::home,
-    rtools::{init_log, Boxed},
-    Screen,
-};
+use test_engine::{paths::home, rtools::init_log, Screen};
+use ui::NewView;
 
 use crate::{
     benchmark::BenchmarkView,
@@ -22,9 +19,9 @@ mod ui_test;
 async fn main() {
     init_log(false, 4);
 
-    let mut screen = Screen::new((1000, 600), &home().join("test_engine"), TestGameView::boxed());
+    let mut screen = Screen::new((1000, 600), &home().join("test_engine"), TestGameView::new());
 
-    screen.ui.set_level(TestGameLevel::boxed());
+    screen.ui.set_level(Box::<TestGameLevel>::default());
 
     screen.start_main_loop();
 }

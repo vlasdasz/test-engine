@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use rtools::{data_manager::Handle, Animation, Boxed, Unwrap};
+use rtools::{data_manager::Handle, Animation, Unwrap};
 use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::{data_source, Button, DrawingView, ImageView, Label, StringCell, TableView, TableViewDataSource};
@@ -79,7 +79,7 @@ impl TableViewDataSource for TestView {
     }
 
     fn cell_for_index(&self, index: usize) -> Box<dyn View> {
-        let mut cell = StringCell::boxed();
+        let mut cell = StringCell::new();
         cell.set_data(DATA[index].into());
         cell
     }

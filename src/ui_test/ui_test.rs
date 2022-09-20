@@ -1,4 +1,4 @@
-use test_engine::{rtools::Boxed, ui::layout::Anchor, view};
+use test_engine::{ui::layout::Anchor, view};
 use ui::{get_ui_drawer, BaseView, SubView, ViewCallbacks, ViewFrame};
 use ui_views::Button;
 
@@ -24,7 +24,7 @@ impl ViewCallbacks for UITestView {
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 
         self.back.on_tap.sub(|_| {
-            get_ui_drawer().set_next_view(TestGameView::boxed());
+            get_ui_drawer().set_view(Box::<TestGameView>::default());
         });
     }
 }

@@ -26,9 +26,17 @@ impl Placer {
         Self {
             view,
             frame: view.frame().to_rglica(),
-            s_frame: view.super_frame().to_rglica(),
+            s_frame: Default::default(),
             ..Default::default()
         }
+    }
+
+    pub(crate) fn init(&mut self) {
+        self.s_frame = self.view.super_frame().to_rglica();
+    }
+
+    pub fn is_invalid(&self) -> bool {
+        self.view.is_null()
     }
 }
 

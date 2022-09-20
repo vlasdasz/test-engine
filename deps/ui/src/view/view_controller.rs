@@ -20,7 +20,8 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     fn present(&mut self, view: Box<dyn View>) {
-        let mut view = self.add_subview(view);
+        let mut view = get_ui_drawer().root_view().add_subview(view);
+        let mut this = self.rglica();
         view.place.as_background();
         view.set_frame(self.frame().with_zero_origin());
         let anim = UIAnimation::new(view, Animation::new(self.height(), 0, 0.5), |view, y| {
@@ -28,7 +29,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         });
 
         anim.on_finish.sub(move |_| {
-            get_ui_drawer().replace_view(view);
+            this.remove_from_superview();
         });
 
         self.add_animation(anim);

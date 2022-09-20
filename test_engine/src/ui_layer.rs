@@ -6,19 +6,21 @@ use std::rc::Rc;
 use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
-use gm::flat::{Point, Size};
-use rtools::{platform::Platform, IntoF32, ToRglica};
+use gm::flat::Point;
+use rtools::{platform::Platform, IntoF32};
+use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
 use ui::{
     get_ui_drawer,
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
-    Touch, ViewFrame, ViewLayout, ViewTouch,
+    Touch, ViewFrame, ViewTouch,
 };
 
 use crate::Keymap;
 
+#[derive(SmartDefault)]
 pub struct UILayer {
     pub level: Option<Box<dyn Level>>,
 
@@ -31,8 +33,7 @@ pub struct UILayer {
     pub prev_time:  i64,
     pub frame_time: f64,
 
-    pub screen_size: Size,
-
+    #[default = 1.0]
     scale: f32,
 }
 
@@ -55,19 +56,6 @@ impl UILayer {
                 }
             }
         }
-        get_ui_drawer().remove_scheduled();
-    }
-
-    pub(crate) fn init_next_view(&mut self) {
-        let Some(view) = get_ui_drawer().next_view() else {
-            return;
-        };
-        let mut rg = view.to_rglica();
-        *get_ui_drawer().root_view() = view;
-        rg.set_size(self.screen_size);
-        rg.init_views();
-        rg.setup();
-        rg.calculate_frames();
     }
 
     pub fn set_level(&mut self, level: Box<dyn Level>) {
@@ -152,26 +140,5 @@ impl UILayer {
         ev.mouse_click.set(self, |this, a| this.on_mouse_click(a.0, a.1));
 
         ev.cursor_moved.set(self, |this, a| this.on_cursor_moved(a))
-    }
-}
-
-impl UILayer {
-    pub fn new(size: impl Into<Size>) -> Box<Self> {
-        Box::new(Self {
-            level: Default::default(),
-
-            ui_cursor_position: Default::default(),
-            cursor_position:    Default::default(),
-
-            keymap: Default::default(),
-
-            fps:        Default::default(),
-            prev_time:  Default::default(),
-            frame_time: Default::default(),
-
-            screen_size: size.into(),
-
-            scale: 1.0,
-        })
     }
 }

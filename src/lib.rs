@@ -9,7 +9,7 @@ use std::{
     ptr,
 };
 
-use test_engine::{app::App, gl_wrapper::GLWrapper, rtools::Boxed};
+use test_engine::{app::App, gl_wrapper::GLWrapper};
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -59,7 +59,7 @@ pub extern "C" fn set_monitor(
     diagonal: c_float,
 ) {
     unsafe {
-        let mut app = App::boxed();
+        let mut app = Box::<App>::default();
         app.set_monitor(
             ppi,
             scale,
@@ -69,7 +69,7 @@ pub extern "C" fn set_monitor(
             width,
             height,
             diagonal,
-            TestGameView::boxed(),
+            Box::<TestGameView>::default(),
         );
 
         APP = Box::into_raw(app);

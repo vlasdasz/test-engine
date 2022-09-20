@@ -1,10 +1,16 @@
 use std::ops::{Deref, DerefMut};
 
-use rtools::{Boxed, Rglica};
+use rtools::Rglica;
 
 use crate::{ViewBase, ViewCallbacks};
 
-pub trait View: Boxed + ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
+pub trait NewView {
+    fn new() -> Box<Self>
+    where
+        Self: Sized;
+}
+
+pub trait View: NewView + ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
     fn init_views(&mut self);
     fn rglica(&self) -> Rglica<dyn View>;
 }

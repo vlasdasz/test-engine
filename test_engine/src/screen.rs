@@ -1,12 +1,12 @@
 #![allow(clippy::mismatched_target_os)]
 
-use std::{ops::DerefMut, path::Path, ptr::null_mut};
+use std::{path::Path, ptr::null_mut};
 
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{Boxed, Dispatch, Rglica, Time, ToRglica, Unwrap};
+use rtools::{Dispatch, Rglica, Time, ToRglica, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{get_ui_drawer, set_ui_drawer, View, ViewFrame, ViewLayout};
 
@@ -47,7 +47,7 @@ impl Screen {
         GlEvents::get().frame_drawn.set(self, |this, _| this.update());
     }
 
-    fn init(&mut self, _size: Size, mut view: Box<dyn View>) {
+    fn init(&mut self, _size: Size, view: Box<dyn View>) {
         #[cfg(desktop)]
         {
             let m = self.glfw.monitors.first().unwrap().clone();
@@ -57,13 +57,7 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
 
-        view.init_views();
-        view.setup();
-        view.calculate_frames();
-
-        *get_ui_drawer().root_view() = view;
-
-        // get_ui_drawer().set_root_view(self.ui.view.to_rglica());
+        get_ui_drawer().set_view(view);
 
         #[cfg(desktop)]
         {
@@ -110,6 +104,8 @@ impl Screen {
         self.calculate_fps();
 
         get_ui_drawer().reset_viewport();
+        get_ui_drawer().remove_scheduled();
+        get_ui_drawer().set_scheduled();
 
         GLWrapper::clear();
 
@@ -120,17 +116,13 @@ impl Screen {
         let view = get_ui_drawer().root_view();
 
         view.calculate_frames();
-        get_ui_drawer().update(view.deref_mut());
-        get_ui_drawer().draw(view.deref_mut());
+        get_ui_drawer().update(view);
+        get_ui_drawer().draw(view);
 
         Dispatch::call();
 
-        get_ui_drawer().remove_scheduled();
-
         #[cfg(desktop)]
         self.glfw.swap_buffers();
-
-        self.ui.init_next_view();
     }
 
     fn update_level(&mut self) {
@@ -152,16 +144,13 @@ impl Screen {
     pub fn set_size(&mut self, size: Size) -> &mut Self {
         #[cfg(desktop)]
         self.glfw.set_size(size);
-        self.ui.screen_size = size;
         self.on_size_changed(size);
         self
     }
 
     fn on_size_changed(&mut self, size: Size) {
         trace!("Size changed: {:?}", size);
-        get_ui_drawer().set_size(size);
         get_ui_drawer().root_view().set_frame(size);
-        self.ui.screen_size = size;
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
         self.update();
@@ -194,10 +183,10 @@ impl Screen {
         Assets::init(assets_path);
         trace!("Assets: Ok");
 
-        let ui = UILayer::new(size.clone());
+        let ui = Box::<UILayer>::default();
         trace!("UILayer: OK");
 
-        set_ui_drawer(TEUIDrawer::boxed());
+        set_ui_drawer(Box::<TEUIDrawer>::default());
         trace!("UIDrawer: OK");
 
         set_sprites_drawer(TESpritesDrawer::new());

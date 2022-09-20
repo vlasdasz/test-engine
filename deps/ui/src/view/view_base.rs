@@ -7,7 +7,7 @@ use gl_image::Image;
 use gm::{flat::Rect, Color};
 use rtools::{data_manager::Handle, Rglica, ToRglica};
 
-use crate::{layout::Placer, PathData, View};
+use crate::{layout::Placer, view::view::NewView, PathData, View};
 
 #[derive(Default)]
 pub struct ViewBase {
@@ -47,6 +47,17 @@ impl View for BaseView {
 
     fn rglica(&self) -> Rglica<dyn View> {
         (self as &dyn View).to_rglica()
+    }
+}
+
+impl NewView for BaseView {
+    fn new() -> Box<Self>
+    where
+        Self: Sized,
+    {
+        let mut res = Box::<Self>::default();
+        res.place = Placer::make(res.rglica());
+        res
     }
 }
 

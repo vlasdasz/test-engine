@@ -18,36 +18,15 @@ pub trait UIDrawer {
     fn draw_round_border(&self, view: &mut dyn View);
     fn set_screen_scale(&mut self, scale: f32);
     fn set_scale(&mut self, scale: f32);
-    fn set_size(&mut self, size: Size);
     fn update(&self, view: &mut dyn View);
     fn draw(&self, view: &mut dyn View);
     fn rglica(&self) -> Rglica<dyn UIDrawer>;
     fn window_size(&self) -> &Size;
 
-    fn root_view(&mut self) -> &mut Box<dyn View>;
-
-    fn next_view(&mut self) -> Option<Box<dyn View>>;
-    fn set_next_view(&mut self, view: Box<dyn View>);
+    fn root_view(&mut self) -> &mut dyn View;
+    fn next_view(&mut self) -> &mut Option<Box<dyn View>>;
 
     fn animations(&mut self) -> &mut Vec<UIAnimation>;
-
-    fn replace_view(&mut self, view: Rglica<dyn View>);
-    fn view_to_replace(&self) -> Rglica<dyn View>;
-
-    fn replace_scheduled(&mut self) {
-        let mut view = self.view_to_replace();
-        if view.is_null() {
-            return;
-        }
-
-        let mut superview = view.superview();
-
-        let index = view.subviews().iter().position(|sub| view.address() == sub.address()).unwrap();
-        view.superview = Default::default();
-        let view = superview.remove_subview_at(index);
-
-        *self.root_view() = view;
-    }
 
     fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
 
@@ -69,6 +48,21 @@ pub trait UIDrawer {
                 .unwrap();
             view.superview().remove_subview_at(index);
         }
+    }
+
+    fn set_scheduled(&mut self) {
+        let Some(mut view) = self.next_view().take() else {
+            return;
+        };
+        dbg!("spes");
+        self.root_view().remove_all_subviews();
+        view.frame = self.root_view().frame;
+        view.place.as_background();
+        self.root_view().add_subview(view);
+    }
+
+    fn set_view(&mut self, view: Box<dyn View>) {
+        self.next_view().replace(view);
     }
 }
 
