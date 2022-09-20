@@ -52,8 +52,8 @@ impl GLFWManager {
     }
 }
 
-impl GLFWManager {
-    pub fn new() -> Self {
+impl Default for GLFWManager {
+    fn default() -> Self {
         let mut loader = GLLoader::default();
         let monitors = loader.monitors();
         Self {

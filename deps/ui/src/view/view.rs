@@ -22,7 +22,7 @@ impl<T: View> Copy for SubView<T> {}
 
 impl<T: View> Clone for SubView<T> {
     fn clone(&self) -> Self {
-        Self(self.0.clone())
+        Self(self.0)
     }
 }
 

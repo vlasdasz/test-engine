@@ -1,5 +1,6 @@
 mod buffer;
 mod buffer_config;
+#[allow(clippy::module_inception)]
 mod buffers;
 mod frame_buffer;
 

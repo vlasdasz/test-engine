@@ -179,12 +179,10 @@ impl Placer {
                 } else {
                     self.anchor_layout(rule)
                 }
+            } else if let Some(tiling) = &rule.tiling {
+                self.tiling_layout(tiling);
             } else {
-                if let Some(tiling) = &rule.tiling {
-                    self.tiling_layout(tiling);
-                } else {
-                    self.simple_layout(rule)
-                }
+                self.simple_layout(rule)
             }
         }
     }
@@ -255,7 +253,7 @@ impl Placer {
     }
 
     fn tiling_layout(&mut self, tiling: &Tiling) {
-        let mut frame = self.frame.clone();
+        let mut frame = self.frame;
         let frame = frame.deref_mut();
         match tiling {
             Tiling::Background => *frame = self.s_frame.with_zero_origin(),

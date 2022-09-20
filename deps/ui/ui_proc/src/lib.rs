@@ -18,7 +18,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let mut inits = quote!();
 
     if let Fields::Named(fields) = &mut data.fields {
-        inits = add_inits(&fields);
+        inits = add_inits(fields);
 
         fields
             .named

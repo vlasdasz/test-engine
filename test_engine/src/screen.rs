@@ -176,7 +176,7 @@ impl Screen {
         trace!("Creating screen");
 
         #[cfg(desktop)]
-        let glfw = GLFWManager::new();
+        let glfw = GLFWManager::default();
         #[cfg(desktop)]
         trace!("GLFWManager: OK");
 

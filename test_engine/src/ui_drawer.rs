@@ -176,7 +176,7 @@ impl UIDrawer for TEUIDrawer {
 
         if let Some(image) = view.image().get() {
             let frame = &image.size.fit_in(view.absolute_frame());
-            draw_image(&image, &self.convert_viewport(frame), view.color());
+            draw_image(image, &self.convert_viewport(frame), view.color());
         }
 
         if view.border_color().is_visible() {
