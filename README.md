@@ -1,7 +1,5 @@
 # TestEngine
 
-## Supported platforms:
-
 [BUILD]: https://github.com/vlasdasz/test_engine/actions/workflows/build.yml/badge.svg
 
 [LBUILD]: https://github.com/vlasdasz/test_engine/actions/workflows/build.yml

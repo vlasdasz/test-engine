@@ -9,11 +9,7 @@ name = "ui"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-log = "0.4"
-smart-default = "0.6"
-
 gm = { path = "../gm" }
-text = { path = "../text" }
 rtools = { path = "../rtools" }
 ui_proc = { path = "ui_proc" }
 gl_image = { path = "../gl_image" }

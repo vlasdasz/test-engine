@@ -54,7 +54,6 @@ pub trait UIDrawer {
         let Some(mut view) = self.next_view().take() else {
             return;
         };
-        dbg!("spes");
         self.root_view().remove_all_subviews();
         view.frame = self.root_view().frame;
         view.place.as_background();
