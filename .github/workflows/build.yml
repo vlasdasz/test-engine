@@ -30,5 +30,19 @@ jobs:
         with:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
-      - name: build
-        run: python3 build.py ${{ matrix.target.os }}
+      - name: setup
+        run: |
+          echo $GITHUB_PATH
+          echo $PATH
+
+          echo "${HOME}/.cargo/bin" >> $GITHUB_PATH
+          echo "${HOME}/.cargo/bin" >> $PATH
+
+          echo $GITHUB_PATH
+          echo $PATH
+
+          which git
+          which cargo
+          
+      # - name: build
+      #   run: python3 build.py ${{ matrix.target.os }}

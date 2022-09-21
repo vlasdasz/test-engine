@@ -58,6 +58,9 @@ this_path = os.path.dirname(os.path.abspath(__file__))
 
 
 if unix:
+    run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
+
+
     run("echo $0")
     run("echo $PATH")
     run("export PATH=$PATH:$HOME/.cargo/bin")
@@ -67,7 +70,6 @@ if unix:
     run("echo $GITHUB_PATH")
     run("which git")
     run("which cargo")
-    run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
     run("echo \"$HOME/.cargo/env\"")
     run("echo $HOME")
     run("echo \"${CARGO_HOME:-$HOME/.cargo}/bin\" >> $GITHUB_PATH")
