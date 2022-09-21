@@ -17,12 +17,11 @@ jobs:
       matrix:
         target: [
           # { runner: mac, os: macos },
-          # { runner: lin, os: linux },
-          { runner: win, os: windows },
+          { runner: lin, os: linux },
           # { runner: ARM64, os: raspberry },
 
           # { runner: mac, os: ios },
-          # { runner: lin, os: android }
+          { runner: lin, os: android }
         ]
     runs-on: ${{ matrix.target.runner }}
     steps:
@@ -38,9 +37,9 @@ jobs:
             override: true
             components: rustfmt, clippy
 
-      # - name: Build
-      #   if: ${{ matrix.target.os != 'windows' }}
-      #   run: ./build.sh ${{ matrix.target.os }}
+      - name: Build
+        if: ${{ matrix.target.os != 'windows' }}
+        run: ./build.sh ${{ matrix.target.os }}
 
       - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
