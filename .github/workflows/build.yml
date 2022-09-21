@@ -31,25 +31,6 @@ jobs:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
       - name: setup
-        run: |
-
-          echo helloy
-
-          echo $0
-
-          echo helloy2
-
-          echo "gethep- $GITHUB_PATH"
-          echo "pethe- $PATH"
-
-          PATH=$PATH:${HOME}/.cargo/bin"
-          GITHUB_PATH=$GITHUB_PATH:${HOME}/.cargo/bin"
-
-          echo "gethep- $GITHUB_PATH"
-          echo "pethe- $PATH"
-
-          which git
-          which cargo
-          
-      # - name: build
-      #   run: python3 build.py ${{ matrix.target.os }}
+        run: ./deps.sh
+      - name: build
+        run: python3 build.py ${{ matrix.target.os }}
