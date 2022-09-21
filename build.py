@@ -67,6 +67,7 @@ if unix:
     run("echo $CARGO_HOME")
     run("echo $GITHUB_PATH")
     run(". \"$HOME/.cargo/env\"")
+    run("PATH=$PATH:$HOME/.cargo/env")
 
 
 def setup_android():
