@@ -30,15 +30,16 @@ jobs:
         with:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
-      - name: setup
-        run: |
-          echo Installing rustup:
-          curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-          echo Adding rustup to path
-          source "$HOME/.cargo/env"
+      # - name: Install rustup
+      #   run: |
+      #     echo Installing rustup:
+      #     curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-          which cargo
+      - name: Build
+        run: ./build.sh ${{ matrix.target.os }}
 
-          python3 build.py ${{ matrix.target.os }}
-          
+      # - name: Build
+      #   run: |
+      #     source "$HOME/.cargo/env"
+      #     python3 build.py ${{ matrix.target.os }}
