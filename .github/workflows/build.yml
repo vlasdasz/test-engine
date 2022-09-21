@@ -40,5 +40,5 @@ jobs:
 
           which cargo
 
-      - name: build
-        run: python3 build.py ${{ matrix.target.os }}
+          python3 build.py ${{ matrix.target.os }}
+          
