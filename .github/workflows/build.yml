@@ -29,14 +29,7 @@ jobs:
         with:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
-
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
-        with:
-            toolchain: nightly
-            override: true
-            components: rustfmt, clippy
-
+          
       - name: Build
         if: ${{ matrix.target.os != 'windows' }}
         run: ./build.sh ${{ matrix.target.os }}
