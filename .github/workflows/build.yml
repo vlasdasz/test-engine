@@ -32,6 +32,9 @@ jobs:
           submodules: recursive
       - name: setup
         run: |
+
+          echo $0
+
           echo $GITHUB_PATH
           echo $PATH
 
