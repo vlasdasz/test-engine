@@ -31,6 +31,9 @@ jobs:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
       - name: setup
-        run: ./deps.sh
+        run: |
+          ./deps.sh
+          which cargo
+
       - name: build
         run: python3 build.py ${{ matrix.target.os }}
