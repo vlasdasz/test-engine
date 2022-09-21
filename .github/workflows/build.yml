@@ -37,4 +37,4 @@ jobs:
 
       - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
-        run: python3 build.py
+        run: py build.py
