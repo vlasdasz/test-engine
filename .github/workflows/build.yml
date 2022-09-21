@@ -16,13 +16,13 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { runner: mac, os: macos },
-          { runner: lin, os: linux },
-          # { runner: win, os: windows },
+          # { runner: mac, os: macos },
+          # { runner: lin, os: linux },
+          { runner: win, os: windows },
           # { runner: ARM64, os: raspberry },
 
           # { runner: mac, os: ios },
-          { runner: lin, os: android }
+          # { runner: lin, os: android }
         ]
     runs-on: ${{ matrix.target.runner }}
     steps:
@@ -31,4 +31,9 @@ jobs:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
       - name: Build
+
+        if: ${{ matrix.target.os != windows }}
         run: ./build.sh ${{ matrix.target.os }}
+
+        if: ${{ matrix.target.os == windows }}
+        run: python3 build.py
