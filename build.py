@@ -61,6 +61,9 @@ if unix:
     run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
     run("echo \"$HOME/.cargo/env\"")
     run("echo $HOME")
+    run("echo \"${CARGO_HOME:-$HOME/.cargo}/bin\" >> $GITHUB_PATH")
+    run("echo $CARGO_HOME")
+    run("echo $GITHUB_PATH")
     run(". \"$HOME/.cargo/env\"")
 
 
