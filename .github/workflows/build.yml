@@ -48,8 +48,8 @@ jobs:
           echo "gethep- $GITHUB_PATH"
           echo "pethe- $PATH"
 
-          # which git
-          # which cargo
+          which git
+          which cargo
           
       # - name: build
       #   run: python3 build.py ${{ matrix.target.os }}
