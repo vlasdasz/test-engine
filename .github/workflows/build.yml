@@ -31,15 +31,17 @@ jobs:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
 
-      - name: Build
-        if: ${{ matrix.target.os != 'windows' }}
-        run: ./build.sh ${{ matrix.target.os }}
-
-      - name: Build windows
+      - name: Install latest nightly
         uses: actions-rs/toolchain@v1
         with:
             toolchain: nightly
             override: true
             components: rustfmt, clippy
+
+      # - name: Build
+      #   if: ${{ matrix.target.os != 'windows' }}
+      #   run: ./build.sh ${{ matrix.target.os }}
+
+      - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
         run: py build.py
