@@ -57,6 +57,10 @@ home = get_home()
 this_path = os.path.dirname(os.path.abspath(__file__))
 
 
+if unix:
+    run("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh")
+
+
 def setup_android():
 
     print("Add rust targets")
