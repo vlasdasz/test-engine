@@ -10,7 +10,7 @@ use std::{
 };
 
 use test_engine::{
-    app::{App, TestEngineAction},
+    app::{App, MobileKeyEvent, TestEngineAction},
     gl_wrapper::GLWrapper,
 };
 
@@ -48,6 +48,11 @@ pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
 #[no_mangle]
 pub extern "C" fn set_gyro(pitch: c_float, roll: c_float, yaw: c_float) {
     unsafe { APP.as_mut().unwrap().set_gyro(pitch, roll, yaw) }
+}
+
+#[no_mangle]
+pub extern "C" fn add_key(char: u8, event: MobileKeyEvent) {
+    unsafe { APP.as_mut().unwrap_unchecked().add_key(char, event) }
 }
 
 #[no_mangle]
