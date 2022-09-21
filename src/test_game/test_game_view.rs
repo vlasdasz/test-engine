@@ -177,8 +177,6 @@ impl TestGameView {
 
 impl ViewCallbacks for TestGameView {
     fn setup(&mut self) {
-        API::set_base_url("ec2-18-217-89-172.us-east-2.compute.amazonaws.com");
-
         self.setup_ui();
         self.setup_level();
     }

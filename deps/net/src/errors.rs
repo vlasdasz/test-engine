@@ -14,8 +14,8 @@ impl From<&'static str> for Error {
 }
 
 impl From<reqwest::Error> for Error {
-    fn from(_: reqwest::Error) -> Self {
-        "Network error".into()
+    fn from(error: reqwest::Error) -> Self {
+        format!("Network error: {}", error).into()
     }
 }
 
