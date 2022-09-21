@@ -16,13 +16,13 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          # { runner: mac, os: macos },
+          { runner: mac, os: macos },
           { runner: lin, os: linux },
           # { runner: win, os: windows },
           # { runner: ARM64, os: raspberry },
 
           # { runner: mac, os: ios },
-          # { runner: lin, os: android }
+          { runner: lin, os: android }
         ]
     runs-on: ${{ matrix.target.runner }}
     steps:
@@ -30,16 +30,5 @@ jobs:
         with:
           token: ${{secrets.ACCESS_TOKEN}}
           submodules: recursive
-
-      # - name: Install rustup
-      #   run: |
-      #     echo Installing rustup:
-      #     curl https://sh.rustup.rs -sSf | sh -s -- -y
-
       - name: Build
         run: ./build.sh ${{ matrix.target.os }}
-
-      # - name: Build
-      #   run: |
-      #     source "$HOME/.cargo/env"
-      #     python3 build.py ${{ matrix.target.os }}

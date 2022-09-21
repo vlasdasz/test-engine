@@ -8,4 +8,4 @@ source "$HOME/.cargo/env"
 
 which cargo
 
-python3 build.py
+python3 build.py ${1:-}
