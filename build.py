@@ -58,7 +58,7 @@ this_path = os.path.dirname(os.path.abspath(__file__))
 
 
 if unix:
-    run("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh")
+    run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
 
 
 def setup_android():
