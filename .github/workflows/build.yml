@@ -42,8 +42,8 @@ jobs:
           echo "gethep- $GITHUB_PATH"
           echo "pethe- $PATH"
 
-          PATH=PATH:${HOME}/.cargo/bin"
-          GITHUB_PATH=GITHUB_PATH:${HOME}/.cargo/bin"
+          PATH=$PATH:${HOME}/.cargo/bin"
+          GITHUB_PATH=$GITHUB_PATH:${HOME}/.cargo/bin"
 
           echo "gethep- $GITHUB_PATH"
           echo "pethe- $PATH"
