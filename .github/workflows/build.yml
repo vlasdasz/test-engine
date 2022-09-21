@@ -32,8 +32,8 @@ jobs:
           submodules: recursive
       - name: Build
 
-        if: ${{ matrix.target.os != windows }}
+        if: ${{ matrix.target.os != 'windows' }}
         run: ./build.sh ${{ matrix.target.os }}
 
-        if: ${{ matrix.target.os == windows }}
+        if: ${{ matrix.target.os == 'windows' }}
         run: python3 build.py
