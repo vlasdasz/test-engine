@@ -59,6 +59,7 @@ this_path = os.path.dirname(os.path.abspath(__file__))
 
 if unix:
     run("echo $0")
+    run("echo $PATH")
     run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
     run("echo \"$HOME/.cargo/env\"")
     run("echo $HOME")
