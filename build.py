@@ -59,7 +59,7 @@ this_path = os.path.dirname(os.path.abspath(__file__))
 
 if unix:
     run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
-    run("source ~/.cargo/env")
+    run(". ~/.cargo/env")
 
 
 def setup_android():
