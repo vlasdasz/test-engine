@@ -42,8 +42,8 @@ jobs:
           echo $GITHUB_PATH
           echo $PATH
 
-          PATH = PATH:${HOME}/.cargo/bin"
-          GITHUB_PATH = GITHUB_PATH:${HOME}/.cargo/bin"
+          PATH=PATH:${HOME}/.cargo/bin"
+          GITHUB_PATH=GITHUB_PATH:${HOME}/.cargo/bin"
 
           echo $GITHUB_PATH
           echo $PATH
