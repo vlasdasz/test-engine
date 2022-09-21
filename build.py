@@ -60,6 +60,10 @@ this_path = os.path.dirname(os.path.abspath(__file__))
 if unix:
     run("echo $0")
     run("echo $PATH")
+    run("PATH=$PATH:$HOME/.cargo/bin")
+    run("echo $PATH")
+    run("which git")
+    run("which cargo")
     run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
     run("echo \"$HOME/.cargo/env\"")
     run("echo $HOME")
@@ -69,7 +73,6 @@ if unix:
     run(". \"$HOME/.cargo/env\"")
     run("ls $HOME/.cargo/env")
     run("ls $HOME/.cargo/bin")
-    run("PATH=$PATH:$HOME/.cargo/bin")
 
 
 def setup_android():

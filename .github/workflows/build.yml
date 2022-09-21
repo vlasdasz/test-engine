@@ -18,7 +18,6 @@ jobs:
         target: [
           # { runner: mac, os: macos },
           { runner: lin, os: linux },
-          { runner: ubuntu-latest, os: linux },
           # { runner: win, os: windows },
           # { runner: ARM64, os: raspberry },
 
