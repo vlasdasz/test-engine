@@ -37,6 +37,4 @@ jobs:
 
       - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
-        run: |
-          echo $home
-          $home/.cargo/bin/cargo build --all
+        run: py build.py
