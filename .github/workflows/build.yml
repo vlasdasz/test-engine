@@ -16,13 +16,13 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { runner: mac, os: macos },
-          { runner: lin, os: linux },
-          # { runner: win, os: windows },
-          { runner: ARM64, os: raspberry },
+          # { runner: mac, os: macos },
+          # { runner: lin, os: linux },
+          { runner: win, os: windows },
+          # { runner: ARM64, os: raspberry },
 
-          { runner: mac, os: ios },
-          { runner: lin, os: android }
+          # { runner: mac, os: ios },
+          # { runner: lin, os: android }
         ]
     runs-on: ${{ matrix.target.runner }}
     steps:
