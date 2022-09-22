@@ -38,4 +38,4 @@ jobs:
       - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
         run: |
-          cargo build --all
+          ~/.cargo/bin/cargo build --all
