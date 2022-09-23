@@ -145,7 +145,7 @@ if is_linux and desktop:
         print("Arch")
     else:
         run("sudo apt update")
-        run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev")
+        run("sudo apt -y install cmake mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev xorg-dev libasound2-dev build-essential")
 
     run("curl https://sh.rustup.rs -sSf | sh -s -- -y")
     os.environ["PATH"] += ":" + "$HOME/.cargo/bin"
