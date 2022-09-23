@@ -43,16 +43,16 @@ impl API {
 
 impl API {
     pub fn get_request<Result: DeserializeOwned>(url: &'static str) -> GetRequest<Result> {
-        GetRequest::make(Self::base_url(), url)
+        GetRequest::make(url)
     }
 
     pub fn post_request<Param: Serialize>(url: &'static str) -> PostRequest<Param> {
-        PostRequest::make(Self::base_url(), url)
+        PostRequest::make(url)
     }
 
     pub fn fetch_request<Param: Serialize, Result: DeserializeOwned>(
         url: &'static str,
     ) -> DispatchRequest<Param, Result> {
-        DispatchRequest::make(Self::base_url(), url)
+        DispatchRequest::make(url)
     }
 }

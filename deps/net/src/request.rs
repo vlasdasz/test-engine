@@ -9,16 +9,14 @@ use tao_log::{debugv, trace, tracev};
 use crate::{Method, NetResult, API};
 
 pub struct Request<Param, Result> {
-    base:    &'static str,
     url:     &'static str,
     _method: Method,
     _data:   Rglica<(*const Param, *const Result)>,
 }
 
 impl<R, P> Request<R, P> {
-    pub const fn make(base: &'static str, url: &'static str) -> Self {
+    pub const fn make(url: &'static str) -> Self {
         Self {
-            base,
             url,
             _method: Method::Get,
             _data: Rglica::const_default(),
@@ -26,7 +24,7 @@ impl<R, P> Request<R, P> {
     }
 
     fn full_url(&self) -> String {
-        format!("http://{}/{}", self.base, self.url)
+        format!("http://{}/{}", API::base_url(), self.url)
     }
 }
 
@@ -62,6 +60,7 @@ impl<Param: Serialize, Output: DeserializeOwned> Request<Param, Output> {
         tracev!(&body);
         trace!("Body: {}", body);
         let client = Client::new();
+        trace!("Full url: {}", self.full_url());
         let post = client.post(&self.full_url());
         let post = add_headers(post);
         let body_string = post.body(body).send().await?.text().await?;

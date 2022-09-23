@@ -10,9 +10,9 @@ pub struct DispatchRequest<Param, Result> {
 }
 
 impl<R, P> DispatchRequest<R, P> {
-    pub const fn make(base: &'static str, url: &'static str) -> Self {
+    pub const fn make(url: &'static str) -> Self {
         Self {
-            request: Request::make(base, url),
+            request: Request::make(url),
         }
     }
 }
