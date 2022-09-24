@@ -77,14 +77,6 @@ impl TEUIDrawer {
 }
 
 impl UIDrawer for TEUIDrawer {
-    fn next_view(&mut self) -> &mut Option<Box<dyn View>> {
-        &mut self.next_view
-    }
-
-    fn animations(&mut self) -> &mut Vec<UIAnimation> {
-        &mut self.animations
-    }
-
     fn reset_viewport(&self) {
         GLWrapper::set_viewport((
             0,
@@ -140,9 +132,9 @@ impl UIDrawer for TEUIDrawer {
         self.screen_scale = scale
     }
 
-    #[cfg(mobile)]
-    fn set_screen_scale(&mut self, scale: f32) {
-        self.screen_scale = scale
+    #[cfg(any(windows, linux))]
+    fn set_screen_scale(&mut self, _scale: f32) {
+        self.screen_scale = 1.0
     }
 
     fn set_scale(&mut self, scale: f32) {
@@ -213,12 +205,8 @@ impl UIDrawer for TEUIDrawer {
         &self.root_view.frame().size
     }
 
-    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>> {
-        &mut self.views_to_remove
-    }
-
-    fn root_view(&mut self) -> &mut dyn View {
-        self.root_view.deref_mut()
+    fn touch_disabled(&mut self) -> &mut bool {
+        &mut self.touch_disabled
     }
 
     fn open_keyboard(&mut self) -> &mut bool {
@@ -229,8 +217,20 @@ impl UIDrawer for TEUIDrawer {
         &mut self.close_keyboard
     }
 
-    fn touch_disabled(&mut self) -> &mut bool {
-        &mut self.touch_disabled
+    fn root_view(&mut self) -> &mut dyn View {
+        self.root_view.deref_mut()
+    }
+
+    fn next_view(&mut self) -> &mut Option<Box<dyn View>> {
+        &mut self.next_view
+    }
+
+    fn animations(&mut self) -> &mut Vec<UIAnimation> {
+        &mut self.animations
+    }
+
+    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>> {
+        &mut self.views_to_remove
     }
 }
 

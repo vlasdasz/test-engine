@@ -30,7 +30,7 @@ BOOL didAppear = false;
     
     self.text_field = [[UITextField alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
     [self.text_field setBackgroundColor: UIColor.greenColor];
-    self.text_field.text = @"A";
+    self.text_field.text = @" ";
     [self.text_field setHidden:YES];
     [self.view addSubview: self.text_field];
     
@@ -74,7 +74,7 @@ BOOL didAppear = false;
         add_key(letter, Letter);
     }
         
-    self.text_field.text = @"A";
+    self.text_field.text = @" ";
 }
 
 - (void)update {

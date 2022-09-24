@@ -25,6 +25,14 @@ pub trait UIDrawer {
 
     fn touch_disabled(&mut self) -> &mut bool;
 
+    fn disable_touch(&mut self) {
+        *self.touch_disabled() = true;
+    }
+
+    fn enable_touch(&mut self) {
+        *self.touch_disabled() = false;
+    }
+
     fn open_keyboard(&mut self) -> &mut bool;
     fn close_keyboard(&mut self) -> &mut bool;
 
