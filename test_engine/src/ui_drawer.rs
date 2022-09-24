@@ -40,6 +40,7 @@ pub struct TEUIDrawer {
 
     open_keyboard:  bool,
     close_keyboard: bool,
+    touch_disabled: bool,
 }
 
 impl TEUIDrawer {
@@ -226,6 +227,10 @@ impl UIDrawer for TEUIDrawer {
 
     fn close_keyboard(&mut self) -> &mut bool {
         &mut self.close_keyboard
+    }
+
+    fn touch_disabled(&mut self) -> &mut bool {
+        &mut self.touch_disabled
     }
 }
 

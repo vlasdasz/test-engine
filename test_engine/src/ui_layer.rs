@@ -39,6 +39,9 @@ pub struct UILayer {
 
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
+        if *get_ui_drawer().touch_disabled() {
+            return;
+        }
         if !touch.is_moved() {
             trace!("{:?}", touch);
         }

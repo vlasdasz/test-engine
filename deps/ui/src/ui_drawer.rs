@@ -23,6 +23,8 @@ pub trait UIDrawer {
     fn rglica(&self) -> Rglica<dyn UIDrawer>;
     fn window_size(&self) -> &Size;
 
+    fn touch_disabled(&mut self) -> &mut bool;
+
     fn open_keyboard(&mut self) -> &mut bool;
     fn close_keyboard(&mut self) -> &mut bool;
 
