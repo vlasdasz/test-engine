@@ -130,7 +130,7 @@ impl UIDrawer for TEUIDrawer {
         self.draw_path(path, view.absolute_frame(), None);
     }
 
-    #[cfg(any(windows, linux))]
+    #[cfg(any(windows, linux, freebsd))]
     fn set_screen_scale(&mut self, _scale: f32) {
         self.screen_scale = 1.0
     }

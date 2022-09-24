@@ -7,6 +7,7 @@ fn main() {
 
         macos:   { target_os = "macos" },
         linux:   { target_os = "linux" },
+        freebsd: { target_os = "freebsd" },
 
         mobile:  { any(    target_os = "android", target_os = "ios")  },
         desktop: { not(any(target_os = "android", target_os = "ios")) },
