@@ -35,6 +35,8 @@ pub struct ViewBase {
     pub paths: Vec<PathData>,
 
     pub(crate) is_selected: bool,
+
+    pub(crate) is_deleted: bool,
 }
 
 #[derive(Default)]

@@ -36,7 +36,9 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_all_subviews(&mut self) {
-        self.subviews.clear()
+        for view in &self.subviews {
+            get_ui_drawer().schedule_remove(view.rglica())
+        }
     }
 
     fn initialize_view<V: 'static + View + Default>(&mut self) -> SubView<V> {

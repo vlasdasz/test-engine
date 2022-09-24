@@ -43,7 +43,8 @@ pub trait UIDrawer {
 
     fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
 
-    fn schedule_remove(&mut self, view: Rglica<dyn View>) {
+    fn schedule_remove(&mut self, mut view: Rglica<dyn View>) {
+        view.is_deleted = true;
         self.views_to_remove().push(view)
     }
 

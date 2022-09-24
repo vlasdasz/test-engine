@@ -132,7 +132,7 @@ impl UIDrawer for TEUIDrawer {
         self.screen_scale = scale
     }
 
-    #[cfg(any(windows, linux))]
+    #[cfg(mobile)]
     fn set_screen_scale(&mut self, _scale: f32) {
         self.screen_scale = 1.0
     }

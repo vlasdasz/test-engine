@@ -43,6 +43,10 @@ impl<T: ?Sized + View> ViewTouch for T {
     }
 
     fn check_touch(&mut self, touch: &mut Touch) -> bool {
+        if self.is_deleted {
+            return false;
+        }
+
         if self.touch_enabled() {
             if touch.is_moved() && self.touch_id() == touch.id {
                 touch.position -= self.absolute_frame().origin;
