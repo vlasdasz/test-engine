@@ -34,11 +34,27 @@ impl AnalogStickView {
 
         self.on_change.trigger(vector * 0.1);
     }
+
+    fn on_touch(&mut self, touch: &Touch) {
+        if touch.is_ended() {
+            if self.flaccid {
+                return;
+            }
+            let frame = *self.frame();
+            self.direction_stick.set_center(frame.size.center());
+            self.on_change.trigger(Point::default());
+        } else {
+            self.on_touch_moved(&touch.position);
+        }
+    }
 }
 
 impl ViewCallbacks for AnalogStickView {
     fn setup(&mut self) {
         self.enable_touch();
+        self.on_touch.set(self, |this, touch| {
+            this.on_touch(&touch);
+        });
 
         self.set_frame((SIZE, SIZE));
 
@@ -80,18 +96,5 @@ impl ViewCallbacks for AnalogStickView {
                 &Color::LIGHT_GRAY,
                 DrawMode::Fill,
             );
-    }
-
-    fn on_touch(&mut self, touch: &Touch) {
-        if touch.is_ended() {
-            if self.flaccid {
-                return;
-            }
-            let frame = *self.frame();
-            self.direction_stick.set_center(frame.size.center());
-            self.on_change.trigger(Point::default());
-        } else {
-            self.on_touch_moved(&touch.position);
-        }
     }
 }

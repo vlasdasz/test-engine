@@ -1,5 +1,5 @@
 use rtools::Rglica;
-use ui::{view, View, ViewCallbacks, ViewSubviews};
+use ui::{view, View, ViewCallbacks, ViewSubviews, ViewTouch};
 
 #[view]
 #[derive(Default)]
@@ -11,7 +11,10 @@ impl TableView {
     pub fn reload_data(&mut self) {
         self.remove_all_subviews();
         for i in 0..self.data_source.number_of_cells() {
-            self.add_subview(self.data_source.cell_for_index(i));
+            let cell = self.data_source.cell_for_index(i);
+            cell.enable_touch();
+            cell.on_touch_began.set(self, move |this, _| this.data_source.cell_selected(i));
+            self.add_subview(cell);
         }
     }
 }
@@ -25,6 +28,7 @@ impl ViewCallbacks for TableView {
 pub trait TableViewDataSource {
     fn number_of_cells(&self) -> usize;
     fn cell_for_index(&self, index: usize) -> Box<dyn View>;
+    fn cell_selected(&mut self, index: usize);
 }
 
 #[macro_export]

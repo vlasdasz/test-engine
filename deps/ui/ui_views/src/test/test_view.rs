@@ -83,4 +83,8 @@ impl TableViewDataSource for TestView {
         cell.set_data(DATA[index].into());
         cell
     }
+
+    fn cell_selected(&mut self, index: usize) {
+        dbg!(index);
+    }
 }

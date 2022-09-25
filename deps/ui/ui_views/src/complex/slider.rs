@@ -1,7 +1,7 @@
 use gm::Color;
 use rtools::{math::clamped_by, Event};
 use smart_default::SmartDefault;
-use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame};
+use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
 
 use crate::CircleView;
 
@@ -21,11 +21,18 @@ pub struct Slider {
 
 impl ViewCallbacks for Slider {
     fn setup(&mut self) {
+        self.enable_touch();
+        self.on_touch.set(self, |this, touch| {
+            this.on_touch(&touch);
+        });
+
         let radius = self.width() / 2.0;
 
         self.circle.set_radius(radius).set_color(Color::BLUE);
     }
+}
 
+impl Slider {
     fn on_touch(&mut self, touch: &Touch) {
         if touch.is_ended() {
             return;

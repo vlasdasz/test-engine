@@ -1,6 +1,6 @@
 use gm::Color;
 use rtools::Event;
-use ui::{view, SubView, Touch, ViewCallbacks, ViewTouch};
+use ui::{view, SubView, ViewCallbacks, ViewTouch};
 
 use crate::Label;
 
@@ -27,13 +27,8 @@ impl Button {
 
 impl ViewCallbacks for Button {
     fn setup(&mut self) {
-        self.enable_touch()
-    }
-
-    fn on_touch(&mut self, touch: &Touch) {
-        if touch.is_began() {
-            self.on_tap.trigger(())
-        }
+        self.enable_touch();
+        self.on_touch_began.set(self, |this, _| this.on_tap.trigger(()));
     }
 }
 

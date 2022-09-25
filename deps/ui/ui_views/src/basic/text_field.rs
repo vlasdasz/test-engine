@@ -2,7 +2,7 @@ use gm::Color;
 use ui::{
     get_ui_drawer,
     input::{ControlButton, KeyboardButton, UIEvents},
-    view, SubView, Touch, ViewCallbacks, ViewData, ViewTouch,
+    view, SubView, ViewCallbacks, ViewData, ViewTouch,
 };
 
 use crate::Label;
@@ -22,14 +22,14 @@ impl TextField {
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {
         self.enable_touch();
+        self.on_touch.set(self, |this, touch| {
+            if touch.is_began() {
+                this.set_selected(true);
+            }
+        });
+
         self.set_color(Color::LIGHT_GRAY);
         self.label.place.as_background();
-    }
-
-    fn on_touch(&mut self, touch: &Touch) {
-        if touch.is_began() {
-            self.set_selected(true);
-        }
     }
 
     fn on_selection_changed(&mut self, selected: bool) {

@@ -5,9 +5,9 @@ use std::{
 
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use rtools::{data_manager::Handle, Rglica, ToRglica, Unwrap};
+use rtools::{data_manager::Handle, Event, Rglica, ToRglica, Unwrap};
 
-use crate::{layout::Placer, PathData, View};
+use crate::{layout::Placer, PathData, Touch, View};
 
 #[derive(Default)]
 pub struct ViewBase {
@@ -28,15 +28,15 @@ pub struct ViewBase {
 
     pub(crate) touch_id: u64,
 
-    pub place: Unwrap<Placer>,
-
     pub(crate) image: Handle<Image>,
 
-    pub paths: Vec<PathData>,
-
     pub(crate) is_selected: bool,
+    pub(crate) is_deleted:  bool,
 
-    pub(crate) is_deleted: bool,
+    pub place:          Unwrap<Placer>,
+    pub paths:          Vec<PathData>,
+    pub on_touch:       Event<Touch>,
+    pub on_touch_began: Event<Touch>,
 }
 
 #[derive(Default)]
