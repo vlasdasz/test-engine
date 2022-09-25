@@ -137,8 +137,8 @@ impl UIDrawer for TEUIDrawer {
     }
 
     #[cfg(mobile)]
-    fn set_screen_scale(&mut self, _scale: f32) {
-        self.screen_scale = 1.0
+    fn set_screen_scale(&mut self, scale: f32) {
+        self.screen_scale = scale
     }
 
     fn set_scale(&mut self, scale: f32) {
