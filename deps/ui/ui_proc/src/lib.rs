@@ -28,18 +28,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let name = &stream.ident;
 
     quote! {
-        use ui::NewView;
-
         #stream
-
-        impl ui::NewView for #name {
-            fn new() -> Box<Self> {
-                use ui::View;
-                let mut res = Box::<Self>::default();
-                res.place = ui::layout::Placer::make(res.rglica());
-                res
-            }
-        }
 
         impl ui::View for #name {
             fn rglica(&self) -> rtools::Rglica<dyn ui::View> {

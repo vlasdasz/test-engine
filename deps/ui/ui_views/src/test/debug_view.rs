@@ -14,7 +14,8 @@ pub struct DebugView {
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.place.tl(10).size(200, 50).all_ver();
+        self.set_frame((10, 10, 200, 50));
+        self.place.all_ver();
 
         self.fps_label.set_text("fps label");
 

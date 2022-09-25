@@ -41,7 +41,7 @@ impl ViewCallbacks for BenchmarkView {
 
         self.back.on_tap.sub(|_| {
             Screen::current().ui.set_level(Box::<TestGameLevel>::default());
-            get_ui_drawer().set_view(TestGameView::new());
+            get_ui_drawer().set_view(Box::<TestGameView>::default());
         });
     }
 }

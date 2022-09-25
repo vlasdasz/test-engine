@@ -17,6 +17,7 @@ use ui::{
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
     Touch, ViewFrame, ViewTouch,
 };
+use ui_views::debug_view::DebugView;
 
 use crate::Keymap;
 
@@ -32,6 +33,8 @@ pub struct UILayer {
     pub fps:        u64,
     pub prev_time:  i64,
     pub frame_time: f64,
+
+    pub debug_view: Box<DebugView>,
 
     #[default = 1.0]
     scale: f32,

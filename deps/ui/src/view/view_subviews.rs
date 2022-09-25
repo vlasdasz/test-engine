@@ -1,6 +1,6 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{get_ui_drawer, SubView, View};
+use crate::{get_ui_drawer, layout::Placer, SubView, View};
 
 pub trait ViewSubviews {
     fn superview(&self) -> Rglica<dyn View>;
@@ -42,18 +42,15 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn initialize_view<V: 'static + View + Default>(&mut self) -> SubView<V> {
-        let view = V::new();
+        let view = Box::<V>::default();
         let result = view.to_rglica();
         self.add_subview(view);
         result.into()
     }
 
     fn add_subview(&mut self, mut view: Box<dyn View>) -> Rglica<dyn View> {
-        if view.place.is_invalid() {
-            panic!("Init views with new method only");
-        }
         view.superview = self.rglica();
-        view.place.init();
+        view.place = Placer::new(view.rglica());
         view.init_views();
         view.setup();
         let res = view.to_rglica();

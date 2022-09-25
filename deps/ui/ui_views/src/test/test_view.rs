@@ -79,7 +79,7 @@ impl TableViewDataSource for TestView {
     }
 
     fn cell_for_index(&self, index: usize) -> Box<dyn View> {
-        let mut cell = StringCell::new();
+        let mut cell = Box::<StringCell>::default();
         cell.set_data(DATA[index].into());
         cell
     }

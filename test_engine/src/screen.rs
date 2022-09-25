@@ -1,6 +1,6 @@
 #![allow(clippy::mismatched_target_os)]
 
-use std::{path::Path, ptr::null_mut};
+use std::{ops::DerefMut, path::Path, ptr::null_mut};
 
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
@@ -8,7 +8,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use rtools::{Dispatch, Rglica, Time, ToRglica, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
-use ui::{get_ui_drawer, set_ui_drawer, View, ViewFrame, ViewLayout};
+use ui::{get_ui_drawer, layout::Placer, set_ui_drawer, View, ViewCallbacks, ViewFrame, ViewLayout};
 
 use crate::{
     app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
@@ -58,6 +58,10 @@ impl Screen {
             let m = self.glfw.monitors.first().unwrap().clone();
             self.add_monitor(m);
         }
+
+        self.ui.debug_view.init_views();
+        self.ui.debug_view.setup();
+        self.ui.debug_view.place = Placer::new(self.ui.debug_view.rglica());
 
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
@@ -123,6 +127,10 @@ impl Screen {
         view.calculate_frames();
         get_ui_drawer().update(view);
         get_ui_drawer().draw(view);
+
+        self.ui.debug_view.calculate_frames();
+        get_ui_drawer().update(self.ui.debug_view.deref_mut());
+        get_ui_drawer().draw(self.ui.debug_view.deref_mut());
 
         Dispatch::call();
 

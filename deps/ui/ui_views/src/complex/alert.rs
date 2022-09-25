@@ -13,7 +13,7 @@ pub struct Alert {
 
 impl Alert {
     pub fn show(message: impl ToString) {
-        let mut alert = Self::new();
+        let mut alert = Box::<Self>::default();
         alert.message = message.to_string();
         get_ui_drawer().root_view().add_subview(alert);
     }

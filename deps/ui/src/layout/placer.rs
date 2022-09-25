@@ -22,21 +22,13 @@ pub struct Placer {
 }
 
 impl Placer {
-    pub fn make(view: Rglica<dyn View>) -> Self {
+    pub fn new(view: Rglica<dyn View>) -> Self {
         Self {
             view,
             frame: view.frame().to_rglica(),
-            s_frame: Default::default(),
+            s_frame: view.super_frame().to_rglica(),
             ..Default::default()
         }
-    }
-
-    pub(crate) fn init(&mut self) {
-        self.s_frame = self.view.super_frame().to_rglica();
-    }
-
-    pub fn is_invalid(&self) -> bool {
-        self.view.is_null()
     }
 }
 
