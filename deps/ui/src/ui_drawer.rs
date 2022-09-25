@@ -70,8 +70,8 @@ pub trait UIDrawer {
         };
         self.root_view().remove_all_subviews();
         view.frame = self.root_view().frame;
+        let mut view = self.root_view().add_subview(view);
         view.place.as_background();
-        self.root_view().add_subview(view);
     }
 
     fn set_view(&mut self, view: Box<dyn View>) {

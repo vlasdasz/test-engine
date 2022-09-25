@@ -11,8 +11,8 @@ use gm::{
 use rtools::{address::Address, Rglica, ToRglica};
 use smart_default::SmartDefault;
 use ui::{
-    BaseView, DrawMode, PathData, UIAnimation, UIDrawer, View, ViewAnimation, ViewData, ViewFrame,
-    ViewSubviews,
+    layout::Placer, BaseView, DrawMode, PathData, UIAnimation, UIDrawer, View, ViewAnimation, ViewData,
+    ViewFrame, ViewSubviews,
 };
 use ui_views::initialize_path_data;
 
@@ -29,7 +29,11 @@ pub struct TEUIDrawer {
     #[default = 1.0]
     screen_scale: f32,
 
-    #[default(Box::<BaseView>::default())]
+    #[default({
+        let mut view = Box::<BaseView>::default();
+        view.place = Placer::new(view.rglica()).into();
+        view
+    })]
     root_view: Box<dyn View>,
 
     next_view: Option<Box<dyn View>>,

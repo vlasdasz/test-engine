@@ -6,7 +6,8 @@ use std::{ops::DerefMut, path::Path, ptr::null_mut};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
-use rtools::{Dispatch, Rglica, Time, ToRglica, Unwrap};
+use net::API;
+use rtools::{Dispatch, Rglica, Time, ToRglica, UnwrapBox};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{get_ui_drawer, layout::Placer, set_ui_drawer, View, ViewCallbacks, ViewFrame, ViewLayout};
 
@@ -22,7 +23,7 @@ pub struct Screen {
 
     #[cfg(desktop)]
     glfw:    GLFWManager,
-    monitor: Unwrap<Monitor>,
+    monitor: UnwrapBox<Monitor>,
 }
 
 impl Screen {
@@ -59,9 +60,9 @@ impl Screen {
             self.add_monitor(m);
         }
 
+        self.ui.debug_view.place = Placer::new(self.ui.debug_view.rglica()).into();
         self.ui.debug_view.init_views();
         self.ui.debug_view.setup();
-        self.ui.debug_view.place = Placer::new(self.ui.debug_view.rglica());
 
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
@@ -105,8 +106,8 @@ impl Screen {
         self.ui.frame_time = interval as f64 / 1000000000.0;
         self.ui.fps = (1.0 / self.ui.frame_time as f64) as u64;
 
-        // FIXME: -
-        //self.ui.root_view.debug_view.fps.set(self.ui.fps);
+        self.ui.debug_view.fps.set(self.ui.fps);
+        self.ui.debug_view.url.set(API::base_url().to_string());
     }
 
     pub fn update(&mut self) -> TestEngineAction {

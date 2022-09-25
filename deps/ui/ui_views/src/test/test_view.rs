@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use rtools::{data_manager::Handle, Animation, Unwrap};
+use rtools::{data_manager::Handle, Animation, UnwrapBox};
 use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::{data_source, Button, DrawingView, ImageView, Label, StringCell, TableView, TableViewDataSource};
@@ -15,7 +15,7 @@ pub struct TestView {
     table:    SubView<TableView>,
     animated: SubView<ImageView>,
 
-    animation: Unwrap<Animation>,
+    animation: UnwrapBox<Animation>,
 
     label_value: u64,
 }

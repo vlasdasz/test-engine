@@ -5,7 +5,7 @@ use std::{
 
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use rtools::{data_manager::Handle, Rglica, ToRglica};
+use rtools::{data_manager::Handle, Rglica, ToRglica, Unwrap};
 
 use crate::{layout::Placer, PathData, View};
 
@@ -28,7 +28,7 @@ pub struct ViewBase {
 
     pub(crate) touch_id: u64,
 
-    pub place: Placer,
+    pub place: Unwrap<Placer>,
 
     pub(crate) image: Handle<Image>,
 

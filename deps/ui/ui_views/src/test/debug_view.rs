@@ -8,17 +8,17 @@ use crate::Label;
 pub struct DebugView {
     fps_label:         SubView<Label>,
     frame_drawn_label: SubView<Label>,
+    url_label:         SubView<Label>,
     frame_drawn:       u64,
     pub fps:           Property<u64>,
+    pub url:           Property<String>,
 }
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.set_frame((10, 10, 200, 50));
-        self.place.all_ver();
+        self.set_frame((10, 10, 280, 60)).place.all_ver();
 
         self.fps_label.set_text("fps label");
-
         self.frame_drawn_label.set_text("frame drawn label");
 
         if Platform::MOBILE {
@@ -27,9 +27,12 @@ impl ViewCallbacks for DebugView {
             self.set_origin((10, 10));
         }
 
-        self.fps.on_set.set(self, |this, _| {
-            let fps = this.fps.copy();
+        self.fps.on_set.set(self, |this, fps| {
             this.fps_label.set_text(format!("FPS: {}", fps));
+        });
+
+        self.url.on_set.set(self, |this, url| {
+            this.url_label.set_text(url);
         });
     }
 

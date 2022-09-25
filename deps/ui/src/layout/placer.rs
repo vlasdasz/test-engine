@@ -9,7 +9,6 @@ use crate::{
     View, ViewSubviews,
 };
 
-#[derive(Default)]
 pub struct Placer {
     pub(crate) rules: Vec<LayoutRule>,
 
@@ -24,11 +23,17 @@ pub struct Placer {
 impl Placer {
     pub fn new(view: Rglica<dyn View>) -> Self {
         Self {
+            rules: vec![],
             view,
             frame: view.frame().to_rglica(),
             s_frame: view.super_frame().to_rglica(),
-            ..Default::default()
+            has_width: false,
+            has_height: false,
         }
+    }
+
+    pub fn rules_count(&self) -> usize {
+        self.rules.len()
     }
 }
 
