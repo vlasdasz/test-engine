@@ -9,7 +9,7 @@ use glfw::{
     ffi::{glfwSetWindowSizeCallback, GLFWwindow},
     Context, Glfw,
     OpenGlProfileHint::Core,
-    Window, WindowEvent,
+    SwapInterval, Window, WindowEvent,
 };
 
 use crate::{gl_events::GlEvents, monitor::Monitor};
@@ -42,6 +42,8 @@ impl Default for GLLoader {
         GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
 
         window.make_current();
+
+        glfw.set_swap_interval(SwapInterval::None);
 
         GLLoader { glfw, window, events }
     }

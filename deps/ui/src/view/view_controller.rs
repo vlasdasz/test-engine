@@ -4,6 +4,7 @@ use crate::{get_ui_drawer, UIAnimation, View, ViewAnimation, ViewFrame, ViewSubv
 
 pub trait ViewController {
     fn push(&mut self, view: Box<dyn View>);
+    fn pop(&mut self);
     fn present(&mut self, view: Box<dyn View>);
 }
 
@@ -25,6 +26,28 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
         anim.on_finish.sub(|_| {
             *get_ui_drawer().touch_disabled() = false;
+        });
+
+        self.add_animation(anim);
+    }
+
+    fn pop(&mut self) {
+        if *get_ui_drawer().touch_disabled() {
+            return;
+        }
+
+        *get_ui_drawer().touch_disabled() = true;
+
+        let mut this = self.rglica();
+
+        let anim = UIAnimation::new(this, Animation::new(0, self.width(), 0.5), |view, x| {
+            view.set_x(x);
+        });
+
+        anim.on_finish.sub(move |_| {
+            *get_ui_drawer().touch_disabled() = false;
+            this.is_hidden = true;
+            this.remove_from_superview();
         });
 
         self.add_animation(anim);
