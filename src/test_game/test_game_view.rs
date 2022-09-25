@@ -98,8 +98,9 @@ impl TestGameView {
         );
 
         self.left_stick.place.bl(10).size(80, 80);
-        self.left_stick.on_change.sub(|dir| {
+        self.left_stick.on_change.sub(|mut dir| {
             if let Some(level) = &mut Screen::current().ui.level {
+                dir.y = -dir.y;
                 level.player().add_impulse(dir);
             }
         });
