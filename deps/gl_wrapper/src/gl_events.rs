@@ -2,7 +2,7 @@
 
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{Point, Size};
-use rtools::{static_get, Event};
+use rtools::{static_default, Event};
 
 #[derive(Default)]
 pub struct GlEvents {
@@ -13,4 +13,4 @@ pub struct GlEvents {
     pub key_pressed:  Event<(Key, Action)>,
 }
 
-static_get!(GlEvents);
+static_default!(GlEvents);

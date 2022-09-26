@@ -1,4 +1,4 @@
-use rtools::{static_get, Event, Rglica};
+use rtools::{static_default, Event, Rglica};
 
 use crate::{input::keyboard::KeyEvent, View, ViewTouch};
 
@@ -7,6 +7,7 @@ pub struct UIEvents {
     pub key_pressed:   Event<KeyEvent>,
     pub selected_view: Rglica<dyn View>,
 }
+static_default!(UIEvents);
 
 impl UIEvents {
     pub fn unselect_view(&mut self) {
@@ -15,5 +16,3 @@ impl UIEvents {
         }
     }
 }
-
-static_get!(UIEvents);

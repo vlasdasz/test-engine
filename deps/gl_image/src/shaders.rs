@@ -1,12 +1,12 @@
 use gl_wrapper::{Shader, ShaderCompiler};
-use rtools::static_get;
+use rtools::static_init;
 
-pub(crate) struct Shaders {
+pub struct ImageShaders {
     pub(crate) texture:    Shader,
     pub(crate) monochrome: Shader,
 }
 
-impl Default for Shaders {
+impl Default for ImageShaders {
     fn default() -> Self {
         let compiler = ShaderCompiler::default();
 
@@ -23,4 +23,4 @@ impl Default for Shaders {
     }
 }
 
-static_get!(Shaders);
+static_init!(ImageShaders);

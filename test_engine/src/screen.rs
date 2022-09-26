@@ -2,9 +2,10 @@
 
 use std::{ops::DerefMut, path::Path, ptr::null_mut};
 
+use gl_image::ImageShaders;
+use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
-use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
 use rtools::{Dispatch, Rglica, Time, ToRglica, UnwrapBox};
@@ -227,6 +228,9 @@ impl Screen {
         unsafe {
             SCREEN = screen.to_rglica().as_ptr();
         }
+
+        Buffers::init(Buffers::default());
+        ImageShaders::init(ImageShaders::default());
 
         screen.init(size.into(), view);
 

@@ -1,7 +1,7 @@
 #[cfg(mobile)]
 use gles31_sys::*;
 use gm::flat::Rect;
-use rtools::static_get;
+use rtools::static_init;
 
 use crate::{Buffer, BufferConfig};
 
@@ -46,7 +46,7 @@ pub struct Buffers {
     pub full_outline: Buffer,
 }
 
-static_get!(Buffers);
+static_init!(Buffers);
 
 impl Default for Buffers {
     fn default() -> Buffers {

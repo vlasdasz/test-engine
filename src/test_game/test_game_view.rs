@@ -1,4 +1,4 @@
-use rtools::{static_get, Apply};
+use rtools::{static_default, Apply};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
 use tao_log::infov;
@@ -27,7 +27,7 @@ struct Network {
     #[default(API::get_request("get_users"))]
     get_users: GetRequest<Vec<User>>,
 }
-static_get!(Network);
+static_default!(Network);
 
 #[view]
 #[derive(Default)]

@@ -17,7 +17,7 @@ use rtools::{
     hash, managed,
 };
 
-use crate::shaders::Shaders;
+use crate::shaders::ImageShaders;
 
 #[derive(Debug)]
 pub struct Image {
@@ -118,7 +118,7 @@ impl LoadFromPath for Image {
 }
 
 pub fn draw_image(image: &Image, rect: &Rect, color: &Color) {
-    let shaders = Shaders::get();
+    let shaders = ImageShaders::get();
 
     if image.is_monochrome() {
         shaders.monochrome.enable().set_color(color)
