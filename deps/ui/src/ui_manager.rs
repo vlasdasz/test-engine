@@ -63,11 +63,11 @@ impl UIManager {
         Self::get().touch_disabled
     }
 
-    pub(crate) fn disable_touch() {
+    pub fn disable_touch() {
         Self::get().touch_disabled = true
     }
 
-    pub(crate) fn enable_touch() {
+    pub fn enable_touch() {
         Self::get().touch_disabled = false
     }
 
