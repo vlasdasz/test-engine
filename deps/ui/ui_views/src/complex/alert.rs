@@ -1,4 +1,5 @@
 use gm::Color;
+use rtools::{Event, Rglica, ToRglica};
 use ui::{get_ui_drawer, view, SubView, ViewCallbacks, ViewData, ViewSubviews};
 
 use crate::{Button, Label};
@@ -9,13 +10,16 @@ pub struct Alert {
     label:     SubView<Label>,
     ok_button: SubView<Button>,
     message:   String,
+    pub on_ok: Event,
 }
 
 impl Alert {
-    pub fn show(message: impl ToString) {
+    pub fn show(message: impl ToString) -> Rglica<Alert> {
         let mut alert = Box::<Self>::default();
         alert.message = message.to_string();
+        let res = alert.to_rglica();
         get_ui_drawer().root_view().add_subview(alert);
+        res
     }
 }
 
@@ -41,7 +45,11 @@ impl ViewCallbacks for Alert {
             .set_text("OK")
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
-        self.ok_button.on_tap.set(self, |this, _| this.remove_from_superview());
+
+        self.ok_button.on_tap.set(self, |this, _| {
+            this.remove_from_superview();
+            this.on_ok.trigger(());
+        });
 
         self.set_message(self.message.clone());
     }

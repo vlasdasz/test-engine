@@ -27,10 +27,10 @@ impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Resul
         let mut rglica = obj.to_rglica();
         Dispatch::dispatch(self.request.get(), move |result| match result {
             Ok(val) => completion(rglica.deref_mut(), None, val),
-            Err(err) =>  {
+            Err(err) => {
                 error!("{err}");
                 completion(rglica.deref_mut(), err.into(), Result::default())
-            },
+            }
         });
     }
 }
@@ -48,7 +48,7 @@ impl<Param: Serialize> DispatchRequest<Param, ()> {
             Err(err) => {
                 error!("{err}");
                 completion(rglica.deref_mut(), err.into());
-            },
+            }
         });
     }
 }
@@ -70,7 +70,7 @@ where
             Err(err) => {
                 error!("{err}");
                 completion(rglica.deref_mut(), err.into(), Result::default());
-            },
+            }
         });
     }
 }
