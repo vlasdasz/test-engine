@@ -9,10 +9,12 @@ pub mod input;
 pub mod layout;
 mod path_data;
 mod ui_drawer;
+mod ui_manager;
 mod view;
 
 pub use path_data::*;
 pub use ui_drawer::*;
+pub use ui_manager::*;
 pub use ui_proc::*;
 pub use view::*;
 

@@ -38,13 +38,10 @@ pub struct TEUIDrawer {
 
     next_view: Option<Box<dyn View>>,
 
-    views_to_remove: Vec<Rglica<dyn View>>,
-
     animations: Vec<UIAnimation>,
 
     open_keyboard:  bool,
     close_keyboard: bool,
-    touch_disabled: bool,
 }
 
 impl TEUIDrawer {
@@ -209,10 +206,6 @@ impl UIDrawer for TEUIDrawer {
         &self.root_view.frame().size
     }
 
-    fn touch_disabled(&mut self) -> &mut bool {
-        &mut self.touch_disabled
-    }
-
     fn open_keyboard(&mut self) -> &mut bool {
         &mut self.open_keyboard
     }
@@ -231,10 +224,6 @@ impl UIDrawer for TEUIDrawer {
 
     fn animations(&mut self) -> &mut Vec<UIAnimation> {
         &mut self.animations
-    }
-
-    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>> {
-        &mut self.views_to_remove
     }
 }
 

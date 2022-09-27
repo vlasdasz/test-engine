@@ -1,6 +1,6 @@
 use rtools::Animation;
 
-use crate::{get_ui_drawer, UIAnimation, View, ViewAnimation, ViewFrame, ViewSubviews};
+use crate::{get_ui_drawer, UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
 
 pub trait ViewController {
     fn push(&mut self, view: Box<dyn View>);
@@ -10,11 +10,11 @@ pub trait ViewController {
 
 impl<T: ?Sized + View + 'static> ViewController for T {
     fn push(&mut self, view: Box<dyn View>) {
-        if *get_ui_drawer().touch_disabled() {
+        if UIManager::touch_disabled() {
             return;
         }
 
-        *get_ui_drawer().touch_disabled() = true;
+        UIManager::disable_touch();
 
         let mut view = self.add_subview(view);
         view.place.as_background();
@@ -25,18 +25,18 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         });
 
         anim.on_finish.sub(|_| {
-            *get_ui_drawer().touch_disabled() = false;
+            UIManager::enable_touch();
         });
 
         self.add_animation(anim);
     }
 
     fn pop(&mut self) {
-        if *get_ui_drawer().touch_disabled() {
+        if UIManager::touch_disabled() {
             return;
         }
 
-        *get_ui_drawer().touch_disabled() = true;
+        UIManager::disable_touch();
 
         let mut this = self.rglica();
 
@@ -45,7 +45,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         });
 
         anim.on_finish.sub(move |_| {
-            *get_ui_drawer().touch_disabled() = false;
+            UIManager::enable_touch();
             this.is_hidden = true;
             this.remove_from_superview();
         });
@@ -54,11 +54,11 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     fn present(&mut self, view: Box<dyn View>) {
-        if *get_ui_drawer().touch_disabled() {
+        if UIManager::touch_disabled() {
             return;
         }
 
-        *get_ui_drawer().touch_disabled() = true;
+        UIManager::disable_touch();
 
         let mut view = get_ui_drawer().root_view().add_subview(view);
         let mut this = self.rglica();
@@ -70,7 +70,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
         anim.on_finish.sub(move |_| {
             this.remove_from_superview();
-            *get_ui_drawer().touch_disabled() = false;
+            UIManager::enable_touch();
         });
 
         self.add_animation(anim);

@@ -15,7 +15,7 @@ use ui::input::TouchEvent;
 use ui::{
     get_ui_drawer,
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
-    Touch, ViewFrame, ViewTouch,
+    Touch, UIManager, ViewFrame, ViewTouch,
 };
 use ui_views::debug_view::DebugView;
 
@@ -42,7 +42,7 @@ pub struct UILayer {
 
 impl UILayer {
     pub fn on_touch(&mut self, mut touch: Touch) {
-        if *get_ui_drawer().touch_disabled() {
+        if UIManager::touch_disabled() {
             return;
         }
         if !touch.is_moved() {

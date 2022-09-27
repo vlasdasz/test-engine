@@ -6,7 +6,7 @@ use gm::{
 };
 use rtools::{address::Address, Rglica};
 
-use crate::{view::ViewSubviews, DrawMode, PathData, UIAnimation, View};
+use crate::{view::ViewSubviews, DrawMode, PathData, UIAnimation, UIManager, View};
 
 static mut DRAWER: Option<Box<dyn UIDrawer>> = Option::None;
 
@@ -23,16 +23,6 @@ pub trait UIDrawer {
     fn rglica(&self) -> Rglica<dyn UIDrawer>;
     fn window_size(&self) -> &Size;
 
-    fn touch_disabled(&mut self) -> &mut bool;
-
-    fn disable_touch(&mut self) {
-        *self.touch_disabled() = true;
-    }
-
-    fn enable_touch(&mut self) {
-        *self.touch_disabled() = false;
-    }
-
     fn open_keyboard(&mut self) -> &mut bool;
     fn close_keyboard(&mut self) -> &mut bool;
 
@@ -41,18 +31,16 @@ pub trait UIDrawer {
 
     fn animations(&mut self) -> &mut Vec<UIAnimation>;
 
-    fn views_to_remove(&mut self) -> &mut Vec<Rglica<dyn View>>;
-
     fn schedule_remove(&mut self, mut view: Rglica<dyn View>) {
         view.is_deleted = true;
-        self.views_to_remove().push(view)
+        UIManager::views_to_remove().push(view);
     }
 
     fn remove_scheduled(&mut self) {
-        if self.views_to_remove().is_empty() {
+        if UIManager::views_to_remove().is_empty() {
             return;
         }
-        let to_remove = self.views_to_remove().drain(..);
+        let to_remove = UIManager::views_to_remove().drain(..);
         for view in to_remove {
             let index = view
                 .superview()

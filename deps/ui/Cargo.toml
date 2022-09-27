@@ -9,6 +9,8 @@ name = "ui"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
+smart-default = "0.6"
+
 gm = { path = "../gm" }
 rtools = { path = "../rtools" }
 ui_proc = { path = "ui_proc" }
