@@ -19,6 +19,8 @@ pub struct UIManager {
 
     next_view: Option<Box<dyn View>>,
 
+    different_touch_root: Rglica<dyn View>,
+
     pub(crate) animations: Vec<UIAnimation>,
 
     views_to_remove: Vec<Rglica<dyn View>>,
@@ -67,6 +69,14 @@ impl UIManager {
 
     pub(crate) fn enable_touch() {
         Self::get().touch_disabled = false
+    }
+
+    pub fn touch_root() -> &'static mut dyn View {
+        if Self::get().different_touch_root.is_ok() {
+            Self::get().different_touch_root.deref_mut()
+        } else {
+            Self::get().root_view.deref_mut()
+        }
     }
 }
 

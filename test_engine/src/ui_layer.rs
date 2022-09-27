@@ -53,7 +53,7 @@ impl UILayer {
         } else {
             touch.position /= self.scale;
         }
-        if !UIManager::root_view().check_touch(&mut touch) {
+        if !UIManager::touch_root().check_touch(&mut touch) {
             if let Some(level) = &mut self.level {
                 level.set_cursor_position(level_touch.position);
                 if touch.is_began() {
