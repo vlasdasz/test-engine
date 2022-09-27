@@ -11,7 +11,7 @@ use test_engine::{
     sprites::Control,
     view, Image, LevelBase, Screen,
 };
-use ui::{get_ui_drawer, BaseView, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
+use ui::{BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 use ui_views::{test_view::TestView, Alert, AnalogStickView, Button, DPadView, IntView};
 
 use crate::{benchmark::BenchmarkLevel, BenchmarkView};
@@ -132,14 +132,14 @@ impl TestGameView {
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap.sub(|_| {
                 Screen::current().ui.set_level(Box::<BenchmarkLevel>::default());
-                get_ui_drawer().set_view(Box::<BenchmarkView>::default());
+                UIManager::set_view(Box::<BenchmarkView>::default());
             });
 
             let mut to_test = view.initialize_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap.sub(|_| {
                 Screen::current().ui.set_level(Box::<LevelBase>::default());
-                get_ui_drawer().set_view(Box::<BenchmarkView>::default());
+                UIManager::set_view(Box::<BenchmarkView>::default());
             });
 
             let mut play = view.initialize_view::<Button>();

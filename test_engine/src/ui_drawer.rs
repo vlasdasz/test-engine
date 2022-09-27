@@ -9,49 +9,26 @@ use gm::{
     Color,
 };
 use rtools::{address::Address, Rglica, ToRglica};
-use smart_default::SmartDefault;
-use ui::{
-    layout::Placer, BaseView, DrawMode, PathData, UIAnimation, UIDrawer, View, ViewAnimation, ViewData,
-    ViewFrame, ViewSubviews,
-};
+use ui::{DrawMode, PathData, UIDrawer, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
 use ui_views::initialize_path_data;
 
 use crate::assets::Assets;
 
 type RoundStorage = HashMap<u64, (PathData, Size)>;
 
-#[derive(SmartDefault)]
+#[derive(Default)]
 pub struct TEUIDrawer {
     round_storage: RefCell<RoundStorage>,
-
-    #[default = 1.0]
-    scale:        f32,
-    #[default = 1.0]
-    screen_scale: f32,
-
-    #[default({
-        let mut view = Box::<BaseView>::default();
-        view.place = Placer::new(view.rglica()).into();
-        view
-    })]
-    root_view: Box<dyn View>,
-
-    next_view: Option<Box<dyn View>>,
-
-    animations: Vec<UIAnimation>,
-
-    open_keyboard:  bool,
-    close_keyboard: bool,
 }
 
 impl TEUIDrawer {
     pub fn convert_viewport(&self, rect: impl Borrow<Rect>) -> Rect {
-        let scale = self.screen_scale;
-        let rect = rect.borrow() * self.scale;
+        let scale = UIManager::screen_scale();
+        let rect = rect.borrow() * UIManager::scale();
 
         (
             rect.origin.x * scale,
-            (self.window_size().height - rect.origin.y - rect.size.height) * scale,
+            (UIManager::window_size().height - rect.origin.y - rect.size.height) * scale,
             rect.size.width * scale,
             rect.size.height * scale,
         )
@@ -82,8 +59,8 @@ impl UIDrawer for TEUIDrawer {
         GLWrapper::set_viewport((
             0,
             0,
-            self.window_size().width * self.screen_scale,
-            self.window_size().height * self.screen_scale,
+            UIManager::window_size().width * UIManager::screen_scale(),
+            UIManager::window_size().height * UIManager::screen_scale(),
         ));
     }
 
@@ -121,25 +98,6 @@ impl UIDrawer for TEUIDrawer {
         let mut storage = self.round_storage.borrow_mut();
         let path = self.rounded_path_for_view(view, &mut storage);
         self.draw_path(path, view.absolute_frame(), None);
-    }
-
-    #[cfg(any(windows, linux, freebsd))]
-    fn set_screen_scale(&mut self, _scale: f32) {
-        self.screen_scale = 1.0
-    }
-
-    #[cfg(macos)]
-    fn set_screen_scale(&mut self, scale: f32) {
-        self.screen_scale = scale
-    }
-
-    #[cfg(mobile)]
-    fn set_screen_scale(&mut self, scale: f32) {
-        self.screen_scale = scale
-    }
-
-    fn set_scale(&mut self, scale: f32) {
-        self.scale = scale
     }
 
     fn update(&self, view: &mut dyn View) {
@@ -200,30 +158,6 @@ impl UIDrawer for TEUIDrawer {
 
     fn rglica(&self) -> Rglica<dyn UIDrawer> {
         (self as &dyn UIDrawer).to_rglica()
-    }
-
-    fn window_size(&self) -> &Size {
-        &self.root_view.frame().size
-    }
-
-    fn open_keyboard(&mut self) -> &mut bool {
-        &mut self.open_keyboard
-    }
-
-    fn close_keyboard(&mut self) -> &mut bool {
-        &mut self.close_keyboard
-    }
-
-    fn root_view(&mut self) -> &mut dyn View {
-        self.root_view.deref_mut()
-    }
-
-    fn next_view(&mut self) -> &mut Option<Box<dyn View>> {
-        &mut self.next_view
-    }
-
-    fn animations(&mut self) -> &mut Vec<UIAnimation> {
-        &mut self.animations
     }
 }
 

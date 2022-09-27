@@ -1,6 +1,6 @@
 use gm::Color;
 use rtools::{Event, Rglica, ToRglica};
-use ui::{get_ui_drawer, view, SubView, ViewCallbacks, ViewData, ViewSubviews};
+use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
 
 use crate::{Button, Label};
 
@@ -18,7 +18,7 @@ impl Alert {
         let mut alert = Box::<Self>::default();
         alert.message = message.to_string();
         let res = alert.to_rglica();
-        get_ui_drawer().root_view().add_subview(alert);
+        UIManager::root_view().add_subview(alert);
         res
     }
 }

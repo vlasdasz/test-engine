@@ -5,7 +5,7 @@ use test_engine::{
     ui::{layout::Anchor, SubView},
     view, Screen,
 };
-use ui::{get_ui_drawer, ViewCallbacks};
+use ui::{UIManager, ViewCallbacks};
 use ui_views::{Button, LabeledTextField};
 
 use crate::test_game::{TestGameLevel, TestGameView};
@@ -41,7 +41,7 @@ impl ViewCallbacks for BenchmarkView {
 
         self.back.on_tap.sub(|_| {
             Screen::current().ui.set_level(Box::<TestGameLevel>::default());
-            get_ui_drawer().set_view(Box::<TestGameView>::default());
+            UIManager::set_view(Box::<TestGameView>::default());
         });
     }
 }

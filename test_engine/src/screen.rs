@@ -10,7 +10,7 @@ use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
 use rtools::{Dispatch, Rglica, Time, ToRglica, UnwrapBox};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
-use ui::{get_ui_drawer, layout::Placer, set_ui_drawer, View, ViewCallbacks, ViewFrame, ViewLayout};
+use ui::{layout::Placer, UIManager, View, ViewCallbacks, ViewFrame, ViewLayout};
 
 use crate::{
     app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
@@ -38,7 +38,7 @@ impl Screen {
 
     pub fn add_monitor(&mut self, monitor: Monitor) {
         self.monitor = monitor.into();
-        get_ui_drawer().set_screen_scale(self.monitor.scale);
+        UIManager::set_screen_scale(self.monitor.scale);
     }
 
     #[cfg(desktop)]
@@ -68,7 +68,7 @@ impl Screen {
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
 
-        get_ui_drawer().set_view(view);
+        UIManager::set_view(view);
 
         #[cfg(desktop)]
         {
@@ -118,9 +118,9 @@ impl Screen {
     pub fn update(&mut self) -> TestEngineAction {
         self.calculate_fps();
 
-        get_ui_drawer().reset_viewport();
-        get_ui_drawer().remove_scheduled();
-        get_ui_drawer().set_scheduled();
+        UIManager::drawer().reset_viewport();
+        UIManager::remove_scheduled();
+        UIManager::set_scheduled();
 
         GLWrapper::clear();
 
@@ -128,15 +128,15 @@ impl Screen {
             self.update_level();
         }
 
-        let view = get_ui_drawer().root_view();
+        let view = UIManager::root_view();
 
         view.calculate_frames();
-        get_ui_drawer().update(view);
-        get_ui_drawer().draw(view);
+        UIManager::drawer().update(view);
+        UIManager::drawer().draw(view);
 
         self.ui.debug_view.calculate_frames();
-        get_ui_drawer().update(self.ui.debug_view.deref_mut());
-        get_ui_drawer().draw(self.ui.debug_view.deref_mut());
+        UIManager::drawer().update(self.ui.debug_view.deref_mut());
+        UIManager::drawer().draw(self.ui.debug_view.deref_mut());
 
         Dispatch::call();
 
@@ -144,11 +144,11 @@ impl Screen {
         self.glfw.swap_buffers();
 
         // TODO: tis ugly
-        if *get_ui_drawer().close_keyboard() {
-            *get_ui_drawer().close_keyboard() = false;
+        if UIManager::get().close_keyboard {
+            UIManager::get().close_keyboard = false;
             TestEngineAction::CloseKeyboard
-        } else if *get_ui_drawer().open_keyboard() {
-            *get_ui_drawer().open_keyboard() = false;
+        } else if UIManager::get().open_keyboard {
+            UIManager::get().open_keyboard = false;
             TestEngineAction::OpenKeyboard
         } else {
             TestEngineAction::None
@@ -180,7 +180,7 @@ impl Screen {
 
     fn on_size_changed(&mut self, size: Size) {
         trace!("Size changed: {:?}", size);
-        get_ui_drawer().root_view().set_frame(size);
+        UIManager::root_view().set_frame(size);
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
         self.update();
@@ -216,7 +216,7 @@ impl Screen {
         let ui = Box::<UILayer>::default();
         trace!("UILayer: OK");
 
-        set_ui_drawer(Box::<TEUIDrawer>::default());
+        UIManager::set_drawer(Box::<TEUIDrawer>::default());
         trace!("UIDrawer: OK");
 
         set_sprites_drawer(TESpritesDrawer::new());

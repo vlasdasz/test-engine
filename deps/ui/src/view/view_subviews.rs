@@ -1,6 +1,6 @@
 use rtools::{Rglica, ToRglica};
 
-use crate::{get_ui_drawer, layout::Placer, SubView, View};
+use crate::{layout::Placer, SubView, UIManager, View};
 
 pub trait ViewSubviews {
     fn superview(&self) -> Rglica<dyn View>;
@@ -28,7 +28,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_from_superview(&mut self) {
-        get_ui_drawer().schedule_remove(self.rglica())
+        UIManager::schedule_remove(self.rglica())
     }
 
     fn remove_subview_at(&mut self, index: usize) -> Box<dyn View> {
@@ -37,7 +37,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn remove_all_subviews(&mut self) {
         for view in &self.subviews {
-            get_ui_drawer().schedule_remove(view.rglica())
+            UIManager::schedule_remove(view.rglica())
         }
     }
 

@@ -13,7 +13,6 @@ use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
 use ui::{
-    get_ui_drawer,
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
     Touch, UIManager, ViewFrame, ViewTouch,
 };
@@ -54,7 +53,7 @@ impl UILayer {
         } else {
             touch.position /= self.scale;
         }
-        if !get_ui_drawer().root_view().check_touch(&mut touch) {
+        if !UIManager::root_view().check_touch(&mut touch) {
             if let Some(level) = &mut self.level {
                 level.set_cursor_position(level_touch.position);
                 if touch.is_began() {
@@ -74,11 +73,9 @@ impl UILayer {
     }
 
     pub fn set_scale(&mut self, scale: impl IntoF32) {
-        self.scale = scale.into_f32();
-        get_ui_drawer().set_scale(self.scale);
-        get_ui_drawer()
-            .root_view()
-            .set_frame(*get_ui_drawer().window_size() / self.scale);
+        let scale = scale.into_f32();
+        UIManager::set_scale(scale);
+        UIManager::root_view().set_frame(UIManager::window_size() / scale);
     }
 }
 
