@@ -108,7 +108,11 @@ impl Screen {
         self.ui.fps = (1.0 / self.ui.frame_time as f64) as u64;
 
         self.ui.debug_view.fps.set(self.ui.fps);
-        self.ui.debug_view.url.set(API::base_url().to_string());
+        if API::is_ok() {
+            self.ui.debug_view.url.set(API::base_url().to_string());
+        } else {
+            self.ui.debug_view.url.set("API not initizlized");
+        }
     }
 
     pub fn update(&mut self) -> TestEngineAction {

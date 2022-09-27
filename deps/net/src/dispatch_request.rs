@@ -2,6 +2,7 @@ use std::{borrow::Borrow, ops::DerefMut};
 
 use rtools::{Dispatch, ToRglica};
 use serde::{de::DeserializeOwned, Serialize};
+use tao_log::error;
 
 use crate::{Error, Request};
 
@@ -26,7 +27,10 @@ impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Resul
         let mut rglica = obj.to_rglica();
         Dispatch::dispatch(self.request.get(), move |result| match result {
             Ok(val) => completion(rglica.deref_mut(), None, val),
-            Err(err) => completion(rglica.deref_mut(), err.into(), Result::default()),
+            Err(err) =>  {
+                error!("{err}");
+                completion(rglica.deref_mut(), err.into(), Result::default())
+            },
         });
     }
 }
@@ -41,7 +45,10 @@ impl<Param: Serialize> DispatchRequest<Param, ()> {
         let mut rglica = obj.to_rglica();
         Dispatch::dispatch(self.request.post(param), move |result| match result {
             Ok(_) => completion(rglica.deref_mut(), None),
-            Err(err) => completion(rglica.deref_mut(), err.into()),
+            Err(err) => {
+                error!("{err}");
+                completion(rglica.deref_mut(), err.into());
+            },
         });
     }
 }
@@ -60,7 +67,10 @@ where
         let mut rglica = obj.to_rglica();
         Dispatch::dispatch(self.request.fetch(param), move |response| match response {
             Ok(val) => completion(rglica.deref_mut(), None, val),
-            Err(err) => completion(rglica.deref_mut(), err.into(), Result::default()),
+            Err(err) => {
+                error!("{err}");
+                completion(rglica.deref_mut(), err.into(), Result::default());
+            },
         });
     }
 }

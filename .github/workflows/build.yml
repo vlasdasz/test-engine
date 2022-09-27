@@ -19,7 +19,7 @@ jobs:
           { runner: mac, os: macos },
           { runner: lin, os: linux },
           { runner: win, os: windows },
-          { runner: rpi, os: raspberry },
+#          { runner: rpi, os: raspberry },
 
           { runner: mac, os: ios },
           { runner: lin86, os: android }

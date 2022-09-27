@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter};
+
 #[derive(Debug)]
 pub struct Error(String);
 
@@ -25,9 +27,9 @@ impl From<serde_json::Error> for Error {
     }
 }
 
-impl ToString for Error {
-    fn to_string(&self) -> String {
-        self.0.clone()
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Network error: {}", self.0)
     }
 }
 

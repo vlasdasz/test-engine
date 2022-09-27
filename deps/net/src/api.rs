@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use rtools::static_default;
+use rtools::{static_init};
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
@@ -13,7 +13,16 @@ pub struct API {
     base_url: String,
     headers:  HashMap<String, String>,
 }
-static_default!(API);
+static_init!(API);
+
+impl API {
+    pub fn new(base_url: impl ToString) -> Self {
+        Self {
+            base_url: base_url.to_string(),
+            headers: Default::default()
+        }
+    }
+}
 
 impl API {
     pub fn base_url() -> &'static str {
