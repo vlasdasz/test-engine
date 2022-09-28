@@ -15,11 +15,11 @@ pub struct Request<Param, Result> {
 }
 
 impl<R, P> Request<R, P> {
-    pub const fn make(url: &'static str) -> Self {
+    pub fn make(url: &'static str) -> Self {
         Self {
             url,
             _method: Method::Get,
-            _data: Rglica::const_default(),
+            _data: Default::default(),
         }
     }
 

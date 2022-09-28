@@ -1,4 +1,4 @@
-use rtools::{weak::ToWeak, Rglica};
+use rtools::{Rglica, ToWeak};
 
 use crate::{layout::Placer, SubView, UIManager, View};
 

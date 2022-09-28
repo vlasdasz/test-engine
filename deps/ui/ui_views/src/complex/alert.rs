@@ -1,5 +1,5 @@
 use gm::Color;
-use rtools::{weak::ToWeak, Event, Rglica};
+use rtools::{Event, Rglica, ToWeak};
 use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
 
 use crate::{Button, Label};

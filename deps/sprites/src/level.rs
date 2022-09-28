@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
-use rtools::{weak::ToWeak, Rglica};
+use rtools::{Rglica, ToWeak};
 
 use crate::{get_sprites_drawer, LevelBase, Player, Sprite};
 

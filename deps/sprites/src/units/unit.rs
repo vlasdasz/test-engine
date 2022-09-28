@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::prelude::ActiveEvents;
-use rtools::{weak::ToWeak, Rglica};
+use rtools::{Rglica, ToWeak};
 
 use crate::{Body, Level, Sprite, SpriteData};
 

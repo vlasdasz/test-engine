@@ -1,6 +1,6 @@
 use std::{borrow::Borrow, ops::DerefMut};
 
-use rtools::{weak::ToWeak, Dispatch};
+use rtools::{Dispatch, ToWeak};
 use serde::{de::DeserializeOwned, Serialize};
 use tao_log::error;
 
@@ -11,7 +11,7 @@ pub struct DispatchRequest<Param, Result> {
 }
 
 impl<R, P> DispatchRequest<R, P> {
-    pub const fn make(url: &'static str) -> Self {
+    pub fn make(url: &'static str) -> Self {
         Self {
             request: Request::make(url),
         }

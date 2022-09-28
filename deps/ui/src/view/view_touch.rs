@@ -23,7 +23,7 @@ impl<T: ?Sized + View> ViewTouch for T {
         if let Some(selected) = events.selected_view.get() {
             selected.is_selected = false;
             selected.on_selection_changed(false);
-            events.selected_view.reset();
+            events.selected_view = Default::default();
         }
 
         if selected {

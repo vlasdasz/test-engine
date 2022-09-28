@@ -1,7 +1,6 @@
-use rtools::{weak::ToWeak, Animation};
+use rtools::{Animation, ToWeak};
 
 use crate::{UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
-
 pub trait ViewController {
     fn push(&mut self, view: Box<dyn View>);
     fn pop(&mut self);

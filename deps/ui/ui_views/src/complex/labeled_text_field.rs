@@ -1,4 +1,4 @@
-use rtools::weak::ToWeak;
+use rtools::ToWeak;
 use ui::{layout::Anchor, view, SubView, ViewCallbacks};
 
 use crate::{Label, TextField};

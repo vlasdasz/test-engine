@@ -32,7 +32,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
         impl ui::View for #name {
             fn weak_view(&self) -> rtools::Weak<dyn ui::View> {
-                use rtools::weak::ToWeak;
+                use rtools::ToWeak;
                 (self as &dyn ui::View).weak()
             }
             fn init_views(&mut self) {

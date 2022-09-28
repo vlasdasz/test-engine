@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Rect;
-use rtools::{weak::ToWeak, IntoF32, Rglica};
+use rtools::{IntoF32, Rglica, ToWeak};
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},
