@@ -1,5 +1,5 @@
 use gm::Color;
-use rtools::{Event, Rglica, ToRglica};
+use rtools::{weak::ToWeak, Event, Rglica};
 use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
 
 use crate::{Button, Label};
@@ -17,7 +17,7 @@ impl Alert {
     pub fn show(message: impl ToString) -> Rglica<Alert> {
         let mut alert = Box::<Self>::default();
         alert.message = message.to_string();
-        let res = alert.to_rglica();
+        let res = alert.weak();
         UIManager::root_view().add_subview(alert);
         res
     }

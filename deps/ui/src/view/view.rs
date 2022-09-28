@@ -1,12 +1,12 @@
 use std::ops::{Deref, DerefMut};
 
-use rtools::Rglica;
+use rtools::{Rglica, Weak};
 
 use crate::{ViewBase, ViewCallbacks};
 
 pub trait View: ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
     fn init_views(&mut self);
-    fn rglica(&self) -> Rglica<dyn View>;
+    fn weak_view(&self) -> Weak<dyn View>;
 }
 
 #[derive(Default)]

@@ -12,7 +12,7 @@ pub struct UIManager {
 
     #[default({
         let mut view = Box::<BaseView>::default();
-        view.place = Placer::new(view.rglica()).into();
+        view.place = Placer::new(view.weak_view()).into();
         view
     })]
     root_view: Box<dyn View>,

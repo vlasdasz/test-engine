@@ -5,7 +5,7 @@ use std::{
 
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use rtools::{data_manager::Handle, Event, Rglica, ToRglica, Unwrap};
+use rtools::{data_manager::Handle, weak::ToWeak, Event, Strong, Unwrap, Weak};
 
 use crate::{layout::Placer, PathData, Touch, View};
 
@@ -23,8 +23,8 @@ pub struct ViewBase {
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,
 
-    pub(crate) superview: Rglica<dyn View>,
-    pub(crate) subviews:  Vec<Box<dyn View>>,
+    pub(crate) superview: Weak<dyn View>,
+    pub(crate) subviews:  Vec<Strong<dyn View>>,
 
     pub(crate) touch_id: u64,
 
@@ -47,8 +47,8 @@ pub struct BaseView {
 impl View for BaseView {
     fn init_views(&mut self) {}
 
-    fn rglica(&self) -> Rglica<dyn View> {
-        (self as &dyn View).to_rglica()
+    fn weak_view(&self) -> Weak<dyn View> {
+        (self as &dyn View).weak()
     }
 }
 

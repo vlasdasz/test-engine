@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
-use rtools::{Rglica, ToRglica};
+use rtools::{weak::ToWeak, Rglica};
 
 use crate::{get_sprites_drawer, LevelBase, Player, Sprite};
 
@@ -48,7 +48,7 @@ pub trait Level {
     fn sprite_at(&self, point: Point) -> Option<Rglica<dyn Sprite>> {
         for bx in self.sprites() {
             if bx.contains(point) {
-                return bx.to_rglica().into();
+                return bx.weak().into();
             }
         }
         None

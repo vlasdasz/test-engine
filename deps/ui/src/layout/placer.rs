@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Rect;
-use rtools::{IntoF32, Rglica, ToRglica};
+use rtools::{weak::ToWeak, IntoF32, Rglica};
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},
@@ -25,8 +25,8 @@ impl Placer {
         Self {
             rules: vec![],
             view,
-            frame: view.frame().to_rglica(),
-            s_frame: view.super_frame().to_rglica(),
+            frame: view.frame().weak(),
+            s_frame: view.super_frame().weak(),
             has_width: false,
             has_height: false,
         }
@@ -124,11 +124,11 @@ impl Placer {
 
 impl Placer {
     pub fn anchor(&mut self, view: impl Deref<Target = impl View>, side: Anchor, offset: impl IntoF32) {
-        self.rules.push(LayoutRule::anchor(side, offset, view.rglica()));
+        self.rules.push(LayoutRule::anchor(side, offset, view.weak_view()));
     }
 
     pub fn relative(&mut self, view: impl Deref<Target = impl View>, side: Anchor, ratio: impl IntoF32) {
-        self.rules.push(LayoutRule::relative(side, ratio, view.rglica()))
+        self.rules.push(LayoutRule::relative(side, ratio, view.weak_view()))
     }
 }
 
@@ -168,7 +168,7 @@ impl Placer {
 
 impl Placer {
     pub fn layout(&mut self) {
-        let this = self.to_rglica();
+        let this = self.weak();
         for rule in &this.rules {
             if rule.anchor_view.is_ok() {
                 if rule.relative {
@@ -272,7 +272,7 @@ where
         return;
     }
 
-    let mut last = views.last_mut().unwrap().to_rglica();
+    let mut last = views.last_mut().unwrap().weak();
 
     if views.len() == 1 {
         let back = last.super_frame().with_zero_origin();
@@ -302,7 +302,7 @@ where
         return;
     }
 
-    let mut last = views.last_mut().unwrap().to_rglica();
+    let mut last = views.last_mut().unwrap().weak();
 
     if views.len() == 1 {
         let back = last.super_frame().with_zero_origin();

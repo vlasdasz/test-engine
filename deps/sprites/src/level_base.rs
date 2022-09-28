@@ -10,7 +10,7 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline,
     },
 };
-use rtools::{address::Address, Event, Rglica, ToRglica};
+use rtools::{address::Address, weak::ToWeak, Event, Rglica};
 use smart_default::SmartDefault;
 
 use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
@@ -88,7 +88,7 @@ impl LevelBase {
                 };
 
                 if let Some(other) = self.sprite_with_index(other_index.index()) {
-                    sprite.to_rglica().data_mut().on_collision.trigger(other);
+                    sprite.weak().data_mut().on_collision.trigger(other);
                 }
             }
         }
@@ -101,7 +101,7 @@ impl LevelBase {
                 Some(handle) => handle.index() == index,
                 None => false,
             })
-            .map(|a| a.to_rglica())
+            .map(|a| a.weak())
     }
 
     pub(crate) fn remove(&mut self, sprite: u64) {
@@ -141,7 +141,7 @@ impl Level for LevelBase {
         self
     }
     fn rglica(&self) -> Rglica<dyn Level> {
-        (self as &dyn Level).to_rglica()
+        (self as &dyn Level).weak()
     }
 }
 

@@ -1,4 +1,4 @@
-use rtools::Animation;
+use rtools::{weak::ToWeak, Animation};
 
 use crate::{UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
 
@@ -38,7 +38,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
         UIManager::disable_touch();
 
-        let mut this = self.rglica();
+        let mut this = self.weak();
 
         let anim = UIAnimation::new(this, Animation::new(0, self.width(), 0.5), |view, x| {
             view.set_x(x);
@@ -61,7 +61,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         UIManager::disable_touch();
 
         let mut view = UIManager::root_view().add_subview(view);
-        let mut this = self.rglica();
+        let mut this = self.weak();
         view.place.as_background();
         view.set_frame(self.frame().with_zero_origin());
         let anim = UIAnimation::new(view, Animation::new(self.height(), 0, 0.5), |view, y| {

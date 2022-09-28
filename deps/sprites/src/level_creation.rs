@@ -1,5 +1,5 @@
 use gm::flat::{Point, Rect, Shape};
-use rtools::{Rglica, ToRglica};
+use rtools::{weak::ToWeak, Rglica};
 
 use crate::{Level, Sprite, SpriteData};
 
@@ -15,7 +15,7 @@ impl<T: ?Sized + Level> LevelCreation for T {
         position: impl Into<Point>,
     ) -> Rglica<S> {
         let sprite = S::make(shape.into(), position.into(), self.rglica());
-        let result = sprite.to_rglica();
+        let result = sprite.weak();
         self.base_mut().sprites.push(sprite);
         result
     }

@@ -27,7 +27,7 @@ impl<T: ?Sized + View> ViewTouch for T {
         }
 
         if selected {
-            events.selected_view = self.rglica();
+            events.selected_view = self.weak_view();
         }
 
         self.is_selected = selected;

@@ -20,7 +20,7 @@ impl UIAnimation {
         action: impl FnMut(&mut dyn View, f32) + 'static,
     ) -> Self {
         Self {
-            view: view.rglica(),
+            view: view.weak_view(),
             animation,
             action: Box::new(action),
             on_finish: Default::default(),

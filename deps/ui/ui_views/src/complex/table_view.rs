@@ -34,7 +34,7 @@ pub trait TableViewDataSource {
 #[macro_export]
 macro_rules! data_source {
     ($source:ident) => {{
-        use rtools::ToRglica;
-        ($source as &mut dyn TableViewDataSource).to_rglica()
+        use rtools::weak::ToWeak;
+        ($source as &mut dyn TableViewDataSource).weak()
     }};
 }

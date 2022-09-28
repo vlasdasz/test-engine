@@ -8,7 +8,7 @@ use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
-use rtools::{Dispatch, Rglica, Time, ToRglica, UnwrapBox};
+use rtools::{weak::ToWeak, Dispatch, Rglica, Time, UnwrapBox};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{layout::Placer, UIManager, View, ViewCallbacks, ViewFrame, ViewLayout};
 
@@ -61,7 +61,7 @@ impl Screen {
             self.add_monitor(m);
         }
 
-        self.ui.debug_view.place = Placer::new(self.ui.debug_view.rglica()).into();
+        self.ui.debug_view.place = Placer::new(self.ui.debug_view.weak_view()).into();
         self.ui.debug_view.init_views();
         self.ui.debug_view.setup();
 
@@ -230,7 +230,7 @@ impl Screen {
         });
 
         unsafe {
-            SCREEN = screen.to_rglica().as_ptr();
+            SCREEN = screen.weak().as_ptr();
         }
 
         Buffers::init(Buffers::default());

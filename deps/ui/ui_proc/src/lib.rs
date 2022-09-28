@@ -31,9 +31,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         #stream
 
         impl ui::View for #name {
-            fn rglica(&self) -> rtools::Rglica<dyn ui::View> {
-                use rtools::ToRglica;
-                (self as &dyn ui::View).to_rglica()
+            fn weak_view(&self) -> rtools::Weak<dyn ui::View> {
+                use rtools::weak::ToWeak;
+                (self as &dyn ui::View).weak()
             }
             fn init_views(&mut self) {
                 use ui::ViewSubviews;

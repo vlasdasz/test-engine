@@ -1,5 +1,6 @@
+use rtools::weak::ToWeak;
 use test_engine::{
-    rtools::{data_manager::DataManager, Animation, Rglica, ToRglica},
+    rtools::{data_manager::DataManager, Animation, Rglica},
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
 };
@@ -69,6 +70,6 @@ impl Level for BenchmarkLevel {
     }
 
     fn rglica(&self) -> Rglica<dyn Level> {
-        (self as &dyn Level).to_rglica()
+        (self as &dyn Level).weak()
     }
 }

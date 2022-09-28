@@ -1,13 +1,14 @@
+use rtools::{
+    data_manager::{DataManager, Handle},
+    weak::ToWeak,
+    Rglica,
+};
 use test_engine::{
     audio::Sound,
     gl_wrapper::GLWrapper,
     gm::{
         flat::{Point, Shape},
         Color,
-    },
-    rtools::{
-        data_manager::{DataManager, Handle},
-        Rglica, ToRglica,
     },
     sprites::{Body, LevelCreation, Player, SpriteTemplates, Wall},
     text::{render_text, Font},
@@ -100,6 +101,6 @@ impl Level for TestGameLevel {
     }
 
     fn rglica(&self) -> Rglica<dyn Level> {
-        (self as &dyn Level).to_rglica()
+        (self as &dyn Level).weak()
     }
 }

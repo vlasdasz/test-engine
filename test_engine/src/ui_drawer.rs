@@ -8,7 +8,7 @@ use gm::{
     flat::{PointsPath, Rect, Size},
     Color,
 };
-use rtools::{address::Address, Rglica, ToRglica};
+use rtools::{address::Address, weak::ToWeak, Rglica};
 use ui::{DrawMode, PathData, UIDrawer, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
 use ui_views::initialize_path_data;
 
@@ -157,7 +157,7 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn rglica(&self) -> Rglica<dyn UIDrawer> {
-        (self as &dyn UIDrawer).to_rglica()
+        (self as &dyn UIDrawer).weak()
     }
 }
 

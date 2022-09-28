@@ -1,6 +1,6 @@
 use std::{borrow::Borrow, ops::DerefMut};
 
-use rtools::{Dispatch, ToRglica};
+use rtools::{weak::ToWeak, Dispatch};
 use serde::{de::DeserializeOwned, Serialize};
 use tao_log::error;
 
@@ -24,7 +24,7 @@ impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Resul
         obj: &Obj,
         completion: impl FnOnce(&mut Obj, Option<Error>, Result) + Send + 'static,
     ) {
-        let mut rglica = obj.to_rglica();
+        let mut rglica = obj.weak();
         Dispatch::dispatch(self.request.get(), move |result| match result {
             Ok(val) => completion(rglica.deref_mut(), None, val),
             Err(err) => {
@@ -42,7 +42,7 @@ impl<Param: Serialize> DispatchRequest<Param, ()> {
         obj: &Obj,
         completion: impl FnOnce(&mut Obj, Option<Error>) + Send + 'static,
     ) {
-        let mut rglica = obj.to_rglica();
+        let mut rglica = obj.weak();
         Dispatch::dispatch(self.request.post(param), move |result| match result {
             Ok(_) => completion(rglica.deref_mut(), None),
             Err(err) => {
@@ -64,7 +64,7 @@ where
         obj: &Obj,
         completion: impl FnOnce(&mut Obj, Option<Error>, Result) + Send + 'static,
     ) {
-        let mut rglica = obj.to_rglica();
+        let mut rglica = obj.weak();
         Dispatch::dispatch(self.request.fetch(param), move |response| match response {
             Ok(val) => completion(rglica.deref_mut(), None, val),
             Err(err) => {
