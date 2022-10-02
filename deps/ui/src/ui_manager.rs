@@ -19,7 +19,7 @@ pub struct UIManager {
 
     next_view: Option<Strong<dyn View>>,
 
-    different_touch_root: Weak<dyn View>,
+    pub(crate) touch_stack: Vec<Weak<dyn View>>,
 
     pub(crate) animations: Vec<UIAnimation>,
 
@@ -72,10 +72,14 @@ impl UIManager {
     }
 
     pub fn touch_root() -> &'static mut dyn View {
-        if Self::get().different_touch_root.is_ok() {
-            Self::get().different_touch_root.deref_mut()
+        let this = Self::get();
+
+        this.touch_stack.retain(|a| !a.freed());
+
+        if let Some(touch) = this.touch_stack.last_mut() {
+            touch.deref_mut()
         } else {
-            Self::get().root_view.deref_mut()
+            this.root_view.deref_mut()
         }
     }
 }

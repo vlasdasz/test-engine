@@ -19,6 +19,8 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         view.place.as_background();
         view.set_frame(self.frame().with_zero_origin());
 
+        UIManager::get().touch_stack.push(view.weak_view());
+
         let anim = UIAnimation::new(view, Animation::new(self.width(), 0, 0.5), |view, x| {
             view.set_x(x);
         });
