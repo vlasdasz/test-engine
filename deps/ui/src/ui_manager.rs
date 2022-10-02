@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Size;
-use rtools::{address::Address, static_default, Strong, UnwrapBox, Weak};
+use rtools::{static_default, Strong, UnwrapBox, Weak};
 use smart_default::SmartDefault;
 
 use crate::{layout::Placer, view::ViewSubviews, BaseView, UIAnimation, UIDrawer, View};
@@ -96,7 +96,7 @@ impl UIManager {
                 .superview()
                 .subviews()
                 .iter()
-                .position(|sub| view.address() == sub.address())
+                .position(|sub| view.addr() == sub.addr())
                 .unwrap();
             view.superview().remove_subview_at(index);
         }
