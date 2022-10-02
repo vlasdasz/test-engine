@@ -1,6 +1,6 @@
 use rtools::{
     data_manager::{DataManager, Handle},
-    Rglica, ToWeak,
+    Rglica, ToWeak, Weak,
 };
 use test_engine::{
     audio::Sound,
@@ -17,7 +17,7 @@ use test_engine::{
 #[derive(Default)]
 pub struct TestGameLevel {
     base:            LevelBase,
-    selected_sprite: Option<Rglica<dyn Sprite>>,
+    selected_sprite: Option<Weak<dyn Sprite>>,
     collision_sound: Handle<Sound>,
 }
 
@@ -36,7 +36,7 @@ impl TestGameLevel {
         if let Some(mut sprite) = self.selected_sprite {
             sprite.set_selected(false);
             self.selected_sprite = None;
-            self.base_mut().on_sprite_selected.trigger(Rglica::default());
+            self.base_mut().on_sprite_selected.trigger(Weak::default());
         }
     }
 }
@@ -73,7 +73,7 @@ impl Level for TestGameLevel {
             self.add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2)).set_image(square);
         }
 
-        let mut player: Rglica<Player> = self.add_sprite((2, 2), (0, 5));
+        let mut player: Weak<Player> = self.add_sprite((2, 2), (0, 5));
         self.base_mut().player = player;
         player.set_image(Image::get("frisk.png")).enable_collision_detection();
         player.weapon.set_image(Image::get("ak.png"));
@@ -99,7 +99,7 @@ impl Level for TestGameLevel {
         &mut self.base
     }
 
-    fn rglica(&self) -> Rglica<dyn Level> {
+    fn rglica(&self) -> Weak<dyn Level> {
         (self as &dyn Level).weak()
     }
 }

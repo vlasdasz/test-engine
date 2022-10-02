@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use rtools::{data_manager::Handle, Animation, UnwrapBox};
+use rtools::{data_manager::Handle, Animation, Strong, UnwrapBox};
 use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::{data_source, Button, DrawingView, ImageView, Label, StringCell, TableView, TableViewDataSource};
@@ -78,8 +78,8 @@ impl TableViewDataSource for TestView {
         DATA.len()
     }
 
-    fn cell_for_index(&self, index: usize) -> Box<dyn View> {
-        let mut cell = Box::<StringCell>::default();
+    fn cell_for_index(&self, index: usize) -> Strong<dyn View> {
+        let mut cell = Strong::<StringCell>::default();
         cell.set_data(DATA[index].into());
         cell
     }

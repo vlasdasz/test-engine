@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Rect;
-use rtools::{IntoF32, Rglica, ToWeak};
+use rtools::{IntoF32, Rglica, ToRglica, ToWeak, Weak};
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},
@@ -12,7 +12,7 @@ use crate::{
 pub struct Placer {
     pub(crate) rules: Vec<LayoutRule>,
 
-    view:    Rglica<dyn View>,
+    view:    Weak<dyn View>,
     frame:   Rglica<Rect>,
     s_frame: Rglica<Rect>,
 
@@ -21,12 +21,12 @@ pub struct Placer {
 }
 
 impl Placer {
-    pub fn new(view: Rglica<dyn View>) -> Self {
+    pub fn new(view: Weak<dyn View>) -> Self {
         Self {
             rules: vec![],
             view,
-            frame: view.frame().weak(),
-            s_frame: view.super_frame().weak(),
+            frame: view.frame().to_rglica(),
+            s_frame: view.super_frame().to_rglica(),
             has_width: false,
             has_height: false,
         }

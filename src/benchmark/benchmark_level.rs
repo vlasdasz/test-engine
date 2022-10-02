@@ -1,4 +1,4 @@
-use rtools::ToWeak;
+use rtools::{ToWeak, Weak};
 use test_engine::{
     rtools::{data_manager::DataManager, Animation, Rglica},
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
@@ -8,15 +8,15 @@ use test_engine::{
 #[derive(Default)]
 pub struct BenchmarkLevel {
     base:       LevelBase,
-    left_wall:  Rglica<Wall>,
-    right_wall: Rglica<Wall>,
-    floor:      Rglica<Wall>,
+    left_wall:  Weak<Wall>,
+    right_wall: Weak<Wall>,
+    floor:      Weak<Wall>,
 
     left_animation:  Animation,
     right_animation: Animation,
     floor_animation: Animation,
 
-    pub player:        Rglica<Player>,
+    pub player:        Weak<Player>,
     pub bullets_count: u64,
 }
 
@@ -69,7 +69,7 @@ impl Level for BenchmarkLevel {
         &mut self.base
     }
 
-    fn rglica(&self) -> Rglica<dyn Level> {
+    fn rglica(&self) -> Weak<dyn Level> {
         (self as &dyn Level).weak()
     }
 }

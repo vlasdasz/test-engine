@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use gl_image::Image;
 use gm::flat::{Point, Shape};
-use rtools::{data_manager::Handle, Rglica};
+use rtools::{data_manager::Handle, Rglica, Strong, Weak};
 
 use crate::{sprite::SpriteTemplates, Body, Level, LevelCreation, Sprite, SpriteData};
 
 pub struct Weapon {
-    sprite:              SpriteData,
+    sprite:              Strong<SpriteData>,
     pub(crate) velocity: Point,
     pub bullet_speed:    f32,
     pub bullet_image:    Handle<Image>,
@@ -41,12 +41,12 @@ impl Sprite for Weapon {
         &mut self.sprite
     }
 
-    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
     where
         Self: Sized,
     {
-        Box::new(Self {
-            sprite:       *SpriteData::make(shape, position, level),
+        Strong::new(Self {
+            sprite:       SpriteData::make(shape, position, level),
             velocity:     Default::default(),
             bullet_speed: 1.0,
             bullet_image: Default::default(),

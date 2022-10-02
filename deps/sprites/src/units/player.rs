@@ -1,13 +1,13 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rtools::Rglica;
+use rtools::{Rglica, Strong, Weak};
 
 use crate::{Level, Sprite, SpriteData, Unit, Weapon};
 
 pub struct Player {
-    unit:       Unit,
-    pub weapon: Weapon,
+    unit:       Strong<Unit>,
+    pub weapon: Strong<Weapon>,
 }
 
 impl Sprite for Player {
@@ -46,13 +46,13 @@ impl Sprite for Player {
         self.unit.data_mut()
     }
 
-    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
     where
         Self: Sized,
     {
-        Box::new(Player {
-            unit:   *Unit::make(shape, position, level),
-            weapon: *Weapon::make(shape, position, level),
+        Strong::new(Player {
+            unit:   Unit::make(shape, position, level),
+            weapon: Weapon::make(shape, position, level),
         })
     }
 }

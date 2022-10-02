@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
-use rtools::{Rglica, ToWeak};
+use rtools::{Rglica, Strong, ToWeak, Weak};
 
 use crate::{get_sprites_drawer, LevelBase, Player, Sprite};
 
@@ -45,7 +45,7 @@ pub trait Level {
         pos
     }
 
-    fn sprite_at(&self, point: Point) -> Option<Rglica<dyn Sprite>> {
+    fn sprite_at(&self, point: Point) -> Option<Weak<dyn Sprite>> {
         for bx in self.sprites() {
             if bx.contains(point) {
                 return bx.weak().into();
@@ -72,11 +72,11 @@ pub trait Level {
         (gravity[0], gravity[1]).into()
     }
 
-    fn sprites(&self) -> &[Box<dyn Sprite>] {
+    fn sprites(&self) -> &[Strong<dyn Sprite>] {
         &self.base().sprites
     }
 
-    fn sprites_mut(&mut self) -> &mut [Box<dyn Sprite>] {
+    fn sprites_mut(&mut self) -> &mut [Strong<dyn Sprite>] {
         &mut self.base_mut().sprites
     }
 
@@ -104,15 +104,15 @@ pub trait Level {
         get_sprites_drawer().set_camera_rotation(angle)
     }
 
-    fn remove(&mut self, sprite: u64) {
+    fn remove(&mut self, sprite: usize) {
         self.base_mut().remove(sprite)
     }
 
-    fn player(&self) -> Rglica<Player> {
+    fn player(&self) -> Weak<Player> {
         self.base().player
     }
 
     fn base(&self) -> &LevelBase;
     fn base_mut(&mut self) -> &mut LevelBase;
-    fn rglica(&self) -> Rglica<dyn Level>;
+    fn rglica(&self) -> Weak<dyn Level>;
 }

@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::{na::Vector2, prelude::RigidBodyBuilder};
-use rtools::Rglica;
+use rtools::{Rglica, Strong, Weak};
 
 use crate::{control::Control, Level, Sprite, SpriteData, ToCollider};
 
 pub struct Body {
-    sprite: SpriteData,
+    sprite: Strong<SpriteData>,
 }
 
 impl Body {
@@ -41,7 +41,7 @@ impl Sprite for Body {
         &mut self.sprite
     }
 
-    fn make(shape: Shape, position: Point, mut level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Strong<Self>
     where
         Self: Sized,
     {
@@ -65,10 +65,9 @@ impl Sprite for Body {
 
         sprite.collider_handle = collider_handle.into();
         sprite.rigid_handle = rigid_handle.into();
+        sprite.level = level.rglica();
 
-        Box::new(Self {
-            sprite: sprite.with_level(level),
-        })
+        Strong::new(Self { sprite })
     }
 }
 

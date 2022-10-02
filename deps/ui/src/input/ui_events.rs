@@ -1,11 +1,11 @@
-use rtools::{static_default, Event, Rglica};
+use rtools::{static_default, Event, Rglica, Weak};
 
 use crate::{input::keyboard::KeyEvent, View, ViewTouch};
 
 #[derive(Default)]
 pub struct UIEvents {
     pub key_pressed:   Event<KeyEvent>,
-    pub selected_view: Rglica<dyn View>,
+    pub selected_view: Weak<dyn View>,
 }
 static_default!(UIEvents);
 

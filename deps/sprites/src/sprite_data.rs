@@ -4,7 +4,7 @@ use gm::{
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
-use rtools::{data_manager::Handle, Event, IntoF32, Rglica};
+use rtools::{data_manager::Handle, Event, IntoF32, Rglica, Strong, Weak};
 
 use crate::{Level, Sprite};
 
@@ -13,7 +13,7 @@ pub struct SpriteData {
     pub(crate) position:    Point,
     pub(crate) shape:       Shape,
     pub(crate) rotation:    f32,
-    pub(crate) level:       Rglica<dyn Level>,
+    pub(crate) level:       Weak<dyn Level>,
     pub(crate) is_selected: bool,
 
     pub(crate) rigid_handle:    Option<RigidBodyHandle>,
@@ -23,11 +23,11 @@ pub struct SpriteData {
     pub color: Color,
     pub image: Handle<Image>,
 
-    pub on_collision: Event<Rglica<dyn Sprite>>,
+    pub on_collision: Event<Weak<dyn Sprite>>,
 }
 
 impl SpriteData {
-    pub(crate) fn with_level(mut self, level: Rglica<dyn Level>) -> Self {
+    pub(crate) fn with_level(mut self, level: Weak<dyn Level>) -> Self {
         debug_assert!(level.is_ok());
         self.level = level;
         self
@@ -54,11 +54,11 @@ impl Sprite for SpriteData {
         self
     }
 
-    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
     where
         Self: Sized,
     {
-        Box::new(Self {
+        Strong::new(Self {
             shape,
             position,
             level,

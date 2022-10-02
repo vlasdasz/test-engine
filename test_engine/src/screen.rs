@@ -8,7 +8,7 @@ use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
-use rtools::{Dispatch, Rglica, Time, ToWeak, UnwrapBox};
+use rtools::{Dispatch, Rglica, Strong, Time, ToWeak, UnwrapBox, Weak};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{layout::Placer, UIManager, View, ViewCallbacks, ViewFrame, ViewLayout};
 
@@ -28,7 +28,7 @@ pub struct Screen {
 }
 
 impl Screen {
-    pub fn player(&self) -> Rglica<Player> {
+    pub fn player(&self) -> Weak<Player> {
         if let Some(level) = &self.ui.level {
             level.player()
         } else {
@@ -54,7 +54,7 @@ impl Screen {
         });
     }
 
-    fn init(&mut self, _size: Size, view: Box<dyn View>) {
+    fn init(&mut self, _size: Size, view: Strong<dyn View>) {
         #[cfg(desktop)]
         {
             let m = self.glfw.monitors.first().unwrap().clone();
@@ -202,7 +202,7 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Box<dyn View>) -> Box<Self> {
+    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Strong<dyn View>) -> Box<Self> {
         trace!("Creating screen");
 
         #[cfg(desktop)]
@@ -230,7 +230,7 @@ impl Screen {
         });
 
         unsafe {
-            SCREEN = screen.weak().as_ptr();
+            SCREEN = screen.deref_mut() as *mut Screen;
         }
 
         Buffers::init(Buffers::default());

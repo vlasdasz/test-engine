@@ -1,4 +1,4 @@
-use rtools::{static_default, Apply};
+use rtools::{static_default, Apply, Strong};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
 use tao_log::infov;
@@ -131,15 +131,15 @@ impl TestGameView {
             let mut to_benchmark = view.initialize_view::<Button>();
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap.sub(|_| {
-                Screen::current().ui.set_level(Box::<BenchmarkLevel>::default());
-                UIManager::set_view(Box::<BenchmarkView>::default());
+                Screen::current().ui.set_level(Strong::<BenchmarkLevel>::default());
+                UIManager::set_view(Strong::<BenchmarkView>::default());
             });
 
             let mut to_test = view.initialize_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap.sub(|_| {
-                Screen::current().ui.set_level(Box::<LevelBase>::default());
-                UIManager::set_view(Box::<BenchmarkView>::default());
+                Screen::current().ui.set_level(Strong::<LevelBase>::default());
+                UIManager::set_view(Strong::<BenchmarkView>::default());
             });
 
             let mut play = view.initialize_view::<Button>();

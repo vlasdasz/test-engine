@@ -1,13 +1,13 @@
 use std::ops::{Deref, DerefMut};
 
-use rtools::{Animation, Event, Rglica};
+use rtools::{Animation, Event, Rglica, Weak};
 
 use crate::{UIManager, View};
 
 type Action = Box<dyn FnMut(&mut dyn View, f32)>;
 
 pub struct UIAnimation {
-    view:          Rglica<dyn View>,
+    view:          Weak<dyn View>,
     animation:     Animation,
     action:        Action,
     pub on_finish: Event,

@@ -1,5 +1,5 @@
 use gl_image::Image;
-use rtools::{data_manager::DataManager, Rglica};
+use rtools::{data_manager::DataManager, Rglica, Weak};
 use sprites::Sprite;
 use ui::{view, SubView, ViewCallbacks, ViewData};
 use ui_views::{Button, LabeledView};
@@ -13,11 +13,11 @@ pub struct SpriteView {
 
     delete_button: SubView<Button>,
 
-    sprite: Rglica<dyn Sprite>,
+    sprite: Weak<dyn Sprite>,
 }
 
 impl SpriteView {
-    pub fn set_sprite(&mut self, sprite: Rglica<dyn Sprite>) {
+    pub fn set_sprite(&mut self, sprite: Weak<dyn Sprite>) {
         self.sprite = sprite;
         self.delete_button.set_hidden(sprite.is_null());
         if sprite.is_null() {
@@ -38,7 +38,7 @@ impl SpriteView {
         self.delete_button.on_tap.set(self, |this, _| {
             if this.sprite.is_ok() {
                 this.sprite.remove();
-                this.set_sprite(Rglica::default());
+                this.set_sprite(Weak::default());
             }
         });
     }

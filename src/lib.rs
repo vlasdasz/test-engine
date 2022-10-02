@@ -9,6 +9,7 @@ use std::{
     ptr,
 };
 
+use rtools::Strong;
 use test_engine::{
     app::{App, MobileKeyEvent, TestEngineAction},
     gl_wrapper::GLWrapper,
@@ -77,7 +78,7 @@ pub extern "C" fn set_monitor(
             width,
             height,
             diagonal,
-            Box::<TestGameView>::default(),
+            Strong::<TestGameView>::default(),
         );
 
         APP = Box::into_raw(app);

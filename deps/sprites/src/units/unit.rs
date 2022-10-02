@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::prelude::ActiveEvents;
-use rtools::{Rglica, ToWeak};
+use rtools::{Rglica, Strong, ToWeak, Weak};
 
 use crate::{Body, Level, Sprite, SpriteData};
 
 pub struct Unit {
-    body: Body,
+    body: Strong<Body>,
 }
 
 impl Unit {
@@ -33,7 +33,7 @@ impl Sprite for Unit {
         self.body.data_mut()
     }
 
-    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
     where
         Self: Sized,
     {
@@ -42,9 +42,7 @@ impl Sprite for Unit {
         body.lock_rotations();
         body.collider_mut().set_restitution(0.0);
 
-        Box::new(Unit {
-            body: Box::into_inner(body),
-        })
+        Strong::new(Unit { body })
     }
 }
 

@@ -7,7 +7,7 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::{platform::Platform, IntoF32};
+use rtools::{platform::Platform, IntoF32, Strong};
 use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
@@ -22,7 +22,7 @@ use crate::Keymap;
 
 #[derive(SmartDefault)]
 pub struct UILayer {
-    pub level: Option<Box<dyn Level>>,
+    pub level: Option<Strong<dyn Level>>,
 
     pub ui_cursor_position: Point,
     pub cursor_position:    Point,
@@ -63,7 +63,7 @@ impl UILayer {
         }
     }
 
-    pub fn set_level(&mut self, level: Box<dyn Level>) {
+    pub fn set_level(&mut self, level: Strong<dyn Level>) {
         self.level = level.into();
         self.level.as_mut().unwrap().setup();
     }

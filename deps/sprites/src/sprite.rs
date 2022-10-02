@@ -4,7 +4,7 @@ use gm::{
     Color,
 };
 use rapier2d::{geometry::Collider, prelude::RigidBody};
-use rtools::{address::Address, data_manager::Handle, IntoF32, Rglica};
+use rtools::{address::Address, data_manager::Handle, IntoF32, Rglica, Strong, Weak};
 
 use crate::{get_sprites_drawer, Level, SpriteData};
 
@@ -84,12 +84,12 @@ pub trait Sprite {
         self.level_mut().remove(address);
     }
 
-    fn level(&self) -> &Rglica<dyn Level> {
+    fn level(&self) -> &Weak<dyn Level> {
         debug_assert!(self.data().level.is_ok(), "Null Level");
         &self.data().level
     }
 
-    fn level_mut(&mut self) -> &mut Rglica<dyn Level> {
+    fn level_mut(&mut self) -> &mut Weak<dyn Level> {
         debug_assert!(self.data().level.is_ok(), "Null Level");
         &mut self.data_mut().level
     }
@@ -100,7 +100,7 @@ pub trait Sprite {
 
     fn data(&self) -> &SpriteData;
     fn data_mut(&mut self) -> &mut SpriteData;
-    fn make(shape: Shape, position: Point, level: Rglica<dyn Level>) -> Box<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
     where
         Self: Sized;
 }

@@ -1,10 +1,10 @@
-use rtools::Rglica;
+use rtools::{Rglica, Strong, Weak};
 use ui::{view, View, ViewCallbacks, ViewSubviews, ViewTouch};
 
 #[view]
 #[derive(Default)]
 pub struct TableView {
-    pub data_source: Rglica<dyn TableViewDataSource>,
+    pub data_source: Weak<dyn TableViewDataSource>,
 }
 
 impl TableView {
@@ -27,7 +27,7 @@ impl ViewCallbacks for TableView {
 
 pub trait TableViewDataSource {
     fn number_of_cells(&self) -> usize;
-    fn cell_for_index(&self, index: usize) -> Box<dyn View>;
+    fn cell_for_index(&self, index: usize) -> Strong<dyn View>;
     fn cell_selected(&mut self, index: usize);
 }
 

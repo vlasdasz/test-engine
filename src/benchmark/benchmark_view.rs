@@ -1,5 +1,6 @@
 use std::string::String;
 
+use rtools::Strong;
 use test_engine::{
     rtools::Random,
     ui::{layout::Anchor, SubView},
@@ -40,8 +41,8 @@ impl ViewCallbacks for BenchmarkView {
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 
         self.back.on_tap.sub(|_| {
-            Screen::current().ui.set_level(Box::<TestGameLevel>::default());
-            UIManager::set_view(Box::<TestGameView>::default());
+            Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
+            UIManager::set_view(Strong::<TestGameView>::default());
         });
     }
 }

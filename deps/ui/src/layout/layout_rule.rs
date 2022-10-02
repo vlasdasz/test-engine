@@ -1,4 +1,4 @@
-use rtools::{IntoF32, Rglica};
+use rtools::{IntoF32, Rglica, Weak};
 
 use crate::{
     layout::{Anchor, Tiling},
@@ -10,7 +10,7 @@ pub(crate) struct LayoutRule {
     pub(crate) tiling: Option<Tiling>,
     pub(crate) offset: f32,
 
-    pub(crate) anchor_view: Rglica<dyn View>,
+    pub(crate) anchor_view: Weak<dyn View>,
 
     pub(crate) relative: bool,
 }
@@ -21,7 +21,7 @@ impl LayoutRule {
             side:        Anchor::Top,
             tiling:      tiling.into(),
             offset:      offset.into_f32(),
-            anchor_view: Rglica::default(),
+            anchor_view: Weak::default(),
             relative:    false,
         }
     }
@@ -31,12 +31,12 @@ impl LayoutRule {
             side,
             tiling: None,
             offset: offset.into_f32(),
-            anchor_view: Rglica::default(),
+            anchor_view: Weak::default(),
             relative: false,
         }
     }
 
-    pub fn anchor(side: Anchor, offset: impl IntoF32, anchor_view: Rglica<dyn View>) -> Self {
+    pub fn anchor(side: Anchor, offset: impl IntoF32, anchor_view: Weak<dyn View>) -> Self {
         Self {
             side,
             tiling: None,
@@ -46,7 +46,7 @@ impl LayoutRule {
         }
     }
 
-    pub fn relative(side: Anchor, ratio: impl IntoF32, anchor_view: Rglica<dyn View>) -> Self {
+    pub fn relative(side: Anchor, ratio: impl IntoF32, anchor_view: Weak<dyn View>) -> Self {
         Self {
             side,
             tiling: None,

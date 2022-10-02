@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use gl_wrapper::monitor::Monitor;
 use gm::volume::GyroData;
-use rtools::{init_log, platform::Platform, UnwrapBox};
+use rtools::{init_log, platform::Platform, Strong, UnwrapBox};
 use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
@@ -40,7 +40,7 @@ pub struct App {
 }
 
 impl App {
-    fn create_screen(&mut self, assets_path: &Path, monitor: Monitor, view: Box<dyn View>) {
+    fn create_screen(&mut self, assets_path: &Path, monitor: Monitor, view: Strong<dyn View>) {
         self.runtime.block_on(async {
             let mut screen = Screen::new(monitor.resolution, assets_path, view);
 
@@ -127,7 +127,7 @@ impl App {
         width: c_float,
         height: c_float,
         diagonal: c_float,
-        view: Box<dyn View>,
+        view: Strong<dyn View>,
     ) {
         let monitor = Monitor::new(
             "Phone screen".into(),

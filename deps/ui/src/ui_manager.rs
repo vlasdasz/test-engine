@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Size;
-use rtools::{address::Address, static_default, Rglica, UnwrapBox};
+use rtools::{address::Address, static_default, Rglica, Strong, UnwrapBox, Weak};
 use smart_default::SmartDefault;
 
 use crate::{layout::Placer, view::ViewSubviews, BaseView, UIAnimation, UIDrawer, View};
@@ -11,19 +11,19 @@ pub struct UIManager {
     drawer: UnwrapBox<dyn UIDrawer>,
 
     #[default({
-        let mut view = Box::<BaseView>::default();
+        let mut view = Strong::<BaseView>::default();
         view.place = Placer::new(view.weak_view()).into();
         view
     })]
-    root_view: Box<dyn View>,
+    root_view: Strong<dyn View>,
 
-    next_view: Option<Box<dyn View>>,
+    next_view: Option<Strong<dyn View>>,
 
-    different_touch_root: Rglica<dyn View>,
+    different_touch_root: Weak<dyn View>,
 
     pub(crate) animations: Vec<UIAnimation>,
 
-    views_to_remove: Vec<Rglica<dyn View>>,
+    views_to_remove: Vec<Weak<dyn View>>,
     touch_disabled:  bool,
 
     #[default = 1.0]
@@ -45,7 +45,7 @@ impl UIManager {
         Self::get().root_view.deref_mut()
     }
 
-    pub(crate) fn views_to_remove() -> &'static mut Vec<Rglica<dyn View>> {
+    pub(crate) fn views_to_remove() -> &'static mut Vec<Weak<dyn View>> {
         &mut Self::get().views_to_remove
     }
 
@@ -81,7 +81,7 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub(crate) fn schedule_remove(mut view: Rglica<dyn View>) {
+    pub(crate) fn schedule_remove(mut view: Weak<dyn View>) {
         view.is_deleted = true;
         UIManager::views_to_remove().push(view);
     }
@@ -112,7 +112,7 @@ impl UIManager {
         view.place.as_background();
     }
 
-    pub fn set_view(view: Box<dyn View>) {
+    pub fn set_view(view: Strong<dyn View>) {
         UIManager::get().next_view.replace(view);
     }
 }

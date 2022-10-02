@@ -10,23 +10,23 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline,
     },
 };
-use rtools::{address::Address, Event, Rglica, ToWeak};
+use rtools::{address::Address, Event, Rglica, Strong, ToWeak, Weak};
 use smart_default::SmartDefault;
 
 use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
 
 #[derive(SmartDefault)]
 pub struct LevelBase {
-    pub player: Rglica<Player>,
+    pub player: Weak<Player>,
 
     pub cursor_position: Point,
 
     pub on_tap:             Event<Point>,
-    pub on_sprite_selected: Event<Rglica<dyn Sprite>>,
+    pub on_sprite_selected: Event<Weak<dyn Sprite>>,
 
-    pub(crate) colliding_sprites: Vec<Rglica<dyn Sprite>>,
+    pub(crate) colliding_sprites: Vec<Weak<dyn Sprite>>,
 
-    pub(crate) sprites: Vec<Box<dyn Sprite>>,
+    pub(crate) sprites: Vec<Strong<dyn Sprite>>,
     pub(crate) sets:    Sets,
 
     #[default(Vector2::new(0.0, -9.81))]
@@ -94,7 +94,7 @@ impl LevelBase {
         }
     }
 
-    fn sprite_with_index(&self, index: usize) -> Option<Rglica<dyn Sprite>> {
+    fn sprite_with_index(&self, index: usize) -> Option<Weak<dyn Sprite>> {
         self.sprites
             .iter()
             .find(|a| match a.data().collider_handle {
@@ -104,7 +104,7 @@ impl LevelBase {
             .map(|a| a.weak())
     }
 
-    pub(crate) fn remove(&mut self, sprite: u64) {
+    pub(crate) fn remove(&mut self, sprite: usize) {
         let index = self.sprites.iter().position(|a| a.address() == sprite).unwrap();
 
         let sprite = self.sprites[index].deref();
@@ -140,7 +140,7 @@ impl Level for LevelBase {
     fn base_mut(&mut self) -> &mut LevelBase {
         self
     }
-    fn rglica(&self) -> Rglica<dyn Level> {
+    fn rglica(&self) -> Weak<dyn Level> {
         (self as &dyn Level).weak()
     }
 }

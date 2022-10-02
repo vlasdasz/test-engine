@@ -1,14 +1,14 @@
-use rtools::{Animation, ToWeak};
+use rtools::{Animation, Strong, ToWeak};
 
 use crate::{UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
 pub trait ViewController {
-    fn push(&mut self, view: Box<dyn View>);
+    fn push(&mut self, view: Strong<dyn View>);
     fn pop(&mut self);
-    fn present(&mut self, view: Box<dyn View>);
+    fn present(&mut self, view: Strong<dyn View>);
 }
 
 impl<T: ?Sized + View + 'static> ViewController for T {
-    fn push(&mut self, view: Box<dyn View>) {
+    fn push(&mut self, view: Strong<dyn View>) {
         if UIManager::touch_disabled() {
             return;
         }
@@ -52,7 +52,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         self.add_animation(anim);
     }
 
-    fn present(&mut self, view: Box<dyn View>) {
+    fn present(&mut self, view: Strong<dyn View>) {
         if UIManager::touch_disabled() {
             return;
         }

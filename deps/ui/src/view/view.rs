@@ -1,8 +1,11 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    ops::{Deref, DerefMut},
+    ptr::null_mut,
+};
 
 use rtools::{Rglica, Weak};
 
-use crate::{ViewBase, ViewCallbacks};
+use crate::{BaseView, ViewBase, ViewCallbacks};
 
 pub trait View: ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
     fn init_views(&mut self);
@@ -10,7 +13,7 @@ pub trait View: ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = Vie
 }
 
 #[derive(Default)]
-pub struct SubView<T: View>(Rglica<T>);
+pub struct SubView<T: View>(Weak<T>);
 
 impl<T: View> Copy for SubView<T> {}
 
@@ -33,8 +36,8 @@ impl<T: View> DerefMut for SubView<T> {
     }
 }
 
-impl<T: View> From<Rglica<T>> for SubView<T> {
-    fn from(r: Rglica<T>) -> Self {
+impl<T: View> From<Weak<T>> for SubView<T> {
+    fn from(r: Weak<T>) -> Self {
         Self(r)
     }
 }

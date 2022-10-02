@@ -3,6 +3,7 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 
+use rtools::Strong;
 use test_engine::{paths::home, rtools::init_log, Screen};
 
 use crate::{
@@ -21,10 +22,10 @@ async fn main() {
     let mut screen = Screen::new(
         (1000, 600),
         &home().join("test_engine"),
-        Box::<TestGameView>::default(),
+        Strong::<TestGameView>::default(),
     );
 
-    screen.ui.set_level(Box::<TestGameLevel>::default());
+    screen.ui.set_level(Strong::<TestGameLevel>::default());
 
     screen.start_main_loop();
 }

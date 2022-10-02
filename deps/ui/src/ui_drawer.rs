@@ -1,5 +1,5 @@
 use gm::{flat::Rect, Color};
-use rtools::Rglica;
+use rtools::{Rglica, Weak};
 
 use crate::{DrawMode, PathData, View};
 
@@ -11,5 +11,5 @@ pub trait UIDrawer {
     fn draw_round_border(&self, view: &mut dyn View);
     fn update(&self, view: &mut dyn View);
     fn draw(&self, view: &mut dyn View);
-    fn rglica(&self) -> Rglica<dyn UIDrawer>;
+    fn rglica(&self) -> Weak<dyn UIDrawer>;
 }
