@@ -8,7 +8,7 @@ use gm::{
     flat::{PointsPath, Rect, Size},
     Color,
 };
-use rtools::{address::Address, Rglica, ToWeak, Weak};
+use rtools::{address::Address, ToWeak, Weak};
 use ui::{DrawMode, PathData, UIDrawer, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
 use ui_views::initialize_path_data;
 

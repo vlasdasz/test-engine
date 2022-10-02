@@ -4,7 +4,7 @@ use gm::{
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
-use rtools::{data_manager::Handle, Event, IntoF32, Rglica, Strong, Weak};
+use rtools::{data_manager::Handle, Event, IntoF32, Strong, Weak};
 
 use crate::{Level, Sprite};
 
@@ -24,14 +24,6 @@ pub struct SpriteData {
     pub image: Handle<Image>,
 
     pub on_collision: Event<Weak<dyn Sprite>>,
-}
-
-impl SpriteData {
-    pub(crate) fn with_level(mut self, level: Weak<dyn Level>) -> Self {
-        debug_assert!(level.is_ok());
-        self.level = level;
-        self
-    }
 }
 
 impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteData {

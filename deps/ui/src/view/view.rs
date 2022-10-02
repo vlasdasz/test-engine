@@ -1,11 +1,8 @@
-use std::{
-    ops::{Deref, DerefMut},
-    ptr::null_mut,
-};
+use std::ops::{Deref, DerefMut};
 
-use rtools::{Rglica, Weak};
+use rtools::Weak;
 
-use crate::{BaseView, ViewBase, ViewCallbacks};
+use crate::{ViewBase, ViewCallbacks};
 
 pub trait View: ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
     fn init_views(&mut self);

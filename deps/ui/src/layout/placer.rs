@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Rect;
-use rtools::{IntoF32, Rglica, ToRglica, ToWeak, Weak};
+use rtools::{IntoF32, Rglica, Strong, ToRglica, Weak};
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},
@@ -168,7 +168,7 @@ impl Placer {
 
 impl Placer {
     pub fn layout(&mut self) {
-        let this = self.weak();
+        let this = self.to_rglica();
         for rule in &this.rules {
             if rule.anchor_view.is_ok() {
                 if rule.relative {
@@ -260,19 +260,12 @@ impl Placer {
     }
 }
 
-fn place_vertically<T, Ref, Arr>(mut views: Arr)
-where
-    T: View + ?Sized,
-    Ref: DerefMut<Target = T>,
-    Arr: AsMut<[Ref]>,
-{
-    let views = views.as_mut();
-
+fn place_vertically(views: &mut [Strong<dyn View>]) {
     if views.is_empty() {
         return;
     }
 
-    let mut last = views.last_mut().unwrap().weak();
+    let mut last = views.last_mut().unwrap().weak_view();
 
     if views.len() == 1 {
         let back = last.super_frame().with_zero_origin();
@@ -302,7 +295,7 @@ where
         return;
     }
 
-    let mut last = views.last_mut().unwrap().weak();
+    let mut last = views.last_mut().unwrap().weak_view();
 
     if views.len() == 1 {
         let back = last.super_frame().with_zero_origin();

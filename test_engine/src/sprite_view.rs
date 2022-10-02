@@ -1,5 +1,5 @@
 use gl_image::Image;
-use rtools::{data_manager::DataManager, Rglica, Weak};
+use rtools::{data_manager::DataManager, Weak};
 use sprites::Sprite;
 use ui::{view, SubView, ViewCallbacks, ViewData};
 use ui_views::{Button, LabeledView};

@@ -1,5 +1,5 @@
 use gm::{flat::Rect, Color};
-use rtools::{Rglica, Weak};
+use rtools::Weak;
 
 use crate::{DrawMode, PathData, View};
 

@@ -33,7 +33,7 @@ pub struct UILayer {
     pub prev_time:  i64,
     pub frame_time: f64,
 
-    pub debug_view: Box<DebugView>,
+    pub debug_view: Strong<DebugView>,
 
     #[default = 1.0]
     scale: f32,

@@ -1,6 +1,6 @@
 use rtools::{ToWeak, Weak};
 use test_engine::{
-    rtools::{data_manager::DataManager, Animation, Rglica},
+    rtools::{data_manager::DataManager, Animation},
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
 };

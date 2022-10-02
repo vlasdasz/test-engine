@@ -1,6 +1,6 @@
 use rtools::{
     data_manager::{DataManager, Handle},
-    Rglica, ToWeak, Weak,
+    ToWeak, Weak,
 };
 use test_engine::{
     audio::Sound,

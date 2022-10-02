@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use rtools::{Animation, Event, Rglica, Weak};
+use rtools::{Animation, Event, Weak};
 
 use crate::{UIManager, View};
 

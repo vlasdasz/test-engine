@@ -1,4 +1,4 @@
-use rtools::{Rglica, Strong, Weak};
+use rtools::{Strong, Weak};
 use ui::{view, View, ViewCallbacks, ViewSubviews, ViewTouch};
 
 #[view]

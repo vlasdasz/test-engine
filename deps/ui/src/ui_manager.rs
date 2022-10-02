@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Size;
-use rtools::{address::Address, static_default, Rglica, Strong, UnwrapBox, Weak};
+use rtools::{address::Address, static_default, Strong, UnwrapBox, Weak};
 use smart_default::SmartDefault;
 
 use crate::{layout::Placer, view::ViewSubviews, BaseView, UIAnimation, UIDrawer, View};
@@ -122,7 +122,7 @@ impl UIManager {
         Self::get().drawer.deref()
     }
 
-    pub fn set_drawer(drawer: Box<dyn UIDrawer>) {
+    pub fn set_drawer(drawer: Strong<dyn UIDrawer>) {
         Self::get().drawer = UnwrapBox::from_box(drawer)
     }
 }

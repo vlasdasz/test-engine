@@ -8,7 +8,7 @@ use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
-use rtools::{Dispatch, Rglica, Strong, Time, ToWeak, UnwrapBox, Weak};
+use rtools::{Dispatch, Strong, Time, UnwrapBox, Weak};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{layout::Placer, UIManager, View, ViewCallbacks, ViewFrame, ViewLayout};
 
@@ -20,7 +20,7 @@ use crate::{
 static mut SCREEN: *mut Screen = null_mut();
 
 pub struct Screen {
-    pub ui: Box<UILayer>,
+    pub ui: Strong<UILayer>,
 
     #[cfg(desktop)]
     glfw:    GLFWManager,
@@ -107,7 +107,8 @@ impl Screen {
         self.ui.frame_time = interval as f64 / 1000000000.0;
         self.ui.fps = (1.0 / self.ui.frame_time as f64) as u64;
 
-        self.ui.debug_view.fps.set(self.ui.fps);
+        let fps = self.ui.fps;
+        self.ui.debug_view.fps.set(fps);
         if API::is_ok() {
             self.ui.debug_view.url.set(API::base_url().to_string());
         } else {
@@ -156,6 +157,8 @@ impl Screen {
     }
 
     fn update_level(&mut self) {
+        let cursor_position = self.ui.cursor_position.clone();
+
         let Some(level) = &mut self.ui.level else {
             return;
         };
@@ -163,7 +166,7 @@ impl Screen {
         level.base_mut().update_physics();
         level.update();
 
-        level.set_cursor_position(self.ui.cursor_position);
+        level.set_cursor_position(cursor_position);
 
         for sprite in level.sprites_mut() {
             sprite.update();
@@ -202,7 +205,7 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Strong<dyn View>) -> Box<Self> {
+    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Strong<dyn View>) -> Strong<Self> {
         trace!("Creating screen");
 
         #[cfg(desktop)]
@@ -213,16 +216,16 @@ impl Screen {
         Assets::init(assets_path);
         trace!("Assets: Ok");
 
-        let ui = Box::<UILayer>::default();
+        let ui = Strong::<UILayer>::default();
         trace!("UILayer: OK");
 
-        UIManager::set_drawer(Box::<TEUIDrawer>::default());
+        UIManager::set_drawer(Strong::<TEUIDrawer>::default());
         trace!("UIDrawer: OK");
 
         set_sprites_drawer(TESpritesDrawer::new());
         trace!("SpritesDrawer: OK");
 
-        let mut screen = Box::new(Self {
+        let mut screen = Strong::new(Self {
             ui,
             #[cfg(desktop)]
             glfw,
