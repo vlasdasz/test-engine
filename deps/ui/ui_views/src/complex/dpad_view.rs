@@ -2,7 +2,7 @@ use gl_image::Image;
 use gm::flat::Direction;
 use refs::ToWeak;
 use rtools::{data_manager::Handle, Apply};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, Event};
+use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::Button;
 

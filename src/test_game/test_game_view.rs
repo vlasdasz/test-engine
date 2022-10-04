@@ -3,14 +3,13 @@ use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
 use test_engine::{
     audio::Sound,
-    gm::Color,
+    gm::{flat::Direction, Color},
     net::{GetRequest, API},
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
     view, Image, LevelBase, Screen,
 };
-use test_engine::gm::flat::Direction;
 use ui::{
     refs::{Own, Strong},
     BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,

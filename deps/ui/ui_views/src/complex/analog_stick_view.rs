@@ -3,7 +3,7 @@ use gm::{
     Color,
 };
 use refs::ToWeak;
-use ui::{view, DrawMode, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch, Event};
+use ui::{view, DrawMode, Event, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
 
 use crate::DrawingView;
 

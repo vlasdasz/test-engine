@@ -11,7 +11,7 @@ use rapier2d::{
     },
 };
 use refs::{Strong, ToWeak, Weak};
-use rtools::{address::Address};
+use rtools::address::Address;
 use smart_default::SmartDefault;
 use vents::Event;
 

@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use refs::Weak;
-use rtools::{Animation};
+use rtools::Animation;
 use vents::Event;
 
 use crate::{UIManager, View};

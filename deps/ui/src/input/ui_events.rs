@@ -1,5 +1,5 @@
 use refs::Weak;
-use rtools::{static_default};
+use rtools::static_default;
 use vents::Event;
 
 use crate::{input::keyboard::KeyEvent, View, ViewTouch};

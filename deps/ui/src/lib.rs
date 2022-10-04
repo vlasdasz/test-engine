@@ -17,9 +17,8 @@ pub use refs;
 pub use ui_drawer::*;
 pub use ui_manager::*;
 pub use ui_proc::*;
-pub use view::*;
-
 pub use vents::*;
+pub use view::*;
 
 extern crate core;
 pub extern crate ui_proc;
