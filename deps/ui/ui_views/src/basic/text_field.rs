@@ -17,6 +17,11 @@ impl TextField {
     pub fn text(&self) -> &str {
         self.label.text()
     }
+
+    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
+        self.label.set_text(text);
+        self
+    }
 }
 
 impl ViewCallbacks for TextField {

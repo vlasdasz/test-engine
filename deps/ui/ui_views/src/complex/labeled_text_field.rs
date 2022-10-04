@@ -19,6 +19,11 @@ impl LabeledTextField {
         self.label.set_text(title);
         self
     }
+
+    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
+        self.text_field.set_text(text);
+        self
+    }
 }
 
 impl ViewCallbacks for LabeledTextField {
