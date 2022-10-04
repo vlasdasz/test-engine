@@ -12,10 +12,9 @@ use rtools::{Dispatch, Time, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{
     layout::Placer,
-    refs::{Strong, ToWeak, Weak},
+    refs::{Own, Strong, ToWeak, Weak},
     UIManager, View, ViewCallbacks, ViewFrame, ViewLayout,
 };
-use ui::refs::Own;
 
 use crate::{
     app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,

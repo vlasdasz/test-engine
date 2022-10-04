@@ -12,10 +12,9 @@ use tokio::{
 };
 use ui::{
     input::{ControlButton, KeyEvent, KeyState, KeyboardButton, TouchEvent, UIEvents},
-    refs::Strong,
+    refs::{Own, Strong},
     Touch, View,
 };
-use ui::refs::Own;
 
 use crate::Screen;
 
