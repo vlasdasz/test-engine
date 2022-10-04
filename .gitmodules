@@ -1,6 +1,3 @@
-[submodule "rtools"]
-	path = deps/rtools
-	url = git@github.com:VladasZ/rtools.git
 [submodule "gles31-sys"]
 	path = gles31-sys
 	url = git@github.com:VladasZ/gles31-sys-1.git
