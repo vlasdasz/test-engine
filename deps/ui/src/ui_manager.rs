@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Size;
-use refs::{Strong, Weak};
+use refs::{Own, Strong, Weak};
 use rtools::{static_default, Unwrap};
 use smart_default::SmartDefault;
 
@@ -9,7 +9,7 @@ use crate::{layout::Placer, view::ViewSubviews, BaseView, UIAnimation, UIDrawer,
 
 #[derive(SmartDefault)]
 pub struct UIManager {
-    drawer: Unwrap<Strong<dyn UIDrawer>>,
+    drawer: Unwrap<Own<dyn UIDrawer>>,
 
     #[default({
         let mut view = Strong::<BaseView>::default();
@@ -127,7 +127,7 @@ impl UIManager {
         Self::get().drawer.deref().deref()
     }
 
-    pub fn set_drawer(drawer: Strong<dyn UIDrawer>) {
+    pub fn set_drawer(drawer: Own<dyn UIDrawer>) {
         Self::get().drawer = Unwrap::from(drawer)
     }
 }

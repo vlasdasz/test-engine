@@ -15,6 +15,7 @@ use ui::{
     refs::{Strong, ToWeak, Weak},
     UIManager, View, ViewCallbacks, ViewFrame, ViewLayout,
 };
+use ui::refs::Own;
 
 use crate::{
     app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
@@ -24,7 +25,7 @@ use crate::{
 static mut SCREEN: *mut Screen = null_mut();
 
 pub struct Screen {
-    pub ui: Strong<UILayer>,
+    pub ui: Own<UILayer>,
 
     #[cfg(desktop)]
     glfw:    GLFWManager,
@@ -210,7 +211,7 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Strong<dyn View>) -> Strong<Self> {
+    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Strong<dyn View>) -> Own<Self> {
         trace!("Creating screen");
 
         #[cfg(desktop)]
@@ -221,16 +222,16 @@ impl Screen {
         Assets::init(assets_path);
         trace!("Assets: Ok");
 
-        let ui = Strong::<UILayer>::default();
+        let ui = Own::<UILayer>::default();
         trace!("UILayer: OK");
 
-        UIManager::set_drawer(Strong::<TEUIDrawer>::default());
+        UIManager::set_drawer(Own::<TEUIDrawer>::default());
         trace!("UIDrawer: OK");
 
         set_sprites_drawer(TESpritesDrawer::new());
         trace!("SpritesDrawer: OK");
 
-        let mut screen = Strong::new(Self {
+        let mut screen = Own::new(Self {
             ui,
             #[cfg(desktop)]
             glfw,

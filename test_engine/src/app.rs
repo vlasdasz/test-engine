@@ -15,6 +15,7 @@ use ui::{
     refs::Strong,
     Touch, View,
 };
+use ui::refs::Own;
 
 use crate::Screen;
 
@@ -32,7 +33,7 @@ pub enum MobileKeyEvent {
 }
 
 pub struct App {
-    pub screen:      Unwrap<Strong<Screen>>,
+    pub screen:      Unwrap<Own<Screen>>,
     runtime:         Runtime,
     _touch_sender:   UnboundedSender<Touch>,
     _touch_receiver: UnboundedReceiver<Touch>,
