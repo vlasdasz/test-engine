@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use refs::{Strong, ToWeak};
+use refs::{Own, ToWeak};
 use rtools::{data_manager::Handle, Animation, Unwrap};
 use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame};
 
@@ -80,8 +80,8 @@ impl TableViewDataSource for TestView {
         DATA.len()
     }
 
-    fn cell_for_index(&self, index: usize) -> Strong<dyn View> {
-        let mut cell = Strong::<StringCell>::default();
+    fn cell_for_index(&self, index: usize) -> Own<dyn View> {
+        let mut cell = Own::<StringCell>::default();
         cell.set_data(DATA[index].into());
         cell
     }

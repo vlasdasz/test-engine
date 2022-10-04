@@ -13,7 +13,7 @@ use test_engine::{
     app::{App, MobileKeyEvent, TestEngineAction},
     gl_wrapper::GLWrapper,
 };
-use ui::refs::Strong;
+use ui::refs::Own;
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -78,7 +78,7 @@ pub extern "C" fn set_monitor(
             width,
             height,
             diagonal,
-            Strong::<TestGameView>::default(),
+            Own::<TestGameView>::default(),
         );
 
         APP = Box::into_raw(app);

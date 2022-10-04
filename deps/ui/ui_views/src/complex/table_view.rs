@@ -1,4 +1,4 @@
-use refs::{Strong, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 use ui::{view, View, ViewCallbacks, ViewSubviews, ViewTouch};
 
 #[view]
@@ -28,7 +28,7 @@ impl ViewCallbacks for TableView {
 
 pub trait TableViewDataSource {
     fn number_of_cells(&self) -> usize;
-    fn cell_for_index(&self, index: usize) -> Strong<dyn View>;
+    fn cell_for_index(&self, index: usize) -> Own<dyn View>;
     fn cell_selected(&mut self, index: usize);
 }
 

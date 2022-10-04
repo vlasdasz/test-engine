@@ -18,7 +18,7 @@ pub struct UIManager {
     })]
     root_view: Strong<dyn View>,
 
-    next_view: Option<Strong<dyn View>>,
+    next_view: Option<Own<dyn View>>,
 
     pub(crate) touch_stack: Vec<Weak<dyn View>>,
 
@@ -117,7 +117,7 @@ impl UIManager {
         view.place.as_background();
     }
 
-    pub fn set_view(view: Strong<dyn View>) {
+    pub fn set_view(view: Own<dyn View>) {
         UIManager::get().next_view.replace(view);
     }
 }

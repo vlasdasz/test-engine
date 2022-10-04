@@ -6,7 +6,7 @@ use test_engine::{
     view, Screen,
 };
 use ui::{
-    refs::{Strong, ToWeak},
+    refs::{Own, Strong, ToWeak},
     UIManager, ViewCallbacks,
 };
 use ui_views::{Button, LabeledTextField};
@@ -46,7 +46,7 @@ impl ViewCallbacks for BenchmarkView {
 
         self.back.on_tap.sub(|_| {
             Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
-            UIManager::set_view(Strong::<TestGameView>::default());
+            UIManager::set_view(Own::<TestGameView>::default());
         });
     }
 }

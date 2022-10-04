@@ -12,7 +12,7 @@ use rtools::{Dispatch, Time, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{
     layout::Placer,
-    refs::{Own, Strong, ToWeak, Weak},
+    refs::{Own, ToWeak, Weak},
     UIManager, View, ViewCallbacks, ViewFrame, ViewLayout,
 };
 
@@ -28,7 +28,7 @@ pub struct Screen {
 
     #[cfg(desktop)]
     glfw:    GLFWManager,
-    monitor: Unwrap<Box<Monitor>>,
+    monitor: Unwrap<Monitor>,
 }
 
 impl Screen {
@@ -41,7 +41,7 @@ impl Screen {
     }
 
     pub fn add_monitor(&mut self, monitor: Monitor) {
-        self.monitor = Unwrap::new(Box::new(monitor));
+        self.monitor = Unwrap::new(monitor);
         UIManager::set_screen_scale(self.monitor.scale);
     }
 
@@ -59,7 +59,7 @@ impl Screen {
         });
     }
 
-    fn init(&mut self, _size: Size, view: Strong<dyn View>) {
+    fn init(&mut self, _size: Size, view: Own<dyn View>) {
         #[cfg(desktop)]
         {
             let m = self.glfw.monitors.first().unwrap().clone();
@@ -77,7 +77,7 @@ impl Screen {
 
         #[cfg(desktop)]
         {
-            let size = Screen::adjust_size(*self.monitor.clone(), _size);
+            let size = Screen::adjust_size(self.monitor.clone(), _size);
             self.set_size(size);
         }
     }
@@ -210,7 +210,7 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Strong<dyn View>) -> Own<Self> {
+    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Own<dyn View>) -> Own<Self> {
         trace!("Creating screen");
 
         #[cfg(desktop)]

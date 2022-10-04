@@ -1,5 +1,5 @@
 use test_engine::{ui::layout::Anchor, view};
-use ui::{refs::Strong, BaseView, SubView, UIManager, ViewCallbacks, ViewFrame};
+use ui::{refs::Own, BaseView, SubView, UIManager, ViewCallbacks, ViewFrame};
 use ui_views::Button;
 
 use crate::test_game::TestGameView;
@@ -24,7 +24,7 @@ impl ViewCallbacks for UITestView {
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 
         self.back.on_tap.sub(|_| {
-            UIManager::set_view(Strong::<TestGameView>::default());
+            UIManager::set_view(Own::<TestGameView>::default());
         });
     }
 }

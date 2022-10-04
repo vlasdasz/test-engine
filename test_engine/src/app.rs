@@ -12,7 +12,7 @@ use tokio::{
 };
 use ui::{
     input::{ControlButton, KeyEvent, KeyState, KeyboardButton, TouchEvent, UIEvents},
-    refs::{Own, Strong},
+    refs::Own,
     Touch, View,
 };
 
@@ -41,7 +41,7 @@ pub struct App {
 }
 
 impl App {
-    fn create_screen(&mut self, assets_path: &Path, monitor: Monitor, view: Strong<dyn View>) {
+    fn create_screen(&mut self, assets_path: &Path, monitor: Monitor, view: Own<dyn View>) {
         self.runtime.block_on(async {
             let mut screen = Screen::new(monitor.resolution, assets_path, view);
 
@@ -128,7 +128,7 @@ impl App {
         width: c_float,
         height: c_float,
         diagonal: c_float,
-        view: Strong<dyn View>,
+        view: Own<dyn View>,
     ) {
         let monitor = Monitor::new(
             "Phone screen".into(),

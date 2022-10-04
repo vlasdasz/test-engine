@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Rect;
-use refs::{Rglica, Strong, ToRglica, Weak};
+use refs::{Own, Rglica, ToRglica, Weak};
 use rtools::IntoF32;
 
 use crate::{
@@ -261,7 +261,7 @@ impl Placer {
     }
 }
 
-fn place_vertically(views: &mut [Strong<dyn View>]) {
+fn place_vertically(views: &mut [Own<dyn View>]) {
     if views.is_empty() {
         return;
     }

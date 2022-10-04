@@ -1,5 +1,5 @@
 use gm::Color;
-use refs::{Strong, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 use rtools::Event;
 use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
 
@@ -16,7 +16,7 @@ pub struct Alert {
 
 impl Alert {
     pub fn show(message: impl ToString) -> Weak<Alert> {
-        let mut alert = Strong::<Self>::default();
+        let mut alert = Own::<Self>::default();
         alert.message = message.to_string();
         let res = alert.weak();
         UIManager::root_view().add_subview(alert);

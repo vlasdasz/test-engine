@@ -5,7 +5,7 @@ use std::{
 
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use refs::{Strong, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 use rtools::{data_manager::Handle, Event, Unwrap};
 
 use crate::{layout::Placer, PathData, Touch, View};
@@ -25,7 +25,7 @@ pub struct ViewBase {
     pub(crate) absolute_frame: Rect,
 
     pub(crate) superview: Weak<dyn View>,
-    pub(crate) subviews:  Vec<Strong<dyn View>>,
+    pub(crate) subviews:  Vec<Own<dyn View>>,
 
     pub(crate) touch_id: u64,
 
