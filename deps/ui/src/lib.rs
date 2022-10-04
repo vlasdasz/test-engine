@@ -13,6 +13,7 @@ mod ui_manager;
 mod view;
 
 pub use path_data::*;
+pub use refs;
 pub use ui_drawer::*;
 pub use ui_manager::*;
 pub use ui_proc::*;

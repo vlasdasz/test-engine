@@ -1,4 +1,5 @@
 use gm::Color;
+use refs::ToWeak;
 use rtools::Event;
 use ui::{view, SubView, ViewCallbacks, ViewTouch};
 
@@ -28,7 +29,8 @@ impl Button {
 impl ViewCallbacks for Button {
     fn setup(&mut self) {
         self.enable_touch();
-        self.on_touch_began.set(self, |this, _| this.on_tap.trigger(()));
+        let this = self.weak();
+        self.on_touch_began.sub(move |_| this.on_tap.trigger(()));
     }
 }
 

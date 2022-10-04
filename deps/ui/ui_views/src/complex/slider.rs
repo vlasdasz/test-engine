@@ -1,4 +1,5 @@
 use gm::Color;
+use refs::ToWeak;
 use rtools::{math::clamped_by, Event};
 use smart_default::SmartDefault;
 use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
@@ -22,7 +23,8 @@ pub struct Slider {
 impl ViewCallbacks for Slider {
     fn setup(&mut self) {
         self.enable_touch();
-        self.on_touch.set(self, |this, touch| {
+        let mut this = self.weak();
+        self.on_touch.sub(move |touch| {
             this.on_touch(&touch);
         });
 

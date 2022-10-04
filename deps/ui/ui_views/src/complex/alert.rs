@@ -1,5 +1,6 @@
 use gm::Color;
-use rtools::{Event, Strong, ToWeak, Weak};
+use refs::{Strong, ToWeak, Weak};
+use rtools::Event;
 use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
 
 use crate::{Button, Label};
@@ -46,7 +47,8 @@ impl ViewCallbacks for Alert {
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
 
-        self.ok_button.on_tap.set(self, |this, _| {
+        let mut this = self.weak();
+        self.ok_button.on_tap.sub(move |_| {
             this.remove_from_superview();
             this.on_ok.trigger(());
         });

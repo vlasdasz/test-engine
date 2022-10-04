@@ -1,7 +1,6 @@
-use rtools::{Strong, ToWeak, Weak};
+use refs::{Strong, ToWeak, Weak};
 
 use crate::{layout::Placer, SubView, UIManager, View};
-
 pub trait ViewSubviews {
     fn superview(&self) -> Weak<dyn View>;
     fn subviews(&self) -> &[Strong<dyn View>];

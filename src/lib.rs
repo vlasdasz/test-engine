@@ -9,11 +9,11 @@ use std::{
     ptr,
 };
 
-use rtools::Strong;
 use test_engine::{
     app::{App, MobileKeyEvent, TestEngineAction},
     gl_wrapper::GLWrapper,
 };
+use ui::refs::Strong;
 
 #[allow(unused_imports)]
 use crate::benchmark::BenchmarkView;
@@ -104,7 +104,7 @@ pub mod android {
         _: jclass,
         asset_manager: jobject,
     ) {
-        test_engine::rtools::file::set_asset_manager(env, asset_manager);
+        rtools::file::set_asset_manager(env, asset_manager);
     }
 
     #[no_mangle]

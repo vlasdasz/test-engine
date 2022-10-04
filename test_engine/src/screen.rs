@@ -8,9 +8,13 @@ use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
-use rtools::{Dispatch, Strong, Time, UnwrapBox, Weak};
+use rtools::{Dispatch, Time, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
-use ui::{layout::Placer, UIManager, View, ViewCallbacks, ViewFrame, ViewLayout};
+use ui::{
+    layout::Placer,
+    refs::{Strong, ToWeak, Weak},
+    UIManager, View, ViewCallbacks, ViewFrame, ViewLayout,
+};
 
 use crate::{
     app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
@@ -24,7 +28,7 @@ pub struct Screen {
 
     #[cfg(desktop)]
     glfw:    GLFWManager,
-    monitor: UnwrapBox<Monitor>,
+    monitor: Unwrap<Box<Monitor>>,
 }
 
 impl Screen {
@@ -37,7 +41,7 @@ impl Screen {
     }
 
     pub fn add_monitor(&mut self, monitor: Monitor) {
-        self.monitor = monitor.into();
+        self.monitor = Unwrap::new(Box::new(monitor));
         UIManager::set_screen_scale(self.monitor.scale);
     }
 
@@ -45,11 +49,12 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        GlEvents::get().size_changed.set(self, |this, size| {
+        let mut this = self.weak();
+        GlEvents::get().size_changed.sub(move |size| {
             this.on_size_changed(size);
         });
 
-        GlEvents::get().frame_drawn.set(self, |this, _| {
+        GlEvents::get().frame_drawn.sub(move |_| {
             this.update();
         });
     }
@@ -72,7 +77,7 @@ impl Screen {
 
         #[cfg(desktop)]
         {
-            let size = Screen::adjust_size(self.monitor.clone(), _size);
+            let size = Screen::adjust_size(*self.monitor.clone(), _size);
             self.set_size(size);
         }
     }

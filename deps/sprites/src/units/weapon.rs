@@ -2,7 +2,8 @@ use std::ops::{Deref, DerefMut};
 
 use gl_image::Image;
 use gm::flat::{Point, Shape};
-use rtools::{data_manager::Handle, Strong, Weak};
+use refs::{Strong, Weak};
+use rtools::data_manager::Handle;
 
 use crate::{sprite::SpriteTemplates, Body, Level, LevelCreation, Sprite, SpriteData};
 

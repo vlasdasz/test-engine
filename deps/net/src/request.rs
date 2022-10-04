@@ -1,7 +1,7 @@
 use std::borrow::Borrow;
 
+use refs::Rglica;
 use reqwest::{Client, RequestBuilder};
-use rtools::Rglica;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
 use tao_log::{debugv, trace, tracev};

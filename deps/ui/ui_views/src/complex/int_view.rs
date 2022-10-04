@@ -1,4 +1,5 @@
 use gl_image::Image;
+use refs::ToWeak;
 use rtools::{data_manager::Handle, Event};
 use smart_default::SmartDefault;
 use ui::{view, SubView, ViewCallbacks, ViewData};
@@ -32,16 +33,19 @@ impl ViewCallbacks for IntView {
 
         self.label.set_text("1.0");
 
-        self.up.on_tap.set(self, |this, _| {
+        let mut this = self.weak();
+        self.up.on_tap.sub(move |_| {
             this.value += this.step;
-            this.on_change.trigger(this.value);
-            this.label.set_text(format!("{:.1}", this.value));
+            let val = this.value;
+            this.on_change.trigger(val);
+            this.label.set_text(format!("{:.1}", val));
         });
 
-        self.down.on_tap.set(self, |this, _| {
+        self.down.on_tap.sub(move |_| {
             this.value -= this.step;
-            this.on_change.trigger(this.value);
-            this.label.set_text(format!("{:.1}", this.value));
+            let val = this.value;
+            this.on_change.trigger(val);
+            this.label.set_text(format!("{:.1}", val));
         });
     }
 }

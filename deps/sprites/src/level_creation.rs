@@ -1,5 +1,5 @@
 use gm::flat::{Point, Rect, Shape};
-use rtools::{ToWeak, Weak};
+use refs::{ToWeak, Weak};
 
 use crate::{Level, Sprite, SpriteData};
 

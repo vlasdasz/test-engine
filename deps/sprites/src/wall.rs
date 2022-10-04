@@ -1,6 +1,7 @@
 use gm::flat::{Point, Shape};
 use rapier2d::na::Vector2;
-use rtools::{IntoF32, Strong, Weak};
+use refs::{Strong, Weak};
+use rtools::IntoF32;
 
 use crate::{sprite::SpriteTemplates, Level, Sprite, SpriteData, ToCollider};
 

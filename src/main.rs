@@ -3,8 +3,8 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 
-use rtools::Strong;
 use test_engine::{paths::home, rtools::init_log, Screen};
+use ui::refs::Strong;
 
 use crate::{
     benchmark::BenchmarkView,

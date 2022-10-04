@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use rtools::Weak;
+use refs::Weak;
 
 use crate::{ViewBase, ViewCallbacks};
 

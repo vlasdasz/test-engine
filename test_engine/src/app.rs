@@ -5,13 +5,14 @@ use std::path::{Path, PathBuf};
 
 use gl_wrapper::monitor::Monitor;
 use gm::volume::GyroData;
-use rtools::{init_log, platform::Platform, Strong, UnwrapBox};
+use rtools::{init_log, platform::Platform, Unwrap};
 use tokio::{
     runtime::Runtime,
     sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
 };
 use ui::{
     input::{ControlButton, KeyEvent, KeyState, KeyboardButton, TouchEvent, UIEvents},
+    refs::Strong,
     Touch, View,
 };
 
@@ -31,7 +32,7 @@ pub enum MobileKeyEvent {
 }
 
 pub struct App {
-    pub screen:      UnwrapBox<Screen>,
+    pub screen:      Unwrap<Strong<Screen>>,
     runtime:         Runtime,
     _touch_sender:   UnboundedSender<Touch>,
     _touch_receiver: UnboundedReceiver<Touch>,
@@ -46,7 +47,7 @@ impl App {
 
             screen.add_monitor(monitor);
 
-            self.screen = UnwrapBox::from_box(screen);
+            self.screen = Unwrap::from(screen);
         });
     }
 

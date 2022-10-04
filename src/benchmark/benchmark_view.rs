@@ -1,12 +1,14 @@
 use std::string::String;
 
-use rtools::Strong;
 use test_engine::{
     rtools::Random,
     ui::{layout::Anchor, SubView},
     view, Screen,
 };
-use ui::{UIManager, ViewCallbacks};
+use ui::{
+    refs::{Strong, ToWeak},
+    UIManager, ViewCallbacks,
+};
 use ui_views::{Button, LabeledTextField};
 
 use crate::test_game::{TestGameLevel, TestGameView};
@@ -34,7 +36,9 @@ impl ViewCallbacks for BenchmarkView {
         self.button.place.size(100, 40).center_hor();
         self.button.place.anchor(self.login, Anchor::Bot, 20);
 
-        self.button.on_tap.set(self, |this, _| {
+        let mut this = self.weak();
+
+        self.button.on_tap.sub(move |_| {
             this.button.set_text(String::random());
         });
 

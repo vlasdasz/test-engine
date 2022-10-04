@@ -1,18 +1,17 @@
-use rtools::{static_default, Apply, Strong};
+use rtools::{static_default, Apply};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
-use tao_log::infov;
 use test_engine::{
     audio::Sound,
-    gm::{flat::Direction, Color},
+    gm::Color,
     net::{GetRequest, API},
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
     view, Image, LevelBase, Screen,
 };
-use ui::{BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
-use ui_views::{test_view::TestView, Alert, AnalogStickView, Button, DPadView, IntView};
+use ui::{refs::Strong, BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
+use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
 
 use crate::{benchmark::BenchmarkLevel, BenchmarkView};
 
@@ -25,7 +24,7 @@ struct User {
 #[derive(SmartDefault)]
 struct Network {
     #[default(API::get_request("get_users"))]
-    get_users: GetRequest<Vec<User>>,
+    _get_users: GetRequest<Vec<User>>,
 }
 static_default!(Network);
 
@@ -51,43 +50,43 @@ impl TestGameView {
     }
 
     fn setup_ui(&mut self) {
-        Screen::current().ui.keymap.add('=', self, |_| {
-            let scale = Screen::current().ui.scale() * 1.2;
-            Screen::current().ui.set_scale(scale);
-        });
-
-        Screen::current().ui.keymap.add('-', self, |_| {
-            let scale = Screen::current().ui.scale() * 0.8;
-            Screen::current().ui.set_scale(scale);
-        });
-
-        [' ', 'w', 's', 'd', 'a'].apply2(
-            [
-                Direction::Up,
-                Direction::Up,
-                Direction::Down,
-                Direction::Right,
-                Direction::Left,
-            ],
-            |key, direction| {
-                Screen::current().ui.keymap.add(*key, self, move |_| {
-                    if let Some(level) = &mut Screen::current().ui.level {
-                        if let Some(player) = level.player().get() {
-                            player.move_by_direction(direction)
-                        }
-                    }
-                });
-            },
-        );
+        // Screen::current().ui.keymap.add('=', self, |_| {
+        //     let scale = Screen::current().ui.scale() * 1.2;
+        //     Screen::current().ui.set_scale(scale);
+        // });
+        //
+        // Screen::current().ui.keymap.add('-', self, |_| {
+        //     let scale = Screen::current().ui.scale() * 0.8;
+        //     Screen::current().ui.set_scale(scale);
+        // });
+        //
+        // [' ', 'w', 's', 'd', 'a'].apply2(
+        //     [
+        //         Direction::Up,
+        //         Direction::Up,
+        //         Direction::Down,
+        //         Direction::Right,
+        //         Direction::Left,
+        //     ],
+        //     |key, direction| {
+        //         Screen::current().ui.keymap.add(*key, self, move |_| {
+        //             if let Some(level) = &mut Screen::current().ui.level {
+        //                 if let Some(player) = level.player().get() {
+        //                     player.move_by_direction(direction)
+        //                 }
+        //             }
+        //         });
+        //     },
+        // );
 
         self.sprite_view.place.tr(10).size(400, 80);
 
-        if let Some(level) = &Screen::current().ui.level {
-            level
-                .base()
-                .on_sprite_selected
-                .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
-        }
+        // if let Some(level) = &Screen::current().ui.level {
+        //     level
+        //         .base()
+        //         .on_sprite_selected
+        //         .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
+        // }
 
         self.dpad.place.size(140, 100).b(10).l(100);
         self.dpad.set_images(
@@ -144,27 +143,27 @@ impl TestGameView {
 
             let mut play = view.initialize_view::<Button>();
             play.set_text("Play sound");
-            play.on_tap.set(self, |this, _| this.sound.play());
+            // play.on_tap.set(self, |this, _| this.sound.play());
 
             let mut async_task = view.initialize_view::<Button>();
             async_task.set_text("Async task").set_frame((120, 20));
-            async_task.on_tap.set(self, move |this, _| {
-                Network::get().get_users.get(this, |_, error, result| {
-                    if let Some(error) = error {
-                        infov!(&error);
-                        Alert::show(error);
-                        return;
-                    }
-
-                    infov!(&result);
-
-                    if let Some(_user) = result.first() {
-                        // task.set_text(user.login.clone());
-                    } else {
-                        Alert::show("No response");
-                    }
-                });
-            });
+            // async_task.on_tap.set(self, move |this, _| {
+            //     Network::get().get_users.get(this, |_, error, result| {
+            //         if let Some(error) = error {
+            //             infov!(&error);
+            //             Alert::show(error);
+            //             return;
+            //         }
+            //
+            //         infov!(&result);
+            //
+            //         if let Some(_user) = result.first() {
+            //             // task.set_text(user.login.clone());
+            //         } else {
+            //             Alert::show("No response");
+            //         }
+            //     });
+            // });
 
             [to_benchmark, to_test, play, async_task].apply(|button| {
                 button.set_color(Color::WHITE);

@@ -1,7 +1,4 @@
-use rtools::{
-    data_manager::{DataManager, Handle},
-    ToWeak, Weak,
-};
+use rtools::data_manager::{DataManager, Handle};
 use test_engine::{
     audio::Sound,
     gl_wrapper::GLWrapper,
@@ -13,6 +10,7 @@ use test_engine::{
     text::{render_text, Font},
     Image, Level, LevelBase, Sprite,
 };
+use ui::refs::{ToWeak, Weak};
 
 #[derive(Default)]
 pub struct TestGameLevel {
@@ -77,13 +75,14 @@ impl Level for TestGameLevel {
         self.base_mut().player = player;
         player.set_image(Image::get("frisk.png")).enable_collision_detection();
         player.weapon.set_image(Image::get("ak.png"));
-        player.on_collision.set(self, |this, _| {
+        let mut this = self.weak();
+        player.on_collision.sub(move |_| {
             this.collision_sound.play();
         });
 
         self.collision_sound = Sound::get("pek.wav");
 
-        self.base.on_tap.set(self, |this, pos| this.on_touch(pos));
+        self.base.on_tap.sub(move |pos| this.on_touch(pos));
     }
 
     fn update(&mut self) {

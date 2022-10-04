@@ -1,6 +1,7 @@
 use std::{borrow::Borrow, ops::DerefMut};
 
-use rtools::{Dispatch, ToWeak};
+use refs::ToWeak;
+use rtools::Dispatch;
 use serde::{de::DeserializeOwned, Serialize};
 use tao_log::error;
 

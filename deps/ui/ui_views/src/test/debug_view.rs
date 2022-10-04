@@ -1,3 +1,4 @@
+use refs::ToWeak;
 use rtools::{platform::Platform, Property};
 use ui::{view, SubView, ViewCallbacks, ViewFrame};
 
@@ -27,11 +28,12 @@ impl ViewCallbacks for DebugView {
             self.set_origin((10, 10));
         }
 
-        self.fps.on_set.set(self, |this, fps| {
+        let mut this = self.weak();
+        self.fps.on_set.sub(move |fps| {
             this.fps_label.set_text(format!("FPS: {}", fps));
         });
 
-        self.url.on_set.set(self, |this, url| {
+        self.url.on_set.sub(move |url| {
             this.url_label.set_text(url);
         });
     }

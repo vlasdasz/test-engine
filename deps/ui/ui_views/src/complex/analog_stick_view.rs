@@ -2,6 +2,7 @@ use gm::{
     flat::{Point, PointsPath},
     Color,
 };
+use refs::ToWeak;
 use rtools::Event;
 use ui::{view, DrawMode, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
 
@@ -52,7 +53,8 @@ impl AnalogStickView {
 impl ViewCallbacks for AnalogStickView {
     fn setup(&mut self) {
         self.enable_touch();
-        self.on_touch.set(self, |this, touch| {
+        let mut this = self.weak();
+        self.on_touch.sub(move |touch| {
             this.on_touch(&touch);
         });
 

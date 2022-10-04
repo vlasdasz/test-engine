@@ -10,7 +10,8 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline,
     },
 };
-use rtools::{address::Address, Event, Strong, ToWeak, Weak};
+use refs::{Strong, ToWeak, Weak};
+use rtools::{address::Address, Event};
 use smart_default::SmartDefault;
 
 use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};

@@ -1,4 +1,4 @@
-use rtools::{Strong, Weak};
+use refs::{Strong, ToWeak, Weak};
 use ui::{view, View, ViewCallbacks, ViewSubviews, ViewTouch};
 
 #[view]
@@ -13,7 +13,8 @@ impl TableView {
         for i in 0..self.data_source.number_of_cells() {
             let cell = self.data_source.cell_for_index(i);
             cell.enable_touch();
-            cell.on_touch_began.set(self, move |this, _| this.data_source.cell_selected(i));
+            let mut this = self.weak();
+            cell.on_touch_began.sub(move |_| this.data_source.cell_selected(i));
             self.add_subview(cell);
         }
     }
@@ -34,7 +35,7 @@ pub trait TableViewDataSource {
 #[macro_export]
 macro_rules! data_source {
     ($source:ident) => {{
-        use rtools::ToWeak;
+        use refs::ToWeak;
         ($source as &mut dyn TableViewDataSource).weak()
     }};
 }

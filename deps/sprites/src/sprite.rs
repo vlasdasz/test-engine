@@ -4,7 +4,8 @@ use gm::{
     Color,
 };
 use rapier2d::{geometry::Collider, prelude::RigidBody};
-use rtools::{address::Address, data_manager::Handle, IntoF32, Strong, Weak};
+use refs::{Strong, Weak};
+use rtools::{address::Address, data_manager::Handle, IntoF32};
 
 use crate::{get_sprites_drawer, Level, SpriteData};
 

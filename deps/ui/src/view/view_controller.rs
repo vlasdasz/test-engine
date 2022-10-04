@@ -1,4 +1,5 @@
-use rtools::{Animation, Strong, ToWeak};
+use refs::{Strong, ToWeak};
+use rtools::Animation;
 
 use crate::{UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
 pub trait ViewController {

@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+refs = "0.1.2"
+smart-default = "0.6"
+
 ui = { path = ".." }
 #ui_proc = { path = "../ui_proc" }
 
@@ -12,5 +15,3 @@ text = { path = "../../text" }
 rtools = { path = "../../rtools" }
 gl_image = { path = "../../gl_image" }
 gl_wrapper = { path = "../../gl_wrapper" }
-
-smart-default = "0.6"

@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rtools::{Strong, Weak};
+use refs::{Strong, Weak};
 
 use crate::{Level, Sprite, SpriteData, Unit, Weapon};
 

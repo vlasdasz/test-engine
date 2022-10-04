@@ -1,6 +1,7 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use rtools::{data_manager::Handle, Animation, Strong, UnwrapBox};
+use refs::{Strong, ToWeak};
+use rtools::{data_manager::Handle, Animation, Unwrap};
 use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::{data_source, Button, DrawingView, ImageView, Label, StringCell, TableView, TableViewDataSource};
@@ -15,7 +16,7 @@ pub struct TestView {
     table:    SubView<TableView>,
     animated: SubView<ImageView>,
 
-    animation: UnwrapBox<Animation>,
+    animation: Unwrap<Animation>,
 
     label_value: u64,
 }
@@ -43,7 +44,8 @@ impl ViewCallbacks for TestView {
 
         self.label.set_text("Hello label!");
 
-        self.button.on_tap.set(self, |this, _| {
+        let mut this = self.weak();
+        self.button.on_tap.sub(move |_| {
             let val = this.label_value;
             this.label.set_text(format!("Hello label! {}", val));
             this.label_value += 1;

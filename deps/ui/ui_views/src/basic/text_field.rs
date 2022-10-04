@@ -1,4 +1,5 @@
 use gm::Color;
+use refs::ToWeak;
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
     view, SubView, UIManager, ViewCallbacks, ViewData, ViewTouch,
@@ -21,7 +22,8 @@ impl TextField {
 impl ViewCallbacks for TextField {
     fn setup(&mut self) {
         self.enable_touch();
-        self.on_touch.set(self, |this, touch| {
+        let mut this = self.weak();
+        self.on_touch.sub(move |touch| {
             if touch.is_began() {
                 this.set_selected(true);
             }
@@ -34,7 +36,8 @@ impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
             UIManager::get().open_keyboard = true;
-            UIEvents::get().key_pressed.set(self, |this, key| {
+            let mut this = self.weak();
+            UIEvents::get().key_pressed.sub(move |key| {
                 if this.is_selected() {
                     match key.button {
                         KeyboardButton::Letter(char) => {

@@ -4,7 +4,8 @@ use gm::{
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
-use rtools::{data_manager::Handle, Event, IntoF32, Strong, Weak};
+use refs::{Strong, Weak};
+use rtools::{data_manager::Handle, Event, IntoF32};
 
 use crate::{Level, Sprite};
 

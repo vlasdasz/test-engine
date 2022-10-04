@@ -7,13 +7,14 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::{platform::Platform, IntoF32, Strong};
+use rtools::{platform::Platform, IntoF32};
 use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::TouchEvent;
 use ui::{
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
+    refs::{Strong, ToWeak},
     Touch, UIManager, ViewFrame, ViewTouch,
 };
 use ui_views::debug_view::DebugView;
@@ -109,7 +110,8 @@ impl UILayer {
     pub fn setup_events(&mut self) {
         let ev = GlEvents::get();
 
-        ev.key_pressed.set(self, |this, a| {
+        let mut this = self.weak();
+        ev.key_pressed.sub(move |a| {
             let key = a.0;
             let action = a.1;
 
@@ -140,8 +142,8 @@ impl UILayer {
             }
         });
 
-        ev.mouse_click.set(self, |this, a| this.on_mouse_click(a.0, a.1));
+        ev.mouse_click.sub(move |a| this.on_mouse_click(a.0, a.1));
 
-        ev.cursor_moved.set(self, |this, a| this.on_cursor_moved(a))
+        ev.cursor_moved.sub(move |a| this.on_cursor_moved(a))
     }
 }

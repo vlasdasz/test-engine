@@ -1,9 +1,9 @@
-use rtools::{ToWeak, Weak};
 use test_engine::{
     rtools::{data_manager::DataManager, Animation},
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
 };
+use ui::refs::{ToWeak, Weak};
 
 #[derive(Default)]
 pub struct BenchmarkLevel {
