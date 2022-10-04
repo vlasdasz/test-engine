@@ -1,6 +1,6 @@
 use refs::ToWeak;
-use rtools::{platform::Platform, Property};
-use ui::{view, SubView, ViewCallbacks, ViewFrame};
+use rtools::{platform::Platform};
+use ui::{view, SubView, ViewCallbacks, ViewFrame, Property};
 
 use crate::Label;
 

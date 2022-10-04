@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 refs = "0.1.3"
+rtools = "0.1.7"
 smart-default = "0.6"
 
 ui = { path = ".." }
@@ -12,6 +13,5 @@ ui = { path = ".." }
 
 gm = { path = "../../gm" }
 text = { path = "../../text" }
-rtools = { path = "../../rtools" }
 gl_image = { path = "../../gl_image" }
 gl_wrapper = { path = "../../gl_wrapper" }

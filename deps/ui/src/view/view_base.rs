@@ -6,7 +6,8 @@ use std::{
 use gl_image::Image;
 use gm::{flat::Rect, Color};
 use refs::{Own, ToWeak, Weak};
-use rtools::{data_manager::Handle, Event, Unwrap};
+use rtools::{data_manager::Handle, Unwrap};
+use vents::Event;
 
 use crate::{layout::Placer, PathData, Touch, View};
 

@@ -1,8 +1,8 @@
 use gl_image::Image;
 use refs::ToWeak;
-use rtools::{data_manager::Handle, Event};
+use rtools::{data_manager::Handle};
 use smart_default::SmartDefault;
-use ui::{view, SubView, ViewCallbacks, ViewData};
+use ui::{view, SubView, ViewCallbacks, ViewData, Event};
 
 use crate::{Button, Label};
 

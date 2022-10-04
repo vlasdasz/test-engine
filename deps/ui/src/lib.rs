@@ -19,5 +19,7 @@ pub use ui_manager::*;
 pub use ui_proc::*;
 pub use view::*;
 
+pub use vents::*;
+
 extern crate core;
 pub extern crate ui_proc;

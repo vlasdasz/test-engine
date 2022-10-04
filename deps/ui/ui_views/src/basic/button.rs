@@ -1,7 +1,6 @@
 use gm::Color;
 use refs::ToWeak;
-use rtools::Event;
-use ui::{view, SubView, ViewCallbacks, ViewTouch};
+use ui::{view, SubView, ViewCallbacks, ViewTouch, Event};
 
 use crate::Label;
 

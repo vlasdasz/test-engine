@@ -5,7 +5,8 @@ use gm::{
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use refs::{Strong, Weak};
-use rtools::{data_manager::Handle, Event, IntoF32};
+use rtools::{data_manager::Handle, IntoF32};
+use vents::Event;
 
 use crate::{Level, Sprite};
 

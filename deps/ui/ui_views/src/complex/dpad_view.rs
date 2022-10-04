@@ -1,8 +1,8 @@
 use gl_image::Image;
 use gm::flat::Direction;
 use refs::ToWeak;
-use rtools::{data_manager::Handle, Apply, Event};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame};
+use rtools::{data_manager::Handle, Apply};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, Event};
 
 use crate::Button;
 

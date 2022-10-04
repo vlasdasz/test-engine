@@ -1,6 +1,6 @@
 use refs::ToWeak;
-use rtools::{Event, IntoF32};
-use ui::{view, SubView, ViewCallbacks};
+use rtools::{IntoF32};
+use ui::{view, SubView, ViewCallbacks, Event};
 
 use crate::{Label, Slider};
 

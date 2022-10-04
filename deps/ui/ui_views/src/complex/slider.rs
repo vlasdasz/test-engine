@@ -1,8 +1,8 @@
 use gm::Color;
 use refs::ToWeak;
-use rtools::{math::clamped_by, Event};
+use rtools::{math::clamped_by};
 use smart_default::SmartDefault;
-use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
+use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch, Event};
 
 use crate::CircleView;
 

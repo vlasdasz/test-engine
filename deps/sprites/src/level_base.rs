@@ -11,8 +11,9 @@ use rapier2d::{
     },
 };
 use refs::{Strong, ToWeak, Weak};
-use rtools::{address::Address, Event};
+use rtools::{address::Address};
 use smart_default::SmartDefault;
+use vents::Event;
 
 use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
 
@@ -88,9 +89,8 @@ impl LevelBase {
                     panic!()
                 };
 
-                if let Some(_other) = self.sprite_with_index(other_index.index()) {
-                    // TODO: fix
-                    // sprite.weak().data_mut().on_collision.trigger(other);
+                if let Some(other) = self.sprite_with_index(other_index.index()) {
+                    sprite.deref().weak().data_mut().on_collision.trigger(other);
                 }
             }
         }

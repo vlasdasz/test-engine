@@ -2,7 +2,8 @@
 
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{Point, Size};
-use rtools::{static_default, Event};
+use rtools::{static_default};
+use vents::Event;
 
 #[derive(Default)]
 pub struct GlEvents {

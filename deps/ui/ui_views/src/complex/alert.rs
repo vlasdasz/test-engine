@@ -1,7 +1,6 @@
 use gm::Color;
 use refs::{Own, ToWeak, Weak};
-use rtools::Event;
-use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
+use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews, Event};
 
 use crate::{Button, Label};
 

@@ -10,6 +10,7 @@ use test_engine::{
     sprites::Control,
     view, Image, LevelBase, Screen,
 };
+use test_engine::gm::flat::Direction;
 use ui::{
     refs::{Own, Strong},
     BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
@@ -53,34 +54,34 @@ impl TestGameView {
     }
 
     fn setup_ui(&mut self) {
-        // Screen::current().ui.keymap.add('=', self, |_| {
-        //     let scale = Screen::current().ui.scale() * 1.2;
-        //     Screen::current().ui.set_scale(scale);
-        // });
-        //
-        // Screen::current().ui.keymap.add('-', self, |_| {
-        //     let scale = Screen::current().ui.scale() * 0.8;
-        //     Screen::current().ui.set_scale(scale);
-        // });
-        //
-        // [' ', 'w', 's', 'd', 'a'].apply2(
-        //     [
-        //         Direction::Up,
-        //         Direction::Up,
-        //         Direction::Down,
-        //         Direction::Right,
-        //         Direction::Left,
-        //     ],
-        //     |key, direction| {
-        //         Screen::current().ui.keymap.add(*key, self, move |_| {
-        //             if let Some(level) = &mut Screen::current().ui.level {
-        //                 if let Some(player) = level.player().get() {
-        //                     player.move_by_direction(direction)
-        //                 }
-        //             }
-        //         });
-        //     },
-        // );
+        Screen::current().ui.keymap.add('=', self, |_| {
+            let scale = Screen::current().ui.scale() * 1.2;
+            Screen::current().ui.set_scale(scale);
+        });
+
+        Screen::current().ui.keymap.add('-', self, |_| {
+            let scale = Screen::current().ui.scale() * 0.8;
+            Screen::current().ui.set_scale(scale);
+        });
+
+        [' ', 'w', 's', 'd', 'a'].apply2(
+            [
+                Direction::Up,
+                Direction::Up,
+                Direction::Down,
+                Direction::Right,
+                Direction::Left,
+            ],
+            |key, direction| {
+                Screen::current().ui.keymap.add(*key, self, move |_| {
+                    if let Some(level) = &mut Screen::current().ui.level {
+                        if let Some(player) = level.player().get() {
+                            player.move_by_direction(direction)
+                        }
+                    }
+                });
+            },
+        );
 
         self.sprite_view.place.tr(10).size(400, 80);
 
