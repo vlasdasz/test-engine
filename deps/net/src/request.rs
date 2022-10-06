@@ -1,10 +1,10 @@
 use std::borrow::Borrow;
 
+use log::trace;
 use refs::Rglica;
 use reqwest::{Client, RequestBuilder};
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
-use tao_log::{debugv, trace, tracev};
 
 use crate::{Method, NetResult, API};
 
@@ -44,7 +44,6 @@ impl<Result: DeserializeOwned> Request<(), Result> {
 impl<Param: Serialize> Request<Param, ()> {
     pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
         let body = to_string(param.borrow())?;
-        tracev!(&body);
         trace!("Body: {}", body);
         let client = Client::new();
         let post = client.post(&self.full_url());
@@ -57,14 +56,13 @@ impl<Param: Serialize> Request<Param, ()> {
 impl<Param: Serialize, Output: DeserializeOwned> Request<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow()).unwrap();
-        tracev!(&body);
         trace!("Body: {}", body);
         let client = Client::new();
         trace!("Full url: {}", self.full_url());
         let post = client.post(&self.full_url());
         let post = add_headers(post);
         let body_string = post.body(body).send().await?.text().await?;
-        Ok(from_str(debugv!(&body_string))?)
+        Ok(from_str(&body_string)?)
     }
 }
 

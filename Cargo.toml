@@ -14,7 +14,6 @@ crate-type = ["rlib", "staticlib", "dylib"]
 [dependencies]
 log = "0.4"
 rtools = "0.1.7"
-tao-log = "1.0"
 smart-default = "0.6"
 
 tokio = { version = "1.21", features = ["full"] }

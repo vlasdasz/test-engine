@@ -1,9 +1,9 @@
 use std::{borrow::Borrow, ops::DerefMut};
 
+use log::error;
 use refs::ToWeak;
 use rtools::Dispatch;
 use serde::{de::DeserializeOwned, Serialize};
-use tao_log::error;
 
 use crate::{Error, Request};
 
