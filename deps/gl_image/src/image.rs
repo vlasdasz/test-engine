@@ -29,6 +29,16 @@ pub struct Image {
 }
 
 impl Image {
+    pub fn empty() -> Self {
+        Self {
+            size: Default::default(),
+            channels: 0,
+            flipped: false,
+            flipped_y: false,
+            gl_handle: u32::MAX,
+        }
+    }
+
     pub fn is_valid(&self) -> bool {
         !self.is_invalid()
     }
@@ -118,6 +128,11 @@ impl LoadFromPath for Image {
 }
 
 pub fn draw_image(image: &Image, rect: &Rect, color: &Color) {
+
+    if image.is_invalid() {
+        return;
+    }
+
     let shaders = ImageShaders::get();
 
     if image.is_monochrome() {

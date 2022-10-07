@@ -14,9 +14,10 @@ use ui::{
     refs::{Own, Strong},
     BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
 };
-use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
+use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView, Alert};
+use log::info;
 
-use crate::{benchmark::BenchmarkLevel, BenchmarkView};
+use crate::{benchmark::BenchmarkLevel, UIDebugView};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct User {
@@ -27,7 +28,7 @@ struct User {
 #[derive(SmartDefault)]
 struct Network {
     #[default(API::get_request("get_users"))]
-    _get_users: GetRequest<Vec<User>>,
+    get_users: GetRequest<Vec<User>>,
 }
 static_default!(Network);
 
@@ -84,12 +85,12 @@ impl TestGameView {
 
         self.sprite_view.place.tr(10).size(400, 80);
 
-        // if let Some(level) = &Screen::current().ui.level {
-        //     level
-        //         .base()
-        //         .on_sprite_selected
-        //         .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
-        // }
+        if let Some(level) = &Screen::current().ui.level {
+            level
+                .base()
+                .on_sprite_selected
+                .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
+        }
 
         self.dpad.place.size(140, 100).b(10).l(100);
         self.dpad.set_images(
@@ -134,39 +135,39 @@ impl TestGameView {
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap.sub(|_| {
                 Screen::current().ui.set_level(Strong::<BenchmarkLevel>::default());
-                UIManager::set_view(Own::<BenchmarkView>::default());
+                UIManager::set_view(Own::<UIDebugView>::default());
             });
 
             let mut to_test = view.initialize_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap.sub(|_| {
                 Screen::current().ui.set_level(Strong::<LevelBase>::default());
-                UIManager::set_view(Own::<BenchmarkView>::default());
+                UIManager::set_view(Own::<UIDebugView>::default());
             });
 
             let mut play = view.initialize_view::<Button>();
             play.set_text("Play sound");
-            // play.on_tap.set(self, |this, _| this.sound.play());
+            play.on_tap.set(self, |this, _| this.sound.play());
 
             let mut async_task = view.initialize_view::<Button>();
             async_task.set_text("Async task").set_frame((120, 20));
-            // async_task.on_tap.set(self, move |this, _| {
-            //     Network::get().get_users.get(this, |_, error, result| {
-            //         if let Some(error) = error {
-            //             infov!(&error);
-            //             Alert::show(error);
-            //             return;
-            //         }
-            //
-            //         infov!(&result);
-            //
-            //         if let Some(_user) = result.first() {
-            //             // task.set_text(user.login.clone());
-            //         } else {
-            //             Alert::show("No response");
-            //         }
-            //     });
-            // });
+            async_task.on_tap.set(self, move |this, _| {
+                Network::get().get_users.get(this, |_, error, result| {
+                    if let Some(error) = error {
+                        info!("Error: {error}");
+                        Alert::show(error);
+                        return;
+                    }
+
+                    info!("Result: {result:?}");
+
+                    if let Some(_user) = result.first() {
+                        // task.set_text(user.login.clone());
+                    } else {
+                        Alert::show("No response");
+                    }
+                });
+            });
 
             [to_benchmark, to_test, play, async_task].apply(|button| {
                 button.set_color(Color::WHITE);

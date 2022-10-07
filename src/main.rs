@@ -4,11 +4,10 @@
 #![feature(trait_upcasting)]
 
 use test_engine::{paths::home, rtools::init_log, Screen};
-use ui::refs::{Own, Strong};
+use ui::refs::{Own};
 
 use crate::{
-    benchmark::BenchmarkView,
-    test_game::{TestGameLevel, TestGameView},
+    benchmark::UIDebugView,
 };
 
 mod benchmark;
@@ -22,10 +21,10 @@ async fn main() {
     let mut screen = Screen::new(
         (1000, 600),
         &home().join("test_engine"),
-        Own::<TestGameView>::default(),
+        Own::<UIDebugView>::default(),
     );
 
-    screen.ui.set_level(Strong::<TestGameLevel>::default());
+    // screen.ui.set_level(Strong::<TestGameLevel>::default());
 
     screen.start_main_loop();
 }

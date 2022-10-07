@@ -7,18 +7,16 @@ pub use font::Font;
 use fontdue::layout::{CoordinateSystem, Layout, TextStyle};
 use gl_image::{draw_image, Image};
 use gm::{flat::Size, Color};
-use rtools::{
-    data_manager::{DataManager, Handle},
-    IntoF32,
-};
+use rtools::{data_manager::{DataManager, Handle}, hash, IntoF32};
 
 pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image> {
-    if text.is_empty() {
-        return Default::default();
-    }
 
     if let Some(image) = Image::handle_with_name(text) {
         return image;
+    }
+
+    if text.is_empty() {
+        return Image::add_with_hash(hash(text), Image::empty());
     }
 
     let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);

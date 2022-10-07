@@ -50,6 +50,11 @@ impl Size {
         *self * ratio
     }
 
+    pub fn fit_width(&self, width: impl IntoF32) -> Size {
+        let ratio = width.into_f32() / self.width;
+        *self * ratio
+    }
+
     pub fn fit_in(&self, rect: impl Borrow<Rect>) -> Rect {
         let rect = rect.borrow();
         let ratio = rect.size.height / self.height;

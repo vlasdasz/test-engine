@@ -3,6 +3,7 @@ use rtools::data_manager::Handle;
 use smart_default::SmartDefault;
 use text::{render_text, Font};
 use ui::{view, SubView, ViewCallbacks, ViewData};
+use ui::ViewFrame;
 
 use crate::ImageView;
 
@@ -13,7 +14,7 @@ pub struct Label {
     text:       String,
     image_view: SubView<ImageView>,
     text_color: Color,
-    #[default = 64.0]
+    #[default = 32.0]
     size:       f32,
 }
 
@@ -55,6 +56,12 @@ impl Label {
 
     fn set_letters(&mut self) {
         let image = render_text(&self.text, &self.font, self.size);
+        let size = if self.size > self.height() {
+            image.size.fit_width(self.width())
+        } else {
+            image.size.fit_height(self.size)
+        };
+        self.image_view.set_size(size);
         self.image_view.set_image(image);
     }
 }
@@ -64,7 +71,7 @@ impl ViewCallbacks for Label {
         self.text_color = Color::GREEN;
         self.font = Font::default();
 
-        self.image_view.place.as_background();
+        self.image_view.place.center();
 
         self.set_letters();
     }

@@ -16,7 +16,7 @@ use test_engine::{
 use ui::refs::Own;
 
 #[allow(unused_imports)]
-use crate::benchmark::BenchmarkView;
+use crate::benchmark::UIDebugView;
 use crate::test_game::TestGameView;
 #[allow(unused_imports)]
 use crate::ui_test::UITestView;
