@@ -1,5 +1,5 @@
 use reflected::Reflected;
-use refs::Own;
+use refs::{Own, ToWeak};
 use ui::{view, ViewCallbacks, ViewSubviews};
 
 use crate::LabeledTextField;
@@ -19,10 +19,14 @@ impl FormView {
         self.remove_all_subviews();
 
         for field in T::fields() {
-            let mut view = Own::<LabeledTextField>::default();
-            view.set_title(field.name);
-            view.set_text(data.get_value(field));
+            if field.name.contains("id") {
+                continue;
+            }
+            let view = Own::<LabeledTextField>::default();
+            let mut rg = view.weak();
             self.add_subview(view);
+            rg.set_title(field.name);
+            rg.set_text(data.get_value(field));
         }
     }
 }
