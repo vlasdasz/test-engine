@@ -11,7 +11,7 @@ crate-type = ["rlib", "staticlib"]
 [dependencies]
 log = "0.4"
 home = "0.5"
-rtools = "0.1.7"
+rtools = "0.1.8"
 smart-default = "0.6"
 
 tokio = { version = "1.21", features = ["full"] }
@@ -22,6 +22,7 @@ text = { path = "../deps/text" }
 maze = { path = "../deps/maze" }
 audio = { path = "../deps/audio" }
 sprites = { path = "../deps/sprites" }
+dispatch = { path = "../deps/dispatch" }
 gl_image = { path = "../deps/gl_image" }
 gl_wrapper = { path = "../deps/gl_wrapper" }
 

@@ -1,6 +1,7 @@
 #![allow(clippy::mismatched_target_os)]
 
 use std::{ops::DerefMut, path::Path, ptr::null_mut};
+use dispatch::Dispatch;
 
 use gl_image::ImageShaders;
 use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
@@ -8,7 +9,7 @@ use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
-use rtools::{Dispatch, Time, Unwrap};
+use rtools::{Time, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{
     layout::Placer,

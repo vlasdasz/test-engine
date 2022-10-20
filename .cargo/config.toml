@@ -13,3 +13,13 @@ linker = "ndk/bin/i686-linux-android21-clang"
 [target.x86_64-pc-windows-msvc]
 linker = "rust-lld.exe"
 rustflags = ["-Zshare-generics=off"]
+
+[profile.release-plus]
+inherits = "release"
+#debug = true
+strip = true
+lto = "fat"
+
+[profile.size]
+inherits = "release-plus"
+opt-level = "z"

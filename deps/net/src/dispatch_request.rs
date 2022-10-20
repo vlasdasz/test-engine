@@ -1,8 +1,8 @@
 use std::{borrow::Borrow, ops::DerefMut};
+use dispatch::Dispatch;
 
 use log::error;
 use refs::ToWeak;
-use rtools::Dispatch;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{Error, Request};
