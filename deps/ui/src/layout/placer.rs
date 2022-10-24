@@ -124,13 +124,22 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn anchor(&mut self, view: impl Deref<Target = impl View>, side: Anchor, offset: impl IntoF32) -> &mut Self {
+    pub fn anchor(
+        &mut self,
+        view: impl Deref<Target = impl View>,
+        side: Anchor,
+        offset: impl IntoF32,
+    ) -> &mut Self {
         self.rules.push(LayoutRule::anchor(side, offset, view.weak_view()));
         self
     }
 
-    pub fn relative(&mut self, view: impl Deref<Target = impl View>, side: Anchor, ratio: impl IntoF32) -> &mut Self {
-
+    pub fn relative(
+        &mut self,
+        view: impl Deref<Target = impl View>,
+        side: Anchor,
+        ratio: impl IntoF32,
+    ) -> &mut Self {
         self.has_width = if side.has_width() { true } else { self.has_width };
         self.has_height = if side.has_height() { true } else { self.has_height };
 

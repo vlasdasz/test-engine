@@ -3,6 +3,7 @@
 #![allow(clippy::module_inception)]
 #![feature(specialization)]
 #![feature(trait_upcasting)]
+#![feature(arbitrary_self_types)]
 
 use std::{
     os::raw::{c_float, c_int, c_ulong},

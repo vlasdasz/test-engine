@@ -31,9 +31,9 @@ pub struct Image {
 impl Image {
     pub fn empty() -> Self {
         Self {
-            size: Default::default(),
-            channels: 0,
-            flipped: false,
+            size:      Default::default(),
+            channels:  0,
+            flipped:   false,
             flipped_y: false,
             gl_handle: u32::MAX,
         }
@@ -128,7 +128,6 @@ impl LoadFromPath for Image {
 }
 
 pub fn draw_image(image: &Image, rect: &Rect, color: &Color) {
-
     if image.is_invalid() {
         return;
     }

@@ -2,13 +2,12 @@
 #![allow(clippy::module_inception)]
 #![feature(specialization)]
 #![feature(trait_upcasting)]
+#![feature(arbitrary_self_types)]
 
 use test_engine::{paths::home, rtools::init_log, Screen};
-use ui::refs::{Own};
+use ui::refs::Own;
 
-use crate::{
-    benchmark::UIDebugView,
-};
+use crate::benchmark::UIDebugView;
 
 mod benchmark;
 mod test_game;

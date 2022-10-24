@@ -1,8 +1,8 @@
 use std::{borrow::Borrow, ops::DerefMut};
-use dispatch::Dispatch;
 
+use dispatch::Dispatch;
 use log::error;
-use refs::ToWeak;
+use refs::{ToWeak, Weak};
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{Error, Request};
@@ -23,14 +23,14 @@ impl<Result: DeserializeOwned + Default + Sync + Send> DispatchRequest<(), Resul
     pub fn get<Obj: 'static>(
         &'static self,
         obj: &Obj,
-        completion: impl FnOnce(&mut Obj, Option<Error>, Result) + Send + 'static,
+        completion: impl FnOnce(Weak<Obj>, Option<Error>, Result) + Send + 'static,
     ) {
-        let mut rglica = obj.weak();
+        let weak = obj.weak();
         Dispatch::dispatch(self.request.get(), move |result| match result {
-            Ok(val) => completion(rglica.deref_mut(), None, val),
+            Ok(val) => completion(weak, None, val),
             Err(err) => {
                 error!("{err}");
-                completion(rglica.deref_mut(), err.into(), Result::default())
+                completion(weak, err.into(), Result::default())
             }
         });
     }

@@ -1,3 +1,4 @@
+use log::info;
 use rtools::{static_default, Apply};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
@@ -14,8 +15,7 @@ use ui::{
     refs::{Own, Strong},
     BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
 };
-use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView, Alert};
-use log::info;
+use ui_views::{test_view::TestView, Alert, AnalogStickView, Button, DPadView, IntView};
 
 use crate::{benchmark::BenchmarkLevel, UIDebugView};
 
@@ -89,7 +89,7 @@ impl TestGameView {
             level
                 .base()
                 .on_sprite_selected
-                .set(self, |this, sprite| this.sprite_view.set_sprite(sprite));
+                .set(self, |mut this, sprite| this.sprite_view.set_sprite(sprite));
         }
 
         self.dpad.place.size(140, 100).b(10).l(100);
@@ -147,27 +147,27 @@ impl TestGameView {
 
             let mut play = view.initialize_view::<Button>();
             play.set_text("Play sound");
-            play.on_tap.set(self, |this, _| this.sound.play());
+            play.on_tap.set(self, |mut this, _| this.sound.play());
 
             let mut async_task = view.initialize_view::<Button>();
-            async_task.set_text("Async task").set_frame((120, 20));
-            async_task.on_tap.set(self, move |this, _| {
-                Network::get().get_users.get(this, |_, error, result| {
-                    if let Some(error) = error {
-                        info!("Error: {error}");
-                        Alert::show(error);
-                        return;
-                    }
-
-                    info!("Result: {result:?}");
-
-                    if let Some(_user) = result.first() {
-                        // task.set_text(user.login.clone());
-                    } else {
-                        Alert::show("No response");
-                    }
-                });
-            });
+            // async_task.set_text("Async task").set_frame((120, 20));
+            // async_task.on_tap.set(self, move |this, _| {
+            //     Network::get().get_users.get(this, |_, error, result| {
+            //         if let Some(error) = error {
+            //             info!("Error: {error}");
+            //             Alert::show(error);
+            //             return;
+            //         }
+            //
+            //         info!("Result: {result:?}");
+            //
+            //         if let Some(_user) = result.first() {
+            //             // task.set_text(user.login.clone());
+            //         } else {
+            //             Alert::show("No response");
+            //         }
+            //     });
+            // });
 
             [to_benchmark, to_test, play, async_task].apply(|button| {
                 button.set_color(Color::WHITE);

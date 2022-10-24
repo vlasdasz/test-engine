@@ -5,8 +5,9 @@ use test_engine::{
     ui::{layout::Anchor, SubView},
     view, Screen,
 };
+use tokio::spawn;
 use ui::{
-    refs::{Own, Strong, ToWeak},
+    refs::{Own, Strong, ToWeak, Weak},
     UIManager, ViewCallbacks,
 };
 use ui_views::{Button, Label, LabeledTextField};
@@ -26,6 +27,10 @@ pub struct UIDebugView {
     back: SubView<Button>,
 }
 
+impl UIDebugView {
+    async fn on_tap(self: Weak<Self>) {}
+}
+
 impl ViewCallbacks for UIDebugView {
     fn setup(&mut self) {
         self.login.place.size(200, 80).center_hor();
@@ -38,10 +43,10 @@ impl ViewCallbacks for UIDebugView {
         self.button.place.size(100, 40).center_hor();
         self.button.place.anchor(self.login, Anchor::Bot, 20);
 
-        let mut this = self.weak();
-
-        self.button.on_tap.sub(move |_| {
-            this.button.set_text(String::random());
+        self.button.on_tap.set(self, move |mut this, _| {
+            spawn(async move {
+                this.on_tap().await;
+            });
         });
 
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();

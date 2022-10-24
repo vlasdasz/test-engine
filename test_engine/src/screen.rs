@@ -1,8 +1,8 @@
 #![allow(clippy::mismatched_target_os)]
 
 use std::{ops::DerefMut, path::Path, ptr::null_mut};
-use dispatch::Dispatch;
 
+use dispatch::{Dispatch, MainLock};
 use gl_image::ImageShaders;
 use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
@@ -146,6 +146,7 @@ impl Screen {
         UIManager::drawer().draw(self.ui.debug_view.deref_mut());
 
         Dispatch::call();
+        MainLock::wait();
 
         #[cfg(desktop)]
         self.glfw.swap_buffers();

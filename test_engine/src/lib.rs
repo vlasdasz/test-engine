@@ -5,6 +5,7 @@
 #![feature(const_trait_impl)]
 #![feature(specialization)]
 #![feature(let_chains)]
+#![feature(arbitrary_self_types)]
 
 pub use audio;
 pub use gl_image;
@@ -29,6 +30,7 @@ mod sprites_drawer;
 mod ui_drawer;
 pub mod ui_layer;
 
+pub use dispatch::*;
 pub use gl_image::Image;
 pub use keymap::*;
 pub use sprites::{Level, LevelBase, Sprite};

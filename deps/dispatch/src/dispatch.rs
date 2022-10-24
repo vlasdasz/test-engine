@@ -1,6 +1,6 @@
 use std::{future::Future, sync::Mutex};
-use rtools::{IntoF32, sleep};
 
+use rtools::{sleep, IntoF32};
 use tokio::spawn;
 
 type Storage = Mutex<Vec<Box<dyn FnOnce() + Send>>>;
@@ -16,10 +16,7 @@ impl Dispatch {
     ) {
         spawn(async {
             let val = fut.await;
-            STORAGE
-                .lock()
-                .unwrap()
-                .push(Box::new(move || completion(val)));
+            STORAGE.lock().unwrap().push(Box::new(move || completion(val)));
         });
     }
 

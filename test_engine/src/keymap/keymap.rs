@@ -1,5 +1,7 @@
 use std::cell::RefCell;
 
+use ui::refs::Weak;
+
 use crate::KeyAction;
 
 #[derive(Default)]
@@ -8,7 +10,7 @@ pub struct Keymap {
 }
 
 impl Keymap {
-    pub fn add<Obj: 'static>(&self, key: char, obj: &Obj, action: impl FnMut(&mut Obj) + 'static) {
+    pub fn add<Obj: 'static>(&self, key: char, obj: &Obj, action: impl FnMut(Weak<Obj>) + 'static) {
         self.keys.borrow_mut().push(KeyAction::new(key, obj, action))
     }
 

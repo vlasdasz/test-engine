@@ -2,8 +2,7 @@ use gm::Color;
 use rtools::data_manager::Handle;
 use smart_default::SmartDefault;
 use text::{render_text, Font};
-use ui::{view, SubView, ViewCallbacks, ViewData};
-use ui::ViewFrame;
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::ImageView;
 
