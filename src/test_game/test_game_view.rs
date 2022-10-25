@@ -5,7 +5,7 @@ use smart_default::SmartDefault;
 use test_engine::{
     audio::Sound,
     gm::{flat::Direction, Color},
-    net::{GetRequest, API},
+    net::API,
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
@@ -27,8 +27,8 @@ struct User {
 
 #[derive(SmartDefault)]
 struct Network {
-    #[default(API::get_request("get_users"))]
-    get_users: GetRequest<Vec<User>>,
+    // #[default(API::get_request("get_users"))]
+    // get_users: GetRequest<Vec<User>>,
 }
 static_default!(Network);
 

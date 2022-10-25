@@ -13,7 +13,7 @@ use rtools::{Time, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{
     layout::Placer,
-    refs::{Own, ToWeak, Weak},
+    refs::{MainState, Own, ToWeak, Weak},
     UIManager, View, ViewCallbacks, ViewFrame, ViewLayout,
 };
 
@@ -214,6 +214,8 @@ impl Screen {
 impl Screen {
     pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Own<dyn View>) -> Own<Self> {
         trace!("Creating screen");
+
+        MainState::set_lock_check(|| MainLock::is_locked());
 
         #[cfg(desktop)]
         let glfw = GLFWManager::default();

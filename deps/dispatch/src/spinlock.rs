@@ -5,7 +5,7 @@ pub(crate) struct SpinLock {
 }
 
 impl SpinLock {
-    pub(crate) fn locked(&self) -> bool {
+    pub(crate) fn is_locked(&self) -> bool {
         *self.locked.lock().unwrap()
     }
 
@@ -18,7 +18,7 @@ impl SpinLock {
     }
 
     pub(crate) fn wait(&self) {
-        while self.locked() {}
+        while self.is_locked() {}
     }
 }
 

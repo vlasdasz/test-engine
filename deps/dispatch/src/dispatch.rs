@@ -20,10 +20,11 @@ impl Dispatch {
         });
     }
 
-    pub fn after(delay: impl IntoF32, action: impl FnOnce() + Send + 'static) {
+    pub fn after(delay: impl IntoF32, action: impl Future + Send + 'static) {
         spawn(async move {
             sleep(delay);
-            STORAGE.lock().unwrap().push(Box::new(action));
+            action.await;
+            // STORAGE.lock().unwrap().push(Box::new(action));
         });
     }
 

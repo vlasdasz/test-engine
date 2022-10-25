@@ -8,5 +8,5 @@ mod main_lock;
 mod spinlock;
 
 pub use dispatch::Dispatch;
-pub use main_lock::{lock_main, MainLock};
+pub use main_lock::MainLock;
 pub(crate) use spinlock::SpinLock;

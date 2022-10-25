@@ -25,6 +25,10 @@ impl MainLock {
         receiver
     }
 
+    pub fn is_locked() -> bool {
+        LOCK.is_locked()
+    }
+
     pub async fn new() -> Self {
         Self::start_lock().await.unwrap();
         Self {}
@@ -51,8 +55,4 @@ impl Drop for MainLock {
     fn drop(&mut self) {
         LOCK.unlock()
     }
-}
-
-pub async fn lock_main() -> MainLock {
-    MainLock::new().await
 }

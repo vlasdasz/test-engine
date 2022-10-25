@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-refs = "0.1.3"
+refs = "0.1.6"
 rtools = "0.1.8"
 reflected = "0.1.5"
 #validator = { version = "0.16", features = ["derive"] }

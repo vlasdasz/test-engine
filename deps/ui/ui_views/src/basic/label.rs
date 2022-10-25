@@ -9,12 +9,13 @@ use crate::ImageView;
 #[view]
 #[derive(SmartDefault)]
 pub struct Label {
-    font:       Handle<Font>,
-    text:       String,
-    image_view: SubView<ImageView>,
-    text_color: Color,
+    font:         Handle<Font>,
+    text:         String,
+    image_view:   SubView<ImageView>,
+    text_color:   Color,
     #[default = 32.0]
-    size:       f32,
+    size:         f32,
+    needs_update: bool,
 }
 
 impl Label {
@@ -28,7 +29,7 @@ impl Label {
             return self;
         }
         self.text = text;
-        self.set_letters();
+        self.needs_update = true;
         self
     }
 
@@ -40,7 +41,7 @@ impl Label {
     pub fn pop_letter(&mut self) {
         if !self.text.is_empty() {
             self.text.pop();
-            self.set_letters();
+            self.needs_update = true;
         }
     }
 
@@ -73,5 +74,12 @@ impl ViewCallbacks for Label {
         self.image_view.place.center();
 
         self.set_letters();
+    }
+
+    fn update(&mut self) {
+        if self.needs_update {
+            self.set_letters();
+            self.needs_update = false;
+        }
     }
 }

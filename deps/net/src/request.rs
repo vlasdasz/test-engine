@@ -1,4 +1,4 @@
-use std::borrow::Borrow;
+use std::{borrow::Borrow, marker::PhantomData};
 
 use log::trace;
 use refs::Rglica;
@@ -11,15 +11,18 @@ use crate::{Method, NetResult, API};
 pub struct Request<Param, Result> {
     url:     &'static str,
     _method: Method,
-    _data:   Rglica<(*const Param, *const Result)>,
+    _data:   PhantomData<(*const Param, *const Result)>,
 }
 
+unsafe impl<T, U> Send for Request<T, U> {}
+unsafe impl<T, U> Sync for Request<T, U> {}
+
 impl<R, P> Request<R, P> {
-    pub fn make(url: &'static str) -> Self {
+    pub const fn make(url: &'static str) -> Self {
         Self {
             url,
             _method: Method::Get,
-            _data: Default::default(),
+            _data: PhantomData,
         }
     }
 
@@ -28,15 +31,17 @@ impl<R, P> Request<R, P> {
     }
 }
 
-impl<Result: DeserializeOwned> Request<(), Result> {
+impl<Param, Output> Request<Param, Output> {
     async fn call(&self) -> reqwest::Result<String> {
         let client = Client::new();
         let get = client.get(self.full_url());
         let get = add_headers(get);
         get.send().await?.text().await
     }
+}
 
-    pub async fn get(&self) -> NetResult<Result> {
+impl<Output: DeserializeOwned> Request<(), Output> {
+    pub async fn get(self) -> NetResult<Output> {
         Ok(from_str(&self.call().await?)?)
     }
 }

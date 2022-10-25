@@ -36,6 +36,6 @@ impl ViewCallbacks for Button {
 #[macro_export]
 macro_rules! link_button {
     ($self:ident, $button:ident, $method:ident) => {
-        $self.$button.on_tap.set($self, |this, _| this.$method());
+        $self.$button.on_tap.set($self, |mut this, _| this.$method());
     };
 }

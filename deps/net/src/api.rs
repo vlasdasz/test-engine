@@ -3,11 +3,6 @@ use std::collections::HashMap;
 use rtools::static_init;
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{
-    dispatch_request::{GetRequest, PostRequest},
-    DispatchRequest,
-};
-
 #[derive(Default)]
 pub struct API {
     base_url: String,
@@ -50,18 +45,18 @@ impl API {
     }
 }
 
-impl API {
-    pub fn get_request<Result: DeserializeOwned>(url: &'static str) -> GetRequest<Result> {
-        GetRequest::make(url)
-    }
-
-    pub fn post_request<Param: Serialize>(url: &'static str) -> PostRequest<Param> {
-        PostRequest::make(url)
-    }
-
-    pub fn fetch_request<Param: Serialize, Result: DeserializeOwned>(
-        url: &'static str,
-    ) -> DispatchRequest<Param, Result> {
-        DispatchRequest::make(url)
-    }
-}
+// impl API {
+//     pub fn get_request<Result: DeserializeOwned>(url: &'static str) ->
+// GetRequest<Result> {         GetRequest::make(url)
+//     }
+//
+//     pub fn post_request<Param: Serialize>(url: &'static str) ->
+// PostRequest<Param> {         PostRequest::make(url)
+//     }
+//
+//     pub fn fetch_request<Param: Serialize, Result: DeserializeOwned>(
+//         url: &'static str,
+//     ) -> DispatchRequest<Param, Result> {
+//         DispatchRequest::make(url)
+//     }
+// }
