@@ -56,3 +56,11 @@ impl Drop for MainLock {
         LOCK.unlock()
     }
 }
+
+#[macro_export]
+macro_rules! lock_main {
+    () => {
+        let _main_lock = test_engine::MainLock::new().await;
+    };
+}
+

@@ -9,7 +9,7 @@ name = "sprites"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-refs = "0.1.6"
+refs = "0.1.7"
 vents = "0.1.4"
 rtools = "0.1.8"
 crossbeam = "0.8"

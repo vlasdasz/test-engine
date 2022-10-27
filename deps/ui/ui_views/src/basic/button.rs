@@ -39,3 +39,25 @@ macro_rules! link_button {
         $self.$button.on_tap.set($self, |mut this, _| this.$method());
     };
 }
+
+#[macro_export]
+macro_rules! async_link_button {
+    ($self:ident, $button:ident, $method:ident) => {
+        $self.$button.on_tap.set($self, |mut this, _| {
+            tokio::spawn(async move {
+                this.$method().await;
+            });
+        });
+    };
+}
+
+#[macro_export]
+macro_rules! async_call {
+    ($self:ident, $method:ident) => {
+        use refs::ToWeak;
+        let this = $self.weak();
+        tokio::spawn(async move {
+            this.$method().await;
+        });
+    };
+}

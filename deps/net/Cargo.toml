@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 log = "0.4"
-refs = "0.1.6"
+refs = "0.1.7"
 rtools = "0.1.8"
 serde_json = "1.0"
 

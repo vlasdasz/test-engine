@@ -8,16 +8,18 @@ use serde_json::{from_str, to_string};
 
 use crate::{Method, NetResult, API};
 
-pub struct Request<Param, Result> {
+pub struct Req<Param, Result> {
     url:     &'static str,
     _method: Method,
     _data:   PhantomData<(*const Param, *const Result)>,
 }
 
-unsafe impl<T, U> Send for Request<T, U> {}
-unsafe impl<T, U> Sync for Request<T, U> {}
+pub type GetReq<T> = Req<(), T>;
 
-impl<R, P> Request<R, P> {
+unsafe impl<T, U> Send for Req<T, U> {}
+unsafe impl<T, U> Sync for Req<T, U> {}
+
+impl<R, P> Req<R, P> {
     pub const fn make(url: &'static str) -> Self {
         Self {
             url,
@@ -31,7 +33,7 @@ impl<R, P> Request<R, P> {
     }
 }
 
-impl<Param, Output> Request<Param, Output> {
+impl<Param, Output> Req<Param, Output> {
     async fn call(&self) -> reqwest::Result<String> {
         let client = Client::new();
         let get = client.get(self.full_url());
@@ -40,13 +42,13 @@ impl<Param, Output> Request<Param, Output> {
     }
 }
 
-impl<Output: DeserializeOwned> Request<(), Output> {
+impl<Output: DeserializeOwned> Req<(), Output> {
     pub async fn get(self) -> NetResult<Output> {
         Ok(from_str(&self.call().await?)?)
     }
 }
 
-impl<Param: Serialize> Request<Param, ()> {
+impl<Param: Serialize> Req<Param, ()> {
     pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
         let body = to_string(param.borrow())?;
         trace!("Body: {}", body);
@@ -58,7 +60,7 @@ impl<Param: Serialize> Request<Param, ()> {
     }
 }
 
-impl<Param: Serialize, Output: DeserializeOwned> Request<Param, Output> {
+impl<Param: Serialize, Output: DeserializeOwned> Req<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow()).unwrap();
         trace!("Body: {}", body);

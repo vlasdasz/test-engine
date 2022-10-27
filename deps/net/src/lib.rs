@@ -9,4 +9,4 @@ mod request;
 pub use api::API;
 pub use errors::{Error, NetResult};
 pub use method::Method;
-pub use request::Request;
+pub use request::*;
