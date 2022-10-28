@@ -38,3 +38,7 @@ jobs:
       - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
         run: py build/build.py
+
+      - name: Test
+        run: cargo test --all
+        
