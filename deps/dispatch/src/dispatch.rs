@@ -1,4 +1,4 @@
-use std::{future::Future, sync::Mutex};
+use std::sync::Mutex;
 
 use rtools::{sleep, IntoF32};
 use tokio::spawn;
@@ -10,21 +10,14 @@ static STORAGE: Storage = Storage::new(Default::default());
 pub struct Dispatch;
 
 impl Dispatch {
-    pub fn dispatch<T: Send + 'static>(
-        fut: impl Future<Output = T> + Send + 'static,
-        completion: impl FnOnce(T) + Send + 'static,
-    ) {
-        spawn(async {
-            let val = fut.await;
-            STORAGE.lock().unwrap().push(Box::new(move || completion(val)));
-        });
+    pub fn main(action: impl FnOnce() + Send + 'static) {
+        STORAGE.lock().unwrap().push(Box::new(action));
     }
 
-    pub fn after(delay: impl IntoF32, action: impl Future + Send + 'static) {
+    pub fn after(delay: impl IntoF32, action: impl FnOnce() + Send + 'static) {
         spawn(async move {
             sleep(delay);
-            action.await;
-            // STORAGE.lock().unwrap().push(Box::new(action));
+            STORAGE.lock().unwrap().push(Box::new(action));
         });
     }
 

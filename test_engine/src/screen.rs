@@ -2,7 +2,7 @@
 
 use std::{ops::DerefMut, path::Path, ptr::null_mut};
 
-use dispatch::{Dispatch, MainLock};
+use dispatch::Dispatch;
 use gl_image::ImageShaders;
 use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
@@ -13,7 +13,7 @@ use rtools::{Time, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use ui::{
     layout::Placer,
-    refs::{MainState, Own, ToWeak, Weak},
+    refs::{Own, ToWeak, Weak},
     UIManager, View, ViewCallbacks, ViewFrame, ViewLayout,
 };
 
@@ -146,7 +146,6 @@ impl Screen {
         UIManager::drawer().draw(self.ui.debug_view.deref_mut());
 
         Dispatch::call();
-        MainLock::wait();
 
         #[cfg(desktop)]
         self.glfw.swap_buffers();
@@ -214,8 +213,6 @@ impl Screen {
 impl Screen {
     pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Own<dyn View>) -> Own<Self> {
         trace!("Creating screen");
-
-        MainState::set_lock_check(|| MainLock::is_locked());
 
         #[cfg(desktop)]
         let glfw = GLFWManager::default();
