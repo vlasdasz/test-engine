@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use rtools::static_init;
-use serde::{de::DeserializeOwned, Serialize};
 
 #[derive(Default)]
 pub struct API {

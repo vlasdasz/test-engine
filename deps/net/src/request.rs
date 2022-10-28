@@ -1,7 +1,6 @@
 use std::{borrow::Borrow, marker::PhantomData};
 
 use log::trace;
-use refs::Rglica;
 use reqwest::{Client, RequestBuilder};
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};

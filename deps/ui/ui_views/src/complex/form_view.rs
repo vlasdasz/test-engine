@@ -19,7 +19,7 @@ impl FormView {
         self.remove_all_subviews();
 
         for field in T::fields() {
-            if field.name.contains("id") || field.is_unsupported() {
+            if field.name.contains("id") || field.is_custom() {
                 continue;
             }
             let view = Own::<LabeledTextField>::default();
