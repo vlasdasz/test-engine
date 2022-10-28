@@ -14,6 +14,7 @@ pub use gl_wrapper;
 pub use gm;
 pub use maze;
 pub use net;
+pub use reflected;
 pub use rtools;
 pub use sprites;
 pub use text;

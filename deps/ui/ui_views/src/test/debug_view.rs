@@ -17,7 +17,8 @@ pub struct DebugView {
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.set_frame((10, 10, 280, 60)).place.all_ver();
+        self.place.size(280, 60).all_ver();
+        //  self.set_frame((10, 10, 280, 60)).place.all_ver();
 
         self.fps_label.set_text("fps label");
         self.frame_drawn_label.set_text("frame drawn label");
@@ -25,7 +26,7 @@ impl ViewCallbacks for DebugView {
         if Platform::MOBILE {
             self.set_origin((28, 28));
         } else {
-            self.set_origin((10, 10));
+            self.set_origin((300, 300));
         }
 
         let mut this = self.weak();
