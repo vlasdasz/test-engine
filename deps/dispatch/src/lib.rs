@@ -5,4 +5,4 @@ extern crate core;
 
 mod dispatch;
 
-pub use crate::dispatch::Dispatch;
+pub use crate::dispatch::*;

@@ -2,7 +2,6 @@
 
 use std::{ops::DerefMut, path::Path, ptr::null_mut};
 
-use dispatch::Dispatch;
 use gl_image::ImageShaders;
 use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
@@ -145,7 +144,7 @@ impl Screen {
         UIManager::drawer().update(self.ui.debug_view.deref_mut());
         UIManager::drawer().draw(self.ui.debug_view.deref_mut());
 
-        Dispatch::call();
+        dispatch::invoke_dispatched();
 
         #[cfg(desktop)]
         self.glfw.swap_buffers();
