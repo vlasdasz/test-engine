@@ -54,7 +54,7 @@ pub extern "C" fn set_gyro(pitch: c_float, roll: c_float, yaw: c_float) {
 
 #[no_mangle]
 pub extern "C" fn add_key(char: u8, event: MobileKeyEvent) {
-    unsafe { APP.as_mut().unwrap_unchecked().add_key(char, event) }
+    unsafe { APP.as_mut().unwrap().add_key(char, event) }
 }
 
 #[no_mangle]

@@ -1,11 +1,7 @@
-use log::info;
-use rtools::{static_default, Apply};
-use serde::{Deserialize, Serialize};
-use smart_default::SmartDefault;
+use rtools::Apply;
 use test_engine::{
     audio::Sound,
     gm::{flat::Direction, Color},
-    net::API,
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
@@ -13,24 +9,11 @@ use test_engine::{
 };
 use ui::{
     refs::{Own, Strong},
-    BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
+    BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews,
 };
-use ui_views::{test_view::TestView, Alert, AnalogStickView, Button, DPadView, IntView};
+use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
 
 use crate::{benchmark::BenchmarkLevel, UIDebugView};
-
-#[derive(Debug, Serialize, Deserialize)]
-struct User {
-    login:    String,
-    password: String,
-}
-
-#[derive(SmartDefault)]
-struct Network {
-    // #[default(API::get_request("get_users"))]
-    // get_users: GetRequest<Vec<User>>,
-}
-static_default!(Network);
 
 #[view]
 #[derive(Default)]
@@ -149,27 +132,7 @@ impl TestGameView {
             play.set_text("Play sound");
             play.on_tap.set(self, |mut this, _| this.sound.play());
 
-            let mut async_task = view.initialize_view::<Button>();
-            // async_task.set_text("Async task").set_frame((120, 20));
-            // async_task.on_tap.set(self, move |this, _| {
-            //     Network::get().get_users.get(this, |_, error, result| {
-            //         if let Some(error) = error {
-            //             info!("Error: {error}");
-            //             Alert::show(error);
-            //             return;
-            //         }
-            //
-            //         info!("Result: {result:?}");
-            //
-            //         if let Some(_user) = result.first() {
-            //             // task.set_text(user.login.clone());
-            //         } else {
-            //             Alert::show("No response");
-            //         }
-            //     });
-            // });
-
-            [to_benchmark, to_test, play, async_task].apply(|button| {
+            [to_benchmark, to_test, play].apply(|button| {
                 button.set_color(Color::WHITE);
                 button.set_corner_radius(8);
             });

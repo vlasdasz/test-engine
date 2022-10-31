@@ -1,13 +1,9 @@
-use std::string::String;
-
 use test_engine::{
-    rtools::Random,
     ui::{layout::Anchor, SubView},
     view, Screen,
 };
-use tokio::spawn;
 use ui::{
-    refs::{Own, Strong, ToWeak, Weak},
+    refs::{Own, Strong, ToWeak},
     UIManager, ViewCallbacks,
 };
 use ui_views::{Button, Label, LabeledTextField};
@@ -20,15 +16,9 @@ pub struct UIDebugView {
     password: SubView<LabeledTextField>,
     login:    SubView<LabeledTextField>,
 
-    button: SubView<Button>,
-
     label: SubView<Label>,
 
     back: SubView<Button>,
-}
-
-impl UIDebugView {
-    async fn on_tap(self: Weak<Self>) {}
 }
 
 impl ViewCallbacks for UIDebugView {
@@ -39,15 +29,6 @@ impl ViewCallbacks for UIDebugView {
 
         self.password.place.size(200, 40).center();
         self.password.set_title("Password:");
-
-        self.button.place.size(100, 40).center_hor();
-        self.button.place.anchor(self.login, Anchor::Bot, 20);
-
-        self.button.on_tap.set(self, move |mut this, _| {
-            spawn(async move {
-                this.on_tap().await;
-            });
-        });
 
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 

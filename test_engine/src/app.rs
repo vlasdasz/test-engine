@@ -12,7 +12,7 @@ use tokio::{
 };
 use ui::{
     input::{ControlButton, KeyEvent, KeyState, KeyboardButton, TouchEvent, UIEvents},
-    refs::Own,
+    refs::{thread_id, Own, MAIN_THREAD_NAME},
     Touch, View,
 };
 
@@ -43,6 +43,10 @@ pub struct App {
 impl App {
     fn create_screen(&mut self, assets_path: &Path, monitor: Monitor, view: Own<dyn View>) {
         self.runtime.block_on(async {
+            let mut main_name = MAIN_THREAD_NAME.lock().unwrap();
+            *main_name = thread_id().into();
+            drop(main_name);
+
             let mut screen = Screen::new(monitor.resolution, assets_path, view);
 
             screen.add_monitor(monitor);
@@ -148,7 +152,7 @@ impl App {
 
 impl Default for App {
     fn default() -> Self {
-        init_log(false, 4);
+        init_log(false, 5);
 
         let (_touch_sender, _touch_receiver) = unbounded_channel::<Touch>();
         let (_gyro_sender, _gyro_receiver) = unbounded_channel::<GyroData>();

@@ -1,5 +1,5 @@
 mod benchmark_level;
-mod benchmark_view;
+mod ui_debug_view;
 
 pub use benchmark_level::BenchmarkLevel;
-pub use benchmark_view::UIDebugView;
+pub use ui_debug_view::UIDebugView;

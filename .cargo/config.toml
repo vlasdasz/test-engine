@@ -23,3 +23,8 @@ lto = "fat"
 [profile.size]
 inherits = "release-plus"
 opt-level = "z"
+
+
+[profile.release-debug]
+inherits = "release"
+debug = true

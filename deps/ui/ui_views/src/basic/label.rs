@@ -54,14 +54,22 @@ impl Label {
         self.set_text("")
     }
 
+    fn fit_size(&mut self) {
+        let image = self.image_view.image();
+
+        let size = if image.size.width > self.width() {
+            image.size.fit_width(self.width())
+        } else if image.size.height > self.height() {
+            image.size.fit_height(self.height())
+        } else {
+            image.size
+        };
+
+        self.image_view.set_size(size);
+    }
+
     fn set_letters(&mut self) {
         let image = render_text(&self.text, &self.font, self.size);
-        let size = if self.size > self.height() {
-            image.size.fit_width(self.width())
-        } else {
-            image.size.fit_height(self.size)
-        };
-        self.image_view.set_size(size);
         self.image_view.set_image(image);
     }
 }
@@ -81,5 +89,6 @@ impl ViewCallbacks for Label {
             self.set_letters();
             self.needs_update = false;
         }
+        self.fit_size();
     }
 }

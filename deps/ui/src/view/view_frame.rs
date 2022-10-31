@@ -11,6 +11,7 @@ pub trait ViewFrame {
     fn y(&self) -> f32;
     fn max_x(&self) -> f32;
     fn max_y(&self) -> f32;
+    fn size(&self) -> Size;
     fn width(&self) -> f32;
     fn height(&self) -> f32;
     fn set_x(&mut self, x: impl IntoF32) -> &mut Self;
@@ -35,6 +36,10 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn absolute_frame(&self) -> &Rect {
         &self.absolute_frame
+    }
+
+    fn size(&self) -> Size {
+        self.frame.size
     }
 
     fn x(&self) -> f32 {

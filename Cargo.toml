@@ -14,10 +14,8 @@ crate-type = ["rlib", "staticlib", "dylib"]
 [dependencies]
 log = "0.4"
 rtools = "0.1.8"
-smart-default = "0.6"
 
 tokio = { version = "1.21", features = ["full"] }
-serde = { version = "1.0", features = ["derive"] }
 
 test_engine = { path = "test_engine" }
 

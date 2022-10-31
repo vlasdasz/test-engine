@@ -1,7 +1,6 @@
 #![feature(const_default_impls)]
 
 mod api;
-mod dispatch_request;
 mod errors;
 mod method;
 mod request;

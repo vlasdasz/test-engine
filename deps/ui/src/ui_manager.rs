@@ -5,7 +5,11 @@ use refs::{Own, Strong, Weak};
 use rtools::{static_default, Unwrap};
 use smart_default::SmartDefault;
 
-use crate::{layout::Placer, view::ViewSubviews, BaseView, UIAnimation, UIDrawer, View};
+use crate::{
+    layout::Placer,
+    view::{ViewFrame, ViewSubviews},
+    BaseView, UIAnimation, UIDrawer, View,
+};
 
 #[derive(SmartDefault)]
 pub struct UIManager {
@@ -143,6 +147,10 @@ impl UIManager {
 
     pub fn screen_scale() -> f32 {
         Self::get().screen_scale
+    }
+
+    pub fn screen_size() -> Size {
+        Self::root_view().size()
     }
 
     #[cfg(any(windows, linux, freebsd))]

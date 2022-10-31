@@ -27,7 +27,7 @@ BOOL didAppear = false;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     self.text_field = [[UITextField alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
     [self.text_field setBackgroundColor: UIColor.greenColor];
     self.text_field.text = @" ";
