@@ -9,7 +9,7 @@ name = "ui"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-refs = "0.1.10"
+refs = "0.1.11"
 vents = "0.1.4"
 rtools = "0.1.8"
 smart-default = "0.6"

@@ -12,9 +12,10 @@ use tokio::{
 };
 use ui::{
     input::{ControlButton, KeyEvent, KeyState, KeyboardButton, TouchEvent, UIEvents},
-    refs::{thread_id, Own, MAIN_THREAD_NAME},
+    refs::{Own},
     Touch, View,
 };
+use ui::refs::set_current_thread_as_main;
 
 use crate::Screen;
 
@@ -43,9 +44,7 @@ pub struct App {
 impl App {
     fn create_screen(&mut self, assets_path: &Path, monitor: Monitor, view: Own<dyn View>) {
         self.runtime.block_on(async {
-            let mut main_name = MAIN_THREAD_NAME.lock().unwrap();
-            *main_name = thread_id().into();
-            drop(main_name);
+            set_current_thread_as_main();
 
             let mut screen = Screen::new(monitor.resolution, assets_path, view);
 
