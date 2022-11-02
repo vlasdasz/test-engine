@@ -52,7 +52,7 @@ impl<Param: Serialize> Req<Param, ()> {
         let body = to_string(param.borrow())?;
         trace!("Body: {}", body);
         let client = Client::new();
-        let post = client.post(&self.full_url());
+        let post = client.post(self.full_url());
         let post = add_headers(post);
         post.body(body).send().await?;
         Ok(())
@@ -65,7 +65,7 @@ impl<Param: Serialize, Output: DeserializeOwned> Req<Param, Output> {
         trace!("Body: {}", body);
         let client = Client::new();
         trace!("Full url: {}", self.full_url());
-        let post = client.post(&self.full_url());
+        let post = client.post(self.full_url());
         let post = add_headers(post);
         let body_string = post.body(body).send().await?.text().await?;
         Ok(from_str(&body_string)?)

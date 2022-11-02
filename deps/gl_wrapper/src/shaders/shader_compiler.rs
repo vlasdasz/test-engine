@@ -140,8 +140,8 @@ impl ShaderCompiler {
         let vert_path = path.with_extension("vert");
         let frag_path = path.with_extension("frag");
 
-        let vert_code = File::read_to_string(&vert_path);
-        let frag_code = File::read_to_string(&frag_path);
+        let vert_code = File::read_to_string(vert_path);
+        let frag_code = File::read_to_string(frag_path);
 
         self.compile(vert_code, frag_code)
     }

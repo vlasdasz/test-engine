@@ -22,6 +22,7 @@ net = { path = "../deps/net" }
 text = { path = "../deps/text" }
 maze = { path = "../deps/maze" }
 audio = { path = "../deps/audio" }
+valid = { path = "../deps/valid" }
 sprites = { path = "../deps/sprites" }
 dispatch = { path = "../deps/dispatch" }
 gl_image = { path = "../deps/gl_image" }
