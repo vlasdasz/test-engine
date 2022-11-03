@@ -22,6 +22,7 @@ pub trait Valid: Reflected {
 
 #[cfg(test)]
 mod test {
+    use reflected::Reflected;
     use reflected_proc::reflected;
 
     use crate::{valid_reflected::ValidReflected, Valid, ValidEntry, ValidError, ValidRule};
@@ -40,8 +41,8 @@ mod test {
             age:  15,
         };
 
-        assert_eq!(user.size(&User::FIELDS.age), 15);
         assert_eq!(user.size(&User::FIELDS.name), 5);
+        assert_eq!(user.size(&User::FIELDS.age), 15);
     }
 
     #[test]
@@ -108,5 +109,71 @@ mod test {
         assert_eq!(too_old2.is_valid(), Err(ValidError::BadStuff));
         assert_eq!(ok.is_valid(), Ok(()));
         assert_eq!(ok2.is_valid(), Ok(()));
+    }
+
+    #[test]
+    fn range() {
+        #[reflected]
+        #[derive(Default)]
+        struct User {
+            age: usize,
+        }
+
+        impl Valid for User {
+            fn rules() -> Vec<ValidEntry> {
+                vec![ValidEntry::new(&User::FIELDS.age, ValidRule::Range(14, 18))]
+            }
+        }
+
+        let too_young1 = User { age: 5 };
+        let too_young2 = User { age: 13 };
+        let ok = User { age: 14 };
+        let ok2 = User { age: 15 };
+        let ok3 = User { age: 18 };
+        let too_old1 = User { age: 19 };
+        let too_old2 = User { age: 50 };
+
+        assert_eq!(too_young1.is_valid(), Err(ValidError::BadStuff));
+        assert_eq!(too_young2.is_valid(), Err(ValidError::BadStuff));
+        assert_eq!(ok.is_valid(), Ok(()));
+        assert_eq!(ok2.is_valid(), Ok(()));
+        assert_eq!(ok3.is_valid(), Ok(()));
+        assert_eq!(too_old1.is_valid(), Err(ValidError::BadStuff));
+        assert_eq!(too_old2.is_valid(), Err(ValidError::BadStuff));
+    }
+
+    #[test]
+    fn equals() {
+        #[reflected]
+        #[derive(Default)]
+        struct User {
+            pass:         String,
+            confirm_pass: String,
+            code:         u32,
+            confirm_code: u32,
+        }
+
+        impl Valid for User {
+            fn rules() -> Vec<ValidEntry> {
+                vec![
+                    ValidEntry::new(&User::FIELDS.pass, ValidRule::Equals(&User::FIELDS.confirm_pass)),
+                    ValidEntry::new(&User::FIELDS.code, ValidRule::Equals(&User::FIELDS.confirm_code)),
+                ]
+            }
+        }
+
+        let mut bad_pass = User::random();
+        bad_pass.confirm_pass = "aaaaaaaaaaaa".into();
+
+        let mut bad_code = User::random();
+        bad_code.confirm_code = 1111111111;
+
+        let mut ok = User::random();
+        ok.confirm_pass = ok.pass.clone();
+        ok.confirm_code = ok.code;
+
+        assert_eq!(bad_pass.is_valid(), Err(ValidError::BadStuff));
+        assert_eq!(bad_code.is_valid(), Err(ValidError::BadStuff));
+        assert_eq!(ok.is_valid(), Ok(()));
     }
 }
