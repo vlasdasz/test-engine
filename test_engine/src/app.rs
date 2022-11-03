@@ -1,5 +1,3 @@
-#![allow(clippy::mismatched_target_os)]
-
 use core::ffi::{c_float, c_int};
 use std::path::{Path, PathBuf};
 

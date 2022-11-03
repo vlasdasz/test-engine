@@ -89,7 +89,7 @@ impl Font {
 }
 
 impl Font {
-    pub fn default() -> Handle<Self> {
+    pub fn san_francisco() -> Handle<Self> {
         Font::get("SF.otf")
     }
 

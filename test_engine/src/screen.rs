@@ -1,5 +1,3 @@
-#![allow(clippy::mismatched_target_os)]
-
 use std::{ops::DerefMut, path::Path, ptr::null_mut};
 
 use gl_image::ImageShaders;
@@ -110,7 +108,7 @@ impl Screen {
         self.ui.prev_time = now;
 
         self.ui.frame_time = interval as f64 / 1000000000.0;
-        self.ui.fps = (1.0 / self.ui.frame_time as f64) as u64;
+        self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
         let fps = self.ui.fps;
         self.ui.debug_view.fps.set(fps);
@@ -162,7 +160,7 @@ impl Screen {
     }
 
     fn update_level(&mut self) {
-        let cursor_position = self.ui.cursor_position.clone();
+        let cursor_position = self.ui.cursor_position;
 
         let Some(level) = &mut self.ui.level else {
             return;

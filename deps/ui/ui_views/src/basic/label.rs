@@ -77,7 +77,7 @@ impl Label {
 impl ViewCallbacks for Label {
     fn setup(&mut self) {
         self.text_color = Color::GREEN;
-        self.font = Font::default();
+        self.font = Font::san_francisco();
 
         self.image_view.place.center();
 

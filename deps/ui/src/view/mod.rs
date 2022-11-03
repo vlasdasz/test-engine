@@ -1,5 +1,3 @@
-#![allow(clippy::module_inception)]
-
 mod view;
 mod view_animation;
 mod view_base;

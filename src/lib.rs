@@ -1,6 +1,4 @@
 #![allow(incomplete_features)]
-#![allow(clippy::mismatched_target_os)]
-#![allow(clippy::module_inception)]
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]

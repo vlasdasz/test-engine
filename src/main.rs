@@ -1,5 +1,4 @@
 #![allow(incomplete_features)]
-#![allow(clippy::module_inception)]
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]

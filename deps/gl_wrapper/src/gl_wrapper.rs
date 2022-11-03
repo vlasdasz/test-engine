@@ -1,5 +1,3 @@
-#![allow(clippy::mismatched_target_os)]
-
 #[cfg(mobile)]
 use gles31_sys::*;
 use gm::{flat::Rect, Color};

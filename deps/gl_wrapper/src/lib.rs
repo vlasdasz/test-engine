@@ -1,4 +1,3 @@
-#![allow(clippy::mismatched_target_os)]
 #![feature(const_trait_impl)]
 #![feature(const_convert)]
 

@@ -1,5 +1,3 @@
-#![allow(clippy::mismatched_target_os)]
-
 use std::{borrow::Borrow, cell::RefCell, collections::HashMap, ops::DerefMut};
 
 use gl_image::draw_image;

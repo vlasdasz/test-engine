@@ -1,5 +1,4 @@
 #![cfg(desktop)]
-#![allow(clippy::mismatched_target_os)]
 
 extern crate glfw;
 
