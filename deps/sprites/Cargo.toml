@@ -10,7 +10,7 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 refs = "0.1.12"
-vents = "0.1.4"
+vents = "0.1.5"
 rtools = "0.1.8"
 crossbeam = "0.8"
 smart-default = "0.6"
