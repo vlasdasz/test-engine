@@ -23,14 +23,13 @@ pub trait Valid: Reflected {
 #[cfg(test)]
 mod test {
     use reflected::Reflected;
-    use reflected_proc::reflected;
+    use reflected_proc::Reflected;
 
     use crate::{valid_reflected::ValidReflected, Valid, ValidEntry, ValidError, ValidRule};
 
     #[test]
     fn size() {
-        #[reflected]
-        #[derive(Default)]
+        #[derive(Default, Reflected)]
         struct User {
             name: String,
             age:  usize,
@@ -47,8 +46,7 @@ mod test {
 
     #[test]
     fn no_rules() {
-        #[reflected]
-        #[derive(Default)]
+        #[derive(Default, Reflected)]
         struct User {}
 
         impl Valid for User {
@@ -63,8 +61,7 @@ mod test {
 
     #[test]
     fn min() {
-        #[reflected]
-        #[derive(Default)]
+        #[derive(Default, Reflected)]
         struct User {
             age: usize,
         }
@@ -88,8 +85,7 @@ mod test {
 
     #[test]
     fn max() {
-        #[reflected]
-        #[derive(Default)]
+        #[derive(Default, Reflected)]
         struct User {
             age: usize,
         }
@@ -113,8 +109,7 @@ mod test {
 
     #[test]
     fn range() {
-        #[reflected]
-        #[derive(Default)]
+        #[derive(Default, Reflected)]
         struct User {
             age: usize,
         }
@@ -144,8 +139,7 @@ mod test {
 
     #[test]
     fn equals() {
-        #[reflected]
-        #[derive(Default)]
+        #[derive(Default, Reflected)]
         struct User {
             pass:         String,
             confirm_pass: String,

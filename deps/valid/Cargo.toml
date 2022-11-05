@@ -9,5 +9,6 @@ edition = "2021"
 strum = "0.24"
 strum_macros = "0.24"
 
-reflected = "0.1.7"
-reflected_proc = "0.1.7"
+rtools = "0.1.9"
+reflected = "0.2.5"
+reflected_proc = "0.2.1"

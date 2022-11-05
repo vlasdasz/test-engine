@@ -1,6 +1,5 @@
 use gm::Color;
 use refs::ToWeak;
-use rtools::math::clamped_by;
 use smart_default::SmartDefault;
 use ui::{view, Event, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
 
@@ -41,7 +40,7 @@ impl Slider {
         }
 
         let half_circle = self.circle.frame().height() / 2.0;
-        let y_pos = clamped_by(half_circle, self.frame().height() - half_circle, touch.position.y);
+        let y_pos = half_circle.clamp(self.frame().height() - half_circle, touch.position.y);
 
         self.circle.set_y(y_pos - half_circle);
         self.raw_value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
