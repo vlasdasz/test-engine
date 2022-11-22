@@ -68,6 +68,21 @@ impl Placer {
         self.w(width).h(height)
     }
 
+    pub fn same_size(&mut self, view: impl Deref<Target = impl View>) -> &mut Self {
+        self.relative(view, Anchor::Size, 1)
+    }
+
+    pub fn same<const S: usize>(
+        &mut self,
+        view: impl Deref<Target = impl View> + Copy,
+        anchors: [Anchor; S],
+    ) -> &mut Self {
+        for anchor in anchors {
+            self.relative(view, anchor, 1);
+        }
+        self
+    }
+
     pub fn w(&mut self, w: impl IntoF32) -> &mut Self {
         self.rules.push(LayoutRule::make(Anchor::Width, w));
         self.has_width = true;
@@ -261,6 +276,8 @@ impl Placer {
             Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
             Anchor::Height => frame.size.height = a_frame.size.height * rule.offset,
             Anchor::Size => frame.size = a_frame.size * rule.offset,
+            Anchor::X => frame.origin.x = a_frame.origin.x * rule.offset,
+            Anchor::Y => frame.origin.y = a_frame.origin.y * rule.offset,
             _ => unimplemented!(),
         }
     }

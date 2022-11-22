@@ -17,6 +17,9 @@ pub enum Anchor {
     CenterV,
 
     Center,
+
+    X,
+    Y,
 }
 
 impl Anchor {

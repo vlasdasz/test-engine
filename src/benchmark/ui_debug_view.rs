@@ -6,7 +6,7 @@ use ui::{
     refs::{Own, Strong, ToWeak},
     UIManager, ViewCallbacks,
 };
-use ui_views::{Button, Label, LabeledTextField};
+use ui_views::{Alert, Button, Label, LabeledTextField};
 
 use crate::test_game::{TestGameLevel, TestGameView};
 
@@ -18,7 +18,8 @@ pub struct UIDebugView {
 
     label: SubView<Label>,
 
-    back: SubView<Button>,
+    alert: SubView<Button>,
+    back:  SubView<Button>,
 }
 
 impl ViewCallbacks for UIDebugView {
@@ -31,6 +32,18 @@ impl ViewCallbacks for UIDebugView {
         self.password.set_title("Password:");
 
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
+
+        self.alert
+            .set_text("Alert")
+            .place
+            .same(self.back, [Anchor::Size, Anchor::X])
+            .anchor(self.back, Anchor::Bot, 20);
+        self.alert.on_tap.sub(|_| {
+            Alert::show(
+                "lalala kok sos alala alal asas sa f dsf  jfdsjhfdg hjklfdg fdgs kjhlfdh jlj f \
+                 sdsdfsdjkl;sadfjkl sdfa lj; fdsa ",
+            );
+        });
 
         self.back.on_tap.sub(|_| {
             Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
