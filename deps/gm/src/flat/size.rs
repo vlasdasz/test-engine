@@ -22,8 +22,8 @@ impl Size {
         (self.width * self.width + self.height * self.height).sqrt()
     }
 
-    pub fn square(side: f32) -> Size {
-        (side, side).into()
+    pub fn square(&self) -> f32 {
+        self.width * self.height
     }
 
     pub fn is_valid(&self) -> bool {

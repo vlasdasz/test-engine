@@ -1,4 +1,4 @@
-use std::{ffi::c_void, hash::Hash, path::Path};
+use std::{ffi::c_void, hash::Hash, mem::size_of, path::Path};
 
 use gl_wrapper::{
     buffers::{Buffers, FrameBuffer},
@@ -11,6 +11,7 @@ use gm::{
 };
 use image::GenericImageView;
 use log::error;
+use refs::TotalSize;
 use rtools::{
     data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
     file::File,
@@ -26,16 +27,18 @@ pub struct Image {
     pub flipped:   bool,
     pub flipped_y: bool,
     gl_handle:     u32,
+    total_size:    usize,
 }
 
 impl Image {
     pub fn empty() -> Self {
         Self {
-            size:      Default::default(),
-            channels:  0,
-            flipped:   false,
-            flipped_y: false,
-            gl_handle: u32::MAX,
+            size:       Default::default(),
+            channels:   0,
+            flipped:    false,
+            flipped_y:  false,
+            gl_handle:  u32::MAX,
+            total_size: size_of::<Self>(),
         }
     }
 
@@ -55,6 +58,7 @@ impl Image {
             flipped: false,
             flipped_y: false,
             gl_handle,
+            total_size: size_of::<Image>() + size.square() as usize * channels as usize,
         }
     }
 
@@ -94,6 +98,7 @@ impl Image {
             flipped: false,
             flipped_y: false,
             gl_handle: buffer.texture_handle,
+            total_size: size_of::<Self>() + 10,
         };
 
         GLWrapper::clear_with_color(Color::GREEN);
@@ -146,4 +151,10 @@ pub fn draw_image(image: &Image, rect: &Rect, color: &Color) {
 
     image.bind();
     Buffers::get().full_image.draw();
+}
+
+impl TotalSize for Image {
+    fn total_size(&self) -> usize {
+        self.total_size
+    }
 }
