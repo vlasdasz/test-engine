@@ -113,6 +113,12 @@ impl Image {
 
 managed!(Image);
 
+impl Drop for Image {
+    fn drop(&mut self) {
+        ImageLoader::free(self.gl_handle);
+    }
+}
+
 impl LoadFromPath for Image {
     fn load(path: &Path) -> Image {
         let image = image::load_from_memory(&File::read(path)).unwrap_or_else(|_| {

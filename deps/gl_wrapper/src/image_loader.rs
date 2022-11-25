@@ -60,4 +60,8 @@ impl ImageLoader {
 
         id
     }
+
+    pub fn free(id: u32) {
+        GL!(DeleteTextures, 1, &id);
+    }
 }

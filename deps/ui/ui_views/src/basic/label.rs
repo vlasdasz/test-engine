@@ -11,6 +11,7 @@ use crate::ImageView;
 pub struct Label {
     font:         Handle<Font>,
     text:         String,
+    prev_text:    String,
     image_view:   SubView<ImageView>,
     text_color:   Color,
     #[default = 32.0]
@@ -69,8 +70,16 @@ impl Label {
     }
 
     fn set_letters(&mut self) {
+        for char in self.prev_text.chars() {
+            if ('0'..='9').contains(&char) {
+                self.image_view.image().free();
+                break;
+            }
+        }
+
         let image = render_text(&self.text, &self.font, self.size);
         self.image_view.set_image(image);
+        self.prev_text = self.text.clone();
     }
 }
 

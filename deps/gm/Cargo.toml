@@ -9,5 +9,5 @@ name = "gm"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-rtools = "0.1.12"
+rtools = "0.1.14"
 serde = { version = "1.0", features = ["derive"] }

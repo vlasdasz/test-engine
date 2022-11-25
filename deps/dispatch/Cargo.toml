@@ -9,5 +9,5 @@ name = "dispatch"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-rtools = "0.1.12"
+rtools = "0.1.14"
 tokio = { version = "1.21", features = ["full"] }
