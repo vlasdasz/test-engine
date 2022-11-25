@@ -4,7 +4,7 @@
 #![feature(arbitrary_self_types)]
 
 use test_engine::{paths::home, rtools::init_log, Screen};
-use ui::refs::Own;
+use ui::refs::{enable_ref_stats_counter, Own};
 
 use crate::benchmark::UIDebugView;
 
@@ -14,6 +14,8 @@ mod ui_test;
 
 #[tokio::main]
 async fn main() {
+    enable_ref_stats_counter(true);
+
     init_log(false, 4);
 
     let mut screen = Screen::new(

@@ -3,7 +3,7 @@ use test_engine::{
     view, Screen,
 };
 use ui::{
-    refs::{Own, Strong, ToWeak},
+    refs::{dump_ref_stats, Own, Strong, ToWeak},
     UIManager, ViewCallbacks,
 };
 use ui_views::{Alert, Button, Label, LabeledTextField};
@@ -20,6 +20,8 @@ pub struct UIDebugView {
 
     alert: SubView<Button>,
     back:  SubView<Button>,
+
+    stats: SubView<Button>,
 }
 
 impl ViewCallbacks for UIDebugView {
@@ -39,10 +41,7 @@ impl ViewCallbacks for UIDebugView {
             .same(self.back, [Anchor::Size, Anchor::X])
             .anchor(self.back, Anchor::Bot, 20);
         self.alert.on_tap.sub(|_| {
-            Alert::show(
-                "lalala kok sos alala alal asas sa f dsf  jfdsjhfdg hjklfdg fdgs kjhlfdh jlj f \
-                 sdsdfsdjkl;sadfjkl sdfa lj; fdsa ",
-            );
+            Alert::show("Sokol");
         });
 
         self.back.on_tap.sub(|_| {
@@ -53,5 +52,12 @@ impl ViewCallbacks for UIDebugView {
         let this = self.weak();
         self.label.place.br(10).relative(this, Anchor::Size, 0.4);
         self.label.set_text("Skoggo4");
+
+        self.stats.place.size(100, 20).tr(5);
+        self.stats.set_text("Print stats");
+        self.stats.on_tap.sub(|_| {
+            println!("===========================================================");
+            dump_ref_stats();
+        });
     }
 }

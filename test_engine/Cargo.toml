@@ -11,7 +11,7 @@ crate-type = ["rlib", "staticlib"]
 [dependencies]
 log = "0.4"
 home = "0.5"
-rtools = "0.1.9"
+rtools = "0.1.12"
 reflected = "0.2.5"
 smart-default = "0.6"
 
