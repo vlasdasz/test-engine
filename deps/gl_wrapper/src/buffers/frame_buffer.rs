@@ -8,7 +8,7 @@ use crate::GLWrapper;
 
 #[derive(Debug)]
 pub struct FrameBuffer {
-    buffer_handle:      u32,
+    pub buffer_handle:  u32,
     pub texture_handle: u32,
 }
 
@@ -19,6 +19,17 @@ impl FrameBuffer {
 
     pub fn unbind(&self) {
         GLWrapper::unbind_framebuffer();
+    }
+}
+
+impl Drop for FrameBuffer {
+    fn drop(&mut self) {
+        if self.texture_handle != u32::MAX {
+            GL!(DeleteTextures, 1, &self.texture_handle);
+        }
+        if self.buffer_handle != u32::MAX {
+            GL!(DeleteBuffers, 1, &self.buffer_handle);
+        }
     }
 }
 

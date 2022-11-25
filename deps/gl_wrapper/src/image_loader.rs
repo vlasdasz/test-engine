@@ -4,6 +4,8 @@ use std::ffi::c_void;
 use gles31_sys::*;
 use gm::flat::Size;
 
+use crate::buffers::FrameBuffer;
+
 pub struct ImageLoader;
 
 fn mode_for_channels(channels: u32) -> u32 {
@@ -18,12 +20,12 @@ fn mode_for_channels(channels: u32) -> u32 {
 
 impl ImageLoader {
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn load(data: *const c_void, size: Size, channels: u32) -> u32 {
-        let mut id = u32::MAX;
+    pub fn load(data: *const c_void, size: Size, channels: u32) -> FrameBuffer {
+        let mut texture_handle = u32::MAX;
 
-        GL!(GenTextures, 1, &mut id);
+        GL!(GenTextures, 1, &mut texture_handle);
 
-        GL!(BindTexture, GLC!(TEXTURE_2D), id);
+        GL!(BindTexture, GLC!(TEXTURE_2D), texture_handle);
 
         if channels == 1 {
             GL!(PixelStorei, GLC!(UNPACK_ALIGNMENT), 1);
@@ -56,12 +58,11 @@ impl ImageLoader {
             GLC!(LINEAR) as f32
         );
 
-        assert_ne!(id, u32::MAX);
+        assert_ne!(texture_handle, u32::MAX);
 
-        id
-    }
-
-    pub fn free(id: u32) {
-        GL!(DeleteTextures, 1, &id);
+        FrameBuffer {
+            texture_handle,
+            buffer_handle: u32::MAX,
+        }
     }
 }

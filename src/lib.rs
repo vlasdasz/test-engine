@@ -16,6 +16,7 @@ use ui::refs::Own;
 
 #[allow(unused_imports)]
 use crate::benchmark::UIDebugView;
+use crate::test_game::EmptyView;
 #[allow(unused_imports)]
 use crate::ui_test::UITestView;
 
@@ -76,7 +77,7 @@ pub extern "C" fn set_monitor(
             width,
             height,
             diagonal,
-            Own::<UIDebugView>::default(),
+            Own::<EmptyView>::default(),
         );
 
         APP = Box::into_raw(app);

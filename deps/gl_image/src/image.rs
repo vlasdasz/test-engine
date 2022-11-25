@@ -26,7 +26,7 @@ pub struct Image {
     pub channels:  u32,
     pub flipped:   bool,
     pub flipped_y: bool,
-    gl_handle:     u32,
+    buffer:        FrameBuffer,
     total_size:    usize,
 }
 
@@ -37,7 +37,10 @@ impl Image {
             channels:   0,
             flipped:    false,
             flipped_y:  false,
-            gl_handle:  u32::MAX,
+            buffer:     FrameBuffer {
+                buffer_handle:  u32::MAX,
+                texture_handle: u32::MAX,
+            },
             total_size: size_of::<Self>(),
         }
     }
@@ -47,17 +50,17 @@ impl Image {
     }
 
     pub fn is_invalid(&self) -> bool {
-        self.gl_handle == u32::MAX
+        self.buffer.texture_handle == u32::MAX
     }
 
     fn load_to_gl(data: *const c_void, size: Size, channels: u32) -> Image {
-        let gl_handle = ImageLoader::load(data, size, channels);
+        let buffer = ImageLoader::load(data, size, channels);
         Image {
             size,
             channels,
             flipped: false,
             flipped_y: false,
-            gl_handle,
+            buffer,
             total_size: size_of::<Image>() + size.square() as usize * channels as usize,
         }
     }
@@ -71,7 +74,7 @@ impl Image {
     }
 
     pub fn bind(&self) {
-        GLWrapper::bind_texture(self.gl_handle)
+        GLWrapper::bind_texture(self.buffer.texture_handle)
     }
 }
 
@@ -97,7 +100,7 @@ impl Image {
             channels: 4,
             flipped: false,
             flipped_y: false,
-            gl_handle: buffer.texture_handle,
+            buffer,
             total_size: size_of::<Self>() + 10,
         };
 
@@ -105,19 +108,13 @@ impl Image {
 
         draw(&mut image);
 
-        buffer.unbind();
+        GLWrapper::unbind_framebuffer();
 
         Image::add_with_hash(hash, image)
     }
 }
 
 managed!(Image);
-
-impl Drop for Image {
-    fn drop(&mut self) {
-        ImageLoader::free(self.gl_handle);
-    }
-}
 
 impl LoadFromPath for Image {
     fn load(path: &Path) -> Image {

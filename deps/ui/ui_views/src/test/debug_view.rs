@@ -1,6 +1,6 @@
 use refs::ToWeak;
 use rtools::platform::Platform;
-use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewFrame};
+use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::Label;
 
@@ -17,6 +17,8 @@ pub struct DebugView {
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
+        self.set_hidden(true);
+
         self.place.size(280, 60).all_ver();
 
         self.fps_label.set_text("fps label");

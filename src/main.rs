@@ -6,7 +6,7 @@
 use test_engine::{paths::home, rtools::init_log, Screen};
 use ui::refs::{enable_ref_stats_counter, Own};
 
-use crate::benchmark::UIDebugView;
+use crate::{benchmark::UIDebugView, test_game::EmptyView};
 
 mod benchmark;
 mod test_game;
@@ -21,7 +21,8 @@ async fn main() {
     let mut screen = Screen::new(
         (1000, 600),
         &home().join("test_engine"),
-        Own::<UIDebugView>::default(),
+        //  Own::<UIDebugView>::default(),
+        Own::<EmptyView>::default(),
     );
 
     // screen.ui.set_level(Strong::<TestGameLevel>::default());

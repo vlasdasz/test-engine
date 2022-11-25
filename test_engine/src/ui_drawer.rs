@@ -101,6 +101,9 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn update(&self, view: &mut dyn View) {
+        if view.is_hidden() {
+            return;
+        }
         view.update();
         view.commit_animations();
         for view in view.subviews_mut() {
