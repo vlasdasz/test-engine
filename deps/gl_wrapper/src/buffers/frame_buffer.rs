@@ -24,11 +24,11 @@ impl FrameBuffer {
 
 impl Drop for FrameBuffer {
     fn drop(&mut self) {
+        if self.buffer_handle != u32::MAX {
+            GL!(DeleteFramebuffers, 1, &self.buffer_handle);
+        }
         if self.texture_handle != u32::MAX {
             GL!(DeleteTextures, 1, &self.texture_handle);
-        }
-        if self.buffer_handle != u32::MAX {
-            GL!(DeleteBuffers, 1, &self.buffer_handle);
         }
     }
 }
@@ -84,7 +84,7 @@ impl<T: Into<Size>> From<T> for FrameBuffer {
             0
         );
 
-        // GL!(DrawBuffers, 1, &GLC!(COLOR_ATTACHMENT0));
+        GL!(DrawBuffers, 1, &GLC!(COLOR_ATTACHMENT0));
 
         if GL!(CheckFramebufferStatus, GLC!(FRAMEBUFFER)) != GLC!(FRAMEBUFFER_COMPLETE) {
             panic!("Failed to initialize framebuffer")

@@ -10,6 +10,6 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 tokio = "1.21"
-rtools = "0.1.14"
+rtools = "0.1.16"
 
 gm = { path = "../gm" }

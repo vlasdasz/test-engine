@@ -9,9 +9,9 @@ name = "sprites"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-refs = "0.1.18"
+refs = "0.1.19"
 vents = "0.1.5"
-rtools = "0.1.14"
+rtools = "0.1.16"
 crossbeam = "0.8"
 smart-default = "0.6"
 rapier2d = { version = "0.14", features = [ "parallel", "simd-stable" ] }

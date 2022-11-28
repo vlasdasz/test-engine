@@ -9,9 +9,9 @@ name = "ui"
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-refs = "0.1.18"
+refs = "0.1.19"
 vents = "0.1.5"
-rtools = "0.1.14"
+rtools = "0.1.16"
 smart-default = "0.6"
 
 gm = { path = "../gm" }
