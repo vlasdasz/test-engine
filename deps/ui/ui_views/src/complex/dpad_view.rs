@@ -34,14 +34,17 @@ impl DPadView {
 
 impl ViewCallbacks for DPadView {
     fn setup(&mut self) {
-        [self.up, self.down, self.left, self.right].apply2(
-            [Direction::Up, Direction::Down, Direction::Left, Direction::Right],
-            |view, direction| {
-                let this = self.weak();
-                view.on_tap.sub(move |_| this.on_press.trigger(direction));
-                view.set_corner_radius(5);
-            },
-        );
+        [
+            (self.up, Direction::Up),
+            (self.down, Direction::Down),
+            (self.left, Direction::Left),
+            (self.right, Direction::Right),
+        ]
+        .apply(|(mut view, direction)| {
+            let this = self.weak();
+            view.on_tap.sub(move |_| this.on_press.trigger(direction));
+            view.set_corner_radius(5);
+        });
     }
 
     fn update(&mut self) {

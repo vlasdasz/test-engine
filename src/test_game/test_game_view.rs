@@ -33,7 +33,7 @@ impl TestGameView {
     fn setup_level(&mut self) {
         self.dpad
             .on_press
-            .sub(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(dir));
+            .sub(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(&dir));
     }
 
     fn setup_ui(&mut self) {
@@ -47,24 +47,22 @@ impl TestGameView {
             Screen::current().ui.set_scale(scale);
         });
 
-        [' ', 'w', 's', 'd', 'a'].apply2(
-            [
-                Direction::Up,
-                Direction::Up,
-                Direction::Down,
-                Direction::Right,
-                Direction::Left,
-            ],
-            |key, direction| {
-                Screen::current().ui.keymap.add(*key, self, move |_| {
-                    if let Some(level) = &mut Screen::current().ui.level {
-                        if let Some(player) = level.player().get() {
-                            player.move_by_direction(direction)
-                        }
+        [
+            (' ', Direction::Up),
+            ('w', Direction::Up),
+            ('s', Direction::Down),
+            ('d', Direction::Right),
+            ('a', Direction::Left),
+        ]
+        .apply(|(key, direction)| {
+            Screen::current().ui.keymap.add(key, self, move |_| {
+                if let Some(level) = &mut Screen::current().ui.level {
+                    if let Some(player) = level.player().get() {
+                        player.move_by_direction(&direction)
                     }
-                });
-            },
-        );
+                }
+            });
+        });
 
         self.sprite_view.place.tr(10).size(400, 80);
 
@@ -132,7 +130,7 @@ impl TestGameView {
             play.set_text("Play sound");
             play.on_tap.set(self, |mut this, _| this.sound.play());
 
-            [to_benchmark, to_test, play].apply(|button| {
+            [to_benchmark, to_test, play].apply(|mut button| {
                 button.set_color(Color::WHITE);
                 button.set_corner_radius(8);
             });

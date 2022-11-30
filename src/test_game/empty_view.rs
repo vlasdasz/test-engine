@@ -38,7 +38,7 @@ impl ViewCallbacks for EmptyView {
         // let mut obj = Test::add_with_hash(u64::random(), Test::default());
         // obj.free();
         //
-        let mut image = render_text("SPEspgfdjsklfjdslkfjklds", &Font::san_francisco().deref(), 16);
+        let mut image = render_text("SPEspgfdjsklfjdslkfjklds", Font::san_francisco().deref(), 16);
         image.free();
 
         // let mut image = Image::get("up.png");

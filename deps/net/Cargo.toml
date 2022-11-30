@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 log = "0.4"
-rtools = "0.1.16"
+rtools = "0.1.18"
 serde_json = "1.0"
 
 serde = { version = "1.0", features = ["derive"] }
