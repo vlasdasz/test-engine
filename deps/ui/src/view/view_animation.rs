@@ -65,7 +65,7 @@ impl<T: ?Sized + View> ViewAnimation for T {
     }
 
     fn commit_animations(&mut self) {
-        if UIManager::animations().is_empty() {
+        if UIManager::get().animations.is_empty() {
             return;
         }
         for animation in &mut UIManager::get().animations {

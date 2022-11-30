@@ -8,6 +8,7 @@ use gm::{flat::Size, volume::GyroData, Color};
 use net::API;
 use rtools::{Time, Unwrap};
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
+use text::Font;
 use ui::{
     layout::Placer,
     refs::{Own, ToWeak, Weak},
@@ -132,11 +133,11 @@ impl Screen {
             self.update_level();
         }
 
-        let view = UIManager::root_view();
+        let mut view = UIManager::root_view();
 
         view.calculate_frames();
-        UIManager::drawer().update(view);
-        UIManager::drawer().draw(view);
+        UIManager::drawer().update(view.deref_mut());
+        UIManager::drawer().draw(view.deref_mut());
 
         self.ui.debug_view.calculate_frames();
         UIManager::drawer().update(self.ui.debug_view.deref_mut());
@@ -245,5 +246,12 @@ impl Screen {
         screen.init(size.into(), view);
 
         screen
+    }
+}
+
+impl Drop for Screen {
+    fn drop(&mut self) {
+        UIManager::drop();
+        Font::san_francisco().free();
     }
 }

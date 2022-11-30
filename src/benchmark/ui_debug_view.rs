@@ -58,6 +58,7 @@ impl ViewCallbacks for UIDebugView {
         self.stats.on_tap.sub(|_| {
             println!("===========================================================");
             dump_ref_stats();
+            println!("===========================================================");
         });
     }
 }

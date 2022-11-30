@@ -1,8 +1,8 @@
-use std::ops::{Deref, DerefMut};
+use std::{ops::Deref, sync::Mutex};
 
 use gm::flat::Size;
-use refs::{Own, Strong, Weak};
-use rtools::{static_default, Unwrap};
+use refs::{Own, Strong, ToWeak, Weak};
+use rtools::Unwrap;
 use smart_default::SmartDefault;
 
 use crate::{
@@ -10,6 +10,8 @@ use crate::{
     view::{ViewFrame, ViewSubviews},
     BaseView, UIAnimation, UIDrawer, View,
 };
+
+static MANAGER: Mutex<Unwrap<Own<UIManager>>> = Mutex::new(Unwrap::default());
 
 #[derive(SmartDefault)]
 pub struct UIManager {
@@ -39,24 +41,40 @@ pub struct UIManager {
     pub open_keyboard:  bool,
     pub close_keyboard: bool,
 }
-static_default!(UIManager);
 
 impl UIManager {
+    pub fn drop() {
+        MANAGER.lock().unwrap().take();
+    }
+
+    pub fn get() -> Weak<UIManager> {
+        let mut lock = MANAGER.lock().unwrap();
+
+        if lock.is_none() {
+            *lock = Unwrap::new(Own::new(Self::default()));
+        }
+
+        let unwrap = lock.deref();
+        let own = unwrap.deref();
+        let weak = own.weak();
+        weak
+    }
+
     pub fn window_size() -> Size {
         Self::get().root_view.frame.size
     }
 
-    pub fn root_view() -> &'static mut dyn View {
-        Self::get().root_view.deref_mut()
+    pub fn root_view() -> Weak<dyn View> {
+        Self::get().root_view.weak()
     }
 
-    pub(crate) fn views_to_remove() -> &'static mut Vec<Weak<dyn View>> {
-        &mut Self::get().views_to_remove
-    }
+    // pub(crate) fn views_to_remove() -> &'static mut Vec<Weak<dyn View>> {
+    //     &mut Self::get().views_to_remove
+    // }
 
-    pub(crate) fn animations() -> &'static [UIAnimation] {
-        &Self::get().animations
-    }
+    // pub(crate) fn animations() -> &'static [UIAnimation] {
+    //     &Self::get().animations
+    // }
 
     pub(crate) fn add_animation(anim: UIAnimation) {
         Self::get().animations.push(anim)
@@ -76,15 +94,15 @@ impl UIManager {
         Self::get().touch_disabled = false
     }
 
-    pub fn touch_root() -> &'static mut dyn View {
-        let this = Self::get();
+    pub fn touch_root() -> Weak<dyn View> {
+        let mut this = Self::get();
 
         this.touch_stack.retain(|a| !a.freed());
 
         if let Some(touch) = this.touch_stack.last_mut() {
-            touch.deref_mut()
+            *touch
         } else {
-            this.root_view.deref_mut()
+            this.root_view.weak()
         }
     }
 }
@@ -92,14 +110,16 @@ impl UIManager {
 impl UIManager {
     pub(crate) fn schedule_remove(mut view: Weak<dyn View>) {
         view.is_deleted = true;
-        UIManager::views_to_remove().push(view);
+        Self::get().views_to_remove.push(view);
     }
 
     pub fn remove_scheduled() {
-        if UIManager::views_to_remove().is_empty() {
+        let mut this = Self::get();
+
+        if this.views_to_remove.is_empty() {
             return;
         }
-        let to_remove = UIManager::views_to_remove().drain(..);
+        let to_remove = this.views_to_remove.drain(..);
         for view in to_remove {
             let index = view
                 .superview()
@@ -127,8 +147,8 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub fn drawer() -> &'static dyn UIDrawer {
-        Self::get().drawer.deref().deref()
+    pub fn drawer() -> Weak<dyn UIDrawer> {
+        Self::get().drawer.deref().weak()
     }
 
     pub fn set_drawer(drawer: Own<dyn UIDrawer>) {

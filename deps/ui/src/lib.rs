@@ -1,6 +1,8 @@
 #![allow(incomplete_features)]
 #![feature(trait_upcasting)]
 #![feature(specialization)]
+#![feature(const_default_impls)]
+#![feature(const_trait_impl)]
 
 pub use input::Touch;
 

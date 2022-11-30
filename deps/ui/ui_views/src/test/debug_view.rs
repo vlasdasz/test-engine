@@ -17,7 +17,7 @@ pub struct DebugView {
 
 impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
-        self.set_hidden(true);
+        self.set_hidden(false);
 
         self.place.size(280, 60).all_ver();
 
