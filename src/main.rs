@@ -4,7 +4,7 @@
 #![feature(arbitrary_self_types)]
 
 use test_engine::{paths::home, rtools::init_log, Screen};
-use ui::refs::{dump_ref_stats, enable_ref_stats_counter, Own};
+use ui::refs::{enable_ref_stats_counter, Own};
 
 use crate::benchmark::UIDebugView;
 
@@ -24,11 +24,5 @@ async fn main() {
         Own::<UIDebugView>::default(),
     );
 
-    // screen.ui.set_level(Strong::<TestGameLevel>::default());
-
     screen.start_main_loop();
-
-    drop(screen);
-
-    dump_ref_stats();
 }

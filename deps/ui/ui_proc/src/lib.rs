@@ -58,13 +58,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 fn add_inits(fields: &FieldsNamed) -> TokenStream2 {
     let subview = Ident::new("SubView", Span::call_site());
 
-    // dbg!(&subview);
-
     let mut res = quote!();
 
     for field in &fields.named {
-        // dbg!(&field.ident);
-
         let name = field.ident.as_ref().unwrap();
 
         if let Type::Path(path) = &field.ty {
@@ -72,7 +68,7 @@ fn add_inits(fields: &FieldsNamed) -> TokenStream2 {
                 if segment.ident == subview {
                     res = quote! {
                         #res
-                        self.#name = self.initialize_view();
+                        self.#name = self.add_view();
                     }
                 }
             }

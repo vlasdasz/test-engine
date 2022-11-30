@@ -108,25 +108,25 @@ impl TestGameView {
             .sub(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));
 
         {
-            let mut view = self.initialize_view::<BaseView>();
+            let mut view = self.add_view::<BaseView>();
 
             view.place.b(10).center_hor().size(150, 100).all_ver();
 
-            let mut to_benchmark = view.initialize_view::<Button>();
+            let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap.sub(|_| {
                 Screen::current().ui.set_level(Strong::<BenchmarkLevel>::default());
                 UIManager::set_view(Own::<UIDebugView>::default());
             });
 
-            let mut to_test = view.initialize_view::<Button>();
+            let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap.sub(|_| {
                 Screen::current().ui.set_level(Strong::<LevelBase>::default());
                 UIManager::set_view(Own::<UIDebugView>::default());
             });
 
-            let mut play = view.initialize_view::<Button>();
+            let mut play = view.add_view::<Button>();
             play.set_text("Play sound");
             play.on_tap.set(self, |mut this, _| this.sound.play());
 

@@ -12,6 +12,24 @@ use rtools::{
     hash, IntoF32,
 };
 
+pub fn text_layout(text: &str, font: &Font, size: impl IntoF32) -> (Layout, Size) {
+    let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
+
+    layout.append(&[&font.font], &TextStyle::new(text, size.into_f32(), 0));
+
+    let size = layout
+        .glyphs()
+        .last()
+        .map(|last| (last.x + last.width as f32, last.y + last.height as f32).into())
+        .unwrap_or_default();
+
+    (layout, size)
+}
+
+pub fn text_size(text: &str, font: &Font, size: impl IntoF32) -> Size {
+    text_layout(text, font, size).1
+}
+
 pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image> {
     if let Some(image) = Image::handle_with_name(text) {
         return image;
@@ -21,14 +39,7 @@ pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image>
         return Image::add_with_hash(hash(text), Image::empty());
     }
 
-    let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
-
-    layout.append(&[&font.font], &TextStyle::new(text, size.into_f32(), 0));
-
-    let size: Size = {
-        let last = layout.glyphs().last().unwrap();
-        (last.x + last.width as f32, last.y + last.height as f32).into()
-    };
+    let (layout, size) = text_layout(text, font, size);
 
     Image::draw(text, size, |image| {
         for glyph in layout.glyphs() {

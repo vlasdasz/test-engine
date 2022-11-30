@@ -6,7 +6,7 @@ use ui::{
     refs::{dump_ref_stats, Own, Strong, ToWeak},
     UIManager, ViewCallbacks,
 };
-use ui_views::{Alert, Button, Label, LabeledTextField};
+use ui_views::{Alert, Button, Label, LabeledTextField, MultilineLabel};
 
 use crate::test_game::{TestGameLevel, TestGameView};
 
@@ -16,7 +16,8 @@ pub struct UIDebugView {
     password: SubView<LabeledTextField>,
     login:    SubView<LabeledTextField>,
 
-    label: SubView<Label>,
+    label:       SubView<Label>,
+    multi_label: SubView<MultilineLabel>,
 
     alert: SubView<Button>,
     back:  SubView<Button>,
@@ -38,7 +39,7 @@ impl ViewCallbacks for UIDebugView {
         self.alert
             .set_text("Alert")
             .place
-            .same(self.back, [Anchor::Size, Anchor::X])
+            .same([Anchor::Size, Anchor::X], self.back)
             .anchor(self.back, Anchor::Bot, 20);
         self.alert.on_tap.sub(|_| {
             Alert::show("Sokol");
@@ -50,8 +51,12 @@ impl ViewCallbacks for UIDebugView {
         });
 
         let this = self.weak();
-        self.label.place.br(10).relative(this, Anchor::Size, 0.4);
+
+        self.label.place.br(10).relative(Anchor::Size, 0.4, this);
         self.label.set_text("Skoggo4");
+
+        self.multi_label.place.tl(10).same_size(self.label);
+        self.multi_label.set_text("Multi Skoggo4");
 
         self.stats.place.size(100, 20).tr(5);
         self.stats.set_text("Print stats");

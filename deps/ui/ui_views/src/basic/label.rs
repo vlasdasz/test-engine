@@ -9,11 +9,11 @@ use crate::ImageView;
 #[view]
 #[derive(SmartDefault)]
 pub struct Label {
+    #[default(Font::san_francisco())]
     font:         Handle<Font>,
     text:         String,
     prev_text:    String,
     image_view:   SubView<ImageView>,
-    text_color:   Color,
     #[default = 32.0]
     size:         f32,
     needs_update: bool,
@@ -85,11 +85,7 @@ impl Label {
 
 impl ViewCallbacks for Label {
     fn setup(&mut self) {
-        self.text_color = Color::GREEN;
-        self.font = Font::san_francisco();
-
         self.image_view.place.center();
-
         self.set_letters();
     }
 

@@ -69,16 +69,16 @@ impl Placer {
     }
 
     pub fn same_size(&mut self, view: impl Deref<Target = impl View>) -> &mut Self {
-        self.relative(view, Anchor::Size, 1)
+        self.relative(Anchor::Size, 1, view)
     }
 
     pub fn same<const S: usize>(
         &mut self,
-        view: impl Deref<Target = impl View> + Copy,
         anchors: [Anchor; S],
+        view: impl Deref<Target = impl View> + Copy,
     ) -> &mut Self {
         for anchor in anchors {
-            self.relative(view, anchor, 1);
+            self.relative(anchor, 1, view);
         }
         self
     }
@@ -151,9 +151,9 @@ impl Placer {
 
     pub fn relative(
         &mut self,
-        view: impl Deref<Target = impl View>,
         side: Anchor,
         ratio: impl IntoF32,
+        view: impl Deref<Target = impl View>,
     ) -> &mut Self {
         self.has_width = if side.has_width() { true } else { self.has_width };
         self.has_height = if side.has_height() { true } else { self.has_height };

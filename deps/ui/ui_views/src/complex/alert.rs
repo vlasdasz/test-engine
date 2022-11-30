@@ -32,7 +32,7 @@ impl Alert {
 
 impl ViewCallbacks for Alert {
     fn setup(&mut self) {
-        self.place.size(200, 80).center();
+        self.place.size(240, 100).center();
         self.set_color(Color::WHITE)
             .set_corner_radius(10)
             .set_border_color(Color::BLACK);
