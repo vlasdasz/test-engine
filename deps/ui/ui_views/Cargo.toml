@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 refs = "0.1.23"
-rtools = "0.1.21"
+rtools = "0.1.22"
 reflected = "0.2.5"
 #validator = { version = "0.16", features = ["derive"] }
 smart-default = "0.6"
@@ -17,3 +17,6 @@ gm = { path = "../../gm" }
 text = { path = "../../text" }
 gl_image = { path = "../../gl_image" }
 gl_wrapper = { path = "../../gl_wrapper" }
+
+[dev-dependencies]
+serial_test = "0.9.0"

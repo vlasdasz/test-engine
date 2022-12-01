@@ -10,7 +10,7 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 log = "0.4"
-rtools = "0.1.21"
+rtools = "0.1.22"
 fontdue = "0.7"
 
 gm = { path = "../gm" }

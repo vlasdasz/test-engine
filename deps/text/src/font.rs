@@ -2,6 +2,7 @@ use std::{
     ffi::c_void,
     ops::Range,
     path::{Path, PathBuf},
+    sync::Mutex,
 };
 
 use gl_image::Image;
@@ -14,6 +15,10 @@ use rtools::{
 };
 
 use crate::glyph::Glyph;
+
+static RENDER: Mutex<bool> = Mutex::new(true);
+
+pub static DEFAULT_FONT_SIZE: u32 = 64;
 
 fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     let (metrics, bitmap) = font.rasterize(symbol, size);
@@ -45,10 +50,7 @@ pub struct Font {
 }
 
 impl Font {
-    fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
-        trace!("Loading font {:?}", path);
-
-        let data = File::read(path);
+    fn from_data(path: &Path, data: &[u8], size: u32) -> Result<Font, &'static str> {
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
         let mut glyphs = Vec::with_capacity(128);
@@ -56,19 +58,21 @@ impl Font {
         let mut y_max = f32::MIN;
         let mut y_min = f32::MAX;
 
-        for symbol in (Range {
-            start: 0 as char,
-            end:   127 as char,
-        }) {
-            let glyph = render_glyph(&font, symbol, size as f32);
-            if y_max < glyph.y_max() {
-                y_max = glyph.y_max()
-            }
-            if y_min > glyph.y_min() {
-                y_min = glyph.y_min()
-            }
+        if *RENDER.lock().unwrap() {
+            for symbol in (Range {
+                start: 0 as char,
+                end:   127 as char,
+            }) {
+                let glyph = render_glyph(&font, symbol, size as f32);
+                if y_max < glyph.y_max() {
+                    y_max = glyph.y_max()
+                }
+                if y_min > glyph.y_min() {
+                    y_min = glyph.y_min()
+                }
 
-            glyphs.push(glyph);
+                glyphs.push(glyph);
+            }
         }
 
         let height = y_max - y_min;
@@ -86,11 +90,33 @@ impl Font {
             glyphs,
         })
     }
+
+    fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
+        trace!("Loading font {:?}", path);
+        Self::from_data(path, &File::read(path), size)
+    }
 }
 
 impl Font {
     pub fn san_francisco() -> Handle<Self> {
-        Font::get("SF.otf")
+        const SF: &str = "default_sf";
+
+        if let Some(sf) = Font::handle_with_name(SF) {
+            return sf;
+        }
+
+        let sf = Font::from_data(
+            &PathBuf::from(SF),
+            include_bytes!("fonts/SF.otf"),
+            DEFAULT_FONT_SIZE,
+        )
+        .expect("BUG: Failed to render default font");
+
+        Font::add_with_name(SF, sf)
+    }
+
+    pub fn disable_render() {
+        *RENDER.lock().unwrap() = false
     }
 
     pub fn glyph_for_char(&self, ch: char) -> &Glyph {
@@ -104,7 +130,7 @@ impl Font {
 
 impl LoadFromPath for Font {
     fn load(path: &Path) -> Self {
-        Font::new(path, 48).unwrap()
+        Font::new(path, DEFAULT_FONT_SIZE).unwrap()
     }
 }
 

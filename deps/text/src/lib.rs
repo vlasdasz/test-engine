@@ -3,7 +3,7 @@ mod glyph;
 
 use std::ops::Deref;
 
-pub use font::Font;
+pub use font::*;
 use fontdue::layout::{CoordinateSystem, Layout, TextStyle};
 use gl_image::{draw_image, Image};
 use gm::{flat::Size, Color};

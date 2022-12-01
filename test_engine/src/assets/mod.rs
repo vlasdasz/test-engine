@@ -7,6 +7,7 @@ use gl_image::Image;
 use rtools::data_manager::DataManager;
 pub use shaders::Shaders;
 use text::Font;
+use ui::refs::is_main_thread;
 
 use crate::paths::Paths;
 
@@ -19,6 +20,8 @@ pub struct Assets {
 
 impl Assets {
     pub fn init(root_path: &Path) {
+        assert!(is_main_thread());
+
         let paths = Paths::new(root_path);
 
         Image::set_path(&paths.images);
@@ -34,6 +37,7 @@ impl Assets {
     }
 
     pub fn get() -> &'static Assets {
+        assert!(is_main_thread());
         unsafe {
             if ASSETS.is_null() {
                 panic!("Assets were not initialized");
