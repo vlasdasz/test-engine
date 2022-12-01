@@ -25,8 +25,9 @@ pub struct ViewBase {
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,
 
-    pub(crate) superview: Weak<dyn View>,
-    pub(crate) subviews:  Vec<Own<dyn View>>,
+    pub(crate) superview:        Weak<dyn View>,
+    pub(crate) subviews:         Vec<Own<dyn View>>,
+    pub(crate) deleted_subviews: Vec<Own<dyn View>>,
 
     pub(crate) touch_id: u64,
 

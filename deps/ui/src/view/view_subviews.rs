@@ -1,12 +1,11 @@
 use refs::{Own, ToWeak, Weak};
 
-use crate::{layout::Placer, SubView, UIManager, View};
+use crate::{layout::Placer, SubView, View};
 pub trait ViewSubviews {
     fn superview(&self) -> Weak<dyn View>;
     fn subviews(&self) -> &[Own<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Own<dyn View>];
     fn remove_from_superview(&mut self);
-    fn remove_subview_at(&mut self, index: usize) -> Own<dyn View>;
     fn remove_all_subviews(&mut self);
 
     fn add_view<V: 'static + View + Default>(&mut self) -> SubView<V>;
@@ -27,17 +26,18 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_from_superview(&mut self) {
-        UIManager::schedule_remove(self.weak_view())
-    }
+        let this_addr = self.weak_view().addr();
+        let super_subs = &mut self.superview.subviews;
 
-    fn remove_subview_at(&mut self, index: usize) -> Own<dyn View> {
-        self.subviews.remove(index)
+        let index = super_subs.iter().position(|a| a.addr() == this_addr).unwrap();
+
+        let removed = super_subs.remove(index);
+
+        self.superview.deleted_subviews.push(removed);
     }
 
     fn remove_all_subviews(&mut self) {
-        for view in &self.subviews {
-            UIManager::schedule_remove(view.weak_view())
-        }
+        self.deleted_subviews = self.subviews.drain(..).collect();
     }
 
     fn add_view<V: 'static + View + Default>(&mut self) -> SubView<V> {

@@ -30,8 +30,7 @@ pub struct UIManager {
 
     pub(crate) animations: Vec<UIAnimation>,
 
-    views_to_remove: Vec<Weak<dyn View>>,
-    touch_disabled:  bool,
+    touch_disabled: bool,
 
     #[default = 1.0]
     scale:        f32,
@@ -108,29 +107,6 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub(crate) fn schedule_remove(mut view: Weak<dyn View>) {
-        view.is_deleted = true;
-        Self::get().views_to_remove.push(view);
-    }
-
-    pub fn remove_scheduled() {
-        let mut this = Self::get();
-
-        if this.views_to_remove.is_empty() {
-            return;
-        }
-        let to_remove = this.views_to_remove.drain(..);
-        for view in to_remove {
-            let index = view
-                .superview()
-                .subviews()
-                .iter()
-                .position(|sub| view.addr() == sub.addr())
-                .unwrap();
-            view.superview().remove_subview_at(index);
-        }
-    }
-
     pub fn set_scheduled() {
         let Some(mut view) = UIManager::get().next_view.take() else {
             return;

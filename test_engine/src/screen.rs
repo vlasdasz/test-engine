@@ -124,7 +124,6 @@ impl Screen {
         self.calculate_fps();
 
         UIManager::drawer().reset_viewport();
-        UIManager::remove_scheduled();
         UIManager::set_scheduled();
 
         GLWrapper::clear();
