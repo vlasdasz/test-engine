@@ -42,7 +42,7 @@ impl ViewCallbacks for UIDebugView {
             .same([Anchor::Size, Anchor::X], self.back)
             .anchor(self.back, Anchor::Bot, 20);
         self.alert.on_tap.sub(|_| {
-            Alert::show("Sokol");
+            Alert::show("Multi Skoggo4 Ultra Boggo4 Sopokokt4ek smeorglil4ek");
         });
 
         self.back.on_tap.sub(|_| {

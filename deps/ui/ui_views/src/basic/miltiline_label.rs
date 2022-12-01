@@ -56,6 +56,7 @@ impl MultilineLabel {
         for line in split {
             let mut image_view = self.add_view::<ImageView>();
             let image = render_text(&line, &self.font, self.size);
+            image_view.set_size(image.size);
             image_view.set_image(image);
         }
     }
@@ -99,6 +100,14 @@ impl MultilineLabel {
     fn fits(&self, text: &str) -> bool {
         text_size(text, &self.font, self.size).width <= self.width()
     }
+
+    fn layout(&mut self) {
+        let height = self.height() / self.subviews().len() as f32;
+
+        for (i, view) in self.subviews_mut().iter_mut().enumerate() {
+            view.set_y(height * i as f32);
+        }
+    }
 }
 
 impl ViewCallbacks for MultilineLabel {
@@ -109,16 +118,12 @@ impl ViewCallbacks for MultilineLabel {
         // self.image_view.place.center();
         //
         self.set_letters();
-        self.place.all_ver();
+        // self.place.all_ver();
     }
 
     fn update(&mut self) {
         self.set_letters();
-        // if self.needs_update {
-        //     self.set_letters();
-        //     self.needs_update = false;
-        // }
-        // self.fit_size();
+        self.layout();
     }
 }
 

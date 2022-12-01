@@ -2,12 +2,12 @@ use gm::Color;
 use refs::{Own, ToWeak, Weak};
 use ui::{view, Event, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
 
-use crate::{Button, Label};
+use crate::{Button, MultilineLabel};
 
 #[view]
 #[derive(Default)]
 pub struct Alert {
-    label:     SubView<Label>,
+    label:     SubView<MultilineLabel>,
     ok_button: SubView<Button>,
     message:   String,
     pub on_ok: Event,
@@ -37,7 +37,7 @@ impl ViewCallbacks for Alert {
             .set_corner_radius(10)
             .set_border_color(Color::BLACK);
 
-        self.label.place.lrt(10).h(20);
+        self.label.place.lrt(10).h(60);
         self.label.set_text(self.message.clone());
 
         self.ok_button.place.size(202, 20).center_hor().b(-1);
