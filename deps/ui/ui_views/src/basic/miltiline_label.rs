@@ -51,25 +51,16 @@ impl MultilineLabel {
     fn set_letters(&mut self) {
         self.remove_all_subviews();
 
-        let size = text_size(&self.text, &self.font, self.size);
+        let split = self.split_text(&self.text);
 
-        if size.width < self.width() {
-            let image = render_text(&self.text, &self.font, self.size);
-            let mut view = self.add_view::<ImageView>();
-            view.set_image(image);
-        } else {
-            let text = self.text.clone();
-            let (a, b) = text.split_at(self.text.len() / 2);
-            let image = render_text(a, &self.font, self.size);
-            let mut view = self.add_view::<ImageView>();
-            view.set_image(image);
-            let image = render_text(b, &self.font, self.size);
-            let mut view = self.add_view::<ImageView>();
-            view.set_image(image);
+        for line in split {
+            let mut image_view = self.add_view::<ImageView>();
+            let image = render_text(&line, &self.font, self.size);
+            image_view.set_image(image);
         }
     }
 
-    fn split_text(&self, text: &str) -> (String, Option<String>) {
+    fn get_rest(&self, text: &str) -> (String, Option<String>) {
         if self.fits(text) {
             return (text.to_string(), None);
         }
@@ -83,6 +74,25 @@ impl MultilineLabel {
             }
             assert!(index > 0);
             index -= 1;
+        }
+    }
+
+    fn split_text(&self, text: &str) -> Vec<String> {
+        let mut str = text.to_string();
+
+        let mut split = vec![];
+
+        loop {
+            match self.get_rest(&str) {
+                (line, Some(rest)) => {
+                    split.push(line);
+                    str = rest;
+                }
+                (line, None) => {
+                    split.push(line);
+                    return split;
+                }
+            }
         }
     }
 
@@ -167,12 +177,12 @@ mod test {
         let mut view = MultilineLabel::default();
         view.set_size((100, 100));
 
-        assert_eq!(view.split_text("lolo"), ("lolo".to_string(), None));
+        assert_eq!(view.split_text("lolo"), vec!["lolo".to_string()]);
     }
 
     #[test]
     #[serial]
-    fn split_two() {
+    fn rest() {
         set_current_thread_as_main();
         Font::disable_render();
 
@@ -180,11 +190,9 @@ mod test {
         view.set_size((200, 100));
 
         assert_eq!(
-            view.split_text("123456789abcdefg"),
+            view.get_rest("123456789abcdefg"),
             ("12345".to_string(), Some("6789abcdefg".to_string()))
         );
-
-        dbg!("poros");
     }
 
     #[test]
@@ -196,18 +204,11 @@ mod test {
         let mut view = MultilineLabel::default();
         view.set_size((1200, 100));
 
-        let mut long_string = (0..u64::random_in(50..100))
+        let long_string = (0..u64::random_in(50..100))
             .map(|_| String::random())
             .collect::<Vec<_>>()
             .join("");
 
-        let mut split = vec![];
-
-        while let (line, Some(rest)) = view.split_text(&long_string) {
-            split.push(line);
-            long_string = rest;
-        }
-
-        assert!(split.iter().all(|line| view.fits(&line)));
+        assert!(view.split_text(&long_string).iter().all(|line| view.fits(&line)));
     }
 }

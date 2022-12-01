@@ -56,7 +56,7 @@ impl ViewCallbacks for UIDebugView {
         self.label.set_text("Skoggo4");
 
         self.multi_label.place.tl(10).same_size(self.label);
-        self.multi_label.set_text("Multi Skoggo4");
+        self.multi_label.set_text("Multi Skoggo4 Ultra Boggo4 Sopokokt4ek smeorglil4ek");
 
         self.stats.place.size(100, 20).tr(5);
         self.stats.set_text("Print stats");
