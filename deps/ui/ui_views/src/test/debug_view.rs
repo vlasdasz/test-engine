@@ -32,7 +32,7 @@ impl ViewCallbacks for DebugView {
 
         let mut this = self.weak();
         self.fps.on_set.sub(move |fps| {
-            this.fps_label.set_text(format!("FPS: {}", fps));
+            this.fps_label.set_text(format!("FPS: {fps}"));
         });
 
         self.url.on_set.sub(move |url| {

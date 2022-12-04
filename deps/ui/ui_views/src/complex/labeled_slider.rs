@@ -25,7 +25,7 @@ impl LabeledSlider {
     }
 
     fn on_change(&mut self, val: f32) {
-        self.label.set_text(format!("{:.2}", val));
+        self.label.set_text(format!("{val:.2}"));
         self.on_change.trigger(val);
     }
 }

@@ -1,11 +1,11 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 
-use std::ops::Index;
+use std::{collections::HashMap, ops::Index};
 
-use gm::Color;
-use refs::{set_current_thread_as_main, Weak};
-use rtools::{data_manager::Handle, IntoF32};
+use gm::{flat::Size, Color};
+use refs::{set_current_thread_as_main, ToWeak, Weak};
+use rtools::{data_manager::Handle, hash, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, text_size, Font};
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
@@ -16,10 +16,11 @@ use crate::ImageView;
 #[derive(SmartDefault)]
 pub struct MultilineLabel {
     #[default(Font::san_francisco())]
-    font: Handle<Font>,
-    text: String,
+    font:          Handle<Font>,
+    text:          String,
     #[default(text::DEFAULT_FONT_SIZE as f32)]
-    size: f32,
+    size:          f32,
+    split_storage: HashMap<u64, Vec<String>>,
 }
 
 impl MultilineLabel {
@@ -47,21 +48,40 @@ impl MultilineLabel {
         self.set_text("")
     }
 
+    fn calculate_split(&mut self) -> &[String] {
+        let size = self.size();
+
+        let hash = hash(size);
+
+        if let Some(split) = self.split_storage.get(&hash) {
+            return split;
+        }
+
+        let mut text_size = self.size;
+
+        let mut split = self.split_text(&self.text, text_size);
+
+        while !self.fits_height(&split, text_size) {
+            text_size -= 1.0;
+            split = self.split_text(&self.text, text_size);
+        }
+
+        let mut this = self.weak();
+        this.split_storage.insert(hash, split);
+
+        self.split_storage.get(&hash).unwrap()
+    }
+
     fn set_letters(&mut self) {
         self.remove_all_subviews();
 
-        let mut size = self.size;
-
-        let mut split = self.split_text(&self.text, size);
-
-        while !self.fits_height(&split, size) {
-            size -= 1.0;
-            split = self.split_text(&self.text, size);
-        }
+        // Sorry borrow checker
+        let mut this = self.weak();
+        let split = this.calculate_split();
 
         for line in split {
             let mut image_view = self.add_view::<ImageView>();
-            let image = render_text(&line, &self.font, size);
+            let image = render_text(line, &self.font, self.size);
             image_view.set_size(image.size);
             image_view.set_image(image);
             use ui::ViewLayout;
@@ -109,7 +129,7 @@ impl MultilineLabel {
     }
 
     fn fits_height(&self, text: &[String], size: impl IntoF32) -> bool {
-        let total_height: f32 = text.iter().map(|a| text_size(&a, &self.font, size).height).sum();
+        let total_height: f32 = text.iter().map(|a| text_size(a, &self.font, size).height).sum();
 
         total_height <= self.height()
     }
@@ -233,6 +253,8 @@ mod test {
 
     #[test]
     #[serial]
+    /// Check if space between leters is variable
+    /// It is
     fn letter_margin() {
         set_current_thread_as_main();
         Font::disable_render();
@@ -243,27 +265,27 @@ mod test {
         let letter_a = u8::random() as char;
         let letter_b = u8::random() as char;
 
-        let text_ab = format!("{letter_a} {letter_b}");
-        let text_ba = format!("{letter_b} {letter_a}");
+        let text_a_b = format!("{letter_a} {letter_b}");
+        let text_b_a = format!("{letter_b} {letter_a}");
 
         let a = text_size(letter_a, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
         let b = text_size(letter_b, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
 
-        let ab = text_size(&text_ab, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
-        let ba = text_size(&text_ba, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+        let a_b = text_size(&text_a_b, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+        let b_a = text_size(&text_b_a, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
 
-        let space = ab - a - b;
-        let space2 = ba - a - b;
+        let space = a_b - a - b;
+        let space2 = b_a - a - b;
 
         dbg!(&a);
         dbg!(&b);
-        dbg!(&ab);
-        dbg!(&ba);
+        dbg!(&a_b);
+        dbg!(&b_a);
         dbg!(&space);
         dbg!(&space2);
         dbg!(&letter_a);
         dbg!(&letter_b);
-        dbg!(&text_ab);
-        dbg!(&text_ba);
+        dbg!(&text_a_b);
+        dbg!(&text_b_a);
     }
 }

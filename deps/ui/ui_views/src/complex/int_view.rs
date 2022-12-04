@@ -38,14 +38,14 @@ impl ViewCallbacks for IntView {
             this.value += this.step;
             let val = this.value;
             this.on_change.trigger(val);
-            this.label.set_text(format!("{:.1}", val));
+            this.label.set_text(format!("{val:.1}"));
         });
 
         self.down.on_tap.sub(move |_| {
             this.value -= this.step;
             let val = this.value;
             this.on_change.trigger(val);
-            this.label.set_text(format!("{:.1}", val));
+            this.label.set_text(format!("{val:.1}"));
         });
     }
 }

@@ -47,7 +47,7 @@ impl ViewCallbacks for TestView {
         let mut this = self.weak();
         self.button.on_tap.sub(move |_| {
             let val = this.label_value;
-            this.label.set_text(format!("Hello label! {}", val));
+            this.label.set_text(format!("Hello label! {val}"));
             this.label_value += 1;
         });
 
