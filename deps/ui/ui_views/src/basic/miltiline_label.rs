@@ -16,11 +16,10 @@ use crate::ImageView;
 #[derive(SmartDefault)]
 pub struct MultilineLabel {
     #[default(Font::san_francisco())]
-    font:   Handle<Font>,
-    text:   String,
-    images: Vec<(String, Weak<ImageView>)>,
+    font: Handle<Font>,
+    text: String,
     #[default(text::DEFAULT_FONT_SIZE as f32)]
-    size:   f32,
+    size: f32,
 }
 
 impl MultilineLabel {
@@ -58,6 +57,7 @@ impl MultilineLabel {
             let image = render_text(&line, &self.font, self.size);
             image_view.set_size(image.size);
             image_view.set_image(image);
+            use ui::ViewLayout;
         }
     }
 
@@ -106,19 +106,15 @@ impl MultilineLabel {
 
         for (i, view) in self.subviews_mut().iter_mut().enumerate() {
             view.set_y(height * i as f32);
+            use ui::ViewLayout;
+            view.calculate_frames();
         }
     }
 }
 
 impl ViewCallbacks for MultilineLabel {
     fn setup(&mut self) {
-        // self.text_color = Color::GREEN;kjlfdgfsd
-        // self.font = Font::san_francisco();
-        //
-        // self.image_view.place.center();
-        //
         self.set_letters();
-        // self.place.all_ver();
     }
 
     fn update(&mut self) {

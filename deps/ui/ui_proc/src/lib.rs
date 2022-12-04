@@ -39,6 +39,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use ui::ViewSubviews;
                 #inits
             }
+            fn as_any(&self) -> &dyn std::any::Any {
+               self
+            }
         }
         impl std::ops::Deref for #name {
             type Target = ui::ViewBase;

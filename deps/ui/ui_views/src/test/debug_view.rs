@@ -1,6 +1,6 @@
 use refs::ToWeak;
 use rtools::platform::Platform;
-use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame};
+use ui::{view, Property, SubView, ViewCallbacks, ViewData, ViewFrame};
 
 use crate::Label;
 
@@ -19,7 +19,7 @@ impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
         self.set_hidden(false);
 
-        self.place.size(280, 60).all_ver();
+        self.place.size(280, 60).tl(40).all_ver();
 
         self.fps_label.set_text("fps label");
         self.frame_drawn_label.set_text("frame drawn label");
@@ -44,12 +44,13 @@ impl ViewCallbacks for DebugView {
         self.frame_drawn += 1;
         self.frame_drawn_label.set_text(format!("Frame drawn: {}", self.frame_drawn));
 
-        let size = self.size();
-        let screen_size = UIManager::screen_size();
-
-        self.set_origin((
-            10,
-            (screen_size.height - size.height - 10.0) / UIManager::screen_scale(),
-        ));
+        // let size = self.size();
+        // let screen_size = UIManager::screen_size();
+        //
+        // // TODO: - Why this needed?
+        // self.set_origin((
+        //     10,
+        //     (screen_size.height - size.height - 10.0) /
+        // UIManager::screen_scale(), ));
     }
 }

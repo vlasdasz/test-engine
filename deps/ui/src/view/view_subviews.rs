@@ -8,8 +8,10 @@ pub trait ViewSubviews {
     fn remove_from_superview(&mut self);
     fn remove_all_subviews(&mut self);
 
-    fn add_view<V: 'static + View + Default>(&mut self) -> SubView<V>;
+    fn add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
     fn add_subview(&mut self, view: Own<dyn View>) -> Weak<dyn View>;
+
+    fn downcast_view<V: View + 'static>(&self) -> Option<&V>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -55,5 +57,9 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let res = view.weak();
         self.subviews.push(view);
         res
+    }
+
+    fn downcast_view<V: View + 'static>(&self) -> Option<&V> {
+        self.as_any().downcast_ref::<V>()
     }
 }

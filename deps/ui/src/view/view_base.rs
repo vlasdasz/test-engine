@@ -1,4 +1,5 @@
 use std::{
+    any::Any,
     cell::RefCell,
     ops::{Deref, DerefMut},
 };
@@ -7,11 +8,12 @@ use gl_image::Image;
 use gm::{flat::Rect, Color};
 use refs::{Own, ToWeak, Weak};
 use rtools::{data_manager::Handle, Unwrap};
+use smart_default::SmartDefault;
 use vents::Event;
 
 use crate::{layout::Placer, PathData, Touch, View};
 
-#[derive(Default)]
+#[derive(SmartDefault)]
 pub struct ViewBase {
     pub(crate) color: Color,
 
@@ -52,6 +54,10 @@ impl View for BaseView {
 
     fn weak_view(&self) -> Weak<dyn View> {
         (self as &dyn View).weak()
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 

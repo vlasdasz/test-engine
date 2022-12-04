@@ -1,4 +1,7 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    any::Any,
+    ops::{Deref, DerefMut},
+};
 
 use refs::Weak;
 
@@ -7,6 +10,7 @@ use crate::{ViewBase, ViewCallbacks};
 pub trait View: ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
     fn init_views(&mut self);
     fn weak_view(&self) -> Weak<dyn View>;
+    fn as_any(&self) -> &dyn Any;
 }
 
 #[derive(Default)]
