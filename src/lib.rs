@@ -1,3 +1,4 @@
+#![cfg(mobile)]
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(trait_upcasting)]
@@ -14,10 +15,7 @@ use test_engine::{
 };
 use ui::refs::Own;
 
-#[allow(unused_imports)]
-use crate::benchmark::UIDebugView;
-#[allow(unused_imports)]
-use crate::ui_test::UITestView;
+use crate::test_game::TestApp;
 
 mod benchmark;
 mod test_game;
@@ -26,34 +24,41 @@ mod ui_test;
 #[macro_use]
 extern crate log;
 
-static mut APP: *mut App = ptr::null_mut();
+#[cfg(mobile)]
+static mut APP: *mut TestApp = ptr::null_mut();
 
+#[cfg(mobile)]
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
     trace!("set_screen_size");
-    unsafe { APP.as_mut().unwrap().set_screen_size(width, height) }
+    unsafe { APP.as_mut().unwrap().app.set_screen_size(width, height) }
 }
 
+#[cfg(mobile)]
 #[no_mangle]
 pub extern "C" fn update_screen() -> TestEngineAction {
-    unsafe { APP.as_mut().unwrap().update_screen() }
+    unsafe { APP.as_mut().unwrap().app.update_screen() }
 }
 
+#[cfg(mobile)]
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
-    unsafe { APP.as_mut().unwrap().on_touch(id as _, x, y, event) }
+    unsafe { APP.as_mut().unwrap().app.on_touch(id as _, x, y, event) }
 }
 
+#[cfg(mobile)]
 #[no_mangle]
 pub extern "C" fn set_gyro(pitch: c_float, roll: c_float, yaw: c_float) {
-    unsafe { APP.as_mut().unwrap().set_gyro(pitch, roll, yaw) }
+    unsafe { APP.as_mut().unwrap().app.set_gyro(pitch, roll, yaw) }
 }
 
+#[cfg(mobile)]
 #[no_mangle]
 pub extern "C" fn add_key(char: u8, event: MobileKeyEvent) {
-    unsafe { APP.as_mut().unwrap().add_key(char, event) }
+    unsafe { APP.as_mut().unwrap().app.add_key(char, event) }
 }
 
+#[cfg(mobile)]
 #[no_mangle]
 pub extern "C" fn set_monitor(
     ppi: c_int,
@@ -66,8 +71,7 @@ pub extern "C" fn set_monitor(
     diagonal: c_float,
 ) {
     unsafe {
-        let mut app = Box::<App>::default();
-        app.set_monitor(
+        let app = TestApp::new(
             ppi,
             scale,
             refresh_rate,
@@ -76,7 +80,6 @@ pub extern "C" fn set_monitor(
             width,
             height,
             diagonal,
-            Own::<UIDebugView>::default(),
         );
 
         APP = Box::into_raw(app);

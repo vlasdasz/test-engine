@@ -13,7 +13,7 @@ use ui::{
 };
 use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
 
-use crate::{benchmark::BenchmarkLevel, UIDebugView};
+use crate::benchmark::{BenchmarkLevel, UIDebugView};
 
 #[view]
 #[derive(Default)]

@@ -1,12 +1,14 @@
-use std::{ops::DerefMut, path::Path, ptr::null_mut};
+use std::{ops::DerefMut, path::PathBuf, ptr::null_mut};
 
 use gl_image::ImageShaders;
 use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
-use gm::{flat::Size, volume::GyroData, Color};
+#[cfg(mobile)]
+use gm::volume::GyroData;
+use gm::{flat::Size, Color};
 use net::API;
-use rtools::{Time, Unwrap};
+use rtools::Time;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
@@ -27,7 +29,7 @@ pub struct Screen {
 
     #[cfg(desktop)]
     glfw:    GLFWManager,
-    monitor: Unwrap<Monitor>,
+    monitor: Monitor,
 }
 
 impl Screen {
@@ -37,11 +39,6 @@ impl Screen {
         } else {
             Default::default()
         }
-    }
-
-    pub fn add_monitor(&mut self, monitor: Monitor) {
-        self.monitor = Unwrap::new(monitor);
-        UIManager::set_screen_scale(self.monitor.scale);
     }
 
     #[cfg(desktop)]
@@ -58,12 +55,8 @@ impl Screen {
         });
     }
 
-    fn init(&mut self, _size: Size, view: Own<dyn View>) {
-        #[cfg(desktop)]
-        {
-            let m = self.glfw.monitors.first().unwrap().clone();
-            self.add_monitor(m);
-        }
+    fn init(&mut self, #[cfg(desktop)] window_size: impl Into<Size>, view: Own<dyn View>) {
+        UIManager::set_screen_scale(self.monitor.scale);
 
         self.ui.debug_view.place = Placer::new(self.ui.debug_view.weak_view()).into();
         self.ui.debug_view.init_views();
@@ -76,7 +69,7 @@ impl Screen {
 
         #[cfg(desktop)]
         {
-            let size = Screen::adjust_size(self.monitor.clone(), _size);
+            let size = Screen::adjust_size(self.monitor.clone(), window_size.into());
             self.set_size(size);
         }
     }
@@ -192,6 +185,7 @@ impl Screen {
         self.update();
     }
 
+    #[cfg(mobile)]
     pub(crate) fn on_gyro_changed(&mut self, gyro: GyroData) {
         error!("GyroData: {:?}", gyro);
         let Some(level) = &mut self.ui.level else {
@@ -208,13 +202,14 @@ impl Screen {
 }
 
 impl Screen {
-    pub fn new(size: impl Into<Size> + Clone, assets_path: &Path, view: Own<dyn View>) -> Own<Self> {
+    pub fn new(
+        monitor: Monitor,
+        assets_path: impl Into<PathBuf>,
+        root_view: Own<dyn View>,
+        #[cfg(desktop)] glfw: GLFWManager,
+        #[cfg(desktop)] window_size: impl Into<Size>,
+    ) -> Own<Self> {
         trace!("Creating screen");
-
-        #[cfg(desktop)]
-        let glfw = GLFWManager::default();
-        #[cfg(desktop)]
-        trace!("GLFWManager: OK");
 
         Assets::init(assets_path);
         trace!("Assets: Ok");
@@ -232,7 +227,7 @@ impl Screen {
             ui,
             #[cfg(desktop)]
             glfw,
-            monitor: Default::default(),
+            monitor,
         });
 
         unsafe {
@@ -242,7 +237,11 @@ impl Screen {
         Buffers::init(Buffers::default());
         ImageShaders::init(ImageShaders::default());
 
-        screen.init(size.into(), view);
+        screen.init(
+            #[cfg(desktop)]
+            window_size,
+            root_view,
+        );
 
         screen
     }

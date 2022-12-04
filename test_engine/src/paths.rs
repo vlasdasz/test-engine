@@ -18,8 +18,8 @@ pub struct Paths {
 }
 
 impl Paths {
-    pub fn new(root: &Path) -> Rc<Self> {
-        let root = Self::root(root);
+    pub fn new(root: PathBuf) -> Rc<Self> {
+        let root = Self::root(&root);
         let assets = Self::assets(&root);
         Rc::new(Self {
             assets:  assets.clone(),

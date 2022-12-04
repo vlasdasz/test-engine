@@ -1,6 +1,6 @@
 mod shaders;
 
-use std::{path::Path, ptr::null_mut, rc::Rc};
+use std::{path::PathBuf, ptr::null_mut, rc::Rc};
 
 use audio::Sound;
 use gl_image::Image;
@@ -19,10 +19,10 @@ pub struct Assets {
 }
 
 impl Assets {
-    pub fn init(root_path: &Path) {
+    pub fn init(root_path: impl Into<PathBuf>) {
         assert!(is_main_thread());
 
-        let paths = Paths::new(root_path);
+        let paths = Paths::new(root_path.into());
 
         Image::set_path(&paths.images);
         Sound::set_path(&paths.sounds);
