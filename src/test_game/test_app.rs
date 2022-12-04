@@ -41,7 +41,7 @@ mod desktop {
 }
 
 #[cfg(mobile)]
-mod mobile {
+pub mod mobile {
     use std::ffi::{c_float, c_int};
 
     use test_engine::app::App;

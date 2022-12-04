@@ -10,7 +10,7 @@ use std::{
 };
 
 use test_engine::{
-    app::{App, MobileKeyEvent, TestEngineAction},
+    app::{mobile::MobileKeyEvent, App, TestEngineAction},
     gl_wrapper::GLWrapper,
 };
 use ui::refs::Own;
