@@ -10,13 +10,14 @@ use crate::ImageView;
 #[derive(SmartDefault)]
 pub struct Label {
     #[default(Font::san_francisco())]
-    font:         Handle<Font>,
-    text:         String,
-    prev_text:    String,
-    image_view:   SubView<ImageView>,
+    font:          Handle<Font>,
+    text:          String,
+    prev_text:     String,
+    image_view:    SubView<ImageView>,
     #[default = 32.0]
-    size:         f32,
-    needs_update: bool,
+    size:          f32,
+    needs_update:  bool,
+    pub free_text: bool,
 }
 
 impl Label {
@@ -70,10 +71,12 @@ impl Label {
     }
 
     fn set_letters(&mut self) {
-        for char in self.prev_text.chars() {
-            if ('0'..='9').contains(&char) {
-                self.image_view.image().free();
-                break;
+        if self.free_text {
+            for char in self.prev_text.chars() {
+                if ('0'..='9').contains(&char) {
+                    self.image_view.image().free();
+                    break;
+                }
             }
         }
 

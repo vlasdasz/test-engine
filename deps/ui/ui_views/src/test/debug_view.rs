@@ -22,7 +22,10 @@ impl ViewCallbacks for DebugView {
         self.place.size(280, 60).tl(40).all_ver();
 
         self.fps_label.set_text("fps label");
+        self.fps_label.free_text = true;
+
         self.frame_drawn_label.set_text("frame drawn label");
+        self.frame_drawn_label.free_text = true;
 
         if Platform::MOBILE {
             self.set_origin((28, 28));
