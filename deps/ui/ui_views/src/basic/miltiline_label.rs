@@ -5,7 +5,7 @@ use std::ops::Index;
 
 use gm::Color;
 use refs::{set_current_thread_as_main, Weak};
-use rtools::data_manager::Handle;
+use rtools::{data_manager::Handle, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, text_size, Font};
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
@@ -50,19 +50,26 @@ impl MultilineLabel {
     fn set_letters(&mut self) {
         self.remove_all_subviews();
 
-        let split = self.split_text(&self.text);
+        let mut size = self.size;
+
+        let mut split = self.split_text(&self.text, size);
+
+        while !self.fits_height(&split, size) {
+            size -= 1.0;
+            split = self.split_text(&self.text, size);
+        }
 
         for line in split {
             let mut image_view = self.add_view::<ImageView>();
-            let image = render_text(&line, &self.font, self.size);
+            let image = render_text(&line, &self.font, size);
             image_view.set_size(image.size);
             image_view.set_image(image);
             use ui::ViewLayout;
         }
     }
 
-    fn get_rest(&self, text: &str) -> (String, Option<String>) {
-        if self.fits(text) {
+    fn get_rest(&self, text: &str, size: impl IntoF32) -> (String, Option<String>) {
+        if self.fits_width(text, size) {
             return (text.to_string(), None);
         }
 
@@ -70,7 +77,7 @@ impl MultilineLabel {
 
         loop {
             let slice = &text[..index];
-            if self.fits(slice) {
+            if self.fits_width(slice, size) {
                 return (slice.to_string(), text[index..].to_string().into());
             }
             assert!(index > 0);
@@ -78,13 +85,13 @@ impl MultilineLabel {
         }
     }
 
-    fn split_text(&self, text: &str) -> Vec<String> {
+    fn split_text(&self, text: &str, size: impl IntoF32) -> Vec<String> {
         let mut str = text.to_string();
 
         let mut split = vec![];
 
         loop {
-            match self.get_rest(&str) {
+            match self.get_rest(&str, size) {
                 (line, Some(rest)) => {
                     split.push(line);
                     str = rest;
@@ -97,8 +104,14 @@ impl MultilineLabel {
         }
     }
 
-    fn fits(&self, text: &str) -> bool {
-        text_size(text, &self.font, self.size).width <= self.width()
+    fn fits_width(&self, text: &str, size: impl IntoF32) -> bool {
+        text_size(text, &self.font, size).width <= self.width()
+    }
+
+    fn fits_height(&self, text: &[String], size: impl IntoF32) -> bool {
+        let total_height: f32 = text.iter().map(|a| text_size(&a, &self.font, size).height).sum();
+
+        total_height <= self.height()
     }
 
     fn layout(&mut self) {
