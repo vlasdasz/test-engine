@@ -12,10 +12,12 @@ use rtools::{
     hash, IntoF32,
 };
 
-pub fn text_layout(text: &str, font: &Font, size: impl IntoF32) -> (Layout, Size) {
+pub fn text_layout(text: impl ToString, font: &Font, size: impl IntoF32) -> (Layout, Size) {
     let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
 
-    layout.append(&[&font.font], &TextStyle::new(text, size.into_f32(), 0));
+    let text = text.to_string();
+
+    layout.append(&[&font.font], &TextStyle::new(&text, size.into_f32(), 0));
 
     let size = layout
         .glyphs()
@@ -26,7 +28,7 @@ pub fn text_layout(text: &str, font: &Font, size: impl IntoF32) -> (Layout, Size
     (layout, size)
 }
 
-pub fn text_size(text: &str, font: &Font, size: impl IntoF32) -> Size {
+pub fn text_size(text: impl ToString, font: &Font, size: impl IntoF32) -> Size {
     text_layout(text, font, size).1
 }
 

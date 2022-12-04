@@ -11,7 +11,7 @@ crate-type = ["rlib", "staticlib"]
 [dependencies]
 refs = "0.1.23"
 vents = "0.1.5"
-rtools = "0.1.22"
+rtools = "0.1.24"
 crossbeam = "0.8"
 smart-default = "0.6"
 rapier2d = { version = "0.14", features = [ "parallel", "simd-stable" ] }

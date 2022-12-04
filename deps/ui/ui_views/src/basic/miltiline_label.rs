@@ -138,6 +138,8 @@ impl ViewCallbacks for MultilineLabel {
 
 #[cfg(test)]
 mod test {
+    use std::ops::Deref;
+
     use refs::set_current_thread_as_main;
     use rtools::Random;
     use serial_test::serial;
@@ -176,10 +178,10 @@ mod test {
         let mut view = MultilineLabel::default();
         view.set_size((100, 100));
 
-        assert!(view.fits("lo"));
-        assert!(view.fits("lolo"));
-        assert!(!view.fits("lolol"));
-        assert!(!view.fits("lolololol"));
+        assert!(view.fits_width("lo", view.size));
+        assert!(view.fits_width("lolo", view.size));
+        assert!(!view.fits_width("lolol", view.size));
+        assert!(!view.fits_width("lolololol", view.size));
     }
 
     #[test]
@@ -191,7 +193,7 @@ mod test {
         let mut view = MultilineLabel::default();
         view.set_size((100, 100));
 
-        assert_eq!(view.split_text("lolo"), vec!["lolo".to_string()]);
+        assert_eq!(view.split_text("lolo", view.size), vec!["lolo".to_string()]);
     }
 
     #[test]
@@ -204,7 +206,7 @@ mod test {
         view.set_size((200, 100));
 
         assert_eq!(
-            view.get_rest("123456789abcdefg"),
+            view.get_rest("123456789abcdefg", view.size),
             ("12345".to_string(), Some("6789abcdefg".to_string()))
         );
     }
@@ -223,6 +225,45 @@ mod test {
             .collect::<Vec<_>>()
             .join("");
 
-        assert!(view.split_text(&long_string).iter().all(|line| view.fits(&line)));
+        assert!(view
+            .split_text(&long_string, view.size)
+            .iter()
+            .all(|line| view.fits_width(&line, view.size)));
+    }
+
+    #[test]
+    #[serial]
+    fn letter_margin() {
+        set_current_thread_as_main();
+        Font::disable_render();
+
+        let mut view = MultilineLabel::default();
+        view.set_size((100, 100));
+
+        let letter_a = u8::random() as char;
+        let letter_b = u8::random() as char;
+
+        let text_ab = format!("{letter_a} {letter_b}");
+        let text_ba = format!("{letter_b} {letter_a}");
+
+        let a = text_size(letter_a, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+        let b = text_size(letter_b, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+
+        let ab = text_size(&text_ab, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+        let ba = text_size(&text_ba, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+
+        let space = ab - a - b;
+        let space2 = ba - a - b;
+
+        dbg!(&a);
+        dbg!(&b);
+        dbg!(&ab);
+        dbg!(&ba);
+        dbg!(&space);
+        dbg!(&space2);
+        dbg!(&letter_a);
+        dbg!(&letter_b);
+        dbg!(&text_ab);
+        dbg!(&text_ba);
     }
 }
