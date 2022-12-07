@@ -7,7 +7,7 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::{platform::Platform, IntoF32};
+use rtools::platform::Platform;
 use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
@@ -15,7 +15,7 @@ use ui::input::TouchEvent;
 use ui::{
     input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
     refs::{Strong, ToWeak},
-    Touch, UIManager, ViewFrame, ViewTouch,
+    Touch, UIManager, ViewTouch,
 };
 use ui_views::debug_view::DebugView;
 
@@ -35,9 +35,6 @@ pub struct UILayer {
     pub frame_time: f64,
 
     pub debug_view: Strong<DebugView>,
-
-    #[default = 1.0]
-    scale: f32,
 }
 
 impl UILayer {
@@ -52,7 +49,7 @@ impl UILayer {
         if Platform::DESKTOP {
             touch.position = self.ui_cursor_position;
         } else {
-            touch.position /= self.scale;
+            touch.position /= UIManager::ui_scale();
         }
         if !UIManager::touch_root().check_touch(&mut touch) {
             if let Some(level) = &mut self.level {
@@ -68,23 +65,13 @@ impl UILayer {
         self.level = level.into();
         self.level.as_mut().unwrap().setup();
     }
-
-    pub fn scale(&self) -> f32 {
-        self.scale
-    }
-
-    pub fn set_scale(&mut self, scale: impl IntoF32) {
-        let scale = scale.into_f32();
-        UIManager::set_scale(scale);
-        UIManager::root_view().set_frame(UIManager::window_size() / scale);
-    }
 }
 
 #[cfg(desktop)]
 impl UILayer {
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;
-        self.ui_cursor_position = position / self.scale;
+        self.ui_cursor_position = position / UIManager::ui_scale();
         self.on_touch(Touch {
             id:       1,
             position: self.cursor_position,

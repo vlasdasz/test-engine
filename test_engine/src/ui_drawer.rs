@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, cell::RefCell, collections::HashMap, ops::DerefMut};
+use std::{cell::RefCell, collections::HashMap, ops::DerefMut};
 
 use gl_image::draw_image;
 use gl_wrapper::{buffers::Buffers, GLWrapper};
@@ -22,17 +22,31 @@ pub struct TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    pub fn convert_viewport(&self, rect: impl Borrow<Rect>) -> Rect {
+    pub fn convert_viewport(&self, rect: &Rect) -> Rect {
         let scale = UIManager::screen_scale();
-        let rect = rect.borrow() * UIManager::scale();
+        let rect = rect * UIManager::ui_scale();
 
-        (
+        let rect: Rect = (
             rect.origin.x * scale,
-            (UIManager::window_size().height - rect.origin.y - rect.size.height) * scale,
+            (UIManager::window_size().height * UIManager::ui_scale() - rect.origin.y - rect.size.height)
+                * scale,
             rect.size.width * scale,
             rect.size.height * scale,
         )
-            .into()
+            .into();
+
+        rect
+        // (
+        //     rect.origin.x,
+        //     (UIManager::window_size().height - rect.origin.y -
+        // rect.size.height),     rect.size.width,
+        //     rect.size.height,
+        // )
+        //     .into()
+    }
+
+    pub fn set_viewport(&self, rect: &Rect) {
+        GLWrapper::set_viewport(self.convert_viewport(rect));
     }
 }
 
@@ -65,13 +79,13 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn fill(&self, rect: &Rect, color: &Color) {
-        GLWrapper::set_viewport(self.convert_viewport(rect));
+        self.set_viewport(rect);
         Assets::get().shaders.ui.enable().set_color(color);
         Buffers::get().full.draw();
     }
 
     fn outline(&self, rect: &Rect, color: &Color) {
-        GLWrapper::set_viewport(self.convert_viewport(rect));
+        self.set_viewport(rect);
         Assets::get().shaders.ui.enable().set_color(color);
         Buffers::get().full_outline.draw();
     }
@@ -80,7 +94,7 @@ impl UIDrawer for TEUIDrawer {
         if rect.size.is_invalid() {
             return;
         }
-        GLWrapper::set_viewport(self.convert_viewport(rect));
+        self.set_viewport(rect);
         Assets::get()
             .shaders
             .ui_path
@@ -119,7 +133,7 @@ impl UIDrawer for TEUIDrawer {
         let needs_stensil = view.corner_radius() > 0.0;
 
         if needs_stensil {
-            GLWrapper::set_viewport(self.convert_viewport(view.frame()));
+            self.set_viewport(view.frame());
 
             GLWrapper::start_stensil();
 

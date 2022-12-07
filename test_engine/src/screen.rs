@@ -128,6 +128,7 @@ impl Screen {
         let mut view = UIManager::root_view();
 
         view.calculate_frames();
+
         UIManager::drawer().update(view.deref_mut());
         UIManager::drawer().draw(view.deref_mut());
 
@@ -179,7 +180,7 @@ impl Screen {
 
     fn on_size_changed(&mut self, size: Size) {
         trace!("Size changed: {:?}", size);
-        UIManager::root_view().set_frame(size);
+        UIManager::root_view().set_frame(size / UIManager::ui_scale());
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
         self.update();

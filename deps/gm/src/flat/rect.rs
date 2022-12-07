@@ -52,6 +52,13 @@ impl Rect {
         };
         (side, side).into()
     }
+
+    pub fn short_display(&self) -> String {
+        format!(
+            "x: {} y: {} w: {} h: {}",
+            self.origin.x, self.origin.y, self.size.width, self.size.height
+        )
+    }
 }
 
 impl Rect {
@@ -118,6 +125,20 @@ impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y, Size)> for Rect {
 }
 
 impl<T: IntoF32> Mul<T> for &Rect {
+    type Output = Rect;
+    fn mul(self, rhs: T) -> Rect {
+        let mul = rhs.into_f32();
+        (
+            self.origin.x * mul,
+            self.origin.y * mul,
+            self.size.width * mul,
+            self.size.height * mul,
+        )
+            .into()
+    }
+}
+
+impl<T: IntoF32> Mul<T> for Rect {
     type Output = Rect;
     fn mul(self, rhs: T) -> Rect {
         let mul = rhs.into_f32();
