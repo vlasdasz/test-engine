@@ -1,5 +1,4 @@
 use refs::ToWeak;
-use rtools::platform::Platform;
 use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 
 use crate::Label;

@@ -7,7 +7,6 @@ use gl_wrapper::gl_events::GlEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
-use rtools::platform::Platform;
 use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
