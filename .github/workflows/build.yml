@@ -22,7 +22,7 @@ jobs:
 #          { runner: rpi, os: raspberry },
 
           { runner: mac, os: ios },
-#          { runner: lin86, os: android }
+          { runner: ubuntu-latest, os: android }
         ]
     runs-on: ${{ matrix.target.runner }}
     steps:
