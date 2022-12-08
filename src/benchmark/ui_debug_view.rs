@@ -19,8 +19,8 @@ pub struct UIDebugView {
     label:       SubView<Label>,
     multi_label: SubView<MultilineLabel>,
 
-    alert: SubView<Button>,
     back:  SubView<Button>,
+    alert: SubView<Button>,
 
     stats: SubView<Button>,
 }

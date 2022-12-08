@@ -36,6 +36,7 @@ pub use gl_image::Image;
 pub use keymap::*;
 pub use sprites::{Level, LevelBase, Sprite};
 pub use ui::ui_proc::*;
+pub use ui_drawer::*;
 
 #[cfg(mobile)]
 #[macro_use]

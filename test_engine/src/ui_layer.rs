@@ -25,8 +25,7 @@ use crate::Keymap;
 pub struct UILayer {
     pub level: Option<Strong<dyn Level>>,
 
-    pub ui_cursor_position: Point,
-    pub cursor_position:    Point,
+    pub cursor_position: Point,
 
     pub keymap: Rc<Keymap>,
 
@@ -46,11 +45,12 @@ impl UILayer {
             trace!("{:?}", touch);
         }
         let level_touch = touch;
-        if Platform::DESKTOP {
-            touch.position = self.ui_cursor_position;
-        } else {
-            touch.position /= UIManager::ui_scale();
-        }
+        // TODO: Revisit scale
+        // if Platform::DESKTOP {
+        //     touch.position = self.cursor_position / UIManager::ui_scale();
+        // } else {
+        //     touch.position /= UIManager::ui_scale();
+        // }
         if !UIManager::touch_root().check_touch(&mut touch) {
             if let Some(level) = &mut self.level {
                 level.set_cursor_position(level_touch.position);
@@ -71,7 +71,6 @@ impl UILayer {
 impl UILayer {
     fn on_cursor_moved(&mut self, position: Point) {
         self.cursor_position = position;
-        self.ui_cursor_position = position / UIManager::ui_scale();
         self.on_touch(Touch {
             id:       1,
             position: self.cursor_position,

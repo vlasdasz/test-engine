@@ -81,7 +81,7 @@ pub mod mobile {
     impl App {
         pub fn set_screen_size(&mut self, width: c_int, height: c_int) {
             self.mobile.runtime.block_on(async {
-                self.screen.set_size((width, height).into());
+                self.screen.set_size((width, height));
             });
         }
 

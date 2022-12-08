@@ -1,6 +1,6 @@
 use std::{ops::Deref, sync::Mutex};
 
-use gm::flat::Size;
+use gm::flat::{Rect, Size};
 use refs::{Own, Strong, ToWeak, Weak};
 use rtools::Unwrap;
 use smart_default::SmartDefault;
@@ -32,10 +32,12 @@ pub struct UIManager {
 
     touch_disabled: bool,
 
+    // #[default = 1.0]
+    // ui_scale:     f32,
     #[default = 1.0]
-    ui_scale:     f32,
-    #[default = 1.0]
-    screen_scale: f32,
+    display_scale: f32,
+
+    window_size: Size,
 
     pub open_keyboard:  bool,
     pub close_keyboard: bool,
@@ -59,12 +61,16 @@ impl UIManager {
         weak
     }
 
-    pub fn window_size() -> Size {
-        Self::get().root_view.frame.size
+    pub fn set_window_size(size: impl Into<Size>) {
+        Self::get().window_size = size.into();
     }
 
-    pub fn scaled_ui_window_size() -> Size {
-        Self::window_size() / UIManager::ui_scale()
+    pub fn window_size() -> Size {
+        Self::get().window_size
+    }
+
+    pub fn root_view_size() -> Size {
+        Self::window_size() // / UIManager::ui_scale()
     }
 
     pub fn root_view() -> Weak<dyn View> {
@@ -129,21 +135,46 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub fn ui_scale() -> f32 {
-        Self::get().ui_scale
+    /// There are 2 types of scale
+    /// Display scale - constant for display on mac and iPhones, always 1 on
+    /// other OS (probably) UI scale - adjustable in runtime
+    pub fn rescale_frame(rect: &Rect) -> Rect {
+        let scale = Self::display_scale();
+        let rect = rect; // * UIManager::ui_scale();
+
+        let rect: Rect = (
+            rect.origin.x * scale,
+            (Self::window_size().height /* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height)
+                * scale,
+            rect.size.width * scale,
+            rect.size.height * scale,
+        )
+            .into();
+
+        rect
+        // (
+        //     rect.origin.x,
+        //     (UIManager::window_size().height - rect.origin.y -
+        // rect.size.height),     rect.size.width,
+        //     rect.size.height,
+        // )
+        //     .into()
     }
 
-    pub fn set_ui_scale(scale: f32) {
-        Self::get().ui_scale = scale;
-        UIManager::root_view().set_frame(Self::scaled_ui_window_size());
+    // pub fn ui_scale() -> f32 {
+    //     Self::get().ui_scale
+    // }
+    //
+    // pub fn set_ui_scale(scale: f32) {
+    //     Self::get().ui_scale = scale;
+    //     UIManager::root_view().set_frame(Self::scaled_ui_window_size());
+    // }
+
+    pub fn display_scale() -> f32 {
+        Self::get().display_scale
     }
 
-    pub fn screen_scale() -> f32 {
-        //Self::get().screen_scale
-        1.0
-    }
-
-    pub fn set_screen_scale(scale: f32) {
-        Self::get().screen_scale = scale
+    pub fn set_display_scale(scale: f32) {
+        Self::get().display_scale = scale
     }
 }

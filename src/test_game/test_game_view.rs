@@ -37,15 +37,15 @@ impl TestGameView {
     }
 
     fn setup_ui(&mut self) {
-        Screen::current().ui.keymap.add('=', self, |_| {
-            let scale = UIManager::ui_scale() * 1.2;
-            UIManager::set_ui_scale(scale);
-        });
-
-        Screen::current().ui.keymap.add('-', self, |_| {
-            let scale = UIManager::ui_scale() * 0.8;
-            UIManager::set_ui_scale(scale);
-        });
+        // Screen::current().ui.keymap.add('=', self, |_| {
+        //     let scale = UIManager::ui_scale() * 1.2;
+        //     UIManager::set_ui_scale(scale);
+        // });
+        //
+        // Screen::current().ui.keymap.add('-', self, |_| {
+        //     let scale = UIManager::ui_scale() * 0.8;
+        //     UIManager::set_ui_scale(scale);
+        // });
 
         [
             (' ', Direction::Up),
@@ -98,7 +98,7 @@ impl TestGameView {
         self.ui_scale.step = 0.1;
         self.ui_scale.place.size(28, 120).l(100).b(140);
         self.ui_scale.set_images(Image::get("up.png"), Image::get("down.png"));
-        self.ui_scale.on_change.sub(|val| UIManager::set_ui_scale(val));
+        //self.ui_scale.on_change.sub(|val| UIManager::set_ui_scale(val));
 
         self.level_scale.step = 0.1;
         self.level_scale.place.size(28, 120).l(28).b(140);

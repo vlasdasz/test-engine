@@ -47,7 +47,7 @@ impl Screen {
 
         let mut this = self.weak();
         GlEvents::get().size_changed.sub(move |size| {
-            this.on_size_changed(size);
+            this.set_size(size);
         });
 
         GlEvents::get().frame_drawn.sub(move |_| {
@@ -55,8 +55,8 @@ impl Screen {
         });
     }
 
-    fn init(&mut self, #[cfg(desktop)] window_size: impl Into<Size>, view: Own<dyn View>) {
-        UIManager::set_screen_scale(self.monitor.scale);
+    fn init(&mut self, #[cfg(desktop)] window_size: &Size, view: Own<dyn View>) {
+        UIManager::set_display_scale(self.monitor.scale);
 
         self.ui.debug_view.place = Placer::new(self.ui.debug_view.weak_view()).into();
         self.ui.debug_view.init_views();
@@ -69,19 +69,9 @@ impl Screen {
 
         #[cfg(desktop)]
         {
-            let size = Screen::adjust_size(self.monitor.clone(), window_size.into());
-            self.set_size(size);
+            self.glfw.set_size(&window_size);
+            self.set_size(*window_size);
         }
-    }
-
-    #[cfg(not(any(mobile, macos)))]
-    fn adjust_size(monitor: Monitor, size: Size) -> Size {
-        size * monitor.scale
-    }
-
-    #[cfg(macos)]
-    fn adjust_size(_monitor: Monitor, size: Size) -> Size {
-        size
     }
 }
 
@@ -127,6 +117,8 @@ impl Screen {
 
         let mut view = UIManager::root_view();
 
+        view.set_frame(UIManager::root_view_size());
+
         view.calculate_frames();
 
         UIManager::drawer().update(view.deref_mut());
@@ -171,16 +163,10 @@ impl Screen {
         }
     }
 
-    pub fn set_size(&mut self, size: Size) -> &mut Self {
-        #[cfg(desktop)]
-        self.glfw.set_size(size);
-        self.on_size_changed(size);
-        self
-    }
-
-    fn on_size_changed(&mut self, size: Size) {
+    pub fn set_size(&mut self, size: impl Into<Size>) {
+        let size = size.into();
         trace!("Size changed: {:?}", size);
-        UIManager::root_view().set_frame(size / UIManager::ui_scale());
+        UIManager::set_window_size(size);
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
         self.update();
@@ -240,7 +226,7 @@ impl Screen {
 
         screen.init(
             #[cfg(desktop)]
-            window_size,
+            &window_size.into(),
             root_view,
         );
 

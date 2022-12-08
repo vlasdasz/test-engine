@@ -1,6 +1,6 @@
 use refs::ToWeak;
 use rtools::platform::Platform;
-use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame};
+use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 
 use crate::Label;
 
@@ -24,7 +24,11 @@ impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
         self.set_hidden(false);
 
-        self.place.size(400, 200).tl(200).all_ver();
+        dbg!(UIManager::root_view().is_ok());
+
+        self.manually_set_superview(UIManager::root_view());
+
+        self.place.size(400, 200).bl(10).all_ver();
 
         self.fps_label.set_text("fps label");
         self.fps_label.free_text = true;
@@ -41,12 +45,6 @@ impl ViewCallbacks for DebugView {
         self.root_frame.set_text("root frame");
         self.root_frame.free_text = true;
 
-        if Platform::MOBILE {
-            self.set_origin((28, 28));
-        } else {
-            self.set_origin((300, 300));
-        }
-
         let mut this = self.weak();
         self.fps.on_set.sub(move |fps| {
             this.fps_label.set_text(format!("FPS: {fps}"));
@@ -61,24 +59,15 @@ impl ViewCallbacks for DebugView {
         self.frame_drawn += 1;
         self.frame_drawn_label.set_text(format!("Frame drawn: {}", self.frame_drawn));
 
-        let ui_scale = UIManager::ui_scale();
-        self.ui_scale_label.set_text(format!("UI scale: {ui_scale}"));
+        // let ui_scale = UIManager::ui_scale();
+        // self.ui_scale_label.set_text(format!("UI scale: {ui_scale}"));
 
-        let screen_scale = UIManager::screen_scale();
+        let screen_scale = UIManager::display_scale();
         self.screen_scale_label.set_text(format!("Screen scale: {screen_scale}"));
 
         self.root_frame.set_text(format!(
             "Root frame: {:?}",
             UIManager::root_view().frame().short_display()
         ));
-
-        // let size = self.size();
-        // let screen_size = UIManager::screen_size();
-        //
-        // // TODO: - Why this needed?
-        // self.set_origin((
-        //     10,
-        //     (screen_size.height - size.height - 10.0) /
-        // UIManager::screen_scale(), ));
     }
 }

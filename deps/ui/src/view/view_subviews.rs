@@ -2,6 +2,8 @@ use refs::{Own, ToWeak, Weak};
 
 use crate::{layout::Placer, SubView, View};
 pub trait ViewSubviews {
+    /// Use this only if you know what you are doing
+    fn manually_set_superview(&mut self, superview: Weak<dyn View>);
     fn superview(&self) -> Weak<dyn View>;
     fn subviews(&self) -> &[Own<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Own<dyn View>];
@@ -15,6 +17,12 @@ pub trait ViewSubviews {
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
+    /// Use this only if you know what you are doing
+    fn manually_set_superview(&mut self, superview: Weak<dyn View>) {
+        self.superview = superview;
+        self.place = Placer::new(self.weak_view()).into();
+    }
+
     fn superview(&self) -> Weak<dyn View> {
         self.superview
     }
@@ -50,8 +58,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_subview(&mut self, mut view: Own<dyn View>) -> Weak<dyn View> {
-        view.superview = self.weak_view();
-        view.place = Placer::new(view.weak_view()).into();
+        view.manually_set_superview(self.weak_view());
         view.init_views();
         view.setup();
         let res = view.weak();

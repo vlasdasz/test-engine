@@ -47,7 +47,7 @@ impl GLFWManager {
         }
     }
 
-    pub fn set_size(&mut self, size: Size) {
+    pub fn set_size(&mut self, size: &Size) {
         self.window.set_size(size.width as i32, size.height as i32)
     }
 }

@@ -22,31 +22,8 @@ pub struct TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    pub fn convert_viewport(&self, rect: &Rect) -> Rect {
-        let scale = UIManager::screen_scale();
-        let rect = rect * UIManager::ui_scale();
-
-        let rect: Rect = (
-            rect.origin.x * scale,
-            (UIManager::window_size().height * UIManager::ui_scale() - rect.origin.y - rect.size.height)
-                * scale,
-            rect.size.width * scale,
-            rect.size.height * scale,
-        )
-            .into();
-
-        rect
-        // (
-        //     rect.origin.x,
-        //     (UIManager::window_size().height - rect.origin.y -
-        // rect.size.height),     rect.size.width,
-        //     rect.size.height,
-        // )
-        //     .into()
-    }
-
     pub fn set_viewport(&self, rect: &Rect) {
-        GLWrapper::set_viewport(self.convert_viewport(rect));
+        GLWrapper::set_viewport(UIManager::rescale_frame(rect));
     }
 }
 
@@ -73,8 +50,8 @@ impl UIDrawer for TEUIDrawer {
         GLWrapper::set_viewport((
             0,
             0,
-            UIManager::window_size().width * UIManager::screen_scale(),
-            UIManager::window_size().height * UIManager::screen_scale(),
+            UIManager::window_size().width * UIManager::display_scale(),
+            UIManager::window_size().height * UIManager::display_scale(),
         ));
     }
 
@@ -148,7 +125,7 @@ impl UIDrawer for TEUIDrawer {
 
         if let Some(image) = view.image().get() {
             let frame = &image.size.fit_in(view.absolute_frame());
-            draw_image(image, &self.convert_viewport(frame), view.color());
+            draw_image(image, &UIManager::rescale_frame(frame), view.color());
         }
 
         if view.border_color().is_visible() {
