@@ -6,10 +6,7 @@ use gm::{
     flat::{PointsPath, Rect, Size},
     Color,
 };
-use ui::{
-    refs::{Address, ToWeak, Weak},
-    DrawMode, PathData, UIDrawer, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews,
-};
+use ui::{refs::Address, DrawMode, PathData, UIDrawer, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 use ui_views::initialize_path_data;
 
 use crate::assets::Assets;
@@ -43,18 +40,15 @@ impl TEUIDrawer {
         storage.insert(view.address(), (path, view.frame().size));
         &storage.get(&view.address()).unwrap().0
     }
+
+    fn draw_round_border(&self, view: &mut dyn View) {
+        let mut storage = self.round_storage.borrow_mut();
+        let path = self.rounded_path_for_view(view, &mut storage);
+        self.draw_path(path, view.absolute_frame(), None);
+    }
 }
 
 impl UIDrawer for TEUIDrawer {
-    fn reset_viewport(&self) {
-        GLWrapper::set_viewport((
-            0,
-            0,
-            UIManager::window_size().width * UIManager::display_scale(),
-            UIManager::window_size().height * UIManager::display_scale(),
-        ));
-    }
-
     fn fill(&self, rect: &Rect, color: &Color) {
         self.set_viewport(rect);
         Assets::get().shaders.ui.enable().set_color(color);
@@ -82,23 +76,6 @@ impl UIDrawer for TEUIDrawer {
             path.buffer.draw_with_mode(mode.to_gl())
         } else {
             path.buffer.draw();
-        }
-    }
-
-    fn draw_round_border(&self, view: &mut dyn View) {
-        let mut storage = self.round_storage.borrow_mut();
-        let path = self.rounded_path_for_view(view, &mut storage);
-        self.draw_path(path, view.absolute_frame(), None);
-    }
-
-    fn update(&self, view: &mut dyn View) {
-        if view.is_hidden() {
-            return;
-        }
-        view.update();
-        view.commit_animations();
-        for view in view.subviews_mut() {
-            self.update(view.deref_mut());
         }
     }
 
@@ -148,10 +125,6 @@ impl UIDrawer for TEUIDrawer {
         }
 
         GLWrapper::disable_stensil();
-    }
-
-    fn rglica(&self) -> Weak<dyn UIDrawer> {
-        (self as &dyn UIDrawer).weak()
     }
 }
 
