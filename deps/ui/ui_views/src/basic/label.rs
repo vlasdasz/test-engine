@@ -1,5 +1,5 @@
 use gm::Color;
-use rtools::data_manager::Handle;
+use rtools::{data_manager::Handle, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, Font};
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame};
@@ -15,7 +15,7 @@ pub struct Label {
     prev_text:     String,
     image_view:    SubView<ImageView>,
     #[default = 32.0]
-    size:          f32,
+    text_size:     f32,
     needs_update:  bool,
     pub free_text: bool,
 }
@@ -32,6 +32,11 @@ impl Label {
         }
         self.text = text;
         self.needs_update = true;
+        self
+    }
+
+    pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
+        self.text_size = size.into_f32();
         self
     }
 
@@ -80,7 +85,7 @@ impl Label {
             }
         }
 
-        let image = render_text(&self.text, &self.font, self.size);
+        let image = render_text(&self.text, &self.font, self.text_size);
         self.image_view.set_image(image);
         self.prev_text = self.text.clone();
     }

@@ -53,6 +53,7 @@ impl ViewCallbacks for UIDebugView {
         let this = self.weak();
 
         self.label.place.br(10).relative(Anchor::Size, 0.4, this);
+        self.label.set_text_size(64);
         self.label.set_text("Skoggo4");
 
         self.multi_label.place.tl(10).same_size(self.label);

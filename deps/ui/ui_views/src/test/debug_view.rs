@@ -23,8 +23,6 @@ impl ViewCallbacks for DebugView {
     fn setup(&mut self) {
         self.set_hidden(false);
 
-        dbg!(UIManager::root_view().is_ok());
-
         self.manually_set_superview(UIManager::root_view());
 
         self.place.size(400, 200).bl(10).all_ver();

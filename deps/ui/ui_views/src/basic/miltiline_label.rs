@@ -96,6 +96,11 @@ impl MultilineLabel {
 
         loop {
             let slice = &text[..index];
+
+            if slice.is_empty() {
+                return (text[0..1].to_string(), text[1..].to_string().into());
+            }
+
             if self.fits_width(slice, size) {
                 return (slice.to_string(), text[index..].to_string().into());
             }
