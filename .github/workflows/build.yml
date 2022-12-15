@@ -40,4 +40,5 @@ jobs:
         run: py build/build.py
 
       - name: Test
-        run: cargo test --all
+        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
+        run: python3 test.py
