@@ -27,7 +27,9 @@ run("cargo test --all")
 run("cargo test -p valid")
 
 os.chdir("deps/ui/ui_views/")
-
 run("cargo test --all")
+os.chdir(this_path)
 
+os.chdir("deps/text/")
+run("cargo test --all")
 os.chdir(this_path)

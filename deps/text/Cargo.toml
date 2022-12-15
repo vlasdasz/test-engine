@@ -10,9 +10,12 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 log = "0.4"
-rtools = "0.1.24"
+refs = "0.1.23"
+rtools = "0.1.26"
 fontdue = "0.7"
 
 gm = { path = "../gm" }
 gl_image = { path = "../gl_image" }
 
+[dev-dependencies]
+serial_test = "0.9.0"

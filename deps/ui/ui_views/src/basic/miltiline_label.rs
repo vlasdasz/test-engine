@@ -8,7 +8,7 @@ use refs::{set_current_thread_as_main, ToWeak, Weak};
 use rtools::{data_manager::Handle, hash, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, text_size, Font};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews};
 
 use crate::ImageView;
 
@@ -20,7 +20,7 @@ pub struct MultilineLabel {
     text:          String,
     #[default(text::DEFAULT_FONT_SIZE as f32)]
     size:          f32,
-    split_storage: HashMap<u64, Vec<String>>,
+    split_storage: HashMap<u64, (Vec<String>, f32)>,
 }
 
 impl MultilineLabel {
@@ -48,7 +48,7 @@ impl MultilineLabel {
         self.set_text("")
     }
 
-    fn calculate_split(&mut self) -> &[String] {
+    fn calculate_split(&mut self) -> &(Vec<String>, f32) {
         let size = self.size();
 
         let hash = hash(size);
@@ -67,7 +67,7 @@ impl MultilineLabel {
         }
 
         let mut this = self.weak();
-        this.split_storage.insert(hash, split);
+        this.split_storage.insert(hash, (split, text_size));
 
         self.split_storage.get(&hash).unwrap()
     }
@@ -79,12 +79,11 @@ impl MultilineLabel {
         let mut this = self.weak();
         let split = this.calculate_split();
 
-        for line in split {
+        for line in &split.0 {
             let mut image_view = self.add_view::<ImageView>();
-            let image = render_text(line, &self.font, self.size);
+            let image = render_text(line, &self.font, split.1);
             image_view.set_size(image.size);
             image_view.set_image(image);
-            use ui::ViewLayout;
         }
     }
 
@@ -139,7 +138,6 @@ impl MultilineLabel {
 
         for (i, view) in self.subviews_mut().iter_mut().enumerate() {
             view.set_y(height * i as f32);
-            use ui::ViewLayout;
             view.calculate_frames();
         }
     }
@@ -153,6 +151,10 @@ impl ViewCallbacks for MultilineLabel {
     fn update(&mut self) {
         self.set_letters();
         self.layout();
+
+        // dbg!(self.size());
+        // dbg!(self.subviews().first().map(|a| a.frame().size));
+        // dbg!(self.subviews().first().map(|a| a.image().size));
     }
 }
 

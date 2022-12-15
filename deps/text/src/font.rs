@@ -58,7 +58,7 @@ impl Font {
         let mut y_max = f32::MIN;
         let mut y_min = f32::MAX;
 
-        if *RENDER.lock().unwrap() {
+        if Font::render_enabled() {
             for symbol in (Range {
                 start: 0 as char,
                 end:   127 as char,
@@ -117,6 +117,16 @@ impl Font {
 
     pub fn disable_render() {
         *RENDER.lock().unwrap() = false
+    }
+
+    #[cfg(debug_assertions)]
+    pub fn render_enabled() -> bool {
+        *RENDER.lock().unwrap()
+    }
+
+    #[cfg(not(debug_assertions))]
+    pub fn render_enabled() -> bool {
+        true
     }
 
     pub fn glyph_for_char(&self, ch: char) -> &Glyph {
