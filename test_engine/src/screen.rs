@@ -7,7 +7,7 @@ use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 #[cfg(mobile)]
 use gm::volume::GyroData;
 use gm::{flat::Size, Color};
-use net::API;
+use rest::API;
 use rtools::Time;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;

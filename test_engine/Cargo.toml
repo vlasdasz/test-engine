@@ -18,7 +18,7 @@ smart-default = "0.6"
 tokio = { version = "1.21", features = ["full"] }
 
 gm = { path = "../deps/gm" }
-net = { path = "../deps/net" }
+rest = { path = "../deps/rest" }
 text = { path = "../deps/text" }
 maze = { path = "../deps/maze" }
 audio = { path = "../deps/audio" }
