@@ -1,9 +1,6 @@
 #![cfg(mobile)]
 
-use std::{
-    ffi::{c_float, c_int, c_ulong},
-    ops::DerefMut,
-};
+use std::ffi::{c_float, c_int, c_ulong};
 
 use gl_wrapper::GLWrapper;
 
@@ -38,6 +35,7 @@ pub extern "C" fn add_key(char: u8, event: MobileKeyEvent) {
 }
 
 extern "C" {
+    #[allow(improper_ctypes_definitions)]
     fn make_app(
         ppi: c_int,
         scale: c_float,

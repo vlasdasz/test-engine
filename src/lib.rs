@@ -4,24 +4,18 @@
 #![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]
 
-use std::{
-    os::raw::{c_float, c_int, c_ulong},
-    ptr, todo,
-};
+use std::os::raw::{c_float, c_int};
 
-use test_engine::App;
+use test_engine::{App, MakeApp};
 
 use crate::test_game::TestApp;
-use test_engine::MakeApp;
 
 mod benchmark;
 mod test_game;
 mod ui_test;
 
-#[macro_use]
-extern crate log;
-
 #[no_mangle]
+#[allow(improper_ctypes_definitions)]
 extern "C" fn make_app(
     ppi: c_int,
     scale: c_float,

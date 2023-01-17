@@ -1,12 +1,11 @@
+#[cfg(mobile)]
+use core::ffi::{c_float, c_int};
 use std::path::PathBuf;
 
 use gm::flat::Size;
 use ui::{refs::Own, View};
 
 use crate::AppCore;
-
-#[cfg(mobile)]
-use core::ffi::{ c_int, c_float};
 
 pub trait App {
     fn setup()
