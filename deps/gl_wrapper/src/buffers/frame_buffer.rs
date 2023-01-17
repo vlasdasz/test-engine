@@ -37,7 +37,7 @@ impl<T: Into<Size>> From<T> for FrameBuffer {
     fn from(size: T) -> Self {
         let size = size.into();
 
-        debug_assert!(size.is_valid(), "Invalid framebuffer size: {:?}", size);
+        debug_assert!(size.is_valid(), "Invalid framebuffer size: {size:?}");
 
         let mut buffer_handle = u32::MAX;
 

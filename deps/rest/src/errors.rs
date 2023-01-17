@@ -17,13 +17,13 @@ impl From<&'static str> for Error {
 
 impl From<reqwest::Error> for Error {
     fn from(error: reqwest::Error) -> Self {
-        format!("Network error: {}", error).into()
+        format!("Network error: {error}").into()
     }
 }
 
 impl From<serde_json::Error> for Error {
     fn from(err: serde_json::Error) -> Self {
-        format!("Serialization error: {}", err).into()
+        format!("Serialization error: {err}").into()
     }
 }
 

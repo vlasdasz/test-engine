@@ -69,7 +69,7 @@ impl Screen {
 
         #[cfg(desktop)]
         {
-            self.glfw.set_size(&window_size);
+            self.glfw.set_size(window_size);
             self.set_size(*window_size);
         }
     }

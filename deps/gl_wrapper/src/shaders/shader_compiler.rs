@@ -76,7 +76,7 @@ impl ShaderCompiler {
         );
 
         let error = error.to_string_lossy().into_owned();
-        panic!("Failed to compile shader: {}", error);
+        panic!("Failed to compile shader: {error}");
     }
 
     fn unfold_includes(&self, mut code: String) -> String {

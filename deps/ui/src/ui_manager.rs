@@ -53,8 +53,7 @@ impl UIManager {
 
         let unwrap = lock.deref();
         let own = unwrap.deref();
-        let weak = own.weak();
-        weak
+        own.weak()
     }
 
     pub fn set_window_size(size: impl Into<Size>) {

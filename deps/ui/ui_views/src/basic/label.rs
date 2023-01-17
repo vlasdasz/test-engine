@@ -78,7 +78,7 @@ impl Label {
     fn set_letters(&mut self) {
         if self.free_text {
             for char in self.prev_text.chars() {
-                if ('0'..='9').contains(&char) {
+                if char.is_ascii_digit() {
                     self.image_view.image().free();
                     break;
                 }
