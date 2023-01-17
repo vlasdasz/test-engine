@@ -1,11 +1,13 @@
+use std::ops::{Deref, DerefMut};
+
 use rtools::init_log;
-use test_engine::app::App;
+use test_engine::{app_core::AppCore, App};
 use ui::refs::{enable_ref_stats_counter, Own};
 
 use crate::benchmark::UIDebugView;
 
 pub struct TestApp {
-    pub app: App,
+    app: AppCore,
 }
 
 impl TestApp {
@@ -21,7 +23,7 @@ impl TestApp {
 
 #[cfg(desktop)]
 mod desktop {
-    use test_engine::{app::App, paths::home};
+    use test_engine::{app_core::AppCore, paths::home};
 
     use crate::test_game::TestApp;
 
@@ -34,9 +36,24 @@ mod desktop {
     impl Default for TestApp {
         fn default() -> Self {
             Self::setup();
-            let app = App::new((1000, 600), home().join("test_engine"), Self::make_root_view());
+            let app = AppCore::new((1000, 600), home().join("test_engine"), Self::make_root_view());
             Self { app }
         }
+    }
+}
+
+impl App for TestApp {}
+
+impl Deref for TestApp {
+    type Target = AppCore;
+    fn deref(&self) -> &Self::Target {
+        &self.app
+    }
+}
+
+impl DerefMut for TestApp {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.app
     }
 }
 
@@ -44,7 +61,7 @@ mod desktop {
 pub mod mobile {
     use std::ffi::{c_float, c_int};
 
-    use test_engine::app::App;
+    use test_engine::app_core::AppCore;
 
     use crate::test_game::TestApp;
 
@@ -61,7 +78,7 @@ pub mod mobile {
         ) -> Box<Self> {
             Self::setup();
 
-            let app = App::new(
+            let app = AppCore::new(
                 ppi,
                 scale,
                 refresh_rate,

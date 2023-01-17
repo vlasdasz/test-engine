@@ -22,8 +22,10 @@ pub use ui;
 pub use crate::screen::Screen;
 
 pub mod app;
+pub mod app_core;
 pub mod assets;
 mod keymap;
+pub mod mobile_bindings;
 pub mod paths;
 pub mod screen;
 pub mod sprite_view;
@@ -31,6 +33,8 @@ mod sprites_drawer;
 mod ui_drawer;
 pub mod ui_layer;
 
+pub use app::*;
+pub use app_core::*;
 pub use dispatch::*;
 pub use gl_image::Image;
 pub use keymap::*;
