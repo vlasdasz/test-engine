@@ -34,9 +34,7 @@ impl Sprite for Unit {
     }
 
     fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
-    where
-        Self: Sized,
-    {
+    where Self: Sized {
         let mut body = Body::make(shape, position, level);
 
         body.lock_rotations();

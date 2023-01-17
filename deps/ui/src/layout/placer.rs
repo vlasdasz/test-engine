@@ -320,8 +320,7 @@ fn place_horizontally<T, Ref, Arr>(mut views: Arr)
 where
     T: View + ?Sized,
     Ref: DerefMut<Target = T>,
-    Arr: AsMut<[Ref]>,
-{
+    Arr: AsMut<[Ref]>, {
     let views = views.as_mut();
 
     if views.is_empty() {

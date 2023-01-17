@@ -12,6 +12,7 @@ use std::{
 use test_engine::App;
 
 use crate::test_game::TestApp;
+use test_engine::MakeApp;
 
 mod benchmark;
 mod test_game;
@@ -31,7 +32,7 @@ extern "C" fn make_app(
     height: c_float,
     diagonal: c_float,
 ) -> Box<dyn App> {
-    TestApp::new(
+    TestApp::make_app(
         ppi,
         scale,
         refresh_rate,

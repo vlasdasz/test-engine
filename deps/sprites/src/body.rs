@@ -42,9 +42,7 @@ impl Sprite for Body {
     }
 
     fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Strong<Self>
-    where
-        Self: Sized,
-    {
+    where Self: Sized {
         let rigid_body = RigidBodyBuilder::dynamic()
             .translation(Vector2::new(position.x, position.y))
             .build();

@@ -47,9 +47,7 @@ impl Sprite for Player {
     }
 
     fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
-    where
-        Self: Sized,
-    {
+    where Self: Sized {
         Strong::new(Player {
             unit:   Unit::make(shape, position, level),
             weapon: Weapon::make(shape, position, level),

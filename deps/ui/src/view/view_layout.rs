@@ -3,9 +3,7 @@ use crate::{view::view_internal::ViewInternal, View, ViewSubviews};
 pub trait ViewLayout {
     fn calculate_frames(&mut self);
     fn layout(&mut self)
-    where
-        Self: View,
-    {
+    where Self: View {
         self.place.layout();
     }
 }

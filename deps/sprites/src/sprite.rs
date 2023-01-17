@@ -102,8 +102,7 @@ pub trait Sprite {
     fn data(&self) -> &SpriteData;
     fn data_mut(&mut self) -> &mut SpriteData;
     fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
-    where
-        Self: Sized;
+    where Self: Sized;
 }
 
 pub trait SpriteTemplates {

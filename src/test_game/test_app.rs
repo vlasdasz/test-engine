@@ -31,54 +31,12 @@ impl App for TestApp {
         Own::<UIDebugView>::default()
     }
 
+    fn with_core(core: AppCore) -> Self
+    where Self: Sized {
+        Self { core }
+    }
+
     fn core(&mut self) -> &mut AppCore {
         &mut self.core
-    }
-}
-
-#[cfg(desktop)]
-impl Default for TestApp {
-    fn default() -> Self {
-        Self {
-            core: Self::make_core(),
-        }
-    }
-}
-
-#[cfg(mobile)]
-pub mod mobile {
-
-    use std::ffi::{c_float, c_int};
-
-    use test_engine::{app_core::AppCore, App};
-
-    use crate::test_game::TestApp;
-
-    impl TestApp {
-        pub fn new(
-            ppi: c_int,
-            scale: c_float,
-            refresh_rate: c_int,
-            resolution_x: c_int,
-            resolution_y: c_int,
-            width: c_float,
-            height: c_float,
-            diagonal: c_float,
-        ) -> Box<Self> {
-            Self::setup();
-
-            let core = AppCore::new(
-                ppi,
-                scale,
-                refresh_rate,
-                resolution_x,
-                resolution_y,
-                width,
-                height,
-                diagonal,
-                Self::make_root_view(),
-            );
-            Box::new(Self { core })
-        }
     }
 }

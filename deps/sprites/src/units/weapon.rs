@@ -43,9 +43,7 @@ impl Sprite for Weapon {
     }
 
     fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
-    where
-        Self: Sized,
-    {
+    where Self: Sized {
         Strong::new(Self {
             sprite:       SpriteData::make(shape, position, level),
             velocity:     Default::default(),

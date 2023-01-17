@@ -7,11 +7,11 @@ mod benchmark;
 mod test_game;
 mod ui_test;
 
-use test_engine::App;
+use test_engine::{App, MakeApp};
 
 use crate::test_game::TestApp;
 
 #[tokio::main]
 async fn main() {
-    TestApp::default().launch()
+    TestApp::make_app().launch()
 }

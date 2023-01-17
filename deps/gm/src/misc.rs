@@ -4,8 +4,7 @@ pub trait FloatIterExt {
 }
 
 impl<T> FloatIterExt for T
-where
-    T: Iterator<Item = f32>,
+where T: Iterator<Item = f32>
 {
     fn float_max(&mut self) -> f32 {
         self.fold(f32::NAN, f32::max)
