@@ -1,67 +1,56 @@
-use std::ops::{Deref, DerefMut};
+use std::path::PathBuf;
 
 use rtools::init_log;
-use test_engine::{app_core::AppCore, App};
-use ui::refs::{enable_ref_stats_counter, Own};
+use test_engine::{app_core::AppCore, gm::flat::Size, paths::home, App};
+use ui::{
+    refs::{enable_ref_stats_counter, Own},
+    View,
+};
 
 use crate::benchmark::UIDebugView;
 
 pub struct TestApp {
-    app: AppCore,
+    core: AppCore,
 }
 
-impl TestApp {
+impl App for TestApp {
     fn setup() {
         enable_ref_stats_counter(true);
         init_log(false, 4);
     }
 
-    fn make_root_view() -> Own<UIDebugView> {
-        Default::default()
+    fn screen_size() -> Size {
+        (1000, 600).into()
+    }
+
+    fn assets_path() -> PathBuf {
+        home().join("test_engine")
+    }
+
+    fn make_root_view() -> Own<dyn View> {
+        Own::<UIDebugView>::default()
+    }
+
+    fn core(&mut self) -> &mut AppCore {
+        &mut self.core
     }
 }
 
 #[cfg(desktop)]
-mod desktop {
-    use test_engine::{app_core::AppCore, paths::home};
-
-    use crate::test_game::TestApp;
-
-    impl TestApp {
-        pub fn launch(&mut self) {
-            self.app.screen.start_main_loop();
+impl Default for TestApp {
+    fn default() -> Self {
+        Self {
+            core: Self::make_core(),
         }
-    }
-
-    impl Default for TestApp {
-        fn default() -> Self {
-            Self::setup();
-            let app = AppCore::new((1000, 600), home().join("test_engine"), Self::make_root_view());
-            Self { app }
-        }
-    }
-}
-
-impl App for TestApp {}
-
-impl Deref for TestApp {
-    type Target = AppCore;
-    fn deref(&self) -> &Self::Target {
-        &self.app
-    }
-}
-
-impl DerefMut for TestApp {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.app
     }
 }
 
 #[cfg(mobile)]
 pub mod mobile {
+
     use std::ffi::{c_float, c_int};
 
-    use test_engine::app_core::AppCore;
+    use test_engine::{app_core::AppCore, App};
 
     use crate::test_game::TestApp;
 
@@ -78,7 +67,7 @@ pub mod mobile {
         ) -> Box<Self> {
             Self::setup();
 
-            let app = AppCore::new(
+            let core = AppCore::new(
                 ppi,
                 scale,
                 refresh_rate,
@@ -89,7 +78,7 @@ pub mod mobile {
                 diagonal,
                 Self::make_root_view(),
             );
-            Box::new(Self { app })
+            Box::new(Self { core })
         }
     }
 }

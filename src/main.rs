@@ -7,6 +7,8 @@ mod benchmark;
 mod test_game;
 mod ui_test;
 
+use test_engine::App;
+
 use crate::test_game::TestApp;
 
 #[tokio::main]

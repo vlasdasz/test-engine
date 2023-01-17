@@ -14,27 +14,27 @@ static mut APP: Option<Box<dyn App>> = None;
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
     trace!("set_screen_size");
-    unsafe { APP.as_mut().unwrap().set_screen_size(width, height) }
+    unsafe { APP.as_mut().unwrap().core().set_screen_size(width, height) }
 }
 
 #[no_mangle]
 pub extern "C" fn update_screen() -> TestEngineAction {
-    unsafe { APP.as_mut().unwrap().update_screen() }
+    unsafe { APP.as_mut().unwrap().core().update_screen() }
 }
 
 #[no_mangle]
 pub extern "C" fn on_touch(id: c_ulong, x: c_float, y: c_float, event: c_int) {
-    unsafe { APP.as_mut().unwrap().on_touch(id as _, x, y, event) }
+    unsafe { APP.as_mut().unwrap().core().on_touch(id as _, x, y, event) }
 }
 
 #[no_mangle]
 pub extern "C" fn set_gyro(pitch: c_float, roll: c_float, yaw: c_float) {
-    unsafe { APP.as_mut().unwrap().set_gyro(pitch, roll, yaw) }
+    unsafe { APP.as_mut().unwrap().core().set_gyro(pitch, roll, yaw) }
 }
 
 #[no_mangle]
 pub extern "C" fn add_key(char: u8, event: MobileKeyEvent) {
-    unsafe { APP.as_mut().unwrap().add_key(char, event) }
+    unsafe { APP.as_mut().unwrap().core().add_key(char, event) }
 }
 
 extern "C" {
