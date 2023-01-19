@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, marker::PhantomData};
+use std::{borrow::Borrow, fmt::Debug, marker::PhantomData};
 
 use log::trace;
 use reqwest::{Client, RequestBuilder};
@@ -59,16 +59,17 @@ impl<Param: Serialize> Req<Param, ()> {
     }
 }
 
-impl<Param: Serialize, Output: DeserializeOwned> Req<Param, Output> {
+impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow()).unwrap();
-        trace!("Body: {}", body);
+        trace!("Request body: {}", body);
         let client = Client::new();
         trace!("Full url: {}", self.full_url());
         let post = client.post(self.full_url());
         let post = add_headers(post);
-        let body_string = post.body(body).send().await?.text().await?;
-        Ok(from_str(&body_string)?)
+        let response_body = post.body(body).send().await?.text().await?;
+        trace!("Response body: {response_body}");
+        Ok(dbg!(from_str(&response_body))?)
     }
 }
 
