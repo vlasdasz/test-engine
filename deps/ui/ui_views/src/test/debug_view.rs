@@ -1,22 +1,47 @@
+use std::{collections::HashMap, fmt::Display};
+
 use refs::ToWeak;
 use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 
-use crate::Label;
+use crate::{Button, Label};
 
 #[view]
 #[derive(Default)]
 pub struct DebugView {
     fps_label:          SubView<Label>,
     frame_drawn_label:  SubView<Label>,
-    url_label:          SubView<Label>,
     ui_scale_label:     SubView<Label>,
     screen_scale_label: SubView<Label>,
     root_frame:         SubView<Label>,
 
+    custom_labels: HashMap<String, SubView<Label>>,
+
     pub fps: Property<u64>,
-    pub url: Property<String>,
 
     frame_drawn: u64,
+}
+
+impl DebugView {
+    pub fn custom_button(&mut self, label: impl Display, mut action: impl FnMut() + 'static) {
+        let mut button = self.add_view::<Button>();
+        button.set_text(label);
+        button.on_tap.sub(move |_| action());
+    }
+
+    pub fn set_custom(&mut self, label: impl Display, value: impl Display) {
+        let label_text = label.to_string();
+
+        let label = match self.custom_labels.get_mut(&label_text) {
+            Some(label) => label,
+            None => {
+                let label_view = self.add_view::<Label>();
+                self.custom_labels.insert(label_text.clone(), label_view);
+                self.custom_labels.get_mut(&label_text).unwrap()
+            }
+        };
+
+        label.set_text(format!("{label_text}: {value}"));
+    }
 }
 
 impl ViewCallbacks for DebugView {
@@ -45,10 +70,6 @@ impl ViewCallbacks for DebugView {
         let mut this = self.weak();
         self.fps.on_set.sub(move |fps| {
             this.fps_label.set_text(format!("FPS: {fps}"));
-        });
-
-        self.url.on_set.sub(move |url| {
-            this.url_label.set_text(url);
         });
     }
 

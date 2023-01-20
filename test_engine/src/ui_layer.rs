@@ -58,6 +58,8 @@ impl UILayer {
                 }
             }
         }
+
+        self.debug_view.check_touch(&mut touch);
     }
 
     pub fn set_level(&mut self, level: Strong<dyn Level>) {

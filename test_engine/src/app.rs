@@ -3,7 +3,10 @@ use core::ffi::{c_float, c_int};
 use std::path::PathBuf;
 
 use gm::flat::Size;
-use ui::{refs::Own, View};
+use ui::{
+    refs::{set_current_thread_as_main, Own},
+    View,
+};
 
 use crate::AppCore;
 
@@ -29,6 +32,7 @@ pub trait App {
     #[cfg(desktop)]
     fn make_core() -> AppCore
     where Self: Sized {
+        set_current_thread_as_main();
         Self::setup();
         AppCore::new(Self::screen_size(), Self::assets_path(), Self::make_root_view())
     }
