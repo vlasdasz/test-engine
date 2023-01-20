@@ -1,6 +1,6 @@
 use std::{borrow::Borrow, fmt::Debug, marker::PhantomData};
 
-use log::trace;
+use log::{debug, error, trace};
 use reqwest::{Client, RequestBuilder};
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
@@ -37,13 +37,21 @@ impl<Param, Output> Req<Param, Output> {
         let client = Client::new();
         let get = client.get(self.full_url());
         let get = add_headers(get);
-        get.send().await?.text().await
+        let response = get.send().await?;
+        debug!("Status: {}", response.status());
+        response.text().await
     }
 }
 
 impl<Output: DeserializeOwned> Req<(), Output> {
     pub async fn get(self) -> NetResult<Output> {
-        Ok(from_str(&self.call().await?)?)
+        debug!("get - url: {}", self.url);
+        let body = self.call().await?;
+        let res = from_str(&body);
+        if res.is_err() {
+            error!("Body: {body}");
+        }
+        Ok(res?)
     }
 }
 
