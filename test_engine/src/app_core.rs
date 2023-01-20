@@ -33,7 +33,9 @@ mod desktop {
             trace!("GLFWManager: OK");
 
             let monitor = glfw.monitors.first().unwrap().clone();
+            trace!("Monitor: OK");
             let screen = Screen::new(monitor, assets_path, root_view, glfw, size);
+            trace!("Screen: OK");
             Self { screen }
         }
     }
