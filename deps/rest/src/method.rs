@@ -1,14 +1,17 @@
+use std::fmt::{Display, Formatter};
+
 pub enum Method {
     Get,
     Post,
 }
 
-impl ToString for Method {
-    fn to_string(&self) -> String {
-        match self {
+impl Display for Method {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let st = match self {
             Self::Get => "GET",
             Self::Post => "POST",
-        }
-        .into()
+        };
+
+        write!(f, "{st}")
     }
 }

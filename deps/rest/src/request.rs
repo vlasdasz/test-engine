@@ -1,16 +1,16 @@
 use std::{borrow::Borrow, fmt::Debug, marker::PhantomData};
 
-use log::{debug, error, trace};
+use log::debug;
 use reqwest::{Client, RequestBuilder};
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
 
-use crate::{Method, NetResult, API};
+use crate::{response::Response, Method, NetResult, API};
 
 pub struct Req<Param, Result> {
-    url:     &'static str,
-    _method: Method,
-    _data:   PhantomData<(*const Param, *const Result)>,
+    url:    &'static str,
+    method: Method,
+    _data:  PhantomData<(*const Param, *const Result)>,
 }
 
 pub type GetReq<T> = Req<(), T>;
@@ -22,7 +22,7 @@ impl<R, P> Req<R, P> {
     pub const fn make(url: &'static str) -> Self {
         Self {
             url,
-            _method: Method::Get,
+            method: Method::Get,
             _data: PhantomData,
         }
     }
@@ -32,37 +32,16 @@ impl<R, P> Req<R, P> {
     }
 }
 
-impl<Param, Output> Req<Param, Output> {
-    async fn call(&self) -> reqwest::Result<String> {
-        let client = Client::new();
-        let get = client.get(self.full_url());
-        let get = add_headers(get);
-        let response = get.send().await?;
-        debug!("Status: {}", response.status());
-        response.text().await
-    }
-}
-
 impl<Output: DeserializeOwned> Req<(), Output> {
     pub async fn get(self) -> NetResult<Output> {
-        debug!("get - url: {}", self.url);
-        let body = self.call().await?;
-        let res = from_str(&body);
-        if res.is_err() {
-            error!("Body: {body}");
-        }
-        Ok(res?)
+        request_object(&self.method, self.full_url(), None).await
     }
 }
 
 impl<Param: Serialize> Req<Param, ()> {
     pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
         let body = to_string(param.borrow())?;
-        trace!("Body: {}", body);
-        let client = Client::new();
-        let post = client.post(self.full_url());
-        let post = add_headers(post);
-        post.body(body).send().await?;
+        request(&self.method, self.full_url(), body.into()).await?;
         Ok(())
     }
 }
@@ -70,15 +49,44 @@ impl<Param: Serialize> Req<Param, ()> {
 impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow()).unwrap();
-        trace!("Request body: {}", body);
-        let client = Client::new();
-        trace!("Full url: {}", self.full_url());
-        let post = client.post(self.full_url());
-        let post = add_headers(post);
-        let response_body = post.body(body).send().await?.text().await?;
-        trace!("Response body: {response_body}");
-        Ok(dbg!(from_str(&response_body))?)
+        request_object(&self.method, self.full_url(), body.into()).await
     }
+}
+
+async fn request(method: &Method, url: String, body: Option<String>) -> NetResult<Response> {
+    let url = url.to_string();
+    let client = Client::new();
+
+    let req = match method {
+        Method::Get => client.get(&url),
+        Method::Post => client.post(&url),
+    };
+
+    let req = add_headers(req);
+
+    let req = match &body {
+        Some(body) => req.body(body.clone()),
+        None => req,
+    };
+
+    debug!("Request - {url} - {method} {body:?}");
+
+    let res = req.send().await?;
+
+    let status = res.status();
+    let body = res.text().await?;
+
+    let response = Response { status, body };
+
+    debug!("Response - {response:?}");
+
+    Ok(response)
+}
+
+async fn request_object<T>(method: &Method, url: String, body: Option<String>) -> NetResult<T>
+where T: DeserializeOwned {
+    let response = request(method, url, body).await?;
+    Ok(from_str(&response.body)?)
 }
 
 fn add_headers(request: RequestBuilder) -> RequestBuilder {

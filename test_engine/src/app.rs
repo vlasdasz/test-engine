@@ -32,11 +32,11 @@ pub trait App {
     #[cfg(desktop)]
     fn make_core() -> AppCore
     where Self: Sized {
+        Self::setup();
+        trace!("App setup: OK");
         trace!("Make core");
         set_current_thread_as_main();
         trace!("Marked thread {} as main", thread_id());
-        Self::setup();
-        trace!("App setup: OK");
         let core = AppCore::new(Self::screen_size(), Self::assets_path(), Self::make_root_view());
         trace!("AppCore: OK");
         core
@@ -83,6 +83,7 @@ impl<T: App> MakeApp for T {
         height: c_float,
         diagonal: c_float,
     ) -> Box<Self> {
+        T::setup();
         let core = AppCore::new(
             ppi,
             scale,
@@ -94,6 +95,7 @@ impl<T: App> MakeApp for T {
             diagonal,
             Self::make_root_view(),
         );
-        Box::new(T::with_core(core))
+        let app = T::with_core(core);
+        Box::new(app)
     }
 }

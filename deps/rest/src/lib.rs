@@ -4,6 +4,7 @@ mod api;
 mod errors;
 mod method;
 mod request;
+mod response;
 
 pub use api::API;
 pub use errors::{Error, NetResult};
