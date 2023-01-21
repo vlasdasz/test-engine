@@ -50,7 +50,7 @@ impl UILayer {
         // } else {
         //     touch.position /= UIManager::ui_scale();
         // }
-        if !UIManager::touch_root().check_touch(&mut touch) {
+        if !UIManager::touch_root().check_touch(&mut touch, false) {
             if let Some(level) = &mut self.level {
                 level.set_cursor_position(level_touch.position);
                 if touch.is_began() {
@@ -59,7 +59,7 @@ impl UILayer {
             }
         }
 
-        self.debug_view.check_touch(&mut touch);
+        self.debug_view.check_touch(&mut touch, true);
     }
 
     pub fn set_level(&mut self, level: Strong<dyn Level>) {

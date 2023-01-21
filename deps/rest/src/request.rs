@@ -86,7 +86,12 @@ async fn request(method: &Method, url: String, body: Option<String>) -> NetResul
 async fn request_object<T>(method: &Method, url: String, body: Option<String>) -> NetResult<T>
 where T: DeserializeOwned {
     let response = request(method, url, body).await?;
-    Ok(from_str(&response.body)?)
+
+    if response.status == 500 {
+        Err(from_str(&response.body)?)
+    } else {
+        Ok(from_str(&response.body)?)
+    }
 }
 
 fn add_headers(request: RequestBuilder) -> RequestBuilder {

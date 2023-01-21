@@ -9,7 +9,7 @@ pub trait ViewTouch {
     fn set_selected(&mut self, selected: bool);
     fn enable_touch(&self);
     fn disable_touch(&self);
-    fn check_touch(&mut self, touch: &mut Touch) -> bool;
+    fn check_touch(&mut self, touch: &mut Touch, skip_select: bool) -> bool;
 }
 
 impl<T: ?Sized + View> ViewTouch for T {
@@ -42,13 +42,13 @@ impl<T: ?Sized + View> ViewTouch for T {
         self.touch_enabled.replace(false);
     }
 
-    fn check_touch(&mut self, touch: &mut Touch) -> bool {
+    fn check_touch(&mut self, touch: &mut Touch, skip_select: bool) -> bool {
         if self.is_deleted {
             return false;
         }
 
         for view in self.subviews_mut().iter_mut().rev() {
-            if view.check_touch(touch) {
+            if view.check_touch(touch, skip_select) {
                 return true;
             }
         }
@@ -82,7 +82,7 @@ impl<T: ?Sized + View> ViewTouch for T {
             }
         }
 
-        if touch.is_began() {
+        if touch.is_began() && !skip_select {
             UIEvents::get().unselect_view();
         }
 

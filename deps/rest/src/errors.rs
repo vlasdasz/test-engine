@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct RestError {
-    message: String,
+    pub message: String,
 }
 
 impl Error for RestError {}
