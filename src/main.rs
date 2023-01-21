@@ -2,6 +2,7 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]
+#![feature(const_trait_impl)]
 
 mod benchmark;
 mod test_game;

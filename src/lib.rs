@@ -3,6 +3,7 @@
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]
+#![feature(const_trait_impl)]
 
 use std::os::raw::{c_float, c_int};
 

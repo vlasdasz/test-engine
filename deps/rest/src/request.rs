@@ -32,6 +32,12 @@ impl<R, P> Req<R, P> {
     }
 }
 
+impl<R, P> const From<&'static str> for Req<R, P> {
+    fn from(url: &'static str) -> Self {
+        Self::make(url)
+    }
+}
+
 impl<Output: DeserializeOwned> Req<(), Output> {
     pub async fn get(self) -> NetResult<Output> {
         request_object(&self.method, self.full_url(), None).await
