@@ -97,9 +97,9 @@ impl Screen {
         let fps = self.ui.fps;
         self.ui.debug_view.fps.set(fps);
         if API::is_ok() {
-            self.ui.debug_view.set_custom("URL:", API::base_url());
+            self.ui.debug_view.weak().set_custom("URL:", API::base_url());
         } else {
-            self.ui.debug_view.set_custom("URL:", "API not initizlized");
+            self.ui.debug_view.weak().set_custom("URL:", "API not initizlized");
         }
     }
 

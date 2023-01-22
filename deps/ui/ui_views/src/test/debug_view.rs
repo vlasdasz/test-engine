@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt::Display};
 
-use refs::ToWeak;
+use refs::{ToWeak, Weak};
 use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 
 use crate::{Button, Label};
@@ -28,7 +28,7 @@ impl DebugView {
         button.on_tap.sub(move |_| action());
     }
 
-    pub fn set_custom(&mut self, label: impl Display, value: impl Display) {
+    pub fn set_custom(mut self: Weak<Self>, label: impl Display, value: impl Display) {
         let label_text = label.to_string();
 
         let label = match self.custom_labels.get_mut(&label_text) {

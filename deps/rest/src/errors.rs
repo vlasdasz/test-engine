@@ -1,6 +1,7 @@
 use std::{
     error::Error,
     fmt::{Display, Formatter},
+    sync::PoisonError,
 };
 
 use actix_web::ResponseError;
@@ -34,6 +35,14 @@ impl From<reqwest::Error> for RestError {
 impl From<serde_json::Error> for RestError {
     fn from(err: serde_json::Error) -> Self {
         format!("Serialization error: {err}").into()
+    }
+}
+
+impl<T> From<PoisonError<T>> for RestError {
+    fn from(err: PoisonError<T>) -> Self {
+        Self {
+            message: err.to_string(),
+        }
     }
 }
 
