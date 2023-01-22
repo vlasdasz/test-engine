@@ -54,7 +54,7 @@ impl<Param: Serialize> Req<Param, ()> {
 
 impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
-        let body = to_string(param.borrow()).unwrap();
+        let body = to_string(param.borrow())?;
         request_object(&self.method, self.full_url(), body.into()).await
     }
 }
