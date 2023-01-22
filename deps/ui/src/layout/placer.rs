@@ -265,6 +265,8 @@ impl Placer {
         match rule.side {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
             Anchor::Bot => frame.origin.y = a_frame.y() - rule.offset - frame.height(),
+            Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
+            Anchor::Right => frame.origin.x = a_frame.x() - rule.offset - frame.width(),
             _ => unimplemented!(),
         }
     }
