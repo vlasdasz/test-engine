@@ -82,7 +82,7 @@ async fn request(method: &Method, url: String, body: Option<String>) -> NetResul
     let status = res.status();
     let body = res.text().await?;
 
-    let response = Response { status, body };
+    let response = Response { url, status, body };
 
     debug!("Response - {response:?}");
 
