@@ -4,9 +4,11 @@ use rtools::Animation;
 use crate::{UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
 pub trait ViewController {
     fn push(&mut self, view: Own<dyn View>);
-    fn pop(&mut self);
+    fn pop(self: Weak<Self>);
     fn present(&mut self, view: Own<dyn View>);
 }
+
+use refs::Weak;
 
 impl<T: ?Sized + View + 'static> ViewController for T {
     fn push(&mut self, view: Own<dyn View>) {
@@ -33,23 +35,23 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         self.add_animation(anim);
     }
 
-    fn pop(&mut self) {
+    fn pop(mut self: Weak<Self>) {
         if UIManager::touch_disabled() {
             return;
         }
 
         UIManager::disable_touch();
 
-        let mut this = self.weak();
-
-        let anim = UIAnimation::new(this, Animation::new(0, self.width(), 0.5), |view, x| {
+        let anim = UIAnimation::new(self, Animation::new(0, self.width(), 0.5), |view, x| {
             view.set_x(x);
         });
 
         anim.on_finish.sub(move |_| {
+            self.is_hidden = true;
+            self.remove_from_superview();
+            let vo = UIManager::get().touch_stack.pop().expect("add error message");
+            assert_eq!(self.addr(), vo.addr());
             UIManager::enable_touch();
-            this.is_hidden = true;
-            this.remove_from_superview();
         });
 
         self.add_animation(anim);
