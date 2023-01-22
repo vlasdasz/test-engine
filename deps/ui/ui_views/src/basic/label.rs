@@ -1,8 +1,9 @@
 use gm::Color;
+use refs::Weak;
 use rtools::{data_manager::Handle, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, Font};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::ImageView;
 
@@ -91,12 +92,14 @@ impl Label {
     }
 }
 
-impl ViewCallbacks for Label {
-    fn setup(&mut self) {
+impl ViewSetup for Label {
+    fn setup(mut self: Weak<Self>) {
         self.image_view.place.center();
         self.set_letters();
     }
+}
 
+impl ViewCallbacks for Label {
     fn update(&mut self) {
         if self.needs_update {
             self.set_letters();

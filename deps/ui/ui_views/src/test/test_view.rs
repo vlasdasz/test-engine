@@ -1,8 +1,8 @@
 use gl_image::Image;
 use gm::{flat::PointsPath, Color};
-use refs::{Own, ToWeak};
+use refs::{Own, Weak};
 use rtools::{data_manager::Handle, Animation, Unwrap};
-use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame};
+use ui::{view, DrawMode, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::{data_source, Button, DrawingView, ImageView, Label, StringCell, TableView, TableViewDataSource};
 
@@ -38,17 +38,16 @@ impl TestView {
     }
 }
 
-impl ViewCallbacks for TestView {
-    fn setup(&mut self) {
+impl ViewSetup for TestView {
+    fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
 
         self.label.set_text("Hello label!");
 
-        let mut this = self.weak();
         self.button.on_tap.sub(move |_| {
-            let val = this.label_value;
-            this.label.set_text(format!("Hello label! {val}"));
-            this.label_value += 1;
+            let val = self.label_value;
+            self.label.set_text(format!("Hello label! {val}"));
+            self.label_value += 1;
         });
 
         self.drawing.add_path(
@@ -64,7 +63,9 @@ impl ViewCallbacks for TestView {
 
         self.animation = Animation::new(0, 200, 10).into();
     }
+}
 
+impl ViewCallbacks for TestView {
     fn update(&mut self) {
         self.animated.set_y(self.animation.value());
         let radius = self.button.frame().size.height / 2.0;

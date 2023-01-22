@@ -3,7 +3,7 @@ use rtools::data_manager::DataManager;
 use sprites::Sprite;
 use ui::{
     refs::{ToWeak, Weak},
-    view, SubView, ViewCallbacks, ViewData,
+    view, SubView, ViewCallbacks, ViewData, ViewSetup,
 };
 use ui_views::{Button, LabeledView};
 
@@ -48,8 +48,8 @@ impl SpriteView {
     }
 }
 
-impl ViewCallbacks for SpriteView {
-    fn setup(&mut self) {
+impl ViewSetup for SpriteView {
+    fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
 
         self.position.set_title("position:");
@@ -58,7 +58,9 @@ impl ViewCallbacks for SpriteView {
 
         self.setup_delete_button();
     }
+}
 
+impl ViewCallbacks for SpriteView {
     fn update(&mut self) {
         if self.sprite.is_null() {
             return;

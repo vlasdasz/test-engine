@@ -8,8 +8,8 @@ use test_engine::{
     view, Image, LevelBase, Screen,
 };
 use ui::{
-    refs::{Own, Strong},
-    BaseView, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews,
+    refs::{Own, Strong, Weak},
+    BaseView, SubView, UIManager, ViewData, ViewSetup, ViewSubviews,
 };
 use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
 
@@ -140,8 +140,8 @@ impl TestGameView {
     }
 }
 
-impl ViewCallbacks for TestGameView {
-    fn setup(&mut self) {
+impl ViewSetup for TestGameView {
+    fn setup(mut self: Weak<Self>) {
         self.setup_ui();
         self.setup_level();
     }

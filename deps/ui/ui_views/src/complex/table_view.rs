@@ -1,5 +1,5 @@
 use refs::{Own, ToWeak, Weak};
-use ui::{view, View, ViewCallbacks, ViewSubviews, ViewTouch};
+use ui::{view, View, ViewSetup, ViewSubviews, ViewTouch};
 
 #[view]
 #[derive(Default)]
@@ -20,8 +20,8 @@ impl TableView {
     }
 }
 
-impl ViewCallbacks for TableView {
-    fn setup(&mut self) {
+impl ViewSetup for TableView {
+    fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
     }
 }
@@ -35,7 +35,9 @@ pub trait TableViewDataSource {
 #[macro_export]
 macro_rules! data_source {
     ($source:ident) => {{
+        use std::ops::DerefMut;
+
         use refs::ToWeak;
-        ($source as &mut dyn TableViewDataSource).weak()
+        ($source.deref_mut() as &mut dyn TableViewDataSource).weak()
     }};
 }

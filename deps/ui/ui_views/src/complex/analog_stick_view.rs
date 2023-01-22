@@ -2,8 +2,8 @@ use gm::{
     flat::{Point, PointsPath},
     Color,
 };
-use refs::ToWeak;
-use ui::{view, DrawMode, Event, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
+use refs::Weak;
+use ui::{view, DrawMode, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
 
 use crate::DrawingView;
 
@@ -49,12 +49,11 @@ impl AnalogStickView {
     }
 }
 
-impl ViewCallbacks for AnalogStickView {
-    fn setup(&mut self) {
+impl ViewSetup for AnalogStickView {
+    fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        let mut this = self.weak();
         self.on_touch.sub(move |touch| {
-            this.on_touch(&touch);
+            self.on_touch(&touch);
         });
 
         self.set_frame((SIZE, SIZE));

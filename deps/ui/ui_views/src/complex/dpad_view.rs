@@ -1,8 +1,8 @@
 use gl_image::Image;
 use gm::flat::Direction;
-use refs::ToWeak;
+use refs::Weak;
 use rtools::{data_manager::Handle, Apply};
-use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame};
+use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::Button;
 
@@ -32,8 +32,8 @@ impl DPadView {
     }
 }
 
-impl ViewCallbacks for DPadView {
-    fn setup(&mut self) {
+impl ViewSetup for DPadView {
+    fn setup(self: Weak<Self>) {
         [
             (self.up, Direction::Up),
             (self.down, Direction::Down),
@@ -41,12 +41,13 @@ impl ViewCallbacks for DPadView {
             (self.right, Direction::Right),
         ]
         .apply(|(mut view, direction)| {
-            let this = self.weak();
-            view.on_tap.sub(move |_| this.on_press.trigger(direction));
+            view.on_tap.sub(move |_| self.on_press.trigger(direction));
             view.set_corner_radius(5);
         });
     }
+}
 
+impl ViewCallbacks for DPadView {
     fn update(&mut self) {
         let width = self.width() / 3.0;
         let height = self.height() / 2.0;

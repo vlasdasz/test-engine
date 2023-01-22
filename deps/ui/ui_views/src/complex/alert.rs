@@ -1,6 +1,6 @@
 use gm::Color;
 use refs::{Own, ToWeak, Weak};
-use ui::{view, Event, SubView, UIManager, ViewCallbacks, ViewData, ViewSubviews};
+use ui::{view, Event, SubView, UIManager, ViewData, ViewSetup, ViewSubviews};
 
 use crate::{Button, MultilineLabel};
 
@@ -24,21 +24,20 @@ impl Alert {
 }
 
 impl Alert {
-    pub fn set_message(&mut self, message: impl ToString) {
-        self.message = message.to_string();
+    fn set_message(&mut self) {
+        let message = self.message.clone();
         self.label.set_text(message);
     }
 }
 
-impl ViewCallbacks for Alert {
-    fn setup(&mut self) {
+impl ViewSetup for Alert {
+    fn setup(mut self: Weak<Self>) {
         self.place.size(280, 200).center();
         self.set_color(Color::WHITE)
             .set_corner_radius(10)
             .set_border_color(Color::BLACK);
 
         self.label.place.lrt(10).h(140);
-        self.label.set_text(self.message.clone());
         self.label.set_text_size(28);
 
         self.ok_button.place.size(202, 20).center_hor().b(-1);
@@ -47,12 +46,11 @@ impl ViewCallbacks for Alert {
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
 
-        let mut this = self.weak();
         self.ok_button.on_tap.sub(move |_| {
-            this.remove_from_superview();
-            this.on_ok.trigger(());
+            self.remove_from_superview();
+            self.on_ok.trigger(());
         });
 
-        self.set_message(self.message.clone());
+        self.set_message();
     }
 }

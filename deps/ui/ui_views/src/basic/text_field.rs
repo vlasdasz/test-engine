@@ -1,8 +1,8 @@
 use gm::Color;
-use refs::ToWeak;
+use refs::{ToWeak, Weak};
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
-    view, SubView, UIManager, ViewCallbacks, ViewData, ViewTouch,
+    view, SubView, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
 };
 
 use crate::Label;
@@ -24,20 +24,21 @@ impl TextField {
     }
 }
 
-impl ViewCallbacks for TextField {
-    fn setup(&mut self) {
+impl ViewSetup for TextField {
+    fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        let mut this = self.weak();
         self.on_touch.sub(move |touch| {
             if touch.is_began() {
-                this.set_selected(true);
+                self.set_selected(true);
             }
         });
 
         self.set_color(Color::LIGHT_GRAY);
         self.label.place.as_background();
     }
+}
 
+impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
             UIManager::get().open_keyboard = true;

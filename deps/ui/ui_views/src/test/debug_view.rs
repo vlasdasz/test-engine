@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt::Display};
 
-use refs::ToWeak;
-use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
+use refs::Weak;
+use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
 
 use crate::{Button, Label};
 
@@ -45,8 +45,8 @@ impl DebugView {
     }
 }
 
-impl ViewCallbacks for DebugView {
-    fn setup(&mut self) {
+impl ViewSetup for DebugView {
+    fn setup(mut self: Weak<Self>) {
         self.set_hidden(false);
 
         self.manually_set_superview(UIManager::root_view());
@@ -68,12 +68,13 @@ impl ViewCallbacks for DebugView {
         self.root_frame.set_text("root frame");
         self.root_frame.free_text = true;
 
-        let mut this = self.weak();
         self.fps.on_set.sub(move |fps| {
-            this.fps_label.set_text(format!("FPS: {fps}"));
+            self.fps_label.set_text(format!("FPS: {fps}"));
         });
     }
+}
 
+impl ViewCallbacks for DebugView {
     fn update(&mut self) {
         self.frame_drawn += 1;
         self.frame_drawn_label.set_text(format!("Frame drawn: {}", self.frame_drawn));

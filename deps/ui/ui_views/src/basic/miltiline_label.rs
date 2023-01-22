@@ -8,7 +8,7 @@ use refs::{set_current_thread_as_main, ToWeak, Weak};
 use rtools::{data_manager::Handle, hash, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, text_size, Font};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSubviews};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews};
 
 use crate::ImageView;
 
@@ -153,11 +153,13 @@ impl MultilineLabel {
     }
 }
 
-impl ViewCallbacks for MultilineLabel {
-    fn setup(&mut self) {
+impl ViewSetup for MultilineLabel {
+    fn setup(mut self: Weak<Self>) {
         self.set_letters();
     }
+}
 
+impl ViewCallbacks for MultilineLabel {
     fn update(&mut self) {
         self.set_letters();
         self.layout();

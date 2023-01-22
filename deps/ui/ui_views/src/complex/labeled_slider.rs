@@ -1,6 +1,6 @@
-use refs::ToWeak;
+use refs::Weak;
 use rtools::IntoF32;
-use ui::{view, Event, SubView, ViewCallbacks};
+use ui::{view, Event, SubView, ViewSetup};
 
 use crate::{Label, Slider};
 
@@ -30,9 +30,8 @@ impl LabeledSlider {
     }
 }
 
-impl ViewCallbacks for LabeledSlider {
-    fn setup(&mut self) {
-        let mut s = self.weak();
-        self.slider.on_change.sub(move |a| s.on_change(a));
+impl ViewSetup for LabeledSlider {
+    fn setup(mut self: Weak<Self>) {
+        self.slider.on_change.sub(move |a| self.on_change(a));
     }
 }

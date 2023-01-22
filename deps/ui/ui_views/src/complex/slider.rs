@@ -1,7 +1,7 @@
 use gm::Color;
-use refs::ToWeak;
+use refs::Weak;
 use smart_default::SmartDefault;
-use ui::{view, Event, SubView, Touch, ViewCallbacks, ViewFrame, ViewTouch};
+use ui::{view, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
 
 use crate::CircleView;
 
@@ -19,12 +19,12 @@ pub struct Slider {
     pub finish: f32,
 }
 
-impl ViewCallbacks for Slider {
-    fn setup(&mut self) {
+impl ViewSetup for Slider {
+    fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        let mut this = self.weak();
+
         self.on_touch.sub(move |touch| {
-            this.on_touch(&touch);
+            self.on_touch(&touch);
         });
 
         let radius = self.width() / 2.0;

@@ -14,7 +14,7 @@ mod view_touch_internal;
 pub use view::*;
 pub use view_animation::*;
 pub use view_base::{BaseView, ViewBase};
-pub use view_callbacks::ViewCallbacks;
+pub use view_callbacks::*;
 pub use view_controller::*;
 pub use view_data::ViewData;
 pub use view_frame::ViewFrame;

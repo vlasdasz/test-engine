@@ -1,8 +1,8 @@
 use gl_image::Image;
-use refs::ToWeak;
+use refs::Weak;
 use rtools::data_manager::Handle;
 use smart_default::SmartDefault;
-use ui::{view, Event, SubView, ViewCallbacks, ViewData};
+use ui::{view, Event, SubView, ViewData, ViewSetup};
 
 use crate::{Button, Label};
 
@@ -27,25 +27,24 @@ impl IntView {
     }
 }
 
-impl ViewCallbacks for IntView {
-    fn setup(&mut self) {
+impl ViewSetup for IntView {
+    fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
 
         self.label.set_text("1.0");
 
-        let mut this = self.weak();
         self.up.on_tap.sub(move |_| {
-            this.value += this.step;
-            let val = this.value;
-            this.on_change.trigger(val);
-            this.label.set_text(format!("{val:.1}"));
+            self.value += self.step;
+            let val = self.value;
+            self.on_change.trigger(val);
+            self.label.set_text(format!("{val:.1}"));
         });
 
         self.down.on_tap.sub(move |_| {
-            this.value -= this.step;
-            let val = this.value;
-            this.on_change.trigger(val);
-            this.label.set_text(format!("{val:.1}"));
+            self.value -= self.step;
+            let val = self.value;
+            self.on_change.trigger(val);
+            self.label.set_text(format!("{val:.1}"));
         });
     }
 }

@@ -58,7 +58,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     fn add_subview(&mut self, mut view: Own<dyn View>) -> Weak<dyn View> {
         view.manually_set_superview(self.weak_view());
         view.init_views();
-        view.setup();
+        view.internal_setup();
         let res = view.weak();
         self.subviews.push(view);
         res

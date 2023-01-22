@@ -43,6 +43,15 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                self
             }
         }
+
+        impl ui::ViewInternalSetup for #name {
+            fn internal_setup(&mut self) {
+                use ui::ViewSetup;
+                use ui::refs::ToWeak;
+                self.weak().setup()
+            }
+        }
+
         impl std::ops::Deref for #name {
             type Target = ui::ViewBase;
             fn deref(&self) -> &ui::ViewBase {

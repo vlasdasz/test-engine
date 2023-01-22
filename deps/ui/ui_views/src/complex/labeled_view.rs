@@ -1,4 +1,5 @@
-use ui::{view, SubView, ViewCallbacks};
+use refs::Weak;
+use ui::{view, SubView, ViewSetup};
 
 use crate::Label;
 
@@ -26,8 +27,8 @@ impl LabeledView {
     }
 }
 
-impl ViewCallbacks for LabeledView {
-    fn setup(&mut self) {
+impl ViewSetup for LabeledView {
+    fn setup(mut self: Weak<Self>) {
         self.place.all_hor();
     }
 }

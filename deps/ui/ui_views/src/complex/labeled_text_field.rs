@@ -1,5 +1,5 @@
-use refs::ToWeak;
-use ui::{layout::Anchor, view, SubView, ViewCallbacks};
+use refs::Weak;
+use ui::{layout::Anchor, view, SubView, ViewSetup};
 
 use crate::{Label, TextField};
 
@@ -26,9 +26,9 @@ impl LabeledTextField {
     }
 }
 
-impl ViewCallbacks for LabeledTextField {
-    fn setup(&mut self) {
-        let this = self.weak();
+impl ViewSetup for LabeledTextField {
+    fn setup(mut self: Weak<Self>) {
+        let this = self;
         self.label.place.lrt(0).h(10).relative(Anchor::Height, 1.0 / 3.0, this);
         self.text_field.place.lrb(0).h(20).relative(Anchor::Height, 2.0 / 3.0, this);
     }

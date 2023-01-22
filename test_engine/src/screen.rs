@@ -14,7 +14,7 @@ use text::Font;
 use ui::{
     layout::Placer,
     refs::{Own, ToWeak, Weak},
-    UIManager, View, ViewCallbacks, ViewFrame, ViewLayout,
+    UIManager, View, ViewFrame, ViewInternalSetup, ViewLayout,
 };
 
 use crate::{
@@ -60,7 +60,7 @@ impl Screen {
 
         self.ui.debug_view.place = Placer::new(self.ui.debug_view.weak_view()).into();
         self.ui.debug_view.init_views();
-        self.ui.debug_view.setup();
+        self.ui.debug_view.internal_setup();
 
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);

@@ -11,7 +11,7 @@ use rtools::{data_manager::Handle, Unwrap};
 use smart_default::SmartDefault;
 use vents::Event;
 
-use crate::{layout::Placer, PathData, Touch, View};
+use crate::{layout::Placer, view::view_callbacks::ViewInternalSetup, PathData, Touch, View};
 
 #[derive(SmartDefault)]
 pub struct ViewBase {
@@ -59,6 +59,10 @@ impl View for BaseView {
     fn as_any(&self) -> &dyn Any {
         self
     }
+}
+
+impl ViewInternalSetup for BaseView {
+    fn internal_setup(&mut self) {}
 }
 
 impl Deref for BaseView {

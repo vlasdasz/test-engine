@@ -1,5 +1,8 @@
 use test_engine::{ui::layout::Anchor, view};
-use ui::{refs::Own, BaseView, SubView, UIManager, ViewCallbacks, ViewFrame};
+use ui::{
+    refs::{Own, Weak},
+    BaseView, SubView, UIManager, ViewFrame, ViewSetup,
+};
 use ui_views::Button;
 
 use crate::test_game::TestGameView;
@@ -13,13 +16,15 @@ pub struct UITestView {
     back:      SubView<Button>,
 }
 
-impl ViewCallbacks for UITestView {
-    fn setup(&mut self) {
+impl ViewSetup for UITestView {
+    fn setup(mut self: Weak<Self>) {
         self.container.set_frame((200, 200, 280, 280));
 
         self.top_view.place.lrt(10).h(50);
 
-        self.test.place.lrb(10).anchor(self.top_view, Anchor::Top, 20);
+        let this = self;
+
+        self.test.place.lrb(10).anchor(this.top_view, Anchor::Top, 20);
 
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 

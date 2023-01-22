@@ -1,6 +1,6 @@
 use gm::Color;
-use refs::ToWeak;
-use ui::{view, Event, SubView, ViewCallbacks, ViewTouch};
+use refs::Weak;
+use ui::{view, Event, SubView, ViewSetup, ViewTouch};
 
 use crate::Label;
 
@@ -25,27 +25,26 @@ impl Button {
     }
 }
 
-impl ViewCallbacks for Button {
-    fn setup(&mut self) {
+impl ViewSetup for Button {
+    fn setup(self: Weak<Self>) {
         self.enable_touch();
-        let this = self.weak();
-        self.on_touch_began.sub(move |_| this.on_tap.trigger(()));
+        self.on_touch_began.sub(move |_| self.on_tap.trigger(()));
     }
 }
 
 #[macro_export]
 macro_rules! link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
-        $self.$($button).+.on_tap.set($self, |mut this, _| this.$method());
+        $self.$($button).+.on_tap.sub(move |_| $self.$method());
     }
 }
 
 #[macro_export]
 macro_rules! async_link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
-        $self.$($button).+.on_tap.set($self, |mut this, _| {
+        $self.$($button).+.on_tap.sub(move |_| {
             tokio::spawn(async move {
-                this.$method().await;
+                $self.$method().await;
             });
         });
     };
@@ -54,10 +53,8 @@ macro_rules! async_link_button {
 #[macro_export]
 macro_rules! async_call {
     ($self:ident, $method:ident) => {
-        use refs::ToWeak;
-        let this = $self.weak();
         tokio::spawn(async move {
-            this.$method().await;
+            $self.$method().await;
         });
     };
 }

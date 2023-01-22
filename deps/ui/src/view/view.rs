@@ -5,9 +5,10 @@ use std::{
 
 use refs::Weak;
 
-use crate::{ViewBase, ViewCallbacks};
+use crate::{view::view_callbacks::ViewInternalSetup, ViewBase, ViewCallbacks};
 
-pub trait View: ViewCallbacks + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
+pub trait View:
+    ViewCallbacks + ViewInternalSetup + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
     fn init_views(&mut self);
     fn weak_view(&self) -> Weak<dyn View>;
     fn as_any(&self) -> &dyn Any;

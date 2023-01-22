@@ -1,4 +1,5 @@
-use ui::{view, SubView, ViewCallbacks};
+use refs::Weak;
+use ui::{view, SubView, ViewSetup};
 
 use crate::Label;
 
@@ -9,9 +10,10 @@ pub struct StringCell {
     label: SubView<Label>,
 }
 
-impl ViewCallbacks for StringCell {
-    fn setup(&mut self) {
-        self.label.set_text(self.data.clone());
+impl ViewSetup for StringCell {
+    fn setup(mut self: Weak<Self>) {
+        let data = self.data.clone();
+        self.label.set_text(data);
         self.label.place.as_background();
     }
 }

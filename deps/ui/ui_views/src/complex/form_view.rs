@@ -1,6 +1,6 @@
 use reflected::Reflected;
-use refs::{Own, ToWeak};
-use ui::{view, ViewCallbacks, ViewSubviews};
+use refs::{Own, ToWeak, Weak};
+use ui::{view, ViewSetup, ViewSubviews};
 
 use crate::LabeledTextField;
 
@@ -8,8 +8,8 @@ use crate::LabeledTextField;
 #[derive(Default)]
 pub struct FormView {}
 
-impl ViewCallbacks for FormView {
-    fn setup(&mut self) {
+impl ViewSetup for FormView {
+    fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
     }
 }
