@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 log = "0.4"
-rtools = "0.1.26"
+rtools = "0.1.27"
 actix-web = "4"
 serde_json = "1.0"
 

@@ -32,13 +32,14 @@ impl Alert {
 
 impl ViewCallbacks for Alert {
     fn setup(&mut self) {
-        self.place.size(280, 140).center();
+        self.place.size(280, 200).center();
         self.set_color(Color::WHITE)
             .set_corner_radius(10)
             .set_border_color(Color::BLACK);
 
-        self.label.place.lrt(10).h(60);
+        self.label.place.lrt(10).h(140);
         self.label.set_text(self.message.clone());
+        self.label.set_text_size(28);
 
         self.ok_button.place.size(202, 20).center_hor().b(-1);
         self.ok_button

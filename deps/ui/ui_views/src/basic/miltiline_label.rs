@@ -33,6 +33,11 @@ impl MultilineLabel {
         self
     }
 
+    pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
+        self.size = size.into_f32() as _;
+        self
+    }
+
     pub fn append_text(&mut self, text: impl ToString) -> &mut Self {
         self.set_text(format!("{}{}", self.text, text.to_string()));
         self

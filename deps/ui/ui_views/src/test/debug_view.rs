@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt::Display};
 
-use refs::{ToWeak, Weak};
+use refs::ToWeak;
 use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 
 use crate::{Button, Label};
@@ -13,6 +13,7 @@ pub struct DebugView {
     ui_scale_label:     SubView<Label>,
     screen_scale_label: SubView<Label>,
     root_frame:         SubView<Label>,
+    touch_enabled:      SubView<Label>,
 
     custom_labels: HashMap<String, SubView<Label>>,
 
@@ -28,7 +29,7 @@ impl DebugView {
         button.on_tap.sub(move |_| action());
     }
 
-    pub fn set_custom(mut self: Weak<Self>, label: impl Display, value: impl Display) {
+    pub fn set_custom(&mut self, label: impl Display, value: impl Display) {
         let label_text = label.to_string();
 
         let label = match self.custom_labels.get_mut(&label_text) {
@@ -87,5 +88,8 @@ impl ViewCallbacks for DebugView {
             "Root frame: {:?}",
             UIManager::root_view().frame().short_display()
         ));
+
+        self.touch_enabled
+            .set_text(format!("Touch enabled: {}", !UIManager::touch_disabled()));
     }
 }
