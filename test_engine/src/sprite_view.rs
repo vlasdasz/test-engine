@@ -1,10 +1,7 @@
 use gl_image::Image;
 use rtools::data_manager::DataManager;
 use sprites::Sprite;
-use ui::{
-    refs::{ToWeak, Weak},
-    view, SubView, ViewCallbacks, ViewData, ViewSetup,
-};
+use ui::{refs::Weak, view, SubView, ViewCallbacks, ViewData, ViewSetup};
 use ui_views::{Button, LabeledView};
 
 #[view]
@@ -34,15 +31,14 @@ impl SpriteView {
         self.color.set_text(*sprite.color());
     }
 
-    fn setup_delete_button(&mut self) {
+    fn setup_delete_button(mut self: Weak<Self>) {
         self.delete_button.place.size(20, 20).tl(0);
         self.delete_button.set_hidden(true).set_image(Image::get("delete.png"));
 
-        let mut this = self.weak();
         self.delete_button.on_tap.sub(move |_| {
-            if this.sprite.is_ok() {
-                this.sprite.remove();
-                this.set_sprite(Weak::default());
+            if self.sprite.is_ok() {
+                self.sprite.remove();
+                self.set_sprite(Weak::default());
             }
         });
     }

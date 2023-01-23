@@ -9,7 +9,7 @@ use crate::LabeledTextField;
 pub struct FormView {}
 
 impl ViewSetup for FormView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.place.all_ver();
     }
 }

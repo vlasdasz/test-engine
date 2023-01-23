@@ -65,13 +65,13 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         UIManager::disable_touch();
 
         let mut view = UIManager::root_view().add_subview(view);
-        let mut this = self.weak();
         view.place.as_background();
         view.set_frame(self.frame().with_zero_origin());
         let anim = UIAnimation::new(view, Animation::new(self.height(), 0, 0.5), |view, y| {
             view.set_y(y);
         });
 
+        let mut this = self.weak();
         anim.on_finish.sub(move |_| {
             this.remove_from_superview();
             UIManager::enable_touch();

@@ -27,9 +27,8 @@ impl LabeledTextField {
 }
 
 impl ViewSetup for LabeledTextField {
-    fn setup(mut self: Weak<Self>) {
-        let this = self;
-        self.label.place.lrt(0).h(10).relative(Anchor::Height, 1.0 / 3.0, this);
-        self.text_field.place.lrb(0).h(20).relative(Anchor::Height, 2.0 / 3.0, this);
+    fn setup(self: Weak<Self>) {
+        self.label.place.lrt(0).h(10).relative(Anchor::Height, 1.0 / 3.0, self);
+        self.text_field.place.lrb(0).h(20).relative(Anchor::Height, 2.0 / 3.0, self);
     }
 }

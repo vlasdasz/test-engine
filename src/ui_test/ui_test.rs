@@ -22,9 +22,7 @@ impl ViewSetup for UITestView {
 
         self.top_view.place.lrt(10).h(50);
 
-        let this = self;
-
-        self.test.place.lrb(10).anchor(this.top_view, Anchor::Top, 20);
+        self.test.place.lrb(10).anchor(self.top_view, Anchor::Top, 20);
 
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 

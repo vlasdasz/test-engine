@@ -28,7 +28,7 @@ impl LabeledView {
 }
 
 impl ViewSetup for LabeledView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.place.all_hor();
     }
 }

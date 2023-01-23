@@ -110,8 +110,7 @@ impl UIManager {
         };
         UIManager::root_view().remove_all_subviews();
         view.frame = UIManager::root_view().frame;
-        let mut view = UIManager::root_view().add_subview(view);
-        view.place.as_background();
+        UIManager::root_view().add_subview(view).place.as_background();
     }
 
     pub fn set_view(view: Own<dyn View>) {

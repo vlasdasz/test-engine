@@ -1,6 +1,9 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    cell::{RefCell, RefMut},
+    ops::{Deref, DerefMut},
+};
 
-use gm::flat::Rect;
+use gm::flat::{Rect, SizeBase};
 use refs::{Own, Rglica, ToRglica, Weak};
 use rtools::IntoF32;
 
@@ -11,188 +14,187 @@ use crate::{
 };
 
 pub struct Placer {
-    pub(crate) rules: Vec<LayoutRule>,
+    pub(crate) rules: RefCell<Vec<LayoutRule>>,
 
     view:    Weak<dyn View>,
     frame:   Rglica<Rect>,
     s_frame: Rglica<Rect>,
 
-    has_width:  bool,
-    has_height: bool,
+    has: RefCell<SizeBase<bool>>,
 }
 
 impl Placer {
     pub fn new(view: Weak<dyn View>) -> Self {
         Self {
-            rules: vec![],
+            rules: vec![].into(),
             view,
             frame: view.frame().to_rglica(),
             s_frame: view.super_frame().to_rglica(),
-            has_width: false,
-            has_height: false,
+            has: Default::default(),
         }
     }
 
     pub fn rules_count(&self) -> usize {
-        self.rules.len()
+        self.rules.borrow().len()
+    }
+
+    fn rules(&self) -> RefMut<Vec<LayoutRule>> {
+        self.rules.borrow_mut()
+    }
+
+    fn has(&self) -> RefMut<SizeBase<bool>> {
+        self.has.borrow_mut()
     }
 }
 
 impl Placer {
-    pub fn background(&mut self) -> &mut Self {
+    pub fn background(&self) -> &Self {
         self.t(0).b(0).l(0).r(0)
     }
 
-    pub fn t(&mut self, offset: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::Top, offset.into_f32()));
+    pub fn t(&self, offset: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Top, offset.into_f32()));
         self
     }
 
-    pub fn b(&mut self, offset: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::Bot, offset.into_f32()));
+    pub fn b(&self, offset: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Bot, offset.into_f32()));
         self
     }
 
-    pub fn l(&mut self, offset: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::Left, offset.into_f32()));
-
+    pub fn l(&self, offset: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Left, offset.into_f32()));
         self
     }
 
-    pub fn r(&mut self, offset: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::Right, offset.into_f32()));
+    pub fn r(&self, offset: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Right, offset.into_f32()));
         self
     }
 
-    pub fn size(&mut self, width: impl IntoF32, height: impl IntoF32) -> &mut Self {
+    pub fn size(&self, width: impl IntoF32, height: impl IntoF32) -> &Self {
         self.w(width).h(height)
     }
 
-    pub fn same_size(&mut self, view: impl Deref<Target = impl View>) -> &mut Self {
+    pub fn same_size(&self, view: impl Deref<Target = impl View>) -> &Self {
         self.relative(Anchor::Size, 1, view)
     }
 
     pub fn same<const S: usize>(
-        &mut self,
+        &self,
         anchors: [Anchor; S],
         view: impl Deref<Target = impl View> + Copy,
-    ) -> &mut Self {
+    ) -> &Self {
         for anchor in anchors {
             self.relative(anchor, 1, view);
         }
         self
     }
 
-    pub fn w(&mut self, w: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::Width, w));
-        self.has_width = true;
+    pub fn w(&self, w: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Width, w));
+        self.has().width = true;
         self
     }
 
-    pub fn h(&mut self, h: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::Height, h));
-        self.has_height = true;
+    pub fn h(&self, h: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Height, h));
+        self.has().height = true;
         self
     }
 
-    pub fn center(&mut self) -> &mut Self {
-        self.rules.push(Anchor::Center.into());
+    pub fn center(&self) -> &Self {
+        self.rules().push(Anchor::Center.into());
         self
     }
 
-    pub fn center_hor(&mut self) -> &mut Self {
-        self.rules.push(Anchor::CenterH.into());
+    pub fn center_hor(&self) -> &Self {
+        self.rules().push(Anchor::CenterH.into());
         self
     }
 
-    pub fn center_ver(&mut self) -> &mut Self {
-        self.rules.push(Anchor::CenterV.into());
+    pub fn center_ver(&self) -> &Self {
+        self.rules().push(Anchor::CenterV.into());
         self
     }
 
-    pub fn as_background(&mut self) -> &mut Self {
-        self.rules.push(Tiling::Background.into());
+    pub fn as_background(&self) -> &Self {
+        self.rules().push(Tiling::Background.into());
         self
     }
 
-    pub fn all_ver(&mut self) -> &mut Self {
-        self.rules.push(Tiling::Vertically.into());
+    pub fn all_ver(&self) -> &Self {
+        self.rules().push(Tiling::Vertically.into());
         self
     }
 
-    pub fn all_hor(&mut self) -> &mut Self {
-        self.rules.push(Tiling::Horizontally.into());
-        self
-    }
-}
-
-impl Placer {
-    pub fn max_width(&mut self, w: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::MaxWidth, w));
-        self
-    }
-
-    pub fn max_height(&mut self, h: impl IntoF32) -> &mut Self {
-        self.rules.push(LayoutRule::make(Anchor::MaxHeight, h));
+    pub fn all_hor(&self) -> &Self {
+        self.rules().push(Tiling::Horizontally.into());
         self
     }
 }
 
 impl Placer {
-    pub fn anchor(
-        &mut self,
-        view: impl Deref<Target = impl View>,
-        side: Anchor,
-        offset: impl IntoF32,
-    ) -> &mut Self {
-        self.rules.push(LayoutRule::anchor(side, offset, view.weak_view()));
+    pub fn max_width(&self, w: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::MaxWidth, w));
         self
     }
 
-    pub fn relative(
-        &mut self,
-        side: Anchor,
-        ratio: impl IntoF32,
-        view: impl Deref<Target = impl View>,
-    ) -> &mut Self {
-        self.has_width = if side.has_width() { true } else { self.has_width };
-        self.has_height = if side.has_height() { true } else { self.has_height };
-
-        self.rules.push(LayoutRule::relative(side, ratio, view.weak_view()));
+    pub fn max_height(&self, h: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::MaxHeight, h));
         self
     }
 }
 
 impl Placer {
-    pub fn lr(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn anchor(&self, view: impl Deref<Target = impl View>, side: Anchor, offset: impl IntoF32) -> &Self {
+        self.rules().push(LayoutRule::anchor(side, offset, view.weak_view()));
+        self
+    }
+
+    pub fn relative(&self, side: Anchor, ratio: impl IntoF32, view: impl Deref<Target = impl View>) -> &Self {
+        self.has().width = if side.has_width() { true } else { self.has().width };
+        self.has().height = if side.has_height() {
+            true
+        } else {
+            self.has().height
+        };
+
+        self.rules().push(LayoutRule::relative(side, ratio, view.weak_view()));
+        self
+    }
+}
+
+impl Placer {
+    pub fn lr(&self, offset: impl IntoF32) -> &Self {
         self.l(offset).r(offset)
     }
 
-    pub fn tl(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn tl(&self, offset: impl IntoF32) -> &Self {
         self.t(offset).l(offset)
     }
 
-    pub fn tr(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn tr(&self, offset: impl IntoF32) -> &Self {
         self.t(offset).r(offset)
     }
 
-    pub fn bl(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn bl(&self, offset: impl IntoF32) -> &Self {
         self.b(offset).l(offset)
     }
 
-    pub fn br(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn br(&self, offset: impl IntoF32) -> &Self {
         self.b(offset).r(offset)
     }
 
-    pub fn tlb(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn tlb(&self, offset: impl IntoF32) -> &Self {
         self.t(offset).l(offset).b(offset)
     }
 
-    pub fn lrt(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn lrt(&self, offset: impl IntoF32) -> &Self {
         self.l(offset).r(offset).t(offset)
     }
 
-    pub fn lrb(&mut self, offset: impl IntoF32) -> &mut Self {
+    pub fn lrb(&self, offset: impl IntoF32) -> &Self {
         self.l(offset).r(offset).b(offset)
     }
 }
@@ -200,7 +202,7 @@ impl Placer {
 impl Placer {
     pub fn layout(&mut self) {
         let this = self.to_rglica();
-        for rule in &this.rules {
+        for rule in this.rules().iter() {
             if rule.anchor_view.is_ok() {
                 if rule.relative {
                     self.relative_layout(rule)
@@ -218,12 +220,13 @@ impl Placer {
 
 impl Placer {
     fn simple_layout(&mut self, rule: &LayoutRule) {
+        let has = *self.has();
         let frame = self.frame.deref_mut();
         let s_frame = self.s_frame.deref();
         match rule.side {
             Anchor::Top => frame.origin.y = rule.offset,
             Anchor::Bot => {
-                if self.has_height {
+                if has.height {
                     frame.origin.y = s_frame.height() - frame.height() - rule.offset
                 } else {
                     frame.size.height = frame.height() + s_frame.height() - frame.max_y() - rule.offset
@@ -231,7 +234,7 @@ impl Placer {
             }
             Anchor::Left => frame.origin.x = rule.offset,
             Anchor::Right => {
-                if self.has_width {
+                if has.width {
                     frame.origin.x = s_frame.width() - frame.width() - rule.offset;
                 } else {
                     frame.size.width = frame.width() + s_frame.width() - frame.max_x() - rule.offset

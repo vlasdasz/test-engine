@@ -21,7 +21,7 @@ impl TableView {
 }
 
 impl ViewSetup for TableView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.place.all_ver();
     }
 }
