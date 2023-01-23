@@ -47,10 +47,10 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         });
 
         anim.on_finish.sub(move |_| {
+            let vo = UIManager::get().touch_stack.pop().expect("BUG: pop without push");
+            assert_eq!(self.addr(), vo.addr());
             self.is_hidden = true;
             self.remove_from_superview();
-            let vo = UIManager::get().touch_stack.pop().expect("add error message");
-            assert_eq!(self.addr(), vo.addr());
             UIManager::enable_touch();
         });
 
