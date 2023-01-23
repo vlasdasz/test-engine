@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 refs = "0.1.25"
 rtools = "0.1.27"
-reflected = "0.2.5"
+reflected = "0.2.6"
 #validator = { version = "0.16", features = ["derive"] }
 smart-default = "0.6"
 

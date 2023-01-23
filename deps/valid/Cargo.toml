@@ -10,5 +10,5 @@ strum = "0.24"
 strum_macros = "0.24"
 
 rtools = "0.1.27"
-reflected = "0.2.5"
-reflected_proc = "0.2.1"
+reflected = "0.2.6"
+reflected_proc = "0.2.6"

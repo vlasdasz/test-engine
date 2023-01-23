@@ -12,7 +12,7 @@ crate-type = ["rlib", "staticlib"]
 log = "0.4"
 home = "0.5"
 rtools = "0.1.27"
-reflected = "0.2.5"
+reflected = "0.2.6"
 smart-default = "0.6"
 
 tokio = { version = "1.24.2", features = ["full"] }
