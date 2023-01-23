@@ -35,7 +35,7 @@ impl SpriteView {
         self.delete_button.place.size(20, 20).tl(0);
         self.delete_button.set_hidden(true).set_image(Image::get("delete.png"));
 
-        self.delete_button.on_tap.sub(move |_| {
+        self.delete_button.on_tap.sub(move || {
             if self.sprite.is_ok() {
                 self.sprite.remove();
                 self.set_sprite(Weak::default());

@@ -44,7 +44,7 @@ impl ViewSetup for TestView {
 
         self.label.set_text("Hello label!");
 
-        self.button.on_tap.sub(move |_| {
+        self.button.on_tap.sub(move || {
             let val = self.label_value;
             self.label.set_text(format!("Hello label! {val}"));
             self.label_value += 1;
@@ -85,6 +85,10 @@ impl TableViewDataSource for TestView {
         let mut cell = Own::<StringCell>::default();
         cell.set_data(DATA[index].into());
         cell
+    }
+
+    fn height_for_index(&self, _index: usize) -> f32 {
+        20.0
     }
 
     fn cell_selected(&mut self, index: usize) {

@@ -41,7 +41,7 @@ impl ViewSetup for DPadView {
             (self.right, Direction::Right),
         ]
         .apply(|(mut view, direction)| {
-            view.on_tap.sub(move |_| self.on_press.trigger(direction));
+            view.on_tap.sub(move || self.on_press.trigger(direction));
             view.set_corner_radius(5);
         });
     }

@@ -1,5 +1,5 @@
 use refs::{Own, ToWeak, Weak};
-use ui::{view, View, ViewSetup, ViewSubviews, ViewTouch};
+use ui::{view, View, ViewCallbacks, ViewFrame, ViewSubviews, ViewTouch};
 
 #[view]
 #[derive(Default)]
@@ -14,21 +14,29 @@ impl TableView {
             let cell = self.data_source.cell_for_index(i);
             cell.enable_touch();
             let mut this = self.weak();
-            cell.on_touch_began.sub(move |_| this.data_source.cell_selected(i));
+            cell.on_touch_began.sub(move || this.data_source.cell_selected(i));
             self.add_subview(cell);
         }
     }
 }
 
-impl ViewSetup for TableView {
-    fn setup(self: Weak<Self>) {
-        self.place.all_ver();
+impl ViewCallbacks for TableView {
+    fn update(&mut self) {
+        let mut last_y: f32 = 0.0;
+        let width = self.width();
+        for i in 0..self.data_source.number_of_cells() {
+            let height = self.data_source.height_for_index(i);
+            let cell = &mut self.subviews_mut()[i];
+            cell.set_frame((0, last_y, width, height));
+            last_y += height;
+        }
     }
 }
 
 pub trait TableViewDataSource {
     fn number_of_cells(&self) -> usize;
     fn cell_for_index(&self, index: usize) -> Own<dyn View>;
+    fn height_for_index(&self, index: usize) -> f32;
     fn cell_selected(&mut self, index: usize);
 }
 

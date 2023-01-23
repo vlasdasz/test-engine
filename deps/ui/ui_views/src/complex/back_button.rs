@@ -14,7 +14,7 @@ impl ViewSetup for BackButton {
         self.button.set_text("Back");
         self.button.place.background();
 
-        self.button.on_tap.sub(|_| {
+        self.button.on_tap.sub(|| {
             UIManager::touch_root().pop();
         });
     }

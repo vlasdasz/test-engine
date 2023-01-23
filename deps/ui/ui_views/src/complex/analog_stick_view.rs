@@ -52,7 +52,7 @@ impl AnalogStickView {
 impl ViewSetup for AnalogStickView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        self.on_touch.sub(move |touch| {
+        self.on_touch.val(move |touch| {
             self.on_touch(&touch);
         });
 

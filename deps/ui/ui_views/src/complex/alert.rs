@@ -10,17 +10,30 @@ pub struct Alert {
     label:     SubView<MultilineLabel>,
     ok_button: SubView<Button>,
     message:   String,
-    pub on_ok: Event,
+    on_ok:     Event,
 }
 
 impl Alert {
-    pub fn show(message: impl ToString) -> Weak<Alert> {
+    fn prepare(message: impl ToString) -> Weak<Self> {
         let mut alert = Own::<Self>::default();
         alert.message = message.to_string();
         let res = alert.weak();
         UIManager::root_view().add_subview(alert);
         res
     }
+
+    pub fn ok(message: impl ToString, mut on_ok: impl FnMut() + 'static) {
+        let alert = Self::prepare(message);
+        alert.on_ok.sub(move || {
+            on_ok();
+        });
+    }
+
+    pub fn show(message: impl ToString) {
+        Self::prepare(message);
+    }
+
+    pub fn ask(_message: impl ToString, _on_ok: impl FnMut()) {}
 }
 
 impl Alert {
@@ -46,7 +59,7 @@ impl ViewSetup for Alert {
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
 
-        self.ok_button.on_tap.sub(move |_| {
+        self.ok_button.on_tap.sub(move || {
             self.remove_from_superview();
             self.on_ok.trigger(());
         });

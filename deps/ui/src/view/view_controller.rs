@@ -28,7 +28,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
             view.set_x(x);
         });
 
-        anim.on_finish.sub(|_| {
+        anim.on_finish.sub(|| {
             UIManager::enable_touch();
         });
 
@@ -46,7 +46,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
             view.set_x(x);
         });
 
-        anim.on_finish.sub(move |_| {
+        anim.on_finish.sub(move || {
             let vo = UIManager::get().touch_stack.pop().expect("BUG: pop without push");
             assert_eq!(self.addr(), vo.addr());
             self.is_hidden = true;
@@ -72,7 +72,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         });
 
         let mut this = self.weak();
-        anim.on_finish.sub(move |_| {
+        anim.on_finish.sub(move || {
             this.remove_from_superview();
             UIManager::enable_touch();
         });

@@ -46,11 +46,11 @@ impl Screen {
         self.ui.setup_events();
 
         let mut this = self.weak();
-        GlEvents::get().size_changed.sub(move |size| {
+        GlEvents::get().size_changed.val(move |size| {
             this.set_size(size);
         });
 
-        GlEvents::get().frame_drawn.sub(move |_| {
+        GlEvents::get().frame_drawn.sub(move || {
             this.update();
         });
     }

@@ -26,7 +26,7 @@ impl ViewSetup for UITestView {
 
         self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
 
-        self.back.on_tap.sub(|_| {
+        self.back.on_tap.sub(|| {
             UIManager::set_view(Own::<TestGameView>::default());
         });
     }

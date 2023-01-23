@@ -33,7 +33,7 @@ impl TestGameView {
     fn setup_level(&mut self) {
         self.dpad
             .on_press
-            .sub(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(&dir));
+            .val(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(&dir));
     }
 
     fn setup_ui(&mut self) {
@@ -82,7 +82,7 @@ impl TestGameView {
         );
 
         self.left_stick.place.bl(10).size(80, 80);
-        self.left_stick.on_change.sub(|mut dir| {
+        self.left_stick.on_change.val(|mut dir| {
             if let Some(level) = &mut Screen::current().ui.level {
                 dir.y = -dir.y;
                 level.player().add_impulse(dir);
@@ -105,7 +105,7 @@ impl TestGameView {
         self.level_scale.set_images(Image::get("up.png"), Image::get("down.png"));
         self.level_scale
             .on_change
-            .sub(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));
+            .val(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));
 
         {
             let mut view = self.add_view::<BaseView>();
@@ -114,14 +114,14 @@ impl TestGameView {
 
             let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");
-            to_benchmark.on_tap.sub(|_| {
+            to_benchmark.on_tap.sub(|| {
                 Screen::current().ui.set_level(Strong::<BenchmarkLevel>::default());
                 UIManager::set_view(Own::<UIDebugView>::default());
             });
 
             let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
-            to_test.on_tap.sub(|_| {
+            to_test.on_tap.sub(|| {
                 Screen::current().ui.set_level(Strong::<LevelBase>::default());
                 UIManager::set_view(Own::<UIDebugView>::default());
             });

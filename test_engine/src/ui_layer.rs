@@ -98,7 +98,7 @@ impl UILayer {
         let ev = GlEvents::get();
 
         let mut this = self.weak();
-        ev.key_pressed.sub(move |a| {
+        ev.key_pressed.val(move |a| {
             let key = a.0;
             let action = a.1;
 
@@ -129,8 +129,8 @@ impl UILayer {
             }
         });
 
-        ev.mouse_click.sub(move |a| this.on_mouse_click(a.0, a.1));
+        ev.mouse_click.val(move |a| this.on_mouse_click(a.0, a.1));
 
-        ev.cursor_moved.sub(move |a| this.on_cursor_moved(a))
+        ev.cursor_moved.val(move |a| this.on_cursor_moved(a))
     }
 }

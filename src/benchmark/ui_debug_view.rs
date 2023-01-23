@@ -41,11 +41,11 @@ impl ViewSetup for UIDebugView {
         self.place
             .same([Anchor::Size, Anchor::X], self.back)
             .anchor(self.back, Anchor::Bot, 20);
-        self.alert.on_tap.sub(|_| {
+        self.alert.on_tap.sub(|| {
             Alert::show("Multi Skoggo4 Ultra Boggo4 Sopokokt4ek smeorglil4ek");
         });
 
-        self.back.on_tap.sub(|_| {
+        self.back.on_tap.sub(|| {
             Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
             UIManager::set_view(Own::<TestGameView>::default());
         });
@@ -59,7 +59,7 @@ impl ViewSetup for UIDebugView {
 
         self.stats.place.size(100, 20).tr(5);
         self.stats.set_text("Print stats");
-        self.stats.on_tap.sub(|_| {
+        self.stats.on_tap.sub(|| {
             println!("===========================================================");
             dump_ref_stats();
             println!("===========================================================");

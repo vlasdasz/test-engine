@@ -23,10 +23,10 @@ pub struct DebugView {
 }
 
 impl DebugView {
-    pub fn custom_button(&mut self, label: impl Display, mut action: impl FnMut() + 'static) {
+    pub fn custom_button(&mut self, label: impl Display, action: impl FnMut() + 'static) {
         let mut button = self.add_view::<Button>();
         button.set_text(label);
-        button.on_tap.sub(move |_| action());
+        button.on_tap.sub(action);
     }
 
     pub fn set_custom(&mut self, label: impl Display, value: impl Display) {
@@ -68,7 +68,7 @@ impl ViewSetup for DebugView {
         self.root_frame.set_text("root frame");
         self.root_frame.free_text = true;
 
-        self.fps.on_set.sub(move |fps| {
+        self.fps.on_set.val(move |fps| {
             self.fps_label.set_text(format!("FPS: {fps}"));
         });
     }

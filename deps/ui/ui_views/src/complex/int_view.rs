@@ -33,14 +33,14 @@ impl ViewSetup for IntView {
 
         self.label.set_text("1.0");
 
-        self.up.on_tap.sub(move |_| {
+        self.up.on_tap.sub(move || {
             self.value += self.step;
             let val = self.value;
             self.on_change.trigger(val);
             self.label.set_text(format!("{val:.1}"));
         });
 
-        self.down.on_tap.sub(move |_| {
+        self.down.on_tap.sub(move || {
             self.value -= self.step;
             let val = self.value;
             self.on_change.trigger(val);

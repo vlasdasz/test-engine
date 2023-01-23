@@ -27,7 +27,7 @@ impl TextField {
 impl ViewSetup for TextField {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        self.on_touch.sub(move |touch| {
+        self.on_touch.val(move |touch| {
             if touch.is_began() {
                 self.set_selected(true);
             }
@@ -43,7 +43,7 @@ impl ViewCallbacks for TextField {
         if selected {
             UIManager::get().open_keyboard = true;
             let mut this = self.weak();
-            UIEvents::get().key_pressed.sub(move |key| {
+            UIEvents::get().key_pressed.val(move |key| {
                 if this.is_selected() {
                     match key.button {
                         KeyboardButton::Letter(char) => {
@@ -59,7 +59,7 @@ impl ViewCallbacks for TextField {
             });
         } else {
             UIManager::get().close_keyboard = true;
-            UIEvents::get().key_pressed.unsubscribe()
+            UIEvents::get().key_pressed.remove_subscribers();
         }
 
         self.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
@@ -68,6 +68,6 @@ impl ViewCallbacks for TextField {
 
 impl Drop for TextField {
     fn drop(&mut self) {
-        UIEvents::get().key_pressed.unsubscribe()
+        UIEvents::get().key_pressed.remove_subscribers()
     }
 }

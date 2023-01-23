@@ -32,6 +32,6 @@ impl LabeledSlider {
 
 impl ViewSetup for LabeledSlider {
     fn setup(mut self: Weak<Self>) {
-        self.slider.on_change.sub(move |a| self.on_change(a));
+        self.slider.on_change.val(move |a| self.on_change(a));
     }
 }

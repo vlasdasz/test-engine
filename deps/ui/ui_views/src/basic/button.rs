@@ -28,7 +28,7 @@ impl Button {
 impl ViewSetup for Button {
     fn setup(self: Weak<Self>) {
         self.enable_touch();
-        self.on_touch_began.sub(move |_| self.on_tap.trigger(()));
+        self.on_touch_began.sub(move || self.on_tap.trigger(()));
     }
 }
 
@@ -42,7 +42,7 @@ macro_rules! link_button {
 #[macro_export]
 macro_rules! async_link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
-        $self.$($button).+.on_tap.sub(move |_| {
+        $self.$($button).+.on_tap.sub(move || {
             tokio::spawn(async move {
                 $self.$method().await;
             });
