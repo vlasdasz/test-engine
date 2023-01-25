@@ -75,6 +75,19 @@ impl UIManager {
     pub(crate) fn add_animation(anim: UIAnimation) {
         Self::get().animations.push(anim)
     }
+
+    pub(crate) fn commit_animations() {
+        if Self::get().animations.is_empty() {
+            return;
+        }
+        for animation in &mut Self::get().animations {
+            animation.commit();
+            if animation.finished() {
+                animation.on_finish.trigger(())
+            }
+        }
+        Self::get().animations.retain(|a| !a.finished())
+    }
 }
 
 impl UIManager {

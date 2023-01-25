@@ -2,10 +2,11 @@ use std::ops::DerefMut;
 
 use gl_wrapper::GLWrapper;
 use gm::{flat::Rect, Color};
+use refs::Weak;
 
 use crate::{
-    view::{ViewAnimation, ViewData, ViewSubviews},
-    DrawMode, PathData, UIManager, View,
+    view::{ViewData, ViewSubviews},
+    DrawMode, PathData, UIManager, View, ViewLayout,
 };
 
 pub trait UIDrawer {
@@ -14,14 +15,24 @@ pub trait UIDrawer {
     fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>);
     fn draw(&self, view: &mut dyn View);
 
-    fn update(&self, view: &mut dyn View) {
+    fn update_internal(&self, view: &mut dyn View) {
         if view.is_hidden() {
             return;
         }
         view.update();
-        view.commit_animations();
         for view in view.subviews_mut() {
-            self.update((*view).deref_mut());
+            self.update_internal((*view).deref_mut());
+        }
+    }
+
+    fn update(&self, views: &mut [Weak<dyn View>]) {
+        UIManager::commit_animations();
+
+        for view in views {
+            view.calculate_frames();
+            view.update();
+            self.update_internal(view.deref_mut());
+            self.draw(view.deref_mut());
         }
     }
 

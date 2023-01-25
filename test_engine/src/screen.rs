@@ -14,7 +14,7 @@ use text::Font;
 use ui::{
     layout::Placer,
     refs::{Own, ToWeak, Weak},
-    UIManager, View, ViewFrame, ViewInternalSetup, ViewLayout,
+    UIManager, View, ViewFrame, ViewInternalSetup,
 };
 
 use crate::{
@@ -119,14 +119,7 @@ impl Screen {
 
         view.set_frame(UIManager::root_view_size());
 
-        view.calculate_frames();
-
-        UIManager::drawer().update(view.deref_mut());
-        UIManager::drawer().draw(view.deref_mut());
-
-        self.ui.debug_view.calculate_frames();
-        UIManager::drawer().update(self.ui.debug_view.deref_mut());
-        UIManager::drawer().draw(self.ui.debug_view.deref_mut());
+        UIManager::drawer().update(&mut [view, self.ui.debug_view.weak_view()]);
 
         dispatch::invoke_dispatched();
 

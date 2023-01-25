@@ -29,11 +29,11 @@ impl UIAnimation {
         }
     }
 
-    fn finished(&self) -> bool {
+    pub(crate) fn finished(&self) -> bool {
         self.animation.finished()
     }
 
-    fn commit(&mut self) {
+    pub(crate) fn commit(&mut self) {
         (self.action)(self.view.deref_mut(), self.animation.value());
     }
 }
@@ -46,7 +46,6 @@ pub trait ViewAnimation {
         _: impl FnMut(&mut dyn View, f32) + 'static,
     ) -> &mut Self;
     fn add_animation(&mut self, anim: UIAnimation);
-    fn commit_animations(&mut self);
 }
 
 impl<T: ?Sized + View> ViewAnimation for T {
@@ -62,18 +61,5 @@ impl<T: ?Sized + View> ViewAnimation for T {
 
     fn add_animation(&mut self, anim: UIAnimation) {
         UIManager::add_animation(anim)
-    }
-
-    fn commit_animations(&mut self) {
-        if UIManager::get().animations.is_empty() {
-            return;
-        }
-        for animation in &mut UIManager::get().animations {
-            animation.commit();
-            if animation.finished() {
-                animation.on_finish.trigger(())
-            }
-        }
-        UIManager::get().animations.retain(|a| !a.finished())
     }
 }
