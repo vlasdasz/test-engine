@@ -14,6 +14,7 @@ pub struct DebugView {
     screen_scale_label: SubView<Label>,
     root_frame:         SubView<Label>,
     touch_enabled:      SubView<Label>,
+    exit:               SubView<Button>,
 
     custom_labels: HashMap<String, SubView<Label>>,
 
@@ -67,6 +68,11 @@ impl ViewSetup for DebugView {
 
         self.root_frame.set_text("root frame");
         self.root_frame.free_text = true;
+
+        self.exit.set_text("exit");
+        self.exit.on_tap.sub(|| {
+            panic!("bye");
+        });
 
         self.fps.on_set.val(move |fps| {
             self.fps_label.set_text(format!("FPS: {fps}"));
