@@ -1,4 +1,4 @@
-#![cfg(not_android)]
+// #![cfg(not_android)]
 
 use std::{
     fs::File,

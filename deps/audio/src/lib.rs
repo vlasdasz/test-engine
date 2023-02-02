@@ -5,8 +5,9 @@ use rtools::{
 };
 
 cfg_if! { if #[cfg(android)] {
-    mod android_sound;
-    use android_sound as sound;
+    // mod android_sound;
+    // use android_sound as sound;
+    mod sound;
 } else {
     mod sound;
 }}
