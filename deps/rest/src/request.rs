@@ -40,14 +40,14 @@ impl<R, P> const From<&'static str> for Req<R, P> {
 
 impl<Output: DeserializeOwned> Req<(), Output> {
     pub async fn get(self) -> NetResult<Output> {
-        request_object(&self.method, self.full_url(), None).await
+        request_object(self.method, self.full_url(), None).await
     }
 }
 
 impl<Param: Serialize> Req<Param, ()> {
     pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
         let body = to_string(param.borrow())?;
-        request(&self.method, self.full_url(), body.into()).await?;
+        raw_request(self.method, self.full_url(), body.into()).await?;
         Ok(())
     }
 }
@@ -55,11 +55,11 @@ impl<Param: Serialize> Req<Param, ()> {
 impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
     pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow())?;
-        request_object(&self.method, self.full_url(), body.into()).await
+        request_object(self.method, self.full_url(), body.into()).await
     }
 }
 
-async fn request(method: &Method, url: String, body: Option<String>) -> NetResult<Response> {
+pub async fn raw_request(method: Method, url: impl ToString, body: Option<String>) -> NetResult<Response> {
     let url = url.to_string();
     let client = Client::new();
 
@@ -68,7 +68,7 @@ async fn request(method: &Method, url: String, body: Option<String>) -> NetResul
         Method::Post => client.post(&url),
     };
 
-    let req = add_headers(req);
+    //let req = add_headers(req);
 
     let req = match &body {
         Some(body) => req.body(body.clone()),
@@ -89,9 +89,9 @@ async fn request(method: &Method, url: String, body: Option<String>) -> NetResul
     Ok(response)
 }
 
-async fn request_object<T>(method: &Method, url: String, body: Option<String>) -> NetResult<T>
+async fn request_object<T>(method: Method, url: String, body: Option<String>) -> NetResult<T>
 where T: DeserializeOwned {
-    let response = request(method, url, body).await?;
+    let response = raw_request(method, url, body).await?;
 
     if response.status == 500 {
         Err(from_str(&response.body)?)

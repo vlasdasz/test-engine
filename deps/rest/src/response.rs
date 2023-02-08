@@ -3,10 +3,16 @@ use std::fmt::Debug;
 use reqwest::StatusCode;
 
 #[derive(Debug)]
-pub(crate) struct Response {
+pub struct Response {
     #[allow(dead_code)]
-    pub(crate) url:    String,
+    pub url:    String,
     #[allow(dead_code)]
-    pub(crate) status: StatusCode,
-    pub(crate) body:   String,
+    pub status: StatusCode,
+    pub body:   String,
+}
+
+impl Response {
+    pub fn is_ok(&self) -> bool {
+        self.status == 200
+    }
 }
