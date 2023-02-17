@@ -10,7 +10,7 @@ crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 cfg-if = "1.0"
-rtools = "0.1.27"
+rtools = "0.1.28"
 
 # [target.'cfg(not(target_os="android"))'.dependencies]
 rodio = "0.16"

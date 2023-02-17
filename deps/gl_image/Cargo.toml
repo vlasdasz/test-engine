@@ -12,7 +12,7 @@ crate-type = ["rlib", "staticlib"]
 log = "0.4"
 image = "0.24"
 refs = "0.1.25"
-rtools = "0.1.27"
+rtools = "0.1.28"
 
 gm = { path = "../gm" }
 gl_wrapper = { path = "../gl_wrapper" }

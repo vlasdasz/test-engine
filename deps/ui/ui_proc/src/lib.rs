@@ -22,7 +22,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let mut inits = quote!();
 
     if let Fields::Named(fields) = &mut data.fields {
-        inits = add_inits(&name, fields);
+        inits = add_inits(name, fields);
 
         fields
             .named

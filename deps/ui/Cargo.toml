@@ -11,7 +11,7 @@ crate-type = ["rlib", "staticlib"]
 [dependencies]
 refs = "0.1.25"
 vents = "0.1.6"
-rtools = "0.1.27"
+rtools = "0.1.28"
 smart-default = "0.6"
 
 gm = { path = "../gm" }

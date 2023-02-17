@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use rtools::init_log;
+use rtools::{init_log, LogBuilder};
 use test_engine::{app_core::AppCore, gm::flat::Size, paths::home, App};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
@@ -16,7 +16,7 @@ pub struct TestApp {
 impl App for TestApp {
     fn setup() {
         enable_ref_stats_counter(true);
-        init_log(false, 4);
+        init_log(LogBuilder::builder().build());
     }
 
     fn screen_size() -> Size {
