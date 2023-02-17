@@ -1,27 +1,36 @@
 use gm::Color;
 use refs::Weak;
-use ui::{view, Event, SubView, ViewSetup, ViewTouch};
+use ui::{view, Event, SubView, ViewSetup, ViewSubviews, ViewTouch};
 
 use crate::Label;
 
 #[view]
 #[derive(Default)]
 pub struct Button {
-    label: SubView<Label>,
+    label_view: Option<SubView<Label>>,
 
     pub on_tap: Event,
 }
 
 impl Button {
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
-        self.label.place.as_background();
-        self.label.set_text(text);
+        self.get_label().place.as_background();
+        self.get_label().set_text(text);
         self
     }
 
     pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.label.set_text_color(color);
+        self.get_label().set_text_color(color);
         self
+    }
+
+    fn get_label(&mut self) -> &mut Label {
+        if self.label_view.is_none() {
+            let mut view: SubView<Label> = self.add_view();
+            view.label = "Button.label_view".into();
+            self.label_view = Some(view);
+        }
+        self.label_view.as_mut().unwrap()
     }
 }
 

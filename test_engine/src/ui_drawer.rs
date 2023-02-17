@@ -84,6 +84,15 @@ impl UIDrawer for TEUIDrawer {
             return;
         }
 
+        if view.frame().size.is_invalid() {
+            warn!(
+                "View has invalid frame: {}. Frame: {:?} ",
+                view.label,
+                view.frame()
+            );
+            return;
+        }
+
         let needs_stensil = view.corner_radius() > 0.0;
 
         if needs_stensil {

@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{
@@ -15,17 +17,17 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         _ => panic!("`view` macro has to be used with structs"),
     };
 
+    let name = &stream.ident;
+
     let mut inits = quote!();
 
     if let Fields::Named(fields) = &mut data.fields {
-        inits = add_inits(fields);
+        inits = add_inits(&name, fields);
 
         fields
             .named
             .push(Field::parse_named.parse2(quote! { view: ui::ViewBase }).unwrap());
     }
-
-    let name = &stream.ident;
 
     quote! {
         #stream
@@ -67,7 +69,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     .into()
 }
 
-fn add_inits(fields: &FieldsNamed) -> TokenStream2 {
+fn add_inits(root_name: &Ident, fields: &FieldsNamed) -> TokenStream2 {
     let subview = Ident::new("SubView", Span::call_site());
 
     let mut res = quote!();
@@ -78,9 +80,12 @@ fn add_inits(fields: &FieldsNamed) -> TokenStream2 {
         if let Type::Path(path) = &field.ty {
             for segment in &path.path.segments {
                 if segment.ident == subview {
+                    let label = TokenStream2::from_str(&format!("\"{root_name}.{name}\"")).unwrap();
+
                     res = quote! {
                         #res
                         self.#name = self.add_view();
+                        self.#name.label = String::from(#label);
                     }
                 }
             }

@@ -1,7 +1,7 @@
-use std::{borrow::Borrow, fmt::Debug, marker::PhantomData};
+use std::{borrow::Borrow, collections::HashMap, fmt::Debug, marker::PhantomData};
 
 use log::debug;
-use reqwest::{Client, RequestBuilder};
+use reqwest::Client;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
 
@@ -47,7 +47,7 @@ impl<Output: DeserializeOwned> Req<(), Output> {
 impl<Param: Serialize> Req<Param, ()> {
     pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
         let body = to_string(param.borrow())?;
-        raw_request(self.method, self.full_url(), body.into()).await?;
+        raw_request(self.method, self.full_url(), API::headers(), body.into()).await?;
         Ok(())
     }
 }
@@ -59,39 +59,9 @@ impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
     }
 }
 
-pub async fn raw_request(method: Method, url: impl ToString, body: Option<String>) -> NetResult<Response> {
-    let url = url.to_string();
-    let client = Client::new();
-
-    let req = match method {
-        Method::Get => client.get(&url),
-        Method::Post => client.post(&url),
-    };
-
-    //let req = add_headers(req);
-
-    let req = match &body {
-        Some(body) => req.body(body.clone()),
-        None => req,
-    };
-
-    debug!("Request - {url} - {method} {body:?}");
-
-    let res = req.send().await?;
-
-    let status = res.status();
-    let body = res.text().await?;
-
-    let response = Response { url, status, body };
-
-    debug!("Response - {response:?}");
-
-    Ok(response)
-}
-
 async fn request_object<T>(method: Method, url: String, body: Option<String>) -> NetResult<T>
 where T: DeserializeOwned {
-    let response = raw_request(method, url, body).await?;
+    let response = raw_request(method, url, API::headers(), body).await?;
 
     if response.status == 500 {
         Err(from_str(&response.body)?)
@@ -100,10 +70,39 @@ where T: DeserializeOwned {
     }
 }
 
-fn add_headers(request: RequestBuilder) -> RequestBuilder {
-    let mut request = request;
-    for (key, value) in API::headers() {
+pub async fn raw_request(
+    method: Method,
+    url: impl ToString,
+    headers: &HashMap<String, String>,
+    body: Option<String>,
+) -> NetResult<Response> {
+    let url = url.to_string();
+    let client = Client::new();
+
+    let mut request = match method {
+        Method::Get => client.get(&url),
+        Method::Post => client.post(&url),
+    };
+
+    for (key, value) in headers {
         request = request.header(key, value)
     }
-    request
+
+    let request = match &body {
+        Some(body) => request.body(body.clone()),
+        None => request,
+    };
+
+    debug!("Request - {url} - {method} {body:?}");
+
+    let response = request.send().await?;
+
+    let status = response.status();
+    let body = response.text().await?;
+
+    let response = Response { url, status, body };
+
+    debug!("Response - {response:?}");
+
+    Ok(response)
 }

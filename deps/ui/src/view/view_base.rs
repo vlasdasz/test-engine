@@ -38,6 +38,8 @@ pub struct ViewBase {
     pub(crate) is_selected: bool,
     pub(crate) is_deleted:  bool,
 
+    pub label: String,
+
     pub place:          Unwrap<Placer>,
     pub paths:          Vec<PathData>,
     pub on_touch:       Event<Touch>,
