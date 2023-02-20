@@ -28,6 +28,12 @@ impl Label {
 
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
         let text = text.to_string();
+        if text.is_empty() {
+            self.image_view.set_hidden(true);
+            return self;
+        } else {
+            self.image_view.set_hidden(false);
+        }
         if self.text == text {
             return self;
         }
@@ -63,6 +69,10 @@ impl Label {
     }
 
     fn fit_size(&mut self) {
+        if self.text.is_empty() {
+            return;
+        }
+
         let image = self.image_view.image();
 
         let size = if image.size.width > self.width() {
@@ -94,8 +104,9 @@ impl Label {
 
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
+        debug_assert!(self.text.is_empty());
         self.image_view.place.center();
-        self.set_letters();
+        self.image_view.set_hidden(true);
     }
 }
 
