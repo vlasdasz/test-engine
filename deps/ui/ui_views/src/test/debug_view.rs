@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt::Display};
 
-use refs::Weak;
+use refs::{dump_ref_stats, Weak};
 use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
 
 use crate::{Button, Label};
@@ -15,6 +15,7 @@ pub struct DebugView {
     root_frame:         SubView<Label>,
     touch_enabled:      SubView<Label>,
     exit:               SubView<Button>,
+    dump_mem:           SubView<Button>,
 
     custom_labels: HashMap<String, SubView<Label>>,
 
@@ -72,6 +73,11 @@ impl ViewSetup for DebugView {
         self.exit.set_text("exit");
         self.exit.on_tap.sub(|| {
             panic!("bye");
+        });
+
+        self.dump_mem.set_text("dump mem");
+        self.dump_mem.on_tap.sub(|| {
+            dump_ref_stats();
         });
 
         self.fps.on_set.val(move |fps| {

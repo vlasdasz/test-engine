@@ -126,6 +126,8 @@ impl Screen {
         #[cfg(desktop)]
         self.glfw.swap_buffers();
 
+        UIManager::update();
+
         // TODO: tis ugly
         if UIManager::get().close_keyboard {
             UIManager::get().close_keyboard = false;

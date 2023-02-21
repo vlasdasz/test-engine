@@ -16,7 +16,6 @@ mod test_game;
 mod ui_test;
 
 #[no_mangle]
-#[allow(improper_ctypes_definitions)]
 extern "C" fn make_app(
     ppi: c_int,
     scale: c_float,

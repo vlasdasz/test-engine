@@ -26,6 +26,8 @@ pub struct UIManager {
 
     pub(crate) animations: Vec<UIAnimation>,
 
+    pub(crate) deleted_views: Vec<Own<dyn View>>,
+
     touch_disabled: bool,
 
     // #[default = 1.0]
@@ -70,6 +72,10 @@ impl UIManager {
 
     pub fn root_view() -> Weak<dyn View> {
         Self::get().root_view.weak()
+    }
+
+    pub fn update() {
+        Self::get().deleted_views.clear()
     }
 
     pub(crate) fn add_animation(anim: UIAnimation) {

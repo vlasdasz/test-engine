@@ -22,7 +22,7 @@
 @end
 
 BOOL didAppear = false;
-
+ 
 @implementation TestEngineController
 
 - (void)viewDidLoad {
@@ -92,14 +92,11 @@ BOOL didAppear = false;
     
     switch (action) {
         case OpenKeyboard:
-            NSLog(@"Open");
             [self.text_field becomeFirstResponder];
             break;
         case CloseKeyboard:
             [self.text_field resignFirstResponder];
-            NSLog(@"Close");
             break;
-            
         default:
             break;
     }

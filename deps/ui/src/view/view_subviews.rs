@@ -1,6 +1,6 @@
 use refs::{Own, ToWeak, Weak};
 
-use crate::{layout::Placer, SubView, View};
+use crate::{layout::Placer, SubView, UIManager, View};
 pub trait ViewSubviews {
     /// Use this only if you know what you are doing
     fn manually_set_superview(&mut self, superview: Weak<dyn View>);
@@ -41,11 +41,11 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
         let removed = super_subs.remove(index);
 
-        self.superview.deleted_subviews.push(removed);
+        UIManager::get().deleted_views.push(removed);
     }
 
     fn remove_all_subviews(&mut self) {
-        self.deleted_subviews = self.subviews.drain(..).collect();
+        UIManager::get().deleted_views.append(&mut self.subviews);
     }
 
     fn add_view<V: 'static + View + Default>(&mut self) -> SubView<V> {
