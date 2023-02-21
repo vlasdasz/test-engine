@@ -11,7 +11,7 @@ crate-type = ["rlib", "staticlib"]
 [dependencies]
 log = "0.4"
 image = "0.24"
-refs = "0.1.25"
+refs = "0.1.28"
 rtools = "0.1.28"
 
 gm = { path = "../gm" }
