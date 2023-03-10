@@ -2,7 +2,6 @@ use refs::{Own, ToWeak, Weak};
 use ui::{view, View, ViewCallbacks, ViewFrame, ViewSubviews, ViewTouch};
 
 #[view]
-#[derive(Default)]
 pub struct TableView {
     pub data_source: Weak<dyn TableViewDataSource>,
 }

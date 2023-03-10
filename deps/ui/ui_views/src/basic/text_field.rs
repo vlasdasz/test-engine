@@ -8,7 +8,6 @@ use ui::{
 use crate::Label;
 
 #[view]
-#[derive(Default)]
 pub struct TextField {
     label: SubView<Label>,
 }

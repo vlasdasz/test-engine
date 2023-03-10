@@ -8,7 +8,6 @@ use test_engine::text::{render_text, Font};
 use ui::{view, ViewCallbacks};
 
 #[view]
-#[derive(Default)]
 pub struct EmptyView {}
 
 #[derive(Default)]

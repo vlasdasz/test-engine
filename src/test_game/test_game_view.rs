@@ -16,7 +16,6 @@ use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
 use crate::benchmark::{BenchmarkLevel, UIDebugView};
 
 #[view]
-#[derive(Default)]
 pub struct TestGameView {
     dpad:        SubView<DPadView>,
     left_stick:  SubView<AnalogStickView>,

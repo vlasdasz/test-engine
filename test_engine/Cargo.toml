@@ -1,46 +1,46 @@
 [package]
-name = "test_engine"
-version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
+name    = "test_engine"
+version = "0.1.0"
 
 [lib]
-name = "test_engine"
 crate-type = ["rlib", "staticlib"]
+name       = "test_engine"
 
 [dependencies]
-log = "0.4"
-home = "0.5"
-rtools = "0.1.28"
-reflected = "0.2.6"
-smart-default = "0.6"
+home          = "0.5"
+log           = { workspace = true }
+reflected     = { workspace = true }
+rtools        = { workspace = true }
+smart-default = { workspace = true }
 
-tokio = { version = "1.24.2", features = ["full"] }
+tokio = { workspace = true }
 
-gm = { path = "../deps/gm" }
-rest = { path = "../deps/rest" }
-text = { path = "../deps/text" }
-maze = { path = "../deps/maze" }
-audio = { path = "../deps/audio" }
-valid = { path = "../deps/valid" }
-sprites = { path = "../deps/sprites" }
-dispatch = { path = "../deps/dispatch" }
-gl_image = { path = "../deps/gl_image" }
-gl_wrapper = { path = "../deps/gl_wrapper" }
+audio      = { workspace = true }
+dispatch   = { workspace = true }
+gl_image   = { workspace = true }
+gl_wrapper = { workspace = true }
+gm         = { workspace = true }
+maze       = { workspace = true }
+rest       = { workspace = true }
+sprites    = { workspace = true }
+text       = { workspace = true }
+valid      = { workspace = true }
 
-ui = { path = "../deps/ui" }
-ui_views = { path = "../deps/ui/ui_views" }
+ui       = { workspace = true }
+ui_views = { workspace = true }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
-gl = "0.14"
-glfw = "0.45"
+gl   = { workspace = true }
+glfw = { workspace = true }
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
-mashup = "0.1"
-gles31-sys = { path = "../gles31-sys" }
+gles31-sys = { workspace = true }
+mashup     = { workspace = true }
 
 [target.'cfg(target_os="android")'.dependencies]
 android-ndk-sys = "0.2.0"
 
 [build-dependencies]
-cfg_aliases = "0.1"
+cfg_aliases = { workspace = true }

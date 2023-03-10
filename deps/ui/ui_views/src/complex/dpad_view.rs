@@ -7,7 +7,6 @@ use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 use crate::Button;
 
 #[view]
-#[derive(Default)]
 pub struct DPadView {
     up:           SubView<Button>,
     down:         SubView<Button>,

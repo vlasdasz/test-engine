@@ -11,7 +11,6 @@ use ui_views::{Alert, Button, Label, LabeledTextField, MultilineLabel};
 use crate::test_game::{TestGameLevel, TestGameView};
 
 #[view]
-#[derive(Default)]
 pub struct UIDebugView {
     password: SubView<LabeledTextField>,
     login:    SubView<LabeledTextField>,
@@ -19,8 +18,8 @@ pub struct UIDebugView {
     label:       SubView<Label>,
     multi_label: SubView<MultilineLabel>,
 
-    back:  SubView<Button>,
-    alert: SubView<Button>,
+    test_game: SubView<Button>,
+    alert:     SubView<Button>,
 
     stats: SubView<Button>,
 }
@@ -35,17 +34,19 @@ impl ViewSetup for UIDebugView {
         self.password.place.size(200, 40).center();
         self.password.set_title("Password:");
 
-        self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
+        self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_hor();
 
         self.alert.set_text("Alert");
-        self.place
-            .same([Anchor::Size, Anchor::X], self.back)
-            .anchor(self.back, Anchor::Bot, 20);
+        self.alert.place.same([Anchor::Size, Anchor::X], self.test_game).anchor(
+            self.test_game,
+            Anchor::Bot,
+            20,
+        );
         self.alert.on_tap.sub(|| {
             Alert::show("Multi Skoggo4 Ultra Boggo4 Sopokokt4ek smeorglil4ek");
         });
 
-        self.back.on_tap.sub(|| {
+        self.test_game.on_tap.sub(|| {
             Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
             UIManager::set_view(Own::<TestGameView>::default());
         });

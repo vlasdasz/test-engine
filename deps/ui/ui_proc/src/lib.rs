@@ -30,6 +30,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     }
 
     quote! {
+        #[derive(Default)]
         #stream
 
         impl ui::View for #name {

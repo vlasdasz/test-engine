@@ -4,7 +4,6 @@ use ui::{view, SubView, ViewSetup};
 use crate::Label;
 
 #[view]
-#[derive(Default)]
 pub struct LabeledView {
     title: SubView<Label>,
     text:  SubView<Label>,

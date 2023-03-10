@@ -5,7 +5,6 @@ use ui::{view, Event, SubView, UIManager, ViewData, ViewSetup, ViewSubviews};
 use crate::{Button, MultilineLabel};
 
 #[view]
-#[derive(Default)]
 pub struct Alert {
     label:     SubView<MultilineLabel>,
     ok_button: SubView<Button>,

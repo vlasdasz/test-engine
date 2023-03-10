@@ -1,6 +1,7 @@
 use refs::{Own, ToWeak, Weak};
+use rtools::Random;
 
-use crate::{layout::Placer, SubView, UIManager, View};
+use crate::{layout::Placer, BaseView, SubView, UIManager, View, ViewFrame};
 pub trait ViewSubviews {
     /// Use this only if you know what you are doing
     fn manually_set_superview(&mut self, superview: Weak<dyn View>);
@@ -12,6 +13,8 @@ pub trait ViewSubviews {
 
     fn add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
     fn add_subview(&mut self, view: Own<dyn View>) -> Weak<dyn View>;
+
+    fn add_dummy_view(&mut self);
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -62,5 +65,10 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let res = view.weak();
         self.subviews.push(view);
         res
+    }
+
+    fn add_dummy_view(&mut self) {
+        let mut view = self.add_view::<BaseView>();
+        view.set_size((f32::random(), f32::random()));
     }
 }

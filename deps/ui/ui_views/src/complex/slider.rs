@@ -1,26 +1,25 @@
 use gm::Color;
 use refs::Weak;
-use smart_default::SmartDefault;
 use ui::{view, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
 
 use crate::CircleView;
 
 #[view]
-#[derive(SmartDefault)]
 pub struct Slider {
     circle:    SubView<CircleView>,
     raw_value: f32,
 
     pub on_change: Event<f32>,
 
-    #[default = 0.0]
     pub start:  f32,
-    #[default = 1.0]
     pub finish: f32,
 }
 
 impl ViewSetup for Slider {
     fn setup(mut self: Weak<Self>) {
+        self.start = 0.0;
+        self.finish = 1.0;
+
         self.enable_touch();
 
         self.on_touch.val(move |touch| {

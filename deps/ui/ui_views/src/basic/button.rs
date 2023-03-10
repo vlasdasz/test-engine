@@ -5,7 +5,6 @@ use ui::{view, Event, SubView, ViewSetup, ViewSubviews, ViewTouch};
 use crate::Label;
 
 #[view]
-#[derive(Default)]
 pub struct Button {
     label_view: Option<SubView<Label>>,
 

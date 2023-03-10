@@ -7,7 +7,6 @@ use ui::{view, DrawMode, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup}
 use crate::{Button, DrawingView, ImageView, Label};
 
 #[view]
-#[derive(Default)]
 pub struct TestView {
     label:    SubView<Label>,
     button:   SubView<Button>,

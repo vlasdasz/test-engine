@@ -4,7 +4,6 @@ use ui::{view, SubView, UIManager, ViewController, ViewSetup};
 use crate::Button;
 
 #[view]
-#[derive(Default)]
 pub struct BackButton {
     button: SubView<Button>,
 }

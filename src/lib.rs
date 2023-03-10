@@ -14,6 +14,7 @@ use crate::test_game::TestApp;
 mod benchmark;
 mod test_game;
 mod ui_test;
+mod views_testing;
 
 #[no_mangle]
 extern "C" fn make_app(

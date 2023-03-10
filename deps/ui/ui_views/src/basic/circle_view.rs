@@ -6,7 +6,6 @@ use ui::{view, DrawMode, SubView, ViewFrame, ViewSetup};
 use crate::DrawingView;
 
 #[view]
-#[derive(Default)]
 pub struct CircleView {
     drawing: SubView<DrawingView>,
     color:   Color,

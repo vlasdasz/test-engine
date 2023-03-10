@@ -1,29 +1,29 @@
 [target.aarch64-linux-android]
-ar = "ndk/bin/aarch64-linux-android-ar"
+ar     = "ndk/bin/aarch64-linux-android-ar"
 linker = "ndk/bin/aarch64-linux-android-clang"
 
 [target.armv7-linux-androideabi]
-ar = "ndk/bin/armv7a-linux-androideabi-ar"
+ar     = "ndk/bin/armv7a-linux-androideabi-ar"
 linker = "ndk/bin/armv7a-linux-androideabi21-clang"
 
 [target.i686-linux-android]
-ar = "ndk/bin/i686-linux-android-ar"
+ar     = "ndk/bin/i686-linux-android-ar"
 linker = "ndk/bin/i686-linux-android21-clang"
 
 [target.x86_64-pc-windows-msvc]
-linker = "rust-lld.exe"
+linker    = "rust-lld.exe"
 rustflags = ["-Zshare-generics=off"]
 
 [profile.release-plus]
 inherits = "release"
 #debug = true
+lto   = "fat"
 strip = true
-lto = "fat"
 
 [profile.size]
-inherits = "release-plus"
+inherits  = "release-plus"
 opt-level = "z"
 
 [profile.release-debug]
+debug    = true
 inherits = "release"
-debug = true

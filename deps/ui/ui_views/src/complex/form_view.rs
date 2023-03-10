@@ -5,7 +5,6 @@ use ui::{view, ViewSetup, ViewSubviews};
 use crate::LabeledTextField;
 
 #[view]
-#[derive(Default)]
 pub struct FormView {}
 
 impl ViewSetup for FormView {

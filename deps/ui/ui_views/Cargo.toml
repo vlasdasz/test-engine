@@ -1,22 +1,20 @@
 [package]
-name = "ui_views"
-version = "0.1.0"
 edition = "2021"
+name    = "ui_views"
+version = "0.1.0"
 
 [dependencies]
-refs = "0.1.28"
-rtools = "0.1.28"
-reflected = "0.2.6"
-#validator = { version = "0.16", features = ["derive"] }
-smart-default = "0.6"
+reflected     = { workspace = true }
+refs          = { workspace = true }
+rtools        = { workspace = true }
+smart-default = { workspace = true }
 
-ui = { path = ".." }
-#ui_proc = { path = "../ui_proc" }
+ui = { workspace = true }
 
-gm = { path = "../../gm" }
-text = { path = "../../text" }
-gl_image = { path = "../../gl_image" }
-gl_wrapper = { path = "../../gl_wrapper" }
+gl_image   = { workspace = true }
+gl_wrapper = { workspace = true }
+gm         = { workspace = true }
+text       = { workspace = true }
 
 [dev-dependencies]
-serial_test = "0.9.0"
+serial_test = { workspace = true }

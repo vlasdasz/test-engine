@@ -4,7 +4,6 @@ use ui::{layout::Anchor, view, SubView, ViewSetup};
 use crate::{Label, TextField};
 
 #[view]
-#[derive(Default)]
 pub struct LabeledTextField {
     label:      SubView<Label>,
     text_field: SubView<TextField>,

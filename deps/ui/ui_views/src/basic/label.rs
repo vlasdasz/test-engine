@@ -1,21 +1,17 @@
 use gm::Color;
 use refs::Weak;
 use rtools::{data_manager::Handle, IntoF32};
-use smart_default::SmartDefault;
 use text::{render_text, Font};
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::ImageView;
 
 #[view]
-#[derive(SmartDefault)]
 pub struct Label {
-    #[default(Font::san_francisco())]
     font:          Handle<Font>,
     text:          String,
     prev_text:     String,
     image_view:    SubView<ImageView>,
-    #[default = 32.0]
     text_size:     f32,
     needs_update:  bool,
     pub free_text: bool,
@@ -104,6 +100,9 @@ impl Label {
 
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
+        self.font = Font::san_francisco();
+        self.text_size = 32.0;
+
         debug_assert!(self.text.is_empty());
         self.image_view.place.center();
         self.image_view.set_hidden(true);

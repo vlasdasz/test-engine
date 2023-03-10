@@ -5,7 +5,6 @@ use ui::{view, Event, SubView, ViewSetup};
 use crate::{Label, Slider};
 
 #[view]
-#[derive(Default)]
 pub struct LabeledSlider {
     label:  SubView<Label>,
     slider: SubView<Slider>,

@@ -13,12 +13,9 @@ use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSetu
 use crate::ImageView;
 
 #[view]
-#[derive(SmartDefault)]
 pub struct MultilineLabel {
-    #[default(Font::san_francisco())]
     font:          Handle<Font>,
     text:          String,
-    #[default(text::DEFAULT_FONT_SIZE as f32)]
     size:          f32,
     split_storage: HashMap<u64, (Vec<String>, f32)>,
 }
@@ -155,6 +152,9 @@ impl MultilineLabel {
 
 impl ViewSetup for MultilineLabel {
     fn setup(mut self: Weak<Self>) {
+        self.font = Font::san_francisco();
+        self.size = text::DEFAULT_FONT_SIZE as f32;
+
         self.set_letters();
     }
 }
@@ -174,11 +174,11 @@ impl ViewCallbacks for MultilineLabel {
 mod test {
     use std::ops::Deref;
 
-    use refs::set_current_thread_as_main;
+    use refs::{set_current_thread_as_main, Own};
     use rtools::Random;
     use serial_test::serial;
     use text::{text_size, Font, DEFAULT_FONT_SIZE};
-    use ui::ViewFrame;
+    use ui::{ViewFrame, ViewInternalSetup};
 
     use crate::MultilineLabel;
 
@@ -209,7 +209,8 @@ mod test {
         set_current_thread_as_main();
         Font::disable_render();
 
-        let mut view = MultilineLabel::default();
+        let mut view = Own::<MultilineLabel>::default();
+        view.internal_setup();
         view.set_size((100, 100));
 
         assert!(view.fits_width("lo", view.size));
@@ -224,7 +225,8 @@ mod test {
         set_current_thread_as_main();
         Font::disable_render();
 
-        let mut view = MultilineLabel::default();
+        let mut view = Own::<MultilineLabel>::default();
+        view.internal_setup();
         view.set_size((100, 100));
 
         assert_eq!(view.split_text("lolo", view.size), vec!["lolo".to_string()]);
@@ -236,7 +238,8 @@ mod test {
         set_current_thread_as_main();
         Font::disable_render();
 
-        let mut view = MultilineLabel::default();
+        let mut view = Own::<MultilineLabel>::default();
+        view.internal_setup();
         view.set_size((200, 100));
 
         assert_eq!(
@@ -251,7 +254,8 @@ mod test {
         set_current_thread_as_main();
         Font::disable_render();
 
-        let mut view = MultilineLabel::default();
+        let mut view = Own::<MultilineLabel>::default();
+        view.internal_setup();
         view.set_size((1200, 100));
 
         let long_string = (0..u64::random_in(50..100))
@@ -273,7 +277,8 @@ mod test {
         set_current_thread_as_main();
         Font::disable_render();
 
-        let mut view = MultilineLabel::default();
+        let mut view = Own::<MultilineLabel>::default();
+        view.internal_setup();
         view.set_size((100, 100));
 
         let letter_a = u8::random() as char;

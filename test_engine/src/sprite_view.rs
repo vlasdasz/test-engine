@@ -5,7 +5,6 @@ use ui::{refs::Weak, view, SubView, ViewCallbacks, ViewData, ViewSetup};
 use ui_views::{Button, LabeledView};
 
 #[view]
-#[derive(Default)]
 pub struct SpriteView {
     position: SubView<LabeledView>,
     size:     SubView<LabeledView>,

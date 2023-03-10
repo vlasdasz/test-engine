@@ -13,7 +13,6 @@ const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 const PRECISION: u16 = 50;
 
 #[view]
-#[derive(Default)]
 pub struct AnalogStickView {
     background:      SubView<DrawingView>,
     direction_stick: SubView<DrawingView>,

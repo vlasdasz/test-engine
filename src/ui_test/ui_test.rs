@@ -8,7 +8,6 @@ use ui_views::Button;
 use crate::test_game::TestGameView;
 
 #[view]
-#[derive(Default)]
 pub struct UITestView {
     container: SubView<BaseView>,
     top_view:  SubView<BaseView>,

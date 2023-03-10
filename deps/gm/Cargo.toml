@@ -1,13 +1,13 @@
 [package]
-name = "gm"
-version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
+name    = "gm"
+version = "0.1.0"
 
 [lib]
-name = "gm"
 crate-type = ["rlib", "staticlib"]
+name       = "gm"
 
 [dependencies]
-rtools = "0.1.28"
-serde = { version = "1.0", features = ["derive"] }
+rtools = { workspace = true }
+serde  = { workspace = true }

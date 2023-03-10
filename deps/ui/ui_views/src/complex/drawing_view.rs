@@ -3,7 +3,6 @@ use gm::{flat::PointsPath, Color};
 use ui::{view, DrawMode, PathData};
 
 #[view]
-#[derive(Default)]
 pub struct DrawingView {}
 
 impl DrawingView {

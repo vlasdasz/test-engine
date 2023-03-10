@@ -1,18 +1,19 @@
 [package]
-name = "gl_image"
-version = "0.1.0"
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
+name    = "gl_image"
+version = "0.1.0"
 
 [lib]
-name = "gl_image"
 crate-type = ["rlib", "staticlib"]
+name       = "gl_image"
 
 [dependencies]
-log = "0.4"
 image = "0.24"
-refs = "0.1.28"
-rtools = "0.1.28"
 
-gm = { path = "../gm" }
-gl_wrapper = { path = "../gl_wrapper" }
+log    = { workspace = true }
+refs   = { workspace = true }
+rtools = { workspace = true }
+
+gl_wrapper = { workspace = true }
+gm         = { workspace = true }

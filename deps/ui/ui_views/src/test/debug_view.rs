@@ -6,7 +6,6 @@ use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame,
 use crate::{Button, Label};
 
 #[view]
-#[derive(Default)]
 pub struct DebugView {
     fps_label:          SubView<Label>,
     frame_drawn_label:  SubView<Label>,
