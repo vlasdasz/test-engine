@@ -1,20 +1,20 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name    = "sprites"
+name = "sprites"
 version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name       = "sprites"
+name = "sprites"
 
 [dependencies]
-crossbeam     = "0.8"
-rapier2d      = { version = "0.14", features = ["parallel", "simd-stable"] }
-refs          = { workspace = true }
-rtools        = { workspace = true }
+crossbeam = "0.8"
+rapier2d = { version = "0.14", features = ["parallel", "simd-stable"] }
+refs = { workspace = true }
+rtools = { workspace = true }
 smart-default = { workspace = true }
-vents         = { workspace = true }
+vents = { workspace = true }
 
 gl_image = { workspace = true }
-gm       = { workspace = true }
+gm = { workspace = true }

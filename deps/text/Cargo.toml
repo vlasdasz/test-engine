@@ -1,21 +1,21 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name    = "text"
+name = "text"
 version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name       = "text"
+name = "text"
 
 [dependencies]
 fontdue = "0.7"
-log     = { workspace = true }
-refs    = { workspace = true }
-rtools  = { workspace = true }
+log = { workspace = true }
+refs = { workspace = true }
+rtools = { workspace = true }
 
 gl_image = { workspace = true }
-gm       = { workspace = true }
+gm = { workspace = true }
 
 [dev-dependencies]
 serial_test = { workspace = true }

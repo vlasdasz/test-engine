@@ -1,15 +1,15 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name    = "maze"
+name = "maze"
 version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name       = "maze"
+name = "maze"
 
 [dependencies]
 rtools = { workspace = true }
-tokio  = { workspace = true }
+tokio = { workspace = true }
 
 gm = { workspace = true }

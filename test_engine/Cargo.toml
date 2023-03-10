@@ -1,43 +1,43 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name    = "test_engine"
+name = "test_engine"
 version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name       = "test_engine"
+name = "test_engine"
 
 [dependencies]
-home          = "0.5"
-log           = { workspace = true }
-reflected     = { workspace = true }
-rtools        = { workspace = true }
+home = "0.5"
+log = { workspace = true }
+reflected = { workspace = true }
+rtools = { workspace = true }
 smart-default = { workspace = true }
 
 tokio = { workspace = true }
 
-audio      = { workspace = true }
-dispatch   = { workspace = true }
-gl_image   = { workspace = true }
+audio = { workspace = true }
+dispatch = { workspace = true }
+gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
-gm         = { workspace = true }
-maze       = { workspace = true }
-rest       = { workspace = true }
-sprites    = { workspace = true }
-text       = { workspace = true }
-valid      = { workspace = true }
+gm = { workspace = true }
+maze = { workspace = true }
+rest = { workspace = true }
+sprites = { workspace = true }
+text = { workspace = true }
+valid = { workspace = true }
 
-ui       = { workspace = true }
+ui = { workspace = true }
 ui_views = { workspace = true }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
-gl   = { workspace = true }
+gl = { workspace = true }
 glfw = { workspace = true }
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 gles31-sys = { workspace = true }
-mashup     = { workspace = true }
+mashup = { workspace = true }
 
 [target.'cfg(target_os="android")'.dependencies]
 android-ndk-sys = "0.2.0"

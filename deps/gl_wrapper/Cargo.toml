@@ -1,28 +1,28 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name    = "gl_wrapper"
+name = "gl_wrapper"
 version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name       = "gl_wrapper"
+name = "gl_wrapper"
 
 [dependencies]
 cfg-if = { workspace = true }
-log    = { workspace = true }
+log = { workspace = true }
 rtools = { workspace = true }
-vents  = { workspace = true }
+vents = { workspace = true }
 
 gm = { workspace = true }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
-gl   = { workspace = true }
+gl = { workspace = true }
 glfw = { workspace = true }
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 gles31-sys = { workspace = true }
-mashup     = { workspace = true }
+mashup = { workspace = true }
 
 [build-dependencies]
 cfg_aliases = { workspace = true }

@@ -1,31 +1,31 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name    = "ui"
+name = "ui"
 version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name       = "ui"
+name = "ui"
 
 [dependencies]
-refs          = { workspace = true }
-rtools        = { workspace = true }
+refs = { workspace = true }
+rtools = { workspace = true }
 smart-default = { workspace = true }
-vents         = { workspace = true }
+vents = { workspace = true }
 
-gl_image   = { workspace = true }
+gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
-gm         = { workspace = true }
-ui_proc    = { workspace = true }
+gm = { workspace = true }
+ui_proc = { workspace = true }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
-gl   = { workspace = true }
+gl = { workspace = true }
 glfw = { workspace = true }
 
 [target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
 gles31-sys = { workspace = true }
-mashup     = { workspace = true }
+mashup = { workspace = true }
 
 [build-dependencies]
 cfg_aliases = { workspace = true }

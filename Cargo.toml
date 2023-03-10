@@ -1,7 +1,7 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name    = "test_game"
+name = "test_game"
 version = "0.1.0"
 
 [[bin]]
@@ -9,16 +9,16 @@ name = "test_game"
 
 [lib]
 crate-type = ["rlib", "staticlib", "dylib"]
-name       = "test_game_lib"
+name = "test_game_lib"
 
 [dependencies]
-log   = { workspace = true }
+log = { workspace = true }
 tokio = { workspace = true }
 
-rtools      = { workspace = true }
+rtools = { workspace = true }
 test_engine = { workspace = true }
-ui          = { workspace = true }
-ui_views    = { workspace = true }
+ui = { workspace = true }
+ui_views = { workspace = true }
 
 [target.'cfg(target_os="android")'.dependencies]
 android-ndk-sys = "0.2"
@@ -27,38 +27,38 @@ android-ndk-sys = "0.2"
 cfg_aliases = { workspace = true }
 
 [workspace.dependencies]
-cfg-if        = "1.0"
-cfg_aliases   = "0.1"
-gl            = "0.14"
-glfw          = "0.51.0"
-log           = "0.4"
-mashup        = "0.1"
-serde         = { version = "1.0", features = ["derive"] }
-serde_json    = "1.0"
-serial_test   = "1.0.0"
+cfg-if = "1.0"
+cfg_aliases = "0.1"
+gl = "0.14"
+glfw = "0.51.0"
+log = "0.4"
+mashup = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serial_test = "1.0.0"
 smart-default = "0.6"
-tokio         = { version = "1.26.0", features = ["full"] }
+tokio = { version = "1.26.0", features = ["full"] }
 
 
-reflected      = "0.2.6"
+reflected = "0.2.6"
 reflected_proc = "0.2.6"
-refs           = "0.1.28"
-rtools         = "0.1.29"
-vents          = "0.1.6"
+refs = "0.1.28"
+rtools = "0.1.30"
+vents = "0.1.6"
 
 
-audio       = { path = "deps/audio" }
-dispatch    = { path = "deps/dispatch" }
-gl_image    = { path = "deps/gl_image" }
-gl_wrapper  = { path = "deps/gl_wrapper" }
-gles31-sys  = { path = "gles31-sys" }
-gm          = { path = "deps/gm" }
-maze        = { path = "deps/maze" }
-rest        = { path = "deps/rest" }
-sprites     = { path = "deps/sprites" }
+audio = { path = "deps/audio" }
+dispatch = { path = "deps/dispatch" }
+gl_image = { path = "deps/gl_image" }
+gl_wrapper = { path = "deps/gl_wrapper" }
+gles31-sys = { path = "gles31-sys" }
+gm = { path = "deps/gm" }
+maze = { path = "deps/maze" }
+rest = { path = "deps/rest" }
+sprites = { path = "deps/sprites" }
 test_engine = { path = "test_engine" }
-text        = { path = "deps/text" }
-ui          = { path = "deps/ui" }
-ui_proc     = { path = "deps/ui/ui_proc" }
-ui_views    = { path = "deps/ui/ui_views" }
-valid       = { path = "deps/valid" }
+text = { path = "deps/text" }
+ui = { path = "deps/ui" }
+ui_proc = { path = "deps/ui/ui_proc" }
+ui_views = { path = "deps/ui/ui_views" }
+valid = { path = "deps/valid" }
