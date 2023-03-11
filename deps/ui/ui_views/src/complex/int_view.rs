@@ -1,6 +1,5 @@
-use gl_image::Image;
+use gl_image::ToImage;
 use refs::Weak;
-use rtools::data_manager::Handle;
 use ui::{view, Event, SubView, ViewData, ViewSetup};
 
 use crate::{Button, Label};
@@ -17,7 +16,7 @@ pub struct IntView {
 }
 
 impl IntView {
-    pub fn set_images(&mut self, up: Handle<Image>, down: Handle<Image>) {
+    pub fn set_images(&mut self, up: impl ToImage, down: impl ToImage) {
         self.up.set_image(up);
         self.down.set_image(down);
     }

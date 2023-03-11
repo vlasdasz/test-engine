@@ -65,7 +65,7 @@ impl Level for TestGameLevel {
         self.add_sprite::<Wall>((5, 100), (-60, 0)).set_image(square);
 
         self.add_sprite::<Body>(Shape::triangle((-10, -10), (10, -10), (-10, 10)), (0, 50))
-            .set_image(Image::get("triangle.png"));
+            .set_image("triangle.png");
 
         for i in 0..500 {
             self.add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2)).set_image(square);
@@ -73,8 +73,8 @@ impl Level for TestGameLevel {
 
         let mut player: Weak<Player> = self.add_sprite((2, 2), (0, 5));
         self.base_mut().player = player;
-        player.set_image(Image::get("frisk.png")).enable_collision_detection();
-        player.weapon.set_image(Image::get("ak.png"));
+        player.set_image("frisk.png").enable_collision_detection();
+        player.weapon.set_image("ak.png");
         let mut this = self.weak();
         player.on_collision.sub(move || {
             this.collision_sound.play();

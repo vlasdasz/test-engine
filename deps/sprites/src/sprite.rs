@@ -1,4 +1,4 @@
-use gl_image::Image;
+use gl_image::{Image, ToImage};
 use gm::{
     flat::{Point, Shape, Size},
     Color,
@@ -108,7 +108,7 @@ pub trait Sprite {
 pub trait SpriteTemplates {
     fn set_color(&mut self, _: Color) -> &mut Self;
     fn set_selected(&mut self, _: bool) -> &mut Self;
-    fn set_image(&mut self, _: Handle<Image>) -> &mut Self;
+    fn set_image(&mut self, _: impl ToImage) -> &mut Self;
     fn set_restitution(&mut self, _: f32) -> &mut Self;
     fn set_position(&mut self, _: Point) -> &mut Self;
     fn set_rotation(&mut self, _: impl IntoF32) -> &mut Self;
@@ -125,8 +125,8 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         self
     }
 
-    fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
-        self.data_mut().image = image;
+    fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.data_mut().image = image.to_image();
         self
     }
 

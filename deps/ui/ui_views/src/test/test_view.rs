@@ -1,7 +1,7 @@
-use gl_image::Image;
+use gl_image::ToImage;
 use gm::{flat::PointsPath, Color};
 use refs::Weak;
-use rtools::{data_manager::Handle, Animation, Unwrap};
+use rtools::{Animation, Unwrap};
 use ui::{view, DrawMode, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::{Button, DrawingView, ImageView, Label};
@@ -20,17 +20,17 @@ pub struct TestView {
 }
 
 impl TestView {
-    pub fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
+    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image.set_image(image);
         self
     }
 
-    pub fn set_button_image(&mut self, image: Handle<Image>) -> &mut Self {
+    pub fn set_button_image(&mut self, image: impl ToImage) -> &mut Self {
         self.button.set_image(image);
         self
     }
 
-    pub fn set_animation_image(&mut self, image: Handle<Image>) -> &mut Self {
+    pub fn set_animation_image(&mut self, image: impl ToImage) -> &mut Self {
         self.animated.set_image(image);
         self
     }

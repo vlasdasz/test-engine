@@ -90,18 +90,18 @@ impl TestGameView {
 
         self.test_view.place.br(20).size(280, 400);
         self.test_view
-            .set_image(Image::get("cat.png"))
-            .set_button_image(Image::get("square.png"))
-            .set_animation_image(Image::get("palm.png"));
+            .set_image("cat.png")
+            .set_button_image("square.png")
+            .set_animation_image("palm.png");
 
         self.ui_scale.step = 0.1;
         self.ui_scale.place.size(28, 120).l(100).b(140);
-        self.ui_scale.set_images(Image::get("up.png"), Image::get("down.png"));
+        self.ui_scale.set_images("up.png", "down.png");
         //self.ui_scale.on_change.sub(|val| UIManager::set_ui_scale(val));
 
         self.level_scale.step = 0.1;
         self.level_scale.place.size(28, 120).l(28).b(140);
-        self.level_scale.set_images(Image::get("up.png"), Image::get("down.png"));
+        self.level_scale.set_images("up.png", "down.png");
         self.level_scale
             .on_change
             .val(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));

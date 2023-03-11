@@ -43,9 +43,9 @@ impl Level for BenchmarkLevel {
     fn setup(&mut self) {
         self.player = self.add_sprite((2, 2), (0, 5));
 
-        self.player.set_image(Image::get("frisk.png"));
+        self.player.set_image("frisk.png");
 
-        self.player.weapon.set_image(Image::get("ak.png"));
+        self.player.weapon.set_image("ak.png");
         self.player.weapon.bullet_image = Image::get("bullet.png");
         self.player.weapon.bullet_speed = 100.0;
         self.player.weapon.bullet_shape = (1, 0.28).into();

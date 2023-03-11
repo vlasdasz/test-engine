@@ -1,4 +1,4 @@
-use gl_image::Image;
+use gl_image::{Image, ToImage};
 use gm::Color;
 use rtools::{data_manager::Handle, IntoF32};
 
@@ -12,7 +12,7 @@ pub trait ViewData {
     fn corner_radius(&self) -> f32;
     fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self;
     fn image(&self) -> Handle<Image>;
-    fn set_image(&mut self, image: Handle<Image>) -> &mut Self;
+    fn set_image(&mut self, image: impl ToImage) -> &mut Self;
     fn is_hidden(&self) -> bool;
     fn set_hidden(&mut self, hidden: bool) -> &mut Self;
     fn paths(&self) -> &[PathData];
@@ -50,8 +50,8 @@ impl<T: ?Sized + View> ViewData for T {
         self.image
     }
 
-    fn set_image(&mut self, image: Handle<Image>) -> &mut Self {
-        self.image = image;
+    fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.image = image.to_image();
         self
     }
 
