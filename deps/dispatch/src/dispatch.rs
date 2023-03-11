@@ -1,4 +1,7 @@
-use std::sync::{Arc, Mutex};
+use std::{
+    future::Future,
+    sync::{Arc, Mutex},
+};
 
 use rtools::{sleep, IntoF32};
 use tokio::{
@@ -43,6 +46,13 @@ pub fn after(delay: impl IntoF32, action: impl FnOnce() + Send + 'static) {
     spawn(async move {
         sleep(delay);
         CALLBACKS.lock().unwrap().push(Box::new(action));
+    });
+}
+
+pub fn async_after(delay: impl IntoF32, action: impl Future + Send + 'static) {
+    spawn(async move {
+        sleep(delay);
+        action.await;
     });
 }
 

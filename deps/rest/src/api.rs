@@ -19,6 +19,13 @@ impl API {
 }
 
 impl API {
+    pub fn use_json(mut self) -> Self {
+        self.headers.insert("content-type".to_string(), "application/json".to_string());
+        self
+    }
+}
+
+impl API {
     pub fn base_url() -> &'static str {
         &Self::get().base_url
     }
