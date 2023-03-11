@@ -8,7 +8,10 @@ use ui::{
 };
 use ui_views::{Alert, Button, Label, LabeledTextField, MultilineLabel};
 
-use crate::test_game::{TestGameLevel, TestGameView};
+use crate::{
+    test_game::{TestGameLevel, TestGameView},
+    views_testing::CollectionTestView,
+};
 
 #[view]
 pub struct UIDebugView {
@@ -18,8 +21,9 @@ pub struct UIDebugView {
     label:       SubView<Label>,
     multi_label: SubView<MultilineLabel>,
 
-    test_game: SubView<Button>,
-    alert:     SubView<Button>,
+    test_game:  SubView<Button>,
+    alert:      SubView<Button>,
+    collection: SubView<Button>,
 
     stats: SubView<Button>,
 }
@@ -36,19 +40,21 @@ impl ViewSetup for UIDebugView {
 
         self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_hor();
 
+        self.test_game.on_tap.sub(|| {
+            Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
+            UIManager::set_view(Own::<TestGameView>::default());
+        });
+
         self.alert.set_text("Alert");
-        self.alert.place.same([Anchor::Size, Anchor::X], self.test_game).anchor(
-            self.test_game,
-            Anchor::Bot,
-            20,
-        );
+        self.alert.place.above(self.test_game, 20);
         self.alert.on_tap.sub(|| {
             Alert::show("Multi Skoggo4 Ultra Boggo4 Sopokokt4ek smeorglil4ek");
         });
 
-        self.test_game.on_tap.sub(|| {
-            Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
-            UIManager::set_view(Own::<TestGameView>::default());
+        self.collection.set_text("Collection");
+        self.collection.place.above(self.alert, 20);
+        self.collection.on_tap.sub(|| {
+            UIManager::set_view(Own::<CollectionTestView>::default());
         });
 
         self.label.place.br(10).relative(Anchor::Size, 0.4, self);

@@ -200,6 +200,12 @@ impl Placer {
 }
 
 impl Placer {
+    pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
+        self.same([Anchor::Size, Anchor::X], view).anchor(view, Anchor::Bot, offset)
+    }
+}
+
+impl Placer {
     pub fn layout(&mut self) {
         let this = self.to_rglica();
         for rule in this.rules().iter() {

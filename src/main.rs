@@ -7,6 +7,7 @@
 mod benchmark;
 mod test_game;
 mod ui_test;
+mod views_testing;
 
 use test_engine::{App, MakeApp};
 

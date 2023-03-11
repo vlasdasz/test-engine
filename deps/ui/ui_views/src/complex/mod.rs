@@ -10,7 +10,6 @@ mod labeled_slider;
 mod labeled_text_field;
 mod labeled_view;
 mod slider;
-mod table_view;
 
 pub use alert::Alert;
 pub use analog_stick_view::AnalogStickView;
@@ -24,4 +23,3 @@ pub use labeled_slider::LabeledSlider;
 pub use labeled_text_field::LabeledTextField;
 pub use labeled_view::LabeledView;
 pub use slider::Slider;
-pub use table_view::*;
