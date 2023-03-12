@@ -1,15 +1,18 @@
+use dispatch::on_main;
 use gm::Color;
 use refs::{Own, ToWeak, Weak};
+use tokio::sync::oneshot::channel;
 use ui::{view, Event, SubView, UIManager, ViewData, ViewSetup, ViewSubviews};
 
 use crate::{Button, MultilineLabel};
 
 #[view]
 pub struct Alert {
-    label:     SubView<MultilineLabel>,
-    ok_button: SubView<Button>,
-    message:   String,
-    on_ok:     Event,
+    label:         SubView<MultilineLabel>,
+    ok_button:     SubView<Button>,
+    cancel_button: SubView<Button>,
+    message:       String,
+    agreed:        Event<bool>,
 }
 
 impl Alert {
@@ -21,18 +24,23 @@ impl Alert {
         res
     }
 
-    pub fn ok(message: impl ToString, mut on_ok: impl FnMut() + 'static) {
-        let alert = Self::prepare(message);
-        alert.on_ok.sub(move || {
-            on_ok();
+    pub async fn ask(message: impl ToString + Send + 'static) -> bool {
+        let (send, recv) = channel::<bool>();
+
+        on_main(move || {
+            let alert = Self::prepare(message);
+
+            alert.agreed.once(move |agreed| {
+                send.send(agreed).expect("BUG: Failed to send alert status.");
+            });
         });
+
+        recv.await.expect("BUG: Failed to receive alert status.")
     }
 
     pub fn show(message: impl ToString) {
         Self::prepare(message);
     }
-
-    pub fn ask(_message: impl ToString, _on_ok: impl FnMut()) {}
 }
 
 impl Alert {
@@ -52,7 +60,7 @@ impl ViewSetup for Alert {
         self.label.place.lrt(10).h(140);
         self.label.set_text_size(28);
 
-        self.ok_button.place.size(202, 20).center_hor().b(-1);
+        self.ok_button.place.size(101, 20).bl(-1);
         self.ok_button
             .set_text("OK")
             .set_border_color(Color::GRAY)
@@ -60,7 +68,18 @@ impl ViewSetup for Alert {
 
         self.ok_button.on_tap.sub(move || {
             self.remove_from_superview();
-            self.on_ok.trigger(());
+            self.agreed.trigger(true);
+        });
+
+        self.cancel_button.place.size(101, 20).br(-1);
+        self.cancel_button
+            .set_text("Cancel")
+            .set_border_color(Color::GRAY)
+            .set_text_color(Color::RED);
+
+        self.cancel_button.on_tap.sub(move || {
+            self.remove_from_superview();
+            self.agreed.trigger(false);
         });
 
         self.set_message();

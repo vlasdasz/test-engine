@@ -44,7 +44,7 @@ reflected = "0.2.6"
 reflected_proc = "0.2.6"
 refs = "0.1.28"
 rtools = "0.1.30"
-vents = "0.1.6"
+vents = "0.1.7"
 
 
 audio = { path = "deps/audio" }
