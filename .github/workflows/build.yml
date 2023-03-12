@@ -19,7 +19,7 @@ jobs:
           { runner: mac, os: macos },
           { runner: ubuntu-latest, os: linux },
           { runner: windows-latest, os: windows },
-#          { runner: rpi, os: raspberry },
+          { runner: pi, os: raspberry },
 
           { runner: mac, os: ios },
 #          { runner: ubuntu-latest, os: android }
