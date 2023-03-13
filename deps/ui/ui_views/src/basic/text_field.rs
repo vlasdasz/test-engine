@@ -5,11 +5,15 @@ use ui::{
     view, SubView, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
 };
 
-use crate::Label;
+use crate::{
+    basic::{text_field_constraint::AcceptChar, TextFieldConstraint},
+    Label,
+};
 
 #[view]
 pub struct TextField {
-    label: SubView<Label>,
+    label:                 SubView<Label>,
+    pub(crate) constraint: Option<TextFieldConstraint>,
 }
 
 impl TextField {
@@ -18,8 +22,16 @@ impl TextField {
     }
 
     pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
+        let text = self.filter_constraint(text);
         self.label.set_text(text);
         self
+    }
+
+    fn filter_constraint(&mut self, text: impl ToString) -> String {
+        match &self.constraint {
+            Some(constraint) => constraint.filter(text),
+            None => text.to_string(),
+        }
     }
 }
 
@@ -46,7 +58,9 @@ impl ViewCallbacks for TextField {
                 if this.is_selected() {
                     match key.button {
                         KeyboardButton::Letter(char) => {
-                            this.label.append_text(char);
+                            if this.constraint.accept_char(char, &this.label.text()) {
+                                this.label.append_text(char);
+                            }
                         }
                         KeyboardButton::Control(control) => {
                             if let ControlButton::Backspace = control {

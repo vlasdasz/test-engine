@@ -2,7 +2,7 @@ use reflected::Reflected;
 use refs::{Own, ToWeak, Weak};
 use ui::{view, ViewSetup, ViewSubviews};
 
-use crate::LabeledTextField;
+use crate::{basic::TextFieldConstraint, LabeledTextField};
 
 #[view]
 pub struct FormView<T: Reflected + 'static> {
@@ -27,6 +27,8 @@ impl<T: Reflected> FormView<T> {
             let view = Own::<LabeledTextField>::default();
             let mut rg = view.weak();
             self.add_subview(view);
+            dbg!(field);
+            rg.text_field().constraint = dbg!(TextFieldConstraint::from_field(field));
             rg.set_title(field.name);
             rg.set_text(self.data.get_value(field));
             self.labels.push(rg);

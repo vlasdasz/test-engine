@@ -17,6 +17,12 @@ pub trait View:
 #[derive(Default)]
 pub struct SubView<T: View>(Weak<T>);
 
+impl<T: View> SubView<T> {
+    pub fn weak(&self) -> Weak<T> {
+        self.0
+    }
+}
+
 impl<T: View> Copy for SubView<T> {}
 
 impl<T: View> Clone for SubView<T> {

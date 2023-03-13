@@ -23,6 +23,10 @@ impl LabeledTextField {
         self.text_field.set_text(text);
         self
     }
+
+    pub fn text_field(&self) -> Weak<TextField> {
+        self.text_field.weak()
+    }
 }
 
 impl ViewSetup for LabeledTextField {
