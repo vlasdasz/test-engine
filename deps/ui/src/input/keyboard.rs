@@ -1,6 +1,7 @@
 #[cfg(desktop)]
 use glfw::Action;
 
+#[derive(Debug)]
 pub struct KeyEvent {
     pub button: KeyboardButton,
     pub state:  KeyState,
@@ -15,6 +16,19 @@ impl KeyEvent {
         matches!(self.state, KeyState::Release)
     }
 
+    pub fn is_control(&self, control: ControlButton) -> bool {
+        match &self.button {
+            KeyboardButton::Letter(_) => false,
+            KeyboardButton::Control(c) => c == &control,
+        }
+    }
+
+    pub fn uppercase(&mut self) {
+        if let KeyboardButton::Letter(ref mut c) = &mut self.button {
+            *c = c.to_ascii_uppercase();
+        }
+    }
+
     pub fn char(&self) -> Option<char> {
         match self.button {
             KeyboardButton::Letter(char) => char.into(),
@@ -23,15 +37,18 @@ impl KeyEvent {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub enum ControlButton {
     Ctrl,
     Alt,
     Del,
+    Shift,
     Escape,
     Backspace,
     Unknown,
 }
 
+#[derive(Debug)]
 pub enum KeyboardButton {
     Letter(char),
     Control(ControlButton),

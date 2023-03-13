@@ -33,6 +33,8 @@ pub struct UILayer {
     pub frame_time: f64,
 
     pub debug_view: Strong<DebugView>,
+
+    shift_pressed: bool,
 }
 
 impl UILayer {
@@ -107,6 +109,7 @@ impl UILayer {
                 Key::LeftControl | Key::RightControl => ControlButton::Ctrl.into(),
                 Key::LeftAlt | Key::RightAlt => ControlButton::Alt.into(),
                 Key::Delete => ControlButton::Del.into(),
+                Key::LeftShift | Key::RightShift => ControlButton::Shift.into(),
                 Key::Escape => ControlButton::Escape.into(),
                 Key::Backspace => ControlButton::Backspace.into(),
                 _ => match key.get_name() {
@@ -115,10 +118,18 @@ impl UILayer {
                 },
             };
 
-            let event = KeyEvent {
+            let mut event = KeyEvent {
                 button,
                 state: action.into(),
             };
+
+            if event.is_control(ControlButton::Shift) {
+                this.shift_pressed = event.is_press();
+            }
+
+            if this.shift_pressed {
+                event.uppercase();
+            }
 
             if let Some(char) = event.char() && event.is_press() {
                 this.on_key_pressed(char);

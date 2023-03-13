@@ -1,11 +1,12 @@
 use std::str::FromStr;
 
 use proc_macro::TokenStream;
-use quote::quote;
+use quote::{quote, quote_spanned};
 use syn::{
     parse::Parser,
-    parse_macro_input, Data, DeriveInput, Field, Fields, FieldsNamed, Ident, Type,
+    parse_macro_input, Data, DeriveInput, Field, Fields, FieldsNamed, GenericParam, Ident, Type,
     __private::{Span, TokenStream2},
+    spanned::Spanned,
 };
 
 #[proc_macro_attribute]
@@ -18,6 +19,21 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     };
 
     let name = &stream.ident;
+
+    let generics = &stream.generics;
+
+    let type_param_names: Vec<_> = generics
+        .params
+        .iter()
+        .filter_map(|param| match param {
+            GenericParam::Type(type_param) => Some(type_param.ident.clone()),
+            _ => None,
+        })
+        .collect();
+
+    let type_params = quote_spanned! {stream.generics.span()=>
+        #(#type_param_names),*
+    };
 
     let mut inits = quote!();
 
@@ -33,7 +49,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         #[derive(Default)]
         #stream
 
-        impl ui::View for #name {
+        impl #generics ui::View for #name <#type_params> {
             fn weak_view(&self) -> ui::refs::Weak<dyn ui::View> {
                 use ui::refs::ToWeak;
                 (self as &dyn ui::View).weak()
@@ -47,7 +63,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             }
         }
 
-        impl ui::ViewInternalSetup for #name {
+        impl #generics ui::ViewInternalSetup for #name <#type_params>  {
             fn internal_setup(&mut self) {
                 use ui::ViewSetup;
                 use ui::refs::ToWeak;
@@ -55,13 +71,13 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             }
         }
 
-        impl std::ops::Deref for #name {
+        impl #generics std::ops::Deref for #name <#type_params> {
             type Target = ui::ViewBase;
             fn deref(&self) -> &ui::ViewBase {
                 &self.view
             }
         }
-        impl std::ops::DerefMut for #name {
+        impl #generics std::ops::DerefMut for #name <#type_params>  {
             fn deref_mut(&mut self) -> &mut ui::ViewBase {
                 &mut self.view
             }
