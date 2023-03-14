@@ -58,9 +58,9 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     fn present(&mut self, view: Own<dyn View>) {
-        if UIManager::touch_disabled() {
-            return;
-        }
+        // if UIManager::touch_disabled() {
+        //     panic!("Presenting while touch is already disabled");
+        // }
 
         UIManager::disable_touch();
 

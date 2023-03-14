@@ -24,7 +24,9 @@ impl Alert {
         res
     }
 
-    pub async fn ask(message: impl ToString + Send + 'static) -> bool {
+    pub async fn ask(message: impl ToString) -> bool {
+        let message = message.to_string();
+
         let (send, recv) = channel::<bool>();
 
         on_main(move || {
@@ -39,7 +41,10 @@ impl Alert {
     }
 
     pub fn show(message: impl ToString) {
-        Self::prepare(message);
+        let message = message.to_string();
+        on_main(|| {
+            Self::prepare(message);
+        })
     }
 }
 

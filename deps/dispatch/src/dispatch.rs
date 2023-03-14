@@ -3,6 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use refs::is_main_thread;
 use rtools::{sleep, IntoF32};
 use tokio::{
     spawn,
@@ -39,7 +40,11 @@ where
 }
 
 pub fn on_main(action: impl FnOnce() + Send + 'static) {
-    CALLBACKS.lock().unwrap().push(Box::new(action));
+    if is_main_thread() {
+        action();
+    } else {
+        CALLBACKS.lock().unwrap().push(Box::new(action));
+    }
 }
 
 pub fn after(delay: impl IntoF32, action: impl FnOnce() + Send + 'static) {
