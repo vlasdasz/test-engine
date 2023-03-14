@@ -27,7 +27,6 @@ impl<T: Reflected> FormView<T> {
             let view = Own::<LabeledTextField>::default();
             let mut rg = view.weak();
             self.add_subview(view);
-            dbg!(field);
             rg.text_field().constraint = dbg!(TextFieldConstraint::from_field(field));
             rg.set_title(field.name);
             rg.set_text(self.data.get_value(field));
