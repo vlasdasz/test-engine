@@ -4,7 +4,7 @@ use dispatch::on_main;
 use gm::{flat::point_on_circle, Color};
 use log::warn;
 use refs::{Own, Weak};
-use rtools::{Animation, IntoF32, Time};
+use rtools::{Animation, Time};
 use ui::{
     view, BaseView, UIAnimation, UIManager, View, ViewAnimation, ViewCallbacks, ViewData, ViewFrame,
     ViewSetup, ViewSubviews,

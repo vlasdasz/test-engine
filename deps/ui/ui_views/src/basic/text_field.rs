@@ -58,7 +58,7 @@ impl ViewCallbacks for TextField {
                 if this.is_selected() {
                     match key.button {
                         KeyboardButton::Letter(char) => {
-                            if this.constraint.accept_char(char, &this.label.text()) {
+                            if this.constraint.accept_char(char, this.label.text()) {
                                 this.label.append_text(char);
                             }
                         }
