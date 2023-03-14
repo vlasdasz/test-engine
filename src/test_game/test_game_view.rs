@@ -8,7 +8,7 @@ use test_engine::{
     view, Image, LevelBase, Screen,
 };
 use ui::{
-    refs::{Own, Strong, Weak},
+    refs::{Own, Strong, ToWeak, Weak},
     BaseView, SubView, UIManager, ViewData, ViewSetup, ViewSubviews,
 };
 use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
@@ -54,7 +54,7 @@ impl TestGameView {
             ('a', Direction::Left),
         ]
         .apply(|(key, direction)| {
-            Screen::current().ui.keymap.add(key, self, move |_| {
+            Screen::current().ui.keymap.add(key, move || {
                 if let Some(level) = &mut Screen::current().ui.level {
                     if let Some(player) = level.player().get() {
                         player.move_by_direction(&direction)
@@ -66,10 +66,12 @@ impl TestGameView {
         self.sprite_view.place.tr(10).size(400, 80);
 
         if let Some(level) = &Screen::current().ui.level {
+            let mut this = self.weak();
+
             level
                 .base()
                 .on_sprite_selected
-                .set(self, |mut this, sprite| this.sprite_view.set_sprite(sprite));
+                .val(move |sprite| this.sprite_view.set_sprite(sprite));
         }
 
         self.dpad.place.size(140, 100).b(10).l(100);
@@ -127,7 +129,8 @@ impl TestGameView {
 
             let mut play = view.add_view::<Button>();
             play.set_text("Play sound");
-            play.on_tap.set(self, |mut this, _| this.sound.play());
+            let mut this = self.weak();
+            play.on_tap.sub(move || this.sound.play());
 
             [to_benchmark, to_test, play].apply(|mut button| {
                 button.set_color(Color::WHITE);

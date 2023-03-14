@@ -1,4 +1,4 @@
-use ui::{refs::Weak, Event};
+use ui::Event;
 
 pub struct KeyAction {
     pub key: char,
@@ -6,9 +6,9 @@ pub struct KeyAction {
 }
 
 impl KeyAction {
-    pub fn new<Obj: 'static>(key: char, obj: &Obj, mut action: impl FnMut(Weak<Obj>) + 'static) -> Self {
+    pub fn new(key: char, action: impl FnMut() + 'static) -> Self {
         let event = Event::default();
-        event.set(obj, move |obj, _| action(obj));
+        event.sub(action);
         Self { key, action: event }
     }
 }
