@@ -27,6 +27,16 @@ impl LabeledTextField {
     pub fn text_field(&self) -> Weak<TextField> {
         self.text_field.weak()
     }
+
+    pub fn enable_editing(&mut self) -> &mut Self {
+        self.text_field.enable_editing();
+        self
+    }
+
+    pub fn disable_editing(&mut self) -> &mut Self {
+        self.text_field.disable_editing();
+        self
+    }
 }
 
 impl ViewSetup for LabeledTextField {

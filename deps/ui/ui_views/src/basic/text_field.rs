@@ -33,6 +33,18 @@ impl TextField {
             None => text.to_string(),
         }
     }
+
+    pub fn enable_editing(&mut self) -> &mut Self {
+        self.enable_touch();
+        self.set_color(Color::LIGHT_GRAY);
+        self
+    }
+
+    pub fn disable_editing(&mut self) -> &mut Self {
+        self.disable_touch();
+        self.set_color(Color::CLEAR);
+        self
+    }
 }
 
 impl ViewSetup for TextField {
