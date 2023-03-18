@@ -43,7 +43,7 @@ impl ViewSetup for Button {
 #[macro_export]
 macro_rules! link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
-        $self.$($button).+.on_tap.sub(move |_| $self.$method());
+        $self.$($button).+.on_tap.sub(move || $self.$method());
     }
 }
 

@@ -7,7 +7,7 @@ use crate::{basic::TextFieldConstraint, LabeledTextField};
 #[view]
 pub struct FormView<T: Reflected + 'static> {
     labels:          Vec<Weak<LabeledTextField>>,
-    data:            T,
+    data:            Weak<T>,
     editind_enabled: bool,
 }
 
@@ -19,7 +19,7 @@ impl<T: Reflected> ViewSetup for FormView<T> {
 }
 
 impl<T: Reflected> FormView<T> {
-    pub fn set_data(&mut self, data: T) {
+    pub fn set_data(&mut self, data: Weak<T>) {
         self.remove_all_subviews();
         self.labels.clear();
 

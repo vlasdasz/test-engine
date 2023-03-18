@@ -4,7 +4,7 @@ use strum_macros::Display;
 
 pub type ValidResult<T> = Result<T, ValidError>;
 
-#[derive(Debug, Display, PartialEq)]
+#[derive(Debug, PartialEq, Display)]
 pub enum ValidError {
     BadStuff,
 }

@@ -7,7 +7,7 @@ use std::{
 use actix_web::ResponseError;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RestError {
     pub message: String,
 }
