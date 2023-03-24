@@ -19,6 +19,7 @@ pub trait UIDrawer {
         if view.is_hidden() {
             return;
         }
+        view.calculate_frames();
         view.update();
         for view in view.subviews_mut() {
             self.update_internal((*view).deref_mut());
@@ -29,8 +30,6 @@ pub trait UIDrawer {
         UIManager::commit_animations();
 
         for view in views {
-            view.calculate_frames();
-            view.update();
             self.update_internal(view.deref_mut());
             self.draw(view.deref_mut());
         }

@@ -16,9 +16,9 @@ use crate::{
 pub struct Placer {
     pub(crate) rules: RefCell<Vec<LayoutRule>>,
 
-    view:    Weak<dyn View>,
-    frame:   Rglica<Rect>,
-    s_frame: Rglica<Rect>,
+    view:        Weak<dyn View>,
+    pub frame:   Rglica<Rect>,
+    pub s_frame: Rglica<Rect>,
 
     has: RefCell<SizeBase<bool>>,
 }
