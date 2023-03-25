@@ -5,7 +5,7 @@ use refs::{Own, Strong, ToWeak, Weak};
 use rtools::Unwrap;
 use smart_default::SmartDefault;
 
-use crate::{layout::Placer, view::ViewSubviews, BaseView, UIAnimation, UIDrawer, View};
+use crate::{layout::Placer, view::ViewSubviews, BaseView, UIDrawer, View};
 
 static MANAGER: Mutex<Unwrap<Own<UIManager>>> = Mutex::new(Unwrap::default());
 
@@ -23,8 +23,6 @@ pub struct UIManager {
     next_view: Option<Own<dyn View>>,
 
     pub(crate) touch_stack: Vec<Weak<dyn View>>,
-
-    pub(crate) animations: Vec<UIAnimation>,
 
     pub(crate) deleted_views: Vec<Own<dyn View>>,
 
@@ -76,23 +74,6 @@ impl UIManager {
 
     pub fn update() {
         Self::get().deleted_views.clear()
-    }
-
-    pub(crate) fn add_animation(anim: UIAnimation) {
-        Self::get().animations.push(anim)
-    }
-
-    pub(crate) fn commit_animations() {
-        if Self::get().animations.is_empty() {
-            return;
-        }
-        for animation in &mut Self::get().animations {
-            animation.commit();
-            if animation.finished() {
-                animation.on_finish.trigger(())
-            }
-        }
-        Self::get().animations.retain(|a| !a.finished())
     }
 }
 

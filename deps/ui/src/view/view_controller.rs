@@ -24,7 +24,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
         UIManager::get().touch_stack.push(view.weak_view());
 
-        let anim = UIAnimation::new(view, Animation::new(self.width(), 0, 0.5), |view, x| {
+        let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
             view.set_x(x);
         });
 
@@ -42,7 +42,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
         UIManager::disable_touch();
 
-        let anim = UIAnimation::new(self, Animation::new(0, self.width(), 0.5), |view, x| {
+        let anim = UIAnimation::new(Animation::new(0, self.width(), 0.5), |view, x| {
             view.set_x(x);
         });
 
@@ -67,7 +67,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         let mut view = UIManager::root_view().add_subview(view);
         view.place.as_background();
         view.set_frame(self.frame().with_zero_origin());
-        let anim = UIAnimation::new(view, Animation::new(self.height(), 0, 0.5), |view, y| {
+        let anim = UIAnimation::new(Animation::new(self.height(), 0, 0.5), |view, y| {
             view.set_y(y);
         });
 

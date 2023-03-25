@@ -1,28 +1,21 @@
-use std::ops::{Deref, DerefMut};
+use std::ops::DerefMut;
 
-use refs::Weak;
 use rtools::Animation;
 use vents::Event;
 
-use crate::{UIManager, View};
+use crate::View;
 
 type Action = Box<dyn FnMut(&mut dyn View, f32)>;
 
 pub struct UIAnimation {
-    view:          Weak<dyn View>,
     animation:     Animation,
     action:        Action,
     pub on_finish: Event,
 }
 
 impl UIAnimation {
-    pub fn new(
-        view: impl Deref<Target = impl View + ?Sized>,
-        animation: Animation,
-        action: impl FnMut(&mut dyn View, f32) + 'static,
-    ) -> Self {
+    pub fn new(animation: Animation, action: impl FnMut(&mut dyn View, f32) + 'static) -> Self {
         Self {
-            view: view.weak_view(),
             animation,
             action: Box::new(action),
             on_finish: Default::default(),
@@ -33,33 +26,34 @@ impl UIAnimation {
         self.animation.finished()
     }
 
-    pub(crate) fn commit(&mut self) {
-        (self.action)(self.view.deref_mut(), self.animation.value());
+    pub(crate) fn commit(&mut self, view: &mut dyn View) {
+        (self.action)(view, self.animation.value());
     }
 }
 
 pub trait ViewAnimation {
-    fn make_animation(
-        &mut self,
-        _: impl Deref<Target = impl View>,
-        _: Animation,
-        _: impl FnMut(&mut dyn View, f32) + 'static,
-    ) -> &mut Self;
     fn add_animation(&mut self, anim: UIAnimation);
+    fn commit_animations(&mut self);
 }
 
 impl<T: ?Sized + View> ViewAnimation for T {
-    fn make_animation(
-        &mut self,
-        view: impl Deref<Target = impl View>,
-        animation: Animation,
-        action: impl FnMut(&mut dyn View, f32) + 'static,
-    ) -> &mut Self {
-        UIManager::add_animation(UIAnimation::new(view, animation, action));
-        self
+    fn add_animation(&mut self, anim: UIAnimation) {
+        self.animations.push(anim)
     }
 
-    fn add_animation(&mut self, anim: UIAnimation) {
-        UIManager::add_animation(anim)
+    fn commit_animations(&mut self) {
+        if self.animations.is_empty() {
+            return;
+        }
+
+        let mut this = self.weak_view();
+
+        for animation in &mut this.animations {
+            animation.commit(self.weak_view().deref_mut());
+            if animation.finished() {
+                animation.on_finish.trigger(())
+            }
+        }
+        self.animations.retain(|a| !a.finished())
     }
 }

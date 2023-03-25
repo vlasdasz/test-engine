@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, ops::DerefMut};
+use std::{cell::RefCell, collections::HashMap, ops::Deref};
 
 use gl_image::draw_image;
 use gl_wrapper::{buffers::Buffers, GLWrapper};
@@ -41,7 +41,7 @@ impl TEUIDrawer {
         &storage.get(&view.address()).unwrap().0
     }
 
-    fn draw_round_border(&self, view: &mut dyn View) {
+    fn draw_round_border(&self, view: &dyn View) {
         let mut storage = self.round_storage.borrow_mut();
         let path = self.rounded_path_for_view(view, &mut storage);
         self.draw_path(path, view.absolute_frame(), None);
@@ -79,7 +79,7 @@ impl UIDrawer for TEUIDrawer {
         }
     }
 
-    fn draw(&self, view: &mut dyn View) {
+    fn draw(&self, view: &dyn View) {
         if view.is_hidden() {
             return;
         }
@@ -129,8 +129,8 @@ impl UIDrawer for TEUIDrawer {
         //MARK - Debug frames
         self.outline(view.absolute_frame(), &Color::TURQUOISE);
 
-        for view in view.subviews_mut() {
-            self.draw(view.deref_mut())
+        for view in view.subviews() {
+            self.draw(view.deref())
         }
 
         GLWrapper::disable_stensil();

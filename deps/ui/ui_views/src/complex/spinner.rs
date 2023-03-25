@@ -87,7 +87,7 @@ impl Spinner {
                 return;
             }
 
-            let animation = UIAnimation::new(SPINNER, Animation::new(0.8, 0, 0.4), |sp, val| {
+            let animation = UIAnimation::new(Animation::new(0.8, 0, 0.4), |sp, val| {
                 let color = sp.color();
                 sp.set_color(color.with_alpha(val));
                 for dot in sp.subviews_mut() {

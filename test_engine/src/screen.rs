@@ -115,11 +115,11 @@ impl Screen {
             self.update_level();
         }
 
-        let mut view = UIManager::root_view();
+        let mut root_view = UIManager::root_view();
 
-        view.set_frame(UIManager::root_view_size());
+        root_view.set_frame(UIManager::root_view_size());
 
-        UIManager::drawer().update(&mut [view, self.ui.debug_view.weak_view()]);
+        UIManager::drawer().update(&mut [root_view, self.ui.debug_view.weak_view()]);
 
         dispatch::invoke_dispatched();
 

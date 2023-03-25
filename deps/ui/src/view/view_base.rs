@@ -11,7 +11,7 @@ use rtools::{data_manager::Handle, Unwrap};
 use smart_default::SmartDefault;
 use vents::Event;
 
-use crate::{layout::Placer, view::view_callbacks::ViewInternalSetup, PathData, Touch, View};
+use crate::{layout::Placer, view::view_callbacks::ViewInternalSetup, PathData, Touch, UIAnimation, View};
 
 #[derive(SmartDefault)]
 pub struct ViewBase {
@@ -36,6 +36,8 @@ pub struct ViewBase {
 
     pub(crate) is_selected: bool,
     pub(crate) is_deleted:  bool,
+
+    pub animations: Vec<UIAnimation>,
 
     pub label: String,
 
