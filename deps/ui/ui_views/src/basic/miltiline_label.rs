@@ -145,7 +145,7 @@ impl MultilineLabel {
 
         for (i, view) in self.subviews_mut().iter_mut().enumerate() {
             view.set_y(height * i as f32);
-            view.calculate_frames();
+            view.calculate_absolute_frame();
         }
     }
 }

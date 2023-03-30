@@ -19,8 +19,9 @@ pub trait UIDrawer {
         if view.is_hidden() {
             return;
         }
+        view.layout();
         view.commit_animations();
-        view.calculate_frames();
+        view.calculate_absolute_frame();
         view.update();
         for view in view.subviews_mut() {
             self.update_internal((*view).deref_mut());
