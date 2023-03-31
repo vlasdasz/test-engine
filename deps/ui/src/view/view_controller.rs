@@ -12,10 +12,6 @@ use refs::Weak;
 
 impl<T: ?Sized + View + 'static> ViewController for T {
     fn push(&mut self, view: Own<dyn View>) {
-        if UIManager::touch_disabled() {
-            return;
-        }
-
         UIManager::disable_touch();
 
         let mut view = self.add_subview(view);
@@ -36,10 +32,6 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     fn pop(mut self: Weak<Self>) {
-        if UIManager::touch_disabled() {
-            return;
-        }
-
         UIManager::disable_touch();
 
         let anim = UIAnimation::new(Animation::new(0, self.width(), 0.5), |view, x| {
@@ -58,10 +50,6 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     fn present(&mut self, view: Own<dyn View>) {
-        // if UIManager::touch_disabled() {
-        //     panic!("Presenting while touch is already disabled");
-        // }
-
         UIManager::disable_touch();
 
         let mut view = UIManager::root_view().add_subview(view);
