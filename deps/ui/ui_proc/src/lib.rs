@@ -54,6 +54,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use ui::refs::ToWeak;
                 (self as &dyn ui::View).weak()
             }
+            fn base(&self) -> &ui::ViewBase {
+                &self.view
+            }
             fn init_views(&mut self) {
                 use ui::ViewSubviews;
                 #inits

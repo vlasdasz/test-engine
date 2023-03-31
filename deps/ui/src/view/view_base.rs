@@ -55,6 +55,10 @@ pub struct BaseView {
 impl View for BaseView {
     fn init_views(&mut self) {}
 
+    fn base(&self) -> &ViewBase {
+        &self.view
+    }
+
     fn weak_view(&self) -> Weak<dyn View> {
         (self as &dyn View).weak()
     }

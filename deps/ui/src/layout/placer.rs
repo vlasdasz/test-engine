@@ -14,7 +14,8 @@ use crate::{
 };
 
 pub struct Placer {
-    pub(crate) rules: RefCell<Vec<LayoutRule>>,
+    pub(crate) rules:     RefCell<Vec<LayoutRule>>,
+    pub(crate) sub_rules: RefCell<Vec<LayoutRule>>,
 
     view:        Weak<dyn View>,
     pub frame:   Rglica<Rect>,
@@ -27,6 +28,7 @@ impl Placer {
     pub fn new(view: Weak<dyn View>) -> Self {
         Self {
             rules: vec![].into(),
+            sub_rules: vec![].into(),
             view,
             frame: view.frame().to_rglica(),
             s_frame: view.super_frame().to_rglica(),
@@ -40,6 +42,10 @@ impl Placer {
 
     fn rules(&self) -> RefMut<Vec<LayoutRule>> {
         self.rules.borrow_mut()
+    }
+
+    fn sub_rules(&self) -> RefMut<Vec<LayoutRule>> {
+        self.sub_rules.borrow_mut()
     }
 
     fn has(&self) -> RefMut<SizeBase<bool>> {
@@ -124,12 +130,12 @@ impl Placer {
     }
 
     pub fn all_ver(&self) -> &Self {
-        self.rules().push(Tiling::Vertically.into());
+        self.sub_rules().push(Tiling::Vertically.into());
         self
     }
 
     pub fn all_hor(&self) -> &Self {
-        self.rules().push(Tiling::Horizontally.into());
+        self.sub_rules().push(Tiling::Horizontally.into());
         self
     }
 }
@@ -208,6 +214,7 @@ impl Placer {
 impl Placer {
     pub fn layout(&mut self) {
         let this = self.to_rglica();
+
         for rule in this.rules().iter() {
             if rule.anchor_view.is_ok() {
                 if rule.relative {
@@ -220,6 +227,10 @@ impl Placer {
             } else {
                 self.simple_layout(rule)
             }
+        }
+
+        for rule in this.sub_rules().iter() {
+            self.tiling_layout(rule.tiling.as_ref().expect("BUG"));
         }
     }
 }
