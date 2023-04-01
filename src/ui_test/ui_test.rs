@@ -1,32 +1,39 @@
-use test_engine::{ui::layout::Anchor, view};
+use test_engine::view;
 use ui::{
     refs::{Own, Weak},
-    BaseView, SubView, UIManager, ViewFrame, ViewSetup,
+    SubView, ViewController, ViewSetup,
 };
-use ui_views::Button;
+use ui_views::{link_button, Button};
 
-use crate::test_game::TestGameView;
+use crate::{benchmark::UIDebugView, ui_test::CollectionTestView};
 
 #[view]
 pub struct UITestView {
-    container: SubView<BaseView>,
-    top_view:  SubView<BaseView>,
-    test:      SubView<BaseView>,
-    back:      SubView<Button>,
+    push_pop:   SubView<Button>,
+    collection: SubView<Button>,
+    debug:      SubView<Button>,
+    nothing:    SubView<Button>,
 }
 
 impl ViewSetup for UITestView {
     fn setup(mut self: Weak<Self>) {
-        self.container.set_frame((200, 200, 280, 280));
+        self.place.all_ver();
 
-        self.top_view.place.lrt(10).h(50);
+        self.push_pop.set_text("Push Pop");
+        link_button!(self, push_pop, on_push_pop);
 
-        self.test.place.lrb(10).anchor(self.top_view, Anchor::Top, 20);
+        self.collection.set_text("Collection");
+        self.collection
+            .on_tap
+            .sub(move || self.push(Own::<CollectionTestView>::default()));
 
-        self.back.set_text("Back").place.size(120, 20).b(20).center_hor();
+        self.debug.set_text("Debug");
+        self.debug.on_tap.sub(move || self.push(Own::<UIDebugView>::default()));
 
-        self.back.on_tap.sub(|| {
-            UIManager::set_view(Own::<TestGameView>::default());
-        });
+        self.nothing.set_text("Nothing");
     }
+}
+
+impl UITestView {
+    fn on_push_pop(&mut self) {}
 }

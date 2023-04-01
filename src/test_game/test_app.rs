@@ -7,7 +7,7 @@ use ui::{
     View,
 };
 
-use crate::benchmark::UIDebugView;
+use crate::ui_test::UITestView;
 
 pub struct TestApp {
     core: AppCore,
@@ -28,7 +28,7 @@ impl App for TestApp {
     }
 
     fn make_root_view() -> Own<dyn View> {
-        Own::<UIDebugView>::default()
+        Own::<UITestView>::default()
     }
 
     fn with_core(core: AppCore) -> Self

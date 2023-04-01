@@ -10,7 +10,7 @@ use ui_views::{Alert, Button, Label, LabeledTextField, MultilineLabel};
 
 use crate::{
     test_game::{TestGameLevel, TestGameView},
-    views_testing::CollectionTestView,
+    ui_test::CollectionTestView,
 };
 
 #[view]

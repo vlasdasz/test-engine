@@ -1,3 +1,5 @@
+mod collection_test_view;
 mod ui_test;
 
-pub use ui_test::UITestView;
+pub use collection_test_view::*;
+pub use ui_test::*;

@@ -4,7 +4,6 @@ include = ["**/*.toml"]
 allowed_blank_lines = 2
 column_width = 80
 
-align_entries = true
 array_auto_collapse = true
 array_auto_expand = true
 array_trailing_comma = true
