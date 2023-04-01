@@ -28,7 +28,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
             UIManager::enable_touch();
         });
 
-        self.add_animation(anim);
+        view.add_animation(anim);
     }
 
     fn pop(mut self: Weak<Self>) {
