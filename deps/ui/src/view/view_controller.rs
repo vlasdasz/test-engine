@@ -1,52 +1,21 @@
 use refs::{Own, ToWeak};
 use rtools::Animation;
 
-use crate::{UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
+use crate::{NavigationView, UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
 pub trait ViewController {
-    fn push(&mut self, view: Own<dyn View>);
-    fn pop(self: Weak<Self>);
+    fn navigation(&self) -> Weak<NavigationView>;
     fn present(&mut self, view: Own<dyn View>);
 }
 
 use refs::Weak;
 
 impl<T: ?Sized + View + 'static> ViewController for T {
-    fn push(&mut self, view: Own<dyn View>) {
-        UIManager::disable_touch();
-
-        let mut view = self.add_subview(view);
-        view.place.as_background();
-        view.set_frame(self.frame().with_zero_origin());
-
-        UIManager::get().touch_stack.push(view.weak_view());
-
-        let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
-            view.set_x(x);
-        });
-
-        anim.on_finish.sub(|| {
-            UIManager::enable_touch();
-        });
-
-        view.add_animation(anim);
-    }
-
-    fn pop(mut self: Weak<Self>) {
-        UIManager::disable_touch();
-
-        let anim = UIAnimation::new(Animation::new(0, self.width(), 0.5), |view, x| {
-            view.set_x(x);
-        });
-
-        anim.on_finish.sub(move || {
-            let vo = UIManager::get().touch_stack.pop().expect("BUG: pop without push");
-            assert_eq!(self.addr(), vo.addr());
-            self.is_hidden = true;
-            self.remove_from_superview();
-            UIManager::enable_touch();
-        });
-
-        self.add_animation(anim);
+    fn navigation(&self) -> Weak<NavigationView> {
+        assert!(
+            self.navigation_view.is_ok(),
+            "Current view is not a part of navigation stack"
+        );
+        self.navigation_view
     }
 
     fn present(&mut self, view: Own<dyn View>) {

@@ -9,11 +9,13 @@ pub use input::Touch;
 
 pub mod input;
 pub mod layout;
+mod navigation_view;
 mod path_data;
 mod ui_drawer;
 mod ui_manager;
 mod view;
 
+pub use navigation_view::*;
 pub use path_data::*;
 pub use refs;
 pub use ui_drawer::*;

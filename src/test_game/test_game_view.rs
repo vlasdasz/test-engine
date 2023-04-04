@@ -9,7 +9,7 @@ use test_engine::{
 };
 use ui::{
     refs::{Own, Strong, ToWeak, Weak},
-    BaseView, SubView, UIManager, ViewData, ViewSetup, ViewSubviews,
+    Container, SubView, UIManager, ViewData, ViewSetup, ViewSubviews,
 };
 use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
 
@@ -109,7 +109,7 @@ impl TestGameView {
             .val(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));
 
         {
-            let mut view = self.add_view::<BaseView>();
+            let mut view = self.add_view::<Container>();
 
             view.place.b(10).center_hor().size(150, 100).all_ver();
 

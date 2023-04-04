@@ -25,10 +25,12 @@ impl ViewSetup for UITestView {
         self.collection.set_text("Collection");
         self.collection
             .on_tap
-            .sub(move || self.push(Own::<CollectionTestView>::default()));
+            .sub(move || self.navigation().push(Own::<CollectionTestView>::default()));
 
         self.debug.set_text("Debug");
-        self.debug.on_tap.sub(move || self.push(Own::<UIDebugView>::default()));
+        self.debug
+            .on_tap
+            .sub(move || self.navigation().push(Own::<UIDebugView>::default()));
 
         self.nothing.set_text("Nothing");
     }

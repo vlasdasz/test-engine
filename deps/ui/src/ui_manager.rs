@@ -5,7 +5,7 @@ use refs::{Own, Strong, ToWeak, Weak};
 use rtools::Unwrap;
 use smart_default::SmartDefault;
 
-use crate::{layout::Placer, view::ViewSubviews, BaseView, UIDrawer, View};
+use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, View};
 
 static MANAGER: Mutex<Unwrap<Own<UIManager>>> = Mutex::new(Unwrap::default());
 
@@ -14,7 +14,7 @@ pub struct UIManager {
     drawer: Unwrap<Own<dyn UIDrawer>>,
 
     #[default({
-        let mut view = Strong::<BaseView>::default();
+        let mut view = Strong::<Container>::default();
         view.place = Placer::new(view.weak_view()).into();
         view
     })]

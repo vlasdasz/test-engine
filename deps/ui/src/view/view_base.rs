@@ -1,17 +1,15 @@
-use std::{
-    any::Any,
-    cell::RefCell,
-    ops::{Deref, DerefMut},
-};
+use std::cell::RefCell;
 
 use gl_image::Image;
 use gm::{flat::Rect, Color};
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 use rtools::{data_manager::Handle, Unwrap};
 use smart_default::SmartDefault;
+use ui_proc::view;
 use vents::Event;
 
-use crate::{layout::Placer, view::view_callbacks::ViewInternalSetup, PathData, Touch, UIAnimation, View};
+use crate as ui;
+use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View};
 
 #[derive(SmartDefault)]
 pub struct ViewBase {
@@ -37,6 +35,8 @@ pub struct ViewBase {
     pub(crate) is_selected: bool,
     pub(crate) is_deleted:  bool,
 
+    pub(crate) navigation_view: Weak<NavigationView>,
+
     pub animations: Vec<UIAnimation>,
 
     pub label: String,
@@ -47,41 +47,5 @@ pub struct ViewBase {
     pub on_touch_began: Event<Touch>,
 }
 
-#[derive(Default)]
-pub struct BaseView {
-    view: ViewBase,
-}
-
-impl View for BaseView {
-    fn init_views(&mut self) {}
-
-    fn base(&self) -> &ViewBase {
-        &self.view
-    }
-
-    fn weak_view(&self) -> Weak<dyn View> {
-        (self as &dyn View).weak()
-    }
-
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
-
-impl ViewInternalSetup for BaseView {
-    fn internal_setup(&mut self) {}
-}
-
-impl Deref for BaseView {
-    type Target = ViewBase;
-
-    fn deref(&self) -> &ViewBase {
-        &self.view
-    }
-}
-
-impl DerefMut for BaseView {
-    fn deref_mut(&mut self) -> &mut ViewBase {
-        &mut self.view
-    }
-}
+#[view]
+pub struct Container {}

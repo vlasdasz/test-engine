@@ -6,7 +6,7 @@ use log::warn;
 use refs::{Own, Weak};
 use rtools::{Animation, Time};
 use ui::{
-    view, BaseView, UIAnimation, UIManager, View, ViewAnimation, ViewCallbacks, ViewData, ViewFrame,
+    view, Container, UIAnimation, UIManager, View, ViewAnimation, ViewCallbacks, ViewData, ViewFrame,
     ViewSetup, ViewSubviews,
 };
 
@@ -15,7 +15,7 @@ static mut SPINNER: Weak<dyn View> = Default::default();
 
 #[view]
 pub struct Spinner {
-    circles: Vec<Weak<BaseView>>,
+    circles: Vec<Weak<Container>>,
 }
 
 impl Spinner {
@@ -35,7 +35,7 @@ impl ViewSetup for Spinner {
         self.set_corner_radius(20);
 
         for _ in 0..CIRCLES_N {
-            let mut circle = self.add_view::<BaseView>().weak();
+            let mut circle = self.add_view::<Container>().weak();
 
             circle.set_size((16, 16));
             circle.set_color(Color::LIGHT_BLUE);

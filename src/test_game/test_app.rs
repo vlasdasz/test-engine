@@ -4,7 +4,7 @@ use rtools::{init_log, LogBuilder};
 use test_engine::{app_core::AppCore, gm::flat::Size, paths::home, App};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
-    View,
+    NavigationView, View,
 };
 
 use crate::ui_test::UITestView;
@@ -28,7 +28,7 @@ impl App for TestApp {
     }
 
     fn make_root_view() -> Own<dyn View> {
-        Own::<UITestView>::default()
+        NavigationView::with_view::<UITestView>()
     }
 
     fn with_core(core: AppCore) -> Self

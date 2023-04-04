@@ -1,7 +1,7 @@
 use test_engine::gm::flat::Size;
 use ui::{
     refs::{Own, ToWeak, Weak},
-    view, BaseView, SubView, View, ViewSetup,
+    view, Container, SubView, View, ViewSetup,
 };
 use ui_views::{collection_data, BackButton, CollectionData, CollectionLayout, CollectionView};
 
@@ -67,7 +67,7 @@ impl CollectionData for CollectionTestView {
     }
 
     fn cell_for_index(&self, _index: usize) -> Own<dyn View> {
-        Own::<BaseView>::default()
+        Own::<Container>::default()
     }
 
     fn size_for_index(&self, index: usize) -> Size {
