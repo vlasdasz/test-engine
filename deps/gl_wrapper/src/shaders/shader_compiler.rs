@@ -44,7 +44,14 @@ impl ShaderCompiler {
         result + "\n"
     }
 
-    fn check_program_error(&self, program: u32) {
+    fn alloc_str(len: usize) -> CString {
+        let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
+        buffer.extend([b' '].iter().cycle().take(len));
+        unsafe { CString::from_vec_unchecked(buffer) }
+    }
+
+    #[allow(clippy::cast_sign_loss)]
+    fn check_program_error(program: u32) {
         let mut success: GLT!(GLint) = 1;
 
         GL_SILENT!(GetShaderiv, program, GLC!(COMPILE_STATUS), &mut success);
@@ -59,13 +66,7 @@ impl ShaderCompiler {
 
         GL!(GetShaderiv, program, GLC!(INFO_LOG_LENGTH), &mut len);
 
-        fn alloc_str(len: usize) -> CString {
-            let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
-            buffer.extend([b' '].iter().cycle().take(len));
-            unsafe { CString::from_vec_unchecked(buffer) }
-        }
-
-        let error = alloc_str(len as usize);
+        let error = Self::alloc_str(len as usize);
 
         GL!(
             GetShaderInfoLog,
@@ -106,7 +107,7 @@ impl ShaderCompiler {
         GL!(ShaderSource, shader, 1, &code_ptr, std::ptr::null());
         GL!(CompileShader, shader);
 
-        self.check_program_error(shader);
+        Self::check_program_error(shader);
 
         shader
     }
@@ -121,7 +122,7 @@ impl ShaderCompiler {
         GL!(AttachShader, program, frag);
         GL!(LinkProgram, program);
 
-        self.check_program_error(program);
+        Self::check_program_error(program);
 
         GL!(DetachShader, program, vert);
         GL!(DetachShader, program, frag);

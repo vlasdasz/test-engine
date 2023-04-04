@@ -21,6 +21,7 @@ pub struct Buffer {
 }
 
 impl Buffer {
+    #[allow(clippy::cast_possible_wrap)]
     pub fn make(
         config: &'static BufferConfig,
         vertex_data: ArrayView<f32>,
@@ -32,7 +33,7 @@ impl Buffer {
         let mut index_buffer_object: u32 = u32::MAX;
 
         let vertices_count: i32 = if indices.is_none() {
-            vertex_data.size as i32 / config.size() as i32
+            i32::try_from(vertex_data.size).unwrap() / i32::from(config.size())
         } else {
             -1
         };
@@ -47,7 +48,7 @@ impl Buffer {
             BufferData,
             GLC!(ARRAY_BUFFER),
             (vertex_data.size * std::mem::size_of::<GLT!(GLfloat)>()) as _,
-            vertex_data.data as *const c_void,
+            vertex_data.data.cast::<c_void>(),
             GLC!(STATIC_DRAW)
         );
 
@@ -58,7 +59,7 @@ impl Buffer {
                 BufferData,
                 GLC!(ELEMENT_ARRAY_BUFFER),
                 (indices.size * std::mem::size_of::<GLT!(GLushort)>()) as _,
-                indices.data as *const c_void,
+                indices.data.cast::<c_void>(),
                 GLC!(STATIC_DRAW)
             );
         }
@@ -68,8 +69,8 @@ impl Buffer {
 
         Buffer {
             vertex_data,
-            vertices_count,
             indices,
+            vertices_count,
             vertex_array_object,
             vertex_buffer_object,
             index_buffer_object,
@@ -79,6 +80,8 @@ impl Buffer {
 }
 
 impl Buffer {
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_possible_wrap)]
     pub fn draw_with_mode(&self, draw_mode: u32) {
         GL!(BindVertexArray, self.vertex_array_object);
 

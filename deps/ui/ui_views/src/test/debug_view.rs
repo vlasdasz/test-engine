@@ -33,13 +33,12 @@ impl DebugView {
     pub fn set_custom(&mut self, label: impl Display, value: impl Display) {
         let label_text = label.to_string();
 
-        let label = match self.custom_labels.get_mut(&label_text) {
-            Some(label) => label,
-            None => {
-                let label_view = self.add_view::<Label>();
-                self.custom_labels.insert(label_text.clone(), label_view);
-                self.custom_labels.get_mut(&label_text).unwrap()
-            }
+        let label = if let Some(label) = self.custom_labels.get_mut(&label_text) {
+            label
+        } else {
+            let label_view = self.add_view::<Label>();
+            self.custom_labels.insert(label_text.clone(), label_view);
+            self.custom_labels.get_mut(&label_text).unwrap()
         };
 
         label.set_text(format!("{label_text}: {value}"));

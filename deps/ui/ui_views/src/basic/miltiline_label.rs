@@ -153,7 +153,7 @@ impl MultilineLabel {
 impl ViewSetup for MultilineLabel {
     fn setup(mut self: Weak<Self>) {
         self.font = Font::san_francisco();
-        self.size = text::DEFAULT_FONT_SIZE as f32;
+        self.size = text::DEFAULT_FONT_SIZE;
 
         self.set_letters();
     }

@@ -13,10 +13,7 @@ use syn::{
 pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let mut stream = parse_macro_input!(stream as DeriveInput);
 
-    let data = match &mut stream.data {
-        Data::Struct(data) => data,
-        _ => panic!("`view` macro has to be used with structs"),
-    };
+    let Data::Struct(data) = &mut stream.data else { panic!("`view` macro has to be used with structs") };
 
     let name = &stream.ident;
 

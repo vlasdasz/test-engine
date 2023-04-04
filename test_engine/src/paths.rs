@@ -31,6 +31,7 @@ impl Paths {
     }
 }
 
+#[allow(clippy::used_underscore_binding)]
 impl Paths {
     fn root(_base: &Path) -> PathBuf {
         #[cfg(ios)]

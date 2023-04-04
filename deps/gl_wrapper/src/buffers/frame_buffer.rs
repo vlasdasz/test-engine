@@ -34,6 +34,8 @@ impl Drop for FrameBuffer {
 }
 
 impl<T: Into<Size>> From<T> for FrameBuffer {
+    #[allow(clippy::cast_possible_wrap)]
+    #[allow(clippy::cast_possible_truncation)]
     fn from(size: T) -> Self {
         let size = size.into();
 
@@ -86,9 +88,11 @@ impl<T: Into<Size>> From<T> for FrameBuffer {
 
         GL!(DrawBuffers, 1, &GLC!(COLOR_ATTACHMENT0));
 
-        if GL!(CheckFramebufferStatus, GLC!(FRAMEBUFFER)) != GLC!(FRAMEBUFFER_COMPLETE) {
-            panic!("Failed to initialize framebuffer")
-        }
+        assert_eq!(
+            GL!(CheckFramebufferStatus, GLC!(FRAMEBUFFER)),
+            GLC!(FRAMEBUFFER_COMPLETE),
+            "Failed to initialize framebuffer"
+        );
 
         GLWrapper::clear_with_color(Color::CLEAR);
         GLWrapper::unbind_framebuffer();

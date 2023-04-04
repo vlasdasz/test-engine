@@ -27,9 +27,10 @@ impl Label {
         if text.is_empty() {
             self.image_view.set_hidden(true);
             return self;
-        } else {
-            self.image_view.set_hidden(false);
         }
+
+        self.image_view.set_hidden(false);
+
         if self.text == text {
             return self;
         }

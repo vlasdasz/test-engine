@@ -60,7 +60,7 @@ impl CollectionView {
         let mut rectangles = Vec::new();
         let mut x = 0.0;
         let mut y = 0.0;
-        for size in sizes.iter() {
+        for size in &sizes {
             let rectangle = (x, y, size.width, size.height);
             rectangles.push(rectangle);
             x += size.width;

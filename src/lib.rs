@@ -1,5 +1,6 @@
 #![cfg(mobile)]
 #![allow(incomplete_features)]
+#![allow(improper_ctypes_definitions)]
 #![feature(specialization)]
 #![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]
@@ -14,7 +15,6 @@ use crate::test_game::TestApp;
 mod benchmark;
 mod test_game;
 mod ui_test;
-mod views_testing;
 
 #[no_mangle]
 extern "C" fn make_app(

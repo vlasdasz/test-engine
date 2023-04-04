@@ -26,7 +26,7 @@ impl Sound {
 
 impl LoadFromPath for Sound {
     fn load(path: &Path) -> Self {
-        let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+        let (stream, stream_handle) = OutputStream::try_default().unwrap();
 
         let mut file = File::open(path).unwrap_or_else(|_| panic!("{}", path.to_string_lossy().to_string()));
 
@@ -35,7 +35,7 @@ impl LoadFromPath for Sound {
 
         Self {
             _path: path.to_path_buf(),
-            _stream,
+            _stream: stream,
             stream_handle,
             data,
         }

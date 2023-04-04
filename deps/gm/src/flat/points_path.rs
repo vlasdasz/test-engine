@@ -12,9 +12,9 @@ pub struct PointsPath {
 impl PointsPath {
     pub fn circle_with(center: Point, radius: f32, precision: u16) -> Self {
         let mut path = PointsPath::default();
-        let angle_step = PI * 2.0 / precision as f32;
+        let angle_step = PI * 2.0 / f32::from(precision);
         for i in 0..precision {
-            path.add_point(point_on_circle(radius, angle_step * i as f32, center));
+            path.add_point(point_on_circle(radius, angle_step * f32::from(i), center));
         }
         path
     }
@@ -29,22 +29,22 @@ impl PointsPath {
         let c = (rect.max_x() - radius, rect.max_y() - radius);
         let d = (rect.x() + radius, rect.max_y() - radius);
 
-        let angle_step = PI * 0.5 / precision as f32;
+        let angle_step = PI * 0.5 / f32::from(precision);
 
         for i in 0..precision {
-            path.add_point(point_on_circle(radius, -3.0 + angle_step * i as f32, a));
+            path.add_point(point_on_circle(radius, -3.0 + angle_step * f32::from(i), a));
         }
 
         for i in 0..precision {
-            path.add_point(point_on_circle(radius, -1.5 + angle_step * i as f32, b));
+            path.add_point(point_on_circle(radius, -1.5 + angle_step * f32::from(i), b));
         }
 
         for i in 0..precision {
-            path.add_point(point_on_circle(radius, angle_step * i as f32, c));
+            path.add_point(point_on_circle(radius, angle_step * f32::from(i), c));
         }
 
         for i in 0..precision {
-            path.add_point(point_on_circle(radius, 1.5 + angle_step * i as f32, d));
+            path.add_point(point_on_circle(radius, 1.5 + angle_step * f32::from(i), d));
         }
 
         path

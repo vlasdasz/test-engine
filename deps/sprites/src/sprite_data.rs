@@ -51,8 +51,8 @@ impl Sprite for SpriteData {
     fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
     where Self: Sized {
         Strong::new(Self {
-            shape,
             position,
+            shape,
             level,
             ..Default::default()
         })

@@ -38,7 +38,7 @@ impl Default for GLLoader {
 
         unsafe { glfwSetWindowSizeCallback(window.window_ptr(), Some(size_callback)) };
 
-        GL!(load_with, |symbol| window.get_proc_address(symbol) as *const _);
+        GL!(load_with, |symbol| window.get_proc_address(symbol).cast());
 
         window.make_current();
 
@@ -51,7 +51,7 @@ impl Default for GLLoader {
 impl GLLoader {
     pub fn monitors(&mut self) -> Vec<Monitor> {
         self.glfw
-            .with_connected_monitors(|_, monitors| monitors.iter().map(|a| a.into()).collect())
+            .with_connected_monitors(|_, monitors| monitors.iter().map(Into::into).collect())
     }
 }
 

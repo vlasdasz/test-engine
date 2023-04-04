@@ -72,10 +72,7 @@ impl LevelBase {
 
     fn handle_collisions(&self) {
         while let Ok(contact) = self.events.intersection.try_recv() {
-            let (a, b) = match contact {
-                CollisionEvent::Started(a, b, _) => (a, b),
-                _ => continue,
-            };
+            let CollisionEvent::Started(a, b, _) = contact else { continue };
 
             for sprite in &self.colliding_sprites {
                 let handle = sprite.data().collider_handle.unwrap();
@@ -102,7 +99,7 @@ impl LevelBase {
                 Some(handle) => handle.index() == index,
                 None => false,
             })
-            .map(|a| a.weak())
+            .map(ToWeak::weak)
     }
 
     pub(crate) fn remove(&mut self, sprite: usize) {

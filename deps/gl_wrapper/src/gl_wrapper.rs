@@ -45,6 +45,7 @@ impl GLWrapper {
         Self::set_clear_color(clear_color);
     }
 
+    #[allow(clippy::cast_possible_truncation)]
     pub fn set_viewport(rect: impl Into<Rect>) {
         let rect = rect.into();
         GL!(
@@ -56,6 +57,7 @@ impl GLWrapper {
         );
     }
 
+    #[allow(clippy::cast_possible_truncation)]
     pub fn scissor(rect: impl Into<Rect>, mut draw: impl FnMut()) {
         let rect = rect.into();
         GL!(Enable, GLC!(SCISSOR_TEST));
@@ -102,10 +104,11 @@ impl GLWrapper {
             &mut STATIC_DATA.default_framebuffer_id
         );
         trace!("default_framebuffer_id: {}", unsafe {
-            STATIC_DATA.default_framebuffer_id as u32
+            STATIC_DATA.default_framebuffer_id
         });
     }
 
+    #[allow(clippy::cast_sign_loss)]
     fn default_framebuffer_id() -> u32 {
         if Platform::IOS {
             unsafe { STATIC_DATA.default_framebuffer_id as u32 }

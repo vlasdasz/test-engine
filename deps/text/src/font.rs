@@ -1,5 +1,4 @@
 use std::{
-    ffi::c_void,
     ops::Range,
     path::{Path, PathBuf},
     sync::Mutex,
@@ -18,7 +17,7 @@ use crate::glyph::Glyph;
 
 static RENDER: Mutex<bool> = Mutex::new(true);
 
-pub static DEFAULT_FONT_SIZE: u32 = 64;
+pub static DEFAULT_FONT_SIZE: f32 = 64.0;
 
 fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     let (metrics, bitmap) = font.rasterize(symbol, size);
@@ -28,7 +27,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
         height: metrics.height as f32,
     };
 
-    let image = Image::from(bitmap.as_ptr() as *const c_void, size, 1, hash(symbol));
+    let image = Image::from(bitmap.as_ptr().cast(), size, 1, hash(symbol));
 
     Glyph::new(
         symbol,
@@ -42,7 +41,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 pub struct Font {
     pub path:           PathBuf,
     pub font:           fontdue::Font,
-    pub size:           u32,
+    pub size:           f32,
     pub height:         f32,
     pub baseline_shift: f32,
 
@@ -50,7 +49,7 @@ pub struct Font {
 }
 
 impl Font {
-    fn from_data(path: &Path, data: &[u8], size: u32) -> Result<Font, &'static str> {
+    fn from_data(path: &Path, data: &[u8], size: f32) -> Result<Font, &'static str> {
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
         let mut glyphs = Vec::with_capacity(128);
@@ -63,7 +62,7 @@ impl Font {
                 start: 0 as char,
                 end:   127 as char,
             }) {
-                let glyph = render_glyph(&font, symbol, size as f32);
+                let glyph = render_glyph(&font, symbol, size);
                 if y_max < glyph.y_max() {
                     y_max = glyph.y_max()
                 }
@@ -91,7 +90,7 @@ impl Font {
         })
     }
 
-    fn new(path: &Path, size: u32) -> Result<Font, &'static str> {
+    fn new(path: &Path, size: f32) -> Result<Font, &'static str> {
         trace!("Loading font {:?}", path);
         Self::from_data(path, &File::read(path), size)
     }

@@ -1,7 +1,7 @@
 use test_engine::view;
 use ui::{
     refs::{Own, Weak},
-    SubView, ViewController, ViewSetup,
+    SubView, ViewController, ViewFrame, ViewSetup,
 };
 use ui_views::{link_button, Button};
 
@@ -35,5 +35,7 @@ impl ViewSetup for UITestView {
 }
 
 impl UITestView {
-    fn on_push_pop(&mut self) {}
+    fn on_push_pop(&mut self) {
+        dbg!(self.frame());
+    }
 }

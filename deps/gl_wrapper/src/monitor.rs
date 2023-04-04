@@ -38,6 +38,8 @@ impl Monitor {
 
 #[cfg(desktop)]
 impl From<&glfw::Monitor> for Monitor {
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     fn from(monitor: &glfw::Monitor) -> Self {
         let name = monitor.get_name().unwrap();
 

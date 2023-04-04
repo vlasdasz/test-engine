@@ -39,9 +39,7 @@ impl Assets {
     pub fn get() -> &'static Assets {
         assert!(is_main_thread());
         unsafe {
-            if ASSETS.is_null() {
-                panic!("Assets were not initialized");
-            }
+            assert!(!ASSETS.is_null(), "Assets were not initialized");
             ASSETS.as_ref().unwrap()
         }
     }

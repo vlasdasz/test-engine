@@ -32,7 +32,7 @@ impl KeyEvent {
     pub fn char(&self) -> Option<char> {
         match self.button {
             KeyboardButton::Letter(char) => char.into(),
-            _ => None,
+            KeyboardButton::Control(_) => None,
         }
     }
 }

@@ -21,6 +21,8 @@ pub struct Maker {
 }
 
 impl Maker {
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_possible_wrap)]
     pub fn new(width: usize, height: usize) -> Self {
         Self {
             size:        Size {
@@ -75,11 +77,11 @@ impl Maker {
 impl Maker {
     fn add_missing_side(&mut self) {
         for i in 0..self.size.height {
-            self.grid[0][i as usize].left = true;
+            self.grid[0][usize::try_from(i).unwrap()].left = true;
         }
 
         for i in 0..self.size.width {
-            self.grid[i as usize][0].bottom = true;
+            self.grid[usize::try_from(i).unwrap()][0].bottom = true;
         }
     }
 
@@ -88,11 +90,11 @@ impl Maker {
     }
 
     fn at(&self, pos: Point) -> &Cell {
-        &self.grid[pos.x as usize][pos.y as usize]
+        &self.grid[usize::try_from(pos.x).unwrap()][usize::try_from(pos.y).unwrap()]
     }
 
     fn at_mut(&mut self, pos: Point) -> &mut Cell {
-        &mut self.grid[pos.x as usize][pos.y as usize]
+        &mut self.grid[usize::try_from(pos.x).unwrap()][usize::try_from(pos.y).unwrap()]
     }
 
     fn has_unvisited(&self) -> bool {
@@ -107,14 +109,14 @@ impl Maker {
     }
 
     fn unvisited_neighbours(&self) -> Vec<Point> {
-        let mut result = vec![];
-
         const NEIGHBOURS: &[Point; 4] = &[
             Point { x: 0, y: -1 },
             Point { x: 1, y: 0 },
             Point { x: 0, y: 1 },
             Point { x: -1, y: 0 },
         ];
+
+        let mut result = vec![];
 
         for neighbor in NEIGHBOURS {
             let pos = &self.current_pos + neighbor;

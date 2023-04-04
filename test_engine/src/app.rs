@@ -3,10 +3,9 @@ use core::ffi::{c_float, c_int};
 use std::path::PathBuf;
 
 use gm::flat::Size;
-use ui::{
-    refs::{set_current_thread_as_main, thread_id, Own},
-    View,
-};
+#[cfg(desktop)]
+use ui::refs::{set_current_thread_as_main, thread_id};
+use ui::{refs::Own, View};
 
 use crate::AppCore;
 

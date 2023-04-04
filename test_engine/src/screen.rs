@@ -55,7 +55,7 @@ impl Screen {
         });
     }
 
-    fn init(&mut self, #[cfg(desktop)] window_size: &Size, view: Own<dyn View>) {
+    fn init(&mut self, #[cfg(desktop)] window_size: Size, view: Own<dyn View>) {
         UIManager::set_display_scale(self.monitor.scale);
 
         self.ui.debug_view.place = Placer::new(self.ui.debug_view.weak_view()).into();
@@ -70,7 +70,7 @@ impl Screen {
         #[cfg(desktop)]
         {
             self.glfw.set_size(window_size);
-            self.set_size(*window_size);
+            self.set_size(window_size);
         }
     }
 }
@@ -78,20 +78,20 @@ impl Screen {
 impl Screen {
     pub fn current() -> &'static mut Screen {
         unsafe {
-            if SCREEN.is_null() {
-                panic!("Assets were not initialized");
-            }
+            assert!(!SCREEN.is_null(), "Assets were not initialized");
             SCREEN.as_mut().unwrap()
         }
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     fn calculate_fps(&mut self) {
         let now = Time::now();
 
         let interval = now - self.ui.prev_time;
         self.ui.prev_time = now;
 
-        self.ui.frame_time = interval as f64 / 1000000000.0;
+        self.ui.frame_time = interval as f64 / 1_000_000_000.0;
         self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
         let fps = self.ui.fps;
@@ -221,7 +221,7 @@ impl Screen {
 
         screen.init(
             #[cfg(desktop)]
-            &window_size.into(),
+            window_size.into(),
             root_view,
         );
 

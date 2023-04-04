@@ -33,8 +33,8 @@ impl GLFWManager {
                         }
                         events.key_pressed.trigger((key, action))
                     }
-                    glfw::WindowEvent::CursorPos(xpos, ypos) => {
-                        events.cursor_moved.trigger((xpos, ypos).into())
+                    glfw::WindowEvent::CursorPos(x_pos, y_pos) => {
+                        events.cursor_moved.trigger((x_pos, y_pos).into())
                     }
                     glfw::WindowEvent::MouseButton(btn, action, _) => {
                         events.mouse_click.trigger((btn, action))
@@ -47,7 +47,8 @@ impl GLFWManager {
         }
     }
 
-    pub fn set_size(&mut self, size: &Size) {
+    pub fn set_size(&mut self, size: Size) {
+        #[allow(clippy::cast_possible_truncation)]
         self.window.set_size(size.width as i32, size.height as i32)
     }
 }

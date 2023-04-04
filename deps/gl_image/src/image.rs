@@ -53,6 +53,8 @@ impl Image {
         self.buffer.texture_handle == u32::MAX
     }
 
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
     fn load_to_gl(data: *const c_void, size: Size, channels: u32) -> Image {
         let buffer = ImageLoader::load(data, size, channels);
         Image {
@@ -128,9 +130,9 @@ impl LoadFromPath for Image {
         let channels = image.color().channel_count();
 
         Image::load_to_gl(
-            data.as_ptr() as *const c_void,
+            data.as_ptr().cast(),
             (dimensions.0, dimensions.1).into(),
-            channels as u32,
+            u32::from(channels),
         )
     }
 }

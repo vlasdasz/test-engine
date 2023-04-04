@@ -10,12 +10,8 @@ use gm::flat::Point;
 use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
-use ui::input::TouchEvent;
-use ui::{
-    input::{ControlButton, KeyEvent, KeyboardButton, UIEvents},
-    refs::{Strong, ToWeak},
-    Touch, UIManager, ViewTouch,
-};
+use ui::input::{ControlButton, KeyEvent, KeyboardButton, TouchEvent, UIEvents};
+use ui::{refs::Strong, Touch, UIManager, ViewTouch};
 use ui_views::debug_view::DebugView;
 
 use crate::Keymap;
@@ -34,6 +30,7 @@ pub struct UILayer {
 
     pub debug_view: Strong<DebugView>,
 
+    #[cfg(desktop)]
     shift_pressed: bool,
 }
 
@@ -97,6 +94,8 @@ impl UILayer {
     }
 
     pub fn setup_events(&mut self) {
+        use ui::refs::ToWeak;
+
         let ev = GlEvents::get();
 
         let mut this = self.weak();

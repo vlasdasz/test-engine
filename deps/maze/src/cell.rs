@@ -5,6 +5,7 @@ pub enum CellSide {
     Right,
 }
 
+#[allow(clippy::struct_excessive_bools)]
 #[derive(Copy, Clone, Debug)]
 pub struct Cell {
     pub top:     bool,

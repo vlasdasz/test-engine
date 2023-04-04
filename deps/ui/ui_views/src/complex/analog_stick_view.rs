@@ -21,11 +21,11 @@ pub struct AnalogStickView {
 }
 
 impl AnalogStickView {
-    fn on_touch_moved(&mut self, touch: &Point) {
+    fn on_touch_moved(&mut self, touch: Point) {
         let max_length = self.frame().size.height / 2.0;
         let center = self.frame().size.center();
 
-        let vector = (touch - &center).trimmed(max_length);
+        let vector = (touch - center).trimmed(max_length);
 
         let frame = *self.frame();
 
@@ -43,7 +43,7 @@ impl AnalogStickView {
             self.direction_stick.set_center(frame.size.center());
             self.on_change.trigger(Point::default());
         } else {
-            self.on_touch_moved(&touch.position);
+            self.on_touch_moved(touch.position);
         }
     }
 }

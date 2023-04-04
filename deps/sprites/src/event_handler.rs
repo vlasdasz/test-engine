@@ -11,6 +11,7 @@ pub(crate) struct EventHandler {
 }
 
 impl Default for EventHandler {
+    #[allow(clippy::used_underscore_binding)]
     fn default() -> Self {
         let (contact_send, _contact) = crossbeam::channel::unbounded();
         let (intersection_send, intersection) = crossbeam::channel::unbounded();

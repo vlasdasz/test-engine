@@ -23,7 +23,7 @@ impl GLInfo {
     fn get_string(id: u32) -> String {
         use std::ffi::CStr;
         let full_gl_version = GL!(GetString, id);
-        let c_str: &CStr = unsafe { CStr::from_ptr(full_gl_version as _) };
+        let c_str: &CStr = unsafe { CStr::from_ptr(full_gl_version.cast()) };
         c_str.to_str().unwrap().to_string()
     }
 }

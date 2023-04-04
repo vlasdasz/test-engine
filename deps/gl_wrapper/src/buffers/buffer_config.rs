@@ -47,7 +47,9 @@ impl BufferConfig {
         self.vertex_size
     }
 
+    #[allow(clippy::cast_lossless)]
     pub fn set_pointers(&self) {
+        #[allow(clippy::cast_possible_truncation)]
         const GLFLOAT_SIZE: u8 = std::mem::size_of::<GLT!(GLfloat)>() as u8;
         for i in 0..self.size {
             GL!(EnableVertexAttribArray, i.into());

@@ -25,7 +25,7 @@ impl TEUIDrawer {
 }
 
 impl TEUIDrawer {
-    fn rounded_path_for_view<'a>(&'a self, view: &dyn View, storage: &'a mut RoundStorage) -> &'a PathData {
+    fn rounded_path_for_view<'a>(view: &dyn View, storage: &'a mut RoundStorage) -> &'a PathData {
         if storage.get(&view.address()).is_some() {
             let (path, prev_size) = storage.get_mut(&view.address()).unwrap();
             if *prev_size == view.frame().size {
@@ -43,7 +43,7 @@ impl TEUIDrawer {
 
     fn draw_round_border(&self, view: &dyn View) {
         let mut storage = self.round_storage.borrow_mut();
-        let path = self.rounded_path_for_view(view, &mut storage);
+        let path = Self::rounded_path_for_view(view, &mut storage);
         self.draw_path(path, view.absolute_frame(), None);
     }
 }
@@ -101,7 +101,7 @@ impl UIDrawer for TEUIDrawer {
             GLWrapper::start_stensil();
 
             let mut storage = self.round_storage.borrow_mut();
-            let path = self.rounded_path_for_view(view, &mut storage);
+            let path = Self::rounded_path_for_view(view, &mut storage);
             self.draw_path(path, view.absolute_frame(), DrawMode::Fill.into());
 
             GLWrapper::draw_stensiled();

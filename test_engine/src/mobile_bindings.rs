@@ -1,4 +1,5 @@
 #![cfg(mobile)]
+#![allow(improper_ctypes)]
 
 use std::ffi::{c_float, c_int, c_ulong};
 
