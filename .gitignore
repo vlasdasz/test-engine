@@ -111,6 +111,7 @@ NDK/
 ndk/
 temp/
 extern/
+generated/
 
 **/jniLibs/
 
