@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use rtools::{init_log, LogBuilder};
-use test_engine::{app_core::AppCore, gm::flat::Size, paths::home, App};
+use test_engine::{app::AppCore, gm::flat::Size, paths::home, App};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
     NavigationView, View,

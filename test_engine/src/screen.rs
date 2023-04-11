@@ -18,7 +18,7 @@ use ui::{
 };
 
 use crate::{
-    app_core::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
+    app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
     ui_layer::UILayer,
 };
 

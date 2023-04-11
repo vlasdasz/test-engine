@@ -1,7 +1,7 @@
 use ui::refs::Own;
 
 #[cfg(mobile)]
-use crate::app_core::mobile::MobileStuff;
+use crate::app::mobile::MobileStuff;
 use crate::Screen;
 
 #[repr(C)]
@@ -25,7 +25,7 @@ mod desktop {
     use gm::flat::Size;
     use ui::{refs::Own, View};
 
-    use crate::{app_core::AppCore, Screen};
+    use crate::{AppCore, Screen};
 
     impl AppCore {
         pub fn new(size: impl Into<Size>, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
@@ -62,7 +62,7 @@ pub mod mobile {
     };
 
     use crate::{
-        app_core::{AppCore, TestEngineAction},
+        app::{AppCore, TestEngineAction},
         Screen,
     };
 
