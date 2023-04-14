@@ -1,10 +1,7 @@
 use std::cell::RefCell;
 
 use gl_image::Image;
-use gm::{
-    flat::{Rect, Size},
-    Color,
-};
+use gm::{flat::Rect, Color};
 use refs::{Own, Weak};
 use rtools::{data_manager::Handle, Unwrap};
 use smart_default::SmartDefault;
@@ -12,7 +9,7 @@ use ui_proc::view;
 use vents::Event;
 
 use crate as ui;
-use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View, ViewCallbacks};
+use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View};
 
 #[derive(SmartDefault)]
 pub struct ViewBase {
@@ -52,10 +49,3 @@ pub struct ViewBase {
 
 #[view]
 pub struct Container {}
-
-impl ViewCallbacks for Container {
-    fn expected_size() -> Size
-    where Self: Sized {
-        (100, 100).into()
-    }
-}

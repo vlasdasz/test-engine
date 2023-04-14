@@ -15,7 +15,7 @@ impl<T: ?Sized + View> ViewCallbacks for T {
     default fn on_selection_changed(&mut self, _: bool) {}
     default fn expected_size() -> Size
     where Self: Sized {
-        Default::default()
+        (200, 200).into()
     }
 }
 

@@ -45,21 +45,17 @@ impl<T: View + Default + 'static> App for ViewApp<T> {
     }
 }
 
-#[cfg(test)]
-mod tes {
-    use ui::{
-        refs::{is_main_thread, thread_id},
-        Container,
+#[macro_export]
+macro_rules! test_view {
+    ($view_type:ty) => {
+        #[test]
+        fn test() {
+            ViewApp::<$view_type>::start();
+        }
     };
+}
 
-    use crate::ViewApp;
-
-    #[test]
-    fn test() {
-        dbg!(thread_id());
-
-        dbg!(is_main_thread());
-
-        ViewApp::<Container>::start();
-    }
+#[test]
+fn test() {
+    ViewApp::<ui::Container>::start()
 }
