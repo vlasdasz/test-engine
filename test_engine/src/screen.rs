@@ -14,7 +14,7 @@ use text::Font;
 use ui::{
     layout::Placer,
     refs::{Own, ToWeak, Weak},
-    UIManager, View, ViewFrame, ViewInternalSetup,
+    UIManager, UIShaders, View, ViewFrame, ViewInternalSetup,
 };
 
 use crate::{
@@ -218,6 +218,7 @@ impl Screen {
 
         Buffers::init(Buffers::default());
         ImageShaders::init(ImageShaders::default());
+        UIShaders::init(UIShaders::default());
 
         screen.init(
             #[cfg(desktop)]

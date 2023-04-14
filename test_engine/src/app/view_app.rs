@@ -47,13 +47,15 @@ impl<T: View + Default + 'static> App for ViewApp<T> {
 
 #[cfg(test)]
 mod tes {
-    use ui::Container;
-    use ui::refs::{is_main_thread, thread_id};
+    use ui::{
+        refs::{is_main_thread, thread_id},
+        Container,
+    };
+
     use crate::ViewApp;
 
     #[test]
     fn test() {
-
         dbg!(thread_id());
 
         dbg!(is_main_thread());

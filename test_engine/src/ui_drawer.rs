@@ -6,10 +6,11 @@ use gm::{
     flat::{PointsPath, Rect, Size},
     Color,
 };
-use ui::{refs::Address, DrawMode, PathData, UIDrawer, UIManager, View, ViewData, ViewFrame, ViewSubviews};
+use ui::{
+    refs::Address, DrawMode, PathData, UIDrawer, UIManager, UIShaders, View, ViewData, ViewFrame,
+    ViewSubviews,
+};
 use ui_views::initialize_path_data;
-
-use crate::assets::Assets;
 
 type RoundStorage = HashMap<usize, (PathData, Size)>;
 
@@ -51,13 +52,13 @@ impl TEUIDrawer {
 impl UIDrawer for TEUIDrawer {
     fn fill(&self, rect: &Rect, color: &Color) {
         self.set_viewport(rect);
-        Assets::get().shaders.ui.enable().set_color(color);
+        UIShaders::view().enable().set_color(color);
         Buffers::get().full.draw();
     }
 
     fn outline(&self, rect: &Rect, color: &Color) {
         self.set_viewport(rect);
-        Assets::get().shaders.ui.enable().set_color(color);
+        UIShaders::view().enable().set_color(color);
         Buffers::get().full_outline.draw();
     }
 
@@ -66,12 +67,7 @@ impl UIDrawer for TEUIDrawer {
             return;
         }
         self.set_viewport(rect);
-        Assets::get()
-            .shaders
-            .ui_path
-            .enable()
-            .set_color(&path.color)
-            .set_size(rect.size);
+        UIShaders::path().enable().set_color(&path.color).set_size(rect.size);
         if let Some(mode) = custom_mode {
             path.buffer.draw_with_mode(mode.to_gl())
         } else {
