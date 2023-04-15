@@ -17,9 +17,6 @@ pub trait App {
     fn screen_size() -> Size
     where Self: Sized;
 
-    fn assets_path() -> PathBuf
-    where Self: Sized;
-
     fn make_root_view() -> Own<dyn View>
     where Self: Sized;
 
@@ -27,6 +24,11 @@ pub trait App {
     where Self: Sized;
 
     fn core(&mut self) -> &mut AppCore;
+
+    fn assets_path() -> PathBuf
+    where Self: Sized {
+        PathBuf::new()
+    }
 
     #[cfg(desktop)]
     fn make_core() -> AppCore

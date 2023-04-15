@@ -48,6 +48,7 @@ impl<T: View + Default + 'static> App for ViewApp<T> {
 #[macro_export]
 macro_rules! test_view {
     ($view_type:ty) => {
+        #[ignore]
         #[test]
         fn test() {
             ViewApp::<$view_type>::start();

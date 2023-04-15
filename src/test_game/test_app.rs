@@ -31,11 +31,6 @@ impl App for TestApp {
         NavigationView::with_view::<UITestView>()
     }
 
-    fn with_core(core: AppCore) -> Self
-    where Self: Sized {
-        Self { core }
-    }
-
     fn core(&mut self) -> &mut AppCore {
         &mut self.core
     }
