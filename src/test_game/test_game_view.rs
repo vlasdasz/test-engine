@@ -5,7 +5,7 @@ use test_engine::{
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
-    view, Image, LevelBase, Screen,
+    view, LevelBase, Screen,
 };
 use ui::{
     refs::{Own, Strong, ToWeak, Weak},
@@ -75,12 +75,6 @@ impl TestGameView {
         }
 
         self.dpad.place.size(140, 100).b(10).l(100);
-        self.dpad.set_images(
-            Image::get("up.png"),
-            Image::get("down.png"),
-            Image::get("left.png"),
-            Image::get("right.png"),
-        );
 
         self.left_stick.place.bl(10).size(80, 80);
         self.left_stick.on_change.val(|mut dir| {

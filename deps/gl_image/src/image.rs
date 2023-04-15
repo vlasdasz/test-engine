@@ -13,7 +13,7 @@ use image::GenericImageView;
 use log::error;
 use refs::TotalSize;
 use rtools::{
-    data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
+    data_manager::{DataManager, DataStorage, Handle, Managed, ResourceLoader},
     file::File,
     hash, managed,
 };
@@ -118,11 +118,15 @@ impl Image {
 
 managed!(Image);
 
-impl LoadFromPath for Image {
-    fn load(path: &Path) -> Image {
-        let image = image::load_from_memory(&File::read(path)).unwrap_or_else(|_| {
-            error!("Failed to open image {:?}", path);
-            panic!();
+impl ResourceLoader for Image {
+    fn load_path(path: &Path) -> Self {
+        Self::load_data(&File::read(path), path.display())
+    }
+
+    fn load_data(data: &[u8], name: impl ToString) -> Self {
+        let image = image::load_from_memory(data).unwrap_or_else(|_| {
+            error!("Failed to load image: {}", name.to_string());
+            panic!("Failed to load image: {}", name.to_string());
         });
 
         let dimensions = image.dimensions();

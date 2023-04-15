@@ -1,10 +1,9 @@
-use gl_image::Image;
-use gm::flat::Direction;
+use gm::flat::{Direction, Size};
 use refs::Weak;
-use rtools::{data_manager::Handle, Apply};
+use rtools::Apply;
 use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
-use crate::Button;
+use crate::{Button, Images};
 
 #[view]
 pub struct DPadView {
@@ -15,31 +14,16 @@ pub struct DPadView {
     pub on_press: Event<Direction>,
 }
 
-impl DPadView {
-    pub fn set_images(
-        &mut self,
-        up: Handle<Image>,
-        down: Handle<Image>,
-        left: Handle<Image>,
-        right: Handle<Image>,
-    ) -> &mut Self {
-        self.up.set_image(up);
-        self.down.set_image(down);
-        self.left.set_image(left);
-        self.right.set_image(right);
-        self
-    }
-}
-
 impl ViewSetup for DPadView {
     fn setup(self: Weak<Self>) {
         [
-            (self.up, Direction::Up),
-            (self.down, Direction::Down),
-            (self.left, Direction::Left),
-            (self.right, Direction::Right),
+            (self.up, Direction::Up, Images::up()),
+            (self.down, Direction::Down, Images::down()),
+            (self.left, Direction::Left, Images::left()),
+            (self.right, Direction::Right, Images::right()),
         ]
-        .apply(|(mut view, direction)| {
+        .apply(|(mut view, direction, image)| {
+            view.set_image(image);
             view.on_tap.sub(move || self.on_press.trigger(direction));
             view.set_corner_radius(5);
         });
@@ -55,5 +39,10 @@ impl ViewCallbacks for DPadView {
         self.left.set_frame((0, height, width, height));
         self.down.set_frame((width, height, width, height));
         self.right.set_frame((width * 2.0, height, width, height));
+    }
+
+    fn expected_size() -> Size
+    where Self: Sized {
+        (140, 100).into()
     }
 }

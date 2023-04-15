@@ -7,7 +7,7 @@ use std::{
 };
 
 use rodio::{Decoder, OutputStream, OutputStreamHandle, Source};
-use rtools::data_manager::LoadFromPath;
+use rtools::data_manager::ResourceLoader;
 
 pub struct Sound {
     _path:         PathBuf,
@@ -24,20 +24,24 @@ impl Sound {
     }
 }
 
-impl LoadFromPath for Sound {
-    fn load(path: &Path) -> Self {
-        let (stream, stream_handle) = OutputStream::try_default().unwrap();
-
+impl ResourceLoader for Sound {
+    fn load_path(path: &Path) -> Self {
         let mut file = File::open(path).unwrap_or_else(|_| panic!("{}", path.to_string_lossy().to_string()));
 
         let mut data = Vec::new();
         file.read_to_end(&mut data).unwrap();
 
+        Self::load_data(&data, path.display())
+    }
+
+    fn load_data(data: &[u8], name: impl ToString) -> Self {
+        let (stream, stream_handle) = OutputStream::try_default().unwrap();
+
         Self {
-            _path: path.to_path_buf(),
+            _path: name.to_string().into(),
             _stream: stream,
             stream_handle,
-            data,
+            data: data.into(),
         }
     }
 }

@@ -1,14 +1,10 @@
-use std::{
-    ops::Range,
-    path::{Path, PathBuf},
-    sync::Mutex,
-};
+use std::{ops::Range, path::Path, sync::Mutex};
 
 use gl_image::Image;
 use gm::flat::Size;
 use log::trace;
 use rtools::{
-    data_manager::{DataManager, DataStorage, Handle, LoadFromPath, Managed},
+    data_manager::{DataManager, DataStorage, Handle, Managed, ResourceLoader},
     file::File,
     hash, managed,
 };
@@ -39,7 +35,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 
 #[derive(Clone, Debug)]
 pub struct Font {
-    pub path:           PathBuf,
+    pub name:           String,
     pub font:           fontdue::Font,
     pub size:           f32,
     pub height:         f32,
@@ -49,7 +45,7 @@ pub struct Font {
 }
 
 impl Font {
-    fn from_data(path: &Path, data: &[u8], size: f32) -> Result<Font, &'static str> {
+    fn from_data(name: impl ToString, data: &[u8], size: f32) -> Result<Font, &'static str> {
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
         let mut glyphs = Vec::with_capacity(128);
@@ -81,7 +77,7 @@ impl Font {
         trace!("Font: OK");
 
         Ok(Font {
-            path: path.into(),
+            name: name.to_string(),
             font,
             size,
             height,
@@ -90,9 +86,13 @@ impl Font {
         })
     }
 
-    fn new(path: &Path, size: f32) -> Result<Font, &'static str> {
-        trace!("Loading font {:?}", path);
-        Self::from_data(path, &File::read(path), size)
+    fn load_path(path: &Path, size: f32) -> Result<Font, &'static str> {
+        Self::load_data(&File::read(path), size, path.display())
+    }
+
+    fn load_data(data: &[u8], size: f32, name: impl ToString) -> Result<Font, &'static str> {
+        trace!("Loading font {:?}", name.to_string());
+        Self::from_data(name, data, size)
     }
 }
 
@@ -104,12 +104,8 @@ impl Font {
             return sf;
         }
 
-        let sf = Font::from_data(
-            &PathBuf::from(SF),
-            include_bytes!("fonts/SF.otf"),
-            DEFAULT_FONT_SIZE,
-        )
-        .expect("BUG: Failed to render default font");
+        let sf = Font::from_data(SF, include_bytes!("fonts/SF.otf"), DEFAULT_FONT_SIZE)
+            .expect("BUG: Failed to render default font");
 
         Font::add_with_name(SF, sf)
     }
@@ -137,9 +133,13 @@ impl Font {
     }
 }
 
-impl LoadFromPath for Font {
-    fn load(path: &Path) -> Self {
-        Font::new(path, DEFAULT_FONT_SIZE).unwrap()
+impl ResourceLoader for Font {
+    fn load_path(path: &Path) -> Self {
+        Font::load_path(path, DEFAULT_FONT_SIZE).unwrap()
+    }
+
+    fn load_data(data: &[u8], name: impl ToString) -> Self {
+        Font::load_data(data, DEFAULT_FONT_SIZE, name).unwrap()
     }
 }
 

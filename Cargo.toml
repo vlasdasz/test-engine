@@ -35,7 +35,7 @@ log = "0.4"
 mashup = "0.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-serial_test = "1.0.0"
+serial_test = "2.0.0"
 smart-default = "0.6"
 tokio = { version = "1.26.0", features = ["full"] }
 
@@ -43,7 +43,7 @@ tokio = { version = "1.26.0", features = ["full"] }
 reflected = "0.2.9"
 reflected_proc = "0.2.9"
 refs = "0.1.30"
-rtools = "0.1.35"
+rtools = "0.1.37"
 vents = "0.1.8"
 
 

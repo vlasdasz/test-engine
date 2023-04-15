@@ -1,4 +1,4 @@
-use test_engine::{view, ViewApp};
+use test_engine::view;
 use ui::{
     refs::{Own, Weak},
     SubView, ViewController, ViewFrame, ViewSetup,

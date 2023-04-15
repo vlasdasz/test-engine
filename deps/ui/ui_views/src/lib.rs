@@ -6,8 +6,10 @@
 
 mod basic;
 mod complex;
+mod images;
 mod test;
 
 pub use basic::*;
 pub use complex::*;
+pub use images::*;
 pub use test::*;
