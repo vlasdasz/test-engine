@@ -27,6 +27,8 @@ static mut SCREEN: *mut Screen = null_mut();
 pub struct Screen {
     pub ui: Own<UILayer>,
 
+    debug_view: bool,
+
     #[cfg(desktop)]
     glfw:    GLFWManager,
     monitor: Monitor,
@@ -58,9 +60,11 @@ impl Screen {
     fn init(&mut self, #[cfg(desktop)] window_size: Size, view: Own<dyn View>) {
         UIManager::set_display_scale(self.monitor.scale);
 
-        self.ui.debug_view.place = Placer::new(self.ui.debug_view.weak_view()).into();
-        self.ui.debug_view.init_views();
-        self.ui.debug_view.internal_setup();
+        if self.debug_view {
+            self.ui.debug_view.place = Placer::new(self.ui.debug_view.weak_view()).into();
+            self.ui.debug_view.init_views();
+            self.ui.debug_view.internal_setup();
+        }
 
         GLWrapper::enable_blend();
         GLWrapper::set_clear_color(Color::GRAY);
@@ -119,7 +123,10 @@ impl Screen {
 
         root_view.set_frame(UIManager::root_view_size());
 
-        UIManager::drawer().update(&mut [root_view, self.ui.debug_view.weak_view()]);
+        UIManager::drawer().update(&mut [root_view]);
+        if self.debug_view {
+            UIManager::drawer().update(&mut [self.ui.debug_view.weak_view()])
+        }
 
         dispatch::invoke_dispatched();
 
@@ -190,6 +197,7 @@ impl Screen {
         root_view: Own<dyn View>,
         #[cfg(desktop)] glfw: GLFWManager,
         #[cfg(desktop)] window_size: impl Into<Size>,
+        debug_view: bool,
     ) -> Own<Self> {
         trace!("Creating screen");
 
@@ -207,6 +215,7 @@ impl Screen {
 
         let mut screen = Own::new(Self {
             ui,
+            debug_view,
             #[cfg(desktop)]
             glfw,
             monitor,

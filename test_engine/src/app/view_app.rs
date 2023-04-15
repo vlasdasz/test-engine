@@ -50,12 +50,13 @@ macro_rules! test_view {
     ($view_type:ty) => {
         #[ignore]
         #[test]
-        fn test() {
+        fn test_view() {
             ViewApp::<$view_type>::start();
         }
     };
 }
 
+#[ignore]
 #[test]
 fn test() {
     ViewApp::<ui::Container>::start()

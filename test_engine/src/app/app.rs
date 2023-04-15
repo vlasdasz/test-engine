@@ -25,6 +25,10 @@ pub trait App {
 
     fn core(&mut self) -> &mut AppCore;
 
+    fn show_debug_view() -> bool {
+        false
+    }
+
     fn assets_path() -> PathBuf
     where Self: Sized {
         PathBuf::new()
@@ -38,7 +42,12 @@ pub trait App {
         trace!("Make core");
         set_current_thread_as_main();
         trace!("Marked thread {} as main", thread_id());
-        let core = AppCore::new(Self::screen_size(), Self::assets_path(), Self::make_root_view());
+        let core = AppCore::new(
+            Self::screen_size(),
+            Self::assets_path(),
+            Self::make_root_view(),
+            Self::show_debug_view(),
+        );
         trace!("AppCore: OK");
         core
     }

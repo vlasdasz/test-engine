@@ -19,4 +19,8 @@ impl Images {
     pub fn down() -> Handle<Image> {
         Image::load(include_bytes!("images/down.png"), "ui::default::down")
     }
+
+    pub fn delete() -> Handle<Image> {
+        Image::load(include_bytes!("images/delete.png"), "ui::default::delete")
+    }
 }
