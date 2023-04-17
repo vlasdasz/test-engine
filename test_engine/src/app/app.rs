@@ -25,7 +25,8 @@ pub trait App {
 
     fn core(&mut self) -> &mut AppCore;
 
-    fn show_debug_view() -> bool {
+    fn show_debug_view() -> bool
+    where Self: Sized {
         false
     }
 

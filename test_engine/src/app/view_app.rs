@@ -1,3 +1,5 @@
+#![cfg(desktop)]
+
 use std::{marker::PhantomData, path::PathBuf};
 
 use gm::flat::Size;

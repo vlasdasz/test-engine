@@ -183,7 +183,7 @@ pub mod mobile {
 
             let screen = runtime.block_on(async {
                 set_current_thread_as_main();
-                Screen::new(monitor, PathBuf::new(), view).into()
+                Screen::new(monitor, PathBuf::new(), view, false).into()
             });
 
             let mobile = MobileStuff {
