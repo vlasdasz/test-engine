@@ -8,6 +8,7 @@ mod view_frame;
 mod view_internal;
 mod view_layout;
 mod view_subviews;
+mod view_test;
 mod view_touch;
 mod view_touch_internal;
 
@@ -20,4 +21,5 @@ pub use view_data::ViewData;
 pub use view_frame::ViewFrame;
 pub use view_layout::ViewLayout;
 pub use view_subviews::ViewSubviews;
+pub use view_test::*;
 pub use view_touch::ViewTouch;

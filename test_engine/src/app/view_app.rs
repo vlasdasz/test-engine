@@ -1,7 +1,10 @@
 use std::{marker::PhantomData, path::PathBuf};
 
 use gm::flat::Size;
-use ui::{refs::Own, View};
+use ui::{
+    refs::{Own, ToWeak},
+    View, ViewTest,
+};
 
 use crate::{app::MakeApp, App, AppCore};
 
@@ -19,17 +22,14 @@ impl<T: View + Default + 'static> ViewApp<T> {
 impl<T: View + Default + 'static> App for ViewApp<T> {
     fn screen_size() -> Size
     where Self: Sized {
-        T::expected_size()
-    }
-
-    fn assets_path() -> PathBuf
-    where Self: Sized {
-        Default::default()
+        T::test_size()
     }
 
     fn make_root_view() -> Own<dyn View>
     where Self: Sized {
-        Own::<T>::default()
+        let view = Own::<T>::default();
+        view.weak().test_setup();
+        view
     }
 
     fn with_core(core: AppCore) -> Self
@@ -42,6 +42,11 @@ impl<T: View + Default + 'static> App for ViewApp<T> {
 
     fn core(&mut self) -> &mut AppCore {
         &mut self.core
+    }
+
+    fn assets_path() -> PathBuf
+    where Self: Sized {
+        Default::default()
     }
 }
 

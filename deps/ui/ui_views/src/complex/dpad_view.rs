@@ -1,7 +1,7 @@
 use gm::flat::{Direction, Size};
 use refs::Weak;
 use rtools::Apply;
-use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewTest};
 
 use crate::{Button, Images};
 
@@ -40,8 +40,10 @@ impl ViewCallbacks for DPadView {
         self.down.set_frame((width, height, width, height));
         self.right.set_frame((width * 2.0, height, width, height));
     }
+}
 
-    fn expected_size() -> Size
+impl ViewTest for DPadView {
+    fn test_size() -> Size
     where Self: Sized {
         (140, 100).into()
     }
