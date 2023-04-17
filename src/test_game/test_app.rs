@@ -34,4 +34,8 @@ impl App for TestApp {
     fn core(&mut self) -> &mut AppCore {
         &mut self.core
     }
+
+    fn with_core(core: AppCore) -> Self where Self: Sized {
+        Self { core }
+    }
 }
