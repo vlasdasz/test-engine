@@ -38,6 +38,13 @@ impl Point {
     pub fn length(&self) -> f32 {
         (self.x * self.x + self.y * self.y).sqrt()
     }
+
+    pub fn middle(&self, other: &Point) -> Point {
+        Point {
+            x: (self.x + other.x) / 2.0,
+            y: (self.y + other.y) / 2.0,
+        }
+    }
 }
 
 impl Point {

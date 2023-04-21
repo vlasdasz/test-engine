@@ -11,7 +11,7 @@ use ui::{
     refs::{Own, Strong, ToWeak, Weak},
     Container, SubView, UIManager, ViewData, ViewSetup, ViewSubviews,
 };
-use ui_views::{test_view::TestView, AnalogStickView, Button, DPadView, IntView};
+use ui_views::{test_view::ViewWithCat, AnalogStickView, Button, DPadView, IntView};
 
 use crate::benchmark::{BenchmarkLevel, UIDebugView};
 
@@ -20,7 +20,7 @@ pub struct TestGameView {
     dpad:        SubView<DPadView>,
     left_stick:  SubView<AnalogStickView>,
     sprite_view: SubView<SpriteView>,
-    test_view:   SubView<TestView>,
+    test_view:   SubView<ViewWithCat>,
 
     ui_scale:    SubView<IntView>,
     level_scale: SubView<IntView>,
@@ -92,12 +92,10 @@ impl TestGameView {
 
         self.ui_scale.step = 0.1;
         self.ui_scale.place.size(28, 120).l(100).b(140);
-        self.ui_scale.set_images("up.png", "down.png");
         //self.ui_scale.on_change.sub(|val| UIManager::set_ui_scale(val));
 
         self.level_scale.step = 0.1;
         self.level_scale.place.size(28, 120).l(28).b(140);
-        self.level_scale.set_images("up.png", "down.png");
         self.level_scale
             .on_change
             .val(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));

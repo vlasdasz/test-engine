@@ -209,6 +209,15 @@ impl Placer {
     pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
         self.same([Anchor::Size, Anchor::X], view).anchor(view, Anchor::Bot, offset)
     }
+
+    pub fn between(
+        &self,
+        view_a: impl Deref<Target = impl View> + Copy,
+        view_b: impl Deref<Target = impl View> + Copy,
+    ) -> &Self {
+        self.rules().push(LayoutRule::between(view_a.weak_view(), view_b.weak_view()));
+        self
+    }
 }
 
 impl Placer {
@@ -216,7 +225,9 @@ impl Placer {
         let this = self.to_rglica();
 
         for rule in this.rules().iter() {
-            if rule.anchor_view.is_ok() {
+            if rule.between {
+                self.between_layout(rule);
+            } else if rule.anchor_view.is_ok() {
                 if rule.relative {
                     self.relative_layout(rule)
                 } else {
@@ -312,6 +323,13 @@ impl Placer {
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut()),
         }
+    }
+
+    fn between_layout(&mut self, rule: &LayoutRule) {
+        let center_a = rule.anchor_view.frame.center();
+        let center_b = rule.anchor_view2.frame.center();
+        let center = center_a.middle(&center_b);
+        self.frame.set_center(center);
     }
 }
 

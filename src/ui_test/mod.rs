@@ -1,3 +1,4 @@
+mod between_test_view;
 mod collection_test_view;
 mod ui_test;
 

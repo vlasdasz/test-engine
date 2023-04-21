@@ -7,7 +7,7 @@ use ui::{view, DrawMode, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup}
 use crate::{Button, DrawingView, ImageView, Label};
 
 #[view]
-pub struct TestView {
+pub struct ViewWithCat {
     label:    SubView<Label>,
     button:   SubView<Button>,
     image:    SubView<ImageView>,
@@ -19,7 +19,7 @@ pub struct TestView {
     label_value: u64,
 }
 
-impl TestView {
+impl ViewWithCat {
     pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image.set_image(image);
         self
@@ -36,7 +36,7 @@ impl TestView {
     }
 }
 
-impl ViewSetup for TestView {
+impl ViewSetup for ViewWithCat {
     fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
 
@@ -60,7 +60,7 @@ impl ViewSetup for TestView {
     }
 }
 
-impl ViewCallbacks for TestView {
+impl ViewCallbacks for ViewWithCat {
     fn update(&mut self) {
         self.animated.set_y(self.animation.value());
         let radius = self.button.frame().size.height / 2.0;

@@ -1,8 +1,7 @@
-use gl_image::ToImage;
 use refs::Weak;
 use ui::{view, Event, SubView, ViewData, ViewSetup};
 
-use crate::{Button, Label};
+use crate::{Button, Images, Label};
 
 #[view]
 pub struct IntView {
@@ -15,13 +14,6 @@ pub struct IntView {
     pub step:      f32,
 }
 
-impl IntView {
-    pub fn set_images(&mut self, up: impl ToImage, down: impl ToImage) {
-        self.up.set_image(up);
-        self.down.set_image(down);
-    }
-}
-
 impl ViewSetup for IntView {
     fn setup(mut self: Weak<Self>) {
         self.value = 1.0;
@@ -31,6 +23,7 @@ impl ViewSetup for IntView {
 
         self.label.set_text("1.0");
 
+        self.up.set_image(Images::up());
         self.up.on_tap.sub(move || {
             self.value += self.step;
             let val = self.value;
@@ -38,6 +31,7 @@ impl ViewSetup for IntView {
             self.label.set_text(format!("{val:.1}"));
         });
 
+        self.down.set_image(Images::down());
         self.down.on_tap.sub(move || {
             self.value -= self.step;
             let val = self.value;

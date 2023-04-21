@@ -1,7 +1,7 @@
 use test_engine::gm::flat::Size;
 use ui::{
     refs::{Own, ToWeak, Weak},
-    view, Container, SubView, View, ViewSetup,
+    view, Container, SubView, View, ViewSetup, ViewTest,
 };
 use ui_views::{collection_data, BackButton, CollectionData, CollectionLayout, CollectionView};
 
@@ -77,4 +77,17 @@ impl CollectionData for CollectionTestView {
     fn cell_selected(&mut self, index: usize) {
         dbg!(index);
     }
+}
+
+impl ViewTest for CollectionTestView {
+    fn test_size() -> Size
+    where Self: Sized {
+        (1000, 1000).into()
+    }
+}
+
+#[ignore]
+#[test]
+fn test() {
+    test_engine::ViewApp::<CollectionTestView>::start()
 }
