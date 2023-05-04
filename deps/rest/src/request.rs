@@ -32,9 +32,14 @@ impl<R, P> Req<R, P> {
     }
 }
 
-impl<R, P> From<&'static str> for Req<R, P> {
-    fn from(url: &'static str) -> Self {
-        Self::make(url)
+#[const_trait]
+pub trait ToReq<R, P, T> {
+    fn req(self) -> Req<R, P>;
+}
+
+impl<R, P> const ToReq<R, P, &'static str> for &'static str {
+    fn req(self) -> Req<R, P> {
+        Req::<R, P>::make(self)
     }
 }
 
