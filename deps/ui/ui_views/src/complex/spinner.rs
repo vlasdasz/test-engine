@@ -11,7 +11,7 @@ use ui::{
 };
 
 static CIRCLES_N: u32 = 6;
-static mut SPINNER: Weak<dyn View> = Default::default();
+static mut SPINNER: Weak<dyn View> = Weak::const_default();
 
 #[view]
 pub struct Spinner {

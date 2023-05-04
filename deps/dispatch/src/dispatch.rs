@@ -13,8 +13,8 @@ use tokio::{
 type Callbacks = Mutex<Vec<Box<dyn FnOnce() + Send>>>;
 type SignalledCallbacks = Mutex<Vec<(Sender<()>, Box<dyn FnOnce() + Send>)>>;
 
-static CALLBACKS: Callbacks = Callbacks::new(Default::default());
-static SIGNALLED: SignalledCallbacks = SignalledCallbacks::new(Default::default());
+static CALLBACKS: Callbacks = Callbacks::new(vec![]);
+static SIGNALLED: SignalledCallbacks = SignalledCallbacks::new(vec![]);
 
 pub async fn from_main<T, A>(action: A) -> T
 where

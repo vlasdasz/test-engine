@@ -10,6 +10,19 @@ pub struct Color {
 }
 
 impl Color {
+    pub const fn rgb<R, G, B>(r: R, g: G, b: B) -> Self
+    where
+        R: ~const IntoF32,
+        G: ~const IntoF32,
+        B: ~const IntoF32, {
+        Self {
+            r: r.into_f32(),
+            g: g.into_f32(),
+            b: b.into_f32(),
+            a: 1.0,
+        }
+    }
+
     pub fn is_visible(&self) -> bool {
         self.a > 0.02
     }
@@ -20,20 +33,25 @@ impl Color {
 }
 
 impl Color {
-    pub const BLACK: Color = (0, 0, 0).into();
-    pub const WHITE: Color = (1, 1, 1).into();
-    pub const RED: Color = (1, 0, 0).into();
-    pub const GREEN: Color = (0, 1, 0).into();
-    pub const BLUE: Color = (0, 0, 0.8).into();
-    pub const LIGHT_BLUE: Color = (0, 0.7, 1).into();
-    pub const YELLOW: Color = (1, 1, 0).into();
-    pub const ORANGE: Color = (1, 0.6, 0).into();
-    pub const PURPLE: Color = (1, 0, 1).into();
-    pub const TURQUOISE: Color = (0, 1, 1).into();
-    pub const GRAY: Color = (0.5, 0.5, 0.5).into();
-    pub const BROWN: Color = (0.7, 0.4, 0.2).into();
-    pub const LIGHT_GRAY: Color = (0.8, 0.8, 0.8).into();
-    pub const CLEAR: Color = (0, 0, 0, 0).into();
+    pub const BLACK: Color = Color::rgb(0, 0, 0);
+    pub const WHITE: Color = Color::rgb(1, 1, 1);
+    pub const RED: Color = Color::rgb(1, 0, 0);
+    pub const GREEN: Color = Color::rgb(0, 1, 0);
+    pub const BLUE: Color = Color::rgb(0, 0, 0.8);
+    pub const LIGHT_BLUE: Color = Color::rgb(0, 0.7, 1);
+    pub const YELLOW: Color = Color::rgb(1, 1, 0);
+    pub const ORANGE: Color = Color::rgb(1, 0.6, 0);
+    pub const PURPLE: Color = Color::rgb(1, 0, 1);
+    pub const TURQUOISE: Color = Color::rgb(0, 1, 1);
+    pub const GRAY: Color = Color::rgb(0.5, 0.5, 0.5);
+    pub const BROWN: Color = Color::rgb(0.7, 0.4, 0.2);
+    pub const LIGHT_GRAY: Color = Color::rgb(0.8, 0.8, 0.8);
+    pub const CLEAR: Color = Color {
+        r: 0.0,
+        g: 0.0,
+        b: 0.0,
+        a: 0.0,
+    };
 
     pub const ALL: [Color; 12] = [
         Color::BLACK,
@@ -61,7 +79,7 @@ impl Default for Color {
     }
 }
 
-impl<R, G, B> const From<(R, G, B)> for Color
+impl<R, G, B> From<(R, G, B)> for Color
 where
     R: ~const IntoF32,
     G: ~const IntoF32,
@@ -77,7 +95,7 @@ where
     }
 }
 
-impl<R, G, B, A> const From<(R, G, B, A)> for Color
+impl<R, G, B, A> From<(R, G, B, A)> for Color
 where
     R: ~const IntoF32,
     G: ~const IntoF32,

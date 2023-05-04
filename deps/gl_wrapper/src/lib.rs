@@ -1,5 +1,4 @@
 #![feature(const_trait_impl)]
-#![feature(const_convert)]
 
 pub use buffers::{Buffer, BufferConfig};
 use cfg_if::cfg_if;

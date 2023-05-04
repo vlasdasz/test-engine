@@ -18,7 +18,7 @@ impl<T: ?Sized + View> ViewTouch for T {
     }
 
     fn set_selected(&mut self, selected: bool) {
-        let mut events = UIEvents::get();
+        let events = UIEvents::get();
 
         if let Some(selected) = events.selected_view.get() {
             selected.is_selected = false;

@@ -32,7 +32,7 @@ impl<R, P> Req<R, P> {
     }
 }
 
-impl<R, P> const From<&'static str> for Req<R, P> {
+impl<R, P> From<&'static str> for Req<R, P> {
     fn from(url: &'static str) -> Self {
         Self::make(url)
     }

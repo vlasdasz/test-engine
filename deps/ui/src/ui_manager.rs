@@ -7,7 +7,7 @@ use smart_default::SmartDefault;
 
 use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, View};
 
-static MANAGER: Mutex<Unwrap<Own<UIManager>>> = Mutex::new(Unwrap::default());
+static MANAGER: Mutex<Unwrap<Own<UIManager>>> = Mutex::new(Unwrap::const_default());
 
 #[derive(SmartDefault)]
 pub struct UIManager {

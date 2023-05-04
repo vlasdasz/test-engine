@@ -12,6 +12,19 @@ pub struct Rect {
 }
 
 impl Rect {
+    pub const fn from_vals(vals: [f32; 4]) -> Self {
+        Self {
+            origin: Point {
+                x: vals[0],
+                y: vals[1],
+            },
+            size:   Size {
+                width:  vals[2],
+                height: vals[3],
+            },
+        }
+    }
+
     pub fn max_x(&self) -> f32 {
         self.x() + self.width()
     }
@@ -76,7 +89,7 @@ impl Rect {
     }
 }
 
-impl const From<Size> for Rect {
+impl From<Size> for Rect {
     fn from(size: Size) -> Self {
         Rect {
             origin: Point { x: 0.0, y: 0.0 },
@@ -85,7 +98,7 @@ impl const From<Size> for Rect {
     }
 }
 
-impl<X, Y, W, H> const From<(X, Y, W, H)> for Rect
+impl<X, Y, W, H> From<(X, Y, W, H)> for Rect
 where
     X: ~const IntoF32,
     Y: ~const IntoF32,
@@ -106,7 +119,7 @@ where
     }
 }
 
-impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Rect {
+impl<W: ~const IntoF32, H: ~const IntoF32> From<(W, H)> for Rect {
     fn from(tup: (W, H)) -> Self {
         Self {
             origin: Point { x: 0.0, y: 0.0 },
@@ -115,7 +128,7 @@ impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Rect {
     }
 }
 
-impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y, Size)> for Rect {
+impl<X: ~const IntoF32, Y: ~const IntoF32> From<(X, Y, Size)> for Rect {
     fn from(tup: (X, Y, Size)) -> Self {
         Self {
             origin: (tup.0, tup.1).into(),

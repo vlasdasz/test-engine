@@ -5,7 +5,6 @@
 #![feature(specialization)]
 #![feature(let_chains)]
 #![feature(arbitrary_self_types)]
-#![feature(const_default_impls)]
 
 pub use audio;
 pub use gl_image;

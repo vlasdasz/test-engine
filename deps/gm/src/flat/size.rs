@@ -64,7 +64,7 @@ impl Size {
     }
 }
 
-impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Size {
+impl<W: ~const IntoF32, H: ~const IntoF32> From<(W, H)> for Size {
     fn from(tup: (W, H)) -> Self {
         Self {
             width:  tup.0.into_f32(),

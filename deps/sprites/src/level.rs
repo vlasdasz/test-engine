@@ -1,5 +1,3 @@
-use std::borrow::Borrow;
-
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
 use refs::{Strong, ToWeak, Weak};
@@ -68,7 +66,7 @@ pub trait Level {
     }
 
     fn gravity(&self) -> Point {
-        let gravity = self.base().gravity.borrow();
+        let gravity = &self.base().gravity;
         (gravity[0], gravity[1]).into()
     }
 

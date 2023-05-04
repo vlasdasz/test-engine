@@ -42,8 +42,8 @@ tokio = { version = "1.26.0", features = ["full"] }
 
 reflected = "0.2.9"
 reflected_proc = "0.2.9"
-refs = "0.1.30"
-rtools = "0.1.37"
+refs = "0.1.33"
+rtools = "0.1.39"
 vents = "0.1.8"
 
 
