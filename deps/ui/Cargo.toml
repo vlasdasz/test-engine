@@ -7,6 +7,7 @@ version = "0.1.0"
 [lib]
 crate-type = ["rlib", "staticlib"]
 name = "ui"
+doctest = false
 
 [dependencies]
 refs = { workspace = true }
