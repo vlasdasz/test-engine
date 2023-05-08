@@ -67,15 +67,15 @@ impl LayoutRule {
         }
     }
 
-    pub fn between(view_a: Weak<dyn View>, view_b: Weak<dyn View>) -> Self {
+    pub fn between(view_a: Weak<dyn View>, view_b: Weak<dyn View>, side: Anchor) -> Self {
         Self {
-            side:         Anchor::Top,
-            tiling:       None,
-            offset:       0.0,
-            anchor_view:  view_a,
+            side,
+            tiling: None,
+            offset: 0.0,
+            anchor_view: view_a,
             anchor_view2: view_b,
-            relative:     false,
-            between:      true,
+            relative: false,
+            between: true,
         }
     }
 }

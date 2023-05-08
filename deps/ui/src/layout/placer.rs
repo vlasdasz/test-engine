@@ -215,7 +215,17 @@ impl Placer {
         view_a: impl Deref<Target = impl View> + Copy,
         view_b: impl Deref<Target = impl View> + Copy,
     ) -> &Self {
-        self.rules().push(LayoutRule::between(view_a.weak_view(), view_b.weak_view()));
+        self.rules().push(LayoutRule::between(
+            view_a.weak_view(),
+            view_b.weak_view(),
+            Anchor::None,
+        ));
+        self
+    }
+
+    pub fn between_super(&self, view: impl Deref<Target = impl View> + Copy, anchor: Anchor) -> &Self {
+        self.rules()
+            .push(LayoutRule::between(view.weak_view(), Default::default(), anchor));
         self
     }
 }
@@ -326,10 +336,36 @@ impl Placer {
     }
 
     fn between_layout(&mut self, rule: &LayoutRule) {
+        if rule.side.is_none() {
+            self.between_2_layout(rule)
+        } else {
+            self.between_s_layout(rule);
+        }
+    }
+
+    fn between_2_layout(&mut self, rule: &LayoutRule) {
         let center_a = rule.anchor_view.frame.center();
         let center_b = rule.anchor_view2.frame.center();
         let center = center_a.middle(&center_b);
         self.frame.set_center(center);
+    }
+
+    fn between_s_layout(&mut self, rule: &LayoutRule) {
+        let f = rule.anchor_view.frame();
+        let cen = f.center();
+        match rule.side {
+            Anchor::Top => self.frame.set_center((cen.x, f.y() / 2.0)),
+            Anchor::Bot => self.frame.set_center((
+                cen.x,
+                self.s_frame.height() - (self.s_frame.height() - f.max_y()) / 2.0,
+            )),
+            Anchor::Left => self.frame.set_center((f.x() / 2.0, cen.y)),
+            Anchor::Right => self.frame.set_center((
+                self.s_frame.width() - (self.s_frame.width() - f.max_x()) / 2.0,
+                cen.y,
+            )),
+            _ => unimplemented!(),
+        }
     }
 }
 

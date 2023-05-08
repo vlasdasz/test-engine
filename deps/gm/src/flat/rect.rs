@@ -79,7 +79,8 @@ impl Rect {
         (self.x() + self.width() / 2.0, self.y() + self.height() / 2.0).into()
     }
 
-    pub fn set_center(&mut self, center: Point) {
+    pub fn set_center(&mut self, center: impl Into<Point>) {
+        let center = center.into();
         self.origin.x = center.x - self.width() / 2.0;
         self.origin.y = center.y - self.height() / 2.0;
     }

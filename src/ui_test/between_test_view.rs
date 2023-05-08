@@ -1,6 +1,6 @@
 use rtools::Apply;
-use test_engine::gm::flat::Size;
-use ui::{refs::Weak, view, Container, SubView, ViewSetup, ViewSubviews, ViewTest};
+use test_engine::gm::{flat::Size, Color};
+use ui::{layout::Anchor, refs::Weak, view, Container, SubView, ViewData, ViewSetup, ViewSubviews, ViewTest};
 
 #[view]
 struct BetweenTestView {
@@ -15,6 +15,11 @@ struct BetweenTestView {
     bottom_center: SubView<Container>,
     left_center:   SubView<Container>,
     right_center:  SubView<Container>,
+
+    top_s_center:    SubView<Container>,
+    bottom_s_center: SubView<Container>,
+    left_s_center:   SubView<Container>,
+    right_s_center:  SubView<Container>,
 }
 
 impl ViewSetup for BetweenTestView {
@@ -29,15 +34,20 @@ impl ViewSetup for BetweenTestView {
 
         self.center.place.center();
 
-        self.top.place.center_hor();
-        self.bottom.place.b(0).center_hor();
-        self.left.place.center_ver();
-        self.right.place.center_ver().r(0);
+        self.top.set_color(Color::ORANGE).place.center_hor().t(200);
+        self.bottom.set_color(Color::GREEN).place.center_hor().b(200);
+        self.left.place.center_ver().l(200);
+        self.right.place.center_ver().r(200);
 
         self.top_center.place.between(self.top, self.center);
         self.bottom_center.place.between(self.bottom, self.center);
         self.left_center.place.between(self.left, self.center);
         self.right_center.place.between(self.right, self.center);
+
+        self.top_s_center.place.between_super(self.top, Anchor::Top);
+        self.bottom_s_center.place.between_super(self.bottom, Anchor::Bot);
+        self.left_s_center.place.between_super(self.left, Anchor::Left);
+        self.right_s_center.place.between_super(self.right, Anchor::Right);
     }
 }
 

@@ -20,6 +20,8 @@ pub enum Anchor {
 
     X,
     Y,
+
+    None,
 }
 
 impl Anchor {
@@ -29,5 +31,9 @@ impl Anchor {
 
     pub(crate) fn has_height(&self) -> bool {
         matches!(self, Self::Height | Self::Size)
+    }
+
+    pub(crate) fn is_none(&self) -> bool {
+        matches!(self, Self::None)
     }
 }
