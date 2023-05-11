@@ -67,4 +67,8 @@ impl<T: Reflected> FormView<T> {
     pub fn editing_enabled(&self) -> bool {
         self.editind_enabled
     }
+
+    pub fn editing_disabled(&self) -> bool {
+        !self.editing_enabled()
+    }
 }
