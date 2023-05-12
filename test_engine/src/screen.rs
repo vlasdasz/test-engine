@@ -176,7 +176,7 @@ impl Screen {
 
     #[cfg(mobile)]
     pub(crate) fn on_gyro_changed(&mut self, gyro: GyroData) {
-        error!("GyroData: {:?}", gyro);
+        // error!("GyroData: {:?}", gyro);
         let Some(level) = &mut self.ui.level else {
             return;
         };
