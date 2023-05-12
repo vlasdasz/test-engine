@@ -196,6 +196,10 @@ impl Placer {
         self.t(offset).l(offset).b(offset)
     }
 
+    pub fn trb(&self, offset: impl IntoF32) -> &Self {
+        self.t(offset).r(offset).b(offset)
+    }
+
     pub fn lrt(&self, offset: impl IntoF32) -> &Self {
         self.l(offset).r(offset).t(offset)
     }

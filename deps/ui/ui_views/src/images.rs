@@ -4,6 +4,14 @@ use rtools::data_manager::{DataManager, Handle};
 pub struct Images;
 
 impl Images {
+    pub fn plus() -> Handle<Image> {
+        Image::load(include_bytes!("images/plus.png"), "ui::default::plus")
+    }
+
+    pub fn minus() -> Handle<Image> {
+        Image::load(include_bytes!("images/minus.png"), "ui::default::minus")
+    }
+
     pub fn left() -> Handle<Image> {
         Image::load(include_bytes!("images/left.png"), "ui::default::left")
     }
