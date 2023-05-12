@@ -75,6 +75,14 @@ impl UIManager {
     pub fn update() {
         Self::get().deleted_views.clear()
     }
+
+    pub fn push_touch_view(view: Weak<dyn View>) {
+        Self::get().touch_stack.push(view);
+    }
+
+    pub fn pop_touch_view() {
+        Self::get().touch_stack.pop();
+    }
 }
 
 impl UIManager {

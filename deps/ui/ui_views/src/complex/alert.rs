@@ -2,7 +2,7 @@ use dispatch::on_main;
 use gm::Color;
 use refs::{Own, ToWeak, Weak};
 use tokio::sync::oneshot::channel;
-use ui::{view, Event, SubView, UIManager, ViewData, ViewSetup, ViewSubviews};
+use ui::{view, Event, SubView, UIManager, View, ViewData, ViewSetup, ViewSubviews};
 
 use crate::{Button, MultilineLabel};
 
@@ -20,6 +20,7 @@ impl Alert {
         let mut alert = Own::<Self>::default();
         alert.message = message.to_string();
         let res = alert.weak();
+        UIManager::push_touch_view(res.weak_view());
         UIManager::root_view().add_subview(alert);
         res
     }
@@ -73,6 +74,7 @@ impl ViewSetup for Alert {
 
         self.ok_button.on_tap.sub(move || {
             self.remove_from_superview();
+            UIManager::pop_touch_view();
             self.agreed.trigger(true);
         });
 
@@ -84,6 +86,7 @@ impl ViewSetup for Alert {
 
         self.cancel_button.on_tap.sub(move || {
             self.remove_from_superview();
+            UIManager::pop_touch_view();
             self.agreed.trigger(false);
         });
 
