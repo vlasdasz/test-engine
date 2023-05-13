@@ -11,6 +11,7 @@ doctest = false
 
 [dependencies]
 refs = { workspace = true }
+async-trait = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }

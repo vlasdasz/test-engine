@@ -8,6 +8,7 @@ pub use input::Touch;
 
 pub mod input;
 pub mod layout;
+mod modal_view;
 mod navigation_view;
 mod path_data;
 mod shaders;
@@ -15,6 +16,7 @@ mod ui_drawer;
 mod ui_manager;
 mod view;
 
+pub use modal_view::*;
 pub use navigation_view::*;
 pub use path_data::*;
 pub use refs;
