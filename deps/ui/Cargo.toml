@@ -15,6 +15,7 @@ async-trait = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }
+tokio = { workspace = true }
 
 gl_image = { workspace = true }
 gl_wrapper = { workspace = true }

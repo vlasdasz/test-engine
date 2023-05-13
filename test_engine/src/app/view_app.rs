@@ -17,7 +17,9 @@ pub struct ViewApp<T> {
 
 impl<T: View + Default + 'static> ViewApp<T> {
     pub fn start() {
-        Self::make_app().launch();
+        tokio::runtime::Runtime::new().unwrap().block_on(async {
+            Self::make_app().launch();
+        });
     }
 }
 
