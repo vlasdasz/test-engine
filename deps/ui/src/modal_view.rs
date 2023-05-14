@@ -8,21 +8,22 @@ use tokio::sync::oneshot::{Receiver, Sender};
 use crate::{view::ViewSubviews, UIManager, View};
 
 #[async_trait]
-pub trait ModalView<In = (), Out: Default + Debug = ()>: View {
-    fn show_modally(self: Own<Self>, input: In) -> Receiver<Out>
+pub trait ModalView<In = (), Out: Default + Debug = ()>: View + Default {
+    fn show_modally(input: In) -> Receiver<Out>
     where Self: 'static + Sized {
+        let view = Own::<Self>::default();
         let size = Self::modal_size();
-        let mut weak = self.weak();
-        UIManager::root_view().add_subview(self);
+        let mut weak = view.weak();
+        UIManager::root_view().add_subview(view);
         weak.setup_input(input);
         weak.place.center().size(size.width, size.height);
         UIManager::push_touch_view(weak.weak_view());
         weak.recv()
     }
 
-    fn hide_modal(mut self: Weak<Self>) {
+    fn hide_modal(mut self: Weak<Self>, result: Out) {
         self.remove_from_superview();
-        self.send().send(self.result()).unwrap();
+        self.send().send(result).unwrap();
     }
 
     fn modal_size() -> Size;
@@ -31,8 +32,4 @@ pub trait ModalView<In = (), Out: Default + Debug = ()>: View {
     fn recv(&mut self) -> Receiver<Out>;
 
     fn setup_input(self: Weak<Self>, _: In) {}
-
-    fn result(self: Weak<Self>) -> Out {
-        Out::default()
-    }
 }

@@ -5,10 +5,7 @@ use test_engine::{
     on_main,
 };
 use tokio::sync::oneshot::{channel, Receiver, Sender};
-use ui::{
-    refs::{Own, Weak},
-    view, ModalView, SubView, ViewData, ViewSetup, ViewTest,
-};
+use ui::{refs::Weak, view, ModalView, SubView, ViewData, ViewSetup, ViewTest};
 use ui_views::{async_link_button, link_button, Button, Label, TextField};
 
 #[view]
@@ -19,6 +16,14 @@ struct ModalTestView {
     sender:      Option<Sender<u32>>,
 }
 
+impl ModalTestView {
+    fn on_tap(self: Weak<Self>) {
+        self.hide_modal(
+            self.text_field.text().parse::<u32>().unwrap() + self.input_label.text().parse::<u32>().unwrap(),
+        )
+    }
+}
+
 impl ViewSetup for ModalTestView {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::WHITE);
@@ -26,7 +31,7 @@ impl ViewSetup for ModalTestView {
         self.input_label.place.size(100, 20).tr(0);
         self.text_field.place.size(100, 20).l(0);
 
-        link_button!(self, button, hide_modal);
+        link_button!(self, button, on_tap);
     }
 }
 
@@ -49,10 +54,6 @@ impl ModalView<u32, u32> for ModalTestView {
     fn setup_input(mut self: Weak<Self>, input: u32) {
         self.input_label.set_text(input);
     }
-
-    fn result(self: Weak<Self>) -> u32 {
-        self.text_field.text().parse::<u32>().unwrap() + self.input_label.text().parse::<u32>().unwrap()
-    }
 }
 
 #[view]
@@ -64,13 +65,10 @@ struct ModalViewTestContainer {
 
 impl ModalViewTestContainer {
     async fn on_tap(mut self: Weak<Self>) {
-        let result = from_main(move || {
-            let modal = Own::<ModalTestView>::default();
-            modal.show_modally(self.text_field.text().parse().unwrap())
-        })
-        .await
-        .await
-        .unwrap();
+        let result = from_main(move || ModalTestView::show_modally(self.text_field.text().parse().unwrap()))
+            .await
+            .await
+            .unwrap();
 
         on_main(move || {
             self.label.set_text(result);

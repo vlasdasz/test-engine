@@ -4,7 +4,7 @@ use std::{marker::PhantomData, path::PathBuf};
 
 use gm::flat::Size;
 use ui::{
-    refs::{Own, ToWeak},
+    refs::{set_current_thread_as_main, Own, ToWeak},
     View, ViewTest,
 };
 
@@ -18,6 +18,7 @@ pub struct ViewApp<T> {
 impl<T: View + Default + 'static> ViewApp<T> {
     pub fn start() {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
+            set_current_thread_as_main();
             Self::make_app().launch();
         });
     }
