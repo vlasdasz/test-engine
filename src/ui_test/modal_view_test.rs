@@ -13,24 +13,25 @@ use ui_views::{async_link_button, link_button, Button, Label, TextField};
 
 #[view]
 struct ModalTestView {
-    button: SubView<Button>,
-    text:   SubView<TextField>,
-    sender: Option<Sender<u32>>,
+    button:      SubView<Button>,
+    input_label: SubView<Label>,
+    text_field:  SubView<TextField>,
+    sender:      Option<Sender<u32>>,
 }
 
 impl ViewSetup for ModalTestView {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::WHITE);
         self.button.set_text("Tap").place.size(100, 20).center();
-
-        self.text.place.size(100, 20).l(0);
+        self.input_label.place.size(100, 20).tr(0);
+        self.text_field.place.size(100, 20).l(0);
 
         link_button!(self, button, hide_modal);
     }
 }
 
 #[async_trait]
-impl ModalView<u32> for ModalTestView {
+impl ModalView<u32, u32> for ModalTestView {
     fn modal_size() -> Size {
         (400, 400).into()
     }
@@ -45,22 +46,27 @@ impl ModalView<u32> for ModalTestView {
         r
     }
 
+    fn setup_input(mut self: Weak<Self>, input: u32) {
+        self.input_label.set_text(input);
+    }
+
     fn result(self: Weak<Self>) -> u32 {
-        self.text.text().parse().unwrap()
+        self.text_field.text().parse::<u32>().unwrap() + self.input_label.text().parse::<u32>().unwrap()
     }
 }
 
 #[view]
 struct ModalViewTestContainer {
-    button: SubView<Button>,
-    label:  SubView<Label>,
+    button:     SubView<Button>,
+    label:      SubView<Label>,
+    text_field: SubView<TextField>,
 }
 
 impl ModalViewTestContainer {
     async fn on_tap(mut self: Weak<Self>) {
-        let result = from_main(|| {
+        let result = from_main(move || {
             let modal = Own::<ModalTestView>::default();
-            modal.show_modally()
+            modal.show_modally(self.text_field.text().parse().unwrap())
         })
         .await
         .await
@@ -76,6 +82,7 @@ impl ViewSetup for ModalViewTestContainer {
     fn setup(mut self: Weak<Self>) {
         self.button.set_text("Tap").place.size(100, 50);
         self.label.set_text("Nothing").place.size(100, 50).tr(0);
+        self.text_field.place.size(100, 50).br(0);
         async_link_button!(self, button, on_tap);
     }
 }
