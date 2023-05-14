@@ -9,10 +9,8 @@ struct AlertTestView {
 }
 
 impl AlertTestView {
-    fn on_button_tap(mut self: Weak<Self>) {
-        Alert::ask("Prokpudak prokpudok!", move |result| {
-            self.label.set_text(result);
-        });
+    fn on_button_tap(self: Weak<Self>) {
+        Alert::show("Prokpudak prokpudok!!");
     }
 }
 

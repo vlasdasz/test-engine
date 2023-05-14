@@ -6,37 +6,14 @@ use crate::{Button, MultilineLabel};
 
 #[view]
 pub struct Alert {
-    label:         SubView<MultilineLabel>,
-    ok_button:     SubView<Button>,
-    cancel_button: SubView<Button>,
-    message:       String,
-    event:         Event<bool>,
-}
-
-impl ModalView<String, bool> for Alert {
-    fn modal_event(&self) -> &Event<bool> {
-        &self.event
-    }
-
-    fn modal_size() -> Size {
-        (280, 200).into()
-    }
-
-    fn setup_input(mut self: Weak<Self>, input: String) {
-        self.label.set_text(input);
-    }
+    label:     SubView<MultilineLabel>,
+    ok_button: SubView<Button>,
+    event:     Event,
 }
 
 impl Alert {
-    pub fn ask(message: impl ToString, callback: impl FnOnce(bool) + 'static) {
-        Self::show_modally(message.to_string(), callback);
-    }
-}
-
-impl Alert {
-    fn set_message(&mut self) {
-        let message = self.message.clone();
-        self.label.set_text(message);
+    pub fn show(message: impl ToString) {
+        Self::show_modally(message.to_string(), |_| {});
     }
 }
 
@@ -49,22 +26,26 @@ impl ViewSetup for Alert {
         self.label.place.lrt(10).h(140);
         self.label.set_text_size(28);
 
-        self.ok_button.place.size(101, 20).bl(-1);
+        self.ok_button.place.h(28).lrb(-1);
         self.ok_button
             .set_text("OK")
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
 
-        self.ok_button.on_tap.sub(move || self.hide_modal(true));
+        self.ok_button.on_tap.sub(move || self.hide_modal(()));
+    }
+}
 
-        self.cancel_button.place.size(101, 20).br(-1);
-        self.cancel_button
-            .set_text("Cancel")
-            .set_border_color(Color::GRAY)
-            .set_text_color(Color::RED);
+impl ModalView<String> for Alert {
+    fn modal_event(&self) -> &Event<()> {
+        &self.event
+    }
 
-        self.cancel_button.on_tap.sub(move || self.hide_modal(false));
+    fn modal_size() -> Size {
+        (280, 200).into()
+    }
 
-        self.set_message();
+    fn setup_input(mut self: Weak<Self>, message: String) {
+        self.label.set_text(message);
     }
 }
