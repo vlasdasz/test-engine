@@ -41,4 +41,4 @@ jobs:
 
       - name: Test
         if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
-        run: python3 test.py
+        run: make test
