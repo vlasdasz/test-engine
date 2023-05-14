@@ -1,19 +1,13 @@
-use async_trait::async_trait;
-use test_engine::{
-    from_main,
-    gm::{flat::Size, Color},
-    on_main,
-};
-use tokio::sync::oneshot::{channel, Receiver, Sender};
-use ui::{refs::Weak, view, ModalView, SubView, ViewData, ViewSetup, ViewTest};
-use ui_views::{async_link_button, link_button, Button, Label, TextField};
+use test_engine::gm::{flat::Size, Color};
+use ui::{refs::Weak, view, Event, ModalView, SubView, ViewData, ViewSetup, ViewTest};
+use ui_views::{link_button, Button, Label, TextField};
 
 #[view]
 struct ModalTestView {
     button:      SubView<Button>,
     input_label: SubView<Label>,
     text_field:  SubView<TextField>,
-    sender:      Option<Sender<u32>>,
+    event:       Event<u32>,
 }
 
 impl ModalTestView {
@@ -35,20 +29,13 @@ impl ViewSetup for ModalTestView {
     }
 }
 
-#[async_trait]
 impl ModalView<u32, u32> for ModalTestView {
+    fn modal_event(&self) -> &Event<u32> {
+        &self.event
+    }
+
     fn modal_size() -> Size {
         (400, 400).into()
-    }
-
-    fn send(&mut self) -> Sender<u32> {
-        self.sender.take().unwrap()
-    }
-
-    fn recv(&mut self) -> Receiver<u32> {
-        let (s, r) = channel();
-        self.sender = s.into();
-        r
     }
 
     fn setup_input(mut self: Weak<Self>, input: u32) {
@@ -64,13 +51,9 @@ struct ModalViewTestContainer {
 }
 
 impl ModalViewTestContainer {
-    async fn on_tap(mut self: Weak<Self>) {
-        let result = from_main(move || ModalTestView::show_modally(self.text_field.text().parse().unwrap()))
-            .await
-            .await
-            .unwrap();
-
-        on_main(move || {
+    fn on_tap(mut self: Weak<Self>) {
+        let input = self.text_field.text().parse().unwrap();
+        ModalTestView::show_modally(input, move |result| {
             self.label.set_text(result);
         });
     }
@@ -81,7 +64,7 @@ impl ViewSetup for ModalViewTestContainer {
         self.button.set_text("Tap").place.size(100, 50);
         self.label.set_text("Nothing").place.size(100, 50).tr(0);
         self.text_field.place.size(100, 50).br(0);
-        async_link_button!(self, button, on_tap);
+        link_button!(self, button, on_tap);
     }
 }
 

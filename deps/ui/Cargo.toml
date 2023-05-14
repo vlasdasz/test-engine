@@ -11,13 +11,10 @@ doctest = false
 
 [dependencies]
 refs = { workspace = true }
-async-trait = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }
-tokio = { workspace = true }
 
-dispatch = { workspace = true }
 gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
 gm = { workspace = true }

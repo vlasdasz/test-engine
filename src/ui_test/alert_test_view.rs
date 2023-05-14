@@ -1,6 +1,6 @@
-use test_engine::{gm::flat::Size, on_main};
+use test_engine::gm::flat::Size;
 use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
-use ui_views::{async_link_button, Alert, Button, Label};
+use ui_views::{link_button, Alert, Button, Label};
 
 #[view]
 struct AlertTestView {
@@ -9,10 +9,9 @@ struct AlertTestView {
 }
 
 impl AlertTestView {
-    async fn on_button_tap(mut self: Weak<Self>) {
-        let res = Alert::ask("Prokpudak prokpudok!").await;
-        on_main(move || {
-            self.label.set_text(res);
+    fn on_button_tap(mut self: Weak<Self>) {
+        Alert::ask("Prokpudak prokpudok!", move |result| {
+            self.label.set_text(result);
         });
     }
 }
@@ -21,7 +20,7 @@ impl ViewSetup for AlertTestView {
     fn setup(mut self: Weak<Self>) {
         self.button.set_text("Show Alert").place.size(200, 50);
         self.label.place.size(200, 50).tr(0);
-        async_link_button!(self, button, on_button_tap);
+        link_button!(self, button, on_button_tap);
     }
 }
 

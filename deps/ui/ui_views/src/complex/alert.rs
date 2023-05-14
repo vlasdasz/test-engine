@@ -1,8 +1,6 @@
-use dispatch::from_main;
 use gm::{flat::Size, Color};
 use refs::Weak;
-use tokio::sync::oneshot::{channel, Receiver, Sender};
-use ui::{view, ModalView, SubView, ViewData, ViewSetup};
+use ui::{view, Event, ModalView, SubView, ViewData, ViewSetup};
 
 use crate::{Button, MultilineLabel};
 
@@ -12,22 +10,16 @@ pub struct Alert {
     ok_button:     SubView<Button>,
     cancel_button: SubView<Button>,
     message:       String,
-    sender:        Option<Sender<bool>>,
+    event:         Event<bool>,
 }
 
 impl ModalView<String, bool> for Alert {
+    fn modal_event(&self) -> &Event<bool> {
+        &self.event
+    }
+
     fn modal_size() -> Size {
         (280, 200).into()
-    }
-
-    fn send(&mut self) -> Sender<bool> {
-        self.sender.take().unwrap()
-    }
-
-    fn recv(&mut self) -> Receiver<bool> {
-        let (s, r) = channel();
-        self.sender = s.into();
-        r
     }
 
     fn setup_input(mut self: Weak<Self>, input: String) {
@@ -36,8 +28,8 @@ impl ModalView<String, bool> for Alert {
 }
 
 impl Alert {
-    pub async fn ask(message: impl ToString + 'static + Send) -> bool {
-        from_main(move || Self::show_modally(message.to_string())).await.await.unwrap()
+    pub fn ask(message: impl ToString, callback: impl FnOnce(bool) + 'static) {
+        Self::show_modally(message.to_string(), callback);
     }
 }
 
