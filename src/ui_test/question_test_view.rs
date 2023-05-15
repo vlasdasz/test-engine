@@ -1,5 +1,5 @@
-use test_engine::{gm::flat::Size, on_main};
-use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
+use test_engine::on_main;
+use ui::{refs::Weak, view, SubView, ViewSetup};
 use ui_views::{async_link_button, link_button, Button, Label, Question};
 
 #[view]
@@ -33,13 +33,6 @@ impl ViewSetup for QuestionTestView {
 
         self.button.set_text("Ask question").place.size(200, 50);
         link_button!(self, button, on_button_tap);
-    }
-}
-
-impl ViewTest for QuestionTestView {
-    fn test_size() -> Size
-    where Self: Sized {
-        (1000, 1000).into()
     }
 }
 

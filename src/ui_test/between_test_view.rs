@@ -1,6 +1,6 @@
 use rtools::Apply;
-use test_engine::gm::{flat::Size, Color};
-use ui::{layout::Anchor, refs::Weak, view, Container, SubView, ViewData, ViewSetup, ViewSubviews, ViewTest};
+use test_engine::gm::Color;
+use ui::{layout::Anchor, refs::Weak, view, Container, SubView, ViewData, ViewSetup, ViewSubviews};
 
 #[view]
 struct BetweenTestView {
@@ -48,13 +48,6 @@ impl ViewSetup for BetweenTestView {
         self.bottom_s_center.place.between_super(self.bottom, Anchor::Bot);
         self.left_s_center.place.between_super(self.left, Anchor::Left);
         self.right_s_center.place.between_super(self.right, Anchor::Right);
-    }
-}
-
-impl ViewTest for BetweenTestView {
-    fn test_size() -> Size
-    where Self: Sized {
-        (1000, 1000).into()
     }
 }
 

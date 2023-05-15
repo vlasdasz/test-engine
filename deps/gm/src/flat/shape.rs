@@ -45,12 +45,6 @@ impl<T: Into<Size>> From<T> for Shape {
     }
 }
 
-impl From<f32> for Shape {
-    fn from(val: f32) -> Self {
-        Shape::Circle(val)
-    }
-}
-
 impl Default for Shape {
     fn default() -> Self {
         Shape::Rect(Default::default())

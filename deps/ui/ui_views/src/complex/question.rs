@@ -27,7 +27,7 @@ impl ModalView<String, bool> for Question {
 }
 
 impl Question {
-    pub fn ask(message: impl ToString, callback: impl FnOnce(bool) + 'static) {
+    pub fn ask(message: impl ToString, callback: impl FnOnce(bool) + 'static + Send) {
         Self::show_modally(message.to_string(), callback);
     }
 

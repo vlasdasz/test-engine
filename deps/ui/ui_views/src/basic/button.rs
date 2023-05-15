@@ -1,6 +1,6 @@
 use gm::Color;
 use refs::Weak;
-use ui::{view, Event, SubView, ViewSetup, ViewSubviews, ViewTouch};
+use ui::{view, Event, SubView, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
 use crate::Label;
 
@@ -34,8 +34,9 @@ impl Button {
 }
 
 impl ViewSetup for Button {
-    fn setup(self: Weak<Self>) {
+    fn setup(mut self: Weak<Self>) {
         self.enable_touch();
+        self.set_size((100, 20));
         self.on_touch_began.sub(move || self.on_tap.trigger(()));
     }
 }

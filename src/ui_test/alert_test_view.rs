@@ -1,5 +1,4 @@
-use test_engine::gm::flat::Size;
-use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
+use ui::{refs::Weak, view, SubView, ViewSetup};
 use ui_views::{link_button, Alert, Button, Label};
 
 #[view]
@@ -19,13 +18,6 @@ impl ViewSetup for AlertTestView {
         self.button.set_text("Show Alert").place.size(200, 50);
         self.label.place.size(200, 50).tr(0);
         link_button!(self, button, on_button_tap);
-    }
-}
-
-impl ViewTest for AlertTestView {
-    fn test_size() -> Size
-    where Self: Sized {
-        (1000, 1000).into()
     }
 }
 

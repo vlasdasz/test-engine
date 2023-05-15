@@ -1,21 +1,25 @@
 use std::f32::consts::PI;
 
 use dispatch::on_main;
-use gm::{flat::point_on_circle, Color};
+use gm::{
+    flat::{point_on_circle, Size},
+    Color,
+};
 use log::warn;
-use refs::{Own, Weak};
+use refs::Weak;
 use rtools::{Animation, Time};
 use ui::{
-    view, Container, UIAnimation, UIManager, View, ViewAnimation, ViewCallbacks, ViewData, ViewFrame,
+    view, Container, Event, ModalView, UIAnimation, ViewAnimation, ViewCallbacks, ViewData, ViewFrame,
     ViewSetup, ViewSubviews,
 };
 
 static CIRCLES_N: u32 = 6;
-static mut SPINNER: Weak<dyn View> = Weak::const_default();
+static mut SPINNER: Weak<Spinner> = Weak::const_default();
 
 #[view]
 pub struct Spinner {
     circles: Vec<Weak<Container>>,
+    event:   Event<()>,
 }
 
 impl Spinner {
@@ -30,7 +34,6 @@ impl Spinner {
 
 impl ViewSetup for Spinner {
     fn setup(mut self: Weak<Self>) {
-        self.place.size(140, 140).center();
         self.set_color(Color::GRAY.with_alpha(0.8));
         self.set_corner_radius(20);
 
@@ -72,11 +75,8 @@ impl ViewCallbacks for Spinner {
 
 impl Spinner {
     pub fn start() {
-        on_main(|| {
-            UIManager::disable_touch();
-            unsafe {
-                SPINNER = UIManager::touch_root().add_subview(Own::<Spinner>::default());
-            }
+        on_main(|| unsafe {
+            SPINNER = Self::prepare_modally(());
         });
     }
 
@@ -97,12 +97,21 @@ impl Spinner {
             });
 
             animation.on_finish.sub(|| {
-                SPINNER.remove_from_superview();
+                SPINNER.hide_modal(());
                 SPINNER = Default::default();
-                UIManager::enable_touch();
             });
 
             SPINNER.add_animation(animation);
         });
+    }
+}
+
+impl ModalView for Spinner {
+    fn modal_event(&self) -> &Event<()> {
+        &self.event
+    }
+
+    fn modal_size() -> Size {
+        (140, 140).into()
     }
 }

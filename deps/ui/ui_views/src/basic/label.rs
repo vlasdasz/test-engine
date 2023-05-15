@@ -102,6 +102,7 @@ impl Label {
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
         self.font = Font::san_francisco();
+        self.set_size((100, 20));
         self.text_size = 32.0;
 
         debug_assert!(self.text.is_empty());

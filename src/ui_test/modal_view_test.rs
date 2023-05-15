@@ -1,5 +1,5 @@
 use test_engine::gm::{flat::Size, Color};
-use ui::{refs::Weak, view, Event, ModalView, SubView, ViewData, ViewSetup, ViewTest};
+use ui::{refs::Weak, view, Event, ModalView, SubView, ViewData, ViewSetup};
 use ui_views::{link_button, Button, Label, TextField};
 
 #[view]
@@ -65,13 +65,6 @@ impl ViewSetup for ModalViewTestContainer {
         self.label.set_text("Nothing").place.size(100, 50).tr(0);
         self.text_field.place.size(100, 50).br(0);
         link_button!(self, button, on_tap);
-    }
-}
-
-impl ViewTest for ModalViewTestContainer {
-    fn test_size() -> Size
-    where Self: Sized {
-        (1000, 1000).into()
     }
 }
 
