@@ -4,15 +4,20 @@ use vents::Event;
 
 use crate::{view::ViewSubviews, UIManager, View};
 
+fn prepare<T: ModalView<In, Out>, In, Out: 'static>(input: In) -> Weak<T> {
+    let view = Own::<T>::default();
+    let size = T::modal_size();
+    let weak = view.weak();
+    UIManager::root_view().add_subview(view);
+    weak.setup_input(input);
+    weak.place.center().size(size.width, size.height);
+    UIManager::push_touch_view(weak.weak_view());
+    weak
+}
+
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     fn show_modally(input: In, callback: impl FnOnce(Out) + 'static) {
-        let view = Own::<Self>::default();
-        let size = Self::modal_size();
-        let weak = view.weak();
-        UIManager::root_view().add_subview(view);
-        weak.setup_input(input);
-        weak.place.center().size(size.width, size.height);
-        UIManager::push_touch_view(weak.weak_view());
+        let weak = prepare::<Self, In, Out>(input);
         weak.modal_event().once(callback);
     }
 
