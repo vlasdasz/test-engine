@@ -41,6 +41,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where Out: Send {
         on_main(move || {
             self.remove_from_superview();
+            UIManager::pop_touch_view(self.weak_view());
             self.modal_event().trigger(result);
         });
     }

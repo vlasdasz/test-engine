@@ -80,8 +80,10 @@ impl UIManager {
         Self::get().touch_stack.push(view);
     }
 
-    pub fn pop_touch_view() {
-        Self::get().touch_stack.pop();
+    pub fn pop_touch_view(view: Weak<dyn View>) {
+        if let Some(pop) = Self::get().touch_stack.pop() {
+            assert_eq!(pop.addr(), view.addr(), "Inconsistent pop_touch_view call");
+        }
     }
 }
 
@@ -101,7 +103,7 @@ impl UIManager {
     pub fn touch_root() -> Weak<dyn View> {
         let mut this = Self::get();
 
-        this.touch_stack.retain(|a| !a.freed());
+        // this.touch_stack.retain(|a| !a.freed());
 
         if let Some(touch) = this.touch_stack.last_mut() {
             *touch

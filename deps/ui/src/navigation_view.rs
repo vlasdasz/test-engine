@@ -71,8 +71,8 @@ impl NavigationView {
         });
 
         anim.on_finish.sub(move || {
-            UIManager::get().touch_stack.pop().expect("BUG: pop without push");
             to_pop.remove_from_superview();
+            UIManager::pop_touch_view(to_pop);
             UIManager::enable_touch();
         });
 

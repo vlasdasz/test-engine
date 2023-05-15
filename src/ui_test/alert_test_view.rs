@@ -1,8 +1,9 @@
 use ui::{refs::Weak, view, SubView, ViewSetup};
-use ui_views::{link_button, Alert, Button, Label};
+use ui_views::{link_button, touch_test_view::TouchTestView, Alert, Button, Label};
 
 #[view]
 struct AlertTestView {
+    test:   SubView<TouchTestView>,
     button: SubView<Button>,
     label:  SubView<Label>,
 }

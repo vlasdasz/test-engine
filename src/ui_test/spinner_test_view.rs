@@ -1,10 +1,11 @@
 use rtools::sleep;
 use ui::{refs::Weak, view, SubView, ViewSetup};
-use ui_views::{async_link_button, Button, Spinner};
+use ui_views::{async_link_button, touch_test_view::TouchTestView, Button, Spinner};
 
 #[view]
 struct SpinnerTestView {
     button: SubView<Button>,
+    test:   SubView<TouchTestView>,
 }
 
 impl SpinnerTestView {
