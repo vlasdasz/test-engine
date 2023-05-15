@@ -14,6 +14,7 @@ name = "test_game_lib"
 [dependencies]
 tokio = { workspace = true }
 
+derivative = { workspace = true }
 rtools = { workspace = true }
 test_engine = { workspace = true }
 ui = { workspace = true }
@@ -31,6 +32,7 @@ cfg_aliases = "0.1"
 gl = "0.14"
 glfw = "0.51.0"
 log = "0.4"
+derivative = "2.2.0"
 mashup = "0.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -41,8 +43,8 @@ tokio = { version = "1.26.0", features = ["full"] }
 
 reflected = "0.2.9"
 reflected_proc = "0.2.9"
-refs = "0.1.33"
-rtools = "0.1.40"
+refs = "0.1.34"
+rtools = "0.1.42"
 vents = "0.1.11"
 
 

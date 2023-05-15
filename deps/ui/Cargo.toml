@@ -10,6 +10,7 @@ name = "ui"
 doctest = false
 
 [dependencies]
+derivative = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }

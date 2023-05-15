@@ -1,5 +1,6 @@
 use std::{
     any::Any,
+    fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
 };
 
@@ -8,7 +9,7 @@ use refs::Weak;
 use crate::{view::view_callbacks::ViewInternalSetup, ViewBase, ViewCallbacks};
 
 pub trait View:
-    ViewCallbacks + ViewInternalSetup + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> {
+    ViewCallbacks + ViewInternalSetup + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> + Debug {
     fn init_views(&mut self);
     fn base(&self) -> &ViewBase;
     fn weak_view(&self) -> Weak<dyn View>;
@@ -48,5 +49,11 @@ impl<T: View> DerefMut for SubView<T> {
 impl<T: View> From<Weak<T>> for SubView<T> {
     fn from(r: Weak<T>) -> Self {
         Self(r)
+    }
+}
+
+impl<T: View> Debug for SubView<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(&"Subview", f)
     }
 }

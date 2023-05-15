@@ -4,7 +4,7 @@ use ui::{view, View, ViewCallbacks, ViewFrame, ViewSubviews, ViewTouch};
 
 use crate::CollectionData;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub enum CollectionLayout {
     #[default]
     Table,

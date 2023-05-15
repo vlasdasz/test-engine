@@ -1,8 +1,10 @@
+use std::fmt::Debug;
+
 use gm::flat::Size;
 use refs::Own;
 use ui::View;
 
-pub trait CollectionData {
+pub trait CollectionData: Debug {
     fn number_of_cells(&self) -> usize;
     fn cell_for_index(&self, index: usize) -> Own<dyn View>;
     fn size_for_index(&self, index: usize) -> Size;

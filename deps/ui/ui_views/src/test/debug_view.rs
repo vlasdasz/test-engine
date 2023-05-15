@@ -15,6 +15,7 @@ pub struct DebugView {
     touch_enabled:      SubView<Label>,
     exit:               SubView<Button>,
     dump_mem:           SubView<Button>,
+    touch_root:         SubView<Label>,
 
     custom_labels: HashMap<String, SubView<Label>>,
 
@@ -102,5 +103,8 @@ impl ViewCallbacks for DebugView {
 
         self.touch_enabled
             .set_text(format!("Touch enabled: {}", !UIManager::touch_disabled()));
+
+        self.touch_root
+            .set_text(format!("Touch root: {}", dbg!(&UIManager::touch_root().label)));
     }
 }

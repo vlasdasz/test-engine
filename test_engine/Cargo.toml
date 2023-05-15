@@ -14,6 +14,7 @@ log = { workspace = true }
 reflected = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
+derivative = { workspace = true }
 
 tokio = { workspace = true }
 

@@ -18,7 +18,9 @@ static mut SPINNER: Weak<Spinner> = Weak::const_default();
 
 #[view]
 pub struct Spinner {
+    #[derivative(Debug = "ignore")]
     circles: Vec<Weak<Container>>,
+    #[derivative(Debug = "ignore")]
     event:   Event<()>,
 }
 

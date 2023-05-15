@@ -17,6 +17,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
     let name = &stream.ident;
 
+    let name_str = TokenStream2::from_str(&format!("\"{name}\"")).unwrap();
+
     let generics = &stream.generics;
 
     let type_param_names: Vec<_> = generics
@@ -44,7 +46,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     }
 
     quote! {
-        #[derive(Default)]
+        #[derive(derivative::Derivative, Default)]
+        #[derivative(Debug)]
         #stream
 
         impl #generics ui::View for #name <#type_params> {
@@ -68,6 +71,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             fn internal_setup(&mut self) {
                 use ui::ViewSetup;
                 use ui::refs::ToWeak;
+                self.view.label = #name_str.to_string();
                 self.weak().setup()
             }
         }
@@ -103,7 +107,7 @@ fn add_inits(root_name: &Ident, fields: &FieldsNamed) -> TokenStream2 {
                     res = quote! {
                         #res
                         self.#name = self.add_view();
-                        self.#name.label = String::from(#label);
+                        self.#name.label += #label;
                     }
                 }
             }

@@ -1,3 +1,4 @@
+use derivative::Derivative;
 use refs::Weak;
 use rtools::IntoF32;
 
@@ -6,12 +7,16 @@ use crate::{
     View,
 };
 
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub(crate) struct LayoutRule {
     pub(crate) side:   Anchor,
     pub(crate) tiling: Option<Tiling>,
     pub(crate) offset: f32,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) anchor_view:  Weak<dyn View>,
+    #[derivative(Debug = "ignore")]
     pub(crate) anchor_view2: Weak<dyn View>,
 
     pub(crate) relative: bool,

@@ -1,6 +1,6 @@
 use sprites::Sprite;
-use ui::{refs::Weak, view, SubView, ViewCallbacks, ViewData, ViewSetup};
-use ui_views::{Button, Images, LabeledView};
+use ui::{refs::Weak, view, SubView, ViewCallbacks, ViewSetup};
+use ui_views::{Button, LabeledView};
 
 #[view]
 pub struct SpriteView {
@@ -9,35 +9,34 @@ pub struct SpriteView {
     color:    SubView<LabeledView>,
 
     delete_button: SubView<Button>,
-
-    sprite: Weak<dyn Sprite>,
+    //sprite: Weak<dyn Sprite>,
 }
 
 impl SpriteView {
-    pub fn set_sprite(&mut self, sprite: Weak<dyn Sprite>) {
-        self.sprite = sprite;
-        self.delete_button.set_hidden(sprite.is_null());
-        if sprite.is_null() {
-            self.position.clear();
-            self.size.clear();
-            self.color.clear();
-            return;
-        }
-        self.position.set_text(sprite.position());
-        self.size.set_text(sprite.size());
-        self.color.set_text(*sprite.color());
+    pub fn set_sprite(&mut self, _sprite: Weak<dyn Sprite>) {
+        // self.sprite = sprite;
+        // self.delete_button.set_hidden(sprite.is_null());
+        // if sprite.is_null() {
+        //     self.position.clear();
+        //     self.size.clear();
+        //     self.color.clear();
+        //     return;
+        // }
+        // self.position.set_text(sprite.position());
+        // self.size.set_text(sprite.size());
+        // self.color.set_text(*sprite.color());
     }
 
-    fn setup_delete_button(mut self: Weak<Self>) {
-        self.delete_button.place.size(20, 20).tl(0);
-        self.delete_button.set_hidden(true).set_image(Images::delete());
-
-        self.delete_button.on_tap.sub(move || {
-            if self.sprite.is_ok() {
-                self.sprite.remove();
-                self.set_sprite(Weak::default());
-            }
-        });
+    fn setup_delete_button(self: Weak<Self>) {
+        // self.delete_button.place.size(20, 20).tl(0);
+        // self.delete_button.set_hidden(true).set_image(Images::delete());
+        //
+        // self.delete_button.on_tap.sub(move || {
+        //     if self.sprite.is_ok() {
+        //         self.sprite.remove();
+        //         self.set_sprite(Weak::default());
+        //     }
+        // });
     }
 }
 
@@ -55,9 +54,9 @@ impl ViewSetup for SpriteView {
 
 impl ViewCallbacks for SpriteView {
     fn update(&mut self) {
-        if self.sprite.is_null() {
-            return;
-        }
-        self.set_sprite(self.sprite);
+        // if self.sprite.is_null() {
+        //     return;
+        // }
+        // self.set_sprite(self.sprite);
     }
 }

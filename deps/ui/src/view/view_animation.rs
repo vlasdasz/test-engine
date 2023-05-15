@@ -1,5 +1,6 @@
 use std::ops::DerefMut;
 
+use derivative::Derivative;
 use rtools::Animation;
 use vents::Event;
 
@@ -7,9 +8,13 @@ use crate::View;
 
 type Action = Box<dyn FnMut(&mut dyn View, f32)>;
 
+#[derive(Derivative)]
+#[derivative(Debug)]
 pub struct UIAnimation {
     animation:     Animation,
+    #[derivative(Debug = "ignore")]
     action:        Action,
+    #[derivative(Debug = "ignore")]
     pub on_finish: Event,
 }
 

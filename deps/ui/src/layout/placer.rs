@@ -1,5 +1,6 @@
 use std::{
     cell::{RefCell, RefMut},
+    fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
 };
 
@@ -422,5 +423,11 @@ where
 
     for (i, view) in views.iter_mut().enumerate() {
         view.set_frame((i as f32 * width, 0, width, height));
+    }
+}
+
+impl Debug for Placer {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        self.rules.borrow().fmt(f)
     }
 }
