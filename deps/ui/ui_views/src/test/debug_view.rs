@@ -105,6 +105,6 @@ impl ViewCallbacks for DebugView {
             .set_text(format!("Touch enabled: {}", !UIManager::touch_disabled()));
 
         self.touch_root
-            .set_text(format!("Touch root: {}", dbg!(&UIManager::touch_root().label)));
+            .set_text(format!("Touch root: {}", UIManager::touch_root().label));
     }
 }

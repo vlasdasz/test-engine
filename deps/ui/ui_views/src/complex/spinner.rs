@@ -5,7 +5,6 @@ use gm::{
     flat::{point_on_circle, Size},
     Color,
 };
-use log::warn;
 use refs::Weak;
 use rtools::{Animation, Time};
 use ui::{
@@ -18,9 +17,7 @@ static mut SPINNER: Weak<Spinner> = Weak::const_default();
 
 #[view]
 pub struct Spinner {
-    #[derivative(Debug = "ignore")]
     circles: Vec<Weak<Container>>,
-    #[derivative(Debug = "ignore")]
     event:   Event<()>,
 }
 
@@ -78,16 +75,14 @@ impl ViewCallbacks for Spinner {
 impl Spinner {
     pub fn start() {
         on_main(|| unsafe {
+            assert!(SPINNER.is_null(), "A spinner is already spinning");
             SPINNER = Self::prepare_modally(());
         });
     }
 
     pub fn stop() {
         on_main(|| unsafe {
-            if SPINNER.is_null() {
-                warn!("Spinner already stopped");
-                return;
-            }
+            assert!(SPINNER.is_ok(), "Spinner already stopped");
 
             let animation = UIAnimation::new(Animation::new(0.8, 0, 0.4), |sp, val| {
                 let color = sp.color();
@@ -105,6 +100,14 @@ impl Spinner {
 
             SPINNER.add_animation(animation);
         });
+    }
+
+    pub fn instant_stop() {
+        unsafe {
+            assert!(SPINNER.is_ok(), "Spinner already stopped");
+            SPINNER.hide_modal(());
+            SPINNER = Default::default();
+        }
     }
 }
 
