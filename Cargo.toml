@@ -26,7 +26,6 @@ android-ndk-sys = "0.2"
 cfg_aliases = { workspace = true }
 
 [workspace.dependencies]
-async-trait = "0.1.68"
 cfg-if = "1.0"
 cfg_aliases = "0.1"
 gl = "0.14"

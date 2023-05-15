@@ -30,6 +30,10 @@ impl Question {
     pub fn ask(message: impl ToString, callback: impl FnOnce(bool) + 'static) {
         Self::show_modally(message.to_string(), callback);
     }
+
+    pub async fn ask_async(message: impl ToString) -> bool {
+        Self::show_modally_async(message.to_string()).await
+    }
 }
 
 impl ViewSetup for Question {

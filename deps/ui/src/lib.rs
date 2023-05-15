@@ -3,6 +3,7 @@
 #![feature(specialization)]
 #![feature(const_trait_impl)]
 #![feature(arbitrary_self_types)]
+#![feature(async_fn_in_trait)]
 
 pub use input::Touch;
 
