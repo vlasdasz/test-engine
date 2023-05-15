@@ -22,6 +22,8 @@ pub struct Placer {
     pub frame:   Rglica<Rect>,
     pub s_frame: Rglica<Rect>,
 
+    all_margin: RefCell<f32>,
+
     has: RefCell<SizeBase<bool>>,
 }
 
@@ -33,6 +35,7 @@ impl Placer {
             view,
             frame: view.frame().to_rglica(),
             s_frame: view.super_frame().to_rglica(),
+            all_margin: Default::default(),
             has: Default::default(),
         }
     }
@@ -137,6 +140,11 @@ impl Placer {
 
     pub fn all_hor(&self) -> &Self {
         self.sub_rules().push(Tiling::Horizontally.into());
+        self
+    }
+
+    pub fn all(&self, margin: impl IntoF32) -> &Self {
+        *self.all_margin.borrow_mut() = margin.into_f32();
         self
     }
 }
@@ -335,8 +343,8 @@ impl Placer {
         let frame = frame.deref_mut();
         match tiling {
             Tiling::Background => *frame = self.s_frame.with_zero_origin(),
-            Tiling::Horizontally => place_horizontally(self.view.subviews_mut()),
-            Tiling::Vertically => place_vertically(self.view.subviews_mut()),
+            Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
+            Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
         }
     }
 
@@ -374,7 +382,7 @@ impl Placer {
     }
 }
 
-fn place_vertically(views: &mut [Own<dyn View>]) {
+fn place_vertically(views: &mut [Own<dyn View>], _margin: f32) {
     if views.is_empty() {
         return;
     }
@@ -397,7 +405,7 @@ fn place_vertically(views: &mut [Own<dyn View>]) {
     }
 }
 
-fn place_horizontally<T, Ref, Arr>(mut views: Arr)
+fn place_horizontally<T, Ref, Arr>(mut views: Arr, _margin: f32)
 where
     T: View + ?Sized,
     Ref: DerefMut<Target = T>,
