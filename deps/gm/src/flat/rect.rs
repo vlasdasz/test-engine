@@ -108,14 +108,14 @@ impl Rect {
         }
     }
 
-    pub fn lenght<const AXIS: Axis>(&self) -> f32 {
+    pub fn length<const AXIS: Axis>(&self) -> f32 {
         match AXIS {
             Axis::X => self.size.width,
             Axis::Y => self.size.height,
         }
     }
 
-    pub fn other_lenght<const AXIS: Axis>(&self) -> f32 {
+    pub fn other_length<const AXIS: Axis>(&self) -> f32 {
         match AXIS {
             Axis::X => self.size.height,
             Axis::Y => self.size.width,

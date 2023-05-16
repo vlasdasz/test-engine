@@ -393,7 +393,7 @@ fn place_horizontally(views: &mut [Own<dyn View>], margin: f32) {
     distribute::<{ Axis::X }>(views, margin);
 }
 
-fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], _margin: f32) {
+fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
     let Some(mut last) = views.last_mut().map(|v| v.weak_view()) else {
         return;
     };
@@ -406,14 +406,22 @@ fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], _margin: f32) {
         return;
     }
 
-    let lenght = super_frame.lenght::<AXIS>() / views.len() as f32;
-    let other_lenght = super_frame.other_lenght::<AXIS>();
+    let all_margins = margin * (views.len() - 1) as f32;
 
-    for (i, frame) in views.iter_mut().map(|v| v.frame_mut()).enumerate() {
-        frame.set_position::<AXIS>(i as f32 * lenght);
+    let left_length = super_frame.length::<AXIS>() - all_margins;
+
+    let length = left_length / views.len() as f32;
+    let other_length = super_frame.other_length::<AXIS>();
+
+    let mut last_pos: f32 = 0.0;
+
+    for frame in views.iter_mut().map(|v| v.frame_mut()) {
+        frame.set_position::<AXIS>(last_pos);
         frame.set_other_position::<AXIS>(0);
-        frame.set_length::<AXIS>(lenght);
-        frame.set_other_length::<AXIS>(other_lenght);
+        frame.set_length::<AXIS>(length);
+        frame.set_other_length::<AXIS>(other_length);
+
+        last_pos += length + margin;
     }
 }
 
