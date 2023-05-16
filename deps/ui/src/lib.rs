@@ -4,6 +4,8 @@
 #![feature(const_trait_impl)]
 #![feature(arbitrary_self_types)]
 #![feature(async_fn_in_trait)]
+#![feature(adt_const_params)]
+#![feature(generic_const_exprs)]
 
 pub use input::Touch;
 

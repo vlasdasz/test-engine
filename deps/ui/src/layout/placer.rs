@@ -4,7 +4,10 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::flat::{Rect, SizeBase};
+use gm::{
+    axis::Axis,
+    flat::{Rect, SizeBase},
+};
 use refs::{Own, Rglica, ToRglica, Weak};
 use rtools::IntoF32;
 
@@ -382,55 +385,35 @@ impl Placer {
     }
 }
 
-fn place_vertically(views: &mut [Own<dyn View>], _margin: f32) {
-    if views.is_empty() {
-        return;
-    }
-
-    let mut last = views.last_mut().unwrap().weak_view();
-
-    if views.len() == 1 {
-        let back = last.super_frame().with_zero_origin();
-        last.set_frame(back);
-        return;
-    }
-
-    let super_frame = *last.superview().frame();
-
-    let height = super_frame.height() / views.len() as f32;
-    let width = super_frame.width();
-
-    for (i, view) in views.iter_mut().enumerate() {
-        view.set_frame((0.0, i as f32 * height, width, height));
-    }
+fn place_vertically(views: &mut [Own<dyn View>], margin: f32) {
+    distribute::<{ Axis::Y }>(views, margin);
 }
 
-fn place_horizontally<T, Ref, Arr>(mut views: Arr, _margin: f32)
-where
-    T: View + ?Sized,
-    Ref: DerefMut<Target = T>,
-    Arr: AsMut<[Ref]>, {
-    let views = views.as_mut();
+fn place_horizontally(views: &mut [Own<dyn View>], margin: f32) {
+    distribute::<{ Axis::X }>(views, margin);
+}
 
-    if views.is_empty() {
+fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], _margin: f32) {
+    let Some(mut last) = views.last_mut().map(|v| v.weak_view()) else {
         return;
-    }
+    };
 
-    let mut last = views.last_mut().unwrap().weak_view();
+    let super_frame = *last.superview().frame();
 
     if views.len() == 1 {
-        let back = last.super_frame().with_zero_origin();
+        let back = super_frame.with_zero_origin();
         last.set_frame(back);
         return;
     }
 
-    let super_frame = *last.superview().frame();
+    let lenght = super_frame.lenght::<AXIS>() / views.len() as f32;
+    let other_lenght = super_frame.other_lenght::<AXIS>();
 
-    let width = super_frame.width() / views.len() as f32;
-    let height = super_frame.height();
-
-    for (i, view) in views.iter_mut().enumerate() {
-        view.set_frame((i as f32 * width, 0, width, height));
+    for (i, frame) in views.iter_mut().map(|v| v.frame_mut()).enumerate() {
+        frame.set_position::<AXIS>(i as f32 * lenght);
+        frame.set_other_position::<AXIS>(0);
+        frame.set_length::<AXIS>(lenght);
+        frame.set_other_length::<AXIS>(other_lenght);
     }
 }
 

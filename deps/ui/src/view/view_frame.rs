@@ -5,6 +5,7 @@ use crate::View;
 
 pub trait ViewFrame {
     fn frame(&self) -> &Rect;
+    fn frame_mut(&mut self) -> &mut Rect;
     fn super_frame(&self) -> &Rect;
     fn absolute_frame(&self) -> &Rect;
     fn x(&self) -> f32;
@@ -27,6 +28,10 @@ impl<T: ?Sized + View> ViewFrame for T {
         &self.frame
     }
 
+    fn frame_mut(&mut self) -> &mut Rect {
+        &mut self.frame
+    }
+
     fn super_frame(&self) -> &Rect {
         if self.superview.is_ok() {
             return self.superview.frame();
@@ -36,10 +41,6 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn absolute_frame(&self) -> &Rect {
         &self.absolute_frame
-    }
-
-    fn size(&self) -> Size {
-        self.frame.size
     }
 
     fn x(&self) -> f32 {
@@ -56,6 +57,10 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn max_y(&self) -> f32 {
         self.frame.max_y()
+    }
+
+    fn size(&self) -> Size {
+        self.frame.size
     }
 
     fn width(&self) -> f32 {

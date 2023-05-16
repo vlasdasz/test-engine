@@ -3,7 +3,10 @@ use std::ops::Mul;
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
-use crate::flat::{Point, Size};
+use crate::{
+    axis::Axis,
+    flat::{Point, Size},
+};
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Rect {
@@ -87,6 +90,64 @@ impl Rect {
 
     pub fn with_zero_origin(&self) -> Rect {
         (0, 0, self.size.width, self.size.height).into()
+    }
+}
+
+impl Rect {
+    pub fn position<const AXIS: Axis>(&self) -> f32 {
+        match AXIS {
+            Axis::X => self.origin.x,
+            Axis::Y => self.origin.y,
+        }
+    }
+
+    pub fn other_position<const AXIS: Axis>(&self) -> f32 {
+        match AXIS {
+            Axis::X => self.origin.y,
+            Axis::Y => self.origin.x,
+        }
+    }
+
+    pub fn lenght<const AXIS: Axis>(&self) -> f32 {
+        match AXIS {
+            Axis::X => self.size.width,
+            Axis::Y => self.size.height,
+        }
+    }
+
+    pub fn other_lenght<const AXIS: Axis>(&self) -> f32 {
+        match AXIS {
+            Axis::X => self.size.height,
+            Axis::Y => self.size.width,
+        }
+    }
+
+    pub fn set_position<const AXIS: Axis>(&mut self, pos: impl IntoF32) {
+        match AXIS {
+            Axis::X => self.origin.x = pos.into_f32(),
+            Axis::Y => self.origin.y = pos.into_f32(),
+        }
+    }
+
+    pub fn set_other_position<const AXIS: Axis>(&mut self, pos: impl IntoF32) {
+        match AXIS {
+            Axis::X => self.origin.y = pos.into_f32(),
+            Axis::Y => self.origin.x = pos.into_f32(),
+        }
+    }
+
+    pub fn set_length<const AXIS: Axis>(&mut self, length: impl IntoF32) {
+        match AXIS {
+            Axis::X => self.size.width = length.into_f32(),
+            Axis::Y => self.size.height = length.into_f32(),
+        }
+    }
+
+    pub fn set_other_length<const AXIS: Axis>(&mut self, length: impl IntoF32) {
+        match AXIS {
+            Axis::X => self.size.height = length.into_f32(),
+            Axis::Y => self.size.width = length.into_f32(),
+        }
     }
 }
 
