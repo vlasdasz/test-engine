@@ -8,6 +8,7 @@ pub mod axis;
 pub mod color;
 pub mod flat;
 pub mod misc;
+pub mod sign;
 pub mod volume;
 
 pub use color::Color;

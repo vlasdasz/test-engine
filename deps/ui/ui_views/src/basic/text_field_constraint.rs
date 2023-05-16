@@ -36,7 +36,7 @@ impl TextFieldConstraint {
                 if str.contains('.') {
                     "0123456789"
                 } else {
-                    "0.123456789"
+                    "-0.123456789"
                 }
             }
         }

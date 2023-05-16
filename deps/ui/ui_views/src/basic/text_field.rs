@@ -45,6 +45,11 @@ impl TextField {
         self.set_color(Color::CLEAR);
         self
     }
+
+    pub fn float_only(&mut self) -> &mut Self {
+        self.constraint = TextFieldConstraint::Float.into();
+        self
+    }
 }
 
 impl ViewSetup for TextField {
