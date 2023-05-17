@@ -4,10 +4,10 @@ name = "ui_views"
 version = "0.1.0"
 
 [dependencies]
+derivative = { workspace = true }
 log = { workspace = true }
 smart-default = { workspace = true }
 tokio = { workspace = true }
-derivative = { workspace = true }
 
 dispatch = { workspace = true }
 gl_image = { workspace = true }

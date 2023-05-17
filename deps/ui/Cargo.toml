@@ -6,16 +6,16 @@ version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name = "ui"
 doctest = false
+name = "ui"
 
 [dependencies]
 derivative = { workspace = true }
+dispatch = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }
-dispatch = { workspace = true }
 
 gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
