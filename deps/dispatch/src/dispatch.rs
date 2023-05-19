@@ -19,7 +19,7 @@ static SIGNALLED: SignalledCallbacks = SignalledCallbacks::new(vec![]);
 pub async fn from_main<T, A>(action: A) -> T
 where
     A: FnOnce() -> T + Send + 'static,
-    T: Send + Sync + 'static, {
+    T: Send + 'static, {
     let res = Arc::<Mutex<Option<T>>>::default();
 
     let (sender, receiver) = channel::<()>();
