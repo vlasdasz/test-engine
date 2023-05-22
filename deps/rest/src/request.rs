@@ -1,6 +1,6 @@
 use std::{borrow::Borrow, collections::HashMap, fmt::Debug, marker::PhantomData};
 
-use log::debug;
+use log::{debug, error};
 use reqwest::Client;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
@@ -68,7 +68,8 @@ async fn request_object<T>(method: Method, url: String, body: Option<String>) ->
 where T: DeserializeOwned {
     let response = raw_request(method, url, API::headers(), body).await?;
 
-    if response.status == 500 {
+    if response.status != 200 {
+        error!("Object request failed: {response:?}");
         Err(from_str(&response.body)?)
     } else {
         Ok(from_str(&response.body)?)
