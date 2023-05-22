@@ -2,7 +2,6 @@ use std::{borrow::Borrow, collections::HashMap, fmt::Debug, marker::PhantomData}
 
 use log::debug;
 use reqwest::Client;
-use rtools::sleep;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
 
@@ -82,7 +81,7 @@ pub async fn raw_request(
     headers: &HashMap<String, String>,
     body: Option<String>,
 ) -> NetResult<Response> {
-    sleep(1);
+    rtools::sleep(0.2);
 
     let url = url.to_string();
     let client = Client::new();
