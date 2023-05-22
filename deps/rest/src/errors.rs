@@ -14,6 +14,12 @@ pub struct RestError {
 
 impl Error for RestError {}
 
+impl From<RestError> for String {
+    fn from(value: RestError) -> Self {
+        value.message
+    }
+}
+
 impl From<String> for RestError {
     fn from(message: String) -> Self {
         Self { message }
