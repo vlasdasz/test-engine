@@ -29,16 +29,10 @@ impl TextFieldConstraint {
         self.accepted_symbols(string).contains(char)
     }
 
-    fn accepted_symbols(&self, str: &str) -> &str {
+    fn accepted_symbols(&self, _str: &str) -> &str {
         match self {
-            Self::Integer => "0123456789",
-            Self::Float => {
-                if str.contains('.') {
-                    "0123456789"
-                } else {
-                    "-0.123456789"
-                }
-            }
+            Self::Integer => "-0123456789",
+            Self::Float => "-0.123456789",
         }
     }
 }
