@@ -12,6 +12,7 @@ pub trait ViewSubviews {
     fn remove_all_subviews(&mut self);
 
     fn add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
+    fn add_weak<V: 'static + View + Default>(&mut self) -> Weak<V>;
     fn add_subview(&mut self, view: Own<dyn View>) -> Weak<dyn View>;
 
     fn add_dummy_view(&mut self);
@@ -56,6 +57,10 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let result = view.weak();
         self.add_subview(view);
         result.into()
+    }
+
+    fn add_weak<V: 'static + View + Default>(&mut self) -> Weak<V> {
+        self.add_view::<V>().weak()
     }
 
     fn add_subview(&mut self, mut view: Own<dyn View>) -> Weak<dyn View> {
