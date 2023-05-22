@@ -1,7 +1,9 @@
 use std::{collections::HashMap, fmt::Display};
 
 use refs::{dump_ref_stats, Weak};
-use ui::{view, Property, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
+use ui::{
+    view, Property, SubView, ToLabel, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews,
+};
 
 use crate::{Button, Label};
 
@@ -25,7 +27,7 @@ pub struct DebugView {
 }
 
 impl DebugView {
-    pub fn custom_button(&mut self, label: impl Display, action: impl FnMut() + 'static) {
+    pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
         let mut button = self.add_view::<Button>();
         button.set_text(label);
         button.on_tap.sub(action);

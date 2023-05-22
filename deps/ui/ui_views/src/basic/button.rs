@@ -1,6 +1,6 @@
 use gm::Color;
 use refs::Weak;
-use ui::{view, Event, SubView, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+use ui::{view, Event, SubView, ToLabel, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
 use crate::Label;
 
@@ -12,7 +12,7 @@ pub struct Button {
 }
 
 impl Button {
-    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
+    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         self.get_label().place.as_background();
         self.get_label().set_text(text);
         self

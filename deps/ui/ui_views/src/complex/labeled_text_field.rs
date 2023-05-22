@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{layout::Anchor, view, SubView, ViewSetup};
+use ui::{layout::Anchor, view, SubView, ToLabel, ViewSetup};
 
 use crate::{Label, TextField};
 
@@ -14,12 +14,12 @@ impl LabeledTextField {
         self.text_field.text()
     }
 
-    pub fn set_title(&mut self, title: impl ToString) -> &mut Self {
+    pub fn set_title(&mut self, title: impl ToLabel) -> &mut Self {
         self.label.set_text(title);
         self
     }
 
-    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
+    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         self.text_field.set_text(text);
         self
     }

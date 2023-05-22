@@ -14,6 +14,7 @@ derivative = { workspace = true }
 dispatch = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
+rust_decimal = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }
 

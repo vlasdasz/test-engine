@@ -2,7 +2,7 @@ use gm::Color;
 use refs::{ToWeak, Weak};
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
-    view, SubView, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
+    view, SubView, ToLabel, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
 };
 
 use crate::{
@@ -21,16 +21,16 @@ impl TextField {
         self.label.text()
     }
 
-    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
+    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         let text = self.filter_constraint(text);
         self.label.set_text(text);
         self
     }
 
-    fn filter_constraint(&mut self, text: impl ToString) -> String {
+    fn filter_constraint(&mut self, text: impl ToLabel) -> String {
         match &self.constraint {
             Some(constraint) => constraint.filter(text),
-            None => text.to_string(),
+            None => text.to_label(),
         }
     }
 

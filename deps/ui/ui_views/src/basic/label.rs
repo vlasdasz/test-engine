@@ -2,7 +2,7 @@ use gm::Color;
 use refs::Weak;
 use rtools::{data_manager::Handle, IntoF32};
 use text::{render_text, Font};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use ui::{view, SubView, ToLabel, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::ImageView;
 
@@ -22,8 +22,8 @@ impl Label {
         &self.text
     }
 
-    pub fn set_text(&mut self, text: impl ToString) -> &mut Self {
-        let text = text.to_string();
+    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
+        let text = text.to_label();
         if text.is_empty() {
             self.image_view.set_hidden(true);
             return self;

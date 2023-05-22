@@ -1,6 +1,7 @@
 use std::fmt::Debug;
 
 use reflected::{Field, Type};
+use ui::ToLabel;
 
 #[derive(Debug)]
 pub(crate) enum TextFieldConstraint {
@@ -19,8 +20,8 @@ impl TextFieldConstraint {
         }
     }
 
-    pub(crate) fn filter(&self, string: impl ToString) -> String {
-        let string = string.to_string();
+    pub(crate) fn filter(&self, string: impl ToLabel) -> String {
+        let string = string.to_label();
         let symbols = self.accepted_symbols(&string);
         string.to_string().chars().filter(|c| symbols.contains(*c)).collect()
     }

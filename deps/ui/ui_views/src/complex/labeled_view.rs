@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{view, SubView, ViewSetup};
+use ui::{view, SubView, ToLabel, ViewSetup};
 
 use crate::Label;
 
@@ -10,12 +10,12 @@ pub struct LabeledView {
 }
 
 impl LabeledView {
-    pub fn set_title(&mut self, label: impl ToString) -> &Self {
+    pub fn set_title(&mut self, label: impl ToLabel) -> &Self {
         self.title.set_text(label);
         self
     }
 
-    pub fn set_text(&mut self, value: impl ToString) -> &Self {
+    pub fn set_text(&mut self, value: impl ToLabel) -> &Self {
         self.text.set_text(value);
         self
     }
