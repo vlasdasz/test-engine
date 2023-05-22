@@ -46,6 +46,7 @@ impl Color {
     pub const GRAY: Color = Color::rgb(0.5, 0.5, 0.5);
     pub const BROWN: Color = Color::rgb(0.7, 0.4, 0.2);
     pub const LIGHT_GRAY: Color = Color::rgb(0.8, 0.8, 0.8);
+    pub const LIGHTER_GRAY: Color = Color::rgb(0.9, 0.9, 0.9);
     pub const CLEAR: Color = Color {
         r: 0.0,
         g: 0.0,
