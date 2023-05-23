@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, collections::HashMap, fmt::Debug, marker::PhantomData};
+use std::{any::type_name, borrow::Borrow, collections::HashMap, fmt::Debug, marker::PhantomData};
 
 use log::{debug, error};
 use reqwest::Client;
@@ -70,9 +70,21 @@ where T: DeserializeOwned {
 
     if response.status != 200 {
         error!("Object request failed: {response:?}");
-        Err(from_str(&response.body)?)
+        Err(parse(&response.body)?)
     } else {
-        Ok(from_str(&response.body)?)
+        Ok(parse(&response.body)?)
+    }
+}
+
+fn parse<T: DeserializeOwned>(json: impl ToString) -> NetResult<T> {
+    let json = json.to_string();
+    match from_str(&json) {
+        Ok(obj) => Ok(obj),
+        Err(error) => {
+            let message = format!("Failed to parse {} from {json}. Error: {error}", type_name::<T>());
+            error!("{message}");
+            Err(message.into())
+        }
     }
 }
 
