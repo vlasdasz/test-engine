@@ -8,7 +8,7 @@ pub trait CollectionData: Debug {
     fn number_of_cells(&self) -> usize;
     fn cell_for_index(&self, index: usize) -> Own<dyn View>;
     fn size_for_index(&self, index: usize) -> Size;
-    fn cell_selected(&mut self, index: usize);
+    fn cell_selected(&mut self, _index: usize) {}
 }
 
 #[macro_export]
