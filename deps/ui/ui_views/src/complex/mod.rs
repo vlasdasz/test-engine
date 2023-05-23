@@ -12,6 +12,7 @@ mod labeled_view;
 mod question;
 mod slider;
 mod spinner;
+mod with_header;
 
 pub use alert::*;
 pub use analog_stick_view::AnalogStickView;
@@ -27,3 +28,4 @@ pub use labeled_view::LabeledView;
 pub use question::Question;
 pub use slider::Slider;
 pub use spinner::*;
+pub use with_header::*;

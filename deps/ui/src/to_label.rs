@@ -22,6 +22,18 @@ impl ToLabel for &String {
     }
 }
 
+impl ToLabel for bool {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl ToLabel for u32 {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
 impl ToLabel for f32 {
     fn to_label(&self) -> String {
         format!("{self:.2}")

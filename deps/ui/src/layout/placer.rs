@@ -165,7 +165,12 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn anchor(&self, view: impl Deref<Target = impl View>, side: Anchor, offset: impl IntoF32) -> &Self {
+    pub fn anchor(
+        &self,
+        view: impl Deref<Target = impl View + ?Sized>,
+        side: Anchor,
+        offset: impl IntoF32,
+    ) -> &Self {
         self.rules().push(LayoutRule::anchor(side, offset, view.weak_view()));
         self
     }
