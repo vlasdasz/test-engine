@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, marker::PhantomData};
 
 use reflected::Reflected;
 use refs::{Own, ToWeak, Weak};
@@ -9,8 +9,8 @@ use crate::{basic::TextFieldConstraint, LabeledTextField};
 #[view]
 pub struct FormView<T: Debug + Reflected + 'static> {
     labels:          Vec<Weak<LabeledTextField>>,
-    data:            Weak<T>,
     editind_enabled: bool,
+    _p:              PhantomData<T>,
 }
 
 impl<T: Debug + Reflected> ViewSetup for FormView<T> {
@@ -25,15 +25,13 @@ impl<T: Debug + Reflected> FormView<T> {
         self.remove_all_subviews();
         self.labels.clear();
 
-        self.data = data;
-
         for field in T::simple_fields() {
             let view = Own::<LabeledTextField>::default();
             let mut rg = view.weak();
             self.add_subview(view);
             rg.text_field().constraint = TextFieldConstraint::from_field(field);
             rg.set_title(field.name);
-            rg.set_text(self.data.get_value(field));
+            rg.set_text(data.get_value(field));
             if self.editind_enabled {
                 rg.enable_editing();
             } else {
@@ -43,11 +41,10 @@ impl<T: Debug + Reflected> FormView<T> {
         }
     }
 
-    pub fn get_data(&mut self) -> &T {
+    pub fn get_data(&mut self, data: &mut T) {
         for (field, label) in T::simple_fields().iter().zip(self.labels.iter()) {
-            self.data.set_value(field, label.text());
+            data.set_value(field, label.text());
         }
-        &self.data
     }
 
     pub fn enable_editing(&mut self) -> &mut Self {
