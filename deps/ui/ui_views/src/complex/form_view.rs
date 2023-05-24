@@ -41,7 +41,7 @@ impl<T: Debug + Reflected> FormView<T> {
         }
     }
 
-    pub fn get_data(&mut self, data: &mut T) {
+    pub fn get_data(&self, data: &mut T) {
         for (field, label) in T::simple_fields().iter().zip(self.labels.iter()) {
             data.set_value(field, label.text());
         }

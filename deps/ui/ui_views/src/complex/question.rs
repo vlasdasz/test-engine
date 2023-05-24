@@ -45,7 +45,7 @@ impl ViewSetup for Question {
         self.label.place.lrt(10).h(140);
         self.label.set_text_size(28);
 
-        self.ok_button.place.size(101, 20).bl(-1);
+        self.ok_button.place.size(101, 20).br(-1);
         self.ok_button
             .set_text("OK")
             .set_border_color(Color::GRAY)
@@ -53,7 +53,7 @@ impl ViewSetup for Question {
 
         self.ok_button.on_tap.sub(move || self.hide_modal(true));
 
-        self.cancel_button.place.size(101, 20).br(-1);
+        self.cancel_button.place.size(101, 20).bl(-1);
         self.cancel_button
             .set_text("Cancel")
             .set_border_color(Color::GRAY)
