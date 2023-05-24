@@ -115,7 +115,10 @@ pub async fn raw_request(
 
     debug!("Request - {url} - {method} {body:?}");
 
-    let response = request.send().await?;
+    let response = request.send().await.map_err(|e| {
+        error!("Failed to send request: {e}");
+        e
+    })?;
 
     let status = response.status();
     let body = response.text().await?;
