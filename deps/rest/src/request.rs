@@ -28,7 +28,7 @@ impl<R, P> Req<R, P> {
     }
 
     fn full_url(&self) -> String {
-        format!("http://{}/{}", API::base_url(), self.url)
+        format!("{}/{}", API::base_url(), self.url)
     }
 }
 
