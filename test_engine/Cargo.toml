@@ -10,7 +10,7 @@ name = "test_engine"
 
 [dependencies]
 derivative = { workspace = true }
-home = "0.5"
+home = { workspace = true }
 log = { workspace = true }
 reflected = { workspace = true }
 rtools = { workspace = true }
