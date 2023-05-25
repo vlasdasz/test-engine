@@ -108,7 +108,7 @@ fn add_inits(root_name: &Ident, fields: &FieldsNamed) -> TokenStream2 {
 
                     res = quote! {
                         #res
-                        self.#name = self.add_view();
+                        self.#name = self.internal_add_view();
                         self.#name.label += #label;
                     }
                 }

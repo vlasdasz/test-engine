@@ -25,7 +25,7 @@ impl Button {
 
     fn get_label(&mut self) -> &mut Label {
         if self.label_view.is_none() {
-            let mut view: SubView<Label> = self.add_view();
+            let mut view: SubView<Label> = self.internal_add_view();
             view.label = "Button.label_view".into();
             self.label_view = Some(view);
         }

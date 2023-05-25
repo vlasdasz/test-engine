@@ -1,4 +1,5 @@
 use refs::Weak;
+use rtools::platform::Platform;
 
 use crate::{layout::Anchor, View};
 
@@ -13,7 +14,11 @@ pub trait WithHeader: View {
         if self.header().is_null() {
             return;
         }
-        self.header().place.lrt(0).h(self.header_size());
+        if Platform::IOS {
+            self.header().place.lr(0).t(40).h(self.header_size());
+        } else {
+            self.header().place.lrt(0).h(self.header_size());
+        }
         self.main_view()
             .place
             .anchor(self.header(), Anchor::Top, self.header_margin())

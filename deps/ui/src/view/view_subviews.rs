@@ -11,8 +11,8 @@ pub trait ViewSubviews {
     fn remove_from_superview(&mut self);
     fn remove_all_subviews(&mut self);
 
-    fn add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
-    fn add_weak<V: 'static + View + Default>(&mut self) -> Weak<V>;
+    fn internal_add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
+    fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V>;
     fn add_subview(&mut self, view: Own<dyn View>) -> Weak<dyn View>;
 
     fn add_dummy_view(&mut self);
@@ -52,15 +52,15 @@ impl<T: ?Sized + View> ViewSubviews for T {
         UIManager::get().deleted_views.append(&mut self.subviews);
     }
 
-    fn add_view<V: 'static + View + Default>(&mut self) -> SubView<V> {
+    fn internal_add_view<V: 'static + View + Default>(&mut self) -> SubView<V> {
         let view = Own::<V>::default();
         let result = view.weak();
         self.add_subview(view);
         result.into()
     }
 
-    fn add_weak<V: 'static + View + Default>(&mut self) -> Weak<V> {
-        self.add_view::<V>().weak()
+    fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V> {
+        self.internal_add_view::<V>().weak()
     }
 
     fn add_subview(&mut self, mut view: Own<dyn View>) -> Weak<dyn View> {
@@ -73,7 +73,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_dummy_view(&mut self) {
-        let mut view = self.add_view::<Container>();
+        let mut view = self.internal_add_view::<Container>();
         view.set_size((f32::random(), f32::random()));
     }
 }
