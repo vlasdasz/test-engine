@@ -12,7 +12,6 @@ impl ViewSetup for HeaderTestView {
     fn setup(mut self: Weak<Self>) {
         self.header.set_color(Color::GREEN);
         self.main.set_color(Color::BLUE);
-        self.layout_header();
     }
 }
 

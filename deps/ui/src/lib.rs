@@ -19,6 +19,7 @@ mod to_label;
 mod ui_drawer;
 mod ui_manager;
 mod view;
+mod with_header;
 
 pub use modal_view::*;
 pub use navigation_view::*;
@@ -31,6 +32,7 @@ pub use ui_manager::*;
 pub use ui_proc::*;
 pub use vents::*;
 pub use view::*;
+pub use with_header::*;
 
 extern crate core;
 pub extern crate ui_proc;

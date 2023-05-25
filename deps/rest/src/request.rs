@@ -94,8 +94,6 @@ pub async fn raw_request(
     headers: &HashMap<String, String>,
     body: Option<String>,
 ) -> NetResult<Response> {
-    rtools::sleep(0.2);
-
     let url = url.to_string();
     let client = Client::new();
 

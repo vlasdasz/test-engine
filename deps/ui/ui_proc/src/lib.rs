@@ -70,8 +70,10 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         impl #generics ui::ViewInternalSetup for #name <#type_params>  {
             fn internal_setup(&mut self) {
                 use ui::ViewSetup;
+                use ui::WithHeader;
                 use ui::refs::ToWeak;
                 self.view.label = #name_str.to_string();
+                self.weak().layout_header();
                 self.weak().setup()
             }
         }
