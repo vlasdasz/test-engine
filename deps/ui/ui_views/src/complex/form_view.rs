@@ -1,4 +1,4 @@
-use std::{fmt::Debug, marker::PhantomData};
+use std::marker::PhantomData;
 
 use reflected::Reflected;
 use refs::{Own, ToWeak, Weak};
@@ -7,20 +7,20 @@ use ui::{view, ViewSetup, ViewSubviews};
 use crate::{basic::TextFieldConstraint, LabeledTextField};
 
 #[view]
-pub struct FormView<T: Debug + Reflected + 'static> {
+pub struct FormView<T: Reflected + 'static> {
     labels:          Vec<Weak<LabeledTextField>>,
     editind_enabled: bool,
     _p:              PhantomData<T>,
 }
 
-impl<T: Debug + Reflected> ViewSetup for FormView<T> {
+impl<T: Reflected> ViewSetup for FormView<T> {
     fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
         self.editind_enabled = true;
     }
 }
 
-impl<T: Debug + Reflected> FormView<T> {
+impl<T: Reflected> FormView<T> {
     pub fn set_data(&mut self, data: Weak<T>) {
         self.remove_all_subviews();
         self.labels.clear();
