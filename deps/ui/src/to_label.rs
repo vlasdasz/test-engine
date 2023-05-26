@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 
 pub trait ToLabel {
@@ -43,5 +44,11 @@ impl ToLabel for f32 {
 impl ToLabel for Decimal {
     fn to_label(&self) -> String {
         format!("{self:.2}")
+    }
+}
+
+impl ToLabel for DateTime<Utc> {
+    fn to_label(&self) -> String {
+        self.format("%H:%M %d-%m").to_string()
     }
 }
