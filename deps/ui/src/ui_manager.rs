@@ -1,4 +1,7 @@
-use std::{ops::Deref, sync::Mutex};
+use std::{
+    ops::Deref,
+    sync::{Mutex, MutexGuard, OnceLock},
+};
 
 use gm::flat::{Rect, Size};
 use refs::{Own, Strong, ToWeak, Weak};
@@ -7,7 +10,7 @@ use smart_default::SmartDefault;
 
 use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, View};
 
-static MANAGER: Mutex<Unwrap<Own<UIManager>>> = Mutex::new(Unwrap::const_default());
+static UI_MANAGER: OnceLock<Mutex<UIManager>> = OnceLock::new();
 
 #[derive(SmartDefault)]
 pub struct UIManager {
@@ -41,19 +44,11 @@ pub struct UIManager {
 
 impl UIManager {
     pub fn drop() {
-        MANAGER.lock().unwrap().take();
+        *Self::get() = UIManager::default();
     }
 
-    pub fn get() -> Weak<UIManager> {
-        let mut lock = MANAGER.lock().unwrap();
-
-        if lock.is_none() {
-            *lock = Unwrap::new(Own::new(Self::default()));
-        }
-
-        let unwrap = lock.deref();
-        let own = unwrap.deref();
-        own.weak()
+    pub fn get() -> MutexGuard<'static, Self> {
+        UI_MANAGER.get_or_init(|| UIManager::default().into()).lock().unwrap()
     }
 
     pub fn set_window_size(size: impl Into<Size>) {
