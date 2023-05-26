@@ -9,6 +9,7 @@ pub trait ViewSubviews {
     fn subviews(&self) -> &[Own<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Own<dyn View>];
     fn remove_from_superview(&mut self);
+    fn take_from_superview(&mut self) -> Own<dyn View>;
     fn remove_all_subviews(&mut self);
 
     fn internal_add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
@@ -38,14 +39,17 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_from_superview(&mut self) {
+        let removed = self.take_from_superview();
+        UIManager::get().deleted_views.push(removed);
+    }
+
+    fn take_from_superview(&mut self) -> Own<dyn View> {
         let this_addr = self.weak_view().addr();
         let super_subs = &mut self.superview.subviews;
 
         let index = super_subs.iter().position(|a| a.addr() == this_addr).unwrap();
 
-        let removed = super_subs.remove(index);
-
-        UIManager::get().deleted_views.push(removed);
+        super_subs.remove(index)
     }
 
     fn remove_all_subviews(&mut self) {
