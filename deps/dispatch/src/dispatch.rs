@@ -57,7 +57,7 @@ pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
     } else {
         let (sender, mut receiver) = channel::<()>();
         SIGNALLED.lock().unwrap().push((sender, Box::new(action)));
-        while let Err(_) = receiver.try_recv() {}
+        while receiver.try_recv().is_err() {}
     }
 }
 
