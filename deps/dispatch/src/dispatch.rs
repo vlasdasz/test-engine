@@ -51,6 +51,16 @@ pub fn on_main(action: impl FnOnce() + Send + 'static) {
     }
 }
 
+pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
+    if is_main_thread() {
+        action();
+    } else {
+        let (sender, mut receiver) = channel::<()>();
+        SIGNALLED.lock().unwrap().push((sender, Box::new(action)));
+        while let Err(_) = receiver.try_recv() {}
+    }
+}
+
 pub fn after(delay: impl IntoF32, action: impl FnOnce() + Send + 'static) {
     spawn(async move {
         sleep(delay);

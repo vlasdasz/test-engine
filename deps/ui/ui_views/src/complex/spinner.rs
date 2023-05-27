@@ -1,10 +1,14 @@
-use std::f32::consts::PI;
+use std::{
+    f32::consts::PI,
+    sync::{Mutex, MutexGuard},
+};
 
-use dispatch::on_main;
+use dispatch::{on_main, on_main_sync};
 use gm::{
     flat::{point_on_circle, Size},
     Color,
 };
+use log::{trace, warn};
 use refs::Weak;
 use rtools::{Animation, Time};
 use ui::{
@@ -13,7 +17,7 @@ use ui::{
 };
 
 static CIRCLES_N: u32 = 6;
-static mut SPINNER: Weak<Spinner> = Weak::const_default();
+static SPINNER: Mutex<Weak<Spinner>> = Mutex::new(Weak::const_default());
 
 #[view]
 pub struct Spinner {
@@ -22,6 +26,10 @@ pub struct Spinner {
 }
 
 impl Spinner {
+    fn current() -> MutexGuard<'static, Weak<Spinner>> {
+        SPINNER.lock().unwrap()
+    }
+
     // fn set_alpha(&mut self, alpha: impl IntoF32) {
     //     self.set_color(self.color().with_alpha(alpha));
     //     for cir in &mut self.circles {
@@ -74,16 +82,30 @@ impl ViewCallbacks for Spinner {
 
 impl Spinner {
     pub fn start() {
-        on_main(|| unsafe {
-            assert!(SPINNER.is_null(), "A spinner is already spinning");
-            SPINNER = Self::prepare_modally(());
+        trace!("Start spinner");
+
+        if Self::current().is_ok() {
+            warn!("Spinner already started");
+            return;
+        }
+
+        on_main_sync(|| {
+            *Self::current() = Self::prepare_modally(());
         });
     }
 
     pub fn stop() {
-        on_main(|| unsafe {
-            assert!(SPINNER.is_ok(), "Spinner already stopped");
-            UIManager::pop_touch_view(SPINNER.weak_view());
+        trace!("Stop spinner");
+
+        if Self::current().is_null() {
+            warn!("Spinner already stopped");
+            return;
+        }
+
+        on_main(|| {
+            let mut spinner = Self::current();
+
+            UIManager::pop_touch_view(spinner.weak_view());
 
             let animation = UIAnimation::new(Animation::new(0.8, 0, 0.4), |sp, val| {
                 let color = sp.color();
@@ -95,20 +117,27 @@ impl Spinner {
             });
 
             animation.on_finish.sub(|| {
-                SPINNER.remove_from_superview();
-                SPINNER = Default::default();
+                let mut spinner = Self::current();
+                spinner.remove_from_superview();
+                *spinner = Default::default();
             });
 
-            SPINNER.add_animation(animation);
+            spinner.add_animation(animation);
         });
     }
 
     pub fn instant_stop() {
-        unsafe {
-            assert!(SPINNER.is_ok(), "Spinner already stopped");
-            SPINNER.hide_modal(());
-            SPINNER = Default::default();
+        trace!("Instant stop spinner");
+
+        let mut spinner = Self::current();
+
+        if spinner.is_null() {
+            warn!("Spinner already stopped");
+            return;
         }
+
+        spinner.hide_modal(());
+        *spinner = Default::default();
     }
 }
 
