@@ -6,9 +6,7 @@ use crate::{layout::Anchor, View};
 pub trait WithHeader: View {
     fn header(&self) -> Weak<dyn View>;
     fn main_view(&self) -> Weak<dyn View>;
-    fn header_size(&self) -> f32 {
-        50.0
-    }
+    fn header_size(&self) -> f32;
     fn header_margin(&self) -> f32;
     fn layout_header(&self) {
         if self.header().is_null() {
@@ -37,5 +35,9 @@ impl<T: View> WithHeader for T {
 
     default fn header_margin(&self) -> f32 {
         0.0
+    }
+
+    default fn header_size(&self) -> f32 {
+        50.0
     }
 }

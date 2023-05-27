@@ -43,6 +43,13 @@ impl Placer {
         }
     }
 
+    pub fn clear(&self) -> &Self {
+        self.rules.borrow_mut().clear();
+        self.sub_rules.borrow_mut().clear();
+        *self.has.borrow_mut() = Default::default();
+        self
+    }
+
     pub fn rules_count(&self) -> usize {
         self.rules.borrow().len()
     }
@@ -207,6 +214,10 @@ impl Placer {
 
     pub fn br(&self, offset: impl IntoF32) -> &Self {
         self.b(offset).r(offset)
+    }
+
+    pub fn tb(&self, offset: impl IntoF32) -> &Self {
+        self.t(offset).b(offset)
     }
 
     pub fn tlb(&self, offset: impl IntoF32) -> &Self {

@@ -27,13 +27,17 @@ android-ndk-sys = "0.2"
 cfg_aliases = { workspace = true }
 
 [workspace.dependencies]
+actix-web = { version = "4.3.1", features = ["rustls"] }
 cfg-if = "1.0"
 cfg_aliases = "0.1"
+chrono = "0.4.24"
 derivative = "2.2.0"
 gl = "0.14"
 glfw = "0.51.0"
 log = "0.4"
+home = "0.5.5"
 mashup = "0.1"
+reqwest = { version = "0.11.18" }
 rust_decimal = "1.29.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

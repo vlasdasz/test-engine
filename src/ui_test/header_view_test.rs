@@ -1,6 +1,5 @@
 use test_engine::gm::Color;
-use ui::{refs::Weak, view, Container, SubView, View, ViewData, ViewSetup};
-use ui_views::WithHeader;
+use ui::{refs::Weak, view, Container, SubView, View, ViewData, ViewSetup, WithHeader};
 
 #[view]
 struct HeaderTestView {
