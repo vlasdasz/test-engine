@@ -20,6 +20,10 @@ impl LabeledSwitch {
         self.label.set_text(text);
         self
     }
+
+    pub fn set_on(&mut self, on: bool) {
+        self.switch.set_on(on);
+    }
 }
 
 impl ViewSetup for LabeledSwitch {
