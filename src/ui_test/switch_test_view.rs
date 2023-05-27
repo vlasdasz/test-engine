@@ -9,15 +9,19 @@ struct SwitchTestView {
 }
 
 impl ViewSetup for SwitchTestView {
-    fn setup(self: Weak<Self>) {
-        self.place.all_ver();
+    fn setup(mut self: Weak<Self>) {
+        self.place.all_hor();
+        self.switch.place.size(80, 40).l(20).center_ver();
+        self.switch.selected.val(move |on| {
+            self.label.set_text(on);
+        });
     }
 }
 
 impl ViewTest for SwitchTestView {
     fn test_size() -> Size
     where Self: Sized {
-        (100, 100).into()
+        (400, 200).into()
     }
 }
 

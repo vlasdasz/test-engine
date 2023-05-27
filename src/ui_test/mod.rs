@@ -5,8 +5,8 @@ mod header_view_test;
 mod modal_view_test;
 mod question_test_view;
 mod spinner_test_view;
-mod ui_test;
 mod switch_test_view;
+mod ui_test;
 
 pub use collection_test_view::*;
 pub use ui_test::*;
