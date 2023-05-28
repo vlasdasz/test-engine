@@ -12,6 +12,10 @@ pub struct LabeledSwitch {
 }
 
 impl LabeledSwitch {
+    pub fn on(&self) -> bool {
+        self.switch.on()
+    }
+
     pub fn text(&self) -> &str {
         self.label.text()
     }

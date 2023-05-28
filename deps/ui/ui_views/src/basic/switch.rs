@@ -11,6 +11,10 @@ pub struct Switch {
 }
 
 impl Switch {
+    pub fn on(&self) -> bool {
+        self.on
+    }
+
     pub fn set_on(&mut self, on: bool) {
         self.on = on;
         const MARGIN: f32 = 5.0;
