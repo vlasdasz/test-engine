@@ -3,7 +3,7 @@ use reflected::{Field, Reflected};
 use crate::{ValidResult, ValidRule};
 
 pub struct ValidEntry {
-    field: &'static Field,
+    field: &'static Field<'static>,
     rule:  ValidRule,
 }
 

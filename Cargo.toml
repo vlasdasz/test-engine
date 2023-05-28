@@ -46,8 +46,8 @@ smart-default = "0.6"
 tokio = { version = "1.26.0", features = ["full"] }
 
 
-reflected = "0.5.2"
-reflected_proc = "0.5.2"
+reflected = "0.5.4"
+reflected_proc = "0.5.4"
 refs = "0.2.6"
 rtools = "0.2.1"
 vents = "0.1.11"

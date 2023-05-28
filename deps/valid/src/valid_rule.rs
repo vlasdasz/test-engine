@@ -6,7 +6,7 @@ pub enum ValidRule {
     Min(usize),
     Max(usize),
     Range(usize, usize),
-    Equals(&'static Field),
+    Equals(&'static Field<'static>),
 }
 
 impl ValidRule {
