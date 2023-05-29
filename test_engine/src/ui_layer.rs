@@ -11,14 +11,14 @@ use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::{ControlButton, KeyEvent, KeyboardButton, TouchEvent, UIEvents};
-use ui::{refs::Strong, Touch, UIManager, ViewTouch};
+use ui::{refs::Own, Touch, UIManager, ViewTouch};
 use ui_views::debug_view::DebugView;
 
 use crate::Keymap;
 
 #[derive(SmartDefault)]
 pub struct UILayer {
-    pub level: Option<Strong<dyn Level>>,
+    pub level: Option<Own<dyn Level>>,
 
     pub cursor_position: Point,
 
@@ -28,7 +28,7 @@ pub struct UILayer {
     pub prev_time:  i64,
     pub frame_time: f64,
 
-    pub debug_view: Strong<DebugView>,
+    pub debug_view: Own<DebugView>,
 
     #[cfg(desktop)]
     shift_pressed: bool,
@@ -61,7 +61,7 @@ impl UILayer {
         self.debug_view.check_touch(&mut touch, true);
     }
 
-    pub fn set_level(&mut self, level: Strong<dyn Level>) {
+    pub fn set_level(&mut self, level: Own<dyn Level>) {
         self.level = level.into();
         self.level.as_mut().unwrap().setup();
     }
@@ -84,6 +84,10 @@ impl UILayer {
             position: self.cursor_position,
             event:    ui::input::MouseButtonState::from_glfw(state).into(),
         })
+    }
+
+    fn on_scroll(&mut self, scroll: Point) {
+        UIManager::get().on_scroll.trigger(scroll * 10)
     }
 
     fn on_key_pressed(&mut self, key: char) {
@@ -141,6 +145,8 @@ impl UILayer {
 
         ev.mouse_click.val(move |a| this.on_mouse_click(a.0, a.1));
 
-        ev.cursor_moved.val(move |a| this.on_cursor_moved(a))
+        ev.cursor_moved.val(move |a| this.on_cursor_moved(a));
+
+        ev.scroll.val(move |a| this.on_scroll(a));
     }
 }

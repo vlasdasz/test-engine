@@ -12,6 +12,7 @@ pub struct GlEvents {
     pub size_changed: Event<Size>,
     pub mouse_click:  Event<(MouseButton, Action)>,
     pub key_pressed:  Event<(Key, Action)>,
+    pub scroll:       Event<Point>,
 }
 
 static_default!(GlEvents);

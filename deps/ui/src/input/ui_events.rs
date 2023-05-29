@@ -7,6 +7,7 @@ use crate::{input::keyboard::KeyEvent, View, ViewTouch};
 #[derive(Default)]
 pub struct UIEvents {
     pub key_pressed:   Event<KeyEvent>,
+    pub scroll:        Event<f32>,
     pub selected_view: Weak<dyn View>,
 }
 static_default!(UIEvents);

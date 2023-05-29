@@ -19,6 +19,7 @@ impl GLFWManager {
         self.window.set_key_polling(true);
         self.window.set_cursor_pos_polling(true);
         self.window.set_mouse_button_polling(true);
+        self.window.set_scroll_polling(true);
 
         while !self.window.should_close() {
             self.window.glfw.poll_events();
@@ -39,6 +40,7 @@ impl GLFWManager {
                     glfw::WindowEvent::MouseButton(btn, action, _) => {
                         events.mouse_click.trigger((btn, action))
                     }
+                    glfw::WindowEvent::Scroll(x, y) => events.scroll.trigger((x, y).into()),
                     _ => {}
                 }
             }

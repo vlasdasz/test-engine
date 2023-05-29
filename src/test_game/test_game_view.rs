@@ -8,7 +8,7 @@ use test_engine::{
     view, LevelBase, Screen,
 };
 use ui::{
-    refs::{Own, Strong, ToWeak, Weak},
+    refs::{Own, ToWeak, Weak},
     Container, SubView, UIManager, ViewData, ViewSetup, ViewSubviews,
 };
 use ui_views::{test_view::ViewWithCat, AnalogStickView, Button, DPadView, IntView};
@@ -108,14 +108,14 @@ impl TestGameView {
             let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap.sub(|| {
-                Screen::current().ui.set_level(Strong::<BenchmarkLevel>::default());
+                Screen::current().ui.set_level(Own::<BenchmarkLevel>::default());
                 UIManager::set_view(Own::<UIDebugView>::default());
             });
 
             let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap.sub(|| {
-                Screen::current().ui.set_level(Strong::<LevelBase>::default());
+                Screen::current().ui.set_level(Own::<LevelBase>::default());
                 UIManager::set_view(Own::<UIDebugView>::default());
             });
 

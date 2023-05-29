@@ -3,7 +3,7 @@ use test_engine::{
     view, Screen,
 };
 use ui::{
-    refs::{dump_ref_stats, Own, Strong, Weak},
+    refs::{dump_ref_stats, Own, Weak},
     UIManager, ViewSetup,
 };
 use ui_views::{Button, Label, LabeledTextField, MultilineLabel};
@@ -40,7 +40,7 @@ impl ViewSetup for UIDebugView {
         self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_hor();
 
         self.test_game.on_tap.sub(|| {
-            Screen::current().ui.set_level(Strong::<TestGameLevel>::default());
+            Screen::current().ui.set_level(Own::<TestGameLevel>::default());
             UIManager::set_view(Own::<TestGameView>::default());
         });
 

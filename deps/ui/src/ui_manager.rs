@@ -3,12 +3,12 @@ use std::{
     sync::{Mutex, MutexGuard, OnceLock},
 };
 
-use gm::flat::{Rect, Size};
+use gm::flat::{Point, Rect, Size};
 use refs::{Own, Strong, ToWeak, Weak};
 use rtools::Unwrap;
 use smart_default::SmartDefault;
 
-use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, View};
+use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, UIEvent, View};
 
 static UI_MANAGER: OnceLock<Mutex<UIManager>> = OnceLock::new();
 
@@ -37,6 +37,8 @@ pub struct UIManager {
     display_scale: f32,
 
     window_size: Size,
+
+    pub on_scroll: UIEvent<Point>,
 
     pub open_keyboard:  bool,
     pub close_keyboard: bool,
