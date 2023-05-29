@@ -11,3 +11,4 @@ name = "gm"
 [dependencies]
 rtools = { workspace = true }
 serde = { workspace = true }
+smart-default = { wokrspace = true }

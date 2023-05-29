@@ -1,6 +1,7 @@
-use gm::Color;
+use gm::{converter::Converter, Color};
 use refs::Weak;
-use ui::{view, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
+use rtools::IntoF32;
+use ui::{view, Event, SubView, Touch, ViewCallbacks, ViewFrame, ViewSetup, ViewTouch};
 
 use crate::CircleView;
 
@@ -9,10 +10,28 @@ pub struct Slider {
     circle:    SubView<CircleView>,
     raw_value: f32,
 
+    converter: Converter,
+
     pub on_change: Event<f32>,
 
     pub start:  f32,
     pub finish: f32,
+}
+
+impl Slider {
+    pub fn set_range(&mut self, min: impl IntoF32, max: impl IntoF32) -> &mut Self {
+        self.set_min(min).set_max(max)
+    }
+
+    pub fn set_min(&mut self, min: impl IntoF32) -> &mut Self {
+        self.converter.set_min(min);
+        self
+    }
+
+    pub fn set_max(&mut self, max: impl IntoF32) -> &mut Self {
+        self.converter.set_max(max);
+        self
+    }
 }
 
 impl ViewSetup for Slider {
@@ -21,14 +40,18 @@ impl ViewSetup for Slider {
         self.finish = 1.0;
 
         self.enable_touch();
-
         self.on_touch.val(move |touch| {
             self.on_touch(&touch);
         });
 
-        let radius = self.width() / 2.0;
+        self.circle.set_color(Color::BLUE);
+    }
+}
 
-        self.circle.set_radius(radius).set_color(Color::BLUE);
+impl ViewCallbacks for Slider {
+    fn update(&mut self) {
+        let radius = self.width() / 2.0;
+        self.circle.set_radius(radius);
     }
 }
 
@@ -39,13 +62,11 @@ impl Slider {
         }
 
         let half_circle = self.circle.frame().height() / 2.0;
-        let y_pos = half_circle.clamp(self.frame().height() - half_circle, touch.position.y);
+        let y_pos = touch.position.y.clamp(half_circle, self.height() - half_circle);
 
         self.circle.set_y(y_pos - half_circle);
         self.raw_value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
 
-        let span = self.finish - self.start;
-
-        self.on_change.trigger(self.start + span * self.raw_value);
+        self.on_change.trigger(self.converter.convert(self.raw_value));
     }
 }

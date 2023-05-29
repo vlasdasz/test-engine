@@ -11,7 +11,7 @@ pub struct ScrollView {
 
 impl ViewSetup for ScrollView {
     fn setup(self: Weak<Self>) {
-        self.scroll.place.relative(Anchor::Height, 1, self);
+        self.scroll.place.relative(Anchor::Height, 1, self).w(50).r(0);
     }
 }
 

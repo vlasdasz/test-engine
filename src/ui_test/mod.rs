@@ -6,6 +6,7 @@ mod labeled_switch_test;
 mod modal_view_test;
 mod question_test_view;
 mod scroll_view_test;
+mod slider_test_view;
 mod spinner_test_view;
 mod switch_test_view;
 mod ui_test;
