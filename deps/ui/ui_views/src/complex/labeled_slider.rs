@@ -14,12 +14,12 @@ pub struct LabeledSlider {
 
 impl LabeledSlider {
     pub fn set_start(&mut self, start: impl IntoF32) -> &mut Self {
-        self.slider.start = start.into_f32();
+        self.slider.set_min(start);
         self
     }
 
     pub fn set_finish(&mut self, finish: impl IntoF32) -> &mut Self {
-        self.slider.finish = finish.into_f32();
+        self.slider.set_max(finish);
         self
     }
 

@@ -3,19 +3,16 @@ use ui::{
     refs::{Own, ToWeak, Weak},
     view, Container, SubView, View, ViewSetup,
 };
-use ui_views::{collection_data, BackButton, CollectionData, CollectionLayout, CollectionView};
+use ui_views::{collection_data, CollectionData, CollectionLayout, CollectionView};
 
 #[view]
 pub struct CollectionTestView {
-    back:            SubView<BackButton>,
     collection_view: SubView<CollectionView>,
 }
 
 impl ViewSetup for CollectionTestView {
     fn setup(mut self: Weak<Self>) {
-        self.back.place.size(50, 50).br(10);
-
-        self.collection_view.place.background();
+        self.collection_view.place.back();
         self.collection_view.layout = CollectionLayout::Cards;
         self.collection_view.data_source = collection_data!(self);
         self.collection_view.reload_data();

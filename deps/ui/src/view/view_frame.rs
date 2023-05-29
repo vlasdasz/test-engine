@@ -8,7 +8,6 @@ pub trait ViewFrame {
     fn frame_mut(&mut self) -> &mut Rect;
     fn super_frame(&self) -> &Rect;
     fn absolute_frame(&self) -> &Rect;
-    fn content_offset(&self) -> &Point;
     fn x(&self) -> f32;
     fn y(&self) -> f32;
     fn max_x(&self) -> f32;
@@ -42,10 +41,6 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn absolute_frame(&self) -> &Rect {
         &self.absolute_frame
-    }
-
-    fn content_offset(&self) -> &Point {
-        &self.content_offset
     }
 
     fn x(&self) -> f32 {

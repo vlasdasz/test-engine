@@ -24,12 +24,12 @@ pub struct ViewBase {
 
     pub(crate) touch_enabled: RefCell<bool>,
 
-    pub(crate) is_hidden: bool,
+    pub is_hidden: bool,
 
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,
 
-    pub(crate) content_offset: Point,
+    pub content_offset: Point,
 
     #[derivative(Debug = "ignore")]
     pub(crate) superview: Weak<dyn View>,

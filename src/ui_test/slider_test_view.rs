@@ -13,7 +13,7 @@ impl ViewSetup for SliderTestView {
         self.label.set_text("Sokol");
 
         self.slider.place.r(200).center_ver().size(40, 500);
-        self.slider.set_range(-10, 10);
+        self.slider.set_range(500, 0);
         self.slider.on_change.val(move |val| {
             self.label.set_text(val);
         })

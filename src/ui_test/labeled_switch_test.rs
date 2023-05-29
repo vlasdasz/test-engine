@@ -9,7 +9,7 @@ struct LabeledSwitchTestView {
 
 impl ViewSetup for LabeledSwitchTestView {
     fn setup(mut self: Weak<Self>) {
-        self.switch.place.background();
+        self.switch.place.back();
         self.switch.set_text("Lobel");
         self.switch.selected.val(move |on| {
             self.switch.set_text(format!("Lobel: {on}"));

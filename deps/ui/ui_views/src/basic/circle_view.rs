@@ -38,6 +38,6 @@ impl CircleView {
 impl ViewSetup for CircleView {
     fn setup(mut self: Weak<Self>) {
         self.frame_mut().size = (10, 10).into();
-        self.drawing.place.background();
+        self.drawing.place.back();
     }
 }

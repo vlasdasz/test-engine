@@ -1,8 +1,8 @@
 use gm::flat::Size;
 use refs::{ToWeak, Weak};
-use ui::{view, View, ViewCallbacks, ViewFrame, ViewSubviews, ViewTouch};
+use ui::{view, SubView, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
-use crate::CollectionData;
+use crate::{CollectionData, ScrollView};
 
 #[derive(Default, Debug)]
 pub enum CollectionLayout {
@@ -11,16 +11,36 @@ pub enum CollectionLayout {
     Cards,
 }
 
+impl CollectionLayout {
+    pub fn is_table(&self) -> bool {
+        matches!(self, Self::Table)
+    }
+
+    pub fn is_cards(&self) -> bool {
+        matches!(self, Self::Cards)
+    }
+}
+
 #[view]
 pub struct CollectionView {
     pub data_source: Weak<dyn CollectionData>,
     pub layout:      CollectionLayout,
     cells:           Vec<Weak<dyn View>>,
+    scroll:          SubView<ScrollView>,
+}
+
+impl ViewSetup for CollectionView {
+    fn setup(mut self: Weak<Self>) {
+        self.scroll.content_size = (1000, 1500).into();
+        self.scroll.place.back();
+    }
 }
 
 impl CollectionView {
     pub fn reload_data(&mut self) {
-        self.remove_all_subviews();
+        for cell in &mut self.cells {
+            cell.remove_from_superview();
+        }
         self.cells.clear();
         for i in 0..self.data_source.number_of_cells() {
             let cell = self.data_source.cell_for_index(i);
@@ -28,11 +48,26 @@ impl CollectionView {
             let mut this = self.weak();
             cell.on_touch_began.sub(move || this.data_source.cell_selected(i));
             self.cells.push(cell.weak());
-            self.add_subview(cell);
+            self.scroll.add_subview(cell);
+        }
+        if self.layout.is_table() {
+            self.scroll.content_size.height =
+                self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
+            self.scroll.content_size.width = self.width();
+            dbg!(self.scroll.content_size.height);
         }
     }
 
     fn layout(&mut self) {
+        if self.layout.is_cards() {
+            self.scroll.content_size = self.size();
+        } else {
+            self.scroll.content_size.width = self.width();
+            dbg!(self.scroll.content_size.height);
+            self.scroll.content_size.height =
+                self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
+        }
+
         match self.layout {
             CollectionLayout::Table => self.table_layout(),
             CollectionLayout::Cards => self.cards_layout(),
@@ -41,7 +76,7 @@ impl CollectionView {
 
     fn table_layout(&mut self) {
         let mut last_y: f32 = 0.0;
-        let width = self.width();
+        let width = self.width() - 60.0;
 
         for (index, cell) in self.cells.iter_mut().enumerate() {
             let height = self.data_source.size_for_index(index).height;

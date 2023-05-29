@@ -19,7 +19,7 @@ impl ViewSetup for TouchTestView {
     fn setup(mut self: Weak<Self>) {
         self.place.size(100, 100).center_ver().r(0);
         self.set_color(Color::random());
-        self.button.place.background();
+        self.button.place.back();
         link_button!(self, button, tap);
     }
 }

@@ -11,7 +11,7 @@ pub struct BackButton {
 impl ViewSetup for BackButton {
     fn setup(mut self: Weak<Self>) {
         self.button.set_text("Back");
-        self.button.place.background();
+        self.button.place.back();
 
         self.button.on_tap.sub(|| {
             UIManager::touch_root().navigation().pop();

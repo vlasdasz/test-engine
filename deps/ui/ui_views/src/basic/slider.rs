@@ -14,8 +14,7 @@ pub struct Slider {
 
     pub on_change: Event<f32>,
 
-    pub start:  f32,
-    pub finish: f32,
+    pub value: f32,
 }
 
 impl Slider {
@@ -36,9 +35,6 @@ impl Slider {
 
 impl ViewSetup for Slider {
     fn setup(mut self: Weak<Self>) {
-        self.start = 0.0;
-        self.finish = 1.0;
-
         self.enable_touch();
         self.on_touch.val(move |touch| {
             self.on_touch(&touch);
@@ -67,6 +63,8 @@ impl Slider {
         self.circle.set_y(y_pos - half_circle);
         self.raw_value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
 
-        self.on_change.trigger(self.converter.convert(self.raw_value));
+        let val = self.converter.convert(self.raw_value);
+        self.value = val;
+        self.on_change.trigger(val);
     }
 }

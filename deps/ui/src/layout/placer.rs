@@ -6,7 +6,7 @@ use std::{
 
 use gm::{
     axis::Axis,
-    flat::{Rect, SizeBase},
+    flat::{Rect, Size, SizeBase},
 };
 use refs::{Own, Rglica, ToRglica, Weak};
 use rtools::IntoF32;
@@ -21,9 +21,9 @@ pub struct Placer {
     pub(crate) rules:     RefCell<Vec<LayoutRule>>,
     pub(crate) sub_rules: RefCell<Vec<LayoutRule>>,
 
-    view:        Weak<dyn View>,
-    pub frame:   Rglica<Rect>,
-    pub s_frame: Rglica<Rect>,
+    view:      Weak<dyn View>,
+    frame:     Rglica<Rect>,
+    s_content: Rglica<Size>,
 
     all_margin: RefCell<f32>,
 
@@ -32,12 +32,18 @@ pub struct Placer {
 
 impl Placer {
     pub fn new(view: Weak<dyn View>) -> Self {
+        let s_content = if view.superview.is_ok() {
+            view.superview.content_size()
+        } else {
+            view.content_size()
+        };
+
         Self {
             rules: vec![].into(),
             sub_rules: vec![].into(),
             view,
             frame: view.frame().to_rglica(),
-            s_frame: view.super_frame().to_rglica(),
+            s_content: s_content.to_rglica(),
             all_margin: Default::default(),
             has: Default::default(),
         }
@@ -68,7 +74,7 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn background(&self) -> &Self {
+    pub fn back(&self) -> &Self {
         self.t(0).b(0).l(0).r(0)
     }
 
@@ -296,31 +302,31 @@ impl Placer {
     fn simple_layout(&mut self, rule: &LayoutRule) {
         let has = *self.has();
         let frame = self.frame.deref_mut();
-        let s_frame = self.s_frame.deref();
+        let s_content = self.s_content.deref();
         match rule.side {
             Anchor::Top => frame.origin.y = rule.offset,
             Anchor::Bot => {
                 if has.height {
-                    frame.origin.y = s_frame.height() - frame.height() - rule.offset
+                    frame.origin.y = s_content.height - frame.height() - rule.offset
                 } else {
-                    frame.size.height = frame.height() + s_frame.height() - frame.max_y() - rule.offset
+                    frame.size.height = frame.height() + s_content.height - frame.max_y() - rule.offset
                 }
             }
             Anchor::Left => frame.origin.x = rule.offset,
             Anchor::Right => {
                 if has.width {
-                    frame.origin.x = s_frame.width() - frame.width() - rule.offset;
+                    frame.origin.x = s_content.width - frame.width() - rule.offset;
                 } else {
-                    frame.size.width = frame.width() + s_frame.width() - frame.max_x() - rule.offset
+                    frame.size.width = frame.width() + s_content.width - frame.max_x() - rule.offset
                 }
             }
             Anchor::Width => frame.size.width = rule.offset,
             Anchor::Height => frame.size.height = rule.offset,
-            Anchor::CenterH => frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0,
-            Anchor::CenterV => frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0,
+            Anchor::CenterH => frame.origin.x = s_content.width / 2.0 - frame.width() / 2.0,
+            Anchor::CenterV => frame.origin.y = s_content.height / 2.0 - frame.height() / 2.0,
             Anchor::Center => {
-                frame.origin.x = s_frame.width() / 2.0 - frame.width() / 2.0;
-                frame.origin.y = s_frame.height() / 2.0 - frame.height() / 2.0;
+                frame.origin.x = s_content.width / 2.0 - frame.width() / 2.0;
+                frame.origin.y = s_content.height / 2.0 - frame.height() / 2.0;
             }
             Anchor::MaxWidth => {
                 if frame.size.width > rule.offset {
@@ -365,7 +371,7 @@ impl Placer {
         let mut frame = self.frame;
         let frame = frame.deref_mut();
         match tiling {
-            Tiling::Background => *frame = self.s_frame.with_zero_origin(),
+            Tiling::Background => *frame = (*self.s_content.deref()).into(),
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
         }
@@ -393,11 +399,11 @@ impl Placer {
             Anchor::Top => self.frame.set_center((cen.x, f.y() / 2.0)),
             Anchor::Bot => self.frame.set_center((
                 cen.x,
-                self.s_frame.height() - (self.s_frame.height() - f.max_y()) / 2.0,
+                self.s_content.height - (self.s_content.height - f.max_y()) / 2.0,
             )),
             Anchor::Left => self.frame.set_center((f.x() / 2.0, cen.y)),
             Anchor::Right => self.frame.set_center((
-                self.s_frame.width() - (self.s_frame.width() - f.max_x()) / 2.0,
+                self.s_content.width - (self.s_content.width - f.max_x()) / 2.0,
                 cen.y,
             )),
             _ => unimplemented!(),

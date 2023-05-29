@@ -15,7 +15,6 @@ impl Converter {
     pub fn new(min: impl IntoF32, max: impl IntoF32) -> Self {
         let min = min.into_f32();
         let max = max.into_f32();
-        assert!(min < max);
         Self {
             min,
             max,
@@ -25,7 +24,6 @@ impl Converter {
 
     pub fn set_min(&mut self, min: impl IntoF32) -> &mut Self {
         let min = min.into_f32();
-        assert!(min < self.max);
         self.min = min;
         self.span = self.max - self.min;
         self
@@ -33,7 +31,6 @@ impl Converter {
 
     pub fn set_max(&mut self, max: impl IntoF32) -> &mut Self {
         let max = max.into_f32();
-        assert!(self.min < max);
         self.max = max;
         self.span = self.max - self.min;
         self
@@ -59,6 +56,8 @@ mod test {
             (0.00001, 0.00004),
             (100.0, 500.0),
             (0.0, 1.0),
+            (5000.0, 2.0),
+            (50543500.0, -1000.0),
         ] {
             let conv = Converter::new(min, max);
 
