@@ -324,7 +324,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L363K9J2RM;
+				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
 				INFOPLIST_FILE = "TestEngine copy-Info.plist";
@@ -338,7 +338,7 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
+				PRODUCT_BUNDLE_IDENTIFIER = "vladas.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -353,7 +353,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L363K9J2RM;
+				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
 				INFOPLIST_FILE = "TestEngine copy-Info.plist";
@@ -367,7 +367,7 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
+				PRODUCT_BUNDLE_IDENTIFIER = "vladas.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -494,7 +494,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L363K9J2RM;
+				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = arm64;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
@@ -509,7 +509,7 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
+				PRODUCT_BUNDLE_IDENTIFIER = "vladas.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -524,7 +524,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TestEngine/TestEngine.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L363K9J2RM;
+				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = arm64;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
@@ -539,7 +539,7 @@
 					"$(SDKROOT)/usr/lib/swift",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.anastasia-zakrevskis.test-engine";
+				PRODUCT_BUNDLE_IDENTIFIER = "vladas.test-engine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
