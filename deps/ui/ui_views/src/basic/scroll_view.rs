@@ -25,8 +25,7 @@ impl ViewCallbacks for ScrollView {
         self.slider.frame_mut().size.height = self.height();
         self.slider.set_range(-range, 0);
         self.content_offset.y = self.slider.value;
-        self.slider.is_hidden = dbg!(self.height()) >= dbg!(self.content_size.height);
-        dbg!(self.slider.is_hidden);
+        self.slider.is_hidden = self.height() >= self.content_size.height;
     }
 
     fn content_size(&self) -> &Size {

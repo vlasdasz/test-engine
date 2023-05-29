@@ -54,7 +54,6 @@ impl CollectionView {
             self.scroll.content_size.height =
                 self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
             self.scroll.content_size.width = self.width();
-            dbg!(self.scroll.content_size.height);
         }
     }
 
@@ -63,7 +62,6 @@ impl CollectionView {
             self.scroll.content_size = self.size();
         } else {
             self.scroll.content_size.width = self.width();
-            dbg!(self.scroll.content_size.height);
             self.scroll.content_size.height =
                 self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
         }
