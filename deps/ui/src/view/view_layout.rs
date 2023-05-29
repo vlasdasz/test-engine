@@ -13,5 +13,7 @@ impl<T: ?Sized + View> ViewLayout for T {
         self.absolute_frame = self.frame;
         let orig = self.super_absolute_frame().origin;
         self.absolute_frame.origin += orig;
+        let offset = self.content_offset;
+        self.absolute_frame.origin += offset;
     }
 }

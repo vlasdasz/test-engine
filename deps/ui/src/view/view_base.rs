@@ -2,7 +2,10 @@ use std::cell::RefCell;
 
 use derivative::Derivative;
 use gl_image::Image;
-use gm::{flat::Rect, Color};
+use gm::{
+    flat::{Point, Rect},
+    Color,
+};
 use refs::{Own, Weak};
 use rtools::{data_manager::Handle, Unwrap};
 use ui_proc::view;
@@ -25,6 +28,8 @@ pub struct ViewBase {
 
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,
+
+    pub(crate) content_offset: Point,
 
     #[derivative(Debug = "ignore")]
     pub(crate) superview: Weak<dyn View>,

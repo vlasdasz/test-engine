@@ -11,7 +11,6 @@ mod labeled_switch;
 mod labeled_text_field;
 mod labeled_view;
 mod question;
-mod slider;
 mod spinner;
 
 pub use alert::*;
@@ -27,5 +26,4 @@ pub use labeled_switch::*;
 pub use labeled_text_field::LabeledTextField;
 pub use labeled_view::LabeledView;
 pub use question::Question;
-pub use slider::Slider;
 pub use spinner::*;
