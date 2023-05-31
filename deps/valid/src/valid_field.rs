@@ -1,5 +1,5 @@
 use reflected::Field;
 
-pub(crate) trait ValidField {}
+pub(crate) trait ValidField<T> {}
 
-impl ValidField for Field<'_> {}
+impl<T> ValidField<T> for Field<'_, T> {}

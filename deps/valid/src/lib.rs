@@ -10,7 +10,7 @@ pub use valid_entry::*;
 pub use valid_rule::*;
 
 pub trait Valid: Reflected {
-    fn rules() -> Vec<ValidEntry>;
+    fn rules() -> Vec<ValidEntry<Self>>;
 
     fn is_valid(&self) -> ValidResult<()> {
         for rule in Self::rules() {
@@ -29,8 +29,8 @@ mod test {
 
     #[test]
     fn size() {
-        #[derive(Default, Reflected)]
-        struct User {
+        #[derive(Default, Debug, Reflected)]
+        pub struct User {
             name: String,
             age:  usize,
         }
@@ -46,11 +46,11 @@ mod test {
 
     #[test]
     fn no_rules() {
-        #[derive(Default, Reflected)]
-        struct User {}
+        #[derive(Default, Debug, Reflected)]
+        pub struct User {}
 
         impl Valid for User {
-            fn rules() -> Vec<ValidEntry> {
+            fn rules() -> Vec<ValidEntry<User>> {
                 vec![]
             }
         }
@@ -61,13 +61,13 @@ mod test {
 
     #[test]
     fn min() {
-        #[derive(Default, Reflected)]
-        struct User {
+        #[derive(Default, Debug, Reflected)]
+        pub struct User {
             age: usize,
         }
 
         impl Valid for User {
-            fn rules() -> Vec<ValidEntry> {
+            fn rules() -> Vec<ValidEntry<User>> {
                 vec![ValidEntry::new(&User::FIELDS.age, ValidRule::Min(14))]
             }
         }
@@ -85,13 +85,13 @@ mod test {
 
     #[test]
     fn max() {
-        #[derive(Default, Reflected)]
-        struct User {
+        #[derive(Default, Debug, Reflected)]
+        pub struct User {
             age: usize,
         }
 
         impl Valid for User {
-            fn rules() -> Vec<ValidEntry> {
+            fn rules() -> Vec<ValidEntry<Self>> {
                 vec![ValidEntry::new(&User::FIELDS.age, ValidRule::Max(14))]
             }
         }
@@ -109,13 +109,13 @@ mod test {
 
     #[test]
     fn range() {
-        #[derive(Default, Reflected)]
-        struct User {
+        #[derive(Default, Debug, Reflected)]
+        pub struct User {
             age: usize,
         }
 
         impl Valid for User {
-            fn rules() -> Vec<ValidEntry> {
+            fn rules() -> Vec<ValidEntry<Self>> {
                 vec![ValidEntry::new(&User::FIELDS.age, ValidRule::Range(14, 18))]
             }
         }
@@ -139,8 +139,8 @@ mod test {
 
     #[test]
     fn equals() {
-        #[derive(Default, Reflected)]
-        struct User {
+        #[derive(Default, Debug, Reflected)]
+        pub struct User {
             pass:         String,
             confirm_pass: String,
             code:         u32,
@@ -148,7 +148,7 @@ mod test {
         }
 
         impl Valid for User {
-            fn rules() -> Vec<ValidEntry> {
+            fn rules() -> Vec<ValidEntry<Self>> {
                 vec![
                     ValidEntry::new(&User::FIELDS.pass, ValidRule::Equals(&User::FIELDS.confirm_pass)),
                     ValidEntry::new(&User::FIELDS.code, ValidRule::Equals(&User::FIELDS.confirm_code)),
