@@ -1,5 +1,5 @@
 use gm::Color;
-use refs::Weak;
+use refs::{Own, Weak};
 use rtools::{data_manager::Handle, IntoF32};
 use text::{render_text, Font};
 use ui::{view, SubView, ToLabel, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
@@ -14,6 +14,7 @@ pub struct Label {
     image_view:    SubView<ImageView>,
     text_size:     f32,
     needs_update:  bool,
+    initial_text:  Option<String>,
     pub free_text: bool,
 }
 
@@ -108,6 +109,10 @@ impl ViewSetup for Label {
         debug_assert!(self.text.is_empty());
         self.image_view.place.center();
         self.image_view.set_hidden(true);
+
+        if let Some(text) = self.initial_text.take() {
+            self.set_text(text);
+        }
     }
 }
 
@@ -118,5 +123,13 @@ impl ViewCallbacks for Label {
             self.needs_update = false;
         }
         self.fit_size();
+    }
+}
+
+impl From<&String> for Label {
+    fn from(value: &String) -> Self {
+        let mut new = Label::default();
+        new.initial_text = value.to_string().into();
+        new
     }
 }
