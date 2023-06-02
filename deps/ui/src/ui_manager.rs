@@ -4,7 +4,7 @@ use std::{
 };
 
 use gm::flat::{Point, Rect, Size};
-use refs::{Own, Strong, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 use rtools::Unwrap;
 use smart_default::SmartDefault;
 
@@ -17,11 +17,11 @@ pub struct UIManager {
     drawer: Unwrap<Own<dyn UIDrawer>>,
 
     #[default({
-        let mut view = Strong::<Container>::default();
+        let mut view = Own::<Container>::default();
         view.place = Placer::new(view.weak_view()).into();
         view
     })]
-    root_view: Strong<dyn View>,
+    root_view: Own<dyn View>,
 
     next_view: Option<Own<dyn View>>,
 

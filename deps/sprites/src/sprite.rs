@@ -4,7 +4,7 @@ use gm::{
     Color,
 };
 use rapier2d::{geometry::Collider, prelude::RigidBody};
-use refs::{Address, Strong, Weak};
+use refs::{Address, Own, Weak};
 use rtools::{data_manager::Handle, IntoF32};
 
 use crate::{get_sprites_drawer, Level, SpriteData};
@@ -101,7 +101,7 @@ pub trait Sprite {
 
     fn data(&self) -> &SpriteData;
     fn data_mut(&mut self) -> &mut SpriteData;
-    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Own<Self>
     where Self: Sized;
 }
 

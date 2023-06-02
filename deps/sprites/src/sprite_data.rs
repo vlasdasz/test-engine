@@ -4,7 +4,7 @@ use gm::{
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
-use refs::{Strong, Weak};
+use refs::{Own, Weak};
 use rtools::{data_manager::Handle, IntoF32};
 use vents::Event;
 
@@ -48,9 +48,9 @@ impl Sprite for SpriteData {
         self
     }
 
-    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Own<Self>
     where Self: Sized {
-        Strong::new(Self {
+        Own::new(Self {
             position,
             shape,
             level,

@@ -37,6 +37,7 @@ glfw = "0.51.0"
 home = "0.5.5"
 log = "0.4"
 mashup = "0.1"
+itertools = "0.10.5"
 reqwest = { version = "0.11.18" }
 rust_decimal = "1.29.1"
 serde = { version = "1.0", features = ["derive"] }
@@ -49,7 +50,7 @@ tokio = { version = "1.26.0", features = ["full"] }
 reflected = "0.6.1"
 reflected_proc = "0.6.1"
 refs = "0.2.6"
-rtools = "0.2.1"
+rtools = "0.2.3"
 vents = "0.1.11"
 
 

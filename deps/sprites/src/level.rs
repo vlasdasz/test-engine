@@ -1,6 +1,6 @@
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
-use refs::{Strong, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 
 use crate::{get_sprites_drawer, LevelBase, Player, Sprite};
 
@@ -70,11 +70,11 @@ pub trait Level {
         (gravity[0], gravity[1]).into()
     }
 
-    fn sprites(&self) -> &[Strong<dyn Sprite>] {
+    fn sprites(&self) -> &[Own<dyn Sprite>] {
         &self.base().sprites
     }
 
-    fn sprites_mut(&mut self) -> &mut [Strong<dyn Sprite>] {
+    fn sprites_mut(&mut self) -> &mut [Own<dyn Sprite>] {
         &mut self.base_mut().sprites
     }
 

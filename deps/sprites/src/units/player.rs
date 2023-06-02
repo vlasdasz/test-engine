@@ -1,13 +1,13 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use refs::{Strong, Weak};
+use refs::{Own, Weak};
 
 use crate::{Level, Sprite, SpriteData, Unit, Weapon};
 
 pub struct Player {
-    unit:       Strong<Unit>,
-    pub weapon: Strong<Weapon>,
+    unit:       Own<Unit>,
+    pub weapon: Own<Weapon>,
 }
 
 impl Sprite for Player {
@@ -46,9 +46,9 @@ impl Sprite for Player {
         self.unit.data_mut()
     }
 
-    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Own<Self>
     where Self: Sized {
-        Strong::new(Player {
+        Own::new(Player {
             unit:   Unit::make(shape, position, level),
             weapon: Weapon::make(shape, position, level),
         })

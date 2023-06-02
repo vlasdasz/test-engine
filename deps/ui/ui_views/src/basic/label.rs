@@ -1,5 +1,5 @@
 use gm::Color;
-use refs::{Own, Weak};
+use refs::Weak;
 use rtools::{data_manager::Handle, IntoF32};
 use text::{render_text, Font};
 use ui::{view, SubView, ToLabel, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
@@ -128,8 +128,9 @@ impl ViewCallbacks for Label {
 
 impl From<&String> for Label {
     fn from(value: &String) -> Self {
-        let mut new = Label::default();
-        new.initial_text = value.to_string().into();
-        new
+        Label {
+            initial_text: value.to_string().into(),
+            ..Default::default()
+        }
     }
 }

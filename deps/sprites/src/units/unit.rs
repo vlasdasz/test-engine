@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::prelude::ActiveEvents;
-use refs::{Strong, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 
 use crate::{Body, Level, Sprite, SpriteData};
 
 pub struct Unit {
-    body: Strong<Body>,
+    body: Own<Body>,
 }
 
 impl Unit {
@@ -33,14 +33,14 @@ impl Sprite for Unit {
         self.body.data_mut()
     }
 
-    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Strong<Self>
+    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Own<Self>
     where Self: Sized {
         let mut body = Body::make(shape, position, level);
 
         body.lock_rotations();
         body.collider_mut().set_restitution(0.0);
 
-        Strong::new(Unit { body })
+        Own::new(Unit { body })
     }
 }
 

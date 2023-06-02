@@ -1,6 +1,7 @@
 mod alert_test_view;
 mod between_test_view;
 mod collection_test_view;
+mod drop_down_test_view;
 mod header_view_test;
 mod labeled_switch_test;
 mod modal_view_test;

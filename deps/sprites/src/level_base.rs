@@ -10,7 +10,7 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline,
     },
 };
-use refs::{Strong, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 use smart_default::SmartDefault;
 use vents::Event;
 
@@ -27,7 +27,7 @@ pub struct LevelBase {
 
     pub(crate) colliding_sprites: Vec<Weak<dyn Sprite>>,
 
-    pub(crate) sprites: Vec<Strong<dyn Sprite>>,
+    pub(crate) sprites: Vec<Own<dyn Sprite>>,
     pub(crate) sets:    Sets,
 
     #[default(Vector2::new(0.0, -9.81))]

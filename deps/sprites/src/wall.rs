@@ -1,12 +1,12 @@
 use gm::flat::{Point, Shape};
 use rapier2d::na::Vector2;
-use refs::{Strong, Weak};
+use refs::{Own, Weak};
 use rtools::IntoF32;
 
 use crate::{sprite::SpriteTemplates, Level, Sprite, SpriteData, ToCollider};
 
 pub struct Wall {
-    data: Strong<SpriteData>,
+    data: Own<SpriteData>,
 }
 
 impl Wall {
@@ -32,7 +32,7 @@ impl Sprite for Wall {
         &mut self.data
     }
 
-    fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Strong<Self> {
+    fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Own<Self> {
         let collider = shape
             .to_collider()
             .translation(Vector2::new(position.x, position.y))
@@ -40,6 +40,6 @@ impl Sprite for Wall {
             .build();
         let mut sprite = SpriteData::make(shape, position, level);
         sprite.collider_handle = level.base_mut().sets.collider.insert(collider).into();
-        Strong::new(Wall { data: sprite })
+        Own::new(Wall { data: sprite })
     }
 }
