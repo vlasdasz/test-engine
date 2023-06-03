@@ -9,12 +9,10 @@ pub fn home() -> PathBuf {
     home_dir().unwrap()
 }
 
-pub struct Paths {
-    pub assets:  PathBuf,
-    pub images:  PathBuf,
-    pub sounds:  PathBuf,
-    pub fonts:   PathBuf,
-    pub shaders: ShaderPaths,
+pub(crate) struct Paths {
+    pub(crate) images: PathBuf,
+    pub(crate) sounds: PathBuf,
+    pub(crate) fonts:  PathBuf,
 }
 
 impl Paths {
@@ -22,11 +20,9 @@ impl Paths {
         let root = Self::root(&root);
         let assets = Self::assets(&root);
         Rc::new(Self {
-            assets:  assets.clone(),
-            images:  assets.join("Images"),
-            sounds:  assets.join("Sounds"),
-            fonts:   assets.join("Fonts"),
-            shaders: ShaderPaths::with_assets(&assets),
+            images: assets.join("Images"),
+            sounds: assets.join("Sounds"),
+            fonts:  assets.join("Fonts"),
         })
     }
 }
@@ -45,26 +41,5 @@ impl Paths {
         return Default::default();
         #[cfg(not(android))]
         return _root.join("Assets");
-    }
-}
-
-pub struct ShaderPaths {
-    pub ui:        PathBuf,
-    pub sprites:   PathBuf,
-    pub isometric: PathBuf,
-    pub include:   PathBuf,
-    pub test:      PathBuf,
-}
-
-impl ShaderPaths {
-    fn with_assets(assets: &Path) -> Self {
-        let root = assets.join("Shaders");
-        Self {
-            ui:        root.join("ui"),
-            sprites:   root.join("sprites"),
-            isometric: root.join("isometric"),
-            include:   root.join("include"),
-            test:      root.join("test"),
-        }
     }
 }

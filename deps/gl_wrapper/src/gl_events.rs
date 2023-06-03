@@ -2,10 +2,11 @@
 
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{Point, Size};
-use rtools::static_default;
+use refs::is_main_thread;
 use vents::Event;
 
-#[derive(Default)]
+static mut EVENTS: *const GlEvents = std::ptr::null_mut();
+
 pub struct GlEvents {
     pub frame_drawn:  Event,
     pub cursor_moved: Event<Point>,
@@ -15,4 +16,25 @@ pub struct GlEvents {
     pub scroll:       Event<Point>,
 }
 
-static_default!(GlEvents);
+impl GlEvents {
+    fn init() -> Self {
+        Self {
+            frame_drawn:  Default::default(),
+            cursor_moved: Default::default(),
+            size_changed: Default::default(),
+            mouse_click:  Default::default(),
+            key_pressed:  Default::default(),
+            scroll:       Default::default(),
+        }
+    }
+
+    pub fn get() -> &'static Self {
+        debug_assert!(is_main_thread());
+        unsafe {
+            if EVENTS.is_null() {
+                EVENTS = Box::into_raw(Box::new(Self::init()));
+            }
+            EVENTS.as_ref().unwrap()
+        }
+    }
+}

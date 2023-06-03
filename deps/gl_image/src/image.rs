@@ -146,12 +146,10 @@ pub fn draw_image(image: &Image, rect: &Rect, color: &Color) {
         return;
     }
 
-    let shaders = ImageShaders::get();
-
     if image.is_monochrome() {
-        shaders.monochrome.enable().set_color(color)
+        ImageShaders::monochrome().enable().set_color(color)
     } else {
-        shaders.texture.enable()
+        ImageShaders::texture().enable()
     }
     .set_flipped(image.flipped)
     .set_flipped_y(image.flipped_y);

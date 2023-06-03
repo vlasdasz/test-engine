@@ -52,7 +52,7 @@ impl<Output: DeserializeOwned> Req<(), Output> {
 impl<Param: Serialize> Req<Param, ()> {
     pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
         let body = to_string(param.borrow())?;
-        raw_request(self.method, self.full_url(), API::headers(), body.into()).await?;
+        raw_request(self.method, self.full_url(), &API::headers(), body.into()).await?;
         Ok(())
     }
 }
@@ -66,7 +66,7 @@ impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
 
 async fn request_object<T>(method: Method, url: String, body: Option<String>) -> NetResult<T>
 where T: DeserializeOwned {
-    let response = raw_request(method, url, API::headers(), body).await?;
+    let response = raw_request(method, url, &API::headers(), body).await?;
 
     if response.status != 200 {
         error!("Object request failed: {response:?}");

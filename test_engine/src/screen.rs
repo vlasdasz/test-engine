@@ -1,6 +1,5 @@
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut};
 
-use gl_image::ImageShaders;
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
@@ -14,7 +13,7 @@ use text::Font;
 use ui::{
     layout::Placer,
     refs::{Own, ToWeak, Weak},
-    UIManager, UIShaders, View, ViewFrame, ViewInternalSetup,
+    UIManager, View, ViewFrame, ViewInternalSetup,
 };
 
 use crate::{
@@ -224,9 +223,6 @@ impl Screen {
         unsafe {
             SCREEN = screen.deref_mut() as *mut Screen;
         }
-
-        ImageShaders::init(ImageShaders::default());
-        UIShaders::init(UIShaders::default());
 
         screen.init(
             #[cfg(desktop)]

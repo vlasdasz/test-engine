@@ -1,23 +1,16 @@
+use std::sync::OnceLock;
+
 use gl_wrapper::{Shader, ShaderCompiler};
-use rtools::static_init;
+
+static SHADERS: OnceLock<UIShaders> = OnceLock::new();
 
 pub struct UIShaders {
-    pub(crate) view: Shader,
-    pub(crate) path: Shader,
+    view: Shader,
+    path: Shader,
 }
 
 impl UIShaders {
-    pub fn view() -> &'static Shader {
-        &Self::get().view
-    }
-
-    pub fn path() -> &'static Shader {
-        &Self::get().path
-    }
-}
-
-impl Default for UIShaders {
-    fn default() -> Self {
+    fn init() -> Self {
         let compiler = ShaderCompiler::default();
 
         let view_vert = include_str!("shaders/ui.vert");
@@ -31,6 +24,16 @@ impl Default for UIShaders {
 
         Self { view, path }
     }
-}
 
-static_init!(UIShaders);
+    fn get() -> &'static Self {
+        SHADERS.get_or_init(Self::init)
+    }
+
+    pub fn view() -> &'static Shader {
+        &Self::get().view
+    }
+
+    pub fn path() -> &'static Shader {
+        &Self::get().path
+    }
+}

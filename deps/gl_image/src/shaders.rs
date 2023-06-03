@@ -1,13 +1,16 @@
+use std::sync::OnceLock;
+
 use gl_wrapper::{Shader, ShaderCompiler};
-use rtools::static_init;
+
+static SHADERS: OnceLock<ImageShaders> = OnceLock::new();
 
 pub struct ImageShaders {
-    pub(crate) texture:    Shader,
-    pub(crate) monochrome: Shader,
+    texture:    Shader,
+    monochrome: Shader,
 }
 
-impl Default for ImageShaders {
-    fn default() -> Self {
+impl ImageShaders {
+    fn init() -> Self {
         let compiler = ShaderCompiler::default();
 
         let ui_texture_vert = include_str!("shaders/ui_texture.vert");
@@ -21,6 +24,16 @@ impl Default for ImageShaders {
 
         Self { texture, monochrome }
     }
-}
 
-static_init!(ImageShaders);
+    fn get() -> &'static Self {
+        SHADERS.get_or_init(Self::init)
+    }
+
+    pub fn texture() -> &'static Shader {
+        &Self::get().texture
+    }
+
+    pub fn monochrome() -> &'static Shader {
+        &Self::get().monochrome
+    }
+}

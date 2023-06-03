@@ -1,48 +1,52 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    sync::{Mutex, OnceLock},
+};
 
-use rtools::static_init;
+static STATIC_API: OnceLock<API> = OnceLock::new();
 
-#[derive(Default)]
+#[derive(Debug)]
 pub struct API {
-    base_url: String,
-    headers:  HashMap<String, String>,
+    base_url: &'static str,
+    headers:  Mutex<HashMap<String, String>>,
 }
-static_init!(API);
 
 impl API {
-    pub fn new(base_url: impl ToString) -> Self {
-        Self {
-            base_url: base_url.to_string(),
-            headers:  Default::default(),
-        }
+    pub fn init(base_url: &'static str) {
+        STATIC_API
+            .set(Self {
+                base_url,
+                headers: Mutex::new(HashMap::from([(
+                    "content-type".to_string(),
+                    "application/json".to_string(),
+                )])),
+            })
+            .unwrap();
     }
-}
 
-impl API {
-    pub fn use_json(mut self) -> Self {
-        self.headers.insert("content-type".to_string(), "application/json".to_string());
-        self
+    pub fn is_ok() -> bool {
+        STATIC_API.get().is_some()
+    }
+
+    fn get() -> &'static Self {
+        STATIC_API.get().unwrap()
     }
 }
 
 impl API {
     pub fn base_url() -> &'static str {
-        &Self::get().base_url
+        Self::get().base_url
     }
 
-    pub fn set_base_url(url: impl ToString) {
-        Self::get().base_url = url.to_string()
-    }
-
-    pub fn headers() -> &'static HashMap<String, String> {
-        &Self::get().headers
+    pub fn headers() -> HashMap<String, String> {
+        Self::get().headers.lock().unwrap().clone()
     }
 
     pub fn remove_header(key: impl ToString) {
-        Self::get().headers.remove(&key.to_string());
+        Self::get().headers.lock().unwrap().remove(&key.to_string());
     }
 
     pub fn add_header(key: impl ToString, value: impl ToString) {
-        Self::get().headers.insert(key.to_string(), value.to_string());
+        Self::get().headers.lock().unwrap().insert(key.to_string(), value.to_string());
     }
 }
