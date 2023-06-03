@@ -17,6 +17,7 @@ pub struct Shader {
     flipped:    i32,
     flipped_y:  i32,
     scale:      i32,
+    z_position: i32,
 
     camera_rotation: i32,
     camera_position: i32,
@@ -43,6 +44,7 @@ impl Shader {
             scale: get_uniform(program, "scale"),
             camera_rotation: get_uniform(program, "camera_rotation"),
             camera_position: get_uniform(program, "camera_position"),
+            z_position: get_uniform(program, "z_position"),
         }
     }
 
@@ -112,6 +114,12 @@ impl Shader {
     pub fn set_scale(&self, scale: f32) -> &Self {
         debug_assert!(self.scale >= 0, "Invalid shader uniform");
         GL!(Uniform1f, self.scale, scale);
+        self
+    }
+
+    pub fn set_z_position(&self, z_position: f32) -> &Self {
+        debug_assert!(self.z_position >= 0, "Invalid shader uniform");
+        GL!(Uniform1f, self.z_position, z_position);
         self
     }
 }

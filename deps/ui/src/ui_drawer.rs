@@ -1,4 +1,4 @@
-use std::ops::DerefMut;
+use std::{fmt::Debug, ops::DerefMut};
 
 use gl_wrapper::GLWrapper;
 use gm::{flat::Rect, Color};
@@ -9,7 +9,7 @@ use crate::{
     DrawMode, PathData, UIManager, View, ViewLayout,
 };
 
-pub trait UIDrawer {
+pub trait UIDrawer: Debug + Send {
     fn fill(&self, rect: &Rect, color: &Color);
     fn outline(&self, rect: &Rect, color: &Color);
     fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>);

@@ -1,4 +1,9 @@
-use std::{cell::RefCell, collections::HashMap, ops::Deref};
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    fmt::{Debug, Formatter},
+    ops::Deref,
+};
 
 use gl_image::draw_image;
 use gl_wrapper::{buffers::Buffers, GLWrapper};
@@ -130,6 +135,12 @@ impl UIDrawer for TEUIDrawer {
         }
 
         GLWrapper::disable_stensil();
+    }
+}
+
+impl Debug for TEUIDrawer {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        "TEUIDrawer".fmt(f)
     }
 }
 

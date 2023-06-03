@@ -17,7 +17,10 @@ impl DrawingView {
 }
 
 pub fn initialize_path_data(path: PointsPath, color: &Color, draw_mode: DrawMode) -> PathData {
-    let buffer = Buffer::make(&BufferConfig::_2, (&path.points).into(), None, draw_mode.to_gl());
+    let float_slice: &[f32] =
+        unsafe { std::slice::from_raw_parts(path.points.as_ptr() as *const f32, path.points.len() * 2) };
+
+    let buffer = Buffer::make(&BufferConfig::_2, float_slice, None, draw_mode.to_gl());
 
     PathData {
         buffer,

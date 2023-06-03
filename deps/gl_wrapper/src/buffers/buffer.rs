@@ -1,15 +1,14 @@
-use std::ffi::c_void;
+use std::{ffi::c_void, mem::size_of_val};
 
 #[cfg(mobile)]
 use gles31_sys::*;
-use rtools::array_view::ArrayView;
 
 use crate::BufferConfig;
 
 #[derive(Debug)]
 pub struct Buffer {
-    vertex_data: ArrayView<f32>,
-    indices:     Option<ArrayView<u16>>,
+    vertex_data: &'static [f32],
+    indices:     Option<&'static [u16]>,
 
     vertices_count: i32,
 
@@ -24,8 +23,8 @@ impl Buffer {
     #[allow(clippy::cast_possible_wrap)]
     pub fn make(
         config: &'static BufferConfig,
-        vertex_data: ArrayView<f32>,
-        indices: Option<ArrayView<u16>>,
+        vertex_data: &'static [f32],
+        indices: Option<&'static [u16]>,
         draw_mode: u32,
     ) -> Buffer {
         let mut vertex_array_object: u32 = u32::MAX;
@@ -33,7 +32,7 @@ impl Buffer {
         let mut index_buffer_object: u32 = u32::MAX;
 
         let vertices_count: i32 = if indices.is_none() {
-            i32::try_from(vertex_data.size).unwrap() / i32::from(config.size())
+            i32::try_from(vertex_data.len()).unwrap() / i32::from(config.size())
         } else {
             -1
         };
@@ -47,19 +46,19 @@ impl Buffer {
         GL!(
             BufferData,
             GLC!(ARRAY_BUFFER),
-            (vertex_data.size * std::mem::size_of::<GLT!(GLfloat)>()) as _,
-            vertex_data.data.cast::<c_void>(),
+            size_of_val(vertex_data) as _,
+            vertex_data.as_ptr().cast::<c_void>(),
             GLC!(STATIC_DRAW)
         );
 
-        if let Some(indices) = &indices {
+        if let Some(indices) = indices {
             GL!(GenBuffers, 1, &mut index_buffer_object);
             GL!(BindBuffer, GLC!(ELEMENT_ARRAY_BUFFER), index_buffer_object);
             GL!(
                 BufferData,
                 GLC!(ELEMENT_ARRAY_BUFFER),
-                (indices.size * std::mem::size_of::<GLT!(GLushort)>()) as _,
-                indices.data.cast::<c_void>(),
+                size_of_val(indices) as _,
+                indices.as_ptr().cast::<c_void>(),
                 GLC!(STATIC_DRAW)
             );
         }
@@ -89,7 +88,7 @@ impl Buffer {
             GL!(
                 DrawElements,
                 draw_mode,
-                indices.size as i32,
+                indices.len() as i32,
                 GLC!(UNSIGNED_SHORT),
                 std::ptr::null::<c_void>()
             )
@@ -106,9 +105,9 @@ impl Buffer {
 
     pub fn print(&self) {
         if let Some(indices) = &self.indices {
-            indices.print();
+            dbg!(indices);
         }
-        self.vertex_data.print();
+        dbg!(self.vertex_data);
     }
 }
 

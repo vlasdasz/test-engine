@@ -4,7 +4,7 @@ use test_engine::{
 };
 use ui::{
     refs::{dump_ref_stats, Own, Weak},
-    UIManager, ViewSetup,
+    Labeled, UIManager, ViewSetup,
 };
 use ui_views::{Button, Label, LabeledTextField, MultilineLabel};
 
@@ -32,10 +32,10 @@ impl ViewSetup for UIDebugView {
         self.login.place.size(200, 80).center_hor();
 
         self.login.place.anchor(self.password, Anchor::Bot, 20);
-        self.login.set_title("Login:");
+        self.login.set_title(&"Login:");
 
         self.password.place.size(200, 40).center();
-        self.password.set_title("Password:");
+        self.password.set_title(&"Password:");
 
         self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_hor();
 

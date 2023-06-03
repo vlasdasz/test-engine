@@ -1,21 +1,16 @@
-use std::{
-    ops::Deref,
-    sync::{Mutex, MutexGuard, OnceLock},
-};
+use std::sync::{Mutex, MutexGuard, OnceLock};
 
 use gm::flat::{Point, Rect, Size};
 use refs::{Own, ToWeak, Weak};
-use rtools::Unwrap;
 use smart_default::SmartDefault;
 
 use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, UIEvent, View};
 
 static UI_MANAGER: OnceLock<Mutex<UIManager>> = OnceLock::new();
+static DRAWER: OnceLock<Mutex<Box<dyn UIDrawer>>> = OnceLock::new();
 
 #[derive(SmartDefault)]
 pub struct UIManager {
-    drawer: Unwrap<Own<dyn UIDrawer>>,
-
     #[default({
         let mut view = Own::<Container>::default();
         view.place = Placer::new(view.weak_view()).into();
@@ -126,12 +121,12 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub fn drawer() -> Weak<dyn UIDrawer> {
-        Self::get().drawer.deref().weak()
+    pub fn drawer() -> MutexGuard<'static, Box<dyn UIDrawer>> {
+        DRAWER.get().unwrap().lock().unwrap()
     }
 
-    pub fn set_drawer(drawer: Own<dyn UIDrawer>) {
-        Self::get().drawer = Unwrap::from(drawer)
+    pub fn set_drawer(drawer: impl UIDrawer + 'static) {
+        DRAWER.set(Mutex::new(Box::new(drawer))).unwrap();
     }
 }
 

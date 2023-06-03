@@ -1,7 +1,8 @@
+use std::sync::OnceLock;
+
 #[cfg(mobile)]
 use gles31_sys::*;
 use gm::flat::Rect;
-use rtools::static_init;
 
 use crate::{Buffer, BufferConfig};
 
@@ -40,38 +41,33 @@ const IMAGE_VERTICES: &[f32; 16] = &[
     1.0, //| -|
 ];
 
+static BUFFERS: OnceLock<Buffers> = OnceLock::new();
+
 pub struct Buffers {
     pub full:         Buffer,
     pub full_image:   Buffer,
     pub full_outline: Buffer,
 }
 
-static_init!(Buffers);
-
-impl Default for Buffers {
-    fn default() -> Buffers {
+impl Buffers {
+    fn init() -> Buffers {
         trace!("Initializing buffers");
 
         let full = Buffer::make(
             &BufferConfig::_2,
-            FULLSCREEN_VERT.into(),
-            Some(RECT_INDICES.into()),
+            FULLSCREEN_VERT,
+            Some(RECT_INDICES),
             GLC!(TRIANGLE_STRIP),
         );
 
         let full_image = Buffer::make(
             &BufferConfig::_2_2,
-            IMAGE_VERTICES.into(),
-            Some(RECT_INDICES.into()),
+            IMAGE_VERTICES,
+            Some(RECT_INDICES),
             GLC!(TRIANGLE_STRIP),
         );
 
-        let full_outline = Buffer::make(
-            &BufferConfig::_2,
-            FULLSCREEN_VERT.into(),
-            Some(INDICES.into()),
-            GLC!(LINE_LOOP),
-        );
+        let full_outline = Buffer::make(&BufferConfig::_2, FULLSCREEN_VERT, Some(INDICES), GLC!(LINE_LOOP));
 
         trace!("Buffers: OK");
 
@@ -80,5 +76,9 @@ impl Default for Buffers {
             full_image,
             full_outline,
         }
+    }
+
+    pub fn get() -> &'static Buffers {
+        BUFFERS.get_or_init(Self::init)
     }
 }

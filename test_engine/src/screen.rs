@@ -1,9 +1,9 @@
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut};
 
 use gl_image::ImageShaders;
-use gl_wrapper::{buffers::Buffers, monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
+use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(mobile)]
 use gm::volume::GyroData;
 use gm::{flat::Size, Color};
@@ -207,7 +207,7 @@ impl Screen {
         let ui = Own::<UILayer>::default();
         trace!("UILayer: OK");
 
-        UIManager::set_drawer(Own::<TEUIDrawer>::default());
+        UIManager::set_drawer(TEUIDrawer::default());
         trace!("UIDrawer: OK");
 
         set_sprites_drawer(TESpritesDrawer::new());
@@ -225,7 +225,6 @@ impl Screen {
             SCREEN = screen.deref_mut() as *mut Screen;
         }
 
-        Buffers::init(Buffers::default());
         ImageShaders::init(ImageShaders::default());
         UIShaders::init(UIShaders::default());
 
