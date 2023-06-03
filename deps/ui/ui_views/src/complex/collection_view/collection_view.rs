@@ -37,6 +37,11 @@ impl ViewSetup for CollectionView {
 }
 
 impl CollectionView {
+    pub fn set_priority(&mut self, p: usize) {
+        self.priority = p;
+        self.scroll.priority = p;
+    }
+
     pub fn reload_data(&mut self) {
         for cell in &mut self.cells {
             cell.remove_from_superview();

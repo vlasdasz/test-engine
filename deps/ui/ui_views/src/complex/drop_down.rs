@@ -65,6 +65,7 @@ impl ViewSetup for DropDown {
 
         self.table.data_source = collection_data!(self);
         self.table.set_color(Color::WHITE);
+        self.table.set_priority(1);
         self.table.set_hidden(true);
     }
 }

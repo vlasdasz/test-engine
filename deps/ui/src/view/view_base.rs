@@ -59,7 +59,7 @@ pub struct ViewBase {
     #[derivative(Debug = "ignore")]
     pub on_touch_began: Event<Touch>,
 
-    pub priority: f32,
+    pub priority: usize,
 }
 
 #[view]

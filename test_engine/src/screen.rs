@@ -66,6 +66,7 @@ impl Screen {
         }
 
         GLWrapper::enable_blend();
+        GLWrapper::enable_depth();
         GLWrapper::set_clear_color(Color::GRAY);
 
         UIManager::set_view(view);

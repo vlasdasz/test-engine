@@ -141,18 +141,19 @@ impl ResourceLoader for Image {
     }
 }
 
-pub fn draw_image(image: &Image, rect: &Rect, color: &Color) {
+pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize) {
     if image.is_invalid() {
         return;
     }
 
     if image.is_monochrome() {
-        ImageShaders::monochrome().enable().set_color(color)
+        ImageShaders::mono().enable().set_color(color)
     } else {
-        ImageShaders::texture().enable()
+        ImageShaders::color().enable()
     }
     .set_flipped(image.flipped)
-    .set_flipped_y(image.flipped_y);
+    .set_flipped_y(image.flipped_y)
+    .set_priority(priority);
 
     GLWrapper::set_viewport(*rect);
 

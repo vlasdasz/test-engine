@@ -68,6 +68,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_subview(&mut self, mut view: Own<dyn View>) -> Weak<dyn View> {
+        view.priority = self.priority;
         view.manually_set_superview(self.weak_view());
         view.init_views();
         view.internal_setup();

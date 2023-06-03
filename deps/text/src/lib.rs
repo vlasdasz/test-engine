@@ -63,7 +63,8 @@ pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image>
                     glyph.height,
                 )
                     .into(),
-                &Color::WHITE, // See ui_monochrome shader
+                &Color::WHITE, // See ui_monochrome shader,
+                0,
             );
         }
 

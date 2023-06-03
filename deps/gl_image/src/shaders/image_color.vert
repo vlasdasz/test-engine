@@ -3,11 +3,12 @@ layout (location = 1) in vec2 in_tex_coord;
 
 uniform bool flipped;
 uniform bool flipped_y;
+uniform float z_position;
 
 out vec2 tex_coord;
 
 void main() {
-    gl_Position = vec4(position, 1.0, 1.0);
+    gl_Position = vec4(position, z_position, 1.0);
     tex_coord = in_tex_coord;
 
     if (flipped) {

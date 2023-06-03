@@ -47,32 +47,36 @@ impl TEUIDrawer {
         &storage.get(&view.address()).unwrap().0
     }
 
-    fn draw_round_border(&self, view: &dyn View) {
+    fn draw_round_border(&self, view: &dyn View, priority: usize) {
         let mut storage = self.round_storage.borrow_mut();
         let path = Self::rounded_path_for_view(view, &mut storage);
-        self.draw_path(path, view.absolute_frame(), None);
+        self.draw_path(path, view.absolute_frame(), None, priority);
     }
 }
 
 impl UIDrawer for TEUIDrawer {
-    fn fill(&self, rect: &Rect, color: &Color) {
+    fn fill(&self, rect: &Rect, color: &Color, priority: usize) {
         self.set_viewport(rect);
-        UIShaders::view().enable().set_color(color);
+        UIShaders::view().enable().set_color(color).set_priority(priority);
         Buffers::get().full.draw();
     }
 
-    fn outline(&self, rect: &Rect, color: &Color) {
+    fn outline(&self, rect: &Rect, color: &Color, priority: usize) {
         self.set_viewport(rect);
-        UIShaders::view().enable().set_color(color);
+        UIShaders::view().enable().set_color(color).set_priority(priority);
         Buffers::get().full_outline.draw();
     }
 
-    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>) {
+    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: usize) {
         if rect.size.is_invalid() {
             return;
         }
         self.set_viewport(rect);
-        UIShaders::path().enable().set_color(&path.color).set_size(rect.size);
+        UIShaders::path()
+            .enable()
+            .set_color(&path.color)
+            .set_size(rect.size)
+            .set_priority(priority);
         if let Some(mode) = custom_mode {
             path.buffer.draw_with_mode(mode.to_gl())
         } else {
@@ -103,32 +107,42 @@ impl UIDrawer for TEUIDrawer {
 
             let mut storage = self.round_storage.borrow_mut();
             let path = Self::rounded_path_for_view(view, &mut storage);
-            self.draw_path(path, view.absolute_frame(), DrawMode::Fill.into());
+            self.draw_path(
+                path,
+                view.absolute_frame(),
+                DrawMode::Fill.into(),
+                view.base().priority,
+            );
 
             GLWrapper::draw_stensiled();
         }
 
-        self.fill(view.absolute_frame(), view.color());
+        self.fill(view.absolute_frame(), view.color(), view.priority);
 
         if let Some(image) = view.image().get() {
             let frame = &image.size.fit_in(view.absolute_frame());
-            draw_image(image, &UIManager::rescale_frame(frame), view.color());
+            draw_image(
+                image,
+                &UIManager::rescale_frame(frame),
+                view.color(),
+                view.priority,
+            );
         }
 
         if view.border_color().is_visible() {
             if needs_stensil {
-                self.draw_round_border(view);
+                self.draw_round_border(view, view.priority);
             } else {
-                self.outline(view.absolute_frame(), view.border_color());
+                self.outline(view.absolute_frame(), view.border_color(), view.priority);
             }
         }
 
         for path in view.paths() {
-            self.draw_path(path, view.absolute_frame(), None);
+            self.draw_path(path, view.absolute_frame(), None, view.priority);
         }
 
         //MARK - Debug frames
-        self.outline(view.absolute_frame(), &Color::TURQUOISE);
+        self.outline(view.absolute_frame(), &Color::TURQUOISE, view.priority);
 
         for view in view.subviews() {
             self.draw(view.deref())

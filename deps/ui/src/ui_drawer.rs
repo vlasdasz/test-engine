@@ -10,9 +10,9 @@ use crate::{
 };
 
 pub trait UIDrawer: Debug + Send {
-    fn fill(&self, rect: &Rect, color: &Color);
-    fn outline(&self, rect: &Rect, color: &Color);
-    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>);
+    fn fill(&self, rect: &Rect, color: &Color, priority: usize);
+    fn outline(&self, rect: &Rect, color: &Color, priority: usize);
+    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: usize);
     fn draw(&self, view: &dyn View);
 
     fn update_internal(&self, view: &mut dyn View) {

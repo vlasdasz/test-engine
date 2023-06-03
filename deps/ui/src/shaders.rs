@@ -19,8 +19,8 @@ impl UIShaders {
         let path_vert = include_str!("shaders/ui_path.vert");
         let path_frag = include_str!("shaders/ui_path.frag");
 
-        let view = compiler.compile(view_vert, view_frag);
-        let path = compiler.compile(path_vert, path_frag);
+        let view = compiler.compile(view_vert, view_frag, "ui");
+        let path = compiler.compile(path_vert, path_frag, "ui_path");
 
         Self { view, path }
     }

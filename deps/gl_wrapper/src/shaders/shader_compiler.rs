@@ -112,7 +112,7 @@ impl ShaderCompiler {
         shader
     }
 
-    pub fn compile(&self, vert_code: impl ToString, frag_code: impl ToString) -> Shader {
+    pub fn compile(&self, vert_code: impl ToString, frag_code: impl ToString, name: impl ToString) -> Shader {
         let vert = self.compile_shader(vert_code, GLC!(VERTEX_SHADER));
         let frag = self.compile_shader(frag_code, GLC!(FRAGMENT_SHADER));
 
@@ -132,7 +132,7 @@ impl ShaderCompiler {
 
         trace!("Shader: OK");
 
-        Shader::new(program)
+        Shader::new(program, name)
     }
 
     pub fn compile_path(&self, path: &Path) -> Shader {
@@ -144,6 +144,6 @@ impl ShaderCompiler {
         let vert_code = File::read_to_string(vert_path);
         let frag_code = File::read_to_string(frag_path);
 
-        self.compile(vert_code, frag_code)
+        self.compile(vert_code, frag_code, path.display())
     }
 }
