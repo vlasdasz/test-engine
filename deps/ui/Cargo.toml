@@ -18,6 +18,7 @@ rtools = { workspace = true }
 rust_decimal = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }
+reflected = { workspace = true }
 
 gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
