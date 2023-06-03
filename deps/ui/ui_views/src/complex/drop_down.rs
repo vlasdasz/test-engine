@@ -1,7 +1,7 @@
 use gm::{flat::Size, Color};
 use refs::{Own, ToOwn, ToWeak, Weak};
 use rtools::{MapVec, Toggle};
-use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup};
+use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
 
 use crate::{collection_data, link_button, Button, CollectionData, CollectionView, Label};
 
@@ -15,6 +15,10 @@ pub struct DropDown {
 }
 
 impl DropDown {
+    pub fn text(&self) -> &str {
+        self.label.text()
+    }
+
     pub fn set_values(&mut self, values: Vec<impl ToLabel>) {
         let values = values.map(|a| a.to_label());
         self.label.set_text(values.first().unwrap());
@@ -35,6 +39,18 @@ impl DropDown {
             let table_size = (self.width(), self.height() * self.number_of_cells() as f32);
             self.table.set_size(table_size);
         }
+    }
+
+    pub fn enable_editing(&mut self) -> &mut Self {
+        self.button.enable_touch();
+        self.set_color(Color::LIGHT_GRAY);
+        self
+    }
+
+    pub fn disable_editing(&mut self) -> &mut Self {
+        self.button.disable_touch();
+        self.set_color(Color::CLEAR);
+        self
     }
 }
 

@@ -1,14 +1,14 @@
 use std::marker::PhantomData;
 
-use reflected::Reflected;
-use refs::{Own, ToWeak, Weak};
-use ui::{view, ViewSetup, ViewSubviews};
+use reflected::{has_variants_field::HasVariantsField, Reflected};
+use refs::Weak;
+use ui::{view, Labeled, TextFieldConstraint, ViewSetup, ViewSubviews};
 
-use crate::{basic::TextFieldConstraint, LabeledTextField};
+use crate::{LabeledDrop, LabeledTextField};
 
 #[view]
 pub struct FormView<T: Reflected + 'static> {
-    labels:          Vec<Weak<LabeledTextField>>,
+    labels:          Vec<Weak<dyn Labeled>>,
     editind_enabled: bool,
     _p:              PhantomData<T>,
 }
@@ -26,18 +26,25 @@ impl<T: Reflected> FormView<T> {
         self.labels.clear();
 
         for field in T::simple_fields() {
-            let view = Own::<LabeledTextField>::default();
-            let mut rg = view.weak();
-            self.add_subview(view);
-            rg.text_field().constraint = TextFieldConstraint::from_field(field);
-            rg.set_title(field.name);
-            rg.set_text(data.get_value(field));
-            if self.editind_enabled {
-                rg.enable_editing();
+            let mut view = if let Some(variants) = T::variants_for(field) {
+                let mut view = self.add_view::<LabeledDrop>();
+                view.set_values(variants);
+                view.labeled()
             } else {
-                rg.disable_editing();
+                let mut view = self.add_view::<LabeledTextField>();
+                view.set_text(&data.get_value(field));
+                view.set_constraint(TextFieldConstraint::from_field(field));
+                view.labeled()
+            };
+
+            view.set_title(&field.name);
+
+            if self.editind_enabled {
+                view.enable_editing();
+            } else {
+                view.disable_editing();
             }
-            self.labels.push(rg);
+            self.labels.push(view);
         }
     }
 

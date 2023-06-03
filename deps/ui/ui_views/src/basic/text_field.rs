@@ -2,13 +2,11 @@ use gm::Color;
 use refs::{ToWeak, Weak};
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
-    view, SubView, ToLabel, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
+    view, AcceptChar, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData, ViewSetup,
+    ViewTouch,
 };
 
-use crate::{
-    basic::{text_field_constraint::AcceptChar, TextFieldConstraint},
-    Label,
-};
+use crate::Label;
 
 #[view]
 pub struct TextField {

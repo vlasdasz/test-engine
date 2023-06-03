@@ -1,16 +1,17 @@
 use std::fmt::Debug;
 
 use reflected::{Field, Type};
-use ui::ToLabel;
+
+use crate::ToLabel;
 
 #[derive(Debug)]
-pub(crate) enum TextFieldConstraint {
+pub enum TextFieldConstraint {
     Integer,
     Float,
 }
 
 impl TextFieldConstraint {
-    pub(crate) fn from_field<T>(field: &Field<T>) -> Option<Self> {
+    pub fn from_field<T>(field: &Field<T>) -> Option<Self> {
         if matches!(field.tp, Type::Integer) {
             Self::Integer.into()
         } else if matches!(field.tp, Type::Float) {
@@ -20,13 +21,13 @@ impl TextFieldConstraint {
         }
     }
 
-    pub(crate) fn filter(&self, string: impl ToLabel) -> String {
+    pub fn filter(&self, string: impl ToLabel) -> String {
         let string = string.to_label();
         let symbols = self.accepted_symbols(&string);
         string.to_string().chars().filter(|c| symbols.contains(*c)).collect()
     }
 
-    fn accept_char(&self, char: char, string: &str) -> bool {
+    pub fn accept_char(&self, char: char, string: &str) -> bool {
         self.accepted_symbols(string).contains(char)
     }
 
@@ -38,7 +39,7 @@ impl TextFieldConstraint {
     }
 }
 
-pub(crate) trait AcceptChar {
+pub trait AcceptChar {
     fn accept_char(&self, char: char, string: &str) -> bool;
 }
 

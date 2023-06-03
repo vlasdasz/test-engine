@@ -1,5 +1,5 @@
-use refs::Weak;
-use ui::{layout::Anchor, view, SubView, ToLabel, ViewSetup};
+use refs::{ToWeak, Weak};
+use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewSetup};
 
 use crate::{Label, TextField};
 
@@ -9,33 +9,37 @@ pub struct LabeledTextField {
     text_field: SubView<TextField>,
 }
 
-impl LabeledTextField {
-    pub fn text(&self) -> &str {
+impl Labeled for LabeledTextField {
+    fn text(&self) -> &str {
         self.text_field.text()
     }
 
-    pub fn set_title(&mut self, title: impl ToLabel) -> &mut Self {
-        self.label.set_text(title);
-        self
+    fn set_text(&mut self, text: &dyn ToLabel) {
+        self.text_field.set_text(text.to_label());
     }
 
-    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
-        self.text_field.set_text(text);
-        self
+    fn title(&self) -> &str {
+        self.label.text()
     }
 
-    pub fn text_field(&self) -> Weak<TextField> {
-        self.text_field.weak()
+    fn set_title(&mut self, title: &dyn ToLabel) {
+        self.label.set_text(title.to_label());
     }
 
-    pub fn enable_editing(&mut self) -> &mut Self {
+    fn set_constraint(&mut self, cons: Option<TextFieldConstraint>) {
+        self.text_field.constraint = cons;
+    }
+
+    fn enable_editing(&mut self) {
         self.text_field.enable_editing();
-        self
     }
 
-    pub fn disable_editing(&mut self) -> &mut Self {
+    fn disable_editing(&mut self) {
         self.text_field.disable_editing();
-        self
+    }
+
+    fn labeled(&self) -> Weak<dyn Labeled> {
+        (self as &dyn Labeled).weak()
     }
 }
 

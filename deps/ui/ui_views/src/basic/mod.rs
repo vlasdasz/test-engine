@@ -7,7 +7,6 @@ mod scroll_view;
 mod slider;
 mod switch;
 mod text_field;
-mod text_field_constraint;
 
 pub use button::Button;
 pub use circle_view::CircleView;
@@ -18,4 +17,3 @@ pub use scroll_view::*;
 pub use slider::*;
 pub use switch::*;
 pub use text_field::TextField;
-pub(crate) use text_field_constraint::*;
