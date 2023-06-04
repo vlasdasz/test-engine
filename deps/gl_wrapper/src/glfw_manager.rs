@@ -43,6 +43,7 @@ impl GLFWManager {
                     }
                     glfw::WindowEvent::Scroll(x, y) => events.scroll.trigger((x, y).into()),
                     glfw::WindowEvent::FileDrop(paths) => events.file_drop.trigger(paths),
+                    glfw::WindowEvent::Close => return,
                     _ => {}
                 }
             }

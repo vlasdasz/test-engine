@@ -40,7 +40,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn remove_from_superview(&mut self) {
         let removed = self.take_from_superview();
-        UIManager::get().deleted_views.push(removed);
+        UIManager::get().deleted_views.lock().unwrap().push(removed);
     }
 
     fn take_from_superview(&mut self) -> Own<dyn View> {
@@ -53,7 +53,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn remove_all_subviews(&mut self) {
-        UIManager::get().deleted_views.append(&mut self.subviews);
+        UIManager::get().deleted_views.lock().unwrap().append(&mut self.subviews);
     }
 
     fn internal_add_view<V: 'static + View + Default>(&mut self) -> SubView<V> {

@@ -1,7 +1,10 @@
 use std::{
     ops::Deref,
     path::PathBuf,
-    sync::{Mutex, MutexGuard, OnceLock},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Mutex, MutexGuard, OnceLock,
+    },
 };
 
 use gm::flat::{Point, Rect, Size};
@@ -12,29 +15,29 @@ use crate::{
     layout::Placer, touch_layer::TouchLayer, view::ViewSubviews, Container, UIDrawer, UIEvent, View,
 };
 
-static UI_MANAGER: OnceLock<Mutex<UIManager>> = OnceLock::new();
+static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 static DRAWER: OnceLock<Mutex<Box<dyn UIDrawer>>> = OnceLock::new();
 
 pub struct UIManager {
     root_view: Own<dyn View>,
 
-    next_view: Option<Own<dyn View>>,
+    next_view: Mutex<Option<Own<dyn View>>>,
 
-    pub(crate) deleted_views: Vec<Own<dyn View>>,
+    pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
 
-    touch_disabled: bool,
+    touch_disabled: AtomicBool,
 
-    display_scale: f32,
+    display_scale: Mutex<f32>,
 
-    window_size: Size,
+    window_size: Mutex<Size>,
 
-    pub(crate) touch_stack: NonEmpty<TouchLayer>,
+    pub(crate) touch_stack: Mutex<NonEmpty<TouchLayer>>,
 
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<Vec<PathBuf>>,
 
-    pub open_keyboard:  bool,
-    pub close_keyboard: bool,
+    pub open_keyboard:  AtomicBool,
+    pub close_keyboard: AtomicBool,
 }
 
 impl UIManager {
@@ -45,33 +48,33 @@ impl UIManager {
 
         Self {
             root_view,
-            next_view: None,
-            deleted_views: vec![],
-            touch_disabled: false,
-            display_scale: 1.0,
+            next_view: None.into(),
+            deleted_views: Default::default(),
+            touch_disabled: false.into(),
+            display_scale: 1.0.into(),
             window_size: Default::default(),
-            touch_stack: NonEmpty::new(weak_root.into()),
+            touch_stack: NonEmpty::new(weak_root.into()).into(),
             on_scroll: Default::default(),
             on_drop_file: Default::default(),
-            open_keyboard: false,
-            close_keyboard: false,
+            open_keyboard: false.into(),
+            close_keyboard: false.into(),
         }
     }
+    //
+    // pub fn drop() {
+    //     *Self::get() = Self::init();
+    // }
 
-    pub fn drop() {
-        *Self::get() = Self::init();
-    }
-
-    pub fn get() -> MutexGuard<'static, Self> {
-        UI_MANAGER.get_or_init(|| Self::init().into()).lock().unwrap()
+    pub fn get() -> &'static Self {
+        UI_MANAGER.get_or_init(|| Self::init())
     }
 
     pub fn set_window_size(size: impl Into<Size>) {
-        Self::get().window_size = size.into();
+        *Self::get().window_size.lock().unwrap() = size.into();
     }
 
     pub fn window_size() -> Size {
-        Self::get().window_size
+        *Self::get().window_size.lock().unwrap()
     }
 
     pub fn root_view_size() -> Size {
@@ -83,56 +86,52 @@ impl UIManager {
     }
 
     pub fn update() {
-        Self::get().deleted_views.clear()
+        Self::get().deleted_views.lock().unwrap().clear()
     }
 }
 
 impl UIManager {
-    fn touch_layer(&mut self) -> &mut TouchLayer {
-        self.touch_stack.last_mut()
-    }
-
     pub fn touch_views() -> Vec<Weak<dyn View>> {
-        Self::get().touch_layer().views()
+        Self::get().touch_stack.lock().unwrap().last().views()
     }
 
     pub fn touch_disabled() -> bool {
-        Self::get().touch_disabled
+        Self::get().touch_disabled.load(Ordering::Relaxed)
     }
 
     pub fn disable_touch() {
-        Self::get().touch_disabled = true
+        Self::get().touch_disabled.store(true, Ordering::Relaxed)
     }
 
     pub fn enable_touch() {
-        Self::get().touch_disabled = false
+        Self::get().touch_disabled.store(false, Ordering::Relaxed)
     }
 
     pub fn enable_touch_for(view: Weak<dyn View>) {
-        Self::get().touch_layer().add(view)
+        Self::get().touch_stack.lock().unwrap().last_mut().add(view)
     }
 
     pub fn disable_touch_for(view: Weak<dyn View>) {
-        Self::get().touch_layer().remove(view)
+        Self::get().touch_stack.lock().unwrap().last_mut().remove(view)
     }
 
     pub fn push_touch_layer(view: Weak<dyn View>) {
-        Self::get().touch_stack.push(view.into())
+        Self::get().touch_stack.lock().unwrap().push(view.into())
     }
 
     pub fn pop_touch_layer(view: Weak<dyn View>) {
-        let pop = Self::get().touch_stack.pop().unwrap();
+        let pop = Self::get().touch_stack.lock().unwrap().pop().unwrap();
         assert_eq!(pop.root_addr(), view.addr(), "Inconsistent pop_touch_view call");
     }
 
     pub fn touch_root_name() -> String {
-        Self::get().touch_layer().root_name()
+        Self::get().touch_stack.lock().unwrap().last().root_name()
     }
 }
 
 impl UIManager {
     pub fn set_scheduled() {
-        let Some(mut view) = UIManager::get().next_view.take() else {
+        let Some(mut view) = UIManager::get().next_view.lock().unwrap().take() else {
             return;
         };
         UIManager::root_view().remove_all_subviews();
@@ -140,8 +139,9 @@ impl UIManager {
         UIManager::root_view().add_subview(view).place.as_background();
     }
 
+    // TODO: Rework this
     pub fn set_view(view: Own<dyn View>) {
-        UIManager::get().next_view.replace(view);
+        UIManager::get().next_view.lock().unwrap().replace(view);
     }
 }
 
@@ -200,11 +200,11 @@ impl UIManager {
 
     #[cfg(not(windows))]
     pub fn display_scale() -> f32 {
-        Self::get().display_scale
+        *Self::get().display_scale.lock().unwrap()
     }
 
     pub fn set_display_scale(scale: f32) {
-        Self::get().display_scale = scale
+        *Self::get().display_scale.lock().unwrap() = scale
     }
 }
 

@@ -1,3 +1,5 @@
+use std::sync::atomic::Ordering::Relaxed;
+
 use gm::Color;
 use refs::{ToWeak, Weak};
 use ui::{
@@ -67,7 +69,7 @@ impl ViewSetup for TextField {
 impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
-            UIManager::get().open_keyboard = true;
+            UIManager::get().open_keyboard.store(true, Relaxed);
             let mut this = self.weak();
             UIEvents::get().key_pressed.val(move |key| {
                 if this.is_selected() {
@@ -86,7 +88,7 @@ impl ViewCallbacks for TextField {
                 }
             });
         } else {
-            UIManager::get().close_keyboard = true;
+            UIManager::get().close_keyboard.store(true, Relaxed);
             UIEvents::get().key_pressed.remove_subscribers();
         }
 

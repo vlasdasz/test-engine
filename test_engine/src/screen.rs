@@ -1,4 +1,4 @@
-use std::{ops::DerefMut, path::PathBuf, ptr::null_mut};
+use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering::Relaxed};
 
 #[cfg(desktop)]
 use gl_wrapper::{gl_events::GlEvents, GLFWManager};
@@ -136,11 +136,11 @@ impl Screen {
         UIManager::update();
 
         // TODO: tis ugly
-        if UIManager::get().close_keyboard {
-            UIManager::get().close_keyboard = false;
+        if UIManager::get().close_keyboard.load(Relaxed) {
+            UIManager::get().close_keyboard.store(false, Relaxed);
             TestEngineAction::CloseKeyboard
-        } else if UIManager::get().open_keyboard {
-            UIManager::get().open_keyboard = false;
+        } else if UIManager::get().open_keyboard.load(Relaxed) {
+            UIManager::get().open_keyboard.store(false, Relaxed);
             TestEngineAction::OpenKeyboard
         } else {
             TestEngineAction::None
@@ -237,7 +237,6 @@ impl Screen {
 
 impl Drop for Screen {
     fn drop(&mut self) {
-        UIManager::drop();
         Font::san_francisco().free();
     }
 }
