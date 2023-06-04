@@ -14,12 +14,12 @@ mod view_touch_internal;
 
 pub use view::*;
 pub use view_animation::*;
-pub use view_base::{Container, ViewBase};
+pub use view_base::*;
 pub use view_callbacks::*;
 pub use view_controller::*;
-pub use view_data::ViewData;
-pub use view_frame::ViewFrame;
-pub use view_layout::ViewLayout;
-pub use view_subviews::ViewSubviews;
+pub use view_data::*;
+pub use view_frame::*;
+pub use view_layout::*;
+pub use view_subviews::*;
 pub use view_test::*;
-pub use view_touch::ViewTouch;
+pub use view_touch::*;

@@ -20,8 +20,6 @@ pub struct UIManager {
 
     next_view: Option<Own<dyn View>>,
 
-    pub(crate) touch_stack: Vec<Weak<dyn View>>,
-
     pub(crate) deleted_views: Vec<Own<dyn View>>,
 
     touch_disabled: bool,
@@ -32,6 +30,8 @@ pub struct UIManager {
     display_scale: f32,
 
     window_size: Size,
+
+    pub touch_views: Vec<Weak<dyn View>>,
 
     pub on_scroll: UIEvent<Point>,
 
@@ -67,16 +67,6 @@ impl UIManager {
     pub fn update() {
         Self::get().deleted_views.clear()
     }
-
-    pub fn push_touch_view(view: Weak<dyn View>) {
-        Self::get().touch_stack.push(view);
-    }
-
-    pub fn pop_touch_view(view: Weak<dyn View>) {
-        if let Some(pop) = Self::get().touch_stack.pop() {
-            assert_eq!(pop.addr(), view.addr(), "Inconsistent pop_touch_view call");
-        }
-    }
 }
 
 impl UIManager {
@@ -92,16 +82,14 @@ impl UIManager {
         Self::get().touch_disabled = false
     }
 
-    pub fn touch_root() -> Weak<dyn View> {
+    pub fn enable_touch_for(view: Weak<dyn View>) {
         let mut this = Self::get();
+        this.touch_views.retain(|a| !a.freed());
+        this.touch_views.push(view);
+    }
 
-        // this.touch_stack.retain(|a| !a.freed());
-
-        if let Some(touch) = this.touch_stack.last_mut() {
-            *touch
-        } else {
-            this.root_view.weak()
-        }
+    pub fn disable_touch_for(view: Weak<dyn View>) {
+        Self::get().touch_views.retain(|a| a.addr() != view.addr());
     }
 }
 

@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{view, SubView, UIManager, ViewController, ViewSetup};
+use ui::{view, SubView, ViewController, ViewSetup};
 
 use crate::Button;
 
@@ -13,8 +13,8 @@ impl ViewSetup for BackButton {
         self.button.set_text("Back");
         self.button.place.back();
 
-        self.button.on_tap.sub(|| {
-            UIManager::touch_root().navigation().pop();
+        self.button.on_tap.sub(move || {
+            self.navigation().pop();
         });
     }
 }

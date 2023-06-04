@@ -11,7 +11,7 @@ use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::{ControlButton, KeyEvent, KeyboardButton, TouchEvent, UIEvents};
-use ui::{refs::Own, Touch, UIManager, ViewTouch};
+use ui::{check_touch, refs::Own, Touch, UIManager};
 use ui_views::debug_view::DebugView;
 
 use crate::Keymap;
@@ -49,16 +49,21 @@ impl UILayer {
         // } else {
         //     touch.position /= UIManager::ui_scale();
         // }
-        if !UIManager::touch_root().check_touch(&mut touch, false) {
-            if let Some(level) = &mut self.level {
-                level.set_cursor_position(level_touch.position);
-                if touch.is_began() {
-                    level.add_touch(level_touch.position)
-                }
+
+        let touch_views = UIManager::get().touch_views.clone();
+
+        for view in touch_views.into_iter().rev() {
+            if check_touch(view, &mut touch, false) {
+                return;
             }
         }
 
-        self.debug_view.check_touch(&mut touch, true);
+        if let Some(level) = &mut self.level {
+            level.set_cursor_position(level_touch.position);
+            if touch.is_began() {
+                level.add_touch(level_touch.position)
+            }
+        }
     }
 
     pub fn set_level(&mut self, level: Own<dyn Level>) {

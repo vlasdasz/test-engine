@@ -11,11 +11,15 @@ use refs::Weak;
 
 impl<T: ?Sized + View + 'static> ViewController for T {
     fn navigation(&self) -> Weak<NavigationView> {
-        assert!(
-            self.navigation_view.is_ok(),
-            "Current view is not a part of navigation stack"
-        );
-        self.navigation_view
+        if self.superview.is_null() {
+            panic!("Current view is not a part of navigation stack");
+        }
+
+        if self.navigation_view.is_ok() {
+            self.navigation_view
+        } else {
+            self.superview.navigation()
+        }
     }
 
     fn present(&mut self, view: Own<dyn View>) {

@@ -43,7 +43,7 @@ impl NavigationView {
         view.navigation_view = self;
         view.set_frame(self.frame().with_zero_origin());
 
-        UIManager::get().touch_stack.push(view.weak_view());
+        // UIManager::get().touch_stack.push(view.weak_view()); //TODO:
 
         let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
             view.set_x(x);
@@ -72,7 +72,7 @@ impl NavigationView {
 
         anim.on_finish.sub(move || {
             to_pop.remove_from_superview();
-            UIManager::pop_touch_view(to_pop);
+            // UIManager::pop_touch_view(to_pop);//TODO:
             UIManager::enable_touch();
         });
 

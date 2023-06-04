@@ -1,5 +1,3 @@
-use std::cell::RefCell;
-
 use derivative::Derivative;
 use gl_image::Image;
 use gm::{
@@ -21,8 +19,6 @@ pub struct ViewBase {
 
     pub(crate) corner_radius: f32,
     pub(crate) border_color:  Color,
-
-    pub(crate) touch_enabled: RefCell<bool>,
 
     pub is_hidden: bool,
 

@@ -1,7 +1,9 @@
+use refs::Weak;
+
 use crate::{
     input::UIEvents,
-    view::{view_touch_internal::ViewTouchInternal, ViewFrame, ViewSubviews},
-    Touch, View,
+    view::{view_touch_internal::ViewTouchInternal, ViewFrame},
+    Touch, UIManager, View,
 };
 
 pub trait ViewTouch {
@@ -9,7 +11,6 @@ pub trait ViewTouch {
     fn set_selected(&mut self, selected: bool);
     fn enable_touch(&self);
     fn disable_touch(&self);
-    fn check_touch(&mut self, touch: &mut Touch, skip_select: bool) -> bool;
 }
 
 impl<T: ?Sized + View> ViewTouch for T {
@@ -35,57 +36,49 @@ impl<T: ?Sized + View> ViewTouch for T {
     }
 
     fn enable_touch(&self) {
-        self.touch_enabled.replace(true);
+        UIManager::enable_touch_for(self.weak_view());
     }
 
     fn disable_touch(&self) {
-        self.touch_enabled.replace(false);
+        UIManager::disable_touch_for(self.weak_view());
+    }
+}
+
+pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch, skip_select: bool) -> bool {
+    if view.freed() || view.is_deleted {
+        return false;
     }
 
-    fn check_touch(&mut self, touch: &mut Touch, skip_select: bool) -> bool {
-        if self.is_deleted {
-            return false;
-        }
-
-        for view in self.subviews_mut().iter_mut().rev() {
-            if view.check_touch(touch, skip_select) {
-                return true;
-            }
-        }
-
-        if self.touch_enabled() {
-            if touch.is_moved() && self.touch_id() == touch.id {
-                touch.position -= self.absolute_frame().origin;
-                self.on_touch.trigger(*touch);
-                return true;
-            }
-
-            if touch.is_moved() {
-                return false;
-            }
-
-            if touch.is_ended() && self.touch_id() == touch.id {
-                touch.position -= self.absolute_frame().origin;
-                self.set_touch_id(0);
-                self.on_touch.trigger(*touch);
-                return true;
-            }
-
-            if self.absolute_frame().contains(touch.position) {
-                touch.position -= self.absolute_frame().origin;
-                self.set_touch_id(touch.id);
-                self.on_touch.trigger(*touch);
-                if touch.is_began() {
-                    self.on_touch_began.trigger(*touch);
-                }
-                return true;
-            }
-        }
-
-        if touch.is_began() && !skip_select {
-            UIEvents::get().unselect_view();
-        }
-
-        false
+    if touch.is_moved() && view.touch_id() == touch.id {
+        touch.position -= view.absolute_frame().origin;
+        view.on_touch.trigger(*touch);
+        return true;
     }
+
+    if touch.is_moved() {
+        return false;
+    }
+
+    if touch.is_ended() && view.touch_id() == touch.id {
+        touch.position -= view.absolute_frame().origin;
+        view.set_touch_id(0);
+        view.on_touch.trigger(*touch);
+        return true;
+    }
+
+    if view.absolute_frame().contains(touch.position) {
+        touch.position -= view.absolute_frame().origin;
+        view.set_touch_id(touch.id);
+        view.on_touch.trigger(*touch);
+        if touch.is_began() {
+            view.on_touch_began.trigger(*touch);
+        }
+        return true;
+    }
+
+    if touch.is_began() && !skip_select {
+        UIEvents::get().unselect_view();
+    }
+
+    false
 }
