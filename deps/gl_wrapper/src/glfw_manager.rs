@@ -20,6 +20,7 @@ impl GLFWManager {
         self.window.set_cursor_pos_polling(true);
         self.window.set_mouse_button_polling(true);
         self.window.set_scroll_polling(true);
+        self.window.set_drag_and_drop_polling(true);
 
         while !self.window.should_close() {
             self.window.glfw.poll_events();
@@ -41,6 +42,7 @@ impl GLFWManager {
                         events.mouse_click.trigger((btn, action))
                     }
                     glfw::WindowEvent::Scroll(x, y) => events.scroll.trigger((x, y).into()),
+                    glfw::WindowEvent::FileDrop(paths) => events.file_drop.trigger(paths),
                     _ => {}
                 }
             }

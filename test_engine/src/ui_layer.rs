@@ -89,10 +89,6 @@ impl UILayer {
         })
     }
 
-    fn on_scroll(&mut self, scroll: Point) {
-        UIManager::get().on_scroll.trigger(scroll * 10)
-    }
-
     fn on_key_pressed(&mut self, key: char) {
         self.keymap.check(key);
         if let Some(level) = &mut self.level {
@@ -147,9 +143,9 @@ impl UILayer {
         });
 
         ev.mouse_click.val(move |a| this.on_mouse_click(a.0, a.1));
-
         ev.cursor_moved.val(move |a| this.on_cursor_moved(a));
 
-        ev.scroll.val(move |a| this.on_scroll(a));
+        ev.scroll.val(UIManager::trigger_scroll);
+        ev.file_drop.val(UIManager::trigger_drop_file);
     }
 }

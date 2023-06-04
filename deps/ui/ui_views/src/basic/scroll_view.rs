@@ -18,7 +18,7 @@ impl ViewSetup for ScrollView {
             self.content_offset.y = val;
         });
 
-        UIManager::get().on_scroll.val(self, move |scroll| {
+        UIManager::on_scroll(self, move |scroll| {
             self.content_offset.y += scroll.y;
         });
     }

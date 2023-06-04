@@ -40,11 +40,11 @@ impl<T: Send> UIEvent<T> {
     }
 
     pub fn trigger(&self, val: T)
-    where T: Copy {
+    where T: Clone {
         let mut subs = self.subscribers.lock().unwrap();
         subs.retain(|a| a.view.is_ok());
         for sub in subs.iter_mut() {
-            (sub.action)(val)
+            (sub.action)(val.clone())
         }
     }
 }

@@ -1,5 +1,7 @@
 #![cfg(desktop)]
 
+use std::path::PathBuf;
+
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{Point, Size};
 use refs::is_main_thread;
@@ -14,6 +16,7 @@ pub struct GlEvents {
     pub mouse_click:  Event<(MouseButton, Action)>,
     pub key_pressed:  Event<(Key, Action)>,
     pub scroll:       Event<Point>,
+    pub file_drop:    Event<Vec<PathBuf>>,
 }
 
 impl GlEvents {
@@ -25,6 +28,7 @@ impl GlEvents {
             mouse_click:  Default::default(),
             key_pressed:  Default::default(),
             scroll:       Default::default(),
+            file_drop:    Default::default(),
         }
     }
 

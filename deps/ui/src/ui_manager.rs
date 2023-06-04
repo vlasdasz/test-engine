@@ -1,4 +1,8 @@
-use std::sync::{Mutex, MutexGuard, OnceLock};
+use std::{
+    ops::Deref,
+    path::PathBuf,
+    sync::{Mutex, MutexGuard, OnceLock},
+};
 
 use gm::flat::{Point, Rect, Size};
 use nonempty::NonEmpty;
@@ -26,7 +30,8 @@ pub struct UIManager {
 
     pub(crate) touch_stack: NonEmpty<TouchLayer>,
 
-    pub on_scroll: UIEvent<Point>,
+    on_scroll:    UIEvent<Point>,
+    on_drop_file: UIEvent<Vec<PathBuf>>,
 
     pub open_keyboard:  bool,
     pub close_keyboard: bool,
@@ -47,6 +52,7 @@ impl UIManager {
             window_size: Default::default(),
             touch_stack: NonEmpty::new(weak_root.into()),
             on_scroll: Default::default(),
+            on_drop_file: Default::default(),
             open_keyboard: false,
             close_keyboard: false,
         }
@@ -199,5 +205,29 @@ impl UIManager {
 
     pub fn set_display_scale(scale: f32) {
         Self::get().display_scale = scale
+    }
+}
+
+impl UIManager {
+    pub fn trigger_scroll(scroll: Point) {
+        Self::get().on_scroll.trigger(scroll * 10)
+    }
+
+    pub fn on_scroll(
+        view: impl Deref<Target = impl View + ?Sized>,
+        action: impl FnMut(Point) + Send + 'static,
+    ) {
+        Self::get().on_scroll.val(view, action)
+    }
+
+    pub fn trigger_drop_file(files: Vec<PathBuf>) {
+        Self::get().on_drop_file.trigger(files)
+    }
+
+    pub fn on_drop_file(
+        view: impl Deref<Target = impl View + ?Sized>,
+        action: impl FnMut(Vec<PathBuf>) + Send + 'static,
+    ) {
+        Self::get().on_drop_file.val(view, action)
     }
 }
