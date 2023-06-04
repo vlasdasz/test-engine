@@ -24,7 +24,7 @@ use crate::{
 static mut SCREEN: *mut Screen = null_mut();
 
 pub struct Screen {
-    ui: Own<UILayer>,
+    pub ui: Own<UILayer>,
 
     debug_view: bool,
 

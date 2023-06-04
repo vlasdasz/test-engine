@@ -100,7 +100,6 @@ impl GLWrapper {
     pub fn enable_depth() {
         GL!(Enable, GLC!(DEPTH_TEST));
         GL!(DepthFunc, GLC!(LEQUAL));
-        GL!(DepthRange, 0.0, 1.0);
     }
 
     pub fn save_default_framebuffer_id() {
