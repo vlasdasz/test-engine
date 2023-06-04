@@ -12,8 +12,8 @@ use log::{trace, warn};
 use refs::Weak;
 use rtools::{Animation, Time};
 use ui::{
-    view, Container, Event, ModalView, UIAnimation, ViewAnimation, ViewCallbacks, ViewData, ViewFrame,
-    ViewSetup, ViewSubviews,
+    view, Container, Event, ModalView, UIAnimation, UIManager, View, ViewAnimation, ViewCallbacks, ViewData,
+    ViewFrame, ViewSetup, ViewSubviews,
 };
 
 static CIRCLES_N: u32 = 6;
@@ -105,7 +105,7 @@ impl Spinner {
         on_main(|| {
             let mut spinner = Self::current();
 
-            // UIManager::pop_touch_view(spinner.weak_view()); //TODO:
+            UIManager::pop_touch_layer(spinner.weak_view());
 
             let animation = UIAnimation::new(Animation::new(0.8, 0, 0.4), |sp, val| {
                 let color = sp.color();

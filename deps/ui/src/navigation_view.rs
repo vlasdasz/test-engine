@@ -35,6 +35,7 @@ impl NavigationView {
         assert!(!self.subviews.is_empty(), "BUG: push from empty navigation");
 
         UIManager::disable_touch();
+        UIManager::push_touch_layer(view.weak_view());
 
         let mut prev_view = self.subviews.first().unwrap().weak_view();
 
@@ -42,8 +43,6 @@ impl NavigationView {
         view.place.as_background();
         view.navigation_view = self;
         view.set_frame(self.frame().with_zero_origin());
-
-        // UIManager::get().touch_stack.push(view.weak_view()); //TODO:
 
         let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
             view.set_x(x);
@@ -72,7 +71,7 @@ impl NavigationView {
 
         anim.on_finish.sub(move || {
             to_pop.remove_from_superview();
-            // UIManager::pop_touch_view(to_pop);//TODO:
+            UIManager::pop_touch_layer(to_pop);
             UIManager::enable_touch();
         });
 

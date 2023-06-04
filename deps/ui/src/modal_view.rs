@@ -10,10 +10,10 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
         let view = Own::<Self>::default();
         let size = Self::modal_size();
         let weak = view.weak();
+        UIManager::push_touch_layer(weak.weak_view());
         UIManager::root_view().add_subview(view);
         weak.setup_input(input);
         weak.place.center().size(size.width, size.height);
-        // UIManager::push_touch_view(weak.weak_view()); //TODO:
         weak
     }
 
@@ -41,7 +41,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where Out: Send {
         on_main(move || {
             self.remove_from_superview();
-            // UIManager::pop_touch_view(self.weak_view()); //TODO:
+            UIManager::pop_touch_layer(self.weak_view());
             self.modal_event().trigger(result);
         });
     }

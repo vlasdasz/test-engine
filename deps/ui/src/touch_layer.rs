@@ -20,6 +20,14 @@ impl TouchLayer {
     pub(crate) fn views(&self) -> Vec<Weak<dyn View>> {
         self.touches.clone()
     }
+
+    pub(crate) fn root_addr(&self) -> usize {
+        self.root.addr()
+    }
+
+    pub(crate) fn root_name(&self) -> String {
+        self.root.label.clone()
+    }
 }
 
 impl From<Weak<dyn View>> for TouchLayer {

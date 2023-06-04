@@ -3,7 +3,6 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 use gm::flat::{Point, Rect, Size};
 use nonempty::NonEmpty;
 use refs::{Own, ToWeak, Weak};
-use smart_default::SmartDefault;
 
 use crate::{
     layout::Placer, touch_layer::TouchLayer, view::ViewSubviews, Container, UIDrawer, UIEvent, View,
@@ -109,6 +108,19 @@ impl UIManager {
 
     pub fn disable_touch_for(view: Weak<dyn View>) {
         Self::get().touch_layer().remove(view)
+    }
+
+    pub fn push_touch_layer(view: Weak<dyn View>) {
+        Self::get().touch_stack.push(view.into())
+    }
+
+    pub fn pop_touch_layer(view: Weak<dyn View>) {
+        let pop = Self::get().touch_stack.pop().unwrap();
+        assert_eq!(pop.root_addr(), view.addr(), "Inconsistent pop_touch_view call");
+    }
+
+    pub fn touch_root_name() -> String {
+        Self::get().touch_layer().root_name()
     }
 }
 

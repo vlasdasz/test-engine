@@ -28,7 +28,6 @@ impl SpritesDrawer for TESpritesDrawer {
 
     fn set_scale(&mut self, scale: f32) {
         self.scale = scale;
-        //TODO
         //let ass = Assets::get();
         //ass.shaders.sprite.enable().set_scale(scale.into_f32());
         //ass.shaders.image_sprite.enable().set_scale(scale);
@@ -40,14 +39,12 @@ impl SpritesDrawer for TESpritesDrawer {
 
     fn set_resolution(&mut self, size: Size) {
         self.resolution = size;
-        //TODO
         //let ass = Assets::get();
         //ass.shaders.sprite.enable().set_resolution(size);
         //ass.shaders.image_sprite.enable().set_resolution(size);
     }
 
     fn set_camera_rotation(&self, _angle: f32) {
-        //TODO
         //let angle = angle + std::f32::consts::PI / 2.0;
         // let ass = Assets::get();
         // ass.shaders.sprite.enable().set_camera_rotation(angle);
@@ -59,7 +56,6 @@ impl SpritesDrawer for TESpritesDrawer {
     }
 
     fn set_camera_position(&mut self, _pos: Point) {
-        //TODO
         // self.camera_posotion = pos;
         // let ass = Assets::get();
         // ass.shaders.sprite.enable().set_camera_position(pos);
@@ -67,7 +63,6 @@ impl SpritesDrawer for TESpritesDrawer {
     }
 
     fn draw(&self, _sprite: &dyn Sprite) {
-        //TODO
         // let buffers = Buffers::get();
         // let ass = Assets::get();
         // let (shader, buffer) = if sprite.image().is_ok() {
