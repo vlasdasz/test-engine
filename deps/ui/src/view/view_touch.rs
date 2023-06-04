@@ -45,7 +45,7 @@ impl<T: ?Sized + View> ViewTouch for T {
 }
 
 pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch, skip_select: bool) -> bool {
-    if view.freed() || view.is_deleted {
+    if view.freed() || view.is_hidden || view.is_deleted {
         return false;
     }
 

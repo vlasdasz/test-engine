@@ -1,21 +1,18 @@
 use std::sync::{Mutex, MutexGuard, OnceLock};
 
 use gm::flat::{Point, Rect, Size};
+use nonempty::NonEmpty;
 use refs::{Own, ToWeak, Weak};
 use smart_default::SmartDefault;
 
-use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, UIEvent, View};
+use crate::{
+    layout::Placer, touch_layer::TouchLayer, view::ViewSubviews, Container, UIDrawer, UIEvent, View,
+};
 
 static UI_MANAGER: OnceLock<Mutex<UIManager>> = OnceLock::new();
 static DRAWER: OnceLock<Mutex<Box<dyn UIDrawer>>> = OnceLock::new();
 
-#[derive(SmartDefault)]
 pub struct UIManager {
-    #[default({
-        let mut view = Own::<Container>::default();
-        view.place = Placer::new(view.weak_view()).into();
-        view
-    })]
     root_view: Own<dyn View>,
 
     next_view: Option<Own<dyn View>>,
@@ -24,14 +21,11 @@ pub struct UIManager {
 
     touch_disabled: bool,
 
-    // #[default = 1.0]
-    // ui_scale:     f32,
-    #[default = 1.0]
     display_scale: f32,
 
     window_size: Size,
 
-    pub touch_views: Vec<Weak<dyn View>>,
+    pub(crate) touch_stack: NonEmpty<TouchLayer>,
 
     pub on_scroll: UIEvent<Point>,
 
@@ -40,12 +34,31 @@ pub struct UIManager {
 }
 
 impl UIManager {
+    fn init() -> Self {
+        let mut root_view = Own::<Container>::default();
+        let weak_root = root_view.weak_view();
+        root_view.place = Placer::new(weak_root).into();
+
+        Self {
+            root_view,
+            next_view: None,
+            deleted_views: vec![],
+            touch_disabled: false,
+            display_scale: 1.0,
+            window_size: Default::default(),
+            touch_stack: NonEmpty::new(weak_root.into()),
+            on_scroll: Default::default(),
+            open_keyboard: false,
+            close_keyboard: false,
+        }
+    }
+
     pub fn drop() {
-        *Self::get() = UIManager::default();
+        *Self::get() = Self::init();
     }
 
     pub fn get() -> MutexGuard<'static, Self> {
-        UI_MANAGER.get_or_init(|| UIManager::default().into()).lock().unwrap()
+        UI_MANAGER.get_or_init(|| Self::init().into()).lock().unwrap()
     }
 
     pub fn set_window_size(size: impl Into<Size>) {
@@ -70,6 +83,14 @@ impl UIManager {
 }
 
 impl UIManager {
+    fn touch_layer(&mut self) -> &mut TouchLayer {
+        self.touch_stack.last_mut()
+    }
+
+    pub fn touch_views() -> Vec<Weak<dyn View>> {
+        Self::get().touch_layer().views()
+    }
+
     pub fn touch_disabled() -> bool {
         Self::get().touch_disabled
     }
@@ -83,13 +104,11 @@ impl UIManager {
     }
 
     pub fn enable_touch_for(view: Weak<dyn View>) {
-        let mut this = Self::get();
-        this.touch_views.retain(|a| !a.freed());
-        this.touch_views.push(view);
+        Self::get().touch_layer().add(view)
     }
 
     pub fn disable_touch_for(view: Weak<dyn View>) {
-        Self::get().touch_views.retain(|a| a.addr() != view.addr());
+        Self::get().touch_layer().remove(view)
     }
 }
 

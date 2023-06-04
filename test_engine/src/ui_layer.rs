@@ -50,9 +50,7 @@ impl UILayer {
         //     touch.position /= UIManager::ui_scale();
         // }
 
-        let touch_views = UIManager::get().touch_views.clone();
-
-        for view in touch_views.into_iter().rev() {
+        for view in UIManager::touch_views().into_iter().rev() {
             if check_touch(view, &mut touch, false) {
                 return;
             }
