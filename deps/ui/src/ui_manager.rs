@@ -60,13 +60,9 @@ impl UIManager {
             close_keyboard: false.into(),
         }
     }
-    //
-    // pub fn drop() {
-    //     *Self::get() = Self::init();
-    // }
 
     pub fn get() -> &'static Self {
-        UI_MANAGER.get_or_init(|| Self::init())
+        UI_MANAGER.get_or_init(Self::init)
     }
 
     pub fn set_window_size(size: impl Into<Size>) {
