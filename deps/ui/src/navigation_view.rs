@@ -6,7 +6,7 @@ use ui_proc::view;
 use crate as ui;
 use crate::{
     view::{ViewAnimation, ViewFrame, ViewSubviews},
-    UIAnimation, UIManager, View, ViewSetup,
+    TouchStack, UIAnimation, UIManager, View, ViewSetup,
 };
 
 #[view]
@@ -15,10 +15,12 @@ pub struct NavigationView {
 }
 
 impl NavigationView {
-    pub fn with_view<T: View + Default + 'static>() -> Own<Self> {
-        let mut new = Own::<Self>::default();
-        new.first_view = Some(Own::<T>::default());
-        new
+    pub fn with_view(first_view: impl View + 'static) -> Own<Self> {
+        Self {
+            first_view: Some(first_view.to_own()),
+            ..Default::default()
+        }
+        .to_own()
     }
 }
 
@@ -39,7 +41,7 @@ impl NavigationView {
 
         on_main(move || {
             UIManager::disable_touch();
-            UIManager::push_touch_layer(view.weak_view());
+            TouchStack::push_layer(view.weak_view());
 
             let mut prev_view = self.subviews.first().unwrap().weak_view();
 
@@ -76,7 +78,7 @@ impl NavigationView {
 
         anim.on_finish.sub(move || {
             to_pop.remove_from_superview();
-            UIManager::pop_touch_layer(to_pop);
+            TouchStack::pop_layer(to_pop);
             UIManager::enable_touch();
         });
 

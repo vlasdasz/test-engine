@@ -8,9 +8,13 @@ pub(crate) struct TouchLayer {
 }
 
 impl TouchLayer {
-    pub(crate) fn add(&mut self, view: Weak<dyn View>) {
+    pub(crate) fn add(&mut self, view: Weak<dyn View>, priority: bool) {
         self.touches.retain(|a| !a.freed());
-        self.touches.push(view);
+        if priority {
+            self.touches.insert(0, view);
+        } else {
+            self.touches.push(view);
+        }
     }
 
     pub(crate) fn remove(&mut self, view: Weak<dyn View>) {

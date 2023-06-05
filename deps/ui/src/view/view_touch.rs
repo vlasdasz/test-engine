@@ -3,13 +3,14 @@ use refs::Weak;
 use crate::{
     input::UIEvents,
     view::{view_touch_internal::ViewTouchInternal, ViewFrame},
-    Touch, UIManager, View,
+    Touch, TouchStack, View,
 };
 
 pub trait ViewTouch {
     fn is_selected(&self) -> bool;
     fn set_selected(&mut self, selected: bool);
     fn enable_touch(&self);
+    fn enable_touch_low_priority(&self);
     fn disable_touch(&self);
 }
 
@@ -36,15 +37,19 @@ impl<T: ?Sized + View> ViewTouch for T {
     }
 
     fn enable_touch(&self) {
-        UIManager::enable_touch_for(self.weak_view());
+        TouchStack::enable_for(self.weak_view(), true);
+    }
+
+    fn enable_touch_low_priority(&self) {
+        TouchStack::enable_for(self.weak_view(), false);
     }
 
     fn disable_touch(&self) {
-        UIManager::disable_touch_for(self.weak_view());
+        TouchStack::disable_for(self.weak_view());
     }
 }
 
-pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch, skip_select: bool) -> bool {
+pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
     if view.freed() || view.is_hidden || view.is_deleted {
         return false;
     }
@@ -76,7 +81,7 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch, skip_select: boo
         return true;
     }
 
-    if touch.is_began() && !skip_select {
+    if touch.is_began() {
         UIEvents::get().unselect_view();
     }
 

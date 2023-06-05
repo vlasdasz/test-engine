@@ -3,14 +3,14 @@ use gm::flat::Size;
 use refs::{Own, ToWeak, Weak};
 use vents::Event;
 
-use crate::{view::ViewSubviews, UIManager, View};
+use crate::{view::ViewSubviews, TouchStack, UIManager, View};
 
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     fn prepare_modally(input: In) -> Weak<Self> {
         let view = Own::<Self>::default();
         let size = Self::modal_size();
         let weak = view.weak();
-        UIManager::push_touch_layer(weak.weak_view());
+        TouchStack::push_layer(weak.weak_view());
         UIManager::root_view().add_subview(view);
         weak.setup_input(input);
         weak.place.center().size(size.width, size.height);
@@ -41,7 +41,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where Out: Send {
         on_main(move || {
             self.remove_from_superview();
-            UIManager::pop_touch_layer(self.weak_view());
+            TouchStack::pop_layer(self.weak_view());
             self.modal_event().trigger(result);
         });
     }

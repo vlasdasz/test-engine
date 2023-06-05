@@ -2,7 +2,8 @@ use std::{collections::HashMap, fmt::Display};
 
 use refs::{dump_ref_stats, Weak};
 use ui::{
-    view, Property, SubView, ToLabel, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews,
+    view, Property, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup,
+    ViewSubviews,
 };
 
 use crate::{Button, Label};
@@ -106,7 +107,6 @@ impl ViewCallbacks for DebugView {
         self.touch_enabled
             .set_text(format!("Touch enabled: {}", !UIManager::touch_disabled()));
 
-        self.touch_root
-            .set_text(format!("Touch root: {}", UIManager::touch_root_name()));
+        self.touch_root.set_text(format!("Touch root: {}", TouchStack::root_name()));
     }
 }

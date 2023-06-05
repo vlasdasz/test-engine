@@ -28,11 +28,9 @@ pub trait UIDrawer: Debug + Send {
         }
     }
 
-    fn update(&self, views: &mut [Weak<dyn View>]) {
-        for view in views {
-            self.update_internal(view.deref_mut());
-            self.draw(view.deref_mut());
-        }
+    fn update(&self, view: &mut Weak<dyn View>) {
+        self.update_internal(view.deref_mut());
+        self.draw(view.deref_mut());
     }
 
     fn reset_viewport(&self) {

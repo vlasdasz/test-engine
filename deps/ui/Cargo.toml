@@ -10,6 +10,7 @@ doctest = false
 name = "ui"
 
 [dependencies]
+log = { workspace = true }
 chrono = { workspace = true }
 derivative = { workspace = true }
 dispatch = { workspace = true }
@@ -18,6 +19,7 @@ nonempty = { workspace = true }
 rtools = { workspace = true }
 rust_decimal = { workspace = true }
 smart-default = { workspace = true }
+itertools = { workspace = true }
 vents = { workspace = true }
 reflected = { workspace = true }
 

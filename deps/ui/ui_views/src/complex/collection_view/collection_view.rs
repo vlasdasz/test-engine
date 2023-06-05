@@ -49,11 +49,11 @@ impl CollectionView {
         self.cells.clear();
         for i in 0..self.data_source.number_of_cells() {
             let cell = self.data_source.cell_for_index(i);
-            cell.enable_touch();
+            let cell = self.scroll.add_subview(cell);
+            cell.enable_touch_low_priority();
             let mut this = self.weak();
             cell.on_touch_began.sub(move || this.data_source.cell_selected(i));
-            self.cells.push(cell.weak());
-            self.scroll.add_subview(cell);
+            self.cells.push(cell);
         }
         if self.layout.is_table() {
             self.scroll.content_size.height =

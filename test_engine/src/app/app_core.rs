@@ -28,18 +28,13 @@ mod desktop {
     use crate::{AppCore, Screen};
 
     impl AppCore {
-        pub fn new(
-            size: impl Into<Size>,
-            assets_path: impl Into<PathBuf>,
-            root_view: Own<dyn View>,
-            debug_view: bool,
-        ) -> Self {
+        pub fn new(size: impl Into<Size>, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
             let glfw = GLFWManager::default();
             trace!("GLFWManager: OK");
 
             let monitor = glfw.monitors.first().unwrap().clone();
             trace!("Monitor: OK");
-            let screen = Screen::new(monitor, assets_path, root_view, glfw, size, debug_view);
+            let screen = Screen::new(monitor, assets_path, root_view, glfw, size);
             trace!("Screen: OK");
             Self { screen }
         }

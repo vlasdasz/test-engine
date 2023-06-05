@@ -8,18 +8,15 @@ use std::{
 };
 
 use gm::flat::{Point, Rect, Size};
-use nonempty::NonEmpty;
 use refs::{Own, ToWeak, Weak};
 
-use crate::{
-    layout::Placer, touch_layer::TouchLayer, view::ViewSubviews, Container, UIDrawer, UIEvent, View,
-};
+use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, UIEvent, View};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 static DRAWER: OnceLock<Mutex<Box<dyn UIDrawer>>> = OnceLock::new();
 
 pub struct UIManager {
-    root_view: Own<dyn View>,
+    pub(crate) root_view: Own<dyn View>,
 
     next_view: Mutex<Option<Own<dyn View>>>,
 
@@ -31,8 +28,6 @@ pub struct UIManager {
 
     window_size: Mutex<Size>,
 
-    pub(crate) touch_stack: Mutex<NonEmpty<TouchLayer>>,
-
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<Vec<PathBuf>>,
 
@@ -43,6 +38,7 @@ pub struct UIManager {
 impl UIManager {
     fn init() -> Self {
         let mut root_view = Own::<Container>::default();
+        root_view.label = "Root view".to_string();
         let weak_root = root_view.weak_view();
         root_view.place = Placer::new(weak_root).into();
 
@@ -53,7 +49,6 @@ impl UIManager {
             touch_disabled: false.into(),
             display_scale: 1.0.into(),
             window_size: Default::default(),
-            touch_stack: NonEmpty::new(weak_root.into()).into(),
             on_scroll: Default::default(),
             on_drop_file: Default::default(),
             open_keyboard: false.into(),
@@ -87,10 +82,6 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub fn touch_views() -> Vec<Weak<dyn View>> {
-        Self::get().touch_stack.lock().unwrap().last().views()
-    }
-
     pub fn touch_disabled() -> bool {
         Self::get().touch_disabled.load(Ordering::Relaxed)
     }
@@ -101,33 +92,6 @@ impl UIManager {
 
     pub fn enable_touch() {
         Self::get().touch_disabled.store(false, Ordering::Relaxed)
-    }
-
-    pub fn enable_touch_for(view: Weak<dyn View>) {
-        Self::get().touch_stack.lock().unwrap().last_mut().add(view)
-    }
-
-    pub fn disable_touch_for(view: Weak<dyn View>) {
-        Self::get().touch_stack.lock().unwrap().last_mut().remove(view)
-    }
-
-    pub fn push_touch_layer(view: Weak<dyn View>) {
-        Self::get().touch_stack.lock().unwrap().push(view.into())
-    }
-
-    pub fn pop_touch_layer(view: Weak<dyn View>) {
-        let pop = Self::get().touch_stack.lock().unwrap().pop().unwrap();
-        assert_eq!(
-            pop.root_addr(),
-            view.addr(),
-            "Inconsistent pop_touch_view call. Expected: {} got: {}",
-            pop.root_name(),
-            view.label
-        );
-    }
-
-    pub fn touch_root_name() -> String {
-        Self::get().touch_stack.lock().unwrap().last().root_name()
     }
 }
 

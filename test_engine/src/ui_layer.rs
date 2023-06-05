@@ -11,7 +11,7 @@ use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::{ControlButton, KeyEvent, KeyboardButton, TouchEvent, UIEvents};
-use ui::{check_touch, refs::Own, Touch, UIManager};
+use ui::{check_touch, refs::Own, Touch, TouchStack, UIManager};
 use ui_views::debug_view::DebugView;
 
 use crate::Keymap;
@@ -50,8 +50,8 @@ impl UILayer {
         //     touch.position /= UIManager::ui_scale();
         // }
 
-        for view in UIManager::touch_views().into_iter().rev() {
-            if check_touch(view, &mut touch, false) {
+        for view in TouchStack::touch_views() {
+            if check_touch(view, &mut touch) {
                 return;
             }
         }

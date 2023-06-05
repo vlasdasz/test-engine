@@ -12,7 +12,7 @@ use log::{trace, warn};
 use refs::Weak;
 use rtools::{Animation, Time};
 use ui::{
-    view, Container, Event, ModalView, UIAnimation, UIManager, View, ViewAnimation, ViewCallbacks, ViewData,
+    view, Container, Event, ModalView, TouchStack, UIAnimation, View, ViewAnimation, ViewCallbacks, ViewData,
     ViewFrame, ViewSetup, ViewSubviews,
 };
 
@@ -104,8 +104,7 @@ impl Spinner {
 
         on_main(|| {
             let mut spinner = Self::current();
-
-            UIManager::pop_touch_layer(spinner.weak_view());
+            TouchStack::pop_layer(spinner.weak_view());
 
             let animation = UIAnimation::new(Animation::new(0.8, 0, 0.4), |sp, val| {
                 let color = sp.color();
