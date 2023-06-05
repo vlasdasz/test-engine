@@ -117,7 +117,13 @@ impl UIManager {
 
     pub fn pop_touch_layer(view: Weak<dyn View>) {
         let pop = Self::get().touch_stack.lock().unwrap().pop().unwrap();
-        assert_eq!(pop.root_addr(), view.addr(), "Inconsistent pop_touch_view call");
+        assert_eq!(
+            pop.root_addr(),
+            view.addr(),
+            "Inconsistent pop_touch_view call. Expected: {} got: {}",
+            pop.root_name(),
+            view.label
+        );
     }
 
     pub fn touch_root_name() -> String {

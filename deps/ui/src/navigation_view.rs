@@ -1,4 +1,5 @@
-use refs::{Own, Weak};
+use dispatch::on_main;
+use refs::{Own, ToOwn, Weak};
 use rtools::Animation;
 use ui_proc::view;
 
@@ -31,29 +32,33 @@ impl ViewSetup for NavigationView {
 }
 
 impl NavigationView {
-    pub fn push(mut self: Weak<Self>, view: Own<dyn View>) {
+    pub fn push(mut self: Weak<Self>, view: impl View + 'static) {
         assert!(!self.subviews.is_empty(), "BUG: push from empty navigation");
 
-        UIManager::disable_touch();
-        UIManager::push_touch_layer(view.weak_view());
+        let view = view.to_own();
 
-        let mut prev_view = self.subviews.first().unwrap().weak_view();
+        on_main(move || {
+            UIManager::disable_touch();
+            UIManager::push_touch_layer(view.weak_view());
 
-        let mut view = self.add_subview(view);
-        view.place.as_background();
-        view.navigation_view = self;
-        view.set_frame(self.frame().with_zero_origin());
+            let mut prev_view = self.subviews.first().unwrap().weak_view();
 
-        let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
-            view.set_x(x);
+            let mut view = self.add_subview(view);
+            view.place.as_background();
+            view.navigation_view = self;
+            view.set_frame(self.frame().with_zero_origin());
+
+            let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
+                view.set_x(x);
+            });
+
+            anim.on_finish.sub(move || {
+                UIManager::enable_touch();
+                prev_view.is_hidden = true;
+            });
+
+            view.add_animation(anim);
         });
-
-        anim.on_finish.sub(move || {
-            UIManager::enable_touch();
-            prev_view.is_hidden = true;
-        });
-
-        view.add_animation(anim);
     }
 
     pub fn pop(self: Weak<Self>) {
