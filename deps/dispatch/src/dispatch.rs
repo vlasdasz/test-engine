@@ -1,6 +1,5 @@
 use std::{
     future::Future,
-    ops::Deref,
     sync::{Arc, Mutex},
 };
 
