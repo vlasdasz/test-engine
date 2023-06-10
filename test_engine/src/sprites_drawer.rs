@@ -6,7 +6,7 @@ use crate::Sprite;
 pub struct TESpritesDrawer {
     scale:           f32,
     resolution:      Size,
-    camera_posotion: Point,
+    camera_position: Point,
 }
 
 impl TESpritesDrawer {
@@ -14,7 +14,7 @@ impl TESpritesDrawer {
         let mut new = Self {
             scale:           0.0,
             resolution:      (0, 0).into(),
-            camera_posotion: Default::default(),
+            camera_position: Default::default(),
         };
         new.set_scale(1.0);
         Box::new(new)
@@ -52,11 +52,11 @@ impl SpritesDrawer for TESpritesDrawer {
     }
 
     fn camera_position(&self) -> Point {
-        self.camera_posotion
+        self.camera_position
     }
 
     fn set_camera_position(&mut self, _pos: Point) {
-        // self.camera_posotion = pos;
+        // self.camera_position = pos;
         // let ass = Assets::get();
         // ass.shaders.sprite.enable().set_camera_position(pos);
         // ass.shaders.image_sprite.enable().set_camera_position(pos);
