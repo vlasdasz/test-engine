@@ -37,10 +37,11 @@ impl NavigationView {
     pub fn push(mut self: Weak<Self>, view: impl View + 'static) {
         assert!(!self.subviews.is_empty(), "BUG: push from empty navigation");
 
+        UIManager::disable_touch();
+
         let view = view.to_own();
 
         on_main(move || {
-            UIManager::disable_touch();
             TouchStack::push_layer(view.weak_view());
 
             let mut prev_view = self.subviews.first().unwrap().weak_view();

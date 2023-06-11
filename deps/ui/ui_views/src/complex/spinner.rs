@@ -19,6 +19,26 @@ use ui::{
 static CIRCLES_N: u32 = 6;
 static SPINNER: Mutex<Weak<Spinner>> = Mutex::new(Weak::const_default());
 
+pub struct SpinnerLock {
+    stopped: bool,
+}
+
+impl SpinnerLock {
+    pub fn stop(mut self) {
+        self.stopped = true;
+        Spinner::stop();
+    }
+    pub fn instant_stop(self) {}
+}
+
+impl Drop for SpinnerLock {
+    fn drop(&mut self) {
+        if !self.stopped {
+            Spinner::instant_stop();
+        }
+    }
+}
+
 #[view]
 pub struct Spinner {
     circles: Vec<Weak<Container>>,
@@ -81,6 +101,11 @@ impl ViewCallbacks for Spinner {
 }
 
 impl Spinner {
+    pub fn lock() -> SpinnerLock {
+        Self::start();
+        SpinnerLock { stopped: false }
+    }
+
     pub fn start() {
         trace!("Start spinner");
 
@@ -131,7 +156,6 @@ impl Spinner {
         let mut spinner = Self::current();
 
         if spinner.is_null() {
-            warn!("Spinner already stopped");
             return;
         }
 

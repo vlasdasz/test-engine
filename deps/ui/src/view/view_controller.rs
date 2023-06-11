@@ -24,9 +24,9 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     fn present(mut self: Weak<Self>, view: Own<dyn View>) {
-        on_main(move || {
-            UIManager::disable_touch();
+        UIManager::disable_touch();
 
+        on_main(move || {
             let mut view = UIManager::root_view().add_subview(view);
             view.set_frame(self.frame().with_zero_origin());
             let anim = UIAnimation::new(Animation::new(self.height(), 0, 0.4), |view, y| {
