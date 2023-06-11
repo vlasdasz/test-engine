@@ -1,4 +1,5 @@
 mod alert;
+mod alert_err;
 mod analog_stick_view;
 mod back_button;
 mod collection_view;
@@ -16,6 +17,7 @@ mod question;
 mod spinner;
 
 pub use alert::*;
+pub use alert_err::*;
 pub use analog_stick_view::AnalogStickView;
 pub use back_button::*;
 pub use collection_view::*;

@@ -1,7 +1,9 @@
 use refs::Own;
 use rtools::Animation;
 
-use crate::{NavigationView, UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
+use crate::{
+    NavigationView, UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewLayout, ViewSubviews,
+};
 pub trait ViewController {
     fn navigation(&self) -> Weak<NavigationView>;
     fn present(self: Weak<Self>, view: Own<dyn View>);
@@ -28,18 +30,18 @@ impl<T: ?Sized + View + 'static> ViewController for T {
             UIManager::disable_touch();
 
             let mut view = UIManager::root_view().add_subview(view);
-            view.place.as_background();
             view.set_frame(self.frame().with_zero_origin());
-            let anim = UIAnimation::new(Animation::new(self.height(), 0, 0.5), |view, y| {
+            let anim = UIAnimation::new(Animation::new(self.height(), 0, 0.4), |view, y| {
                 view.set_y(y);
             });
 
             anim.on_finish.sub(move || {
                 self.remove_from_superview();
+                view.place.back();
                 UIManager::enable_touch();
             });
 
-            self.add_animation(anim);
+            view.add_animation(anim);
         });
     }
 }

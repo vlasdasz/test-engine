@@ -49,3 +49,9 @@ impl ViewSetup for LabeledTextField {
         self.text_field.place.lrb(0).h(20).relative(Anchor::Height, 2.0 / 3.0, self);
     }
 }
+
+impl ToString for LabeledTextField {
+    fn to_string(&self) -> String {
+        self.text().to_string()
+    }
+}

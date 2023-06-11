@@ -57,3 +57,9 @@ impl<T: View> Debug for SubView<T> {
         Debug::fmt(&"Subview", f)
     }
 }
+
+impl<T: View + ToString> ToString for SubView<T> {
+    fn to_string(&self) -> String {
+        self.to_string()
+    }
+}

@@ -1,4 +1,5 @@
 use derivative::Derivative;
+use gm::flat::{Rect, Size};
 use refs::Weak;
 use rtools::IntoF32;
 
@@ -21,6 +22,9 @@ pub(crate) struct LayoutRule {
 
     pub(crate) relative: bool,
     pub(crate) between:  bool,
+
+    #[derivative(Debug = "ignore")]
+    pub(crate) custom: Option<Box<dyn FnMut(Weak<dyn View>, &Size)>>,
 }
 
 impl LayoutRule {
@@ -33,6 +37,7 @@ impl LayoutRule {
             anchor_view2: Default::default(),
             relative:     false,
             between:      false,
+            custom:       None,
         }
     }
 
@@ -45,6 +50,7 @@ impl LayoutRule {
             anchor_view2: Default::default(),
             relative: false,
             between: false,
+            custom: None,
         }
     }
 
@@ -57,6 +63,7 @@ impl LayoutRule {
             anchor_view2: Default::default(),
             relative: false,
             between: false,
+            custom: None,
         }
     }
 
@@ -69,6 +76,7 @@ impl LayoutRule {
             anchor_view2: Default::default(),
             relative: true,
             between: false,
+            custom: None,
         }
     }
 
@@ -81,6 +89,20 @@ impl LayoutRule {
             anchor_view2: view_b,
             relative: false,
             between: true,
+            custom: None,
+        }
+    }
+
+    pub fn custom(action: impl FnMut(Weak<dyn View>, &Size) + 'static) -> Self {
+        Self {
+            side:         Anchor::Bot,
+            tiling:       None,
+            offset:       0.0,
+            anchor_view:  Default::default(),
+            anchor_view2: Default::default(),
+            relative:     false,
+            between:      false,
+            custom:       Some(Box::new(action)),
         }
     }
 }

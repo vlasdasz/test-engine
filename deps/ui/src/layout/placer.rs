@@ -106,6 +106,17 @@ impl Placer {
         self.relative(Anchor::Size, 1, view)
     }
 
+    pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl IntoF32) -> &Self {
+        self.relative(Anchor::Size, multiplier, view)
+    }
+
+    pub fn relative_y(&self, position: impl IntoF32) -> &Self {
+        let position = position.into_f32();
+        self.custom(move |mut view, s_content| {
+            view.frame.origin.y = s_content.height * position;
+        })
+    }
+
     pub fn same<const S: usize>(
         &self,
         anchors: [Anchor; S],
@@ -199,6 +210,11 @@ impl Placer {
         self.rules().push(LayoutRule::relative(side, ratio, view.weak_view()));
         self
     }
+
+    pub fn custom(&self, action: impl FnMut(Weak<dyn View>, &Size) + 'static) -> &Self {
+        self.rules().push(LayoutRule::custom(action));
+        self
+    }
 }
 
 impl Placer {
@@ -249,7 +265,11 @@ impl Placer {
 
 impl Placer {
     pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
-        self.same([Anchor::Size, Anchor::X], view).anchor(view, Anchor::Bot, offset)
+        self.anchor(view, Anchor::Bot, offset)
+    }
+
+    pub fn belove(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
+        self.anchor(view, Anchor::Top, offset)
     }
 
     pub fn between(
@@ -276,8 +296,10 @@ impl Placer {
     pub fn layout(&mut self) {
         let this = self.to_rglica();
 
-        for rule in this.rules().iter() {
-            if rule.between {
+        for rule in this.rules().iter_mut() {
+            if let Some(custom) = &mut rule.custom {
+                custom(self.view, &self.s_content)
+            } else if rule.between {
                 self.between_layout(rule);
             } else if rule.anchor_view.is_ok() {
                 if rule.relative {
