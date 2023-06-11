@@ -53,7 +53,11 @@ macro_rules! async_link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
         $self.$($button).+.on_tap.sub(move || {
             tokio::spawn(async move {
-                $self.$method().await;
+                if let Err(err) = $self.$method().await {
+                    if err != "alert_handled" {
+                        panic!("Unhandled error: {err}");
+                    }
+                };
             });
         });
     };

@@ -63,3 +63,9 @@ impl<T: View + ToString> ToString for SubView<T> {
         self.0.to_string()
     }
 }
+
+impl<T: View + AsRef<bool>> AsRef<bool> for SubView<T> {
+    fn as_ref(&self) -> &bool {
+        self.0.as_ref()
+    }
+}
