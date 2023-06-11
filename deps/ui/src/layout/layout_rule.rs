@@ -1,5 +1,5 @@
 use derivative::Derivative;
-use gm::flat::{Rect, Size};
+use gm::flat::Size;
 use refs::Weak;
 use rtools::IntoF32;
 
@@ -7,6 +7,8 @@ use crate::{
     layout::{Anchor, Tiling},
     View,
 };
+
+pub(crate) type CustomCallback = Box<dyn FnMut(Weak<dyn View>, &Size)>;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -24,7 +26,7 @@ pub(crate) struct LayoutRule {
     pub(crate) between:  bool,
 
     #[derivative(Debug = "ignore")]
-    pub(crate) custom: Option<Box<dyn FnMut(Weak<dyn View>, &Size)>>,
+    pub(crate) custom: Option<CustomCallback>,
 }
 
 impl LayoutRule {

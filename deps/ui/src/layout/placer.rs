@@ -268,7 +268,7 @@ impl Placer {
         self.anchor(view, Anchor::Bot, offset)
     }
 
-    pub fn belove(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
+    pub fn below(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
         self.anchor(view, Anchor::Top, offset)
     }
 

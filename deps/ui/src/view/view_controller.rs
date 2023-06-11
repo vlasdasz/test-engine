@@ -1,9 +1,7 @@
 use refs::Own;
 use rtools::Animation;
 
-use crate::{
-    NavigationView, UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewLayout, ViewSubviews,
-};
+use crate::{NavigationView, UIAnimation, UIManager, View, ViewAnimation, ViewFrame, ViewSubviews};
 pub trait ViewController {
     fn navigation(&self) -> Weak<NavigationView>;
     fn present(self: Weak<Self>, view: Own<dyn View>);

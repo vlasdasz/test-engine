@@ -60,6 +60,6 @@ impl<T: View> Debug for SubView<T> {
 
 impl<T: View + ToString> ToString for SubView<T> {
     fn to_string(&self) -> String {
-        self.to_string()
+        self.0.to_string()
     }
 }
