@@ -1,4 +1,4 @@
-#[derive(Debug, Default)]
+#[derive(Default, Debug)]
 pub enum Sign {
     #[default]
     Plus,

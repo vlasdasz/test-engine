@@ -1,18 +1,18 @@
 use crate::{Alert, Spinner};
 
-pub trait AlertErr<T> {
-    fn alert_err(self) -> Result<T, String>;
+pub trait AlertErr {
+    fn alert_err(self);
 }
 
-impl<Err: ToString, T> AlertErr<T> for Result<T, Err> {
-    fn alert_err(self) -> Result<T, String> {
-        match self {
-            Ok(t) => Ok(t),
-            Err(err) => {
-                Spinner::instant_stop();
-                Alert::show(err);
-                Err("alert_handled".to_string())
-            }
+impl<E: ToString> AlertErr for Result<(), E> {
+    fn alert_err(self) {
+        if let Err(err) = self {
+            Spinner::instant_stop();
+            Alert::show(err);
         }
     }
+}
+
+impl AlertErr for () {
+    fn alert_err(self) {}
 }

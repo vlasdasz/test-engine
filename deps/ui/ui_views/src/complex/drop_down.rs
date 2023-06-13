@@ -3,7 +3,7 @@ use refs::{Own, ToOwn, ToWeak, Weak};
 use rtools::{MapVec, Toggle};
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
 
-use crate::{collection_data, link_button, Button, CollectionData, CollectionView, Label};
+use crate::{collection_data, link_button, Button, CollectionData, CollectionView, Label, _ui_link_button};
 
 #[view]
 pub struct DropDown {
@@ -59,7 +59,7 @@ impl ViewSetup for DropDown {
         self.set_color(Color::WHITE);
 
         self.button.place.back();
-        link_button!(self, button, tapped);
+        _ui_link_button!(self, button, tapped);
 
         self.label.place.back();
 

@@ -42,9 +42,18 @@ impl ViewSetup for Button {
 }
 
 #[macro_export]
+macro_rules! _ui_link_button {
+    ($self:ident, $($button:ident).+, $method:ident) => {
+        use crate::complex::AlertErr;
+        $self.$($button).+.on_tap.sub(move || $self.$method().alert_err());
+    }
+}
+
+#[macro_export]
 macro_rules! link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
-        $self.$($button).+.on_tap.sub(move || $self.$method());
+        use ui_views::AlertErr;
+        $self.$($button).+.on_tap.sub(move || $self.$method().alert_err());
     }
 }
 
@@ -53,11 +62,8 @@ macro_rules! async_link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
         $self.$($button).+.on_tap.sub(move || {
             tokio::spawn(async move {
-                if let Err(err) = $self.$method().await {
-                    if err != "alert_handled" {
-                        panic!("Unhandled error: {err}");
-                    }
-                };
+                use ui_views::AlertErr;
+                $self.$method().await.alert_err();
             });
         });
     };

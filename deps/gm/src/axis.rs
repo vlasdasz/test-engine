@@ -1,6 +1,6 @@
 use std::marker::ConstParamTy;
 
-#[derive(Eq, PartialEq, Copy, ConstParamTy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, ConstParamTy)]
 pub enum Axis {
     X,
     Y,
