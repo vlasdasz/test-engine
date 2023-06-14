@@ -10,7 +10,7 @@ pub struct LabeledDrop {
 }
 
 impl LabeledDrop {
-    pub fn set_values(&mut self, values: Vec<String>) {
+    pub fn set_values(&mut self, values: &[String]) {
         self.drop.set_values(values)
     }
 }

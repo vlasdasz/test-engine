@@ -1,34 +1,40 @@
-use std::marker::PhantomData;
+use std::{collections::HashMap, fmt::Debug, marker::PhantomData};
 
-use reflected::{has_variants_field::HasVariantsField, Reflected};
+use reflected::{FieldRef, Reflected};
 use refs::Weak;
 use ui::{view, Labeled, TextFieldConstraint, ViewSetup, ViewSubviews};
 
 use crate::{LabeledDrop, LabeledTextField};
 
 #[view]
-pub struct FormView<T: Reflected + 'static> {
+pub struct FormView<T: Debug + Reflected + 'static> {
     labels:          Vec<Weak<dyn Labeled>>,
     editind_enabled: bool,
+    variants:        HashMap<FieldRef<T>, Vec<String>>,
     _p:              PhantomData<T>,
 }
 
-impl<T: Reflected> ViewSetup for FormView<T> {
+impl<T: Debug + Reflected> ViewSetup for FormView<T> {
     fn setup(mut self: Weak<Self>) {
         self.place.all_ver();
         self.editind_enabled = true;
     }
 }
 
-impl<T: Reflected> FormView<T> {
+impl<T: Debug + Reflected> FormView<T> {
+    pub fn add_variants(&mut self, field: FieldRef<T>, vals: Vec<String>) {
+        self.variants.insert(field, vals);
+    }
+
     pub fn set_data(&mut self, data: Weak<T>) {
         self.remove_all_subviews();
         self.labels.clear();
 
         for field in T::simple_fields() {
-            let mut view = if let Some(variants) = T::variants_for(field) {
+            let mut view = if let Some(variants) = self.variants.get(field) {
+                let variants = variants.clone();
                 let mut view = self.add_view::<LabeledDrop>();
-                view.set_values(variants);
+                view.set_values(&variants);
                 view.labeled()
             } else {
                 let mut view = self.add_view::<LabeledTextField>();

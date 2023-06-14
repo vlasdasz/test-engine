@@ -1,4 +1,5 @@
 use gm::{flat::Size, Color};
+use itertools::Itertools;
 use refs::{Own, ToOwn, ToWeak, Weak};
 use rtools::{MapVec, Toggle};
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
@@ -19,8 +20,8 @@ impl DropDown {
         self.label.text()
     }
 
-    pub fn set_values(&mut self, values: Vec<impl ToLabel>) {
-        let values = values.map(|a| a.to_label());
+    pub fn set_values(&mut self, values: &[impl ToLabel]) {
+        let values = values.iter().map(|a| a.to_label()).collect_vec();
         self.label.set_text(values.first().unwrap());
         self.values = values;
         self.table.reload_data();
