@@ -43,22 +43,8 @@ impl<R, P> const ToReq<R, P, &'static str> for &'static str {
     }
 }
 
-impl<Output: DeserializeOwned> Req<(), Output> {
-    pub async fn get(self) -> NetResult<Output> {
-        request_object(self.method, self.full_url(), None).await
-    }
-}
-
-impl<Param: Serialize> Req<Param, ()> {
-    pub async fn post(&self, param: impl Borrow<Param>) -> NetResult<()> {
-        let body = to_string(param.borrow())?;
-        raw_request(self.method, self.full_url(), &API::headers(), body.into()).await?;
-        Ok(())
-    }
-}
-
 impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
-    pub async fn fetch(&self, param: impl Borrow<Param>) -> NetResult<Output> {
+    pub async fn send(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow())?;
         request_object(self.method, self.full_url(), body.into()).await
     }
