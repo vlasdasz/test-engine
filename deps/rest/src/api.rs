@@ -16,10 +16,7 @@ impl API {
         STATIC_API
             .set(Self {
                 base_url,
-                headers: Mutex::new(HashMap::from([(
-                    "content-type".to_string(),
-                    "application/json".to_string(),
-                )])),
+                headers: Default::default(),
             })
             .unwrap();
     }

@@ -46,13 +46,29 @@ impl<R, P> const ToReq<R, P, &'static str> for &'static str {
 impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
     pub async fn send(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow())?;
-        request_object(self.method, self.full_url(), body.into()).await
+        request_object(self.method, self.full_url(), &API::headers(), body.into()).await
+    }
+
+    pub async fn send_with_headers(
+        &self,
+        param: impl Borrow<Param>,
+        headers: impl Into<HashMap<String, String>>,
+    ) -> NetResult<Output> {
+        let body = to_string(param.borrow())?;
+        request_object(self.method, self.full_url(), &headers.into(), body.into()).await
     }
 }
 
-async fn request_object<T>(method: Method, url: String, body: Option<String>) -> NetResult<T>
-where T: DeserializeOwned {
-    let response = raw_request(method, url, &API::headers(), body).await?;
+async fn request_object<T>(
+    method: Method,
+    url: String,
+    headers: &HashMap<String, String>,
+    body: Option<String>,
+) -> NetResult<T>
+where
+    T: DeserializeOwned,
+{
+    let response = raw_request(method, url, headers, body).await?;
 
     if response.status != 200 {
         error!("Object request failed: {response:?}");
@@ -87,6 +103,8 @@ pub async fn raw_request(
         Method::Get => client.get(&url),
         Method::Post => client.post(&url),
     };
+
+    request = request.header("content-type", "application/json");
 
     for (key, value) in headers {
         request = request.header(key, value)
