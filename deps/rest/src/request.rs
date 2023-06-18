@@ -49,7 +49,18 @@ impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
         request_object(self.method, self.full_url(), &API::headers(), body.into()).await
     }
 
-    pub async fn send_with_headers(
+    pub async fn with_token(&self, param: impl Borrow<Param>, token: impl ToString) -> NetResult<Output> {
+        let body = to_string(param.borrow())?;
+        request_object(
+            self.method,
+            self.full_url(),
+            &[("token".to_string(), token.to_string())].into(),
+            body.into(),
+        )
+        .await
+    }
+
+    pub async fn with_headers(
         &self,
         param: impl Borrow<Param>,
         headers: impl Into<HashMap<String, String>>,
