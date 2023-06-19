@@ -1,5 +1,5 @@
 use gm::flat::Size;
-use refs::Weak;
+use refs::{Own, Weak};
 
 use crate::View;
 
@@ -18,13 +18,19 @@ impl<T: ?Sized + View> ViewCallbacks for T {
 }
 
 pub trait ViewInternalSetup {
-    fn internal_setup(&mut self);
+    fn __internal_setup(&mut self);
 }
 
 pub trait ViewSetup {
+    fn new() -> Own<Self>
+    where Self: Default;
     fn setup(self: Weak<Self>);
 }
 
-impl<T: View> ViewSetup for T {
+impl<T: View + 'static> ViewSetup for T {
+    default fn new() -> Own<Self>
+    where Self: Default {
+        Own::<Self>::default()
+    }
     default fn setup(self: Weak<Self>) {}
 }

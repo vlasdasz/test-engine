@@ -68,13 +68,14 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         }
 
         impl #generics ui::ViewInternalSetup for #name <#type_params>  {
-            fn internal_setup(&mut self) {
+            fn __internal_setup(&mut self) {
                 use ui::ViewSetup;
                 use ui::WithHeader;
                 use ui::refs::ToWeak;
                 self.view.label = #name_str.to_string();
                 self.weak().layout_header();
-                self.weak().setup()
+                self.weak().setup();
+                self.__trigger_after_setup();
             }
         }
 
@@ -108,7 +109,7 @@ fn add_inits(root_name: &Ident, fields: &FieldsNamed) -> TokenStream2 {
 
                     res = quote! {
                         #res
-                        self.#name = self.internal_add_view();
+                        self.#name = self.__internal_add_view();
                         self.#name.label += #label;
                     }
                 }

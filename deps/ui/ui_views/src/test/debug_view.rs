@@ -29,7 +29,7 @@ pub struct DebugView {
 
 impl DebugView {
     pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
-        let mut button = self.internal_add_view::<Button>();
+        let mut button = self.__internal_add_view::<Button>();
         button.set_text(label);
         button.on_tap.sub(action);
     }
@@ -40,7 +40,7 @@ impl DebugView {
         let label = if let Some(label) = self.custom_labels.get_mut(&label_text) {
             label
         } else {
-            let label_view = self.internal_add_view::<Label>();
+            let label_view = self.__internal_add_view::<Label>();
             self.custom_labels.insert(label_text.clone(), label_view);
             self.custom_labels.get_mut(&label_text).unwrap()
         };

@@ -65,7 +65,7 @@ impl ViewSetup for Spinner {
         self.set_corner_radius(20);
 
         for _ in 0..CIRCLES_N {
-            let mut circle = self.internal_add_view::<Container>().weak();
+            let mut circle = self.__internal_add_view::<Container>().weak();
 
             circle.set_size((16, 16));
             circle.set_color(Color::LIGHT_BLUE);

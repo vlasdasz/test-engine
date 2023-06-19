@@ -2,7 +2,7 @@ use gm::Color;
 use refs::Weak;
 use ui::{view, SubView, ViewData, ViewSetup};
 
-use crate::{link_button, Button, _ui_link_button};
+use crate::{Button, _ui_link_button};
 
 #[view]
 pub struct TouchTestView {

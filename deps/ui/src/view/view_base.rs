@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+
 use derivative::Derivative;
 use gl_image::Image;
 use gm::{
@@ -6,10 +8,8 @@ use gm::{
 };
 use refs::{Own, Weak};
 use rtools::{data_manager::Handle, Unwrap};
-use ui_proc::view;
 use vents::Event;
 
-use crate as ui;
 use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View};
 
 #[derive(Default, Derivative)]
@@ -56,7 +56,19 @@ pub struct ViewBase {
     pub on_touch_began: Event<Touch>,
 
     pub priority: usize,
+
+    #[derivative(Debug = "ignore")]
+    after_setup: RefCell<Vec<Box<dyn FnOnce()>>>,
 }
 
-#[view]
-pub struct Container {}
+impl ViewBase {
+    pub fn after_setup(&self, action: impl FnOnce() + 'static) {
+        self.after_setup.borrow_mut().push(Box::new(action))
+    }
+
+    pub fn __trigger_after_setup(&self) {
+        for action in self.after_setup.borrow_mut().drain(..) {
+            action()
+        }
+    }
+}

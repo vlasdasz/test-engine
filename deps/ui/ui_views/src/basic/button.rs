@@ -25,7 +25,7 @@ impl Button {
 
     fn get_label(&mut self) -> &mut Label {
         if self.label_view.is_none() {
-            let mut view: SubView<Label> = self.internal_add_view();
+            let mut view: SubView<Label> = self.__internal_add_view();
             view.label = "Button.label_view".into();
             self.label_view = Some(view);
         }
@@ -44,7 +44,7 @@ impl ViewSetup for Button {
 #[macro_export]
 macro_rules! _ui_link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
-        use crate::complex::AlertErr;
+        use $crate::complex::AlertErr;
         $self.$($button).+.on_tap.sub(move || $self.$method().alert_err());
     }
 }

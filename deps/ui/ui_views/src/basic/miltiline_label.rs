@@ -82,7 +82,7 @@ impl MultilineLabel {
         let split = this.calculate_split();
 
         for line in &split.0 {
-            let mut image_view = self.internal_add_view::<ImageView>();
+            let mut image_view = self.__internal_add_view::<ImageView>();
             let image = render_text(line, &self.font, split.1);
             image_view.set_size(image.size);
             image_view.set_image(image);
@@ -210,7 +210,7 @@ mod test {
         Font::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
-        view.internal_setup();
+        view.__internal_setup();
         view.set_size((100, 100));
 
         assert!(view.fits_width("lo", view.size));
@@ -226,7 +226,7 @@ mod test {
         Font::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
-        view.internal_setup();
+        view.__internal_setup();
         view.set_size((100, 100));
 
         assert_eq!(view.split_text("lolo", view.size), vec!["lolo".to_string()]);
@@ -239,7 +239,7 @@ mod test {
         Font::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
-        view.internal_setup();
+        view.__internal_setup();
         view.set_size((200, 100));
 
         assert_eq!(
@@ -255,7 +255,7 @@ mod test {
         Font::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
-        view.internal_setup();
+        view.__internal_setup();
         view.set_size((1200, 100));
 
         let long_string = (0..u64::random_in(50..100))
@@ -278,7 +278,7 @@ mod test {
         Font::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
-        view.internal_setup();
+        view.__internal_setup();
         view.set_size((100, 100));
 
         let letter_a = u8::random() as char;

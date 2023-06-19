@@ -1,10 +1,10 @@
 use gm::{flat::Size, Color};
 use itertools::Itertools;
 use refs::{Own, ToOwn, ToWeak, Weak};
-use rtools::{MapVec, Toggle};
+use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
 
-use crate::{collection_data, link_button, Button, CollectionData, CollectionView, Label, _ui_link_button};
+use crate::{collection_data, Button, CollectionData, CollectionView, Label, _ui_link_button};
 
 #[view]
 pub struct DropDown {

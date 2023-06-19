@@ -15,9 +15,9 @@ pub struct NavigationView {
 }
 
 impl NavigationView {
-    pub fn with_view(first_view: impl View + 'static) -> Own<Self> {
+    pub fn with_view(first_view: Own<dyn View>) -> Own<Self> {
         Self {
-            first_view: Some(first_view.to_own()),
+            first_view: Some(first_view),
             ..Default::default()
         }
         .to_own()
@@ -34,12 +34,10 @@ impl ViewSetup for NavigationView {
 }
 
 impl NavigationView {
-    pub fn push(mut self: Weak<Self>, view: impl View + 'static) {
+    pub fn push(mut self: Weak<Self>, view: Own<dyn View>) {
         assert!(!self.subviews.is_empty(), "BUG: push from empty navigation");
 
         UIManager::disable_touch();
-
-        let view = view.to_own();
 
         on_main(move || {
             TouchStack::push_layer(view.weak_view());
