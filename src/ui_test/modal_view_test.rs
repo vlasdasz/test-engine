@@ -20,7 +20,6 @@ impl ModalTestView {
 
 impl ViewSetup for ModalTestView {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::WHITE);
         self.button.set_text("Tap").place.size(100, 20).center();
         self.input_label.place.size(100, 20).tr(0);
         self.text_field.place.size(100, 20).l(0);

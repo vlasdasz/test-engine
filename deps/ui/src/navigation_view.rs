@@ -1,4 +1,5 @@
 use dispatch::on_main;
+use gm::Color;
 use refs::{Own, ToOwn, Weak};
 use rtools::Animation;
 use ui_proc::view;
@@ -6,7 +7,7 @@ use ui_proc::view;
 use crate as ui;
 use crate::{
     view::{ViewAnimation, ViewFrame, ViewSubviews},
-    TouchStack, UIAnimation, UIManager, View, ViewSetup,
+    TouchStack, UIAnimation, UIManager, View, ViewData, ViewSetup,
 };
 
 #[view]
@@ -34,7 +35,7 @@ impl ViewSetup for NavigationView {
 }
 
 impl NavigationView {
-    pub fn push(mut self: Weak<Self>, view: Own<dyn View>) {
+    pub fn push(mut self: Weak<Self>, mut view: Own<dyn View>) {
         assert!(!self.subviews.is_empty(), "BUG: push from empty navigation");
 
         UIManager::disable_touch();
@@ -42,8 +43,9 @@ impl NavigationView {
         on_main(move || {
             TouchStack::push_layer(view.weak_view());
 
-            let mut prev_view = self.subviews.first().unwrap().weak_view();
+            let mut prev_view = self.subviews.last().unwrap().weak_view();
 
+            view.set_color(Color::WHITE);
             let mut view = self.add_subview(view);
             view.place.as_background();
             view.navigation_view = self;

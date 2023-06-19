@@ -19,9 +19,7 @@ impl Alert {
 
 impl ViewSetup for Alert {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::WHITE)
-            .set_corner_radius(10)
-            .set_border_color(Color::BLACK);
+        self.set_corner_radius(10).set_border_color(Color::BLACK);
 
         self.label.place.lrt(10).h(140);
         self.label.set_text_size(28);

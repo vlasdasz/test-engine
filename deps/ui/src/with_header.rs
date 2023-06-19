@@ -17,10 +17,13 @@ pub trait WithHeader: View {
         } else {
             self.header().place.lrt(0).h(self.header_size());
         }
-        self.main_view()
-            .place
-            .anchor(self.header(), Anchor::Top, self.header_margin())
-            .lrb(0);
+
+        if !self.main_view().is_null() {
+            self.main_view()
+                .place
+                .anchor(self.header(), Anchor::Top, self.header_margin())
+                .lrb(0);
+        }
     }
 }
 
@@ -30,7 +33,7 @@ impl<T: View> WithHeader for T {
     }
 
     default fn main_view(&self) -> Weak<dyn View> {
-        unreachable!()
+        Default::default()
     }
 
     default fn header_margin(&self) -> f32 {

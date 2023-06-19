@@ -1,13 +1,14 @@
 use dispatch::{from_main, on_main};
-use gm::flat::Size;
+use gm::{flat::Size, Color};
 use refs::{Own, ToWeak, Weak};
 use vents::Event;
 
-use crate::{view::ViewSubviews, TouchStack, UIManager, View};
+use crate::{view::ViewSubviews, TouchStack, UIManager, View, ViewData};
 
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     fn prepare_modally(input: In) -> Weak<Self> {
-        let view = Own::<Self>::default();
+        let mut view = Own::<Self>::default();
+        view.set_color(Color::WHITE);
         let size = Self::modal_size();
         let weak = view.weak();
         TouchStack::push_layer(weak.weak_view());

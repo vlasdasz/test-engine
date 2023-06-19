@@ -3,7 +3,7 @@
 use std::rc::Rc;
 
 #[cfg(desktop)]
-use gl_wrapper::gl_events::GlEvents;
+use gl_wrapper::system_events::SystemEvents;
 #[cfg(desktop)]
 use glfw::{Action, Key};
 use gm::flat::Point;
@@ -99,7 +99,7 @@ impl UILayer {
     pub fn setup_events(&mut self) {
         use ui::refs::ToWeak;
 
-        let ev = GlEvents::get();
+        let ev = SystemEvents::get();
 
         let mut this = self.weak();
         ev.key_pressed.val(move |a| {

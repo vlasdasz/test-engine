@@ -2,7 +2,7 @@
 use glfw::{Context, Window};
 use gm::flat::Size;
 
-use crate::{gl_events::GlEvents, gl_loader::GLFWEvents, monitor::Monitor, GLLoader};
+use crate::{gl_loader::GLFWEvents, monitor::Monitor, system_events::SystemEvents, GLLoader};
 
 pub struct GLFWManager {
     window:       Window,
@@ -25,7 +25,7 @@ impl GLFWManager {
         while !self.window.should_close() {
             self.window.glfw.poll_events();
 
-            let events = GlEvents::get();
+            let events = SystemEvents::get();
 
             for (_, event) in glfw::flush_messages(&self.gl_events) {
                 match event {

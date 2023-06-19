@@ -33,6 +33,7 @@ impl SpinnerLock {
 
 impl Drop for SpinnerLock {
     fn drop(&mut self) {
+        trace!("Spinner lock dropped");
         if !self.stopped {
             Spinner::instant_stop();
         }
@@ -102,6 +103,7 @@ impl ViewCallbacks for Spinner {
 
 impl Spinner {
     pub fn lock() -> SpinnerLock {
+        trace!("Lock spinner");
         Self::start();
         SpinnerLock { stopped: false }
     }

@@ -7,9 +7,9 @@ use gm::flat::{Point, Size};
 use refs::is_main_thread;
 use vents::Event;
 
-static mut EVENTS: *const GlEvents = std::ptr::null_mut();
+static mut EVENTS: *const SystemEvents = std::ptr::null_mut();
 
-pub struct GlEvents {
+pub struct SystemEvents {
     pub frame_drawn:  Event,
     pub cursor_moved: Event<Point>,
     pub size_changed: Event<Size>,
@@ -19,7 +19,7 @@ pub struct GlEvents {
     pub file_drop:    Event<Vec<PathBuf>>,
 }
 
-impl GlEvents {
+impl SystemEvents {
     fn init() -> Self {
         Self {
             frame_drawn:  Default::default(),

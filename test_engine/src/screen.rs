@@ -1,8 +1,8 @@
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering::Relaxed};
 
-#[cfg(desktop)]
-use gl_wrapper::{gl_events::GlEvents, GLFWManager};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
+#[cfg(desktop)]
+use gl_wrapper::{system_events::SystemEvents, GLFWManager};
 #[cfg(mobile)]
 use gm::volume::GyroData;
 use gm::{flat::Size, Color};
@@ -44,11 +44,11 @@ impl Screen {
         self.ui.setup_events();
 
         let mut this = self.weak();
-        GlEvents::get().size_changed.val(move |size| {
+        SystemEvents::get().size_changed.val(move |size| {
             this.set_size(size);
         });
 
-        GlEvents::get().frame_drawn.sub(move || {
+        SystemEvents::get().frame_drawn.sub(move || {
             this.update();
         });
     }
@@ -102,7 +102,6 @@ impl Screen {
         self.calculate_fps();
 
         UIManager::drawer().reset_viewport();
-        UIManager::set_scheduled();
 
         GLWrapper::clear();
 

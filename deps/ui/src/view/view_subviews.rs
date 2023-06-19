@@ -72,12 +72,12 @@ impl<T: ?Sized + View> ViewSubviews for T {
         if view.navigation_view.is_null() {
             view.navigation_view = self.navigation_view;
         }
-        view.manually_set_superview(self.weak_view());
-        view.init_views();
-        view.__internal_setup();
-        let res = view.weak();
+        let mut weak = view.weak_view();
         self.subviews.push(view);
-        res
+        weak.manually_set_superview(self.weak_view());
+        weak.init_views();
+        weak.__internal_setup();
+        weak
     }
 
     fn add_dummy_view(&mut self) {

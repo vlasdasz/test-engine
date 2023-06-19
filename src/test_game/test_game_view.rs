@@ -125,7 +125,6 @@ impl TestGameView {
             play.on_tap.sub(move || this.sound.play());
 
             [to_benchmark, to_test, play].apply(|mut button| {
-                button.set_color(Color::WHITE);
                 button.set_corner_radius(8);
             });
         }

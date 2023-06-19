@@ -57,15 +57,12 @@ impl DropDown {
 
 impl ViewSetup for DropDown {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::WHITE);
-
         self.button.place.back();
         _ui_link_button!(self, button, tapped);
 
         self.label.place.back();
 
         self.table.data_source = collection_data!(self);
-        self.table.set_color(Color::WHITE);
         self.table.set_priority(1);
         self.table.set_hidden(true);
     }

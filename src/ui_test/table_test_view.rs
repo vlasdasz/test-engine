@@ -13,7 +13,7 @@ struct TableTestView {
 
 impl ViewSetup for TableTestView {
     fn setup(mut self: Weak<Self>) {
-        self.label.set_color(Color::WHITE).set_text("Label");
+        self.label.set_text("Label");
         self.table.data_source = collection_data!(self);
         self.table.reload_data();
     }

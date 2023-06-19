@@ -12,8 +12,8 @@ use vents::Event;
 
 use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View};
 
-#[derive(Default, Derivative)]
-#[derivative(Debug)]
+#[derive(Derivative)]
+#[derivative(Default, Debug)]
 pub struct ViewBase {
     pub(crate) color: Color,
 

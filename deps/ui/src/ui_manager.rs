@@ -18,8 +18,6 @@ static DRAWER: OnceLock<Mutex<Box<dyn UIDrawer>>> = OnceLock::new();
 pub struct UIManager {
     pub(crate) root_view: Own<dyn View>,
 
-    next_view: Mutex<Option<Own<dyn View>>>,
-
     pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
 
     touch_disabled: AtomicBool,
@@ -44,7 +42,6 @@ impl UIManager {
 
         Self {
             root_view,
-            next_view: None.into(),
             deleted_views: Default::default(),
             touch_disabled: false.into(),
             display_scale: 1.0.into(),
@@ -96,18 +93,9 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub fn set_scheduled() {
-        let Some(mut view) = UIManager::get().next_view.lock().unwrap().take() else {
-            return;
-        };
-        UIManager::root_view().remove_all_subviews();
-        view.frame = UIManager::root_view().frame;
-        UIManager::root_view().add_subview(view).place.as_background();
-    }
-
-    // TODO: Rework this
     pub fn set_view(view: Own<dyn View>) {
-        UIManager::get().next_view.lock().unwrap().replace(view);
+        UIManager::root_view().remove_all_subviews();
+        UIManager::root_view().add_subview(view).place.as_background();
     }
 }
 

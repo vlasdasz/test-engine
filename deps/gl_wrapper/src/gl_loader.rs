@@ -11,7 +11,7 @@ use glfw::{
     SwapInterval, Window, WindowEvent,
 };
 
-use crate::{gl_events::GlEvents, monitor::Monitor};
+use crate::{monitor::Monitor, system_events::SystemEvents};
 
 pub type GLFWEvents = std::sync::mpsc::Receiver<(f64, WindowEvent)>;
 
@@ -56,5 +56,5 @@ impl GLLoader {
 }
 
 extern "C" fn size_callback(_: *mut GLFWwindow, w: c_int, h: c_int) {
-    GlEvents::get().size_changed.trigger((w, h).into())
+    SystemEvents::get().size_changed.trigger((w, h).into())
 }
