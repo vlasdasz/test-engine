@@ -59,6 +59,9 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     after_setup: RefCell<Vec<Box<dyn FnOnce()>>>,
+
+    #[derivative(Debug = "ignore")]
+    before_setup: RefCell<Vec<Box<dyn FnOnce()>>>,
 }
 
 impl ViewBase {
@@ -68,6 +71,16 @@ impl ViewBase {
 
     pub fn __trigger_after_setup(&self) {
         for action in self.after_setup.borrow_mut().drain(..) {
+            action()
+        }
+    }
+
+    pub fn before_setup(&self, action: impl FnOnce() + 'static) {
+        self.before_setup.borrow_mut().push(Box::new(action))
+    }
+
+    pub fn __trigger_before_setup(&self) {
+        for action in self.before_setup.borrow_mut().drain(..) {
             action()
         }
     }
