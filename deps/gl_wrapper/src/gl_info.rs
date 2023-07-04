@@ -18,7 +18,7 @@ pub struct GLInfo {
 }
 
 impl GLInfo {
-    const GL_QUERY: &str = r#"((\d\.)(\d))"#;
+    const GL_QUERY: &str = r"((\d\.)(\d))";
 
     fn get_string(id: u32) -> String {
         use std::ffi::CStr;

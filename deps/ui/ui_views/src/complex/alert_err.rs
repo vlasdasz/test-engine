@@ -4,7 +4,7 @@ pub trait AlertErr {
     fn alert_err(self);
 }
 
-impl<E: ToString> AlertErr for Result<(), E> {
+impl<T, E: ToString> AlertErr for Result<T, E> {
     fn alert_err(self) {
         if let Err(err) = self {
             Spinner::instant_stop();

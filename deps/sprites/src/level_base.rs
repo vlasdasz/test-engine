@@ -72,7 +72,9 @@ impl LevelBase {
 
     fn handle_collisions(&self) {
         while let Ok(contact) = self.events.intersection.try_recv() {
-            let CollisionEvent::Started(a, b, _) = contact else { continue };
+            let CollisionEvent::Started(a, b, _) = contact else {
+                continue;
+            };
 
             for sprite in &self.colliding_sprites {
                 let handle = sprite.data().collider_handle.unwrap();
