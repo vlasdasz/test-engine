@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [dependencies]
 actix-web = { workspace = true }
+sea-orm = { workspace = true }
 log = { workspace = true }
 reqwest = { workspace = true }
 serde = { workspace = true }

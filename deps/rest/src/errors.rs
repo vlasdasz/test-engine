@@ -5,6 +5,7 @@ use std::{
 };
 
 use actix_web::ResponseError;
+use sea_orm::DbErr;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -46,6 +47,14 @@ impl From<serde_json::Error> for RestError {
 
 impl<T> From<PoisonError<T>> for RestError {
     fn from(err: PoisonError<T>) -> Self {
+        Self {
+            message: err.to_string(),
+        }
+    }
+}
+
+impl From<sea_orm::DbErr> for RestError {
+    fn from(err: DbErr) -> Self {
         Self {
             message: err.to_string(),
         }
