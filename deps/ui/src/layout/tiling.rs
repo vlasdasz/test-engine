@@ -4,4 +4,6 @@ pub enum Tiling {
 
     Horizontally,
     Vertically,
+
+    Distribute(Vec<f32>),
 }

@@ -8,6 +8,7 @@ use gm::{
     axis::Axis,
     flat::{Rect, Size, SizeBase},
 };
+use itertools::Itertools;
 use refs::{Own, Rglica, ToRglica, Weak};
 use rtools::IntoF32;
 
@@ -106,6 +107,10 @@ impl Placer {
         self.relative(Anchor::Size, 1, view)
     }
 
+    pub fn relative_width(&self, view: impl Deref<Target = impl View>, multiplier: impl IntoF32) -> &Self {
+        self.relative(Anchor::Width, multiplier, view)
+    }
+
     pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl IntoF32) -> &Self {
         self.relative(Anchor::Size, multiplier, view)
     }
@@ -167,6 +172,12 @@ impl Placer {
 
     pub fn all_hor(&self) -> &Self {
         self.sub_rules().push(Tiling::Horizontally.into());
+        self
+    }
+
+    pub fn distribute_ratio(&self, ratios: &[impl IntoF32]) -> &Self {
+        self.sub_rules()
+            .push(Tiling::Distribute(ratios.into_iter().map(|f| f.into_f32()).collect_vec()).into());
         self
     }
 
@@ -396,6 +407,9 @@ impl Placer {
             Tiling::Background => *frame = (*self.s_content.deref()).into(),
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
+            Tiling::Distribute(ratio) => {
+                distribute_with_ratio(&self.frame.size, self.view.subviews_mut(), &ratio)
+            }
         }
     }
 
@@ -470,6 +484,22 @@ fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
         frame.set_other_length::<AXIS>(other_length);
 
         last_pos += length + margin;
+    }
+}
+
+fn distribute_with_ratio(size: &Size, views: &mut [Own<dyn View>], ratios: &[f32]) {
+    assert_eq!(
+        views.len(),
+        ratios.len(),
+        "distribute_ratio shoud have the same number as subviews"
+    );
+
+    let total_ratio = 1.0 / ratios.iter().sum::<f32>();
+
+    for i in 0..views.len() {
+        let is_first = i == 0;
+        let x_pos = if is_first { 0.0 } else { views[i - 1].max_x() };
+        views[i].set_frame((x_pos, 0, ratios[i] * size.width * total_ratio, size.height));
     }
 }
 

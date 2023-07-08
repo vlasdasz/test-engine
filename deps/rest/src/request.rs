@@ -81,7 +81,9 @@ where
 {
     let response = raw_request(method, url, headers, body).await?;
 
-    if response.status != 200 {
+    if response.status == 404 {
+        Err("404 not found".into())
+    } else if response.status != 200 {
         error!("Object request failed: {response:?}");
         Err(parse(&response.body)?)
     } else {
