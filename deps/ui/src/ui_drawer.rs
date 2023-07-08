@@ -14,6 +14,7 @@ pub trait UIDrawer: Debug + Send {
     fn outline(&self, rect: &Rect, color: &Color, priority: usize);
     fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: usize);
     fn draw(&self, view: &dyn View);
+    fn set_root_frame(&mut self, frame: Rect);
 
     fn update_internal(&self, view: &mut dyn View) {
         if view.is_hidden() {

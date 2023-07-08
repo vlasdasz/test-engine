@@ -44,6 +44,20 @@ impl Rect {
             && point.y <= self.y() + self.height()
     }
 
+    pub fn intersects(&self, rect: &Rect) -> bool {
+        let x1 = self.x();
+        let y1 = self.y();
+        let x2 = x1 + self.width();
+        let y2 = y1 + self.height();
+
+        let x3 = rect.x();
+        let y3 = rect.y();
+        let x4 = x3 + rect.width();
+        let y4 = y3 + rect.height();
+
+        x1 < x4 && x2 > x3 && y1 < y4 && y2 > y3
+    }
+
     pub fn x(&self) -> f32 {
         self.origin.x
     }

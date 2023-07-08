@@ -21,6 +21,7 @@ type RoundStorage = HashMap<usize, (PathData, Size)>;
 
 #[derive(Default)]
 pub struct TEUIDrawer {
+    root_frame:    Rect,
     round_storage: RefCell<RoundStorage>,
 }
 
@@ -145,10 +146,16 @@ impl UIDrawer for TEUIDrawer {
         self.outline(view.absolute_frame(), &Color::TURQUOISE, view.priority);
 
         for view in view.subviews() {
-            self.draw(view.deref())
+            if view.dont_hide || view.absolute_frame().intersects(&self.root_frame) {
+                self.draw(view.deref())
+            }
         }
 
         GLWrapper::disable_stensil();
+    }
+
+    fn set_root_frame(&mut self, frame: Rect) {
+        self.root_frame = frame;
     }
 }
 

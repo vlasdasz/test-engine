@@ -11,7 +11,11 @@ use smart_default::SmartDefault;
 use sprites::Level;
 #[cfg(desktop)]
 use ui::input::{ControlButton, KeyEvent, KeyboardButton, TouchEvent, UIEvents};
-use ui::{check_touch, refs::Own, Touch, TouchStack, UIManager};
+use ui::{
+    check_touch,
+    refs::{Own, Weak},
+    Touch, TouchStack, UIManager,
+};
 use ui_views::debug_view::DebugView;
 
 use crate::Keymap;
@@ -28,7 +32,7 @@ pub struct UILayer {
     pub prev_time:  i64,
     pub frame_time: f64,
 
-    pub debug_view: Own<DebugView>,
+    pub debug_view: Weak<DebugView>,
 
     #[cfg(desktop)]
     shift_pressed: bool,

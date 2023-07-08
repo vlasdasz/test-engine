@@ -5,15 +5,19 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
 #[cfg(mobile)]
 use gm::volume::GyroData;
-use gm::{flat::Size, Color};
+use gm::{
+    flat::{Rect, Size},
+    Color,
+};
 use rest::API;
 use rtools::Time;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
     refs::{Own, ToWeak, Weak},
-    UIManager, View, ViewFrame,
+    UIManager, View, ViewFrame, ViewSetup, ViewSubviews,
 };
+use ui_views::debug_view::DebugView;
 
 use crate::{
     app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
@@ -60,7 +64,17 @@ impl Screen {
         GLWrapper::enable_depth();
         GLWrapper::set_clear_color(Color::GRAY);
 
-        UIManager::set_view(view);
+        UIManager::root_view().add_subview(view).place.as_background();
+
+        let mut debug_view = DebugView::new();
+
+        debug_view.priority = 10;
+
+        let weak = debug_view.weak();
+
+        UIManager::root_view().add_subview(debug_view);
+
+        Screen::current().ui.debug_view = weak;
 
         #[cfg(desktop)]
         {
@@ -92,16 +106,18 @@ impl Screen {
         let fps = self.ui.fps;
         self.ui.debug_view.fps.set(fps);
         if API::is_ok() {
-            self.ui.debug_view.weak().set_custom("URL:", API::base_url());
+            self.ui.debug_view.set_custom("URL:", API::base_url());
         } else {
-            self.ui.debug_view.weak().set_custom("URL:", "API not initizlized");
+            self.ui.debug_view.set_custom("URL:", "API not initizlized");
         }
     }
 
     pub fn update(&mut self) -> TestEngineAction {
         self.calculate_fps();
 
-        UIManager::drawer().reset_viewport();
+        let mut drawer = UIManager::drawer();
+
+        drawer.reset_viewport();
 
         GLWrapper::clear();
 
@@ -110,10 +126,11 @@ impl Screen {
         }
 
         let mut root_view = UIManager::root_view();
+        let root_frame: Rect = UIManager::root_view_size().into();
+        root_view.set_frame(root_frame);
 
-        root_view.set_frame(UIManager::root_view_size());
-
-        UIManager::drawer().update(&mut root_view);
+        drawer.set_root_frame(root_frame);
+        drawer.update(&mut root_view);
 
         dispatch::invoke_dispatched();
 

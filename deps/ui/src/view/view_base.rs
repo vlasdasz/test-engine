@@ -57,6 +57,8 @@ pub struct ViewBase {
 
     pub priority: usize,
 
+    pub dont_hide: bool,
+
     #[derivative(Debug = "ignore")]
     after_setup: RefCell<Vec<Box<dyn FnOnce()>>>,
 

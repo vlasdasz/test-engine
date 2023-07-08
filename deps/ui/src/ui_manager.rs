@@ -10,7 +10,7 @@ use std::{
 use gm::flat::{Point, Rect, Size};
 use refs::{Own, ToWeak, Weak};
 
-use crate::{layout::Placer, view::ViewSubviews, Container, UIDrawer, UIEvent, View};
+use crate::{layout::Placer, Container, UIDrawer, UIEvent, View};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 static DRAWER: OnceLock<Mutex<Box<dyn UIDrawer>>> = OnceLock::new();
@@ -89,13 +89,6 @@ impl UIManager {
 
     pub fn enable_touch() {
         Self::get().touch_disabled.store(false, Ordering::Relaxed)
-    }
-}
-
-impl UIManager {
-    pub fn set_view(view: Own<dyn View>) {
-        UIManager::root_view().remove_all_subviews();
-        UIManager::root_view().add_subview(view).place.as_background();
     }
 }
 
