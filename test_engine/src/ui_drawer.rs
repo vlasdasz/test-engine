@@ -8,6 +8,7 @@ use std::{
 use gl_image::draw_image;
 use gl_wrapper::{buffers::Buffers, GLWrapper};
 use gm::{
+    axis::Axis,
     flat::{PointsPath, Rect, Size},
     Color,
 };
@@ -121,7 +122,7 @@ impl UIDrawer for TEUIDrawer {
         self.fill(view.absolute_frame(), view.color(), view.priority);
 
         if let Some(image) = view.image().get() {
-            let frame = &image.size.fit_in(view.absolute_frame());
+            let frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
             draw_image(
                 image,
                 &UIManager::rescale_frame(frame),

@@ -28,6 +28,10 @@ impl Images {
         Image::load(include_bytes!("images/down.png"), "ui::default::down")
     }
 
+    pub fn dot() -> Handle<Image> {
+        Image::load(include_bytes!("images/dot.png"), "ui::default::dot")
+    }
+
     pub fn delete() -> Handle<Image> {
         Image::load(include_bytes!("images/delete.png"), "ui::default::delete")
     }

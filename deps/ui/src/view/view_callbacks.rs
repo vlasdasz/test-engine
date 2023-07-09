@@ -25,7 +25,6 @@ pub trait ViewSetup {
     fn new() -> Own<Self>
     where Self: Default;
     fn setup(self: Weak<Self>);
-    fn loaded(self: Weak<Self>);
 }
 
 impl<T: View + 'static> ViewSetup for T {
@@ -34,5 +33,4 @@ impl<T: View + 'static> ViewSetup for T {
         Own::<Self>::default()
     }
     default fn setup(self: Weak<Self>) {}
-    default fn loaded(self: Weak<Self>) {}
 }

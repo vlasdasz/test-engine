@@ -7,7 +7,10 @@ use std::{
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
-use crate::flat::{Point, Rect};
+use crate::{
+    axis::Axis,
+    flat::{Point, Rect},
+};
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SizeBase<T> {
@@ -45,6 +48,20 @@ impl Size {
         }
     }
 
+    pub fn side<const AXIS: Axis>(&self) -> f32 {
+        match AXIS {
+            Axis::X => self.width,
+            Axis::Y => self.height,
+        }
+    }
+
+    pub fn other_size<const AXIS: Axis>(&self) -> f32 {
+        match AXIS {
+            Axis::X => self.height,
+            Axis::Y => self.width,
+        }
+    }
+
     pub fn fit_height(&self, height: impl IntoF32) -> Size {
         let ratio = height.into_f32() / self.height;
         *self * ratio
@@ -55,12 +72,19 @@ impl Size {
         *self * ratio
     }
 
-    pub fn fit_in(&self, rect: impl Borrow<Rect>) -> Rect {
+    pub fn fit_in_rect<const AXIS: Axis>(&self, rect: impl Borrow<Rect>) -> Rect {
         let rect = rect.borrow();
-        let ratio = rect.size.height / self.height;
+        let ratio = rect.length::<AXIS>() / self.side::<AXIS>();
         let size = *self * ratio;
-        let x = rect.x() + rect.width() / 2.0 - size.width / 2.0;
-        (x, rect.y(), size.width, size.height).into()
+        let pos = rect.other_position::<AXIS>() + rect.other_length::<AXIS>() / 2.0
+            - size.other_size::<AXIS>() / 2.0;
+
+        let mut result: Rect = (size.width, size.height).into();
+
+        result.set_position::<AXIS>(rect.position::<AXIS>());
+        result.set_other_position::<AXIS>(pos);
+
+        result
     }
 }
 
