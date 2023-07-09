@@ -1,4 +1,4 @@
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::NaiveDateTime;
 use rust_decimal::Decimal;
 
 pub trait ToLabel {
@@ -53,15 +53,9 @@ impl ToLabel for Decimal {
     }
 }
 
-impl ToLabel for DateTime<Utc> {
-    fn to_label(&self) -> String {
-        self.format("%H:%M %d-%m").to_string()
-    }
-}
-
 // TODO: think about timezones
 impl ToLabel for NaiveDateTime {
     fn to_label(&self) -> String {
-        self.format("%H:%M %d-%m").to_string()
+        self.format("%Y-%m-%d %H:%M:%S").to_string()
     }
 }

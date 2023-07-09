@@ -177,7 +177,7 @@ impl Placer {
 
     pub fn distribute_ratio(&self, ratios: &[impl IntoF32]) -> &Self {
         self.sub_rules()
-            .push(Tiling::Distribute(ratios.into_iter().map(|f| f.into_f32()).collect_vec()).into());
+            .push(Tiling::Distribute(ratios.iter().map(|f| f.into_f32()).collect_vec()).into());
         self
     }
 
@@ -408,7 +408,7 @@ impl Placer {
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Distribute(ratio) => {
-                distribute_with_ratio(&self.frame.size, self.view.subviews_mut(), &ratio)
+                distribute_with_ratio(&self.frame.size, self.view.subviews_mut(), ratio)
             }
         }
     }
@@ -491,7 +491,7 @@ fn distribute_with_ratio(size: &Size, views: &mut [Own<dyn View>], ratios: &[f32
     assert_eq!(
         views.len(),
         ratios.len(),
-        "distribute_ratio shoud have the same number as subviews"
+        "distribute_ratio should have the same number as subviews"
     );
 
     let total_ratio = 1.0 / ratios.iter().sum::<f32>();
