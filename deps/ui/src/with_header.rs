@@ -25,7 +25,7 @@ pub trait WithHeader: View {
         }
 
         if !self.main_view().is_null() {
-            self.main_view().place.anchor(header, Anchor::Top, self.header_margin()).lrb(0);
+            self.main_view().place.anchor(Anchor::Top, header, self.header_margin()).lrb(0);
         }
     }
 }

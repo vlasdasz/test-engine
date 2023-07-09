@@ -43,18 +43,18 @@ impl ViewSetup for Button {
 
 #[macro_export]
 macro_rules! _ui_link_button {
-    ($self:ident, $($button:ident).+, $method:ident) => {
+    ($self:ident, $($button:ident).+, $method:ident) => {{
         use $crate::complex::AlertErr;
         $self.$($button).+.on_tap.sub(move || $self.$method().alert_err());
-    }
+    }}
 }
 
 #[macro_export]
 macro_rules! link_button {
-    ($self:ident, $($button:ident).+, $method:ident) => {
+    ($self:ident, $($button:ident).+, $method:ident) => {{
         use ui_views::AlertErr;
         $self.$($button).+.on_tap.sub(move || $self.$method().alert_err());
-    }
+    }}
 }
 
 #[macro_export]

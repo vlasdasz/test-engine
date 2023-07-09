@@ -64,6 +64,8 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     before_setup: RefCell<Vec<Box<dyn FnOnce()>>>,
+
+    pub loaded: Event,
 }
 
 impl ViewBase {
