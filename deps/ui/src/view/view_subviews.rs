@@ -1,3 +1,5 @@
+use std::ops::DerefMut;
+
 use refs::{Own, ToWeak, Weak};
 use rtools::Random;
 
@@ -17,6 +19,8 @@ pub trait ViewSubviews {
     fn add_subview(&mut self, view: Own<dyn View>) -> Weak<dyn View>;
 
     fn add_dummy_view(&mut self);
+
+    fn apply_to_all_subviews(&mut self, action: impl FnMut(&mut dyn View) + Clone + 'static);
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -85,5 +89,12 @@ impl<T: ?Sized + View> ViewSubviews for T {
     fn add_dummy_view(&mut self) {
         let mut view = self.__internal_add_view::<Container>();
         view.set_size((f32::random(), f32::random()));
+    }
+
+    fn apply_to_all_subviews(&mut self, mut action: impl FnMut(&mut dyn View) + Clone + 'static) {
+        action(self.weak_view().deref_mut());
+        for view in &mut self.subviews {
+            view.apply_to_all_subviews(action.clone());
+        }
     }
 }

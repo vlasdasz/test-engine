@@ -1,3 +1,4 @@
+use gm::Color;
 use refs::Weak;
 use rtools::platform::Platform;
 
@@ -9,20 +10,22 @@ pub trait WithHeader: View {
     fn header_size(&self) -> f32;
     fn header_margin(&self) -> f32;
     fn layout_header(&self) {
-        if self.header().is_null() {
+        let mut header = self.header();
+
+        if header.is_null() {
             return;
         }
+
+        header.color = Color::WHITE;
+
         if Platform::IOS {
-            self.header().place.lr(0).t(40).h(self.header_size());
+            header.place.lr(0).t(40).h(self.header_size());
         } else {
-            self.header().place.lrt(0).h(self.header_size());
+            header.place.lrt(0).h(self.header_size());
         }
 
         if !self.main_view().is_null() {
-            self.main_view()
-                .place
-                .anchor(self.header(), Anchor::Top, self.header_margin())
-                .lrb(0);
+            self.main_view().place.anchor(header, Anchor::Top, self.header_margin()).lrb(0);
         }
     }
 }
