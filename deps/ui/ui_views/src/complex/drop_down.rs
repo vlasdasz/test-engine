@@ -31,12 +31,12 @@ impl DropDown {
 
     fn tapped(&mut self) {
         if self.opened.toggle() {
-            self.label.set_hidden(false);
-            self.table.set_hidden(true);
+            self.label.is_hidden = false;
+            self.table.is_hidden = true;
         } else {
-            self.label.set_hidden(true);
+            self.label.is_hidden = true;
             self.table.reload_data();
-            self.table.set_hidden(false);
+            self.table.is_hidden = false;
             let table_size = (self.width(), self.height() * self.number_of_cells() as f32);
             self.table.set_size(table_size);
         }
@@ -64,7 +64,7 @@ impl ViewSetup for DropDown {
 
         self.table.data_source = collection_data!(self);
         self.table.set_priority(1);
-        self.table.set_hidden(true);
+        self.table.is_hidden = true
     }
 }
 

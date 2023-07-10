@@ -2,7 +2,7 @@ use gm::Color;
 use refs::Weak;
 use rtools::{data_manager::Handle, IntoF32};
 use text::{render_text, Font};
-use ui::{view, SubView, ToLabel, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use ui::{view, SubView, ToLabel, ViewCallbacks, ViewFrame, ViewSetup};
 
 use crate::ImageView;
 
@@ -26,12 +26,12 @@ impl Label {
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         let text = text.to_label();
         if text.is_empty() {
-            self.image_view.set_hidden(true);
+            self.image_view.is_hidden = true;
             self.text = text;
             return self;
         }
 
-        self.image_view.set_hidden(false);
+        self.image_view.is_hidden = false;
 
         if self.text == text {
             return self;
@@ -72,7 +72,7 @@ impl Label {
             return;
         }
 
-        let image = self.image_view.image();
+        let image = self.image_view.image;
 
         let size = if image.size.width > self.width() {
             image.size.fit_width(self.width())
@@ -89,14 +89,14 @@ impl Label {
         if self.free_text {
             for char in self.prev_text.chars() {
                 if char.is_ascii_digit() {
-                    self.image_view.image().free();
+                    self.image_view.image.free();
                     break;
                 }
             }
         }
 
         let image = render_text(&self.text, &self.font, self.text_size);
-        self.image_view.set_image(image);
+        self.image_view.image = image;
         self.prev_text = self.text.clone();
     }
 }
@@ -109,7 +109,7 @@ impl ViewSetup for Label {
 
         debug_assert!(self.text.is_empty());
         self.image_view.place.center();
-        self.image_view.set_hidden(true);
+        self.image_view.is_hidden = true;
 
         if let Some(text) = self.initial_text.take() {
             self.set_text(text);

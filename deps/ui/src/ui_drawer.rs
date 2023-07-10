@@ -5,7 +5,7 @@ use gm::{flat::Rect, Color};
 use refs::Weak;
 
 use crate::{
-    view::{ViewAnimation, ViewData, ViewSubviews},
+    view::{ViewAnimation, ViewSubviews},
     DrawMode, PathData, UIManager, View, ViewLayout,
 };
 
@@ -17,7 +17,7 @@ pub trait UIDrawer: Debug + Send {
     fn set_root_frame(&mut self, frame: Rect);
 
     fn update_internal(&self, view: &mut dyn View) {
-        if view.is_hidden() {
+        if view.is_hidden {
             return;
         }
         view.layout();

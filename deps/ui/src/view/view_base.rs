@@ -1,13 +1,12 @@
 use std::cell::RefCell;
 
 use derivative::Derivative;
-use gl_image::Image;
 use gm::{
     flat::{Point, Rect},
     Color,
 };
 use refs::{Own, Weak};
-use rtools::{data_manager::Handle, Unwrap};
+use rtools::Unwrap;
 use vents::Event;
 
 use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View};
@@ -34,8 +33,6 @@ pub struct ViewBase {
     pub(crate) subviews: Vec<Own<dyn View>>,
 
     pub(crate) touch_id: u64,
-
-    pub(crate) image: Handle<Image>,
 
     pub(crate) is_selected: bool,
     pub(crate) is_deleted:  bool,

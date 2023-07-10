@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{view, Event, SubView, ViewData, ViewSetup};
+use ui::{view, Event, SubView, ViewSetup};
 
 use crate::{Button, Images, Label};
 

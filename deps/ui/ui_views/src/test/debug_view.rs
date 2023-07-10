@@ -2,7 +2,7 @@ use std::{collections::HashMap, fmt::Display};
 
 use refs::{dump_ref_stats, Weak};
 use ui::{
-    view, Property, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup,
+    view, Property, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewFrame, ViewSetup,
     ViewSubviews,
 };
 
@@ -51,7 +51,7 @@ impl DebugView {
 
 impl ViewSetup for DebugView {
     fn setup(mut self: Weak<Self>) {
-        self.set_hidden(false);
+        self.is_hidden = false;
 
         self.manually_set_superview(UIManager::root_view());
 

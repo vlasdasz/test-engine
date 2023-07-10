@@ -1,42 +1,46 @@
+use gl_image::ToImage;
 use gm::Color;
 use refs::Weak;
-use ui::{view, Event, SubView, ToLabel, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+use ui::{view, Event, SubView, ToLabel, ViewSetup, ViewTouch};
 
-use crate::Label;
+use crate::{ImageView, Label};
 
 #[view]
 pub struct Button {
-    label_view: Option<SubView<Label>>,
+    label: SubView<Label>,
+    image: SubView<ImageView>,
 
     pub on_tap: Event,
 }
 
 impl Button {
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
-        self.get_label().place.as_background();
-        self.get_label().set_text(text);
+        self.label.is_hidden = false;
+        self.label.set_text(text);
+        self
+    }
+
+    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.image.is_hidden = false;
+        self.image.image = image.to_image();
         self
     }
 
     pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.get_label().set_text_color(color);
+        self.label.set_text_color(color);
         self
-    }
-
-    fn get_label(&mut self) -> &mut Label {
-        if self.label_view.is_none() {
-            let mut view: SubView<Label> = self.__internal_add_view();
-            view.label = "Button.label_view".into();
-            self.label_view = Some(view);
-        }
-        self.label_view.as_mut().unwrap()
     }
 }
 
 impl ViewSetup for Button {
     fn setup(mut self: Weak<Self>) {
+        self.label.place.back();
+        self.label.is_hidden = true;
+
+        self.image.place.back();
+        self.image.is_hidden = true;
+
         self.enable_touch();
-        self.set_size((100, 20));
         self.on_touch_began.sub(move || self.on_tap.trigger(()));
     }
 }

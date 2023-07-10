@@ -16,7 +16,7 @@ use ui::{
     refs::Address, DrawMode, PathData, UIDrawer, UIManager, UIShaders, View, ViewData, ViewFrame,
     ViewSubviews,
 };
-use ui_views::initialize_path_data;
+use ui_views::{initialize_path_data, ImageView};
 
 type RoundStorage = HashMap<usize, (PathData, Size)>;
 
@@ -87,7 +87,7 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn draw(&self, view: &dyn View) {
-        if view.is_hidden() {
+        if view.is_hidden {
             return;
         }
 
@@ -121,14 +121,16 @@ impl UIDrawer for TEUIDrawer {
 
         self.fill(view.absolute_frame(), view.color(), view.priority);
 
-        if let Some(image) = view.image().get() {
-            let frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
-            draw_image(
-                image,
-                &UIManager::rescale_frame(frame),
-                view.color(),
-                view.priority,
-            );
+        if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
+            if let Some(image) = image_view.image.get() {
+                let frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
+                draw_image(
+                    image,
+                    &UIManager::rescale_frame(frame),
+                    view.color(),
+                    view.priority,
+                );
+            }
         }
 
         if view.border_color().is_visible() {
