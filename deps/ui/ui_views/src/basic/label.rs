@@ -27,6 +27,7 @@ impl Label {
         let text = text.to_label();
         if text.is_empty() {
             self.image_view.set_hidden(true);
+            self.text = text;
             return self;
         }
 
@@ -58,7 +59,7 @@ impl Label {
     }
 
     pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
-        //self.image_view.view_mut().image.color = color.into();
+        // self.image_view.view_mut().image.color = color.into();
         self
     }
 

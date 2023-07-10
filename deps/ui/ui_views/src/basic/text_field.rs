@@ -4,8 +4,8 @@ use gm::Color;
 use refs::{ToWeak, Weak};
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
-    view, AcceptChar, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData, ViewSetup,
-    ViewTouch,
+    view, AcceptChar, Event, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData,
+    ViewSetup, ViewTouch,
 };
 
 use crate::Label;
@@ -14,17 +14,43 @@ use crate::Label;
 pub struct TextField {
     label:                 SubView<Label>,
     pub(crate) constraint: Option<TextFieldConstraint>,
+
+    pub placeholder: String,
+    pub changed:     Event<String>,
+
+    placeholding: bool,
 }
 
 impl TextField {
     pub fn text(&self) -> &str {
-        self.label.text()
+        if self.placeholding {
+            ""
+        } else {
+            self.label.text()
+        }
     }
 
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         let text = self.filter_constraint(text);
-        self.label.set_text(text);
+
+        if text.is_empty() && !self.placeholder.is_empty() {
+            self.placeholding = true;
+            self.label.set_text(self.placeholder.clone());
+        } else {
+            self.placeholding = false;
+            self.label.set_text(&text);
+        }
+
+        self.changed.trigger(text);
         self
+    }
+
+    pub fn clear(&mut self) -> &mut Self {
+        self.set_text("")
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.text().is_empty()
     }
 
     fn filter_constraint(&mut self, text: impl ToLabel) -> String {
@@ -72,20 +98,31 @@ impl ViewCallbacks for TextField {
             UIManager::get().open_keyboard.store(true, Relaxed);
             let mut this = self.weak();
             UIEvents::get().key_pressed.val(move |key| {
+                let mut text = this.label.text().to_string();
+
                 if this.is_selected() {
                     match key.button {
                         KeyboardButton::Letter(char) => {
-                            if this.constraint.accept_char(char, this.label.text()) {
-                                this.label.append_text(char);
+                            if this.constraint.accept_char(char, &text) {
+                                if this.placeholding {
+                                    text = String::default();
+                                    this.placeholding = false;
+                                }
+                                text.push(char);
                             }
                         }
                         KeyboardButton::Control(control) => {
+                            if this.placeholding {
+                                return;
+                            }
                             if let ControlButton::Backspace = control {
-                                this.label.pop_letter();
+                                text.pop();
                             }
                         }
                     };
                 }
+                this.set_text(text);
+                this.changed.trigger(this.text().to_string());
             });
         } else {
             UIManager::get().close_keyboard.store(true, Relaxed);
