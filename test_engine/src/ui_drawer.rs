@@ -127,8 +127,9 @@ impl UIDrawer for TEUIDrawer {
                 draw_image(
                     image,
                     &UIManager::rescale_frame(frame),
-                    view.color(),
+                    &image_view.tint_color,
                     view.priority,
+                    false,
                 );
             }
         }

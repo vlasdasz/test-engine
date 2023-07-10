@@ -1,7 +1,7 @@
 use rtools::Apply;
 use test_engine::{
     audio::Sound,
-    gm::{flat::Direction, Color},
+    gm::flat::Direction,
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
@@ -9,11 +9,11 @@ use test_engine::{
 };
 use ui::{
     refs::{Own, ToWeak, Weak},
-    Container, SubView, UIManager, ViewData, ViewSetup, ViewSubviews,
+    Container, SubView, ViewData, ViewSetup, ViewSubviews,
 };
 use ui_views::{test_view::ViewWithCat, AnalogStickView, Button, DPadView, IntView};
 
-use crate::benchmark::{BenchmarkLevel, UIDebugView};
+use crate::benchmark::BenchmarkLevel;
 
 #[view]
 pub struct TestGameView {
@@ -109,14 +109,14 @@ impl TestGameView {
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap.sub(|| {
                 Screen::current().ui.set_level(Own::<BenchmarkLevel>::default());
-                UIManager::set_view(Own::<UIDebugView>::default());
+                // UIManager::set_view(Own::<UIDebugView>::default());
             });
 
             let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap.sub(|| {
                 Screen::current().ui.set_level(Own::<LevelBase>::default());
-                UIManager::set_view(Own::<UIDebugView>::default());
+                // UIManager::set_view(Own::<UIDebugView>::default());
             });
 
             let mut play = view.add_view::<Button>();

@@ -23,6 +23,10 @@ impl Color {
         }
     }
 
+    pub fn is_clear(&self) -> bool {
+        !self.is_visible()
+    }
+
     pub fn is_visible(&self) -> bool {
         self.a > 0.02
     }

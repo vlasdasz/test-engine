@@ -58,8 +58,8 @@ impl Label {
         }
     }
 
-    pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
-        // self.image_view.view_mut().image.color = color.into();
+    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.image_view.tint_color = color.into();
         self
     }
 

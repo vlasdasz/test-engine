@@ -1,7 +1,7 @@
-use test_engine::gm::{flat::Size, Color};
+use test_engine::gm::flat::Size;
 use ui::{
     refs::{Own, ToWeak, Weak},
-    view, Container, SubView, View, ViewData, ViewSetup, ViewSubviews, WithHeader,
+    view, Container, SubView, View, ViewSetup, ViewSubviews, WithHeader,
 };
 use ui_views::{collection_data, CollectionData, CollectionView, Label};
 

@@ -11,5 +11,5 @@ void main() {
     out_color = color;
     out_color.a = texture(in_texture, tex_coord).r;
 //
-    out_color = texture(in_texture, tex_coord);
+//    out_color = texture(in_texture, tex_coord);
 }

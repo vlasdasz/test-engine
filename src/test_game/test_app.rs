@@ -28,7 +28,7 @@ impl App for TestApp {
     }
 
     fn make_root_view() -> Own<dyn View> {
-        NavigationView::with_view::<UITestView>()
+        NavigationView::with_view(Own::<UITestView>::default())
     }
 
     fn core(&mut self) -> &mut AppCore {

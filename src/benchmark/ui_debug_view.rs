@@ -4,14 +4,11 @@ use test_engine::{
 };
 use ui::{
     refs::{dump_ref_stats, Own, Weak},
-    Labeled, UIManager, ViewSetup,
+    Labeled, ViewSetup,
 };
 use ui_views::{Button, Label, LabeledTextField, MultilineLabel};
 
-use crate::{
-    test_game::{TestGameLevel, TestGameView},
-    ui_test::CollectionTestView,
-};
+use crate::test_game::TestGameLevel;
 
 #[view]
 pub struct UIDebugView {
@@ -31,7 +28,7 @@ impl ViewSetup for UIDebugView {
     fn setup(mut self: Weak<Self>) {
         self.login.place.size(200, 80).center_hor();
 
-        self.login.place.anchor(self.password, Anchor::Bot, 20);
+        self.login.place.anchor(Anchor::Bot, self.password, 20);
         self.login.set_title(&"Login:");
 
         self.password.place.size(200, 40).center();
@@ -41,13 +38,13 @@ impl ViewSetup for UIDebugView {
 
         self.test_game.on_tap.sub(|| {
             Screen::current().ui.set_level(Own::<TestGameLevel>::default());
-            UIManager::set_view(Own::<TestGameView>::default());
+            // UIManager::set_view(Own::<TestGameView>::default());
         });
 
         self.collection.set_text("Collection");
         self.collection.place.above(self.test_game, 20);
         self.collection.on_tap.sub(|| {
-            UIManager::set_view(Own::<CollectionTestView>::default());
+            // UIManager::set_view(Own::<CollectionTestView>::default());
         });
 
         self.label.place.br(10).relative(Anchor::Size, 0.4, self);

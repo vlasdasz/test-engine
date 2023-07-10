@@ -1,4 +1,4 @@
-use test_engine::view;
+use test_engine::{gm::Color, view};
 use ui::{
     refs::{Own, Weak},
     SubView, ViewController, ViewFrame, ViewSetup,
@@ -20,18 +20,22 @@ impl ViewSetup for UITestView {
         self.place.all_ver();
 
         self.push_pop.set_text("Push Pop");
+        self.push_pop.set_text_color(Color::RED);
         link_button!(self, push_pop, on_push_pop);
 
+        self.collection.set_text_color(Color::GREEN);
         self.collection.set_text("Collection");
         self.collection
             .on_tap
             .sub(move || self.navigation().push(Own::<CollectionTestView>::default()));
 
+        self.collection.set_text_color(Color::BLUE);
         self.debug.set_text("Debug");
         self.debug
             .on_tap
             .sub(move || self.navigation().push(Own::<UIDebugView>::default()));
 
+        self.collection.set_text_color(Color::WHITE);
         self.nothing.set_text("Nothing");
     }
 }

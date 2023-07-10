@@ -1,5 +1,5 @@
-use test_engine::gm::{flat::Size, Color};
-use ui::{refs::Weak, view, Event, ModalView, SubView, ViewData, ViewSetup};
+use test_engine::gm::flat::Size;
+use ui::{refs::Weak, view, Event, ModalView, SubView, ViewSetup};
 use ui_views::{link_button, Button, Label, TextField};
 
 #[view]

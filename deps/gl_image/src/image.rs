@@ -141,12 +141,14 @@ impl ResourceLoader for Image {
     }
 }
 
-pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize) {
+pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize, is_text: bool) {
     if image.is_invalid() {
         return;
     }
 
-    if image.is_monochrome() {
+    if is_text {
+        ImageShaders::text().enable().set_color(color)
+    } else if image.is_monochrome() {
         ImageShaders::mono().enable().set_color(color)
     } else {
         ImageShaders::color().enable()

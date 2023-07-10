@@ -65,6 +65,7 @@ pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image>
                     .into(),
                 &Color::WHITE, // See ui_monochrome shader,
                 0,
+                true,
             );
         }
 
