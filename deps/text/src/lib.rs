@@ -39,7 +39,7 @@ pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image>
         return image;
     }
 
-    if text.is_empty() {
+    if text.is_empty() || text == " " {
         return Image::add_with_name(id, Image::empty());
     }
 
