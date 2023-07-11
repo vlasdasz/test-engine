@@ -149,7 +149,7 @@ pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize, is
     if is_text {
         ImageShaders::text().enable()
     } else if image.is_monochrome() {
-        ImageShaders::mono().enable().set_color(color)
+        ImageShaders::mono().enable().set_color(&color)
     } else {
         ImageShaders::color().enable()
     }

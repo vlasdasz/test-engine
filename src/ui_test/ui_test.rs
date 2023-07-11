@@ -29,13 +29,13 @@ impl ViewSetup for UITestView {
             .on_tap
             .sub(move || self.navigation().push(Own::<CollectionTestView>::default()));
 
-        self.collection.set_text_color(Color::BLUE);
+        self.debug.set_text_color(Color::BLUE);
         self.debug.set_text("Debug");
         self.debug
             .on_tap
             .sub(move || self.navigation().push(Own::<UIDebugView>::default()));
 
-        self.collection.set_text_color(Color::WHITE);
+        self.nothing.set_text_color(Color::WHITE);
         self.nothing.set_text("Nothing");
     }
 }

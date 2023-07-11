@@ -51,6 +51,10 @@ impl Shader {
         }
     }
 
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
     pub fn enable(&self) -> &Self {
         GL!(UseProgram, self.program);
         self
