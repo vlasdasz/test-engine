@@ -3,6 +3,7 @@ mod between_test_view;
 mod collection_test_view;
 mod drop_down_test_view;
 mod header_view_test;
+mod label_test_view;
 mod labeled_switch_test;
 mod modal_view_test;
 mod question_test_view;

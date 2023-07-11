@@ -81,7 +81,7 @@ impl Image {
 }
 
 impl Image {
-    pub fn draw(
+    pub fn render(
         name: impl ToString + Hash,
         size: impl Into<Size>,
         draw: impl FnOnce(&mut Image),
@@ -106,7 +106,7 @@ impl Image {
             total_size: size_of::<Self>() + 10,
         };
 
-        GLWrapper::clear_with_color(Color::GREEN);
+        GLWrapper::clear_with_color(Color::CLEAR);
 
         draw(&mut image);
 
@@ -147,7 +147,7 @@ pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize, is
     }
 
     if is_text {
-        ImageShaders::text().enable().set_color(color)
+        ImageShaders::text().enable()
     } else if image.is_monochrome() {
         ImageShaders::mono().enable().set_color(color)
     } else {

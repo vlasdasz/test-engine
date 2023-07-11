@@ -8,6 +8,8 @@ use ui::{
 
 use crate::{Button, Label};
 
+pub const SHOW_DEBUG_VIEW: bool = false;
+
 #[view]
 pub struct DebugView {
     fps_label:          SubView<Label>,
@@ -19,6 +21,8 @@ pub struct DebugView {
     exit:               SubView<Button>,
     dump_mem:           SubView<Button>,
     touch_root:         SubView<Label>,
+
+    hide: SubView<Button>,
 
     custom_labels: HashMap<String, SubView<Label>>,
 
@@ -75,6 +79,11 @@ impl ViewSetup for DebugView {
         self.exit.set_text("exit");
         self.exit.on_tap.sub(|| {
             panic!("bye");
+        });
+
+        self.hide.set_text("hide");
+        self.hide.on_tap.sub(move || {
+            self.remove_from_superview();
         });
 
         self.dump_mem.set_text("dump mem");

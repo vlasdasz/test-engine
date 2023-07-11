@@ -51,7 +51,7 @@ pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image>
         return Image::add_with_name(&id, image);
     }
 
-    Image::draw(id, size, |image| {
+    Image::render(id, size, |image| {
         for glyph in layout.glyphs() {
             let image = font.glyph_for_char(glyph.parent).image;
             draw_image(
@@ -63,7 +63,7 @@ pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image>
                     glyph.height,
                 )
                     .into(),
-                &Color::WHITE, // See ui_monochrome shader,
+                &Color::WHITE,
                 0,
                 true,
             );

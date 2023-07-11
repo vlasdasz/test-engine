@@ -17,7 +17,7 @@ use ui::{
     refs::{Own, ToWeak, Weak},
     UIManager, View, ViewFrame, ViewSetup, ViewSubviews,
 };
-use ui_views::debug_view::DebugView;
+use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
 
 use crate::{
     app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
@@ -66,16 +66,13 @@ impl Screen {
 
         UIManager::root_view().add_subview(view).place.as_background();
 
-        let mut debug_view = DebugView::new();
-
-        debug_view.priority = 10;
-
-        let weak = debug_view.weak();
-
-        UIManager::root_view().add_subview(debug_view);
-
-        Screen::current().ui.debug_view = weak;
-
+        if SHOW_DEBUG_VIEW {
+            let mut debug_view = DebugView::new();
+            debug_view.priority = 10;
+            let weak = debug_view.weak();
+            UIManager::root_view().add_subview(debug_view);
+            Screen::current().ui.debug_view = weak;
+        }
         #[cfg(desktop)]
         {
             self.glfw.set_size(window_size);
@@ -103,12 +100,14 @@ impl Screen {
         self.ui.frame_time = interval as f64 / 1_000_000_000.0;
         self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
-        let fps = self.ui.fps;
-        self.ui.debug_view.fps.set(fps);
-        if API::is_ok() {
-            self.ui.debug_view.set_custom("URL:", API::base_url());
-        } else {
-            self.ui.debug_view.set_custom("URL:", "API not initizlized");
+        if SHOW_DEBUG_VIEW && self.ui.debug_view.is_ok() {
+            let fps = self.ui.fps;
+            self.ui.debug_view.fps.set(fps);
+            if API::is_ok() {
+                self.ui.debug_view.set_custom("URL:", API::base_url());
+            } else {
+                self.ui.debug_view.set_custom("URL:", "API not initizlized");
+            }
         }
     }
 
