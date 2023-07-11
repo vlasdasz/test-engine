@@ -15,10 +15,11 @@ pub struct TextField {
     label:                 SubView<Label>,
     pub(crate) constraint: Option<TextFieldConstraint>,
 
-    pub placeholder: String,
-    pub changed:     Event<String>,
-
+    placeholder:  String,
+    text_color:   Color,
     placeholding: bool,
+
+    pub changed: Event<String>,
 }
 
 impl TextField {
@@ -36,9 +37,11 @@ impl TextField {
         if text.is_empty() && !self.placeholder.is_empty() {
             self.placeholding = true;
             self.label.set_text(self.placeholder.clone());
+            self.label.set_text_color(Color::LIGHTER_GRAY);
         } else {
             self.placeholding = false;
             self.label.set_text(&text);
+            self.label.set_text_color(self.text_color);
         }
 
         self.changed.trigger(text);
@@ -76,19 +79,37 @@ impl TextField {
         self.constraint = TextFieldConstraint::Float.into();
         self
     }
+
+    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        let color = color.into();
+        self.text_color = color;
+        self.label.set_text_color(color);
+        self
+    }
+
+    pub fn set_placeholder(&mut self, placeholder: impl ToLabel) {
+        self.placeholder = placeholder.to_label();
+        if self.placeholding {
+            self.label.set_text(self.placeholder.clone());
+            self.label.set_text_color(Color::LIGHTER_GRAY);
+        }
+    }
 }
 
 impl ViewSetup for TextField {
     fn setup(mut self: Weak<Self>) {
+        self.text_color = Color::BLACK;
+        self.placeholding = true;
+        self.label.place.as_background();
+        self.label.set_text_color(Color::LIGHTER_GRAY);
+        self.set_color(Color::LIGHT_GRAY);
+
         self.enable_touch();
         self.on_touch.val(move |touch| {
             if touch.is_began() {
                 self.set_selected(true);
             }
         });
-
-        self.set_color(Color::LIGHT_GRAY);
-        self.label.place.as_background();
     }
 }
 
