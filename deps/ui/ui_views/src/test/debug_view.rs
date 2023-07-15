@@ -1,14 +1,15 @@
 use std::{collections::HashMap, fmt::Display};
 
+use gm::Color;
 use refs::{dump_ref_stats, Weak};
 use ui::{
-    view, Property, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewFrame, ViewSetup,
+    view, Property, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup,
     ViewSubviews,
 };
 
 use crate::{Button, Label};
 
-pub const SHOW_DEBUG_VIEW: bool = false;
+pub const SHOW_DEBUG_VIEW: bool = true;
 
 #[view]
 pub struct DebugView {
@@ -56,6 +57,7 @@ impl DebugView {
 impl ViewSetup for DebugView {
     fn setup(mut self: Weak<Self>) {
         self.is_hidden = false;
+        self.set_color(Color::WHITE);
 
         self.manually_set_superview(UIManager::root_view());
 

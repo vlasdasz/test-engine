@@ -14,6 +14,7 @@ pub trait View:
     fn base(&self) -> &ViewBase;
     fn weak_view(&self) -> Weak<dyn View>;
     fn as_any(&self) -> &dyn Any;
+    fn as_any_mut(&mut self) -> &mut dyn Any;
 }
 
 #[derive(Default)]

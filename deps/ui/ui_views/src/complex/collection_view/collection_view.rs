@@ -48,7 +48,8 @@ impl CollectionView {
         }
         self.cells.clear();
         for i in 0..self.data_source.number_of_cells() {
-            let cell = self.data_source.cell_for_index(i);
+            let mut cell = self.data_source.make_cell();
+            self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
             let cell = self.scroll.add_subview(cell);
             cell.enable_touch_low_priority();
             let mut this = self.weak();

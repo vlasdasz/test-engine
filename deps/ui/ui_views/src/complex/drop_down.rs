@@ -1,6 +1,8 @@
+use std::any::Any;
+
 use gm::{flat::Size, Color};
 use itertools::Itertools;
-use refs::{Own, ToOwn, ToWeak, Weak};
+use refs::{Own, ToWeak, Weak};
 use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
 
@@ -73,8 +75,13 @@ impl CollectionData for DropDown {
         self.values.len()
     }
 
-    fn cell_for_index(&self, index: usize) -> Own<dyn View> {
-        Label::from(&self.values[index]).to_own()
+    fn make_cell(&self) -> Own<dyn View> {
+        Label::new()
+    }
+
+    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
+        let label = cell.downcast_mut::<Label>().unwrap();
+        label.set_text(&self.values[index]);
     }
 
     fn size_for_index(&self, _index: usize) -> Size {
