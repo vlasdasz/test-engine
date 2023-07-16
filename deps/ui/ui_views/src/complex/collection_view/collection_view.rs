@@ -2,7 +2,7 @@ use gm::flat::Size;
 use refs::{ToWeak, Weak};
 use ui::{view, SubView, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
-use crate::{debug_view::DebugView, CollectionData, ScrollView};
+use crate::{CollectionData, ScrollView};
 
 #[derive(Default, Debug)]
 pub enum CollectionLayout {
@@ -43,6 +43,11 @@ impl CollectionView {
     }
 
     pub fn reload_data(&mut self) {
+        if self.layout.is_table() {
+            self.layout();
+            return;
+        }
+
         for cell in &mut self.cells {
             cell.remove_from_superview();
         }
@@ -56,11 +61,6 @@ impl CollectionView {
             cell.on_touch_began.sub(move || this.data_source.cell_selected(i));
             self.cells.push(cell);
         }
-        if self.layout.is_table() {
-            self.scroll.content_size.height =
-                self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
-            self.scroll.content_size.width = self.width();
-        }
     }
 
     fn layout(&mut self) {
@@ -71,19 +71,46 @@ impl CollectionView {
     }
 
     fn table_layout(&mut self) {
+        for cell in &mut self.cells {
+            cell.remove_from_superview();
+        }
+        self.cells.clear();
+
+        let cell_height = self.data_source.size_for_index(0).height;
+
         self.scroll.content_size.width = self.width();
-        self.scroll.content_size.height =
-            self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
+        self.scroll.content_size.height = self.data_source.number_of_cells() as f32 * cell_height;
 
-        let mut last_y: f32 = 0.0;
-        let width = self.width() - 60.0;
+        let width = self.width() - 40.0;
 
-        DebugView::current().set_custom("Table size", self.frame().size.to_string());
+        let mut content_start = -self.scroll.content_offset.y;
+        let content_end = content_start + self.scroll.height();
 
-        for (index, cell) in self.cells.iter_mut().enumerate() {
-            let height = self.data_source.size_for_index(index).height;
-            cell.set_frame((0, last_y, width, height));
-            last_y += height;
+        if content_start < 0.0 {
+            content_start = 0.0;
+        }
+
+        let content_height = content_end - content_start;
+
+        let first_cell_index = (content_start / cell_height).floor() as usize;
+
+        let number_of_cells_fit = (content_height / cell_height).ceil();
+
+        let mut last_cell_index = first_cell_index + number_of_cells_fit as usize;
+
+        if last_cell_index + 1 > self.data_source.number_of_cells() {
+            last_cell_index = self.data_source.number_of_cells() - 1;
+        }
+
+        for index in first_cell_index..=last_cell_index {
+            let mut cell = self.data_source.make_cell();
+            self.data_source.setup_cell_for_index(cell.as_any_mut(), index);
+            cell.set_frame((0, index as f32 * cell_height, width, cell_height));
+            let cell = self.scroll.add_subview(cell);
+            cell.enable_touch_low_priority();
+            let mut this = self.weak();
+            cell.on_touch_began.sub(move || this.data_source.cell_selected(index));
+            self.cells.push(cell);
         }
     }
 

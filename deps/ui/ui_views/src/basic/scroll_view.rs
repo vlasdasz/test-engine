@@ -14,7 +14,7 @@ impl ViewSetup for ScrollView {
     fn setup(mut self: Weak<Self>) {
         self.dont_hide = true;
         self.slider.set_range(-1000, 0);
-        self.slider.place.w(50).r(0);
+        self.slider.place.w(40).r(0);
         self.slider.on_change.val(move |val| {
             self.content_offset.y = val;
         });
