@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Display};
+use std::{collections::HashMap, fmt::Display, sync::OnceLock};
 
 use gm::Color;
 use refs::{dump_ref_stats, Weak};
@@ -10,6 +10,8 @@ use ui::{
 use crate::{Button, Label};
 
 pub const SHOW_DEBUG_VIEW: bool = true;
+
+static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 
 #[view]
 pub struct DebugView {
@@ -33,6 +35,10 @@ pub struct DebugView {
 }
 
 impl DebugView {
+    pub fn current() -> Weak<Self> {
+        *CURRENT.get().unwrap()
+    }
+
     pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
         let mut button = self.__internal_add_view::<Button>();
         button.set_text(label);
@@ -56,6 +62,8 @@ impl DebugView {
 
 impl ViewSetup for DebugView {
     fn setup(mut self: Weak<Self>) {
+        CURRENT.set(self).unwrap();
+
         self.is_hidden = false;
         self.set_color(Color::WHITE);
 

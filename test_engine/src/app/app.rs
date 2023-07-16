@@ -4,8 +4,11 @@ use std::path::PathBuf;
 
 use gm::flat::Size;
 #[cfg(desktop)]
-use ui::refs::{set_current_thread_as_main, thread_id};
-use ui::{refs::Own, View};
+use ui::refs::set_current_thread_as_main;
+use ui::{
+    refs::{current_thread_id, Own},
+    View,
+};
 
 use crate::AppCore;
 
@@ -37,7 +40,7 @@ pub trait App {
         trace!("App setup: OK");
         trace!("Make core");
         set_current_thread_as_main();
-        trace!("Marked thread {} as main", thread_id());
+        trace!("Marked thread {} as main", current_thread_id());
         let core = AppCore::new(Self::screen_size(), Self::assets_path(), Self::make_root_view());
         trace!("AppCore: OK");
         core

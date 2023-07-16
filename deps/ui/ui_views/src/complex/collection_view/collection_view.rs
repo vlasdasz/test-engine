@@ -2,7 +2,7 @@ use gm::flat::Size;
 use refs::{ToWeak, Weak};
 use ui::{view, SubView, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
-use crate::{CollectionData, ScrollView};
+use crate::{debug_view::DebugView, CollectionData, ScrollView};
 
 #[derive(Default, Debug)]
 pub enum CollectionLayout {
@@ -64,14 +64,6 @@ impl CollectionView {
     }
 
     fn layout(&mut self) {
-        if self.layout.is_cards() {
-            self.scroll.content_size = self.size();
-        } else {
-            self.scroll.content_size.width = self.width();
-            self.scroll.content_size.height =
-                self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
-        }
-
         match self.layout {
             CollectionLayout::Table => self.table_layout(),
             CollectionLayout::Cards => self.cards_layout(),
@@ -79,8 +71,14 @@ impl CollectionView {
     }
 
     fn table_layout(&mut self) {
+        self.scroll.content_size.width = self.width();
+        self.scroll.content_size.height =
+            self.data_source.number_of_cells() as f32 * self.data_source.size_for_index(0).height;
+
         let mut last_y: f32 = 0.0;
         let width = self.width() - 60.0;
+
+        DebugView::current().set_custom("Table size", self.frame().size.to_string());
 
         for (index, cell) in self.cells.iter_mut().enumerate() {
             let height = self.data_source.size_for_index(index).height;
@@ -90,6 +88,8 @@ impl CollectionView {
     }
 
     fn cards_layout(&mut self) {
+        self.scroll.content_size = self.size();
+
         let area_width = self.width();
 
         let sizes: Vec<Size> = (0..self.data_source.number_of_cells())
