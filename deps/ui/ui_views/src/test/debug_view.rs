@@ -9,7 +9,7 @@ use ui::{
 
 use crate::{Button, Label};
 
-pub const SHOW_DEBUG_VIEW: bool = true;
+pub const SHOW_DEBUG_VIEW: bool = false;
 
 static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 
