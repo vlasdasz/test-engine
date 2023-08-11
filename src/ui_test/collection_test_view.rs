@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use test_engine::gm::flat::Size;
 use ui::{
     refs::{Own, ToWeak, Weak},
@@ -63,9 +65,11 @@ impl CollectionData for CollectionTestView {
         RECTANGLE_SIZES.len()
     }
 
-    fn cell_for_index(&self, _index: usize) -> Own<dyn View> {
+    fn make_cell(&self) -> Own<dyn View> {
         Own::<Container>::default()
     }
+
+    fn setup_cell_for_index(&self, _cell: &mut dyn Any, _index: usize) {}
 
     fn size_for_index(&self, index: usize) -> Size {
         RECTANGLE_SIZES[index]

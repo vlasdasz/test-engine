@@ -7,7 +7,7 @@ use ui::{
     NavigationView, View,
 };
 
-use crate::ui_test::UITestView;
+use crate::{test_game::TestGameView, ui_test::UITestView};
 
 pub struct TestApp {
     core: AppCore,
@@ -28,7 +28,7 @@ impl App for TestApp {
     }
 
     fn make_root_view() -> Own<dyn View> {
-        NavigationView::with_view(Own::<UITestView>::default())
+        NavigationView::with_view(Own::<TestGameView>::default())
     }
 
     fn core(&mut self) -> &mut AppCore {

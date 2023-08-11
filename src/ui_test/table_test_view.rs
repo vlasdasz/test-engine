@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use test_engine::gm::flat::Size;
 use ui::{
     refs::{Own, ToWeak, Weak},
@@ -24,14 +26,16 @@ impl CollectionData for TableTestView {
         50
     }
 
-    fn cell_for_index(&self, index: usize) -> Own<dyn View> {
-        let mut cell = Own::<Container>::default();
+    fn make_cell(&self) -> Own<dyn View> {
+        Own::<Container>::default()
+    }
+
+    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
+        let cell = cell.downcast_mut::<Container>().unwrap();
 
         let mut label = cell.add_view::<Label>();
         label.set_text(format!("Cell: {index}"));
         label.place.center().size(100, 20);
-
-        cell
     }
 
     fn size_for_index(&self, _index: usize) -> Size {
