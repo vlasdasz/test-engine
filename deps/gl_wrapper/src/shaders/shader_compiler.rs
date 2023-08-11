@@ -3,7 +3,7 @@ use cfg_if::cfg_if;
 cfg_if! { if #[cfg(mobile)] {
     use gles31_sys::*;
 } else {
-    extern crate gl;
+    use gl;
 }}
 
 use std::{
