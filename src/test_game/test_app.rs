@@ -7,7 +7,7 @@ use ui::{
     NavigationView, View,
 };
 
-use crate::{test_game::TestGameView, ui_test::UITestView};
+use crate::{test_game::TestGameView};
 
 pub struct TestApp {
     core: AppCore,
@@ -23,20 +23,20 @@ impl App for TestApp {
         (1000, 600).into()
     }
 
-    fn assets_path() -> PathBuf {
-        home().join("test_engine")
-    }
-
     fn make_root_view() -> Own<dyn View> {
         NavigationView::with_view(Own::<TestGameView>::default())
+    }
+
+    fn with_core(core: AppCore) -> Self
+    where Self: Sized {
+        Self { core }
     }
 
     fn core(&mut self) -> &mut AppCore {
         &mut self.core
     }
 
-    fn with_core(core: AppCore) -> Self
-    where Self: Sized {
-        Self { core }
+    fn assets_path() -> PathBuf {
+        home().join("test_engine")
     }
 }

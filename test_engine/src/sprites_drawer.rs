@@ -63,6 +63,7 @@ impl SpritesDrawer for TESpritesDrawer {
     }
 
     fn draw(&self, _sprite: &dyn Sprite) {
+
         // let buffers = Buffers::get();
         // let ass = Assets::get();
         // let (shader, buffer) = if sprite.image().is_ok() {

@@ -14,6 +14,7 @@ use ui::{
 use ui_views::{test_view::ViewWithCat, AnalogStickView, Button, DPadView, IntView};
 
 use crate::benchmark::BenchmarkLevel;
+use crate::test_game::TestGameLevel;
 
 #[view]
 pub struct TestGameView {
@@ -30,6 +31,10 @@ pub struct TestGameView {
 
 impl TestGameView {
     fn setup_level(&mut self) {
+        // Screen::current().
+
+        Screen::current().ui.set_level(Own::<TestGameLevel>::default());
+
         self.dpad
             .on_press
             .val(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(&dir));
