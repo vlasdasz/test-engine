@@ -23,12 +23,12 @@ impl WithHeader for HeaderTestView {
         self.main.weak_view()
     }
 
-    fn header_margin(&self) -> f32 {
-        10.0
-    }
-
     fn header_size(&self) -> f32 {
         100.0
+    }
+
+    fn header_margin(&self) -> f32 {
+        10.0
     }
 }
 

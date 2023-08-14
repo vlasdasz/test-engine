@@ -14,6 +14,7 @@ use std::{
 
 use rtools::{
     file::File,
+    paths::Paths,
     regex::{find_match, find_matches},
 };
 
@@ -88,6 +89,7 @@ impl ShaderCompiler {
         for include in includes {
             let file_name = find_match(&include, QUOTES_QUERY).replace('\"', "");
             let file_path = self.path.join(file_name);
+            dbg!(Paths::pwd());
             let include_code = File::read_to_string(file_path);
             files.insert(include, include_code);
         }

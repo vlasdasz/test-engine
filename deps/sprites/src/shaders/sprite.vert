@@ -1,6 +1,4 @@
 
-#include "transforms.glsl"
-
 layout (location = 0) in vec2 vertex_position;
 
 uniform vec2 size;
@@ -11,6 +9,18 @@ uniform float camera_rotation;
 uniform vec2 camera_position;
 
 uniform vec2 resolution;
+
+mat4 rotation_z_matrix(in float angle) {
+    float cos_z = cos(angle);
+    float sin_z = sin(angle);
+    return mat4 (
+    cos_z, sin_z, 0, 0,
+    -sin_z, cos_z, 0, 0,
+    0,     0, 1, 0,
+    0,     0, 0, 1
+    );
+}
+
 
 void main() {
 

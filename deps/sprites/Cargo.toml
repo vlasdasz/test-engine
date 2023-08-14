@@ -15,6 +15,6 @@ refs = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }
-
+gl_wrapper = { workspace = true }
 gl_image = { workspace = true }
 gm = { workspace = true }

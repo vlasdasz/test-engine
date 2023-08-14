@@ -1,5 +1,7 @@
+use gl_wrapper::buffers::Buffers;
 use gm::flat::{Point, Size};
-use sprites::SpritesDrawer;
+use rtools::IntoF32;
+use sprites::{SpriteShaders, SpritesDrawer};
 
 use crate::Sprite;
 
@@ -28,9 +30,8 @@ impl SpritesDrawer for TESpritesDrawer {
 
     fn set_scale(&mut self, scale: f32) {
         self.scale = scale;
-        //let ass = Assets::get();
-        //ass.shaders.sprite.enable().set_scale(scale.into_f32());
-        //ass.shaders.image_sprite.enable().set_scale(scale);
+        SpriteShaders::sprite().enable().set_scale(scale.into_f32());
+        SpriteShaders::textured_sprite().enable().set_scale(scale);
     }
 
     fn resolution(&self) -> Size {
@@ -39,53 +40,50 @@ impl SpritesDrawer for TESpritesDrawer {
 
     fn set_resolution(&mut self, size: Size) {
         self.resolution = size;
-        //let ass = Assets::get();
-        //ass.shaders.sprite.enable().set_resolution(size);
-        //ass.shaders.image_sprite.enable().set_resolution(size);
+        SpriteShaders::sprite().enable().set_resolution(size);
+        SpriteShaders::textured_sprite().enable().set_resolution(size);
     }
 
-    fn set_camera_rotation(&self, _angle: f32) {
-        //let angle = angle + std::f32::consts::PI / 2.0;
-        // let ass = Assets::get();
-        // ass.shaders.sprite.enable().set_camera_rotation(angle);
-        // ass.shaders.image_sprite.enable().set_camera_rotation(angle);
+    fn set_camera_rotation(&self, angle: f32) {
+        let angle = angle + std::f32::consts::PI / 2.0;
+        SpriteShaders::sprite().enable().set_camera_rotation(angle);
+        SpriteShaders::textured_sprite().enable().set_camera_rotation(angle);
     }
 
     fn camera_position(&self) -> Point {
         self.camera_position
     }
 
-    fn set_camera_position(&mut self, _pos: Point) {
-        // self.camera_position = pos;
-        // let ass = Assets::get();
-        // ass.shaders.sprite.enable().set_camera_position(pos);
-        // ass.shaders.image_sprite.enable().set_camera_position(pos);
+    fn set_camera_position(&mut self, pos: Point) {
+        self.camera_position = pos;
+        SpriteShaders::sprite().enable().set_camera_position(pos);
+        SpriteShaders::textured_sprite().enable().set_camera_position(pos);
     }
 
-    fn draw(&self, _sprite: &dyn Sprite) {
-
-        // let buffers = Buffers::get();
+    fn draw(&self, sprite: &dyn Sprite) {
+        let buffers = Buffers::get();
         // let ass = Assets::get();
-        // let (shader, buffer) = if sprite.image().is_ok() {
-        //     (&ass.shaders.image_sprite, &buffers.full_image)
-        // } else {
-        //     (&ass.shaders.sprite, &buffers.full)
-        // };
-        //
-        // shader
-        //     .enable()
-        //     .set_selected(sprite.is_selected())
-        //     .set_size(sprite.size())
-        //     .set_position(sprite.position())
-        //     .set_rotation(sprite.rotation());
-        //
-        // if let Some(image) = sprite.image().get() {
-        //     shader.set_flipped(image.flipped).set_flipped_y(image.flipped_y);
-        //     image.bind();
-        // } else {
-        //     shader.set_color(sprite.color());
-        // }
-        //
-        // buffer.draw();
+
+        let (shader, buffer) = if sprite.image().is_ok() {
+            (SpriteShaders::textured_sprite(), &buffers.full_image)
+        } else {
+            (SpriteShaders::sprite(), &buffers.full)
+        };
+
+        shader
+            .enable()
+            .set_selected(sprite.is_selected())
+            .set_size(sprite.size())
+            .set_position(sprite.position())
+            .set_rotation(sprite.rotation());
+
+        if let Some(image) = sprite.image().get() {
+            shader.set_flipped(image.flipped).set_flipped_y(image.flipped_y);
+            image.bind();
+        } else {
+            shader.set_color(sprite.color());
+        }
+
+        buffer.draw();
     }
 }
