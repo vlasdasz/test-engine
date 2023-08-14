@@ -108,7 +108,7 @@ impl UIManager {
     /// other OS (probably) UI scale - adjustable in runtime
     pub fn rescale_frame(rect: &Rect) -> Rect {
         let scale = Self::display_scale();
-        let rect = rect; // * UIManager::ui_scale();
+        // let rect = rect * UIManager::ui_scale();
 
         let rect: Rect = (
             rect.origin.x * scale,

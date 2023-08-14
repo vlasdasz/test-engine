@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		D100A8AA27EF2B8800254154 /* TestEngineController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100A8A927EF2B8800254154 /* TestEngineController.m */; };
-		D112632F2A2516E700358F0F /* WatchEngineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112632E2A2516E700358F0F /* WatchEngineApp.swift */; };
-		D11263312A2516E700358F0F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11263302A2516E700358F0F /* ContentView.swift */; };
-		D11263332A2516E700358F0F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D11263322A2516E700358F0F /* Assets.xcassets */; };
-		D11263362A2516E700358F0F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D11263352A2516E700358F0F /* Preview Assets.xcassets */; };
-		D11263392A2516E700358F0F /* WatchEngine Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D112632C2A2516E700358F0F /* WatchEngine Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D1392BE928CE4325000D8CF5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1392BEA28CE4325000D8CF5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E8F2617166800F3F18B /* main.m */; };
 		D1392BEB28CE4325000D8CF5 /* TestEngineController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100A8A927EF2B8800254154 /* TestEngineController.m */; };
@@ -42,16 +37,6 @@
 		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		D11263372A2516E700358F0F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D1411E722617166700F3F18B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D112632B2A2516E700358F0F;
-			remoteInfo = "WatchEngine Watch App";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		D112633A2A2516E700358F0F /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -59,7 +44,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				D11263392A2516E700358F0F /* WatchEngine Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,11 +53,6 @@
 /* Begin PBXFileReference section */
 		D100A8A827EF2B8800254154 /* TestEngineController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEngineController.h; sourceTree = "<group>"; };
 		D100A8A927EF2B8800254154 /* TestEngineController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEngineController.m; sourceTree = "<group>"; };
-		D112632C2A2516E700358F0F /* WatchEngine Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchEngine Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D112632E2A2516E700358F0F /* WatchEngineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEngineApp.swift; sourceTree = "<group>"; };
-		D11263302A2516E700358F0F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		D11263322A2516E700358F0F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D11263352A2516E700358F0F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D1392BFC28CE4325000D8CF5 /* TestEngine Release.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestEngine Release.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1392BFD28CE4325000D8CF5 /* TestEngine copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TestEngine copy-Info.plist"; path = "/Users/vladas/test_engine/mobile/iOS/TestEngine copy-Info.plist"; sourceTree = "<absolute>"; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,13 +76,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D11263292A2516E700358F0F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D1392BEC28CE4325000D8CF5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,30 +109,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D112632D2A2516E700358F0F /* WatchEngine Watch App */ = {
-			isa = PBXGroup;
-			children = (
-				D112632E2A2516E700358F0F /* WatchEngineApp.swift */,
-				D11263302A2516E700358F0F /* ContentView.swift */,
-				D11263322A2516E700358F0F /* Assets.xcassets */,
-				D11263342A2516E700358F0F /* Preview Content */,
-			);
-			path = "WatchEngine Watch App";
-			sourceTree = "<group>";
-		};
-		D11263342A2516E700358F0F /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				D11263352A2516E700358F0F /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		D1411E712617166700F3F18B = {
 			isa = PBXGroup;
 			children = (
 				D1411E7C2617166700F3F18B /* TestEngine */,
-				D112632D2A2516E700358F0F /* WatchEngine Watch App */,
 				D1411E7B2617166700F3F18B /* Products */,
 				D1D524F2261BB078005C1426 /* Frameworks */,
 				D1392BFD28CE4325000D8CF5 /* TestEngine copy-Info.plist */,
@@ -172,7 +124,6 @@
 			children = (
 				D1411E7A2617166700F3F18B /* TestEngine.app */,
 				D1392BFC28CE4325000D8CF5 /* TestEngine Release.app */,
-				D112632C2A2516E700358F0F /* WatchEngine Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -213,23 +164,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D112632B2A2516E700358F0F /* WatchEngine Watch App */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D112633D2A2516E700358F0F /* Build configuration list for PBXNativeTarget "WatchEngine Watch App" */;
-			buildPhases = (
-				D11263282A2516E700358F0F /* Sources */,
-				D11263292A2516E700358F0F /* Frameworks */,
-				D112632A2A2516E700358F0F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "WatchEngine Watch App";
-			productName = "WatchEngine Watch App";
-			productReference = D112632C2A2516E700358F0F /* WatchEngine Watch App.app */;
-			productType = "com.apple.product-type.application";
-		};
 		D1392BE628CE4325000D8CF5 /* TestEngine Release */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D1392BF928CE4325000D8CF5 /* Build configuration list for PBXNativeTarget "TestEngine Release" */;
@@ -261,7 +195,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D11263382A2516E700358F0F /* PBXTargetDependency */,
 			);
 			name = TestEngine;
 			productName = TestEngine;
@@ -277,9 +210,6 @@
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
-					D112632B2A2516E700358F0F = {
-						CreatedOnToolsVersion = 14.3;
-					};
 					D1411E792617166700F3F18B = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -300,21 +230,11 @@
 			targets = (
 				D1411E792617166700F3F18B /* TestEngine */,
 				D1392BE628CE4325000D8CF5 /* TestEngine Release */,
-				D112632B2A2516E700358F0F /* WatchEngine Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		D112632A2A2516E700358F0F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D11263362A2516E700358F0F /* Preview Assets.xcassets in Resources */,
-				D11263332A2516E700358F0F /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D1392BF528CE4325000D8CF5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -377,15 +297,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D11263282A2516E700358F0F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D11263312A2516E700358F0F /* ContentView.swift in Sources */,
-				D112632F2A2516E700358F0F /* WatchEngineApp.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D1392BE828CE4325000D8CF5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -408,14 +319,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		D11263382A2516E700358F0F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D112632B2A2516E700358F0F /* WatchEngine Watch App */;
-			targetProxy = D11263372A2516E700358F0F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -428,72 +331,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		D112633B2A2516E700358F0F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"WatchEngine Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 2545JX4S8U;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = WatchEngine;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "vladas.test-engine";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "vladas.test-engine.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 9.4;
-			};
-			name = Debug;
-		};
-		D112633C2A2516E700358F0F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"WatchEngine Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 2545JX4S8U;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = WatchEngine;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "vladas.test-engine";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "vladas.test-engine.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 9.4;
-			};
-			name = Release;
-		};
 		D1392BFA28CE4325000D8CF5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -729,15 +566,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D112633D2A2516E700358F0F /* Build configuration list for PBXNativeTarget "WatchEngine Watch App" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D112633B2A2516E700358F0F /* Debug */,
-				D112633C2A2516E700358F0F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		D1392BF928CE4325000D8CF5 /* Build configuration list for PBXNativeTarget "TestEngine Release" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

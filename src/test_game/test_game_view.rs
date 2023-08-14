@@ -13,8 +13,7 @@ use ui::{
 };
 use ui_views::{test_view::ViewWithCat, AnalogStickView, Button, DPadView, IntView};
 
-use crate::benchmark::BenchmarkLevel;
-use crate::test_game::TestGameLevel;
+use crate::{benchmark::BenchmarkLevel, test_game::TestGameLevel};
 
 #[view]
 pub struct TestGameView {

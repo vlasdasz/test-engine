@@ -7,7 +7,7 @@ use ui::{
     NavigationView, View,
 };
 
-use crate::{test_game::TestGameView};
+use crate::test_game::TestGameView;
 
 pub struct TestApp {
     core: AppCore,
