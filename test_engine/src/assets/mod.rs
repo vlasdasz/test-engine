@@ -16,8 +16,8 @@ impl Assets {
 
         let paths = Paths::new(root_path.into());
 
-        Image::set_path(&paths.images);
-        Sound::set_path(&paths.sounds);
-        Font::set_path(&paths.fonts);
+        Image::set_root_path(&paths.images);
+        Sound::set_root_path(&paths.sounds);
+        Font::set_root_path(&paths.fonts);
     }
 }

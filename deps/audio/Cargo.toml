@@ -12,7 +12,7 @@ name = "audio"
 cfg-if = { workspace = true }
 rtools = { workspace = true }
 
-rodio = "0.17"
+rodio = "0.17.1"
 
 [build-dependencies]
 cfg_aliases = { workspace = true }

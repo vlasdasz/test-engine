@@ -13,7 +13,7 @@ use image::GenericImageView;
 use log::error;
 use refs::TotalSize;
 use rtools::{
-    data_manager::{DataManager, DataStorage, Handle, Managed, ResourceLoader},
+    data_manager::{DataManager, Handle, ResourceLoader},
     file::File,
     hash, managed,
 };

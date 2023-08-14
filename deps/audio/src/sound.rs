@@ -6,7 +6,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use rodio::{Decoder, OutputStream, OutputStreamHandle, Source};
+use rodio::{Decoder, OutputStream, OutputStreamHandle, Sink};
 use rtools::data_manager::ResourceLoader;
 
 pub struct Sound {
@@ -20,13 +20,23 @@ impl Sound {
     pub fn play(&mut self) {
         let cursor = Cursor::new(self.data.clone());
         let input = Decoder::new(cursor).unwrap();
-        self.stream_handle.play_raw(input.convert_samples()).unwrap();
+
+        let sink = Sink::try_new(&self.stream_handle).unwrap();
+
+        sink.set_volume(0.1);
+        sink.append(input);
+        sink.detach();
     }
 }
 
 impl ResourceLoader for Sound {
     fn load_path(path: &Path) -> Self {
-        let mut file = File::open(path).unwrap_or_else(|_| panic!("{}", path.to_string_lossy().to_string()));
+        let mut file = File::open(path).unwrap_or_else(|_| {
+            panic!(
+                "Failed to load sound at path: {}",
+                path.to_string_lossy().to_string()
+            )
+        });
 
         let mut data = Vec::new();
         file.read_to_end(&mut data).unwrap();

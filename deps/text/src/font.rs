@@ -4,7 +4,7 @@ use gl_image::Image;
 use gm::flat::Size;
 use log::trace;
 use rtools::{
-    data_manager::{DataManager, DataStorage, Handle, Managed, ResourceLoader},
+    data_manager::{DataManager, Handle, ResourceLoader},
     file::File,
     hash, managed,
 };
