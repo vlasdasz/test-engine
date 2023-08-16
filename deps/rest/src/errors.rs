@@ -4,8 +4,6 @@ use std::{
     sync::PoisonError,
 };
 
-use actix_web::ResponseError;
-use sea_orm::DbErr;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -53,14 +51,6 @@ impl<T> From<PoisonError<T>> for RestError {
     }
 }
 
-impl From<sea_orm::DbErr> for RestError {
-    fn from(err: DbErr) -> Self {
-        Self {
-            message: err.to_string(),
-        }
-    }
-}
-
 impl Display for RestError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", serde_json::to_string(self).unwrap())
@@ -68,5 +58,3 @@ impl Display for RestError {
 }
 
 pub type NetResult<T> = Result<T, RestError>;
-
-impl ResponseError for RestError {}

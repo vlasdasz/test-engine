@@ -27,7 +27,6 @@ android-ndk-sys = "0.2"
 cfg_aliases = { workspace = true }
 
 [workspace.dependencies]
-actix-web = { version = "4.3.1", default-features = false, features = ["rustls", "macros"] }
 cfg-if = "1.0"
 cfg_aliases = "0.1"
 chrono = "0.4.24"
@@ -41,7 +40,6 @@ itertools = "0.11.0"
 reqwest = { version = "0.11.18", default-features = false, features = ["native-tls-vendored"] }
 rust_decimal = "1.29.1"
 nonempty = "0.8.1"
-sea-orm = { version = "0.11.3", features = [ "sqlx-postgres", "runtime-actix-rustls", "macros" ] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serial_test = "2.0.0"
@@ -70,4 +68,4 @@ text = { path = "deps/text" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
 ui_views = { path = "deps/ui/ui_views" }
-valid = { path = "deps/valid" }
+#valid = { path = "deps/valid" }
