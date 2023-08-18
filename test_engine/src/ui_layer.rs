@@ -30,7 +30,7 @@ pub struct UILayer {
 
     pub fps:        u64,
     pub prev_time:  i64,
-    pub frame_time: f64,
+    pub frame_time: f32,
 
     pub debug_view: Weak<DebugView>,
 

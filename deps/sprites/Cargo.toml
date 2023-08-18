@@ -9,8 +9,8 @@ crate-type = ["rlib", "staticlib"]
 name = "sprites"
 
 [dependencies]
-crossbeam = "0.8"
-rapier2d = { version = "0.14", features = ["parallel", "simd-stable"] }
+crossbeam = "0.8.2"
+rapier2d = { version = "0.17.2", features = ["parallel", "simd-stable"] }
 refs = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }

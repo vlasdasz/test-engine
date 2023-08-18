@@ -3,7 +3,10 @@ use gm::{
     flat::{Point, Shape, Size},
     Color,
 };
-use rapier2d::{geometry::Collider, prelude::RigidBody};
+use rapier2d::{
+    geometry::Collider,
+    prelude::{RigidBody, Rotation},
+};
 use refs::{Address, Own, Weak};
 use rtools::{data_manager::Handle, IntoF32};
 
@@ -148,10 +151,10 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
     fn set_rotation(&mut self, rotation: impl IntoF32) -> &mut Self {
         let rotation = rotation.into_f32();
         if self.data().rigid_handle.is_some() {
-            self.rigid_body_mut().set_rotation(rotation, true);
+            self.rigid_body_mut().set_rotation(Rotation::new(rotation), true);
         }
         if self.data().collider_handle.is_some() {
-            self.collider_mut().set_rotation(rotation);
+            self.collider_mut().set_rotation(Rotation::new(rotation));
         } else {
             self.data_mut().rotation = rotation
         }

@@ -51,7 +51,9 @@ pub struct LevelBase {
 }
 
 impl LevelBase {
-    pub fn update_physics(&mut self) {
+    pub fn update_physics(&mut self, frame_time: f32) {
+        self.integration_parameters.dt = frame_time;
+
         self.physics_pipeline.step(
             &self.gravity,
             &self.integration_parameters,
@@ -63,6 +65,7 @@ impl LevelBase {
             &mut self.impulse_joints,
             &mut self.multibody_joints,
             &mut self.ccd_solver,
+            None,
             &(),
             &self.events.handler,
         );

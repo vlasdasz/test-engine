@@ -14,7 +14,7 @@ use rtools::Time;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
-    refs::{Own, ToWeak, Weak},
+    refs::{is_main_thread, Own, ToWeak, Weak},
     UIManager, View, ViewFrame, ViewSetup, ViewSubviews,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
@@ -83,8 +83,9 @@ impl Screen {
 
 impl Screen {
     pub fn current() -> &'static mut Screen {
+        assert!(is_main_thread());
         unsafe {
-            assert!(!SCREEN.is_null(), "Assets were not initialized");
+            assert!(!SCREEN.is_null(), "Screen was not initialized");
             SCREEN.as_mut().unwrap()
         }
     }
@@ -97,7 +98,7 @@ impl Screen {
         let interval = now - self.ui.prev_time;
         self.ui.prev_time = now;
 
-        self.ui.frame_time = interval as f64 / 1_000_000_000.0;
+        self.ui.frame_time = interval as f32 / 1_000_000_000.0;
         self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
         if SHOW_DEBUG_VIEW && self.ui.debug_view.is_ok() {
@@ -153,11 +154,13 @@ impl Screen {
     fn update_level(&mut self) {
         let cursor_position = self.ui.cursor_position;
 
+        let frame_time = self.ui.frame_time;
+
         let Some(level) = &mut self.ui.level else {
             return;
         };
 
-        level.base_mut().update_physics();
+        level.base_mut().update_physics(frame_time);
         level.update();
 
         level.set_cursor_position(cursor_position);
