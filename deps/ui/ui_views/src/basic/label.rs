@@ -8,14 +8,14 @@ use crate::ImageView;
 
 #[view]
 pub struct Label {
-    font:          Handle<Font>,
-    text:          String,
-    prev_text:     String,
-    image_view:    SubView<ImageView>,
-    text_size:     f32,
-    needs_update:  bool,
-    initial_text:  Option<String>,
-    pub free_text: bool,
+    font:                         Handle<Font>,
+    text:                         String,
+    prev_text:                    String,
+    image_view:                   SubView<ImageView>,
+    text_size:                    f32,
+    needs_update:                 bool,
+    initial_text:                 Option<String>,
+    pub dont_cache_rendered_text: bool,
 }
 
 impl Label {
@@ -86,7 +86,7 @@ impl Label {
     }
 
     fn set_letters(&mut self) {
-        if self.free_text {
+        if self.dont_cache_rendered_text {
             for char in self.prev_text.chars() {
                 if char.is_ascii_digit() {
                     self.image_view.image.free();

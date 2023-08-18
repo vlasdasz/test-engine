@@ -1,4 +1,4 @@
-use std::{ffi::c_void, hash::Hash, mem::size_of, path::Path};
+use std::{ffi::c_void, mem::size_of, path::Path};
 
 use gl_wrapper::{
     buffers::{Buffers, FrameBuffer},
@@ -28,6 +28,7 @@ pub struct Image {
     pub flipped_y: bool,
     buffer:        FrameBuffer,
     total_size:    usize,
+    name:          String,
 }
 
 impl Image {
@@ -42,7 +43,12 @@ impl Image {
                 texture_handle: u32::MAX,
             },
             total_size: size_of::<Self>(),
+            name:       "empty".to_string(),
         }
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
     pub fn is_valid(&self) -> bool {
@@ -55,7 +61,7 @@ impl Image {
 
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
-    fn load_to_gl(data: *const c_void, size: Size, channels: u32) -> Image {
+    fn load_to_gl(data: *const c_void, size: Size, channels: u32, name: String) -> Image {
         let buffer = ImageLoader::load(data, size, channels);
         Image {
             size,
@@ -64,11 +70,12 @@ impl Image {
             flipped_y: false,
             buffer,
             total_size: size_of::<Image>() + size.square() as usize * channels as usize,
+            name,
         }
     }
 
-    pub fn from(data: *const c_void, size: Size, channels: u32, hash: u64) -> Handle<Image> {
-        Image::add_with_hash(hash, Self::load_to_gl(data, size, channels))
+    pub fn from(data: *const c_void, size: Size, channels: u32, hash: u64, name: String) -> Handle<Image> {
+        Image::add_with_hash(hash, Self::load_to_gl(data, size, channels, name))
     }
 
     pub fn is_monochrome(&self) -> bool {
@@ -81,12 +88,8 @@ impl Image {
 }
 
 impl Image {
-    pub fn render(
-        name: impl ToString + Hash,
-        size: impl Into<Size>,
-        draw: impl FnOnce(&mut Image),
-    ) -> Handle<Image> {
-        let hash = hash(name);
+    pub fn render(name: String, size: impl Into<Size>, draw: impl FnOnce(&mut Image)) -> Handle<Image> {
+        let hash = hash(name.clone());
 
         if let Some(image) = Image::handle_with_hash(hash) {
             return image;
@@ -104,6 +107,7 @@ impl Image {
             flipped_y: false,
             buffer,
             total_size: size_of::<Self>() + 10,
+            name,
         };
 
         GLWrapper::clear_with_color(Color::CLEAR);
@@ -137,6 +141,7 @@ impl ResourceLoader for Image {
             data.as_ptr().cast(),
             (dimensions.0, dimensions.1).into(),
             u32::from(channels),
+            name.to_string(),
         )
     }
 }

@@ -72,19 +72,19 @@ impl ViewSetup for DebugView {
         self.place.size(400, 200).bl(10).all_ver();
 
         self.fps_label.set_text("fps label");
-        self.fps_label.free_text = true;
+        self.fps_label.dont_cache_rendered_text = true;
 
         self.frame_drawn_label.set_text("frame drawn label");
-        self.frame_drawn_label.free_text = true;
+        self.frame_drawn_label.dont_cache_rendered_text = true;
 
         self.ui_scale_label.set_text("ui scale");
-        self.ui_scale_label.free_text = true;
+        self.ui_scale_label.dont_cache_rendered_text = true;
 
         self.screen_scale_label.set_text("screen scale");
-        self.screen_scale_label.free_text = true;
+        self.screen_scale_label.dont_cache_rendered_text = true;
 
         self.root_frame.set_text("root frame");
-        self.root_frame.free_text = true;
+        self.root_frame.dont_cache_rendered_text = true;
 
         self.exit.set_text("exit");
         self.exit.on_tap.sub(|| {
@@ -98,6 +98,12 @@ impl ViewSetup for DebugView {
 
         self.dump_mem.set_text("dump mem");
         self.dump_mem.on_tap.sub(|| {
+            // dbg!(Image::storage().len());
+            //
+            // for (_key, val) in Image::storage() {
+            //     dbg!(val.name());
+            // }
+
             dump_ref_stats();
         });
 

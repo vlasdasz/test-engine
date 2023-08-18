@@ -33,7 +33,7 @@ pub fn text_size(text: impl ToString, font: &Font, size: impl IntoF32) -> Size {
 }
 
 pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image> {
-    let id = format!("{text}:size-{size}");
+    let id = format!("label-text:{text}:size-{size}");
 
     if let Some(image) = Image::handle_with_name(&id) {
         return image;
