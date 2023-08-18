@@ -88,7 +88,7 @@ impl ViewSetup for DebugView {
 
         self.exit.set_text("exit");
         self.exit.on_tap.sub(|| {
-            panic!("bye");
+            panic!("Exit pressed. Panic to stop the app. Bye.");
         });
 
         self.hide.set_text("hide");

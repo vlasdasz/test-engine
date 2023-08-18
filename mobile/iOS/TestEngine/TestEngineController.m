@@ -28,17 +28,20 @@ BOOL didAppear = false;
 - (void)viewDidLoad {
     [super viewDidLoad];
         
-    self.text_field = [[UITextField alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
-    [self.text_field setBackgroundColor: UIColor.greenColor];
-    self.text_field.text = @" ";
-    [self.text_field setHidden:YES];
-    [self.view addSubview: self.text_field];
+    [self setupTextField];
+    [self setupOpenGL];
     
-    [self.text_field addTarget:self
-                  action:@selector(textFieldDidChange:)
-        forControlEvents:UIControlEventEditingChanged];
-    
-    [self setup];
+// TODO: -
+//    if (@available(iOS 15.0, *)) {
+//
+//        NSLog(@"Farogorn!!! 222");
+//        // On iOS, this branch runs in versions 15.4.1 and greater.
+//        // On any other OS, this branch runs in any version of that OS.
+//        CADisplayLink *displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(checkTimer)];
+//        displayLink.preferredFrameRateRange = CAFrameRateRangeMake(120, 120, 120);
+//        displayLink.preferredFramesPerSecond = 120;
+//        [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+//    }
     
     CGRect screen = [[UIScreen mainScreen] bounds];
     
@@ -52,6 +55,10 @@ BOOL didAppear = false;
                 7);
 }
 
+- (void)checkTimer {
+    [self drawFrame];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     opengl_ready();
@@ -63,22 +70,7 @@ BOOL didAppear = false;
     set_screen_size(self.view.frame.size.width, self.view.frame.size.height);
 }
 
-- (void)textFieldDidChange:(UITextField*)field {
-    
-    if (field.text.length == 0) {
-        NSLog(@"backspace");
-        add_key(0, Backspace);
-    } else {
-        char letter = [field.text cStringUsingEncoding: NSUTF8StringEncoding][1];
-        NSLog(@"%c", letter);
-        add_key(letter, Letter);
-    }
-        
-    self.text_field.text = @" ";
-}
-
-- (void)update {
-    
+- (void)drawFrame {
     if (!didAppear) {
         return;
     }
@@ -102,12 +94,16 @@ BOOL didAppear = false;
     }
 }
 
-- (void)setup {
+- (void)update {
+    [self drawFrame];
+}
+
+- (void)setupOpenGL {
     
-    self.preferredFramesPerSecond = 240; 
-    
+    self.preferredFramesPerSecond = 120;
+        
     EAGLContext* context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-    
+        
     if (context == nil) {
         NSAssert(false, @"Failed to initialize OpenGL");
     } else {
@@ -161,6 +157,33 @@ BOOL didAppear = false;
 //         // Add the timer to the current run loop.
 //               RunLoop.current.add(self.timer, forMode: RunLoop.Mode.default)
 //           }
+}
+
+- (void)setupTextField {
+    self.text_field = [[UITextField alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
+    [self.text_field setBackgroundColor: UIColor.greenColor];
+    self.text_field.text = @" ";
+    [self.text_field setHidden:YES];
+    [self.view addSubview: self.text_field];
+    
+    [self.text_field addTarget:self
+                  action:@selector(textFieldDidChange:)
+        forControlEvents:UIControlEventEditingChanged];
+    
+}
+
+- (void)textFieldDidChange:(UITextField*)field {
+    
+    if (field.text.length == 0) {
+        NSLog(@"backspace");
+        add_key(0, Backspace);
+    } else {
+        char letter = [field.text cStringUsingEncoding: NSUTF8StringEncoding][1];
+        NSLog(@"%c", letter);
+        add_key(letter, Letter);
+    }
+        
+    self.text_field.text = @" ";
 }
 
 - (void)process_touch:(UITouch*)touch event:(int)event {
