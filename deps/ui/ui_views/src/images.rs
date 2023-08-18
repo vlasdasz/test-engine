@@ -1,9 +1,9 @@
 use gl_image::Image;
 use rtools::data_manager::{DataManager, Handle};
 
-pub struct Images;
+pub struct UIImages;
 
-impl Images {
+impl UIImages {
     pub fn plus() -> Handle<Image> {
         Image::load(include_bytes!("images/plus.png"), "ui::default::plus")
     }

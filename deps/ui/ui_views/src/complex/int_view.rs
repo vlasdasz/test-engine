@@ -1,7 +1,7 @@
 use refs::Weak;
 use ui::{view, Event, SubView, ViewSetup};
 
-use crate::{Button, Images, Label};
+use crate::{Button, Label, UIImages};
 
 #[view]
 pub struct IntView {
@@ -23,7 +23,7 @@ impl ViewSetup for IntView {
 
         self.label.set_text("1.0");
 
-        self.up.set_image(Images::up());
+        self.up.set_image(UIImages::up());
         self.up.on_tap.sub(move || {
             self.value += self.step;
             let val = self.value;
@@ -31,7 +31,7 @@ impl ViewSetup for IntView {
             self.label.set_text(format!("{val:.1}"));
         });
 
-        self.down.set_image(Images::down());
+        self.down.set_image(UIImages::down());
         self.down.on_tap.sub(move || {
             self.value -= self.step;
             let val = self.value;
