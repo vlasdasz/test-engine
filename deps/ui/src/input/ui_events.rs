@@ -1,3 +1,4 @@
+use gm::volume::GyroData;
 use refs::{is_main_thread, Weak};
 use vents::Event;
 
@@ -8,6 +9,7 @@ static mut EVENTS: *mut UIEvents = std::ptr::null_mut();
 pub struct UIEvents {
     pub key_pressed:   Event<KeyEvent>,
     pub scroll:        Event<f32>,
+    pub gyro_changed:  Event<GyroData>,
     pub selected_view: Weak<dyn View>,
 }
 
@@ -16,6 +18,7 @@ impl UIEvents {
         Self {
             key_pressed:   Default::default(),
             scroll:        Default::default(),
+            gyro_changed:  Default::default(),
             selected_view: Default::default(),
         }
     }

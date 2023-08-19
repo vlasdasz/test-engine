@@ -3,8 +3,6 @@ use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering::R
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
-#[cfg(mobile)]
-use gm::volume::GyroData;
 use gm::{
     flat::{Rect, Size},
     Color,
@@ -181,8 +179,11 @@ impl Screen {
     }
 
     #[cfg(mobile)]
-    pub(crate) fn on_gyro_changed(&mut self, gyro: GyroData) {
+    pub(crate) fn on_gyro_changed(&mut self, gyro: gm::volume::GyroData) {
         // error!("GyroData: {:?}", gyro);
+
+        ui::input::UIEvents::get().gyro_changed.trigger(gyro);
+
         let Some(level) = &mut self.ui.level else {
             return;
         };
