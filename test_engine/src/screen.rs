@@ -88,6 +88,16 @@ impl Screen {
         }
     }
 
+    #[cfg(desktop)]
+    pub fn take_screenshot(path: impl ToString) {
+        Self::current().glfw.take_screenshot(path)
+    }
+
+    #[cfg(mobile)]
+    pub fn take_screenshot(_path: impl ToString) {
+        todo!("Take screenshot is not implemented for mobile")
+    }
+
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     fn calculate_fps(&mut self) {

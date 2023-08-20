@@ -27,7 +27,7 @@ maze = { workspace = true }
 rest = { workspace = true }
 sprites = { workspace = true }
 text = { workspace = true }
-#valid = { workspace = true }
+valid = { workspace = true }
 
 ui = { workspace = true }
 ui_views = { workspace = true }

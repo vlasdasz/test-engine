@@ -1,4 +1,3 @@
-#[cfg(desktop)]
 use glfw::{Context, Window};
 use gm::flat::Size;
 
@@ -11,8 +10,27 @@ pub struct GLFWManager {
 }
 
 impl GLFWManager {
+    pub fn new(size: Size) -> Self {
+        let mut loader = GLLoader::new(size);
+        let monitors = loader.monitors();
+        Self {
+            window: loader.window,
+            gl_events: loader.events,
+            monitors,
+        }
+    }
+
     pub fn swap_buffers(&mut self) {
         self.window.swap_buffers();
+    }
+
+    pub fn take_screenshot(&self, path: impl ToString) {
+        let (width, height) = self.window.get_framebuffer_size();
+
+        dbg!(width);
+        dbg!(height);
+
+        dbg!(path.to_string());
     }
 
     pub fn start_main_loop(&mut self) {
@@ -55,17 +73,5 @@ impl GLFWManager {
     pub fn set_size(&mut self, size: Size) {
         #[allow(clippy::cast_possible_truncation)]
         self.window.set_size(size.width as i32, size.height as i32)
-    }
-}
-
-impl Default for GLFWManager {
-    fn default() -> Self {
-        let mut loader = GLLoader::default();
-        let monitors = loader.monitors();
-        Self {
-            window: loader.window,
-            gl_events: loader.events,
-            monitors,
-        }
     }
 }

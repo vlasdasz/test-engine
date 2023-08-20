@@ -10,6 +10,7 @@ use glfw::{
     OpenGlProfileHint::Core,
     SwapInterval, Window, WindowEvent,
 };
+use gm::flat::Size;
 
 use crate::{monitor::Monitor, system_events::SystemEvents};
 
@@ -21,8 +22,8 @@ pub struct GLLoader {
     pub events: GLFWEvents,
 }
 
-impl Default for GLLoader {
-    fn default() -> Self {
+impl GLLoader {
+    pub fn new(size: Size) -> Self {
         let mut glfw = glfw::init(glfw::LOG_ERRORS).unwrap();
 
         glfw.window_hint(glfw::WindowHint::Samples(16.into()));
@@ -33,7 +34,12 @@ impl Default for GLLoader {
         glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
 
         let (mut window, events) = glfw
-            .create_window(500, 500, "Test Engine", glfw::WindowMode::Windowed)
+            .create_window(
+                size.width as u32,
+                size.height as u32,
+                "Test Engine",
+                glfw::WindowMode::Windowed,
+            )
             .expect("Failed to create GLFW window.");
 
         unsafe { glfwSetWindowSizeCallback(window.window_ptr(), Some(size_callback)) };
