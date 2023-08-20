@@ -88,7 +88,12 @@ impl Image {
 }
 
 impl Image {
-    pub fn render(name: String, size: impl Into<Size>, draw: impl FnOnce(&mut Image)) -> Handle<Image> {
+    pub fn render(
+        name: impl ToString,
+        size: impl Into<Size>,
+        draw: impl FnOnce(&mut Image),
+    ) -> Handle<Image> {
+        let name = name.to_string();
         let hash = hash(name.clone());
 
         if let Some(image) = Image::handle_with_hash(hash) {
