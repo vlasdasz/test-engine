@@ -1,14 +1,14 @@
 use rtools::Apply;
 use test_engine::{
     audio::Sound,
-    gm::flat::Direction,
+    gm::{flat::Direction, Color},
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
-    view, LevelBase, Screen,
+    view, Screen,
 };
 use ui::{
-    refs::{Own, ToWeak, Weak},
+    refs::{Own, Weak},
     Container, SubView, ViewData, ViewSetup, ViewSubviews,
 };
 use ui_views::{test_view::ViewWithCat, AnalogStickView, Button, DPadView, IntView};
@@ -39,7 +39,7 @@ impl TestGameView {
             .val(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(&dir));
     }
 
-    fn setup_ui(&mut self) {
+    fn setup_ui(mut self: Weak<Self>) {
         // Screen::current().ui.keymap.add('=', self, |_| {
         //     let scale = UIManager::ui_scale() * 1.2;
         //     UIManager::set_ui_scale(scale);
@@ -70,12 +70,10 @@ impl TestGameView {
         self.sprite_view.place.tr(10).size(400, 80);
 
         if let Some(level) = &Screen::current().ui.level {
-            let mut this = self.weak();
-
             level
                 .base()
                 .on_sprite_selected
-                .val(move |sprite| this.sprite_view.set_sprite(sprite));
+                .val(move |sprite| self.sprite_view.set_sprite(sprite));
         }
 
         self.dpad.place.size(140, 100).b(10).l(100);
@@ -113,22 +111,24 @@ impl TestGameView {
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap.sub(|| {
                 Screen::current().ui.set_level(Own::<BenchmarkLevel>::default());
-                // UIManager::set_view(Own::<UIDebugView>::default());
             });
 
             let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap.sub(|| {
-                Screen::current().ui.set_level(Own::<LevelBase>::default());
-                // UIManager::set_view(Own::<UIDebugView>::default());
+                Screen::current().ui.set_level(Own::<TestGameLevel>::default());
             });
 
             let mut play = view.add_view::<Button>();
             play.set_text("Play sound");
-            let mut this = self.weak();
-            play.on_tap.sub(move || this.sound.play());
+            play.on_tap.sub(move || self.sound.play());
 
-            [to_benchmark, to_test, play].apply(|mut button| {
+            let mut screenshot = view.add_view::<Button>();
+            screenshot.set_text("Screenshot");
+            screenshot.on_tap.sub(move || Screen::take_screenshot("screen.png"));
+
+            [to_benchmark, to_test, play, screenshot].apply(|mut button| {
+                button.set_color(Color::WHITE);
                 button.set_corner_radius(8);
             });
         }
