@@ -43,6 +43,10 @@ impl<R, P> const ToReq<R, P, &'static str> for &'static str {
     }
 }
 
+pub const fn req<R, P>(url: &'static str) -> Req<R, P> {
+    Req::<R, P>::make(url)
+}
+
 impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
     pub async fn send(&self, param: impl Borrow<Param>) -> NetResult<Output> {
         let body = to_string(param.borrow())?;
