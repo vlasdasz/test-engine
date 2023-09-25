@@ -27,12 +27,13 @@ android-ndk-sys = "0.2"
 cfg_aliases = { workspace = true }
 
 [workspace.dependencies]
+anyhow = "1.0.75"
 cfg-if = "1.0"
 cfg_aliases = "0.1"
 chrono = "0.4.24"
 derivative = "2.2.0"
 gl = "0.14"
-glfw = "0.52.0"
+glfw = "0.53.0"
 home = "0.5.5"
 log = "0.4"
 mashup = "0.1"

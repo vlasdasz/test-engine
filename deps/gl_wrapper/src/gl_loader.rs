@@ -24,7 +24,7 @@ pub struct GLLoader {
 
 impl GLLoader {
     pub fn new(size: Size) -> Self {
-        let mut glfw = glfw::init(glfw::LOG_ERRORS).unwrap();
+        let mut glfw = glfw::init(|error, string| error!("GLFW error: {error} string: {string}")).unwrap();
 
         glfw.window_hint(glfw::WindowHint::Samples(16.into()));
         glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));

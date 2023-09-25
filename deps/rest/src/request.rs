@@ -1,11 +1,12 @@
 use std::{any::type_name, borrow::Borrow, collections::HashMap, fmt::Debug, marker::PhantomData};
 
+use anyhow::{anyhow, Result};
 use log::{debug, error};
 use reqwest::Client;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
 
-use crate::{response::Response, Method, NetResult, API};
+use crate::{response::Response, Method, API};
 
 pub struct Req<Param, Result> {
     url:    &'static str,
@@ -48,12 +49,12 @@ pub const fn req<R, P>(url: &'static str) -> Req<R, P> {
 }
 
 impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
-    pub async fn send(&self, param: impl Borrow<Param>) -> NetResult<Output> {
+    pub async fn send(&self, param: impl Borrow<Param>) -> Result<Output> {
         let body = to_string(param.borrow())?;
         request_object(self.method, self.full_url(), &API::headers(), body.into()).await
     }
 
-    pub async fn with_token(&self, param: impl Borrow<Param>, token: impl ToString) -> NetResult<Output> {
+    pub async fn with_token(&self, param: impl Borrow<Param>, token: impl ToString) -> Result<Output> {
         let body = to_string(param.borrow())?;
         request_object(
             self.method,
@@ -68,7 +69,7 @@ impl<Param: Serialize, Output: DeserializeOwned + Debug> Req<Param, Output> {
         &self,
         param: impl Borrow<Param>,
         headers: impl Into<HashMap<String, String>>,
-    ) -> NetResult<Output> {
+    ) -> Result<Output> {
         let body = to_string(param.borrow())?;
         request_object(self.method, self.full_url(), &headers.into(), body.into()).await
     }
@@ -79,30 +80,29 @@ async fn request_object<T>(
     url: String,
     headers: &HashMap<String, String>,
     body: Option<String>,
-) -> NetResult<T>
+) -> Result<T>
 where
     T: DeserializeOwned,
 {
     let response = raw_request(method, url, headers, body).await?;
 
     if response.status == 404 {
-        Err("404 not found".into())
+        Err(anyhow!("404 not found"))
     } else if response.status != 200 {
-        error!("Object request failed: {response:?}");
-        Err(parse(&response.body)?)
+        Err(anyhow!("Object request failed: {response:?}"))
     } else {
         Ok(parse(&response.body)?)
     }
 }
 
-fn parse<T: DeserializeOwned>(json: impl ToString) -> NetResult<T> {
+fn parse<T: DeserializeOwned>(json: impl ToString) -> Result<T> {
     let json = json.to_string();
     match from_str(&json) {
         Ok(obj) => Ok(obj),
         Err(error) => {
             let message = format!("Failed to parse {} from {json}. Error: {error}", type_name::<T>());
             error!("{message}");
-            Err(message.into())
+            Err(anyhow!(message))
         }
     }
 }
@@ -112,7 +112,7 @@ pub async fn raw_request(
     url: impl ToString,
     headers: &HashMap<String, String>,
     body: Option<String>,
-) -> NetResult<Response> {
+) -> Result<Response> {
     let url = url.to_string();
     let client = Client::new();
 
