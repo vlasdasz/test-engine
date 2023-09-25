@@ -10,6 +10,7 @@ doctest = false
 name = "ui"
 
 [dependencies]
+anyhow = { workspace = true }
 chrono = { workspace = true }
 derivative = { workspace = true }
 dispatch = { workspace = true }

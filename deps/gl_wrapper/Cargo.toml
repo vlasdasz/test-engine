@@ -9,6 +9,7 @@ crate-type = ["rlib", "staticlib"]
 name = "gl_wrapper"
 
 [dependencies]
+anyhow = { workspace = true }
 cfg-if = { workspace = true }
 log = { workspace = true }
 rtools = { workspace = true }

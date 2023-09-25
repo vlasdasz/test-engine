@@ -32,6 +32,18 @@ pub struct Placer {
 }
 
 impl Placer {
+    pub fn empty() -> Self {
+        Self {
+            rules:      RefCell::new(vec![]),
+            sub_rules:  RefCell::new(vec![]),
+            view:       Default::default(),
+            frame:      Default::default(),
+            s_content:  Default::default(),
+            all_margin: RefCell::new(0.0),
+            has:        RefCell::new(Default::default()),
+        }
+    }
+
     pub fn new(view: Weak<dyn View>) -> Self {
         let s_content = if view.superview.is_ok() {
             view.superview.content_size()

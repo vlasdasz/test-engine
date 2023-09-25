@@ -38,7 +38,7 @@ impl UIManager {
         let mut root_view = Own::<Container>::default();
         root_view.label = "Root view".to_string();
         let weak_root = root_view.weak_view();
-        root_view.place = Placer::new(weak_root).into();
+        root_view.place = Placer::new(weak_root);
 
         Self {
             root_view,

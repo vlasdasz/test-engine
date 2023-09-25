@@ -11,6 +11,7 @@ name = "sprites"
 [dependencies]
 crossbeam = "0.8.2"
 rapier2d = { version = "0.17.2", features = ["parallel", "simd-stable"] }
+anyhow = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }

@@ -1,5 +1,6 @@
 use std::sync::OnceLock;
 
+use anyhow::Result;
 use gl_wrapper::{Shader, ShaderCompiler};
 
 static SHADERS: OnceLock<SpriteShaders> = OnceLock::new();
@@ -10,8 +11,8 @@ pub struct SpriteShaders {
 }
 
 impl SpriteShaders {
-    fn init() -> Self {
-        let compiler = ShaderCompiler::default();
+    fn init() -> Result<Self> {
+        let compiler = ShaderCompiler::new()?;
 
         let sprite_vert = include_str!("shaders/sprite.vert");
         let sprite_frag = include_str!("shaders/sprite.frag");
@@ -19,17 +20,18 @@ impl SpriteShaders {
         let textured_sprite_vert = include_str!("shaders/textured_sprite.vert");
         let textured_sprite_frag = include_str!("shaders/textured_sprite.frag");
 
-        let sprite = compiler.compile(sprite_vert, sprite_frag, "sprite");
-        let textured_sprite = compiler.compile(textured_sprite_vert, textured_sprite_frag, "textured_sprite");
+        let sprite = compiler.compile(sprite_vert, sprite_frag, "sprite")?;
+        let textured_sprite =
+            compiler.compile(textured_sprite_vert, textured_sprite_frag, "textured_sprite")?;
 
-        Self {
+        Ok(Self {
             sprite,
             textured_sprite,
-        }
+        })
     }
 
     fn get() -> &'static Self {
-        SHADERS.get_or_init(Self::init)
+        SHADERS.get_or_init(|| Self::init().unwrap())
     }
 
     pub fn sprite() -> &'static Shader {

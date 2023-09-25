@@ -1,7 +1,7 @@
 use gl_image::ToImage;
 use gm::{flat::PointsPath, Color};
 use refs::Weak;
-use rtools::{Animation, Unwrap};
+use rtools::Animation;
 use ui::{view, DrawMode, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::{Button, DrawingView, ImageView, Label};
@@ -14,7 +14,7 @@ pub struct ViewWithCat {
     drawing:  SubView<DrawingView>,
     animated: SubView<ImageView>,
 
-    animation: Unwrap<Animation>,
+    animation: Animation,
 
     label_value: u64,
 }
@@ -56,7 +56,7 @@ impl ViewSetup for ViewWithCat {
 
         self.animated.set_frame((100, 100));
 
-        self.animation = Animation::new(0, 200, 10).into();
+        self.animation = Animation::new(0, 200, 10);
     }
 }
 

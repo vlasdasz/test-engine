@@ -6,6 +6,7 @@ cfg_if! { if #[cfg(mobile)] {
     extern crate gl;
 }}
 
+use anyhow::{anyhow, Result};
 use rtools::regex::find_match;
 
 #[derive(Debug)]
@@ -28,24 +29,27 @@ impl GLInfo {
     }
 }
 
-impl Default for GLInfo {
-    fn default() -> Self {
+impl GLInfo {
+    pub fn new() -> Result<Self> {
         let version = GLInfo::get_string(GLC!(VERSION));
         let is_gles = version.contains("ES");
-        let gl_version = find_match(&version, GLInfo::GL_QUERY);
+        let gl_version = find_match(&version, GLInfo::GL_QUERY)?;
         let mut glsl_version = gl_version.clone();
         glsl_version = glsl_version.replace('.', "");
         glsl_version += "0";
-        let glsl_version_number = glsl_version.parse::<u16>().unwrap();
-        let ch = glsl_version.chars().next().unwrap();
-        let major_version = ch.to_string().parse::<u8>().unwrap();
+        let glsl_version_number = glsl_version.parse::<u16>()?;
+        let ch = glsl_version
+            .chars()
+            .next()
+            .ok_or_else(|| anyhow!("Failed to parse glsl version"))?;
+        let major_version = ch.to_string().parse::<u8>()?;
 
-        GLInfo {
+        Ok(GLInfo {
             is_gles,
             gl_version,
             major_version,
             glsl_version,
             glsl_version_number,
-        }
+        })
     }
 }

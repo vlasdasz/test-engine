@@ -6,7 +6,6 @@ use gm::{
     Color,
 };
 use refs::{Own, Weak};
-use rtools::Unwrap;
 use vents::Event;
 
 use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View};
@@ -45,7 +44,8 @@ pub struct ViewBase {
     pub label: String,
 
     #[derivative(Debug = "ignore")]
-    pub place:          Unwrap<Placer>,
+    #[derivative(Default(value = "Placer::empty()"))]
+    pub place:          Placer,
     pub paths:          Vec<PathData>,
     #[derivative(Debug = "ignore")]
     pub on_touch:       Event<Touch>,
