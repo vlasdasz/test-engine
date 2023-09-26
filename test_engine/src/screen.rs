@@ -13,7 +13,7 @@ use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
     refs::{is_main_thread, Own, ToWeak, Weak},
-    UIManager, View, ViewFrame, ViewSetup, ViewSubviews,
+    UIManager, View, ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
 
@@ -106,7 +106,7 @@ impl Screen {
         let interval = now - self.ui.prev_time;
         self.ui.prev_time = now;
 
-        self.ui.frame_time = interval as f32 / 1_000_000_000.0;
+        self.ui.frame_time = interval as f32 / MICROSECONDS_IN_ONE_SECOND as f32;
         self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
         if SHOW_DEBUG_VIEW && self.ui.debug_view.is_ok() {

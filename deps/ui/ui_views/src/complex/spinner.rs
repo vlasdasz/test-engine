@@ -13,7 +13,7 @@ use refs::Weak;
 use rtools::{Animation, Time};
 use ui::{
     view, Container, Event, ModalView, TouchStack, UIAnimation, View, ViewAnimation, ViewCallbacks, ViewData,
-    ViewFrame, ViewSetup, ViewSubviews,
+    ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
 };
 
 static CIRCLES_N: u32 = 6;
@@ -79,10 +79,9 @@ impl ViewSetup for Spinner {
 
 impl ViewCallbacks for Spinner {
     fn update(&mut self) {
-        const ONE_SECOND_IN_NANOSECONDS: i64 = 1_000_000_000;
         let current_time: i64 = Time::now();
 
-        let val = ((current_time % ONE_SECOND_IN_NANOSECONDS) as f32) / ONE_SECOND_IN_NANOSECONDS as f32;
+        let val = ((current_time % MICROSECONDS_IN_ONE_SECOND) as f32) / MICROSECONDS_IN_ONE_SECOND as f32;
 
         let span = PI * 2.0;
         let start = -PI;
