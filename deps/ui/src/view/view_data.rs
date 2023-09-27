@@ -1,7 +1,7 @@
 use gm::Color;
 use rtools::IntoF32;
 
-use crate::{PathData, View};
+use crate::View;
 
 pub trait ViewData {
     fn color(&self) -> &Color;
@@ -10,7 +10,6 @@ pub trait ViewData {
     fn set_border_color(&mut self, color: Color) -> &mut Self;
     fn corner_radius(&self) -> f32;
     fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self;
-    fn paths(&self) -> &[PathData];
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -39,9 +38,5 @@ impl<T: ?Sized + View> ViewData for T {
     fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self {
         self.corner_radius = radius.into_f32();
         self
-    }
-
-    fn paths(&self) -> &[PathData] {
-        &self.paths
     }
 }

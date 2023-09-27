@@ -80,9 +80,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use ui::refs::ToWeak;
                 self.view.label = #name_str.to_string();
                 self.weak().layout_header();
-                self.__trigger_before_setup();
                 self.weak().setup();
-                self.__trigger_after_setup();
             }
         }
 

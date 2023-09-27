@@ -16,7 +16,7 @@ use ui::{
     refs::Address, DrawMode, PathData, UIDrawer, UIManager, UIShaders, View, ViewData, ViewFrame,
     ViewSubviews,
 };
-use ui_views::{initialize_path_data, ImageView};
+use ui_views::{initialize_path_data, DrawingView, ImageView};
 
 type RoundStorage = HashMap<usize, (PathData, Size)>;
 
@@ -142,8 +142,10 @@ impl UIDrawer for TEUIDrawer {
             }
         }
 
-        for path in view.paths() {
-            self.draw_path(path, view.absolute_frame(), None, view.priority);
+        if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
+            for path in drawing_view.paths() {
+                self.draw_path(path, view.absolute_frame(), None, view.priority);
+            }
         }
 
         //MARK - Debug frames

@@ -1,5 +1,3 @@
-use std::cell::RefCell;
-
 use derivative::Derivative;
 use gm::{
     flat::{Point, Rect},
@@ -8,7 +6,7 @@ use gm::{
 use refs::{Own, Weak};
 use vents::Event;
 
-use crate::{layout::Placer, NavigationView, PathData, Touch, UIAnimation, View};
+use crate::{layout::Placer, NavigationView, Touch, UIAnimation, View};
 
 #[derive(Derivative)]
 #[derivative(Default, Debug)]
@@ -45,8 +43,8 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     #[derivative(Default(value = "Placer::empty()"))]
-    pub place:          Placer,
-    pub paths:          Vec<PathData>,
+    pub place: Placer,
+
     #[derivative(Debug = "ignore")]
     pub on_touch:       Event<Touch>,
     #[derivative(Debug = "ignore")]
@@ -56,33 +54,5 @@ pub struct ViewBase {
 
     pub dont_hide: bool,
 
-    #[derivative(Debug = "ignore")]
-    after_setup: RefCell<Vec<Box<dyn FnOnce()>>>,
-
-    #[derivative(Debug = "ignore")]
-    before_setup: RefCell<Vec<Box<dyn FnOnce()>>>,
-
     pub loaded: Event,
-}
-
-impl ViewBase {
-    pub fn after_setup(&self, action: impl FnOnce() + 'static) {
-        self.after_setup.borrow_mut().push(Box::new(action))
-    }
-
-    pub fn __trigger_after_setup(&self) {
-        for action in self.after_setup.borrow_mut().drain(..) {
-            action()
-        }
-    }
-
-    pub fn before_setup(&self, action: impl FnOnce() + 'static) {
-        self.before_setup.borrow_mut().push(Box::new(action))
-    }
-
-    pub fn __trigger_before_setup(&self) {
-        for action in self.before_setup.borrow_mut().drain(..) {
-            action()
-        }
-    }
 }

@@ -105,10 +105,8 @@ impl ViewSetup for TextField {
         self.set_color(Color::LIGHT_GRAY);
 
         self.enable_touch();
-        self.on_touch.val(move |touch| {
-            if touch.is_began() {
-                self.set_selected(true);
-            }
+        self.on_touch_began.sub(move || {
+            self.set_selected(true);
         });
     }
 }

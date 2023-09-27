@@ -3,16 +3,22 @@ use gm::{flat::PointsPath, Color};
 use ui::{view, DrawMode, PathData};
 
 #[view]
-pub struct DrawingView {}
+pub struct DrawingView {
+    paths: Vec<PathData>,
+}
 
 impl DrawingView {
+    pub fn paths(&self) -> &[PathData] {
+        &self.paths
+    }
+
     pub fn add_path(&mut self, path: impl Into<PointsPath>, color: &Color, mode: DrawMode) -> &mut Self {
-        self.view.paths.push(initialize_path_data(path.into(), color, mode));
+        self.paths.push(initialize_path_data(path.into(), color, mode));
         self
     }
 
     pub fn remove_all_paths(&mut self) {
-        self.view.paths.clear()
+        self.paths.clear()
     }
 }
 
