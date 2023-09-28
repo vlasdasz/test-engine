@@ -31,12 +31,8 @@ impl Sound {
 
 impl ResourceLoader for Sound {
     fn load_path(path: &Path) -> Self {
-        let mut file = File::open(path).unwrap_or_else(|_| {
-            panic!(
-                "Failed to load sound at path: {}",
-                path.to_string_lossy().to_string()
-            )
-        });
+        let mut file = File::open(path)
+            .unwrap_or_else(|_| panic!("Failed to load sound at path: {}", path.to_string_lossy()));
 
         let mut data = Vec::new();
         file.read_to_end(&mut data).unwrap();
