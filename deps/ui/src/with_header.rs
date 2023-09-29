@@ -39,11 +39,11 @@ impl<T: View> WithHeader for T {
         Default::default()
     }
 
-    default fn header_margin(&self) -> f32 {
-        0.0
-    }
-
     default fn header_size(&self) -> f32 {
         50.0
+    }
+
+    default fn header_margin(&self) -> f32 {
+        0.0
     }
 }

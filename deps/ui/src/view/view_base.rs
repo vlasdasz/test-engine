@@ -46,13 +46,17 @@ pub struct ViewBase {
     pub place: Placer,
 
     #[derivative(Debug = "ignore")]
-    pub on_touch:       Event<Touch>,
-    #[derivative(Debug = "ignore")]
-    pub on_touch_began: Event<Touch>,
+    pub touch: ViewTouchCallbacks,
 
     pub priority: usize,
 
     pub dont_hide: bool,
 
     pub loaded: Event,
+}
+
+#[derive(Default)]
+pub struct ViewTouchCallbacks {
+    pub all:   Event<Touch>,
+    pub began: Event<Touch>,
 }

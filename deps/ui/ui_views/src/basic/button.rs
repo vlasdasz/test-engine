@@ -41,7 +41,7 @@ impl ViewSetup for Button {
         self.image.is_hidden = true;
 
         self.enable_touch();
-        self.on_touch_began.sub(move || self.on_tap.trigger(()));
+        self.touch.began.sub(move || self.on_tap.trigger(()));
     }
 }
 

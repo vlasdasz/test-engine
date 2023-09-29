@@ -56,7 +56,7 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
 
     if touch.is_moved() && view.touch_id() == touch.id {
         touch.position -= view.absolute_frame().origin;
-        view.on_touch.trigger(*touch);
+        view.touch.all.trigger(*touch);
         return true;
     }
 
@@ -67,16 +67,16 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
     if touch.is_ended() && view.touch_id() == touch.id {
         touch.position -= view.absolute_frame().origin;
         view.set_touch_id(0);
-        view.on_touch.trigger(*touch);
+        view.touch.all.trigger(*touch);
         return true;
     }
 
     if view.absolute_frame().contains(touch.position) {
         touch.position -= view.absolute_frame().origin;
         view.set_touch_id(touch.id);
-        view.on_touch.trigger(*touch);
+        view.touch.all.trigger(*touch);
         if touch.is_began() {
-            view.on_touch_began.trigger(*touch);
+            view.touch.began.trigger(*touch);
         }
         return true;
     }

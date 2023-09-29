@@ -58,7 +58,7 @@ impl CollectionView {
             let cell = self.scroll.add_subview(cell);
             cell.enable_touch_low_priority();
             let mut this = self.weak();
-            cell.on_touch_began.sub(move || this.data_source.cell_selected(i));
+            cell.touch.began.sub(move || this.data_source.cell_selected(i));
             self.cells.push(cell);
         }
     }
@@ -115,7 +115,7 @@ impl CollectionView {
             cell.set_frame((0, index as f32 * cell_height, width, cell_height));
             cell.enable_touch_low_priority();
             let mut this = self.weak();
-            cell.on_touch_began.sub(move || this.data_source.cell_selected(index));
+            cell.touch.began.sub(move || this.data_source.cell_selected(index));
             self.cells.push(cell);
         }
     }

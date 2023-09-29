@@ -34,7 +34,7 @@ impl ViewSetup for Switch {
         self.enable_touch();
         self.center.set_color(Color::BLUE);
         self.set_on(false);
-        self.on_touch_began.sub(move || {
+        self.touch.began.sub(move || {
             let on = !self.on;
             self.set_on(on);
             self.selected.trigger(on);
