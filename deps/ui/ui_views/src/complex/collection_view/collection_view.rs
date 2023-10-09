@@ -58,7 +58,7 @@ impl CollectionView {
             let cell = self.scroll.add_subview(cell);
             cell.enable_touch_low_priority();
             let mut this = self.weak();
-            cell.touch.began.sub(move || this.data_source.cell_selected(i));
+            cell.touch.up_inside.sub(move || this.data_source.cell_selected(i));
             self.cells.push(cell);
         }
     }

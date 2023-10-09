@@ -32,7 +32,6 @@ pub struct ViewBase {
     pub(crate) touch_id: u64,
 
     pub(crate) is_selected: bool,
-    pub(crate) is_deleted:  bool,
 
     #[derivative(Debug = "ignore")]
     pub(crate) navigation_view: Weak<NavigationView>,
@@ -57,6 +56,7 @@ pub struct ViewBase {
 
 #[derive(Default)]
 pub struct ViewTouchCallbacks {
-    pub all:   Event<Touch>,
-    pub began: Event<Touch>,
+    pub all:       Event<Touch>,
+    pub began:     Event<Touch>,
+    pub up_inside: Event<Touch>,
 }

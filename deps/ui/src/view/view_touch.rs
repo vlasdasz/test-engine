@@ -50,7 +50,7 @@ impl<T: ?Sized + View> ViewTouch for T {
 }
 
 pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
-    if view.freed() || view.is_hidden || view.is_deleted {
+    if view.freed() || view.is_hidden {
         return false;
     }
 
@@ -68,6 +68,10 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
         touch.position -= view.absolute_frame().origin;
         view.set_touch_id(0);
         view.touch.all.trigger(*touch);
+
+        if view.absolute_frame().contains(touch.position) {
+            view.touch.up_inside.trigger(*touch);
+        }
         return true;
     }
 
