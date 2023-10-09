@@ -5,8 +5,5 @@
 extern crate core;
 
 mod dispatch;
-mod dispatchable;
-
-pub use dispatchable::*;
 
 pub use crate::dispatch::*;

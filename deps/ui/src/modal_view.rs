@@ -1,3 +1,5 @@
+#![allow(async_fn_in_trait)]
+
 use dispatch::{from_main, on_main};
 use gm::{flat::Size, Color};
 use refs::{Own, ToWeak, Weak};
