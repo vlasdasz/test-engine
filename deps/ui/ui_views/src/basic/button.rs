@@ -1,7 +1,7 @@
 use gl_image::ToImage;
-use gm::Color;
+use gm::{flat::Size, Color};
 use refs::Weak;
-use ui::{view, Event, SubView, ToLabel, ViewSetup, ViewTouch};
+use ui::{view, Event, SubView, ToLabel, ViewSetup, ViewTest, ViewTouch};
 
 use crate::{ImageView, Label};
 
@@ -45,6 +45,17 @@ impl ViewSetup for Button {
     }
 }
 
+impl ViewTest for Button {
+    fn test_setup(mut self: Weak<Self>) {
+        self.set_text("Button text");
+    }
+
+    fn test_size() -> Size
+    where Self: Sized {
+        (100, 50).into()
+    }
+}
+
 #[macro_export]
 macro_rules! _ui_link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {{
@@ -77,7 +88,7 @@ macro_rules! async_link_button {
 macro_rules! async_call {
     ($self:ident, $method:ident) => {
         tokio::spawn(async move {
-            $self.$method().await;
+            $self.$method().await.alert_err();
         });
     };
 }
