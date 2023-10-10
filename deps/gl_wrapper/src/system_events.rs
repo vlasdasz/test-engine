@@ -1,6 +1,9 @@
 #![cfg(desktop)]
 
-use std::path::PathBuf;
+use std::{
+    path::PathBuf,
+    sync::atomic::{AtomicBool, Ordering},
+};
 
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{Point, Size};
@@ -17,6 +20,7 @@ pub struct SystemEvents {
     pub key_pressed:  Event<(Key, Action)>,
     pub scroll:       Event<Point>,
     pub file_drop:    Event<Vec<PathBuf>>,
+    pub terminate:    AtomicBool,
 }
 
 impl SystemEvents {
@@ -29,6 +33,7 @@ impl SystemEvents {
             key_pressed:  Default::default(),
             scroll:       Default::default(),
             file_drop:    Default::default(),
+            terminate:    Default::default(),
         }
     }
 
@@ -40,5 +45,9 @@ impl SystemEvents {
             }
             EVENTS.as_ref().unwrap()
         }
+    }
+
+    pub fn terminate() {
+        unsafe { EVENTS.as_ref().unwrap().terminate.store(true, Ordering::Relaxed) };
     }
 }

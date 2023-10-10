@@ -1,7 +1,7 @@
 use gl_image::ToImage;
-use gm::{flat::Size, Color};
+use gm::Color;
 use refs::Weak;
-use ui::{view, Event, SubView, ToLabel, ViewSetup, ViewTest, ViewTouch};
+use ui::{view, Event, SubView, ToLabel, ViewSetup, ViewTouch};
 
 use crate::{ImageView, Label};
 
@@ -42,17 +42,6 @@ impl ViewSetup for Button {
 
         self.enable_touch();
         self.touch.up_inside.sub(move || self.on_tap.trigger(()));
-    }
-}
-
-impl ViewTest for Button {
-    fn test_setup(mut self: Weak<Self>) {
-        self.set_text("Button text");
-    }
-
-    fn test_size() -> Size
-    where Self: Sized {
-        (100, 50).into()
     }
 }
 

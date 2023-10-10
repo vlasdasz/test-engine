@@ -65,11 +65,13 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
     }
 
     if touch.is_ended() && view.touch_id() == touch.id {
+        let inside = view.absolute_frame().contains(touch.position);
+
         touch.position -= view.absolute_frame().origin;
         view.set_touch_id(0);
         view.touch.all.trigger(*touch);
 
-        if view.absolute_frame().contains(touch.position) {
+        if inside {
             view.touch.up_inside.trigger(*touch);
         }
         return true;
@@ -77,11 +79,11 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
 
     if view.absolute_frame().contains(touch.position) {
         touch.position -= view.absolute_frame().origin;
-        view.set_touch_id(touch.id);
-        view.touch.all.trigger(*touch);
         if touch.is_began() {
+            view.set_touch_id(touch.id);
             view.touch.began.trigger(*touch);
         }
+        view.touch.all.trigger(*touch);
         return true;
     }
 

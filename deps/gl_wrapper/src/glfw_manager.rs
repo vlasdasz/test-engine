@@ -1,3 +1,5 @@
+use std::sync::atomic::Ordering;
+
 use glfw::{Context, Window};
 use gm::flat::Size;
 
@@ -31,6 +33,8 @@ impl GLFWManager {
         dbg!(height);
 
         dbg!(path.to_string());
+
+        todo!()
     }
 
     pub fn start_main_loop(&mut self) {
@@ -44,6 +48,10 @@ impl GLFWManager {
             self.window.glfw.poll_events();
 
             let events = SystemEvents::get();
+
+            if events.terminate.load(Ordering::Relaxed) {
+                return;
+            }
 
             for (_, event) in glfw::flush_messages(&self.gl_events) {
                 match event {

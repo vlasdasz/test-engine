@@ -24,7 +24,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serial_test = "2.0.0"
 smart-default = "0.7.1"
-tokio = { version = "1.26.0", features = ["full"] }
+tokio = { version = "1.26.0" }
 
 
 reflected = "0.7.0"
@@ -44,6 +44,7 @@ maze = { path = "deps/maze" }
 rest = { path = "deps/rest" }
 sprites = { path = "deps/sprites" }
 test_engine = { path = "test_engine" }
+test_game = { path = "test_game" }
 text = { path = "deps/text" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }

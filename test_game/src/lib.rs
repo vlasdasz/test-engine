@@ -1,4 +1,3 @@
-#![cfg(mobile)]
 #![allow(incomplete_features)]
 #![allow(improper_ctypes_definitions)]
 #![feature(specialization)]
@@ -6,28 +5,24 @@
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
 
-use std::os::raw::{c_float, c_int};
-
-use test_engine::{App, MakeApp};
-
-use crate::test_game::TestApp;
-
-mod benchmark;
+pub mod benchmark;
 mod test_game;
-mod ui_test;
 
+#[cfg(mobile)]
 #[no_mangle]
 extern "C" fn make_app(
-    ppi: c_int,
-    scale: c_float,
-    refresh_rate: c_int,
-    resolution_x: c_int,
-    resolution_y: c_int,
-    width: c_float,
-    height: c_float,
-    diagonal: c_float,
-) -> Box<dyn App> {
-    TestApp::make_app(
+    ppi: std::os::raw::c_int,
+    scale: std::os::raw::c_float,
+    refresh_rate: std::os::raw::c_int,
+    resolution_x: std::os::raw::c_int,
+    resolution_y: std::os::raw::c_int,
+    width: std::os::raw::c_float,
+    height: std::os::raw::c_float,
+    diagonal: std::os::raw::c_float,
+) -> Box<dyn test_engine::App> {
+    use test_engine::MakeApp;
+
+    crate::test_game::TestApp::make_app(
         ppi,
         scale,
         refresh_rate,

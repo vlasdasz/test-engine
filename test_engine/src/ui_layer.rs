@@ -20,6 +20,8 @@ use ui_views::debug_view::DebugView;
 
 use crate::Keymap;
 
+const LOG_TOUCHES: bool = true;
+
 #[derive(SmartDefault)]
 pub struct UILayer {
     pub level: Option<Own<dyn Level>>,
@@ -43,9 +45,11 @@ impl UILayer {
         if UIManager::touch_disabled() {
             return;
         }
-        if !touch.is_moved() {
-            trace!("{:?}", touch);
+
+        if LOG_TOUCHES && !touch.is_moved() {
+            warn!("{touch:?}");
         }
+
         let level_touch = touch;
         // TODO: Revisit scale
         // if Platform::DESKTOP {

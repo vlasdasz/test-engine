@@ -3,6 +3,13 @@ name = "ui_test"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+glfw = { workspace = true }
+tokio = { workspace = true }
+derivative = { workspace = true }
+rtools = { workspace = true }
+ui = { workspace = true }
+ui_views = { workspace = true }
+test_engine = { workspace = true }
+test_game = { workspace = true }

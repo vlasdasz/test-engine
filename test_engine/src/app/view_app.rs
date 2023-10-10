@@ -3,6 +3,8 @@
 use std::{marker::PhantomData, path::PathBuf};
 
 use gm::flat::Size;
+use rtools::{init_log, sleep, LogBuilder};
+use tokio::spawn;
 use ui::{
     refs::{set_current_thread_as_main, Own, ToWeak},
     View, ViewTest,
@@ -22,9 +24,27 @@ impl<T: View + Default + 'static> ViewApp<T> {
             Self::make_app().launch();
         });
     }
+
+    pub fn start_with_actor(actions: impl FnOnce() + Send + 'static) {
+        tokio::runtime::Runtime::new().unwrap().block_on(async {
+            set_current_thread_as_main();
+
+            spawn(async {
+                sleep(1);
+                actions();
+            });
+
+            Self::make_app().launch();
+        });
+    }
 }
 
 impl<T: View + Default + 'static> App for ViewApp<T> {
+    fn setup()
+    where Self: Sized {
+        init_log(LogBuilder::builder().build());
+    }
+
     fn screen_size() -> Size
     where Self: Sized {
         T::test_size()

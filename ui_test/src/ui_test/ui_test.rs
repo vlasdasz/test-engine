@@ -1,11 +1,12 @@
 use test_engine::{gm::Color, view};
+use test_game_lib::benchmark::UIDebugView;
 use ui::{
     refs::{Own, Weak},
     SubView, ViewController, ViewFrame, ViewSetup,
 };
 use ui_views::{link_button, Button};
 
-use crate::{benchmark::UIDebugView, ui_test::CollectionTestView};
+use crate::ui_test::CollectionTestView;
 
 #[view]
 pub struct UITestView {
