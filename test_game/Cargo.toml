@@ -1,0 +1,27 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2021"
+name = "test_game"
+version = "0.1.0"
+
+[[bin]]
+name = "test_game"
+
+[lib]
+crate-type = ["rlib", "staticlib", "dylib"]
+name = "test_game_lib"
+
+[dependencies]
+tokio = { workspace = true }
+
+derivative = { workspace = true }
+rtools = { workspace = true }
+test_engine = { workspace = true }
+ui = { workspace = true }
+ui_views = { workspace = true }
+
+[target.'cfg(target_os="android")'.dependencies]
+android-ndk-sys = "0.2"
+
+[build-dependencies]
+cfg_aliases = { workspace = true }
