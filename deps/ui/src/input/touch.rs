@@ -1,33 +1,11 @@
+use std::str::FromStr;
+
 use gm::flat::Point;
+use itertools::Itertools;
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum TouchEvent {
-    Began,
-    Moved,
-    Ended,
-}
+use crate::input::TouchEvent;
 
-impl TouchEvent {
-    // #[cfg(desktop)]
-    // pub fn from_state(state: ButtonState) -> Self {
-    //     match state {
-    //         ButtonState::Up => Self::Ended,
-    //         ButtonState::Down => Self::Began,
-    //         ButtonState::Repeat => Self::Moved,
-    //     }
-    // }
-
-    pub fn from_int(event: i32) -> TouchEvent {
-        match event {
-            0 => TouchEvent::Began,
-            1 => TouchEvent::Moved,
-            2 => TouchEvent::Ended,
-            _ => unreachable!("Invalid value for touch event"),
-        }
-    }
-}
-
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Touch {
     pub id:       u64,
     pub position: Point,
@@ -45,5 +23,110 @@ impl Touch {
 
     pub fn is_ended(&self) -> bool {
         self.event == TouchEvent::Ended
+    }
+}
+
+impl Touch {
+    pub fn vec_from_str(s: &str) -> Vec<Self> {
+        s.split('\n')
+            .filter(|line| !line.trim().is_empty())
+            .map(|s| s.parse().unwrap())
+            .collect()
+    }
+}
+
+impl ToString for Touch {
+    fn to_string(&self) -> String {
+        format!(
+            "{:>4} {:>4} {}",
+            self.position.x,
+            self.position.y,
+            self.event.to_string()
+        )
+    }
+}
+
+impl FromStr for Touch {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let vals = s.split_whitespace().collect_vec();
+
+        let touch = Touch {
+            id:       0,
+            position: Point {
+                x: vals[0].parse()?,
+                y: vals[1].parse()?,
+            },
+            event:    vals[2].parse()?,
+        };
+
+        Ok(touch)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use itertools::Itertools;
+
+    use crate::{input::TouchEvent, Touch};
+
+    #[test]
+    fn touch_to_string() {
+        let touches = [
+            Touch {
+                id:       0,
+                position: (0, 0).into(),
+                event:    TouchEvent::Began,
+            },
+            Touch {
+                id:       0,
+                position: (2000, 10).into(),
+                event:    TouchEvent::Ended,
+            },
+            Touch {
+                id:       0,
+                position: (100, 4000).into(),
+                event:    TouchEvent::Ended,
+            },
+            Touch {
+                id:       0,
+                position: (1, 4000).into(),
+                event:    TouchEvent::Moved,
+            },
+            Touch {
+                id:       0,
+                position: (4000, 1).into(),
+                event:    TouchEvent::Moved,
+            },
+        ];
+
+        let result = touches.into_iter().map(|t| t.to_string()).join("\n");
+
+        println!("{result}");
+
+        assert_eq!(
+            result,
+            r#"   0    0 ↓
+2000   10 ↑
+ 100 4000 ↑
+   1 4000 →
+4000    1 →"#
+        );
+
+        assert_eq!(touches.as_slice(), &Touch::vec_from_str(&result));
+
+        assert_eq!(
+            touches.as_slice(),
+            &Touch::vec_from_str(
+                r#"
+                                       0    0 ↓
+                                    2000   10 ↑
+                                     100 4000 ↑
+                                       1 4000 →
+                                    4000    1 →
+                "#
+            )
+        );
     }
 }
