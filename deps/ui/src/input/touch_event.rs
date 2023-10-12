@@ -1,12 +1,23 @@
 use std::str::FromStr;
 
 use anyhow::bail;
+use glfw::Action;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum TouchEvent {
     Began,
     Moved,
     Ended,
+}
+
+impl TouchEvent {
+    pub fn glfw_action(&self) -> Action {
+        match self {
+            TouchEvent::Began => Action::Press,
+            TouchEvent::Moved => Action::Repeat,
+            TouchEvent::Ended => Action::Release,
+        }
+    }
 }
 
 impl ToString for TouchEvent {

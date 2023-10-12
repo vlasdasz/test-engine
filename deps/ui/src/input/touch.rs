@@ -103,8 +103,6 @@ mod test {
 
         let result = touches.into_iter().map(|t| t.to_string()).join("\n");
 
-        println!("{result}");
-
         assert_eq!(
             result,
             r#"   0    0 ↓
@@ -127,6 +125,15 @@ mod test {
                                     4000    1 →
                 "#
             )
+        );
+
+        assert_eq!(
+            vec![Touch {
+                id:       0,
+                position: (10, 20).into(),
+                event:    TouchEvent::Began,
+            }],
+            Touch::vec_from_str("10 20 ↓")
         );
     }
 }
