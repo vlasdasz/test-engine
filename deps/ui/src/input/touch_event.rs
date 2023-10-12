@@ -1,7 +1,6 @@
 use std::str::FromStr;
 
 use anyhow::bail;
-use glfw::Action;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum TouchEvent {
@@ -10,12 +9,13 @@ pub enum TouchEvent {
     Ended,
 }
 
+#[cfg(desktop)]
 impl TouchEvent {
-    pub fn glfw_action(&self) -> Action {
+    pub fn glfw_action(&self) -> glfw::Action {
         match self {
-            TouchEvent::Began => Action::Press,
-            TouchEvent::Moved => Action::Repeat,
-            TouchEvent::Ended => Action::Release,
+            TouchEvent::Began => glfw::Action::Press,
+            TouchEvent::Moved => glfw::Action::Repeat,
+            TouchEvent::Ended => glfw::Action::Release,
         }
     }
 }

@@ -58,7 +58,7 @@ pub mod mobile {
         sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
     };
     use ui::{
-        input::{ControlButton, KeyEvent, KeyState, KeyboardButton, TouchEvent, UIEvents},
+        input::{ControlButton, KeyEvent, KeyState, KeyboardButton, UIEvents},
         refs::{set_current_thread_as_main, Own},
         Touch, View,
     };
@@ -107,7 +107,7 @@ pub mod mobile {
             let touch = Touch {
                 id,
                 position: (x, y).into(),
-                event: TouchEvent::from_int(event),
+                event: event.into(),
             };
 
             if Platform::ANDROID {
