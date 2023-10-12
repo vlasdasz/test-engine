@@ -22,5 +22,5 @@ pub fn set_sprites_drawer(drawer: Box<dyn SpritesDrawer>) {
 }
 
 pub fn get_sprites_drawer() -> &'static mut dyn SpritesDrawer {
-    unsafe { DRAWER.as_mut().unwrap().deref_mut() }
+    unsafe { DRAWER.as_mut().unwrap_unchecked().deref_mut() }
 }
