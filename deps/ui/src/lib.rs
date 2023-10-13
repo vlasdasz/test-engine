@@ -6,6 +6,7 @@
 #![feature(async_fn_in_trait)]
 #![feature(adt_const_params)]
 #![feature(generic_const_exprs)]
+#![feature(result_option_inspect)]
 
 pub use input::Touch;
 

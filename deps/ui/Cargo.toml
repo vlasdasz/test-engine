@@ -10,6 +10,7 @@ doctest = false
 name = "ui"
 
 [dependencies]
+log = { workspace = true }
 anyhow = { workspace = true }
 chrono = { workspace = true }
 derivative = { workspace = true }
