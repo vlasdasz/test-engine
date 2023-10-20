@@ -111,7 +111,7 @@ impl Screen {
 
         if SHOW_DEBUG_VIEW && self.ui.debug_view.is_ok() {
             let fps = self.ui.fps;
-            self.ui.debug_view.fps.set(fps);
+            self.ui.debug_view.fps.trigger(fps);
             if API::is_ok() {
                 self.ui.debug_view.set_custom("URL:", API::base_url());
             } else {

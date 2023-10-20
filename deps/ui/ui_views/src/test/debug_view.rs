@@ -3,13 +3,13 @@ use std::{collections::HashMap, fmt::Display, sync::OnceLock};
 use gm::Color;
 use refs::{dump_ref_stats, Weak};
 use ui::{
-    view, Property, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup,
+    view, Event, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup,
     ViewSubviews,
 };
 
 use crate::{Button, Label};
 
-pub const SHOW_DEBUG_VIEW: bool = false;
+pub const SHOW_DEBUG_VIEW: bool = true;
 
 static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 
@@ -29,7 +29,7 @@ pub struct DebugView {
 
     custom_labels: HashMap<String, SubView<Label>>,
 
-    pub fps: Property<u64>,
+    pub fps: Event<u64>,
 
     frame_drawn: u64,
 }
@@ -107,7 +107,7 @@ impl ViewSetup for DebugView {
             dump_ref_stats();
         });
 
-        self.fps.on_set.val(move |fps| {
+        self.fps.val(move |fps| {
             self.fps_label.set_text(format!("FPS: {fps}"));
         });
     }

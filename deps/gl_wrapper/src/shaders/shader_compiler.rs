@@ -79,7 +79,7 @@ impl ShaderCompiler {
         panic!("Failed to compile shader: {error}");
     }
 
-    fn unfold_includes(&self, mut code: String) -> Result<String> {
+    fn unfold_includes(mut code: String) -> Result<String> {
         const QUOTES_QUERY: &str = r#"(("[^ "]+"))"#;
         const INCLUDE_QUERY: &str = r#"#include (("[^ "]+"))"#;
         let includes = find_matches(&code, INCLUDE_QUERY)?;
@@ -99,7 +99,7 @@ impl ShaderCompiler {
     }
 
     fn compile_shader(&self, code: impl ToString, kind: GLT!(GLenum)) -> Result<u32> {
-        let code = self.version() + "\n" + &self.unfold_includes(code.to_string())?;
+        let code = self.version() + "\n" + &Self::unfold_includes(code.to_string())?;
         let shader = GL!(CreateShader, kind);
 
         let c_code = CString::new(code).unwrap();

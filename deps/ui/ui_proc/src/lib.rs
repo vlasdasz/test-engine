@@ -29,7 +29,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         .filter_map(|param| match param {
             GenericParam::Type(type_param) => Some(type_param.ident.clone()),
             GenericParam::Const(const_param) => Some(const_param.ident.clone()),
-            _ => None,
+            GenericParam::Lifetime(_) => None,
         })
         .collect();
 

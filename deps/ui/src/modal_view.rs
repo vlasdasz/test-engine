@@ -1,5 +1,3 @@
-#![allow(async_fn_in_trait)]
-
 use dispatch::{from_main, on_main};
 use gm::{flat::Size, Color};
 use refs::{Own, ToWeak, Weak};
@@ -30,6 +28,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
         })
     }
 
+    #[allow(async_fn_in_trait)]
     async fn show_modally_async(input: In) -> Out
     where
         In: 'static + Send,
