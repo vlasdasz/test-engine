@@ -2,7 +2,7 @@ use std::any::Any;
 
 use gm::{flat::Size, Color};
 use itertools::Itertools;
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
 

@@ -4,7 +4,7 @@
 use std::{collections::HashMap, ops::Index};
 
 use gm::{flat::Size, Color};
-use refs::{set_current_thread_as_main, ToWeak, Weak};
+use refs::{set_current_thread_as_main, Weak};
 use rtools::{data_manager::Handle, hash, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, text_size, Font};

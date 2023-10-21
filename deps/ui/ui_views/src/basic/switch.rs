@@ -1,5 +1,5 @@
 use gm::Color;
-use refs::{ToWeak, Weak};
+use refs::Weak;
 use ui::{layout::Anchor, view, Container, Event, SubView, ViewData, ViewSetup, ViewTouch};
 
 #[view]

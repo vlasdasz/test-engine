@@ -1,4 +1,4 @@
-use refs::{ToWeak, Weak};
+use refs::Weak;
 use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewSetup};
 
 use crate::{DropDown, Label};

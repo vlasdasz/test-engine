@@ -1,5 +1,5 @@
 use gm::flat::Size;
-use refs::{ToWeak, Weak};
+use refs::Weak;
 use ui::{view, SubView, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
 use crate::{CollectionData, ScrollView};

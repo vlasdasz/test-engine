@@ -1,7 +1,7 @@
 use std::sync::atomic::Ordering::Relaxed;
 
 use gm::Color;
-use refs::{ToWeak, Weak};
+use refs::Weak;
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
     view, AcceptChar, Event, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData,
