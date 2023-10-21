@@ -4,11 +4,11 @@
 use std::{collections::HashMap, ops::Index};
 
 use gm::{flat::Size, Color};
-use refs::{set_current_thread_as_main, Weak};
+use refs::{set_current_thread_as_main, weak_from_ref, Weak};
 use rtools::{data_manager::Handle, hash, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, text_size, Font};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews};
+use ui::{view, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews};
 
 use crate::ImageView;
 
@@ -68,7 +68,7 @@ impl MultilineLabel {
             split = self.split_text(&self.text, text_size);
         }
 
-        let mut this = self.weak();
+        let mut this = weak_from_ref(self);
         this.split_storage.insert(hash, (split, text_size));
 
         self.split_storage.get(&hash).unwrap()
@@ -78,7 +78,7 @@ impl MultilineLabel {
         self.remove_all_subviews();
 
         // Sorry borrow checker
-        let mut this = self.weak();
+        let mut this = weak_from_ref(self);
         let split = this.calculate_split();
 
         for line in &split.0 {

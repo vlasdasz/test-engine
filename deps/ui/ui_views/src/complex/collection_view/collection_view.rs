@@ -1,5 +1,5 @@
 use gm::flat::Size;
-use refs::Weak;
+use refs::{weak_from_ref, Weak};
 use ui::{view, SubView, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
 use crate::{CollectionData, ScrollView};
@@ -57,7 +57,7 @@ impl CollectionView {
             self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
             let cell = self.scroll.add_subview(cell);
             cell.enable_touch_low_priority();
-            let mut this = self.weak();
+            let mut this = weak_from_ref(self);
             cell.touch.up_inside.sub(move || this.data_source.cell_selected(i));
             self.cells.push(cell);
         }
@@ -114,7 +114,7 @@ impl CollectionView {
             self.data_source.setup_cell_for_index(cell.as_any_mut(), index);
             cell.set_frame((0, index as f32 * cell_height, width, cell_height));
             cell.enable_touch_low_priority();
-            let mut this = self.weak();
+            let mut this = weak_from_ref(self);
             cell.touch.began.sub(move || this.data_source.cell_selected(index));
             self.cells.push(cell);
         }

@@ -10,7 +10,7 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline,
     },
 };
-use refs::{Own, Weak};
+use refs::{weak_from_ref, Own, Weak};
 use smart_default::SmartDefault;
 use vents::Event;
 
@@ -143,9 +143,9 @@ impl Level for LevelBase {
     fn base_mut(&mut self) -> &mut LevelBase {
         self
     }
-    // fn rglica(&self) -> Weak<dyn Level> {
-    //     (self as &dyn Level).weak()
-    // }
+    fn weak_level(&self) -> Weak<dyn Level> {
+        weak_from_ref(self as &dyn Level)
+    }
 }
 
 pub trait LevelTemplates {

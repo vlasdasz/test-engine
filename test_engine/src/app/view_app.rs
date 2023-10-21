@@ -6,7 +6,7 @@ use gm::flat::Size;
 use rtools::{init_log, sleep, LogBuilder};
 use tokio::spawn;
 use ui::{
-    refs::{set_current_thread_as_main, Own, ToWeak},
+    refs::{set_current_thread_as_main, Own},
     View, ViewTest,
 };
 

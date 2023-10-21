@@ -12,7 +12,7 @@ use rtools::Time;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
-    refs::{is_main_thread, Own, ToWeak, Weak},
+    refs::{is_main_thread, weak_from_ref, Own, Weak},
     UIManager, View, ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
@@ -45,7 +45,7 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        let mut this = self.weak();
+        let mut this = weak_from_ref(self);
         SystemEvents::get().size_changed.val(move |size| {
             this.set_size(size);
         });

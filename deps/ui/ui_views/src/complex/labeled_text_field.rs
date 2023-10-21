@@ -1,4 +1,4 @@
-use refs::Weak;
+use refs::{weak_from_ref, Weak};
 use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewSetup};
 
 use crate::{Label, TextField};
@@ -39,7 +39,7 @@ impl Labeled for LabeledTextField {
     }
 
     fn labeled(&self) -> Weak<dyn Labeled> {
-        (self as &dyn Labeled).weak()
+        weak_from_ref(self as &dyn Labeled)
     }
 }
 

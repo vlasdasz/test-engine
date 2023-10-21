@@ -1,5 +1,5 @@
 use gm::Color;
-use refs::Weak;
+use refs::{weak_from_ref, Weak};
 use ui::{layout::Anchor, view, Container, Event, SubView, ViewData, ViewSetup, ViewTouch};
 
 #[view]
@@ -18,7 +18,11 @@ impl Switch {
     pub fn set_on(&mut self, on: bool) {
         self.on = on;
         const MARGIN: f32 = 5.0;
-        self.center.place.clear().relative(Anchor::Width, 0.4, self.weak()).tb(MARGIN);
+        self.center
+            .place
+            .clear()
+            .relative(Anchor::Width, 0.4, weak_from_ref(self))
+            .tb(MARGIN);
         if on {
             self.center.place.r(MARGIN);
             self.set_color(Color::GREEN);

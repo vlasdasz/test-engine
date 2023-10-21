@@ -1,7 +1,7 @@
 use std::sync::atomic::Ordering::Relaxed;
 
 use gm::Color;
-use refs::Weak;
+use refs::{weak_from_ref, Weak};
 use ui::{
     input::{ControlButton, KeyboardButton, UIEvents},
     view, AcceptChar, Event, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData,
@@ -115,7 +115,7 @@ impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
             UIManager::get().open_keyboard.store(true, Relaxed);
-            let mut this = self.weak();
+            let mut this = weak_from_ref(self);
             UIEvents::get().key_pressed.val(move |key| {
                 let mut text = this.label.text().to_string();
 

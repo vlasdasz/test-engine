@@ -112,5 +112,5 @@ pub trait Level {
 
     fn base(&self) -> &LevelBase;
     fn base_mut(&mut self) -> &mut LevelBase;
-    // fn rglica(&self) -> Weak<dyn Level>;
+    fn weak_level(&self) -> Weak<dyn Level>;
 }
