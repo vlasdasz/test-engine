@@ -1,6 +1,6 @@
 use std::ops::DerefMut;
 
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 use rtools::Random;
 
 use crate::{layout::Placer, Container, SubView, UIManager, View, ViewFrame};

@@ -9,7 +9,7 @@ use std::{
 
 use gm::flat::{Point, Rect, Size};
 use log::warn;
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 
 use crate::{layout::Placer, Container, UIDrawer, UIEvent, View};
 

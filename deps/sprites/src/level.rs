@@ -1,6 +1,6 @@
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 
 use crate::{get_sprites_drawer, LevelBase, Player, Sprite};
 
@@ -112,5 +112,5 @@ pub trait Level {
 
     fn base(&self) -> &LevelBase;
     fn base_mut(&mut self) -> &mut LevelBase;
-    fn rglica(&self) -> Weak<dyn Level>;
+    // fn rglica(&self) -> Weak<dyn Level>;
 }

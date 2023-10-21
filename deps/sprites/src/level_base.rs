@@ -10,7 +10,7 @@ use rapier2d::{
         NarrowPhase, PhysicsPipeline,
     },
 };
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 use smart_default::SmartDefault;
 use vents::Event;
 
@@ -91,7 +91,7 @@ impl LevelBase {
                 };
 
                 if let Some(other) = self.sprite_with_index(other_index.index()) {
-                    sprite.deref().weak().data_mut().on_collision.trigger(other);
+                    sprite.clone().data_mut().on_collision.trigger(other);
                 }
             }
         }
@@ -104,7 +104,7 @@ impl LevelBase {
                 Some(handle) => handle.index() == index,
                 None => false,
             })
-            .map(ToWeak::weak)
+            .map(|a| a.weak())
     }
 
     pub(crate) fn remove(&mut self, sprite: usize) {
@@ -143,9 +143,9 @@ impl Level for LevelBase {
     fn base_mut(&mut self) -> &mut LevelBase {
         self
     }
-    fn rglica(&self) -> Weak<dyn Level> {
-        (self as &dyn Level).weak()
-    }
+    // fn rglica(&self) -> Weak<dyn Level> {
+    //     (self as &dyn Level).weak()
+    // }
 }
 
 pub trait LevelTemplates {

@@ -1,4 +1,5 @@
 #![feature(box_into_inner)]
+#![feature(arbitrary_self_types)]
 
 extern crate core;
 

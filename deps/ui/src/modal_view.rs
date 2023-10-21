@@ -1,6 +1,6 @@
 use dispatch::{from_main, on_main};
 use gm::{flat::Size, Color};
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 use vents::Event;
 
 use crate::{view::ViewSubviews, TouchStack, UIManager, View, ViewData};

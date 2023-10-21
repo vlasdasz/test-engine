@@ -63,7 +63,7 @@ impl Sprite for Body {
 
         sprite.collider_handle = collider_handle.into();
         sprite.rigid_handle = rigid_handle.into();
-        sprite.level = level.rglica();
+        sprite.level = level;
 
         Own::new(Self { sprite })
     }

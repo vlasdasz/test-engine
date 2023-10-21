@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::prelude::ActiveEvents;
-use refs::{Own, ToWeak, Weak};
+use refs::{Own, Weak};
 
 use crate::{Body, Level, Sprite, SpriteData};
 
@@ -11,11 +11,10 @@ pub struct Unit {
 }
 
 impl Unit {
-    pub fn enable_collision_detection(&mut self) -> &mut Self {
+    pub fn enable_collision_detection(self: Weak<Self>) -> Weak<Self> {
         self.collider_mut().set_active_events(ActiveEvents::COLLISION_EVENTS);
 
-        let rglica = (self as &dyn Sprite).weak();
-        self.level_mut().base_mut().colliding_sprites.push(rglica);
+        self.level_mut().base_mut().colliding_sprites.push(self);
         self
     }
 }

@@ -54,7 +54,6 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
         impl #generics ui::View for #name <#type_params> {
             fn weak_view(&self) -> ui::refs::Weak<dyn ui::View> {
-                use ui::refs::ToWeak;
                 (self as &dyn ui::View).weak()
             }
             fn base(&self) -> &ui::ViewBase {
@@ -77,9 +76,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             fn __internal_setup(&mut self) {
                 use ui::ViewSetup;
                 use ui::WithHeader;
-                use ui::refs::ToWeak;
                 self.view.label = #name_str.to_string();
-                self.weak().layout_header();
+                self.layout_header();
                 self.weak().setup();
             }
         }
