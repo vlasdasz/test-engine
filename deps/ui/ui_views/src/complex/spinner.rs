@@ -3,6 +3,7 @@ use std::{
     sync::{Mutex, MutexGuard},
 };
 
+use chrono::Utc;
 use dispatch::{on_main, on_main_sync};
 use gm::{
     flat::{point_on_circle, Size},
@@ -10,7 +11,7 @@ use gm::{
 };
 use log::{trace, warn};
 use refs::Weak;
-use rtools::{Animation, Time};
+use rtools::Animation;
 use ui::{
     view, Container, Event, ModalView, TouchStack, UIAnimation, View, ViewAnimation, ViewCallbacks, ViewData,
     ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
@@ -79,7 +80,7 @@ impl ViewSetup for Spinner {
 
 impl ViewCallbacks for Spinner {
     fn update(&mut self) {
-        let current_time: i64 = Time::now();
+        let current_time: i64 = Utc::now().timestamp_micros();
 
         let val = ((current_time % MICROSECONDS_IN_ONE_SECOND) as f32) / MICROSECONDS_IN_ONE_SECOND as f32;
 

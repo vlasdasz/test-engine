@@ -1,5 +1,6 @@
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering::Relaxed};
 
+use chrono::Utc;
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
@@ -8,7 +9,6 @@ use gm::{
     Color,
 };
 use rest::API;
-use rtools::Time;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
@@ -101,7 +101,7 @@ impl Screen {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
     fn calculate_fps(&mut self) {
-        let now = Time::now();
+        let now = Utc::now().timestamp_micros();
 
         let interval = now - self.ui.prev_time;
         self.ui.prev_time = now;
