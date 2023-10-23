@@ -10,7 +10,7 @@ use test_engine::{
     text::{render_text, Font},
     Image, Level, LevelBase, Sprite,
 };
-use ui::refs::{ToWeak, Weak};
+use ui::refs::{weak_from_ref, Weak};
 
 #[derive(Default)]
 pub struct TestGameLevel {
@@ -75,7 +75,7 @@ impl Level for TestGameLevel {
         self.base_mut().player = player;
         player.set_image("frisk.png").enable_collision_detection();
         player.weapon.set_image("ak.png");
-        let mut this = self.weak();
+        let mut this = weak_from_ref(self);
         player.on_collision.sub(move || {
             this.collision_sound.play();
         });
@@ -98,7 +98,7 @@ impl Level for TestGameLevel {
         &mut self.base
     }
 
-    fn rglica(&self) -> Weak<dyn Level> {
-        (self as &dyn Level).weak()
+    fn weak_level(&self) -> Weak<dyn Level> {
+        weak_from_ref(self as &dyn Level)
     }
 }

@@ -2,7 +2,7 @@ use std::any::Any;
 
 use test_engine::gm::flat::Size;
 use ui::{
-    refs::{Own, ToWeak, Weak},
+    refs::{Own, Weak},
     view, Container, SubView, View, ViewSetup, ViewSubviews, WithHeader,
 };
 use ui_views::{collection_data, CollectionData, CollectionView, Label};

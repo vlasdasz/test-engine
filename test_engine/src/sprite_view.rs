@@ -1,5 +1,5 @@
 use sprites::Sprite;
-use ui::{refs, refs::Weak, view, SubView, ViewCallbacks, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewCallbacks, ViewSetup};
 use ui_views::{Button, LabeledView};
 
 #[view]

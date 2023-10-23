@@ -3,7 +3,7 @@ use test_engine::{
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
 };
-use ui::refs::{ToWeak, Weak};
+use ui::refs::{weak_from_ref, Weak};
 
 #[derive(Default)]
 pub struct BenchmarkLevel {
@@ -55,7 +55,7 @@ impl Level for BenchmarkLevel {
     }
 
     fn update(&mut self) {
-        self.player.weapon.shoot_at((10, 15));
+        self.player.weapon.weak().shoot_at((10, 15));
         self.bullets_count += 1;
         self.left_wall.set_x(self.left_animation.value());
         self.right_wall.set_x(self.right_animation.value());
@@ -69,7 +69,7 @@ impl Level for BenchmarkLevel {
         &mut self.base
     }
 
-    fn rglica(&self) -> Weak<dyn Level> {
-        (self as &dyn Level).weak()
+    fn weak_level(&self) -> Weak<dyn Level> {
+        weak_from_ref(self as &dyn Level)
     }
 }
