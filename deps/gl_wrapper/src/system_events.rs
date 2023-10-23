@@ -2,7 +2,7 @@
 
 use std::{
     path::PathBuf,
-    sync::atomic::{AtomicBool, Ordering},
+    sync::atomic::{AtomicI32, Ordering},
 };
 
 use glfw::{Action, Key, MouseButton};
@@ -20,7 +20,7 @@ pub struct SystemEvents {
     pub key_pressed:  Event<(Key, Action)>,
     pub scroll:       Event<Point>,
     pub file_drop:    Event<Vec<PathBuf>>,
-    pub terminate:    AtomicBool,
+    pub terminate:    AtomicI32,
 }
 
 impl SystemEvents {
@@ -33,7 +33,7 @@ impl SystemEvents {
             key_pressed:  Default::default(),
             scroll:       Default::default(),
             file_drop:    Default::default(),
-            terminate:    Default::default(),
+            terminate:    AtomicI32::new(i32::MIN),
         }
     }
 
@@ -47,7 +47,7 @@ impl SystemEvents {
         }
     }
 
-    pub fn terminate() {
-        unsafe { EVENTS.as_ref().unwrap().terminate.store(true, Ordering::Relaxed) };
+    pub fn terminate(code: i32) {
+        unsafe { EVENTS.as_ref().unwrap().terminate.store(code, Ordering::Relaxed) };
     }
 }

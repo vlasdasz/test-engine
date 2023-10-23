@@ -1,4 +1,4 @@
-use std::sync::atomic::Ordering;
+use std::{process::exit, sync::atomic::Ordering};
 
 use glfw::{Context, Window};
 use gm::flat::Size;
@@ -49,8 +49,10 @@ impl GLFWManager {
 
             let events = SystemEvents::get();
 
-            if events.terminate.load(Ordering::Relaxed) {
-                return;
+            let terminate = events.terminate.load(Ordering::Relaxed);
+
+            if terminate != i32::MIN {
+                exit(terminate);
             }
 
             for (_, event) in glfw::flush_messages(&self.gl_events) {

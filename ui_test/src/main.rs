@@ -3,7 +3,6 @@
 #![feature(stmt_expr_attributes)]
 #![feature(const_trait_impl)]
 #![feature(specialization)]
-#![feature(let_chains)]
 #![feature(arbitrary_self_types)]
 
 use crate::view_tests::button_test::test_button_view;

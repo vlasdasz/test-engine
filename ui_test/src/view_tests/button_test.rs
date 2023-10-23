@@ -1,4 +1,5 @@
 use glfw::MouseButtonLeft;
+use log::error;
 use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, gm::flat::Size};
 use tokio::spawn;
 use ui::{refs::Weak, view, SubView, Touch, ViewSetup, ViewTest};
@@ -39,9 +40,18 @@ fn test_combinations<const A: usize>(comb: [(&'static str, u32); A]) {
             for touch in touches {
                 inject_touch(touch).await;
             }
-            assert_eq!(get_state(), comb.1);
+
+            if get_state() != comb.1 {
+                error!(
+                    "Failed state for: {}Expected: {} got: {}",
+                    comb.0,
+                    comb.1,
+                    get_state()
+                );
+                SystemEvents::terminate(1);
+            }
         }
-        SystemEvents::terminate();
+        SystemEvents::terminate(0);
     });
 }
 
