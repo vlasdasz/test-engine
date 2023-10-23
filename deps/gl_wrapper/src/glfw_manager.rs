@@ -37,7 +37,7 @@ impl GLFWManager {
         todo!()
     }
 
-    pub fn start_main_loop(&mut self) {
+    pub fn start_main_loop(&mut self) -> u8 {
         self.window.set_key_polling(true);
         self.window.set_cursor_pos_polling(true);
         self.window.set_mouse_button_polling(true);
@@ -52,7 +52,7 @@ impl GLFWManager {
             let terminate = events.terminate.load(Ordering::Relaxed);
 
             if terminate != i32::MIN {
-                exit(terminate);
+                return terminate as u8;
             }
 
             for (_, event) in glfw::flush_messages(&self.gl_events) {
@@ -71,13 +71,15 @@ impl GLFWManager {
                     }
                     glfw::WindowEvent::Scroll(x, y) => events.scroll.trigger((x, y).into()),
                     glfw::WindowEvent::FileDrop(paths) => events.file_drop.trigger(paths),
-                    glfw::WindowEvent::Close => return,
+                    glfw::WindowEvent::Close => return 0,
                     _ => {}
                 }
             }
 
             events.frame_drawn.trigger(());
         }
+
+        0
     }
 
     pub fn set_size(&mut self, size: Size) {

@@ -5,11 +5,13 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
+use std::process::ExitCode;
+
 use crate::view_tests::button_test::test_button_view;
 
 mod ui_test;
 mod view_tests;
 
-fn main() {
-    test_button_view();
+fn main() -> ExitCode {
+    dbg!(test_button_view()).into()
 }

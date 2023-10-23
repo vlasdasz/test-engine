@@ -44,9 +44,9 @@ pub trait App {
     }
 
     #[cfg(desktop)]
-    fn launch(&mut self) {
+    fn launch(&mut self) -> u8 {
         trace!("Launch");
-        self.core().screen.start_main_loop();
+        self.core().screen.start_main_loop()
     }
 }
 

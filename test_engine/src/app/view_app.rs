@@ -25,7 +25,7 @@ impl<T: View + Default + 'static> ViewApp<T> {
         });
     }
 
-    pub fn start_with_actor(actions: impl FnOnce() + Send + 'static) {
+    pub fn start_with_actor(actions: impl FnOnce() + Send + 'static) -> u8 {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
             set_current_thread_as_main();
 
@@ -34,8 +34,8 @@ impl<T: View + Default + 'static> ViewApp<T> {
                 actions();
             });
 
-            Self::make_app().launch();
-        });
+            Self::make_app().launch()
+        })
     }
 }
 

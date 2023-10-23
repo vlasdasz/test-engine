@@ -201,7 +201,7 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn start_main_loop(&mut self) {
+    pub fn start_main_loop(&mut self) -> u8 {
         self.setup_events();
         self.glfw.start_main_loop()
     }
