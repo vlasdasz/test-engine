@@ -1,6 +1,6 @@
 #[cfg(mobile)]
 use core::ffi::{c_float, c_int};
-use std::path::PathBuf;
+use std::{path::PathBuf, process::ExitCode};
 
 use gm::flat::Size;
 #[cfg(desktop)]
@@ -44,7 +44,7 @@ pub trait App {
     }
 
     #[cfg(desktop)]
-    fn launch(&mut self) -> u8 {
+    fn launch(&mut self) -> ExitCode {
         trace!("Launch");
         self.core().screen.start_main_loop()
     }

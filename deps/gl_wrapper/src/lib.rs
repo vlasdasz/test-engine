@@ -1,4 +1,5 @@
 #![feature(const_trait_impl)]
+#![feature(process_exitcode_internals)]
 
 pub use buffers::{Buffer, BufferConfig};
 use cfg_if::cfg_if;

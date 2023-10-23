@@ -13,5 +13,5 @@ mod ui_test;
 mod view_tests;
 
 fn main() -> ExitCode {
-    dbg!(test_button_view()).into()
+    test_button_view()
 }

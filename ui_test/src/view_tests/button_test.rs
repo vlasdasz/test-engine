@@ -1,3 +1,5 @@
+use std::process::ExitCode;
+
 use glfw::MouseButtonLeft;
 use log::error;
 use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, gm::flat::Size};
@@ -48,10 +50,10 @@ fn test_combinations<const A: usize>(comb: [(&'static str, u32); A]) {
                     comb.1,
                     get_state()
                 );
-                SystemEvents::terminate(1);
+                SystemEvents::terminate(ExitCode::FAILURE);
             }
         }
-        SystemEvents::terminate(0);
+        SystemEvents::terminate(ExitCode::SUCCESS);
     });
 }
 
@@ -64,7 +66,7 @@ async fn inject_touch(touch: Touch) {
     .await;
 }
 
-pub fn test_button_view() -> u8 {
+pub fn test_button_view() -> ExitCode {
     test_engine::ViewApp::<ButtonTestView>::start_with_actor(|| {
         return;
         test_combinations([

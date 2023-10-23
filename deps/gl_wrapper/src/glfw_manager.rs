@@ -1,4 +1,4 @@
-use std::{process::exit, sync::atomic::Ordering};
+use std::{process::ExitCode, sync::atomic::Ordering};
 
 use glfw::{Context, Window};
 use gm::flat::Size;
@@ -37,7 +37,7 @@ impl GLFWManager {
         todo!()
     }
 
-    pub fn start_main_loop(&mut self) -> u8 {
+    pub fn start_main_loop(&mut self) -> ExitCode {
         self.window.set_key_polling(true);
         self.window.set_cursor_pos_polling(true);
         self.window.set_mouse_button_polling(true);
@@ -52,7 +52,7 @@ impl GLFWManager {
             let terminate = events.terminate.load(Ordering::Relaxed);
 
             if terminate != i32::MIN {
-                return terminate as u8;
+                return (terminate as u8).into();
             }
 
             for (_, event) in glfw::flush_messages(&self.gl_events) {
@@ -71,7 +71,7 @@ impl GLFWManager {
                     }
                     glfw::WindowEvent::Scroll(x, y) => events.scroll.trigger((x, y).into()),
                     glfw::WindowEvent::FileDrop(paths) => events.file_drop.trigger(paths),
-                    glfw::WindowEvent::Close => return 0,
+                    glfw::WindowEvent::Close => return ExitCode::SUCCESS,
                     _ => {}
                 }
             }
@@ -79,7 +79,7 @@ impl GLFWManager {
             events.frame_drawn.trigger(());
         }
 
-        0
+        ExitCode::SUCCESS
     }
 
     pub fn set_size(&mut self, size: Size) {

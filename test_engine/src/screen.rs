@@ -1,4 +1,10 @@
-use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering::Relaxed};
+use std::{
+    ops::DerefMut,
+    path::PathBuf,
+    process::ExitCode,
+    ptr::null_mut,
+    sync::atomic::{Ordering, Ordering::Relaxed},
+};
 
 use chrono::Utc;
 use gl_wrapper::{monitor::Monitor, GLWrapper};
@@ -64,7 +70,7 @@ impl Screen {
 
         UIManager::root_view().add_subview(view).place.as_background();
 
-        if SHOW_DEBUG_VIEW {
+        if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) {
             let mut debug_view = DebugView::new();
             debug_view.priority = 10;
             let weak = debug_view.weak();
@@ -109,7 +115,7 @@ impl Screen {
         self.ui.frame_time = interval as f32 / MICROSECONDS_IN_ONE_SECOND as f32;
         self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
-        if SHOW_DEBUG_VIEW && self.ui.debug_view.is_ok() {
+        if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) && self.ui.debug_view.is_ok() {
             let fps = self.ui.fps;
             self.ui.debug_view.fps.trigger(fps);
             if API::is_ok() {
@@ -201,7 +207,7 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn start_main_loop(&mut self) -> u8 {
+    pub fn start_main_loop(&mut self) -> ExitCode {
         self.setup_events();
         self.glfw.start_main_loop()
     }

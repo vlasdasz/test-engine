@@ -1,6 +1,6 @@
 #![cfg(desktop)]
 
-use std::{marker::PhantomData, path::PathBuf};
+use std::{marker::PhantomData, path::PathBuf, process::ExitCode};
 
 use gm::flat::Size;
 use rtools::{init_log, sleep, LogBuilder};
@@ -25,7 +25,7 @@ impl<T: View + Default + 'static> ViewApp<T> {
         });
     }
 
-    pub fn start_with_actor(actions: impl FnOnce() + Send + 'static) -> u8 {
+    pub fn start_with_actor(actions: impl FnOnce() + Send + 'static) -> ExitCode {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
             set_current_thread_as_main();
 

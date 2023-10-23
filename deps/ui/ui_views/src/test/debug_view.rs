@@ -1,4 +1,8 @@
-use std::{collections::HashMap, fmt::Display, sync::OnceLock};
+use std::{
+    collections::HashMap,
+    fmt::Display,
+    sync::{atomic::AtomicBool, OnceLock},
+};
 
 use gm::Color;
 use refs::{dump_ref_stats, Weak};
@@ -9,7 +13,7 @@ use ui::{
 
 use crate::{Button, Label};
 
-pub const SHOW_DEBUG_VIEW: bool = false;
+pub const SHOW_DEBUG_VIEW: AtomicBool = AtomicBool::new(false);
 
 static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 

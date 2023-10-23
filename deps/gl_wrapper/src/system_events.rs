@@ -2,6 +2,7 @@
 
 use std::{
     path::PathBuf,
+    process::ExitCode,
     sync::atomic::{AtomicI32, Ordering},
 };
 
@@ -47,7 +48,7 @@ impl SystemEvents {
         }
     }
 
-    pub fn terminate(code: i32) {
-        unsafe { EVENTS.as_ref().unwrap().terminate.store(code, Ordering::Relaxed) };
+    pub fn terminate(code: ExitCode) {
+        unsafe { EVENTS.as_ref().unwrap().terminate.store(code.to_i32(), Ordering::Relaxed) };
     }
 }
