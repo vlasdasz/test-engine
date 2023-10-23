@@ -13,7 +13,7 @@ use sprites::Level;
 use ui::input::{ControlButton, KeyEvent, KeyboardButton, TouchEvent, UIEvents};
 use ui::{
     check_touch,
-    refs::{weak_from_ref, Own, Weak},
+    refs::{Own, Weak},
     Touch, TouchStack, UIManager,
 };
 use ui_views::debug_view::DebugView;
@@ -107,7 +107,7 @@ impl UILayer {
     pub fn setup_events(&mut self) {
         let ev = SystemEvents::get();
 
-        let mut this = weak_from_ref(self);
+        let mut this = ui::refs::weak_from_ref(self);
         ev.key_pressed.val(move |a| {
             let key = a.0;
             let action = a.1;
