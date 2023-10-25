@@ -1,43 +1,52 @@
+use std::cell::RefCell;
+
 use gm::volume::GyroData;
-use refs::{is_main_thread, Weak};
+use refs::{MainLock, Weak};
 use vents::Event;
 
-use crate::{input::keyboard::KeyEvent, View, ViewTouch};
+use crate::{input::keyboard::KeyEvent, View};
 
-static mut EVENTS: *mut UIEvents = std::ptr::null_mut();
+static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 
+#[derive(Default)]
 pub struct UIEvents {
-    pub key_pressed:   Event<KeyEvent>,
-    pub scroll:        Event<f32>,
-    pub gyro_changed:  Event<GyroData>,
-    pub selected_view: Weak<dyn View>,
+    pub key_pressed:  Event<KeyEvent>,
+    pub scroll:       Event<f32>,
+    pub gyro_changed: Event<GyroData>,
+    selected_view:    RefCell<Weak<dyn View>>,
 }
 
 impl UIEvents {
-    fn init() -> Self {
-        Self {
-            key_pressed:   Default::default(),
-            scroll:        Default::default(),
-            gyro_changed:  Default::default(),
-            selected_view: Default::default(),
-        }
-    }
-
-    pub fn get() -> &'static mut Self {
-        debug_assert!(is_main_thread());
-        unsafe {
-            if EVENTS.is_null() {
-                EVENTS = Box::into_raw(Box::new(Self::init()));
-            }
-            EVENTS.as_mut().unwrap()
-        }
+    pub fn get() -> &'static Self {
+        &UI_EVENTS
     }
 }
 
 impl UIEvents {
-    pub fn unselect_view(&mut self) {
-        if let Some(view) = self.selected_view.get() {
-            view.set_selected(false)
+    pub fn unselect_view(&self) {
+        let mut selected_view = self.selected_view.borrow_mut();
+        if !selected_view.is_ok() {
+            return;
         }
+        selected_view.is_selected = false;
+        selected_view.on_selection_changed(false);
+        *selected_view = Default::default();
+    }
+
+    pub fn set_selected(&self, mut view: Weak<dyn View>, selected: bool) {
+        let mut selected_view = self.selected_view.borrow_mut();
+
+        if let Some(selected) = selected_view.get() {
+            selected.is_selected = false;
+            selected.on_selection_changed(false);
+            *selected_view = Default::default();
+        }
+
+        if selected {
+            *selected_view = view;
+        }
+
+        view.is_selected = selected;
+        view.on_selection_changed(selected);
     }
 }

@@ -20,20 +20,7 @@ impl<T: ?Sized + View> ViewTouch for T {
     }
 
     fn set_selected(&mut self, selected: bool) {
-        let events = UIEvents::get();
-
-        if let Some(selected) = events.selected_view.get() {
-            selected.is_selected = false;
-            selected.on_selection_changed(false);
-            events.selected_view = Default::default();
-        }
-
-        if selected {
-            events.selected_view = self.weak_view();
-        }
-
-        self.is_selected = selected;
-        self.on_selection_changed(selected);
+        UIEvents::get().set_selected(self.weak_view(), selected);
     }
 
     fn enable_touch(&self) {
@@ -50,7 +37,7 @@ impl<T: ?Sized + View> ViewTouch for T {
 }
 
 pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
-    if view.freed() || view.is_hidden {
+    if view.is_null() || view.is_hidden {
         return false;
     }
 

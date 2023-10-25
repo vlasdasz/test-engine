@@ -11,7 +11,7 @@ use std::process::ExitCode;
 
 use test_engine::{App, MakeApp};
 
-use crate::test_game::TestApp;
+use crate::test_game::test_app::TestApp;
 
 #[tokio::main]
 async fn main() -> ExitCode {

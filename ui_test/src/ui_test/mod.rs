@@ -12,7 +12,6 @@ mod slider_test_view;
 mod spinner_test_view;
 mod switch_test_view;
 mod table_test_view;
-mod ui_test;
+pub mod ui_test;
 
 pub use collection_test_view::*;
-pub use ui_test::*;

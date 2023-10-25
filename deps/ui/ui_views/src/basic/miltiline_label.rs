@@ -50,13 +50,13 @@ impl MultilineLabel {
         self.set_text("")
     }
 
-    fn calculate_split(&mut self) -> &(Vec<String>, f32) {
+    fn calculate_split(&mut self) -> (Vec<String>, f32) {
         let size = self.size();
 
         let hash = hash(size);
 
         if let Some(split) = self.split_storage.get(&hash) {
-            return split;
+            return split.clone();
         }
 
         let mut text_size = self.size;
@@ -71,15 +71,13 @@ impl MultilineLabel {
         let mut this = weak_from_ref(self);
         this.split_storage.insert(hash, (split, text_size));
 
-        self.split_storage.get(&hash).unwrap()
+        self.split_storage.get(&hash).unwrap().clone()
     }
 
     fn set_letters(&mut self) {
         self.remove_all_subviews();
 
-        // Sorry borrow checker
-        let mut this = weak_from_ref(self);
-        let split = this.calculate_split();
+        let split = self.calculate_split();
 
         for line in &split.0 {
             let mut image_view = self.__internal_add_view::<ImageView>();
