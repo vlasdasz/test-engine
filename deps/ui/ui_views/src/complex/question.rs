@@ -1,6 +1,6 @@
 use gm::{flat::Size, Color};
 use refs::Weak;
-use ui::{view, Event, ModalView, SubView, ViewData, ViewSetup};
+use ui::{view, ModalView, OnceEvent, SubView, ViewData, ViewSetup};
 
 use crate::{Button, MultilineLabel};
 
@@ -9,11 +9,11 @@ pub struct Question {
     label:         SubView<MultilineLabel>,
     ok_button:     SubView<Button>,
     cancel_button: SubView<Button>,
-    event:         Event<bool>,
+    event:         OnceEvent<bool>,
 }
 
 impl ModalView<String, bool> for Question {
-    fn modal_event(&self) -> &Event<bool> {
+    fn modal_event(&self) -> &OnceEvent<bool> {
         &self.event
     }
 

@@ -1,7 +1,7 @@
 use dispatch::{from_main, on_main};
 use gm::{flat::Size, Color};
 use refs::{Own, Weak};
-use vents::Event;
+use vents::OnceEvent;
 
 use crate::{view::ViewSubviews, TouchStack, UIManager, View, ViewData};
 
@@ -48,7 +48,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
         });
     }
 
-    fn modal_event(&self) -> &Event<Out>;
+    fn modal_event(&self) -> &OnceEvent<Out>;
 
     fn modal_size() -> Size;
 

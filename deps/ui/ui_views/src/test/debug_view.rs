@@ -13,7 +13,7 @@ use ui::{
 
 use crate::{Button, Label};
 
-pub const SHOW_DEBUG_VIEW: AtomicBool = AtomicBool::new(false);
+pub static SHOW_DEBUG_VIEW: AtomicBool = AtomicBool::new(false);
 
 static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 

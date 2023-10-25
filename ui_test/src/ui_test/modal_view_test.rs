@@ -1,5 +1,5 @@
 use test_engine::gm::flat::Size;
-use ui::{refs::Weak, view, Event, ModalView, SubView, ViewSetup};
+use ui::{refs::Weak, view, ModalView, OnceEvent, SubView, ViewSetup};
 use ui_views::{link_button, Button, Label, TextField};
 
 #[view]
@@ -7,7 +7,7 @@ struct ModalTestView {
     button:      SubView<Button>,
     input_label: SubView<Label>,
     text_field:  SubView<TextField>,
-    event:       Event<u32>,
+    event:       OnceEvent<u32>,
 }
 
 impl ModalTestView {
@@ -29,7 +29,7 @@ impl ViewSetup for ModalTestView {
 }
 
 impl ModalView<u32, u32> for ModalTestView {
-    fn modal_event(&self) -> &Event<u32> {
+    fn modal_event(&self) -> &OnceEvent<u32> {
         &self.event
     }
 

@@ -143,7 +143,9 @@ impl UILayer {
                 event.uppercase();
             }
 
-            if let Some(char) = event.char() && event.is_press() {
+            if let Some(char) = event.char()
+                && event.is_press()
+            {
                 this.on_key_pressed(char);
             }
 

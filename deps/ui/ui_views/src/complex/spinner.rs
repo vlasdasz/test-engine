@@ -13,8 +13,8 @@ use log::{trace, warn};
 use refs::Weak;
 use rtools::Animation;
 use ui::{
-    view, Container, Event, ModalView, TouchStack, UIAnimation, View, ViewAnimation, ViewCallbacks, ViewData,
-    ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
+    view, Container, ModalView, OnceEvent, TouchStack, UIAnimation, View, ViewAnimation, ViewCallbacks,
+    ViewData, ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
 };
 
 static CIRCLES_N: u32 = 6;
@@ -44,7 +44,7 @@ impl Drop for SpinnerLock {
 #[view]
 pub struct Spinner {
     circles: Vec<Weak<Container>>,
-    event:   Event<()>,
+    event:   OnceEvent,
 }
 
 impl Spinner {
@@ -167,7 +167,7 @@ impl Spinner {
 }
 
 impl ModalView for Spinner {
-    fn modal_event(&self) -> &Event<()> {
+    fn modal_event(&self) -> &OnceEvent<()> {
         &self.event
     }
 
