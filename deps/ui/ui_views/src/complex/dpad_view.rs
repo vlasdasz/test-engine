@@ -1,4 +1,4 @@
-use gm::flat::{Direction, Size};
+use gm::flat::{Direction, IntSize};
 use refs::Weak;
 use rtools::Apply;
 use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewTest};
@@ -43,7 +43,7 @@ impl ViewCallbacks for DPadView {
 }
 
 impl ViewTest for DPadView {
-    fn test_size() -> Size
+    fn test_size() -> IntSize
     where Self: Sized {
         (140, 100).into()
     }

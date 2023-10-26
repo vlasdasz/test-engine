@@ -71,7 +71,7 @@ impl ShaderCompiler {
             program,
             len,
             std::ptr::null_mut(),
-            error.as_ptr() as *mut GLT!(GLchar)
+            error.as_ptr().cast_mut()
         );
 
         let error = error.to_string_lossy().into_owned();

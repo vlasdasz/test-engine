@@ -104,7 +104,7 @@ impl LevelBase {
                 Some(handle) => handle.index() == index,
                 None => false,
             })
-            .map(|a| a.weak())
+            .map(Own::weak)
     }
 
     pub(crate) fn remove(&mut self, sprite: usize) {

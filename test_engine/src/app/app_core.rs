@@ -22,15 +22,14 @@ mod desktop {
     use std::path::PathBuf;
 
     use gl_wrapper::GLFWManager;
-    use gm::flat::Size;
+    use gm::flat::IntSize;
     use ui::{refs::Own, View};
 
     use crate::{AppCore, Screen};
 
     impl AppCore {
-        pub fn new(size: impl Into<Size>, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
+        pub fn new(size: IntSize, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
             trace!("AppCore::new");
-            let size = size.into();
 
             let glfw = GLFWManager::new(size);
             trace!("GLFWManager: OK");

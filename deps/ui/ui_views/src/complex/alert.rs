@@ -13,7 +13,7 @@ pub struct Alert {
 
 impl Alert {
     pub fn show(message: impl ToString) {
-        Self::show_modally(message.to_string(), |_| {});
+        Self::show_modally(message.to_string(), |()| {});
     }
 }
 

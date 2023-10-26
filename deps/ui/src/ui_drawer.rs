@@ -38,8 +38,8 @@ pub trait UIDrawer: Debug + Send {
         GLWrapper::set_viewport((
             0,
             0,
-            UIManager::window_size().width * UIManager::display_scale(),
-            UIManager::window_size().height * UIManager::display_scale(),
+            UIManager::window_size().width as f32 * UIManager::display_scale(),
+            UIManager::window_size().height as f32 * UIManager::display_scale(),
         ));
     }
 }

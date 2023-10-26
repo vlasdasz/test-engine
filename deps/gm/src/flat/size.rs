@@ -19,6 +19,7 @@ pub struct SizeBase<T> {
 }
 
 pub type Size = SizeBase<f32>;
+pub type IntSize = SizeBase<u32>;
 
 impl Size {
     pub fn diagonal(&self) -> f32 {
@@ -121,5 +122,23 @@ impl Hash for Size {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.width.to_bits().hash(state);
         self.height.to_bits().hash(state);
+    }
+}
+
+impl From<IntSize> for Size {
+    fn from(value: IntSize) -> Self {
+        Self {
+            width:  value.width as _,
+            height: value.height as _,
+        }
+    }
+}
+
+impl From<(u32, u32)> for IntSize {
+    fn from(tup: (u32, u32)) -> Self {
+        Self {
+            width:  tup.0,
+            height: tup.1,
+        }
     }
 }

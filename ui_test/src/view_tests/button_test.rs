@@ -2,7 +2,7 @@ use std::process::ExitCode;
 
 use glfw::MouseButtonLeft;
 use log::error;
-use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, gm::flat::Size};
+use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, gm::flat::IntSize};
 use tokio::spawn;
 use ui::{refs::Weak, view, SubView, Touch, ViewSetup, ViewTest};
 use ui_views::Button;
@@ -26,7 +26,7 @@ impl ViewSetup for ButtonTestView {
 }
 
 impl ViewTest for ButtonTestView {
-    fn test_size() -> Size
+    fn test_size() -> IntSize
     where Self: Sized {
         (200, 100).into()
     }

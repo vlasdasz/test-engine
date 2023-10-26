@@ -1,4 +1,4 @@
-use test_engine::gm::flat::Size;
+use test_engine::gm::flat::IntSize;
 use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
 use ui_views::LabeledSwitch;
 
@@ -18,7 +18,7 @@ impl ViewSetup for LabeledSwitchTestView {
 }
 
 impl ViewTest for LabeledSwitchTestView {
-    fn test_size() -> Size
+    fn test_size() -> IntSize
     where Self: Sized {
         (600, 60).into()
     }

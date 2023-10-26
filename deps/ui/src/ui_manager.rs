@@ -7,7 +7,7 @@ use std::{
     },
 };
 
-use gm::flat::{Point, Rect, Size};
+use gm::flat::{IntSize, Point, Rect, Size};
 use log::warn;
 use refs::{Own, Weak};
 
@@ -25,7 +25,7 @@ pub struct UIManager {
 
     display_scale: Mutex<f32>,
 
-    window_size: Mutex<Size>,
+    window_size: Mutex<IntSize>,
 
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<Vec<PathBuf>>,
@@ -58,16 +58,16 @@ impl UIManager {
         UI_MANAGER.get_or_init(Self::init)
     }
 
-    pub fn set_window_size(size: impl Into<Size>) {
-        *Self::get().window_size.lock().unwrap() = size.into();
+    pub fn set_window_size(size: IntSize) {
+        *Self::get().window_size.lock().unwrap() = size;
     }
 
-    pub fn window_size() -> Size {
+    pub fn window_size() -> IntSize {
         *Self::get().window_size.lock().unwrap()
     }
 
     pub fn root_view_size() -> Size {
-        Self::window_size() // / UIManager::ui_scale()
+        Self::window_size().into() // / UIManager::ui_scale()
     }
 
     pub fn root_view() -> Weak<dyn View> {
@@ -115,7 +115,7 @@ impl UIManager {
 
         let rect: Rect = (
             rect.origin.x * scale,
-            (Self::window_size().height /* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height)
+            (Self::window_size().height as f32 /* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height)
                 * scale,
             rect.size.width * scale,
             rect.size.height * scale,

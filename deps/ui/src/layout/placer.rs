@@ -420,7 +420,7 @@ impl Placer {
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Distribute(ratio) => {
-                distribute_with_ratio(&self.frame.size, self.view.subviews_mut(), ratio)
+                distribute_with_ratio(self.frame.size, self.view.subviews_mut(), ratio)
             }
         }
     }
@@ -499,7 +499,7 @@ fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
     }
 }
 
-fn distribute_with_ratio(size: &Size, views: &mut [Own<dyn View>], ratios: &[f32]) {
+fn distribute_with_ratio(size: Size, views: &mut [Own<dyn View>], ratios: &[f32]) {
     assert_eq!(
         views.len(),
         ratios.len(),

@@ -10,4 +10,4 @@ pub use points_path::*;
 pub use process_points::*;
 pub use rect::Rect;
 pub use shape::Shape;
-pub use size::{Size, SizeBase};
+pub use size::*;

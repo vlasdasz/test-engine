@@ -7,7 +7,7 @@ pub trait ToLabel {
 
 impl ToLabel for &str {
     fn to_label(&self) -> String {
-        self.to_string()
+        (*self).to_string()
     }
 }
 
@@ -19,7 +19,7 @@ impl ToLabel for String {
 
 impl ToLabel for &String {
     fn to_label(&self) -> String {
-        self.to_string()
+        (*self).to_string()
     }
 }
 

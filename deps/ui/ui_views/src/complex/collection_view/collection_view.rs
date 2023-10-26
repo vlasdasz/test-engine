@@ -98,11 +98,14 @@ impl CollectionView {
 
         let content_height = content_end - content_start;
 
+        #[allow(clippy::cast_possible_truncation)]
+        #[allow(clippy::cast_sign_loss)]
         let first_cell_index = (content_start / cell_height).floor() as usize;
+        #[allow(clippy::cast_possible_truncation)]
+        #[allow(clippy::cast_sign_loss)]
+        let number_of_cells_fit = (content_height / cell_height).ceil() as usize;
 
-        let number_of_cells_fit = (content_height / cell_height).ceil();
-
-        let mut last_cell_index = first_cell_index + number_of_cells_fit as usize;
+        let mut last_cell_index = first_cell_index + number_of_cells_fit;
 
         if last_cell_index + 1 > number_of_cells {
             last_cell_index = number_of_cells - 1;

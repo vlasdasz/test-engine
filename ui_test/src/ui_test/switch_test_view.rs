@@ -1,4 +1,4 @@
-use test_engine::gm::flat::Size;
+use test_engine::gm::flat::IntSize;
 use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
 use ui_views::{Label, Switch};
 
@@ -19,7 +19,7 @@ impl ViewSetup for SwitchTestView {
 }
 
 impl ViewTest for SwitchTestView {
-    fn test_size() -> Size
+    fn test_size() -> IntSize
     where Self: Sized {
         (400, 200).into()
     }

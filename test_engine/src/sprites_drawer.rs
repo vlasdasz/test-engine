@@ -1,5 +1,5 @@
 use gl_wrapper::buffers::Buffers;
-use gm::flat::{Point, Size};
+use gm::flat::{IntSize, Point};
 use rtools::IntoF32;
 use sprites::{SpriteShaders, SpritesDrawer};
 
@@ -7,7 +7,7 @@ use crate::Sprite;
 
 pub struct TESpritesDrawer {
     scale:           f32,
-    resolution:      Size,
+    resolution:      IntSize,
     camera_position: Point,
 }
 
@@ -15,7 +15,7 @@ impl TESpritesDrawer {
     pub fn new() -> Box<Self> {
         let mut new = Self {
             scale:           0.0,
-            resolution:      (0, 0).into(),
+            resolution:      Default::default(),
             camera_position: Default::default(),
         };
         new.set_scale(1.0);
@@ -34,14 +34,14 @@ impl SpritesDrawer for TESpritesDrawer {
         SpriteShaders::textured_sprite().enable().set_scale(scale);
     }
 
-    fn resolution(&self) -> Size {
+    fn resolution(&self) -> IntSize {
         self.resolution
     }
 
-    fn set_resolution(&mut self, size: Size) {
+    fn set_resolution(&mut self, size: IntSize) {
         self.resolution = size;
-        SpriteShaders::sprite().enable().set_resolution(size);
-        SpriteShaders::textured_sprite().enable().set_resolution(size);
+        SpriteShaders::sprite().enable().set_resolution(size.into());
+        SpriteShaders::textured_sprite().enable().set_resolution(size.into());
     }
 
     fn set_camera_rotation(&self, angle: f32) {

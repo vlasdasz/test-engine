@@ -2,7 +2,7 @@
 
 use std::{marker::PhantomData, path::PathBuf, process::ExitCode};
 
-use gm::flat::Size;
+use gm::flat::IntSize;
 use rtools::{init_log, sleep, LogBuilder};
 use tokio::spawn;
 use ui::{
@@ -45,7 +45,7 @@ impl<T: View + Default + 'static> App for ViewApp<T> {
         init_log(LogBuilder::builder().build());
     }
 
-    fn screen_size() -> Size
+    fn screen_size() -> IntSize
     where Self: Sized {
         T::test_size()
     }

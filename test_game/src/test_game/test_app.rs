@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use log::trace;
 use rtools::{init_log, LogBuilder};
-use test_engine::{app::AppCore, gm::flat::Size, paths::home, App};
+use test_engine::{app::AppCore, gm::flat::IntSize, paths::home, App};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
     NavigationView, View, ViewSetup,
@@ -21,7 +21,7 @@ impl App for TestApp {
         trace!("TestApp setup: OK");
     }
 
-    fn screen_size() -> Size {
+    fn screen_size() -> IntSize {
         (1000, 600).into()
     }
 

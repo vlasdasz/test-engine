@@ -16,8 +16,8 @@ impl Switch {
     }
 
     pub fn set_on(&mut self, on: bool) {
-        self.on = on;
         const MARGIN: f32 = 5.0;
+        self.on = on;
         self.center
             .place
             .clear()

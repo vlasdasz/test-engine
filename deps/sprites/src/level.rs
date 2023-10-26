@@ -30,8 +30,8 @@ pub trait Level {
         let mut pos = pos;
         let size = get_sprites_drawer().resolution();
 
-        pos.x -= size.width / 2.0;
-        pos.y -= size.height / 2.0;
+        pos.x -= size.width as f32 / 2.0;
+        pos.y -= size.height as f32 / 2.0;
         pos.y = -pos.y;
         pos /= 10;
 

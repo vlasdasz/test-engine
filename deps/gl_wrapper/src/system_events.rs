@@ -7,7 +7,7 @@ use std::{
 };
 
 use glfw::{Action, Key, MouseButton};
-use gm::flat::{Point, Size};
+use gm::flat::{IntSize, Point};
 use refs::MainLock;
 use smart_default::SmartDefault;
 use vents::Event;
@@ -18,7 +18,7 @@ static EVENTS: MainLock<SystemEvents> = MainLock::new();
 pub struct SystemEvents {
     pub frame_drawn:  Event,
     pub cursor_moved: Event<Point>,
-    pub size_changed: Event<Size>,
+    pub size_changed: Event<IntSize>,
     pub mouse_click:  Event<(MouseButton, Action)>,
     pub key_pressed:  Event<(Key, Action)>,
     pub scroll:       Event<Point>,

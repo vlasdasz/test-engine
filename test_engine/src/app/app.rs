@@ -2,7 +2,7 @@
 use core::ffi::{c_float, c_int};
 use std::path::PathBuf;
 
-use gm::flat::Size;
+use gm::flat::IntSize;
 #[cfg(desktop)]
 use ui::refs::set_current_thread_as_main;
 use ui::{refs::Own, View};
@@ -14,7 +14,7 @@ pub trait App {
     where Self: Sized {
     }
 
-    fn screen_size() -> Size
+    fn screen_size() -> IntSize
     where Self: Sized;
 
     fn make_root_view() -> Own<dyn View>

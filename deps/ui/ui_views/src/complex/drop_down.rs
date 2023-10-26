@@ -23,7 +23,7 @@ impl DropDown {
     }
 
     pub fn set_values(&mut self, values: &[impl ToLabel]) {
-        let values = values.iter().map(|a| a.to_label()).collect_vec();
+        let values = values.iter().map(ToLabel::to_label).collect_vec();
         self.label.set_text(values.first().unwrap());
         self.values = values;
         self.table.reload_data();

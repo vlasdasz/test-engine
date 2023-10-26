@@ -1,7 +1,7 @@
 use std::{process::ExitCode, sync::atomic::Ordering};
 
 use glfw::{Context, Window};
-use gm::flat::Size;
+use gm::flat::IntSize;
 
 use crate::{gl_loader::GLFWEvents, monitor::Monitor, system_events::SystemEvents, GLLoader};
 
@@ -12,7 +12,7 @@ pub struct GLFWManager {
 }
 
 impl GLFWManager {
-    pub fn new(size: Size) -> Self {
+    pub fn new(size: IntSize) -> Self {
         let mut loader = GLLoader::new(size);
         let monitors = loader.monitors();
         Self {
@@ -52,7 +52,7 @@ impl GLFWManager {
             let terminate = events.terminate.load(Ordering::Relaxed);
 
             if terminate != i32::MIN {
-                return (terminate as u8).into();
+                return u8::try_from(terminate).unwrap().into();
             }
 
             for (_, event) in glfw::flush_messages(&self.gl_events) {
@@ -82,8 +82,9 @@ impl GLFWManager {
         ExitCode::SUCCESS
     }
 
-    pub fn set_size(&mut self, size: Size) {
+    pub fn set_size(&mut self, size: IntSize) {
         #[allow(clippy::cast_possible_truncation)]
-        self.window.set_size(size.width as i32, size.height as i32)
+        self.window
+            .set_size(size.width.try_into().unwrap(), size.height.try_into().unwrap())
     }
 }

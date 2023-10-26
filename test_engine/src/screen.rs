@@ -10,7 +10,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
 use gm::{
-    flat::{Rect, Size},
+    flat::{IntSize, Rect},
     Color,
 };
 use rest::API;
@@ -60,7 +60,7 @@ impl Screen {
         });
     }
 
-    fn init(&mut self, #[cfg(desktop)] window_size: Size, view: Own<dyn View>) {
+    fn init(&mut self, #[cfg(desktop)] window_size: IntSize, view: Own<dyn View>) {
         UIManager::set_display_scale(self.monitor.scale);
 
         GLWrapper::enable_blend();
@@ -184,8 +184,7 @@ impl Screen {
         }
     }
 
-    pub fn set_size(&mut self, size: impl Into<Size>) {
-        let size = size.into();
+    pub fn set_size(&mut self, size: IntSize) {
         trace!("Size changed: {:?}", size);
         UIManager::set_window_size(size);
         get_sprites_drawer().set_resolution(size);
@@ -218,7 +217,7 @@ impl Screen {
         assets_path: impl Into<PathBuf>,
         root_view: Own<dyn View>,
         #[cfg(desktop)] glfw: GLFWManager,
-        #[cfg(desktop)] window_size: impl Into<Size>,
+        #[cfg(desktop)] window_size: IntSize,
     ) -> Own<Self> {
         trace!("Creating screen");
 
@@ -247,7 +246,7 @@ impl Screen {
 
         screen.init(
             #[cfg(desktop)]
-            window_size.into(),
+            window_size,
             root_view,
         );
 
