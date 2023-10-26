@@ -37,15 +37,16 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         #(#type_param_names),*
     };
 
-    let mut inits = quote!();
+    let Fields::Named(fields) = &mut data.fields else {
+        panic!("No named fields");
+    };
 
-    if let Fields::Named(fields) = &mut data.fields {
-        inits = add_inits(name, fields);
+    let inits = add_inits(name, fields);
+    let links = add_links(fields);
 
-        fields
-            .named
-            .push(Field::parse_named.parse2(quote! { view: ui::ViewBase }).unwrap());
-    }
+    fields
+        .named
+        .push(Field::parse_named.parse2(quote! { view: ui::ViewBase }).unwrap());
 
     quote! {
         #[derive(derivative::Derivative, Default)]
@@ -78,7 +79,14 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use ui::WithHeader;
                 self.view.label = #name_str.to_string();
                 self.layout_header();
+                ui::refs::weak_from_ref(self).__link();
                 ui::refs::weak_from_ref(self).setup();
+            }
+        }
+
+        impl #generics  #name <#type_params> {
+            fn __link(self: ui::refs::Weak<Self>) {
+                #links
             }
         }
 
@@ -103,18 +111,6 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
     let mut res = quote!();
 
     for field in &mut fields.named {
-        let attrs = field.attrs.clone();
-
-        let attr = attrs.first();
-        field.attrs = vec![];
-
-        if let Some(attr) = attr {
-            dbg!(&attr);
-
-            dbg!(attr.path.to_token_stream().to_string());
-            dbg!(attr.tokens.to_token_stream().to_string());
-        }
-
         let name = field.ident.as_ref().unwrap();
 
         if let Type::Path(path) = &field.ty {
@@ -130,6 +126,51 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
                 }
             }
         }
+    }
+
+    res
+}
+
+fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
+    let mut res = quote!();
+
+    for field in &mut fields.named {
+        let field_name = field.ident.as_ref().unwrap();
+
+        let attrs = field.attrs.clone();
+
+        let attr = attrs.first();
+        field.attrs = vec![];
+
+        let Some(attr) = attr else {
+            continue;
+        };
+
+        let attribute_name = attr.path.to_token_stream().to_string();
+        let tokens = attr.tokens.to_token_stream().to_string();
+        let method = tokens.strip_prefix("= ").unwrap();
+
+        let method = Ident::new(method, Span::call_site());
+
+        assert_eq!(
+            &attribute_name, "link",
+            "Invalid attribute. Only `link` is supported."
+        );
+
+        // self.#field_name.on_tap.sub(move || {
+        //     tokio::spawn(async move {
+        //         use ui_views::AlertErr;
+        //         self.#method().await.alert_err();
+        //     });
+        // });
+
+        res = quote! {
+            #res
+            {
+                use ui_views::AlertErr;
+                self.#field_name.on_tap.sub(move || self.#method().alert_err());
+            }
+        };
     }
 
     res
