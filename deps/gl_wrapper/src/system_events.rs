@@ -8,11 +8,13 @@ use std::{
 
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{Point, Size};
-use refs::is_main_thread;
+use refs::MainLock;
+use smart_default::SmartDefault;
 use vents::Event;
 
-static mut EVENTS: *const SystemEvents = std::ptr::null_mut();
+static EVENTS: MainLock<SystemEvents> = MainLock::new();
 
+#[derive(SmartDefault)]
 pub struct SystemEvents {
     pub frame_drawn:  Event,
     pub cursor_moved: Event<Point>,
@@ -21,34 +23,17 @@ pub struct SystemEvents {
     pub key_pressed:  Event<(Key, Action)>,
     pub scroll:       Event<Point>,
     pub file_drop:    Event<Vec<PathBuf>>,
-    pub terminate:    AtomicI32,
+
+    #[default(AtomicI32::new(i32::MIN))]
+    pub terminate: AtomicI32,
 }
 
 impl SystemEvents {
-    fn init() -> Self {
-        Self {
-            frame_drawn:  Default::default(),
-            cursor_moved: Default::default(),
-            size_changed: Default::default(),
-            mouse_click:  Default::default(),
-            key_pressed:  Default::default(),
-            scroll:       Default::default(),
-            file_drop:    Default::default(),
-            terminate:    AtomicI32::new(i32::MIN),
-        }
-    }
-
     pub fn get() -> &'static Self {
-        debug_assert!(is_main_thread());
-        unsafe {
-            if EVENTS.is_null() {
-                EVENTS = Box::into_raw(Box::new(Self::init()));
-            }
-            EVENTS.as_ref().unwrap()
-        }
+        &EVENTS
     }
 
     pub fn terminate(code: ExitCode) {
-        unsafe { EVENTS.as_ref().unwrap().terminate.store(code.to_i32(), Ordering::Relaxed) };
+        EVENTS.terminate.store(code.to_i32(), Ordering::Relaxed);
     }
 }

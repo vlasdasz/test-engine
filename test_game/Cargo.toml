@@ -12,6 +12,7 @@ crate-type = ["rlib", "staticlib", "dylib"]
 name = "test_game_lib"
 
 [dependencies]
+log = { workspace = true }
 tokio = { workspace = true }
 
 derivative = { workspace = true }

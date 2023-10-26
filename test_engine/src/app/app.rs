@@ -1,6 +1,6 @@
 #[cfg(mobile)]
 use core::ffi::{c_float, c_int};
-use std::{path::PathBuf, process::ExitCode};
+use std::path::PathBuf;
 
 use gm::flat::Size;
 #[cfg(desktop)]
@@ -44,7 +44,7 @@ pub trait App {
     }
 
     #[cfg(desktop)]
-    fn launch(&mut self) -> ExitCode {
+    fn launch(&mut self) -> std::process::ExitCode {
         trace!("Launch");
         self.core().screen.start_main_loop()
     }
@@ -85,6 +85,7 @@ impl<T: App> MakeApp for T {
         diagonal: c_float,
     ) -> Box<Self> {
         T::setup();
+        log::trace!("T::setup: OK");
         let core = AppCore::new(
             ppi,
             scale,
@@ -94,8 +95,9 @@ impl<T: App> MakeApp for T {
             width,
             height,
             diagonal,
-            Self::make_root_view(),
+            T::make_root_view(),
         );
+        log::trace!("AppCore::new: OK");
         let app = T::with_core(core);
         Box::new(app)
     }

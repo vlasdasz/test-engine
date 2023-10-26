@@ -1,4 +1,8 @@
-use std::{ops::Range, path::Path, sync::Mutex};
+use std::{
+    ops::Range,
+    path::Path,
+    sync::atomic::{AtomicBool, Ordering},
+};
 
 use gl_image::Image;
 use gm::flat::Size;
@@ -11,7 +15,7 @@ use rtools::{
 
 use crate::glyph::Glyph;
 
-static RENDER: Mutex<bool> = Mutex::new(true);
+static RENDER: AtomicBool = AtomicBool::new(true);
 
 pub static DEFAULT_FONT_SIZE: f32 = 64.0;
 
@@ -117,17 +121,11 @@ impl Font {
     }
 
     pub fn disable_render() {
-        *RENDER.lock().unwrap() = false
+        RENDER.store(false, Ordering::Relaxed);
     }
 
-    #[cfg(debug_assertions)]
     pub fn render_enabled() -> bool {
-        *RENDER.lock().unwrap()
-    }
-
-    #[cfg(not(debug_assertions))]
-    pub fn render_enabled() -> bool {
-        true
+        RENDER.load(Ordering::Relaxed)
     }
 
     pub fn glyph_for_char(&self, ch: char) -> &Glyph {

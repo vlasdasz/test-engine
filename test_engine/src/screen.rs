@@ -1,7 +1,6 @@
 use std::{
     ops::DerefMut,
     path::PathBuf,
-    process::ExitCode,
     ptr::null_mut,
     sync::atomic::{Ordering, Ordering::Relaxed},
 };
@@ -18,7 +17,7 @@ use rest::API;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
-    refs::{is_main_thread, Own, Weak},
+    refs::{assert_main_thread, Own, Weak},
     UIManager, View, ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
@@ -87,7 +86,7 @@ impl Screen {
 
 impl Screen {
     pub fn current() -> &'static mut Screen {
-        assert!(is_main_thread());
+        assert_main_thread();
         unsafe {
             assert!(!SCREEN.is_null(), "Screen was not initialized");
             SCREEN.as_mut().unwrap()
@@ -207,7 +206,7 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn start_main_loop(&mut self) -> ExitCode {
+    pub fn start_main_loop(&mut self) -> std::process::ExitCode {
         self.setup_events();
         self.glfw.start_main_loop()
     }

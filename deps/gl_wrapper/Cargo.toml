@@ -12,6 +12,8 @@ name = "gl_wrapper"
 anyhow = { workspace = true }
 cfg-if = { workspace = true }
 log = { workspace = true }
+smart-default = { workspace = true }
+
 rtools = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }

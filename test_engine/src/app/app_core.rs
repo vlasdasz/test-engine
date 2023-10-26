@@ -29,6 +29,7 @@ mod desktop {
 
     impl AppCore {
         pub fn new(size: impl Into<Size>, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
+            trace!("AppCore::new");
             let size = size.into();
 
             let glfw = GLFWManager::new(size);

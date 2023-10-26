@@ -22,7 +22,7 @@ extern "C" fn make_app(
 ) -> Box<dyn test_engine::App> {
     use test_engine::MakeApp;
 
-    crate::test_game::TestApp::make_app(
+    crate::test_game::test_app::TestApp::make_app(
         ppi,
         scale,
         refresh_rate,

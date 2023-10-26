@@ -1,10 +1,11 @@
 use std::path::PathBuf;
 
+use log::trace;
 use rtools::{init_log, LogBuilder};
 use test_engine::{app::AppCore, gm::flat::Size, paths::home, App};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
-    NavigationView, View,
+    NavigationView, View, ViewSetup,
 };
 
 use crate::test_game::TestGameView;
@@ -16,7 +17,8 @@ pub struct TestApp {
 impl App for TestApp {
     fn setup() {
         enable_ref_stats_counter(true);
-        init_log(LogBuilder::builder().build());
+        init_log(LogBuilder::builder().level(3).build());
+        trace!("TestApp setup: OK");
     }
 
     fn screen_size() -> Size {
@@ -24,7 +26,8 @@ impl App for TestApp {
     }
 
     fn make_root_view() -> Own<dyn View> {
-        NavigationView::with_view(Own::<TestGameView>::default())
+        trace!("make_root_view");
+        NavigationView::with_view(TestGameView::new())
     }
 
     fn with_core(core: AppCore) -> Self
