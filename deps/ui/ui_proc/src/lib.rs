@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use proc_macro::TokenStream;
-use quote::{quote, quote_spanned};
+use quote::{quote, quote_spanned, ToTokens};
 use syn::{
     parse::Parser,
     parse_macro_input, Data, DeriveInput, Field, Fields, FieldsNamed, GenericParam, Ident, Type,
@@ -97,12 +97,24 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     .into()
 }
 
-fn add_inits(root_name: &Ident, fields: &FieldsNamed) -> TokenStream2 {
+fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
     let subview = Ident::new("SubView", Span::call_site());
 
     let mut res = quote!();
 
-    for field in &fields.named {
+    for field in &mut fields.named {
+        let attrs = field.attrs.clone();
+
+        let attr = attrs.first();
+        field.attrs = vec![];
+
+        if let Some(attr) = attr {
+            dbg!(&attr);
+
+            dbg!(attr.path.to_token_stream().to_string());
+            dbg!(attr.tokens.to_token_stream().to_string());
+        }
+
         let name = field.ident.as_ref().unwrap();
 
         if let Type::Path(path) = &field.ty {

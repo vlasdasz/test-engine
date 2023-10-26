@@ -14,7 +14,7 @@ use ui::input::{ControlButton, KeyEvent, KeyboardButton, TouchEvent, UIEvents};
 use ui::{
     check_touch,
     refs::{Own, Weak},
-    Event, Touch, TouchStack, UIManager,
+    Touch, TouchStack, UIManager,
 };
 use ui_views::debug_view::DebugView;
 
@@ -36,8 +36,6 @@ pub struct UILayer {
 
     pub debug_view: Weak<DebugView>,
 
-    pub on_touch: Event<Touch>,
-
     #[cfg(desktop)]
     shift_pressed: bool,
 }
@@ -48,7 +46,7 @@ impl UILayer {
             return;
         }
 
-        self.on_touch.trigger(touch);
+        UIEvents::get().on_touch.trigger(touch);
 
         if LOG_TOUCHES && !touch.is_moved() {
             warn!("{touch:?}");

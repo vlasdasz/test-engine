@@ -32,6 +32,7 @@ valid = { workspace = true }
 
 ui = { workspace = true }
 ui_views = { workspace = true }
+ui_proc_debug = { workspace = true }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = { workspace = true }

@@ -47,5 +47,6 @@ test_game = { path = "test_game" }
 text = { path = "deps/text" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
+ui_proc_debug = { path = "deps/ui/ui_proc_debug" }
 ui_views = { path = "deps/ui/ui_views" }
 valid = { path = "deps/valid" }
