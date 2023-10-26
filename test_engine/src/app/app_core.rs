@@ -46,7 +46,7 @@ mod desktop {
 #[cfg(mobile)]
 pub mod mobile {
     use std::{
-        ffi::{c_float, c_int},
+        ffi::{c_float, c_int, c_uint},
         path::PathBuf,
     };
 
@@ -83,9 +83,9 @@ pub mod mobile {
     }
 
     impl AppCore {
-        pub fn set_screen_size(&mut self, width: c_int, height: c_int) {
+        pub fn set_screen_size(&mut self, width: c_uint, height: c_uint) {
             self.mobile.runtime.block_on(async {
-                self.screen.set_size((width, height));
+                self.screen.set_size((width, height).into());
             });
         }
 

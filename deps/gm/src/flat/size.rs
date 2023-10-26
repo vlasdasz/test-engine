@@ -134,6 +134,17 @@ impl From<IntSize> for Size {
     }
 }
 
+impl From<Size> for IntSize {
+    fn from(value: Size) -> Self {
+        #[allow(clippy::cast_possible_truncation)]
+        #[allow(clippy::cast_sign_loss)]
+        Self {
+            width:  value.width as _,
+            height: value.height as _,
+        }
+    }
+}
+
 impl From<(u32, u32)> for IntSize {
     fn from(tup: (u32, u32)) -> Self {
         Self {

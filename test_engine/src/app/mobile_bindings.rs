@@ -1,7 +1,7 @@
 #![cfg(mobile)]
 #![allow(improper_ctypes)]
 
-use std::ffi::{c_float, c_int, c_ulong};
+use std::ffi::{c_float, c_int, c_uint, c_ulong};
 
 use gl_wrapper::GLWrapper;
 
@@ -10,7 +10,7 @@ use crate::{mobile::MobileKeyEvent, App, TestEngineAction};
 static mut APP: Option<Box<dyn App>> = None;
 
 #[no_mangle]
-pub extern "C" fn set_screen_size(width: c_int, height: c_int) {
+pub extern "C" fn set_screen_size(width: c_uint, height: c_uint) {
     trace!("set_screen_size");
     unsafe { APP.as_mut().unwrap().core().set_screen_size(width, height) }
 }

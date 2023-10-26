@@ -12,7 +12,7 @@ enum KeyEvent {
     Backspace = 1,
 };
 
-void set_screen_size(int width, int height);
+void set_screen_size(unsigned int width, unsigned int height);
 
 enum TestEngineAction update_screen(void);
 
