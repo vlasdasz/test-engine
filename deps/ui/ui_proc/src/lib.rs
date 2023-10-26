@@ -152,25 +152,29 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
 
         let method = Ident::new(method, Span::call_site());
 
-        assert_eq!(
-            &attribute_name, "link",
-            "Invalid attribute. Only `link` is supported."
-        );
-
-        // self.#field_name.on_tap.sub(move || {
-        //     tokio::spawn(async move {
-        //         use ui_views::AlertErr;
-        //         self.#method().await.alert_err();
-        //     });
-        // });
-
-        res = quote! {
-            #res
-            {
-                use ui_views::AlertErr;
-                self.#field_name.on_tap.sub(move || self.#method().alert_err());
+        match attribute_name.as_str() {
+            "link" => {
+                res = quote! {
+                    #res
+                    {
+                        use ui_views::AlertErr;
+                        self.#field_name.on_tap.sub(move || self.#method().alert_err());
+                    }
+                };
             }
-        };
+            "link_async" => {
+                res = quote! {
+                    #res
+                    self.#field_name.on_tap.sub(move || {
+                        tokio::spawn(async move {
+                            use ui_views::AlertErr;
+                            self.#method().await.alert_err();
+                        });
+                    });
+                };
+            }
+            _ => panic!("Invalid attribute. Only `link` and 'link_async' are supported."),
+        }
     }
 
     res
