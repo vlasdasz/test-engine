@@ -21,13 +21,15 @@ pub struct SizeBase<T> {
 pub type Size = SizeBase<f32>;
 pub type IntSize = SizeBase<u32>;
 
+impl<T: Mul<Output = T> + Copy> SizeBase<T> {
+    pub fn square(&self) -> T {
+        self.width.mul(self.height)
+    }
+}
+
 impl Size {
     pub fn diagonal(&self) -> f32 {
         (self.width * self.width + self.height * self.height).sqrt()
-    }
-
-    pub fn square(&self) -> f32 {
-        self.width * self.height
     }
 
     pub fn is_valid(&self) -> bool {

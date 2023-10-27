@@ -1,4 +1,4 @@
-use std::{ffi::c_void, mem::size_of_val};
+use std::{ffi::c_void, mem::size_of_val, ptr::null};
 
 #[cfg(mobile)]
 use gles31_sys::*;
@@ -79,8 +79,6 @@ impl Buffer {
 }
 
 impl Buffer {
-    #[allow(clippy::cast_possible_truncation)]
-    #[allow(clippy::cast_possible_wrap)]
     pub fn draw_with_mode(&self, draw_mode: u32) {
         GL!(BindVertexArray, self.vertex_array_object);
 
@@ -88,9 +86,9 @@ impl Buffer {
             GL!(
                 DrawElements,
                 draw_mode,
-                indices.len() as i32,
+                indices.len().try_into().unwrap(),
                 GLC!(UNSIGNED_SHORT),
-                std::ptr::null::<c_void>()
+                null()
             )
         } else {
             GL!(DrawArrays, draw_mode, 0, self.vertices_count)
