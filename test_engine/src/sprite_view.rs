@@ -28,7 +28,7 @@ impl SpriteView {
     }
 
     fn setup_delete_button(self: Weak<Self>) {
-        dbg!(self);
+        _ = self;
         // self.delete_button.place.size(20, 20).tl(0);
         // self.delete_button.set_hidden(true).set_image(Images::delete());
         //
