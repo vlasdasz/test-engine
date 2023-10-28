@@ -5,6 +5,7 @@ use test_engine::{
     rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
+    ui_layer::UILayer,
     view, Screen,
 };
 use ui::{
@@ -58,7 +59,7 @@ impl TestGameView {
             ('a', Direction::Left),
         ]
         .apply(|(key, direction)| {
-            Screen::current().ui.keymap.add(key, move || {
+            UILayer::keymap().add(key, move || {
                 if let Some(level) = &mut Screen::current().ui.level {
                     if let Some(player) = level.player().get() {
                         player.move_by_direction(&direction)

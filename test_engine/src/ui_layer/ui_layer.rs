@@ -22,7 +22,7 @@ pub struct UILayer {
 
     pub cursor_position: Point,
 
-    pub keymap: Rc<Keymap>,
+    pub(crate) keymap: Rc<Keymap>,
 
     pub fps:        u64,
     pub prev_time:  i64,

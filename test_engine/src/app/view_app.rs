@@ -1,6 +1,6 @@
 #![cfg(desktop)]
 
-use std::{marker::PhantomData, path::PathBuf, process::ExitCode};
+use std::{future::Future, marker::PhantomData, path::PathBuf, process::ExitCode};
 
 use gm::flat::IntSize;
 use rtools::{init_log, sleep, LogBuilder};
@@ -25,13 +25,13 @@ impl<T: View + Default + 'static> ViewApp<T> {
         });
     }
 
-    pub fn start_with_actor(actions: impl FnOnce() + Send + 'static) -> ExitCode {
+    pub fn start_with_actor(actions: impl Future + Send + 'static) -> ExitCode {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
             set_current_thread_as_main();
 
             spawn(async {
                 sleep(1);
-                actions();
+                actions.await;
             });
 
             Self::make_app().launch()

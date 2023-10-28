@@ -2,9 +2,15 @@ use std::process::ExitCode;
 
 use glfw::MouseButtonLeft;
 use log::error;
-use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, gm::flat::IntSize};
-use tokio::spawn;
-use ui::{refs::Weak, view, SubView, Touch, ViewSetup, ViewTest};
+use test_engine::{
+    from_main, gl_wrapper::system_events::SystemEvents, gm::flat::IntSize, on_main, ui_layer::UILayer,
+};
+use tokio::{spawn, sync::mpsc::channel};
+use ui::{
+    input::UIEvents,
+    refs::{Own, Weak},
+    view, SubView, Touch, ViewSetup, ViewTest,
+};
 use ui_views::Button;
 
 use crate::view_tests::state::{clear_state, get_state, increment_state};
@@ -66,9 +72,30 @@ async fn inject_touch(touch: Touch) {
     .await;
 }
 
+async fn record_touches() {
+    let touches = Own::new(vec![]);
+    let mut touches = touches.weak();
+
+    let (s, mut r) = channel::<()>(1);
+
+    on_main(move || {
+        UIEvents::get().on_touch.val(move |touch| {
+            touches.push(touch);
+        });
+
+        UILayer::keymap().add('a', move || {
+            s.try_send(()).unwrap();
+        });
+    });
+
+    r.recv().await.unwrap();
+
+    dbg!(&touches);
+}
+
 pub fn test_button_view() -> ExitCode {
-    test_engine::ViewApp::<ButtonTestView>::start_with_actor(|| {
-        return;
+    test_engine::ViewApp::<ButtonTestView>::start_with_actor(async {
+        return record_touches().await;
         test_combinations([
             ("0 0 ↓", 0),
             ("0 0 ↑", 0),
