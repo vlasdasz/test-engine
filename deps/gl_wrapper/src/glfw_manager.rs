@@ -1,4 +1,4 @@
-use std::{process::ExitCode, sync::atomic::Ordering};
+use std::process::ExitCode;
 
 use glfw::{Context, Window};
 use gm::flat::IntSize;
@@ -47,13 +47,11 @@ impl GLFWManager {
         while !self.window.should_close() {
             self.window.glfw.poll_events();
 
-            let events = SystemEvents::get();
-
-            let terminate = events.terminate.load(Ordering::Relaxed);
-
-            if terminate != i32::MIN {
-                return u8::try_from(terminate).unwrap().into();
+            if let Some(exit_code) = SystemEvents::check_terminate() {
+                return exit_code;
             }
+
+            let events = SystemEvents::get();
 
             for (_, event) in glfw::flush_messages(&self.gl_events) {
                 match event {

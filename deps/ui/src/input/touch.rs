@@ -33,12 +33,16 @@ impl Touch {
             .map(|s| s.parse().unwrap())
             .collect()
     }
+
+    pub fn str_from_vec(v: Vec<Touch>) -> String {
+        v.into_iter().map(|t| t.to_string()).join("\n")
+    }
 }
 
 impl ToString for Touch {
     fn to_string(&self) -> String {
         format!(
-            "{:>4} {:>4} {}",
+            "{:<12} {:<12} {}",
             self.position.x,
             self.position.y,
             self.event.to_string()
@@ -103,13 +107,15 @@ mod test {
 
         let result = touches.into_iter().map(|t| t.to_string()).join("\n");
 
+        println!("{}", result);
+
         assert_eq!(
             result,
-            r#"   0    0 ↓
-2000   10 ↑
- 100 4000 ↑
-   1 4000 →
-4000    1 →"#
+            r#"0            0            ↓
+2000         10           ↑
+100          4000         ↑
+1            4000         →
+4000         1            →"#
         );
 
         assert_eq!(touches.as_slice(), &Touch::vec_from_str(&result));
@@ -118,11 +124,11 @@ mod test {
             touches.as_slice(),
             &Touch::vec_from_str(
                 r#"
-                                       0    0 ↓
-                                    2000   10 ↑
-                                     100 4000 ↑
-                                       1 4000 →
-                                    4000    1 →
+                                       0             0 ↓
+                                    2000            10 ↑
+                                     100          4000 ↑
+                                       1          4000 →
+                                    4000             1 →
                 "#
             )
         );

@@ -14,7 +14,7 @@ use ui_views::debug_view::DebugView;
 
 use crate::{Keymap, Screen};
 
-const LOG_TOUCHES: bool = true;
+const LOG_TOUCHES: bool = false;
 
 #[derive(Default)]
 pub struct UILayer {

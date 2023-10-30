@@ -13,6 +13,7 @@ use smart_default::SmartDefault;
 use vents::Event;
 
 static EVENTS: MainLock<SystemEvents> = MainLock::new();
+static TERMINATE: AtomicI32 = AtomicI32::new(i32::MIN);
 
 #[derive(SmartDefault)]
 pub struct SystemEvents {
@@ -23,9 +24,6 @@ pub struct SystemEvents {
     pub key_pressed:  Event<(Key, Action)>,
     pub scroll:       Event<Point>,
     pub file_drop:    Event<Vec<PathBuf>>,
-
-    #[default(AtomicI32::new(i32::MIN))]
-    pub terminate: AtomicI32,
 }
 
 impl SystemEvents {
@@ -34,6 +32,14 @@ impl SystemEvents {
     }
 
     pub fn terminate(code: ExitCode) {
-        EVENTS.terminate.store(code.to_i32(), Ordering::Relaxed);
+        TERMINATE.store(code.to_i32(), Ordering::Relaxed);
+    }
+
+    pub fn check_terminate() -> Option<ExitCode> {
+        let terminate = TERMINATE.load(Ordering::Relaxed);
+        if terminate == i32::MIN {
+            return None;
+        }
+        Some(u8::try_from(terminate).unwrap().into())
     }
 }
