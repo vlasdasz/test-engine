@@ -9,7 +9,6 @@ use std::process::ExitCode;
 
 use crate::view_tests::button_test::test_button_view;
 
-mod ui_test;
 mod view_tests;
 
 fn main() -> ExitCode {

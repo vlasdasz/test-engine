@@ -7,10 +7,13 @@ edition = "2021"
 name = "ui_test"
 path = "src/main.rs"
 
-
 [[bin]]
 name = "button_test"
 path = "src/button.rs"
+
+[[bin]]
+name = "switch_test"
+path = "src/switch.rs"
 
 
 [dependencies]
@@ -20,6 +23,8 @@ tokio = { workspace = true }
 anyhow = { workspace = true }
 derivative = { workspace = true }
 rtools = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 ui = { workspace = true }
 ui_views = { workspace = true }
 test_engine = { workspace = true }
