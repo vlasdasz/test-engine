@@ -3,11 +3,21 @@ name = "ui_test"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "ui_test"
+path = "src/main.rs"
+
+
+[[bin]]
+name = "button_test"
+path = "src/button.rs"
+
 
 [dependencies]
 log = { workspace = true }
 glfw = { workspace = true }
 tokio = { workspace = true }
+anyhow = { workspace = true }
 derivative = { workspace = true }
 rtools = { workspace = true }
 ui = { workspace = true }

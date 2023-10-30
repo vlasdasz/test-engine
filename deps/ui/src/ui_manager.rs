@@ -8,7 +8,6 @@ use std::{
 };
 
 use gm::flat::{IntSize, Point, Rect, Size};
-use log::warn;
 use refs::{Own, Weak};
 
 use crate::{layout::Placer, Container, UIDrawer, UIEvent, View};
@@ -99,9 +98,7 @@ impl UIManager {
     }
 
     pub fn set_drawer(drawer: impl UIDrawer + 'static) {
-        _ = DRAWER.set(Mutex::new(Box::new(drawer))).inspect_err(|err| {
-            warn!("UI drawer already set: {err:?}");
-        });
+        DRAWER.set(Mutex::new(Box::new(drawer))).unwrap();
     }
 }
 

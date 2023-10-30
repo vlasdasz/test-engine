@@ -42,7 +42,7 @@ impl<T: View + Default + 'static> ViewApp<T> {
 impl<T: View + Default + 'static> App for ViewApp<T> {
     fn setup()
     where Self: Sized {
-        init_log(LogBuilder::builder().build());
+        init_log(LogBuilder::builder().location(false).build());
     }
 
     fn screen_size() -> IntSize
