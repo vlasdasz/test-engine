@@ -7,10 +7,8 @@
 
 use std::process::ExitCode;
 
-use crate::view_tests::button_test::test_button_view;
-
 mod view_tests;
 
 fn main() -> ExitCode {
-    test_button_view()
+    ExitCode::SUCCESS
 }

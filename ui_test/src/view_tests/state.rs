@@ -19,7 +19,7 @@ pub fn clear_state() {
 }
 
 pub fn get_state<T: DeserializeOwned + Default>() -> T {
-    from_str(&*get()).unwrap_or_default()
+    from_str(&get()).unwrap_or_default()
 }
 
 pub fn set_state<T: Serialize>(val: T) {

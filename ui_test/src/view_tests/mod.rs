@@ -11,6 +11,7 @@ use crate::view_tests::state::{clear_state, get_state};
 
 pub mod state;
 
+#[allow(dead_code)]
 pub fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A])
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     spawn(async move {
@@ -37,6 +38,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     });
 }
 
+#[allow(dead_code)]
 pub async fn inject_touch(touch: Touch) {
     from_main(move || {
         let events = SystemEvents::get();
