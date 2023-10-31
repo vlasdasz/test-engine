@@ -15,6 +15,9 @@ path = "src/button.rs"
 name = "switch_test"
 path = "src/switch.rs"
 
+[[bin]]
+name = "layout_test"
+path = "src/layout.rs"
 
 [dependencies]
 log = { workspace = true }

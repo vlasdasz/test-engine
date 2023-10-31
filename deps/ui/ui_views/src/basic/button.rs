@@ -14,6 +14,10 @@ pub struct Button {
 }
 
 impl Button {
+    pub fn text(&self) -> &str {
+        self.label.text()
+    }
+
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         self.label.is_hidden = false;
         self.label.set_text(text);

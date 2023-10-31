@@ -50,6 +50,12 @@ impl ToString for Touch {
     }
 }
 
+impl Into<Touch> for &str {
+    fn into(self) -> Touch {
+        Touch::from_str(self).unwrap()
+    }
+}
+
 impl FromStr for Touch {
     type Err = anyhow::Error;
 

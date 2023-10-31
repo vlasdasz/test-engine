@@ -39,7 +39,8 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 }
 
 #[allow(dead_code)]
-pub async fn inject_touch(touch: Touch) {
+pub async fn inject_touch(touch: impl Into<Touch>) {
+    let touch = touch.into();
     from_main(move || {
         let events = SystemEvents::get();
         events.cursor_moved.trigger(touch.position);
