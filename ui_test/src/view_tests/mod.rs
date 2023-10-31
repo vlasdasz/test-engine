@@ -9,9 +9,7 @@ use ui::{input::UIEvents, refs::ToOwn, Touch};
 
 use crate::view_tests::state::{clear_state, get_state};
 
-pub mod button_test;
 pub mod state;
-pub mod switch_test;
 
 pub fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A])
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
