@@ -1,9 +1,4 @@
-use std::{
-    ops::DerefMut,
-    path::PathBuf,
-    ptr::null_mut,
-    sync::atomic::{Ordering, Ordering::Relaxed},
-};
+use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering};
 
 use chrono::Utc;
 use gl_wrapper::{monitor::Monitor, GLWrapper};
@@ -52,7 +47,7 @@ impl Screen {
 
         let mut this = ui::refs::weak_from_ref(self);
         SystemEvents::get().size_changed.val(move |size| {
-            this.set_size(size);
+            this.size_changed(size);
         });
 
         SystemEvents::get().frame_drawn.sub(move || {
@@ -79,7 +74,7 @@ impl Screen {
         #[cfg(desktop)]
         {
             self.glfw.set_size(window_size);
-            self.set_size(window_size);
+            self.size_changed(window_size);
         }
     }
 }
@@ -153,11 +148,11 @@ impl Screen {
         UIManager::update();
 
         // TODO: tis ugly
-        if UIManager::get().close_keyboard.load(Relaxed) {
-            UIManager::get().close_keyboard.store(false, Relaxed);
+        if UIManager::get().close_keyboard.load(Ordering::Relaxed) {
+            UIManager::get().close_keyboard.store(false, Ordering::Relaxed);
             TestEngineAction::CloseKeyboard
-        } else if UIManager::get().open_keyboard.load(Relaxed) {
-            UIManager::get().open_keyboard.store(false, Relaxed);
+        } else if UIManager::get().open_keyboard.load(Ordering::Relaxed) {
+            UIManager::get().open_keyboard.store(false, Ordering::Relaxed);
             TestEngineAction::OpenKeyboard
         } else {
             TestEngineAction::None
@@ -185,6 +180,10 @@ impl Screen {
     }
 
     pub fn set_size(&mut self, size: IntSize) {
+        self.glfw.set_size(size)
+    }
+
+    pub fn size_changed(&mut self, size: IntSize) {
         trace!("Size changed: {:?}", size);
         UIManager::set_window_size(size);
         get_sprites_drawer().set_resolution(size);

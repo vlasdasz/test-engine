@@ -64,6 +64,10 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use ui::ViewSubviews;
                 #inits
             }
+
+        }
+
+        impl #generics ui::refs::AsAny for #name <#type_params> {
             fn as_any(&self) -> &dyn std::any::Any {
                self
             }
@@ -85,7 +89,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         }
 
         impl #generics  #name <#type_params> {
-            fn __link(self: ui::refs::Weak<Self>) {
+            fn __link(mut self: ui::refs::Weak<Self>) {
                 #links
             }
         }
@@ -150,7 +154,7 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
         let tokens = attr.tokens.to_token_stream().to_string();
         let method = tokens.strip_prefix("= ").unwrap();
 
-        let method = Ident::new(method, Span::call_site());
+        let parameter = Ident::new(method, Span::call_site());
 
         match attribute_name.as_str() {
             "link" => {
@@ -158,7 +162,7 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
                     #res
                     {
                         use ui_views::AlertErr;
-                        self.#field_name.on_tap.sub(move || self.#method().alert_err());
+                        self.#field_name.on_tap.sub(move || self.#parameter().alert_err());
                     }
                 };
             }
@@ -168,12 +172,20 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
                     self.#field_name.on_tap.sub(move || {
                         tokio::spawn(async move {
                             use ui_views::AlertErr;
-                            self.#method().await.alert_err();
+                            self.#parameter().await.alert_err();
                         });
                     });
                 };
             }
-            _ => panic!("Invalid attribute. Only `link` and 'link_async' are supported."),
+            "text" => {
+                let param_str = TokenStream2::from_str(&format!("\"{parameter}\"")).unwrap();
+
+                res = quote! {
+                    #res
+                    self.#field_name.set_text(#param_str);
+                };
+            }
+            _ => panic!("Invalid attribute. Only `link`, 'link_async' and 'text' are supported."),
         }
     }
 

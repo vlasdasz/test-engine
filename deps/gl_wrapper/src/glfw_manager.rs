@@ -43,6 +43,7 @@ impl GLFWManager {
         self.window.set_mouse_button_polling(true);
         self.window.set_scroll_polling(true);
         self.window.set_drag_and_drop_polling(true);
+        self.window.set_size_polling(true);
 
         while !self.window.should_close() {
             self.window.glfw.poll_events();
@@ -69,6 +70,8 @@ impl GLFWManager {
                     }
                     glfw::WindowEvent::Scroll(x, y) => events.scroll.trigger((x, y).into()),
                     glfw::WindowEvent::FileDrop(paths) => events.file_drop.trigger(paths),
+                    #[allow(clippy::cast_sign_loss)]
+                    glfw::WindowEvent::Size(x, y) => events.size_changed.trigger((x as u32, y as u32).into()),
                     glfw::WindowEvent::Close => return ExitCode::SUCCESS,
                     _ => {}
                 }

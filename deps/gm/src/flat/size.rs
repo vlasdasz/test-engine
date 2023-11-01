@@ -4,7 +4,7 @@ use std::{
     ops::{Div, Mul},
 };
 
-use rtools::IntoF32;
+use rtools::{IntoF32, Random};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -152,6 +152,15 @@ impl From<(u32, u32)> for IntSize {
         Self {
             width:  tup.0,
             height: tup.1,
+        }
+    }
+}
+
+impl Random for IntSize {
+    fn random() -> Self {
+        Self {
+            width:  u32::random_in(200..800),
+            height: u32::random_in(200..800),
         }
     }
 }

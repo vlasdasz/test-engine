@@ -32,9 +32,16 @@ pub fn increment_state() {
     set_state(val + 1);
 }
 
+#[allow(dead_code)]
+pub fn append_state(val: &str) {
+    let mut stored: String = get_state();
+    stored += val;
+    set_state(stored);
+}
+
 #[cfg(test)]
 mod test {
-    use crate::view_tests::state::{clear_state, get_state, increment_state};
+    use crate::view_tests::state::{append_state, clear_state, get_state, increment_state};
 
     #[test]
     fn test_state() {
@@ -47,5 +54,12 @@ mod test {
         assert_eq!(get_state::<u32>(), 0);
         increment_state();
         assert_eq!(get_state::<u32>(), 1);
+
+        clear_state();
+        assert_eq!(get_state::<String>(), "");
+        append_state("a");
+        assert_eq!(get_state::<String>(), "a");
+        append_state("_lalala");
+        assert_eq!(get_state::<String>(), "a_lalala");
     }
 }

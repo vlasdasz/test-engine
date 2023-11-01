@@ -2,17 +2,10 @@
 
 extern crate glfw;
 
-use std::os::raw::c_int;
-
-use glfw::{
-    ffi::{glfwSetWindowSizeCallback, GLFWwindow},
-    Context, Glfw,
-    OpenGlProfileHint::Core,
-    SwapInterval, Window, WindowEvent,
-};
+use glfw::{Context, Glfw, OpenGlProfileHint::Core, SwapInterval, Window, WindowEvent};
 use gm::flat::IntSize;
 
-use crate::{monitor::Monitor, system_events::SystemEvents};
+use crate::monitor::Monitor;
 
 pub type GLFWEvents = std::sync::mpsc::Receiver<(f64, WindowEvent)>;
 
@@ -37,8 +30,6 @@ impl GLLoader {
             .create_window(size.width, size.height, "Test Engine", glfw::WindowMode::Windowed)
             .expect("Failed to create GLFW window.");
 
-        unsafe { glfwSetWindowSizeCallback(window.window_ptr(), Some(size_callback)) };
-
         GL!(load_with, |symbol| window.get_proc_address(symbol).cast());
 
         window.make_current();
@@ -55,10 +46,4 @@ impl GLLoader {
         self.glfw
             .with_connected_monitors(|_, monitors| monitors.iter().map(Into::into).collect())
     }
-}
-
-extern "C" fn size_callback(_: *mut GLFWwindow, w: c_int, h: c_int) {
-    SystemEvents::get()
-        .size_changed
-        .trigger((w.try_into().unwrap(), h.try_into().unwrap()).into())
 }

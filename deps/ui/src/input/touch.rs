@@ -50,9 +50,9 @@ impl ToString for Touch {
     }
 }
 
-impl Into<Touch> for &str {
-    fn into(self) -> Touch {
-        Touch::from_str(self).unwrap()
+impl From<&str> for Touch {
+    fn from(value: &str) -> Self {
+        Touch::from_str(value).unwrap()
     }
 }
 

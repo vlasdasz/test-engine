@@ -85,7 +85,7 @@ pub mod mobile {
     impl AppCore {
         pub fn set_screen_size(&mut self, width: c_uint, height: c_uint) {
             self.mobile.runtime.block_on(async {
-                self.screen.set_size((width, height).into());
+                self.screen.size_changed((width, height).into());
             });
         }
 

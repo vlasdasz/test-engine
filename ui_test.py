@@ -38,7 +38,7 @@ files = [file.split('.')[0] for file in files]
 
 
 for file in files:
-    if file == "main":
+    if file == "main" or file == "":
         continue
 
     run("cargo run -p ui_test --bin " + file + "_test")

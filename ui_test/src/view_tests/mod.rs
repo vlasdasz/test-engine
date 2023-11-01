@@ -50,6 +50,13 @@ pub async fn inject_touch(touch: impl Into<Touch>) {
 }
 
 #[allow(dead_code)]
+pub async fn inject_touches(data: &str) {
+    for touch in Touch::vec_from_str(data) {
+        inject_touch(touch).await;
+    }
+}
+
+#[allow(dead_code)]
 pub async fn record_touches() {
     let touches = Vec::<Touch>::new().to_own();
     let mut touches = touches.weak();
@@ -77,6 +84,4 @@ pub async fn record_touches() {
     r.recv().await.unwrap();
 
     println!("{}", Touch::str_from_vec(touches.to_vec()));
-
-    SystemEvents::terminate(ExitCode::SUCCESS);
 }

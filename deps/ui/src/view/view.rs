@@ -1,20 +1,17 @@
 use std::{
-    any::Any,
     fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
 };
 
-use refs::Weak;
+use refs::{AsAny, Weak};
 
 use crate::{view::view_callbacks::ViewInternalSetup, ViewBase, ViewCallbacks};
 
 pub trait View:
-    ViewCallbacks + ViewInternalSetup + Deref<Target = ViewBase> + DerefMut<Target = ViewBase> + Debug {
+    ViewCallbacks + ViewInternalSetup + AsAny + Deref<Target = ViewBase> + DerefMut + Debug {
     fn init_views(&mut self);
     fn base(&self) -> &ViewBase;
     fn weak_view(&self) -> Weak<dyn View>;
-    fn as_any(&self) -> &dyn Any;
-    fn as_any_mut(&mut self) -> &mut dyn Any;
 }
 
 #[derive(Default)]
