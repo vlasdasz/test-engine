@@ -1,11 +1,8 @@
 #![cfg(desktop)]
 
-use std::{
-    path::PathBuf,
-    process::ExitCode,
-    sync::atomic::{AtomicI32, Ordering},
-};
+use std::{path::PathBuf, sync::Mutex};
 
+use anyhow::Result;
 use glfw::{Action, Key, MouseButton};
 use gm::flat::{IntSize, Point};
 use refs::MainLock;
@@ -13,7 +10,7 @@ use smart_default::SmartDefault;
 use vents::Event;
 
 static EVENTS: MainLock<SystemEvents> = MainLock::new();
-static TERMINATE: AtomicI32 = AtomicI32::new(i32::MIN);
+static TERMINATE: Mutex<Option<Result<()>>> = Mutex::new(None);
 
 #[derive(SmartDefault)]
 pub struct SystemEvents {
@@ -31,15 +28,15 @@ impl SystemEvents {
         &EVENTS
     }
 
-    pub fn terminate(code: ExitCode) {
-        TERMINATE.store(code.to_i32(), Ordering::Relaxed);
+    pub fn terminate(result: Result<()>) {
+        *TERMINATE.lock().unwrap() = result.into()
     }
 
-    pub fn check_terminate() -> Option<ExitCode> {
-        let terminate = TERMINATE.load(Ordering::Relaxed);
-        if terminate == i32::MIN {
-            return None;
+    pub fn check_terminate() -> Option<Result<()>> {
+        let mut ter = TERMINATE.lock().unwrap();
+        if let Some(ter) = ter.take() {
+            return ter.into();
         }
-        Some(u8::try_from(terminate).unwrap().into())
+        None
     }
 }

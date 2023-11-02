@@ -5,12 +5,12 @@ version = "0.1.0"
 
 [dependencies]
 anyhow = { workspace = true }
+chrono = { workspace = true }
 derivative = { workspace = true }
-log = { workspace = true }
 itertools = { workspace = true }
+log = { workspace = true }
 smart-default = { workspace = true }
 tokio = { workspace = true }
-chrono = { workspace = true }
 
 dispatch = { workspace = true }
 gl_image = { workspace = true }

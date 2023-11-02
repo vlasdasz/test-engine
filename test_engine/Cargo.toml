@@ -9,13 +9,14 @@ crate-type = ["rlib", "staticlib"]
 name = "test_engine"
 
 [dependencies]
+anyhow = { workspace = true }
+chrono = { workspace = true }
 derivative = { workspace = true }
 home = { workspace = true }
 log = { workspace = true }
 reflected = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
-chrono = { workspace = true }
 
 tokio = { workspace = true }
 
@@ -31,8 +32,8 @@ text = { workspace = true }
 valid = { workspace = true }
 
 ui = { workspace = true }
-ui_views = { workspace = true }
 ui_proc_debug = { workspace = true }
+ui_views = { workspace = true }
 
 [target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
 gl = { workspace = true }

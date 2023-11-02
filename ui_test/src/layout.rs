@@ -1,16 +1,7 @@
-#![allow(incomplete_features)]
-#![feature(trait_upcasting)]
-#![feature(stmt_expr_attributes)]
-#![feature(const_trait_impl)]
-#![feature(specialization)]
-#![feature(arbitrary_self_types)]
-#![feature(process_exitcode_internals)]
-
-use std::process::ExitCode;
-
+use anyhow::{bail, Result};
+use log::debug;
 use test_engine::{
     from_main,
-    gl_wrapper::system_events::SystemEvents,
     gm::{flat::IntSize, Color},
     rtools::Apply,
     Screen,
@@ -22,8 +13,6 @@ use crate::view_tests::{
     inject_touches,
     state::{append_state, clear_state, get_state},
 };
-
-mod view_tests;
 
 #[view]
 struct LayoutTestView {
@@ -102,10 +91,11 @@ impl ViewTest for LayoutTestView {
     }
 }
 
-fn main() -> ExitCode {
-    test_engine::ViewApp::<LayoutTestView>::start_with_actor(async {
-        inject_touches(
-            r#"
+pub async fn test_layout() -> Result<()> {
+    Screen::set_test_view::<LayoutTestView>().await;
+
+    inject_touches(
+        r#"
             104.609375   424.64453    ↓
             104.609375   424.64453    ↑
             234.04297    430.95703    ↓
@@ -133,24 +123,24 @@ fn main() -> ExitCode {
             426.8711     88.13281     ↓
             426.8711     88.13281     ↑
             "#,
-        )
-        .await;
+    )
+    .await;
 
-        if get_state::<String>()
-            != "_le_s_ct_left_le_ct_center_ri_ct_right_ri_s_ct_bo_s_ct_bottom_bt_ct_tp_ct_top_to_s_ct"
-        {
-            SystemEvents::terminate(ExitCode::FAILURE);
-        }
+    if get_state::<String>()
+        != "_le_s_ct_left_le_ct_center_ri_ct_right_ri_s_ct_bo_s_ct_bottom_bt_ct_tp_ct_top_to_s_ct"
+    {
+        bail!("Fail");
+    }
 
-        clear_state();
+    clear_state();
 
-        from_main(|| {
-            Screen::current().set_size((1600, 1200).into());
-        })
-        .await;
+    from_main(|| {
+        Screen::current().set_size((1600, 1200).into());
+    })
+    .await;
 
-        inject_touches(
-            r#"
+    inject_touches(
+        r#"
             809.1758     943.28906    ↓
             808.9336     943.28906    ↑
             811.6875     779.2383     ↓
@@ -180,15 +170,15 @@ fn main() -> ExitCode {
             102.12891    523.53906    ↓
             102.12891    523.53906    ↑
             "#,
-        )
-        .await;
+    )
+    .await;
 
-        if get_state::<String>()
-            == "_bo_s_ct_bottom_bt_ct_center_tp_ct_top_to_s_ct_ri_s_ct_right_ri_ct_center_le_ct_left_le_s_ct"
-        {
-            SystemEvents::terminate(ExitCode::SUCCESS);
-        } else {
-            SystemEvents::terminate(ExitCode::FAILURE)
-        }
-    })
+    if get_state::<String>()
+        == "_bo_s_ct_bottom_bt_ct_center_tp_ct_top_to_s_ct_ri_s_ct_right_ri_ct_center_le_ct_left_le_s_ct"
+    {
+        debug!("Layout test: OK");
+        Ok(())
+    } else {
+        bail!("Fail")
+    }
 }

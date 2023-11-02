@@ -1,6 +1,7 @@
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering};
 
 use chrono::Utc;
+use dispatch::from_main;
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
@@ -13,7 +14,7 @@ use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
     refs::{assert_main_thread, Own, Weak},
-    UIManager, View, ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,
+    UIManager, View, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
 
@@ -205,9 +206,22 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn start_main_loop(&mut self) -> std::process::ExitCode {
+    pub fn start_main_loop(&mut self, callback: impl FnOnce()) -> anyhow::Result<()> {
         self.setup_events();
-        self.glfw.start_main_loop()
+        self.glfw.start_main_loop(callback)
+    }
+
+    pub async fn set_test_view<T: View + ViewTest + Default + 'static>() {
+        from_main(|| {
+            let view = T::new();
+            let mut root = UIManager::root_view();
+            root.remove_all_subviews();
+            let view = root.add_subview(view);
+            view.place.back();
+            #[cfg(desktop)]
+            Screen::current().set_size(T::test_size());
+        })
+        .await
     }
 }
 

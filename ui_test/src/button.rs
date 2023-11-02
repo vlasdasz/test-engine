@@ -1,14 +1,5 @@
-#![allow(incomplete_features)]
-#![feature(trait_upcasting)]
-#![feature(stmt_expr_attributes)]
-#![feature(const_trait_impl)]
-#![feature(specialization)]
-#![feature(arbitrary_self_types)]
-#![feature(process_exitcode_internals)]
-
-use std::process::ExitCode;
-
-use test_engine::gm::flat::IntSize;
+use anyhow::Result;
+use test_engine::{gm::flat::IntSize, Screen};
 use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
 use ui_views::Button;
 
@@ -37,55 +28,53 @@ impl ViewTest for ButtonTestView {
     }
 }
 
-mod view_tests;
+pub async fn test_button() -> Result<()> {
+    Screen::set_test_view::<ButtonTestView>().await;
 
-fn main() -> ExitCode {
-    test_engine::ViewApp::<ButtonTestView>::start_with_actor(async {
-        // return record_touches().await;
-        test_combinations([
-            ("0 0 ↓", 0),
-            ("0 0 ↑", 0),
-            // Begin inside end outside
-            ("100 50 ↓", 0),
-            ("  0 50 ↑", 0),
-            // Begin inside end outside
-            ("100 50 ↓", 0),
-            ("  0 50 ↑", 0),
-            // Simple tap
-            (
-                r#"
+    test_combinations([
+        ("0 0 ↓", 0),
+        ("0 0 ↑", 0),
+        // Begin inside end outside
+        ("100 50 ↓", 0),
+        ("  0 50 ↑", 0),
+        // Begin inside end outside
+        ("100 50 ↓", 0),
+        ("  0 50 ↑", 0),
+        // Simple tap
+        (
+            r#"
                 100 50 ↓
                 100 50 ↑
             "#,
-                1,
-            ),
-            // Simple tap
-            (
-                r#"
+            1,
+        ),
+        // Simple tap
+        (
+            r#"
                  90 50 ↓
                 110 50 ↑
             "#,
-                1,
-            ),
-            // Double release
-            (
-                r#"
+            1,
+        ),
+        // Double release
+        (
+            r#"
                  90 50 ↓
                 110 50 ↑
                 110 50 ↑
             "#,
-                1,
-            ),
-            // Outside then inside
-            (
-                r#"
+            1,
+        ),
+        // Outside then inside
+        (
+            r#"
                   0 50 ↓
                 110 50 ↑
             "#,
-                0,
-            ),
-            (
-                r#"
+            0,
+        ),
+        (
+            r#"
                 23.070313    49.19922     ↓
                 85.86719     52.152344    ↑
                 90.83594     12.671875    ↓
@@ -95,10 +84,10 @@ fn main() -> ExitCode {
                 101.80469    90.75391     ↓
                 105.99219    49.027344    ↑
             "#,
-                0,
-            ),
-            (
-                r#"
+            0,
+        ),
+        (
+            r#"
                 98.61328     48.339844    ↓
                 0            0            →
                 105.02344    50.539063    ↑
@@ -113,10 +102,10 @@ fn main() -> ExitCode {
                 0            0            →
                 99.02734     49.777344    ↑
                 "#,
-                3,
-            ),
-            (
-                r#"
+            3,
+        ),
+        (
+            r#"
                 55.597656    32.632813    ↓
                 55.660156    32.628906    ↑
                 145.63281    33.753906    ↓
@@ -136,8 +125,8 @@ fn main() -> ExitCode {
                 102.51953    16.371094    ↓
                 102.45703    16.199219    ↑
                 "#,
-                5,
-            ),
-        ]);
-    })
+            5,
+        ),
+    ])
+    .await
 }

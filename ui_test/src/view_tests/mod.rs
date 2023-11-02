@@ -1,10 +1,11 @@
-use std::{fmt::Display, process::ExitCode};
+use std::fmt::Display;
 
+use anyhow::{bail, Result};
 use glfw::MouseButtonLeft;
 use log::error;
 use serde::de::DeserializeOwned;
 use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, on_main, ui_layer::UILayer};
-use tokio::{spawn, sync::mpsc::channel};
+use tokio::sync::mpsc::channel;
 use ui::{input::UIEvents, refs::ToOwn, Touch};
 
 use crate::view_tests::state::{clear_state, get_state};
@@ -12,30 +13,28 @@ use crate::view_tests::state::{clear_state, get_state};
 pub mod state;
 
 #[allow(dead_code)]
-pub fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A])
+pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
-    spawn(async move {
-        for comb in comb {
-            clear_state();
+    for comb in comb {
+        clear_state();
 
-            let touches = Touch::vec_from_str(comb.0);
+        let touches = Touch::vec_from_str(comb.0);
 
-            for touch in touches {
-                inject_touch(touch).await;
-            }
-
-            if get_state::<Val>() != comb.1 {
-                error!(
-                    "Failed state for: {}Expected: {} got: {}",
-                    comb.0,
-                    comb.1,
-                    get_state::<Val>()
-                );
-                SystemEvents::terminate(ExitCode::FAILURE);
-            }
+        for touch in touches {
+            inject_touch(touch).await;
         }
-        SystemEvents::terminate(ExitCode::SUCCESS);
-    });
+
+        if get_state::<Val>() != comb.1 {
+            error!(
+                "Failed state for: {}Expected: {} got: {}",
+                comb.0,
+                comb.1,
+                get_state::<Val>()
+            );
+            bail!("UI test failed")
+        }
+    }
+    Ok(())
 }
 
 #[allow(dead_code)]

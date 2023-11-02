@@ -44,9 +44,15 @@ pub trait App {
     }
 
     #[cfg(desktop)]
-    fn launch(&mut self) -> std::process::ExitCode {
+    fn launch(&mut self) -> anyhow::Result<()> {
         trace!("Launch");
-        self.core().screen.start_main_loop()
+        self.core().screen.start_main_loop(|| {})
+    }
+
+    #[cfg(desktop)]
+    fn launch_with_callback(&mut self, callback: impl FnOnce()) -> anyhow::Result<()> {
+        trace!("launch_with_callback");
+        self.core().screen.start_main_loop(callback)
     }
 }
 

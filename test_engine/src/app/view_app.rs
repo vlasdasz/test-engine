@@ -1,9 +1,11 @@
 #![cfg(desktop)]
 
-use std::{future::Future, marker::PhantomData, path::PathBuf, process::ExitCode};
+use std::{future::Future, marker::PhantomData, path::PathBuf};
 
+use anyhow::Result;
+use gl_wrapper::system_events::SystemEvents;
 use gm::flat::IntSize;
-use rtools::{init_log, sleep, LogBuilder};
+use rtools::{init_log, LogBuilder};
 use tokio::spawn;
 use ui::{
     refs::{set_current_thread_as_main, Own},
@@ -18,23 +20,22 @@ pub struct ViewApp<T> {
 }
 
 impl<T: View + Default + 'static> ViewApp<T> {
-    pub fn start() {
+    pub fn start() -> Result<()> {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
             set_current_thread_as_main();
-            Self::make_app().launch();
-        });
+            Self::make_app().launch()
+        })
     }
 
-    pub fn start_with_actor(actions: impl Future + Send + 'static) -> ExitCode {
+    pub fn start_with_actor(actions: impl Future<Output = Result<()>> + Send + 'static) -> Result<()> {
         tokio::runtime::Runtime::new().unwrap().block_on(async {
             set_current_thread_as_main();
 
-            spawn(async {
-                sleep(1);
-                actions.await;
-            });
-
-            Self::make_app().launch()
+            Self::make_app().launch_with_callback(|| {
+                spawn(async {
+                    SystemEvents::terminate(actions.await);
+                });
+            })
         })
     }
 }
@@ -88,6 +89,6 @@ macro_rules! test_view {
 
 #[ignore]
 #[test]
-fn test() {
+fn test() -> Result<()> {
     ViewApp::<ui::Container>::start()
 }

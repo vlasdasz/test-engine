@@ -13,8 +13,8 @@ anyhow = { workspace = true }
 log = { workspace = true }
 smart-default = { workspace = true }
 
-rtools = { workspace = true }
 refs = { workspace = true }
+rtools = { workspace = true }
 vents = { workspace = true }
 
 gm = { workspace = true }

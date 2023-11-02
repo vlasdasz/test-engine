@@ -10,18 +10,18 @@ doctest = false
 name = "ui"
 
 [dependencies]
-log = { workspace = true }
 anyhow = { workspace = true }
 chrono = { workspace = true }
 derivative = { workspace = true }
 dispatch = { workspace = true }
-refs = { workspace = true }
+itertools = { workspace = true }
+log = { workspace = true }
 nonempty = { workspace = true }
+reflected = { workspace = true }
+refs = { workspace = true }
 rtools = { workspace = true }
 rust_decimal = { workspace = true }
-itertools = { workspace = true }
 vents = { workspace = true }
-reflected = { workspace = true }
 
 gl_wrapper = { workspace = true }
 gm = { workspace = true }

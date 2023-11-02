@@ -1,10 +1,8 @@
-use std::process::ExitCode;
-
+use anyhow::Result;
 use glfw::{Context, Window};
 use gm::flat::IntSize;
 
 use crate::{gl_loader::GLFWEvents, monitor::Monitor, system_events::SystemEvents, GLLoader};
-
 pub struct GLFWManager {
     window:       Window,
     gl_events:    GLFWEvents,
@@ -37,7 +35,7 @@ impl GLFWManager {
         todo!()
     }
 
-    pub fn start_main_loop(&mut self) -> ExitCode {
+    pub fn start_main_loop(&mut self, callback: impl FnOnce()) -> Result<()> {
         self.window.set_key_polling(true);
         self.window.set_cursor_pos_polling(true);
         self.window.set_mouse_button_polling(true);
@@ -45,11 +43,13 @@ impl GLFWManager {
         self.window.set_drag_and_drop_polling(true);
         self.window.set_size_polling(true);
 
+        callback();
+
         while !self.window.should_close() {
             self.window.glfw.poll_events();
 
-            if let Some(exit_code) = SystemEvents::check_terminate() {
-                return exit_code;
+            if let Some(result) = SystemEvents::check_terminate() {
+                return result;
             }
 
             let events = SystemEvents::get();
@@ -72,7 +72,7 @@ impl GLFWManager {
                     glfw::WindowEvent::FileDrop(paths) => events.file_drop.trigger(paths),
                     #[allow(clippy::cast_sign_loss)]
                     glfw::WindowEvent::Size(x, y) => events.size_changed.trigger((x as u32, y as u32).into()),
-                    glfw::WindowEvent::Close => return ExitCode::SUCCESS,
+                    glfw::WindowEvent::Close => return Ok(()),
                     _ => {}
                 }
             }
@@ -80,7 +80,7 @@ impl GLFWManager {
             events.frame_drawn.trigger(());
         }
 
-        ExitCode::SUCCESS
+        Ok(())
     }
 
     pub fn set_size(&mut self, size: IntSize) {

@@ -2,4 +2,4 @@
 include build/common.mk
 
 ui:
-	python3 ui_test.py
+	cargo run -p ui_test && cargo run -p ui_test --release

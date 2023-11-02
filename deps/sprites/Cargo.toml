@@ -9,13 +9,13 @@ crate-type = ["rlib", "staticlib"]
 name = "sprites"
 
 [dependencies]
-crossbeam = "0.8.2"
-rapier2d = { version = "0.17.2", features = ["parallel", "simd-stable"] }
 anyhow = { workspace = true }
+crossbeam = "0.8.2"
+gl_image = { workspace = true }
+gl_wrapper = { workspace = true }
+gm = { workspace = true }
+rapier2d = { version = "0.17.2", features = ["parallel", "simd-stable"] }
 refs = { workspace = true }
 rtools = { workspace = true }
 smart-default = { workspace = true }
 vents = { workspace = true }
-gl_wrapper = { workspace = true }
-gl_image = { workspace = true }
-gm = { workspace = true }

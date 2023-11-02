@@ -7,13 +7,12 @@
 mod benchmark;
 mod test_game;
 
-use std::process::ExitCode;
-
+use anyhow::Result;
 use test_engine::{App, MakeApp};
 
 use crate::test_game::test_app::TestApp;
 
 #[tokio::main]
-async fn main() -> ExitCode {
+async fn main() -> Result<()> {
     TestApp::make_app().launch()
 }

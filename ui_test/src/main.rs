@@ -5,10 +5,22 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
-use std::process::ExitCode;
+use anyhow::Result;
+use ui::Container;
 
+use crate::{button::test_button, layout::test_layout, switch::test_switch};
+
+mod button;
+mod layout;
+mod switch;
 mod view_tests;
 
-fn main() -> ExitCode {
-    ExitCode::SUCCESS
+fn main() -> Result<()> {
+    test_engine::ViewApp::<Container>::start_with_actor(async {
+        test_button().await?;
+        test_switch().await?;
+        test_layout().await?;
+
+        Ok(())
+    })
 }
