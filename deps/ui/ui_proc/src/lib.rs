@@ -10,6 +10,7 @@ use syn::{
 };
 
 #[proc_macro_attribute]
+#[allow(clippy::too_many_lines)]
 pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let mut stream = parse_macro_input!(stream as DeriveInput);
 
@@ -22,6 +23,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let name_str = TokenStream2::from_str(&format!("\"{name}\"")).unwrap();
 
     let generics = &stream.generics;
+
+    let no_generics = generics.params.is_empty();
 
     let type_param_names: Vec<_> = generics
         .params
@@ -43,6 +46,27 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
     let inits = add_inits(name, fields);
     let links = add_links(fields);
+
+    let (instance_global, instance_link, instance_method) = if no_generics {
+        (
+            quote! {
+                static __INSTANCE: std::sync::Mutex< ui::refs::Weak<#name>> =
+                    std::sync::Mutex::new(ui::refs::Weak::const_default());
+            },
+            quote! {
+                *__INSTANCE.lock().unwrap() = self;
+            },
+            quote! {
+                impl #name {
+                    pub fn instance() -> ui::refs::Weak<Self> {
+                        __INSTANCE.lock().unwrap().clone()
+                    }
+                }
+            },
+        )
+    } else {
+        (quote! {}, quote! {}, quote! {})
+    };
 
     fields
         .named
@@ -88,8 +112,13 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             }
         }
 
+        #instance_global
+
+        #instance_method
+
         impl #generics  #name <#type_params> {
             fn __link(mut self: ui::refs::Weak<Self>) {
+                #instance_link
                 #links
             }
         }

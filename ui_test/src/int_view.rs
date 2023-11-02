@@ -1,4 +1,4 @@
-use std::{fmt::Display, sync::OnceLock};
+use std::fmt::Display;
 
 use anyhow::{bail, Result};
 use log::{debug, error};
@@ -8,8 +8,6 @@ use ui_views::IntView;
 
 use crate::view_tests::inject_touches;
 
-static THIS: OnceLock<Weak<IntTestView>> = OnceLock::new();
-
 #[view]
 struct IntTestView {
     int: SubView<IntView>,
@@ -17,7 +15,6 @@ struct IntTestView {
 
 impl ViewSetup for IntTestView {
     fn setup(self: Weak<Self>) {
-        THIS.set(self).unwrap();
         self.int.place.back().size(50, 150).center();
     }
 }
@@ -41,7 +38,7 @@ fn assert_eq<T: PartialEq + Display>(a: T, b: T) -> Result<()> {
 pub async fn int_view_test() -> Result<()> {
     Screen::set_test_view::<IntTestView>().await;
 
-    let mut this = THIS.get().unwrap().clone();
+    let mut this = IntTestView::instance();
 
     assert_eq(1.0, this.int.value())?;
 
