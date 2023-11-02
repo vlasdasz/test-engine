@@ -10,7 +10,6 @@ name = "gl_wrapper"
 
 [dependencies]
 anyhow = { workspace = true }
-cfg-if = { workspace = true }
 log = { workspace = true }
 smart-default = { workspace = true }
 

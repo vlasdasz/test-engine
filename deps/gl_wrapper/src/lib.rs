@@ -2,7 +2,6 @@
 #![feature(process_exitcode_internals)]
 
 pub use buffers::{Buffer, BufferConfig};
-use cfg_if::cfg_if;
 pub use gl_info::GLInfo;
 pub use shaders::{Shader, ShaderCompiler};
 
@@ -18,12 +17,14 @@ extern crate mashup;
 #[macro_use]
 extern crate log;
 
-cfg_if! { if #[cfg(desktop)] {
-    pub mod glfw_manager;
-    pub mod gl_loader;
-    pub use glfw_manager::GLFWManager;
-    pub use gl_loader::GLLoader;
-}}
+#[cfg(desktop)]
+pub mod gl_loader;
+#[cfg(desktop)]
+pub mod glfw_manager;
+#[cfg(desktop)]
+pub use gl_loader::GLLoader;
+#[cfg(desktop)]
+pub use glfw_manager::GLFWManager;
 
 pub mod buffers;
 pub mod gl_info;

@@ -179,6 +179,7 @@ impl Screen {
         }
     }
 
+    #[cfg(desktop)]
     pub fn set_size(&mut self, size: IntSize) {
         self.glfw.set_size(size)
     }

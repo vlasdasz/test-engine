@@ -1,3 +1,6 @@
+#[cfg(mobile)]
+pub use gles31_sys::*;
+
 #[cfg(desktop)]
 #[macro_export]
 macro_rules! GLT {

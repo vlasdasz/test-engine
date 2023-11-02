@@ -1,11 +1,3 @@
-use cfg_if::cfg_if;
-
-cfg_if! { if #[cfg(mobile)] {
-    use gles31_sys::*;
-} else {
-    use gl;
-}}
-
 use std::{
     collections::HashMap,
     ffi::CString,
@@ -18,6 +10,8 @@ use rtools::{
     regex::{find_match, find_matches},
 };
 
+#[cfg(mobile)]
+use crate::gl_debug::*;
 use crate::{GLInfo, Shader};
 
 pub struct ShaderCompiler {

@@ -10,7 +10,6 @@ name = "audio"
 
 [dependencies]
 log = { workspace = true }
-cfg-if = { workspace = true }
 rtools = { workspace = true }
 
 rodio = "0.17.1"
