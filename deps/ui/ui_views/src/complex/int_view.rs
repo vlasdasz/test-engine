@@ -1,4 +1,5 @@
 use refs::Weak;
+use rtools::IntoF32;
 use ui::{view, Event, SubView, ViewSetup};
 
 use crate as ui_views;
@@ -32,6 +33,14 @@ impl ViewSetup for IntView {
 }
 
 impl IntView {
+    pub fn value(&self) -> f32 {
+        self.value
+    }
+
+    pub fn set_step(&mut self, step: impl IntoF32) {
+        self.step = step.into_f32();
+    }
+
     fn up_tap(mut self: Weak<Self>) {
         self.value += self.step;
         let val = self.value;

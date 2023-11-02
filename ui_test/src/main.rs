@@ -8,9 +8,10 @@
 use anyhow::Result;
 use ui::Container;
 
-use crate::{button::test_button, layout::test_layout, switch::test_switch};
+use crate::{button::test_button, int_view::int_view_test, layout::test_layout, switch::test_switch};
 
 mod button;
+mod int_view;
 mod layout;
 mod switch;
 mod view_tests;
@@ -20,6 +21,7 @@ fn main() -> Result<()> {
         test_button().await?;
         test_switch().await?;
         test_layout().await?;
+        int_view_test().await?;
 
         Ok(())
     })

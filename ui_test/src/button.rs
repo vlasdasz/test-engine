@@ -1,6 +1,6 @@
 use anyhow::Result;
-use test_engine::{gm::flat::IntSize, Screen};
-use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
+use test_engine::Screen;
+use ui::{refs::Weak, view, SubView, ViewSetup};
 use ui_views::Button;
 
 use crate::view_tests::{state::increment_state, test_combinations};
@@ -18,13 +18,6 @@ impl ViewSetup for ButtonTestView {
         self.button.on_tap.sub(|| {
             increment_state();
         });
-    }
-}
-
-impl ViewTest for ButtonTestView {
-    fn test_size() -> IntSize
-    where Self: Sized {
-        (200, 100).into()
     }
 }
 

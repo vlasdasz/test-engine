@@ -1,6 +1,6 @@
 use anyhow::Result;
-use test_engine::{gm::flat::IntSize, Screen};
-use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
+use test_engine::Screen;
+use ui::{refs::Weak, view, SubView, ViewSetup};
 use ui_views::Switch;
 
 use crate::view_tests::{state::set_state, test_combinations};
@@ -17,13 +17,6 @@ impl ViewSetup for SwitchTestView {
         self.switch.selected.val(|on| {
             set_state(on);
         });
-    }
-}
-
-impl ViewTest for SwitchTestView {
-    fn test_size() -> IntSize
-    where Self: Sized {
-        (200, 100).into()
     }
 }
 
