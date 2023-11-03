@@ -20,9 +20,10 @@ pub async fn from_main<T, A>(action: A) -> T
 where
     A: FnOnce() -> T + Send + 'static,
     T: Send + 'static, {
-    if is_main_thread() {
-        return action();
-    }
+    assert!(
+        !is_main_thread(),
+        "This is already main thread. Just call it without `from_main`"
+    );
 
     let res = Arc::<Mutex<Option<T>>>::default();
 

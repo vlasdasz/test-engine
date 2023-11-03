@@ -81,18 +81,22 @@ impl TouchStack {
         Self::get().stack.last().root_name().to_string()
     }
 
-    pub fn dump() -> String {
-        let mut result = String::new();
+    pub fn dump() -> Vec<Vec<String>> {
+        let mut result = vec![];
 
         for layer in &Self::get().stack {
-            result += &format!("Layer: {}\n", layer.root_name());
+            let mut layer_vec = vec![];
+
+            layer_vec.push(format!("Layer: {}", layer.root_name()));
+
             for view in layer.views() {
                 if view.is_null() {
                     continue;
                 }
-                result += &format!("View: {}\n", view.label);
+                layer_vec.push(format!("View: {}", view.label));
             }
-            result += "\n";
+
+            result.push(layer_vec);
         }
 
         result

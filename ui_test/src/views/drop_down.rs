@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
-use test_engine::{gm::flat::IntSize, Screen};
-use ui::{refs::Weak, view, SubView, TouchStack, View, ViewSetup, ViewSubviews, ViewTest};
+use test_engine::Screen;
+use ui::{refs::Weak, view, SubView, TouchStack, View, ViewSetup, ViewSubviews};
 use ui_views::{Button, DropDown};
 
 use crate::view_tests::record_touches;
@@ -15,7 +15,7 @@ struct DropDownTestView {
 fn add_test_button(mut view: Weak<dyn View>, mut action: impl FnMut() + 'static) {
     let mut button = view.add_view::<Button>();
     button.set_text("TAP").place.size(100, 20).center();
-    button.on_tap.sub(move || action())
+    button.on_tap(move || action())
 }
 
 impl ViewSetup for DropDownTestView {
@@ -27,20 +27,13 @@ impl ViewSetup for DropDownTestView {
         self.bot.set_values(["Car", "Boat", "Plane"]);
 
         add_test_button(self, || {
-            println!("{}", TouchStack::dump());
+            println!("{:?}", TouchStack::dump());
         })
     }
 }
 
-impl ViewTest for DropDownTestView {
-    fn test_size() -> IntSize
-    where Self: Sized {
-        (280, 280).into()
-    }
-}
-
 pub async fn test_drop_down() -> Result<()> {
-    Screen::set_test_view::<DropDownTestView>().await;
+    Screen::set_test_view::<DropDownTestView>(280, 280).await;
 
     record_touches().await;
 

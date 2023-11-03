@@ -46,7 +46,7 @@ impl DebugView {
     pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
         let mut button = self.__internal_add_view::<Button>();
         button.set_text(label);
-        button.on_tap.sub(action);
+        button.on_tap(action);
     }
 
     pub fn set_custom(&mut self, label: impl Display, value: impl Display) {
@@ -91,17 +91,17 @@ impl ViewSetup for DebugView {
         self.root_frame.dont_cache_rendered_text = true;
 
         self.exit.set_text("exit");
-        self.exit.on_tap.sub(|| {
+        self.exit.on_tap(|| {
             panic!("Exit pressed. Panic to stop the app. Bye.");
         });
 
         self.hide.set_text("hide");
-        self.hide.on_tap.sub(move || {
+        self.hide.on_tap(move || {
             self.remove_from_superview();
         });
 
         self.dump_mem.set_text("dump mem");
-        self.dump_mem.on_tap.sub(|| {
+        self.dump_mem.on_tap(|| {
             // dbg!(Image::storage().len());
             //
             // for (_key, val) in Image::storage() {

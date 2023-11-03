@@ -10,10 +10,15 @@ pub struct Button {
     label: SubView<Label>,
     image: SubView<ImageView>,
 
-    pub on_tap: Event,
+    on_tap: Event,
 }
 
 impl Button {
+    pub fn on_tap(&self, action: impl FnMut() + 'static) {
+        self.on_tap.sub(action);
+        self.enable_touch();
+    }
+
     pub fn text(&self) -> &str {
         self.label.text()
     }
@@ -44,17 +49,8 @@ impl ViewSetup for Button {
         self.image.place.back();
         self.image.is_hidden = true;
 
-        self.enable_touch();
         self.touch.up_inside.sub(move || self.on_tap.trigger(()));
     }
-}
-
-#[macro_export]
-macro_rules! _ui_link_button {
-    ($self:ident, $($button:ident).+, $method:ident) => {{
-        use $crate::complex::AlertErr;
-        $self.$($button).+.on_tap.sub(move || $self.$method().alert_err());
-    }}
 }
 
 #[macro_export]

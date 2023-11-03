@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
 
 use anyhow::{bail, Result};
 use glfw::MouseButtonLeft;
@@ -36,7 +36,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     Ok(())
 }
 
-pub async fn inject_touch(touch: impl Into<Touch>) {
+async fn inject_touch(touch: impl Into<Touch>) {
     let touch = touch.into();
     from_main(move || {
         let events = SystemEvents::get();
@@ -79,14 +79,16 @@ pub async fn record_touches() {
 
     r.recv().await.unwrap();
 
+    UIEvents::get().on_touch.remove_subscribers();
+
     println!("{}", Touch::str_from_vec(touches.to_vec()));
 }
 
-pub fn assert_eq<T: PartialEq<U> + Display, U: PartialEq<T> + Display>(a: T, b: U) -> Result<()> {
+pub fn assert_eq<T: PartialEq<U> + Debug, U: PartialEq<T> + Debug>(a: T, b: U) -> Result<()> {
     if a == b {
         return Ok(());
     }
-    let message = format!("Assertion failed: {a} != {b}");
+    let message = format!("Assertion failed: {a:?} != {b:?}");
     error!("{message}");
     bail!(message)
 }

@@ -181,8 +181,8 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn set_size(&mut self, size: IntSize) {
-        self.glfw.set_size(size)
+    pub fn set_size(&mut self, size: impl Into<IntSize>) {
+        self.glfw.set_size(size.into())
     }
 
     pub fn size_changed(&mut self, size: IntSize) {
@@ -211,15 +211,15 @@ impl Screen {
         self.glfw.start_main_loop(callback)
     }
 
-    pub async fn set_test_view<T: View + ViewTest + Default + 'static>() {
-        from_main(|| {
+    pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) {
+        from_main(move || {
             let view = T::new();
             let mut root = UIManager::root_view();
             root.remove_all_subviews();
             let view = root.add_subview(view);
             view.place.back();
             #[cfg(desktop)]
-            Screen::current().set_size(T::test_size());
+            Screen::current().set_size((width, height));
         })
         .await
     }

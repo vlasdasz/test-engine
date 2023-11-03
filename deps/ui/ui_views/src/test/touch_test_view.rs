@@ -2,10 +2,11 @@ use gm::Color;
 use refs::Weak;
 use ui::{view, SubView, ViewData, ViewSetup};
 
-use crate::{Button, _ui_link_button};
+use crate::{self as ui_views, Button};
 
 #[view]
 pub struct TouchTestView {
+    #[link = tap]
     button: SubView<Button>,
 }
 
@@ -20,6 +21,5 @@ impl ViewSetup for TouchTestView {
         self.place.size(100, 100).center_y().r(0);
         self.set_color(Color::random());
         self.button.place.back();
-        _ui_link_button!(self, button, tap);
     }
 }

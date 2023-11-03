@@ -47,14 +47,6 @@ impl Image {
         }
     }
 
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
-    pub fn is_valid(&self) -> bool {
-        !self.is_invalid()
-    }
-
     pub fn is_invalid(&self) -> bool {
         self.buffer.texture_handle == u32::MAX
     }

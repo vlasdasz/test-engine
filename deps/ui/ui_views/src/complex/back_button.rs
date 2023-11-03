@@ -13,7 +13,7 @@ impl ViewSetup for BackButton {
         self.button.set_text("Back");
         self.button.place.back();
 
-        self.button.on_tap.sub(move || {
+        self.button.on_tap(move || {
             self.navigation().pop();
         });
     }

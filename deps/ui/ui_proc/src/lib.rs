@@ -191,14 +191,14 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
                     #res
                     {
                         use ui_views::AlertErr;
-                        self.#field_name.on_tap.sub(move || self.#parameter().alert_err());
+                        self.#field_name.on_tap(move || self.#parameter().alert_err());
                     }
                 };
             }
             "link_async" => {
                 res = quote! {
                     #res
-                    self.#field_name.on_tap.sub(move || {
+                    self.#field_name.on_tap(move || {
                         tokio::spawn(async move {
                             use ui_views::AlertErr;
                             self.#parameter().await.alert_err();

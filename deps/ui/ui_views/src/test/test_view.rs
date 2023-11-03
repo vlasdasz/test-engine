@@ -42,7 +42,7 @@ impl ViewSetup for ViewWithCat {
 
         self.label.set_text("Hello label!");
 
-        self.button.on_tap.sub(move || {
+        self.button.on_tap(move || {
             let val = self.label_value;
             self.label.set_text(format!("Hello label! {val}"));
             self.label_value += 1;

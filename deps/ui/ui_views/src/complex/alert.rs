@@ -30,7 +30,7 @@ impl ViewSetup for Alert {
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
 
-        self.ok_button.on_tap.sub(move || self.hide_modal(()));
+        self.ok_button.on_tap(move || self.hide_modal(()));
     }
 }
 

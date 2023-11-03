@@ -117,11 +117,11 @@ mod test {
 
         assert_eq!(
             result,
-            r#"0            0            ↓
-2000         10           ↑
-100          4000         ↑
-1            4000         →
-4000         1            →"#
+            r#"0            0            b
+2000         10           e
+100          4000         e
+1            4000         m
+4000         1            m"#
         );
 
         assert_eq!(touches.as_slice(), &Touch::vec_from_str(&result));
@@ -130,11 +130,11 @@ mod test {
             touches.as_slice(),
             &Touch::vec_from_str(
                 r#"
-                                       0             0 ↓
-                                    2000            10 ↑
-                                     100          4000 ↑
-                                       1          4000 →
-                                    4000             1 →
+                                       0             0 b
+                                    2000            10 e
+                                     100          4000 e
+                                       1          4000 m
+                                    4000             1 m
                 "#
             )
         );
@@ -145,7 +145,7 @@ mod test {
                 position: (10, 20).into(),
                 event:    TouchEvent::Began,
             }],
-            Touch::vec_from_str("10 20 ↓")
+            Touch::vec_from_str("10 20 b")
         );
     }
 }

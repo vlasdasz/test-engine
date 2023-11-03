@@ -23,9 +23,9 @@ impl TouchEvent {
 impl ToString for TouchEvent {
     fn to_string(&self) -> String {
         match self {
-            TouchEvent::Began => '↓',
-            TouchEvent::Moved => '→',
-            TouchEvent::Ended => '↑',
+            TouchEvent::Began => "b",
+            TouchEvent::Moved => "m",
+            TouchEvent::Ended => "e",
         }
         .to_string()
     }
@@ -36,9 +36,9 @@ impl FromStr for TouchEvent {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "↓" => Ok(TouchEvent::Began),
-            "→" => Ok(TouchEvent::Moved),
-            "↑" => Ok(TouchEvent::Ended),
+            "b" => Ok(TouchEvent::Began),
+            "m" => Ok(TouchEvent::Moved),
+            "e" => Ok(TouchEvent::Ended),
             _ => bail!("Failed to parse TouchEvent from {s}"),
         }
     }

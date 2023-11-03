@@ -110,23 +110,23 @@ impl TestGameView {
 
             let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");
-            to_benchmark.on_tap.sub(|| {
+            to_benchmark.on_tap(|| {
                 Screen::current().ui.set_level(Own::<BenchmarkLevel>::default());
             });
 
             let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
-            to_test.on_tap.sub(|| {
+            to_test.on_tap(|| {
                 Screen::current().ui.set_level(Own::<TestGameLevel>::default());
             });
 
             let mut play = view.add_view::<Button>();
             play.set_text("Play sound");
-            play.on_tap.sub(move || self.sound.play());
+            play.on_tap(move || self.sound.play());
 
             let mut screenshot = view.add_view::<Button>();
             screenshot.set_text("Screenshot");
-            screenshot.on_tap.sub(move || Screen::take_screenshot("screen.png"));
+            screenshot.on_tap(move || Screen::take_screenshot("screen.png"));
 
             [to_benchmark, to_test, play, screenshot].apply(|mut button| {
                 button.set_color(Color::WHITE);

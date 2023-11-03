@@ -24,7 +24,7 @@ impl ViewSetup for DPadView {
         ]
         .apply(|(mut view, direction, image)| {
             view.set_image(image);
-            view.on_tap.sub(move || self.on_press.trigger(direction));
+            view.on_tap(move || self.on_press.trigger(direction));
             view.set_corner_radius(5);
         });
     }

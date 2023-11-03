@@ -36,14 +36,14 @@ impl ViewSetup for UIDebugView {
 
         self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_x();
 
-        self.test_game.on_tap.sub(|| {
+        self.test_game.on_tap(|| {
             Screen::current().ui.set_level(Own::<TestGameLevel>::default());
             // UIManager::set_view(Own::<TestGameView>::default());
         });
 
         self.collection.set_text("Collection");
         self.collection.place.above(self.test_game, 20);
-        self.collection.on_tap.sub(|| {
+        self.collection.on_tap(|| {
             // UIManager::set_view(Own::<CollectionTestView>::default());
         });
 
@@ -56,7 +56,7 @@ impl ViewSetup for UIDebugView {
 
         self.stats.place.size(100, 20).tr(5);
         self.stats.set_text("Print stats");
-        self.stats.on_tap.sub(|| {
+        self.stats.on_tap(|| {
             println!("===========================================================");
             dump_ref_stats();
             println!("===========================================================");
