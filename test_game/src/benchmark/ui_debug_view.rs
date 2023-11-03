@@ -26,7 +26,7 @@ pub struct UIDebugView {
 
 impl ViewSetup for UIDebugView {
     fn setup(mut self: Weak<Self>) {
-        self.login.place.size(200, 80).center_hor();
+        self.login.place.size(200, 80).center_x();
 
         self.login.place.anchor(Anchor::Bot, self.password, 20);
         self.login.set_title(&"Login:");
@@ -34,7 +34,7 @@ impl ViewSetup for UIDebugView {
         self.password.place.size(200, 40).center();
         self.password.set_title(&"Password:");
 
-        self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_hor();
+        self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_x();
 
         self.test_game.on_tap.sub(|| {
             Screen::current().ui.set_level(Own::<TestGameLevel>::default());

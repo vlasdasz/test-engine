@@ -1,4 +1,5 @@
 use anyhow::Result;
+use log::debug;
 use test_engine::Screen;
 use ui::{refs::Weak, view, SubView, ViewSetup};
 use ui_views::Switch;
@@ -69,5 +70,9 @@ pub async fn test_switch() -> Result<()> {
             false,
         ),
     ])
-    .await
+    .await?;
+
+    debug!("Switch test: OK");
+
+    Ok(())
 }

@@ -26,13 +26,11 @@ pub fn set_state<T: Serialize>(val: T) {
     *get() = to_string(&val).unwrap();
 }
 
-#[allow(dead_code)]
 pub fn increment_state() {
     let val: u32 = get_state();
     set_state(val + 1);
 }
 
-#[allow(dead_code)]
 pub fn append_state(val: &str) {
     let mut stored: String = get_state();
     stored += val;

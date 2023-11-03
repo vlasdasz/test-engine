@@ -6,10 +6,11 @@ use refs::{Own, Weak};
 use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
 
-use crate::{collection_data, Button, CollectionData, CollectionView, Label, _ui_link_button};
+use crate::{self as ui_views, collection_data, Button, CollectionData, CollectionView, Label};
 
 #[view]
 pub struct DropDown {
+    #[link = tapped]
     button: SubView<Button>,
     label:  SubView<Label>,
     table:  SubView<CollectionView>,
@@ -22,8 +23,11 @@ impl DropDown {
         self.label.text()
     }
 
-    pub fn set_values(&mut self, values: &[impl ToLabel]) {
-        let values = values.iter().map(ToLabel::to_label).collect_vec();
+    pub fn set_values<Values, Val>(&mut self, values: Values)
+    where
+        Val: ToLabel,
+        Values: IntoIterator<Item = Val>, {
+        let values = values.into_iter().map(|a| a.to_label()).collect_vec();
         self.label.set_text(values.first().unwrap());
         self.values = values;
         self.table.reload_data();
@@ -60,7 +64,6 @@ impl DropDown {
 impl ViewSetup for DropDown {
     fn setup(mut self: Weak<Self>) {
         self.button.place.back();
-        _ui_link_button!(self, button, tapped);
 
         self.label.place.back();
 
@@ -89,6 +92,7 @@ impl CollectionData for DropDown {
     }
 
     fn cell_selected(&mut self, index: usize) {
+        dbg!(index);
         let val = &self.values[index];
         self.label.set_text(val);
         self.tapped();

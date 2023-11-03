@@ -12,7 +12,6 @@ use crate::view_tests::state::{clear_state, get_state};
 
 pub mod state;
 
-#[allow(dead_code)]
 pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     for comb in comb {
@@ -37,7 +36,6 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     Ok(())
 }
 
-#[allow(dead_code)]
 pub async fn inject_touch(touch: impl Into<Touch>) {
     let touch = touch.into();
     from_main(move || {
@@ -48,7 +46,6 @@ pub async fn inject_touch(touch: impl Into<Touch>) {
     .await;
 }
 
-#[allow(dead_code)]
 pub async fn inject_touches(data: &str) {
     for touch in Touch::vec_from_str(data) {
         inject_touch(touch).await;
@@ -83,4 +80,13 @@ pub async fn record_touches() {
     r.recv().await.unwrap();
 
     println!("{}", Touch::str_from_vec(touches.to_vec()));
+}
+
+pub fn assert_eq<T: PartialEq<U> + Display, U: PartialEq<T> + Display>(a: T, b: U) -> Result<()> {
+    if a == b {
+        return Ok(());
+    }
+    let message = format!("Assertion failed: {a} != {b}");
+    error!("{message}");
+    bail!(message)
 }

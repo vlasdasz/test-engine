@@ -162,13 +162,13 @@ impl Placer {
         self
     }
 
-    pub fn center_hor(&self) -> &Self {
-        self.rules().push(Anchor::CenterH.into());
+    pub fn center_x(&self) -> &Self {
+        self.rules().push(Anchor::CenterX.into());
         self
     }
 
-    pub fn center_ver(&self) -> &Self {
-        self.rules().push(Anchor::CenterV.into());
+    pub fn center_y(&self) -> &Self {
+        self.rules().push(Anchor::CenterY.into());
         self
     }
 
@@ -367,8 +367,8 @@ impl Placer {
             }
             Anchor::Width => frame.size.width = rule.offset,
             Anchor::Height => frame.size.height = rule.offset,
-            Anchor::CenterH => frame.origin.x = s_content.width / 2.0 - frame.width() / 2.0,
-            Anchor::CenterV => frame.origin.y = s_content.height / 2.0 - frame.height() / 2.0,
+            Anchor::CenterX => frame.origin.x = s_content.width / 2.0 - frame.width() / 2.0,
+            Anchor::CenterY => frame.origin.y = s_content.height / 2.0 - frame.height() / 2.0,
             Anchor::Center => {
                 frame.origin.x = s_content.width / 2.0 - frame.width() / 2.0;
                 frame.origin.y = s_content.height / 2.0 - frame.height() / 2.0;

@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::Result;
 use log::debug;
 use test_engine::{
     from_main,
@@ -10,7 +10,7 @@ use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewSub
 use ui_views::Button;
 
 use crate::view_tests::{
-    inject_touches,
+    assert_eq, inject_touches,
     state::{append_state, clear_state, get_state},
 };
 
@@ -67,10 +67,10 @@ impl ViewSetup for LayoutTestView {
 
         self.center.place.center();
 
-        self.top.set_color(Color::ORANGE).place.center_hor().t(200);
-        self.bottom.set_color(Color::GREEN).place.center_hor().b(200);
-        self.left.place.center_ver().l(200);
-        self.right.place.center_ver().r(200);
+        self.top.set_color(Color::ORANGE).place.center_x().t(200);
+        self.bottom.set_color(Color::GREEN).place.center_x().b(200);
+        self.left.place.center_y().l(200);
+        self.right.place.center_y().r(200);
 
         self.top_center.place.between(self.top, self.center);
         self.bottom_center.place.between(self.bottom, self.center);
@@ -126,59 +126,59 @@ pub async fn test_layout() -> Result<()> {
     )
     .await;
 
-    if get_state::<String>()
-        != "_le_s_ct_left_le_ct_center_ri_ct_right_ri_s_ct_bo_s_ct_bottom_bt_ct_tp_ct_top_to_s_ct"
-    {
-        bail!("Fail");
-    }
-
-    clear_state();
+    assert_eq(
+        get_state::<String>(),
+        "_le_s_ct_left_le_ct_center_ri_ct_right_ri_s_ct_bo_s_ct_bottom_bt_ct_tp_ct_top_to_s_ct",
+    )?;
 
     from_main(|| {
         Screen::current().set_size((1600, 1200).into());
     })
     .await;
 
+    clear_state();
+
     inject_touches(
         r#"
-            809.1758     943.28906    ↓
-            808.9336     943.28906    ↑
-            811.6875     779.2383     ↓
-            811.4453     779.2383     ↑
-            797.7578     649.96484    ↓
-            797.7578     649.96484    ↑
-            806.0625     503.38672    ↓
-            806.0625     503.38672    ↑
-            804.52344    368.69922    ↓
-            804.52344    368.69922    ↑
-            807.1953     244.3789     ↓
-            807.1953     244.14453    ↑
-            806.5625     104.24219    ↓
-            806.5625     104.24219    ↑
-            1503.7461    516.08984    ↓
-            1503.7461    516.08984    ↑
-            1343.5664    516.33203    ↓
-            1343.3281    516.33203    ↑
-            1083.8633    522.21094    ↓
-            1083.8633    522.21094    ↑
-            819.1758     518.9883     ↓
-            819.1758     518.9883     ↑
-            536.1914     521.2617     ↓
-            535.9492     521.2617     ↑
-            269.59375    520.2383     ↓
-            269.35547    520.2383     ↑
-            102.12891    523.53906    ↓
-            102.12891    523.53906    ↑
+            1075.1445    4.1875       ↓
+            890.71875    -33.57422    ↑
+            110.32422    606.8711     ↓
+            110.98828    606.84375    ↑
+            242.82031    602.91406    ↓
+            244.70313    602.9961     ↑
+            532.3711     603.89453    ↓
+            533.64453    603.8867     ↑
+            815.5508     607.58594    ↓
+            820.08984    607.46484    ↑
+            1089.2617    600.9375     ↓
+            1089.3555    600.96484    ↑
+            1356.9961    596.83203    ↓
+            1363.875     597.25       ↑
+            1504.6953    605.35547    ↓
+            1504.7852    605.3203     ↑
+            795.8008     1101.8008    ↓
+            795.6836     1101.9883    ↑
+            822.03906    929.2344     ↓
+            822.03516    929.2344     ↑
+            799.3711     779.51953    ↓
+            799.4961     779.9297     ↑
+            813.9492     617.8008     ↓
+            813.8711     617.03906    ↑
+            796.53125    428.84375    ↓
+            796.53125    428.84375    ↑
+            802.1797     272.11328    ↓
+            802.1797     272.07813    ↑
+            800.39453    99.57422     ↓
+            800.3281     99.57422     ↑
             "#,
     )
     .await;
 
-    if get_state::<String>()
-        == "_bo_s_ct_bottom_bt_ct_center_tp_ct_top_to_s_ct_ri_s_ct_right_ri_ct_center_le_ct_left_le_s_ct"
-    {
-        debug!("Layout test: OK");
-        Ok(())
-    } else {
-        bail!("Fail")
-    }
+    assert_eq(
+        get_state::<String>(),
+        "_le_s_ct_left_le_ct_center_ri_ct_right_ri_s_ct_bo_s_ct_bottom_bt_ct_center_tp_ct_top_to_s_ct",
+    )?;
+
+    debug!("Layout test: OK");
+    Ok(())
 }

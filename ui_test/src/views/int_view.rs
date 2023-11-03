@@ -1,12 +1,10 @@
-use std::fmt::Display;
-
-use anyhow::{bail, Result};
-use log::{debug, error};
+use anyhow::Result;
+use log::debug;
 use test_engine::{from_main, gm::flat::IntSize, Screen};
 use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
 use ui_views::IntView;
 
-use crate::view_tests::inject_touches;
+use crate::view_tests::{assert_eq, inject_touches};
 
 #[view]
 struct IntTestView {
@@ -26,16 +24,7 @@ impl ViewTest for IntTestView {
     }
 }
 
-fn assert_eq<T: PartialEq + Display>(a: T, b: T) -> Result<()> {
-    if a == b {
-        return Ok(());
-    }
-    let message = format!("Assertion failed: {a} != {b}");
-    error!("{message}");
-    bail!(message)
-}
-
-pub async fn int_view_test() -> Result<()> {
+pub async fn test_int_view() -> Result<()> {
     Screen::set_test_view::<IntTestView>().await;
 
     let mut this = IntTestView::instance();

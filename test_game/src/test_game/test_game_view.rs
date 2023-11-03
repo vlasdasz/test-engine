@@ -106,7 +106,7 @@ impl TestGameView {
         {
             let mut view = self.add_view::<Container>();
 
-            view.place.b(10).center_hor().size(150, 100).all_ver();
+            view.place.b(10).center_x().size(150, 100).all_ver();
 
             let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");

@@ -1,6 +1,5 @@
 use std::sync::{Mutex, MutexGuard, OnceLock};
 
-use itertools::Itertools;
 use nonempty::NonEmpty;
 use refs::Weak;
 
@@ -38,11 +37,9 @@ impl TouchStack {
             sup = sup.superview;
         }
 
-        let stack = self.stack.iter_mut().collect_vec();
-
-        for layer in stack.into_iter().rev() {
+        for layer in self.stack.iter_mut().rev() {
             for label in &view_stack {
-                if &layer.root_name() == label {
+                if layer.root_name() == label {
                     return layer;
                 }
             }
@@ -81,6 +78,23 @@ impl TouchStack {
     }
 
     pub fn root_name() -> String {
-        Self::get().stack.last().root_name()
+        Self::get().stack.last().root_name().to_string()
+    }
+
+    pub fn dump() -> String {
+        let mut result = String::new();
+
+        for layer in &Self::get().stack {
+            result += &format!("Layer: {}\n", layer.root_name());
+            for view in layer.views() {
+                if view.is_null() {
+                    continue;
+                }
+                result += &format!("View: {}\n", view.label);
+            }
+            result += "\n";
+        }
+
+        result
     }
 }

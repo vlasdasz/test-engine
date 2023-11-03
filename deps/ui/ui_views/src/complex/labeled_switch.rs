@@ -36,7 +36,7 @@ impl ViewSetup for LabeledSwitch {
         self.switch
             .place
             .size(80, 40)
-            .center_ver()
+            .center_y()
             .between_super(self.label, Anchor::Right);
 
         self.switch.selected.val(move |on| self.selected.trigger(on));

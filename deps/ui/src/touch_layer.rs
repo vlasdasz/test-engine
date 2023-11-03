@@ -29,8 +29,8 @@ impl TouchLayer {
         self.root.addr()
     }
 
-    pub(crate) fn root_name(&self) -> String {
-        self.root.label.clone()
+    pub(crate) fn root_name(&self) -> &str {
+        &self.root.label
     }
 }
 
