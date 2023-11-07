@@ -19,11 +19,11 @@ mod views;
 fn main() -> Result<()> {
     test_engine::ViewApp::<Container>::start_with_actor(async {
         test_touch_stack().await?;
-        // test_button().await?;
-        // test_switch().await?;
-        // test_layout().await?;
-        // test_int_view().await?;
-        // test_drop_down().await?;
+        test_button().await?;
+        test_switch().await?;
+        test_layout().await?;
+        test_int_view().await?;
+        test_drop_down().await?;
 
         Ok(())
     })

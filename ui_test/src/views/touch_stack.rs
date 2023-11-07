@@ -1,7 +1,11 @@
 use anyhow::Result;
 use log::debug;
+use rtools::sleep;
 use test_engine::Screen;
-use ui::{refs::Weak, view, SubView, TouchStack, ViewSetup};
+use ui::{
+    refs::{is_main_thread, Weak},
+    view, SubView, TouchStack, ViewSetup,
+};
 use ui_views::Button;
 
 use crate::view_tests::{
@@ -25,7 +29,13 @@ impl ViewSetup for TouchStackTestView {
 }
 
 pub async fn test_touch_stack() -> Result<()> {
+    dbg!(is_main_thread());
+
     Screen::set_test_view::<TouchStackTestView>(600, 600).await;
+
+    dbg!("set");
+
+    sleep(20);
 
     let this = TouchStackTestView::instance();
 

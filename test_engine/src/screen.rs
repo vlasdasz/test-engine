@@ -212,14 +212,20 @@ impl Screen {
     }
 
     pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) {
+        dbg!("set_test_view");
         from_main(move || {
+            dbg!("on main");
             let view = T::new();
+            dbg!("created");
             let mut root = UIManager::root_view();
+            dbg!("root view");
             root.remove_all_subviews();
             let view = root.add_subview(view);
             view.place.back();
+            dbg!("placed");
             #[cfg(desktop)]
             Screen::current().set_size((width, height));
+            dbg!("size set");
         })
         .await
     }

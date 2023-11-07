@@ -28,6 +28,7 @@ pub struct Image {
     pub flipped_y: bool,
     buffer:        FrameBuffer,
     total_size:    usize,
+    #[allow(dead_code)]
     name:          String,
 }
 

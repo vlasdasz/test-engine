@@ -58,5 +58,6 @@ impl GLLoader {
 }
 
 extern "C" fn window_size_callback(_: *mut GLFWwindow, w: c_int, h: c_int) {
+    #[allow(clippy::cast_sign_loss)]
     SystemEvents::get().size_changed.trigger((w as u32, h as u32).into())
 }
