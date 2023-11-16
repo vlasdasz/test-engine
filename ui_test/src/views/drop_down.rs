@@ -12,10 +12,10 @@ struct DropDownTestView {
     bot: SubView<DropDown>,
 }
 
-fn add_test_button(mut view: Weak<dyn View>, mut action: impl FnMut() + 'static) {
+fn add_test_button(mut view: Weak<dyn View>, action: impl FnMut() + 'static) {
     let mut button = view.add_view::<Button>();
     button.set_text("TAP").place.size(100, 20).center();
-    button.on_tap(move || action())
+    button.on_tap(action)
 }
 
 impl ViewSetup for DropDownTestView {

@@ -192,7 +192,7 @@ impl<T: IntoF32> DivAssign<T> for Point {
     }
 }
 
-impl<X, Y> From<(X, Y)> for Point
+impl<X, Y> const From<(X, Y)> for Point
 where
     X: ~const IntoF32,
     Y: ~const IntoF32,
