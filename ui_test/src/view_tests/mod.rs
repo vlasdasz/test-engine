@@ -79,7 +79,9 @@ pub async fn record_touches() {
 
     r.recv().await.unwrap();
 
-    UIEvents::get().on_touch.remove_subscribers();
+    on_main(|| {
+        UIEvents::get().on_touch.remove_subscribers();
+    });
 
     println!("{}", Touch::str_from_vec(touches.to_vec()));
 }

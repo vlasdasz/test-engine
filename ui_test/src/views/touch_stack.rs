@@ -1,12 +1,11 @@
 use anyhow::Result;
 use log::debug;
-use rtools::sleep;
 use test_engine::Screen;
 use ui::{refs::Weak, view, SubView, TouchStack, ViewSetup};
 use ui_views::Button;
 
 use crate::view_tests::{
-    assert_eq, inject_touches, record_touches,
+    assert_eq, inject_touches,
     state::{append_state, get_str_state},
 };
 

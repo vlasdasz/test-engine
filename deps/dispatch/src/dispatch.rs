@@ -52,10 +52,6 @@ pub fn on_main(action: impl FnOnce() + Send + 'static) {
     }
 }
 
-pub fn on_next_frame(action: impl FnOnce() + Send + 'static) {
-    CALLBACKS.lock().unwrap().push(Box::new(action));
-}
-
 pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
     if is_main_thread() {
         action();

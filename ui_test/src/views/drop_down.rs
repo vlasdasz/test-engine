@@ -4,8 +4,6 @@ use test_engine::Screen;
 use ui::{refs::Weak, view, SubView, TouchStack, View, ViewSetup, ViewSubviews};
 use ui_views::{Button, DropDown};
 
-use crate::view_tests::record_touches;
-
 #[view]
 struct DropDownTestView {
     top: SubView<DropDown>,
@@ -35,7 +33,7 @@ impl ViewSetup for DropDownTestView {
 pub async fn test_drop_down() -> Result<()> {
     Screen::set_test_view::<DropDownTestView>(280, 280).await;
 
-    record_touches().await;
+    // crate::view_tests::record_touches().await;
 
     debug!("Drop down test: OK");
 
