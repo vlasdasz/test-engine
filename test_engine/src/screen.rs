@@ -124,9 +124,7 @@ impl Screen {
     pub fn update(&mut self) -> TestEngineAction {
         self.calculate_fps();
 
-        let mut drawer = UIManager::drawer();
-
-        drawer.reset_viewport();
+        UIManager::reset_viewport();
 
         GLWrapper::clear();
 
@@ -138,8 +136,10 @@ impl Screen {
         let root_frame: Rect = UIManager::root_view_size().into();
         root_view.set_frame(root_frame);
 
+        let mut drawer = UIManager::drawer();
         drawer.set_root_frame(root_frame);
         drawer.update(&mut root_view);
+        drop(drawer);
 
         dispatch::invoke_dispatched();
 
@@ -212,20 +212,14 @@ impl Screen {
     }
 
     pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) {
-        dbg!("set_test_view");
         from_main(move || {
-            dbg!("on main");
             let view = T::new();
-            dbg!("created");
             let mut root = UIManager::root_view();
-            dbg!("root view");
             root.remove_all_subviews();
             let view = root.add_subview(view);
             view.place.back();
-            dbg!("placed");
             #[cfg(desktop)]
             Screen::current().set_size((width, height));
-            dbg!("size set");
         })
         .await
     }

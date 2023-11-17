@@ -81,13 +81,19 @@ pub fn async_after(delay: impl IntoF32, action: impl Future + Send + 'static) {
 }
 
 pub fn invoke_dispatched() {
-    let mut callback = CALLBACKS.lock().unwrap();
+    let Ok(mut callback) = CALLBACKS.try_lock() else {
+        return;
+    };
+
     for action in callback.drain(..) {
         action()
     }
     drop(callback);
 
-    let mut signalled = SIGNALLED.lock().unwrap();
+    let Ok(mut signalled) = SIGNALLED.try_lock() else {
+        return;
+    };
+
     for action in signalled.drain(..) {
         (action.1)();
         action.0.send(()).unwrap();

@@ -7,6 +7,7 @@ use std::{
     },
 };
 
+use gl_wrapper::GLWrapper;
 use gm::flat::{IntSize, Point, Rect, Size};
 use refs::{Own, Weak};
 
@@ -99,6 +100,17 @@ impl UIManager {
 
     pub fn set_drawer(drawer: impl UIDrawer + 'static) {
         DRAWER.set(Mutex::new(Box::new(drawer))).unwrap();
+    }
+
+    pub fn reset_viewport() {
+        let window_size = UIManager::window_size();
+        let display_scale = UIManager::display_scale();
+        GLWrapper::set_viewport((
+            0,
+            0,
+            window_size.width as f32 * display_scale,
+            window_size.height as f32 * display_scale,
+        ));
     }
 }
 

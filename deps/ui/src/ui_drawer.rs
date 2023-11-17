@@ -1,12 +1,11 @@
 use std::{fmt::Debug, ops::DerefMut};
 
-use gl_wrapper::GLWrapper;
 use gm::{flat::Rect, Color};
 use refs::Weak;
 
 use crate::{
     view::{ViewAnimation, ViewSubviews},
-    DrawMode, PathData, UIManager, View, ViewLayout,
+    DrawMode, PathData, View, ViewLayout,
 };
 
 pub trait UIDrawer: Debug + Send {
@@ -32,14 +31,5 @@ pub trait UIDrawer: Debug + Send {
     fn update(&self, view: &mut Weak<dyn View>) {
         self.update_internal(view.deref_mut());
         self.draw(view.deref_mut());
-    }
-
-    fn reset_viewport(&self) {
-        GLWrapper::set_viewport((
-            0,
-            0,
-            UIManager::window_size().width as f32 * UIManager::display_scale(),
-            UIManager::window_size().height as f32 * UIManager::display_scale(),
-        ));
     }
 }
