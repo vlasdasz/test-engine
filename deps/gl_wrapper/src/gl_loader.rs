@@ -2,11 +2,11 @@
 
 extern crate glfw;
 
-use std::ffi::c_int;
+use std::{ffi::c_int, mem::transmute};
 
 use glfw::{
     ffi::{glfwSetWindowSizeCallback, GLFWwindow},
-    Context, Glfw,
+    Context, Glfw, GlfwReceiver,
     OpenGlProfileHint::Core,
     SwapInterval, Window, WindowEvent,
 };
@@ -14,7 +14,7 @@ use gm::flat::IntSize;
 
 use crate::{monitor::Monitor, system_events::SystemEvents};
 
-pub type GLFWEvents = std::sync::mpsc::Receiver<(f64, WindowEvent)>;
+pub type GLFWEvents = GlfwReceiver<(f64, WindowEvent)>;
 
 pub struct GLLoader {
     pub glfw:   Glfw,
@@ -33,9 +33,17 @@ impl GLLoader {
         #[cfg(macos)]
         glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
 
-        let (mut window, events) = glfw
+        let (window, events) = glfw
             .create_window(size.width, size.height, "Test Engine", glfw::WindowMode::Windowed)
             .expect("Failed to create GLFW window.");
+
+        fn unbox<T>(value: Box<T>) -> T {
+            Box::into_inner(value)
+        }
+
+        let window: Box<Window> = unsafe { transmute(window) };
+
+        let mut window = unbox(window);
 
         unsafe { glfwSetWindowSizeCallback(window.window_ptr(), Some(window_size_callback)) };
 

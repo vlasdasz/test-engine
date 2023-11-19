@@ -26,7 +26,7 @@ use crate::{
 static mut SCREEN: *mut Screen = null_mut();
 
 pub struct Screen {
-    pub ui: Own<UILayer>,
+    pub(crate) ui: Own<UILayer>,
 
     #[cfg(desktop)]
     glfw:    GLFWManager,

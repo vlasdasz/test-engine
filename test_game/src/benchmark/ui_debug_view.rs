@@ -1,6 +1,7 @@
 use test_engine::{
     ui::{layout::Anchor, SubView},
-    view, Screen,
+    ui_layer::UILayer,
+    view,
 };
 use ui::{
     refs::{dump_ref_stats, Own, Weak},
@@ -37,7 +38,7 @@ impl ViewSetup for UIDebugView {
         self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_x();
 
         self.test_game.on_tap(|| {
-            Screen::current().ui.set_level(Own::<TestGameLevel>::default());
+            UILayer::get().set_level(Own::<TestGameLevel>::default());
             // UIManager::set_view(Own::<TestGameView>::default());
         });
 

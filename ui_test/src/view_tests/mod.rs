@@ -3,12 +3,15 @@ use std::fmt::{Debug, Display};
 use anyhow::{bail, Result};
 use glfw::MouseButtonLeft;
 use log::error;
+use rtools::sleep;
 use serde::de::DeserializeOwned;
 use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, on_main, ui_layer::UILayer};
 use tokio::sync::mpsc::channel;
 use ui::{input::UIEvents, refs::ToOwn, Touch};
 
 use crate::view_tests::state::{clear_state, get_state};
+
+const INJECT_TOUCH_DELAY: f32 = 0.0;
 
 pub mod state;
 
@@ -37,6 +40,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 }
 
 async fn inject_touch(touch: impl Into<Touch>) {
+    sleep(INJECT_TOUCH_DELAY);
     let touch = touch.into();
     from_main(move || {
         let events = SystemEvents::get();

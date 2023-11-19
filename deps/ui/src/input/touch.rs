@@ -35,7 +35,7 @@ impl Touch {
     }
 
     pub fn str_from_vec(v: Vec<Touch>) -> String {
-        v.into_iter().map(|t| t.to_string()).join("\n")
+        v.into_iter().map(|t| "            ".to_string() + &t.to_string()).join("\n")
     }
 }
 

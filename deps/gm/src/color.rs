@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use rtools::{IntoF32, Random};
 use serde::{Deserialize, Serialize};
 
@@ -74,8 +76,12 @@ impl Default for Color {
     }
 }
 
-impl ToString for Color {
-    fn to_string(&self) -> String {
-        format!("r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
+impl Display for Color {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            format!("r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
+        )
     }
 }

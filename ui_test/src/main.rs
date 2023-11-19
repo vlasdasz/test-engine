@@ -6,6 +6,7 @@
 #![feature(arbitrary_self_types)]
 
 use anyhow::Result;
+use test_engine::ui_layer::UILayer;
 use ui::Container;
 
 use crate::views::{
@@ -18,6 +19,8 @@ mod views;
 
 fn main() -> Result<()> {
     test_engine::ViewApp::<Container>::start_with_actor(async {
+        UILayer::display_touches();
+
         test_touch_stack().await?;
         test_button().await?;
         test_switch().await?;

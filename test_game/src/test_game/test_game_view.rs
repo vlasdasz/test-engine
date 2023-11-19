@@ -33,11 +33,11 @@ impl TestGameView {
     fn setup_level(&mut self) {
         // Screen::current().
 
-        Screen::current().ui.set_level(Own::<TestGameLevel>::default());
+        UILayer::get().set_level(Own::<TestGameLevel>::default());
 
         self.dpad
             .on_press
-            .val(|dir| Screen::current().ui.level.as_mut().unwrap().player().move_by_direction(&dir));
+            .val(|dir| UILayer::get().level.as_mut().unwrap().player().move_by_direction(&dir));
     }
 
     fn setup_ui(mut self: Weak<Self>) {
@@ -60,7 +60,7 @@ impl TestGameView {
         ]
         .apply(|(key, direction)| {
             UILayer::keymap().add(key, move || {
-                if let Some(level) = &mut Screen::current().ui.level {
+                if let Some(level) = &mut UILayer::get().level {
                     if let Some(player) = level.player().get() {
                         player.move_by_direction(&direction)
                     }
@@ -70,7 +70,7 @@ impl TestGameView {
 
         self.sprite_view.place.tr(10).size(400, 80);
 
-        if let Some(level) = &Screen::current().ui.level {
+        if let Some(level) = &UILayer::get().level {
             level
                 .base()
                 .on_sprite_selected
@@ -81,7 +81,7 @@ impl TestGameView {
 
         self.left_stick.place.bl(10).size(80, 80);
         self.left_stick.on_change.val(|mut dir| {
-            if let Some(level) = &mut Screen::current().ui.level {
+            if let Some(level) = &mut UILayer::get().level {
                 dir.y = -dir.y;
                 level.player().add_impulse(dir);
             }
@@ -101,7 +101,7 @@ impl TestGameView {
         self.level_scale.place.size(28, 120).l(28).b(140);
         self.level_scale
             .on_change
-            .val(|val| Screen::current().ui.level.as_mut().unwrap().set_scale(val));
+            .val(|val| UILayer::get().level.as_mut().unwrap().set_scale(val));
 
         {
             let mut view = self.add_view::<Container>();
@@ -111,13 +111,13 @@ impl TestGameView {
             let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap(|| {
-                Screen::current().ui.set_level(Own::<BenchmarkLevel>::default());
+                UILayer::get().set_level(Own::<BenchmarkLevel>::default());
             });
 
             let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap(|| {
-                Screen::current().ui.set_level(Own::<TestGameLevel>::default());
+                UILayer::get().set_level(Own::<TestGameLevel>::default());
             });
 
             let mut play = view.add_view::<Button>();

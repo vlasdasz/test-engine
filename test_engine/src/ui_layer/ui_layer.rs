@@ -2,13 +2,14 @@
 
 use std::rc::Rc;
 
-use gm::flat::Point;
+use dispatch::on_main_sync;
+use gm::{flat::Point, Color};
 use sprites::Level;
 use ui::{
     check_touch,
     input::UIEvents,
     refs::{Own, Weak},
-    Touch, TouchStack, UIManager,
+    Container, Touch, TouchStack, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews,
 };
 use ui_views::debug_view::DebugView;
 
@@ -30,6 +31,8 @@ pub struct UILayer {
 
     pub debug_view: Weak<DebugView>,
 
+    display_touches: bool,
+
     #[cfg(desktop)]
     pub(crate) shift_pressed: bool,
 }
@@ -44,6 +47,13 @@ impl UILayer {
 
         if LOG_TOUCHES && !touch.is_moved() {
             warn!("{touch:?}");
+        }
+
+        if self.display_touches && !touch.is_moved() {
+            let mut view = Container::new();
+            view.set_size((5, 5)).set_color(Color::random());
+            view.set_center(touch.position);
+            UIManager::root_view().add_subview(view);
         }
 
         let level_touch = touch;
@@ -75,5 +85,17 @@ impl UILayer {
 
     pub fn keymap() -> Rc<Keymap> {
         Screen::current().ui.keymap.clone()
+    }
+}
+
+impl UILayer {
+    pub fn get() -> Weak<Self> {
+        Screen::current().ui.weak()
+    }
+
+    pub fn display_touches() {
+        on_main_sync(|| {
+            UILayer::get().display_touches = true;
+        })
     }
 }
