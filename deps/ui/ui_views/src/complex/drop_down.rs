@@ -4,7 +4,7 @@ use gm::{flat::Size, Color};
 use itertools::Itertools;
 use refs::{Own, Weak};
 use rtools::Toggle;
-use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewTouch};
+use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
 use crate::{self as ui_views, collection_data, Button, CollectionData, CollectionView, Label};
 
@@ -43,8 +43,16 @@ impl DropDown {
             self.label.is_hidden = true;
             self.table.reload_data();
             self.table.is_hidden = false;
-            let table_size = (self.width(), self.height() * self.number_of_cells() as f32);
+            let table_height = self.height() * self.number_of_cells() as f32;
+            let table_size = (self.width(), table_height);
             self.table.set_size(table_size);
+
+            if self.superview().height() - self.max_y() < table_height {
+                let y = -table_height + self.height();
+                self.table.set_y(y);
+            } else {
+                self.table.set_y(0);
+            }
         }
     }
 
@@ -92,7 +100,6 @@ impl CollectionData for DropDown {
     }
 
     fn cell_selected(&mut self, index: usize) {
-        dbg!(index);
         let val = &self.values[index];
         self.label.set_text(val);
         self.tapped();

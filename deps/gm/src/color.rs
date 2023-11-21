@@ -78,10 +78,6 @@ impl Default for Color {
 
 impl Display for Color {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            format!("r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
-        )
+        write!(f, "r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
     }
 }

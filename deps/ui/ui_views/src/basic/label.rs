@@ -74,13 +74,14 @@ impl Label {
 
         let image = self.image_view.image;
 
-        let size = if image.size.width > self.width() {
-            image.size.fit_width(self.width())
-        } else if image.size.height > self.height() {
-            image.size.fit_height(self.height())
-        } else {
-            image.size
-        };
+        let size =
+            if image.size.width > self.width() {
+                image.size.fit_width(self.width())
+            } else if image.size.height > self.height() {
+                image.size.fit_height(self.height())
+            } else {
+                image.size
+            };
 
         self.image_view.set_size(size);
     }
