@@ -26,5 +26,5 @@ impl ViewSetup for SpinnerTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<SpinnerTestView>::start();
+    test_engine::ViewApp::<SpinnerTestView>::start().unwrap()
 }

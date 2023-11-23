@@ -27,5 +27,5 @@ impl ViewTest for LabeledSwitchTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<LabeledSwitchTestView>::start();
+    test_engine::ViewApp::<LabeledSwitchTestView>::start().unwrap()
 }

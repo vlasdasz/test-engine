@@ -14,6 +14,7 @@ use crate::views::{
     switch::test_switch, touch_stack::test_touch_stack,
 };
 
+mod ui_test_legacy;
 mod view_tests;
 mod views;
 

@@ -247,13 +247,12 @@ impl Screen {
         set_sprites_drawer(TESpritesDrawer::new());
         trace!("SpritesDrawer: OK");
 
-        let mut screen =
-            Own::new(Self {
-                ui,
-                #[cfg(desktop)]
-                glfw,
-                monitor,
-            });
+        let mut screen = Own::new(Self {
+            ui,
+            #[cfg(desktop)]
+            glfw,
+            monitor,
+        });
 
         unsafe {
             SCREEN = screen.deref_mut() as *mut Screen;

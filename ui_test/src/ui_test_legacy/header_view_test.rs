@@ -35,5 +35,5 @@ impl WithHeader for HeaderTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<HeaderTestView>::start()
+    test_engine::ViewApp::<HeaderTestView>::start().unwrap()
 }

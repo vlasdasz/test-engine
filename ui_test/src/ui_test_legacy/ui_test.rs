@@ -6,7 +6,7 @@ use ui::{
 };
 use ui_views::{link_button, Button};
 
-use crate::ui_test::CollectionTestView;
+use crate::ui_test_legacy::CollectionTestView;
 
 #[view]
 pub struct UITestView {
@@ -27,14 +27,11 @@ impl ViewSetup for UITestView {
         self.collection.set_text_color(Color::GREEN);
         self.collection.set_text("Collection");
         self.collection
-            .on_tap
-            .sub(move || self.navigation().push(Own::<CollectionTestView>::default()));
+            .on_tap(move || self.navigation().push(Own::<CollectionTestView>::default()));
 
         self.debug.set_text_color(Color::BLUE);
         self.debug.set_text("Debug");
-        self.debug
-            .on_tap
-            .sub(move || self.navigation().push(Own::<UIDebugView>::default()));
+        self.debug.on_tap(move || self.navigation().push(Own::<UIDebugView>::default()));
 
         self.nothing.set_text_color(Color::WHITE);
         self.nothing.set_text("Nothing");

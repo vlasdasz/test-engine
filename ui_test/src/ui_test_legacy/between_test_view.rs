@@ -34,10 +34,10 @@ impl ViewSetup for BetweenTestView {
 
         self.center.place.center();
 
-        self.top.set_color(Color::ORANGE).place.center_hor().t(200);
-        self.bottom.set_color(Color::GREEN).place.center_hor().b(200);
-        self.left.place.center_ver().l(200);
-        self.right.place.center_ver().r(200);
+        self.top.set_color(Color::ORANGE).place.center_x().t(200);
+        self.bottom.set_color(Color::GREEN).place.center_x().b(200);
+        self.left.place.center_y().l(200);
+        self.right.place.center_y().r(200);
 
         self.top_center.place.between(self.top, self.center);
         self.bottom_center.place.between(self.bottom, self.center);
@@ -54,5 +54,5 @@ impl ViewSetup for BetweenTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<BetweenTestView>::start()
+    test_engine::ViewApp::<BetweenTestView>::start().unwrap()
 }

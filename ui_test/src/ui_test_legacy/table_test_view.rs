@@ -59,5 +59,5 @@ impl WithHeader for TableTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<TableTestView>::start()
+    test_engine::ViewApp::<TableTestView>::start().unwrap()
 }

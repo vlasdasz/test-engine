@@ -104,12 +104,11 @@ pub mod mobile {
         }
 
         pub fn on_touch(&mut self, id: u64, x: c_float, y: c_float, event: c_int) {
-            let touch =
-                Touch {
-                    id,
-                    position: (x, y).into(),
-                    event: event.into(),
-                };
+            let touch = Touch {
+                id,
+                position: (x, y).into(),
+                event: event.into(),
+            };
 
             if Platform::ANDROID {
                 if let Err(err) = self.mobile._touch_sender.send(touch) {
@@ -184,14 +183,13 @@ pub mod mobile {
                 Screen::new(monitor, PathBuf::new(), view).into()
             });
 
-            let mobile =
-                MobileStuff {
-                    runtime,
-                    _touch_sender,
-                    _touch_receiver,
-                    _gyro_sender,
-                    _gyro_receiver,
-                };
+            let mobile = MobileStuff {
+                runtime,
+                _touch_sender,
+                _touch_receiver,
+                _gyro_sender,
+                _gyro_receiver,
+            };
 
             Self { screen, mobile }
         }

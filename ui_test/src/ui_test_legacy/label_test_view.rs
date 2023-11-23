@@ -19,5 +19,5 @@ impl ViewSetup for LabelTestView {
 #[ignore]
 #[test]
 fn test_label() {
-    ViewApp::<LabelTestView>::start();
+    ViewApp::<LabelTestView>::start().unwrap()
 }

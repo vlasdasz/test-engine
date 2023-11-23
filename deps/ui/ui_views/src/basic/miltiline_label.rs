@@ -256,11 +256,10 @@ mod test {
         view.__internal_setup();
         view.set_size((1200, 100));
 
-        let long_string =
-            (0..u64::random_in(50..100))
-                .map(|_| String::random())
-                .collect::<Vec<_>>()
-                .join("");
+        let long_string = (0..u64::random_in(50..100))
+            .map(|_| String::random())
+            .collect::<Vec<_>>()
+            .join("");
 
         assert!(view
             .split_text(&long_string, view.size)

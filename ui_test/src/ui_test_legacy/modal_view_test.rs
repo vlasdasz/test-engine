@@ -70,5 +70,5 @@ impl ViewSetup for ModalViewTestContainer {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<ModalViewTestContainer>::start();
+    test_engine::ViewApp::<ModalViewTestContainer>::start().unwrap()
 }

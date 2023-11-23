@@ -8,13 +8,14 @@ use crate::ImageView;
 
 #[view]
 pub struct Label {
-    font:                         Handle<Font>,
-    text:                         String,
-    prev_text:                    String,
-    image_view:                   SubView<ImageView>,
-    text_size:                    f32,
-    needs_update:                 bool,
-    initial_text:                 Option<String>,
+    font:         Handle<Font>,
+    text:         String,
+    prev_text:    String,
+    image_view:   SubView<ImageView>,
+    text_size:    f32,
+    needs_update: bool,
+    initial_text: Option<String>,
+
     pub dont_cache_rendered_text: bool,
 }
 
@@ -74,14 +75,13 @@ impl Label {
 
         let image = self.image_view.image;
 
-        let size =
-            if image.size.width > self.width() {
-                image.size.fit_width(self.width())
-            } else if image.size.height > self.height() {
-                image.size.fit_height(self.height())
-            } else {
-                image.size
-            };
+        let size = if image.size.width > self.width() {
+            image.size.fit_width(self.width())
+        } else if image.size.height > self.height() {
+            image.size.fit_height(self.height())
+        } else {
+            image.size
+        };
 
         self.image_view.set_size(size);
     }

@@ -39,5 +39,5 @@ impl ViewSetup for QuestionTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<QuestionTestView>::start();
+    test_engine::ViewApp::<QuestionTestView>::start().unwrap()
 }

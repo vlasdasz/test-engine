@@ -47,19 +47,21 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let inits = add_inits(name, fields);
     let links = add_links(fields);
 
+    let instance_global_var = Ident::new(&format!("__INSTANCE_{name}"), Span::call_site());
+
     let (instance_global, instance_link, instance_method) = if no_generics {
         (
             quote! {
-                static __INSTANCE: std::sync::Mutex< ui::refs::Weak<#name>> =
+                static #instance_global_var: std::sync::Mutex< ui::refs::Weak<#name>> =
                     std::sync::Mutex::new(ui::refs::Weak::const_default());
             },
             quote! {
-                *__INSTANCE.lock().unwrap() = self;
+                *#instance_global_var.lock().unwrap() = self;
             },
             quote! {
                 impl #name {
                     pub fn instance() -> ui::refs::Weak<Self> {
-                        __INSTANCE.lock().unwrap().clone()
+                        #instance_global_var.lock().unwrap().clone()
                     }
                 }
             },

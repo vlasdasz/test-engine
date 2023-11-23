@@ -128,8 +128,10 @@ impl ViewCallbacks for DebugView {
         let screen_scale = UIManager::display_scale();
         self.screen_scale_label.set_text(format!("Screen scale: {screen_scale}"));
 
-        self.root_frame
-            .set_text(format!("Root frame: {:?}", UIManager::root_view().frame().short_display()));
+        self.root_frame.set_text(format!(
+            "Root frame: {:?}",
+            UIManager::root_view().frame().short_display()
+        ));
 
         self.touch_enabled
             .set_text(format!("Touch enabled: {}", !UIManager::touch_disabled()));

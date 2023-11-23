@@ -25,5 +25,5 @@ impl ViewSetup for AlertTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<AlertTestView>::start();
+    test_engine::ViewApp::<AlertTestView>::start().unwrap()
 }

@@ -11,7 +11,7 @@ struct SwitchTestView {
 impl ViewSetup for SwitchTestView {
     fn setup(mut self: Weak<Self>) {
         self.place.all_hor();
-        self.switch.place.size(80, 40).l(20).center_ver();
+        self.switch.place.size(80, 40).l(20).center_y();
         self.switch.selected.val(move |on| {
             self.label.set_text(on);
         });
@@ -28,5 +28,5 @@ impl ViewTest for SwitchTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<SwitchTestView>::start();
+    test_engine::ViewApp::<SwitchTestView>::start().unwrap()
 }

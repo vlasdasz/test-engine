@@ -83,5 +83,5 @@ impl CollectionData for CollectionTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<CollectionTestView>::start()
+    test_engine::ViewApp::<CollectionTestView>::start().unwrap()
 }
