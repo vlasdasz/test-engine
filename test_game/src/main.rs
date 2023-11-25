@@ -1,6 +1,5 @@
 #![allow(incomplete_features)]
 #![feature(specialization)]
-#![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
 

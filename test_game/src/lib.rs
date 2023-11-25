@@ -1,7 +1,6 @@
 #![allow(incomplete_features)]
 #![allow(improper_ctypes_definitions)]
 #![feature(specialization)]
-#![feature(trait_upcasting)]
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
 
