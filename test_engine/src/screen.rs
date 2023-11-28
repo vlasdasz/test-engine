@@ -1,7 +1,7 @@
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering};
 
 use chrono::Utc;
-use dispatch::{from_main, on_main};
+use dispatch::from_main;
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
@@ -14,7 +14,7 @@ use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
     refs::{assert_main_thread, Own, Weak},
-    ToLabel, UIManager, View, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
+    UIManager, View, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
 
@@ -100,8 +100,8 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn set_title(title: impl ToLabel + Send + Sync + 'static) {
-        on_main(move || Screen::current().glfw.set_window_title(&title.to_label()));
+    pub fn set_title(title: impl ui::ToLabel + Send + Sync + 'static) {
+        dispatch::on_main(move || Screen::current().glfw.set_window_title(&title.to_label()));
     }
 
     #[allow(clippy::cast_possible_truncation)]
@@ -195,6 +195,7 @@ impl Screen {
         UIManager::set_window_size(size);
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
+        #[cfg(desktop)]
         Self::set_title(format!("{} x {}", size.width, size.height));
         self.update();
     }
@@ -217,6 +218,7 @@ impl Screen {
         self.glfw.start_main_loop(callback)
     }
 
+    #[allow(unused_variables)]
     pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) {
         from_main(move || {
             let view = T::new();
