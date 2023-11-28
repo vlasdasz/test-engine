@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 use anyhow::{bail, Result};
 use glfw::MouseButtonLeft;
-use log::error;
+use log::{error, warn};
 use rtools::sleep;
 use serde::de::DeserializeOwned;
 use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, on_main, ui_layer::UILayer};
@@ -81,7 +81,9 @@ pub async fn record_touches() {
         });
     });
 
-    r.recv().await.unwrap();
+    if let None = r.recv().await {
+        warn!("Failed to receive record_touches result");
+    }
 
     on_main(|| {
         UIEvents::get().on_touch.remove_subscribers();
@@ -90,11 +92,14 @@ pub async fn record_touches() {
     println!("{}", Touch::str_from_vec(touches.to_vec()));
 }
 
-pub fn assert_eq<T: PartialEq<U> + Debug, U: PartialEq<T> + Debug>(a: T, b: U) -> Result<()> {
+pub fn assert_eq<T: PartialEq<U> + Debug, U: Debug>(a: T, b: U) -> Result<()> {
     if a == b {
         return Ok(());
     }
     let message = format!("Assertion failed: {a:?} != {b:?}");
     error!("{message}");
+
+    sleep(20);
+
     bail!(message)
 }

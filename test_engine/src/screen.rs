@@ -1,7 +1,7 @@
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering};
 
 use chrono::Utc;
-use dispatch::from_main;
+use dispatch::{from_main, on_main};
 use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
@@ -14,7 +14,7 @@ use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
 use ui::{
     refs::{assert_main_thread, Own, Weak},
-    UIManager, View, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
+    ToLabel, UIManager, View, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
 
@@ -97,6 +97,11 @@ impl Screen {
     #[cfg(mobile)]
     pub fn take_screenshot(_path: impl ToString) {
         todo!("Take screenshot is not implemented for mobile")
+    }
+
+    #[cfg(desktop)]
+    pub fn set_title(title: impl ToLabel + Send + Sync + 'static) {
+        on_main(move || Screen::current().glfw.set_window_title(&title.to_label()));
     }
 
     #[allow(clippy::cast_possible_truncation)]
@@ -190,6 +195,7 @@ impl Screen {
         UIManager::set_window_size(size);
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
+        Self::set_title(format!("{} x {}", size.width, size.height));
         self.update();
     }
 

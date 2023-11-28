@@ -35,6 +35,10 @@ impl GLFWManager {
         todo!()
     }
 
+    pub fn set_window_title(&mut self, title: &str) {
+        self.window.set_title(title);
+    }
+
     pub fn start_main_loop(&mut self, callback: impl FnOnce()) -> Result<()> {
         self.window.set_key_polling(true);
         self.window.set_cursor_pos_polling(true);

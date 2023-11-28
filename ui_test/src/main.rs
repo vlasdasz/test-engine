@@ -9,8 +9,8 @@ use test_engine::ui_layer::UILayer;
 use ui::Container;
 
 use crate::views::{
-    button::test_button, drop_down::test_drop_down, int_view::test_int_view, layout::test_layout,
-    switch::test_switch, touch_stack::test_touch_stack,
+    alert::test_alert, button::test_button, drop_down::test_drop_down, int_view::test_int_view,
+    layout::test_layout, multiline_label::test_multiline, switch::test_switch, touch_stack::test_touch_stack,
 };
 
 mod ui_test_legacy;
@@ -27,6 +27,8 @@ fn main() -> Result<()> {
         test_layout().await?;
         test_int_view().await?;
         test_drop_down().await?;
+        test_alert().await?;
+        test_multiline().await?;
 
         Ok(())
     })
