@@ -91,4 +91,13 @@ impl GLFWManager {
         self.window
             .set_size(size.width.try_into().unwrap(), size.height.try_into().unwrap())
     }
+
+    pub fn get_size(&self) -> IntSize {
+        let (width, height) = self.window.get_size();
+        #[allow(clippy::cast_sign_loss)]
+        IntSize {
+            width:  width as u32,
+            height: height as u32,
+        }
+    }
 }

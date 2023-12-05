@@ -115,6 +115,15 @@ impl Screen {
         self.ui.frame_time = interval as f32 / MICROSECONDS_IN_ONE_SECOND as f32;
         self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
+        #[cfg(desktop)]
+        {
+            let size = self.glfw.get_size();
+            Self::set_title(format!(
+                "{:<8} x   {:<8}    {:<8} FPS",
+                size.width, size.height, self.ui.fps
+            ));
+        }
+
         if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) && self.ui.debug_view.is_ok() {
             let fps = self.ui.fps;
             self.ui.debug_view.fps.trigger(fps);
@@ -195,8 +204,6 @@ impl Screen {
         UIManager::set_window_size(size);
         get_sprites_drawer().set_resolution(size);
         get_sprites_drawer().set_camera_position((0, 0).into());
-        #[cfg(desktop)]
-        Self::set_title(format!("{} x {}", size.width, size.height));
         self.update();
     }
 

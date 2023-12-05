@@ -31,3 +31,13 @@ opt-level = "z"
 [profile.release-debug]
 debug = true
 inherits = "release"
+
+[profile.rerelease]
+codegen-units = 1
+inherits = "release"
+strip = true
+#opt-level = "z"
+debug = false
+lto = "fat"
+#panic = "abort"
+overflow-checks = false
