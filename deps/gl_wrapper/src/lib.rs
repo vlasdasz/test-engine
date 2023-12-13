@@ -1,5 +1,4 @@
 #![feature(const_trait_impl)]
-#![feature(process_exitcode_internals)]
 #![feature(box_into_inner)]
 
 pub use buffers::{Buffer, BufferConfig};
