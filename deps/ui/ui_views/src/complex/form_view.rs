@@ -31,7 +31,7 @@ impl<T: Debug + Reflected> FormView<T> {
         self.labels.clear();
 
         for field in T::simple_fields() {
-            let variant = self.variants.borrow().get(field).map(Clone::clone);
+            let variant = self.variants.borrow().get(field).cloned();
 
             let mut view = if let Some(variants) = variant {
                 let variants = variants.clone();
