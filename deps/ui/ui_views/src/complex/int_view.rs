@@ -37,21 +37,26 @@ impl IntView {
         self.value
     }
 
-    pub fn set_step(&mut self, step: impl IntoF32) {
+    pub fn set_value(&mut self, val: impl IntoF32) -> &mut Self {
+        let val = val.into_f32();
+        self.value = val;
+        self.label.set_text(format!("{val:.1}"));
+        self.on_change.trigger(val);
+        self
+    }
+
+    pub fn set_step(&mut self, step: impl IntoF32) -> &mut Self {
         self.step = step.into_f32();
+        self
     }
 
     fn up_tap(mut self: Weak<Self>) {
-        self.value += self.step;
-        let val = self.value;
-        self.on_change.trigger(val);
-        self.label.set_text(format!("{val:.1}"));
+        let val = self.value + self.step;
+        self.set_value(val);
     }
 
     fn down_tap(mut self: Weak<Self>) {
-        self.value -= self.step;
-        let val = self.value;
-        self.on_change.trigger(val);
-        self.label.set_text(format!("{val:.1}"));
+        let val = self.value - self.step;
+        self.set_value(val);
     }
 }

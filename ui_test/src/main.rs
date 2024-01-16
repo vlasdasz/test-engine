@@ -10,7 +10,8 @@ use ui::Container;
 
 use crate::views::{
     alert::test_alert, button::test_button, drop_down::test_drop_down, int_view::test_int_view,
-    layout::test_layout, multiline_label::test_multiline, switch::test_switch, touch_stack::test_touch_stack,
+    label::test_label, layout::test_layout, multiline_label::test_multiline, switch::test_switch,
+    touch_stack::test_touch_stack,
 };
 
 mod ui_test_legacy;
@@ -22,6 +23,7 @@ fn main() -> Result<()> {
         UILayer::display_touches();
 
         test_touch_stack().await?;
+        test_label().await?;
         test_button().await?;
         test_switch().await?;
         test_layout().await?;

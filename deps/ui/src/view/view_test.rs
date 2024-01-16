@@ -13,6 +13,6 @@ impl<T: ?Sized + View> ViewTest for T {
     default fn test_setup(self: Weak<Self>) {}
     default fn test_size() -> IntSize
     where Self: Sized {
-        (200, 100).into()
+        (600, 600).into()
     }
 }

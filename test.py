@@ -16,6 +16,7 @@ android = False
 
 this_path = os.path.dirname(os.path.abspath(__file__))
 
+
 def run(string):
     print(string)
     time.sleep(0.1)

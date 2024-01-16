@@ -1,4 +1,5 @@
 use gm::Color;
+use log::warn;
 use refs::Weak;
 use rtools::{data_manager::Handle, IntoF32};
 use text::{render_text, Font};
@@ -43,7 +44,16 @@ impl Label {
     }
 
     pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
-        self.text_size = size.into_f32();
+        let mut size = size.into_f32();
+        if size < 0.0 {
+            warn!("Label size less than zero: {size}. Will be set to 1.");
+            size = 1.0;
+        }
+        // clippy::float-cmp
+        if (size - self.text_size).abs() > f32::EPSILON {
+            self.needs_update = true;
+        }
+        self.text_size = size;
         self
     }
 
