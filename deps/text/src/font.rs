@@ -39,7 +39,7 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
     Glyph::new(
         symbol,
         image,
-        metrics.advance_width as _,
+        metrics.advance_width,
         (metrics.bounds.xmin, metrics.bounds.height).into(),
     )
 }
@@ -48,10 +48,10 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
 pub struct Font {
     pub name:           String,
     pub font:           fontdue::Font,
-    pub size:           f32,
     pub height:         f32,
     pub baseline_shift: f32,
 
+    size:   f32,
     glyphs: HashMap<char, Glyph>,
 }
 
@@ -96,26 +96,17 @@ impl Font {
             glyphs: glyphs_map,
         })
     }
-
-    fn load_path(path: &Path, size: f32) -> Result<Font, &'static str> {
-        Self::load_data(&File::read(path), size, path.display())
-    }
-
-    fn load_data(data: &[u8], size: f32, name: impl ToString) -> Result<Font, &'static str> {
-        trace!("Loading font {:?}", name.to_string());
-        Self::from_data(name, data, size)
-    }
 }
 
 impl Font {
-    pub fn san_francisco() -> Handle<Self> {
-        const SF: &str = "default_sf";
+    pub fn helvetica() -> Handle<Self> {
+        const SF: &str = "default_helvetica";
 
         if let Some(sf) = Font::handle_with_name(SF) {
             return sf;
         }
 
-        let sf = Font::from_data(SF, include_bytes!("fonts/SF.otf"), DEFAULT_FONT_SIZE)
+        let sf = Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)
             .expect("BUG: Failed to render default font");
 
         Font::add_with_name(SF, sf)
@@ -137,11 +128,12 @@ impl Font {
 
 impl ResourceLoader for Font {
     fn load_path(path: &Path) -> Self {
-        Font::load_path(path, DEFAULT_FONT_SIZE).unwrap()
+        Self::load_data(&File::read(path), path.display())
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {
-        Font::load_data(data, DEFAULT_FONT_SIZE, name).unwrap()
+        trace!("Loading font {:?}", name.to_string());
+        Self::from_data(name, data, DEFAULT_FONT_SIZE).unwrap()
     }
 }
 

@@ -95,20 +95,12 @@ mod test {
 
             let size = u32::random_in(10..100);
 
-            let middle_size = render_text(&text, Font::san_francisco().deref_mut(), size).size;
+            let middle_size = render_text(&text, Font::helvetica().deref_mut(), size).size;
 
-            let smol_size = render_text(
-                &text,
-                Font::san_francisco().deref_mut(),
-                size - u32::random_in(2..6),
-            )
-            .size;
-            let bigg_size = render_text(
-                &text,
-                Font::san_francisco().deref_mut(),
-                size + u32::random_in(2..6),
-            )
-            .size;
+            let smol_size =
+                render_text(&text, Font::helvetica().deref_mut(), size - u32::random_in(2..6)).size;
+            let bigg_size =
+                render_text(&text, Font::helvetica().deref_mut(), size + u32::random_in(2..6)).size;
 
             assert!(middle_size.width > smol_size.width);
             assert!(middle_size.height > smol_size.height);

@@ -285,6 +285,6 @@ impl Screen {
 
 impl Drop for Screen {
     fn drop(&mut self) {
-        Font::san_francisco().free();
+        Font::helvetica().free();
     }
 }

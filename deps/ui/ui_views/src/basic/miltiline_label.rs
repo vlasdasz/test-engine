@@ -150,7 +150,7 @@ impl MultilineLabel {
 
 impl ViewSetup for MultilineLabel {
     fn setup(mut self: Weak<Self>) {
-        self.font = Font::san_francisco();
+        self.font = Font::helvetica();
         self.size = text::DEFAULT_FONT_SIZE;
 
         self.set_letters();
@@ -187,18 +187,18 @@ mod test {
         Font::disable_render();
 
         assert_eq!(
-            text_size("sos", &Font::san_francisco(), DEFAULT_FONT_SIZE),
-            (94, 62).into()
+            text_size("sos", &Font::helvetica(), DEFAULT_FONT_SIZE),
+            (98, 52).into()
         );
         assert_eq!(
-            text_size("kok", &Font::san_francisco(), DEFAULT_FONT_SIZE),
-            (96, 61).into()
+            text_size("kok", &Font::helvetica(), DEFAULT_FONT_SIZE),
+            (100, 50).into()
         );
         assert_eq!(
-            text_size("lol", &Font::san_francisco(), DEFAULT_FONT_SIZE),
-            (60, 61).into()
+            text_size("lol", &Font::helvetica(), DEFAULT_FONT_SIZE),
+            (61, 50).into()
         );
-        assert_eq!(text_size("lol", &Font::san_francisco(), 100), (95, 96).into());
+        assert_eq!(text_size("lol", &Font::helvetica(), 100), (95, 78).into());
     }
 
     #[test]
@@ -285,11 +285,11 @@ mod test {
         let text_a_b = format!("{letter_a} {letter_b}");
         let text_b_a = format!("{letter_b} {letter_a}");
 
-        let a = text_size(letter_a, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
-        let b = text_size(letter_b, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+        let a = text_size(letter_a, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
+        let b = text_size(letter_b, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
 
-        let a_b = text_size(&text_a_b, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
-        let b_a = text_size(&text_b_a, Font::san_francisco().deref(), DEFAULT_FONT_SIZE).width;
+        let a_b = text_size(&text_a_b, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
+        let b_a = text_size(&text_b_a, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
 
         let space = a_b - a - b;
         let space2 = b_a - a - b;

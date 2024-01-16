@@ -49,10 +49,12 @@ impl Label {
             warn!("Label size less than zero: {size}. Will be set to 1.");
             size = 1.0;
         }
-        if self.text_size.eq(&size) {
+
+        if self.text_size.ne(&size) {
             self.needs_update = true;
         }
         self.text_size = size;
+
         self
     }
 
@@ -113,7 +115,7 @@ impl Label {
 
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
-        self.font = Font::san_francisco();
+        self.font = Font::helvetica();
         self.set_size((100, 20));
         self.text_size = 32.0;
 

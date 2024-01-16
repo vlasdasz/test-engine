@@ -14,7 +14,7 @@ struct LabelTestView {
 
 impl ViewSetup for LabelTestView {
     fn setup(mut self: Weak<Self>) {
-        self.label.set_text("HeH Фаргель");
+        self.label.set_text("ßšėčыў");
         self.label.place.back().size(280, 280).center();
 
         self.text_size_view
