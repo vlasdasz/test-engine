@@ -32,7 +32,7 @@ pub fn text_size(text: impl ToString, font: &Font, size: impl IntoF32) -> Size {
     text_layout(text, font, size).1
 }
 
-pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image> {
+pub fn render_text(text: &str, font: &mut Font, size: impl IntoF32) -> Handle<Image> {
     let id = format!("label-text:{text}:size-{size}");
 
     if let Some(image) = Image::handle_with_name(&id) {
@@ -76,7 +76,7 @@ pub fn render_text(text: &str, font: &Font, size: impl IntoF32) -> Handle<Image>
 
 #[cfg(test)]
 mod test {
-    use std::ops::Deref;
+    use std::ops::DerefMut;
 
     use refs::set_current_thread_as_main;
     use rtools::Random;
@@ -95,12 +95,20 @@ mod test {
 
             let size = u32::random_in(10..100);
 
-            let middle_size = render_text(&text, Font::san_francisco().deref(), size).size;
+            let middle_size = render_text(&text, Font::san_francisco().deref_mut(), size).size;
 
-            let smol_size =
-                render_text(&text, Font::san_francisco().deref(), size - u32::random_in(2..6)).size;
-            let bigg_size =
-                render_text(&text, Font::san_francisco().deref(), size + u32::random_in(2..6)).size;
+            let smol_size = render_text(
+                &text,
+                Font::san_francisco().deref_mut(),
+                size - u32::random_in(2..6),
+            )
+            .size;
+            let bigg_size = render_text(
+                &text,
+                Font::san_francisco().deref_mut(),
+                size + u32::random_in(2..6),
+            )
+            .size;
 
             assert!(middle_size.width > smol_size.width);
             assert!(middle_size.height > smol_size.height);

@@ -1,4 +1,5 @@
 use std::{
+    collections::HashMap,
     ops::Range,
     path::Path,
     sync::atomic::{AtomicBool, Ordering},
@@ -51,14 +52,14 @@ pub struct Font {
     pub height:         f32,
     pub baseline_shift: f32,
 
-    glyphs: Vec<Glyph>,
+    glyphs: HashMap<char, Glyph>,
 }
 
 impl Font {
     fn from_data(name: impl ToString, data: &[u8], size: f32) -> Result<Font, &'static str> {
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
-        let mut glyphs = Vec::with_capacity(128);
+        let mut glyphs_map = HashMap::new();
 
         let mut y_max = f32::MIN;
         let mut y_min = f32::MAX;
@@ -76,7 +77,7 @@ impl Font {
                     y_min = glyph.y_min()
                 }
 
-                glyphs.push(glyph);
+                glyphs_map.insert(symbol, glyph);
             }
         }
 
@@ -92,7 +93,7 @@ impl Font {
             size,
             height,
             baseline_shift,
-            glyphs,
+            glyphs: glyphs_map,
         })
     }
 
@@ -128,12 +129,9 @@ impl Font {
         RENDER.load(Ordering::Relaxed)
     }
 
-    pub fn glyph_for_char(&self, ch: char) -> &Glyph {
+    pub fn glyph_for_char(&mut self, ch: char) -> &Glyph {
         debug_assert!(!self.glyphs.is_empty(), "Font is not initialized");
-        if ch > 127 as char {
-            return &self.glyphs['?' as usize];
-        }
-        &self.glyphs[ch as usize]
+        self.glyphs.entry(ch).or_insert_with(|| render_glyph(&self.font, ch, self.size))
     }
 }
 

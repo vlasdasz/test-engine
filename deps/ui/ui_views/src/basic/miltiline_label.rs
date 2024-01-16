@@ -81,7 +81,7 @@ impl MultilineLabel {
 
         for line in &split.0 {
             let mut image_view = self.__internal_add_view::<ImageView>();
-            let image = render_text(line, &self.font, split.1);
+            let image = render_text(line, &mut self.font, split.1);
             image_view.set_size(image.size);
             image_view.image = image;
         }

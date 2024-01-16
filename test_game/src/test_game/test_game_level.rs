@@ -1,3 +1,5 @@
+use std::ops::DerefMut;
+
 use rtools::data_manager::{DataManager, Handle};
 use test_engine::{
     audio::Sound,
@@ -58,7 +60,7 @@ impl Level for TestGameLevel {
 
         self.add_sprite::<Wall>((100, 5), (0, 0)).set_image(render_text(
             "oo spolokolkok",
-            &Font::san_francisco(),
+            Font::san_francisco().deref_mut(),
             64,
         ));
         self.add_sprite::<Wall>((5, 100), (60, 0)).set_image(square);

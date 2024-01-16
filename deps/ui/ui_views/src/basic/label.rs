@@ -49,8 +49,7 @@ impl Label {
             warn!("Label size less than zero: {size}. Will be set to 1.");
             size = 1.0;
         }
-        // clippy::float-cmp
-        if (size - self.text_size).abs() > f32::EPSILON {
+        if self.text_size.eq(&size) {
             self.needs_update = true;
         }
         self.text_size = size;
@@ -106,7 +105,7 @@ impl Label {
             }
         }
 
-        let image = render_text(&self.text, &self.font, self.text_size);
+        let image = render_text(&self.text, &mut self.font, self.text_size);
         self.image_view.image = image;
         self.prev_text = self.text.clone();
     }
