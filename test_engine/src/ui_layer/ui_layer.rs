@@ -1,6 +1,6 @@
 //! Represents UI elements
 
-use std::rc::Rc;
+use std::{ops::DerefMut, rc::Rc};
 
 use dispatch::on_main_sync;
 use gm::{flat::Point, Color};
@@ -78,9 +78,10 @@ impl UILayer {
         }
     }
 
-    pub fn set_level(&mut self, level: Own<dyn Level>) {
-        self.level = level.into();
-        self.level.as_mut().unwrap().setup();
+    pub fn set_level(level: Own<dyn Level>) {
+        let this = Screen::current().ui.deref_mut();
+        this.level = level.into();
+        this.level.as_mut().unwrap().setup();
     }
 
     pub fn keymap() -> Rc<Keymap> {

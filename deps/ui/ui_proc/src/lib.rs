@@ -20,7 +20,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
     let name = &stream.ident;
 
-    let name_str = TokenStream2::from_str(&format!("\"{name}\"")).unwrap();
+    let name_str =
+        TokenStream2::from_str(&format!("\"{name}\"")).expect("Failed to extract view struct name");
 
     let generics = &stream.generics;
 
@@ -56,12 +57,12 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                     std::sync::Mutex::new(ui::refs::Weak::const_default());
             },
             quote! {
-                *#instance_global_var.lock().unwrap() = self;
+                *#instance_global_var.lock().expect("*#instance_global_var.lock()") = self;
             },
             quote! {
                 impl #name {
                     pub fn instance() -> ui::refs::Weak<Self> {
-                        #instance_global_var.lock().unwrap().clone()
+                        #instance_global_var.lock().expect("#instance_global_var.lock()").clone()
                     }
                 }
             },
@@ -70,9 +71,11 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         (quote! {}, quote! {}, quote! {})
     };
 
-    fields
-        .named
-        .push(Field::parse_named.parse2(quote! { view: ui::ViewBase }).unwrap());
+    fields.named.push(
+        Field::parse_named
+            .parse2(quote! { view: ui::ViewBase })
+            .expect("parse2(quote! { view: ui::ViewBase })"),
+    );
 
     quote! {
         #[derive(derivative::Derivative, Default)]
@@ -146,12 +149,13 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
     let mut res = quote!();
 
     for field in &mut fields.named {
-        let name = field.ident.as_ref().unwrap();
+        let name = field.ident.as_ref().expect("let name = field.ident.as_ref()");
 
         if let Type::Path(path) = &field.ty {
             for segment in &path.path.segments {
                 if segment.ident == subview {
-                    let label = TokenStream2::from_str(&format!("\"{root_name}.{name}\"")).unwrap();
+                    let label = TokenStream2::from_str(&format!("\"{root_name}.{name}\""))
+                        .expect("let label = TokenStream2::from_str()");
 
                     res = quote! {
                         #res
@@ -170,20 +174,24 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
     let mut res = quote!();
 
     for field in &mut fields.named {
-        let field_name = field.ident.as_ref().unwrap();
+        let field_name = field.ident.as_ref().expect("let field_name = field.ident.as_ref()");
 
         let attrs = field.attrs.clone();
 
         let attr = attrs.first();
-        field.attrs = vec![];
-
         let Some(attr) = attr else {
             continue;
         };
 
         let attribute_name = attr.path.to_token_stream().to_string();
         let tokens = attr.tokens.to_token_stream().to_string();
-        let method = tokens.strip_prefix("= ").unwrap();
+
+        // Skip other macro. Should be smarter than that.
+        let Some(method) = tokens.strip_prefix("= ") else {
+            continue;
+        };
+
+        field.attrs = vec![];
 
         let parameter = Ident::new(method, Span::call_site());
 
@@ -209,7 +217,8 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
                 };
             }
             "text" => {
-                let param_str = TokenStream2::from_str(&format!("\"{parameter}\"")).unwrap();
+                let param_str = TokenStream2::from_str(&format!("\"{parameter}\""))
+                    .expect("let param_str = TokenStream2::from_str(");
 
                 res = quote! {
                     #res
