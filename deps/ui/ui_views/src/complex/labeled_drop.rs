@@ -49,7 +49,7 @@ impl Labeled for LabeledDrop {
 
 impl ViewSetup for LabeledDrop {
     fn setup(self: Weak<Self>) {
-        self.title.place.lrt(0).h(10).relative(Anchor::Height, 1.0 / 3.0, self);
-        self.drop.place.lrb(0).h(20).relative(Anchor::Height, 2.0 / 3.0, self);
+        self.title.place.lrt(0).h(10).relative(Anchor::Height, self, 1.0 / 3.0);
+        self.drop.place.lrb(0).h(20).relative(Anchor::Height, self, 2.0 / 3.0);
     }
 }

@@ -62,7 +62,7 @@ impl Image {
             flipped: false,
             flipped_y: false,
             buffer,
-            total_size: size_of::<Image>() + size.square() as usize * channels as usize,
+            total_size: size_of::<Image>() + size.area() as usize * channels as usize,
             name,
         }
     }

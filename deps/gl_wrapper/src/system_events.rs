@@ -15,6 +15,7 @@ static TERMINATE: Mutex<Option<Result<()>>> = Mutex::new(None);
 #[derive(SmartDefault)]
 pub struct SystemEvents {
     pub frame_drawn:  Event,
+    pub after_draw:   Event,
     pub cursor_moved: Event<Point>,
     pub size_changed: Event<IntSize>,
     pub mouse_click:  Event<(MouseButton, Action)>,

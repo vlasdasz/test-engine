@@ -21,7 +21,7 @@ impl Switch {
         self.center
             .place
             .clear()
-            .relative(Anchor::Width, 0.4, weak_from_ref(self))
+            .relative(Anchor::Width, weak_from_ref(self), 0.4)
             .tb(MARGIN);
         if on {
             self.center.place.r(MARGIN);

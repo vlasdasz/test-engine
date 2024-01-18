@@ -22,7 +22,7 @@ pub type Size = SizeBase<f32>;
 pub type IntSize = SizeBase<u32>;
 
 impl<T: Mul<Output = T> + Copy> SizeBase<T> {
-    pub fn square(&self) -> T {
+    pub fn area(&self) -> T {
         self.width.mul(self.height)
     }
 }

@@ -48,7 +48,7 @@ impl ViewSetup for UIDebugView {
             // UIManager::set_view(Own::<CollectionTestView>::default());
         });
 
-        self.label.place.br(10).relative(Anchor::Size, 0.4, self);
+        self.label.place.br(10).relative(Anchor::Size, self, 0.4);
         self.label.set_text_size(64);
         self.label.set_text("Skoggo4");
 

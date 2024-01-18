@@ -27,8 +27,8 @@ impl BenchmarkView {
         VIEWS_COUNT.fetch_add(1, Ordering::Relaxed);
 
         let view = self.add_view::<BenchmarkView>();
-        view.place.relative(Anchor::Width, 0.5, self);
-        view.place.relative(Anchor::Height, 0.5, self);
+        view.place.relative(Anchor::Width, self, 0.5);
+        view.place.relative(Anchor::Height, self, 0.5);
         match self.index {
             0 => view.place.t(0).l(0),
             1 => view.place.t(0).r(0),

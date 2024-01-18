@@ -32,7 +32,7 @@ impl LabeledSwitch {
 
 impl ViewSetup for LabeledSwitch {
     fn setup(self: Weak<Self>) {
-        self.label.place.blt(0).relative(Anchor::Width, 0.5, self);
+        self.label.place.blt(0).relative(Anchor::Width, self, 0.5);
         self.switch
             .place
             .size(80, 40)

@@ -96,7 +96,6 @@ impl Label {
 
     fn set_letters(&mut self) {
         self.image_view.image.free();
-
         let image = render_text(&self.text, &mut self.font, self.text_size);
         self.image_view.image = image;
     }

@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use log::trace;
 use rtools::{init_log, LogBuilder};
-use test_engine::{app::AppCore, gm::flat::IntSize, paths::home, App};
+use test_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, App};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
     NavigationView, View, ViewSetup,
@@ -40,6 +40,6 @@ impl App for TestApp {
     }
 
     fn assets_path() -> PathBuf {
-        home().join("test_engine")
+        git_root().expect("git_root()")
     }
 }

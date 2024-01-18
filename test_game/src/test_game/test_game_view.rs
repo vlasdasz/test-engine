@@ -126,7 +126,7 @@ impl TestGameView {
 
             let mut screenshot = view.add_view::<Button>();
             screenshot.set_text("Screenshot");
-            screenshot.on_tap(move || Screen::take_screenshot("screen.png"));
+            screenshot.on_tap(Screen::take_screenshot);
 
             [to_benchmark, to_test, play, screenshot].apply(|mut button| {
                 button.set_color(Color::WHITE);

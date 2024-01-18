@@ -6,7 +6,7 @@ use gl_wrapper::{monitor::Monitor, GLWrapper};
 #[cfg(desktop)]
 use gl_wrapper::{system_events::SystemEvents, GLFWManager};
 use gm::{
-    flat::{IntSize, Rect},
+    flat::{IntSize, Point, Rect},
     Color,
 };
 use rest::API;
@@ -89,14 +89,24 @@ impl Screen {
         }
     }
 
+    pub fn read_pixel(pos: Point) -> Color {
+        GLWrapper::read_pixel(
+            UIManager::rescale_frame(&Rect {
+                origin: pos,
+                ..Default::default()
+            })
+            .origin,
+        )
+    }
+
     #[cfg(desktop)]
-    pub fn take_screenshot(path: impl ToString) {
-        Self::current().glfw.take_screenshot(path)
+    pub fn take_screenshot() {
+        Self::current().glfw.take_screenshot()
     }
 
     #[cfg(mobile)]
-    pub fn take_screenshot(_path: impl ToString) {
-        todo!("Take screenshot is not implemented for mobile")
+    pub fn take_screenshot() {
+        todo!("Take screenshot is not implemented for mobile yet")
     }
 
     #[cfg(desktop)]

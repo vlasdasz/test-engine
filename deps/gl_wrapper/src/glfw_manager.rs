@@ -2,7 +2,7 @@ use anyhow::Result;
 use glfw::{Context, Window};
 use gm::flat::IntSize;
 
-use crate::{gl_loader::GLFWEvents, monitor::Monitor, system_events::SystemEvents, GLLoader};
+use crate::{gl_loader::GLFWEvents, monitor::Monitor, system_events::SystemEvents, GLLoader, GLWrapper};
 pub struct GLFWManager {
     window:       Window,
     gl_events:    GLFWEvents,
@@ -24,15 +24,21 @@ impl GLFWManager {
         self.window.swap_buffers();
     }
 
-    pub fn take_screenshot(&self, path: impl ToString) {
+    pub fn take_screenshot(&self) {
         let (width, height) = self.window.get_framebuffer_size();
 
         dbg!(width);
         dbg!(height);
 
-        dbg!(path.to_string());
+        let pixels = GLWrapper::read_pixels((10, 10));
 
-        todo!()
+        for row in pixels.chunks(10) {
+            println!("{row:?}");
+        }
+
+        dbg!(pixels);
+
+        error!("take_screenshot is not implemented yet")
     }
 
     pub fn set_window_title(&mut self, title: &str) {
@@ -81,6 +87,7 @@ impl GLFWManager {
             }
 
             events.frame_drawn.trigger(());
+            events.after_draw.trigger(());
         }
 
         Ok(())

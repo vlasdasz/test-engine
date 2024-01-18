@@ -1,12 +1,22 @@
 use std::{
     path::{Path, PathBuf},
+    process::Command,
     rc::Rc,
 };
 
+use anyhow::Result;
 use home::home_dir;
 
 pub fn home() -> PathBuf {
     home_dir().unwrap()
+}
+
+pub fn git_root() -> Result<PathBuf> {
+    let output = Command::new("git").args(["rev-parse", "--show-toplevel"]).output()?;
+    assert!(output.status.success(), "Failed to get Git repository root path");
+    let git_root = String::from_utf8_lossy(&output.stdout).trim_end_matches('\n').to_string();
+
+    Ok(PathBuf::from(git_root))
 }
 
 pub(crate) struct Paths {

@@ -1,6 +1,9 @@
 #[cfg(mobile)]
 use gles31_sys::*;
-use gm::{flat::Rect, Color};
+use gm::{
+    flat::{IntSize, Point, Rect},
+    Color,
+};
 use rtools::platform::Platform;
 
 pub struct GLWrapper;
@@ -124,5 +127,47 @@ impl GLWrapper {
 
     pub fn unbind_framebuffer() {
         GL!(BindFramebuffer, GLC!(FRAMEBUFFER), Self::default_framebuffer_id());
+    }
+
+    pub fn read_pixels(size: impl Into<IntSize>) -> Vec<u8> {
+        let size = size.into();
+
+        let mut data = vec![0; 3 * size.area() as usize + 10];
+
+        GL!(
+            ReadPixels,
+            0,
+            0,
+            i32::try_from(size.width).unwrap(),
+            i32::try_from(size.height).unwrap(),
+            GLC!(RGB),
+            GLC!(UNSIGNED_BYTE),
+            data.as_mut_ptr().cast()
+        );
+
+        data
+    }
+
+    #[allow(clippy::cast_possible_truncation)]
+    pub fn read_pixel(pos: Point) -> Color {
+        let mut data: Vec<u8> = vec![0; 4];
+
+        GL!(
+            ReadPixels,
+            pos.x as i32,
+            pos.y as i32,
+            1,
+            1,
+            GLC!(RGBA),
+            GLC!(UNSIGNED_BYTE),
+            data.as_mut_ptr().cast()
+        );
+
+        Color::rgba(
+            f32::from(data[0]) / 255.0,
+            f32::from(data[1]) / 255.0,
+            f32::from(data[2]) / 255.0,
+            f32::from(data[3]) / 255.0,
+        )
     }
 }

@@ -1,6 +1,7 @@
 pub mod alert;
 pub mod button;
 pub mod drop_down;
+pub mod image_view;
 pub mod int_view;
 pub mod label;
 pub mod layout;

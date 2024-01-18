@@ -116,15 +116,15 @@ impl Placer {
     }
 
     pub fn same_size(&self, view: impl Deref<Target = impl View>) -> &Self {
-        self.relative(Anchor::Size, 1, view)
+        self.relative(Anchor::Size, view, 1)
     }
 
     pub fn relative_width(&self, view: impl Deref<Target = impl View>, multiplier: impl IntoF32) -> &Self {
-        self.relative(Anchor::Width, multiplier, view)
+        self.relative(Anchor::Width, view, multiplier)
     }
 
     pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl IntoF32) -> &Self {
-        self.relative(Anchor::Size, multiplier, view)
+        self.relative(Anchor::Size, view, multiplier)
     }
 
     pub fn relative_y(&self, position: impl IntoF32) -> &Self {
@@ -140,7 +140,7 @@ impl Placer {
         view: impl Deref<Target = impl View> + Copy,
     ) -> &Self {
         for anchor in anchors {
-            self.relative(anchor, 1, view);
+            self.relative(anchor, view, 1);
         }
         self
     }
@@ -222,7 +222,7 @@ impl Placer {
         self
     }
 
-    pub fn relative(&self, side: Anchor, ratio: impl IntoF32, view: impl Deref<Target = impl View>) -> &Self {
+    pub fn relative(&self, side: Anchor, view: impl Deref<Target = impl View>, ratio: impl IntoF32) -> &Self {
         self.has().width = if side.has_width() { true } else { self.has().width };
         self.has().height = if side.has_height() {
             true
