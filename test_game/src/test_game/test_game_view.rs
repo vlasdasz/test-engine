@@ -33,7 +33,7 @@ impl TestGameView {
     fn setup_level(&mut self) {
         // Screen::current().
 
-        UILayer::get().set_level(Own::<TestGameLevel>::default());
+        UILayer::set_level(Own::<TestGameLevel>::default());
 
         self.dpad
             .on_press
@@ -111,13 +111,13 @@ impl TestGameView {
             let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");
             to_benchmark.on_tap(|| {
-                UILayer::get().set_level(Own::<BenchmarkLevel>::default());
+                UILayer::set_level(Own::<BenchmarkLevel>::default());
             });
 
             let mut to_test = view.add_view::<Button>();
             to_test.set_text("Test");
             to_test.on_tap(|| {
-                UILayer::get().set_level(Own::<TestGameLevel>::default());
+                UILayer::set_level(Own::<TestGameLevel>::default());
             });
 
             let mut play = view.add_view::<Button>();

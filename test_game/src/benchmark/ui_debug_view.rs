@@ -38,7 +38,7 @@ impl ViewSetup for UIDebugView {
         self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_x();
 
         self.test_game.on_tap(|| {
-            UILayer::get().set_level(Own::<TestGameLevel>::default());
+            UILayer::set_level(Own::<TestGameLevel>::default());
             // UIManager::set_view(Own::<TestGameView>::default());
         });
 

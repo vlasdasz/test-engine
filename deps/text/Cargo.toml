@@ -9,13 +9,14 @@ crate-type = ["rlib", "staticlib"]
 name = "text"
 
 [dependencies]
-fontdue = "0.7"
 log = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
 
 gl_image = { workspace = true }
 gm = { workspace = true }
+
+fontdue = "0.8"
 
 [dev-dependencies]
 serial_test = { workspace = true }
