@@ -63,7 +63,7 @@ impl Screen {
         GLWrapper::enable_depth();
         GLWrapper::set_clear_color(Color::GRAY);
 
-        UIManager::root_view().add_subview(view).place.as_background();
+        UIManager::root_view().add_subview(view).place.back();
 
         if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) {
             let mut debug_view = DebugView::new();

@@ -87,10 +87,6 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn back(&self) -> &Self {
-        self.t(0).b(0).l(0).r(0)
-    }
-
     pub fn t(&self, offset: impl IntoF32) -> &Self {
         self.rules().push(LayoutRule::make(Anchor::Top, offset.into_f32()));
         self
@@ -172,7 +168,7 @@ impl Placer {
         self
     }
 
-    pub fn as_background(&self) -> &Self {
+    pub fn back(&self) -> &Self {
         self.rules().push(Tiling::Background.into());
         self
     }

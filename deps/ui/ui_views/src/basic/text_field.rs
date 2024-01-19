@@ -100,7 +100,7 @@ impl ViewSetup for TextField {
     fn setup(mut self: Weak<Self>) {
         self.text_color = Color::BLACK;
         self.placeholding = true;
-        self.label.place.as_background();
+        self.label.place.back();
         self.label.set_text_color(Color::LIGHTER_GRAY);
         self.set_color(Color::LIGHT_GRAY);
 

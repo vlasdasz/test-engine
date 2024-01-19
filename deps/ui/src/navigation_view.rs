@@ -30,7 +30,7 @@ impl ViewSetup for NavigationView {
         let mut view = self.first_view.take().unwrap();
         view.navigation_view = self;
         let view = self.add_subview(view);
-        view.place.as_background();
+        view.place.back();
     }
 }
 
@@ -47,7 +47,7 @@ impl NavigationView {
 
             view.set_color(Color::WHITE);
             let mut view = self.add_subview(view);
-            view.place.as_background();
+            view.place.back();
             view.navigation_view = self;
             view.set_frame(self.frame().with_zero_origin());
 
