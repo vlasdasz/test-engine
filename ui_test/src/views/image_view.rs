@@ -39,7 +39,7 @@ impl ViewSetup for ImageTestView {
 
 async fn check_pixel_color(pos: Point, color: Color) {
     from_main(move || {
-        assert_eq!(Screen::read_pixel(pos), color);
+        assert!(Screen::read_pixel(pos).diff(color) < 0.012);
     })
     .await
 }

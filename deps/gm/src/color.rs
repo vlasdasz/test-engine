@@ -31,6 +31,13 @@ impl Color {
     pub fn with_alpha(&self, alpha: impl IntoF32) -> Self {
         Self::rgba(self.r, self.g, self.b, alpha.into_f32())
     }
+
+    pub fn diff(&self, other: Color) -> f32 {
+        (self.r - other.r).abs()
+            + (self.g - other.g).abs()
+            + (self.b - other.b).abs()
+            + (self.a - other.a).abs()
+    }
 }
 
 impl Color {
@@ -80,4 +87,11 @@ impl Display for Color {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
     }
+}
+
+#[test]
+fn color_diff() {
+    assert_eq!(Color::WHITE.diff(Color::CLEAR), 4.0);
+    assert_eq!(Color::WHITE.diff(Color::WHITE), 0.0);
+    assert_eq!(Color::WHITE.diff(Color::WHITE.with_alpha(0.9)), 0.100000024);
 }
