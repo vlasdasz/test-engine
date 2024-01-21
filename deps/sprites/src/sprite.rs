@@ -3,12 +3,13 @@ use gm::{
     flat::{Point, Shape, Size},
     Color,
 };
+use manage::handle::Handle;
 use rapier2d::{
     geometry::Collider,
     prelude::{RigidBody, Rotation},
 };
 use refs::{Address, Own, Weak};
-use rtools::{data_manager::Handle, IntoF32};
+use rtools::IntoF32;
 
 use crate::{get_sprites_drawer, Level, SpriteData};
 

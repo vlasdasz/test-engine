@@ -15,7 +15,6 @@ derivative = { workspace = true }
 home = { workspace = true }
 log = { workspace = true }
 reflected = { workspace = true }
-rtools = { workspace = true }
 smart-default = { workspace = true }
 
 tokio = { workspace = true }
@@ -25,8 +24,10 @@ dispatch = { workspace = true }
 gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
 gm = { workspace = true }
+manage = { workspace = true }
 maze = { workspace = true }
 rest = { workspace = true }
+rtools = { workspace = true }
 sprites = { workspace = true }
 text = { workspace = true }
 valid = { workspace = true }

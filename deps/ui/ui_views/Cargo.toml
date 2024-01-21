@@ -15,11 +15,13 @@ dispatch = { workspace = true }
 gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
 gm = { workspace = true }
+manage = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
 text = { workspace = true }
 ui = { workspace = true }
+
 
 [dev-dependencies]
 serial_test = { workspace = true }

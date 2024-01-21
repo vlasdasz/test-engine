@@ -4,8 +4,9 @@
 use std::{collections::HashMap, ops::Index};
 
 use gm::{flat::Size, Color};
+use manage::handle::Handle;
 use refs::{set_current_thread_as_main, weak_from_ref, Weak};
-use rtools::{data_manager::Handle, hash, IntoF32};
+use rtools::{hash, IntoF32};
 use smart_default::SmartDefault;
 use text::{render_text, text_size, Font};
 use ui::{view, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews};

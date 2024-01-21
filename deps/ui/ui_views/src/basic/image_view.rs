@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::Color;
-use rtools::data_manager::Handle;
+use manage::handle::Handle;
 use ui::view;
 
 #[view]

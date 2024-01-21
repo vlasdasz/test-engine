@@ -11,12 +11,9 @@ use gm::{
 };
 use image::GenericImageView;
 use log::error;
+use manage::{data_manager::DataManager, handle::Handle, managed, resource_loader::ResourceLoader};
 use refs::TotalSize;
-use rtools::{
-    data_manager::{DataManager, Handle, ResourceLoader},
-    file::File,
-    hash, managed,
-};
+use rtools::{file::File, hash};
 
 use crate::shaders::ImageShaders;
 

@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::flat::{Point, Size};
-use rtools::data_manager::Handle;
+use manage::handle::Handle;
 
 #[derive(Clone, Debug)]
 pub struct Glyph {

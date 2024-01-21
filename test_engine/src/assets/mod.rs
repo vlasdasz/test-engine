@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use audio::Sound;
 use gl_image::Image;
-use rtools::data_manager::DataManager;
+use manage::data_manager::DataManager;
 use text::Font;
 use ui::refs::assert_main_thread;
 

@@ -8,11 +8,8 @@ use std::{
 use gl_image::Image;
 use gm::flat::Size;
 use log::trace;
-use rtools::{
-    data_manager::{DataManager, Handle, ResourceLoader},
-    file::File,
-    hash, managed,
-};
+use manage::{data_manager::DataManager, handle::Handle, managed, resource_loader::ResourceLoader};
+use rtools::{file::File, hash};
 
 use crate::glyph::Glyph;
 

@@ -1,9 +1,9 @@
 use anyhow::Result;
 use log::debug;
-use rtools::data_manager::DataManager;
 use test_engine::{
     from_main,
     gm::{flat::Point, Color},
+    manage::data_manager::DataManager,
     Image, Screen,
 };
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewSetup, ViewTouch};

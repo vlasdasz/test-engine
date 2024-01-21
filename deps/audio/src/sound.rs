@@ -1,16 +1,17 @@
 // #![cfg(not_android)]
 
 use std::{
+    fmt::{Debug, Formatter},
     fs::File,
     io::{Cursor, Read},
     path::{Path, PathBuf},
 };
 
+use manage::resource_loader::ResourceLoader;
 use rodio::{Decoder, OutputStream, OutputStreamHandle, Sink};
-use rtools::data_manager::ResourceLoader;
 
 pub struct Sound {
-    _path:         PathBuf,
+    path:          PathBuf,
     _stream:       OutputStream,
     stream_handle: OutputStreamHandle,
     data:          Vec<u8>,
@@ -44,10 +45,16 @@ impl ResourceLoader for Sound {
         let (stream, stream_handle) = OutputStream::try_default().unwrap();
 
         Self {
-            _path: name.to_string().into(),
+            path: name.to_string().into(),
             _stream: stream,
             stream_handle,
             data: data.into(),
         }
+    }
+}
+
+impl Debug for Sound {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        self.path.fmt(f)
     }
 }

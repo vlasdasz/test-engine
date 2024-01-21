@@ -9,6 +9,7 @@ pub use audio;
 pub use gl_image;
 pub use gl_wrapper;
 pub use gm;
+pub use manage;
 pub use maze;
 pub use reflected;
 pub use rest;

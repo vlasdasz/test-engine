@@ -1,7 +1,7 @@
 use gl_image::Image;
-use rtools::data_manager::{DataManager, Handle};
 
 pub struct UIImages;
+use manage::{data_manager::DataManager, handle::Handle};
 
 impl UIImages {
     pub fn plus() -> Handle<Image> {

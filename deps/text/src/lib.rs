@@ -1,16 +1,14 @@
 mod font;
 mod glyph;
-
+mod tests;
 use std::ops::Deref;
 
 pub use font::*;
 use fontdue::layout::{CoordinateSystem, Layout, TextStyle};
 use gl_image::{draw_image, Image};
 use gm::{flat::Size, Color};
-use rtools::{
-    data_manager::{DataManager, Handle},
-    IntoF32,
-};
+use manage::{data_manager::DataManager, handle::Handle};
+use rtools::IntoF32;
 
 pub fn text_layout(text: impl ToString, font: &Font, size: impl IntoF32) -> (Layout, Size) {
     let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);

@@ -11,13 +11,9 @@ path = "src/main.rs"
 [dependencies]
 anyhow = { workspace = true }
 derivative = { workspace = true }
-glfw = { workspace = true }
-log = { workspace = true }
-rtools = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
-test_engine = { workspace = true }
-test_game = { workspace = true }
 tokio = { workspace = true }
+
+rtools = { workspace = true }
+test_engine = { workspace = true }
 ui = { workspace = true }
 ui_views = { workspace = true }

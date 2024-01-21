@@ -1,5 +1,6 @@
+use manage::data_manager::DataManager;
 use test_engine::{
-    rtools::{data_manager::DataManager, Animation},
+    rtools::Animation,
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
 };

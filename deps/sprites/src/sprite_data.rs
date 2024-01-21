@@ -3,9 +3,10 @@ use gm::{
     flat::{Point, Shape},
     Color,
 };
+use manage::handle::Handle;
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use refs::{Own, Weak};
-use rtools::{data_manager::Handle, IntoF32};
+use rtools::IntoF32;
 use vents::Event;
 
 use crate::{Level, Sprite};

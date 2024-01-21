@@ -1,8 +1,8 @@
+use manage::{data_manager::DataManager, handle::Handle};
 use rtools::Apply;
 use test_engine::{
     audio::Sound,
     gm::{flat::Direction, Color},
-    rtools::data_manager::{DataManager, Handle},
     sprite_view::SpriteView,
     sprites::Control,
     ui_layer::UILayer,

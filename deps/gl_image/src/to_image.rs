@@ -1,4 +1,4 @@
-use rtools::data_manager::{DataManager, Handle};
+use manage::{data_manager::DataManager, handle::Handle};
 
 use crate::Image;
 

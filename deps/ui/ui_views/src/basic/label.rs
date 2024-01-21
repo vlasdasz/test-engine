@@ -1,7 +1,8 @@
 use gm::Color;
 use log::warn;
+use manage::handle::Handle;
 use refs::Weak;
-use rtools::{data_manager::Handle, IntoF32};
+use rtools::IntoF32;
 use text::{render_text, Font};
 use ui::{view, SubView, ToLabel, ViewCallbacks, ViewFrame, ViewSetup};
 
