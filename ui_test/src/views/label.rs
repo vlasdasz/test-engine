@@ -12,6 +12,12 @@ struct LabelTestView {
     text_size_view: SubView<IntView>,
 }
 
+impl Drop for LabelTestView {
+    fn drop(&mut self) {
+        dbg!("drebatol");
+    }
+}
+
 impl ViewSetup for LabelTestView {
     fn setup(mut self: Weak<Self>) {
         self.label.set_text("ßšėčыў");

@@ -1,5 +1,6 @@
 use anyhow::Result;
 use log::debug;
+use rtools::sleep;
 use test_engine::{
     from_main,
     gm::{flat::Point, Color},
@@ -41,7 +42,11 @@ impl ViewSetup for ImageTestView {
 
 async fn check_pixel_color(pos: Point, color: Color) {
     from_main(move || {
-        assert!(Screen::read_pixel(pos).diff(color) < 0.012);
+        let diff = Screen::read_pixel(pos).diff(color);
+        let max_diff = 0.012;
+        if diff > max_diff {
+            panic!("Color diff is too big: {diff}. Max: {max_diff}. Position: {pos:?}")
+        }
     })
     .await
 }
@@ -59,7 +64,7 @@ async fn check_colors<const N: usize>(data: [((f32, f32), (f32, f32, f32, f32));
 pub async fn test_image_view() -> Result<()> {
     Screen::set_test_view::<ImageTestView>(400, 400).await;
 
-    record_touches().await;
+    sleep(0.1);
 
     check_colors([
         ((98.0, 113.0), (0.5019608, 0.5019608, 0.5019608, 1.0)),

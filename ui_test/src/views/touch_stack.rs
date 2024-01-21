@@ -1,5 +1,6 @@
 use anyhow::Result;
 use log::debug;
+use rtools::sleep;
 use test_engine::Screen;
 use ui::{refs::Weak, view, SubView, TouchStack, ViewSetup};
 use ui_views::Button;
@@ -32,6 +33,8 @@ pub async fn test_touch_stack() -> Result<()> {
     assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 
     this.button.on_tap(|| append_state("1"));
+
+    sleep(0.1);
 
     assert_eq(
         TouchStack::dump(),
