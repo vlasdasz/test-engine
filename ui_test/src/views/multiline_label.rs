@@ -4,8 +4,6 @@ use test_engine::Screen;
 use ui::{refs::Weak, view, SubView, ViewSetup};
 use ui_views::MultilineLabel;
 
-use crate::view_tests::record_touches;
-
 #[view]
 struct MultilineTestView {
     label: SubView<MultilineLabel>,
@@ -25,8 +23,6 @@ pub async fn test_multiline() -> Result<()> {
     Screen::set_test_view::<MultilineTestView>(600, 600).await;
 
     debug!("Multiline test: OK");
-
-    record_touches().await;
 
     Ok(())
 }

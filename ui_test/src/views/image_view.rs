@@ -10,8 +10,6 @@ use test_engine::{
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewSetup, ViewTouch};
 use ui_views::ImageView;
 
-use crate::view_tests::record_touches;
-
 #[view]
 struct ImageTestView {
     image_view: SubView<ImageView>,

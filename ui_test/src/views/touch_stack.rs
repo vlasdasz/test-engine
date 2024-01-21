@@ -77,8 +77,6 @@ pub async fn test_touch_stack() -> Result<()> {
 
     assert_eq(get_str_state(), "12")?;
 
-    // record_touches().await;
-
     debug!("Touch stack test: OK");
 
     Ok(())

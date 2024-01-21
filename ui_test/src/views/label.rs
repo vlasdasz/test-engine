@@ -4,8 +4,6 @@ use test_engine::Screen;
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewSetup};
 use ui_views::{IntView, Label};
 
-use crate::view_tests::record_touches;
-
 #[view]
 struct LabelTestView {
     label:          SubView<Label>,
@@ -38,8 +36,6 @@ impl ViewSetup for LabelTestView {
 
 pub async fn test_label() -> Result<()> {
     Screen::set_test_view::<LabelTestView>(400, 400).await;
-
-    record_touches().await;
 
     debug!("Int view test: OK");
 
