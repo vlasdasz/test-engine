@@ -9,6 +9,8 @@ use test_engine::{
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewSetup, ViewTouch};
 use ui_views::ImageView;
 
+use crate::view_tests::record_touches;
+
 #[view]
 struct ImageTestView {
     image_view: SubView<ImageView>,
@@ -56,6 +58,8 @@ async fn check_colors<const N: usize>(data: [((f32, f32), (f32, f32, f32, f32));
 
 pub async fn test_image_view() -> Result<()> {
     Screen::set_test_view::<ImageTestView>(400, 400).await;
+
+    record_touches().await;
 
     check_colors([
         ((98.0, 113.0), (0.5019608, 0.5019608, 0.5019608, 1.0)),
