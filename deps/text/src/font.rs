@@ -2,7 +2,10 @@ use std::{
     collections::HashMap,
     ops::Range,
     path::Path,
-    sync::atomic::{AtomicBool, Ordering},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Mutex,
+    },
 };
 
 use gl_image::Image;
@@ -96,9 +99,13 @@ impl Font {
     }
 }
 
+static _FONT_LOCK: Mutex<()> = Mutex::new(());
+
 impl Font {
     pub fn helvetica() -> Weak<Self> {
         const SF: &str = "default_helvetica";
+
+        let _lock = _FONT_LOCK.lock().unwrap();
 
         if let Some(sf) = Font::weak_with_name(SF) {
             return sf;
