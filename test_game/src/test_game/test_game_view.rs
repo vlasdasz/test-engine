@@ -1,4 +1,4 @@
-use manage::{data_manager::DataManager, handle::Handle};
+use manage::data_manager::DataManager;
 use rtools::Apply;
 use test_engine::{
     audio::Sound,
@@ -26,7 +26,7 @@ pub struct TestGameView {
     ui_scale:    SubView<IntView>,
     level_scale: SubView<IntView>,
 
-    sound: Handle<Sound>,
+    sound: Weak<Sound>,
 }
 
 impl TestGameView {

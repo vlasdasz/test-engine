@@ -1,6 +1,6 @@
 use std::ops::DerefMut;
 
-use manage::{data_manager::DataManager, handle::Handle};
+use manage::data_manager::DataManager;
 use test_engine::{
     audio::Sound,
     gl_wrapper::GLWrapper,
@@ -18,7 +18,7 @@ use ui::refs::{weak_from_ref, Weak};
 pub struct TestGameLevel {
     base:            LevelBase,
     selected_sprite: Option<Weak<dyn Sprite>>,
-    collision_sound: Handle<Sound>,
+    collision_sound: Weak<Sound>,
 }
 
 impl TestGameLevel {

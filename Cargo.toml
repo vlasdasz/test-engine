@@ -26,7 +26,7 @@ serial_test = "3.0"
 smart-default = "0.7.1"
 tokio = "1.33.0"
 
-manage = "0.1.2"
+manage = "0.2.2"
 reflected = "=0.7.0"
 reflected_proc = "=0.7.0"
 refs = { version = "=0.6.13", features = [] }

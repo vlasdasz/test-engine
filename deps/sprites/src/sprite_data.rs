@@ -3,7 +3,6 @@ use gm::{
     flat::{Point, Shape},
     Color,
 };
-use manage::handle::Handle;
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use refs::{Own, Weak};
 use rtools::IntoF32;
@@ -24,7 +23,7 @@ pub struct SpriteData {
 
     pub tag:   String,
     pub color: Color,
-    pub image: Handle<Image>,
+    pub image: Weak<Image>,
 
     pub on_collision: Event<Weak<dyn Sprite>>,
 }

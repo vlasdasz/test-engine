@@ -1,18 +1,18 @@
 use gl_image::Image;
 use gm::flat::{Point, Size};
-use manage::handle::Handle;
+use refs::Weak;
 
 #[derive(Clone, Debug)]
 pub struct Glyph {
     pub ch:      char,
     pub size:    Size,
-    pub image:   Handle<Image>,
+    pub image:   Weak<Image>,
     pub advance: f32,
     pub bearing: Point,
 }
 
 impl Glyph {
-    pub fn new(ch: char, image: Handle<Image>, advance: f32, bearing: Point) -> Glyph {
+    pub fn new(ch: char, image: Weak<Image>, advance: f32, bearing: Point) -> Glyph {
         Glyph {
             ch,
             size: image.size / 2.0,

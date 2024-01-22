@@ -1,6 +1,7 @@
+use gl_image::Image;
 use gm::Color;
 use log::warn;
-use manage::handle::Handle;
+use manage::data_manager::DataManager;
 use refs::Weak;
 use rtools::IntoF32;
 use text::{render_text, Font};
@@ -10,7 +11,7 @@ use crate::ImageView;
 
 #[view]
 pub struct Label {
-    font:         Handle<Font>,
+    font:         Weak<Font>,
     text:         String,
     image_view:   SubView<ImageView>,
     text_size:    f32,
@@ -96,7 +97,7 @@ impl Label {
     }
 
     fn set_letters(&mut self) {
-        self.image_view.image.free();
+        Image::free(self.image_view.image);
         let image = render_text(&self.text, &mut self.font, self.text_size);
         self.image_view.image = image;
     }

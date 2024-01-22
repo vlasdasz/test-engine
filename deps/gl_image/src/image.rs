@@ -11,8 +11,8 @@ use gm::{
 };
 use image::GenericImageView;
 use log::error;
-use manage::{data_manager::DataManager, handle::Handle, managed, resource_loader::ResourceLoader};
-use refs::TotalSize;
+use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
+use refs::{TotalSize, Weak};
 use rtools::{file::File, hash};
 
 use crate::shaders::ImageShaders;
@@ -64,7 +64,7 @@ impl Image {
         }
     }
 
-    pub fn from(data: *const c_void, size: Size, channels: u32, hash: u64, name: String) -> Handle<Image> {
+    pub fn from(data: *const c_void, size: Size, channels: u32, hash: u64, name: String) -> Weak<Image> {
         Image::add_with_hash(hash, Self::load_to_gl(data, size, channels, name))
     }
 
@@ -78,15 +78,11 @@ impl Image {
 }
 
 impl Image {
-    pub fn render(
-        name: impl ToString,
-        size: impl Into<Size>,
-        draw: impl FnOnce(&mut Image),
-    ) -> Handle<Image> {
+    pub fn render(name: impl ToString, size: impl Into<Size>, draw: impl FnOnce(&mut Image)) -> Weak<Image> {
         let name = name.to_string();
         let hash = hash(name.clone());
 
-        if let Some(image) = Image::handle_with_hash(hash) {
+        if let Some(image) = Image::weak_with_hash(hash) {
             return image;
         }
 

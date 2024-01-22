@@ -3,7 +3,6 @@ use gm::{
     flat::{Point, Shape, Size},
     Color,
 };
-use manage::handle::Handle;
 use rapier2d::{
     geometry::Collider,
     prelude::{RigidBody, Rotation},
@@ -76,7 +75,7 @@ pub trait Sprite {
         &self.data().color
     }
 
-    fn image(&self) -> Handle<Image> {
+    fn image(&self) -> Weak<Image> {
         self.data().image
     }
 

@@ -7,7 +7,8 @@ pub use font::*;
 use fontdue::layout::{CoordinateSystem, Layout, TextStyle};
 use gl_image::{draw_image, Image};
 use gm::{flat::Size, Color};
-use manage::{data_manager::DataManager, handle::Handle};
+use manage::data_manager::DataManager;
+use refs::Weak;
 use rtools::IntoF32;
 
 pub fn text_layout(text: impl ToString, font: &Font, size: impl IntoF32) -> (Layout, Size) {
@@ -30,10 +31,10 @@ pub fn text_size(text: impl ToString, font: &Font, size: impl IntoF32) -> Size {
     text_layout(text, font, size).1
 }
 
-pub fn render_text(text: &str, font: &mut Font, size: impl IntoF32) -> Handle<Image> {
+pub fn render_text(text: &str, font: &mut Font, size: impl IntoF32) -> Weak<Image> {
     let id = format!("label-text:{text}:size-{size}:font-{}", font.name);
 
-    if let Some(image) = Image::handle_with_name(&id) {
+    if let Some(image) = Image::weak_with_name(&id) {
         return image;
     }
 

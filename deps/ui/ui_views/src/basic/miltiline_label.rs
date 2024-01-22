@@ -4,7 +4,6 @@
 use std::{collections::HashMap, ops::Index};
 
 use gm::{flat::Size, Color};
-use manage::handle::Handle;
 use refs::{set_current_thread_as_main, weak_from_ref, Weak};
 use rtools::{hash, IntoF32};
 use smart_default::SmartDefault;
@@ -15,7 +14,7 @@ use crate::ImageView;
 
 #[view]
 pub struct MultilineLabel {
-    font:          Handle<Font>,
+    font:          Weak<Font>,
     text:          String,
     size:          f32,
     split_storage: HashMap<u64, (Vec<String>, f32)>,

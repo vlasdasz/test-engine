@@ -8,7 +8,8 @@ use std::{
 use gl_image::Image;
 use gm::flat::Size;
 use log::trace;
-use manage::{data_manager::DataManager, handle::Handle, managed, resource_loader::ResourceLoader};
+use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
+use refs::Weak;
 use rtools::{file::File, hash};
 
 use crate::glyph::Glyph;
@@ -96,10 +97,10 @@ impl Font {
 }
 
 impl Font {
-    pub fn helvetica() -> Handle<Self> {
+    pub fn helvetica() -> Weak<Self> {
         const SF: &str = "default_helvetica";
 
-        if let Some(sf) = Font::handle_with_name(SF) {
+        if let Some(sf) = Font::weak_with_name(SF) {
             return sf;
         }
 

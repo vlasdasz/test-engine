@@ -9,6 +9,7 @@ use gm::{
     flat::{IntSize, Point, Rect},
     Color,
 };
+use manage::data_manager::DataManager;
 use rest::API;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::Font;
@@ -295,6 +296,6 @@ impl Screen {
 
 impl Drop for Screen {
     fn drop(&mut self) {
-        Font::helvetica().free();
+        Font::free(Font::helvetica());
     }
 }

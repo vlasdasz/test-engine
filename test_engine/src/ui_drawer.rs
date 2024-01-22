@@ -122,10 +122,11 @@ impl UIDrawer for TEUIDrawer {
         self.fill(view.absolute_frame(), view.color(), view.priority);
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
-            if let Some(image) = image_view.image.get() {
+            if image_view.image.is_ok() {
+                let image = image_view.image;
                 let frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 draw_image(
-                    image,
+                    &image,
                     &UIManager::rescale_frame(frame),
                     &image_view.tint_color,
                     view.priority,
