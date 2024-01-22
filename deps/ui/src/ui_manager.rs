@@ -150,14 +150,14 @@ impl UIManager {
     //     UIManager::root_view().set_frame(Self::scaled_ui_window_size());
     // }
 
-    #[cfg(not(mac))]
+    #[cfg(not(macos))]
     /// On windows and linux display scale is always 1. Only ui scale is
     /// responsible for elements size
     pub fn display_scale() -> f32 {
         1.0
     }
 
-    #[cfg(mac)]
+    #[cfg(macos)]
     pub fn display_scale() -> f32 {
         *Self::get().display_scale.lock().unwrap()
     }
