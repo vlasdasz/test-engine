@@ -40,7 +40,6 @@ pub async fn test_label() -> Result<()> {
     debug!("Int view test: OK");
 
     dbg!(TouchStack::dump());
-    dbg!("Sokol");
 
     Ok(())
 }

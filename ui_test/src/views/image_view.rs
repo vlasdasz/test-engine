@@ -7,7 +7,7 @@ use test_engine::{
     manage::data_manager::DataManager,
     Image, Screen,
 };
-use ui::{layout::Anchor, refs::Weak, view, SubView, ViewSetup, ViewTouch};
+use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewSetup, ViewTouch};
 use ui_views::ImageView;
 
 #[view]
@@ -61,6 +61,8 @@ async fn check_colors<const N: usize>(data: [((f32, f32), (f32, f32, f32, f32));
 
 pub async fn test_image_view() -> Result<()> {
     Screen::set_test_view::<ImageTestView>(400, 400).await;
+
+    dbg!(TouchStack::dump());
 
     sleep(0.1);
 
@@ -141,6 +143,8 @@ pub async fn test_image_view() -> Result<()> {
         ((365.90234, 40.652344), (0.5019608, 0.5019608, 0.5019608, 1.0)),
     ])
     .await;
+
+    dbg!(TouchStack::dump());
 
     debug!("Image view test: OK");
 

@@ -26,9 +26,15 @@ impl ViewSetup for TouchStackTestView {
 }
 
 pub async fn test_touch_stack() -> Result<()> {
+    dbg!(TouchStack::dump());
+
     Screen::set_test_view::<TouchStackTestView>(600, 600).await;
 
+    dbg!(TouchStack::dump());
+
     let this = TouchStackTestView::instance();
+
+    dbg!(TouchStack::dump());
 
     assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 
