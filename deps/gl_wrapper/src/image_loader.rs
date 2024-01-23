@@ -55,7 +55,7 @@ impl ImageLoader {
             TexParameterf,
             GLC!(TEXTURE_2D),
             GLC!(TEXTURE_MAG_FILTER),
-            GLC!(LINEAR) as f32
+            GLC!(NEAREST) as f32
         );
 
         assert_ne!(texture_handle, u32::MAX);

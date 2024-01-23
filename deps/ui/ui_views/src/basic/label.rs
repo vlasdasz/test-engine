@@ -1,7 +1,5 @@
-use gl_image::Image;
 use gm::Color;
 use log::warn;
-use manage::data_manager::DataManager;
 use refs::Weak;
 use rtools::IntoF32;
 use text::{render_text, Font};
@@ -97,7 +95,7 @@ impl Label {
     }
 
     fn set_letters(&mut self) {
-        Image::free(self.image_view.image);
+        // Image::free(self.image_view.image);
         let image = render_text(&self.text, &mut self.font, self.text_size);
         self.image_view.image = image;
     }
