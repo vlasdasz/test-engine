@@ -40,11 +40,12 @@ impl Touch {
 }
 
 impl ToString for Touch {
+    #[allow(clippy::cast_possible_truncation)]
     fn to_string(&self) -> String {
         format!(
-            "{:<12} {:<12} {}",
-            self.position.x,
-            self.position.y,
+            "{:<4} {:<4} {}",
+            self.position.x as isize,
+            self.position.y as isize,
             self.event.to_string()
         )
     }
@@ -117,11 +118,11 @@ mod test {
 
         assert_eq!(
             result,
-            r#"0            0            b
-2000         10           e
-100          4000         e
-1            4000         m
-4000         1            m"#
+            r#"0    0    b
+2000 10   e
+100  4000 e
+1    4000 m
+4000 1    m"#
         );
 
         assert_eq!(touches.as_slice(), &Touch::vec_from_str(&result));

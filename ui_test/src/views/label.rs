@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::Screen;
-use ui::{layout::Anchor, refs::Weak, view, SubView, ViewSetup};
+use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewSetup};
 use ui_views::{IntView, Label};
 
 #[view]
@@ -38,6 +38,9 @@ pub async fn test_label() -> Result<()> {
     Screen::set_test_view::<LabelTestView>(400, 400).await;
 
     debug!("Int view test: OK");
+
+    dbg!(TouchStack::dump());
+    dbg!("Sokol");
 
     Ok(())
 }
