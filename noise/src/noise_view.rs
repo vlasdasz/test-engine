@@ -3,11 +3,14 @@ use noise::{
     OpenSimplex,
 };
 use test_engine::{
-    gm::flat::{IntSize, Point, Size},
+    gm::{
+        flat::{IntSize, Point, Size},
+        Color,
+    },
     Image,
 };
-use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest, ViewTouch};
-use ui_views::{ImageView, IntView};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest, ViewTouch};
+use ui_views::{AddLabel, ImageView, IntView};
 
 #[view]
 pub struct NoiseView {
@@ -16,29 +19,46 @@ pub struct NoiseView {
     threshold_view: SubView<IntView>,
 }
 
-impl NoiseView {}
+impl NoiseView {
+    fn update_image(mut self: Weak<Self>) {
+        let resolution: IntSize = (500, 500).into();
+
+        self.image_view.image = generate_image(
+            self.seed,
+            resolution,
+            (20, 20).into(),
+            (0, 0).into(),
+            self.threshold_view.value() as _,
+        );
+    }
+}
 
 impl ViewSetup for NoiseView {
     fn setup(mut self: Weak<Self>) {
-        let resolution: IntSize = (100, 100).into();
-
-        self.image_view.image = generate_image(self.seed, resolution, (20, 20).into(), (0, 0).into(), 100);
         self.image_view.place.back();
 
-        self.enable_touch();
-        self.touch.up_inside.sub(move || {
-            self.image_view.image =
-                generate_image(self.seed, resolution, (20, 20).into(), (0, 0).into(), 100);
-        });
+        self.enable_touch_low_priority();
+        self.touch.up_inside.sub(move || self.update_image());
 
-        // self.threshold_view.
+        self.threshold_view
+            .set_color(Color::WHITE)
+            .set_value(100)
+            .set_step(2)
+            .add_label("there")
+            .place
+            .size(40, 150)
+            .bl(10);
+
+        self.threshold_view.on_change(move |_| self.update_image());
+
+        self.update_image();
     }
 }
 
 impl ViewTest for NoiseView {
     fn test_size() -> IntSize
     where Self: Sized {
-        (1200, 1200).into()
+        (1200, 1000).into()
     }
 }
 

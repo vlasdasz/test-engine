@@ -5,7 +5,7 @@ use manage::data_manager::DataManager;
 use refs::Weak;
 use rtools::IntoF32;
 use text::{render_text, Font};
-use ui::{view, SubView, ToLabel, ViewCallbacks, ViewFrame, ViewSetup};
+use ui::{view, SubView, ToLabel, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews};
 
 use crate::ImageView;
 
@@ -135,5 +135,18 @@ impl From<&String> for Label {
             initial_text: value.to_string().into(),
             ..Default::default()
         }
+    }
+}
+
+pub trait AddLabel {
+    fn add_label(&mut self, text: impl ToLabel) -> &mut Self;
+}
+
+impl<T: ?Sized + View> AddLabel for T {
+    fn add_label(&mut self, text: impl ToLabel) -> &mut Self {
+        let mut label = self.add_view::<Label>();
+        label.place.center().h(20).lr(0);
+        label.set_text(text);
+        self
     }
 }

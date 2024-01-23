@@ -28,7 +28,7 @@ impl ViewSetup for LabelTestView {
             .anchor(Anchor::Right, self.label, 10);
         self.text_size_view.set_value(32).set_step(5);
 
-        self.text_size_view.on_change.val(move |size| {
+        self.text_size_view.on_change(move |size| {
             self.label.set_text_size(size);
         });
     }

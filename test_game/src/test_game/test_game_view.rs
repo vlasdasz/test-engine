@@ -100,8 +100,7 @@ impl TestGameView {
         self.level_scale.step = 0.1;
         self.level_scale.place.size(28, 120).l(28).b(140);
         self.level_scale
-            .on_change
-            .val(|val| UILayer::get().level.as_mut().unwrap().set_scale(val));
+            .on_change(|val| UILayer::get().level.as_mut().unwrap().set_scale(val));
 
         {
             let mut view = self.add_view::<Container>();

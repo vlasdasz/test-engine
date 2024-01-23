@@ -11,7 +11,7 @@ mod text_field;
 pub use button::Button;
 pub use circle_view::CircleView;
 pub use image_view::ImageView;
-pub use label::Label;
+pub use label::*;
 pub use miltiline_label::MultilineLabel;
 pub use scroll_view::*;
 pub use slider::*;

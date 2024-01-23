@@ -13,7 +13,7 @@ struct IntTestView {
 
 impl ViewSetup for IntTestView {
     fn setup(self: Weak<Self>) {
-        self.int.place.back().size(50, 150).center();
+        self.int.place.size(50, 150).center();
     }
 }
 

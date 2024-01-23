@@ -16,8 +16,8 @@ pub struct IntView {
     #[link = down_tap]
     down: SubView<Button>,
 
-    pub on_change: Event<f32>,
-    pub step:      f32,
+    on_change_event: Event<f32>,
+    pub step:        f32,
 }
 
 impl ViewSetup for IntView {
@@ -41,7 +41,7 @@ impl IntView {
         let val = val.into_f32();
         self.value = val;
         self.label.set_text(format!("{val:.1}"));
-        self.on_change.trigger(val);
+        self.on_change_event.trigger(val);
         self
     }
 
@@ -58,5 +58,10 @@ impl IntView {
     fn down_tap(mut self: Weak<Self>) {
         let val = self.value - self.step;
         self.set_value(val);
+    }
+
+    pub fn on_change(&self, action: impl FnMut(f32) + 'static) -> &Self {
+        self.on_change_event.val(action);
+        self
     }
 }
