@@ -1,5 +1,3 @@
-use std::ffi::c_void;
-
 #[cfg(mobile)]
 use gles31_sys::*;
 use gm::flat::Size;
@@ -22,7 +20,7 @@ impl ImageLoader {
     #[allow(clippy::not_unsafe_ptr_arg_deref)]
     #[allow(clippy::cast_possible_wrap)]
     #[allow(clippy::cast_possible_truncation)]
-    pub fn load(data: *const c_void, size: Size, channels: u32) -> FrameBuffer {
+    pub fn load(data: &[u8], size: Size, channels: u32) -> FrameBuffer {
         let mut texture_handle = u32::MAX;
 
         GL!(GenTextures, 1, &mut texture_handle);
@@ -43,7 +41,7 @@ impl ImageLoader {
             0,
             mode_for_channels(channels),
             GLC!(UNSIGNED_BYTE),
-            data
+            data.as_ptr().cast()
         );
 
         GL!(GenerateMipmap, GLC!(TEXTURE_2D));

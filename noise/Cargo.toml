@@ -1,0 +1,21 @@
+[package]
+edition = "2021"
+name = "noise"
+version = "0.1.0"
+
+[[bin]]
+name = "noise"
+path = "src/main.rs"
+
+
+[dependencies]
+noise = "0.8.2"
+
+anyhow = { workspace = true }
+derivative = { workspace = true }
+tokio = { workspace = true }
+
+rtools = { workspace = true }
+test_engine = { workspace = true }
+ui = { workspace = true }
+ui_views = { workspace = true }

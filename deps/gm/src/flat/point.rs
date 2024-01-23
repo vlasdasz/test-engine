@@ -1,4 +1,7 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
+use std::{
+    fmt::Display,
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
+};
 
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
@@ -205,8 +208,8 @@ where
     }
 }
 
-impl<T: IntoF32> ToString for PointBase<T> {
-    fn to_string(&self) -> String {
-        format!("x: {:.2}, y: {:.2}", self.x.into_f32(), self.y.into_f32())
+impl<T: IntoF32> Display for PointBase<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "x: {:.2}, y: {:.2}", self.x.into_f32(), self.y.into_f32())
     }
 }

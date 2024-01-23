@@ -1,5 +1,6 @@
 use std::{
     borrow::Borrow,
+    fmt::Display,
     hash::{Hash, Hasher},
     ops::{Div, Mul},
 };
@@ -114,12 +115,6 @@ impl<T: IntoF32> Div<T> for Size {
     }
 }
 
-impl ToString for Size {
-    fn to_string(&self) -> String {
-        format!("width: {:.2}, height: {:.2}", self.width, self.height)
-    }
-}
-
 impl Hash for Size {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.width.to_bits().hash(state);
@@ -162,5 +157,17 @@ impl Random for IntSize {
             width:  u32::random_in(200..800),
             height: u32::random_in(200..800),
         }
+    }
+}
+
+impl Display for Size {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "width: {:.2}, height: {:.2}", self.width, self.height)
+    }
+}
+
+impl Display for IntSize {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "width: {}, height: {}", self.width, self.height)
     }
 }

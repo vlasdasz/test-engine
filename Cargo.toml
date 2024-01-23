@@ -1,7 +1,7 @@
 [workspace]
 
 default-members = ["test_game"]
-members = ["test_game", "ui_test", "ui_benchmark"]
+members = ["test_game", "ui_test", "ui_benchmark", "noise"]
 
 resolver = "2"
 
@@ -26,7 +26,7 @@ serial_test = "3.0"
 smart-default = "0.7.1"
 tokio = "1.33.0"
 
-manage = "0.2.3"
+manage = "0.3.0"
 reflected = "=0.7.0"
 reflected_proc = "=0.7.0"
 refs = { version = "=0.6.13", features = [] }

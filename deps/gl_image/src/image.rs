@@ -1,4 +1,4 @@
-use std::{ffi::c_void, mem::size_of, path::Path};
+use std::{mem::size_of, path::Path};
 
 use gl_wrapper::{
     buffers::{Buffers, FrameBuffer},
@@ -10,10 +10,10 @@ use gm::{
     Color,
 };
 use image::GenericImageView;
-use log::error;
+use log::{error, warn};
 use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
 use refs::{TotalSize, Weak};
-use rtools::{file::File, hash};
+use rtools::file::File;
 
 use crate::shaders::ImageShaders;
 
@@ -51,7 +51,7 @@ impl Image {
 
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
-    fn load_to_gl(data: *const c_void, size: Size, channels: u32, name: String) -> Image {
+    fn load_to_gl(data: &[u8], size: Size, channels: u32, name: String) -> Image {
         let buffer = ImageLoader::load(data, size, channels);
         Image {
             size,
@@ -64,8 +64,12 @@ impl Image {
         }
     }
 
-    pub fn from(data: *const c_void, size: Size, channels: u32, hash: u64, name: String) -> Weak<Image> {
-        Image::add_with_hash(hash, Self::load_to_gl(data, size, channels, name))
+    pub fn from(data: &[u8], size: Size, channels: u32, name: String) -> Weak<Image> {
+        if let Some(existing) = Image::weak_with_name(&name) {
+            warn!("Image with name: {name} already exists.");
+            return existing;
+        }
+        Image::add_with_name(name.clone(), Self::load_to_gl(data, size, channels, name))
     }
 
     pub fn is_monochrome(&self) -> bool {
@@ -80,9 +84,8 @@ impl Image {
 impl Image {
     pub fn render(name: impl ToString, size: impl Into<Size>, draw: impl FnOnce(&mut Image)) -> Weak<Image> {
         let name = name.to_string();
-        let hash = hash(name.clone());
 
-        if let Some(image) = Image::weak_with_hash(hash) {
+        if let Some(image) = Image::weak_with_name(&name) {
             return image;
         }
 
@@ -98,7 +101,7 @@ impl Image {
             flipped_y: false,
             buffer,
             total_size: size_of::<Self>() + 10,
-            name,
+            name: name.clone(),
         };
 
         GLWrapper::clear_with_color(Color::CLEAR);
@@ -107,7 +110,7 @@ impl Image {
 
         GLWrapper::unbind_framebuffer();
 
-        Image::add_with_hash(hash, image)
+        Image::add_with_name(name, image)
     }
 }
 
@@ -129,7 +132,7 @@ impl ResourceLoader for Image {
         let channels = image.color().channel_count();
 
         Image::load_to_gl(
-            data.as_ptr().cast(),
+            data,
             (dimensions.0, dimensions.1).into(),
             u32::from(channels),
             name.to_string(),
