@@ -58,22 +58,31 @@ impl Level for TestGameLevel {
 
         self.add_rect((30, 30, 40, 25)).set_image(drawn);
 
-        self.add_sprite::<Wall>((100, 5), (0, 0)).set_image(render_text(
-            "oo spolokolkok",
-            Font::helvetica().deref_mut(),
-            64,
-        ));
-        self.add_sprite::<Wall>((5, 100), (60, 0)).set_image(square);
-        self.add_sprite::<Wall>((5, 100), (-60, 0)).set_image(square);
+        self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, 0))
+            .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0)).set_image(square);
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0))
+            .set_image(square);
 
         self.add_sprite::<Body>(Shape::triangle((-10, -10), (10, -10), (-10, 10)), (0, 50))
             .set_image("triangle.png");
 
+        let concave_points: Vec<Point> = vec![
+            (5, -5).into(),
+            (-10, -10).into(),
+            (10, -10).into(),
+            (10, 10).into(),
+        ];
+
+        self.add_sprite::<Body>(Shape::Polygon(concave_points), (0, 100))
+            .set_image("triangle.png");
+
         for i in 0..500 {
-            self.add_sprite::<Body>((0.5, 0.5), (0.1 * i as f32, i * 2)).set_image(square);
+            self.add_sprite::<Body>(Shape::Rect((0.5, 0.5).into()), (0.1 * i as f32, i * 2))
+                .set_image(square);
         }
 
-        let mut player: Weak<Player> = self.add_sprite((2, 2), (0, 5));
+        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
         self.base_mut().player = player;
         player.set_image("frisk.png").enable_collision_detection();
         player.weapon.set_image("ak.png");

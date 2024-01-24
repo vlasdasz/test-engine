@@ -4,35 +4,13 @@ use gm::flat::{Point, Shape};
 use rapier2d::{na::Vector2, prelude::RigidBodyBuilder};
 use refs::{Own, Weak};
 
-use crate::{control::Control, Level, Sprite, SpriteData, ToCollider};
+use crate::{Level, Sprite, SpriteData, ToCollider};
 
-pub struct Body {
+pub struct Terrain {
     sprite: Own<SpriteData>,
 }
 
-impl Body {
-    pub fn velocity(&self) -> Point {
-        let vel = self.rigid_body().linvel();
-        (vel.x, vel.y).into()
-    }
-
-    pub fn set_velocity(&mut self, vel: Point) -> &mut Self {
-        self.rigid_body_mut().set_linvel([vel.x, vel.y].into(), true);
-        self
-    }
-
-    pub fn lock_rotations(&mut self) -> &mut Self {
-        self.rigid_body_mut().lock_rotations(true, true);
-        self
-    }
-
-    pub fn unlock_rotation(&mut self) -> &mut Self {
-        self.rigid_body_mut().lock_rotations(false, true);
-        self
-    }
-}
-
-impl Sprite for Body {
+impl Sprite for Terrain {
     fn data(&self) -> &SpriteData {
         &self.sprite
     }
@@ -43,7 +21,7 @@ impl Sprite for Body {
 
     fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Own<Self>
     where Self: Sized {
-        let rigid_body = RigidBodyBuilder::dynamic()
+        let rigid_body = RigidBodyBuilder::fixed()
             .translation(Vector2::new(position.x, position.y))
             .build();
 
@@ -69,38 +47,14 @@ impl Sprite for Body {
     }
 }
 
-const FORCE: f32 = 10.0;
-impl Control for Body {
-    fn jump(&mut self) {
-        self.add_impulse((0, FORCE).into());
-    }
-
-    fn go_left(&mut self) {
-        self.add_impulse((-FORCE, 0).into());
-    }
-
-    fn go_right(&mut self) {
-        self.add_impulse((FORCE, 0).into());
-    }
-
-    fn go_down(&mut self) {
-        self.add_impulse((0, -FORCE).into());
-    }
-
-    fn add_impulse(&mut self, impulse: Point) {
-        self.rigid_body_mut()
-            .apply_impulse([impulse.x * 100.0, impulse.y * 100.0].into(), true)
-    }
-}
-
-impl Deref for Body {
+impl Deref for Terrain {
     type Target = SpriteData;
     fn deref(&self) -> &SpriteData {
         &self.sprite
     }
 }
 
-impl DerefMut for Body {
+impl DerefMut for Terrain {
     fn deref_mut(&mut self) -> &mut SpriteData {
         &mut self.sprite
     }

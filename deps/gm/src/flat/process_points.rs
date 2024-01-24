@@ -3,7 +3,7 @@ use crate::{
     misc::FloatIterExt,
 };
 
-type Points<'a> = Vec<&'a Point>;
+type Points = Vec<Point>;
 
 pub trait ProcessPoints {
     fn size(&self) -> Size {
@@ -24,7 +24,7 @@ pub trait ProcessPoints {
     fn min_y(&self) -> f32;
 }
 
-impl ProcessPoints for Points<'_> {
+impl ProcessPoints for Points {
     fn max_x(&self) -> f32 {
         self.iter().map(|a| a.x).float_max()
     }

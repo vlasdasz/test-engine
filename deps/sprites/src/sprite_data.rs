@@ -1,6 +1,6 @@
 use gl_image::Image;
 use gm::{
-    flat::{Point, Shape},
+    flat::{Point, Rect, Shape},
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
@@ -30,9 +30,10 @@ pub struct SpriteData {
 
 impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteData {
     fn from(data: (X, Y, W, H)) -> Self {
+        let rect: Rect = (data).into();
         Self {
-            position: (data.0.into_f32(), data.1.into_f32()).into(),
-            shape: (data.2.into_f32(), data.3.into_f32()).into(),
+            position: rect.origin,
+            shape: Shape::Rect(rect.size),
             color: Color::random(),
             ..Default::default()
         }

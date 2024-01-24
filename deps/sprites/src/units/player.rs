@@ -49,7 +49,7 @@ impl Sprite for Player {
     fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Own<Self>
     where Self: Sized {
         Own::new(Player {
-            unit:   Unit::make(shape, position, level),
+            unit:   Unit::make(shape.clone(), position, level),
             weapon: Weapon::make(shape, position, level),
         })
     }

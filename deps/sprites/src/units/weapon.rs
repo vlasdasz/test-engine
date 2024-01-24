@@ -21,7 +21,7 @@ impl Weapon {
 
         let vel = vector * self.bullet_speed + self.velocity;
 
-        let shape = self.bullet_shape;
+        let shape = self.bullet_shape.clone();
         let mut bullet = self.level.add_sprite::<Body>(shape, pos);
 
         bullet.set_rotation(self.rotation());
@@ -48,7 +48,7 @@ impl Sprite for Weapon {
             velocity:     Default::default(),
             bullet_speed: 1.0,
             bullet_image: Default::default(),
-            bullet_shape: (1, 1).into(),
+            bullet_shape: Shape::Rect((1, 1).into()),
         })
     }
 }

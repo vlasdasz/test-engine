@@ -23,7 +23,7 @@ pub struct PointBase<T> {
 }
 
 impl<T> PointBase<T> {
-    pub fn make(x: T, y: T) -> Self {
+    pub fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 }

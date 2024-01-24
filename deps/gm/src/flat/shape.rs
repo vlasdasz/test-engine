@@ -1,10 +1,11 @@
 use crate::flat::{Point, ProcessPoints, Size};
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub enum Shape {
     Rect(Size),
     Circle(f32),
     Triangle(Point, Point, Point),
+    Polygon(Vec<Point>),
 }
 
 impl Shape {
@@ -18,7 +19,8 @@ impl Shape {
         match self {
             Self::Rect(size) => *size,
             Self::Circle(r) => (*r, *r).into(),
-            Self::Triangle(a, b, c) => vec![a, b, c].size() / 2.0,
+            Self::Triangle(a, b, c) => vec![*a, *b, *c].size() / 2.0,
+            Self::Polygon(points) => points.size() / 2.0,
         }
     }
 
@@ -26,7 +28,8 @@ impl Shape {
         match self {
             Self::Rect(size) => size.width,
             Self::Circle(r) => *r,
-            Self::Triangle(a, b, c) => vec![a, b, c].width() / 2.0,
+            Self::Triangle(a, b, c) => vec![*a, *b, *c].width() / 2.0,
+            Self::Polygon(points) => points.width() / 2.0,
         }
     }
 
@@ -34,14 +37,9 @@ impl Shape {
         match self {
             Self::Rect(size) => size.height,
             Self::Circle(r) => *r,
-            Self::Triangle(a, b, c) => vec![a, b, c].height() / 2.0,
+            Self::Triangle(a, b, c) => vec![*a, *b, *c].height() / 2.0,
+            Self::Polygon(points) => points.height() / 2.0,
         }
-    }
-}
-
-impl<T: Into<Size>> From<T> for Shape {
-    fn from(val: T) -> Self {
-        Shape::Rect(val.into())
     }
 }
 

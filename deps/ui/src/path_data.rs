@@ -1,10 +1,10 @@
 use gl_wrapper::Buffer;
-use gm::{flat::PointsPath, Color};
+use gm::{flat::Points, Color};
 
 #[derive(Debug)]
 pub struct PathData {
     pub buffer:    Buffer,
-    pub path:      PointsPath,
+    pub path:      Points,
     pub color:     Color,
     pub draw_mode: DrawMode,
 }

@@ -34,7 +34,7 @@ impl Sprite for Wall {
 
     fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Own<Self> {
         let collider = shape
-            .to_collider()
+            .make_collider()
             .translation(Vector2::new(position.x, position.y))
             .restitution(1.0)
             .build();

@@ -6,7 +6,7 @@ use gl_wrapper::{
     GLWrapper,
 };
 use gm::{
-    flat::{Rect, Size},
+    flat::{Points, ProcessPoints, Rect, Size},
     Color,
 };
 use image::GenericImageView;
@@ -111,6 +111,11 @@ impl Image {
         GLWrapper::unbind_framebuffer();
 
         Image::add_with_name(name, image)
+    }
+
+    pub fn render_path(name: impl ToString, path: Points) -> Weak<Image> {
+        let size = path.size();
+        Self::render(name, size, |image| {})
     }
 }
 

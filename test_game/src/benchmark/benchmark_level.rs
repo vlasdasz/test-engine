@@ -1,5 +1,6 @@
 use manage::data_manager::DataManager;
 use test_engine::{
+    gm::flat::Shape,
     rtools::Animation,
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
     Image, Level, LevelBase,
@@ -25,13 +26,13 @@ impl BenchmarkLevel {
     fn make_walls(&mut self) {
         let square = Image::get("square.png");
 
-        self.floor = self.add_sprite((100, 10), (0, 0));
+        self.floor = self.add_sprite(Shape::Rect((100, 10).into()), (0, 0));
         self.floor.set_image(square);
 
-        self.left_wall = self.add_sprite((10, 200), (-40, 0));
+        self.left_wall = self.add_sprite(Shape::Rect((10, 200).into()), (-40, 0));
         self.left_wall.set_image(square);
 
-        self.right_wall = self.add_sprite((10, 200), (40, 0));
+        self.right_wall = self.add_sprite(Shape::Rect((10, 200).into()), (40, 0));
         self.right_wall.set_image(square);
 
         self.left_animation = Animation::new(-60, -55, 10);
@@ -42,14 +43,14 @@ impl BenchmarkLevel {
 
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
-        self.player = self.add_sprite((2, 2), (0, 5));
+        self.player = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
 
         self.player.set_image("frisk.png");
 
         self.player.weapon.set_image("ak.png");
         self.player.weapon.bullet_image = Image::get("bullet.png");
         self.player.weapon.bullet_speed = 100.0;
-        self.player.weapon.bullet_shape = (1, 0.28).into();
+        self.player.weapon.bullet_shape = Shape::Rect((1, 0.28).into());
 
         self.set_scale(1.0);
         self.make_walls();
