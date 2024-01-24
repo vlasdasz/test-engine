@@ -21,11 +21,11 @@ tokio = { workspace = true }
 
 audio = { workspace = true }
 dispatch = { workspace = true }
+gen = { workspace = true }
 gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
 gm = { workspace = true }
 manage = { workspace = true }
-gen = { workspace = true }
 rest = { workspace = true }
 rtools = { workspace = true }
 sprites = { workspace = true }

@@ -1,11 +1,7 @@
-use contour::ContourBuilder;
-use noise::{
-    utils::{NoiseMapBuilder, PlaneMapBuilder},
-    OpenSimplex,
-};
+use gen::noise::{generate_terrain, TerrainData, TerrainParams};
 use test_engine::{
     gm::{
-        flat::{IntSize, Point, PointsPath, Size},
+        flat::{IntSize, PointsPath},
         Color,
     },
     Image,
@@ -27,19 +23,20 @@ pub struct NoiseView {
 impl NoiseView {
     fn update_image(mut self: Weak<Self>) {
         let resolution: IntSize = (100, 100).into();
-        let (image, contours) = generate_image(
-            self.seed,
+
+        let (image, islands) = generate_image(TerrainParams {
+            seed: self.seed,
             resolution,
-            (self.size_view.value(), self.size_view.value()).into(),
-            (self.x_view.value(), self.y_view.value()).into(),
-            self.threshold_view.value() as _,
-        );
+            size: (self.size_view.value(), self.size_view.value()).into(),
+            position: (self.x_view.value(), self.y_view.value()).into(),
+            threshold: self.threshold_view.value() as _,
+        });
 
         self.image_view.image = image;
 
         self.drawing_view.remove_all_paths();
-        for contour in contours {
-            self.drawing_view.add_path(contour, &Color::TURQUOISE, DrawMode::Outline);
+        for island in islands {
+            self.drawing_view.add_path(island, &Color::TURQUOISE, DrawMode::Outline);
         }
     }
 }
@@ -105,63 +102,32 @@ impl ViewTest for NoiseView {
     }
 }
 
-fn extract_shapes(data: &[u8], resolution: IntSize) -> Vec<PointsPath> {
-    let data: Vec<_> = data.iter().map(|val| *val as f32).collect();
-
-    let c = ContourBuilder::new(resolution.width, resolution.height, false); // x dim., y dim., smoothing
-    let res = c.contours(&data, &[0.5]).unwrap(); //
-
-    res.first()
-        .unwrap()
-        .geometry()
-        .into_iter()
-        .map(|polygon| PointsPath {
-            points: polygon
-                .exterior()
-                .into_iter()
-                .map(|point| Point {
-                    x: point.x as f32 + 10.0,
-                    y: point.y as f32 + 10.0,
-                })
-                .into_iter()
-                .step_by(5)
-                .collect(),
-        })
-        .collect()
-}
-
 fn generate_image(
-    seed: u32,
-    resolution: IntSize,
-    size: Size,
-    position: Point,
-    threshold: u8,
+    TerrainParams {
+        seed,
+        resolution,
+        size,
+        position,
+        threshold,
+    }: TerrainParams,
 ) -> (Weak<Image>, Vec<PointsPath>) {
-    let open_simplex = OpenSimplex::new(seed);
-
-    let half_w = size.width / 2.0;
-    let half_h = size.width / 2.0;
-
-    let map = PlaneMapBuilder::<_, 2>::new(&open_simplex)
-        .set_size(resolution.width as usize, resolution.height as usize)
-        .set_x_bounds((position.x - half_w) as f64, (position.x + half_w) as f64)
-        .set_y_bounds((-position.y - half_h) as f64, (-position.y + half_h) as f64)
-        .build();
-
-    let (width, height) = map.size();
-    let mut pixels: Vec<u8> = Vec::with_capacity(width * height);
-
-    for i in map {
-        let val = ((i * 0.5 + 0.5).clamp(0.0, 1.0) * 255.0) as u8;
-        pixels.push(if val > threshold { 0 } else { 255 });
-    }
-
-    let contours = extract_shapes(&pixels, resolution);
+    let TerrainData { pixels, islands } = generate_terrain(TerrainParams {
+        seed,
+        resolution,
+        size,
+        position,
+        threshold,
+    });
 
     let image_name = format!("noise_image_{seed}_{resolution}_{size}_{position}_{threshold}");
 
     (
-        Image::from(&pixels, (width, height).into(), 1, image_name),
-        contours,
+        Image::from(
+            &pixels,
+            (resolution.width, resolution.height).into(),
+            1,
+            image_name,
+        ),
+        islands,
     )
 }

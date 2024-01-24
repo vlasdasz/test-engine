@@ -7,7 +7,7 @@ use tokio::{
     time::sleep,
 };
 
-use crate::{Cell, Grid};
+use crate::maze::{Cell, Grid};
 
 type Size = SizeBase<i32>;
 type Point = PointBase<i32>;
