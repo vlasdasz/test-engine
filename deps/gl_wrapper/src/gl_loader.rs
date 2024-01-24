@@ -24,10 +24,6 @@ pub struct GLLoader {
 
 impl GLLoader {
     pub fn new(size: IntSize) -> Self {
-        fn unbox<T>(value: Box<T>) -> T {
-            Box::into_inner(value)
-        }
-
         let mut glfw = glfw::init(|error, string| error!("GLFW error: {error} string: {string}")).unwrap();
 
         glfw.window_hint(glfw::WindowHint::Samples(16.into()));
@@ -43,7 +39,7 @@ impl GLLoader {
 
         let window: Box<Window> = unsafe { transmute(window) };
 
-        let mut window = unbox(window);
+        let mut window = Box::into_inner(window);
 
         unsafe { glfwSetWindowSizeCallback(window.window_ptr(), Some(window_size_callback)) };
 

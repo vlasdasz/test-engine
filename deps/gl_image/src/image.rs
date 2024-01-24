@@ -124,7 +124,7 @@ impl Image {
 
         Self::render(name, size, |image| {
             GLWrapper::set_viewport(size);
-            GLWrapper::clear_with_color(Color::WHITE.with_alpha(0.0));
+            GLWrapper::clear_with_color(Color::RED.with_alpha(0.0));
             BasicShaders::path().enable().set_color(&color).set_size(size);
             path.buffer.draw_with_mode(path.draw_mode.to_gl());
 

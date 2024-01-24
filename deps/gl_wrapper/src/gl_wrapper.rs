@@ -4,6 +4,7 @@ use gm::{
     flat::{IntSize, Point, Rect},
     Color,
 };
+use refs::MainLock;
 use rtools::platform::Platform;
 
 pub struct GLWrapper;
@@ -13,10 +14,16 @@ struct StaticData {
     clear_color:            Color,
 }
 
-static mut STATIC_DATA: StaticData = StaticData {
-    default_framebuffer_id: -1,
-    clear_color:            Color::CLEAR,
-};
+static STATIC_DATA: MainLock<StaticData> = MainLock::new();
+
+impl Default for StaticData {
+    fn default() -> Self {
+        Self {
+            default_framebuffer_id: -1,
+            clear_color:            Color::CLEAR,
+        }
+    }
+}
 
 impl GLWrapper {
     pub fn bind_texture(id: u32) {
@@ -25,12 +32,12 @@ impl GLWrapper {
     }
 
     pub fn clear_color() -> Color {
-        unsafe { STATIC_DATA.clear_color }
+        STATIC_DATA.clear_color
     }
 
     pub fn set_clear_color(color: impl Into<Color>) {
         let color = color.into();
-        unsafe { STATIC_DATA.clear_color = color };
+        STATIC_DATA.get_mut().clear_color = color;
         GL!(ClearColor, color.r, color.g, color.b, color.a)
     }
 
@@ -109,17 +116,15 @@ impl GLWrapper {
         GL!(
             GetIntegerv,
             GLC!(FRAMEBUFFER_BINDING),
-            &mut STATIC_DATA.default_framebuffer_id
+            &mut STATIC_DATA.get_mut().default_framebuffer_id
         );
-        trace!("default_framebuffer_id: {}", unsafe {
-            STATIC_DATA.default_framebuffer_id
-        });
+        trace!("default_framebuffer_id: {}", STATIC_DATA.default_framebuffer_id);
     }
 
     #[allow(clippy::cast_sign_loss)]
     fn default_framebuffer_id() -> u32 {
         if Platform::IOS {
-            unsafe { STATIC_DATA.default_framebuffer_id as u32 }
+            STATIC_DATA.default_framebuffer_id as u32
         } else {
             0
         }

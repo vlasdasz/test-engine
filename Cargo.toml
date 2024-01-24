@@ -1,7 +1,7 @@
 [workspace]
 
 default-members = ["test_game"]
-members = ["test_game", "ui_test", "ui_benchmark", "noise"]
+members = ["test_game", "ui_test", "ui_benchmark", "noise", "wgpu"]
 
 resolver = "2"
 
@@ -29,7 +29,7 @@ tokio = "1.33.0"
 manage = "0.3.0"
 reflected = "=0.7.0"
 reflected_proc = "=0.7.0"
-refs = { version = "=0.6.13", features = [] }
+refs = { version = "=0.6.14", features = [] }
 rtools = "=0.6.0"
 vents = "=0.4.0"
 
