@@ -28,7 +28,7 @@ impl DrawingView {
 
     fn process_points(&self, path: Points) -> Points {
         if !self.rescale {
-            return path.into();
+            return path;
         }
 
         let max_x = path.iter().map(|p| p.x).fold(f32::NAN, f32::max);
