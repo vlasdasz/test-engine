@@ -9,11 +9,10 @@ path = "src/main.rs"
 
 
 [dependencies]
+bytemuck = { version = "1.12", features = ["derive"] }
 env_logger = "0.10"
 log = "0.4"
 wgpu = "0.18"
 winit = "0.28"
-bytemuck = { version = "1.12", features = [ "derive" ] }
-
 
 tokio = { workspace = true }
