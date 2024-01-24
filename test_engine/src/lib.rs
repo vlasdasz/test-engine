@@ -6,11 +6,11 @@
 #![feature(arbitrary_self_types)]
 
 pub use audio;
+pub use gen;
 pub use gl_image;
 pub use gl_wrapper;
 pub use gm;
 pub use manage;
-pub use maze;
 pub use reflected;
 pub use rest;
 pub use rtools;

@@ -106,7 +106,7 @@ impl ViewTest for NoiseView {
 }
 
 fn extract_shapes(data: &[u8], resolution: IntSize) -> Vec<PointsPath> {
-    let data: Vec<_> = data.iter().map(|val| *val as f64).collect();
+    let data: Vec<_> = data.iter().map(|val| *val as f32).collect();
 
     let c = ContourBuilder::new(resolution.width, resolution.height, false); // x dim., y dim., smoothing
     let res = c.contours(&data, &[0.5]).unwrap(); //

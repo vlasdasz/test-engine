@@ -25,7 +25,7 @@ gl_image = { workspace = true }
 gl_wrapper = { workspace = true }
 gm = { workspace = true }
 manage = { workspace = true }
-maze = { workspace = true }
+gen = { workspace = true }
 rest = { workspace = true }
 rtools = { workspace = true }
 sprites = { workspace = true }
