@@ -22,7 +22,7 @@ pub use analog_stick_view::AnalogStickView;
 pub use back_button::*;
 pub use collection_view::*;
 pub use dpad_view::DPadView;
-pub use drawing_view::{initialize_path_data, DrawingView};
+pub use drawing_view::DrawingView;
 pub use drop_down::*;
 pub use form_view::FormView;
 pub use int_view::IntView;

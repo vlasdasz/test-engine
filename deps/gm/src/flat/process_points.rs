@@ -10,6 +10,10 @@ pub trait ProcessPoints {
         (self.width(), self.height()).into()
     }
 
+    fn max_size(&self) -> Size {
+        (self.max_x(), self.max_y()).into()
+    }
+
     fn width(&self) -> f32 {
         self.max_x() - self.min_x()
     }

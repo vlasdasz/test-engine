@@ -1,9 +1,10 @@
+use gl_wrapper::path_data::DrawMode;
 use gm::{
     flat::{Point, PointsPath},
     Color,
 };
 use refs::Weak;
-use ui::{view, DrawMode, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
+use ui::{view, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
 
 use crate::DrawingView;
 

@@ -11,7 +11,7 @@ use ui::Container;
 use crate::views::{
     alert::test_alert, button::test_button, drop_down::test_drop_down, image_view::test_image_view,
     int_view::test_int_view, label::test_label, layout::test_layout, multiline_label::test_multiline,
-    switch::test_switch, touch_stack::test_touch_stack,
+    render_image_path::test_render_image_path, switch::test_switch, touch_stack::test_touch_stack,
 };
 
 mod ui_test_legacy;
@@ -22,6 +22,7 @@ fn main() -> Result<()> {
     test_engine::ViewApp::<Container>::start_with_actor(async {
         UILayer::display_touches();
 
+        test_render_image_path().await?;
         test_image_view().await?;
         test_label().await?;
         test_touch_stack().await?;

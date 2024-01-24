@@ -3,6 +3,8 @@ use std::{mem::size_of, path::Path};
 use gl_wrapper::{
     buffers::{Buffers, FrameBuffer},
     image_loader::ImageLoader,
+    path_data::{initialize_path_data, DrawMode},
+    shaders::BasicShaders,
     GLWrapper,
 };
 use gm::{
@@ -113,9 +115,24 @@ impl Image {
         Image::add_with_name(name, image)
     }
 
-    pub fn render_path(name: impl ToString, path: Points) -> Weak<Image> {
-        let size = path.size();
-        Self::render(name, size, |image| {})
+    pub fn render_path(name: impl ToString, color: Color, path: Points, draw_mode: DrawMode) -> Weak<Image> {
+        let size = path.max_size();
+
+        let path = initialize_path_data(path, &color, draw_mode);
+
+        dbg!(&size);
+
+        Self::render(name, size, |image| {
+            GLWrapper::set_viewport(size);
+            GLWrapper::clear_with_color(Color::WHITE.with_alpha(0.0));
+            BasicShaders::path().enable().set_color(&color).set_size(size);
+            path.buffer.draw_with_mode(path.draw_mode.to_gl());
+
+            dbg!(GLWrapper::read_pixel((5, 5).into()));
+            dbg!(GLWrapper::read_pixel((1, 1).into()));
+            dbg!(GLWrapper::read_pixel((0, 0).into()));
+            image.flipped_y = true;
+        })
     }
 }
 

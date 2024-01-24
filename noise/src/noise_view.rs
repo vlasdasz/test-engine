@@ -1,12 +1,13 @@
 use gen::noise::{generate_terrain, TerrainData, TerrainParams};
 use test_engine::{
+    gl_wrapper::path_data::DrawMode,
     gm::{
-        flat::{IntSize, PointsPath},
+        flat::{IntSize, Points},
         Color,
     },
     Image,
 };
-use ui::{layout::Anchor, refs::Weak, view, DrawMode, SubView, ViewData, ViewSetup, ViewTest, ViewTouch};
+use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest, ViewTouch};
 use ui_views::{AddLabel, DrawingView, ImageView, IntView};
 
 #[view]
@@ -110,7 +111,7 @@ fn generate_image(
         position,
         threshold,
     }: TerrainParams,
-) -> (Weak<Image>, Vec<PointsPath>) {
+) -> (Weak<Image>, Vec<Points>) {
     let TerrainData { pixels, islands } = generate_terrain(TerrainParams {
         seed,
         resolution,

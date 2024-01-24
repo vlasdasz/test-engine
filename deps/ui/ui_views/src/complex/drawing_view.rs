@@ -1,10 +1,10 @@
-use gl_wrapper::{Buffer, BufferConfig};
+use gl_wrapper::path_data::{initialize_path_data, DrawMode, PathData};
 use gm::{
     axis::Axis,
     flat::{Points, Size},
     Color,
 };
-use ui::{view, DrawMode, PathData, ViewFrame};
+use ui::{view, ViewFrame};
 
 #[view]
 pub struct DrawingView {
@@ -45,19 +45,5 @@ impl DrawingView {
 
     pub fn remove_all_paths(&mut self) {
         self.paths.clear()
-    }
-}
-
-pub fn initialize_path_data(path: Points, color: &Color, draw_mode: DrawMode) -> PathData {
-    let float_slice: &[f32] =
-        unsafe { std::slice::from_raw_parts(path.as_ptr().cast::<f32>(), path.len() * 2) };
-
-    let buffer = Buffer::make(&BufferConfig::_2, float_slice, None, draw_mode.to_gl());
-
-    PathData {
-        buffer,
-        path,
-        color: *color,
-        draw_mode,
     }
 }

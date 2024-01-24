@@ -1,11 +1,12 @@
 use std::{fmt::Debug, ops::DerefMut};
 
+use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
 use refs::Weak;
 
 use crate::{
     view::{ViewAnimation, ViewSubviews},
-    DrawMode, PathData, View, ViewLayout,
+    View, ViewLayout,
 };
 
 pub trait UIDrawer: Debug + Send {

@@ -3,6 +3,7 @@ use std::fmt::Display;
 use rtools::{IntoF32, Random};
 use serde::{Deserialize, Serialize};
 
+#[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Color {
     pub r: f32,

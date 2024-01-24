@@ -1,8 +1,9 @@
 use gl_image::ToImage;
+use gl_wrapper::path_data::DrawMode;
 use gm::{flat::PointsPath, Color};
 use refs::Weak;
 use rtools::Animation;
-use ui::{view, DrawMode, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::{Button, DrawingView, ImageView, Label};
 

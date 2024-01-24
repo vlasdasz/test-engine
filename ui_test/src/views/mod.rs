@@ -6,5 +6,6 @@ pub mod int_view;
 pub mod label;
 pub mod layout;
 pub mod multiline_label;
+pub mod render_image_path;
 pub mod switch;
 pub mod touch_stack;

@@ -1,7 +1,8 @@
+use gl_wrapper::path_data::DrawMode;
 use gm::{flat::PointsPath, Color};
 use refs::Weak;
 use rtools::IntoF32;
-use ui::{view, DrawMode, SubView, ViewFrame, ViewSetup};
+use ui::{view, SubView, ViewFrame, ViewSetup};
 
 use crate::DrawingView;
 

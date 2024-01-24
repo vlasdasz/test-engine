@@ -6,17 +6,19 @@ use std::{
 };
 
 use gl_image::draw_image;
-use gl_wrapper::{buffers::Buffers, GLWrapper};
+use gl_wrapper::{
+    buffers::Buffers,
+    path_data::{initialize_path_data, DrawMode, PathData},
+    shaders::BasicShaders,
+    GLWrapper,
+};
 use gm::{
     axis::Axis,
     flat::{PointsPath, Rect, Size},
     Color,
 };
-use ui::{
-    refs::Address, DrawMode, PathData, UIDrawer, UIManager, UIShaders, View, ViewData, ViewFrame,
-    ViewSubviews,
-};
-use ui_views::{initialize_path_data, DrawingView, ImageView};
+use ui::{refs::Address, UIDrawer, UIManager, UIShaders, View, ViewData, ViewFrame, ViewSubviews};
+use ui_views::{DrawingView, ImageView};
 
 type RoundStorage = HashMap<usize, (PathData, Size)>;
 
@@ -74,7 +76,7 @@ impl UIDrawer for TEUIDrawer {
             return;
         }
         self.set_viewport(rect);
-        UIShaders::path()
+        BasicShaders::path()
             .enable()
             .set_color(&path.color)
             .set_size(rect.size)
