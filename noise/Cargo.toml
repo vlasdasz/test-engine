@@ -9,6 +9,7 @@ path = "src/main.rs"
 
 
 [dependencies]
+contour = "0.12.0"
 noise = "0.8.2"
 
 anyhow = { workspace = true }
