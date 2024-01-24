@@ -6,6 +6,8 @@ use std::{
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
+use crate::flat::Size;
+
 #[derive(Copy, Clone)]
 pub enum Direction {
     Up,
@@ -168,6 +170,13 @@ impl<T: IntoF32> Mul<T> for Point {
     fn mul(self, rhs: T) -> Point {
         let rhs = rhs.into_f32();
         (self.x * rhs, self.y * rhs).into()
+    }
+}
+
+impl Mul<Size> for Point {
+    type Output = Point;
+    fn mul(self, size: Size) -> Point {
+        (self.x * size.width, self.y * size.height).into()
     }
 }
 

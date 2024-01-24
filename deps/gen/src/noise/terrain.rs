@@ -68,8 +68,8 @@ fn extract_shapes(data: &[u8], resolution: IntSize) -> Vec<PointsPath> {
                 .exterior()
                 .into_iter()
                 .map(|point| Point {
-                    x: point.x + 10.0,
-                    y: point.y + 10.0,
+                    x: point.x,
+                    y: point.y,
                 })
                 .step_by(5)
                 .collect(),

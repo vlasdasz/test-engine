@@ -22,6 +22,12 @@ pub struct SizeBase<T> {
 pub type Size = SizeBase<f32>;
 pub type IntSize = SizeBase<u32>;
 
+impl<T> SizeBase<T> {
+    pub fn new(width: T, height: T) -> Self {
+        Self { width, height }
+    }
+}
+
 impl<T: Mul<Output = T> + Copy> SizeBase<T> {
     pub fn area(&self) -> T {
         self.width.mul(self.height)
@@ -74,6 +80,10 @@ impl Size {
     pub fn fit_width(&self, width: impl IntoF32) -> Size {
         let ratio = width.into_f32() / self.width;
         *self * ratio
+    }
+
+    pub fn ratios(&self, other: Size) -> Size {
+        Size::new(other.width / self.width, other.height / self.height)
     }
 
     pub fn fit_in_rect<const AXIS: Axis>(&self, rect: impl Borrow<Rect>) -> Rect {
@@ -170,4 +180,12 @@ impl Display for IntSize {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "width: {}, height: {}", self.width, self.height)
     }
+}
+
+#[test]
+fn size_ratios() {
+    let a = Size::new(2.0, 2.0);
+    let b = Size::new(6.0, 12.0);
+
+    assert_eq!(a.ratios(b), Size::new(3.0, 6.0));
 }

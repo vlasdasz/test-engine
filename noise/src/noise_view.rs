@@ -12,12 +12,12 @@ use ui_views::{AddLabel, DrawingView, ImageView, IntView};
 #[view]
 pub struct NoiseView {
     seed:           u32,
-    image_view:     SubView<ImageView>,
+    drawing_view:   SubView<DrawingView>,
     threshold_view: SubView<IntView>,
     x_view:         SubView<IntView>,
     y_view:         SubView<IntView>,
     size_view:      SubView<IntView>,
-    drawing_view:   SubView<DrawingView>,
+    image_view:     SubView<ImageView>,
 }
 
 impl NoiseView {
@@ -43,7 +43,8 @@ impl NoiseView {
 
 impl ViewSetup for NoiseView {
     fn setup(mut self: Weak<Self>) {
-        self.image_view.place.back();
+        self.drawing_view.place.back();
+        self.drawing_view.set_color(Color::WHITE);
 
         self.enable_touch_low_priority();
         self.touch.up_inside.sub(move || self.update_image());
@@ -88,8 +89,7 @@ impl ViewSetup for NoiseView {
             .on_change(update_image);
         self.size_view.place.size(40, 150).b(10).anchor(Anchor::Left, self.y_view, 10);
 
-        self.drawing_view.place.size(200, 200).br(0);
-        self.drawing_view.set_color(Color::WHITE);
+        self.image_view.place.size(400, 400).br(0);
 
         self.update_image();
     }
