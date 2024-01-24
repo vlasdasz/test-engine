@@ -15,4 +15,5 @@ log = "0.4"
 wgpu = "0.18"
 winit = "0.28"
 
+image = { workspace = true }
 tokio = { workspace = true }
