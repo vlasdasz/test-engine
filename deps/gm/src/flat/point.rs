@@ -16,6 +16,7 @@ pub enum Direction {
     Right,
 }
 
+#[repr(C)]
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PointBase<T> {
     pub x: T,

@@ -1,9 +1,9 @@
 mod state;
 pub mod texture;
-
-use std::sync::Arc;
+use std::{mem::size_of, sync::Arc};
 
 use anyhow::Result;
+use gm::flat::Point;
 use winit::{
     event::*,
     event_loop::EventLoop,
@@ -22,24 +22,32 @@ struct Vertex {
     tex_coords: [f32; 2], // NEW!
 }
 
-impl Vertex {
-    fn desc() -> wgpu::VertexBufferLayout<'static> {
-        use std::mem;
+pub trait VertexLayout: Sized {
+    const ATTRIBS: &'static [wgpu::VertexAttribute];
+    fn vertex_layout() -> wgpu::VertexBufferLayout<'static>;
+}
+
+impl VertexLayout for Point {
+    const ATTRIBS: &'static [wgpu::VertexAttribute] = &wgpu::vertex_attr_array![0 => Float32x2];
+
+    fn vertex_layout() -> wgpu::VertexBufferLayout<'static> {
         wgpu::VertexBufferLayout {
-            array_stride: mem::size_of::<Vertex>() as wgpu::BufferAddress,
+            array_stride: size_of::<Self>() as wgpu::BufferAddress,
             step_mode:    wgpu::VertexStepMode::Vertex,
-            attributes:   &[
-                wgpu::VertexAttribute {
-                    offset:          0,
-                    shader_location: 0,
-                    format:          wgpu::VertexFormat::Float32x3,
-                },
-                wgpu::VertexAttribute {
-                    offset:          mem::size_of::<[f32; 3]>() as wgpu::BufferAddress,
-                    shader_location: 1,
-                    format:          wgpu::VertexFormat::Float32x2, // NEW!
-                },
-            ],
+            attributes:   Self::ATTRIBS,
+        }
+    }
+}
+
+impl Vertex {
+    const ATTRIBS: &'static [wgpu::VertexAttribute] =
+        &wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x2];
+
+    fn desc() -> wgpu::VertexBufferLayout<'static> {
+        wgpu::VertexBufferLayout {
+            array_stride: size_of::<Vertex>() as wgpu::BufferAddress,
+            step_mode:    wgpu::VertexStepMode::Vertex,
+            attributes:   Self::ATTRIBS,
         }
     }
 }
