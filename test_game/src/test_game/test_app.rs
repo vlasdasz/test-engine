@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use log::trace;
-use rtools::{init_log, LogBuilder};
 use test_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, App};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
@@ -17,7 +16,6 @@ pub struct TestApp {
 impl App for TestApp {
     fn setup() {
         enable_ref_stats_counter(true);
-        init_log(LogBuilder::builder().level(3).build());
         trace!("TestApp setup: OK");
     }
 

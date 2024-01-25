@@ -9,8 +9,8 @@ crate-type = ["rlib", "staticlib"]
 name = "gl_image"
 
 [dependencies]
-image = { workspace = true }
 anyhow = { workspace = true }
+image = { workspace = true }
 
 log = { workspace = true }
 manage = { workspace = true }

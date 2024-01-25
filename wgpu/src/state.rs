@@ -1,11 +1,13 @@
 // lib.rs
+use std::sync::Arc;
+
 use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
 
 use crate::{texture::Texture, Vertex, INDICES, VERTICES};
 
 pub struct State {
-    surface: wgpu::Surface,
+    surface: wgpu::Surface<'static>,
     device:  wgpu::Device,
     queue:   wgpu::Queue,
     config:  wgpu::SurfaceConfiguration,
@@ -22,16 +24,11 @@ pub struct State {
     pub size: winit::dpi::PhysicalSize<u32>,
 
     _diffuse_texture: Texture, // NEW
-
-    // The window must be declared after the surface so
-    // it gets dropped after it as the surface contains
-    // unsafe references to the window's resources.
-    window: Window,
 }
 
 impl State {
     // Creating some of the wgpu types requires async code
-    pub async fn new(window: Window) -> Self {
+    pub async fn new(window: Arc<Window>) -> Self {
         let size = window.inner_size();
 
         // The instance is a handle to our GPU
@@ -45,7 +42,7 @@ impl State {
         //
         // The surface needs to live as long as the window that created it.
         // State owns the window, so this should be safe.
-        let surface = unsafe { instance.create_surface(&window) }.unwrap();
+        let surface = instance.create_surface(window.clone()).unwrap();
 
         let _adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -58,6 +55,7 @@ impl State {
 
         let adapter = instance
             .enumerate_adapters(wgpu::Backends::all())
+            .into_iter()
             .filter(|adapter| {
                 // Check if this adapter supports our surface
                 adapter.is_surface_supported(&surface)
@@ -68,15 +66,15 @@ impl State {
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
-                    features: wgpu::Features::empty(),
+                    required_features: wgpu::Features::empty(),
                     // WebGL doesn't support all of wgpu's features, so if
                     // we're building for the web, we'll have to disable some.
-                    limits:   if cfg!(target_arch = "wasm32") {
+                    required_limits:   if cfg!(target_arch = "wasm32") {
                         wgpu::Limits::downlevel_webgl2_defaults()
                     } else {
                         wgpu::Limits::default()
                     },
-                    label:    None,
+                    label:             None,
                 },
                 None, // Trace path
             )
@@ -105,6 +103,8 @@ impl State {
             present_mode: surface_caps.present_modes[0],
             alpha_mode:   surface_caps.alpha_modes[0],
             view_formats: vec![],
+
+            desired_maximum_frame_latency: 2,
         };
         surface.configure(&device, &config);
 
@@ -217,7 +217,6 @@ impl State {
         let num_indices = INDICES.len() as u32;
 
         Self {
-            window,
             surface,
             device,
             queue,
@@ -230,10 +229,6 @@ impl State {
             diffuse_bind_group,
             _diffuse_texture: diffuse_texture,
         }
-    }
-
-    pub fn window(&self) -> &Window {
-        &self.window
     }
 
     pub fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {

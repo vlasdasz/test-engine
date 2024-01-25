@@ -5,7 +5,6 @@ use std::{future::Future, marker::PhantomData, path::PathBuf};
 use anyhow::Result;
 use gl_wrapper::system_events::SystemEvents;
 use gm::flat::IntSize;
-use rtools::{init_log, LogBuilder};
 use tokio::spawn;
 use ui::{
     refs::{set_current_thread_as_main, Own},
@@ -43,7 +42,6 @@ impl<T: View + Default + 'static> ViewApp<T> {
 impl<T: View + Default + 'static> App for ViewApp<T> {
     fn setup()
     where Self: Sized {
-        init_log(LogBuilder::builder().location(false).build());
     }
 
     fn screen_size() -> IntSize
