@@ -1,5 +1,3 @@
-use std::cell::RefCell;
-
 use gm::{
     flat::{Point, Rect},
     Color,

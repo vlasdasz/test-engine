@@ -5,7 +5,7 @@ use std::{
     ops::Deref,
 };
 
-use gl_image::{draw_image, Image, ImageShaders};
+use gl_image::{draw_image, Image};
 use gl_wrapper::{
     buffers::Buffers,
     path_data::{initialize_path_data, DrawMode, PathData},

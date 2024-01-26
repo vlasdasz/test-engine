@@ -21,7 +21,10 @@ impl State {
     pub async fn new(window: Arc<Window>) -> Result<Self> {
         let size = window.inner_size();
 
-        let instance = wgpu::Instance::default();
+        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::all(),
+            ..Default::default()
+        });
 
         let surface = instance.create_surface(window.clone())?;
 
@@ -50,6 +53,8 @@ impl State {
 
         let surface_caps = surface.get_capabilities(&adapter);
 
+        dbg!(&surface_caps);
+
         // Shader code in this tutorial assumes an sRGB surface texture. Using a
         // different one will result in all the colors coming out darker. If you
         // want to support non sRGB surfaces, you'll need to account for that
@@ -68,7 +73,7 @@ impl State {
             width:        size.width,
             height:       size.height,
             present_mode: PresentMode::AutoVsync,
-            alpha_mode:   CompositeAlphaMode::PostMultiplied,
+            alpha_mode:   CompositeAlphaMode::Auto,
             view_formats: vec![],
 
             desired_maximum_frame_latency: 2,
