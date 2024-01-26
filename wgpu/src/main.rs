@@ -6,6 +6,7 @@ mod image_state;
 mod rect_state;
 mod state;
 pub mod texture;
+mod utils;
 
 use std::{mem::size_of, sync::Arc};
 

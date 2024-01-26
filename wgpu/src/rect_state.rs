@@ -1,7 +1,7 @@
 use gm::{flat::Point, Color};
 use wgpu::util::DeviceExt;
 
-use crate::VertexLayout;
+use crate::utils::make_pipeline;
 
 pub struct RectState {
     pub render_pipeline: wgpu::RenderPipeline,
@@ -15,6 +15,7 @@ impl RectState {
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/rect.wgsl"));
 
         let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label:   Some("rect_bind_group_layout"),
             entries: &[wgpu::BindGroupLayoutEntry {
                 binding:    0,
                 visibility: wgpu::ShaderStages::FRAGMENT,
@@ -25,7 +26,6 @@ impl RectState {
                 },
                 count:      None,
             }],
-            label:   Some("rect_bind_group_layout"),
         });
 
         let color_uniform_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
@@ -47,48 +47,19 @@ impl RectState {
             }],
         });
 
-        let render_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                Some("Rect Pipeline Layout"),
             bind_group_layouts:   &[&bind_group_layout],
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-            label:         Some("Rect Render Pipeline"),
-            layout:        Some(&render_pipeline_layout),
-            vertex:        wgpu::VertexState {
-                module:      &shader,
-                entry_point: "v_main",                  // 1.
-                buffers:     &[Point::vertex_layout()], // 2.
-            },
-            fragment:      Some(wgpu::FragmentState {
-                // 3.
-                module:      &shader,
-                entry_point: "f_main",
-                targets:     &[Some(wgpu::ColorTargetState {
-                    // 4.
-                    format:     texture_format,
-                    blend:      Some(wgpu::BlendState::REPLACE),
-                    write_mask: wgpu::ColorWrites::ALL,
-                })],
-            }),
-            primitive:     wgpu::PrimitiveState {
-                topology:           wgpu::PrimitiveTopology::TriangleStrip,
-                strip_index_format: None,
-                front_face:         wgpu::FrontFace::Ccw,
-                cull_mode:          Some(wgpu::Face::Back),
-                polygon_mode:       wgpu::PolygonMode::Fill,
-                unclipped_depth:    false,
-                conservative:       false,
-            },
-            depth_stencil: None,
-            multisample:   wgpu::MultisampleState {
-                count:                     1,
-                mask:                      !0,
-                alpha_to_coverage_enabled: false,
-            },
-            multiview:     None,
-        });
+        let render_pipeline = make_pipeline::<Point>(
+            "Rect Render Pipeline",
+            &device,
+            &pipeline_layout,
+            &shader,
+            texture_format,
+        );
 
         const RECT_VERTICES: &[Point] = &[
             Point::new(-1.0, 1.0),
