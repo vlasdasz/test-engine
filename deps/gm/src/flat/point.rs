@@ -3,6 +3,7 @@ use std::{
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign},
 };
 
+use bytemuck::{Pod, Zeroable};
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
@@ -24,12 +25,15 @@ pub struct PointBase<T> {
 }
 
 impl<T> PointBase<T> {
-    pub fn new(x: T, y: T) -> Self {
+    pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 }
 
 pub type Point = PointBase<f32>;
+
+unsafe impl Zeroable for Point {}
+unsafe impl Pod for Point {}
 
 impl Point {
     pub fn angle(&self) -> f32 {

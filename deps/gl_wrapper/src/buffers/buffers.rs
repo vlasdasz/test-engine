@@ -8,10 +8,10 @@ use crate::{Buffer, BufferConfig};
 
 const RECT: Rect = Rect::from_vals([-1.0, -1.0, 2.0, 2.0]);
 
-const RECT_INDICES: &[u16; 4] = &[0, 1, 3, 2];
+pub const RECT_INDICES: &[u16; 4] = &[0, 1, 3, 2];
 const INDICES: &[u16; 4] = &[0, 1, 2, 3];
 
-const FULLSCREEN_VERT: &[f32; 8] = &[
+pub const FULLSCREEN_VERT: &[f32; 8] = &[
     RECT.origin.x,
     RECT.origin.y,
     RECT.origin.x,

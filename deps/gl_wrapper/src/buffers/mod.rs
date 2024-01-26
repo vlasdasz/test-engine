@@ -3,7 +3,7 @@ mod buffer_config;
 mod buffers;
 mod frame_buffer;
 
-pub use buffer::Buffer;
-pub use buffer_config::BufferConfig;
-pub use buffers::Buffers;
-pub use frame_buffer::FrameBuffer;
+pub use buffer::*;
+pub use buffer_config::*;
+pub use buffers::*;
+pub use frame_buffer::*;

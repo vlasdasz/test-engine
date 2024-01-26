@@ -1,14 +1,20 @@
 use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
+use gl_wrapper::buffers::{FULLSCREEN_VERT, RECT_INDICES};
+use gm::flat::Point;
 use wgpu::{util::DeviceExt, CompositeAlphaMode, PresentMode};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{texture::Texture, Vertex, INDICES, VERTICES};
+use crate::{texture::Texture, Vertex, VertexLayout, INDICES, VERTICES};
 
 struct RectState {
+    shader:          wgpu::ShaderModule,
     render_pipeline: wgpu::RenderPipeline,
     vertex_buffer:   wgpu::Buffer,
+    num_vertices:    u32,
+    index_buffer:    wgpu::Buffer,
+    num_indices:     u32,
 }
 
 pub struct State {
@@ -29,9 +35,87 @@ pub struct State {
     pub size: winit::dpi::PhysicalSize<u32>,
 
     _diffuse_texture: Texture,
+
+    rect_state: RectState,
 }
 
 impl State {
+    pub async fn make_rect_state(device: &wgpu::Device, texture_format: wgpu::TextureFormat) -> RectState {
+        let shader = device.create_shader_module(wgpu::include_wgsl!("rect.wgsl"));
+
+        let render_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label:                Some("Rect Pipeline Layout"),
+            bind_group_layouts:   &[],
+            push_constant_ranges: &[],
+        });
+
+        let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label:         Some("Rect Render Pipeline"),
+            layout:        Some(&render_pipeline_layout),
+            vertex:        wgpu::VertexState {
+                module:      &shader,
+                entry_point: "v_main",                  // 1.
+                buffers:     &[Point::vertex_layout()], // 2.
+            },
+            fragment:      Some(wgpu::FragmentState {
+                // 3.
+                module:      &shader,
+                entry_point: "f_main",
+                targets:     &[Some(wgpu::ColorTargetState {
+                    // 4.
+                    format:     texture_format,
+                    blend:      Some(wgpu::BlendState::REPLACE),
+                    write_mask: wgpu::ColorWrites::ALL,
+                })],
+            }),
+            primitive:     wgpu::PrimitiveState {
+                topology:           wgpu::PrimitiveTopology::TriangleList,
+                strip_index_format: None,
+                front_face:         wgpu::FrontFace::Ccw,
+                cull_mode:          Some(wgpu::Face::Back),
+                polygon_mode:       wgpu::PolygonMode::Fill,
+                unclipped_depth:    false,
+                conservative:       false,
+            },
+            depth_stencil: None,
+            multisample:   wgpu::MultisampleState {
+                count:                     1,
+                mask:                      !0,
+                alpha_to_coverage_enabled: false,
+            },
+            multiview:     None,
+        });
+
+        const VERTICES: &[Point] = &[
+            Point::new(0.0, 0.5),
+            Point::new(-0.5, -0.5),
+            Point::new(0.5, -0.5),
+        ];
+
+        let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label:    Some("Rect Vertex Buffer"),
+            contents: bytemuck::cast_slice(VERTICES),
+            usage:    wgpu::BufferUsages::VERTEX,
+        });
+        let num_vertices = VERTICES.len() as u32;
+
+        let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label:    Some("Rect Index Buffer"),
+            contents: bytemuck::cast_slice(RECT_INDICES),
+            usage:    wgpu::BufferUsages::INDEX,
+        });
+        let num_indices = RECT_INDICES.len() as u32;
+
+        RectState {
+            shader,
+            render_pipeline,
+            vertex_buffer,
+            index_buffer,
+            num_indices,
+            num_vertices,
+        }
+    }
+
     pub async fn new(window: Arc<Window>) -> Result<Self> {
         let size = window.inner_size();
 
@@ -135,23 +219,23 @@ impl State {
         });
 
         let render_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-            label:                Some("Render Pipeline Layout"),
+            label:                Some("Image Render Pipeline Layout"),
             bind_group_layouts:   &[&texture_bind_group_layout], // NEW!
             push_constant_ranges: &[],
         });
 
         let render_pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-            label:         Some("Render Pipeline"),
+            label:         Some("Image Render Pipeline"),
             layout:        Some(&render_pipeline_layout),
             vertex:        wgpu::VertexState {
                 module:      &shader,
-                entry_point: "vs_main",         // 1.
+                entry_point: "v_main",          // 1.
                 buffers:     &[Vertex::desc()], // 2.
             },
             fragment:      Some(wgpu::FragmentState {
                 // 3.
                 module:      &shader,
-                entry_point: "fs_main",
+                entry_point: "f_main",
                 targets:     &[Some(wgpu::ColorTargetState {
                     // 4.
                     format:     config.format,
@@ -181,17 +265,19 @@ impl State {
         });
 
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label:    Some("Vertex Buffer"),
+            label:    Some("Image Vertex Buffer"),
             contents: bytemuck::cast_slice(VERTICES),
             usage:    wgpu::BufferUsages::VERTEX,
         });
 
         let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label:    Some("Index Buffer"),
+            label:    Some("Image Index Buffer"),
             contents: bytemuck::cast_slice(INDICES),
             usage:    wgpu::BufferUsages::INDEX,
         });
         let num_indices = INDICES.len() as u32;
+
+        let rect_state = Self::make_rect_state(&device, config.format).await;
 
         Ok(Self {
             surface,
@@ -205,6 +291,7 @@ impl State {
             num_indices,
             diffuse_bind_group,
             _diffuse_texture: diffuse_texture,
+            rect_state,
         })
     }
 
@@ -256,6 +343,13 @@ impl State {
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
 
             render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
+
+            render_pass.set_pipeline(&self.rect_state.render_pipeline);
+            render_pass.set_vertex_buffer(0, self.rect_state.vertex_buffer.slice(..));
+            render_pass.set_index_buffer(self.rect_state.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+            render_pass.draw(0..self.rect_state.num_vertices, 0..1);
+            // render_pass.draw_indexed(0..self.rect_state.num_indices, 0,
+            // 0..1);
         }
 
         // submit will accept anything that implements IntoIter

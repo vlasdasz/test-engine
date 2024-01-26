@@ -5,6 +5,7 @@ use std::{
     ops::{Div, Mul},
 };
 
+use bytemuck::{Pod, Zeroable};
 use rtools::{IntoF32, Random};
 use serde::{Deserialize, Serialize};
 
@@ -21,6 +22,9 @@ pub struct SizeBase<T> {
 
 pub type Size = SizeBase<f32>;
 pub type IntSize = SizeBase<u32>;
+
+unsafe impl Zeroable for Size {}
+unsafe impl Pod for Size {}
 
 impl<T> SizeBase<T> {
     pub fn new(width: T, height: T) -> Self {

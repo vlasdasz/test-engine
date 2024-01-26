@@ -1,3 +1,6 @@
+#![feature(const_trait_impl)]
+#![feature(effects)]
+
 // mod rect_state;
 mod state;
 pub mod texture;
