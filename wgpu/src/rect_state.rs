@@ -1,18 +1,11 @@
-use std::sync::Arc;
-
-use anyhow::{anyhow, Result};
-use wgpu::{util::DeviceExt, CompositeAlphaMode, PresentMode};
+// lib.rs
+use wgpu::util::DeviceExt;
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{texture::Texture, Vertex, INDICES, VERTICES};
-
-struct RectState {
-    render_pipeline: wgpu::RenderPipeline,
-    vertex_buffer:   wgpu::Buffer,
-}
+use crate::{Vertex, VERTICES};
 
 pub struct State {
-    surface: wgpu::Surface<'static>,
+    surface: wgpu::Surface,
     device:  wgpu::Device,
     queue:   wgpu::Queue,
     config:  wgpu::SurfaceConfiguration,
@@ -20,47 +13,60 @@ pub struct State {
     render_pipeline: wgpu::RenderPipeline,
 
     vertex_buffer: wgpu::Buffer,
-
-    index_buffer: wgpu::Buffer,
-    num_indices:  u32,
-
-    diffuse_bind_group: wgpu::BindGroup,
+    num_vertices:  u32,
 
     pub size: winit::dpi::PhysicalSize<u32>,
 
-    _diffuse_texture: Texture,
+    // The window must be declared after the surface so
+    // it gets dropped after it as the surface contains
+    // unsafe references to the window's resources.
+    window: Window,
 }
 
 impl State {
-    pub async fn new(window: Arc<Window>) -> Result<Self> {
+    // Creating some of the wgpu types requires async code
+    pub async fn new(window: Window) -> Self {
         let size = window.inner_size();
 
-        let instance = wgpu::Instance::default();
+        // The instance is a handle to our GPU
+        // Backends::all => Vulkan + Metal + DX12 + Browser WebGPU
+        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::all(),
+            ..Default::default()
+        });
 
-        let surface = instance.create_surface(window.clone())?;
+        // # Safety
+        //
+        // The surface needs to live as long as the window that created it.
+        // State owns the window, so this should be safe.
+        let surface = unsafe { instance.create_surface(&window) }.unwrap();
 
         let adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                compatible_surface: Some(&surface),
-                ..Default::default()
+            .enumerate_adapters(wgpu::Backends::all())
+            .filter(|adapter| {
+                // Check if this adapter supports our surface
+                adapter.is_surface_supported(&surface)
             })
-            .await
-            .ok_or(anyhow!("Failed to request adapter"))?;
+            .next()
+            .unwrap();
 
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
-                    required_features: wgpu::Features::empty(),
-                    required_limits:   if cfg!(target_arch = "wasm32") {
+                    features: wgpu::Features::empty(),
+                    // WebGL doesn't support all of wgpu's features, so if
+                    // we're building for the web, we'll have to disable some.
+                    limits:   if cfg!(target_arch = "wasm32") {
                         wgpu::Limits::downlevel_webgl2_defaults()
                     } else {
                         wgpu::Limits::default()
                     },
-                    label:             None,
+                    label:    None,
                 },
-                None,
+                None, // Trace path
             )
-            .await?;
+            .await
+            .unwrap();
 
         let surface_caps = surface.get_capabilities(&adapter);
 
@@ -81,62 +87,19 @@ impl State {
             format:       surface_format,
             width:        size.width,
             height:       size.height,
-            present_mode: PresentMode::AutoVsync,
-            alpha_mode:   CompositeAlphaMode::PostMultiplied,
+            present_mode: surface_caps.present_modes[0],
+            alpha_mode:   surface_caps.alpha_modes[0],
             view_formats: vec![],
-
-            desired_maximum_frame_latency: 2,
         };
-
         surface.configure(&device, &config);
+
+        let _modes = &surface_caps.present_modes;
 
         let shader = device.create_shader_module(wgpu::include_wgsl!("shader.wgsl"));
 
-        let texture_bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            entries: &[
-                wgpu::BindGroupLayoutEntry {
-                    binding:    0,
-                    visibility: wgpu::ShaderStages::FRAGMENT,
-                    ty:         wgpu::BindingType::Texture {
-                        multisampled:   false,
-                        view_dimension: wgpu::TextureViewDimension::D2,
-                        sample_type:    wgpu::TextureSampleType::Float { filterable: true },
-                    },
-                    count:      None,
-                },
-                wgpu::BindGroupLayoutEntry {
-                    binding:    1,
-                    visibility: wgpu::ShaderStages::FRAGMENT,
-                    // This should match the filterable field of the
-                    // corresponding Texture entry above.
-                    ty:         wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                    count:      None,
-                },
-            ],
-            label:   Some("texture_bind_group_layout"),
-        });
-
-        let diffuse_bytes = include_bytes!("../../Assets/Images/happy-tree.png");
-        let diffuse_texture = Texture::from_bytes(&device, &queue, diffuse_bytes, "happy-tree.png")?;
-
-        let diffuse_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout:  &texture_bind_group_layout,
-            entries: &[
-                wgpu::BindGroupEntry {
-                    binding:  0,
-                    resource: wgpu::BindingResource::TextureView(&diffuse_texture.view), // CHANGED!
-                },
-                wgpu::BindGroupEntry {
-                    binding:  1,
-                    resource: wgpu::BindingResource::Sampler(&diffuse_texture.sampler), // CHANGED!
-                },
-            ],
-            label:   Some("diffuse_bind_group"),
-        });
-
         let render_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                Some("Render Pipeline Layout"),
-            bind_group_layouts:   &[&texture_bind_group_layout], // NEW!
+            bind_group_layouts:   &[],
             push_constant_ranges: &[],
         });
 
@@ -180,20 +143,17 @@ impl State {
             multiview:     None, // 5.
         });
 
+        // new()
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label:    Some("Vertex Buffer"),
             contents: bytemuck::cast_slice(VERTICES),
             usage:    wgpu::BufferUsages::VERTEX,
         });
 
-        let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label:    Some("Index Buffer"),
-            contents: bytemuck::cast_slice(INDICES),
-            usage:    wgpu::BufferUsages::INDEX,
-        });
-        let num_indices = INDICES.len() as u32;
+        let num_vertices = VERTICES.len() as u32;
 
-        Ok(Self {
+        Self {
+            window,
             surface,
             device,
             queue,
@@ -201,11 +161,12 @@ impl State {
             size,
             render_pipeline,
             vertex_buffer,
-            index_buffer,
-            num_indices,
-            diffuse_bind_group,
-            _diffuse_texture: diffuse_texture,
-        })
+            num_vertices,
+        }
+    }
+
+    pub fn window(&self) -> &Window {
+        &self.window
     }
 
     pub fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {
@@ -224,8 +185,8 @@ impl State {
     pub fn update(&mut self) {}
 
     pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
-        let surface_texture = self.surface.get_current_texture()?;
-        let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
+        let output = self.surface.get_current_texture()?;
+        let view = output.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
         });
@@ -250,17 +211,14 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            render_pass.set_pipeline(&self.render_pipeline);
-            render_pass.set_bind_group(0, &self.diffuse_bind_group, &[]);
+            render_pass.set_pipeline(&self.render_pipeline); // 2.
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-            render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-
-            render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
+            render_pass.draw(0..self.num_vertices, 0..1);
         }
 
         // submit will accept anything that implements IntoIter
         self.queue.submit(std::iter::once(encoder.finish()));
-        surface_texture.present();
+        output.present();
 
         Ok(())
     }

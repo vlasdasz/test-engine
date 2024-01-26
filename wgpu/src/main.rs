@@ -1,5 +1,7 @@
+// mod rect_state;
 mod state;
 pub mod texture;
+
 use std::{mem::size_of, sync::Arc};
 
 use anyhow::Result;
