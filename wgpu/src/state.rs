@@ -1,7 +1,7 @@
-// lib.rs
 use std::sync::Arc;
 
-use wgpu::util::DeviceExt;
+use anyhow::{anyhow, Result};
+use wgpu::{util::DeviceExt, CompositeAlphaMode, PresentMode};
 use winit::{event::WindowEvent, window::Window};
 
 use crate::{texture::Texture, Vertex, INDICES, VERTICES};
@@ -19,56 +19,33 @@ pub struct State {
     index_buffer: wgpu::Buffer,
     num_indices:  u32,
 
-    diffuse_bind_group: wgpu::BindGroup, // NEW!
+    diffuse_bind_group: wgpu::BindGroup,
 
     pub size: winit::dpi::PhysicalSize<u32>,
 
-    _diffuse_texture: Texture, // NEW
+    _diffuse_texture: Texture,
 }
 
 impl State {
-    // Creating some of the wgpu types requires async code
-    pub async fn new(window: Arc<Window>) -> Self {
+    pub async fn new(window: Arc<Window>) -> Result<Self> {
         let size = window.inner_size();
 
-        // The instance is a handle to our GPU
-        // Backends::all => Vulkan + Metal + DX12 + Browser WebGPU
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
-            ..Default::default()
-        });
+        let instance = wgpu::Instance::default();
 
-        // # Safety
-        //
-        // The surface needs to live as long as the window that created it.
-        // State owns the window, so this should be safe.
-        let surface = instance.create_surface(window.clone()).unwrap();
-
-        let _adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                power_preference:       wgpu::PowerPreference::default(),
-                compatible_surface:     Some(&surface),
-                force_fallback_adapter: false,
-            })
-            .await
-            .unwrap();
+        let surface = instance.create_surface(window.clone())?;
 
         let adapter = instance
-            .enumerate_adapters(wgpu::Backends::all())
-            .into_iter()
-            .filter(|adapter| {
-                // Check if this adapter supports our surface
-                adapter.is_surface_supported(&surface)
+            .request_adapter(&wgpu::RequestAdapterOptions {
+                compatible_surface: Some(&surface),
+                ..Default::default()
             })
-            .next()
-            .unwrap();
+            .await
+            .ok_or(anyhow!("Failed to request adapter"))?;
 
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
                     required_features: wgpu::Features::empty(),
-                    // WebGL doesn't support all of wgpu's features, so if
-                    // we're building for the web, we'll have to disable some.
                     required_limits:   if cfg!(target_arch = "wasm32") {
                         wgpu::Limits::downlevel_webgl2_defaults()
                     } else {
@@ -76,10 +53,9 @@ impl State {
                     },
                     label:             None,
                 },
-                None, // Trace path
+                None,
             )
-            .await
-            .unwrap();
+            .await?;
 
         let surface_caps = surface.get_capabilities(&adapter);
 
@@ -100,15 +76,14 @@ impl State {
             format:       surface_format,
             width:        size.width,
             height:       size.height,
-            present_mode: surface_caps.present_modes[0],
-            alpha_mode:   surface_caps.alpha_modes[0],
+            present_mode: PresentMode::AutoVsync,
+            alpha_mode:   CompositeAlphaMode::PostMultiplied,
             view_formats: vec![],
 
             desired_maximum_frame_latency: 2,
         };
-        surface.configure(&device, &config);
 
-        let _modes = &surface_caps.present_modes;
+        surface.configure(&device, &config);
 
         let shader = device.create_shader_module(wgpu::include_wgsl!("shader.wgsl"));
 
@@ -136,11 +111,8 @@ impl State {
             label:   Some("texture_bind_group_layout"),
         });
 
-        surface.configure(&device, &config);
         let diffuse_bytes = include_bytes!("../../Assets/Images/happy-tree.png");
-        let diffuse_texture = Texture::from_bytes(&device, &queue, diffuse_bytes, "happy-tree.png").unwrap();
-
-        // Everything up until `let texture_bind_group_layout = ...` can now be removed.
+        let diffuse_texture = Texture::from_bytes(&device, &queue, diffuse_bytes, "happy-tree.png")?;
 
         let diffuse_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             layout:  &texture_bind_group_layout,
@@ -216,7 +188,7 @@ impl State {
         });
         let num_indices = INDICES.len() as u32;
 
-        Self {
+        Ok(Self {
             surface,
             device,
             queue,
@@ -228,7 +200,7 @@ impl State {
             num_indices,
             diffuse_bind_group,
             _diffuse_texture: diffuse_texture,
-        }
+        })
     }
 
     pub fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {

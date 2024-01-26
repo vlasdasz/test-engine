@@ -84,7 +84,7 @@ async fn main() -> Result<()> {
     let event_loop = EventLoop::new()?;
     let window = Arc::new(WindowBuilder::new().build(&event_loop).unwrap());
 
-    let mut state = State::new(window.clone()).await;
+    let mut state = State::new(window.clone()).await?;
 
     event_loop.run(move |event, elwt| match event {
         Event::WindowEvent { ref event, window_id } if window_id == window.id() => match event {
