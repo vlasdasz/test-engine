@@ -10,6 +10,7 @@ name = "gl_wrapper"
 
 [dependencies]
 anyhow = { workspace = true }
+bytemuck = { workspace = true }
 log = { workspace = true }
 smart-default = { workspace = true }
 

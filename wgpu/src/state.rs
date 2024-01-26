@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
-use gl_wrapper::buffers::{FULLSCREEN_VERT, RECT_INDICES};
 use gm::flat::Point;
 use wgpu::{util::DeviceExt, CompositeAlphaMode, PresentMode};
 use winit::{event::WindowEvent, window::Window};
@@ -9,12 +8,9 @@ use winit::{event::WindowEvent, window::Window};
 use crate::{texture::Texture, Vertex, VertexLayout, INDICES, VERTICES};
 
 struct RectState {
-    shader:          wgpu::ShaderModule,
     render_pipeline: wgpu::RenderPipeline,
     vertex_buffer:   wgpu::Buffer,
     num_vertices:    u32,
-    index_buffer:    wgpu::Buffer,
-    num_indices:     u32,
 }
 
 pub struct State {
@@ -40,7 +36,7 @@ pub struct State {
 }
 
 impl State {
-    pub async fn make_rect_state(device: &wgpu::Device, texture_format: wgpu::TextureFormat) -> RectState {
+    async fn make_rect_state(device: &wgpu::Device, texture_format: wgpu::TextureFormat) -> RectState {
         let shader = device.create_shader_module(wgpu::include_wgsl!("rect.wgsl"));
 
         let render_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -69,7 +65,7 @@ impl State {
                 })],
             }),
             primitive:     wgpu::PrimitiveState {
-                topology:           wgpu::PrimitiveTopology::TriangleList,
+                topology:           wgpu::PrimitiveTopology::TriangleStrip,
                 strip_index_format: None,
                 front_face:         wgpu::FrontFace::Ccw,
                 cull_mode:          Some(wgpu::Face::Back),
@@ -86,33 +82,23 @@ impl State {
             multiview:     None,
         });
 
-        const VERTICES: &[Point] = &[
-            Point::new(0.0, 0.5),
-            Point::new(-0.5, -0.5),
-            Point::new(0.5, -0.5),
+        const RECT_VERTICES: &[Point] = &[
+            Point::new(-1.0, 1.0),
+            Point::new(-1.0, -1.0),
+            Point::new(1.0, 1.0),
+            Point::new(1.0, -1.0),
         ];
 
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label:    Some("Rect Vertex Buffer"),
-            contents: bytemuck::cast_slice(VERTICES),
+            contents: bytemuck::cast_slice(RECT_VERTICES),
             usage:    wgpu::BufferUsages::VERTEX,
         });
-        let num_vertices = VERTICES.len() as u32;
-
-        let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label:    Some("Rect Index Buffer"),
-            contents: bytemuck::cast_slice(RECT_INDICES),
-            usage:    wgpu::BufferUsages::INDEX,
-        });
-        let num_indices = RECT_INDICES.len() as u32;
 
         RectState {
-            shader,
             render_pipeline,
             vertex_buffer,
-            index_buffer,
-            num_indices,
-            num_vertices,
+            num_vertices: RECT_VERTICES.len() as u32,
         }
     }
 
@@ -134,7 +120,7 @@ impl State {
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
-                    required_features: wgpu::Features::empty(),
+                    required_features: wgpu::Features::POLYGON_MODE_LINE,
                     required_limits:   if cfg!(target_arch = "wasm32") {
                         wgpu::Limits::downlevel_webgl2_defaults()
                     } else {
@@ -336,7 +322,6 @@ impl State {
                 occlusion_query_set:      None,
                 timestamp_writes:         None,
             });
-
             render_pass.set_pipeline(&self.render_pipeline);
             render_pass.set_bind_group(0, &self.diffuse_bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
@@ -344,12 +329,10 @@ impl State {
 
             render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
 
+            render_pass.set_viewport(200.0, 200.0, 200.0, 200.0, 0.0, 1.0);
             render_pass.set_pipeline(&self.rect_state.render_pipeline);
             render_pass.set_vertex_buffer(0, self.rect_state.vertex_buffer.slice(..));
-            render_pass.set_index_buffer(self.rect_state.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
             render_pass.draw(0..self.rect_state.num_vertices, 0..1);
-            // render_pass.draw_indexed(0..self.rect_state.num_indices, 0,
-            // 0..1);
         }
 
         // submit will accept anything that implements IntoIter
