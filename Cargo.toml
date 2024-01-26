@@ -1,7 +1,7 @@
 [workspace]
 
 default-members = ["test_game"]
-members = ["test_game", "ui_test", "ui_benchmark", "noise", "wgpu"]
+members = ["test_game", "ui_test", "ui_benchmark", "noise", "wgpu_test"]
 
 resolver = "2"
 

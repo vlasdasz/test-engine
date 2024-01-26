@@ -1,10 +1,10 @@
 [package]
 edition = "2021"
-name = "wgpu"
+name = "wgpu_test"
 version = "0.1.0"
 
 [[bin]]
-name = "wgpu"
+name = "wgpu_test"
 path = "src/main.rs"
 
 
