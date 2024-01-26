@@ -2,13 +2,15 @@
 #![feature(effects)]
 
 // mod rect_state;
+mod image_state;
+mod rect_state;
 mod state;
 pub mod texture;
 
 use std::{mem::size_of, sync::Arc};
 
 use anyhow::Result;
-use gm::flat::Point;
+use gm::{flat::Point, volume::UIVertex};
 use winit::{
     event::*,
     event_loop::EventLoop,
@@ -18,23 +20,8 @@ use winit::{
 
 use crate::state::State;
 
-// use crate::state::State;
-
-#[repr(C)]
-#[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
-struct Vertex {
-    position:   [f32; 3],
-    tex_coords: [f32; 2], // NEW!
-}
-
 pub trait VertexLayout: Sized {
     const ATTRIBS: &'static [wgpu::VertexAttribute];
-    fn vertex_layout() -> wgpu::VertexBufferLayout<'static>;
-}
-
-impl VertexLayout for Point {
-    const ATTRIBS: &'static [wgpu::VertexAttribute] = &wgpu::vertex_attr_array![0 => Float32x2];
-
     fn vertex_layout() -> wgpu::VertexBufferLayout<'static> {
         wgpu::VertexBufferLayout {
             array_stride: size_of::<Self>() as wgpu::BufferAddress,
@@ -44,44 +31,14 @@ impl VertexLayout for Point {
     }
 }
 
-impl Vertex {
-    const ATTRIBS: &'static [wgpu::VertexAttribute] =
-        &wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x2];
-
-    fn desc() -> wgpu::VertexBufferLayout<'static> {
-        wgpu::VertexBufferLayout {
-            array_stride: size_of::<Vertex>() as wgpu::BufferAddress,
-            step_mode:    wgpu::VertexStepMode::Vertex,
-            attributes:   Self::ATTRIBS,
-        }
-    }
+impl VertexLayout for Point {
+    const ATTRIBS: &'static [wgpu::VertexAttribute] = &wgpu::vertex_attr_array![0 => Float32x2];
 }
 
-const VERTICES: &[Vertex] = &[
-    // Changed
-    Vertex {
-        position:   [-0.0868241, 0.49240386, 0.0],
-        tex_coords: [0.4131759, 0.00759614],
-    }, // A
-    Vertex {
-        position:   [-0.49513406, 0.06958647, 0.0],
-        tex_coords: [0.0048659444, 0.43041354],
-    }, // B
-    Vertex {
-        position:   [-0.21918549, -0.44939706, 0.0],
-        tex_coords: [0.28081453, 0.949397],
-    }, // C
-    Vertex {
-        position:   [0.35966998, -0.3473291, 0.0],
-        tex_coords: [0.85967, 0.84732914],
-    }, // D
-    Vertex {
-        position:   [0.44147372, 0.2347359, 0.0],
-        tex_coords: [0.9414737, 0.2652641],
-    }, // E
-];
-
-const INDICES: &[u16] = &[0, 1, 4, 1, 2, 4, 2, 3, 4];
+impl VertexLayout for UIVertex {
+    const ATTRIBS: &'static [wgpu::VertexAttribute] =
+        &wgpu::vertex_attr_array![0 => Float32x2, 1 => Float32x2];
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {

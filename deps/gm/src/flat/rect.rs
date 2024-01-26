@@ -1,5 +1,6 @@
 use std::ops::Mul;
 
+use bytemuck::{Pod, Zeroable};
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
@@ -8,7 +9,8 @@ use crate::{
     flat::{Point, Size},
 };
 
-#[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+#[repr(C)]
+#[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize, Zeroable, Pod)]
 pub struct Rect {
     pub origin: Point,
     pub size:   Size,
