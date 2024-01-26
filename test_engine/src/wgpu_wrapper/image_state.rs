@@ -2,8 +2,9 @@ use anyhow::Result;
 use gm::{flat::Point, volume::UIVertex};
 use wgpu::util::DeviceExt;
 
-use crate::{texture::Texture, utils::make_pipeline};
+use crate::wgpu_wrapper::{texture::Texture, utils::make_pipeline};
 
+#[derive(Debug)]
 pub struct ImageState {
     pub render_pipeline: wgpu::RenderPipeline,
     pub bind_group:      wgpu::BindGroup,
@@ -41,7 +42,7 @@ impl ImageState {
             label:   Some("image_bind_group_layout"),
         });
 
-        let diffuse_bytes = include_bytes!("../../Assets/Images/happy-tree.png");
+        let diffuse_bytes = include_bytes!("../../../Assets/Images/happy-tree.png");
         let diffuse_texture = Texture::from_bytes(&device, &queue, diffuse_bytes, "happy-tree.png")?;
 
         let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {

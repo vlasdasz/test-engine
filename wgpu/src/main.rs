@@ -1,17 +1,11 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-// mod rect_state;
-mod image_state;
-mod rect_state;
 mod state;
-pub mod texture;
-mod utils;
 
-use std::{mem::size_of, sync::Arc};
+use std::sync::Arc;
 
 use anyhow::Result;
-use gm::{flat::Point, volume::UIVertex};
 use winit::{
     event::*,
     event_loop::EventLoop,
@@ -20,26 +14,6 @@ use winit::{
 };
 
 use crate::state::State;
-
-pub trait VertexLayout: Sized {
-    const ATTRIBS: &'static [wgpu::VertexAttribute];
-    fn vertex_layout() -> wgpu::VertexBufferLayout<'static> {
-        wgpu::VertexBufferLayout {
-            array_stride: size_of::<Self>() as wgpu::BufferAddress,
-            step_mode:    wgpu::VertexStepMode::Vertex,
-            attributes:   Self::ATTRIBS,
-        }
-    }
-}
-
-impl VertexLayout for Point {
-    const ATTRIBS: &'static [wgpu::VertexAttribute] = &wgpu::vertex_attr_array![0 => Float32x2];
-}
-
-impl VertexLayout for UIVertex {
-    const ATTRIBS: &'static [wgpu::VertexAttribute] =
-        &wgpu::vertex_attr_array![0 => Float32x2, 1 => Float32x2];
-}
 
 #[tokio::main]
 async fn main() -> Result<()> {

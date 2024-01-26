@@ -10,14 +10,16 @@ name = "test_engine"
 
 [dependencies]
 anyhow = { workspace = true }
+bytemuck = { workspace = true }
 chrono = { workspace = true }
 derivative = { workspace = true }
 home = { workspace = true }
+image = { workspace = true }
 log = { workspace = true }
 reflected = { workspace = true }
 smart-default = { workspace = true }
-
 tokio = { workspace = true }
+wgpu = { workspace = true }
 
 audio = { workspace = true }
 dispatch = { workspace = true }

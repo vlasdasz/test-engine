@@ -4,7 +4,7 @@ use wgpu::{
     TextureFormat, VertexState,
 };
 
-use crate::VertexLayout;
+use crate::wgpu_wrapper::vertex_layout::VertexLayout;
 
 pub fn make_pipeline<Vertex: VertexLayout>(
     label: &str,

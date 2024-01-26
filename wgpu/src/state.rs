@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
+use gm::Color;
+use test_engine::wgpu_wrapper::wgpu_drawer::WGPUDrawer;
 use wgpu::{CompositeAlphaMode, PresentMode};
 use winit::{event::WindowEvent, window::Window};
-
-use crate::{image_state::ImageState, rect_state::RectState};
 
 pub struct State {
     surface: wgpu::Surface<'static>,
@@ -12,8 +12,7 @@ pub struct State {
     queue:   wgpu::Queue,
     config:  wgpu::SurfaceConfiguration,
 
-    rect_state:  RectState,
-    image_state: ImageState,
+    drawer: WGPUDrawer,
 
     pub size: winit::dpi::PhysicalSize<u32>,
 }
@@ -77,8 +76,7 @@ impl State {
 
         surface.configure(&device, &config);
 
-        let rect_state = RectState::new(&device, config.format);
-        let image_state = ImageState::new(&device, config.format, &queue)?;
+        let drawer = WGPUDrawer::new(&device, config.format, &queue)?;
 
         Ok(Self {
             surface,
@@ -86,8 +84,7 @@ impl State {
             queue,
             config,
             size,
-            rect_state,
-            image_state,
+            drawer,
         })
     }
 
@@ -133,8 +130,21 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            self.image_state.draw(&mut render_pass);
-            self.rect_state.draw(&mut render_pass);
+            self.drawer.fill_rect(
+                &self.device,
+                &mut render_pass,
+                &(10, 10, 100, 100).into(),
+                &Color::TURQUOISE,
+                1,
+            );
+
+            self.drawer.fill_rect(
+                &self.device,
+                &mut render_pass,
+                &(100, 200, 200, 200).into(),
+                &Color::BLUE,
+                1,
+            );
         }
 
         // submit will accept anything that implements IntoIter
