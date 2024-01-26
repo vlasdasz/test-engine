@@ -39,6 +39,10 @@ impl Color {
             + (self.b - other.b).abs()
             + (self.a - other.a).abs()
     }
+
+    pub const fn as_slice(&self) -> [f32; 4] {
+        [self.r, self.g, self.b, self.a]
+    }
 }
 
 impl Color {
