@@ -29,7 +29,6 @@ pub mod sprite_view;
 mod sprites_drawer;
 mod ui_drawer;
 pub mod ui_layer;
-pub mod wgpu_wrapper;
 
 pub use app::*;
 pub use dispatch::*;

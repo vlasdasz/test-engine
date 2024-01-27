@@ -2,9 +2,10 @@ use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
 use gm::Color;
-use test_engine::wgpu_wrapper::wgpu_drawer::WGPUDrawer;
 use wgpu::{CompositeAlphaMode, PresentMode};
 use winit::{event::WindowEvent, window::Window};
+
+use crate::wgpu_drawer::WGPUDrawer;
 
 pub struct State {
     surface: wgpu::Surface<'static>,
@@ -134,6 +135,8 @@ impl State {
                 occlusion_query_set:      None,
                 timestamp_writes:         None,
             });
+
+            self.drawer.image_state.draw(&mut render_pass);
 
             self.drawer.fill_rect(
                 &self.device,

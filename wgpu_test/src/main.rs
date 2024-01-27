@@ -1,25 +1,28 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-mod state;
-
 use std::sync::Arc;
 
 use anyhow::Result;
+use wgpu_wrapper::state::State;
 use winit::{
+    dpi::PhysicalSize,
     event::*,
     event_loop::EventLoop,
     keyboard::{KeyCode, PhysicalKey},
     window::WindowBuilder,
 };
 
-use crate::state::State;
-
 #[tokio::main]
 async fn main() -> Result<()> {
     env_logger::init();
     let event_loop = EventLoop::new()?;
-    let window = Arc::new(WindowBuilder::new().build(&event_loop).unwrap());
+    let window = Arc::new(
+        WindowBuilder::new()
+            .with_inner_size(PhysicalSize::new(1200, 1200))
+            .build(&event_loop)
+            .unwrap(),
+    );
 
     let mut state = State::new(window.clone()).await?;
 

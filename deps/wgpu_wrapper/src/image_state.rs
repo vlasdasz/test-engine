@@ -1,8 +1,9 @@
 use anyhow::Result;
 use gm::{flat::Point, volume::UIVertex};
 use wgpu::util::DeviceExt;
+use wgpu_image::{Image, Texture};
 
-use crate::wgpu_wrapper::{texture::Texture, utils::make_pipeline};
+use crate::utils::make_pipeline;
 
 #[derive(Debug)]
 pub struct ImageState {
@@ -20,41 +21,21 @@ impl ImageState {
     ) -> Result<Self> {
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
-        let texture_bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            entries: &[
-                wgpu::BindGroupLayoutEntry {
-                    binding:    0,
-                    visibility: wgpu::ShaderStages::FRAGMENT,
-                    ty:         wgpu::BindingType::Texture {
-                        multisampled:   false,
-                        view_dimension: wgpu::TextureViewDimension::D2,
-                        sample_type:    wgpu::TextureSampleType::Float { filterable: true },
-                    },
-                    count:      None,
-                },
-                wgpu::BindGroupLayoutEntry {
-                    binding:    1,
-                    visibility: wgpu::ShaderStages::FRAGMENT,
-                    ty:         wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                    count:      None,
-                },
-            ],
-            label:   Some("image_bind_group_layout"),
-        });
+        let bind_group_layout = Image::bind_group_layout(device);
 
-        let diffuse_bytes = include_bytes!("../../../Assets/Images/happy-tree.png");
-        let diffuse_texture = Texture::from_bytes(&device, &queue, diffuse_bytes, "happy-tree.png")?;
+        let bytes = include_bytes!("../../../Assets/Images/happy-tree.png");
+        let texture = Texture::from_bytes(&device, &queue, bytes, "happy-tree.png")?;
 
         let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout:  &texture_bind_group_layout,
+            layout:  &bind_group_layout,
             entries: &[
                 wgpu::BindGroupEntry {
                     binding:  0,
-                    resource: wgpu::BindingResource::TextureView(&diffuse_texture.view), // CHANGED!
+                    resource: wgpu::BindingResource::TextureView(&texture.view),
                 },
                 wgpu::BindGroupEntry {
                     binding:  1,
-                    resource: wgpu::BindingResource::Sampler(&diffuse_texture.sampler), // CHANGED!
+                    resource: wgpu::BindingResource::Sampler(&texture.sampler),
                 },
             ],
             label:   Some("diffuse_bind_group"),
@@ -62,7 +43,7 @@ impl ImageState {
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                Some("Image Pipeline Layout"),
-            bind_group_layouts:   &[&texture_bind_group_layout],
+            bind_group_layouts:   &[&bind_group_layout],
             push_constant_ranges: &[],
         });
 
@@ -109,7 +90,7 @@ impl ImageState {
     }
 
     pub fn draw<'a>(&'a self, render_pass: &mut wgpu::RenderPass<'a>) {
-        render_pass.set_viewport(10.0, 10.0, 1000.0, 1000.0, 0.0, 1.0);
+        render_pass.set_viewport(10.0, 10.0, 600.0, 600.0, 0.0, 1.0);
         render_pass.set_pipeline(&self.render_pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));

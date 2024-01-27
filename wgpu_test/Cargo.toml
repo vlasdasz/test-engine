@@ -17,6 +17,7 @@ log = { workspace = true }
 tokio = { workspace = true }
 wgpu = { workspace = true }
 winit = { workspace = true }
+wgpu_wrapper = { workspace = true }
 
 gl_wrapper = { workspace = true }
 gm = { workspace = true }

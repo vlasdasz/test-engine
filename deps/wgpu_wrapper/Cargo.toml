@@ -1,0 +1,25 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2021"
+name = "wgpu_wrapper"
+version = "0.1.0"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "wgpu_wrapper"
+
+[dependencies]
+bytemuck = { workspace = true }
+gl_wrapper = { workspace = true }
+anyhow = { workspace = true }
+image = { workspace = true }
+wgpu = { workspace = true }
+wgpu_image = { workspace = true }
+log = { workspace = true }
+winit = { workpace = true }
+
+manage = { workspace = true }
+refs = { workspace = true }
+rtools = { workspace = true }
+
+gm = { workspace = true }

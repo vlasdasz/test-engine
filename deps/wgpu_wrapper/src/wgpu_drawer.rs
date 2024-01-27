@@ -1,23 +1,19 @@
 use anyhow::Result;
-use gl_image::Image;
 use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
-use ui::View;
+use wgpu::{Device, Queue, RenderPass, TextureFormat};
+use wgpu_image::Image;
 
-use crate::wgpu_wrapper::{image_state::ImageState, rect_state::RectState};
+use crate::{image_state::ImageState, rect_state::RectState};
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
-    rect_state:  RectState,
-    image_state: ImageState,
+    rect_state:      RectState,
+    pub image_state: ImageState,
 }
 
 impl WGPUDrawer {
-    pub fn new(
-        device: &wgpu::Device,
-        texture_format: wgpu::TextureFormat,
-        queue: &wgpu::Queue,
-    ) -> Result<Self> {
+    pub fn new(device: &Device, texture_format: TextureFormat, queue: &Queue) -> Result<Self> {
         Ok(Self {
             rect_state:  RectState::new(device, texture_format),
             image_state: ImageState::new(device, texture_format, queue)?,
@@ -28,8 +24,8 @@ impl WGPUDrawer {
 impl WGPUDrawer {
     pub fn fill_rect<'a>(
         &'a self,
-        device: &wgpu::Device,
-        render_pass: &mut wgpu::RenderPass<'a>,
+        device: &Device,
+        render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         color: &Color,
         _priority: usize,
@@ -55,9 +51,9 @@ impl WGPUDrawer {
         todo!()
     }
 
-    pub fn draw(&self, _view: &dyn View) {
-        todo!()
-    }
+    // pub fn draw(&self, _view: &dyn View) {
+    //     todo!()
+    // }
 
     pub fn set_root_frame(&mut self, _frame: Rect) {
         todo!()

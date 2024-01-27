@@ -43,6 +43,8 @@ audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
 gl_image = { path = "deps/gl_image" }
+wgpu_image = { path = "deps/wgpu_image" }
+wgpu_wrapper = { path = "deps/wgpu_wrapper" }
 gl_wrapper = { path = "deps/gl_wrapper" }
 gles31-sys = { path = "gles31-sys" }
 gm = { path = "deps/gm" }

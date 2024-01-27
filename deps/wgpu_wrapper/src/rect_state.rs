@@ -5,7 +5,7 @@ use gm::{
     flat::{Point, Rect},
     Color,
 };
-use ui::refs::MainLock;
+use refs::MainLock;
 use wgpu::{
     include_wgsl,
     util::{BufferInitDescriptor, DeviceExt},
@@ -14,7 +14,7 @@ use wgpu::{
     RenderPipeline, ShaderStages, TextureFormat,
 };
 
-use crate::wgpu_wrapper::utils::make_pipeline;
+use crate::utils::make_pipeline;
 
 static BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 
