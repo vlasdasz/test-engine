@@ -1,4 +1,8 @@
-use std::fmt::Display;
+use std::{
+    fmt::Display,
+    hash::{Hash, Hasher},
+    mem::transmute,
+};
 
 use rtools::{IntoF32, Random};
 use serde::{Deserialize, Serialize};
@@ -93,6 +97,18 @@ impl Display for Color {
         write!(f, "r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
     }
 }
+
+impl Hash for Color {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        state.write_u32(unsafe { transmute(self.r) });
+        state.write_u32(unsafe { transmute(self.g) });
+        state.write_u32(unsafe { transmute(self.b) });
+        state.write_u32(unsafe { transmute(self.a) });
+        state.finish();
+    }
+}
+
+impl Eq for Color {}
 
 #[test]
 fn color_diff() {

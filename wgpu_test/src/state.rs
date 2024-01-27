@@ -139,7 +139,7 @@ impl State {
                 &self.device,
                 &mut render_pass,
                 &(10, 10, 100, 100).into(),
-                &Color::TURQUOISE,
+                &Color::GREEN,
                 1,
             );
 

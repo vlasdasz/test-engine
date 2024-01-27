@@ -1,31 +1,42 @@
+use std::collections::HashMap;
+
+use bytemuck::cast_slice;
 use gm::{
     flat::{Point, Rect},
     Color,
 };
-use wgpu::util::DeviceExt;
+use ui::refs::MainLock;
+use wgpu::{
+    include_wgsl,
+    util::{BufferInitDescriptor, DeviceExt},
+    BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutEntry, BindingResource, BindingType, Buffer,
+    BufferBinding, BufferBindingType, BufferUsages, Device, PipelineLayoutDescriptor, RenderPass,
+    RenderPipeline, ShaderStages, TextureFormat,
+};
 
 use crate::wgpu_wrapper::utils::make_pipeline;
 
+static BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
+
 #[derive(Debug)]
 pub struct RectState {
-    bind_group:          wgpu::BindGroup,
-    bind_group_layout:   wgpu::BindGroupLayout,
-    pub render_pipeline: wgpu::RenderPipeline,
-    pub vertex_buffer:   wgpu::Buffer,
+    bind_group_layout:   BindGroupLayout,
+    pub render_pipeline: RenderPipeline,
+    pub vertex_buffer:   Buffer,
     pub num_vertices:    u32,
 }
 
 impl RectState {
-    pub fn new(device: &wgpu::Device, texture_format: wgpu::TextureFormat) -> Self {
-        let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/rect.wgsl"));
+    pub fn new(device: &Device, texture_format: TextureFormat) -> Self {
+        let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
         let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label:   Some("rect_bind_group_layout"),
-            entries: &[wgpu::BindGroupLayoutEntry {
+            entries: &[BindGroupLayoutEntry {
                 binding:    0,
-                visibility: wgpu::ShaderStages::FRAGMENT,
-                ty:         wgpu::BindingType::Buffer {
-                    ty:                 wgpu::BufferBindingType::Uniform,
+                visibility: ShaderStages::FRAGMENT,
+                ty:         BindingType::Buffer {
+                    ty:                 BufferBindingType::Uniform,
                     has_dynamic_offset: false,
                     min_binding_size:   None,
                 },
@@ -33,7 +44,7 @@ impl RectState {
             }],
         });
 
-        let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+        let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Rect Pipeline Layout"),
             bind_group_layouts:   &[&bind_group_layout],
             push_constant_ranges: &[],
@@ -54,16 +65,13 @@ impl RectState {
             Point::new(1.0, -1.0),
         ];
 
-        let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+        let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label:    Some("Rect Vertex Buffer"),
-            contents: bytemuck::cast_slice(RECT_VERTICES),
-            usage:    wgpu::BufferUsages::VERTEX,
+            contents: cast_slice(RECT_VERTICES),
+            usage:    BufferUsages::VERTEX,
         });
 
-        let bind_group = Self::bind_group_with_color(&bind_group_layout, device, &Color::TURQUOISE);
-
         Self {
-            bind_group: bind_group.into(),
             bind_group_layout,
             render_pipeline,
             vertex_buffer,
@@ -72,22 +80,22 @@ impl RectState {
     }
 
     fn bind_group_with_color(
-        bind_group_layout: &wgpu::BindGroupLayout,
-        device: &wgpu::Device,
+        bind_group_layout: &BindGroupLayout,
+        device: &Device,
         color: &Color,
-    ) -> wgpu::BindGroup {
-        let color_uniform_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+    ) -> BindGroup {
+        let color_uniform_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label:    Some("Color Uniform Buffer"),
-            contents: bytemuck::cast_slice(&color.as_slice()),
-            usage:    wgpu::BufferUsages::UNIFORM,
+            contents: cast_slice(&color.as_slice()),
+            usage:    BufferUsages::UNIFORM,
         });
 
         device.create_bind_group(&wgpu::BindGroupDescriptor {
             label:   Some("rect_bind_group"),
             layout:  bind_group_layout,
-            entries: &[wgpu::BindGroupEntry {
+            entries: &[BindGroupEntry {
                 binding:  0,
-                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
+                resource: BindingResource::Buffer(BufferBinding {
                     buffer: &color_uniform_buffer,
                     offset: 0,
                     size:   None,
@@ -96,17 +104,16 @@ impl RectState {
         })
     }
 
-    pub fn draw<'a>(
-        &'a self,
-        device: &wgpu::Device,
-        render_pass: &mut wgpu::RenderPass<'a>,
-        rect: &Rect,
-        color: &Color,
-    ) {
+    pub fn draw<'a>(&'a self, device: &Device, render_pass: &mut RenderPass<'a>, rect: &Rect, color: &Color) {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(&self.render_pipeline);
 
-        render_pass.set_bind_group(0, &self.bind_group, &[]);
+        let bind = BINDS
+            .get_mut()
+            .entry(*color)
+            .or_insert_with(|| Self::bind_group_with_color(&self.bind_group_layout, &device, color));
+
+        render_pass.set_bind_group(0, bind, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.draw(0..self.num_vertices, 0..1);
     }
