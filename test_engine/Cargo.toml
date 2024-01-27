@@ -25,7 +25,6 @@ audio = { workspace = true }
 dispatch = { workspace = true }
 gen = { workspace = true }
 gl_image = { workspace = true }
-wgpu_image = { workspace = true }
 gl_wrapper = { workspace = true }
 gm = { workspace = true }
 manage = { workspace = true }

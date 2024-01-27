@@ -1,7 +1,7 @@
 use manage::data_manager::DataManager;
 use refs::Weak;
 
-use crate::Image;
+use crate::image::Image;
 
 pub trait ToImage {
     fn to_image(&self) -> Weak<Image>;

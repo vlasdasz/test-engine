@@ -2,9 +2,8 @@ use anyhow::Result;
 use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
 use wgpu::{Device, Queue, RenderPass, TextureFormat};
-use wgpu_image::Image;
 
-use crate::{image_state::ImageState, rect_state::RectState};
+use crate::{image::Image, image_state::ImageState, rect_state::RectState};
 
 #[derive(Debug)]
 pub struct WGPUDrawer {

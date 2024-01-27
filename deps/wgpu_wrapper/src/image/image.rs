@@ -2,7 +2,6 @@ use std::path::Path;
 
 use anyhow::Result;
 use gm::flat::Size;
-use log::{error, warn};
 use manage::{managed, resource_loader::ResourceLoader};
 use rtools::file::File;
 use wgpu::{
@@ -10,9 +9,10 @@ use wgpu::{
     SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-// static GET_STATE: Mutex<RefCell<Option<Box<dyn Fn() -> (&'static Queue, &'static Device)>>>> =
-//     Mutex::new(RefCell::new(None));
-use crate::Texture;
+use crate::image::Texture;
+
+// static GET_STATE: Mutex<RefCell<Option<Box<dyn Fn() -> (&'static Queue,
+// &'static Device)>>>> =     Mutex::new(RefCell::new(None));
 
 #[derive(Debug)]
 pub struct Image {

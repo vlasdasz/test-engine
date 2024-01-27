@@ -9,13 +9,12 @@ crate-type = ["rlib", "staticlib"]
 name = "wgpu_wrapper"
 
 [dependencies]
+anyhow = { workspace = true }
 bytemuck = { workspace = true }
 gl_wrapper = { workspace = true }
-anyhow = { workspace = true }
 image = { workspace = true }
-wgpu = { workspace = true }
-wgpu_image = { workspace = true }
 log = { workspace = true }
+wgpu = { workspace = true }
 winit = { workpace = true }
 
 manage = { workspace = true }

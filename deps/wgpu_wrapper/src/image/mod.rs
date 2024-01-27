@@ -1,6 +1,3 @@
-#![allow(incomplete_features)]
-#![feature(specialization)]
-
 mod image;
 mod texture;
 mod to_image;

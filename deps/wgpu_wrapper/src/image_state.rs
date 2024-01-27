@@ -1,9 +1,11 @@
 use anyhow::Result;
 use gm::{flat::Point, volume::UIVertex};
 use wgpu::util::DeviceExt;
-use wgpu_image::{Image, Texture};
 
-use crate::utils::make_pipeline;
+use crate::{
+    image::{Image, Texture},
+    utils::make_pipeline,
+};
 
 #[derive(Debug)]
 pub struct ImageState {
