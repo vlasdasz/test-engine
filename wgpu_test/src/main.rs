@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 use log::error;
+use test_engine::ui::refs::MainLock;
 use wgpu_wrapper::{state::State, wgpu};
 use winit::{
     dpi::PhysicalSize,
@@ -14,6 +15,8 @@ use winit::{
     window::{Window, WindowBuilder},
 };
 
+static APP: MainLock<Option<App>> = MainLock::new();
+
 struct App {
     state:      State,
     window:     Arc<Window>,
@@ -21,7 +24,7 @@ struct App {
 }
 
 impl App {
-    async fn new(width: u32, height: u32) -> Result<Self> {
+    async fn new(width: u32, height: u32) -> Result<()> {
         env_logger::init();
         let event_loop = EventLoop::new()?;
         let window = Arc::new(
@@ -33,14 +36,17 @@ impl App {
 
         let state = State::new(window.clone()).await?;
 
-        Ok(Self {
+        *APP.get_mut() = Self {
             state,
             window,
             event_loop: event_loop.into(),
-        })
+        }
+        .into();
+
+        APP.get_mut().as_mut().unwrap().start_event_loop()
     }
 
-    pub fn start_event_loop(mut self) -> Result<()> {
+    pub fn start_event_loop(&mut self) -> Result<()> {
         self.event_loop.take().unwrap().run(move |event, elwt| match event {
             Event::WindowEvent { ref event, window_id } if window_id == self.window.id() => match event {
                 WindowEvent::CloseRequested
@@ -84,5 +90,5 @@ impl App {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    App::new(1200, 1200).await?.start_event_loop()
+    App::new(1200, 1200).await
 }
