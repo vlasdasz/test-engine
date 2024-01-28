@@ -11,11 +11,7 @@ path = "src/main.rs"
 [dependencies]
 anyhow = { workspace = true }
 env_logger = { workspace = true }
-image = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }
-wgpu_wrapper = { workspace = true }
-winit = { workspace = true }
 
-gm = { workspace = true }
 test_engine = { workspace = true }

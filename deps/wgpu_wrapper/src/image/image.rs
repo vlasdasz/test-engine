@@ -2,33 +2,34 @@ use std::path::Path;
 
 use anyhow::Result;
 use gm::flat::Size;
-use manage::{managed, resource_loader::ResourceLoader};
+use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
+use refs::Weak;
 use rtools::file::File;
 use wgpu::{
-    BindGroup, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType, Device, Queue,
+    BindGroup, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType, Device,
     SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-use crate::image::Texture;
+use crate::{app::App, image::Texture};
 
 // static GET_STATE: Mutex<RefCell<Option<Box<dyn Fn() -> (&'static Queue,
 // &'static Device)>>>> =     Mutex::new(RefCell::new(None));
 
 #[derive(Debug)]
 pub struct Image {
-    pub size:     Size,
-    pub channels: u32,
-    pub bind:     BindGroup,
+    pub size:        Size,
+    pub channels:    u32,
+    pub(crate) bind: BindGroup,
 }
 
 impl Image {
-    #[allow(clippy::cast_possible_truncation)]
-    #[allow(clippy::cast_sign_loss)]
-    fn load_to_wgpu(queue: &Queue, device: &Device, data: &[u8], size: Size, channels: u32) -> Result<Image> {
-        let texture = Texture::from_bytes(&device, &queue, data, "happy-tree.png")?;
+    fn load_to_wgpu(name: &str, data: &[u8]) -> Result<Image> {
+        let state = &App::current().state;
 
-        let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout:  &Self::bind_group_layout(device),
+        let texture = Texture::from_bytes(&state.device, &state.queue, data, name)?;
+
+        let bind = state.device.create_bind_group(&wgpu::BindGroupDescriptor {
+            layout:  &Self::bind_group_layout(&state.device),
             entries: &[
                 wgpu::BindGroupEntry {
                     binding:  0,
@@ -42,23 +43,18 @@ impl Image {
             label:   Some("diffuse_bind_group"),
         });
 
-        Ok(Image { size, channels, bind })
+        Ok(Image {
+            size: texture.size,
+            channels: texture.channels,
+            bind,
+        })
     }
 
-    // pub fn from(
-    //     queue: &Queue,
-    //     device: &Device,
-    //     data: &[u8],
-    //     size: Size,
-    //     channels: u32,
-    //     name: String,
-    // ) -> Weak<Image> {
-    //     if let Some(existing) = Image::weak_with_name(&name) {
-    //         warn!("Image with name: {name} already exists.");
-    //         return existing;
-    //     }
-    //     Image::add_with_name(name.clone(), Self::load_to_gl(data, size, channels,
-    // name)) }
+    pub fn from(data: &[u8], name: String) -> Weak<Image> {
+        Image::add_with_name(&name.clone(), || {
+            Self::load_to_wgpu(&name, data).expect("Failed to load image {name} to wgpu")
+        })
+    }
 
     pub fn is_monochrome(&self) -> bool {
         self.channels == 1
@@ -126,22 +122,10 @@ impl ResourceLoader for Image {
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {
-        todo!()
-        // let image = image::load_from_memory(data).unwrap_or_else(|_| {
-        //     error!("Failed to load image: {}", name.to_string());
-        //     panic!("Failed to load image: {}", name.to_string());
-        // });
-        //
-        // let dimensions = image.dimensions();
-        // let data = image.as_bytes();
-        // let channels = image.color().channel_count();
-        //
-        // Image::load_to_gl(
-        //     data,
-        //     (dimensions.0, dimensions.1).into(),
-        //     u32::from(channels),
-        //     name.to_string(),
-        // )
+        let name = name.to_string();
+
+        Image::load_to_wgpu(&name.to_string(), data)
+            .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
     }
 }
 
@@ -168,7 +152,7 @@ impl ResourceLoader for Image {
 // }
 
 impl Image {
-    pub fn bind_group_layout(device: &Device) -> BindGroupLayout {
+    pub(crate) fn bind_group_layout(device: &Device) -> BindGroupLayout {
         device.create_bind_group_layout(&BindGroupLayoutDescriptor {
             label:   "image_bind_group_layout".into(),
             entries: &[

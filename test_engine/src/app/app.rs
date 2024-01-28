@@ -9,7 +9,7 @@ use ui::{refs::Own, View};
 
 use crate::AppCore;
 
-pub trait App {
+pub trait OldApp {
     fn setup()
     where Self: Sized {
     }
@@ -73,7 +73,7 @@ pub trait MakeApp {
     ) -> Box<Self>;
 }
 
-impl<T: App> MakeApp for T {
+impl<T: OldApp> MakeApp for T {
     #[cfg(desktop)]
     fn make_app() -> Self {
         T::with_core(T::make_core())

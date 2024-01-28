@@ -5,9 +5,9 @@ use std::ffi::{c_float, c_int, c_uint, c_ulong};
 
 use gl_wrapper::GLWrapper;
 
-use crate::{mobile::MobileKeyEvent, App, TestEngineAction};
+use crate::{mobile::MobileKeyEvent, OldApp, TestEngineAction};
 
-static mut APP: Option<Box<dyn App>> = None;
+static mut APP: Option<Box<dyn OldApp>> = None;
 
 #[no_mangle]
 pub extern "C" fn set_screen_size(width: c_uint, height: c_uint) {
@@ -45,7 +45,7 @@ extern "C" {
         width: c_float,
         height: c_float,
         diagonal: c_float,
-    ) -> Box<dyn App>;
+    ) -> Box<dyn OldApp>;
 }
 
 #[no_mangle]

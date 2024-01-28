@@ -1,6 +1,6 @@
 use std::{fmt::Debug, ops::DerefMut};
 
-use gl_image::Image;
+use gl_image::GlImage;
 use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
 use refs::Weak;
@@ -13,7 +13,7 @@ use crate::{
 pub trait UIDrawer: Debug + Send {
     fn fill(&self, rect: &Rect, color: &Color, priority: usize);
     fn outline(&self, rect: &Rect, color: &Color, priority: usize);
-    fn draw_image(&self, image: &Image, rect: &Rect, color: &Color, priority: usize, is_text: bool);
+    fn draw_image(&self, image: &GlImage, rect: &Rect, color: &Color, priority: usize, is_text: bool);
     fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: usize);
     fn draw(&self, view: &dyn View);
     fn set_root_frame(&mut self, frame: Rect);

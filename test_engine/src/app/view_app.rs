@@ -11,7 +11,7 @@ use ui::{
     View, ViewTest,
 };
 
-use crate::{app::MakeApp, App, AppCore};
+use crate::{app::MakeApp, AppCore, OldApp};
 
 pub struct ViewApp<T> {
     core: AppCore,
@@ -39,7 +39,7 @@ impl<T: View + Default + 'static> ViewApp<T> {
     }
 }
 
-impl<T: View + Default + 'static> App for ViewApp<T> {
+impl<T: View + Default + 'static> OldApp for ViewApp<T> {
     fn setup()
     where Self: Sized {
     }

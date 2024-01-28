@@ -5,7 +5,7 @@ use std::{
     ops::Deref,
 };
 
-use gl_image::{draw_image, Image};
+use gl_image::{draw_image, GlImage};
 use gl_wrapper::{
     buffers::Buffers,
     path_data::{initialize_path_data, DrawMode, PathData},
@@ -71,7 +71,7 @@ impl UIDrawer for TEUIDrawer {
         Buffers::get().full_outline.draw();
     }
 
-    fn draw_image(&self, image: &Image, rect: &Rect, color: &Color, priority: usize, is_text: bool) {
+    fn draw_image(&self, image: &GlImage, rect: &Rect, color: &Color, priority: usize, is_text: bool) {
         draw_image(image, rect, color, priority, is_text);
     }
 

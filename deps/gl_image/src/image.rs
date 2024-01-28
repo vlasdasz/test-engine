@@ -12,7 +12,7 @@ use gm::{
     Color,
 };
 use image::GenericImageView;
-use log::{error, warn};
+use log::error;
 use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
 use refs::{TotalSize, Weak};
 use rtools::file::File;
@@ -20,7 +20,7 @@ use rtools::file::File;
 use crate::shaders::ImageShaders;
 
 #[derive(Debug)]
-pub struct Image {
+pub struct GlImage {
     pub size:      Size,
     pub channels:  u32,
     pub flipped:   bool,
@@ -31,7 +31,7 @@ pub struct Image {
     name:          String,
 }
 
-impl Image {
+impl GlImage {
     pub fn empty() -> Self {
         Self {
             size:       Default::default(),
@@ -53,25 +53,21 @@ impl Image {
 
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
-    fn load_to_gl(data: &[u8], size: Size, channels: u32, name: String) -> Image {
+    fn load_to_gl(data: &[u8], size: Size, channels: u32, name: String) -> GlImage {
         let buffer = ImageLoader::load(data, size, channels);
-        Image {
+        GlImage {
             size,
             channels,
             flipped: false,
             flipped_y: false,
             buffer,
-            total_size: size_of::<Image>() + size.area() as usize * channels as usize,
+            total_size: size_of::<GlImage>() + size.area() as usize * channels as usize,
             name,
         }
     }
 
-    pub fn from(data: &[u8], size: Size, channels: u32, name: String) -> Weak<Image> {
-        if let Some(existing) = Image::weak_with_name(&name) {
-            warn!("Image with name: {name} already exists.");
-            return existing;
-        }
-        Image::add_with_name(name.clone(), Self::load_to_gl(data, size, channels, name))
+    pub fn from(data: &[u8], size: Size, channels: u32, name: String) -> Weak<GlImage> {
+        GlImage::add_with_name(&name.clone(), || Self::load_to_gl(data, size, channels, name))
     }
 
     pub fn is_monochrome(&self) -> bool {
@@ -83,39 +79,48 @@ impl Image {
     }
 }
 
-impl Image {
-    pub fn render(name: impl ToString, size: impl Into<Size>, draw: impl FnOnce(&mut Image)) -> Weak<Image> {
+impl GlImage {
+    pub fn render(
+        name: impl ToString,
+        size: impl Into<Size>,
+        draw: impl FnOnce(&mut GlImage),
+    ) -> Weak<GlImage> {
         let name = name.to_string();
 
-        if let Some(image) = Image::weak_with_name(&name) {
-            return image;
-        }
+        let render = || {
+            let size = size.into();
+            let buffer = FrameBuffer::from(size);
 
-        let size = size.into();
-        let buffer = FrameBuffer::from(size);
+            buffer.bind();
 
-        buffer.bind();
+            let mut image = Self {
+                size,
+                channels: 4,
+                flipped: false,
+                flipped_y: false,
+                buffer,
+                total_size: size_of::<Self>() + 10,
+                name: name.clone(),
+            };
 
-        let mut image = Self {
-            size,
-            channels: 4,
-            flipped: false,
-            flipped_y: false,
-            buffer,
-            total_size: size_of::<Self>() + 10,
-            name: name.clone(),
+            GLWrapper::clear_with_color(Color::CLEAR);
+
+            draw(&mut image);
+
+            GLWrapper::unbind_framebuffer();
+
+            image
         };
 
-        GLWrapper::clear_with_color(Color::CLEAR);
-
-        draw(&mut image);
-
-        GLWrapper::unbind_framebuffer();
-
-        Image::add_with_name(name, image)
+        GlImage::add_with_name(&name, render)
     }
 
-    pub fn render_path(name: impl ToString, color: Color, path: Points, draw_mode: DrawMode) -> Weak<Image> {
+    pub fn render_path(
+        name: impl ToString,
+        color: Color,
+        path: Points,
+        draw_mode: DrawMode,
+    ) -> Weak<GlImage> {
         let size = path.max_size();
 
         let path = initialize_path_data(path, &color, draw_mode);
@@ -136,9 +141,9 @@ impl Image {
     }
 }
 
-managed!(Image);
+managed!(GlImage);
 
-impl ResourceLoader for Image {
+impl ResourceLoader for GlImage {
     fn load_path(path: &Path) -> Self {
         Self::load_data(&File::read(path), path.display())
     }
@@ -153,7 +158,7 @@ impl ResourceLoader for Image {
         let data = image.as_bytes();
         let channels = image.color().channel_count();
 
-        Image::load_to_gl(
+        GlImage::load_to_gl(
             data,
             (dimensions.0, dimensions.1).into(),
             u32::from(channels),
@@ -162,7 +167,7 @@ impl ResourceLoader for Image {
     }
 }
 
-pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize, is_text: bool) {
+pub fn draw_image(image: &GlImage, rect: &Rect, color: &Color, priority: usize, is_text: bool) {
     if image.is_invalid() {
         return;
     }
@@ -184,7 +189,7 @@ pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize, is
     Buffers::get().full_image.draw();
 }
 
-impl TotalSize for Image {
+impl TotalSize for GlImage {
     fn total_size(&self) -> usize {
         self.total_size
     }

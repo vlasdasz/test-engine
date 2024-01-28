@@ -3,7 +3,7 @@ use test_engine::{
     gm::flat::Shape,
     rtools::Animation,
     sprites::{LevelCreation, Player, SpriteTemplates, Wall},
-    Image, Level, LevelBase,
+    GlImage, Level, LevelBase,
 };
 use ui::refs::{weak_from_ref, Weak};
 
@@ -24,7 +24,7 @@ pub struct BenchmarkLevel {
 
 impl BenchmarkLevel {
     fn make_walls(&mut self) {
-        let square = Image::get("square.png");
+        let square = GlImage::get("square.png");
 
         self.floor = self.add_sprite(Shape::Rect((100, 10).into()), (0, 0));
         self.floor.set_image(square);
@@ -48,7 +48,7 @@ impl Level for BenchmarkLevel {
         self.player.set_image("frisk.png");
 
         self.player.weapon.set_image("ak.png");
-        self.player.weapon.bullet_image = Image::get("bullet.png");
+        self.player.weapon.bullet_image = GlImage::get("bullet.png");
         self.player.weapon.bullet_speed = 100.0;
         self.player.weapon.bullet_shape = Shape::Rect((1, 0.28).into());
 

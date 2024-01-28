@@ -28,6 +28,13 @@ pub struct RectState {
 
 impl RectState {
     pub fn new(device: &Device, texture_format: TextureFormat) -> Self {
+        const RECT_VERTICES: &[Point] = &[
+            Point::new(-1.0, 1.0),
+            Point::new(-1.0, -1.0),
+            Point::new(1.0, 1.0),
+            Point::new(1.0, -1.0),
+        ];
+
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
         let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -52,18 +59,11 @@ impl RectState {
 
         let render_pipeline = make_pipeline::<Point>(
             "Rect Render Pipeline",
-            &device,
+            device,
             &pipeline_layout,
             &shader,
             texture_format,
         );
-
-        const RECT_VERTICES: &[Point] = &[
-            Point::new(-1.0, 1.0),
-            Point::new(-1.0, -1.0),
-            Point::new(1.0, 1.0),
-            Point::new(1.0, -1.0),
-        ];
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label:    Some("Rect Vertex Buffer"),
@@ -75,7 +75,7 @@ impl RectState {
             bind_group_layout,
             render_pipeline,
             vertex_buffer,
-            num_vertices: RECT_VERTICES.len() as u32,
+            num_vertices: u32::try_from(RECT_VERTICES.len()).unwrap(),
         }
     }
 
@@ -111,7 +111,7 @@ impl RectState {
         let bind = BINDS
             .get_mut()
             .entry(*color)
-            .or_insert_with(|| Self::bind_group_with_color(&self.bind_group_layout, &device, color));
+            .or_insert_with(|| Self::bind_group_with_color(&self.bind_group_layout, device, color));
 
         render_pass.set_bind_group(0, bind, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));

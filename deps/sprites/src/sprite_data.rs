@@ -1,4 +1,4 @@
-use gl_image::Image;
+use gl_image::GlImage;
 use gm::{
     flat::{Point, Rect, Shape},
     Color,
@@ -23,7 +23,7 @@ pub struct SpriteData {
 
     pub tag:   String,
     pub color: Color,
-    pub image: Weak<Image>,
+    pub image: Weak<GlImage>,
 
     pub on_collision: Event<Weak<dyn Sprite>>,
 }

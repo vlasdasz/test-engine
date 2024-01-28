@@ -17,6 +17,7 @@ pub use rtools;
 pub use sprites;
 pub use text;
 pub use ui;
+pub use wgpu_wrapper;
 
 pub use crate::screen::Screen;
 
@@ -32,7 +33,7 @@ pub mod ui_layer;
 
 pub use app::*;
 pub use dispatch::*;
-pub use gl_image::Image;
+pub use gl_image::GlImage;
 pub use keymap::*;
 pub use sprites::{Level, LevelBase, Sprite};
 pub use ui::ui_proc::*;

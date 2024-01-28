@@ -1,4 +1,4 @@
-use gl_image::{Image, ToImage};
+use gl_image::{GlImage, ToImage};
 use gm::{
     flat::{Point, Shape, Size},
     Color,
@@ -75,8 +75,8 @@ pub trait Sprite {
         &self.data().color
     }
 
-    fn image(&self) -> Weak<Image> {
-        self.data().image
+    fn image(&self) -> Weak<GlImage> {
+        self.data().image.to_image()
     }
 
     fn is_selected(&self) -> bool {

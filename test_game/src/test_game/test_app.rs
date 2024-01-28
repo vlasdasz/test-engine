@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use log::trace;
-use test_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, App};
+use test_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, OldApp};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
     NavigationView, View, ViewSetup,
@@ -13,7 +13,7 @@ pub struct TestApp {
     core: AppCore,
 }
 
-impl App for TestApp {
+impl OldApp for TestApp {
     fn setup() {
         enable_ref_stats_counter(true);
         trace!("TestApp setup: OK");

@@ -1,10 +1,13 @@
-use anyhow::*;
+use anyhow::Result;
+use gm::flat::Size;
 use image::GenericImageView;
 
 pub struct Texture {
-    pub texture: wgpu::Texture,
-    pub view:    wgpu::TextureView,
-    pub sampler: wgpu::Sampler,
+    pub texture:  wgpu::Texture,
+    pub view:     wgpu::TextureView,
+    pub sampler:  wgpu::Sampler,
+    pub size:     Size,
+    pub channels: u32,
 }
 
 impl Texture {
@@ -21,6 +24,7 @@ impl Texture {
     ) -> Result<Self> {
         let rgba = img.to_rgba8();
         let dimensions = img.dimensions();
+        let channels = img.color().channel_count();
 
         let size = wgpu::Extent3d {
             width:                 dimensions.0,
@@ -69,6 +73,8 @@ impl Texture {
             texture,
             view,
             sampler,
+            size: (dimensions.0, dimensions.1).into(),
+            channels: channels.into(),
         })
     }
 }

@@ -8,7 +8,7 @@ use std::{
     },
 };
 
-use gl_image::Image;
+use gl_image::GlImage;
 use gm::flat::Size;
 use log::trace;
 use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
@@ -29,11 +29,13 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
         height: metrics.height as f32,
     };
 
-    let image = Image::from(&bitmap, size, 1, format!("Glyph: {symbol}"));
+    let image_name = format!("Glyph: {symbol}");
+
+    GlImage::from(&bitmap, size, 1, format!("Glyph: {symbol}"));
 
     Glyph::new(
         symbol,
-        image,
+        image_name,
         metrics.advance_width,
         (metrics.bounds.xmin, metrics.bounds.height).into(),
     )
@@ -99,16 +101,10 @@ impl Font {
     pub fn helvetica() -> Weak<Self> {
         const SF: &str = "default_helvetica";
 
-        let _lock = _FONT_LOCK.lock().unwrap();
-
-        if let Some(sf) = Font::weak_with_name(SF) {
-            return sf;
-        }
-
-        let sf = Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)
-            .expect("BUG: Failed to render default font");
-
-        Font::add_with_name(SF, sf)
+        Font::add_with_name(SF, || {
+            Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)
+                .expect("BUG: Failed to render default font")
+        })
     }
 
     pub fn disable_render() {

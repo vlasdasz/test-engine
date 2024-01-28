@@ -2,16 +2,17 @@ use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
 use gm::Color;
-use wgpu::{CompositeAlphaMode, PresentMode};
+use manage::data_manager::DataManager;
+use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::wgpu_drawer::WGPUDrawer;
+use crate::{image::Image, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
-    surface: wgpu::Surface<'static>,
-    device:  wgpu::Device,
-    queue:   wgpu::Queue,
-    config:  wgpu::SurfaceConfiguration,
+    surface:           wgpu::Surface<'static>,
+    pub(crate) device: wgpu::Device,
+    pub(crate) queue:  wgpu::Queue,
+    config:            wgpu::SurfaceConfiguration,
 
     drawer: WGPUDrawer,
 
@@ -64,8 +65,7 @@ impl State {
             .formats
             .iter()
             .copied()
-            .filter(|f| f.is_srgb())
-            .next()
+            .find(TextureFormat::is_srgb)
             .unwrap_or(surface_caps.formats[0]);
 
         let config = wgpu::SurfaceConfiguration {
@@ -89,8 +89,8 @@ impl State {
             device,
             queue,
             config,
-            size,
             drawer,
+            size,
         })
     }
 
@@ -136,7 +136,9 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            self.drawer.image_state.draw(&mut render_pass);
+            self.drawer
+                .image_state
+                .draw(Image::get("happy-tree.png").get_static(), &mut render_pass);
 
             self.drawer.fill_rect(
                 &self.device,

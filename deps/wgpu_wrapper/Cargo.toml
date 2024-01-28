@@ -11,11 +11,12 @@ name = "wgpu_wrapper"
 [dependencies]
 anyhow = { workspace = true }
 bytemuck = { workspace = true }
+env_logger = { workspace = true }
 gl_wrapper = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
 wgpu = { workspace = true }
-winit = { workpace = true }
+winit = { workspace = true }
 
 manage = { workspace = true }
 refs = { workspace = true }

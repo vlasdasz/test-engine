@@ -10,7 +10,7 @@ use test_engine::{
     },
     sprites::{Body, LevelCreation, Player, SpriteTemplates, Wall},
     text::{render_text, Font},
-    Image, Level, LevelBase, Sprite,
+    GlImage, Level, LevelBase, Sprite,
 };
 use ui::refs::{weak_from_ref, Weak};
 
@@ -43,7 +43,7 @@ impl TestGameLevel {
 
 impl Level for TestGameLevel {
     fn setup(&mut self) {
-        let drawn = Image::render("test_draw", (100, 100), |image| {
+        let drawn = GlImage::render("test_draw", (100, 100), |image| {
             GLWrapper::set_clear_color(Color::GREEN);
             GLWrapper::clear();
             GLWrapper::scissor((5, 5, 20, 20), || {
@@ -54,7 +54,7 @@ impl Level for TestGameLevel {
             image.channels = 1;
         });
 
-        let square = Image::get("square.png");
+        let square = GlImage::get("square.png");
 
         self.add_rect((30, 30, 40, 25)).set_image(drawn);
 

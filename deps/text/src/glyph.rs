@@ -1,21 +1,20 @@
-use gl_image::Image;
+use gl_image::ToImage;
 use gm::flat::{Point, Size};
-use refs::Weak;
 
 #[derive(Clone, Debug)]
 pub struct Glyph {
     pub ch:      char,
     pub size:    Size,
-    pub image:   Weak<Image>,
+    pub image:   String,
     pub advance: f32,
     pub bearing: Point,
 }
 
 impl Glyph {
-    pub fn new(ch: char, image: Weak<Image>, advance: f32, bearing: Point) -> Glyph {
+    pub fn new(ch: char, image: String, advance: f32, bearing: Point) -> Glyph {
         Glyph {
             ch,
-            size: image.size / 2.0,
+            size: image.to_image().size / 2.0,
             image,
             advance: advance / 2.0,
             bearing: Point {
@@ -30,6 +29,6 @@ impl Glyph {
     }
 
     pub fn y_min(&self) -> f32 {
-        self.bearing.y - self.image.size.height
+        self.bearing.y - self.image.to_image().size.height
     }
 }

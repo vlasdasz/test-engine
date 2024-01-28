@@ -5,7 +5,7 @@ use test_engine::{
         flat::{IntSize, Points},
         Color,
     },
-    Image,
+    GlImage,
 };
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest, ViewTouch};
 use ui_views::{AddLabel, DrawingView, ImageView, IntView};
@@ -111,7 +111,7 @@ fn generate_image(
         position,
         threshold,
     }: TerrainParams,
-) -> (Weak<Image>, Vec<Points>) {
+) -> (Weak<GlImage>, Vec<Points>) {
     let TerrainData { pixels, islands } = generate_terrain(TerrainParams {
         seed,
         resolution,
@@ -123,7 +123,7 @@ fn generate_image(
     let image_name = format!("noise_image_{seed}_{resolution}_{size}_{position}_{threshold}");
 
     (
-        Image::from(
+        GlImage::from(
             &pixels,
             (resolution.width, resolution.height).into(),
             1,

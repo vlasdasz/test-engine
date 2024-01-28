@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use gl_image::Image;
+use gl_image::GlImage;
 use gm::flat::{Point, Shape};
 use refs::{Own, Weak};
 
@@ -10,7 +10,7 @@ pub struct Weapon {
     sprite:              Own<SpriteData>,
     pub(crate) velocity: Point,
     pub bullet_speed:    f32,
-    pub bullet_image:    Weak<Image>,
+    pub bullet_image:    Weak<GlImage>,
     pub bullet_shape:    Shape,
 }
 

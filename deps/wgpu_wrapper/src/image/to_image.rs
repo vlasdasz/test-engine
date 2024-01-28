@@ -12,15 +12,15 @@ impl ToImage for Weak<Image> {
         *self
     }
 }
-//
-// impl ToImage for String {
-//     fn to_image(&self) -> Weak<Image> {
-//         Image::get(self)
-//     }
-// }
-//
-// impl ToImage for &str {
-//     fn to_image(&self) -> Weak<Image> {
-//         Image::get(self)
-//     }
-// }
+
+impl ToImage for String {
+    fn to_image(&self) -> Weak<Image> {
+        Image::get(self)
+    }
+}
+
+impl ToImage for &str {
+    fn to_image(&self) -> Weak<Image> {
+        Image::get(self)
+    }
+}

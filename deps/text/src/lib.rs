@@ -5,7 +5,7 @@ use std::ops::Deref;
 
 pub use font::*;
 use fontdue::layout::{CoordinateSystem, Layout, TextStyle};
-use gl_image::{draw_image, Image};
+use gl_image::{draw_image, GlImage, ToImage};
 use gm::{flat::Size, Color};
 use manage::data_manager::DataManager;
 use refs::Weak;
@@ -31,28 +31,28 @@ pub fn text_size(text: impl ToString, font: &Font, size: impl IntoF32) -> Size {
     text_layout(text, font, size).1
 }
 
-pub fn render_text(text: &str, font: &mut Font, size: impl IntoF32) -> Weak<Image> {
+pub fn render_text(text: &str, font: &mut Font, size: impl IntoF32) -> Weak<GlImage> {
     let id = format!("label-text:{text}:size-{size}:font-{}", font.name);
 
-    if let Some(image) = Image::weak_with_name(&id) {
+    if let Some(image) = GlImage::get_existing(&id) {
         return image;
     }
 
     if text.is_empty() || text == " " {
-        return Image::add_with_name(id, Image::empty());
+        return GlImage::add_with_name(&id, GlImage::empty);
     }
 
     let (layout, size) = text_layout(text, font, size);
 
     if !Font::render_enabled() {
-        let mut image = Image::empty();
+        let mut image = GlImage::empty();
         image.size = size;
-        return Image::add_with_name(&id, image);
+        return GlImage::add_with_name(&id, || image);
     }
 
-    Image::render(id, size, |image| {
+    GlImage::render(id, size, |image| {
         for glyph in layout.glyphs() {
-            let image = font.glyph_for_char(glyph.parent).image;
+            let image = font.glyph_for_char(glyph.parent).image.to_image();
             draw_image(
                 image.deref(),
                 &(

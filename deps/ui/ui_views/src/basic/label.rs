@@ -1,3 +1,4 @@
+use gl_image::ToImage;
 use gm::Color;
 use log::warn;
 use refs::Weak;
@@ -81,7 +82,7 @@ impl Label {
             return;
         }
 
-        let image = self.image_view.image;
+        let image = self.image_view.image.to_image();
 
         let size = if image.size.width > self.width() {
             image.size.fit_width(self.width())
@@ -96,8 +97,7 @@ impl Label {
 
     fn set_letters(&mut self) {
         // Image::free(self.image_view.image);
-        let image = render_text(&self.text, &mut self.font, self.text_size);
-        self.image_view.image = image;
+        self.image_view.image = render_text(&self.text, &mut self.font, self.text_size);
     }
 }
 

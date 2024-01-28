@@ -1,7 +1,6 @@
 use std::{
     fmt::Display,
     hash::{Hash, Hasher},
-    mem::transmute,
 };
 
 use rtools::{IntoF32, Random};
@@ -100,10 +99,10 @@ impl Display for Color {
 
 impl Hash for Color {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        state.write_u32(unsafe { transmute(self.r) });
-        state.write_u32(unsafe { transmute(self.g) });
-        state.write_u32(unsafe { transmute(self.b) });
-        state.write_u32(unsafe { transmute(self.a) });
+        state.write_u32(self.r.to_bits());
+        state.write_u32(self.g.to_bits());
+        state.write_u32(self.b.to_bits());
+        state.write_u32(self.a.to_bits());
         state.finish();
     }
 }

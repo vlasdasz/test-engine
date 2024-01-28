@@ -15,14 +15,14 @@ pub fn make_pipeline<Vertex: VertexLayout>(
 ) -> wgpu::RenderPipeline {
     device.create_render_pipeline(&RenderPipelineDescriptor {
         label:         label.into(),
-        layout:        Some(&layout),
+        layout:        layout.into(),
         vertex:        VertexState {
-            module:      &shader,
+            module:      shader,
             entry_point: "v_main",
             buffers:     &[Vertex::vertex_layout()],
         },
         fragment:      FragmentState {
-            module:      &shader,
+            module:      shader,
             entry_point: "f_main",
             targets:     &[Some(ColorTargetState {
                 format:     texture_format,

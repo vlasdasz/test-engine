@@ -8,4 +8,4 @@ mod to_image;
 pub use shaders::ImageShaders;
 pub use to_image::*;
 
-pub use self::image::{draw_image, Image};
+pub use self::image::{draw_image, GlImage};
