@@ -136,9 +136,17 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            self.drawer
-                .image_state
-                .draw(Image::get("happy-tree.png").get_static(), &mut render_pass);
+            self.drawer.image_state.draw(
+                Image::get("happy-tree.png").get_static(),
+                &(10, 500, 200, 200).into(),
+                &mut render_pass,
+            );
+
+            self.drawer.image_state.draw(
+                Image::get("frisk.png").get_static(),
+                &(400, 10, 100, 100).into(),
+                &mut render_pass,
+            );
 
             self.drawer.fill_rect(
                 &self.device,

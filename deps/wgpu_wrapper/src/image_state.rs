@@ -1,5 +1,8 @@
 use anyhow::Result;
-use gm::{flat::Point, volume::UIVertex};
+use gm::{
+    flat::{Point, Rect},
+    volume::UIVertex,
+};
 use wgpu::util::DeviceExt;
 
 use crate::{
@@ -91,8 +94,8 @@ impl ImageState {
         })
     }
 
-    pub fn draw<'a>(&'a self, image: &'static Image, render_pass: &mut wgpu::RenderPass<'a>) {
-        render_pass.set_viewport(10.0, 10.0, 600.0, 600.0, 0.0, 1.0);
+    pub fn draw<'a>(&'a self, image: &'static Image, rect: &Rect, render_pass: &mut wgpu::RenderPass<'a>) {
+        render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(&self.render_pipeline);
         render_pass.set_bind_group(0, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
