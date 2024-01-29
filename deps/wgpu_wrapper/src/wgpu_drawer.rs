@@ -3,19 +3,24 @@ use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
 use wgpu::{Device, RenderPass, TextureFormat};
 
-use crate::{image::Image, image_state::ImageState, rect_state::RectState};
+use crate::{
+    colored_image_state::ColoredImageState, image::Image, mono_image_state::MonoImageState,
+    rect_state::RectState,
+};
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
-    rect_state:      RectState,
-    pub image_state: ImageState,
+    rect_state:              RectState,
+    pub colored_image_state: ColoredImageState,
+    pub mono_image_state:    MonoImageState,
 }
 
 impl WGPUDrawer {
     pub fn new(device: &Device, texture_format: TextureFormat) -> Result<Self> {
         Ok(Self {
-            rect_state:  RectState::new(device, texture_format),
-            image_state: ImageState::new(device, texture_format)?,
+            rect_state:          RectState::new(device, texture_format),
+            colored_image_state: ColoredImageState::new(device)?,
+            mono_image_state:    MonoImageState::new(device)?,
         })
     }
 }

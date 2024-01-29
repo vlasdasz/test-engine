@@ -6,7 +6,7 @@ use manage::data_manager::DataManager;
 use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{image::Image, text::Font, wgpu_drawer::WGPUDrawer};
+use crate::{image::Image, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -53,24 +53,26 @@ impl State {
             )
             .await?;
 
-        let surface_caps = surface.get_capabilities(&adapter);
+        let _surface_caps = surface.get_capabilities(&adapter);
 
-        dbg!(&surface_caps);
+        //    dbg!(&surface_caps);
 
         // Shader code in this tutorial assumes an sRGB surface texture. Using a
         // different one will result in all the colors coming out darker. If you
         // want to support non sRGB surfaces, you'll need to account for that
         // when drawing to the frame.
-        let surface_format = surface_caps
-            .formats
-            .iter()
-            .copied()
-            .find(TextureFormat::is_srgb)
-            .unwrap_or(surface_caps.formats[0]);
+        // let surface_format = surface_caps
+        //     .formats
+        //     .iter()
+        //     .copied()
+        //     .find(TextureFormat::is_srgb)
+        //     .unwrap_or(surface_caps.formats[0]);
+        //
+        // dbg!(&surface_format);
 
         let config = wgpu::SurfaceConfiguration {
             usage:        wgpu::TextureUsages::RENDER_ATTACHMENT,
-            format:       surface_format,
+            format:       TextureFormat::Bgra8UnormSrgb,
             width:        size.width,
             height:       size.height,
             present_mode: PresentMode::AutoVsync,
@@ -148,13 +150,13 @@ impl State {
             //     .draw(image.get_static(), &(500, 500, 200, 200).into(), &mut
             // render_pass);
 
-            self.drawer.image_state.draw(
+            self.drawer.colored_image_state.draw(
                 Image::get("happy-tree.png").get_static(),
                 &(10, 500, 200, 200).into(),
                 &mut render_pass,
             );
 
-            self.drawer.image_state.draw(
+            self.drawer.colored_image_state.draw(
                 Image::get("frisk.png").get_static(),
                 &(400, 10, 100, 100).into(),
                 &mut render_pass,

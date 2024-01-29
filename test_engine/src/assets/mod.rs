@@ -17,8 +17,6 @@ impl Assets {
 
         let paths = Paths::new(root_path.into());
 
-        dbg!(&paths.images);
-
         Image::set_root_path(&paths.images);
         GlImage::set_root_path(&paths.images);
         Sound::set_root_path(&paths.sounds);
