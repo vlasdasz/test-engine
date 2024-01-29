@@ -136,16 +136,17 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            let font = Font::helvetice()?;
-            let texture = font.draw(&self.device, "Azazazaza")?;
-
-            let image = Image::from_texture(texture, &self.device)?;
-
-            let image = Image::add_with_name("azaza_text", || image);
-
-            self.drawer
-                .image_state
-                .draw(image.get_static(), &(500, 500, 200, 200).into(), &mut render_pass);
+            // let font = Font::helvetice()?;
+            // let texture = font.draw(&self.device, &self.queue, "Azazazaza")?;
+            //
+            // let image = Image::from_texture(texture, &self.device)?;
+            //
+            // let image = Image::add_with_name("azaza_text", || image);
+            //
+            // self.drawer
+            //     .image_state
+            //     .draw(image.get_static(), &(500, 500, 200, 200).into(), &mut
+            // render_pass);
 
             self.drawer.image_state.draw(
                 Image::get("happy-tree.png").get_static(),

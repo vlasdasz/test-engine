@@ -1,11 +1,12 @@
-use std::mem::zeroed;
-
 use anyhow::Result;
 use glyph_brush::{
     ab_glyph::FontArc, BrushAction, GlyphBrush, GlyphBrushBuilder, GlyphVertex, Section, Text,
 };
 use gm::flat::Point;
-use wgpu::{AddressMode, Device, FilterMode, SamplerDescriptor, TextureViewDescriptor};
+use wgpu::{
+    AddressMode, Device, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Queue, SamplerDescriptor,
+    TextureAspect, TextureViewDescriptor,
+};
 
 use crate::image::Texture;
 
@@ -15,13 +16,14 @@ pub struct Font {
 }
 
 impl Font {
-    pub fn from_data(name: impl ToString, data: &'static [u8], size: f32) -> Result<Self> {
+    pub fn from_data(_name: impl ToString, data: &'static [u8]) -> Result<Self> {
         let font = FontArc::try_from_slice(data)?;
         Ok(Font { font })
     }
 
-    pub fn draw(&self, device: &Device, text: impl ToString) -> Result<Texture> {
+    pub fn draw(&self, device: &Device, queue: &Queue, text: impl ToString) -> Result<Texture> {
         let text = text.to_string();
+        let channels = 1;
 
         let mut glyph_brush: GlyphBrush<Point> = GlyphBrushBuilder::using_font(self.font.clone()).build();
 
@@ -49,15 +51,36 @@ impl Font {
                         mip_level_count: 1,
                         sample_count: 1,
                         dimension: wgpu::TextureDimension::D2,
-                        format: wgpu::TextureFormat::Rgba8UnormSrgb,
+                        format: wgpu::TextureFormat::R8Uint,
                         usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
                         view_formats: &[],
                     })
                     .into();
+
+                queue.write_texture(
+                    ImageCopyTexture {
+                        aspect:    TextureAspect::All,
+                        texture:   texture.as_ref().unwrap(),
+                        mip_level: 0,
+                        origin:    Origin3d::ZERO,
+                    },
+                    &texture_data,
+                    ImageDataLayout {
+                        offset:         0,
+                        bytes_per_row:  Some(channels as u32 * width),
+                        rows_per_image: Some(height),
+                    },
+                    size,
+                );
             },
-            |glyph_vertex: GlyphVertex| Point::default(),
+            |glyph_vertex: GlyphVertex| {
+                dbg!(&glyph_vertex);
+                Point::default()
+            },
         )? {
-            BrushAction::Draw(draw) => {}
+            BrushAction::Draw(draw) => {
+                dbg!(&draw);
+            }
             BrushAction::ReDraw => {}
         };
 
@@ -84,12 +107,11 @@ impl Font {
     }
 }
 
-static DEFAULT_FONT_SIZE: f32 = 64.0;
 const SF: &str = "default_helvetica";
 
 impl Font {
     pub fn helvetice() -> Result<Self> {
-        Self::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)
+        Self::from_data(SF, include_bytes!("fonts/Helvetica.ttf"))
     }
 }
 
@@ -98,7 +120,7 @@ fn test_font() -> Result<()> {
     pub static DEFAULT_FONT_SIZE: f32 = 64.0;
     const SF: &str = "default_helvetica";
 
-    let _font = Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)?;
+    let _font = Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"))?;
 
     Ok(())
 }
