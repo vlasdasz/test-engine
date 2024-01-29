@@ -29,20 +29,18 @@ fn render_glyph(font: &fontdue::Font, symbol: char, size: f32) -> Glyph {
         height: metrics.height as f32,
     };
 
-    let image_name = format!("Glyph: {symbol}");
-
-    GlImage::from(&bitmap, size, 1, format!("Glyph: {symbol}"));
+    let image = GlImage::from(&bitmap, size, 1, format!("Glyph: {symbol}"));
 
     Glyph::new(
         symbol,
-        image_name,
+        image,
         metrics.advance_width,
         (metrics.bounds.xmin, metrics.bounds.height).into(),
     )
 }
 
 #[derive(Clone, Debug)]
-pub struct Font {
+pub struct GlFont {
     pub name:           String,
     pub font:           fontdue::Font,
     pub height:         f32,
@@ -52,8 +50,8 @@ pub struct Font {
     glyphs: HashMap<char, Glyph>,
 }
 
-impl Font {
-    fn from_data(name: impl ToString, data: &[u8], size: f32) -> Result<Font, &'static str> {
+impl GlFont {
+    fn from_data(name: impl ToString, data: &[u8], size: f32) -> Result<GlFont, &'static str> {
         let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default())?;
 
         let mut glyphs_map = HashMap::new();
@@ -61,7 +59,7 @@ impl Font {
         let mut y_max = f32::MIN;
         let mut y_min = f32::MAX;
 
-        if Font::render_enabled() {
+        if GlFont::render_enabled() {
             for symbol in (Range {
                 start: 0 as char,
                 end:   127 as char,
@@ -84,7 +82,7 @@ impl Font {
 
         trace!("Font: OK");
 
-        Ok(Font {
+        Ok(GlFont {
             name: name.to_string(),
             font,
             size,
@@ -97,12 +95,12 @@ impl Font {
 
 static _FONT_LOCK: Mutex<()> = Mutex::new(());
 
-impl Font {
+impl GlFont {
     pub fn helvetica() -> Weak<Self> {
         const SF: &str = "default_helvetica";
 
-        Font::add_with_name(SF, || {
-            Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)
+        GlFont::add_with_name(SF, || {
+            GlFont::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)
                 .expect("BUG: Failed to render default font")
         })
     }
@@ -121,7 +119,7 @@ impl Font {
     }
 }
 
-impl ResourceLoader for Font {
+impl ResourceLoader for GlFont {
     fn load_path(path: &Path) -> Self {
         Self::load_data(&File::read(path), path.display())
     }
@@ -132,4 +130,4 @@ impl ResourceLoader for Font {
     }
 }
 
-managed!(Font);
+managed!(GlFont);

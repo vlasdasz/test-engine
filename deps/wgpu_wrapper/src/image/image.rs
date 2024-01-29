@@ -10,7 +10,7 @@ use wgpu::{
     SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-use crate::{app::App, image::Texture};
+use crate::{app::App, image::Texture, state::State};
 
 // static GET_STATE: Mutex<RefCell<Option<Box<dyn Fn() -> (&'static Queue,
 // &'static Device)>>>> =     Mutex::new(RefCell::new(None));
@@ -23,13 +23,14 @@ pub struct Image {
 }
 
 impl Image {
-    fn load_to_wgpu(name: &str, data: &[u8]) -> Result<Image> {
-        let state = &App::current().state;
-
+    fn load_to_wgpu(state: &State, name: &str, data: &[u8]) -> Result<Self> {
         let texture = Texture::from_bytes(&state.device, &state.queue, data, name)?;
+        Self::from_texture(texture, &state.device)
+    }
 
-        let bind = state.device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout:  &Self::bind_group_layout(&state.device),
+    pub fn from_texture(texture: Texture, device: &Device) -> Result<Self> {
+        let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
+            layout:  &Self::bind_group_layout(&device),
             entries: &[
                 wgpu::BindGroupEntry {
                     binding:  0,
@@ -43,7 +44,7 @@ impl Image {
             label:   Some("diffuse_bind_group"),
         });
 
-        Ok(Image {
+        Ok(Self {
             size: texture.size,
             channels: texture.channels,
             bind,
@@ -52,7 +53,8 @@ impl Image {
 
     pub fn from(data: &[u8], name: String) -> Weak<Image> {
         Image::add_with_name(&name.clone(), || {
-            Self::load_to_wgpu(&name, data).expect("Failed to load image {name} to wgpu")
+            Self::load_to_wgpu(&App::current().state, &name, data)
+                .expect("Failed to load image {name} to wgpu")
         })
     }
 
@@ -124,7 +126,7 @@ impl ResourceLoader for Image {
     fn load_data(data: &[u8], name: impl ToString) -> Self {
         let name = name.to_string();
 
-        Image::load_to_wgpu(&name.to_string(), data)
+        Image::load_to_wgpu(&App::current().state, &name.to_string(), data)
             .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
     }
 }

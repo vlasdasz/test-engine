@@ -17,6 +17,7 @@ image = { workspace = true }
 log = { workspace = true }
 wgpu = { workspace = true }
 winit = { workspace = true }
+glyph_brush = { workspace = true }
 
 manage = { workspace = true }
 refs = { workspace = true }

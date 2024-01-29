@@ -5,25 +5,17 @@ use gm::{
 };
 use wgpu::util::DeviceExt;
 
-use crate::{
-    image::{Image, Texture},
-    utils::make_pipeline,
-};
+use crate::{image::Image, utils::make_pipeline};
 
 #[derive(Debug)]
 pub struct ImageState {
     pub render_pipeline: wgpu::RenderPipeline,
-    pub bind_group:      wgpu::BindGroup,
     pub vertex_buffer:   wgpu::Buffer,
     pub num_vertices:    u32,
 }
 
 impl ImageState {
-    pub fn new(
-        device: &wgpu::Device,
-        texture_format: wgpu::TextureFormat,
-        queue: &wgpu::Queue,
-    ) -> Result<Self> {
+    pub fn new(device: &wgpu::Device, texture_format: wgpu::TextureFormat) -> Result<Self> {
         const VERTICES: &[UIVertex] = &[
             UIVertex {
                 pos: Point::new(-1.0, 1.0),
@@ -46,24 +38,6 @@ impl ImageState {
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
         let bind_group_layout = Image::bind_group_layout(device);
-
-        let bytes = include_bytes!("../../../Assets/Images/happy-tree.png");
-        let texture = Texture::from_bytes(device, queue, bytes, "happy-tree.png")?;
-
-        let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout:  &bind_group_layout,
-            entries: &[
-                wgpu::BindGroupEntry {
-                    binding:  0,
-                    resource: wgpu::BindingResource::TextureView(&texture.view),
-                },
-                wgpu::BindGroupEntry {
-                    binding:  1,
-                    resource: wgpu::BindingResource::Sampler(&texture.sampler),
-                },
-            ],
-            label:   Some("diffuse_bind_group"),
-        });
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                Some("Image Pipeline Layout"),
@@ -88,7 +62,6 @@ impl ImageState {
 
         Ok(Self {
             render_pipeline,
-            bind_group,
             vertex_buffer,
             num_vertices,
         })

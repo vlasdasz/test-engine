@@ -1,0 +1,104 @@
+use std::mem::zeroed;
+
+use anyhow::Result;
+use glyph_brush::{
+    ab_glyph::FontArc, BrushAction, GlyphBrush, GlyphBrushBuilder, GlyphVertex, Section, Text,
+};
+use gm::flat::Point;
+use wgpu::{AddressMode, Device, FilterMode, SamplerDescriptor, TextureViewDescriptor};
+
+use crate::image::Texture;
+
+#[derive(Debug)]
+pub struct Font {
+    font: FontArc,
+}
+
+impl Font {
+    pub fn from_data(name: impl ToString, data: &'static [u8], size: f32) -> Result<Self> {
+        let font = FontArc::try_from_slice(data)?;
+        Ok(Font { font })
+    }
+
+    pub fn draw(&self, device: &Device, text: impl ToString) -> Result<Texture> {
+        let text = text.to_string();
+
+        let mut glyph_brush: GlyphBrush<Point> = GlyphBrushBuilder::using_font(self.font.clone()).build();
+
+        glyph_brush.queue(Section::default().add_text(Text::new(&text)));
+
+        let mut texture: Option<wgpu::Texture> = None;
+
+        let mut width = 0;
+        let mut height = 0;
+
+        match glyph_brush.process_queued(
+            |rectangle, texture_data| {
+                width = rectangle.width();
+                height = rectangle.height();
+
+                let size = wgpu::Extent3d {
+                    width,
+                    height,
+                    depth_or_array_layers: 1,
+                };
+                texture = device
+                    .create_texture(&wgpu::TextureDescriptor {
+                        label: text.as_str().into(),
+                        size,
+                        mip_level_count: 1,
+                        sample_count: 1,
+                        dimension: wgpu::TextureDimension::D2,
+                        format: wgpu::TextureFormat::Rgba8UnormSrgb,
+                        usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+                        view_formats: &[],
+                    })
+                    .into();
+            },
+            |glyph_vertex: GlyphVertex| Point::default(),
+        )? {
+            BrushAction::Draw(draw) => {}
+            BrushAction::ReDraw => {}
+        };
+
+        let texture = texture.unwrap();
+
+        let view = texture.create_view(&TextureViewDescriptor::default());
+        let sampler = device.create_sampler(&SamplerDescriptor {
+            address_mode_u: AddressMode::ClampToEdge,
+            address_mode_v: AddressMode::ClampToEdge,
+            address_mode_w: AddressMode::ClampToEdge,
+            mag_filter: FilterMode::Linear,
+            min_filter: FilterMode::Nearest,
+            mipmap_filter: FilterMode::Nearest,
+            ..Default::default()
+        });
+
+        Ok(Texture {
+            texture,
+            view,
+            sampler,
+            size: (width, height).into(),
+            channels: 1,
+        })
+    }
+}
+
+static DEFAULT_FONT_SIZE: f32 = 64.0;
+const SF: &str = "default_helvetica";
+
+impl Font {
+    pub fn helvetice() -> Result<Self> {
+        Self::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)
+    }
+}
+
+#[test]
+fn test_font() -> Result<()> {
+    pub static DEFAULT_FONT_SIZE: f32 = 64.0;
+    const SF: &str = "default_helvetica";
+
+    let _font = Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"), DEFAULT_FONT_SIZE)?;
+
+    Ok(())
+}

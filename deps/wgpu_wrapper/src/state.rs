@@ -6,7 +6,7 @@ use manage::data_manager::DataManager;
 use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{image::Image, wgpu_drawer::WGPUDrawer};
+use crate::{image::Image, text::Font, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -82,7 +82,7 @@ impl State {
 
         surface.configure(&device, &config);
 
-        let drawer = WGPUDrawer::new(&device, config.format, &queue)?;
+        let drawer = WGPUDrawer::new(&device, config.format)?;
 
         Ok(Self {
             surface,
@@ -109,7 +109,7 @@ impl State {
 
     pub fn update(&mut self) {}
 
-    pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
+    pub fn render(&mut self) -> Result<()> {
         let surface_texture = self.surface.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
@@ -135,6 +135,17 @@ impl State {
                 occlusion_query_set:      None,
                 timestamp_writes:         None,
             });
+
+            let font = Font::helvetice()?;
+            let texture = font.draw(&self.device, "Azazazaza")?;
+
+            let image = Image::from_texture(texture, &self.device)?;
+
+            let image = Image::add_with_name("azaza_text", || image);
+
+            self.drawer
+                .image_state
+                .draw(image.get_static(), &(500, 500, 200, 200).into(), &mut render_pass);
 
             self.drawer.image_state.draw(
                 Image::get("happy-tree.png").get_static(),

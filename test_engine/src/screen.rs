@@ -12,7 +12,7 @@ use gm::{
 use manage::data_manager::DataManager;
 use rest::API;
 use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
-use text::Font;
+use text::GlFont;
 use ui::{
     refs::{assert_main_thread, Own, Weak},
     UIManager, View, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
@@ -296,6 +296,6 @@ impl Screen {
 
 impl Drop for Screen {
     fn drop(&mut self) {
-        Font::free(Font::helvetica());
+        GlFont::free(GlFont::helvetica());
     }
 }

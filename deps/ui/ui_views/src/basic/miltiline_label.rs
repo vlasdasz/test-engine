@@ -7,14 +7,14 @@ use gm::{flat::Size, Color};
 use refs::{set_current_thread_as_main, weak_from_ref, Weak};
 use rtools::{hash, IntoF32};
 use smart_default::SmartDefault;
-use text::{render_text, text_size, Font};
+use text::{render_text, text_size, GlFont};
 use ui::{view, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews};
 
 use crate::ImageView;
 
 #[view]
 pub struct MultilineLabel {
-    font:          Weak<Font>,
+    font:          Weak<GlFont>,
     text:          String,
     size:          f32,
     split_storage: HashMap<u64, (Vec<String>, f32)>,
@@ -150,7 +150,7 @@ impl MultilineLabel {
 
 impl ViewSetup for MultilineLabel {
     fn setup(mut self: Weak<Self>) {
-        self.font = Font::helvetica();
+        self.font = GlFont::helvetica();
         self.size = text::DEFAULT_FONT_SIZE;
 
         self.set_letters();
@@ -175,7 +175,7 @@ mod test {
     use refs::{set_current_thread_as_main, Own};
     use rtools::Random;
     use serial_test::serial;
-    use text::{text_size, Font, DEFAULT_FONT_SIZE};
+    use text::{text_size, GlFont, DEFAULT_FONT_SIZE};
     use ui::{ViewFrame, ViewInternalSetup};
 
     use crate::MultilineLabel;
@@ -184,28 +184,28 @@ mod test {
     #[serial]
     fn size() {
         set_current_thread_as_main();
-        Font::disable_render();
+        GlFont::disable_render();
 
         assert_eq!(
-            text_size("sos", &Font::helvetica(), DEFAULT_FONT_SIZE),
+            text_size("sos", &GlFont::helvetica(), DEFAULT_FONT_SIZE),
             (98, 52).into()
         );
         assert_eq!(
-            text_size("kok", &Font::helvetica(), DEFAULT_FONT_SIZE),
+            text_size("kok", &GlFont::helvetica(), DEFAULT_FONT_SIZE),
             (100, 50).into()
         );
         assert_eq!(
-            text_size("lol", &Font::helvetica(), DEFAULT_FONT_SIZE),
+            text_size("lol", &GlFont::helvetica(), DEFAULT_FONT_SIZE),
             (61, 50).into()
         );
-        assert_eq!(text_size("lol", &Font::helvetica(), 100), (95, 78).into());
+        assert_eq!(text_size("lol", &GlFont::helvetica(), 100), (95, 78).into());
     }
 
     #[test]
     #[serial]
     fn fits() {
         set_current_thread_as_main();
-        Font::disable_render();
+        GlFont::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
         view.__internal_setup();
@@ -221,7 +221,7 @@ mod test {
     #[serial]
     fn split_one() {
         set_current_thread_as_main();
-        Font::disable_render();
+        GlFont::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
         view.__internal_setup();
@@ -234,7 +234,7 @@ mod test {
     #[serial]
     fn rest() {
         set_current_thread_as_main();
-        Font::disable_render();
+        GlFont::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
         view.__internal_setup();
@@ -250,7 +250,7 @@ mod test {
     #[serial]
     fn split_many() {
         set_current_thread_as_main();
-        Font::disable_render();
+        GlFont::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
         view.__internal_setup();
@@ -273,7 +273,7 @@ mod test {
     /// It is
     fn letter_margin() {
         set_current_thread_as_main();
-        Font::disable_render();
+        GlFont::disable_render();
 
         let mut view = Own::<MultilineLabel>::default();
         view.__internal_setup();
@@ -285,11 +285,11 @@ mod test {
         let text_a_b = format!("{letter_a} {letter_b}");
         let text_b_a = format!("{letter_b} {letter_a}");
 
-        let a = text_size(letter_a, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
-        let b = text_size(letter_b, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
+        let a = text_size(letter_a, GlFont::helvetica().deref(), DEFAULT_FONT_SIZE).width;
+        let b = text_size(letter_b, GlFont::helvetica().deref(), DEFAULT_FONT_SIZE).width;
 
-        let a_b = text_size(&text_a_b, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
-        let b_a = text_size(&text_b_a, Font::helvetica().deref(), DEFAULT_FONT_SIZE).width;
+        let a_b = text_size(&text_a_b, GlFont::helvetica().deref(), DEFAULT_FONT_SIZE).width;
+        let b_a = text_size(&text_b_a, GlFont::helvetica().deref(), DEFAULT_FONT_SIZE).width;
 
         let space = a_b - a - b;
         let space2 = b_a - a - b;

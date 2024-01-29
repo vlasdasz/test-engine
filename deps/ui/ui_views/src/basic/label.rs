@@ -3,14 +3,14 @@ use gm::Color;
 use log::warn;
 use refs::Weak;
 use rtools::IntoF32;
-use text::{render_text, Font};
+use text::{render_text, GlFont};
 use ui::{view, SubView, ToLabel, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews};
 
 use crate::ImageView;
 
 #[view]
 pub struct Label {
-    font:         Weak<Font>,
+    font:         Weak<GlFont>,
     text:         String,
     image_view:   SubView<ImageView>,
     text_size:    f32,
@@ -103,7 +103,7 @@ impl Label {
 
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
-        self.font = Font::helvetica();
+        self.font = GlFont::helvetica();
         self.set_size((100, 20));
         self.text_size = 32.0;
 

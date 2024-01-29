@@ -11,7 +11,7 @@ use manage::data_manager::DataManager;
 use refs::Weak;
 use rtools::IntoF32;
 
-pub fn text_layout(text: impl ToString, font: &Font, size: impl IntoF32) -> (Layout, Size) {
+pub fn text_layout(text: impl ToString, font: &GlFont, size: impl IntoF32) -> (Layout, Size) {
     let mut layout: Layout = Layout::new(CoordinateSystem::PositiveYDown);
 
     let text = text.to_string();
@@ -27,11 +27,11 @@ pub fn text_layout(text: impl ToString, font: &Font, size: impl IntoF32) -> (Lay
     (layout, size)
 }
 
-pub fn text_size(text: impl ToString, font: &Font, size: impl IntoF32) -> Size {
+pub fn text_size(text: impl ToString, font: &GlFont, size: impl IntoF32) -> Size {
     text_layout(text, font, size).1
 }
 
-pub fn render_text(text: &str, font: &mut Font, size: impl IntoF32) -> Weak<GlImage> {
+pub fn render_text(text: &str, font: &mut GlFont, size: impl IntoF32) -> Weak<GlImage> {
     let id = format!("label-text:{text}:size-{size}:font-{}", font.name);
 
     if let Some(image) = GlImage::get_existing(&id) {
@@ -44,7 +44,7 @@ pub fn render_text(text: &str, font: &mut Font, size: impl IntoF32) -> Weak<GlIm
 
     let (layout, size) = text_layout(text, font, size);
 
-    if !Font::render_enabled() {
+    if !GlFont::render_enabled() {
         let mut image = GlImage::empty();
         image.size = size;
         return GlImage::add_with_name(&id, || image);
@@ -81,25 +81,33 @@ mod test {
     use rtools::Random;
     use serial_test::serial;
 
-    use crate::{render_text, Font};
+    use crate::{render_text, GlFont};
 
     #[test]
     #[serial]
     fn text_size() {
         set_current_thread_as_main();
-        Font::disable_render();
+        GlFont::disable_render();
 
         for _ in 0..100 {
             let text = String::random();
 
             let size = u32::random_in(10..100);
 
-            let middle_size = render_text(&text, Font::helvetica().deref_mut(), size).size;
+            let middle_size = render_text(&text, GlFont::helvetica().deref_mut(), size).size;
 
-            let smol_size =
-                render_text(&text, Font::helvetica().deref_mut(), size - u32::random_in(2..6)).size;
-            let bigg_size =
-                render_text(&text, Font::helvetica().deref_mut(), size + u32::random_in(2..6)).size;
+            let smol_size = render_text(
+                &text,
+                GlFont::helvetica().deref_mut(),
+                size - u32::random_in(2..6),
+            )
+            .size;
+            let bigg_size = render_text(
+                &text,
+                GlFont::helvetica().deref_mut(),
+                size + u32::random_in(2..6),
+            )
+            .size;
 
             assert!(middle_size.width > smol_size.width);
             assert!(middle_size.height > smol_size.height);

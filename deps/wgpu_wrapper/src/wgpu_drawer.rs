@@ -1,7 +1,7 @@
 use anyhow::Result;
 use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
-use wgpu::{Device, Queue, RenderPass, TextureFormat};
+use wgpu::{Device, RenderPass, TextureFormat};
 
 use crate::{image::Image, image_state::ImageState, rect_state::RectState};
 
@@ -12,10 +12,10 @@ pub struct WGPUDrawer {
 }
 
 impl WGPUDrawer {
-    pub fn new(device: &Device, texture_format: TextureFormat, queue: &Queue) -> Result<Self> {
+    pub fn new(device: &Device, texture_format: TextureFormat) -> Result<Self> {
         Ok(Self {
             rect_state:  RectState::new(device, texture_format),
-            image_state: ImageState::new(device, texture_format, queue)?,
+            image_state: ImageState::new(device, texture_format)?,
         })
     }
 }

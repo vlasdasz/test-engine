@@ -31,6 +31,7 @@ impl App {
         let event_loop = EventLoop::new()?;
         let window = Arc::new(
             WindowBuilder::new()
+                .with_title("Test Engine")
                 .with_inner_size(PhysicalSize::new(width, height))
                 .build(&event_loop)
                 .unwrap(),
@@ -78,8 +79,8 @@ impl App {
                     self.state.update();
                     match self.state.render() {
                         Ok(()) => {}
-                        Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),
-                        Err(wgpu::SurfaceError::OutOfMemory) => elwt.exit(),
+                        // Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),
+                        // Err(wgpu::SurfaceError::OutOfMemory) => elwt.exit(),
                         Err(e) => error!("{e:?}"),
                     }
                 }

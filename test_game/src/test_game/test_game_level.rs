@@ -9,7 +9,7 @@ use test_engine::{
         Color,
     },
     sprites::{Body, LevelCreation, Player, SpriteTemplates, Wall},
-    text::{render_text, Font},
+    text::{render_text, GlFont},
     GlImage, Level, LevelBase, Sprite,
 };
 use ui::refs::{weak_from_ref, Weak};
@@ -59,7 +59,7 @@ impl Level for TestGameLevel {
         self.add_rect((30, 30, 40, 25)).set_image(drawn);
 
         self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, 0))
-            .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
+            .set_image(render_text("oo spolokolkok", GlFont::helvetica().deref_mut(), 64));
         self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0)).set_image(square);
         self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0))
             .set_image(square);
