@@ -12,7 +12,7 @@ use crate::{
 pub struct WGPUDrawer {
     rect_state:              RectState,
     pub colored_image_state: ColoredImageState,
-    pub mono_image_state:    MonoImageState,
+    //  pub mono_image_state:    MonoImageState,
 }
 
 impl WGPUDrawer {
@@ -20,7 +20,7 @@ impl WGPUDrawer {
         Ok(Self {
             rect_state:          RectState::new(device, texture_format),
             colored_image_state: ColoredImageState::new(device)?,
-            mono_image_state:    MonoImageState::new(device)?,
+            //  mono_image_state:    MonoImageState::new(device)?,
         })
     }
 }

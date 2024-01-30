@@ -59,7 +59,11 @@ impl Texture {
         );
 
         let view = texture.create_view(&TextureViewDescriptor::default());
+
+        dbg!(&view);
+
         let sampler = device.create_sampler(&SamplerDescriptor {
+            label: "texture_sampler".into(),
             address_mode_u: AddressMode::ClampToEdge,
             address_mode_v: AddressMode::ClampToEdge,
             address_mode_w: AddressMode::ClampToEdge,
@@ -68,6 +72,8 @@ impl Texture {
             mipmap_filter: FilterMode::Nearest,
             ..Default::default()
         });
+
+        dbg!(&sampler);
 
         Ok(Self {
             texture,
