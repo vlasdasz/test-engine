@@ -2,7 +2,7 @@ use anyhow::Result;
 use gm::{flat::Rect, volume::UIVertex};
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    TextureFormat, TextureSampleType,
+    TextureFormat,
 };
 
 use crate::{image::Image, utils::make_pipeline, IMAGE_VERTICES};
@@ -18,8 +18,7 @@ impl ColoredImageState {
     pub fn new(device: &wgpu::Device) -> Result<Self> {
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image_color.wgsl"));
 
-        let bind_group_layout =
-            Image::bind_group_layout(device, TextureSampleType::Float { filterable: true });
+        let bind_group_layout = Image::bind_group_layout(device);
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                Some("Colored Image Pipeline Layout"),

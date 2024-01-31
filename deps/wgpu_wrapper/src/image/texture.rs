@@ -21,7 +21,7 @@ impl Texture {
         Ok(Self::from_dynamic_image(device, queue, &img, label))
     }
 
-    fn from_raw_data(
+    pub(crate) fn from_raw_data(
         device: &Device,
         queue: &Queue,
         data: &[u8],
@@ -34,15 +34,22 @@ impl Texture {
             height:                size.height,
             depth_or_array_layers: 1,
         };
+
+        let format = match channels {
+            1 => wgpu::TextureFormat::R8Unorm,
+            4 => wgpu::TextureFormat::Rgba8UnormSrgb,
+            ch => panic!("Invalid number of channels: {ch}"),
+        };
+
         let texture = device.create_texture(&wgpu::TextureDescriptor {
-            label:           label.into(),
-            size:            extend_size,
+            label: label.into(),
+            size: extend_size,
             mip_level_count: 1,
-            sample_count:    1,
-            dimension:       wgpu::TextureDimension::D2,
-            format:          wgpu::TextureFormat::Rgba8UnormSrgb,
-            usage:           wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
-            view_formats:    &[],
+            sample_count: 1,
+            dimension: wgpu::TextureDimension::D2,
+            format,
+            usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+            view_formats: &[],
         });
 
         queue.write_texture(
@@ -63,20 +70,16 @@ impl Texture {
 
         let view = texture.create_view(&TextureViewDescriptor::default());
 
-        dbg!(&view);
-
         let sampler = device.create_sampler(&SamplerDescriptor {
             label: "texture_sampler".into(),
             address_mode_u: AddressMode::ClampToEdge,
             address_mode_v: AddressMode::ClampToEdge,
             address_mode_w: AddressMode::ClampToEdge,
-            mag_filter: FilterMode::Linear,
+            mag_filter: FilterMode::Nearest,
             min_filter: FilterMode::Nearest,
             mipmap_filter: FilterMode::Nearest,
             ..Default::default()
         });
-
-        dbg!(&sampler);
 
         Self {
             texture,

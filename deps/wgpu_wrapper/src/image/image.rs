@@ -28,14 +28,7 @@ impl Image {
     pub fn from_texture(texture: Texture, device: &Device) -> Result<Self> {
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label:   Some("diffuse_bind_group"),
-            layout:  &Self::bind_group_layout(
-                device,
-                if texture.channels == 1 {
-                    TextureSampleType::Uint
-                } else {
-                    TextureSampleType::Float { filterable: true }
-                },
-            ),
+            layout:  &Self::bind_group_layout(device),
             entries: &[
                 wgpu::BindGroupEntry {
                     binding:  0,
@@ -158,7 +151,7 @@ impl ResourceLoader for Image {
 // }
 
 impl Image {
-    pub(crate) fn bind_group_layout(device: &Device, sample_type: TextureSampleType) -> BindGroupLayout {
+    pub(crate) fn bind_group_layout(device: &Device) -> BindGroupLayout {
         device.create_bind_group_layout(&BindGroupLayoutDescriptor {
             label:   "image_bind_group_layout".into(),
             entries: &[
@@ -166,9 +159,9 @@ impl Image {
                     binding:    0,
                     visibility: ShaderStages::FRAGMENT,
                     ty:         BindingType::Texture {
-                        multisampled: false,
+                        multisampled:   false,
                         view_dimension: TextureViewDimension::D2,
-                        sample_type,
+                        sample_type:    TextureSampleType::Float { filterable: true },
                     },
                     count:      None,
                 },
