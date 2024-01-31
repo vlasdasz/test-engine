@@ -52,7 +52,7 @@ impl Texture {
             &rgba,
             ImageDataLayout {
                 offset:         0,
-                bytes_per_row:  Some(channels as u32 * dimensions.0),
+                bytes_per_row:  Some(u32::from(channels) * dimensions.0),
                 rows_per_image: Some(dimensions.1),
             },
             size,

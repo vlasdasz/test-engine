@@ -23,7 +23,7 @@ impl Font {
 
     pub fn draw(&self, device: &Device, queue: &Queue, text: impl ToString) -> Result<Texture> {
         let text = text.to_string();
-        let channels = 1;
+        let channels = 1u32;
 
         let mut glyph_brush: GlyphBrush<Point> = GlyphBrushBuilder::using_font(self.font.clone()).build();
 
@@ -64,10 +64,10 @@ impl Font {
                         mip_level: 0,
                         origin:    Origin3d::ZERO,
                     },
-                    &texture_data,
+                    texture_data,
                     ImageDataLayout {
                         offset:         0,
-                        bytes_per_row:  Some(channels as u32 * width),
+                        bytes_per_row:  Some(channels * width),
                         rows_per_image: Some(height),
                     },
                     size,
@@ -117,7 +117,6 @@ impl Font {
 
 #[test]
 fn test_font() -> Result<()> {
-    pub static DEFAULT_FONT_SIZE: f32 = 64.0;
     const SF: &str = "default_helvetica";
 
     let _font = Font::from_data(SF, include_bytes!("fonts/Helvetica.ttf"))?;

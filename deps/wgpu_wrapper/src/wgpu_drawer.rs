@@ -3,10 +3,7 @@ use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
 use wgpu::{Device, RenderPass, TextureFormat};
 
-use crate::{
-    colored_image_state::ColoredImageState, image::Image, mono_image_state::MonoImageState,
-    rect_state::RectState,
-};
+use crate::{colored_image_state::ColoredImageState, image::Image, rect_state::RectState};
 
 #[derive(Debug)]
 pub struct WGPUDrawer {

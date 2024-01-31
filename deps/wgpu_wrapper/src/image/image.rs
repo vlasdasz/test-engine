@@ -32,7 +32,7 @@ impl Image {
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label:   Some("diffuse_bind_group"),
             layout:  &Self::bind_group_layout(
-                &device,
+                device,
                 if texture.channels == 1 {
                     TextureSampleType::Uint
                 } else {

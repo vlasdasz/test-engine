@@ -10,6 +10,7 @@ pub mod color;
 pub mod converter;
 pub mod flat;
 pub mod misc;
+pub mod num;
 pub mod sign;
 pub mod volume;
 
