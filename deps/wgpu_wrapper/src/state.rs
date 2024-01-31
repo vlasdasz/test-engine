@@ -1,16 +1,12 @@
 use std::sync::Arc;
 
 use anyhow::{anyhow, Result};
-use bytemuck::cast_slice;
 use gm::Color;
 use manage::data_manager::DataManager;
 use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{
-    image::{Image, Texture},
-    wgpu_drawer::WGPUDrawer,
-};
+use crate::{image::Image, text::Font, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -142,8 +138,6 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            // let font = Font::helvetice()?;
-            // let texture = font.draw(&self.device, &self.queue, "Azazazaza")?;
             //
             // let image = Image::from_texture(texture, &self.device)?;
             //
@@ -155,20 +149,14 @@ impl State {
             // render_pass);
 
             let manual = Image::add_with_name("manual_image", || {
-                let texture = Texture::from_raw_data(
-                    &self.device,
-                    &self.queue,
-                    cast_slice(&[255u8, 0, 100, 0]),
-                    (2, 2).into(),
-                    1,
-                    "manual_image",
-                );
+                let font = Font::helvetice().unwrap();
+                let texture = font.draw(&self.device, &self.queue, "ЫЖЦДЙ §-ž9ę-č0ė9").unwrap();
                 Image::from_texture(texture, &self.device).unwrap()
             });
 
             self.drawer.colored_image_state.draw(
                 manual.get_static(),
-                &(500, 500, 200, 200).into(),
+                &(280, 500, 800, 200).into(),
                 &mut render_pass,
             );
 

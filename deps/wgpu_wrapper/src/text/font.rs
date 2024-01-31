@@ -3,10 +3,7 @@ use glyph_brush::{
     ab_glyph::FontArc, BrushAction, GlyphBrush, GlyphBrushBuilder, GlyphVertex, Section, Text,
 };
 use gm::flat::Point;
-use wgpu::{
-    AddressMode, Device, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Queue, SamplerDescriptor,
-    TextureAspect, TextureViewDescriptor,
-};
+use wgpu::{Device, Queue};
 
 use crate::image::Texture;
 
@@ -23,13 +20,12 @@ impl Font {
 
     pub fn draw(&self, device: &Device, queue: &Queue, text: impl ToString) -> Result<Texture> {
         let text = text.to_string();
-        let channels = 1u32;
 
         let mut glyph_brush: GlyphBrush<Point> = GlyphBrushBuilder::using_font(self.font.clone()).build();
 
-        glyph_brush.queue(Section::default().add_text(Text::new(&text)));
+        glyph_brush.queue(Section::default().add_text(Text::new(&text).with_scale(80.0)));
 
-        let mut texture: Option<wgpu::Texture> = None;
+        let mut texture: Option<Texture> = None;
 
         let mut width = 0;
         let mut height = 0;
@@ -39,39 +35,9 @@ impl Font {
                 width = rectangle.width();
                 height = rectangle.height();
 
-                let size = wgpu::Extent3d {
-                    width,
-                    height,
-                    depth_or_array_layers: 1,
-                };
-                texture = device
-                    .create_texture(&wgpu::TextureDescriptor {
-                        label: text.as_str().into(),
-                        size,
-                        mip_level_count: 1,
-                        sample_count: 1,
-                        dimension: wgpu::TextureDimension::D2,
-                        format: wgpu::TextureFormat::R8Uint,
-                        usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
-                        view_formats: &[],
-                    })
-                    .into();
-
-                queue.write_texture(
-                    ImageCopyTexture {
-                        aspect:    TextureAspect::All,
-                        texture:   texture.as_ref().unwrap(),
-                        mip_level: 0,
-                        origin:    Origin3d::ZERO,
-                    },
-                    texture_data,
-                    ImageDataLayout {
-                        offset:         0,
-                        bytes_per_row:  Some(channels * width),
-                        rows_per_image: Some(height),
-                    },
-                    size,
-                );
+                texture =
+                    Texture::from_raw_data(device, queue, texture_data, (width, height).into(), 1, &text)
+                        .into();
             },
             |glyph_vertex: GlyphVertex| {
                 dbg!(&glyph_vertex);
@@ -84,26 +50,7 @@ impl Font {
             BrushAction::ReDraw => {}
         };
 
-        let texture = texture.unwrap();
-
-        let view = texture.create_view(&TextureViewDescriptor::default());
-        let sampler = device.create_sampler(&SamplerDescriptor {
-            address_mode_u: AddressMode::ClampToEdge,
-            address_mode_v: AddressMode::ClampToEdge,
-            address_mode_w: AddressMode::ClampToEdge,
-            mag_filter: FilterMode::Linear,
-            min_filter: FilterMode::Nearest,
-            mipmap_filter: FilterMode::Nearest,
-            ..Default::default()
-        });
-
-        Ok(Texture {
-            texture,
-            view,
-            sampler,
-            size: (width, height).into(),
-            channels: 1,
-        })
+        Ok(texture.unwrap())
     }
 }
 
