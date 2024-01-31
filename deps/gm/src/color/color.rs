@@ -1,60 +1,9 @@
-use std::{
-    fmt::Display,
-    hash::{Hash, Hasher},
-    ops::{Add, Sub},
-};
+use std::hash::{Hash, Hasher};
 
 use bytemuck::{Pod, Zeroable};
 use rtools::Random;
-use serde::{Deserialize, Serialize};
 
-use crate::num::{Abs, Zero};
-
-#[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ColorBase<T> {
-    pub r: T,
-    pub g: T,
-    pub b: T,
-    pub a: T,
-}
-
-impl<T> ColorBase<T> {
-    pub const fn rgba(r: T, g: T, b: T, a: T) -> Self {
-        Self { r, g, b, a }
-    }
-}
-
-impl<T: Copy> ColorBase<T> {
-    pub const fn as_slice(&self) -> [T; 4] {
-        [self.r, self.g, self.b, self.a]
-    }
-
-    pub fn with_alpha(&self, alpha: T) -> Self {
-        Self::rgba(self.r, self.g, self.b, alpha)
-    }
-}
-
-impl<T: Copy + Abs + Sub<Output = T> + Add<Output = T>> ColorBase<T> {
-    pub fn diff(&self, other: ColorBase<T>) -> T {
-        (self.r - other.r).abs()
-            + (self.g - other.g).abs()
-            + (self.b - other.b).abs()
-            + (self.a - other.a).abs()
-    }
-}
-
-impl<T: Display> Display for ColorBase<T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
-    }
-}
-
-impl<T: Zero> Default for ColorBase<T> {
-    fn default() -> Self {
-        Self::rgba(T::zero(), T::zero(), T::zero(), T::zero())
-    }
-}
+use crate::{color::ColorBase, U8Color};
 
 pub type Color = ColorBase<f32>;
 unsafe impl Zeroable for Color {}
@@ -71,6 +20,17 @@ impl Color {
 
     pub fn is_visible(&self) -> bool {
         self.a > 0.02
+    }
+
+    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_sign_loss)]
+    pub fn to_u8(&self) -> U8Color {
+        U8Color::rgba(
+            (255.0 * self.r) as u8,
+            (255.0 * self.g) as u8,
+            (255.0 * self.b) as u8,
+            (255.0 * self.a) as u8,
+        )
     }
 }
 
@@ -121,15 +81,17 @@ impl Hash for Color {
     }
 }
 
-impl Eq for Color {}
-
-pub type U8Color = ColorBase<u8>;
-unsafe impl Zeroable for U8Color {}
-unsafe impl Pod for U8Color {}
-
 #[test]
 fn color_diff() {
     assert_eq!(Color::WHITE.diff(Color::CLEAR), 4.0);
     assert_eq!(Color::WHITE.diff(Color::WHITE), 0.0);
     assert_eq!(Color::WHITE.diff(Color::WHITE.with_alpha(0.9)), 0.100000024);
+}
+
+#[test]
+fn color_to_u8() {
+    assert_eq!(
+        Color::rgba(0.5, 1.0, 0.1, 0.0).to_u8(),
+        U8Color::rgba(127, 255, 25, 0)
+    );
 }

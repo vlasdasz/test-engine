@@ -6,7 +6,7 @@
 extern crate core;
 
 pub mod axis;
-pub mod color;
+mod color;
 pub mod converter;
 pub mod flat;
 pub mod misc;
@@ -14,4 +14,4 @@ pub mod num;
 pub mod sign;
 pub mod volume;
 
-pub use color::Color;
+pub use color::*;
