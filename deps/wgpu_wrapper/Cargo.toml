@@ -13,7 +13,7 @@ anyhow = { workspace = true }
 bytemuck = { workspace = true }
 env_logger = { workspace = true }
 gl_wrapper = { workspace = true }
-glyph_brush = { workspace = true }
+#glyph_brush = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
 wgpu = { workspace = true }
@@ -24,3 +24,5 @@ refs = { workspace = true }
 rtools = { workspace = true }
 
 gm = { workspace = true }
+
+wgpu_text = "0.8.6"

@@ -4,9 +4,13 @@ use anyhow::{anyhow, Result};
 use gm::Color;
 use manage::data_manager::DataManager;
 use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
+use wgpu_text::{
+    glyph_brush::{ab_glyph::FontRef, BuiltInLineBreaker, HorizontalAlign, Layout, VerticalAlign},
+    BrushBuilder, TextBrush,
+};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{image::Image, text::Font, wgpu_drawer::WGPUDrawer};
+use crate::{image::Image, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -17,6 +21,8 @@ pub struct State {
     drawer: WGPUDrawer,
 
     pub size: winit::dpi::PhysicalSize<u32>,
+
+    pub brush: TextBrush<FontRef<'static>>,
 }
 
 impl State {
@@ -86,6 +92,10 @@ impl State {
 
         let drawer = WGPUDrawer::new(&device, config.format)?;
 
+        let brush = BrushBuilder::using_font_bytes(include_bytes!("text/fonts/Helvetica.ttf")).unwrap()
+            /* .initial_cache_size((16_384, 16_384))) */ // use this to avoid resizing cache texture
+            .build(&device, config.width, config.height, config.format);
+
         Ok(Self {
             surface,
             device,
@@ -93,6 +103,7 @@ impl State {
             config,
             drawer,
             size,
+            brush,
         })
     }
 
@@ -102,6 +113,8 @@ impl State {
             self.config.width = new_size.width;
             self.config.height = new_size.height;
             self.surface.configure(&self.device, &self.config);
+            self.brush
+                .resize_view(self.config.width as f32, self.config.height as f32, &self.queue);
         }
     }
 
@@ -117,6 +130,26 @@ impl State {
         let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
         });
+
+        use wgpu_text::glyph_brush::{Section as TextSection, Text};
+
+        let section = TextSection::default()
+            .add_text(
+                Text::new("Hello World Плати ęčėčė0- Ye ЩООООФФ")
+                    .with_scale(100.0)
+                    .with_color(Color::BLACK.as_slice()),
+            )
+            .with_bounds((self.config.width as f32 * 0.4, self.config.height as f32))
+            .with_layout(
+                Layout::default()
+                    .v_align(VerticalAlign::Center)
+                    .h_align(HorizontalAlign::Center)
+                    .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
+            )
+            .with_screen_position((400.0, self.config.height as f32 * 0.5));
+
+        self.brush.queue(&self.device, &self.queue, vec![&section]).unwrap();
+
         {
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label:                    Some("Render Pass"),
@@ -148,17 +181,17 @@ impl State {
             //     .draw(image.get_static(), &(500, 500, 200, 200).into(), &mut
             // render_pass);
 
-            let manual = Image::add_with_name("manual_image", || {
-                let font = Font::helvetice().unwrap();
-                let texture = font.draw(&self.device, &self.queue, "ЫЖЦДЙ §-ž9ę-č0ė9").unwrap();
-                Image::from_texture(texture, &self.device).unwrap()
-            });
-
-            self.drawer.colored_image_state.draw(
-                manual.get_static(),
-                &(280, 500, 800, 200).into(),
-                &mut render_pass,
-            );
+            // let manual = Image::add_with_name("manual_image", || {
+            //     let font = Font::helvetice().unwrap();
+            //     let texture = font.draw(&self.device, &self.queue, "ЫЖЦДЙ
+            // §-ž9ę-č0ė9").unwrap();     Image::from_texture(texture,
+            // &self.device).unwrap() });
+            //
+            // self.drawer.colored_image_state.draw(
+            //     manual.get_static(),
+            //     &(280, 500, 800, 200).into(),
+            //     &mut render_pass,
+            // );
 
             self.drawer.colored_image_state.draw(
                 Image::get("happy-tree.png").get_static(),
@@ -183,10 +216,23 @@ impl State {
             self.drawer.fill_rect(
                 &self.device,
                 &mut render_pass,
-                &(100, 200, 200, 200).into(),
+                &(400, 200, 200, 200).into(),
                 &Color::BLUE,
                 1,
             );
+
+            render_pass.set_viewport(
+                0.0,
+                0.0,
+                self.config.width as f32,
+                self.config.height as f32,
+                0.0,
+                1.0,
+            );
+
+            self.brush.draw(&mut render_pass);
+
+            // Crashes if inner cache exceeds limits.
         }
 
         // submit will accept anything that implements IntoIter
