@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use anyhow::Result;
-use gm::flat::Size;
+use gm::flat::IntSize;
 use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
 use refs::Weak;
 use rtools::file::File;
@@ -12,19 +12,16 @@ use wgpu::{
 
 use crate::{app::App, image::Texture, state::State};
 
-// static GET_STATE: Mutex<RefCell<Option<Box<dyn Fn() -> (&'static Queue,
-// &'static Device)>>>> =     Mutex::new(RefCell::new(None));
-
 #[derive(Debug)]
 pub struct Image {
-    pub size:        Size,
-    pub channels:    u32,
+    pub size:        IntSize,
+    pub channels:    u8,
     pub(crate) bind: BindGroup,
 }
 
 impl Image {
     fn load_to_wgpu(state: &State, name: &str, data: &[u8]) -> Result<Self> {
-        let texture = Texture::from_bytes(&state.device, &state.queue, data, name)?;
+        let texture = Texture::from_file_bytes(&state.device, &state.queue, data, name)?;
         Self::from_texture(texture, &state.device)
     }
 

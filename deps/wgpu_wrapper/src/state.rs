@@ -150,6 +150,9 @@ impl State {
             //     .draw(image.get_static(), &(500, 500, 200, 200).into(), &mut
             // render_pass);
 
+            //  let manual = Image::add_with_name("manual_image", || Image::load_data(&[],
+            // "manual_image"));
+
             self.drawer.colored_image_state.draw(
                 Image::get("happy-tree.png").get_static(),
                 &(10, 500, 200, 200).into(),

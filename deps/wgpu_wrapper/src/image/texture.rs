@@ -1,5 +1,5 @@
 use anyhow::Result;
-use gm::flat::Size;
+use gm::flat::IntSize;
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
     AddressMode, Device, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Queue, Sampler,
@@ -11,35 +11,38 @@ pub struct Texture {
     pub texture:  wgpu::Texture,
     pub view:     TextureView,
     pub sampler:  Sampler,
-    pub size:     Size,
-    pub channels: u32,
+    pub size:     IntSize,
+    pub channels: u8,
 }
 
 impl Texture {
-    pub fn from_bytes(device: &Device, queue: &Queue, bytes: &[u8], label: &str) -> Result<Self> {
+    pub fn from_file_bytes(device: &Device, queue: &Queue, bytes: &[u8], label: &str) -> Result<Self> {
         let img = image::load_from_memory(bytes)?;
-        Self::from_image(device, queue, &img, label)
+        Ok(Self::from_dynamic_image(device, queue, &img, label))
     }
 
-    fn from_image(device: &Device, queue: &Queue, img: &DynamicImage, label: &str) -> Result<Self> {
-        let rgba = img.to_rgba8();
-        let dimensions = img.dimensions();
-        let channels = img.color().channel_count();
-
-        let size = wgpu::Extent3d {
-            width:                 dimensions.0,
-            height:                dimensions.1,
+    fn from_raw_data(
+        device: &Device,
+        queue: &Queue,
+        data: &[u8],
+        size: IntSize,
+        channels: u8,
+        label: &str,
+    ) -> Self {
+        let extend_size = wgpu::Extent3d {
+            width:                 size.width,
+            height:                size.height,
             depth_or_array_layers: 1,
         };
         let texture = device.create_texture(&wgpu::TextureDescriptor {
-            label: label.into(),
-            size,
+            label:           label.into(),
+            size:            extend_size,
             mip_level_count: 1,
-            sample_count: 1,
-            dimension: wgpu::TextureDimension::D2,
-            format: wgpu::TextureFormat::Rgba8UnormSrgb,
-            usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
-            view_formats: &[],
+            sample_count:    1,
+            dimension:       wgpu::TextureDimension::D2,
+            format:          wgpu::TextureFormat::Rgba8UnormSrgb,
+            usage:           wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+            view_formats:    &[],
         });
 
         queue.write_texture(
@@ -49,13 +52,13 @@ impl Texture {
                 mip_level: 0,
                 origin:    Origin3d::ZERO,
             },
-            &rgba,
+            data,
             ImageDataLayout {
                 offset:         0,
-                bytes_per_row:  Some(u32::from(channels) * dimensions.0),
-                rows_per_image: Some(dimensions.1),
+                bytes_per_row:  Some(u32::from(channels) * extend_size.width),
+                rows_per_image: Some(extend_size.height),
             },
-            size,
+            extend_size,
         );
 
         let view = texture.create_view(&TextureViewDescriptor::default());
@@ -75,12 +78,25 @@ impl Texture {
 
         dbg!(&sampler);
 
-        Ok(Self {
+        Self {
             texture,
             view,
             sampler,
-            size: (dimensions.0, dimensions.1).into(),
-            channels: channels.into(),
-        })
+            size,
+            channels,
+        }
+    }
+
+    fn from_dynamic_image(device: &Device, queue: &Queue, img: &DynamicImage, label: &str) -> Self {
+        let dimensions = img.dimensions();
+
+        Self::from_raw_data(
+            device,
+            queue,
+            &img.to_rgba8(),
+            (dimensions.0, dimensions.1).into(),
+            img.color().channel_count(),
+            label,
+        )
     }
 }
