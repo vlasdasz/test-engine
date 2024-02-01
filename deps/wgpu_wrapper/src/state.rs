@@ -7,7 +7,7 @@ use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{image::Image, text::Font, wgpu_drawer::WGPUDrawer};
+use crate::{app::App, image::Image, text::Font, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -18,10 +18,11 @@ pub struct State {
     drawer: WGPUDrawer,
 
     pub(crate) fonts: HashMap<&'static str, Font>,
+    pub(crate) app:   Box<dyn App>,
 }
 
 impl State {
-    pub async fn new(window: Arc<Window>) -> Result<Self> {
+    pub async fn new(app: impl App + 'static, window: Arc<Window>) -> Result<Self> {
         let size = window.inner_size();
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -79,6 +80,7 @@ impl State {
             config,
             drawer,
             fonts: Default::default(),
+            app: Box::new(app),
         })
     }
 
@@ -127,6 +129,8 @@ impl State {
                 occlusion_query_set:      None,
                 timestamp_writes:         None,
             });
+
+            self.app.render();
 
             self.drawer.draw_image(
                 &mut render_pass,

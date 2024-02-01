@@ -10,7 +10,7 @@ use wgpu::{
     SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-use crate::{app::App, image::Texture, state::State};
+use crate::{image::Texture, state::State, wgpu_app::WGPUApp};
 
 #[derive(Debug)]
 pub struct Image {
@@ -50,7 +50,7 @@ impl Image {
 
     pub fn from(data: &[u8], name: String) -> Weak<Image> {
         Image::add_with_name(&name.clone(), || {
-            Self::load_to_wgpu(&App::current().state, &name, data)
+            Self::load_to_wgpu(&WGPUApp::current().state, &name, data)
                 .expect("Failed to load image {name} to wgpu")
         })
     }
@@ -123,7 +123,7 @@ impl ResourceLoader for Image {
     fn load_data(data: &[u8], name: impl ToString) -> Self {
         let name = name.to_string();
 
-        Image::load_to_wgpu(&App::current().state, &name.to_string(), data)
+        Image::load_to_wgpu(&WGPUApp::current().state, &name.to_string(), data)
             .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
     }
 }
