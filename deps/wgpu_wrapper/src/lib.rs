@@ -1,7 +1,6 @@
 pub mod app;
 pub mod colored_image_state;
 pub mod image;
-pub mod mono_image_state;
 mod pipeline;
 pub mod rect_state;
 pub mod state;

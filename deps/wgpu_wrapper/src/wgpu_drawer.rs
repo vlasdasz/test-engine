@@ -7,9 +7,8 @@ use crate::{colored_image_state::ColoredImageState, image::Image, rect_state::Re
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
-    rect_state:              RectState,
-    pub colored_image_state: ColoredImageState,
-    //  pub mono_image_state:    MonoImageState,
+    rect_state:          RectState,
+    colored_image_state: ColoredImageState,
 }
 
 impl WGPUDrawer {
@@ -17,7 +16,6 @@ impl WGPUDrawer {
         Ok(Self {
             rect_state:          RectState::new(device, texture_format),
             colored_image_state: ColoredImageState::new(device)?,
-            //  mono_image_state:    MonoImageState::new(device)?,
         })
     }
 }
@@ -29,7 +27,6 @@ impl WGPUDrawer {
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         color: &Color,
-        _priority: usize,
     ) {
         self.rect_state.draw(device, render_pass, rect, color);
     }
@@ -38,8 +35,8 @@ impl WGPUDrawer {
         todo!()
     }
 
-    pub fn draw_image(&self, _image: &Image, _rect: &Rect, _color: &Color, _priority: usize, _is_text: bool) {
-        todo!()
+    pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {
+        self.colored_image_state.draw(image, rect, render_pass);
     }
 
     pub fn draw_path(
