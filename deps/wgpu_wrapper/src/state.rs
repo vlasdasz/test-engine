@@ -107,26 +107,6 @@ impl State {
             label: Some("Render Encoder"),
         });
 
-        let section = Section::default()
-            .add_text(
-                Text::new("Hello World Плати ęčėčė0- Ye ЩООООФФ")
-                    .with_scale(100.0)
-                    .with_color(Color::BLACK.as_slice()),
-            )
-            .with_bounds((self.config.width as f32 * 0.4, self.config.height as f32))
-            .with_layout(
-                Layout::default()
-                    .v_align(VerticalAlign::Center)
-                    .h_align(HorizontalAlign::Center)
-                    .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
-            )
-            .with_screen_position((400.0, self.config.height as f32 * 0.5));
-
-        Font::helvetice()
-            .brush
-            .queue(&self.device, &self.queue, vec![&section])
-            .unwrap();
-
         {
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label:                    Some("Render Pass"),
@@ -182,6 +162,23 @@ impl State {
                 0.0,
                 1.0,
             );
+
+            let section = Section::default()
+                .add_text(
+                    Text::new("Hello World Плати ęčėčė0- Ye ЩООООФФ")
+                        .with_scale(100.0)
+                        .with_color(Color::BLACK.as_slice()),
+                )
+                .with_bounds((self.config.width as f32 * 0.4, self.config.height as f32))
+                .with_layout(
+                    Layout::default()
+                        .v_align(VerticalAlign::Center)
+                        .h_align(HorizontalAlign::Center)
+                        .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
+                )
+                .with_screen_position((400.0, self.config.height as f32 * 0.5));
+
+            self.drawer.draw_text(&self.device, &self.queue, &section, Font::helvetice());
 
             for font in self.fonts.values() {
                 font.brush.draw(&mut render_pass);

@@ -26,4 +26,8 @@ impl Font {
             .entry("Helvetica.ttf")
             .or_insert_with(|| Self::new("Helvetica.ttf", include_bytes!("fonts/Helvetica.ttf")).unwrap())
     }
+
+    pub fn with_name(name: &'static str) -> &'static mut Self {
+        App::current().state.fonts.get_mut(name).unwrap()
+    }
 }

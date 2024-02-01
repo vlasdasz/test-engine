@@ -1,9 +1,10 @@
 use anyhow::Result;
 use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{flat::Rect, Color};
-use wgpu::{Device, RenderPass, TextureFormat};
+use wgpu::{Device, Queue, RenderPass, TextureFormat};
+use wgpu_text::glyph_brush::Section;
 
-use crate::{colored_image_state::ColoredImageState, image::Image, rect_state::RectState};
+use crate::{colored_image_state::ColoredImageState, image::Image, rect_state::RectState, text::Font};
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
@@ -31,12 +32,12 @@ impl WGPUDrawer {
         self.rect_state.draw(device, render_pass, rect, color);
     }
 
-    pub fn outline_rect(&self, _rect: &Rect, _color: &Color, _priority: usize) {
-        todo!()
-    }
-
     pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {
         self.colored_image_state.draw(image, rect, render_pass);
+    }
+
+    pub fn draw_text(&self, device: &Device, queue: &Queue, section: &Section, font: &'static mut Font) {
+        font.brush.queue(device, queue, vec![section]).unwrap()
     }
 
     pub fn draw_path(
