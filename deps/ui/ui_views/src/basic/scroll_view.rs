@@ -1,6 +1,6 @@
 use gm::flat::Size;
 use refs::Weak;
-use ui::{view, SubView, UIManager, ViewCallbacks, ViewFrame, ViewSetup};
+use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
 use crate::Slider;
 
@@ -14,7 +14,7 @@ impl ViewSetup for ScrollView {
     fn setup(mut self: Weak<Self>) {
         self.dont_hide = true;
         self.slider.set_range(-1000, 0);
-        self.slider.place.w(40).r(0);
+        self.slider.place().w(40).r(0);
         self.slider.on_change.val(move |val| {
             self.content_offset.y = val;
         });
@@ -32,7 +32,8 @@ impl ViewCallbacks for ScrollView {
         let range = self.content_size.height - self.height();
         self.slider.frame_mut().size.height = self.height();
         self.slider.set_range(-range, 0);
-        self.slider.is_hidden = self.height() >= self.content_size.height;
+        let hidden = self.height() >= self.content_size.height;
+        self.slider.set_hidden(hidden);
     }
 
     fn content_size(&self) -> &Size {

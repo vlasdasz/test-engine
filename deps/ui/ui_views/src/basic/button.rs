@@ -1,7 +1,7 @@
 use gl_image::ToImage;
 use gm::Color;
 use refs::Weak;
-use ui::{view, Event, SubView, ToLabel, ViewSetup, ViewTouch};
+use ui::{view, Event, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
 
 use crate::{ImageView, Label};
 
@@ -24,13 +24,13 @@ impl Button {
     }
 
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
-        self.label.is_hidden = false;
+        self.label.set_hidden(false);
         self.label.set_text(text);
         self
     }
 
     pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
-        self.image.is_hidden = false;
+        self.image.set_hidden(false);
         self.image.image = image.to_image();
         self
     }
@@ -43,11 +43,11 @@ impl Button {
 
 impl ViewSetup for Button {
     fn setup(mut self: Weak<Self>) {
-        self.label.place.back();
-        self.label.is_hidden = true;
+        self.label.place().back();
+        self.label.set_hidden(true);
 
-        self.image.place.back();
-        self.image.is_hidden = true;
+        self.image.place().back();
+        self.image.set_hidden(true);
 
         self.touch.up_inside.sub(move || self.on_tap.trigger(()));
     }

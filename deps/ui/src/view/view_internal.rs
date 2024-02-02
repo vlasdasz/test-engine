@@ -12,7 +12,7 @@ pub(crate) trait ViewInternal {
 impl<T: ?Sized + View> ViewInternal for T {
     fn super_absolute_frame(&self) -> &Rect {
         if self.superview().is_ok() {
-            return self.superview().absolute_frame();
+            return self.base().superview.absolute_frame();
         }
         self.absolute_frame()
     }

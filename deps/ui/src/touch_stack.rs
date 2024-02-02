@@ -32,12 +32,12 @@ impl TouchStack {
     fn layer_for(&mut self, view: Weak<dyn View>) -> &mut TouchLayer {
         let mut view_stack = vec![];
 
-        view_stack.push(view.label().clone());
+        view_stack.push(view.label().to_string());
 
         let mut sup = view.superview();
 
         while sup.is_ok() {
-            view_stack.push(sup.label().clone());
+            view_stack.push(sup.label().to_string());
             sup = sup.superview();
         }
 

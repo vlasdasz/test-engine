@@ -19,15 +19,15 @@ impl Switch {
         const MARGIN: f32 = 5.0;
         self.on = on;
         self.center
-            .place
+            .place()
             .clear()
             .relative(Anchor::Width, weak_from_ref(self), 0.4)
             .tb(MARGIN);
         if on {
-            self.center.place.r(MARGIN);
+            self.center.place().r(MARGIN);
             self.set_color(Color::GREEN);
         } else {
-            self.center.place.l(MARGIN);
+            self.center.place().l(MARGIN);
             self.set_color(Color::CLEAR);
         }
     }

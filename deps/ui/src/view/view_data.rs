@@ -14,9 +14,6 @@ pub trait ViewData {
     fn corner_radius(&self) -> f32;
     fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self;
 
-    fn is_selected(&self) -> bool;
-    fn set_selected(&mut self, selected: bool) -> &mut Self;
-
     fn is_hidden(&self) -> bool;
     fn set_hidden(&mut self, is_hidden: bool) -> &mut Self;
 
@@ -27,7 +24,7 @@ pub trait ViewData {
 
     fn label(&self) -> &str;
 
-    fn animations(&mut self) -> &Vec<UIAnimation>;
+    fn animations(&mut self) -> &mut Vec<UIAnimation>;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -57,16 +54,6 @@ impl<T: ?Sized + View> ViewData for T {
         self.base_mut().corner_radius = radius.into_f32();
         self
     }
-
-    fn is_selected(&self) -> bool {
-        self.base().is_selected
-    }
-
-    fn set_selected(&mut self, is_selected: bool) -> &mut Self {
-        self.base_mut().is_selected = is_selected;
-        self
-    }
-
     fn is_hidden(&self) -> bool {
         self.base().is_hidden
     }
@@ -77,7 +64,7 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn place(&self) -> &Placer {
-        &self.base().place
+        &self.base().placer
     }
 
     fn navigation_view(&self) -> Weak<NavigationView> {
@@ -93,7 +80,7 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base().label
     }
 
-    fn animations(&mut self) -> &Vec<UIAnimation> {
+    fn animations(&mut self) -> &mut Vec<UIAnimation> {
         &mut self.base_mut().animations
     }
 }

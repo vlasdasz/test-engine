@@ -1,5 +1,5 @@
 use sprites::Sprite;
-use ui::{refs::Weak, view, SubView, ViewCallbacks, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewCallbacks, ViewData, ViewSetup};
 use ui_views::{Button, LabeledView};
 
 #[view]
@@ -36,7 +36,7 @@ impl SpriteView {
 
 impl ViewSetup for SpriteView {
     fn setup(mut self: Weak<Self>) {
-        self.place.all_ver();
+        self.place().all_ver();
 
         self.position.set_title("position:");
         self.size.set_title("size:");

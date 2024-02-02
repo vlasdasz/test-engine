@@ -4,7 +4,7 @@ use log::warn;
 use refs::Weak;
 use rtools::IntoF32;
 use text::{render_text, GlFont};
-use ui::{view, SubView, ToLabel, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews};
+use ui::{view, SubView, ToLabel, View, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
 
 use crate::ImageView;
 
@@ -26,12 +26,12 @@ impl Label {
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         let text = text.to_label();
         if text.is_empty() {
-            self.image_view.is_hidden = true;
+            self.image_view.set_hidden(true);
             self.text = text;
             return self;
         }
 
-        self.image_view.is_hidden = false;
+        self.image_view.set_hidden(false);
 
         if self.text == text {
             return self;
@@ -108,8 +108,8 @@ impl ViewSetup for Label {
         self.text_size = 32.0;
 
         debug_assert!(self.text.is_empty());
-        self.image_view.place.center();
-        self.image_view.is_hidden = true;
+        self.image_view.place().center();
+        self.image_view.set_hidden(true);
 
         if let Some(text) = self.initial_text.take() {
             self.set_text(text);
@@ -143,7 +143,7 @@ pub trait AddLabel {
 impl<T: ?Sized + View> AddLabel for T {
     fn add_label(&mut self, text: impl ToLabel) -> &mut Self {
         let mut label = self.add_view::<Label>();
-        label.place.center().h(20).lr(0);
+        label.place().center().h(20).lr(0);
         label.set_text(text);
         self
     }

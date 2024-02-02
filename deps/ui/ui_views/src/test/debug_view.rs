@@ -68,12 +68,12 @@ impl ViewSetup for DebugView {
     fn setup(mut self: Weak<Self>) {
         CURRENT.set(self).unwrap();
 
-        self.is_hidden = false;
+        self.set_hidden(false);
         self.set_color(Color::WHITE);
 
         self.manually_set_superview(UIManager::root_view());
 
-        self.place.size(400, 200).bl(10).all_ver();
+        self.place().size(400, 200).bl(10).all_ver();
 
         self.fps_label.set_text("fps label");
 

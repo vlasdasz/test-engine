@@ -1,5 +1,5 @@
 use refs::{weak_from_ref, Weak};
-use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewSetup};
+use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
 
 use crate::{Label, TextField};
 
@@ -45,8 +45,8 @@ impl Labeled for LabeledTextField {
 
 impl ViewSetup for LabeledTextField {
     fn setup(self: Weak<Self>) {
-        self.label.place.lrt(0).h(10).relative(Anchor::Height, self, 1.0 / 3.0);
-        self.text_field.place.lrb(0).h(20).relative(Anchor::Height, self, 2.0 / 3.0);
+        self.label.place().lrt(0).h(10).relative(Anchor::Height, self, 1.0 / 3.0);
+        self.text_field.place().lrb(0).h(20).relative(Anchor::Height, self, 2.0 / 3.0);
     }
 }
 

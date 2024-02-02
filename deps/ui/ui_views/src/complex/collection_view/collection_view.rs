@@ -1,6 +1,6 @@
 use gm::flat::Size;
 use refs::{weak_from_ref, Weak};
-use ui::{view, SubView, View, ViewCallbacks, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+use ui::{view, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
 use crate::{CollectionData, ScrollView};
 
@@ -32,7 +32,7 @@ pub struct CollectionView {
 impl ViewSetup for CollectionView {
     fn setup(mut self: Weak<Self>) {
         self.scroll.content_size = (1000, 1500).into();
-        self.scroll.place.back();
+        self.scroll.place().back();
     }
 }
 
@@ -59,7 +59,7 @@ impl CollectionView {
             // cell.enable_touch_low_priority();
             cell.enable_touch();
             let mut this = weak_from_ref(self);
-            cell.touch.up_inside.sub(move || this.data_source.cell_selected(i));
+            cell.touch().up_inside.sub(move || this.data_source.cell_selected(i));
             self.cells.push(cell);
         }
     }
@@ -119,7 +119,7 @@ impl CollectionView {
             cell.set_frame((0, index as f32 * cell_height, width, cell_height));
             cell.enable_touch_low_priority();
             let mut this = weak_from_ref(self);
-            cell.touch.began.sub(move || this.data_source.cell_selected(index));
+            cell.touch().began.sub(move || this.data_source.cell_selected(index));
             self.cells.push(cell);
         }
     }

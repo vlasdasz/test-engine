@@ -2,7 +2,7 @@ use gl_wrapper::path_data::DrawMode;
 use gm::{flat::PointsPath, Color};
 use refs::Weak;
 use rtools::IntoF32;
-use ui::{view, SubView, ViewFrame, ViewSetup};
+use ui::{view, SubView, ViewData, ViewFrame, ViewSetup};
 
 use crate::DrawingView;
 
@@ -39,6 +39,6 @@ impl CircleView {
 impl ViewSetup for CircleView {
     fn setup(mut self: Weak<Self>) {
         self.frame_mut().size = (10, 10).into();
-        self.drawing.place.back();
+        self.drawing.place().back();
     }
 }

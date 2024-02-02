@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{view, SubView, ToLabel, ViewSetup};
+use ui::{view, SubView, ToLabel, ViewData, ViewSetup};
 
 use crate::Label;
 
@@ -28,6 +28,6 @@ impl LabeledView {
 
 impl ViewSetup for LabeledView {
     fn setup(self: Weak<Self>) {
-        self.place.all_hor();
+        self.place().all_hor();
     }
 }

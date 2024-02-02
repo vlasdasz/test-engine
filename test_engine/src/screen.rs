@@ -15,7 +15,7 @@ use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
 use text::GlFont;
 use ui::{
     refs::{assert_main_thread, Own, Weak},
-    UIManager, View, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
+    UIManager, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
 
@@ -64,7 +64,7 @@ impl Screen {
         GLWrapper::enable_depth();
         GLWrapper::set_clear_color(Color::GRAY);
 
-        UIManager::root_view().add_subview(view).place.back();
+        UIManager::root_view().add_subview(view).place().back();
 
         if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) {
             let mut debug_view = DebugView::new();
@@ -243,7 +243,7 @@ impl Screen {
             let mut root = UIManager::root_view();
             root.remove_all_subviews();
             let view = root.add_subview(view);
-            view.place.back();
+            view.place().back();
             #[cfg(desktop)]
             Screen::current().set_size((width, height));
         })

@@ -1,9 +1,9 @@
 use refs::Weak;
 
 use crate::{
-    input::UIEvents,
+    input::{TouchEvent, UIEvents},
     view::{view_data::ViewData, view_touch_internal::ViewTouchInternal, ViewFrame},
-    Touch, TouchStack, View,
+    Touch, TouchStack, View, ViewTouchCallbacks,
 };
 
 pub trait ViewTouch {
@@ -12,6 +12,7 @@ pub trait ViewTouch {
     fn enable_touch(&self);
     fn enable_touch_low_priority(&self);
     fn disable_touch(&self);
+    fn touch(&self) -> &ViewTouchCallbacks;
 }
 
 impl<T: ?Sized + View> ViewTouch for T {
@@ -33,6 +34,10 @@ impl<T: ?Sized + View> ViewTouch for T {
 
     fn disable_touch(&self) {
         TouchStack::disable_for(self.weak_view());
+    }
+
+    fn touch(&self) -> &ViewTouchCallbacks {
+        &self.base().touch
     }
 }
 

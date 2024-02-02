@@ -37,12 +37,12 @@ impl DropDown {
 
     fn tapped(&mut self) {
         if self.opened.toggle() {
-            self.label.is_hidden = false;
-            self.table.is_hidden = true;
+            self.label.set_hidden(false);
+            self.table.set_hidden(true);
         } else {
-            self.label.is_hidden = true;
+            self.label.set_hidden(true);
             self.table.reload_data();
-            self.table.is_hidden = false;
+            self.table.set_hidden(false);
             let table_height = self.height() * self.number_of_cells() as f32;
             let table_size = (self.width(), table_height);
             self.table.set_size(table_size);
@@ -71,13 +71,13 @@ impl DropDown {
 
 impl ViewSetup for DropDown {
     fn setup(mut self: Weak<Self>) {
-        self.button.place.back();
+        self.button.place().back();
 
-        self.label.place.back();
+        self.label.place().back();
 
         self.table.data_source = collection_data!(self);
         self.table.set_priority(1);
-        self.table.is_hidden = true
+        self.table.set_hidden(true);
     }
 }
 

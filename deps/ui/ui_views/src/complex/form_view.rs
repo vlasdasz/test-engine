@@ -2,7 +2,7 @@ use std::{cell::RefCell, collections::HashMap, fmt::Debug, marker::PhantomData};
 
 use reflected::{FieldRef, Reflected};
 use refs::Weak;
-use ui::{view, Labeled, TextFieldConstraint, ViewSetup, ViewSubviews};
+use ui::{view, Labeled, TextFieldConstraint, ViewData, ViewSetup, ViewSubviews};
 
 use crate::{LabeledDrop, LabeledTextField};
 
@@ -16,7 +16,7 @@ pub struct FormView<T: Debug + Reflected + 'static> {
 
 impl<T: Debug + Reflected> ViewSetup for FormView<T> {
     fn setup(mut self: Weak<Self>) {
-        self.place.all_ver();
+        self.place().all_ver();
         self.editind_enabled = true;
     }
 }

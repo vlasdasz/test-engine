@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{layout::Anchor, view, Event, SubView, ToLabel, ViewSetup};
+use ui::{layout::Anchor, view, Event, SubView, ToLabel, ViewData, ViewSetup};
 
 use crate::{Label, Switch};
 
@@ -32,9 +32,9 @@ impl LabeledSwitch {
 
 impl ViewSetup for LabeledSwitch {
     fn setup(self: Weak<Self>) {
-        self.label.place.blt(0).relative(Anchor::Width, self, 0.5);
+        self.label.place().blt(0).relative(Anchor::Width, self, 0.5);
         self.switch
-            .place
+            .place()
             .size(80, 40)
             .center_y()
             .between_super(self.label, Anchor::Right);

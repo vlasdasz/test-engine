@@ -46,7 +46,7 @@ impl Placer {
 
     pub fn new(view: Weak<dyn View>) -> Self {
         let s_content = if view.superview().is_ok() {
-            view.superview().content_size()
+            view.base().superview.content_size()
         } else {
             view.content_size()
         };

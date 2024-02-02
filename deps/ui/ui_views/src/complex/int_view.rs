@@ -1,6 +1,6 @@
 use refs::Weak;
 use rtools::IntoF32;
-use ui::{view, Event, SubView, ViewSetup};
+use ui::{view, Event, SubView, ViewData, ViewSetup};
 
 use crate as ui_views;
 use crate::{Button, Label, UIImages};
@@ -25,7 +25,7 @@ impl ViewSetup for IntView {
         self.value = 1.0;
         self.step = 1.0;
 
-        self.place.all_ver();
+        self.place().all_ver();
         self.label.set_text("1.0");
         self.up.set_image(UIImages::up());
         self.down.set_image(UIImages::down());

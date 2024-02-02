@@ -34,7 +34,7 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn super_frame(&self) -> &Rect {
         if self.superview().is_ok() {
-            return self.superview().frame();
+            return self.base().superview.frame();
         }
         self.frame()
     }

@@ -42,7 +42,7 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     #[derivative(Default(value = "Placer::empty()"))]
-    pub place: Placer,
+    pub(crate) placer: Placer,
 
     #[derivative(Debug = "ignore")]
     pub touch: ViewTouchCallbacks,

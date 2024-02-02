@@ -4,7 +4,7 @@ use gm::volume::GyroData;
 use refs::{MainLock, Weak};
 use vents::Event;
 
-use crate::{input::keyboard::KeyEvent, Touch, View, ViewData};
+use crate::{input::keyboard::KeyEvent, view::ViewTouch, Touch, View, ViewData};
 
 static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 

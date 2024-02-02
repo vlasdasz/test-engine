@@ -7,7 +7,7 @@ pub trait ViewLayout {
     fn calculate_absolute_frame(&mut self);
     fn layout(&mut self)
     where Self: View {
-        self.place().layout();
+        self.base_mut().placer.layout();
     }
 }
 

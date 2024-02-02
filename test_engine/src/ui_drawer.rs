@@ -93,14 +93,14 @@ impl UIDrawer for TEUIDrawer {
     }
 
     fn draw(&self, view: &dyn View) {
-        if view.is_hidden {
+        if view.is_hidden() {
             return;
         }
 
         if view.frame().size.is_invalid() {
             warn!(
                 "View has invalid frame: {}. Frame: {:?} ",
-                view.label,
+                view.label(),
                 view.frame()
             );
             return;
@@ -125,7 +125,7 @@ impl UIDrawer for TEUIDrawer {
             GLWrapper::draw_stensiled();
         }
 
-        self.fill(view.absolute_frame(), view.color(), view.priority);
+        self.fill(view.absolute_frame(), view.color(), 1 /* view.priority */);
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
@@ -135,7 +135,7 @@ impl UIDrawer for TEUIDrawer {
                     &image,
                     &UIManager::rescale_frame(frame),
                     &image_view.tint_color,
-                    view.priority,
+                    1, /* view.priority */
                     false,
                 );
             }

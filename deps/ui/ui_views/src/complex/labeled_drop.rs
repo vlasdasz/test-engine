@@ -1,5 +1,5 @@
 use refs::{weak_from_ref, Weak};
-use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewSetup};
+use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
 
 use crate::{DropDown, Label};
 
@@ -49,7 +49,7 @@ impl Labeled for LabeledDrop {
 
 impl ViewSetup for LabeledDrop {
     fn setup(self: Weak<Self>) {
-        self.title.place.lrt(0).h(10).relative(Anchor::Height, self, 1.0 / 3.0);
-        self.drop.place.lrb(0).h(20).relative(Anchor::Height, self, 2.0 / 3.0);
+        self.title.place().lrt(0).h(10).relative(Anchor::Height, self, 1.0 / 3.0);
+        self.drop.place().lrb(0).h(20).relative(Anchor::Height, self, 2.0 / 3.0);
     }
 }

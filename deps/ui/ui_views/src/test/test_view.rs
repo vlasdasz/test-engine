@@ -39,7 +39,7 @@ impl ViewWithCat {
 
 impl ViewSetup for ViewWithCat {
     fn setup(mut self: Weak<Self>) {
-        self.place.all_ver();
+        self.place().all_ver();
 
         self.label.set_text("Hello label!");
 

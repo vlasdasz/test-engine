@@ -27,7 +27,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     /// Use this only if you know what you are doing
     fn manually_set_superview(&mut self, superview: Weak<dyn View>) {
         self.base_mut().superview = superview;
-        self.base_mut().place = Placer::new(self.weak_view());
+        self.base_mut().placer = Placer::new(self.weak_view());
     }
 
     fn superview(&self) -> Weak<dyn View> {
