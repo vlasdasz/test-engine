@@ -1,4 +1,5 @@
 mod container;
+mod subview;
 mod view;
 mod view_animation;
 mod view_base;
@@ -14,6 +15,7 @@ mod view_touch;
 mod view_touch_internal;
 
 pub use container::*;
+pub use subview::*;
 pub use view::*;
 pub use view_animation::*;
 pub use view_base::*;

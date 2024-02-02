@@ -4,7 +4,7 @@ use gm::volume::GyroData;
 use refs::{MainLock, Weak};
 use vents::Event;
 
-use crate::{input::keyboard::KeyEvent, Touch, View};
+use crate::{input::keyboard::KeyEvent, Touch, View, ViewData};
 
 static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 
@@ -29,7 +29,7 @@ impl UIEvents {
         if !selected_view.is_ok() {
             return;
         }
-        selected_view.is_selected = false;
+        selected_view.set_selected(false);
         selected_view.on_selection_changed(false);
         *selected_view = Default::default();
     }
@@ -38,7 +38,7 @@ impl UIEvents {
         let mut selected_view = self.selected_view.borrow_mut();
 
         if let Some(selected) = selected_view.get() {
-            selected.is_selected = false;
+            selected.set_selected(false);
             selected.on_selection_changed(false);
             *selected_view = Default::default();
         }
@@ -47,7 +47,7 @@ impl UIEvents {
             *selected_view = view;
         }
 
-        view.is_selected = selected;
+        view.set_selected(selected);
         view.on_selection_changed(selected);
     }
 }

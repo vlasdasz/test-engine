@@ -28,9 +28,9 @@ impl NavigationView {
 impl ViewSetup for NavigationView {
     fn setup(mut self: Weak<Self>) {
         let mut view = self.first_view.take().unwrap();
-        view.navigation_view = self;
+        view.set_navigation_view(self);
         let view = self.add_subview(view);
-        view.place.back();
+        view.place().back();
     }
 }
 
@@ -47,8 +47,8 @@ impl NavigationView {
 
             view.set_color(Color::WHITE);
             let mut view = self.add_subview(view);
-            view.place.back();
-            view.navigation_view = self;
+            view.place().back();
+            view.set_navigation_view(self);
             view.set_frame(self.frame().with_zero_origin());
 
             let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
@@ -57,7 +57,7 @@ impl NavigationView {
 
             anim.on_finish.sub(move || {
                 UIManager::enable_touch();
-                prev_view.is_hidden = true;
+                prev_view.set_hidden(true);
             });
 
             view.add_animation(anim);
@@ -70,7 +70,7 @@ impl NavigationView {
         UIManager::disable_touch();
 
         let mut below = self.below_pop();
-        below.is_hidden = false;
+        below.set_hidden(false);
         let mut to_pop = self.subviews.last().unwrap().weak_view();
 
         let anim = UIAnimation::new(Animation::new(0, self.width(), 0.5), |view, x| {

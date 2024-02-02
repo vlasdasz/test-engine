@@ -2,7 +2,7 @@ use refs::Weak;
 
 use crate::{
     input::UIEvents,
-    view::{view_touch_internal::ViewTouchInternal, ViewFrame},
+    view::{view_data::ViewData, view_touch_internal::ViewTouchInternal, ViewFrame},
     Touch, TouchStack, View,
 };
 
@@ -16,7 +16,7 @@ pub trait ViewTouch {
 
 impl<T: ?Sized + View> ViewTouch for T {
     fn is_selected(&self) -> bool {
-        self.is_selected
+        self.base().is_selected
     }
 
     fn set_selected(&mut self, selected: bool) {
@@ -37,13 +37,13 @@ impl<T: ?Sized + View> ViewTouch for T {
 }
 
 pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
-    if view.is_null() || view.is_hidden {
+    if view.is_null() || view.is_hidden() {
         return false;
     }
 
     if touch.is_moved() && view.touch_id() == touch.id {
         touch.position -= view.absolute_frame().origin;
-        view.touch.all.trigger(*touch);
+        view.base().touch.all.trigger(*touch);
         return true;
     }
 
@@ -56,10 +56,10 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
 
         touch.position -= view.absolute_frame().origin;
         view.set_touch_id(0);
-        view.touch.all.trigger(*touch);
+        view.base().touch.all.trigger(*touch);
 
         if inside {
-            view.touch.up_inside.trigger(*touch);
+            view.base().touch.up_inside.trigger(*touch);
         }
         return true;
     }
@@ -68,9 +68,9 @@ pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
         touch.position -= view.absolute_frame().origin;
         if touch.is_began() {
             view.set_touch_id(touch.id);
-            view.touch.began.trigger(*touch);
+            view.base().touch.began.trigger(*touch);
         }
-        view.touch.all.trigger(*touch);
+        view.base().touch.all.trigger(*touch);
         return true;
     }
 

@@ -89,6 +89,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             fn base(&self) -> &ui::ViewBase {
                 &self.view
             }
+            fn base_mut(&mut self) -> &mut ui::ViewBase {
+                &mut self.view
+            }
             fn init_views(&mut self) {
                 use ui::ViewSubviews;
                 #inits

@@ -1,7 +1,7 @@
 use gm::flat::Size;
 use refs::{Own, Weak};
 
-use crate::View;
+use crate::{view::view_frame::ViewFrame, View};
 
 pub trait ViewCallbacks {
     fn update(&mut self);
@@ -13,7 +13,7 @@ impl<T: ?Sized + View> ViewCallbacks for T {
     default fn update(&mut self) {}
     default fn on_selection_changed(&mut self, _: bool) {}
     default fn content_size(&self) -> &Size {
-        &self.frame.size
+        &self.frame().size
     }
 }
 

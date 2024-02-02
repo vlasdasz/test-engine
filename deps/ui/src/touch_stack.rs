@@ -3,7 +3,11 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 use nonempty::NonEmpty;
 use refs::Weak;
 
-use crate::{touch_layer::TouchLayer, UIManager, View};
+use crate::{
+    touch_layer::TouchLayer,
+    view::{ViewData, ViewSubviews},
+    UIManager, View,
+};
 
 static STACK: OnceLock<Mutex<TouchStack>> = OnceLock::new();
 
@@ -28,18 +32,18 @@ impl TouchStack {
     fn layer_for(&mut self, view: Weak<dyn View>) -> &mut TouchLayer {
         let mut view_stack = vec![];
 
-        view_stack.push(view.label.clone());
+        view_stack.push(view.label().clone());
 
-        let mut sup = view.superview;
+        let mut sup = view.superview();
 
         while sup.is_ok() {
-            view_stack.push(sup.label.clone());
-            sup = sup.superview;
+            view_stack.push(sup.label().clone());
+            sup = sup.superview();
         }
 
         for layer in self.stack.iter_mut().rev() {
             for label in &view_stack {
-                if layer.root_name() == label {
+                if layer.root_name() == *label {
                     return layer;
                 }
             }
@@ -73,7 +77,7 @@ impl TouchStack {
             view.addr(),
             "Inconsistent pop_touch_view call. Expected: {} got: {}",
             pop.root_name(),
-            view.label
+            view.label()
         );
     }
 
@@ -93,7 +97,7 @@ impl TouchStack {
                 if view.is_null() {
                     continue;
                 }
-                layer_vec.push(format!("View: {}", view.label));
+                layer_vec.push(format!("View: {}", view.label()));
             }
 
             result.push(layer_vec);

@@ -2,7 +2,7 @@ use gm::Color;
 use refs::Weak;
 use rtools::platform::Platform;
 
-use crate::{layout::Anchor, View};
+use crate::{layout::Anchor, View, ViewData};
 
 pub trait WithHeader: View {
     fn header(&self) -> Weak<dyn View>;
@@ -16,16 +16,19 @@ pub trait WithHeader: View {
             return;
         }
 
-        header.color = Color::WHITE;
+        header.set_color(Color::WHITE);
 
         if Platform::IOS {
-            header.place.lr(0).t(40).h(self.header_size());
+            header.place().lr(0).t(40).h(self.header_size());
         } else {
-            header.place.lrt(0).h(self.header_size());
+            header.place().lrt(0).h(self.header_size());
         }
 
         if !self.main_view().is_null() {
-            self.main_view().place.anchor(Anchor::Top, header, self.header_margin()).lrb(0);
+            self.main_view()
+                .place()
+                .anchor(Anchor::Top, header, self.header_margin())
+                .lrb(0);
         }
     }
 }

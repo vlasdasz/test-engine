@@ -14,7 +14,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
         TouchStack::push_layer(weak.weak_view());
         UIManager::root_view().add_subview(view);
         weak.setup_input(input);
-        weak.place.center().size(size.width, size.height);
+        weak.place().center().size(size.width, size.height);
         weak
     }
 

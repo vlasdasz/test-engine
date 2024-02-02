@@ -4,7 +4,7 @@ use derivative::Derivative;
 use rtools::Animation;
 use vents::Event;
 
-use crate::View;
+use crate::{view::view_data::ViewData, View};
 
 type Action = Box<dyn FnMut(&mut dyn View, f32)>;
 
@@ -43,22 +43,22 @@ pub trait ViewAnimation {
 
 impl<T: ?Sized + View> ViewAnimation for T {
     fn add_animation(&mut self, anim: UIAnimation) {
-        self.animations.push(anim)
+        self.animations().push(anim)
     }
 
     fn commit_animations(&mut self) {
-        if self.animations.is_empty() {
+        if self.animations().is_empty() {
             return;
         }
 
         let mut this = self.weak_view();
 
-        for animation in &mut this.animations {
+        for animation in this.animations() {
             animation.commit(self.weak_view().deref_mut());
             if animation.finished() {
                 animation.on_finish.trigger(())
             }
         }
-        self.animations.retain(|a| !a.finished())
+        self.animations().retain(|a| !a.finished())
     }
 }

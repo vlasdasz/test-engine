@@ -16,7 +16,7 @@ pub struct ViewBase {
     pub(crate) corner_radius: f32,
     pub(crate) border_color:  Color,
 
-    pub is_hidden: bool,
+    pub(crate) is_hidden: bool,
 
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,

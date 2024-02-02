@@ -1,7 +1,7 @@
 use gm::flat::{Point, Rect, Size};
 use rtools::IntoF32;
 
-use crate::View;
+use crate::{view::view_subviews::ViewSubviews, View};
 
 pub trait ViewFrame {
     fn frame(&self) -> &Rect;
@@ -25,79 +25,79 @@ pub trait ViewFrame {
 
 impl<T: ?Sized + View> ViewFrame for T {
     fn frame(&self) -> &Rect {
-        &self.frame
+        &self.base().frame
     }
 
     fn frame_mut(&mut self) -> &mut Rect {
-        &mut self.frame
+        &mut self.base_mut().frame
     }
 
     fn super_frame(&self) -> &Rect {
-        if self.superview.is_ok() {
-            return self.superview.frame();
+        if self.superview().is_ok() {
+            return self.superview().frame();
         }
         self.frame()
     }
 
     fn absolute_frame(&self) -> &Rect {
-        &self.absolute_frame
+        &self.base().absolute_frame
     }
 
     fn x(&self) -> f32 {
-        self.frame.origin.x
+        self.frame().origin.x
     }
 
     fn y(&self) -> f32 {
-        self.frame.origin.y
+        self.frame().origin.y
     }
 
     fn max_x(&self) -> f32 {
-        self.frame.max_x()
+        self.frame().max_x()
     }
 
     fn max_y(&self) -> f32 {
-        self.frame.max_y()
+        self.frame().max_y()
     }
 
     fn size(&self) -> Size {
-        self.frame.size
+        self.frame().size
     }
 
     fn width(&self) -> f32 {
-        self.frame.size.width
+        self.frame().size.width
     }
 
     fn height(&self) -> f32 {
-        self.frame.size.height
+        self.frame().size.height
     }
 
     fn set_x(&mut self, x: impl IntoF32) -> &mut Self {
-        self.frame.origin.x = x.into_f32();
+        self.frame_mut().origin.x = x.into_f32();
         self
     }
 
     fn set_y(&mut self, y: impl IntoF32) -> &mut Self {
-        self.frame.origin.y = y.into_f32();
+        self.frame_mut().origin.y = y.into_f32();
         self
     }
 
     fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self {
-        self.frame.origin = origin.into();
+        self.frame_mut().origin = origin.into();
         self
     }
 
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self {
-        self.frame.set_center(center.into());
+        self.frame_mut().set_center(center.into());
         self
     }
 
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self {
-        self.frame = rect.into();
+        *self.frame_mut() = rect.into();
         self
     }
 
     fn set_size(&mut self, size: impl Into<Size>) -> &mut Self {
-        self.frame.size = size.into();
+        self.frame_mut().size = size.into();
         self
     }
 }

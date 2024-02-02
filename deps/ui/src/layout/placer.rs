@@ -45,8 +45,8 @@ impl Placer {
     }
 
     pub fn new(view: Weak<dyn View>) -> Self {
-        let s_content = if view.superview.is_ok() {
-            view.superview.content_size()
+        let s_content = if view.superview().is_ok() {
+            view.superview().content_size()
         } else {
             view.content_size()
         };
@@ -126,7 +126,7 @@ impl Placer {
     pub fn relative_y(&self, position: impl IntoF32) -> &Self {
         let position = position.into_f32();
         self.custom(move |mut view, s_content| {
-            view.frame.origin.y = s_content.height * position;
+            view.frame_mut().origin.y = s_content.height * position;
         })
     }
 
@@ -430,8 +430,8 @@ impl Placer {
     }
 
     fn between_2_layout(&mut self, rule: &LayoutRule) {
-        let center_a = rule.anchor_view.frame.center();
-        let center_b = rule.anchor_view2.frame.center();
+        let center_a = rule.anchor_view.frame().center();
+        let center_b = rule.anchor_view2.frame().center();
         let center = center_a.middle(&center_b);
         self.frame.set_center(center);
     }

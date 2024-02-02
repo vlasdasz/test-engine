@@ -1,6 +1,9 @@
 use gm::flat::Rect;
 
-use crate::{view::ViewFrame, View};
+use crate::{
+    view::{view_subviews::ViewSubviews, ViewFrame},
+    View,
+};
 
 pub(crate) trait ViewInternal {
     fn super_absolute_frame(&self) -> &Rect;
@@ -8,8 +11,8 @@ pub(crate) trait ViewInternal {
 
 impl<T: ?Sized + View> ViewInternal for T {
     fn super_absolute_frame(&self) -> &Rect {
-        if self.superview.is_ok() {
-            return self.superview.absolute_frame();
+        if self.superview().is_ok() {
+            return self.superview().absolute_frame();
         }
         self.absolute_frame()
     }

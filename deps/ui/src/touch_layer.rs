@@ -1,6 +1,6 @@
 use refs::Weak;
 
-use crate::View;
+use crate::{View, ViewData};
 
 pub(crate) struct TouchLayer {
     root:    Weak<dyn View>,
@@ -30,7 +30,7 @@ impl TouchLayer {
     }
 
     pub(crate) fn root_name(&self) -> &str {
-        &self.root.label
+        self.root.label()
     }
 }
 

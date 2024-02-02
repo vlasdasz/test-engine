@@ -17,6 +17,7 @@ pub use rtools;
 pub use sprites;
 pub use text;
 pub use ui;
+pub use ui_views;
 pub use wgpu_wrapper;
 
 pub use crate::screen::Screen;

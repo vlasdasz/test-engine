@@ -14,14 +14,14 @@ use refs::Weak;
 impl<T: ?Sized + View + 'static> ViewController for T {
     fn navigation(&self) -> Weak<NavigationView> {
         assert!(
-            self.superview.is_ok(),
+            self.superview().is_ok(),
             "Current view is not a part of navigation stack"
         );
 
-        if self.navigation_view.is_ok() {
-            self.navigation_view
+        if self.navigation_view().is_ok() {
+            self.navigation_view()
         } else {
-            self.superview.navigation()
+            self.superview().navigation()
         }
     }
 
@@ -38,7 +38,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
             anim.on_finish.sub(move || {
                 self.remove_from_superview();
-                view.place.back();
+                view.place().back();
                 UIManager::enable_touch();
             });
 
