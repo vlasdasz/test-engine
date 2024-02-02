@@ -11,10 +11,10 @@ use crate::{
 };
 
 pub trait UIDrawer: Debug + Send {
-    fn fill(&self, rect: &Rect, color: &Color, priority: usize);
-    fn outline(&self, rect: &Rect, color: &Color, priority: usize);
-    fn draw_image(&self, image: &GlImage, rect: &Rect, color: &Color, priority: usize, is_text: bool);
-    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: usize);
+    fn fill(&self, rect: &Rect, color: &Color, priority: u8);
+    fn outline(&self, rect: &Rect, color: &Color, priority: u8);
+    fn draw_image(&self, image: &GlImage, rect: &Rect, color: &Color, priority: u8, is_text: bool);
+    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: u8);
     fn draw(&self, view: &dyn View);
     fn set_root_frame(&mut self, frame: Rect);
 

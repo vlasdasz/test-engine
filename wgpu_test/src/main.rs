@@ -1,4 +1,4 @@
-use std::ops::DerefMut;
+use std::ops::{Deref, DerefMut};
 
 use anyhow::Result;
 use log::warn;
@@ -21,7 +21,7 @@ struct TEApp {
 
 impl TEApp {
     fn update_view(&self, view: &mut dyn View) {
-        if view.is_hidden {
+        if view.is_hidden() {
             return;
         }
         view.layout();
@@ -34,14 +34,14 @@ impl TEApp {
     }
 
     fn draw(&self, view: &dyn View) {
-        if view.is_hidden {
+        if view.is_hidden() {
             return;
         }
 
         if view.frame().size.is_invalid() {
             warn!(
                 "View has invalid frame: {}. Frame: {:?} ",
-                view.label,
+                view.label(),
                 view.frame()
             );
             return;
@@ -64,7 +64,7 @@ impl TEApp {
         }
 
         for view in view.subviews() {
-            if view.dont_hide || view.absolute_frame().intersects(self.root_view.frame()) {
+            if view.dont_hide() || view.absolute_frame().intersects(self.root_view.frame()) {
                 self.draw(view.deref())
             }
         }
@@ -76,7 +76,7 @@ impl Default for TEApp {
         let mut root_view = Own::<Container>::default();
         root_view.label = "Root view".to_string();
         let weak_root = root_view.weak_view();
-        root_view.place = Placer::new(weak_root);
+        root_view.base_mut().placer = Placer::new(weak_root);
 
         // UIManager::root_view().add_subview(view).place.back();
 

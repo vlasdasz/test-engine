@@ -167,7 +167,7 @@ impl ResourceLoader for GlImage {
     }
 }
 
-pub fn draw_image(image: &GlImage, rect: &Rect, color: &Color, priority: usize, is_text: bool) {
+pub fn draw_image(image: &GlImage, rect: &Rect, color: &Color, priority: u8, is_text: bool) {
     if image.is_invalid() {
         return;
     }

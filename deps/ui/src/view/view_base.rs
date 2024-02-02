@@ -47,7 +47,7 @@ pub struct ViewBase {
     #[derivative(Debug = "ignore")]
     pub touch: ViewTouchCallbacks,
 
-    pub priority: usize,
+    pub priority: u8,
 
     pub dont_hide: bool,
 

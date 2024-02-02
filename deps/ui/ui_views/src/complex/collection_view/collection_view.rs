@@ -37,7 +37,7 @@ impl ViewSetup for CollectionView {
 }
 
 impl CollectionView {
-    pub fn set_priority(&mut self, p: usize) {
+    pub fn set_priority(&mut self, p: u8) {
         self.priority = p;
         self.scroll.priority = p;
     }

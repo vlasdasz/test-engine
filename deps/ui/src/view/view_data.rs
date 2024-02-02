@@ -25,6 +25,9 @@ pub trait ViewData {
     fn label(&self) -> &str;
 
     fn animations(&mut self) -> &mut Vec<UIAnimation>;
+
+    fn priority(&self) -> u8;
+    fn dont_hide(&self) -> bool;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -82,5 +85,13 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn animations(&mut self) -> &mut Vec<UIAnimation> {
         &mut self.base_mut().animations
+    }
+
+    fn priority(&self) -> u8 {
+        self.base().priority
+    }
+
+    fn dont_hide(&self) -> bool {
+        self.base().dont_hide
     }
 }

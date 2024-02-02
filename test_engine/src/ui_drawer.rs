@@ -51,7 +51,7 @@ impl TEUIDrawer {
         &storage.get(&view.address()).unwrap().0
     }
 
-    fn draw_round_border(&self, view: &dyn View, priority: usize) {
+    fn draw_round_border(&self, view: &dyn View, priority: u8) {
         let mut storage = self.round_storage.borrow_mut();
         let path = Self::rounded_path_for_view(view, &mut storage);
         self.draw_path(path, view.absolute_frame(), None, priority);
@@ -59,23 +59,23 @@ impl TEUIDrawer {
 }
 
 impl UIDrawer for TEUIDrawer {
-    fn fill(&self, rect: &Rect, color: &Color, priority: usize) {
+    fn fill(&self, rect: &Rect, color: &Color, priority: u8) {
         self.set_viewport(rect);
         UIShaders::view().enable().set_color(color).set_priority(priority);
         Buffers::get().full.draw();
     }
 
-    fn outline(&self, rect: &Rect, color: &Color, priority: usize) {
+    fn outline(&self, rect: &Rect, color: &Color, priority: u8) {
         self.set_viewport(rect);
         UIShaders::view().enable().set_color(color).set_priority(priority);
         Buffers::get().full_outline.draw();
     }
 
-    fn draw_image(&self, image: &GlImage, rect: &Rect, color: &Color, priority: usize, is_text: bool) {
+    fn draw_image(&self, image: &GlImage, rect: &Rect, color: &Color, priority: u8, is_text: bool) {
         draw_image(image, rect, color, priority, is_text);
     }
 
-    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: usize) {
+    fn draw_path(&self, path: &PathData, rect: &Rect, custom_mode: Option<DrawMode>, priority: u8) {
         if rect.size.is_invalid() {
             return;
         }
@@ -125,7 +125,7 @@ impl UIDrawer for TEUIDrawer {
             GLWrapper::draw_stensiled();
         }
 
-        self.fill(view.absolute_frame(), view.color(), 1 /* view.priority */);
+        self.fill(view.absolute_frame(), view.color(), view.priority());
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
@@ -135,7 +135,7 @@ impl UIDrawer for TEUIDrawer {
                     &image,
                     &UIManager::rescale_frame(frame),
                     &image_view.tint_color,
-                    1, /* view.priority */
+                    view.priority(),
                     false,
                 );
             }
@@ -143,23 +143,23 @@ impl UIDrawer for TEUIDrawer {
 
         if view.border_color().is_visible() {
             if needs_stensil {
-                self.draw_round_border(view, view.priority);
+                self.draw_round_border(view, view.priority());
             } else {
-                self.outline(view.absolute_frame(), view.border_color(), view.priority);
+                self.outline(view.absolute_frame(), view.border_color(), view.priority());
             }
         }
 
         if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths() {
-                self.draw_path(path, view.absolute_frame(), None, view.priority);
+                self.draw_path(path, view.absolute_frame(), None, view.priority());
             }
         }
 
         //MARK - Debug frames
-        self.outline(view.absolute_frame(), &Color::TURQUOISE, view.priority);
+        self.outline(view.absolute_frame(), &Color::TURQUOISE, view.priority());
 
         for view in view.subviews() {
-            if view.dont_hide || view.absolute_frame().intersects(&self.root_frame) {
+            if view.dont_hide() || view.absolute_frame().intersects(&self.root_frame) {
                 self.draw(view.deref())
             }
         }
