@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{from_main, gm::flat::IntSize, Screen};
-use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest};
 use ui_views::IntView;
 
 use crate::view_tests::{assert_eq, inject_touches};
@@ -13,7 +13,7 @@ struct IntTestView {
 
 impl ViewSetup for IntTestView {
     fn setup(self: Weak<Self>) {
-        self.int.place.size(50, 150).center();
+        self.int.place().size(50, 150).center();
     }
 }
 

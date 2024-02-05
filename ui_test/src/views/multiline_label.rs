@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::Screen;
-use ui::{refs::Weak, view, SubView, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::MultilineLabel;
 
 #[view]
@@ -11,7 +11,7 @@ struct MultilineTestView {
 
 impl ViewSetup for MultilineTestView {
     fn setup(mut self: Weak<Self>) {
-        self.label.place.back();
+        self.label.place().back();
         self.label.set_text(
             "       Plati mne dengi bistrenko pliz. Ja kuplu dengushki.\n      Plati mne dengi bistrenko \
              pliz. Ja kuplu dengushki.",

@@ -3,7 +3,7 @@ use std::any::Any;
 use test_engine::gm::flat::Size;
 use ui::{
     refs::{Own, Weak},
-    view, Container, SubView, View, ViewSetup,
+    view, Container, SubView, View, ViewData, ViewSetup,
 };
 use ui_views::{collection_data, CollectionData, CollectionLayout, CollectionView};
 
@@ -14,7 +14,7 @@ pub struct CollectionTestView {
 
 impl ViewSetup for CollectionTestView {
     fn setup(mut self: Weak<Self>) {
-        self.collection_view.place.back();
+        self.collection_view.place().back();
         self.collection_view.layout = CollectionLayout::Cards;
         self.collection_view.data_source = collection_data!(self);
         self.collection_view.reload_data();

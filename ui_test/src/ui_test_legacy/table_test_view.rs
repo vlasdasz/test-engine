@@ -3,7 +3,7 @@ use std::any::Any;
 use test_engine::gm::flat::Size;
 use ui::{
     refs::{Own, Weak},
-    view, Container, SubView, View, ViewSetup, ViewSubviews, WithHeader,
+    view, Container, SubView, View, ViewData, ViewSetup, ViewSubviews, WithHeader,
 };
 use ui_views::{collection_data, CollectionData, CollectionView, Label};
 
@@ -35,7 +35,7 @@ impl CollectionData for TableTestView {
 
         let mut label = cell.add_view::<Label>();
         label.set_text(format!("Cell: {index}"));
-        label.place.center().size(100, 20);
+        label.place().center().size(100, 20);
     }
 
     fn size_for_index(&self, _index: usize) -> Size {

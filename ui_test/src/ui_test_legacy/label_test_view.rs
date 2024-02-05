@@ -1,7 +1,7 @@
 #![cfg(test)]
 
 use test_engine::ViewApp;
-use ui::{refs::Weak, view, SubView, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::Label;
 
 #[view]
@@ -11,7 +11,7 @@ struct LabelTestView {
 
 impl ViewSetup for LabelTestView {
     fn setup(mut self: Weak<Self>) {
-        self.label.place.back();
+        self.label.place().back();
         self.label.set_text("sokol");
     }
 }

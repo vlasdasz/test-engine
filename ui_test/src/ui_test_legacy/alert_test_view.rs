@@ -1,4 +1,4 @@
-use ui::{refs::Weak, view, SubView, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::{link_button, touch_test_view::TouchTestView, Alert, Button, Label};
 
 #[view]
@@ -16,8 +16,8 @@ impl AlertTestView {
 
 impl ViewSetup for AlertTestView {
     fn setup(mut self: Weak<Self>) {
-        self.button.set_text("Show Alert").place.size(200, 50);
-        self.label.place.size(200, 50).tr(0);
+        self.button.set_text("Show Alert").place().size(200, 50);
+        self.label.place().size(200, 50).tr(0);
         link_button!(self, button, on_button_tap);
     }
 }

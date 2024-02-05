@@ -1,5 +1,5 @@
 use test_engine::gm::flat::IntSize;
-use ui::{refs::Weak, view, SubView, ViewSetup, ViewTest};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest};
 use ui_views::{Label, Switch};
 
 #[view]
@@ -10,8 +10,8 @@ struct SwitchTestView {
 
 impl ViewSetup for SwitchTestView {
     fn setup(mut self: Weak<Self>) {
-        self.place.all_hor();
-        self.switch.place.size(80, 40).l(20).center_y();
+        self.place().all_hor();
+        self.switch.place().size(80, 40).l(20).center_y();
         self.switch.selected.val(move |on| {
             self.label.set_text(on);
         });

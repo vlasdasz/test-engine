@@ -45,7 +45,7 @@ struct LayoutTestView {
 impl ViewSetup for LayoutTestView {
     fn setup(mut self: Weak<Self>) {
         for view in self.subviews_mut() {
-            view.place.size(15, 15);
+            view.place().size(15, 15);
 
             let Some(button) = view.downcast::<Button>() else {
                 continue;
@@ -56,22 +56,22 @@ impl ViewSetup for LayoutTestView {
             })
         }
 
-        self.center.place.center();
+        self.center.place().center();
 
-        self.top.set_color(Color::ORANGE).place.center_x().t(80);
-        self.bottom.set_color(Color::GREEN).place.center_x().b(80);
-        self.left.place.center_y().l(80);
-        self.right.place.center_y().r(80);
+        self.top.set_color(Color::ORANGE).place().center_x().t(80);
+        self.bottom.set_color(Color::GREEN).place().center_x().b(80);
+        self.left.place().center_y().l(80);
+        self.right.place().center_y().r(80);
 
-        self.top_center.place.between(self.top, self.center);
-        self.bottom_center.place.between(self.bottom, self.center);
-        self.left_center.place.between(self.left, self.center);
-        self.right_center.place.between(self.right, self.center);
+        self.top_center.place().between(self.top, self.center);
+        self.bottom_center.place().between(self.bottom, self.center);
+        self.left_center.place().between(self.left, self.center);
+        self.right_center.place().between(self.right, self.center);
 
-        self.top_s_center.place.between_super(self.top, Anchor::Top);
-        self.bottom_s_center.place.between_super(self.bottom, Anchor::Bot);
-        self.left_s_center.place.between_super(self.left, Anchor::Left);
-        self.right_s_center.place.between_super(self.right, Anchor::Right);
+        self.top_s_center.place().between_super(self.top, Anchor::Top);
+        self.bottom_s_center.place().between_super(self.bottom, Anchor::Bot);
+        self.left_s_center.place().between_super(self.left, Anchor::Left);
+        self.right_s_center.place().between_super(self.right, Anchor::Right);
     }
 }
 

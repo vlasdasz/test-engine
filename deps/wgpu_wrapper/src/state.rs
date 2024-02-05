@@ -11,11 +11,10 @@ use crate::{app::App, image::Image, text::Font, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
-    pub(crate) device: wgpu::Device,
     pub(crate) queue:  wgpu::Queue,
     pub(crate) config: wgpu::SurfaceConfiguration,
 
-    drawer: WGPUDrawer,
+    pub(crate) drawer: WGPUDrawer,
 
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
@@ -71,11 +70,10 @@ impl State {
 
         surface.configure(&device, &config);
 
-        let drawer = WGPUDrawer::new(&device, config.format)?;
+        let drawer = WGPUDrawer::new(device, config.format)?;
 
         Ok(Self {
             surface,
-            device,
             queue,
             config,
             drawer,
@@ -86,13 +84,15 @@ impl State {
 
     pub fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {
         if new_size.width > 0 && new_size.height > 0 {
+            self.drawer.window_size = (new_size.width, new_size.height).into();
             self.config.width = new_size.width;
             self.config.height = new_size.height;
-            self.surface.configure(&self.device, &self.config);
+            self.surface.configure(&self.drawer.device, &self.config);
             for font in self.fonts.values() {
                 font.brush
                     .resize_view(self.config.width as f32, self.config.height as f32, &self.queue);
             }
+            self.app.resize((new_size.width, new_size.height).into());
         }
     }
 
@@ -100,12 +100,14 @@ impl State {
         false
     }
 
-    pub fn update(&mut self) {}
+    pub fn update(&mut self) {
+        self.app.update();
+    }
 
     pub fn render(&mut self) -> Result<()> {
         let surface_texture = self.surface.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
-        let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+        let mut encoder = self.drawer.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
         });
 
@@ -130,32 +132,18 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            self.app.render();
+            self.app.render(&mut render_pass, &self.drawer);
 
             self.drawer.draw_image(
                 &mut render_pass,
                 Image::get("happy-tree.png").get_static(),
-                &(10, 500, 200, 200).into(),
+                &(10, 200, 200, 200).into(),
             );
 
             self.drawer.draw_image(
                 &mut render_pass,
                 Image::get("frisk.png").get_static(),
-                &(400, 10, 100, 100).into(),
-            );
-
-            self.drawer.fill_rect(
-                &self.device,
-                &mut render_pass,
-                &(10, 10, 100, 100).into(),
-                &Color::GREEN,
-            );
-
-            self.drawer.fill_rect(
-                &self.device,
-                &mut render_pass,
-                &(400, 200, 200, 200).into(),
-                &Color::BLUE,
+                &(100, 10, 50, 50).into(),
             );
 
             render_pass.set_viewport(
@@ -182,7 +170,7 @@ impl State {
                 )
                 .with_screen_position((400.0, self.config.height as f32 * 0.5));
 
-            self.drawer.draw_text(&self.device, &self.queue, &section, Font::helvetice());
+            self.drawer.draw_text(&self.queue, &section, Font::helvetice());
 
             for font in self.fonts.values() {
                 font.brush.draw(&mut render_pass);

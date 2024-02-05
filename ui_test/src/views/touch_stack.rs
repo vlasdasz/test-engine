@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use rtools::sleep;
 use test_engine::Screen;
-use ui::{refs::Weak, view, SubView, TouchStack, ViewSetup};
+use ui::{refs::Weak, view, SubView, TouchStack, ViewData, ViewSetup};
 use ui_views::Button;
 
 use crate::view_tests::{
@@ -20,8 +20,8 @@ struct TouchStackTestView {
 
 impl ViewSetup for TouchStackTestView {
     fn setup(self: Weak<Self>) {
-        self.button.place.back();
-        self.button2.place.back();
+        self.button.place().back();
+        self.button2.place().back();
     }
 }
 

@@ -68,7 +68,7 @@ impl TestGameView {
             });
         });
 
-        self.sprite_view.place.tr(10).size(400, 80);
+        self.sprite_view.place().tr(10).size(400, 80);
 
         if let Some(level) = &UILayer::get().level {
             level
@@ -77,9 +77,9 @@ impl TestGameView {
                 .val(move |sprite| self.sprite_view.set_sprite(sprite));
         }
 
-        self.dpad.place.size(140, 100).b(10).l(100);
+        self.dpad.place().size(140, 100).b(10).l(100);
 
-        self.left_stick.place.bl(10).size(80, 80);
+        self.left_stick.place().bl(10).size(80, 80);
         self.left_stick.on_change.val(|mut dir| {
             if let Some(level) = &mut UILayer::get().level {
                 dir.y = -dir.y;
@@ -87,25 +87,25 @@ impl TestGameView {
             }
         });
 
-        self.test_view.place.br(20).size(280, 400);
+        self.test_view.place().br(20).size(280, 400);
         self.test_view
             .set_image("cat.png")
             .set_button_image("square.png")
             .set_animation_image("palm.png");
 
         self.ui_scale.step = 0.1;
-        self.ui_scale.place.size(28, 120).l(100).b(140);
+        self.ui_scale.place().size(28, 120).l(100).b(140);
         //self.ui_scale.on_change.sub(|val| UIManager::set_ui_scale(val));
 
         self.level_scale.step = 0.1;
-        self.level_scale.place.size(28, 120).l(28).b(140);
+        self.level_scale.place().size(28, 120).l(28).b(140);
         self.level_scale
             .on_change(|val| UILayer::get().level.as_mut().unwrap().set_scale(val));
 
         {
             let mut view = self.add_view::<Container>();
 
-            view.place.b(10).center_x().size(150, 100).all_ver();
+            view.place().b(10).center_x().size(150, 100).all_ver();
 
             let mut to_benchmark = view.add_view::<Button>();
             to_benchmark.set_text("Benchmark");

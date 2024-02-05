@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{gl_wrapper::path_data::DrawMode, gm::Color, GlImage, Screen};
-use ui::{refs::Weak, view, SubView, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::ImageView;
 
 use crate::view_tests::record_touches;
@@ -13,7 +13,7 @@ struct RenderImagePath {
 
 impl ViewSetup for RenderImagePath {
     fn setup(mut self: Weak<Self>) {
-        self.image_view.place.back();
+        self.image_view.place().back();
         self.image_view.image = GlImage::render_path(
             "test_path",
             Color::BLUE,

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::Screen;
-use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewSetup};
+use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewData, ViewSetup};
 use ui_views::{IntView, Label};
 
 #[view]
@@ -19,10 +19,10 @@ impl Drop for LabelTestView {
 impl ViewSetup for LabelTestView {
     fn setup(mut self: Weak<Self>) {
         self.label.set_text("ßšėčыў");
-        self.label.place.back().size(280, 280).center();
+        self.label.place().back().size(280, 280).center();
 
         self.text_size_view
-            .place
+            .place()
             .size(50, 100)
             .center_y()
             .anchor(Anchor::Right, self.label, 10);

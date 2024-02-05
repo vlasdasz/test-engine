@@ -25,29 +25,29 @@ struct BetweenTestView {
 impl ViewSetup for BetweenTestView {
     fn setup(mut self: Weak<Self>) {
         for view in self.subviews_mut() {
-            view.place.size(50, 50);
+            view.place().size(50, 50);
         }
 
         [self.center, self.top, self.bottom, self.left, self.right].apply(|view| {
-            view.place.size(100, 100);
+            view.place().size(100, 100);
         });
 
-        self.center.place.center();
+        self.center.place().center();
 
-        self.top.set_color(Color::ORANGE).place.center_x().t(200);
-        self.bottom.set_color(Color::GREEN).place.center_x().b(200);
-        self.left.place.center_y().l(200);
-        self.right.place.center_y().r(200);
+        self.top.set_color(Color::ORANGE).place().center_x().t(200);
+        self.bottom.set_color(Color::GREEN).place().center_x().b(200);
+        self.left.place().center_y().l(200);
+        self.right.place().center_y().r(200);
 
-        self.top_center.place.between(self.top, self.center);
-        self.bottom_center.place.between(self.bottom, self.center);
-        self.left_center.place.between(self.left, self.center);
-        self.right_center.place.between(self.right, self.center);
+        self.top_center.place().between(self.top, self.center);
+        self.bottom_center.place().between(self.bottom, self.center);
+        self.left_center.place().between(self.left, self.center);
+        self.right_center.place().between(self.right, self.center);
 
-        self.top_s_center.place.between_super(self.top, Anchor::Top);
-        self.bottom_s_center.place.between_super(self.bottom, Anchor::Bot);
-        self.left_s_center.place.between_super(self.left, Anchor::Left);
-        self.right_s_center.place.between_super(self.right, Anchor::Right);
+        self.top_s_center.place().between_super(self.top, Anchor::Top);
+        self.bottom_s_center.place().between_super(self.bottom, Anchor::Bot);
+        self.left_s_center.place().between_super(self.left, Anchor::Left);
+        self.right_s_center.place().between_super(self.right, Anchor::Right);
     }
 }
 

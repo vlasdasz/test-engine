@@ -1,7 +1,7 @@
 use refs::Weak;
 
 use crate::{
-    input::{TouchEvent, UIEvents},
+    input::UIEvents,
     view::{view_data::ViewData, view_touch_internal::ViewTouchInternal, ViewFrame},
     Touch, TouchStack, View, ViewTouchCallbacks,
 };

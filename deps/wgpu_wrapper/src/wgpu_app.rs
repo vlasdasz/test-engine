@@ -77,7 +77,6 @@ impl WGPUApp {
                 }
                 WindowEvent::RedrawRequested => {
                     self.state.update();
-                    self.state.app.update();
                     match self.state.render() {
                         Ok(()) => {}
                         // Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),

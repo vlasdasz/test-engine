@@ -1,5 +1,5 @@
 use test_engine::gm::flat::Size;
-use ui::{refs::Weak, view, ModalView, OnceEvent, SubView, ViewSetup};
+use ui::{refs::Weak, view, ModalView, OnceEvent, SubView, ViewData, ViewSetup};
 use ui_views::{link_button, Button, Label, TextField};
 
 #[view]
@@ -20,9 +20,9 @@ impl ModalTestView {
 
 impl ViewSetup for ModalTestView {
     fn setup(mut self: Weak<Self>) {
-        self.button.set_text("Tap").place.size(100, 20).center();
-        self.input_label.place.size(100, 20).tr(0);
-        self.text_field.place.size(100, 20).l(0);
+        self.button.set_text("Tap").place().size(100, 20).center();
+        self.input_label.place().size(100, 20).tr(0);
+        self.text_field.place().size(100, 20).l(0);
 
         link_button!(self, button, on_tap);
     }
@@ -60,9 +60,9 @@ impl ModalViewTestContainer {
 
 impl ViewSetup for ModalViewTestContainer {
     fn setup(mut self: Weak<Self>) {
-        self.button.set_text("Tap").place.size(100, 50);
-        self.label.set_text("Nothing").place.size(100, 50).tr(0);
-        self.text_field.place.size(100, 50).br(0);
+        self.button.set_text("Tap").place().size(100, 50);
+        self.label.set_text("Nothing").place().size(100, 50).tr(0);
+        self.text_field.place().size(100, 50).br(0);
         link_button!(self, button, on_tap);
     }
 }

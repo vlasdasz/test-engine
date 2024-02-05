@@ -7,7 +7,7 @@ use test_engine::{
     manage::data_manager::DataManager,
     GlImage, Screen,
 };
-use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewSetup, ViewTouch};
+use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewData, ViewSetup, ViewTouch};
 use ui_views::ImageView;
 
 #[view]
@@ -33,7 +33,7 @@ impl ViewSetup for ImageTestView {
         //     self.button.set_color(color);
         // });
 
-        self.image_view.place.center().relative(Anchor::Size, self, 0.5);
+        self.image_view.place().center().relative(Anchor::Size, self, 0.5);
         self.image_view.image = GlImage::get("blue.png");
     }
 }

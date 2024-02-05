@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::Screen;
-use ui::{refs::Weak, view, SubView, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::Button;
 
 use crate::view_tests::{state::increment_state, test_combinations};
@@ -13,7 +13,7 @@ struct ButtonTestView {
 
 impl ViewSetup for ButtonTestView {
     fn setup(mut self: Weak<Self>) {
-        self.button.place.back().size(100, 50).center();
+        self.button.place().back().size(100, 50).center();
         self.button.set_text("Button text");
 
         self.button.on_tap(|| {

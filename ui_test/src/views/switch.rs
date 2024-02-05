@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::Screen;
-use ui::{refs::Weak, view, SubView, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::Switch;
 
 use crate::view_tests::{state::set_state, test_combinations};
@@ -13,7 +13,7 @@ struct SwitchTestView {
 
 impl ViewSetup for SwitchTestView {
     fn setup(self: Weak<Self>) {
-        self.switch.place.back().size(100, 50).center();
+        self.switch.place().back().size(100, 50).center();
 
         self.switch.selected.val(|on| {
             set_state(on);

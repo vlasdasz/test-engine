@@ -2,7 +2,7 @@ use test_engine::{gm::Color, view};
 use test_game_lib::benchmark::ui_debug_view::UIDebugView;
 use ui::{
     refs::{Own, Weak},
-    SubView, ViewController, ViewFrame, ViewSetup,
+    SubView, ViewController, ViewData, ViewFrame, ViewSetup,
 };
 use ui_views::{link_button, Button};
 
@@ -18,7 +18,7 @@ pub struct UITestView {
 
 impl ViewSetup for UITestView {
     fn setup(mut self: Weak<Self>) {
-        self.place.all_ver();
+        self.place().all_ver();
 
         self.push_pop.set_text("Push Pop");
         self.push_pop.set_text_color(Color::RED);

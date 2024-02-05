@@ -10,6 +10,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = { workspace = true }
+derivative = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }

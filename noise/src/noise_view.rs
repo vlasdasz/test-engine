@@ -44,7 +44,7 @@ impl NoiseView {
 
 impl ViewSetup for NoiseView {
     fn setup(mut self: Weak<Self>) {
-        self.drawing_view.place.back();
+        self.drawing_view.place().back();
         self.drawing_view.set_color(Color::WHITE);
 
         self.enable_touch_low_priority();
@@ -58,7 +58,7 @@ impl ViewSetup for NoiseView {
             .set_step(2)
             .add_label("there")
             .on_change(update_image)
-            .place
+            .place()
             .size(40, 150)
             .bl(10);
 
@@ -69,7 +69,7 @@ impl ViewSetup for NoiseView {
             .add_label("x")
             .on_change(update_image);
         self.x_view
-            .place
+            .place()
             .size(40, 150)
             .b(10)
             .anchor(Anchor::Left, self.threshold_view, 10);
@@ -80,7 +80,7 @@ impl ViewSetup for NoiseView {
             .set_step(0.5)
             .add_label("y")
             .on_change(update_image);
-        self.y_view.place.size(40, 150).b(10).anchor(Anchor::Left, self.x_view, 10);
+        self.y_view.place().size(40, 150).b(10).anchor(Anchor::Left, self.x_view, 10);
 
         self.size_view
             .set_color(Color::WHITE)
@@ -88,9 +88,9 @@ impl ViewSetup for NoiseView {
             .set_step(2)
             .add_label("size")
             .on_change(update_image);
-        self.size_view.place.size(40, 150).b(10).anchor(Anchor::Left, self.y_view, 10);
+        self.size_view.place().size(40, 150).b(10).anchor(Anchor::Left, self.y_view, 10);
 
-        self.image_view.place.size(400, 400).br(0);
+        self.image_view.place().size(400, 400).br(0);
 
         self.update_image();
     }

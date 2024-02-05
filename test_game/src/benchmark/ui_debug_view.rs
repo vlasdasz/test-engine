@@ -5,7 +5,7 @@ use test_engine::{
 };
 use ui::{
     refs::{dump_ref_stats, Own, Weak},
-    Labeled, ViewSetup,
+    Labeled, ViewData, ViewSetup,
 };
 use ui_views::{Button, Label, LabeledTextField, MultilineLabel};
 
@@ -27,15 +27,15 @@ pub struct UIDebugView {
 
 impl ViewSetup for UIDebugView {
     fn setup(mut self: Weak<Self>) {
-        self.login.place.size(200, 80).center_x();
+        self.login.place().size(200, 80).center_x();
 
-        self.login.place.anchor(Anchor::Bot, self.password, 20);
+        self.login.place().anchor(Anchor::Bot, self.password, 20);
         self.login.set_title(&"Login:");
 
-        self.password.place.size(200, 40).center();
+        self.password.place().size(200, 40).center();
         self.password.set_title(&"Password:");
 
-        self.test_game.set_text("Test Game").place.size(120, 20).b(20).center_x();
+        self.test_game.set_text("Test Game").place().size(120, 20).b(20).center_x();
 
         self.test_game.on_tap(|| {
             UILayer::set_level(Own::<TestGameLevel>::default());
@@ -43,19 +43,19 @@ impl ViewSetup for UIDebugView {
         });
 
         self.collection.set_text("Collection");
-        self.collection.place.above(self.test_game, 20);
+        self.collection.place().above(self.test_game, 20);
         self.collection.on_tap(|| {
             // UIManager::set_view(Own::<CollectionTestView>::default());
         });
 
-        self.label.place.br(10).relative(Anchor::Size, self, 0.4);
+        self.label.place().br(10).relative(Anchor::Size, self, 0.4);
         self.label.set_text_size(64);
         self.label.set_text("Skoggo4");
 
-        self.multi_label.place.tl(10).same_size(self.label);
+        self.multi_label.place().tl(10).same_size(self.label);
         self.multi_label.set_text("Multi Skoggo4 Ultra Boggo4 Sopokokt4ek smeorglil4ek");
 
-        self.stats.place.size(100, 20).tr(5);
+        self.stats.place().size(100, 20).tr(5);
         self.stats.set_text("Print stats");
         self.stats.on_tap(|| {
             println!("===========================================================");

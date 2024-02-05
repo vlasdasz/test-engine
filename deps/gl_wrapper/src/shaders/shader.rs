@@ -132,7 +132,7 @@ impl Shader {
 
     pub fn set_priority(&self, priority: u8) -> &Self {
         debug_assert!(self.z_position >= 0, "Invalid shader uniform: {}", self.name);
-        GL!(Uniform1f, self.z_position, 0.5 - (priority as f32) / 1000.0);
+        GL!(Uniform1f, self.z_position, 0.5 - f32::from(priority) / 1000.0);
         self
     }
 }

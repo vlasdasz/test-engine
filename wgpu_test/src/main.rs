@@ -1,25 +1,42 @@
+#![allow(incomplete_features)]
+#![feature(specialization)]
+#![feature(arbitrary_self_types)]
+
+mod wgpu_test_view;
+
 use std::ops::{Deref, DerefMut};
 
 use anyhow::Result;
 use log::warn;
 use test_engine::{
     assets::Assets,
-    gl_wrapper::{path_data::DrawMode, GLWrapper},
-    gm::{axis::Axis, Color},
-    paths::git_root,
-    ui::{
-        layout::Placer, refs::Own, Container, UIManager, View, ViewAnimation, ViewData, ViewFrame,
-        ViewLayout, ViewSubviews,
+    gm::{
+        axis::Axis,
+        flat::{IntSize, Rect, Size},
     },
+    paths::git_root,
+    ui::{refs::Own, Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews},
     ui_views::ImageView,
-    wgpu_wrapper::{app::App, wgpu_app::WGPUApp},
+    wgpu_wrapper::{app::App, wgpu::RenderPass, wgpu_app::WGPUApp, wgpu_drawer::WGPUDrawer},
 };
+
+use crate::wgpu_test_view::WGPUTestView;
 
 struct TEApp {
     pub(crate) root_view: Own<dyn View>,
 }
 
 impl TEApp {
+    fn rescale_frame(rect: &Rect, display_scale: f32, window_size: Size) -> Rect {
+        (
+            rect.origin.x * display_scale,
+            (window_size.height - rect.origin.y - rect.size.height) * display_scale,
+            rect.size.width * display_scale,
+            rect.size.height * display_scale,
+        )
+            .into()
+    }
+
     fn update_view(&self, view: &mut dyn View) {
         if view.is_hidden() {
             return;
@@ -33,12 +50,12 @@ impl TEApp {
         }
     }
 
-    fn draw(&self, view: &dyn View) {
+    fn draw<'a>(&'a self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer, view: &dyn View) {
         if view.is_hidden() {
             return;
         }
 
-        if view.frame().size.is_invalid() {
+        if view.absolute_frame().size.is_invalid() {
             warn!(
                 "View has invalid frame: {}. Frame: {:?} ",
                 view.label(),
@@ -47,12 +64,14 @@ impl TEApp {
             return;
         }
 
-        //self.fill(view.absolute_frame(), view.color(), view.priority);
+        let frame = Self::rescale_frame(view.absolute_frame(), 1.0, drawer.window_size);
+
+        drawer.fill_rect(pass, &frame, view.color());
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
                 let image = image_view.image;
-                let frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
+                let _frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 // self.draw_image(
                 //     &image,
                 //     &UIManager::rescale_frame(frame),
@@ -65,7 +84,7 @@ impl TEApp {
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(self.root_view.frame()) {
-                self.draw(view.deref())
+                self.draw(pass, drawer, view.deref())
             }
         }
     }
@@ -73,21 +92,25 @@ impl TEApp {
 
 impl Default for TEApp {
     fn default() -> Self {
-        let mut root_view = Own::<Container>::default();
-        root_view.label = "Root view".to_string();
-        let weak_root = root_view.weak_view();
-        root_view.base_mut().placer = Placer::new(weak_root);
-
-        // UIManager::root_view().add_subview(view).place.back();
-
+        let mut root_view = Container::make_root_view();
+        let view = root_view.add_view::<WGPUTestView>();
+        view.place().back();
         Self { root_view }
     }
 }
 
 impl App for TEApp {
-    fn update(&mut self) {}
+    fn update(&mut self) {
+        self.update_view(self.root_view.weak().deref_mut());
+    }
 
-    fn render(&mut self) {}
+    fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
+        self.draw(pass, drawer, self.root_view.deref());
+    }
+
+    fn resize(&mut self, size: IntSize) {
+        self.root_view.set_size(size);
+    }
 }
 
 #[tokio::main]

@@ -1,5 +1,5 @@
 use test_engine::on_main;
-use ui::{refs::Weak, view, SubView, ViewSetup};
+use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::{async_link_button, link_button, Button, Label, Question};
 
 #[view]
@@ -26,12 +26,12 @@ impl QuestionTestView {
 
 impl ViewSetup for QuestionTestView {
     fn setup(mut self: Weak<Self>) {
-        self.label.place.size(200, 50).tr(0);
+        self.label.place().size(200, 50).tr(0);
 
-        self.async_button.set_text("Async ask").place.size(200, 50).br(0);
+        self.async_button.set_text("Async ask").place().size(200, 50).br(0);
         async_link_button!(self, async_button, on_async_tap);
 
-        self.button.set_text("Ask question").place.size(200, 50);
+        self.button.set_text("Ask question").place().size(200, 50);
         link_button!(self, button, on_button_tap);
     }
 }
