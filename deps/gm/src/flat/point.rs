@@ -55,6 +55,10 @@ impl Point {
             y: (self.y + other.y) / 2.0,
         }
     }
+
+    pub fn positive(&self) -> bool {
+        self.x >= 0.0 && self.y >= 0.0
+    }
 }
 
 impl Point {

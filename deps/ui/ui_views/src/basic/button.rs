@@ -1,13 +1,13 @@
-use gl_image::ToImage;
 use gm::Color;
 use refs::Weak;
 use ui::{view, Event, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
+use wgpu_wrapper::image::Image;
 
-use crate::{GLLabel, ImageView};
+use crate::{ImageView, Label};
 
 #[view]
 pub struct Button {
-    label: SubView<GLLabel>,
+    label: SubView<Label>,
     image: SubView<ImageView>,
 
     on_tap: Event,
@@ -20,23 +20,23 @@ impl Button {
     }
 
     pub fn text(&self) -> &str {
-        self.label.text()
+        &self.label.text
     }
 
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         self.label.set_hidden(false);
-        self.label.set_text(text);
+        self.label.text = text.to_label();
         self
     }
 
-    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+    pub fn set_image(&mut self, image: Weak<Image>) -> &mut Self {
         self.image.set_hidden(false);
-        self.image.gl_image = image.to_image();
+        self.image.image = image;
         self
     }
 
-    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.label.set_text_color(color);
+    pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
+        //self.label.set_text_color(color);
         self
     }
 }

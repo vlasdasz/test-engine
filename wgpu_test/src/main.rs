@@ -3,8 +3,8 @@
 #![feature(arbitrary_self_types)]
 #![feature(let_chains)]
 
+mod test_game;
 mod wgpu_test_view;
-
 use std::ops::{Deref, DerefMut};
 
 use anyhow::Result;
@@ -12,13 +12,14 @@ use log::warn;
 use test_engine::{
     assets::Assets,
     gm::{
-        axis::Axis,
         flat::{IntSize, Rect, Size},
         Color,
     },
     manage::data_manager::DataManager,
     paths::git_root,
-    ui::{refs::Own, Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews},
+    ui::{
+        refs::Own, Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews,
+    },
     ui_views::{ImageView, Label},
     wgpu_wrapper::{
         app::App,
@@ -30,13 +31,21 @@ use test_engine::{
     },
 };
 
-use crate::wgpu_test_view::WGPUTestView;
+use crate::test_game::test_game_view::TestGameView;
 
 struct TEApp {
-    pub(crate) root_view: Own<dyn View>,
+    pub(crate) root_view:  Own<dyn View>,
+    pub(crate) first_view: Option<Own<dyn View>>,
 }
 
 impl TEApp {
+    pub fn new(first_view: Own<dyn View>) -> Self {
+        Self {
+            root_view:  Container::make_root_view(),
+            first_view: first_view.into(),
+        }
+    }
+
     fn rescale_frame(rect: &Rect, display_scale: f32, window_size: Size) -> Rect {
         (
             rect.origin.x * display_scale,
@@ -82,14 +91,19 @@ impl TEApp {
 
         let frame = Self::rescale_frame(view.absolute_frame(), 1.0, drawer.window_size);
 
+        if !frame.origin.positive() {
+            warn!("A");
+            return;
+        }
+
         drawer.fill_rect(pass, &frame, view.color());
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
                 let image = image_view.image;
-                let size: Size = image.size.into();
-                let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
-                let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
+                // let size: Size = image.size.into();
+                // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
+                // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
                 drawer.draw_image(pass, image.get_static(), &frame);
             }
@@ -120,17 +134,9 @@ impl TEApp {
     }
 }
 
-impl Default for TEApp {
-    fn default() -> Self {
-        Self {
-            root_view: Container::make_root_view(),
-        }
-    }
-}
-
 impl App for TEApp {
     fn window_ready(&mut self) {
-        let view = self.root_view.add_view::<WGPUTestView>();
+        let view = self.root_view.add_subview(self.first_view.take().unwrap());
         view.place().back();
         self.update();
     }
@@ -155,5 +161,5 @@ impl App for TEApp {
 #[tokio::main]
 async fn main() -> Result<()> {
     Assets::init(git_root().expect("git_root()"));
-    WGPUApp::start(TEApp::default(), 1200, 1200).await
+    WGPUApp::start(TEApp::new(TestGameView::new()), 1200, 1200).await
 }

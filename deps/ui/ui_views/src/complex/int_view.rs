@@ -3,12 +3,12 @@ use rtools::IntoF32;
 use ui::{view, Event, SubView, ViewData, ViewSetup};
 
 use crate as ui_views;
-use crate::{Button, GLLabel, UIImages};
+use crate::{Button, Label, UIImages};
 
 #[view]
 pub struct IntView {
     value: f32,
-    label: SubView<GLLabel>,
+    label: SubView<Label>,
 
     #[link = up_tap]
     up: SubView<Button>,
@@ -26,7 +26,7 @@ impl ViewSetup for IntView {
         self.step = 1.0;
 
         self.place().all_ver();
-        self.label.set_text("1.0");
+        self.label.text = "1.0".into();
         self.up.set_image(UIImages::up());
         self.down.set_image(UIImages::down());
     }
@@ -40,7 +40,7 @@ impl IntView {
     pub fn set_value(&mut self, val: impl IntoF32) -> &mut Self {
         let val = val.into_f32();
         self.value = val;
-        self.label.set_text(format!("{val:.1}"));
+        self.label.text = format!("{val:.1}");
         self.on_change_event.trigger(val);
         self
     }

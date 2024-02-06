@@ -1,18 +1,16 @@
-use gl_image::ToImage;
-use gl_wrapper::path_data::DrawMode;
-use gm::{flat::PointsPath, Color};
 use refs::Weak;
 use rtools::Animation;
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use wgpu_wrapper::image::Image;
 
-use crate::{Button, DrawingView, GLLabel, ImageView};
+use crate::{Button, ImageView, Label};
 
 #[view]
 pub struct ViewWithCat {
-    label:    SubView<GLLabel>,
+    label:    SubView<Label>,
     button:   SubView<Button>,
     image:    SubView<ImageView>,
-    drawing:  SubView<DrawingView>,
+    // drawing:  SubView<DrawingView>,
     animated: SubView<ImageView>,
 
     animation: Animation,
@@ -21,18 +19,18 @@ pub struct ViewWithCat {
 }
 
 impl ViewWithCat {
-    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
-        self.image.gl_image = image.to_image();
+    pub fn set_image(&mut self, image: Weak<Image>) -> &mut Self {
+        self.image.image = image;
         self
     }
 
-    pub fn set_button_image(&mut self, image: impl ToImage) -> &mut Self {
+    pub fn set_button_image(&mut self, image: Weak<Image>) -> &mut Self {
         self.button.set_image(image);
         self
     }
 
-    pub fn set_animation_image(&mut self, image: impl ToImage) -> &mut Self {
-        self.animated.gl_image = image.to_image();
+    pub fn set_animation_image(&mut self, image: Weak<Image>) -> &mut Self {
+        self.animated.image = image;
         self
     }
 }
@@ -41,19 +39,19 @@ impl ViewSetup for ViewWithCat {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
 
-        self.label.set_text("Hello label!");
+        self.label.text = "Hello label!".into();
 
         self.button.on_tap(move || {
             let val = self.label_value;
-            self.label.set_text(format!("Hello label! {val}"));
+            self.label.text = format!("Hello label! {val}");
             self.label_value += 1;
         });
 
-        self.drawing.add_path(
-            PointsPath::rounded_rect((0, 0, 100, 40), 15, 50),
-            &Color::GREEN,
-            DrawMode::Outline,
-        );
+        // self.drawing.add_path(
+        //     PointsPath::rounded_rect((0, 0, 100, 40), 15, 50),
+        //     &Color::GREEN,
+        //     DrawMode::Outline,
+        // );
 
         self.animated.set_frame((100, 100));
 

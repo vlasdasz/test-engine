@@ -1,27 +1,27 @@
 use refs::Weak;
 use ui::{view, SubView, ToLabel, ViewData, ViewSetup};
 
-use crate::GLLabel;
+use crate::Label;
 
 #[view]
 pub struct LabeledView {
-    title: SubView<GLLabel>,
-    text:  SubView<GLLabel>,
+    title: SubView<Label>,
+    text:  SubView<Label>,
 }
 
 impl LabeledView {
     pub fn set_title(&mut self, label: impl ToLabel) -> &Self {
-        self.title.set_text(label);
+        self.title.text = label.to_label();
         self
     }
 
     pub fn set_text(&mut self, value: impl ToLabel) -> &Self {
-        self.text.set_text(value);
+        self.text.text = value.to_label();
         self
     }
 
     pub fn clear(&mut self) -> &Self {
-        self.text.clear();
+        self.text = Default::default();
         self
     }
 }
