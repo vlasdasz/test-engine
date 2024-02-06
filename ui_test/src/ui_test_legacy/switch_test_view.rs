@@ -1,11 +1,11 @@
 use test_engine::gm::flat::IntSize;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest};
-use ui_views::{Label, Switch};
+use ui_views::{GLLabel, Switch};
 
 #[view]
 struct SwitchTestView {
     switch: SubView<Switch>,
-    label:  SubView<Label>,
+    label:  SubView<GLLabel>,
 }
 
 impl ViewSetup for SwitchTestView {

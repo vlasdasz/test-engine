@@ -1,12 +1,12 @@
 use refs::Weak;
 use ui::{view, SubView, ToLabel, ViewData, ViewSetup};
 
-use crate::Label;
+use crate::GLLabel;
 
 #[view]
 pub struct LabeledView {
-    title: SubView<Label>,
-    text:  SubView<Label>,
+    title: SubView<GLLabel>,
+    text:  SubView<GLLabel>,
 }
 
 impl LabeledView {

@@ -2,11 +2,11 @@ use refs::Weak;
 use rtools::IntoF32;
 use ui::{view, Event, SubView, ViewSetup};
 
-use crate::{Label, Slider};
+use crate::{GLLabel, Slider};
 
 #[view]
 pub struct LabeledSlider {
-    label:  SubView<Label>,
+    label:  SubView<GLLabel>,
     slider: SubView<Slider>,
 
     pub on_change: Event<f32>,

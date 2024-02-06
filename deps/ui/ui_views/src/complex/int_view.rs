@@ -3,12 +3,12 @@ use rtools::IntoF32;
 use ui::{view, Event, SubView, ViewData, ViewSetup};
 
 use crate as ui_views;
-use crate::{Button, Label, UIImages};
+use crate::{Button, GLLabel, UIImages};
 
 #[view]
 pub struct IntView {
     value: f32,
-    label: SubView<Label>,
+    label: SubView<GLLabel>,
 
     #[link = up_tap]
     up: SubView<Button>,

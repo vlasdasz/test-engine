@@ -5,11 +5,11 @@ use refs::Weak;
 use rtools::Animation;
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 
-use crate::{Button, DrawingView, ImageView, Label};
+use crate::{Button, DrawingView, GLLabel, ImageView};
 
 #[view]
 pub struct ViewWithCat {
-    label:    SubView<Label>,
+    label:    SubView<GLLabel>,
     button:   SubView<Button>,
     image:    SubView<ImageView>,
     drawing:  SubView<DrawingView>,

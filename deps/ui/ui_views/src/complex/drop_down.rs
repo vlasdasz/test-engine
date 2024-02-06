@@ -6,13 +6,13 @@ use refs::{Own, Weak};
 use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 
-use crate::{self as ui_views, collection_data, Button, CollectionData, CollectionView, Label};
+use crate::{self as ui_views, collection_data, Button, CollectionData, CollectionView, GLLabel};
 
 #[view]
 pub struct DropDown {
     #[link = tapped]
     button: SubView<Button>,
-    label:  SubView<Label>,
+    label:  SubView<GLLabel>,
     table:  SubView<CollectionView>,
     values: Vec<String>,
     opened: bool,
@@ -87,11 +87,11 @@ impl CollectionData for DropDown {
     }
 
     fn make_cell(&self) -> Own<dyn View> {
-        Label::new()
+        GLLabel::new()
     }
 
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
+        let label = cell.downcast_mut::<GLLabel>().unwrap();
         label.set_text(&self.values[index]);
     }
 

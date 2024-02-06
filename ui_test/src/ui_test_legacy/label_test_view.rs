@@ -2,11 +2,11 @@
 
 use test_engine::ViewApp;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::Label;
+use ui_views::GLLabel;
 
 #[view]
 struct LabelTestView {
-    label: SubView<Label>,
+    label: SubView<GLLabel>,
 }
 
 impl ViewSetup for LabelTestView {

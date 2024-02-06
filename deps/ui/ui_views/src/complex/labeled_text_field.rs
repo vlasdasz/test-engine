@@ -1,11 +1,11 @@
 use refs::{weak_from_ref, Weak};
 use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
 
-use crate::{Label, TextField};
+use crate::{GLLabel, TextField};
 
 #[view]
 pub struct LabeledTextField {
-    label:      SubView<Label>,
+    label:      SubView<GLLabel>,
     text_field: SubView<TextField>,
 }
 

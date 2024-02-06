@@ -21,7 +21,7 @@ pub struct Image {
 
 impl Image {
     fn load_to_wgpu(state: &State, name: &str, data: &[u8]) -> Result<Self> {
-        let texture = Texture::from_file_bytes(&state.drawer.device, &state.queue, data, name)?;
+        let texture = Texture::from_file_bytes(&state.drawer.device, &state.drawer.queue, data, name)?;
         Self::from_texture(texture, &state.drawer.device)
     }
 

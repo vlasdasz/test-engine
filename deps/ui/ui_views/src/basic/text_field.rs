@@ -8,11 +8,11 @@ use ui::{
     ViewSetup, ViewTouch,
 };
 
-use crate::Label;
+use crate::GLLabel;
 
 #[view]
 pub struct TextField {
-    label:                 SubView<Label>,
+    label:                 SubView<GLLabel>,
     pub(crate) constraint: Option<TextFieldConstraint>,
 
     placeholder:  String,

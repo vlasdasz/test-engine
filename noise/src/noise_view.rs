@@ -8,7 +8,7 @@ use test_engine::{
     GlImage,
 };
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest, ViewTouch};
-use ui_views::{AddLabel, DrawingView, ImageView, IntView};
+use ui_views::{AddGlLabel, DrawingView, ImageView, IntView};
 
 #[view]
 pub struct NoiseView {

@@ -1,11 +1,11 @@
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::{link_button, touch_test_view::TouchTestView, Alert, Button, Label};
+use ui_views::{link_button, touch_test_view::TouchTestView, Alert, Button, GLLabel};
 
 #[view]
 struct AlertTestView {
     test:   SubView<TouchTestView>,
     button: SubView<Button>,
-    label:  SubView<Label>,
+    label:  SubView<GLLabel>,
 }
 
 impl AlertTestView {

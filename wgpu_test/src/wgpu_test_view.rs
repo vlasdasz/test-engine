@@ -3,7 +3,7 @@ use test_engine::{
     manage::data_manager::DataManager,
     ui,
     ui::{layout::Anchor, refs::Weak, Container, SubView, ViewData, ViewSetup},
-    ui_views::ImageView,
+    ui_views::{ImageView, Label},
     view,
     wgpu_wrapper::image::Image,
 };
@@ -16,6 +16,9 @@ pub struct WGPUTestView {
     br: SubView<Container>,
 
     image: SubView<ImageView>,
+
+    label_l: SubView<Label>,
+    label_r: SubView<Label>,
 }
 
 impl ViewSetup for WGPUTestView {
@@ -29,5 +32,19 @@ impl ViewSetup for WGPUTestView {
 
         self.image.place().center().relative(Anchor::Size, self, 0.2);
         self.image.image = Image::get("cat.png");
+
+        self.label_l.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
+            Anchor::Right,
+            self.image,
+            20,
+        );
+        self.label_l.text = "Łėŵœ Ы".into();
+
+        self.label_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
+            Anchor::Left,
+            self.image,
+            20,
+        );
+        self.label_r.text = "щКыЩъ".into();
     }
 }

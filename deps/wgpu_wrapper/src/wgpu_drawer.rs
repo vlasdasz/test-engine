@@ -5,25 +5,26 @@ use gm::{
     Color,
 };
 use wgpu::{Device, Queue, RenderPass, TextureFormat};
-use wgpu_text::glyph_brush::Section;
 
-use crate::{colored_image_state::ColoredImageState, image::Image, rect_state::RectState, text::Font};
+use crate::{colored_image_state::ColoredImageState, image::Image, rect_state::RectState};
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
     pub window_size:     Size,
     pub device:          Device,
+    pub queue:           Queue,
     rect_state:          RectState,
     colored_image_state: ColoredImageState,
 }
 
 impl WGPUDrawer {
-    pub fn new(device: Device, texture_format: TextureFormat) -> Result<Self> {
+    pub fn new(device: Device, queue: Queue, texture_format: TextureFormat) -> Result<Self> {
         let rect_state = RectState::new(&device, texture_format);
         let colored_image_state = ColoredImageState::new(&device)?;
         Ok(Self {
             window_size: Default::default(),
             device,
+            queue,
             rect_state,
             colored_image_state,
         })
@@ -37,10 +38,6 @@ impl WGPUDrawer {
 
     pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {
         self.colored_image_state.draw(image, rect, render_pass);
-    }
-
-    pub fn draw_text(&self, queue: &Queue, section: &Section, font: &'static mut Font) {
-        font.brush.queue(&self.device, queue, vec![section]).unwrap()
     }
 
     pub fn draw_path(

@@ -4,8 +4,8 @@ use wgpu_text::{glyph_brush::ab_glyph::FontRef, BrushBuilder, TextBrush};
 use crate::wgpu_app::WGPUApp;
 
 pub struct Font {
-    pub name:         &'static str,
-    pub(crate) brush: TextBrush<FontRef<'static>>,
+    pub name:  &'static str,
+    pub brush: TextBrush<FontRef<'static>>,
 }
 
 impl Font {

@@ -1,5 +1,6 @@
 mod button;
 mod circle_view;
+mod gl_label;
 mod image_view;
 mod label;
 mod miltiline_label;
@@ -10,6 +11,7 @@ mod text_field;
 
 pub use button::Button;
 pub use circle_view::CircleView;
+pub use gl_label::*;
 pub use image_view::ImageView;
 pub use label::*;
 pub use miltiline_label::MultilineLabel;

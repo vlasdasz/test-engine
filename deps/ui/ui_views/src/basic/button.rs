@@ -3,11 +3,11 @@ use gm::Color;
 use refs::Weak;
 use ui::{view, Event, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
 
-use crate::{ImageView, Label};
+use crate::{GLLabel, ImageView};
 
 #[view]
 pub struct Button {
-    label: SubView<Label>,
+    label: SubView<GLLabel>,
     image: SubView<ImageView>,
 
     on_tap: Event,

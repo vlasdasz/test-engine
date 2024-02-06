@@ -12,6 +12,7 @@ pub mod wgpu_drawer;
 
 use gm::{flat::Point, volume::UIVertex};
 pub use wgpu;
+pub use wgpu_text;
 
 pub(crate) const IMAGE_VERTICES: &[UIVertex] = &[
     UIVertex {

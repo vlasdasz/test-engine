@@ -7,7 +7,7 @@ use ui::{
     refs::{dump_ref_stats, Own, Weak},
     Labeled, ViewData, ViewSetup,
 };
-use ui_views::{Button, Label, LabeledTextField, MultilineLabel};
+use ui_views::{Button, GLLabel, LabeledTextField, MultilineLabel};
 
 use crate::test_game::TestGameLevel;
 
@@ -16,7 +16,7 @@ pub struct UIDebugView {
     password: SubView<LabeledTextField>,
     login:    SubView<LabeledTextField>,
 
-    label:       SubView<Label>,
+    label:       SubView<GLLabel>,
     multi_label: SubView<MultilineLabel>,
 
     test_game:  SubView<Button>,

@@ -1,6 +1,7 @@
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
+#![feature(let_chains)]
 
 mod wgpu_test_view;
 
@@ -13,12 +14,20 @@ use test_engine::{
     gm::{
         axis::Axis,
         flat::{IntSize, Rect, Size},
+        Color,
     },
     manage::data_manager::DataManager,
     paths::git_root,
     ui::{refs::Own, Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews},
-    ui_views::ImageView,
-    wgpu_wrapper::{app::App, wgpu::RenderPass, wgpu_app::WGPUApp, wgpu_drawer::WGPUDrawer},
+    ui_views::{ImageView, Label},
+    wgpu_wrapper::{
+        app::App,
+        text::Font,
+        wgpu::RenderPass,
+        wgpu_app::WGPUApp,
+        wgpu_drawer::WGPUDrawer,
+        wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign},
+    },
 };
 
 use crate::wgpu_test_view::WGPUTestView;
@@ -51,7 +60,13 @@ impl TEApp {
         }
     }
 
-    fn draw<'a>(&'a self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer, view: &dyn View) {
+    fn draw<'a>(
+        &'a self,
+        pass: &mut RenderPass<'a>,
+        drawer: &'a WGPUDrawer,
+        view: &'a dyn View,
+        sections: &mut Vec<Section<'a>>,
+    ) {
         if view.is_hidden() {
             return;
         }
@@ -78,11 +93,28 @@ impl TEApp {
 
                 drawer.draw_image(pass, image.get_static(), &frame);
             }
+        } else if let Some(label) = view.as_any().downcast_ref::<Label>()
+            && !label.text.is_empty()
+        {
+            let center = frame.center();
+
+            let section = Section::default()
+                .add_text(Text::new(&label.text).with_scale(64.0).with_color(Color::BLACK.as_slice()))
+                .with_bounds((frame.width(), frame.height()))
+                .with_layout(
+                    Layout::default()
+                        .v_align(VerticalAlign::Center)
+                        .h_align(HorizontalAlign::Center)
+                        .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
+                )
+                .with_screen_position((center.x, center.y));
+
+            sections.push(section);
         }
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(self.root_view.frame()) {
-                self.draw(pass, drawer, view.deref())
+                self.draw(pass, drawer, view.deref(), sections)
             }
         }
     }
@@ -108,7 +140,10 @@ impl App for TEApp {
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
-        self.draw(pass, drawer, self.root_view.deref());
+        let mut sections: Vec<Section> = vec![];
+        self.draw(pass, drawer, self.root_view.deref(), &mut sections);
+
+        Font::helvetice().brush.queue(&drawer.device, &drawer.queue, sections).unwrap()
     }
 
     fn resize(&mut self, size: IntSize) {

@@ -1,16 +1,13 @@
 use std::{collections::HashMap, sync::Arc};
 
 use anyhow::{anyhow, Result};
-use gm::Color;
 use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
-use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use winit::{event::WindowEvent, window::Window};
 
 use crate::{app::App, text::Font, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
-    pub(crate) queue:  wgpu::Queue,
     pub(crate) config: wgpu::SurfaceConfiguration,
 
     pub(crate) drawer: WGPUDrawer,
@@ -53,7 +50,9 @@ impl State {
             )
             .await?;
 
-        let _surface_caps = surface.get_capabilities(&adapter);
+        let surface_caps = surface.get_capabilities(&adapter);
+
+        dbg!(surface_caps);
 
         let config = wgpu::SurfaceConfiguration {
             usage:        wgpu::TextureUsages::RENDER_ATTACHMENT,
@@ -69,11 +68,10 @@ impl State {
 
         surface.configure(&device, &config);
 
-        let drawer = WGPUDrawer::new(device, config.format)?;
+        let drawer = WGPUDrawer::new(device, queue, config.format)?;
 
         Ok(Self {
             surface,
-            queue,
             config,
             drawer,
             fonts: Default::default(),
@@ -88,8 +86,11 @@ impl State {
             self.config.height = new_size.height;
             self.surface.configure(&self.drawer.device, &self.config);
             for font in self.fonts.values() {
-                font.brush
-                    .resize_view(self.config.width as f32, self.config.height as f32, &self.queue);
+                font.brush.resize_view(
+                    self.config.width as f32,
+                    self.config.height as f32,
+                    &self.drawer.queue,
+                );
             }
             self.app.resize((new_size.width, new_size.height).into());
         }
@@ -142,29 +143,12 @@ impl State {
                 1.0,
             );
 
-            let section = Section::default()
-                .add_text(
-                    Text::new("Hello World Плати ęčėčė0- Ye ЩООООФФ")
-                        .with_scale(100.0)
-                        .with_color(Color::BLACK.as_slice()),
-                )
-                .with_bounds((self.config.width as f32 * 0.4, self.config.height as f32))
-                .with_layout(
-                    Layout::default()
-                        .v_align(VerticalAlign::Center)
-                        .h_align(HorizontalAlign::Center)
-                        .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
-                )
-                .with_screen_position((400.0, self.config.height as f32 * 0.5));
-
-            self.drawer.draw_text(&self.queue, &section, Font::helvetice());
-
             for font in self.fonts.values() {
                 font.brush.draw(&mut render_pass);
             }
         }
 
-        self.queue.submit(std::iter::once(encoder.finish()));
+        self.drawer.queue.submit(std::iter::once(encoder.finish()));
         surface_texture.present();
 
         Ok(())
