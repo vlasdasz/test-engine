@@ -22,7 +22,7 @@ pub struct ViewWithCat {
 
 impl ViewWithCat {
     pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
-        self.image.image = image.to_image();
+        self.image.gl_image = image.to_image();
         self
     }
 
@@ -32,7 +32,7 @@ impl ViewWithCat {
     }
 
     pub fn set_animation_image(&mut self, image: impl ToImage) -> &mut Self {
-        self.animated.image = image.to_image();
+        self.animated.gl_image = image.to_image();
         self
     }
 }

@@ -31,7 +31,7 @@ impl Button {
 
     pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image.set_hidden(false);
-        self.image.image = image.to_image();
+        self.image.gl_image = image.to_image();
         self
     }
 

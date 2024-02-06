@@ -2,12 +2,11 @@ use std::{collections::HashMap, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use gm::Color;
-use manage::data_manager::DataManager;
 use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use winit::{event::WindowEvent, window::Window};
 
-use crate::{app::App, image::Image, text::Font, wgpu_drawer::WGPUDrawer};
+use crate::{app::App, text::Font, wgpu_drawer::WGPUDrawer};
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -133,18 +132,6 @@ impl State {
             });
 
             self.app.render(&mut render_pass, &self.drawer);
-
-            self.drawer.draw_image(
-                &mut render_pass,
-                Image::get("happy-tree.png").get_static(),
-                &(10, 200, 200, 200).into(),
-            );
-
-            self.drawer.draw_image(
-                &mut render_pass,
-                Image::get("frisk.png").get_static(),
-                &(100, 10, 50, 50).into(),
-            );
 
             render_pass.set_viewport(
                 0.0,

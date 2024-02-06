@@ -14,6 +14,7 @@ use test_engine::{
         axis::Axis,
         flat::{IntSize, Rect, Size},
     },
+    manage::data_manager::DataManager,
     paths::git_root,
     ui::{refs::Own, Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews},
     ui_views::ImageView,
@@ -71,14 +72,11 @@ impl TEApp {
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
                 let image = image_view.image;
-                let _frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
-                // self.draw_image(
-                //     &image,
-                //     &UIManager::rescale_frame(frame),
-                //     &image_view.tint_color,
-                //     view.priority,
-                //     false,
-                // );
+                let size: Size = image.size.into();
+                let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
+                let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
+
+                drawer.draw_image(pass, image.get_static(), &frame);
             }
         }
 
@@ -92,14 +90,19 @@ impl TEApp {
 
 impl Default for TEApp {
     fn default() -> Self {
-        let mut root_view = Container::make_root_view();
-        let view = root_view.add_view::<WGPUTestView>();
-        view.place().back();
-        Self { root_view }
+        Self {
+            root_view: Container::make_root_view(),
+        }
     }
 }
 
 impl App for TEApp {
+    fn window_ready(&mut self) {
+        let view = self.root_view.add_view::<WGPUTestView>();
+        view.place().back();
+        self.update();
+    }
+
     fn update(&mut self) {
         self.update_view(self.root_view.weak().deref_mut());
     }
@@ -110,6 +113,7 @@ impl App for TEApp {
 
     fn resize(&mut self, size: IntSize) {
         self.root_view.set_size(size);
+        self.update();
     }
 }
 

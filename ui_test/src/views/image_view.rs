@@ -34,7 +34,7 @@ impl ViewSetup for ImageTestView {
         // });
 
         self.image_view.place().center().relative(Anchor::Size, self, 0.5);
-        self.image_view.image = GlImage::get("blue.png");
+        self.image_view.gl_image = GlImage::get("blue.png");
     }
 }
 

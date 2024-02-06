@@ -33,7 +33,7 @@ impl NoiseView {
             threshold: self.threshold_view.value() as _,
         });
 
-        self.image_view.image = image;
+        self.image_view.gl_image = image;
 
         self.drawing_view.remove_all_paths();
         for island in islands {

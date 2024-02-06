@@ -82,7 +82,7 @@ impl Label {
             return;
         }
 
-        let image = self.image_view.image.to_image();
+        let image = self.image_view.gl_image.to_image();
 
         let size = if image.size.width > self.width() {
             image.size.fit_width(self.width())
@@ -97,7 +97,7 @@ impl Label {
 
     fn set_letters(&mut self) {
         // Image::free(self.image_view.image);
-        self.image_view.image = render_text(&self.text, &mut self.font, self.text_size);
+        self.image_view.gl_image = render_text(&self.text, &mut self.font, self.text_size);
     }
 }
 

@@ -48,7 +48,10 @@ impl WGPUApp {
         }
         .into();
 
-        APP.get_mut().as_mut().unwrap().start_event_loop()
+        let app = Self::current();
+
+        app.state.app.window_ready();
+        app.start_event_loop()
     }
 
     fn start_event_loop(&mut self) -> Result<()> {

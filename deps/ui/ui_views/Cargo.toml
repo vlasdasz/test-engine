@@ -21,6 +21,7 @@ refs = { workspace = true }
 rtools = { workspace = true }
 text = { workspace = true }
 ui = { workspace = true }
+wgpu_wrapper = { workspace = true }
 
 
 [dev-dependencies]

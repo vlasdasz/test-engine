@@ -14,7 +14,7 @@ struct RenderImagePath {
 impl ViewSetup for RenderImagePath {
     fn setup(mut self: Weak<Self>) {
         self.image_view.place().back();
-        self.image_view.image = GlImage::render_path(
+        self.image_view.gl_image = GlImage::render_path(
             "test_path",
             Color::BLUE,
             vec![(1, 0).into(), (1, 50).into(), (50, 50).into(), (15, 35).into()],

@@ -128,8 +128,8 @@ impl UIDrawer for TEUIDrawer {
         self.fill(view.absolute_frame(), view.color(), view.priority());
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
-            if image_view.image.is_ok() {
-                let image = image_view.image;
+            if image_view.gl_image.is_ok() {
+                let image = image_view.gl_image;
                 let frame = &image.size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 self.draw_image(
                     &image,

@@ -1,8 +1,11 @@
 use test_engine::{
     gm::Color,
+    manage::data_manager::DataManager,
     ui,
-    ui::{refs::Weak, Container, SubView, ViewData, ViewSetup},
+    ui::{layout::Anchor, refs::Weak, Container, SubView, ViewData, ViewSetup},
+    ui_views::ImageView,
     view,
+    wgpu_wrapper::image::Image,
 };
 
 #[view]
@@ -11,6 +14,8 @@ pub struct WGPUTestView {
     tr: SubView<Container>,
     bl: SubView<Container>,
     br: SubView<Container>,
+
+    image: SubView<ImageView>,
 }
 
 impl ViewSetup for WGPUTestView {
@@ -21,5 +26,8 @@ impl ViewSetup for WGPUTestView {
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
         self.bl.set_color(Color::BLUE).place().size(100, 100).bl(10);
         self.br.set_color(Color::ORANGE).place().size(100, 100).br(10);
+
+        self.image.place().center().relative(Anchor::Size, self, 0.2);
+        self.image.image = Image::get("cat.png");
     }
 }
