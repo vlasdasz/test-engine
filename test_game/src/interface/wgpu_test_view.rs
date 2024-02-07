@@ -1,6 +1,9 @@
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, Color, Container, Image, ImageView, Label, SubView, ViewData, ViewSetup},
+    ui::{
+        view, Anchor, Color, Container, DPadView, Image, ImageView, IntView, Label, SubView, ViewData,
+        ViewSetup,
+    },
     DataManager,
 };
 
@@ -15,6 +18,9 @@ pub struct WGPUTestView {
 
     label_l: SubView<Label>,
     label_r: SubView<Label>,
+
+    dpad: SubView<DPadView>,
+    int:  SubView<IntView>,
 }
 
 impl ViewSetup for WGPUTestView {
@@ -42,5 +48,8 @@ impl ViewSetup for WGPUTestView {
             20,
         );
         self.label_r.text = "щКыЩъ".into();
+
+        self.dpad.place().size(200, 100).b(20).anchor(Anchor::Left, self.bl, 10);
+        self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
     }
 }

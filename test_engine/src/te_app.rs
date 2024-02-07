@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::{
-    flat::{IntSize, Rect, Size},
+    flat::{IntSize, Rect},
     Color,
 };
 use log::warn;
@@ -26,14 +26,8 @@ impl TEApp {
         }
     }
 
-    fn rescale_frame(rect: &Rect, display_scale: f32, window_size: Size) -> Rect {
-        (
-            rect.origin.x * display_scale,
-            (window_size.height - rect.origin.y - rect.size.height) * display_scale,
-            rect.size.width * display_scale,
-            rect.size.height * display_scale,
-        )
-            .into()
+    fn rescale_frame(rect: &Rect, display_scale: f32) -> Rect {
+        rect * display_scale
     }
 
     fn update_view(&self, view: &mut dyn View) {
@@ -69,7 +63,7 @@ impl TEApp {
             return;
         }
 
-        let frame = Self::rescale_frame(view.absolute_frame(), 1.0, drawer.window_size);
+        let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
 
         if !frame.origin.positive() {
             warn!("A");
