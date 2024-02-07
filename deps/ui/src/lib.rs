@@ -1,4 +1,5 @@
 #![allow(incomplete_features)]
+#![allow(clippy::single_component_path_imports)]
 #![feature(specialization)]
 #![feature(const_trait_impl)]
 #![feature(arbitrary_self_types)]
@@ -9,7 +10,7 @@ pub use input::Touch;
 
 pub mod input;
 mod labeled;
-pub mod layout;
+mod layout;
 mod modal_view;
 mod navigation_view;
 mod text_field_constraint;
@@ -22,6 +23,7 @@ mod view;
 mod with_header;
 
 pub use labeled::*;
+pub use layout::*;
 pub use modal_view::*;
 pub use navigation_view::*;
 pub use refs;

@@ -2,6 +2,10 @@ use refs::Weak;
 use rtools::Animation;
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 use wgpu_wrapper::image::Image;
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::{Button, ImageView, Label};
 

@@ -1,17 +1,11 @@
-use old_engine::{
+use test_engine::{
     audio::Sound,
-    manage::data_manager::DataManager,
-    rtools::Apply,
-    ui,
-    ui::{refs::Weak, ViewData, ViewSubviews},
-    ui_views::{test_view::ViewWithCat, Button, DPadView, IntView},
-    view,
-    wgpu_wrapper::image::Image,
-};
-
-use crate::{
-    test_game::test_game_view::ui::{SubView, ViewSetup},
-    Color, Container,
+    refs::Weak,
+    ui::{
+        view, Button, Color, Container, DPadView, Image, IntView, SubView, ViewData, ViewSetup, ViewSubviews,
+        ViewWithCat,
+    },
+    Apply, DataManager,
 };
 
 #[view]

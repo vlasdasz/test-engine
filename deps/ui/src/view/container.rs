@@ -2,8 +2,12 @@ use gm::Color;
 use refs::Own;
 use ui_proc::view;
 
-use crate as ui;
 use crate::{layout::Placer, View};
+mod test_engine {
+    pub(crate) use refs;
+
+    pub(crate) use crate as ui;
+}
 
 #[view]
 pub struct Container {}

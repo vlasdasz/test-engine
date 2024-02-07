@@ -1,6 +1,10 @@
 use refs::Weak;
 use rtools::IntoF32;
 use ui::{view, Event, SubView, ViewData, ViewSetup};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate as ui_views;
 use crate::{Button, Label, UIImages};

@@ -3,15 +3,15 @@
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
 
-mod benchmark;
-mod test_game;
+mod interface;
 
 use anyhow::Result;
-use old_engine::{MakeApp, OldApp};
+use test_engine::{git_root, ui::ViewSetup, Assets, TEApp, WGPUApp};
 
-use crate::test_game::test_app::TestApp;
+use crate::interface::TestGameView;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    TestApp::make_app().launch()
+    Assets::init(git_root().expect("git_root()"));
+    WGPUApp::start(TEApp::new(TestGameView::new()), 1200, 1200).await
 }

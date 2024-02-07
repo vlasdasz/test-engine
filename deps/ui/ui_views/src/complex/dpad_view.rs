@@ -2,6 +2,10 @@ use gm::flat::{Direction, IntSize};
 use refs::Weak;
 use rtools::Apply;
 use ui::{view, Event, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewTest};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::{Button, UIImages};
 

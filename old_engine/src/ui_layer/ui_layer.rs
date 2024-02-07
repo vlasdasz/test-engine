@@ -8,7 +8,7 @@ use ui::{
     check_touch, input::UIEvents, refs::Weak, Container, Touch, TouchStack, UIManager, ViewData, ViewFrame,
     ViewSetup, ViewSubviews,
 };
-use ui_views::debug_view::DebugView;
+use ui_views::DebugView;
 
 use crate::{Keymap, Screen};
 

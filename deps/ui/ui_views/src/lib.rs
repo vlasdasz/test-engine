@@ -1,4 +1,5 @@
 #![allow(incomplete_features)]
+#![allow(clippy::single_component_path_imports)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 #![feature(associated_type_bounds)]

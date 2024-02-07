@@ -1,6 +1,10 @@
 use gm::flat::Size;
 use refs::{weak_from_ref, Weak};
 use ui::{view, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::{CollectionData, ScrollView};
 

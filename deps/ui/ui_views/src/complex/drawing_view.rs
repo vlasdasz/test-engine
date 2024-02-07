@@ -2,6 +2,11 @@ use gm::{
     axis::Axis,
     flat::{Points, Size},
 };
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
+
 use ui::{view, ViewFrame};
 
 #[view]

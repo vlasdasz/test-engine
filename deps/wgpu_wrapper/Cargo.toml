@@ -23,4 +23,4 @@ rtools = { workspace = true }
 
 gm = { workspace = true }
 
-wgpu_text = "0.8.6"
+wgpu_text = { workspace = true }

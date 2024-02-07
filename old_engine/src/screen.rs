@@ -11,7 +11,7 @@ use ui::{
     refs::{assert_main_thread, Own},
     UIManager, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
 };
-use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
+use ui_views::{DebugView, SHOW_DEBUG_VIEW};
 
 use crate::{app::TestEngineAction, assets::Assets, ui_layer::UILayer};
 

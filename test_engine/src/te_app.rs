@@ -1,39 +1,19 @@
-#![allow(incomplete_features)]
-#![feature(specialization)]
-#![feature(arbitrary_self_types)]
-#![feature(let_chains)]
-
-mod test_game;
-mod wgpu_test_view;
 use std::ops::{Deref, DerefMut};
 
-use anyhow::Result;
-use log::warn;
-use old_engine::{
-    assets::Assets,
-    gm::{
-        flat::{IntSize, Rect, Size},
-        Color,
-    },
-    manage::data_manager::DataManager,
-    paths::git_root,
-    ui::{
-        refs::Own, Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews,
-    },
-    ui_views::{ImageView, Label},
-    wgpu_wrapper::{
-        app::App,
-        text::Font,
-        wgpu::RenderPass,
-        wgpu_app::WGPUApp,
-        wgpu_drawer::WGPUDrawer,
-        wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign},
-    },
+use gm::{
+    flat::{IntSize, Rect, Size},
+    Color,
 };
+use log::warn;
+use manage::data_manager::DataManager;
+use refs::Own;
+use ui::{Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews};
+use ui_views::{ImageView, Label};
+use wgpu::RenderPass;
+use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
+use wgpu_wrapper::{App, Font, WGPUDrawer};
 
-use crate::test_game::test_game_view::TestGameView;
-
-struct TEApp {
+pub struct TEApp {
     pub(crate) root_view:  Own<dyn View>,
     pub(crate) first_view: Option<Own<dyn View>>,
 }
@@ -156,10 +136,4 @@ impl App for TEApp {
         self.root_view.set_size(size);
         self.update();
     }
-}
-
-#[tokio::main]
-async fn main() -> Result<()> {
-    Assets::init(git_root().expect("git_root()"));
-    WGPUApp::start(TEApp::new(TestGameView::new()), 1200, 1200).await
 }

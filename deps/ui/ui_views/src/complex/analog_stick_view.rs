@@ -1,6 +1,10 @@
 use gm::flat::Point;
 use refs::Weak;
 use ui::{view, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::DrawingView;
 

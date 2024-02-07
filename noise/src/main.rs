@@ -8,8 +8,7 @@ mod noise_view;
 
 use anyhow::Result;
 
-use crate::noise_view::NoiseView;
-
 fn main() -> Result<()> {
-    old_engine::ViewApp::<NoiseView>::start()
+    //old_engine::ViewApp::<NoiseView>::start()
+    Ok(())
 }

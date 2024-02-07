@@ -1,11 +1,7 @@
-use old_engine::{
-    gm::Color,
-    manage::data_manager::DataManager,
-    ui,
-    ui::{layout::Anchor, refs::Weak, Container, SubView, ViewData, ViewSetup},
-    ui_views::{ImageView, Label},
-    view,
-    wgpu_wrapper::image::Image,
+use test_engine::{
+    refs::Weak,
+    ui::{view, Anchor, Color, Container, Image, ImageView, Label, SubView, ViewData, ViewSetup},
+    DataManager,
 };
 
 #[view]

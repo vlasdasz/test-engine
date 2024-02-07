@@ -3,16 +3,27 @@ edition = "2021"
 name = "test_engine"
 version = "0.1.0"
 
-[[bin]]
+[lib]
+crate-type = ["rlib", "staticlib", "dylib"]
 name = "test_engine"
-path = "src/main.rs"
-
 
 [dependencies]
 anyhow = { workspace = true }
 derivative = { workspace = true }
 env_logger = { workspace = true }
+home = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }
+wgpu = { workspace = true }
+wgpu_text = { workspace = true }
 
-old_engine = { workspace = true }
+manage = { workspace = true }
+refs = { workspace = true }
+rtools = { workspace = true }
+
+audio = { workspace = true }
+gm = { workspace = true }
+ui = { workspace = true }
+ui_proc = { workspace = true }
+ui_views = { workspace = true }
+wgpu_wrapper = { workspace = true }

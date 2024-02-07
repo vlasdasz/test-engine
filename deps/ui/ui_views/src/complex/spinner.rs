@@ -2,6 +2,10 @@ use std::{
     f32::consts::PI,
     sync::{Mutex, MutexGuard},
 };
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use chrono::Utc;
 use dispatch::{on_main, on_main_sync};

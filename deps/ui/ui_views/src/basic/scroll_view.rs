@@ -1,6 +1,10 @@
 use gm::flat::Size;
 use refs::Weak;
 use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::Slider;
 

@@ -4,6 +4,10 @@ use rtools::IntoF32;
 use ui::{view, SubView, ViewData, ViewFrame, ViewSetup};
 
 use crate::DrawingView;
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 #[view]
 pub struct CircleView {

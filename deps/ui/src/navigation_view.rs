@@ -4,7 +4,11 @@ use refs::{Own, ToOwn, Weak};
 use rtools::Animation;
 use ui_proc::view;
 
-use crate as ui;
+mod test_engine {
+    pub(crate) use refs;
+
+    pub(crate) use crate as ui;
+}
 use crate::{
     view::{ViewAnimation, ViewFrame, ViewSubviews},
     TouchStack, UIAnimation, UIManager, View, ViewData, ViewSetup,

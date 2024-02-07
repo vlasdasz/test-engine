@@ -1,6 +1,10 @@
 use gm::{flat::Size, Color};
 use refs::Weak;
 use ui::{view, ModalView, OnceEvent, SubView, ViewData, ViewSetup};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::{Button, Label};
 

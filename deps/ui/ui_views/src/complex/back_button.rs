@@ -1,5 +1,9 @@
 use refs::Weak;
 use ui::{view, SubView, ViewController, ViewData, ViewSetup};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::Button;
 

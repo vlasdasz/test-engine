@@ -4,6 +4,10 @@ use ui::{view, Event, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
 use wgpu_wrapper::image::Image;
 
 use crate::{ImageView, Label};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 #[view]
 pub struct Button {

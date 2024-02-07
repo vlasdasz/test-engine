@@ -2,6 +2,10 @@ use gm::Color;
 use log::warn;
 use refs::Weak;
 use ui::{view, ToLabel, View, ViewData, ViewSetup, ViewSubviews};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 #[view]
 pub struct Label {

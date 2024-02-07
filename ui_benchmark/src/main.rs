@@ -8,8 +8,7 @@ mod benchmark_view;
 
 use anyhow::Result;
 
-use crate::benchmark_view::BenchmarkView;
-
 fn main() -> Result<()> {
-    old_engine::ViewApp::<BenchmarkView>::start()
+    //old_engine::ViewApp::<BenchmarkView>::start()
+    Ok(())
 }

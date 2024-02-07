@@ -1,3 +1,7 @@
-pub mod debug_view;
-pub mod test_view;
-pub mod touch_test_view;
+mod debug_view;
+mod test_view;
+mod touch_test_view;
+
+pub use debug_view::*;
+pub use test_view::*;
+pub use touch_test_view::*;

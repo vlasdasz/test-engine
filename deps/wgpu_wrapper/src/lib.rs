@@ -1,18 +1,22 @@
-pub mod app;
+mod app;
 pub mod colored_image_state;
 pub mod image;
 mod pipeline;
 pub mod rect_state;
 pub mod state;
-pub mod text;
+mod text;
 pub mod utils;
 pub mod vertex_layout;
-pub mod wgpu_app;
-pub mod wgpu_drawer;
+mod wgpu_app;
 
+mod wgpu_drawer;
+
+pub use app::*;
 use gm::{flat::Point, volume::UIVertex};
+pub use text::*;
 pub use wgpu;
-pub use wgpu_text;
+pub use wgpu_app::*;
+pub use wgpu_drawer::*;
 
 pub(crate) const IMAGE_VERTICES: &[UIVertex] = &[
     UIVertex {

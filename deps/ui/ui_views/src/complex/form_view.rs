@@ -3,6 +3,10 @@ use std::{cell::RefCell, collections::HashMap, fmt::Debug, marker::PhantomData};
 use reflected::{FieldRef, Reflected};
 use refs::Weak;
 use ui::{view, Labeled, TextFieldConstraint, ViewData, ViewSetup, ViewSubviews};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::{LabeledDrop, LabeledTextField};
 

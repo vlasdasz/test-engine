@@ -1,5 +1,5 @@
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::{link_button, touch_test_view::TouchTestView, Alert, Button, Label};
+use ui_views::{link_button, Alert, Button, Label, TouchTestView};
 
 #[view]
 struct AlertTestView {

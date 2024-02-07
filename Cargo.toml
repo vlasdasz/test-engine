@@ -1,7 +1,7 @@
 [workspace]
 
-default-members = ["test_game"]
-members = ["test_game", "ui_test", "ui_benchmark", "noise", "test_engine"]
+default-members = ["old_test_game"]
+members = ["old_test_game", "ui_benchmark", "noise", "test_engine", "test_game"]
 
 resolver = "2"
 
@@ -27,6 +27,7 @@ serial_test = "3.0"
 smart-default = "0.7.1"
 tokio = { version = "1.33.0", features = ["full"] }
 wgpu = "0.19.1"
+wgpu_text = "0.8.6"
 winit = "0.29.10"
 
 manage = "=0.4.5"
@@ -42,7 +43,7 @@ gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
 old_engine = { path = "old_engine" }
 rest = { path = "deps/rest" }
-test_game = { path = "test_game" }
+test_engine = { path = "test_engine" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
 ui_proc_debug = { path = "deps/ui/ui_proc_debug" }

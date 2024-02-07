@@ -1,15 +1,15 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name = "test_game"
+name = "old_test_game"
 version = "0.1.0"
 
 [[bin]]
-name = "test_game"
+name = "old_test_game"
 
-#[lib]
-#crate-type = ["rlib", "staticlib", "dylib"]
-#name = "test_game_lib"
+[lib]
+crate-type = ["rlib", "staticlib", "dylib"]
+name = "old_test_game_lib"
 
 [dependencies]
 anyhow = { workspace = true }
@@ -17,7 +17,12 @@ derivative = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }
 
-test_engine = { workspace = true }
+ui = { workspace = true }
+ui_views = { workspace = true }
+
+manage = { workspace = true }
+old_engine = { workspace = true }
+rtools = { workspace = true }
 
 [target.'cfg(target_os="android")'.dependencies]
 android-ndk-sys = "0.2"

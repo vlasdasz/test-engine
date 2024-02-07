@@ -53,15 +53,15 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     let (instance_global, instance_link, instance_method) = if no_generics {
         (
             quote! {
-                static #instance_global_var: std::sync::Mutex< ui::refs::Weak<#name>> =
-                    std::sync::Mutex::new(ui::refs::Weak::const_default());
+                static #instance_global_var: std::sync::Mutex< test_engine::refs::Weak<#name>> =
+                    std::sync::Mutex::new(test_engine::refs::Weak::const_default());
             },
             quote! {
                 *#instance_global_var.lock().expect("*#instance_global_var.lock()") = self;
             },
             quote! {
                 impl #name {
-                    pub fn instance() -> ui::refs::Weak<Self> {
+                    pub fn instance() -> test_engine::refs::Weak<Self> {
                         #instance_global_var.lock().expect("#instance_global_var.lock()").clone()
                     }
                 }
@@ -73,8 +73,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
     fields.named.push(
         Field::parse_named
-            .parse2(quote! { view: ui::ViewBase })
-            .expect("parse2(quote! { view: ui::ViewBase })"),
+            .parse2(quote! { view: test_engine::ui::ViewBase })
+            .expect("parse2(quote! { view: test_engine::ui::ViewBase })"),
     );
 
     quote! {
@@ -82,24 +82,24 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         #[derivative(Debug)]
         #stream
 
-        impl #generics ui::View for #name <#type_params> {
-            fn weak_view(&self) -> ui::refs::Weak<dyn ui::View> {
-                ui::refs::weak_from_ref(self as &dyn ui::View)
+        impl #generics test_engine::ui::View for #name <#type_params> {
+            fn weak_view(&self) -> test_engine::refs::Weak<dyn test_engine::ui::View> {
+                test_engine::refs::weak_from_ref(self as &dyn test_engine::ui::View)
             }
-            fn base(&self) -> &ui::ViewBase {
+            fn base(&self) -> &test_engine::ui::ViewBase {
                 &self.view
             }
-            fn base_mut(&mut self) -> &mut ui::ViewBase {
+            fn base_mut(&mut self) -> &mut test_engine::ui::ViewBase {
                 &mut self.view
             }
             fn init_views(&mut self) {
-                use ui::ViewSubviews;
+                use test_engine::ui::ViewSubviews;
                 #inits
             }
 
         }
 
-        impl #generics ui::refs::AsAny for #name <#type_params> {
+        impl #generics test_engine::refs::AsAny for #name <#type_params> {
             fn as_any(&self) -> &dyn std::any::Any {
                self
             }
@@ -109,14 +109,14 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             }
         }
 
-        impl #generics ui::ViewInternalSetup for #name <#type_params>  {
+        impl #generics test_engine::ui::ViewInternalSetup for #name <#type_params>  {
             fn __internal_setup(&mut self) {
-                use ui::ViewSetup;
-                use ui::WithHeader;
+                use test_engine::ui::ViewSetup;
+                use test_engine::ui::WithHeader;
                 self.view.label = #name_str.to_string();
                 self.layout_header();
-                ui::refs::weak_from_ref(self).__link();
-                ui::refs::weak_from_ref(self).setup();
+                test_engine::refs::weak_from_ref(self).__link();
+                test_engine::refs::weak_from_ref(self).setup();
             }
         }
 
@@ -125,20 +125,20 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         #instance_method
 
         impl #generics  #name <#type_params> {
-            fn __link(mut self: ui::refs::Weak<Self>) {
+            fn __link(mut self: test_engine::refs::Weak<Self>) {
                 #instance_link
                 #links
             }
         }
 
         impl #generics std::ops::Deref for #name <#type_params> {
-            type Target = ui::ViewBase;
-            fn deref(&self) -> &ui::ViewBase {
+            type Target = test_engine::ui::ViewBase;
+            fn deref(&self) -> &test_engine::ui::ViewBase {
                 &self.view
             }
         }
         impl #generics std::ops::DerefMut for #name <#type_params>  {
-            fn deref_mut(&mut self) -> &mut ui::ViewBase {
+            fn deref_mut(&mut self) -> &mut test_engine::ui::ViewBase {
                 &mut self.view
             }
         }

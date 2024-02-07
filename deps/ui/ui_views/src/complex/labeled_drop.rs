@@ -1,5 +1,9 @@
 use refs::{weak_from_ref, Weak};
-use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
+use ui::{view, Anchor, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::{DropDown, Label};
 

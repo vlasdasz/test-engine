@@ -1,13 +1,11 @@
 use gen::noise::TerrainParams;
-use old_engine::{
-    gm::{
-        flat::{IntSize, Points},
-        Color,
+use test_engine::{
+    refs::Weak,
+    ui::{
+        view, AddLabel, Anchor, Color, DrawingView, Image, ImageView, IntSize, IntView, Points, SubView,
+        ViewData, ViewSetup, ViewTest, ViewTouch,
     },
-    wgpu_wrapper::image::Image,
 };
-use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest, ViewTouch};
-use ui_views::{AddLabel, DrawingView, ImageView, IntView};
 
 #[view]
 pub struct NoiseView {

@@ -1,5 +1,5 @@
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewSubviews};
-use ui_views::{touch_test_view::TouchTestView, ScrollView};
+use ui_views::{ScrollView, TouchTestView};
 
 #[view]
 struct ScrollViewTest {

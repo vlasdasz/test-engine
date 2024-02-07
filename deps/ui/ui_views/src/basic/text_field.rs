@@ -7,6 +7,10 @@ use ui::{
     view, AcceptChar, Event, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData,
     ViewSetup, ViewTouch,
 };
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::Label;
 

@@ -5,6 +5,10 @@ use itertools::Itertools;
 use refs::{Own, Weak};
 use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use crate::{self as ui_views, collection_data, Button, CollectionData, CollectionView, Label};
 

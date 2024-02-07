@@ -3,6 +3,10 @@ use std::{
     fmt::Display,
     sync::{atomic::AtomicBool, OnceLock},
 };
+mod test_engine {
+    pub(crate) use refs;
+    pub(crate) use ui;
+}
 
 use gm::Color;
 use refs::{dump_ref_stats, Weak};
