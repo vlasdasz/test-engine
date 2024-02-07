@@ -21,7 +21,7 @@ jobs:
           { runner: windows-latest, os: windows },
 #          { runner: pi, os: raspberry },
 
-          { runner: mac, os: ios },
+#          { runner: mac, os: ios },
 #          { runner: ubuntu-latest, os: android }
         ]
     runs-on: ${{ matrix.target.runner }}
