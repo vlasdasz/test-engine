@@ -11,5 +11,5 @@ use anyhow::Result;
 use crate::benchmark_view::BenchmarkView;
 
 fn main() -> Result<()> {
-    test_engine::ViewApp::<BenchmarkView>::start()
+    old_engine::ViewApp::<BenchmarkView>::start()
 }

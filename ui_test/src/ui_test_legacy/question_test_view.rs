@@ -1,4 +1,4 @@
-use test_engine::on_main;
+use old_engine::on_main;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::{async_link_button, link_button, Button, Label, Question};
 
@@ -39,5 +39,5 @@ impl ViewSetup for QuestionTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<QuestionTestView>::start().unwrap()
+    old_engine::ViewApp::<QuestionTestView>::start().unwrap()
 }

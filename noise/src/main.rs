@@ -11,5 +11,5 @@ use anyhow::Result;
 use crate::noise_view::NoiseView;
 
 fn main() -> Result<()> {
-    test_engine::ViewApp::<NoiseView>::start()
+    old_engine::ViewApp::<NoiseView>::start()
 }

@@ -1,6 +1,6 @@
 use anyhow::Result;
 use log::debug;
-use test_engine::{from_main, gm::flat::IntSize, Screen};
+use old_engine::{from_main, gm::flat::IntSize, Screen};
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest};
 use ui_views::IntView;
 

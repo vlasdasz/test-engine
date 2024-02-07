@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use log::trace;
-use test_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, OldApp};
+use old_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, OldApp};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
     Container, NavigationView, View, ViewSetup,

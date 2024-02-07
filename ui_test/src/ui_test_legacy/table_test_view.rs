@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use test_engine::gm::flat::Size;
+use old_engine::gm::flat::Size;
 use ui::{
     refs::{Own, Weak},
     view, Container, SubView, View, ViewData, ViewSetup, ViewSubviews, WithHeader,
@@ -59,5 +59,5 @@ impl WithHeader for TableTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<TableTestView>::start().unwrap()
+    old_engine::ViewApp::<TableTestView>::start().unwrap()
 }

@@ -5,7 +5,7 @@
 #![feature(arbitrary_self_types)]
 
 use anyhow::Result;
-use test_engine::ui_layer::UILayer;
+use old_engine::ui_layer::UILayer;
 use ui::Container;
 
 use crate::views::{
@@ -19,7 +19,7 @@ mod view_tests;
 mod views;
 
 fn main() -> Result<()> {
-    test_engine::ViewApp::<Container>::start_with_actor(async {
+    old_engine::ViewApp::<Container>::start_with_actor(async {
         UILayer::display_touches();
 
         test_render_image_path().await?;

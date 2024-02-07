@@ -1,5 +1,5 @@
 use gen::noise::TerrainParams;
-use test_engine::{
+use old_engine::{
     gm::{
         flat::{IntSize, Points},
         Color,

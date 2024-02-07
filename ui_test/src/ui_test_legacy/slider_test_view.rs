@@ -23,5 +23,5 @@ impl ViewSetup for SliderTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<SliderTestView>::start().unwrap()
+    old_engine::ViewApp::<SliderTestView>::start().unwrap()
 }

@@ -18,8 +18,8 @@ extern "C" fn make_app(
     width: std::os::raw::c_float,
     height: std::os::raw::c_float,
     diagonal: std::os::raw::c_float,
-) -> Box<dyn test_engine::OldApp> {
-    use test_engine::MakeApp;
+) -> Box<dyn old_engine::OldApp> {
+    use old_engine::MakeApp;
 
     crate::test_game::test_app::TestApp::make_app(
         ppi,

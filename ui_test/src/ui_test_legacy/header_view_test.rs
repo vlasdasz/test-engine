@@ -1,4 +1,4 @@
-use test_engine::gm::Color;
+use old_engine::gm::Color;
 use ui::{refs::Weak, view, Container, SubView, View, ViewData, ViewSetup, WithHeader};
 
 #[view]
@@ -35,5 +35,5 @@ impl WithHeader for HeaderTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<HeaderTestView>::start().unwrap()
+    old_engine::ViewApp::<HeaderTestView>::start().unwrap()
 }

@@ -1,7 +1,7 @@
 [workspace]
 
 default-members = ["test_game"]
-members = ["test_game", "ui_test", "ui_benchmark", "noise", "wgpu_test"]
+members = ["test_game", "ui_test", "ui_benchmark", "noise", "test_engine"]
 
 resolver = "2"
 
@@ -40,8 +40,8 @@ audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
+old_engine = { path = "old_engine" }
 rest = { path = "deps/rest" }
-test_engine = { path = "test_engine" }
 test_game = { path = "test_game" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }

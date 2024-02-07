@@ -13,7 +13,7 @@ anyhow = { workspace = true }
 derivative = { workspace = true }
 tokio = { workspace = true }
 
+old_engine = { workspace = true }
 rtools = { workspace = true }
-test_engine = { workspace = true }
 ui = { workspace = true }
 ui_views = { workspace = true }

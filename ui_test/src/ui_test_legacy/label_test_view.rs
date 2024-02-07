@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-use test_engine::ViewApp;
+use old_engine::ViewApp;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::Label;
 

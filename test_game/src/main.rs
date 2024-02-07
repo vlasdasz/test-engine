@@ -7,7 +7,7 @@ mod benchmark;
 mod test_game;
 
 use anyhow::Result;
-use test_engine::{MakeApp, OldApp};
+use old_engine::{MakeApp, OldApp};
 
 use crate::test_game::test_app::TestApp;
 

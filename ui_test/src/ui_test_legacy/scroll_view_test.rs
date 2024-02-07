@@ -22,5 +22,5 @@ impl ViewSetup for ScrollViewTest {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<ScrollViewTest>::start().unwrap()
+    old_engine::ViewApp::<ScrollViewTest>::start().unwrap()
 }

@@ -17,5 +17,5 @@ impl ViewSetup for DropDownTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<DropDownTestView>::start().unwrap()
+    old_engine::ViewApp::<DropDownTestView>::start().unwrap()
 }

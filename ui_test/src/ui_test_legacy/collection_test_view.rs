@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use test_engine::gm::flat::Size;
+use old_engine::gm::flat::Size;
 use ui::{
     refs::{Own, Weak},
     view, Container, SubView, View, ViewData, ViewSetup,
@@ -83,5 +83,5 @@ impl CollectionData for CollectionTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<CollectionTestView>::start().unwrap()
+    old_engine::ViewApp::<CollectionTestView>::start().unwrap()
 }

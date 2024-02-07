@@ -1,40 +1,18 @@
 [package]
-authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
 name = "test_engine"
 version = "0.1.0"
 
-[lib]
-crate-type = ["rlib", "staticlib"]
+[[bin]]
 name = "test_engine"
+path = "src/main.rs"
+
 
 [dependencies]
 anyhow = { workspace = true }
-chrono = { workspace = true }
 derivative = { workspace = true }
-home = { workspace = true }
+env_logger = { workspace = true }
 log = { workspace = true }
-reflected = { workspace = true }
-smart-default = { workspace = true }
 tokio = { workspace = true }
 
-audio = { workspace = true }
-dispatch = { workspace = true }
-gen = { workspace = true }
-gm = { workspace = true }
-manage = { workspace = true }
-rest = { workspace = true }
-rtools = { workspace = true }
-#sprites = { workspace = true }
-valid = { workspace = true }
-wgpu_wrapper = { workspace = true }
-
-ui = { workspace = true }
-ui_proc_debug = { workspace = true }
-ui_views = { workspace = true }
-
-[target.'cfg(target_os="android")'.dependencies]
-android-ndk-sys = "0.2.0"
-
-[build-dependencies]
-cfg_aliases = { workspace = true }
+old_engine = { workspace = true }

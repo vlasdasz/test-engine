@@ -1,4 +1,4 @@
-use test_engine::gm::flat::IntSize;
+use old_engine::gm::flat::IntSize;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest};
 use ui_views::LabeledSwitch;
 
@@ -27,5 +27,5 @@ impl ViewTest for LabeledSwitchTestView {
 #[ignore]
 #[test]
 fn test() {
-    test_engine::ViewApp::<LabeledSwitchTestView>::start().unwrap()
+    old_engine::ViewApp::<LabeledSwitchTestView>::start().unwrap()
 }
