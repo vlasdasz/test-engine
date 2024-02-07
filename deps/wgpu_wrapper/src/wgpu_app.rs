@@ -5,7 +5,7 @@ use log::error;
 use refs::MainLock;
 use winit::{
     dpi::PhysicalSize,
-    event::{Event, KeyEvent, WindowEvent},
+    event::{Event, WindowEvent},
     event_loop::EventLoop,
     keyboard::{KeyCode, PhysicalKey},
     window::{Window, WindowBuilder},
@@ -57,17 +57,27 @@ impl WGPUApp {
     fn start_event_loop(&mut self) -> Result<()> {
         self.event_loop.take().unwrap().run(move |event, elwt| match event {
             Event::WindowEvent { ref event, window_id } if window_id == self.window.id() => match event {
-                WindowEvent::CloseRequested
-                | WindowEvent::KeyboardInput {
-                    event:
-                        KeyEvent {
-                            physical_key: PhysicalKey::Code(KeyCode::Escape),
-                            ..
-                        },
-                    ..
-                } => elwt.exit(),
+                WindowEvent::CloseRequested => elwt.exit(),
+                WindowEvent::CursorMoved { position, .. } => {
+                    if self.state.app.mouse_moved((position.x, position.y).into()) {
+                        self.window.request_redraw();
+                    }
+                }
+                WindowEvent::MouseInput { state, button, .. } => {
+                    if self.state.app.mouse_event(*state, *button) {
+                        self.window.request_redraw();
+                    }
+                }
+                WindowEvent::MouseWheel { delta, .. } => {
+                    dbg!(delta);
+                }
+                WindowEvent::KeyboardInput { event, .. } => {
+                    if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
+                        elwt.exit()
+                    }
+                }
                 WindowEvent::Resized(physical_size) => {
-                    self.state.resize(*physical_size);
+                    self.state.resize(physical_size);
                     self.window.request_redraw();
                 }
                 WindowEvent::ScaleFactorChanged {

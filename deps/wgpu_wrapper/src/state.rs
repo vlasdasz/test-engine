@@ -2,7 +2,7 @@ use std::{collections::HashMap, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
-use winit::{event::WindowEvent, window::Window};
+use winit::{dpi::PhysicalSize, event::WindowEvent, window::Window};
 
 use crate::{app::App, text::Font, wgpu_drawer::WGPUDrawer};
 
@@ -79,7 +79,7 @@ impl State {
         })
     }
 
-    pub fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {
+    pub fn resize(&mut self, new_size: &PhysicalSize<u32>) {
         if new_size.width > 0 && new_size.height > 0 {
             self.drawer.window_size = (new_size.width, new_size.height).into();
             self.config.width = new_size.width;

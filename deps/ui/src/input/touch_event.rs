@@ -1,6 +1,7 @@
-use std::str::FromStr;
+use std::{fmt::Display, str::FromStr};
 
 use anyhow::bail;
+use wgpu_wrapper::ElementState;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum TouchEvent {
@@ -9,14 +10,17 @@ pub enum TouchEvent {
     Ended,
 }
 
-impl ToString for TouchEvent {
-    fn to_string(&self) -> String {
-        match self {
-            TouchEvent::Began => "b",
-            TouchEvent::Moved => "m",
-            TouchEvent::Ended => "e",
-        }
-        .to_string()
+impl Display for TouchEvent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                TouchEvent::Began => "b",
+                TouchEvent::Moved => "m",
+                TouchEvent::Ended => "e",
+            }
+        )
     }
 }
 
@@ -33,15 +37,13 @@ impl FromStr for TouchEvent {
     }
 }
 
-impl TouchEvent {
-    // #[cfg(desktop)]
-    // pub fn from_state(state: ButtonState) -> Self {
-    //     match state {
-    //         ButtonState::Up => Self::Ended,
-    //         ButtonState::Down => Self::Began,
-    //         ButtonState::Repeat => Self::Moved,
-    //     }
-    // }
+impl From<ElementState> for TouchEvent {
+    fn from(value: ElementState) -> Self {
+        match value {
+            ElementState::Pressed => Self::Began,
+            ElementState::Released => Self::Ended,
+        }
+    }
 }
 
 impl From<i32> for TouchEvent {

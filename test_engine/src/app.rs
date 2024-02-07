@@ -2,22 +2,28 @@ use std::ops::{Deref, DerefMut};
 
 use anyhow::Result;
 use gm::{
-    flat::{IntSize, Rect},
+    flat::{IntSize, Point, Rect},
     Color,
 };
 use log::warn;
 use manage::data_manager::DataManager;
-use refs::Own;
-use ui::{Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews};
+use refs::{Own, Weak};
+use ui::{
+    check_touch,
+    input::{TouchEvent, UIEvents},
+    Container, Touch, TouchStack, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSetup,
+    ViewSubviews,
+};
 use ui_views::{ImageView, Label};
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
 
 use crate::{assets::Assets, git_root};
 
 pub struct App {
-    pub(crate) root_view:  Own<dyn View>,
+    cursor_position:       Point,
+    root_view:             Weak<dyn View>,
     pub(crate) first_view: Option<Own<dyn View>>,
 }
 
@@ -29,8 +35,9 @@ impl App {
 
     fn new(first_view: Own<dyn View>) -> Self {
         Self {
-            root_view:  Container::make_root_view(),
-            first_view: first_view.into(),
+            cursor_position: Default::default(),
+            root_view:       UIManager::root_view(),
+            first_view:      first_view.into(),
         }
     }
 
@@ -109,22 +116,67 @@ impl App {
         }
 
         for view in view.subviews() {
-            if view.dont_hide() || view.absolute_frame().intersects(self.root_view.frame()) {
+            if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {
                 self.draw(pass, drawer, view.deref(), sections)
             }
         }
+    }
+
+    fn touch_event(&mut self, mut touch: Touch) -> bool {
+        const LOG_TOUCHES: bool = false;
+        const DISPLAY_TOUCHES: bool = false;
+
+        if UIManager::touch_disabled() {
+            return false;
+        }
+
+        UIEvents::get().on_touch.trigger(touch);
+
+        if LOG_TOUCHES && !touch.is_moved() {
+            warn!("{touch:?}");
+        }
+
+        if DISPLAY_TOUCHES && !touch.is_moved() {
+            let mut view = Container::new();
+            view.set_size((5, 5)).set_color(Color::random());
+            view.set_center(touch.position);
+            UIManager::root_view().add_subview(view);
+        }
+
+        let _level_touch = touch;
+        // TODO: Revisit scale
+        // if Platform::DESKTOP {
+        //     touch.position = self.cursor_position / UIManager::ui_scale();
+        // } else {
+        //     touch.position /= UIManager::ui_scale();
+        // }
+
+        for view in TouchStack::touch_views() {
+            if check_touch(view, &mut touch) {
+                return true;
+            }
+        }
+
+        // if let Some(level) = &mut self.level {
+        //     level.set_cursor_position(level_touch.position);
+        //     if touch.is_began() {
+        //         level.add_touch(level_touch.position)
+        //     }
+        // }
+
+        return DISPLAY_TOUCHES;
     }
 }
 
 impl wgpu_wrapper::App for App {
     fn window_ready(&mut self) {
-        let view = self.root_view.add_subview(self.first_view.take().unwrap());
+        let view = UIManager::root_view().add_subview(self.first_view.take().unwrap());
         view.place().back();
         self.update();
     }
 
     fn update(&mut self) {
-        self.update_view(self.root_view.weak().deref_mut());
+        self.update_view(UIManager::root_view().deref_mut());
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
@@ -135,7 +187,26 @@ impl wgpu_wrapper::App for App {
     }
 
     fn resize(&mut self, size: IntSize) {
-        self.root_view.set_size(size);
+        UIManager::root_view().set_size(size);
         self.update();
+    }
+
+    fn mouse_moved(&mut self, position: Point) -> bool {
+        self.cursor_position = position;
+        self.touch_event(Touch {
+            id: 1,
+            position,
+            event: TouchEvent::Moved,
+            button: MouseButton::Left,
+        })
+    }
+
+    fn mouse_event(&mut self, state: ElementState, button: MouseButton) -> bool {
+        self.touch_event(Touch {
+            id: 1,
+            position: self.cursor_position,
+            event: state.into(),
+            button,
+        })
     }
 }

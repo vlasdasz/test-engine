@@ -1,7 +1,8 @@
-use std::str::FromStr;
+use std::{fmt::Display, str::FromStr};
 
 use gm::flat::Point;
 use itertools::Itertools;
+use wgpu_wrapper::MouseButton;
 
 use crate::input::TouchEvent;
 
@@ -10,6 +11,7 @@ pub struct Touch {
     pub id:       u64,
     pub position: Point,
     pub event:    TouchEvent,
+    pub button:   MouseButton,
 }
 
 impl Touch {
@@ -39,14 +41,13 @@ impl Touch {
     }
 }
 
-impl ToString for Touch {
+impl Display for Touch {
     #[allow(clippy::cast_possible_truncation)]
-    fn to_string(&self) -> String {
-        format!(
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
             "{:<4} {:<4} {}",
-            self.position.x as isize,
-            self.position.y as isize,
-            self.event.to_string()
+            self.position.x as isize, self.position.y as isize, self.event
         )
     }
 }
@@ -70,6 +71,7 @@ impl FromStr for Touch {
                 y: vals[1].parse()?,
             },
             event:    vals[2].parse()?,
+            button:   MouseButton::Left,
         };
 
         Ok(touch)
@@ -79,6 +81,7 @@ impl FromStr for Touch {
 #[cfg(test)]
 mod test {
     use itertools::Itertools;
+    use wgpu_wrapper::MouseButton;
 
     use crate::{input::TouchEvent, Touch};
 
@@ -89,26 +92,31 @@ mod test {
                 id:       0,
                 position: (0, 0).into(),
                 event:    TouchEvent::Began,
+                button:   MouseButton::Left,
             },
             Touch {
                 id:       0,
                 position: (2000, 10).into(),
                 event:    TouchEvent::Ended,
+                button:   MouseButton::Left,
             },
             Touch {
                 id:       0,
                 position: (100, 4000).into(),
                 event:    TouchEvent::Ended,
+                button:   MouseButton::Left,
             },
             Touch {
                 id:       0,
                 position: (1, 4000).into(),
                 event:    TouchEvent::Moved,
+                button:   MouseButton::Left,
             },
             Touch {
                 id:       0,
                 position: (4000, 1).into(),
                 event:    TouchEvent::Moved,
+                button:   MouseButton::Left,
             },
         ];
 
@@ -145,6 +153,7 @@ mod test {
                 id:       0,
                 position: (10, 20).into(),
                 event:    TouchEvent::Began,
+                button:   MouseButton::Left,
             }],
             Touch::vec_from_str("10 20 b")
         );

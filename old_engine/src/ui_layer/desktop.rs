@@ -2,6 +2,7 @@
 
 use gm::flat::Point;
 use ui::{input::TouchEvent, Touch};
+use wgpu_wrapper::MouseButton;
 
 use crate::ui_layer::UILayer;
 
@@ -12,6 +13,7 @@ impl UILayer {
             id:       1,
             position: self.cursor_position,
             event:    TouchEvent::Moved,
+            button:   MouseButton::Left,
         })
     }
 

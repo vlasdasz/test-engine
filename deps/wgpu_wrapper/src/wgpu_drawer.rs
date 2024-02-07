@@ -38,12 +38,4 @@ impl WGPUDrawer {
     pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {
         self.colored_image_state.draw(image, rect, render_pass);
     }
-
-    // pub fn draw(&self, _view: &dyn View) {
-    //     todo!()
-    // }
-
-    pub fn set_root_frame(&mut self, _frame: Rect) {
-        todo!()
-    }
 }

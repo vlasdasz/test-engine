@@ -17,6 +17,7 @@ pub use text::*;
 pub use wgpu;
 pub use wgpu_app::*;
 pub use wgpu_drawer::*;
+pub use winit::event::{ElementState, MouseButton};
 
 pub(crate) const IMAGE_VERTICES: &[UIVertex] = &[
     UIVertex {
