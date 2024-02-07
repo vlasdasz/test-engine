@@ -12,14 +12,11 @@ cfg_aliases = "0.2"
 chrono = "0.4.24"
 derivative = "2.2.0"
 env_logger = "0.11.0"
-gl = "0.14"
-glfw = "0.54.0"
 glyph_brush = "0.7.8"
 home = "0.5.5"
 image = "0.24"
 itertools = "0.12.0"
 log = "0.4"
-mashup = "0.1"
 nonempty = "0.9.0"
 rapier2d = { version = "0.18.0", features = ["parallel", "simd-stable"] }
 reqwest = { version = "0.11.18", default-features = false, features = ["native-tls-vendored"] }
@@ -42,15 +39,10 @@ vents = "=0.4.0"
 audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
-gl_image = { path = "deps/gl_image" }
-gl_wrapper = { path = "deps/gl_wrapper" }
-gles31-sys = { path = "gles31-sys" }
 gm = { path = "deps/gm" }
 rest = { path = "deps/rest" }
-sprites = { path = "deps/sprites" }
 test_engine = { path = "test_engine" }
 test_game = { path = "test_game" }
-text = { path = "deps/text" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
 ui_proc_debug = { path = "deps/ui/ui_proc_debug" }

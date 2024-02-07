@@ -7,15 +7,11 @@
 
 pub use audio;
 pub use gen;
-pub use gl_image;
-pub use gl_wrapper;
 pub use gm;
 pub use manage;
 pub use reflected;
 pub use rest;
 pub use rtools;
-pub use sprites;
-pub use text;
 pub use ui;
 pub use ui_views;
 pub use wgpu_wrapper;
@@ -29,16 +25,12 @@ pub mod paths;
 pub mod screen;
 pub mod sprite_view;
 mod sprites_drawer;
-mod ui_drawer;
 pub mod ui_layer;
 
 pub use app::*;
 pub use dispatch::*;
-pub use gl_image::GlImage;
 pub use keymap::*;
-pub use sprites::{Level, LevelBase, Sprite};
 pub use ui::ui_proc::*;
-pub use ui_drawer::*;
 
 #[cfg(mobile)]
 extern crate mashup;

@@ -1,12 +1,12 @@
 use test_engine::on_main;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::{async_link_button, link_button, Button, GLLabel, Question};
+use ui_views::{async_link_button, link_button, Button, Label, Question};
 
 #[view]
 struct QuestionTestView {
     button:       SubView<Button>,
     async_button: SubView<Button>,
-    label:        SubView<GLLabel>,
+    label:        SubView<Label>,
 }
 
 impl QuestionTestView {

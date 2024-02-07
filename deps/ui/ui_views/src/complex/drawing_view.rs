@@ -1,32 +1,30 @@
-use gl_wrapper::path_data::{initialize_path_data, DrawMode, PathData};
 use gm::{
     axis::Axis,
     flat::{Points, Size},
-    Color,
 };
 use ui::{view, ViewFrame};
 
 #[view]
 pub struct DrawingView {
     pub rescale: bool,
-    paths:       Vec<PathData>,
+    // paths:       Vec<PathData>,
 }
 
 impl DrawingView {
-    pub fn paths(&self) -> &[PathData] {
-        &self.paths
-    }
+    // pub fn paths(&self) -> &[PathData] {
+    //     &self.paths
+    // }
 
-    pub fn add_path(&mut self, path: Points, color: &Color, mode: DrawMode) -> &mut Self {
-        let path = self.process_points(path);
-        if path.is_empty() {
-            return self;
-        }
-        self.paths.push(initialize_path_data(path, color, mode));
-        self
-    }
+    // pub fn add_path(&mut self, path: Points, color: &Color, mode: DrawMode) ->
+    // &mut Self {     let path = self.process_points(path);
+    //     if path.is_empty() {
+    //         return self;
+    //     }
+    //     self.paths.push(initialize_path_data(path, color, mode));
+    //     self
+    // }
 
-    fn process_points(&self, path: Points) -> Points {
+    fn _process_points(&self, path: Points) -> Points {
         if !self.rescale {
             return path;
         }
@@ -44,6 +42,6 @@ impl DrawingView {
     }
 
     pub fn remove_all_paths(&mut self) {
-        self.paths.clear()
+        // self.paths.clear()
     }
 }

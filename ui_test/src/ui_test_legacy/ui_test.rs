@@ -1,5 +1,4 @@
 use test_engine::{gm::Color, view};
-use test_game_lib::benchmark::ui_debug_view::UIDebugView;
 use ui::{
     refs::{Own, Weak},
     SubView, ViewController, ViewData, ViewFrame, ViewSetup,
@@ -31,7 +30,8 @@ impl ViewSetup for UITestView {
 
         self.debug.set_text_color(Color::BLUE);
         self.debug.set_text("Debug");
-        self.debug.on_tap(move || self.navigation().push(Own::<UIDebugView>::default()));
+        // self.debug.on_tap(move ||
+        // self.navigation().push(Own::<UIDebugView>::default()));
 
         self.nothing.set_text_color(Color::WHITE);
         self.nothing.set_text("Nothing");

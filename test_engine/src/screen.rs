@@ -2,68 +2,41 @@ use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering};
 
 use chrono::Utc;
 use dispatch::from_main;
-use gl_wrapper::{monitor::Monitor, GLWrapper};
-#[cfg(desktop)]
-use gl_wrapper::{system_events::SystemEvents, GLFWManager};
 use gm::{
     flat::{IntSize, Point, Rect},
     Color,
 };
-use manage::data_manager::DataManager;
 use rest::API;
-use sprites::{get_sprites_drawer, set_sprites_drawer, Player};
-use text::GlFont;
 use ui::{
-    refs::{assert_main_thread, Own, Weak},
+    refs::{assert_main_thread, Own},
     UIManager, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::debug_view::{DebugView, SHOW_DEBUG_VIEW};
 
-use crate::{
-    app::TestEngineAction, assets::Assets, sprites_drawer::TESpritesDrawer, ui_drawer::TEUIDrawer,
-    ui_layer::UILayer,
-};
+use crate::{app::TestEngineAction, assets::Assets, ui_layer::UILayer};
 
 static mut SCREEN: *mut Screen = null_mut();
 
 pub struct Screen {
     pub(crate) ui: Own<UILayer>,
-
-    #[cfg(desktop)]
-    glfw:    GLFWManager,
-    monitor: Monitor,
 }
 
 impl Screen {
-    pub fn player(&self) -> Weak<Player> {
-        if let Some(level) = &self.ui.level {
-            level.player()
-        } else {
-            Default::default()
-        }
-    }
-
     #[cfg(desktop)]
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        let mut this = ui::refs::weak_from_ref(self);
-        SystemEvents::get().size_changed.val(move |size| {
-            this.size_changed(size);
-        });
-
-        SystemEvents::get().frame_drawn.sub(move || {
-            this.update();
-        });
+        let _this = ui::refs::weak_from_ref(self);
+        // SystemEvents::get().size_changed.val(move |size| {
+        //     this.size_changed(size);
+        // });
+        //
+        // SystemEvents::get().frame_drawn.sub(move || {
+        //     this.update();
+        // });
     }
 
     fn init(&mut self, #[cfg(desktop)] window_size: IntSize, view: Own<dyn View>) {
-        UIManager::set_display_scale(self.monitor.scale);
-
-        GLWrapper::enable_blend();
-        GLWrapper::enable_depth();
-        GLWrapper::set_clear_color(Color::GRAY);
-
         UIManager::root_view().add_subview(view).place().back();
 
         if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) {
@@ -75,7 +48,6 @@ impl Screen {
         }
         #[cfg(desktop)]
         {
-            self.glfw.set_size(window_size);
             self.size_changed(window_size);
         }
     }
@@ -90,19 +62,20 @@ impl Screen {
         }
     }
 
-    pub fn read_pixel(pos: Point) -> Color {
-        GLWrapper::read_pixel(
-            UIManager::rescale_frame(&Rect {
-                origin: pos,
-                ..Default::default()
-            })
-            .origin,
-        )
+    pub fn read_pixel(_pos: Point) -> Color {
+        // GLWrapper::read_pixel(
+        //     UIManager::rescale_frame(&Rect {
+        //         origin: pos,
+        //         ..Default::default()
+        //     })
+        //     .origin,
+        // )
+        todo!()
     }
 
     #[cfg(desktop)]
     pub fn take_screenshot() {
-        Self::current().glfw.take_screenshot()
+        //Self::current().glfw.take_screenshot()
     }
 
     #[cfg(mobile)]
@@ -111,8 +84,9 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn set_title(title: impl ui::ToLabel + Send + Sync + 'static) {
-        dispatch::on_main(move || Screen::current().glfw.set_window_title(&title.to_label()));
+    pub fn set_title(_title: impl ui::ToLabel + Send + Sync + 'static) {
+        //dispatch::on_main(move ||
+        // Screen::current().glfw.set_window_title(&title.to_label()));
     }
 
     #[allow(clippy::cast_possible_truncation)]
@@ -126,14 +100,14 @@ impl Screen {
         self.ui.frame_time = interval as f32 / MICROSECONDS_IN_ONE_SECOND as f32;
         self.ui.fps = (1.0 / self.ui.frame_time) as u64;
 
-        #[cfg(desktop)]
-        {
-            let size = self.glfw.get_size();
-            Self::set_title(format!(
-                "{:<8} x   {:<8}    {:<8} FPS",
-                size.width, size.height, self.ui.fps
-            ));
-        }
+        // #[cfg(desktop)]
+        // {
+        //     let size = self.glfw.get_size();
+        //     Self::set_title(format!(
+        //         "{:<8} x   {:<8}    {:<8} FPS",
+        //         size.width, size.height, self.ui.fps
+        //     ));
+        // }
 
         if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) && self.ui.debug_view.is_ok() {
             let fps = self.ui.fps;
@@ -149,27 +123,11 @@ impl Screen {
     pub fn update(&mut self) -> TestEngineAction {
         self.calculate_fps();
 
-        UIManager::reset_viewport();
-
-        GLWrapper::clear();
-
-        if self.ui.level.is_some() {
-            self.update_level();
-        }
-
         let mut root_view = UIManager::root_view();
         let root_frame: Rect = UIManager::root_view_size().into();
         root_view.set_frame(root_frame);
 
-        let mut drawer = UIManager::drawer();
-        drawer.set_root_frame(root_frame);
-        drawer.update(&mut root_view);
-        drop(drawer);
-
         dispatch::invoke_dispatched();
-
-        #[cfg(desktop)]
-        self.glfw.swap_buffers();
 
         UIManager::update();
 
@@ -185,36 +143,13 @@ impl Screen {
         }
     }
 
-    fn update_level(&mut self) {
-        let cursor_position = self.ui.cursor_position;
-
-        let frame_time = self.ui.frame_time;
-
-        let Some(level) = &mut self.ui.level else {
-            return;
-        };
-
-        level.base_mut().update_physics(frame_time);
-        level.update();
-
-        level.set_cursor_position(cursor_position);
-
-        for sprite in level.sprites_mut() {
-            sprite.update();
-            sprite.draw();
-        }
-    }
-
     #[cfg(desktop)]
-    pub fn set_size(&mut self, size: impl Into<IntSize>) {
-        self.glfw.set_size(size.into())
-    }
+    pub fn set_size(&mut self, _size: impl Into<IntSize>) {}
 
     pub fn size_changed(&mut self, size: IntSize) {
         trace!("Size changed: {:?}", size);
         UIManager::set_window_size(size);
-        get_sprites_drawer().set_resolution(size);
-        get_sprites_drawer().set_camera_position((0, 0).into());
+
         self.update();
     }
 
@@ -231,9 +166,9 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn start_main_loop(&mut self, callback: impl FnOnce()) -> anyhow::Result<()> {
+    pub fn start_main_loop(&mut self, _callback: impl FnOnce()) -> anyhow::Result<()> {
         self.setup_events();
-        self.glfw.start_main_loop(callback)
+        Ok(())
     }
 
     #[allow(unused_variables)]
@@ -253,10 +188,8 @@ impl Screen {
 
 impl Screen {
     pub fn new(
-        monitor: Monitor,
         assets_path: impl Into<PathBuf>,
         root_view: Own<dyn View>,
-        #[cfg(desktop)] glfw: GLFWManager,
         #[cfg(desktop)] window_size: IntSize,
     ) -> Own<Self> {
         trace!("Creating screen");
@@ -267,18 +200,7 @@ impl Screen {
         let ui = Own::<UILayer>::default();
         trace!("UILayer: OK");
 
-        UIManager::set_drawer(TEUIDrawer::default());
-        trace!("UIDrawer: OK");
-
-        set_sprites_drawer(TESpritesDrawer::new());
-        trace!("SpritesDrawer: OK");
-
-        let mut screen = Own::new(Self {
-            ui,
-            #[cfg(desktop)]
-            glfw,
-            monitor,
-        });
+        let mut screen = Own::new(Self { ui });
 
         unsafe {
             SCREEN = screen.deref_mut() as *mut Screen;
@@ -291,11 +213,5 @@ impl Screen {
         );
 
         screen
-    }
-}
-
-impl Drop for Screen {
-    fn drop(&mut self) {
-        GlFont::free(GlFont::helvetica());
     }
 }

@@ -1,11 +1,11 @@
 use refs::{weak_from_ref, Weak};
 use ui::{layout::Anchor, view, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
 
-use crate::{DropDown, GLLabel};
+use crate::{DropDown, Label};
 
 #[view]
 pub struct LabeledDrop {
-    title: SubView<GLLabel>,
+    title: SubView<Label>,
     drop:  SubView<DropDown>,
 }
 

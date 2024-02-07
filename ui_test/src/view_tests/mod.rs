@@ -1,11 +1,10 @@
 use std::fmt::{Debug, Display};
 
 use anyhow::{bail, Result};
-use glfw::MouseButtonLeft;
 use log::{error, warn};
 use rtools::sleep;
 use serde::de::DeserializeOwned;
-use test_engine::{from_main, gl_wrapper::system_events::SystemEvents, on_main, ui_layer::UILayer};
+use test_engine::{from_main, on_main, ui_layer::UILayer};
 use tokio::sync::mpsc::channel;
 use ui::{input::UIEvents, refs::ToOwn, Touch};
 
@@ -28,7 +27,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 
         if get_state::<Val>() != comb.1 {
             error!(
-                "Failed state for: {}Expected: {} got: {}",
+                "Failed state for: {} Expected: {} got: {}",
                 comb.0,
                 comb.1,
                 get_state::<Val>()
@@ -41,11 +40,12 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 
 async fn inject_touch(touch: impl Into<Touch>) {
     sleep(INJECT_TOUCH_DELAY);
-    let touch = touch.into();
+    let _touch = touch.into();
     from_main(move || {
-        let events = SystemEvents::get();
-        events.cursor_moved.trigger(touch.position);
-        events.mouse_click.trigger((MouseButtonLeft, touch.event.glfw_action()));
+        // let events = SystemEvents::get();
+        // events.cursor_moved.trigger(touch.position);
+        // events.mouse_click.trigger((MouseButtonLeft,
+        // touch.event.glfw_action()));
     })
     .await;
 }

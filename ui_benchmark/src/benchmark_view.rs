@@ -4,13 +4,13 @@ use rtools::sleep;
 use test_engine::{from_main, gm::flat::IntSize, on_main, rtools::Random, ui_layer::UILayer};
 use tokio::spawn;
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewSubviews, ViewTest};
-use ui_views::GLLabel;
+use ui_views::Label;
 
 static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
 #[view]
 pub struct BenchmarkView {
-    label: SubView<GLLabel>,
+    label: SubView<Label>,
     index: u32,
 }
 

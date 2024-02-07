@@ -14,7 +14,6 @@ anyhow = { workspace = true }
 chrono = { workspace = true }
 derivative = { workspace = true }
 dispatch = { workspace = true }
-gl_image = { workspace = true }
 itertools = { workspace = true }
 log = { workspace = true }
 nonempty = { workspace = true }
@@ -24,17 +23,9 @@ rtools = { workspace = true }
 rust_decimal = { workspace = true }
 vents = { workspace = true }
 
-gl_wrapper = { workspace = true }
 gm = { workspace = true }
 ui_proc = { workspace = true }
 
-[target.'cfg(not(any(target_os="ios", target_os="android")))'.dependencies]
-gl = { workspace = true }
-glfw = { workspace = true }
-
-[target.'cfg(any(target_os="ios", target_os="android"))'.dependencies]
-gles31-sys = { workspace = true }
-mashup = { workspace = true }
 
 [build-dependencies]
 cfg_aliases = { workspace = true }

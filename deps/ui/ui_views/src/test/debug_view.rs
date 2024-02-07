@@ -11,7 +11,7 @@ use ui::{
     ViewSubviews,
 };
 
-use crate::{Button, GLLabel};
+use crate::{Button, Label};
 
 pub static SHOW_DEBUG_VIEW: AtomicBool = AtomicBool::new(false);
 
@@ -19,19 +19,19 @@ static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 
 #[view]
 pub struct DebugView {
-    fps_label:          SubView<GLLabel>,
-    frame_drawn_label:  SubView<GLLabel>,
-    ui_scale_label:     SubView<GLLabel>,
-    screen_scale_label: SubView<GLLabel>,
-    root_frame:         SubView<GLLabel>,
-    touch_enabled:      SubView<GLLabel>,
+    fps_label:          SubView<Label>,
+    frame_drawn_label:  SubView<Label>,
+    ui_scale_label:     SubView<Label>,
+    screen_scale_label: SubView<Label>,
+    root_frame:         SubView<Label>,
+    touch_enabled:      SubView<Label>,
     exit:               SubView<Button>,
     dump_mem:           SubView<Button>,
-    touch_root:         SubView<GLLabel>,
+    touch_root:         SubView<Label>,
 
     hide: SubView<Button>,
 
-    custom_labels: HashMap<String, SubView<GLLabel>>,
+    custom_labels: HashMap<String, SubView<Label>>,
 
     pub fps: Event<u64>,
 
@@ -55,7 +55,7 @@ impl DebugView {
         let label = if let Some(label) = self.custom_labels.get_mut(&label_text) {
             label
         } else {
-            let label_view = self.__internal_add_view::<GLLabel>();
+            let label_view = self.__internal_add_view::<Label>();
             self.custom_labels.insert(label_text.clone(), label_view);
             self.custom_labels.get_mut(&label_text).unwrap()
         };

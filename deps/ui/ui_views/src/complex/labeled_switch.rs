@@ -1,11 +1,11 @@
 use refs::Weak;
 use ui::{layout::Anchor, view, Event, SubView, ToLabel, ViewData, ViewSetup};
 
-use crate::{GLLabel, Switch};
+use crate::{Label, Switch};
 
 #[view]
 pub struct LabeledSwitch {
-    label:  SubView<GLLabel>,
+    label:  SubView<Label>,
     switch: SubView<Switch>,
 
     pub selected: Event<bool>,

@@ -1,6 +1,3 @@
-#[cfg(desktop)]
-use glfw::Action;
-
 #[derive(Debug)]
 pub struct KeyEvent {
     pub button: KeyboardButton,
@@ -71,15 +68,4 @@ pub enum KeyState {
     Release,
     Press,
     Repeat,
-}
-
-#[cfg(desktop)]
-impl From<Action> for KeyState {
-    fn from(action: Action) -> Self {
-        match action {
-            Action::Release => Self::Release,
-            Action::Press => Self::Press,
-            Action::Repeat => Self::Repeat,
-        }
-    }
 }

@@ -2,11 +2,11 @@ use gm::{flat::Size, Color};
 use refs::Weak;
 use ui::{view, ModalView, OnceEvent, SubView, ViewData, ViewSetup};
 
-use crate::{Button, MultilineLabel};
+use crate::{Button, Label};
 
 #[view]
 pub struct Question {
-    label:         SubView<MultilineLabel>,
+    label:         SubView<Label>,
     ok_button:     SubView<Button>,
     cancel_button: SubView<Button>,
     event:         OnceEvent<bool>,

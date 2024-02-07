@@ -2,7 +2,6 @@ use test_engine::{
     audio::Sound,
     manage::data_manager::DataManager,
     rtools::Apply,
-    sprite_view::SpriteView,
     ui,
     ui::{refs::Weak, ViewData, ViewSubviews},
     ui_views::{test_view::ViewWithCat, Button, DPadView, IntView},
@@ -17,10 +16,9 @@ use crate::{
 
 #[view]
 pub struct TestGameView {
-    dpad:        SubView<DPadView>,
+    dpad:      SubView<DPadView>,
     // left_stick:  SubView<AnalogStickView>,
-    sprite_view: SubView<SpriteView>,
-    test_view:   SubView<ViewWithCat>,
+    test_view: SubView<ViewWithCat>,
 
     ui_scale:    SubView<IntView>,
     level_scale: SubView<IntView>,
@@ -30,8 +28,6 @@ pub struct TestGameView {
 
 impl TestGameView {
     fn setup_ui(mut self: Weak<Self>) {
-        self.sprite_view.place().tr(10).size(400, 80);
-
         self.dpad.place().size(140, 100).b(10).l(100);
 
         // self.left_stick.place().bl(10).size(80, 80);

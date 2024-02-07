@@ -2,11 +2,11 @@ use anyhow::Result;
 use log::debug;
 use test_engine::Screen;
 use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewData, ViewSetup};
-use ui_views::{GLLabel, IntView};
+use ui_views::{IntView, Label};
 
 #[view]
 struct LabelTestView {
-    label:          SubView<GLLabel>,
+    label:          SubView<Label>,
     text_size_view: SubView<IntView>,
 }
 
@@ -29,7 +29,7 @@ impl ViewSetup for LabelTestView {
         self.text_size_view.set_value(32).set_step(5);
 
         self.text_size_view.on_change(move |size| {
-            self.label.set_text_size(size);
+            self.label.set_text_size(size as _);
         });
     }
 }

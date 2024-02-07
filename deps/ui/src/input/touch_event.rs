@@ -9,17 +9,6 @@ pub enum TouchEvent {
     Ended,
 }
 
-#[cfg(desktop)]
-impl TouchEvent {
-    pub fn glfw_action(&self) -> glfw::Action {
-        match self {
-            TouchEvent::Began => glfw::Action::Press,
-            TouchEvent::Moved => glfw::Action::Repeat,
-            TouchEvent::Ended => glfw::Action::Release,
-        }
-    }
-}
-
 impl ToString for TouchEvent {
     fn to_string(&self) -> String {
         match self {

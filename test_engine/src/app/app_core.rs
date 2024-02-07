@@ -21,7 +21,6 @@ pub struct AppCore {
 mod desktop {
     use std::path::PathBuf;
 
-    use gl_wrapper::GLFWManager;
     use gm::flat::IntSize;
     use ui::{refs::Own, View};
 
@@ -31,12 +30,7 @@ mod desktop {
         pub fn new(size: IntSize, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
             trace!("AppCore::new");
 
-            let glfw = GLFWManager::new(size);
-            trace!("GLFWManager: OK");
-
-            let monitor = glfw.monitors.first().unwrap().clone();
-            trace!("Monitor: OK");
-            let screen = Screen::new(monitor, assets_path, root_view, glfw, size);
+            let screen = Screen::new(assets_path, root_view, size);
             trace!("Screen: OK");
             Self { screen }
         }

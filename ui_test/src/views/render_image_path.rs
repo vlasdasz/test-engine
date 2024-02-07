@@ -1,6 +1,6 @@
 use anyhow::Result;
 use log::debug;
-use test_engine::{gl_wrapper::path_data::DrawMode, gm::Color, GlImage, Screen};
+use test_engine::Screen;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::ImageView;
 
@@ -12,14 +12,14 @@ struct RenderImagePath {
 }
 
 impl ViewSetup for RenderImagePath {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.image_view.place().back();
-        self.image_view.gl_image = GlImage::render_path(
-            "test_path",
-            Color::BLUE,
-            vec![(1, 0).into(), (1, 50).into(), (50, 50).into(), (15, 35).into()],
-            DrawMode::Outline,
-        );
+        // self.image_view.image = Image::render_path(
+        //     "test_path",
+        //     Color::BLUE,
+        //     vec![(1, 0).into(), (1, 50).into(), (50, 50).into(), (15,
+        // 35).into()],     DrawMode::Outline,
+        // );
     }
 }
 

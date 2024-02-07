@@ -1,15 +1,12 @@
 //! Represents UI elements
 
-use std::{ops::DerefMut, rc::Rc};
+use std::rc::Rc;
 
 use dispatch::on_main_sync;
 use gm::{flat::Point, Color};
-use sprites::Level;
 use ui::{
-    check_touch,
-    input::UIEvents,
-    refs::{Own, Weak},
-    Container, Touch, TouchStack, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews,
+    check_touch, input::UIEvents, refs::Weak, Container, Touch, TouchStack, UIManager, ViewData, ViewFrame,
+    ViewSetup, ViewSubviews,
 };
 use ui_views::debug_view::DebugView;
 
@@ -19,8 +16,6 @@ const LOG_TOUCHES: bool = false;
 
 #[derive(Default)]
 pub struct UILayer {
-    pub level: Option<Own<dyn Level>>,
-
     pub cursor_position: Point,
 
     pub(crate) keymap: Rc<Keymap>,
@@ -32,9 +27,6 @@ pub struct UILayer {
     pub debug_view: Weak<DebugView>,
 
     display_touches: bool,
-
-    #[cfg(desktop)]
-    pub(crate) shift_pressed: bool,
 }
 
 impl UILayer {
@@ -56,7 +48,7 @@ impl UILayer {
             UIManager::root_view().add_subview(view);
         }
 
-        let level_touch = touch;
+        let _level_touch = touch;
         // TODO: Revisit scale
         // if Platform::DESKTOP {
         //     touch.position = self.cursor_position / UIManager::ui_scale();
@@ -70,18 +62,12 @@ impl UILayer {
             }
         }
 
-        if let Some(level) = &mut self.level {
-            level.set_cursor_position(level_touch.position);
-            if touch.is_began() {
-                level.add_touch(level_touch.position)
-            }
-        }
-    }
-
-    pub fn set_level(level: Own<dyn Level>) {
-        let this = Screen::current().ui.deref_mut();
-        this.level = level.into();
-        this.level.as_mut().unwrap().setup();
+        // if let Some(level) = &mut self.level {
+        //     level.set_cursor_position(level_touch.position);
+        //     if touch.is_began() {
+        //         level.add_touch(level_touch.position)
+        //     }
+        // }
     }
 
     pub fn keymap() -> Rc<Keymap> {

@@ -2,11 +2,11 @@ use anyhow::Result;
 use log::debug;
 use test_engine::Screen;
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::MultilineLabel;
+use ui_views::Label;
 
 #[view]
 struct MultilineTestView {
-    label: SubView<MultilineLabel>,
+    label: SubView<Label>,
 }
 
 impl ViewSetup for MultilineTestView {

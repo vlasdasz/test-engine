@@ -1,4 +1,3 @@
-use gl_image::GlImage;
 use wgpu_wrapper::image::Image;
 
 pub struct UIImages;
@@ -30,11 +29,11 @@ impl UIImages {
         Image::load(include_bytes!("images/down.png"), "ui::default::down")
     }
 
-    pub fn dot() -> Weak<GlImage> {
-        GlImage::load(include_bytes!("images/dot.png"), "ui::default::dot")
+    pub fn dot() -> Weak<Image> {
+        Image::load(include_bytes!("images/dot.png"), "ui::default::dot")
     }
 
-    pub fn delete() -> Weak<GlImage> {
-        GlImage::load(include_bytes!("images/delete.png"), "ui::default::delete")
+    pub fn delete() -> Weak<Image> {
+        Image::load(include_bytes!("images/delete.png"), "ui::default::delete")
     }
 }

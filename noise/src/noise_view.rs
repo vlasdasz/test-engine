@@ -1,14 +1,13 @@
-use gen::noise::{generate_terrain, TerrainData, TerrainParams};
+use gen::noise::TerrainParams;
 use test_engine::{
-    gl_wrapper::path_data::DrawMode,
     gm::{
         flat::{IntSize, Points},
         Color,
     },
-    GlImage,
+    wgpu_wrapper::image::Image,
 };
 use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest, ViewTouch};
-use ui_views::{AddGlLabel, DrawingView, ImageView, IntView};
+use ui_views::{AddLabel, DrawingView, ImageView, IntView};
 
 #[view]
 pub struct NoiseView {
@@ -25,7 +24,7 @@ impl NoiseView {
     fn update_image(mut self: Weak<Self>) {
         let resolution: IntSize = (100, 100).into();
 
-        let (image, islands) = generate_image(TerrainParams {
+        let (image, _islands) = generate_image(TerrainParams {
             seed: self.seed,
             resolution,
             size: (self.size_view.value(), self.size_view.value()).into(),
@@ -33,12 +32,12 @@ impl NoiseView {
             threshold: self.threshold_view.value() as _,
         });
 
-        self.image_view.gl_image = image;
+        self.image_view.image = image;
 
         self.drawing_view.remove_all_paths();
-        for island in islands {
-            self.drawing_view.add_path(island, &Color::TURQUOISE, DrawMode::Outline);
-        }
+        // for island in islands {
+        //     self.drawing_view.add_path(island, &Color::TURQUOISE,
+        // DrawMode::Outline); }
     }
 }
 
@@ -105,30 +104,33 @@ impl ViewTest for NoiseView {
 
 fn generate_image(
     TerrainParams {
-        seed,
-        resolution,
-        size,
-        position,
-        threshold,
+        seed: _,
+        resolution: _,
+        size: _,
+        position: _,
+        threshold: _,
     }: TerrainParams,
-) -> (Weak<GlImage>, Vec<Points>) {
-    let TerrainData { pixels, islands } = generate_terrain(TerrainParams {
-        seed,
-        resolution,
-        size,
-        position,
-        threshold,
-    });
+) -> (Weak<Image>, Vec<Points>) {
+    // let TerrainData { pixels, islands } = generate_terrain(TerrainParams {
+    //     seed,
+    //     resolution,
+    //     size,
+    //     position,
+    //     threshold,
+    // });
+    //
+    // let image_name =
+    // format!("noise_image_{seed}_{resolution}_{size}_{position}_{threshold}");
+    //
+    // (
+    //     Image::from(
+    //         &pixels,
+    //         (resolution.width, resolution.height).into(),
+    //         1,
+    //         image_name,
+    //     ),
+    //     islands,
+    // )
 
-    let image_name = format!("noise_image_{seed}_{resolution}_{size}_{position}_{threshold}");
-
-    (
-        GlImage::from(
-            &pixels,
-            (resolution.width, resolution.height).into(),
-            1,
-            image_name,
-        ),
-        islands,
-    )
+    todo!()
 }

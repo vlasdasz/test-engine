@@ -3,18 +3,16 @@ use std::{
     path::PathBuf,
     sync::{
         atomic::{AtomicBool, Ordering},
-        Mutex, MutexGuard, OnceLock,
+        Mutex, OnceLock,
     },
 };
 
-use gl_wrapper::GLWrapper;
 use gm::flat::{IntSize, Point, Rect, Size};
 use refs::{Own, Weak};
 
-use crate::{layout::Placer, Container, UIDrawer, UIEvent, View};
+use crate::{layout::Placer, Container, UIEvent, View};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
-static DRAWER: OnceLock<Mutex<Box<dyn UIDrawer>>> = OnceLock::new();
 
 pub struct UIManager {
     pub(crate) root_view: Own<dyn View>,
@@ -90,27 +88,6 @@ impl UIManager {
 
     pub fn enable_touch() {
         Self::get().touch_disabled.store(false, Ordering::Relaxed)
-    }
-}
-
-impl UIManager {
-    pub fn drawer() -> MutexGuard<'static, Box<dyn UIDrawer>> {
-        DRAWER.get().unwrap().lock().unwrap()
-    }
-
-    pub fn set_drawer(drawer: impl UIDrawer + 'static) {
-        DRAWER.set(Mutex::new(Box::new(drawer))).unwrap();
-    }
-
-    pub fn reset_viewport() {
-        let window_size = UIManager::window_size();
-        let display_scale = UIManager::display_scale();
-        GLWrapper::set_viewport((
-            0,
-            0,
-            window_size.width as f32 * display_scale,
-            window_size.height as f32 * display_scale,
-        ));
     }
 }
 

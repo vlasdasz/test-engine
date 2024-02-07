@@ -1,9 +1,9 @@
 use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::{GLLabel, Slider};
+use ui_views::{Label, Slider};
 
 #[view]
 struct SliderTestView {
-    label:  SubView<GLLabel>,
+    label:  SubView<Label>,
     slider: SubView<Slider>,
 }
 

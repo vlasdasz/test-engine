@@ -3,9 +3,7 @@
 use std::{future::Future, marker::PhantomData, path::PathBuf};
 
 use anyhow::Result;
-use gl_wrapper::system_events::SystemEvents;
 use gm::flat::IntSize;
-use tokio::spawn;
 use ui::{
     refs::{set_current_thread_as_main, Own},
     View, ViewTest,
@@ -26,16 +24,17 @@ impl<T: View + Default + 'static> ViewApp<T> {
         })
     }
 
-    pub fn start_with_actor(actions: impl Future<Output = Result<()>> + Send + 'static) -> Result<()> {
-        tokio::runtime::Runtime::new().unwrap().block_on(async {
-            set_current_thread_as_main();
-
-            Self::make_app().launch_with_callback(|| {
-                spawn(async {
-                    SystemEvents::terminate(actions.await);
-                });
-            })
-        })
+    pub fn start_with_actor(_actions: impl Future<Output = Result<()>> + Send + 'static) -> Result<()> {
+        // tokio::runtime::Runtime::new().unwrap().block_on(async {
+        //     set_current_thread_as_main();
+        //
+        //     // Self::make_app().launch_with_callback(|| {
+        //     //     spawn(async {
+        //     //         SystemEvents::terminate(actions.await);
+        //     //     });
+        //     // })
+        // })
+        Ok(())
     }
 }
 

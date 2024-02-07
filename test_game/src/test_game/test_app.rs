@@ -4,10 +4,8 @@ use log::trace;
 use test_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, OldApp};
 use ui::{
     refs::{enable_ref_stats_counter, Own},
-    NavigationView, View, ViewSetup,
+    Container, NavigationView, View, ViewSetup,
 };
-
-use crate::test_game::TestGameView;
 
 pub struct TestApp {
     core: AppCore,
@@ -25,7 +23,7 @@ impl OldApp for TestApp {
 
     fn make_root_view() -> Own<dyn View> {
         trace!("make_root_view");
-        NavigationView::with_view(TestGameView::new())
+        NavigationView::with_view(Container::new())
     }
 
     fn with_core(core: AppCore) -> Self

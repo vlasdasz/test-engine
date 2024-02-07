@@ -22,7 +22,6 @@ pub fn git_root() -> Result<PathBuf> {
 pub(crate) struct Paths {
     pub(crate) images: PathBuf,
     pub(crate) sounds: PathBuf,
-    pub(crate) fonts:  PathBuf,
 }
 
 impl Paths {
@@ -32,7 +31,6 @@ impl Paths {
         Rc::new(Self {
             images: assets.join("Images"),
             sounds: assets.join("Sounds"),
-            fonts:  assets.join("Fonts"),
         })
     }
 }

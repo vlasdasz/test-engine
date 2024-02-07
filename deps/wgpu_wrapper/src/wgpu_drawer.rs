@@ -1,5 +1,4 @@
 use anyhow::Result;
-use gl_wrapper::path_data::{DrawMode, PathData};
 use gm::{
     flat::{Rect, Size},
     Color,
@@ -38,16 +37,6 @@ impl WGPUDrawer {
 
     pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {
         self.colored_image_state.draw(image, rect, render_pass);
-    }
-
-    pub fn draw_path(
-        &self,
-        _path: &PathData,
-        _rect: &Rect,
-        _custom_mode: Option<DrawMode>,
-        _priority: usize,
-    ) {
-        todo!()
     }
 
     // pub fn draw(&self, _view: &dyn View) {
