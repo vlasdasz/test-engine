@@ -6,12 +6,11 @@
 mod interface;
 
 use anyhow::Result;
-use test_engine::{git_root, ui::ViewSetup, Assets, TEApp, WGPUApp};
+use test_engine::{ui::ViewSetup, App};
 
-use crate::interface::wgpu_test_view::WGPUTestView;
+use crate::interface::test_game_view::TestGameView;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    Assets::init(git_root().expect("git_root()"));
-    WGPUApp::start(TEApp::new(WGPUTestView::new()), 1200, 1200).await
+    App::start(TestGameView::new(), 1200, 1200).await
 }

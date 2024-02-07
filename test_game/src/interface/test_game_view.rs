@@ -1,91 +1,55 @@
 use test_engine::{
-    audio::Sound,
     refs::Weak,
     ui::{
-        view, Button, Color, Container, DPadView, Image, IntView, SubView, ViewData, ViewSetup, ViewSubviews,
-        ViewWithCat,
+        view, Anchor, Color, Container, DPadView, Image, ImageView, IntView, Label, SubView, ViewData,
+        ViewSetup,
     },
-    Apply, DataManager,
+    DataManager,
 };
 
 #[view]
 pub struct TestGameView {
-    dpad:      SubView<DPadView>,
-    // left_stick:  SubView<AnalogStickView>,
-    test_view: SubView<ViewWithCat>,
+    tl: SubView<Container>,
+    tr: SubView<Container>,
+    bl: SubView<Container>,
+    br: SubView<Container>,
 
-    ui_scale:    SubView<IntView>,
-    level_scale: SubView<IntView>,
+    image: SubView<ImageView>,
 
-    sound: Weak<Sound>,
-}
+    label_l: SubView<Label>,
+    label_r: SubView<Label>,
 
-impl TestGameView {
-    fn setup_ui(mut self: Weak<Self>) {
-        self.dpad.place().size(140, 100).b(10).l(100);
-
-        // self.left_stick.place().bl(10).size(80, 80);
-        // self.left_stick.on_change.val(|dir| {
-        //     dbg!(&dir);
-        //     // if let Some(level) = &mut UILayer::get().level {
-        //     //     dir.y = -dir.y;
-        //     //     level.player().add_impulse(dir);
-        //     // }
-        // });
-
-        self.test_view.place().br(20).size(280, 400);
-        self.test_view
-            .set_image(Image::get("cat.png"))
-            .set_button_image(Image::get("square.png"))
-            .set_animation_image(Image::get("palm.png"));
-
-        self.ui_scale.step = 0.1;
-        self.ui_scale.place().size(28, 120).l(100).b(140);
-        //self.ui_scale.on_change.sub(|val| UIManager::set_ui_scale(val));
-
-        self.level_scale.step = 0.1;
-        self.level_scale.place().size(28, 120).l(28).b(140);
-        // self.level_scale
-        //     .on_change(|val| UILayer::get().level.as_mut().unwrap().set_scale(val));
-
-        {
-            let mut view = self.add_view::<Container>();
-
-            view.place().b(10).center_x().size(150, 100).all_ver();
-
-            let mut to_benchmark = view.add_view::<Button>();
-            to_benchmark.set_text("Benchmark");
-            // to_benchmark.on_tap(|| {
-            //     UILayer::set_level(Own::<BenchmarkLevel>::default());
-            // });
-
-            let mut to_test = view.add_view::<Button>();
-            to_test.set_text("Test");
-            // to_test.on_tap(|| {
-            //     UILayer::set_level(Own::<TestGameLevel>::default());
-            // });
-
-            let mut play = view.add_view::<Button>();
-            play.set_text("Play sound");
-            play.on_tap(move || self.sound.play());
-
-            let mut screenshot = view.add_view::<Button>();
-            screenshot.set_text("Screenshot");
-            //screenshot.on_tap(Screen::take_screenshot);
-
-            [to_benchmark, to_test, play, screenshot].apply(|mut button| {
-                button.set_color(Color::WHITE);
-                button.set_corner_radius(8);
-            });
-        }
-
-        self.sound = Sound::get("retro.wav");
-    }
+    dpad: SubView<DPadView>,
+    int:  SubView<IntView>,
 }
 
 impl ViewSetup for TestGameView {
-    fn setup(self: Weak<Self>) {
-        self.setup_ui();
-        // self.setup_level();
+    fn setup(mut self: Weak<Self>) {
+        self.set_color(Color::LIGHTER_GRAY);
+
+        self.tl.set_color(Color::RED).place().size(100, 100).tl(10);
+        self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
+        self.bl.set_color(Color::BLUE).place().size(100, 100).bl(10);
+        self.br.set_color(Color::ORANGE).place().size(100, 100).br(10);
+
+        self.image.place().center().relative(Anchor::Size, self, 0.2);
+        self.image.image = Image::get("cat.png");
+
+        self.label_l.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
+            Anchor::Right,
+            self.image,
+            20,
+        );
+        self.label_l.text = "Łėŵœ Ы".into();
+
+        self.label_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
+            Anchor::Left,
+            self.image,
+            20,
+        );
+        self.label_r.text = "щКыЩъ".into();
+
+        self.dpad.place().size(200, 100).b(20).anchor(Anchor::Left, self.bl, 10);
+        self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
     }
 }

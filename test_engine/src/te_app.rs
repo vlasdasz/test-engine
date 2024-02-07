@@ -1,5 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
+use anyhow::Result;
 use gm::{
     flat::{IntSize, Rect},
     Color,
@@ -11,15 +12,22 @@ use ui::{Container, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSu
 use ui_views::{ImageView, Label};
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{App, Font, WGPUDrawer};
+use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
 
-pub struct TEApp {
+use crate::{assets::Assets, git_root};
+
+pub struct App {
     pub(crate) root_view:  Own<dyn View>,
     pub(crate) first_view: Option<Own<dyn View>>,
 }
 
-impl TEApp {
-    pub fn new(first_view: Own<dyn View>) -> Self {
+impl App {
+    pub async fn start(first_view: Own<dyn View>, width: u32, height: u32) -> Result<()> {
+        Assets::init(git_root().expect("git_root()"));
+        WGPUApp::start(Self::new(first_view), width, height).await
+    }
+
+    fn new(first_view: Own<dyn View>) -> Self {
         Self {
             root_view:  Container::make_root_view(),
             first_view: first_view.into(),
@@ -108,7 +116,7 @@ impl TEApp {
     }
 }
 
-impl App for TEApp {
+impl wgpu_wrapper::App for App {
     fn window_ready(&mut self) {
         let view = self.root_view.add_subview(self.first_view.take().unwrap());
         view.place().back();
