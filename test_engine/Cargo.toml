@@ -17,12 +17,15 @@ tokio = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 
+dispatch = { workspace = true }
 manage = { workspace = true }
+reflected = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
 
 audio = { workspace = true }
 gm = { workspace = true }
+rest = { workspace = true }
 ui = { workspace = true }
 ui_proc = { workspace = true }
 ui_views = { workspace = true }

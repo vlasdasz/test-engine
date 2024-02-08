@@ -1,6 +1,7 @@
 use gm::Color;
 use refs::Weak;
 use rtools::IntoF32;
+use vents::Event;
 
 use crate::{layout::Placer, NavigationView, UIAnimation, View};
 
@@ -28,6 +29,8 @@ pub trait ViewData {
 
     fn priority(&self) -> u8;
     fn dont_hide(&self) -> bool;
+
+    fn loaded(&mut self) -> &mut Event;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -93,5 +96,9 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn dont_hide(&self) -> bool {
         self.base().dont_hide
+    }
+
+    fn loaded(&mut self) -> &mut Event {
+        &mut self.base_mut().loaded
     }
 }

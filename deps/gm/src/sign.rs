@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(Default, Debug)]
 pub enum Sign {
     #[default]
@@ -14,12 +16,15 @@ impl Sign {
     }
 }
 
-impl ToString for Sign {
-    fn to_string(&self) -> String {
-        match self {
-            Self::Plus => '+',
-            Self::Minus => '-',
-        }
-        .to_string()
+impl Display for Sign {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Plus => '+',
+                Self::Minus => '-',
+            }
+        )
     }
 }

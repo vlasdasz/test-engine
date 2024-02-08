@@ -7,7 +7,8 @@ mod paths;
 pub mod ui {
     pub use ::ui::*;
     pub use gm::{
-        flat::{IntSize, Points},
+        flat::{IntSize, Points, Size},
+        sign::Sign,
         Color,
     };
     pub use ui_proc::view;
@@ -15,9 +16,25 @@ pub mod ui {
     pub use wgpu_wrapper::image::Image;
 }
 
+pub mod refs {
+    pub use refs::{
+        set_current_thread_as_main,
+        vec::{OwnVec, ToOwnVec},
+        weak_from_ref, AsAny, Own, ToOwn, Weak,
+    };
+}
+
+pub mod reflect {
+    pub use reflected::{FieldRef, Reflected};
+}
+
+pub mod rest {
+    pub use rest::{req, GetReq, Req, API};
+}
+
 pub use app::App;
 pub use audio;
+pub use dispatch::{async_after, from_main, on_main};
 pub use manage::data_manager::DataManager;
 pub use paths::*;
-pub use refs;
-pub use rtools::Apply;
+pub use rtools::{file::File, platform::Platform, sleep, Apply, Random, RandomContainer, Stored};

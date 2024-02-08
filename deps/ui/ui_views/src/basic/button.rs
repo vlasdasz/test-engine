@@ -60,7 +60,7 @@ impl ViewSetup for Button {
 #[macro_export]
 macro_rules! link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {{
-        use ui_views::AlertErr;
+        use test_engine::ui::AlertErr;
         $self.$($button).+.on_tap(move || $self.$method().alert_err());
     }}
 }
@@ -70,7 +70,7 @@ macro_rules! async_link_button {
     ($self:ident, $($button:ident).+, $method:ident) => {
         $self.$($button).+.on_tap(move || {
             tokio::spawn(async move {
-                use ui_views::AlertErr;
+                use test_engine::ui::AlertErr;
                 $self.$method().await.alert_err();
             });
         });

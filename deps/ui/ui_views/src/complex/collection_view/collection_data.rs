@@ -16,6 +16,6 @@ pub trait CollectionData: Debug {
 macro_rules! collection_data {
     ($source:ident) => {{
         use std::ops::DerefMut;
-        ui::refs::weak_from_ref($source.deref_mut() as &mut dyn CollectionData)
+        test_engine::refs::weak_from_ref($source.deref_mut() as &mut dyn CollectionData)
     }};
 }
