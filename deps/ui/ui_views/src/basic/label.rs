@@ -10,6 +10,7 @@ mod test_engine {
 #[view]
 pub struct Label {
     pub text: String,
+    pub size: f32,
 }
 
 impl Label {
@@ -35,6 +36,7 @@ impl Label {
 
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
+        self.size = 32.0;
         self.set_color(Color::WHITE);
     }
 }

@@ -41,6 +41,7 @@ impl ViewSetup for TestGameView {
             20,
         );
         self.label_l.text = "Łėŵœ Ы".into();
+        self.label_l.size = 64.0;
 
         self.label_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
             Anchor::Left,
@@ -49,7 +50,12 @@ impl ViewSetup for TestGameView {
         );
         self.label_r.text = "щКыЩъ".into();
 
-        self.dpad.place().size(200, 100).b(20).anchor(Anchor::Left, self.bl, 10);
+        self.dpad.place().size(200, 140).b(20).anchor(Anchor::Left, self.bl, 10);
+
+        self.dpad.on_press.val(move |direction| {
+            self.label_l.set_text(format!("{direction:?}"));
+        });
+
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
     }
 }

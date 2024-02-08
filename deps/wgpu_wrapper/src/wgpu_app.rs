@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use anyhow::Result;
-use log::error;
+use log::{error, trace};
 use refs::MainLock;
 use winit::{
     dpi::PhysicalSize,
@@ -69,7 +69,7 @@ impl WGPUApp {
                     }
                 }
                 WindowEvent::MouseWheel { delta, .. } => {
-                    dbg!(delta);
+                    trace!("{delta:?}");
                 }
                 WindowEvent::KeyboardInput { event, .. } => {
                     if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {

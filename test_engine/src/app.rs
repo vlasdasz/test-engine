@@ -102,7 +102,11 @@ impl App {
             let center = frame.center();
 
             let section = Section::default()
-                .add_text(Text::new(&label.text).with_scale(64.0).with_color(Color::BLACK.as_slice()))
+                .add_text(
+                    Text::new(&label.text)
+                        .with_scale(label.size)
+                        .with_color(Color::BLACK.as_slice()),
+                )
                 .with_bounds((frame.width(), frame.height()))
                 .with_layout(
                     Layout::default()

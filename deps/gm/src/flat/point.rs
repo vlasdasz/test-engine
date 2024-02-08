@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::flat::Size;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Debug, Clone)]
 pub enum Direction {
     Up,
     Down,
