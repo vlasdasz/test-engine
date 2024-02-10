@@ -5,7 +5,7 @@ use std::{
 };
 
 use anyhow::Result;
-use dispatch::from_main;
+use dispatch::{from_main, invoke_dispatched};
 use gm::{
     flat::{IntSize, Point, Rect},
     Color,
@@ -13,7 +13,6 @@ use gm::{
 use log::{trace, warn};
 use manage::data_manager::DataManager;
 use refs::{assert_main_thread, Own, Weak};
-use rtools::Random;
 use tokio::spawn;
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -233,7 +232,7 @@ impl wgpu_wrapper::App for App {
     }
 
     fn update(&mut self) -> bool {
-        dbg!(format!("update {}", u32::random()));
+        invoke_dispatched();
         self.update_view(UIManager::root_view().deref_mut())
     }
 

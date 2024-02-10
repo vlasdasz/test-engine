@@ -1,8 +1,9 @@
 use test_engine::{
+    async_after,
     refs::Weak,
     ui::{
-        async_link_button, view, Anchor, Button, Color, Container, DPadView, Image, ImageView, IntView,
-        Label, SubView, ViewData, ViewSetup,
+        async_link_button, view, Alert, Anchor, Button, Color, Container, DPadView, Image, ImageView,
+        IntView, Label, Spinner, SubView, ViewData, ViewSetup,
     },
     DataManager,
 };
@@ -23,11 +24,19 @@ pub struct TestGameView {
     int:  SubView<IntView>,
 
     spinner: SubView<Button>,
+    alert:   SubView<Button>,
 }
 
 impl TestGameView {
     async fn spinner_pressed(self: Weak<Self>) {
-        dbg!("PROSO!!!");
+        Spinner::start();
+        async_after(4, async {
+            Spinner::stop();
+        });
+    }
+
+    async fn alert_pressed(self: Weak<Self>) {
+        Alert::show("Hello!");
     }
 }
 
@@ -67,8 +76,17 @@ impl ViewSetup for TestGameView {
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
 
         self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.int, 10);
-        self.spinner.set_text("Alert");
+        self.spinner.set_text("Spinner");
         self.spinner.set_text_size(20);
         async_link_button!(self, spinner, spinner_pressed);
+
+        self.alert.place().size(100, 28).anchor(Anchor::Left, self.int, 10).anchor(
+            Anchor::Bot,
+            self.spinner,
+            10,
+        );
+        self.alert.set_text("Alert");
+        self.alert.set_text_size(20);
+        async_link_button!(self, alert, alert_pressed);
     }
 }
