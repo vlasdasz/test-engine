@@ -111,7 +111,9 @@ impl WGPUApp {
     fn process_request(&mut self, request: AppRequest) {
         match request {
             AppRequest::WindowTitle(title) => self.window.set_title(&title),
-            AppRequest::WindowSize(_size) => unimplemented!(),
+            AppRequest::WindowSize(size) => {
+                let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
+            }
         }
     }
 }

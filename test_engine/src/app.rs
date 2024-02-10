@@ -230,9 +230,17 @@ impl App {
     }
 
     pub fn set_window_title(title: impl ToString) {
+        Self::request(AppRequest::WindowTitle(title.to_string()));
+    }
+
+    pub fn set_window_size(size: impl Into<IntSize>) {
+        Self::request(AppRequest::WindowSize(size.into()));
+    }
+
+    fn request(request: AppRequest) {
         let app = Self::current();
         assert!(app.request.is_none(), "Should not have existing request");
-        app.request = AppRequest::WindowTitle(title.to_string()).into();
+        app.request = request.into();
     }
 }
 

@@ -1,5 +1,5 @@
 use test_engine::{
-    async_after,
+    async_after, on_main,
     refs::Weak,
     ui::{
         async_link_button, view, Alert, Anchor, Button, Color, Container, DPadView, Image, ImageView,
@@ -37,6 +37,7 @@ impl TestGameView {
 
     async fn alert_pressed(self: Weak<Self>) {
         Alert::show("Hello!");
+        on_main(|| App::set_window_size((600, 600)))
     }
 }
 
