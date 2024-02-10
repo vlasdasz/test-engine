@@ -8,6 +8,7 @@ use gm::{
 use log::warn;
 use manage::data_manager::DataManager;
 use refs::{Own, Weak};
+use rtools::Random;
 use ui::{
     check_touch,
     input::{TouchEvent, UIEvents},
@@ -45,17 +46,18 @@ impl App {
         rect * display_scale
     }
 
-    fn update_view(&self, view: &mut dyn View) {
+    fn update_view(&self, view: &mut dyn View) -> bool {
         if view.is_hidden() {
-            return;
+            return false;
         }
         view.layout();
-        view.commit_animations();
+        let mut animations = view.commit_animations();
         view.calculate_absolute_frame();
         view.update();
         for view in view.subviews_mut() {
-            self.update_view(view.deref_mut());
+            animations = animations || self.update_view(view.deref_mut());
         }
+        animations
     }
 
     fn draw<'a>(
@@ -104,7 +106,7 @@ impl App {
             let section = Section::default()
                 .add_text(
                     Text::new(&label.text)
-                        .with_scale(label.size)
+                        .with_scale(label.text_size())
                         .with_color(Color::BLACK.as_slice()),
                 )
                 .with_bounds((frame.width(), frame.height()))
@@ -179,8 +181,9 @@ impl wgpu_wrapper::App for App {
         self.update();
     }
 
-    fn update(&mut self) {
-        self.update_view(UIManager::root_view().deref_mut());
+    fn update(&mut self) -> bool {
+        dbg!(format!("update {}", u32::random()));
+        self.update_view(UIManager::root_view().deref_mut())
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {

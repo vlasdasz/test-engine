@@ -36,7 +36,7 @@ pub struct ViewBase {
     #[derivative(Debug = "ignore")]
     pub(crate) navigation_view: Weak<NavigationView>,
 
-    pub animations: Vec<UIAnimation>,
+    pub(crate) animations: Vec<UIAnimation>,
 
     pub label: String,
 
@@ -51,7 +51,7 @@ pub struct ViewBase {
 
     pub dont_hide: bool,
 
-    pub loaded: Event,
+    pub(crate) loaded: Event,
 }
 
 #[derive(Default)]

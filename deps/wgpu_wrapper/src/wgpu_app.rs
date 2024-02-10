@@ -89,12 +89,15 @@ impl WGPUApp {
                     //state.resize(**new_inner_size);
                 }
                 WindowEvent::RedrawRequested => {
-                    self.state.update();
+                    let redraw = self.state.update();
                     match self.state.render() {
                         Ok(()) => {}
                         // Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),
                         // Err(wgpu::SurfaceError::OutOfMemory) => elwt.exit(),
                         Err(e) => error!("{e:?}"),
+                    };
+                    if redraw {
+                        self.window.request_redraw();
                     }
                 }
                 _ => {}

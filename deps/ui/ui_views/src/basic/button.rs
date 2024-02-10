@@ -1,5 +1,6 @@
 use gm::Color;
 use refs::Weak;
+use rtools::IntoF32;
 use ui::{view, Event, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
 use wgpu_wrapper::image::Image;
 
@@ -41,6 +42,11 @@ impl Button {
 
     pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
         //self.label.set_text_color(color);
+        self
+    }
+
+    pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
+        self.label.set_text_size(size);
         self
     }
 }

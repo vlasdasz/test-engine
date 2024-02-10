@@ -38,7 +38,7 @@ impl UIAnimation {
 
 pub trait ViewAnimation {
     fn add_animation(&mut self, anim: UIAnimation);
-    fn commit_animations(&mut self);
+    fn commit_animations(&mut self) -> bool;
 }
 
 impl<T: ?Sized + View> ViewAnimation for T {
@@ -46,9 +46,9 @@ impl<T: ?Sized + View> ViewAnimation for T {
         self.animations().push(anim)
     }
 
-    fn commit_animations(&mut self) {
+    fn commit_animations(&mut self) -> bool {
         if self.animations().is_empty() {
-            return;
+            return false;
         }
 
         let mut this = self.weak_view();
@@ -59,6 +59,8 @@ impl<T: ?Sized + View> ViewAnimation for T {
                 animation.on_finish.trigger(())
             }
         }
-        self.animations().retain(|a| !a.finished())
+        self.animations().retain(|a| !a.finished());
+
+        true
     }
 }

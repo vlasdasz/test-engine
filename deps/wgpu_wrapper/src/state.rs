@@ -100,8 +100,8 @@ impl State {
         false
     }
 
-    pub fn update(&mut self) {
-        self.app.update();
+    pub fn update(&mut self) -> bool {
+        self.app.update()
     }
 
     pub fn render(&mut self) -> Result<()> {

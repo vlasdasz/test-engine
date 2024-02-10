@@ -1,8 +1,8 @@
 use test_engine::{
     refs::Weak,
     ui::{
-        view, Anchor, Color, Container, DPadView, Image, ImageView, IntView, Label, SubView, ViewData,
-        ViewSetup,
+        async_link_button, view, Anchor, Button, Color, Container, DPadView, Image, ImageView, IntView,
+        Label, SubView, ViewData, ViewSetup,
     },
     DataManager,
 };
@@ -21,6 +21,14 @@ pub struct TestGameView {
 
     dpad: SubView<DPadView>,
     int:  SubView<IntView>,
+
+    spinner: SubView<Button>,
+}
+
+impl TestGameView {
+    async fn spinner_pressed(self: Weak<Self>) {
+        dbg!("PROSO!!!");
+    }
 }
 
 impl ViewSetup for TestGameView {
@@ -41,7 +49,7 @@ impl ViewSetup for TestGameView {
             20,
         );
         self.label_l.text = "Łėŵœ Ы".into();
-        self.label_l.size = 64.0;
+        self.label_l.set_text_size(64.0);
 
         self.label_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
             Anchor::Left,
@@ -57,5 +65,10 @@ impl ViewSetup for TestGameView {
         });
 
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
+
+        self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.int, 10);
+        self.spinner.set_text("Alert");
+        self.spinner.set_text_size(20);
+        async_link_button!(self, spinner, spinner_pressed);
     }
 }
