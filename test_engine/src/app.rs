@@ -22,7 +22,7 @@ use ui_views::{ImageView, Label};
 use vents::OnceEvent;
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{AppRequest, ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
 
 use crate::{assets::Assets, git_root};
 
@@ -33,20 +33,26 @@ pub struct App {
     root_view:             Weak<dyn View>,
     pub(crate) first_view: Option<Own<dyn View>>,
     window_ready:          OnceEvent,
+    request:               Option<AppRequest>,
 }
 
 impl App {
     pub fn current() -> &'static mut Self {
         assert_main_thread();
         unsafe {
-            assert!(!APP.is_null(), "Screen was not initialized");
+            assert!(!APP.is_null(), "App was not initialized");
             APP.as_mut().unwrap()
         }
     }
 
     fn make_app(first_view: Own<dyn View>) -> Box<Self> {
         Assets::init(git_root().expect("git_root()"));
-        Self::new(first_view)
+        let mut app = Self::new(first_view);
+        unsafe {
+            assert!(APP.is_null(), "Another App already exists");
+            APP = app.as_mut() as _
+        }
+        app
     }
 
     pub async fn start(first_view: Own<dyn View>, width: u32, height: u32) -> Result<()> {
@@ -88,6 +94,7 @@ impl App {
             root_view:       UIManager::root_view(),
             first_view:      first_view.into(),
             window_ready:    Default::default(),
+            request:         None,
         })
     }
 
@@ -221,6 +228,12 @@ impl App {
 
         return DISPLAY_TOUCHES;
     }
+
+    pub fn set_window_title(title: impl ToString) {
+        let app = Self::current();
+        assert!(app.request.is_none(), "Should not have existing request");
+        app.request = AppRequest::WindowTitle(title.to_string()).into();
+    }
 }
 
 impl wgpu_wrapper::App for App {
@@ -265,5 +278,9 @@ impl wgpu_wrapper::App for App {
             event: state.into(),
             button,
         })
+    }
+
+    fn request(&mut self) -> Option<AppRequest> {
+        self.request.take()
     }
 }

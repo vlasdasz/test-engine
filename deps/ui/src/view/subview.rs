@@ -1,5 +1,5 @@
 use std::{
-    fmt::{Debug, Formatter},
+    fmt::{Debug, Display, Formatter},
     ops::{Deref, DerefMut},
 };
 
@@ -49,9 +49,9 @@ impl<T: View> Debug for SubView<T> {
     }
 }
 
-impl<T: View + ToString> ToString for SubView<T> {
-    fn to_string(&self) -> String {
-        self.0.to_string()
+impl<T: View + ToString> Display for SubView<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0.to_string())
     }
 }
 

@@ -11,7 +11,7 @@ use winit::{
     window::{Window, WindowBuilder},
 };
 
-use crate::{app::App, state::State};
+use crate::{app::App, state::State, AppRequest};
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
@@ -33,8 +33,7 @@ impl WGPUApp {
             WindowBuilder::new()
                 .with_title("Test Engine")
                 .with_inner_size(PhysicalSize::new(width, height))
-                .build(&event_loop)
-                .unwrap(),
+                .build(&event_loop)?,
         );
 
         let state = State::new(app, window.clone()).await?;
@@ -78,7 +77,6 @@ impl WGPUApp {
                 }
                 WindowEvent::Resized(physical_size) => {
                     self.state.resize(physical_size);
-                    self.window.request_redraw();
                 }
                 WindowEvent::ScaleFactorChanged {
                     scale_factor,
@@ -90,6 +88,9 @@ impl WGPUApp {
                 }
                 WindowEvent::RedrawRequested => {
                     self.state.update();
+                    if let Some(request) = self.state.app.request() {
+                        self.process_request(request);
+                    }
                     match self.state.render() {
                         Ok(()) => {}
                         // Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),
@@ -105,5 +106,12 @@ impl WGPUApp {
         })?;
 
         Ok(())
+    }
+
+    fn process_request(&mut self, request: AppRequest) {
+        match request {
+            AppRequest::WindowTitle(title) => self.window.set_title(&title),
+            AppRequest::WindowSize(_size) => unimplemented!(),
+        }
     }
 }

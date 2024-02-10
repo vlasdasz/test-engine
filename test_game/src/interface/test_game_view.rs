@@ -5,7 +5,7 @@ use test_engine::{
         async_link_button, view, Alert, Anchor, Button, Color, Container, DPadView, Image, ImageView,
         IntView, Label, Spinner, SubView, ViewData, ViewSetup,
     },
-    DataManager,
+    App, DataManager,
 };
 
 #[view]
@@ -71,6 +71,7 @@ impl ViewSetup for TestGameView {
 
         self.dpad.on_press.val(move |direction| {
             self.label_l.set_text(format!("{direction:?}"));
+            App::set_window_title(format!("{direction:?}"));
         });
 
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
