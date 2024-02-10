@@ -1,8 +1,10 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::Screen;
-use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::Switch;
+use test_engine::{
+    refs::Weak,
+    ui::{view, SubView, Switch, ViewData, ViewSetup},
+    App,
+};
 
 use crate::view_tests::{state::set_state, test_combinations};
 
@@ -22,7 +24,7 @@ impl ViewSetup for SwitchTestView {
 }
 
 pub async fn test_switch() -> Result<()> {
-    Screen::set_test_view::<SwitchTestView>(200, 100).await;
+    App::set_test_view::<SwitchTestView>(200, 100).await;
 
     test_combinations([
         (

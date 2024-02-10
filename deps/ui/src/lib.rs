@@ -6,9 +6,7 @@
 #![feature(adt_const_params)]
 #![feature(generic_const_exprs)]
 
-pub use input::Touch;
-
-pub mod input;
+mod input;
 mod labeled;
 mod layout;
 mod modal_view;
@@ -22,6 +20,7 @@ mod ui_manager;
 mod view;
 mod with_header;
 
+pub use input::*;
 pub use labeled::*;
 pub use layout::*;
 pub use modal_view::*;
@@ -32,7 +31,6 @@ pub use touch_stack::*;
 pub use ui_event::*;
 pub use ui_manager::*;
 pub use ui_proc::*;
-pub use vents::*;
 pub use view::*;
 pub use with_header::*;
 

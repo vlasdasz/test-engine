@@ -1,8 +1,10 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::Screen;
-use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::ImageView;
+use test_engine::{
+    refs::Weak,
+    ui::{view, ImageView, SubView, ViewData, ViewSetup},
+    App,
+};
 
 use crate::view_tests::record_touches;
 
@@ -24,7 +26,7 @@ impl ViewSetup for RenderImagePath {
 }
 
 pub async fn test_render_image_path() -> Result<()> {
-    Screen::set_test_view::<RenderImagePath>(400, 400).await;
+    App::set_test_view::<RenderImagePath>(400, 400).await;
 
     record_touches().await;
 

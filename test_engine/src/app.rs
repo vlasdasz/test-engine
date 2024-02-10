@@ -1,45 +1,95 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    future::Future,
+    ops::{Deref, DerefMut},
+    ptr::null_mut,
+};
 
 use anyhow::Result;
+use dispatch::from_main;
 use gm::{
     flat::{IntSize, Point, Rect},
     Color,
 };
-use log::warn;
+use log::{trace, warn};
 use manage::data_manager::DataManager;
-use refs::{Own, Weak};
+use refs::{assert_main_thread, Own, Weak};
 use rtools::Random;
+use tokio::spawn;
 use ui::{
-    check_touch,
-    input::{TouchEvent, UIEvents},
-    Container, Touch, TouchStack, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSetup,
-    ViewSubviews,
+    check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
+    ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
 };
 use ui_views::{ImageView, Label};
+use vents::OnceEvent;
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
 
 use crate::{assets::Assets, git_root};
 
+static mut APP: *mut App = null_mut();
+
 pub struct App {
     cursor_position:       Point,
     root_view:             Weak<dyn View>,
     pub(crate) first_view: Option<Own<dyn View>>,
+    window_ready:          OnceEvent,
 }
 
 impl App {
-    pub async fn start(first_view: Own<dyn View>, width: u32, height: u32) -> Result<()> {
-        Assets::init(git_root().expect("git_root()"));
-        WGPUApp::start(Self::new(first_view), width, height).await
+    pub fn current() -> &'static mut Self {
+        assert_main_thread();
+        unsafe {
+            assert!(!APP.is_null(), "Screen was not initialized");
+            APP.as_mut().unwrap()
+        }
     }
 
-    fn new(first_view: Own<dyn View>) -> Self {
-        Self {
+    fn make_app(first_view: Own<dyn View>) -> Box<Self> {
+        Assets::init(git_root().expect("git_root()"));
+        Self::new(first_view)
+    }
+
+    pub async fn start(first_view: Own<dyn View>, width: u32, height: u32) -> Result<()> {
+        WGPUApp::start(Self::make_app(first_view), width, height).await
+    }
+
+    pub async fn start_with_actor(
+        first_view: Own<dyn View>,
+        actions: impl Future<Output = Result<()>> + Send + 'static,
+    ) -> Result<()> {
+        let app = Self::make_app(first_view);
+
+        spawn(async move {
+            let recv = from_main(|| App::current().window_ready.once_async()).await;
+            recv.await.unwrap();
+            let _ = actions.await;
+        });
+
+        WGPUApp::start(app, 800, 600).await
+    }
+
+    pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) {
+        from_main(move || {
+            let view = T::new();
+            let mut root = UIManager::root_view();
+            root.remove_all_subviews();
+            let view = root.add_subview(view);
+            view.place().back();
+            trace!("{width} - {height}");
+            // #[cfg(desktop)]
+            // Screen::current().set_size((width, height));
+        })
+        .await
+    }
+
+    fn new(first_view: Own<dyn View>) -> Box<Self> {
+        Box::new(Self {
             cursor_position: Default::default(),
             root_view:       UIManager::root_view(),
             first_view:      first_view.into(),
-        }
+            window_ready:    Default::default(),
+        })
     }
 
     fn rescale_frame(rect: &Rect, display_scale: f32) -> Rect {
@@ -179,6 +229,7 @@ impl wgpu_wrapper::App for App {
         let view = UIManager::root_view().add_subview(self.first_view.take().unwrap());
         view.place().back();
         self.update();
+        self.window_ready.trigger(());
     }
 
     fn update(&mut self) -> bool {

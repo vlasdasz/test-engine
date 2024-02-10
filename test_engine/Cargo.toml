@@ -22,6 +22,7 @@ manage = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }
+vents = { workspace = true }
 
 audio = { workspace = true }
 gm = { workspace = true }

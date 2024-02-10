@@ -1,12 +1,14 @@
 use std::fmt::{Debug, Display};
 
 use anyhow::{bail, Result};
-use log::{error, warn};
-use old_engine::{from_main, on_main, ui_layer::UILayer};
-use rtools::sleep;
+use log::error;
 use serde::de::DeserializeOwned;
-use tokio::sync::mpsc::channel;
-use ui::{input::UIEvents, refs::ToOwn, Touch};
+use test_engine::{
+    from_main, on_main,
+    refs::ToOwn,
+    sleep,
+    ui::{Touch, UIEvents},
+};
 
 use crate::view_tests::state::{clear_state, get_state};
 
@@ -61,7 +63,7 @@ pub async fn record_touches() {
     let touches = Vec::<Touch>::new().to_own();
     let mut touches = touches.weak();
 
-    let (s, mut r) = channel::<()>(1);
+    //    let (s, mut r) = channel::<()>(1);
 
     on_main(move || {
         UIEvents::get().on_touch.val(move |touch| {
@@ -76,14 +78,14 @@ pub async fn record_touches() {
             touches.push(touch);
         });
 
-        UILayer::keymap().add('a', move || {
-            _ = s.try_send(());
-        });
+        // UILayer::keymap().add('a', move || {
+        //     _ = s.try_send(());
+        // });
     });
 
-    if let None = r.recv().await {
-        warn!("Failed to receive record_touches result");
-    }
+    // if let None = r.recv().await {
+    //     warn!("Failed to receive record_touches result");
+    // }
 
     on_main(|| {
         UIEvents::get().on_touch.remove_subscribers();

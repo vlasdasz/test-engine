@@ -6,7 +6,7 @@ use dispatch::on_main_sync;
 use gm::{flat::Point, Color};
 use refs::Weak;
 use ui::{
-    check_touch, input::UIEvents, Container, Touch, TouchStack, UIManager, ViewData, ViewFrame, ViewSetup,
+    check_touch, Container, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, ViewSetup,
     ViewSubviews,
 };
 use ui_views::DebugView;

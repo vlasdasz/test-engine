@@ -1,5 +1,6 @@
 use refs::Weak;
-use ui::{view, Anchor, Event, SubView, ToLabel, ViewData, ViewSetup};
+use ui::{view, Anchor, SubView, ToLabel, ViewData, ViewSetup};
+use vents::Event;
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;

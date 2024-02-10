@@ -1,8 +1,10 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::{from_main, gm::Color, Screen};
-use ui::{layout::Anchor, refs::Weak, view, SubView, ViewData, ViewSetup, ViewSubviews};
-use ui_views::Button;
+use test_engine::{
+    refs::Weak,
+    ui::{view, Anchor, Button, Color, SubView, ViewData, ViewSetup, ViewSubviews},
+    App,
+};
 
 use crate::view_tests::{
     assert_eq, inject_touches,
@@ -76,7 +78,7 @@ impl ViewSetup for LayoutTestView {
 }
 
 pub async fn test_layout() -> Result<()> {
-    Screen::set_test_view::<LayoutTestView>(240, 240).await;
+    App::set_test_view::<LayoutTestView>(240, 240).await;
 
     inject_touches(
         r#"
@@ -145,10 +147,10 @@ pub async fn test_layout() -> Result<()> {
         "|le_s_ct|left|le_ct|center|ri_ct|right|ri_s_ct|bo_s_ct|bottom|bt_ct|center|tp_ct|top|to_s_ct",
     )?;
 
-    from_main(|| {
-        Screen::current().set_size((400, 400));
-    })
-    .await;
+    // from_main(|| {
+    //     Screen::current().set_size((400, 400));
+    // })
+    // .await;
 
     clear_state();
 

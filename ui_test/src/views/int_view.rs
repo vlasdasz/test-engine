@@ -1,8 +1,11 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::{from_main, gm::flat::IntSize, Screen};
-use ui::{refs::Weak, view, SubView, ViewData, ViewSetup, ViewTest};
-use ui_views::IntView;
+use test_engine::{
+    from_main,
+    refs::Weak,
+    ui::{view, IntSize, IntView, SubView, ViewData, ViewSetup, ViewTest},
+    App,
+};
 
 use crate::view_tests::{assert_eq, inject_touches};
 
@@ -25,7 +28,7 @@ impl ViewTest for IntTestView {
 }
 
 pub async fn test_int_view() -> Result<()> {
-    Screen::set_test_view::<IntTestView>(400, 400).await;
+    App::set_test_view::<IntTestView>(400, 400).await;
 
     let mut this = IntTestView::instance();
 

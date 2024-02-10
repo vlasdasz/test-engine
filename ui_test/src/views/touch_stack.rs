@@ -1,9 +1,11 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::Screen;
-use rtools::sleep;
-use ui::{refs::Weak, view, SubView, TouchStack, ViewData, ViewSetup};
-use ui_views::Button;
+use test_engine::{
+    refs::Weak,
+    sleep,
+    ui::{view, Button, SubView, TouchStack, ViewData, ViewSetup},
+    App,
+};
 
 use crate::view_tests::{
     assert_eq, inject_touches,
@@ -28,7 +30,7 @@ impl ViewSetup for TouchStackTestView {
 pub async fn test_touch_stack() -> Result<()> {
     dbg!(TouchStack::dump());
 
-    Screen::set_test_view::<TouchStackTestView>(600, 600).await;
+    App::set_test_view::<TouchStackTestView>(600, 600).await;
 
     dbg!(TouchStack::dump());
 

@@ -1,7 +1,7 @@
 #![cfg(desktop)]
 
 use gm::flat::Point;
-use ui::{input::TouchEvent, Touch};
+use ui::{Touch, TouchEvent};
 use wgpu_wrapper::MouseButton;
 
 use crate::ui_layer::UILayer;

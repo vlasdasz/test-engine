@@ -1,7 +1,8 @@
 use gm::{converter::Converter, Color};
 use refs::Weak;
 use rtools::IntoF32;
-use ui::{view, Event, SubView, Touch, ViewCallbacks, ViewFrame, ViewSetup, ViewTouch};
+use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame, ViewSetup, ViewTouch};
+use vents::Event;
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;

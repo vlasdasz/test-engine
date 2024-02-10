@@ -1,6 +1,7 @@
 use gm::Color;
 use refs::{weak_from_ref, Weak};
-use ui::{view, Anchor, Container, Event, SubView, ViewData, ViewSetup, ViewTouch};
+use ui::{view, Anchor, Container, SubView, ViewData, ViewSetup, ViewTouch};
+use vents::Event;
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;

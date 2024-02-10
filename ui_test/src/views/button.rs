@@ -1,8 +1,10 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::Screen;
-use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::Button;
+use test_engine::{
+    refs::Weak,
+    ui::{view, Button, SubView, ViewData, ViewSetup},
+    App,
+};
 
 use crate::view_tests::{state::increment_state, test_combinations};
 
@@ -23,7 +25,7 @@ impl ViewSetup for ButtonTestView {
 }
 
 pub async fn test_button() -> Result<()> {
-    Screen::set_test_view::<ButtonTestView>(200, 100).await;
+    App::set_test_view::<ButtonTestView>(200, 100).await;
 
     test_combinations([
         ("0 0 b", 0),

@@ -3,10 +3,10 @@ use std::sync::atomic::Ordering::Relaxed;
 use gm::Color;
 use refs::{weak_from_ref, Weak};
 use ui::{
-    input::{ControlButton, KeyboardButton, UIEvents},
-    view, AcceptChar, Event, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData,
-    ViewSetup, ViewTouch,
+    view, AcceptChar, ControlButton, KeyboardButton, SubView, TextFieldConstraint, ToLabel, UIEvents,
+    UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
 };
+use vents::Event;
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;

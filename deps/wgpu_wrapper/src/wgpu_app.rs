@@ -26,7 +26,7 @@ impl WGPUApp {
         APP.get_mut().as_mut().expect("App has not been initialized yet.")
     }
 
-    pub async fn start(app: impl App + 'static, width: u32, height: u32) -> Result<()> {
+    pub async fn start(app: Box<dyn App>, width: u32, height: u32) -> Result<()> {
         env_logger::init();
         let event_loop = EventLoop::new()?;
         let window = Arc::new(

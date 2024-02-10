@@ -1,4 +1,4 @@
-use ui::Event;
+use vents::Event;
 
 pub struct KeyAction {
     pub key: char,

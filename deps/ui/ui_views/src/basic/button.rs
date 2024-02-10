@@ -1,7 +1,8 @@
 use gm::Color;
 use refs::Weak;
 use rtools::IntoF32;
-use ui::{view, Event, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
+use ui::{view, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
+use vents::Event;
 use wgpu_wrapper::image::Image;
 
 use crate::{ImageView, Label};

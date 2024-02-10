@@ -1,7 +1,14 @@
 [workspace]
 
 default-members = ["old_test_game"]
-members = ["old_test_game", "ui_benchmark", "noise", "test_engine", "test_game", "ui_test"]
+members = [
+  "old_test_game",
+  "ui_benchmark",
+  "noise",
+  "test_engine",
+  "test_game",
+  "ui_test",
+]
 
 resolver = "2"
 
@@ -25,7 +32,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serial_test = "3.0"
 smart-default = "0.7.1"
-tokio = { version = "1.33.0", features = ["full"] }
+tokio = { version = "1.36.0", features = ["full"] }
 wgpu = "0.19.1"
 wgpu_text = "0.8.6"
 winit = "0.29.10"

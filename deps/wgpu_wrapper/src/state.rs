@@ -17,7 +17,7 @@ pub struct State {
 }
 
 impl State {
-    pub async fn new(app: impl App + 'static, window: Arc<Window>) -> Result<Self> {
+    pub async fn new(app: Box<dyn App>, window: Arc<Window>) -> Result<Self> {
         let size = window.inner_size();
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -75,7 +75,7 @@ impl State {
             config,
             drawer,
             fonts: Default::default(),
-            app: Box::new(app),
+            app,
         })
     }
 

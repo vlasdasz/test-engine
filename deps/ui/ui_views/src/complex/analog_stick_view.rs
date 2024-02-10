@@ -1,6 +1,7 @@
 use gm::flat::Point;
 use refs::Weak;
-use ui::{view, Event, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
+use ui::{view, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
+use vents::Event;
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;

@@ -1,8 +1,10 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::Screen;
-use ui::{refs::Weak, view, SubView, TouchStack, View, ViewData, ViewSetup, ViewSubviews};
-use ui_views::{Button, DropDown};
+use test_engine::{
+    refs::Weak,
+    ui::{view, Button, DropDown, SubView, TouchStack, View, ViewData, ViewSetup, ViewSubviews},
+    App,
+};
 
 use crate::view_tests::assert_eq;
 
@@ -33,7 +35,7 @@ impl ViewSetup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    Screen::set_test_view::<DropDownTestView>(280, 280).await;
+    App::set_test_view::<DropDownTestView>(280, 280).await;
 
     let view = DropDownTestView::instance();
 

@@ -5,8 +5,10 @@
 #![feature(arbitrary_self_types)]
 
 use anyhow::Result;
-use old_engine::ui_layer::UILayer;
-use ui::Container;
+use test_engine::{
+    ui::{Container, ViewSetup},
+    App,
+};
 
 use crate::views::{
     alert::test_alert, button::test_button, drop_down::test_drop_down, image_view::test_image_view,
@@ -14,13 +16,13 @@ use crate::views::{
     render_image_path::test_render_image_path, switch::test_switch, touch_stack::test_touch_stack,
 };
 
-mod ui_test_legacy;
 mod view_tests;
 mod views;
 
-fn main() -> Result<()> {
-    old_engine::ViewApp::<Container>::start_with_actor(async {
-        UILayer::display_touches();
+#[tokio::main]
+async fn main() -> Result<()> {
+    App::start_with_actor(Container::new(), async {
+        //UILayer::display_touches();
 
         test_render_image_path().await?;
         test_image_view().await?;
@@ -36,4 +38,5 @@ fn main() -> Result<()> {
 
         Ok(())
     })
+    .await
 }

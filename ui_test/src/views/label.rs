@@ -1,8 +1,10 @@
 use anyhow::Result;
 use log::debug;
-use old_engine::Screen;
-use ui::{layout::Anchor, refs::Weak, view, SubView, TouchStack, ViewData, ViewSetup};
-use ui_views::{IntView, Label};
+use test_engine::{
+    refs::Weak,
+    ui::{view, Anchor, IntView, Label, SubView, TouchStack, ViewData, ViewSetup},
+    App,
+};
 
 #[view]
 struct LabelTestView {
@@ -29,13 +31,13 @@ impl ViewSetup for LabelTestView {
         self.text_size_view.set_value(32).set_step(5);
 
         self.text_size_view.on_change(move |size| {
-            self.label.set_text_size(size as _);
+            self.label.set_text_size(size);
         });
     }
 }
 
 pub async fn test_label() -> Result<()> {
-    Screen::set_test_view::<LabelTestView>(400, 400).await;
+    App::set_test_view::<LabelTestView>(400, 400).await;
 
     debug!("Int view test: OK");
 

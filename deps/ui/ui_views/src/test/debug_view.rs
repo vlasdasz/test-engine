@@ -3,6 +3,8 @@ use std::{
     fmt::Display,
     sync::{atomic::AtomicBool, OnceLock},
 };
+
+use vents::Event;
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -11,7 +13,7 @@ mod test_engine {
 use gm::Color;
 use refs::{dump_ref_stats, Weak};
 use ui::{
-    view, Event, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup,
+    view, SubView, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup,
     ViewSubviews,
 };
 
