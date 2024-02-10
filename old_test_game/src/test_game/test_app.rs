@@ -2,10 +2,8 @@ use std::path::PathBuf;
 
 use log::trace;
 use old_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, OldApp};
-use ui::{
-    refs::{enable_ref_stats_counter, Own},
-    Container, NavigationView, View, ViewSetup,
-};
+use refs::{enable_ref_stats_counter, Own};
+use ui::{Container, NavigationView, View, ViewSetup};
 
 pub struct TestApp {
     core: AppCore,

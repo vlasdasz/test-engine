@@ -1,6 +1,5 @@
 use rtools::Random;
-use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
-use ui_views::DropDown;
+
 
 #[view]
 struct DropDownTestView {

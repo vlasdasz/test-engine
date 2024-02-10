@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use audio::Sound;
 use manage::data_manager::DataManager;
-use ui::refs::assert_main_thread;
+use refs::assert_main_thread;
 use wgpu_wrapper::image::Image;
 
 use crate::paths::Paths;

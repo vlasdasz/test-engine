@@ -1,4 +1,3 @@
-use ui::{refs::Weak, view, SubView, ViewData, ViewSetup};
 use ui_views::{link_button, Alert, Button, Label, TouchTestView};
 
 #[view]

@@ -6,9 +6,9 @@ use gm::{
     flat::{IntSize, Point, Rect},
     Color,
 };
+use refs::{assert_main_thread, Own};
 use rest::API;
 use ui::{
-    refs::{assert_main_thread, Own},
     UIManager, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTest, MICROSECONDS_IN_ONE_SECOND,
 };
 use ui_views::{DebugView, SHOW_DEBUG_VIEW};
@@ -26,7 +26,6 @@ impl Screen {
     fn setup_events(&mut self) {
         self.ui.setup_events();
 
-        let _this = ui::refs::weak_from_ref(self);
         // SystemEvents::get().size_changed.val(move |size| {
         //     this.size_changed(size);
         // });

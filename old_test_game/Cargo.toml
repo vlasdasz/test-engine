@@ -16,7 +16,7 @@ anyhow = { workspace = true }
 derivative = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }
-
+refs = { workspace = true }
 ui = { workspace = true }
 ui_views = { workspace = true }
 

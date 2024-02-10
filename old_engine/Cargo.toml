@@ -14,9 +14,12 @@ chrono = { workspace = true }
 derivative = { workspace = true }
 home = { workspace = true }
 log = { workspace = true }
-reflected = { workspace = true }
 smart-default = { workspace = true }
 tokio = { workspace = true }
+
+refs = { workspace = true }
+reflected = { workspace = true }
+
 
 audio = { workspace = true }
 dispatch = { workspace = true }

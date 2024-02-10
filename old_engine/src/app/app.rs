@@ -3,9 +3,8 @@ use core::ffi::{c_float, c_int};
 use std::path::PathBuf;
 
 use gm::flat::IntSize;
-#[cfg(desktop)]
-use ui::refs::set_current_thread_as_main;
-use ui::{refs::Own, View};
+use refs::{set_current_thread_as_main, Own};
+use ui::View;
 
 use crate::AppCore;
 
@@ -37,7 +36,6 @@ pub trait OldApp {
         trace!("App setup: OK");
         trace!("Make core");
         set_current_thread_as_main();
-        trace!("Marked thread {} as main", ui::refs::current_thread_id());
         let core = AppCore::new(Self::screen_size(), Self::assets_path(), Self::make_root_view());
         trace!("AppCore: OK");
         core

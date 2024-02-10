@@ -4,10 +4,8 @@ use std::{future::Future, marker::PhantomData, path::PathBuf};
 
 use anyhow::Result;
 use gm::flat::IntSize;
-use ui::{
-    refs::{set_current_thread_as_main, Own},
-    View, ViewTest,
-};
+use refs::{set_current_thread_as_main, Own};
+use ui::{View, ViewTest};
 
 use crate::{app::MakeApp, AppCore, OldApp};
 

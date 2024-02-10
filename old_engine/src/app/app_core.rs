@@ -1,4 +1,4 @@
-use ui::refs::Own;
+use refs::Own;
 
 #[cfg(mobile)]
 use crate::app::mobile::MobileStuff;
@@ -22,7 +22,8 @@ mod desktop {
     use std::path::PathBuf;
 
     use gm::flat::IntSize;
-    use ui::{refs::Own, View};
+    use refs::Own;
+    use ui::View;
 
     use crate::{AppCore, Screen};
 

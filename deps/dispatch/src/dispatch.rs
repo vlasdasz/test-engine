@@ -3,6 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use log::warn;
 use refs::is_main_thread;
 use rtools::{sleep, IntoF32};
 use tokio::{
@@ -10,8 +11,9 @@ use tokio::{
     sync::oneshot::{channel, Sender},
 };
 
-type Callbacks = Mutex<Vec<Box<dyn FnOnce() + Send>>>;
-type SignalledCallbacks = Mutex<Vec<(Sender<()>, Box<dyn FnOnce() + Send>)>>;
+type Callback = Box<dyn FnOnce() + Send>;
+type Callbacks = Mutex<Vec<Callback>>;
+type SignalledCallbacks = Mutex<Vec<(Sender<()>, Callback)>>;
 
 static CALLBACKS: Callbacks = Callbacks::new(vec![]);
 static SIGNALLED: SignalledCallbacks = SignalledCallbacks::new(vec![]);
@@ -78,6 +80,7 @@ pub fn async_after(delay: impl IntoF32, action: impl Future + Send + 'static) {
 
 pub fn invoke_dispatched() {
     let Ok(mut callback) = CALLBACKS.try_lock() else {
+        warn!("Failed to lock CALLBACKS");
         return;
     };
 
@@ -87,11 +90,12 @@ pub fn invoke_dispatched() {
     drop(callback);
 
     let Ok(mut signalled) = SIGNALLED.try_lock() else {
+        warn!("Failed to lock SIGNALLED");
         return;
     };
 
-    for action in signalled.drain(..) {
-        (action.1)();
-        action.0.send(()).unwrap();
+    for (signal, action) in signalled.drain(..) {
+        action();
+        signal.send(()).unwrap();
     }
 }

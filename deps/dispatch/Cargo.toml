@@ -9,6 +9,8 @@ crate-type = ["rlib", "staticlib"]
 name = "dispatch"
 
 [dependencies]
+log = { workspace = true }
+tokio = { workspace = true }
+
 refs = { workspace = true }
 rtools = { workspace = true }
-tokio = { workspace = true }
