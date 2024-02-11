@@ -11,7 +11,7 @@ use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     keyboard::{KeyCode, PhysicalKey},
-    window::{Window, WindowBuilder},
+    window::WindowBuilder,
 };
 
 use crate::{app::App, state::State};
@@ -19,9 +19,8 @@ use crate::{app::App, state::State};
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
 pub struct WGPUApp {
-    pub(crate) state:  State,
-    pub(crate) window: Arc<Window>,
-    event_loop:        Option<EventLoop<()>>,
+    pub(crate) state: State,
+    event_loop:       Option<EventLoop<()>>,
 }
 
 impl WGPUApp {
@@ -45,7 +44,6 @@ impl WGPUApp {
 
         *APP.get_mut() = Self {
             state,
-            window,
             event_loop: event_loop.into(),
         }
         .into();
@@ -59,16 +57,17 @@ impl WGPUApp {
 
     fn start_event_loop(&mut self) -> Result<()> {
         self.event_loop.take().unwrap().run(move |event, elwt| match event {
-            Event::WindowEvent { ref event, window_id } if window_id == self.window.id() => match event {
+            Event::WindowEvent { ref event, window_id } if window_id == self.state.window.id() => match event
+            {
                 WindowEvent::CloseRequested => elwt.exit(),
                 WindowEvent::CursorMoved { position, .. } => {
                     if self.state.app.mouse_moved((position.x, position.y).into()) {
-                        self.window.request_redraw();
+                        self.state.window.request_redraw();
                     }
                 }
                 WindowEvent::MouseInput { state, button, .. } => {
                     if self.state.app.mouse_event(*state, *button) {
-                        self.window.request_redraw();
+                        self.state.window.request_redraw();
                     }
                 }
                 WindowEvent::MouseWheel { delta, .. } => {
@@ -100,7 +99,7 @@ impl WGPUApp {
                         Err(e) => error!("{e:?}"),
                     };
                     // TODO: think about good redraw strategy
-                    self.window.request_redraw();
+                    self.state.window.request_redraw();
                 }
                 _ => {}
             },
@@ -111,12 +110,12 @@ impl WGPUApp {
     }
 
     pub fn set_title(&self, title: impl ToString) {
-        self.window.set_title(&title.to_string());
+        self.state.window.set_title(&title.to_string());
     }
 
     pub fn set_window_size(&self, size: impl Into<IntSize>) {
         let size = size.into();
-        let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
+        let _ = self.state.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
     pub fn read_pixel(&self) -> Result<(Receiver<Result<(), BufferAsyncError>>, Buffer)> {

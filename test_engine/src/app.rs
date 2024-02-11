@@ -101,18 +101,17 @@ impl App {
         rect * display_scale
     }
 
-    fn update_view(&self, view: &mut dyn View) -> bool {
+    fn update_view(&self, view: &mut dyn View) {
         if view.is_hidden() {
-            return false;
+            return;
         }
         view.layout();
-        let mut animations = view.commit_animations();
+        view.commit_animations();
         view.calculate_absolute_frame();
         view.update();
         for view in view.subviews_mut() {
-            animations = animations || self.update_view(view.deref_mut());
+            self.update_view(view.deref_mut());
         }
-        animations
     }
 
     fn draw<'a>(
@@ -249,7 +248,7 @@ impl wgpu_wrapper::App for App {
         self.window_ready.trigger(());
     }
 
-    fn update(&mut self) -> bool {
+    fn update(&mut self) {
         invoke_dispatched();
         self.update_view(UIManager::root_view().deref_mut())
     }

@@ -33,6 +33,7 @@ serde_json = "1.0"
 serial_test = "3.0"
 smart-default = "0.7.1"
 tokio = { version = "1.36.0", features = ["full"] }
+web-time = "1.0.0"
 wgpu = "0.19.1"
 wgpu_text = "0.8.6"
 winit = "0.29.10"

@@ -9,16 +9,19 @@ use wgpu::{
 };
 use winit::{dpi::PhysicalSize, event::WindowEvent, window::Window};
 
-use crate::{app::App, text::Font, wgpu_drawer::WGPUDrawer};
+use crate::{app::App, frame_counter::FrameCounter, text::Font, wgpu_drawer::WGPUDrawer};
 
 pub(crate) struct State {
     surface:           wgpu::Surface<'static>,
     pub(crate) config: wgpu::SurfaceConfiguration,
+    pub(crate) window: Arc<Window>,
 
     pub(crate) drawer: WGPUDrawer,
 
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
+
+    frame_counter: FrameCounter,
 }
 
 impl State {
@@ -78,9 +81,11 @@ impl State {
         Ok(Self {
             surface,
             config,
+            window,
             drawer,
             fonts: Default::default(),
             app,
+            frame_counter: Default::default(),
         })
     }
 
@@ -105,8 +110,11 @@ impl State {
         false
     }
 
-    pub fn update(&mut self) -> bool {
-        self.app.update()
+    pub fn update(&mut self) {
+        self.app.update();
+        if let Some(fps) = self.frame_counter.update() {
+            self.window.set_title(&fps);
+        }
     }
 
     pub fn render(&mut self) -> Result<()> {
@@ -210,7 +218,7 @@ impl State {
 
         let (sender, receiver) = oneshot::channel();
         buffer_slice.map_async(wgpu::MapMode::Read, |result| {
-            let _ = sender.send(result).unwrap();
+            sender.send(result).unwrap();
         });
 
         Ok((receiver, buffer))

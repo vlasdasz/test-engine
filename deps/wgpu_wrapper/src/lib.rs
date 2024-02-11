@@ -9,6 +9,7 @@ pub mod utils;
 pub mod vertex_layout;
 mod wgpu_app;
 
+mod frame_counter;
 mod wgpu_drawer;
 
 pub use app::*;
