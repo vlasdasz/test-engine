@@ -1,8 +1,9 @@
 use std::sync::Arc;
 
 use anyhow::Result;
+use gm::flat::IntSize;
 use log::{error, trace};
-use refs::MainLock;
+use refs::{MainLock, Rglica};
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
@@ -11,7 +12,7 @@ use winit::{
     window::{Window, WindowBuilder},
 };
 
-use crate::{app::App, state::State, AppRequest};
+use crate::{app::App, state::State};
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
@@ -49,6 +50,7 @@ impl WGPUApp {
 
         let app = Self::current();
 
+        app.state.app.set_wgpu_app(Rglica::from_ref(app));
         app.state.app.window_ready();
         app.start_event_loop()
     }
@@ -88,9 +90,7 @@ impl WGPUApp {
                 }
                 WindowEvent::RedrawRequested => {
                     self.state.update();
-                    if let Some(request) = self.state.app.request() {
-                        self.process_request(request);
-                    }
+
                     match self.state.render() {
                         Ok(()) => {}
                         // Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),
@@ -108,12 +108,12 @@ impl WGPUApp {
         Ok(())
     }
 
-    fn process_request(&mut self, request: AppRequest) {
-        match request {
-            AppRequest::WindowTitle(title) => self.window.set_title(&title),
-            AppRequest::WindowSize(size) => {
-                let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
-            }
-        }
+    pub fn set_title(&mut self, title: impl ToString) {
+        self.window.set_title(&title.to_string());
+    }
+
+    pub fn set_window_size(&mut self, size: impl Into<IntSize>) {
+        let size = size.into();
+        let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 }

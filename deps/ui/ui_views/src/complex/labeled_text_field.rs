@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use refs::{weak_from_ref, Weak};
 use ui::{view, Anchor, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
 mod test_engine {
@@ -54,8 +56,8 @@ impl ViewSetup for LabeledTextField {
     }
 }
 
-impl ToString for LabeledTextField {
-    fn to_string(&self) -> String {
-        self.text().to_string()
+impl Display for LabeledTextField {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.text())
     }
 }

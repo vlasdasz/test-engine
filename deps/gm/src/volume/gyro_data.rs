@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(Debug, Copy, Clone)]
 pub struct GyroData {
     pub pitch: f32,
@@ -5,8 +7,8 @@ pub struct GyroData {
     pub yaw:   f32,
 }
 
-impl ToString for GyroData {
-    fn to_string(&self) -> String {
-        format!("Pitch: {}, Roll: {}, Yaw: {}", self.pitch, self.roll, self.yaw)
+impl Display for GyroData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Pitch: {}, Roll: {}, Yaw: {}", self.pitch, self.roll, self.yaw)
     }
 }

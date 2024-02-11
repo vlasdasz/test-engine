@@ -1,3 +1,4 @@
+use core::ptr::from_mut;
 use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering};
 
 use chrono::Utc;
@@ -202,7 +203,7 @@ impl Screen {
         let mut screen = Own::new(Self { ui });
 
         unsafe {
-            SCREEN = screen.deref_mut() as *mut Screen;
+            SCREEN = from_mut::<Screen>(screen.deref_mut());
         }
 
         screen.init(

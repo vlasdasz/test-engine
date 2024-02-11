@@ -111,6 +111,41 @@ impl State {
             label: Some("Render Encoder"),
         });
 
+        // let texture = &self.surface.get_current_texture()?.texture;
+        //
+        // let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
+        //     label:              None,
+        //     size:               texture.size().width as u64
+        //         * texture.size().height as u64
+        //         * size_of::<u32>() as u64,
+        //     usage:              wgpu::BufferUsages::MAP_READ |
+        // wgpu::BufferUsages::COPY_DST,     mapped_at_creation: false,
+        // });
+        //
+        // encoder.copy_texture_to_buffer(
+        //     wgpu::ImageCopyTexture {
+        //         aspect:    wgpu::TextureAspect::All,
+        //         texture:   &texture,
+        //         mip_level: 0,
+        //         origin:    wgpu::Origin3d::ZERO,
+        //     },
+        //     wgpu::ImageCopyBuffer {
+        //         buffer: &buffer,
+        //         layout: wgpu::ImageDataLayout {
+        //             offset:         0,
+        //             bytes_per_row:  Some(texture.size().width * size_of::<u32>() as
+        // u32),             rows_per_image: texture.size().height.into(),
+        //         },
+        //     },
+        //     Extent3d {
+        //         width:                 texture.size().width,
+        //         height:                texture.size().height,
+        //         depth_or_array_layers: 1,
+        //     },
+        // );
+
+        //copy_texture_to_buffer();
+
         {
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label:                    Some("Render Pass"),

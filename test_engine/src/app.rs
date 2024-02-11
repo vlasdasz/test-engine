@@ -12,7 +12,7 @@ use gm::{
 };
 use log::{trace, warn};
 use manage::data_manager::DataManager;
-use refs::{assert_main_thread, Own, Weak};
+use refs::{assert_main_thread, Own, Rglica, Weak};
 use tokio::spawn;
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -22,7 +22,7 @@ use ui_views::{ImageView, Label};
 use vents::OnceEvent;
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{AppRequest, ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
 
 use crate::{assets::Assets, git_root};
 
@@ -33,7 +33,7 @@ pub struct App {
     root_view:             Weak<dyn View>,
     pub(crate) first_view: Option<Own<dyn View>>,
     window_ready:          OnceEvent,
-    request:               Option<AppRequest>,
+    wgpu_app:              Rglica<WGPUApp>,
 }
 
 impl App {
@@ -94,7 +94,7 @@ impl App {
             root_view:       UIManager::root_view(),
             first_view:      first_view.into(),
             window_ready:    Default::default(),
-            request:         None,
+            wgpu_app:        Default::default(),
         })
     }
 
@@ -230,17 +230,11 @@ impl App {
     }
 
     pub fn set_window_title(title: impl ToString) {
-        Self::request(AppRequest::WindowTitle(title.to_string()));
+        Self::current().wgpu_app.set_title(title);
     }
 
     pub fn set_window_size(size: impl Into<IntSize>) {
-        Self::request(AppRequest::WindowSize(size.into()));
-    }
-
-    fn request(request: AppRequest) {
-        let app = Self::current();
-        assert!(app.request.is_none(), "Should not have existing request");
-        app.request = request.into();
+        Self::current().wgpu_app.set_window_size(size);
     }
 }
 
@@ -288,7 +282,7 @@ impl wgpu_wrapper::App for App {
         })
     }
 
-    fn request(&mut self) -> Option<AppRequest> {
-        self.request.take()
+    fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>) {
+        self.wgpu_app = app;
     }
 }

@@ -1,14 +1,9 @@
 use gm::flat::{IntSize, Point};
+use refs::Rglica;
 use wgpu::RenderPass;
 use winit::event::{ElementState, MouseButton};
 
-use crate::wgpu_drawer::WGPUDrawer;
-
-#[derive(Debug)]
-pub enum AppRequest {
-    WindowTitle(String),
-    WindowSize(IntSize),
-}
+use crate::{wgpu_drawer::WGPUDrawer, WGPUApp};
 
 pub trait App {
     fn window_ready(&mut self);
@@ -17,5 +12,5 @@ pub trait App {
     fn resize(&mut self, size: IntSize);
     fn mouse_moved(&mut self, position: Point) -> bool;
     fn mouse_event(&mut self, state: ElementState, button: MouseButton) -> bool;
-    fn request(&mut self) -> Option<AppRequest>;
+    fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>);
 }
