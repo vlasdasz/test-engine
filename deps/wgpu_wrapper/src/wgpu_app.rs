@@ -116,4 +116,8 @@ impl WGPUApp {
         let size = size.into();
         let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
+
+    pub fn read_pixel(&mut self) -> Result<()> {
+        self.state.read_pixel()
+    }
 }

@@ -73,6 +73,11 @@ impl ViewSetup for TestGameView {
         self.dpad.on_press.val(move |direction| {
             self.label_l.set_text(format!("{direction:?}"));
             App::set_window_title(format!("{direction:?}"));
+
+            if direction.is_up() {
+                App::set_window_title(format!("{direction:?} read pixel"));
+                App::read_pixel();
+            }
         });
 
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);

@@ -236,6 +236,10 @@ impl App {
     pub fn set_window_size(size: impl Into<IntSize>) {
         Self::current().wgpu_app.set_window_size(size);
     }
+
+    pub fn read_pixel() {
+        Self::current().wgpu_app.read_pixel().unwrap();
+    }
 }
 
 impl wgpu_wrapper::App for App {

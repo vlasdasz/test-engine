@@ -1,12 +1,15 @@
-use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
-use wgpu::{CompositeAlphaMode, PresentMode, TextureFormat};
+use rtools::sleep;
+use wgpu::{
+    BufferDescriptor, CompositeAlphaMode, Extent3d, PresentMode, TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT,
+};
 use winit::{dpi::PhysicalSize, event::WindowEvent, window::Window};
 
 use crate::{app::App, text::Font, wgpu_drawer::WGPUDrawer};
 
-pub struct State {
+pub(crate) struct State {
     surface:           wgpu::Surface<'static>,
     pub(crate) config: wgpu::SurfaceConfiguration,
 
@@ -55,7 +58,7 @@ impl State {
         dbg!(surface_caps);
 
         let config = wgpu::SurfaceConfiguration {
-            usage:        wgpu::TextureUsages::RENDER_ATTACHMENT,
+            usage:        wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
             format:       TextureFormat::Bgra8UnormSrgb,
             width:        size.width,
             height:       size.height,
@@ -111,41 +114,6 @@ impl State {
             label: Some("Render Encoder"),
         });
 
-        // let texture = &self.surface.get_current_texture()?.texture;
-        //
-        // let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
-        //     label:              None,
-        //     size:               texture.size().width as u64
-        //         * texture.size().height as u64
-        //         * size_of::<u32>() as u64,
-        //     usage:              wgpu::BufferUsages::MAP_READ |
-        // wgpu::BufferUsages::COPY_DST,     mapped_at_creation: false,
-        // });
-        //
-        // encoder.copy_texture_to_buffer(
-        //     wgpu::ImageCopyTexture {
-        //         aspect:    wgpu::TextureAspect::All,
-        //         texture:   &texture,
-        //         mip_level: 0,
-        //         origin:    wgpu::Origin3d::ZERO,
-        //     },
-        //     wgpu::ImageCopyBuffer {
-        //         buffer: &buffer,
-        //         layout: wgpu::ImageDataLayout {
-        //             offset:         0,
-        //             bytes_per_row:  Some(texture.size().width * size_of::<u32>() as
-        // u32),             rows_per_image: texture.size().height.into(),
-        //         },
-        //     },
-        //     Extent3d {
-        //         width:                 texture.size().width,
-        //         height:                texture.size().height,
-        //         depth_or_array_layers: 1,
-        //     },
-        // );
-
-        //copy_texture_to_buffer();
-
         {
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label:                    Some("Render Pass"),
@@ -185,6 +153,59 @@ impl State {
 
         self.drawer.queue.submit(std::iter::once(encoder.finish()));
         surface_texture.present();
+
+        Ok(())
+    }
+
+    pub fn read_pixel(&mut self) -> Result<()> {
+        let mut encoder = self.drawer.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+            label: Some("Render Encoder"),
+        });
+
+        let texture = &self.surface.get_current_texture()?.texture;
+
+        let width_bytes: u64 = texture.size().width as u64 * size_of::<u32>() as u64;
+
+        let number_of_align = width_bytes / COPY_BYTES_PER_ROW_ALIGNMENT as u64 + 1;
+
+        let width_bytes = number_of_align * COPY_BYTES_PER_ROW_ALIGNMENT as u64;
+
+        let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
+            label:              None,
+            size:               dbg!(width_bytes * texture.size().height as u64),
+            usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+
+        encoder.copy_texture_to_buffer(
+            wgpu::ImageCopyTexture {
+                aspect:    wgpu::TextureAspect::All,
+                texture:   &texture,
+                mip_level: 0,
+                origin:    wgpu::Origin3d::ZERO,
+            },
+            wgpu::ImageCopyBuffer {
+                buffer: &buffer,
+                layout: wgpu::ImageDataLayout {
+                    offset:         0,
+                    bytes_per_row:  Some(width_bytes as u32),
+                    rows_per_image: texture.size().height.into(),
+                },
+            },
+            Extent3d {
+                width:                 texture.size().width,
+                height:                texture.size().height,
+                depth_or_array_layers: 1,
+            },
+        );
+
+        self.drawer.queue.submit(std::iter::once(encoder.finish()));
+
+        sleep(1);
+
+        let slice: &[u8] = &buffer.slice(..).get_mapped_range();
+
+        dbg!(&slice);
 
         Ok(())
     }

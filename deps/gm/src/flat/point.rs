@@ -17,6 +17,12 @@ pub enum Direction {
     Right,
 }
 
+impl Direction {
+    pub fn is_up(&self) -> bool {
+        matches!(self, Self::Up)
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PointBase<T> {

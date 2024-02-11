@@ -40,7 +40,7 @@ winit = "0.29.10"
 manage = "=0.4.5"
 reflected = "=0.7.0"
 reflected_proc = "=0.7.0"
-refs = { version = "=0.6.14", features = [] }
+refs = { version = "=0.6.15", features = [] }
 rtools = "=0.7.0"
 vents = "=0.4.0"
 
