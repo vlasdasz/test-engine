@@ -7,6 +7,7 @@ use test_engine::{
     },
     App, DataManager,
 };
+use tokio::spawn;
 
 #[view]
 pub struct TestGameView {
@@ -76,7 +77,16 @@ impl ViewSetup for TestGameView {
 
             if direction.is_up() {
                 App::set_window_title(format!("{direction:?} read pixel"));
-                App::read_pixel();
+
+                spawn(async {
+                    let (rect, buff) = App::read_pixel();
+                    let recv = rect.await.unwrap();
+                    dbg!(&recv);
+
+                    let data: &[u8] = &buff.slice(..).get_mapped_range();
+
+                    dbg!(&data);
+                });
             }
         });
 

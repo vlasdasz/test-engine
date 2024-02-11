@@ -12,15 +12,15 @@ use gm::{
 };
 use log::{trace, warn};
 use manage::data_manager::DataManager;
-use refs::{assert_main_thread, Own, Rglica, Weak};
-use tokio::spawn;
+use refs::{Own, Rglica, Weak};
+use tokio::{spawn, sync::oneshot::Receiver};
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
     ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
 };
 use ui_views::{ImageView, Label};
 use vents::OnceEvent;
-use wgpu::RenderPass;
+use wgpu::{Buffer, BufferAsyncError, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
 
@@ -37,8 +37,7 @@ pub struct App {
 }
 
 impl App {
-    pub fn current() -> &'static mut Self {
-        assert_main_thread();
+    pub fn current() -> &'static Self {
         unsafe {
             assert!(!APP.is_null(), "App was not initialized");
             APP.as_mut().unwrap()
@@ -237,8 +236,8 @@ impl App {
         Self::current().wgpu_app.set_window_size(size);
     }
 
-    pub fn read_pixel() {
-        Self::current().wgpu_app.read_pixel().unwrap();
+    pub fn read_pixel() -> (Receiver<Result<(), BufferAsyncError>>, Buffer) {
+        Self::current().wgpu_app.read_pixel().unwrap()
     }
 }
 

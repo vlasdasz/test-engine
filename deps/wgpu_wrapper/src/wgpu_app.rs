@@ -4,6 +4,8 @@ use anyhow::Result;
 use gm::flat::IntSize;
 use log::{error, trace};
 use refs::{MainLock, Rglica};
+use tokio::sync::oneshot::Receiver;
+use wgpu::{Buffer, BufferAsyncError};
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
@@ -108,16 +110,16 @@ impl WGPUApp {
         Ok(())
     }
 
-    pub fn set_title(&mut self, title: impl ToString) {
+    pub fn set_title(&self, title: impl ToString) {
         self.window.set_title(&title.to_string());
     }
 
-    pub fn set_window_size(&mut self, size: impl Into<IntSize>) {
+    pub fn set_window_size(&self, size: impl Into<IntSize>) {
         let size = size.into();
         let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn read_pixel(&mut self) -> Result<()> {
+    pub fn read_pixel(&self) -> Result<(Receiver<Result<(), BufferAsyncError>>, Buffer)> {
         self.state.read_pixel()
     }
 }

@@ -2,8 +2,10 @@ use std::{collections::HashMap, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use rtools::sleep;
+use tokio::sync::{oneshot, oneshot::Receiver};
 use wgpu::{
-    BufferDescriptor, CompositeAlphaMode, Extent3d, PresentMode, TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT,
+    Buffer, BufferAsyncError, BufferDescriptor, CompositeAlphaMode, Extent3d, PresentMode, TextureFormat,
+    COPY_BYTES_PER_ROW_ALIGNMENT,
 };
 use winit::{dpi::PhysicalSize, event::WindowEvent, window::Window};
 
@@ -157,7 +159,7 @@ impl State {
         Ok(())
     }
 
-    pub fn read_pixel(&mut self) -> Result<()> {
+    pub fn read_pixel(&self) -> Result<(Receiver<Result<(), BufferAsyncError>>, Buffer)> {
         let mut encoder = self.drawer.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
         });
@@ -203,10 +205,14 @@ impl State {
 
         sleep(1);
 
-        let slice: &[u8] = &buffer.slice(..).get_mapped_range();
+        // Map the buffer and read the pixels
+        let buffer_slice = buffer.slice(..);
 
-        dbg!(&slice);
+        let (sender, receiver) = oneshot::channel();
+        buffer_slice.map_async(wgpu::MapMode::Read, |result| {
+            let _ = sender.send(result).unwrap();
+        });
 
-        Ok(())
+        Ok((receiver, buffer))
     }
 }
