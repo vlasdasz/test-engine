@@ -1,4 +1,3 @@
-use anyhow::Result;
 use gm::{flat::Rect, volume::UIVertex};
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
@@ -15,7 +14,7 @@ pub struct ImageState {
 }
 
 impl ImageState {
-    pub fn new(device: &wgpu::Device) -> Result<Self> {
+    pub fn new(device: &wgpu::Device) -> Self {
         let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/ui_image.wgsl"));
 
         let bind_group_layout = Image::bind_group_layout(device);
@@ -41,11 +40,11 @@ impl ImageState {
         });
         let num_vertices = u32::try_from(IMAGE_VERTICES.len()).unwrap();
 
-        Ok(Self {
+        Self {
             render_pipeline,
             vertex_buffer,
             num_vertices,
-        })
+        }
     }
 
     pub fn draw<'a>(&'a self, image: &'static Image, rect: &Rect, render_pass: &mut wgpu::RenderPass<'a>) {

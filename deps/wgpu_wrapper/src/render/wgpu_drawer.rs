@@ -22,7 +22,7 @@ pub struct WGPUDrawer {
 impl WGPUDrawer {
     pub fn new(device: Device, queue: Queue, texture_format: TextureFormat) -> Result<Self> {
         let rect_state = RectState::new(&device, texture_format);
-        let colored_image_state = ImageState::new(&device)?;
+        let colored_image_state = ImageState::new(&device);
         Ok(Self {
             window_size: Default::default(),
             device,

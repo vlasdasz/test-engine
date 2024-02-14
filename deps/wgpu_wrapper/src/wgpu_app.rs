@@ -56,9 +56,8 @@ impl WGPUApp {
     }
 
     fn start_event_loop(&mut self) -> Result<()> {
-        self.event_loop.take().unwrap().run(move |event, elwt| match event {
-            Event::WindowEvent { ref event, window_id } if window_id == self.state.window.id() => match event
-            {
+        self.event_loop.take().unwrap().run(|event, elwt| match event {
+            Event::WindowEvent { event, window_id } if window_id == self.state.window.id() => match event {
                 WindowEvent::CloseRequested => elwt.exit(),
                 WindowEvent::CursorMoved { position, .. } => {
                     if self.state.app.mouse_moved((position.x, position.y).into()) {
@@ -66,7 +65,7 @@ impl WGPUApp {
                     }
                 }
                 WindowEvent::MouseInput { state, button, .. } => {
-                    if self.state.app.mouse_event(*state, *button) {
+                    if self.state.app.mouse_event(state, button) {
                         self.state.window.request_redraw();
                     }
                 }

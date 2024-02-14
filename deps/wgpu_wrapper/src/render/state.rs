@@ -89,7 +89,7 @@ impl State {
         })
     }
 
-    pub fn resize(&mut self, new_size: &PhysicalSize<u32>) {
+    pub fn resize(&mut self, new_size: PhysicalSize<u32>) {
         if new_size.width > 0 && new_size.height > 0 {
             self.drawer.window_size = (new_size.width, new_size.height).into();
             self.config.width = new_size.width;
@@ -170,31 +170,31 @@ impl State {
 
         let texture = &self.surface.get_current_texture()?.texture;
 
-        let width_bytes: u64 = texture.size().width as u64 * size_of::<u32>() as u64;
+        let width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
-        let number_of_align = width_bytes / COPY_BYTES_PER_ROW_ALIGNMENT as u64 + 1;
+        let number_of_align = width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
 
-        let width_bytes = number_of_align * COPY_BYTES_PER_ROW_ALIGNMENT as u64;
+        let width_bytes = number_of_align * u64::from(COPY_BYTES_PER_ROW_ALIGNMENT);
 
         let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
             label:              None,
-            size:               dbg!(width_bytes * texture.size().height as u64),
+            size:               width_bytes * u64::from(texture.size().height),
             usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
 
         encoder.copy_texture_to_buffer(
             wgpu::ImageCopyTexture {
-                aspect:    wgpu::TextureAspect::All,
-                texture:   &texture,
+                aspect: wgpu::TextureAspect::All,
+                texture,
                 mip_level: 0,
-                origin:    wgpu::Origin3d::ZERO,
+                origin: wgpu::Origin3d::ZERO,
             },
             wgpu::ImageCopyBuffer {
                 buffer: &buffer,
                 layout: wgpu::ImageDataLayout {
                     offset:         0,
-                    bytes_per_row:  Some(width_bytes as u32),
+                    bytes_per_row:  u32::try_from(width_bytes).unwrap().into(),
                     rows_per_image: texture.size().height.into(),
                 },
             },
