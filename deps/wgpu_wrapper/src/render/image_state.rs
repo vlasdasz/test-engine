@@ -8,15 +8,15 @@ use wgpu::{
 use crate::{image::Image, utils::make_pipeline, IMAGE_VERTICES};
 
 #[derive(Debug)]
-pub struct ColoredImageState {
+pub struct ImageState {
     pub render_pipeline: wgpu::RenderPipeline,
     pub vertex_buffer:   wgpu::Buffer,
     pub num_vertices:    u32,
 }
 
-impl ColoredImageState {
+impl ImageState {
     pub fn new(device: &wgpu::Device) -> Result<Self> {
-        let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image_color.wgsl"));
+        let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/ui_image.wgsl"));
 
         let bind_group_layout = Image::bind_group_layout(device);
 

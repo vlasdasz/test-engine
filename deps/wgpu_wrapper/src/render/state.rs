@@ -7,9 +7,9 @@ use wgpu::{
     Buffer, BufferAsyncError, BufferDescriptor, CompositeAlphaMode, Extent3d, PresentMode, TextureFormat,
     COPY_BYTES_PER_ROW_ALIGNMENT,
 };
-use winit::{dpi::PhysicalSize, event::WindowEvent, window::Window};
+use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::{app::App, frame_counter::FrameCounter, text::Font, wgpu_drawer::WGPUDrawer};
+use crate::{app::App, frame_counter::FrameCounter, render::wgpu_drawer::WGPUDrawer, text::Font};
 
 pub(crate) struct State {
     surface:           wgpu::Surface<'static>,
@@ -104,10 +104,6 @@ impl State {
             }
             self.app.resize((new_size.width, new_size.height).into());
         }
-    }
-
-    pub fn _input(&mut self, _event: &WindowEvent) -> bool {
-        false
     }
 
     pub fn update(&mut self) {

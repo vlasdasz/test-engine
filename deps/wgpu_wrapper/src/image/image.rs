@@ -10,7 +10,7 @@ use wgpu::{
     SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-use crate::{image::Texture, state::State, wgpu_app::WGPUApp};
+use crate::{image::Texture, render::state::State, WGPUApp};
 
 #[derive(Debug)]
 pub struct Image {

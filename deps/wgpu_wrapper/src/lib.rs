@@ -1,23 +1,18 @@
 mod app;
-pub mod colored_image_state;
 pub mod image;
-mod pipeline;
-pub mod rect_state;
-pub mod state;
 mod text;
 pub mod utils;
-pub mod vertex_layout;
 mod wgpu_app;
 
 mod frame_counter;
-mod wgpu_drawer;
+mod render;
 
 pub use app::*;
 use gm::{flat::Point, volume::UIVertex};
+pub use render::wgpu_drawer::WGPUDrawer;
 pub use text::*;
 pub use wgpu;
 pub use wgpu_app::*;
-pub use wgpu_drawer::*;
 pub use winit::event::{ElementState, MouseButton};
 
 pub(crate) const IMAGE_VERTICES: &[UIVertex] = &[

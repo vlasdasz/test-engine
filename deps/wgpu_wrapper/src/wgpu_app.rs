@@ -14,7 +14,7 @@ use winit::{
     window::WindowBuilder,
 };
 
-use crate::{app::App, state::State};
+use crate::{app::App, render::state::State};
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 

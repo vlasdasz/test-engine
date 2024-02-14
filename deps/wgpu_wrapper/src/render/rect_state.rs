@@ -35,7 +35,7 @@ impl RectState {
             Point::new(1.0, -1.0),
         ];
 
-        let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
+        let shader = device.create_shader_module(include_wgsl!("../shaders/rect.wgsl"));
 
         let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label:   Some("rect_bind_group_layout"),

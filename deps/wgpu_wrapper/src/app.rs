@@ -3,7 +3,7 @@ use refs::Rglica;
 use wgpu::RenderPass;
 use winit::event::{ElementState, MouseButton};
 
-use crate::{wgpu_drawer::WGPUDrawer, WGPUApp};
+use crate::{render::wgpu_drawer::WGPUDrawer, WGPUApp};
 
 pub trait App {
     fn window_ready(&mut self);
