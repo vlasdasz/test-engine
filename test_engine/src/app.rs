@@ -20,7 +20,7 @@ use ui::{
 };
 use ui_views::{ImageView, Label};
 use vents::OnceEvent;
-use wgpu::{Buffer, BufferAsyncError, RenderPass};
+use wgpu::{Buffer, BufferAsyncError, PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
 
@@ -141,7 +141,7 @@ impl App {
             return;
         }
 
-        drawer.fill_rect(pass, &frame, view.color());
+        drawer.draw_rect(pass, &frame, view.color(), PolygonMode::Fill);
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
@@ -174,6 +174,9 @@ impl App {
 
             sections.push(section);
         }
+
+        // Outline rect
+        drawer.draw_rect(pass, &frame, &Color::TURQUOISE, PolygonMode::Line);
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {

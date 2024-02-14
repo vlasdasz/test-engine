@@ -12,6 +12,7 @@ pub fn make_pipeline<Vertex: VertexLayout>(
     layout: &PipelineLayout,
     shader: &ShaderModule,
     texture_format: TextureFormat,
+    polygon_mode: PolygonMode,
 ) -> wgpu::RenderPipeline {
     device.create_render_pipeline(&RenderPipelineDescriptor {
         label:         label.into(),
@@ -32,13 +33,13 @@ pub fn make_pipeline<Vertex: VertexLayout>(
         }
         .into(),
         primitive:     PrimitiveState {
-            topology:           PrimitiveTopology::TriangleStrip,
+            topology: PrimitiveTopology::TriangleStrip,
             strip_index_format: None,
-            front_face:         FrontFace::Ccw,
-            cull_mode:          Some(Face::Back),
-            polygon_mode:       PolygonMode::Fill,
-            unclipped_depth:    false,
-            conservative:       false,
+            front_face: FrontFace::Ccw,
+            cull_mode: Some(Face::Back),
+            polygon_mode,
+            unclipped_depth: false,
+            conservative: false,
         },
         depth_stencil: None,
         multisample:   MultisampleState {

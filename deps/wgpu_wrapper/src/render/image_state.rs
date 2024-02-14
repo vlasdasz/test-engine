@@ -1,16 +1,42 @@
-use gm::{flat::Rect, volume::UIVertex};
+use std::ops::Range;
+
+use gm::{
+    flat::{Point, Rect},
+    volume::UIVertex,
+};
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    TextureFormat,
+    PolygonMode, TextureFormat,
 };
 
-use crate::{image::Image, utils::make_pipeline, IMAGE_VERTICES};
+use crate::{image::Image, utils::make_pipeline};
+
+const VERTICES: &[UIVertex] = &[
+    UIVertex {
+        pos: Point::new(-1.0, 1.0),
+        uv:  Point::new(0.0, 0.0),
+    },
+    UIVertex {
+        pos: Point::new(-1.0, -1.0),
+        uv:  Point::new(0.0, 1.0),
+    },
+    UIVertex {
+        pos: Point::new(1.0, 1.0),
+        uv:  Point::new(1.0, 0.0),
+    },
+    UIVertex {
+        pos: Point::new(1.0, -1.0),
+        uv:  Point::new(1.0, 1.0),
+    },
+];
+
+#[allow(clippy::cast_possible_truncation)]
+const RANGE: Range<u32> = 0..(VERTICES.len() as u32);
 
 #[derive(Debug)]
 pub struct ImageState {
-    pub render_pipeline: wgpu::RenderPipeline,
-    pub vertex_buffer:   wgpu::Buffer,
-    pub num_vertices:    u32,
+    render_pipeline: wgpu::RenderPipeline,
+    vertex_buffer:   wgpu::Buffer,
 }
 
 impl ImageState {
@@ -31,19 +57,18 @@ impl ImageState {
             &pipeline_layout,
             &shader,
             TextureFormat::Bgra8UnormSrgb,
+            PolygonMode::Fill,
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label:    "Colored Image Vertex Buffer".into(),
-            contents: bytemuck::cast_slice(IMAGE_VERTICES),
+            contents: bytemuck::cast_slice(VERTICES),
             usage:    wgpu::BufferUsages::VERTEX,
         });
-        let num_vertices = u32::try_from(IMAGE_VERTICES.len()).unwrap();
 
         Self {
             render_pipeline,
             vertex_buffer,
-            num_vertices,
         }
     }
 
@@ -52,6 +77,6 @@ impl ImageState {
         render_pass.set_pipeline(&self.render_pipeline);
         render_pass.set_bind_group(0, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-        render_pass.draw(0..self.num_vertices, 0..1);
+        render_pass.draw(RANGE, 0..1);
     }
 }

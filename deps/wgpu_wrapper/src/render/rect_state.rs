@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, ops::Range};
 
 use bytemuck::cast_slice;
 use gm::{
@@ -10,31 +10,40 @@ use wgpu::{
     include_wgsl,
     util::{BufferInitDescriptor, DeviceExt},
     BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutEntry, BindingResource, BindingType, Buffer,
-    BufferBinding, BufferBindingType, BufferUsages, Device, PipelineLayoutDescriptor, RenderPass,
-    RenderPipeline, ShaderStages, TextureFormat,
+    BufferBinding, BufferBindingType, BufferUsages, Device, IndexFormat, PipelineLayoutDescriptor,
+    PolygonMode, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
 use crate::utils::make_pipeline;
 
 static BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 
+const VERTICES: &[Point] = &[
+    Point::new(-1.0, 1.0),
+    Point::new(-1.0, -1.0),
+    Point::new(1.0, 1.0),
+    Point::new(1.0, -1.0),
+];
+
+const INDICES: &[u16] = &[2, 3, 1, 0];
+
+#[allow(clippy::cast_possible_truncation)]
+const VERTEX_RANGE: Range<u32> = 0..(VERTICES.len() as u32);
+
+#[allow(clippy::cast_possible_truncation)]
+const INDEX_RANGE: Range<u32> = 0..(INDICES.len() as u32);
+
 #[derive(Debug)]
 pub struct RectState {
-    bind_group_layout:   BindGroupLayout,
-    pub render_pipeline: RenderPipeline,
-    pub vertex_buffer:   Buffer,
-    pub num_vertices:    u32,
+    bind_group_layout: BindGroupLayout,
+    fill_pipeline:     RenderPipeline,
+    line_pipeline:     RenderPipeline,
+    vertex_buffer:     Buffer,
+    index_buffer:      Buffer,
 }
 
 impl RectState {
     pub fn new(device: &Device, texture_format: TextureFormat) -> Self {
-        const RECT_VERTICES: &[Point] = &[
-            Point::new(-1.0, 1.0),
-            Point::new(-1.0, -1.0),
-            Point::new(1.0, 1.0),
-            Point::new(1.0, -1.0),
-        ];
-
         let shader = device.create_shader_module(include_wgsl!("../shaders/rect.wgsl"));
 
         let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -57,25 +66,42 @@ impl RectState {
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = make_pipeline::<Point>(
-            "Rect Render Pipeline",
+        let fill_pipeline = make_pipeline::<Point>(
+            "Rect Fill Render Pipeline",
             device,
             &pipeline_layout,
             &shader,
             texture_format,
+            PolygonMode::Fill,
+        );
+
+        let line_pipeline = make_pipeline::<Point>(
+            "Rect Line Render Pipeline",
+            device,
+            &pipeline_layout,
+            &shader,
+            texture_format,
+            PolygonMode::Line,
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label:    Some("Rect Vertex Buffer"),
-            contents: cast_slice(RECT_VERTICES),
+            contents: cast_slice(VERTICES),
             usage:    BufferUsages::VERTEX,
+        });
+
+        let index_buffer = device.create_buffer_init(&BufferInitDescriptor {
+            label:    Some("Index Buffer"),
+            contents: cast_slice(INDICES),
+            usage:    BufferUsages::INDEX,
         });
 
         Self {
             bind_group_layout,
-            render_pipeline,
+            fill_pipeline,
+            line_pipeline,
             vertex_buffer,
-            num_vertices: u32::try_from(RECT_VERTICES.len()).unwrap(),
+            index_buffer,
         }
     }
 
@@ -104,9 +130,35 @@ impl RectState {
         })
     }
 
-    pub fn draw<'a>(&'a self, device: &Device, render_pass: &mut RenderPass<'a>, rect: &Rect, color: &Color) {
+    fn pipeline(&self, polygon_mode: PolygonMode) -> &RenderPipeline {
+        match polygon_mode {
+            PolygonMode::Fill => &self.fill_pipeline,
+            PolygonMode::Line => &self.line_pipeline,
+            PolygonMode::Point => unimplemented!(),
+        }
+    }
+
+    fn draw_vertices<'a>(&'a self, render_pass: &mut RenderPass<'a>, polygon_mode: PolygonMode) {
+        match polygon_mode {
+            PolygonMode::Fill => render_pass.draw(VERTEX_RANGE, 0..1),
+            PolygonMode::Line => {
+                render_pass.set_index_buffer(self.index_buffer.slice(..), IndexFormat::Uint16);
+                render_pass.draw_indexed(INDEX_RANGE, 0, 0..1);
+            }
+            PolygonMode::Point => unimplemented!(),
+        }
+    }
+
+    pub fn draw<'a>(
+        &'a self,
+        device: &Device,
+        render_pass: &mut RenderPass<'a>,
+        rect: &Rect,
+        color: &Color,
+        polygon_mode: PolygonMode,
+    ) {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
-        render_pass.set_pipeline(&self.render_pipeline);
+        render_pass.set_pipeline(self.pipeline(polygon_mode));
 
         let bind = BINDS
             .get_mut()
@@ -115,6 +167,6 @@ impl RectState {
 
         render_pass.set_bind_group(0, bind, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-        render_pass.draw(0..self.num_vertices, 0..1);
+        self.draw_vertices(render_pass, polygon_mode);
     }
 }

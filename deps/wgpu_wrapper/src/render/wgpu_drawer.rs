@@ -3,7 +3,7 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use wgpu::{Device, Queue, RenderPass, TextureFormat};
+use wgpu::{Device, PolygonMode, Queue, RenderPass, TextureFormat};
 
 use crate::{
     image::Image,
@@ -34,8 +34,14 @@ impl WGPUDrawer {
 }
 
 impl WGPUDrawer {
-    pub fn fill_rect<'a>(&'a self, render_pass: &mut RenderPass<'a>, rect: &Rect, color: &Color) {
-        self.rect_state.draw(&self.device, render_pass, rect, color);
+    pub fn draw_rect<'a>(
+        &'a self,
+        render_pass: &mut RenderPass<'a>,
+        rect: &Rect,
+        color: &Color,
+        polygon_mode: PolygonMode,
+    ) {
+        self.rect_state.draw(&self.device, render_pass, rect, color, polygon_mode);
     }
 
     pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {
