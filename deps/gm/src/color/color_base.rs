@@ -20,6 +20,15 @@ impl<T> ColorBase<T> {
     pub const fn rgba(r: T, g: T, b: T, a: T) -> Self {
         Self { r, g, b, a }
     }
+
+    pub fn bgra_to_rgba(self) -> Self {
+        Self {
+            r: self.b,
+            g: self.g,
+            b: self.r,
+            a: self.a,
+        }
+    }
 }
 
 impl<T: Copy> ColorBase<T> {

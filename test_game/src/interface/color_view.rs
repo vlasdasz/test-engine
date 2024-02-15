@@ -28,9 +28,12 @@ impl ColorView {
             };
 
             let bytes: &[u8] = &buffer.slice(..).get_mapped_range();
-            let _data: &[U8Color] = cast_slice(bytes);
+            let data: Vec<U8Color> = cast_slice(bytes)
+                .into_iter()
+                .map(|color: &U8Color| color.bgra_to_rgba())
+                .collect();
 
-            let bytes = bytes.to_vec();
+            let bytes = cast_slice(&data).to_vec();
 
             on_main(move || {
                 Image::free_with_name("Screenshot");
@@ -54,6 +57,5 @@ impl ViewSetup for ColorView {
         self.image_view.place().size(200, 200).br(0);
         self.update_button.set_text("Update").place().size(200, 50);
         UIEvents::size_changed().val(move |size| self.update_screenshot(size));
-        //self.update_button.on_tap(move || self.update_screenshot());
     }
 }
