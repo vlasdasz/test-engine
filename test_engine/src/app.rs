@@ -22,7 +22,7 @@ use ui_views::{ImageView, Label};
 use vents::OnceEvent;
 use wgpu::{Buffer, PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{ElementState, Font, MouseButton, State, WGPUApp, WGPUDrawer};
 
 use crate::{assets::Assets, git_root};
 
@@ -43,6 +43,10 @@ impl App {
             assert!(!APP.is_null(), "App was not initialized");
             APP.as_mut().unwrap()
         }
+    }
+
+    pub fn state() -> &'static State {
+        &Self::current().wgpu_app.state
     }
 
     fn make_app(first_view: Own<dyn View>) -> Box<Self> {
@@ -122,6 +126,8 @@ impl App {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
     ) {
+        const DRAW_DEBUG_FRAMES: bool = false;
+
         if view.is_hidden() {
             return;
         }
@@ -176,8 +182,9 @@ impl App {
             sections.push(section);
         }
 
-        // Outline rect
-        drawer.draw_rect(pass, &frame, &Color::TURQUOISE, PolygonMode::Line);
+        if DRAW_DEBUG_FRAMES {
+            drawer.draw_rect(pass, &frame, &Color::TURQUOISE, PolygonMode::Line);
+        }
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {

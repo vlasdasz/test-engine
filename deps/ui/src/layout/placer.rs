@@ -173,6 +173,16 @@ impl Placer {
         self
     }
 
+    pub fn left_half(&self) -> &Self {
+        self.rules().push(Tiling::LeftHalf.into());
+        self
+    }
+
+    pub fn right_half(&self) -> &Self {
+        self.rules().push(Tiling::RightHalf.into());
+        self
+    }
+
     pub fn all_ver(&self) -> &Self {
         self.sub_rules().push(Tiling::Vertically.into());
         self
@@ -415,6 +425,16 @@ impl Placer {
             Tiling::Background => *frame = (*self.s_content.deref()).into(),
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
+            Tiling::LeftHalf => *frame = (0, 0, self.s_content.width / 2.0, self.s_content.height).into(),
+            Tiling::RightHalf => {
+                *frame = (
+                    self.s_content.width / 2.0,
+                    0,
+                    self.s_content.width / 2.0,
+                    self.s_content.height,
+                )
+                    .into()
+            }
             Tiling::Distribute(ratio) => {
                 distribute_with_ratio(self.frame.size, self.view.subviews_mut(), ratio)
             }

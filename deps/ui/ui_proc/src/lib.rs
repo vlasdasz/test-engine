@@ -204,7 +204,7 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
                     #res
                     {
                         use ui_views::AlertErr;
-                        self.#field_name.on_tap(move || self.#parameter().alert_err());
+                        self.#field_name.on_tap(move || { self.#parameter().alert_err(); });
                     }
                 };
             }

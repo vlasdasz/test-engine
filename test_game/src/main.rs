@@ -8,9 +8,11 @@ mod interface;
 use anyhow::Result;
 use test_engine::{ui::ViewSetup, App};
 
-use crate::interface::test_game_view::TestGameView;
+use crate::interface::color_view::ColorView;
+
+// use crate::interface::test_game_view::TestGameView;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    App::start(TestGameView::new(), 1200, 1200).await
+    App::start(ColorView::new(), 1200, 1200).await
 }

@@ -21,7 +21,7 @@ impl Texture {
         Ok(Self::from_dynamic_image(device, queue, &img, label))
     }
 
-    pub(crate) fn from_raw_data(
+    pub fn from_raw_data(
         device: &Device,
         queue: &Queue,
         data: &[u8],

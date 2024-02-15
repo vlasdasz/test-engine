@@ -19,8 +19,8 @@ use crate::{app::App, render::state::State};
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
 pub struct WGPUApp {
-    pub(crate) state: State,
-    event_loop:       Option<EventLoop<()>>,
+    pub state:  State,
+    event_loop: Option<EventLoop<()>>,
 }
 
 impl WGPUApp {

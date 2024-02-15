@@ -16,7 +16,7 @@ use winit::{dpi::PhysicalSize, window::Window};
 
 use crate::{app::App, frame_counter::FrameCounter, render::wgpu_drawer::WGPUDrawer, text::Font};
 
-pub(crate) struct State {
+pub struct State {
     surface:           wgpu::Surface<'static>,
     pub(crate) config: wgpu::SurfaceConfiguration,
     pub(crate) window: Arc<Window>,
@@ -177,7 +177,7 @@ impl State {
         if let Some(buffer_sender) = self.read_display_request.take() {
             let (sender, receiver) = oneshot::channel();
 
-            let buffer = buffer.unwrap();
+            let Some(buffer) = buffer else { return Ok(()) };
 
             let buffer_slice = buffer.0.slice(..);
 

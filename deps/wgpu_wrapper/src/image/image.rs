@@ -48,7 +48,26 @@ impl Image {
         })
     }
 
-    pub fn from(data: &[u8], name: String) -> Weak<Image> {
+    pub fn from_raw_data(
+        state: &State,
+        data: &[u8],
+        name: String,
+        size: IntSize,
+        channels: u8,
+    ) -> Result<Weak<Image>> {
+        let texture = Texture::from_raw_data(
+            &state.drawer.device,
+            &state.drawer.queue,
+            data,
+            size,
+            channels,
+            &name,
+        );
+        let image = Self::from_texture(texture, &state.drawer.device)?;
+        Ok(Image::add_with_name(&name, || image))
+    }
+
+    pub fn from_file_data(data: &[u8], name: String) -> Weak<Image> {
         Image::add_with_name(&name.clone(), || {
             Self::load_to_wgpu(&WGPUApp::current().state, &name, data)
                 .expect("Failed to load image {name} to wgpu")
@@ -58,59 +77,6 @@ impl Image {
     pub fn is_monochrome(&self) -> bool {
         self.channels == 1
     }
-}
-
-impl Image {
-    // pub fn render(name: impl ToString, size: impl Into<Size>, draw: impl
-    // FnOnce(&mut Image)) -> Weak<Image> {     let name = name.to_string();
-    //
-    //     if let Some(image) = Image::weak_with_name(&name) {
-    //         return image;
-    //     }
-    //
-    //     let size = size.into();
-    //     let buffer = FrameBuffer::from(size);
-    //
-    //     buffer.bind();
-    //
-    //     let mut image = Self {
-    //         size,
-    //         channels: 4,
-    //         flipped: false,
-    //         flipped_y: false,
-    //         buffer,
-    //         total_size: size_of::<Self>() + 10,
-    //         name: name.clone(),
-    //     };
-    //
-    //     GLWrapper::clear_with_color(Color::CLEAR);
-    //
-    //     draw(&mut image);
-    //
-    //     GLWrapper::unbind_framebuffer();
-    //
-    //     Image::add_with_name(name, image)
-    // }
-    //
-    // pub fn render_path(name: impl ToString, color: Color, path: Points,
-    // draw_mode: DrawMode) -> Weak<Image> {     let size = path.max_size();
-    //
-    //     let path = initialize_path_data(path, &color, draw_mode);
-    //
-    //     dbg!(&size);
-    //
-    //     Self::render(name, size, |image| {
-    //         GLWrapper::set_viewport(size);
-    //         GLWrapper::clear_with_color(Color::RED.with_alpha(0.0));
-    //         BasicShaders::path().enable().set_color(&color).set_size(size);
-    //         path.buffer.draw_with_mode(path.draw_mode.to_gl());
-    //
-    //         dbg!(GLWrapper::read_pixel((5, 5).into()));
-    //         dbg!(GLWrapper::read_pixel((1, 1).into()));
-    //         dbg!(GLWrapper::read_pixel((0, 0).into()));
-    //         image.flipped_y = true;
-    //     })
-    // }
 }
 
 managed!(Image);
@@ -127,28 +93,6 @@ impl ResourceLoader for Image {
             .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
     }
 }
-
-// pub fn draw_image(image: &Image, rect: &Rect, color: &Color, priority: usize,
-// is_text: bool) {     if image.is_invalid() {
-//         return;
-//     }
-//
-//     if is_text {
-//         ImageShaders::text().enable()
-//     } else if image.is_monochrome() {
-//         ImageShaders::mono().enable().set_color(color)
-//     } else {
-//         ImageShaders::color().enable()
-//     }
-//     .set_flipped(image.flipped)
-//     .set_flipped_y(image.flipped_y)
-//     .set_priority(priority);
-//
-//     GLWrapper::set_viewport(*rect);
-//
-//     image.bind();
-//     Buffers::get().full_image.draw();
-// }
 
 impl Image {
     pub(crate) fn bind_group_layout(device: &Device) -> BindGroupLayout {
