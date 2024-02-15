@@ -49,27 +49,29 @@ impl Color {
     pub const LIGHTER_GRAY: Color = Color::rgb(0.9, 0.9, 0.9);
     pub const CLEAR: Color = Color::rgba(0.0, 0.0, 0.0, 0.0);
 
-    pub const ALL: [Color; 12] = [
+    const ALL: [Color; 14] = [
         Color::BLACK,
         Color::WHITE,
         Color::RED,
         Color::GREEN,
         Color::BLUE,
         Color::LIGHT_BLUE,
+        Color::GRAY_BLUE,
         Color::YELLOW,
         Color::ORANGE,
         Color::PURPLE,
         Color::TURQUOISE,
         Color::BROWN,
         Color::LIGHT_GRAY,
+        Color::LIGHTER_GRAY,
     ];
 
-    pub fn random() -> Color {
-        Color::ALL[usize::random_in(0..Color::ALL.len())]
+    pub fn random() -> Self {
+        Self::ALL[usize::random_in(0..Self::ALL.len())]
     }
 }
 
-impl Hash for Color {
+impl Hash for Color<f32> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         state.write_u32(self.r.to_bits());
         state.write_u32(self.g.to_bits());

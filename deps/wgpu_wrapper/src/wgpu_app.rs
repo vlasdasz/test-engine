@@ -1,11 +1,10 @@
 use std::sync::Arc;
 
 use anyhow::Result;
-use gm::flat::Size;
+use gm::{flat::Size, U8Color};
 use log::{error, trace};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
-use wgpu::Buffer;
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
@@ -117,7 +116,7 @@ impl WGPUApp {
         let _ = self.state.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn request_read_display(&self) -> Receiver<(Buffer, u64)> {
+    pub fn request_read_display(&self) -> Receiver<(Vec<U8Color>, Size<u32>)> {
         self.state.request_read_display()
     }
 }

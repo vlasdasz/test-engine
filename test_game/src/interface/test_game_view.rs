@@ -1,16 +1,12 @@
-use std::mem::size_of;
-
 use test_engine::{
-    async_after, cast_slice, on_main,
+    async_after, on_main,
     refs::Weak,
     ui::{
         async_link_button, view, Alert, Anchor, Button, Color, Container, DPadView, Image, ImageView,
-        IntView, Label, Spinner, SubView, Touch, U8Color, View, ViewCallbacks, ViewData, ViewSetup,
-        ViewTouch,
+        IntView, Label, Spinner, SubView, ViewData, ViewSetup, ViewTouch,
     },
     App, DataManager,
 };
-use tokio::spawn;
 
 #[view]
 pub struct TestGameView {
@@ -43,53 +39,12 @@ impl TestGameView {
         Alert::show("Hello!");
         on_main(|| App::set_window_size((600, 600)))
     }
-
-    fn on_touch(mut self: Weak<Self>, touch: Touch) {
-        spawn(async move {
-            let (buffer, width_bytes) = App::request_read_display().await.unwrap();
-            let width_colors = width_bytes / size_of::<U8Color>() as u64;
-
-            let data: &[u8] = &buffer.slice(..).get_mapped_range();
-            let data: &[U8Color] = cast_slice(data);
-            let color = data[(width_colors as f32 * touch.position.y) as usize + touch.position.x as usize];
-            dbg!(&color);
-            on_main(move || {
-                self.set_color(color);
-            });
-        });
-    }
-}
-
-impl ViewCallbacks for TestGameView {
-    fn update(&mut self) {
-        let cursor_pos = App::current().cursor_position;
-
-        let mut this = self.weak_view();
-        spawn(async move {
-            let Ok((buffer, width_bytes)) = App::request_read_display().await else {
-                return;
-            };
-            let width_colors = width_bytes / size_of::<U8Color>() as u64;
-
-            let data: &[u8] = &buffer.slice(..).get_mapped_range();
-            let data: &[U8Color] = cast_slice(data);
-            let color = data[(width_colors as f32 * cursor_pos.y) as usize + cursor_pos.x as usize];
-            //dbg!(&color);
-            on_main(move || {
-                this.set_color(color);
-            });
-        });
-    }
 }
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::LIGHTER_GRAY);
         self.enable_touch();
-
-        self.touch.began.val(move |touch| {
-            self.on_touch(touch);
-        });
 
         self.tl.set_color(Color::RED).place().size(100, 100).tl(10);
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);

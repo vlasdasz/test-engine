@@ -8,7 +8,7 @@ use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
 use gm::{
     flat::{Point, Rect, Size},
-    Color,
+    Color, U8Color,
 };
 use log::{trace, warn};
 use manage::data_manager::DataManager;
@@ -20,7 +20,7 @@ use ui::{
 };
 use ui_views::{ImageView, Label};
 use vents::OnceEvent;
-use wgpu::{Buffer, PolygonMode, RenderPass};
+use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, State, WGPUApp, WGPUDrawer};
 
@@ -250,7 +250,7 @@ impl App {
         Self::current().wgpu_app.set_window_size(size);
     }
 
-    pub fn request_read_display() -> Receiver<(Buffer, u64)> {
+    pub fn read_display() -> Receiver<(Vec<U8Color>, Size<u32>)> {
         Self::current().wgpu_app.request_read_display()
     }
 }

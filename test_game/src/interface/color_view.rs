@@ -1,11 +1,8 @@
-use std::mem::size_of;
-
 use test_engine::{
     cast_slice, on_main,
     refs::Weak,
     ui::{
-        view, AlertErr, Button, Color, Container, Image, ImageView, Size, SubView, U8Color, UIEvents,
-        ViewData, ViewSetup,
+        view, AlertErr, Button, Color, Container, Image, ImageView, SubView, UIEvents, ViewData, ViewSetup,
     },
     App, DataManager,
 };
@@ -24,19 +21,9 @@ pub struct ColorView {
 impl ColorView {
     fn update_screenshot(mut self: Weak<Self>) {
         spawn(async move {
-            let mut size: Size<u32> = App::root_view_size().into();
-
-            let Ok((buffer, empty_width)) = App::request_read_display().await else {
+            let Some((data, size)) = App::read_display().await.alert_err() else {
                 return;
             };
-
-            size.width += empty_width as u32 / size_of::<U8Color>() as u32;
-
-            let bytes: &[u8] = &buffer.slice(..).get_mapped_range();
-            let data: Vec<U8Color> = cast_slice(bytes)
-                .into_iter()
-                .map(|color: &U8Color| color.bgra_to_rgba())
-                .collect();
 
             let bytes = cast_slice(&data).to_vec();
 

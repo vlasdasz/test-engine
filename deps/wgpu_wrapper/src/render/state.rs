@@ -1,12 +1,11 @@
 use std::{cell::RefCell, collections::HashMap, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
+use bytemuck::cast_slice;
+use gm::{flat::Size, U8Color};
 use tokio::{
     spawn,
-    sync::{
-        oneshot,
-        oneshot::{channel, Receiver, Sender},
-    },
+    sync::oneshot::{channel, Receiver, Sender},
 };
 use wgpu::{
     Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Extent3d, PresentMode, Texture,
@@ -15,6 +14,8 @@ use wgpu::{
 use winit::{dpi::PhysicalSize, window::Window};
 
 use crate::{app::App, frame_counter::FrameCounter, render::wgpu_drawer::WGPUDrawer, text::Font};
+
+type ReadDisplayRequest = Sender<(Vec<U8Color>, Size<u32>)>;
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -26,7 +27,7 @@ pub struct State {
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
 
-    read_display_request: RefCell<Option<Sender<(Buffer, u64)>>>,
+    read_display_request: RefCell<Option<ReadDisplayRequest>>,
 
     frame_counter: FrameCounter,
 }
@@ -176,7 +177,7 @@ impl State {
         surface_texture.present();
 
         if let Some(buffer_sender) = self.read_display_request.take() {
-            let (sender, receiver) = oneshot::channel();
+            let (sender, receiver) = channel();
 
             let Some(buffer) = buffer else { return Ok(()) };
 
@@ -188,28 +189,31 @@ impl State {
 
             spawn(async move {
                 let _ = receiver.await.unwrap();
-                let buff = buffer;
-                buffer_sender.send(buff).unwrap();
+                let (buff, size) = buffer;
+
+                let bytes: &[u8] = &buff.slice(..).get_mapped_range();
+                let data: Vec<U8Color> =
+                    cast_slice(bytes).iter().map(|color: &U8Color| color.bgra_to_rgba()).collect();
+
+                buffer_sender.send((data, size)).unwrap();
             });
         }
 
         Ok(())
     }
 
-    pub fn request_read_display(&self) -> Receiver<(Buffer, u64)> {
+    pub fn request_read_display(&self) -> Receiver<(Vec<U8Color>, Size<u32>)> {
         let (s, r) = channel();
         self.read_display_request.replace(s.into());
         r
     }
 
-    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &Texture) -> (Buffer, u64) {
+    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &Texture) -> (Buffer, Size<u32>) {
         let screen_width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
         let number_of_align = screen_width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
 
         let width_bytes = number_of_align * u64::from(COPY_BYTES_PER_ROW_ALIGNMENT);
-
-        let empty_width = width_bytes - screen_width_bytes;
 
         let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
             label:              Some("Read Screen Buffer"),
@@ -240,6 +244,11 @@ impl State {
             },
         );
 
-        (buffer, empty_width)
+        let size: Size<u32> = Size::new(
+            u32::try_from(width_bytes / size_of::<U8Color>() as u64).unwrap(),
+            texture.size().height,
+        );
+
+        (buffer, size)
     }
 }
