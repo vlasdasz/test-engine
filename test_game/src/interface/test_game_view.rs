@@ -2,8 +2,8 @@ use test_engine::{
     async_after, on_main,
     refs::Weak,
     ui::{
-        async_link_button, view, Alert, Anchor, Button, Color, Container, DPadView, Image, ImageView,
-        IntView, Label, Spinner, SubView, ViewData, ViewSetup, ViewTouch,
+        async_link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, Image,
+        ImageView, IntView, Label, Spinner, SubView, ViewData, ViewSetup, ViewTouch,
     },
     App, DataManager,
 };
@@ -25,6 +25,8 @@ pub struct TestGameView {
 
     spinner: SubView<Button>,
     alert:   SubView<Button>,
+
+    color_meter: SubView<ColorMeter>,
 }
 
 impl TestGameView {
@@ -95,5 +97,7 @@ impl ViewSetup for TestGameView {
         self.alert.set_text("Alert");
         self.alert.set_text_size(20);
         async_link_button!(self, alert, alert_pressed);
+
+        self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);
     }
 }

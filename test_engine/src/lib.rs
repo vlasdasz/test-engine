@@ -1,8 +1,13 @@
+#![allow(incomplete_features)]
 #![feature(let_chains)]
+#![feature(specialization)]
+#![feature(arbitrary_self_types)]
+#![feature(const_trait_impl)]
 
 mod app;
 mod assets;
 mod paths;
+mod views;
 
 pub mod ui {
     pub use ::ui::*;
@@ -13,7 +18,10 @@ pub mod ui {
     };
     pub use ui_proc::view;
     pub use ui_views::*;
+    pub use views::color_meter::ColorMeter;
     pub use wgpu_wrapper::image::Image;
+
+    use crate::views;
 }
 
 pub mod refs {
