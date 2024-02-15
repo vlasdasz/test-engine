@@ -1,13 +1,11 @@
-use std::mem::size_of;
-
 use test_engine::{
     cast_slice, on_main,
-    refs::{weak_from_ref, Weak},
+    refs::Weak,
     ui::{
-        view, AlertErr, Color, Container, Image, ImageView, IntSize, SubView, U8Color, ViewCallbacks,
+        view, AlertErr, Button, Color, Container, Image, ImageView, IntSize, SubView, U8Color, UIEvents,
         ViewData, ViewSetup,
     },
-    App,
+    App, DataManager,
 };
 use tokio::spawn;
 
@@ -18,50 +16,44 @@ pub struct ColorView {
 
     indicator:  SubView<Container>,
     image_view: SubView<ImageView>,
+
+    update_button: SubView<Button>,
+}
+
+impl ColorView {
+    fn update_screenshot(mut self: Weak<Self>, size: IntSize) {
+        spawn(async move {
+            let Ok((buffer, _width_bytes)) = App::request_read_display().await else {
+                return;
+            };
+
+            let bytes: &[u8] = &buffer.slice(..).get_mapped_range();
+            let _data: &[U8Color] = cast_slice(bytes);
+
+            let bytes = bytes.to_vec();
+
+            on_main(move || {
+                Image::free_with_name("Screenshot");
+
+                let Some(image) =
+                    Image::from_raw_data(App::state(), &bytes, "Screenshot", size.into(), 4).alert_err()
+                else {
+                    return;
+                };
+                self.image_view.image = image;
+            });
+        });
+    }
 }
 
 impl ViewSetup for ColorView {
     fn setup(mut self: Weak<Self>) {
-        self.green.set_color(Color::GREEN).place().left_half();
-        self.blue.set_color(Color::BLUE).place().right_half();
+        self.green.set_color(Color::GRAY_BLUE).place().left_half();
+        self.blue.set_color(Color::LIGHT_BLUE).place().right_half();
         self.indicator.place().size(40, 40).bl(0);
-    }
-}
-
-impl ViewCallbacks for ColorView {
-    fn update(&mut self) {
-        let cursor_pos = App::current().cursor_position;
-
-        let mut this = weak_from_ref(self);
-        spawn(async move {
-            let Ok((buffer, width_bytes)) = App::request_read_display().await else {
-                return;
-            };
-            let width_colors = width_bytes / size_of::<U8Color>() as u64;
-
-            let bytes: &[u8] = &buffer.slice(..).get_mapped_range();
-            let data: &[U8Color] = cast_slice(bytes);
-
-            Image::free()
-
-            let Some(image) = Image::from_raw_data(
-                App::state(),
-                bytes,
-                "Screenshot".to_string(),
-                (100, 100).into(),
-                4,
-            )
-            .alert_err() else {
-                return;
-            };
-
-            // let color = data[(width_colors as f32 * cursor_pos.y) as usize + cursor_pos.x
-            // as usize];
-            let color = data[cursor_pos.x as usize];
-            on_main(move || {
-                this.image_view.image = image;
-                this.indicator.set_color(color);
-            });
-        });
+        self.image_view.place().size(200, 200).br(0);
+        self.update_button.set_text("Update").place().size(200, 50);
+        UIEvents::size_changed().val(move |size| self.update_screenshot(size));
+        //self.update_button.on_tap(move || self.update_screenshot());
     }
 }

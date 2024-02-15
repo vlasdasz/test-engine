@@ -7,7 +7,7 @@ use std::{
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
 use gm::{
-    flat::{IntSize, Point, Rect},
+    flat::{IntSize, Point, Rect, Size},
     Color,
 };
 use log::{trace, warn};
@@ -47,6 +47,10 @@ impl App {
 
     pub fn state() -> &'static State {
         &Self::current().wgpu_app.state
+    }
+
+    pub fn root_view_size() -> Size {
+        Self::current().root_view.size()
     }
 
     fn make_app(first_view: Own<dyn View>) -> Box<Self> {
@@ -201,7 +205,7 @@ impl App {
             return false;
         }
 
-        UIEvents::get().on_touch.trigger(touch);
+        UIEvents::on_touch().trigger(touch);
 
         if LOG_TOUCHES && !touch.is_moved() {
             warn!("{touch:?}");
@@ -273,6 +277,7 @@ impl wgpu_wrapper::App for App {
 
     fn resize(&mut self, size: IntSize) {
         UIManager::root_view().set_size(size);
+        UIEvents::size_changed().trigger(size);
         self.update();
     }
 

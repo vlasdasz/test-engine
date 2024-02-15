@@ -120,7 +120,7 @@ impl ViewCallbacks for TextField {
         if selected {
             UIManager::get().open_keyboard.store(true, Relaxed);
             let mut this = weak_from_ref(self);
-            UIEvents::get().key_pressed.val(move |key| {
+            UIEvents::key_pressed().val(move |key| {
                 let mut text = this.label.text().to_string();
 
                 if this.is_selected() {
@@ -149,7 +149,7 @@ impl ViewCallbacks for TextField {
             });
         } else {
             UIManager::get().close_keyboard.store(true, Relaxed);
-            UIEvents::get().key_pressed.remove_subscribers();
+            UIEvents::key_pressed().remove_subscribers();
         }
 
         self.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
@@ -158,6 +158,6 @@ impl ViewCallbacks for TextField {
 
 impl Drop for TextField {
     fn drop(&mut self) {
-        UIEvents::get().key_pressed.remove_subscribers()
+        UIEvents::key_pressed().remove_subscribers()
     }
 }

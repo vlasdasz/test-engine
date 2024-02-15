@@ -36,7 +36,7 @@ impl UILayer {
             return;
         }
 
-        UIEvents::get().on_touch.trigger(touch);
+        UIEvents::on_touch().trigger(touch);
 
         if LOG_TOUCHES && !touch.is_moved() {
             warn!("{touch:?}");

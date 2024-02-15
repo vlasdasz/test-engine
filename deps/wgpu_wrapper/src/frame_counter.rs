@@ -27,7 +27,7 @@ impl FrameCounter {
             self.last_printed_instant = new_instant;
             self.frame_count = 0;
 
-            return format!("Frame time {frame_time:.2}ms ({fps:.1} FPS)").into();
+            return format!("{frame_time:.2}ms frame {fps:.1} FPS").into();
         }
 
         None

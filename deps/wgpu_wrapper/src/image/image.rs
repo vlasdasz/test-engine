@@ -51,10 +51,11 @@ impl Image {
     pub fn from_raw_data(
         state: &State,
         data: &[u8],
-        name: String,
+        name: impl ToString,
         size: IntSize,
         channels: u8,
     ) -> Result<Weak<Image>> {
+        let name = name.to_string();
         let texture = Texture::from_raw_data(
             &state.drawer.device,
             &state.drawer.queue,

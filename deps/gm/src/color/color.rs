@@ -43,6 +43,7 @@ impl Color {
     pub const GREEN: Color = Color::rgb(0.0, 1.0, 0.0);
     pub const BLUE: Color = Color::rgb(0.0, 0.0, 0.8);
     pub const LIGHT_BLUE: Color = Color::rgb(0.0, 0.7, 1.0);
+    pub const GRAY_BLUE: Color = Color::rgb(0.1, 0.2, 0.3);
     pub const YELLOW: Color = Color::rgb(1.0, 1.0, 0.0);
     pub const ORANGE: Color = Color::rgb(1.0, 0.6, 0.0);
     pub const PURPLE: Color = Color::rgb(1.0, 0.0, 1.0);

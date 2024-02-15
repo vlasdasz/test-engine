@@ -66,7 +66,7 @@ pub async fn record_touches() {
     //    let (s, mut r) = channel::<()>(1);
 
     on_main(move || {
-        UIEvents::get().on_touch.val(move |touch| {
+        UIEvents::on_touch().val(move |touch| {
             if touches.is_null() {
                 return;
             }
@@ -88,7 +88,7 @@ pub async fn record_touches() {
     // }
 
     on_main(|| {
-        UIEvents::get().on_touch.remove_subscribers();
+        UIEvents::on_touch().remove_subscribers();
     });
 
     println!("{}", Touch::str_from_vec(touches.to_vec()));

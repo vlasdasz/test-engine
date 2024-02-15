@@ -38,7 +38,7 @@ wgpu = "0.19.1"
 wgpu_text = "0.8.6"
 winit = "0.29.10"
 
-manage = "=0.4.5"
+manage = "=0.4.6"
 reflected = "=0.7.0"
 reflected_proc = "=0.7.0"
 refs = { version = "=0.6.15", features = [] }

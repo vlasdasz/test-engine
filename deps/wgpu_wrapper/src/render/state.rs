@@ -117,7 +117,8 @@ impl State {
     pub fn update(&mut self) {
         self.app.update();
         if let Some(fps) = self.frame_counter.update() {
-            self.window.set_title(&fps);
+            self.window
+                .set_title(&format!("{fps} {} x {}", self.config.width, self.config.height));
         }
     }
 
