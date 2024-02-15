@@ -1,9 +1,11 @@
+use std::mem::size_of;
+
 use test_engine::{
-    async_after, on_main,
+    async_after, cast_slice, on_main,
     refs::Weak,
     ui::{
         async_link_button, view, Alert, Anchor, Button, Color, Container, DPadView, Image, ImageView,
-        IntView, Label, Spinner, SubView, ViewData, ViewSetup,
+        IntView, Label, Spinner, SubView, Touch, U8Color, ViewData, ViewSetup, ViewTouch,
     },
     App, DataManager,
 };
@@ -40,11 +42,27 @@ impl TestGameView {
         Alert::show("Hello!");
         on_main(|| App::set_window_size((600, 600)))
     }
+
+    fn on_touch(self: Weak<Self>, touch: Touch) {
+        spawn(async move {
+            let (buffer, width_bytes) = App::request_read_display().await.unwrap();
+            let width_colors = width_bytes / size_of::<U8Color>() as u64;
+
+            let data: &[u8] = &buffer.slice(..).get_mapped_range();
+            let data: &[U8Color] = cast_slice(data);
+            dbg!(&data[(width_colors as f32 * touch.position.y) as usize + touch.position.x as usize]);
+        });
+    }
 }
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::LIGHTER_GRAY);
+        self.enable_touch();
+
+        self.touch.began.val(move |touch| {
+            self.on_touch(touch);
+        });
 
         self.tl.set_color(Color::RED).place().size(100, 100).tl(10);
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
@@ -77,16 +95,6 @@ impl ViewSetup for TestGameView {
 
             if direction.is_up() {
                 App::set_window_title(format!("{direction:?} read pixel"));
-
-                spawn(async {
-                    let (rect, buff) = App::read_pixel();
-                    let recv = rect.await.unwrap();
-                    dbg!(&recv);
-
-                    let data: &[u8] = &buff.slice(..).get_mapped_range();
-
-                    dbg!(&data);
-                });
             }
         });
 

@@ -1,11 +1,16 @@
-use std::{collections::HashMap, mem::size_of, sync::Arc};
+use std::{cell::RefCell, collections::HashMap, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
-use rtools::sleep;
-use tokio::sync::{oneshot, oneshot::Receiver};
+use tokio::{
+    spawn,
+    sync::{
+        oneshot,
+        oneshot::{channel, Receiver, Sender},
+    },
+};
 use wgpu::{
-    Buffer, BufferAsyncError, BufferDescriptor, CompositeAlphaMode, Extent3d, PresentMode, TextureFormat,
-    COPY_BYTES_PER_ROW_ALIGNMENT,
+    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Extent3d, PresentMode, Texture,
+    TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT,
 };
 use winit::{dpi::PhysicalSize, window::Window};
 
@@ -20,6 +25,8 @@ pub(crate) struct State {
 
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
+
+    read_display_request: RefCell<Option<Sender<(Buffer, u64)>>>,
 
     frame_counter: FrameCounter,
 }
@@ -85,6 +92,7 @@ impl State {
             drawer,
             fonts: Default::default(),
             app,
+            read_display_request: Default::default(),
             frame_counter: Default::default(),
         })
     }
@@ -157,19 +165,43 @@ impl State {
             }
         }
 
+        let buffer = if self.read_display_request.borrow().is_some() {
+            Some(self.read_screen(&mut encoder, &surface_texture.texture)?)
+        } else {
+            None
+        };
+
         self.drawer.queue.submit(std::iter::once(encoder.finish()));
         surface_texture.present();
+
+        if let Some(buffer_sender) = self.read_display_request.take() {
+            let (sender, receiver) = oneshot::channel();
+
+            let buffer = buffer.unwrap();
+
+            let buffer_slice = buffer.0.slice(..);
+
+            buffer_slice.map_async(wgpu::MapMode::Read, |result| {
+                sender.send(result).unwrap();
+            });
+
+            spawn(async move {
+                let _ = receiver.await.unwrap();
+                let buff = buffer;
+                buffer_sender.send(buff).unwrap();
+            });
+        }
 
         Ok(())
     }
 
-    pub fn read_pixel(&self) -> Result<(Receiver<Result<(), BufferAsyncError>>, Buffer)> {
-        let mut encoder = self.drawer.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
-            label: Some("Render Encoder"),
-        });
+    pub fn request_read_display(&self) -> Receiver<(Buffer, u64)> {
+        let (s, r) = channel();
+        self.read_display_request.replace(s.into());
+        r
+    }
 
-        let texture = &self.surface.get_current_texture()?.texture;
-
+    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &Texture) -> Result<(Buffer, u64)> {
         let width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
         let number_of_align = width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
@@ -177,7 +209,7 @@ impl State {
         let width_bytes = number_of_align * u64::from(COPY_BYTES_PER_ROW_ALIGNMENT);
 
         let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
-            label:              None,
+            label:              Some("Read Screen Buffer"),
             size:               width_bytes * u64::from(texture.size().height),
             usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
@@ -205,18 +237,6 @@ impl State {
             },
         );
 
-        self.drawer.queue.submit(std::iter::once(encoder.finish()));
-
-        sleep(1);
-
-        // Map the buffer and read the pixels
-        let buffer_slice = buffer.slice(..);
-
-        let (sender, receiver) = oneshot::channel();
-        buffer_slice.map_async(wgpu::MapMode::Read, |result| {
-            sender.send(result).unwrap();
-        });
-
-        Ok((receiver, buffer))
+        Ok((buffer, width_bytes))
     }
 }

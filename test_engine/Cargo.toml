@@ -16,6 +16,7 @@ log = { workspace = true }
 tokio = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
+bytemuck = { workspace = true }
 
 
 dispatch = { workspace = true }

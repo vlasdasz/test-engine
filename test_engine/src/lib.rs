@@ -9,7 +9,7 @@ pub mod ui {
     pub use gm::{
         flat::{IntSize, Point, Points, Size},
         sign::Sign,
-        Color,
+        Color, U8Color,
     };
     pub use ui_proc::view;
     pub use ui_views::*;
@@ -34,6 +34,7 @@ pub mod rest {
 
 pub use app::App;
 pub use audio;
+pub use bytemuck::cast_slice;
 pub use dispatch::{async_after, from_main, on_main};
 pub use manage::data_manager::DataManager;
 pub use paths::*;

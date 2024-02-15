@@ -20,7 +20,7 @@ use ui::{
 };
 use ui_views::{ImageView, Label};
 use vents::OnceEvent;
-use wgpu::{Buffer, BufferAsyncError, PolygonMode, RenderPass};
+use wgpu::{Buffer, PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, WGPUApp, WGPUDrawer};
 
@@ -238,8 +238,8 @@ impl App {
         Self::current().wgpu_app.set_window_size(size);
     }
 
-    pub fn read_pixel() -> (Receiver<Result<(), BufferAsyncError>>, Buffer) {
-        Self::current().wgpu_app.read_pixel().unwrap()
+    pub fn request_read_display() -> Receiver<(Buffer, u64)> {
+        Self::current().wgpu_app.request_read_display()
     }
 }
 

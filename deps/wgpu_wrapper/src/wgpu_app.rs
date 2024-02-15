@@ -5,7 +5,7 @@ use gm::flat::IntSize;
 use log::{error, trace};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
-use wgpu::{Buffer, BufferAsyncError};
+use wgpu::Buffer;
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
@@ -117,7 +117,7 @@ impl WGPUApp {
         let _ = self.state.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn read_pixel(&self) -> Result<(Receiver<Result<(), BufferAsyncError>>, Buffer)> {
-        self.state.read_pixel()
+    pub fn request_read_display(&self) -> Receiver<(Buffer, u64)> {
+        self.state.request_read_display()
     }
 }
