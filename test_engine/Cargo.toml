@@ -9,6 +9,7 @@ name = "test_engine"
 
 [dependencies]
 anyhow = { workspace = true }
+bytemuck = { workspace = true }
 derivative = { workspace = true }
 env_logger = { workspace = true }
 home = { workspace = true }
@@ -16,7 +17,6 @@ log = { workspace = true }
 tokio = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
-bytemuck = { workspace = true }
 
 
 dispatch = { workspace = true }

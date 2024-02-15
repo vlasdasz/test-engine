@@ -166,7 +166,7 @@ impl State {
         }
 
         let buffer = if self.read_display_request.borrow().is_some() {
-            Some(self.read_screen(&mut encoder, &surface_texture.texture)?)
+            Some(self.read_screen(&mut encoder, &surface_texture.texture))
         } else {
             None
         };
@@ -201,7 +201,7 @@ impl State {
         r
     }
 
-    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &Texture) -> Result<(Buffer, u64)> {
+    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &Texture) -> (Buffer, u64) {
         let width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
         let number_of_align = width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
@@ -237,6 +237,6 @@ impl State {
             },
         );
 
-        Ok((buffer, width_bytes))
+        (buffer, width_bytes)
     }
 }

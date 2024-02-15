@@ -29,11 +29,12 @@ use crate::{assets::Assets, git_root};
 static mut APP: *mut App = null_mut();
 
 pub struct App {
-    cursor_position:       Point,
-    root_view:             Weak<dyn View>,
+    root_view:    Weak<dyn View>,
+    window_ready: OnceEvent,
+    wgpu_app:     Rglica<WGPUApp>,
+
     pub(crate) first_view: Option<Own<dyn View>>,
-    window_ready:          OnceEvent,
-    wgpu_app:              Rglica<WGPUApp>,
+    pub cursor_position:   Point,
 }
 
 impl App {

@@ -21,15 +21,17 @@ impl Color {
     pub fn is_visible(&self) -> bool {
         self.a > 0.02
     }
+}
 
+impl From<Color> for U8Color {
     #[allow(clippy::cast_possible_truncation)]
     #[allow(clippy::cast_sign_loss)]
-    pub fn to_u8(&self) -> U8Color {
+    fn from(value: Color) -> Self {
         U8Color::rgba(
-            (255.0 * self.r) as u8,
-            (255.0 * self.g) as u8,
-            (255.0 * self.b) as u8,
-            (255.0 * self.a) as u8,
+            (255.0 * value.r) as u8,
+            (255.0 * value.g) as u8,
+            (255.0 * value.b) as u8,
+            (255.0 * value.a) as u8,
         )
     }
 }
@@ -90,8 +92,6 @@ fn color_diff() {
 
 #[test]
 fn color_to_u8() {
-    assert_eq!(
-        Color::rgba(0.5, 1.0, 0.1, 0.0).to_u8(),
-        U8Color::rgba(127, 255, 25, 0)
-    );
+    let color: U8Color = Color::rgba(0.5, 1.0, 0.1, 0.0).into();
+    assert_eq!(color, U8Color::rgba(127, 255, 25, 0));
 }

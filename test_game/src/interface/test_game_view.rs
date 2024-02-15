@@ -5,7 +5,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         async_link_button, view, Alert, Anchor, Button, Color, Container, DPadView, Image, ImageView,
-        IntView, Label, Spinner, SubView, Touch, U8Color, ViewData, ViewSetup, ViewTouch,
+        IntView, Label, Spinner, SubView, Touch, U8Color, View, ViewCallbacks, ViewData, ViewSetup,
+        ViewTouch,
     },
     App, DataManager,
 };
@@ -43,14 +44,40 @@ impl TestGameView {
         on_main(|| App::set_window_size((600, 600)))
     }
 
-    fn on_touch(self: Weak<Self>, touch: Touch) {
+    fn on_touch(mut self: Weak<Self>, touch: Touch) {
         spawn(async move {
             let (buffer, width_bytes) = App::request_read_display().await.unwrap();
             let width_colors = width_bytes / size_of::<U8Color>() as u64;
 
             let data: &[u8] = &buffer.slice(..).get_mapped_range();
             let data: &[U8Color] = cast_slice(data);
-            dbg!(&data[(width_colors as f32 * touch.position.y) as usize + touch.position.x as usize]);
+            let color = data[(width_colors as f32 * touch.position.y) as usize + touch.position.x as usize];
+            dbg!(&color);
+            on_main(move || {
+                self.set_color(color);
+            });
+        });
+    }
+}
+
+impl ViewCallbacks for TestGameView {
+    fn update(&mut self) {
+        let cursor_pos = App::current().cursor_position;
+
+        let mut this = self.weak_view();
+        spawn(async move {
+            let Ok((buffer, width_bytes)) = App::request_read_display().await else {
+                return;
+            };
+            let width_colors = width_bytes / size_of::<U8Color>() as u64;
+
+            let data: &[u8] = &buffer.slice(..).get_mapped_range();
+            let data: &[U8Color] = cast_slice(data);
+            let color = data[(width_colors as f32 * cursor_pos.y) as usize + cursor_pos.x as usize];
+            //dbg!(&color);
+            on_main(move || {
+                this.set_color(color);
+            });
         });
     }
 }
