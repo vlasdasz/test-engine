@@ -203,11 +203,13 @@ impl State {
     }
 
     fn read_screen(&self, encoder: &mut CommandEncoder, texture: &Texture) -> (Buffer, u64) {
-        let width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
+        let screen_width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
-        let number_of_align = width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
+        let number_of_align = screen_width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
 
         let width_bytes = number_of_align * u64::from(COPY_BYTES_PER_ROW_ALIGNMENT);
+
+        let empty_width = width_bytes - screen_width_bytes;
 
         let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
             label:              Some("Read Screen Buffer"),
@@ -238,6 +240,6 @@ impl State {
             },
         );
 
-        (buffer, width_bytes)
+        (buffer, empty_width)
     }
 }

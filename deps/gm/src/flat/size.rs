@@ -142,7 +142,7 @@ impl From<Size<u32>> for Size<f32> {
     }
 }
 
-impl From<Size> for Size<u32> {
+impl From<Size<f32>> for Size<u32> {
     fn from(value: Size<f32>) -> Self {
         #[allow(clippy::cast_possible_truncation)]
         #[allow(clippy::cast_sign_loss)]
