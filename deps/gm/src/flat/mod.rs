@@ -5,7 +5,7 @@ mod rect;
 mod shape;
 mod size;
 
-pub use point::{Direction, Point, PointBase};
+pub use point::{Direction, Point};
 pub use points_path::*;
 pub use process_points::*;
 pub use rect::Rect;

@@ -25,28 +25,26 @@ impl Direction {
 
 #[repr(C)]
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct PointBase<T> {
+pub struct Point<T = f32> {
     pub x: T,
     pub y: T,
 }
 
-impl<T> PointBase<T> {
+impl<T> Point<T> {
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 }
 
-pub type Point = PointBase<f32>;
+unsafe impl Zeroable for Point<f32> {}
+unsafe impl Pod for Point<f32> {}
 
-unsafe impl Zeroable for Point {}
-unsafe impl Pod for Point {}
-
-impl Point {
+impl Point<f32> {
     pub fn angle(&self) -> f32 {
         self.y.atan2(self.x)
     }
 
-    pub fn angle_to(&self, point: Point) -> f32 {
+    pub fn angle_to(&self, point: Self) -> f32 {
         let target = point - *self;
         target.angle()
     }
@@ -55,7 +53,7 @@ impl Point {
         (self.x * self.x + self.y * self.y).sqrt()
     }
 
-    pub fn middle(&self, other: &Point) -> Point {
+    pub fn middle(&self, other: &Self) -> Self {
         Point {
             x: (self.x + other.x) / 2.0,
             y: (self.y + other.y) / 2.0,
@@ -67,7 +65,7 @@ impl Point {
     }
 }
 
-impl Point {
+impl Point<f32> {
     pub fn invert(&mut self) {
         self.x = -self.x;
         self.y = -self.y;
@@ -82,8 +80,8 @@ impl Point {
     }
 }
 
-impl Point {
-    pub fn normalized(self) -> Point {
+impl Point<f32> {
+    pub fn normalized(self) -> Self {
         self.with_length(1.0)
     }
 
@@ -92,8 +90,8 @@ impl Point {
     }
 }
 
-impl Point {
-    pub fn with_length(self, l: f32) -> Point {
+impl Point<f32> {
+    pub fn with_length(self, l: f32) -> Self {
         let ratio = l / self.length();
         Point {
             x: self.x * ratio,
@@ -114,19 +112,19 @@ impl Point {
         self.set_length(max_length)
     }
 
-    pub fn trimmed(mut self, max_length: f32) -> Point {
+    pub fn trimmed(mut self, max_length: f32) -> Self {
         self.trim(max_length);
         self
     }
 }
 
-impl PointBase<i32> {
+impl Point<i32> {
     pub fn is_negative(&self) -> bool {
         self.x < 0 || self.y < 0
     }
 }
 
-impl<T: Add<Output = T>> Add for PointBase<T> {
+impl<T: Add<Output = T>> Add for Point<T> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self {
         Self {
@@ -136,8 +134,8 @@ impl<T: Add<Output = T>> Add for PointBase<T> {
     }
 }
 
-impl<T: Add<Output = T> + Copy> Add for &PointBase<T> {
-    type Output = PointBase<T>;
+impl<T: Add<Output = T> + Copy> Add for &Point<T> {
+    type Output = Point<T>;
     fn add(self, rhs: &Self::Output) -> Self::Output {
         Self::Output {
             x: self.x + rhs.x,
@@ -146,14 +144,14 @@ impl<T: Add<Output = T> + Copy> Add for &PointBase<T> {
     }
 }
 
-impl AddAssign for Point {
-    fn add_assign(&mut self, rhs: Point) {
+impl<T: AddAssign> AddAssign for Point<T> {
+    fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y
     }
 }
 
-impl<T: Sub<Output = T>> Sub for PointBase<T> {
+impl<T: Sub<Output = T>> Sub for Point<T> {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self {
         Self {
@@ -163,8 +161,8 @@ impl<T: Sub<Output = T>> Sub for PointBase<T> {
     }
 }
 
-impl<T: Sub<Output = T> + Copy> Sub for &PointBase<T> {
-    type Output = PointBase<T>;
+impl<T: Sub<Output = T> + Copy> Sub for &Point<T> {
+    type Output = Point<T>;
     fn sub(self, rhs: &Self::Output) -> Self::Output {
         Self::Output {
             x: self.x - rhs.x,
@@ -173,29 +171,29 @@ impl<T: Sub<Output = T> + Copy> Sub for &PointBase<T> {
     }
 }
 
-impl SubAssign for Point {
-    fn sub_assign(&mut self, rhs: Point) {
+impl<T: SubAssign> SubAssign for Point<T> {
+    fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
         self.y -= rhs.y
     }
 }
 
-impl<T: IntoF32> Mul<T> for Point {
-    type Output = Point;
-    fn mul(self, rhs: T) -> Point {
+impl<T: IntoF32> Mul<T> for Point<f32> {
+    type Output = Self;
+    fn mul(self, rhs: T) -> Self {
         let rhs = rhs.into_f32();
         (self.x * rhs, self.y * rhs).into()
     }
 }
 
-impl Mul<Size> for Point {
-    type Output = Point;
-    fn mul(self, size: Size) -> Point {
+impl Mul<Size> for Point<f32> {
+    type Output = Self;
+    fn mul(self, size: Size) -> Self {
         (self.x * size.width, self.y * size.height).into()
     }
 }
 
-impl<T: IntoF32> MulAssign<T> for Point {
+impl<T: IntoF32> MulAssign<T> for Point<f32> {
     fn mul_assign(&mut self, rhs: T) {
         let rhs = rhs.into_f32();
         self.x *= rhs;
@@ -203,15 +201,15 @@ impl<T: IntoF32> MulAssign<T> for Point {
     }
 }
 
-impl<T: IntoF32> Div<T> for Point {
-    type Output = Point;
-    fn div(self, rhs: T) -> Point {
+impl<T: IntoF32> Div<T> for Point<f32> {
+    type Output = Self;
+    fn div(self, rhs: T) -> Self {
         let rhs = rhs.into_f32();
         (self.x / rhs, self.y / rhs).into()
     }
 }
 
-impl<T: IntoF32> DivAssign<T> for Point {
+impl<T: IntoF32> DivAssign<T> for Point<f32> {
     fn div_assign(&mut self, rhs: T) {
         let rhs = rhs.into_f32();
         self.x /= rhs;
@@ -219,7 +217,7 @@ impl<T: IntoF32> DivAssign<T> for Point {
     }
 }
 
-impl<X, Y> const From<(X, Y)> for Point
+impl<X, Y> const From<(X, Y)> for Point<f32>
 where
     X: ~const IntoF32,
     Y: ~const IntoF32,
@@ -232,7 +230,7 @@ where
     }
 }
 
-impl<T: IntoF32> Display for PointBase<T> {
+impl<T: IntoF32> Display for Point<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "x: {:.2}, y: {:.2}", self.x.into_f32(), self.y.into_f32())
     }

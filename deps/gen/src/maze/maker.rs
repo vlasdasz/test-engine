@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use gm::flat::{PointBase, SizeBase};
+use gm::flat::{Point as PointBase, SizeBase};
 use rtools::Random;
 use tokio::{
     sync::mpsc::{self, UnboundedReceiver},
