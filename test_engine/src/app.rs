@@ -7,7 +7,7 @@ use std::{
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
 use gm::{
-    flat::{IntSize, Point, Rect, Size},
+    flat::{Point, Rect, Size},
     Color,
 };
 use log::{trace, warn};
@@ -246,7 +246,7 @@ impl App {
         Self::current().wgpu_app.set_title(title);
     }
 
-    pub fn set_window_size(size: impl Into<IntSize>) {
+    pub fn set_window_size(size: impl Into<Size<u32>>) {
         Self::current().wgpu_app.set_window_size(size);
     }
 
@@ -275,7 +275,7 @@ impl wgpu_wrapper::App for App {
         Font::helvetice().brush.queue(&drawer.device, &drawer.queue, sections).unwrap()
     }
 
-    fn resize(&mut self, size: IntSize) {
+    fn resize(&mut self, size: Size<u32>) {
         UIManager::root_view().set_size(size);
         UIEvents::size_changed().trigger(size);
         self.update();

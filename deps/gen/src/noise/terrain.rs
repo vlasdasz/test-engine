@@ -1,5 +1,5 @@
 use contour::ContourBuilder;
-use gm::flat::{IntSize, Point, Points, Size};
+use gm::flat::{Point, Points, Size};
 use noise::{
     utils::{NoiseMapBuilder, PlaneMapBuilder},
     OpenSimplex,
@@ -7,7 +7,7 @@ use noise::{
 
 pub struct TerrainParams {
     pub seed:       u32,
-    pub resolution: IntSize,
+    pub resolution: Size<u32>,
     pub size:       Size,
     pub position:   Point,
     pub threshold:  u8,
@@ -53,7 +53,7 @@ pub fn generate_terrain(
     TerrainData { pixels, islands }
 }
 
-fn extract_shapes(data: &[u8], resolution: IntSize) -> Vec<Points> {
+fn extract_shapes(data: &[u8], resolution: Size<u32>) -> Vec<Points> {
     let data: Vec<_> = data.iter().map(|val| f32::from(*val)).collect();
 
     let c = ContourBuilder::new(resolution.width, resolution.height, false);

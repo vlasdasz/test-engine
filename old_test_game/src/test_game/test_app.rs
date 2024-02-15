@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use log::trace;
-use old_engine::{app::AppCore, gm::flat::IntSize, paths::git_root, OldApp};
+use old_engine::{app::AppCore, gm::flat::Size, paths::git_root, OldApp};
 use refs::{enable_ref_stats_counter, Own};
 use ui::{Container, NavigationView, View, ViewSetup};
 
@@ -15,7 +15,7 @@ impl OldApp for TestApp {
         trace!("TestApp setup: OK");
     }
 
-    fn screen_size() -> IntSize {
+    fn screen_size() -> Size<u32> {
         (1000, 600).into()
     }
 

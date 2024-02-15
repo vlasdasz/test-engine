@@ -1,13 +1,8 @@
 use std::hash::{Hash, Hasher};
 
-use bytemuck::{Pod, Zeroable};
 use rtools::Random;
 
-use crate::{color::ColorBase, U8Color};
-
-pub type Color = ColorBase<f32>;
-unsafe impl Zeroable for Color {}
-unsafe impl Pod for Color {}
+use crate::{Color, U8Color};
 
 impl Color {
     pub const fn rgb(r: f32, g: f32, b: f32) -> Self {

@@ -6,7 +6,7 @@ use std::{
 
 use gm::{
     axis::Axis,
-    flat::{Rect, Size, SizeBase},
+    flat::{Rect, Size},
 };
 use itertools::Itertools;
 use refs::{Own, Rglica, ToRglica, Weak};
@@ -28,7 +28,7 @@ pub struct Placer {
 
     all_margin: RefCell<f32>,
 
-    has: RefCell<SizeBase<bool>>,
+    has: RefCell<Size<bool>>,
 }
 
 impl Placer {
@@ -81,7 +81,7 @@ impl Placer {
         self.sub_rules.borrow_mut()
     }
 
-    fn has(&self) -> RefMut<SizeBase<bool>> {
+    fn has(&self) -> RefMut<Size<bool>> {
         self.has.borrow_mut()
     }
 }

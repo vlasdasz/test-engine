@@ -15,30 +15,27 @@ use crate::{
 };
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct SizeBase<T> {
+pub struct Size<T = f32> {
     pub width:  T,
     pub height: T,
 }
 
-pub type Size = SizeBase<f32>;
-pub type IntSize = SizeBase<u32>;
+unsafe impl<T: Zeroable> Zeroable for Size<T> {}
+unsafe impl<T: Pod> Pod for Size<T> {}
 
-unsafe impl Zeroable for Size {}
-unsafe impl Pod for Size {}
-
-impl<T> SizeBase<T> {
+impl<T> Size<T> {
     pub fn new(width: T, height: T) -> Self {
         Self { width, height }
     }
 }
 
-impl<T: Mul<Output = T> + Copy> SizeBase<T> {
+impl<T: Mul<Output = T> + Copy> Size<T> {
     pub fn area(&self) -> T {
         self.width.mul(self.height)
     }
 }
 
-impl Size {
+impl Size<f32> {
     pub fn diagonal(&self) -> f32 {
         (self.width * self.width + self.height * self.height).sqrt()
     }
@@ -106,7 +103,7 @@ impl Size {
     }
 }
 
-impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Size {
+impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Size<f32> {
     fn from(tup: (W, H)) -> Self {
         Self {
             width:  tup.0.into_f32(),
@@ -115,29 +112,29 @@ impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Size {
     }
 }
 
-impl<T: IntoF32> Mul<T> for Size {
+impl<T: IntoF32> Mul<T> for Size<f32> {
     type Output = Size;
     fn mul(self, rhs: T) -> Self::Output {
         (self.width * rhs.into_f32(), self.height * rhs.into_f32()).into()
     }
 }
 
-impl<T: IntoF32> Div<T> for Size {
-    type Output = Size;
+impl<T: IntoF32> Div<T> for Size<f32> {
+    type Output = Self;
     fn div(self, rhs: T) -> Self::Output {
         (self.width / rhs.into_f32(), self.height / rhs.into_f32()).into()
     }
 }
 
-impl Hash for Size {
+impl Hash for Size<f32> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.width.to_bits().hash(state);
         self.height.to_bits().hash(state);
     }
 }
 
-impl From<IntSize> for Size {
-    fn from(value: IntSize) -> Self {
+impl From<Size<u32>> for Size<f32> {
+    fn from(value: Size<u32>) -> Self {
         Self {
             width:  value.width as _,
             height: value.height as _,
@@ -145,8 +142,8 @@ impl From<IntSize> for Size {
     }
 }
 
-impl From<Size> for IntSize {
-    fn from(value: Size) -> Self {
+impl From<Size> for Size<u32> {
+    fn from(value: Size<f32>) -> Self {
         #[allow(clippy::cast_possible_truncation)]
         #[allow(clippy::cast_sign_loss)]
         Self {
@@ -156,7 +153,7 @@ impl From<Size> for IntSize {
     }
 }
 
-impl From<(u32, u32)> for IntSize {
+impl From<(u32, u32)> for Size<u32> {
     fn from(tup: (u32, u32)) -> Self {
         Self {
             width:  tup.0,
@@ -165,7 +162,7 @@ impl From<(u32, u32)> for IntSize {
     }
 }
 
-impl Random for IntSize {
+impl Random for Size<u32> {
     fn random() -> Self {
         Self {
             width:  u32::random_in(200..800),
@@ -180,7 +177,7 @@ impl Display for Size {
     }
 }
 
-impl Display for IntSize {
+impl Display for Size<u32> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "width: {}, height: {}", self.width, self.height)
     }

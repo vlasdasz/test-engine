@@ -3,20 +3,24 @@ use std::{
     ops::{Add, Sub},
 };
 
+use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 
 use crate::num::{Abs, Zero};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
-pub struct ColorBase<T> {
+pub struct Color<T = f32> {
     pub r: T,
     pub g: T,
     pub b: T,
     pub a: T,
 }
 
-impl<T> ColorBase<T> {
+unsafe impl<T: Zeroable> Zeroable for Color<T> {}
+unsafe impl<T: Pod> Pod for Color<T> {}
+
+impl<T> Color<T> {
     pub const fn rgba(r: T, g: T, b: T, a: T) -> Self {
         Self { r, g, b, a }
     }
@@ -31,7 +35,7 @@ impl<T> ColorBase<T> {
     }
 }
 
-impl<T: Copy> ColorBase<T> {
+impl<T: Copy> Color<T> {
     pub const fn as_slice(&self) -> [T; 4] {
         [self.r, self.g, self.b, self.a]
     }
@@ -41,8 +45,8 @@ impl<T: Copy> ColorBase<T> {
     }
 }
 
-impl<T: Copy + Abs + Sub<Output = T> + Add<Output = T>> ColorBase<T> {
-    pub fn diff(&self, other: ColorBase<T>) -> T {
+impl<T: Copy + Abs + Sub<Output = T> + Add<Output = T>> Color<T> {
+    pub fn diff(&self, other: Color<T>) -> T {
         (self.r - other.r).abs()
             + (self.g - other.g).abs()
             + (self.b - other.b).abs()
@@ -50,16 +54,16 @@ impl<T: Copy + Abs + Sub<Output = T> + Add<Output = T>> ColorBase<T> {
     }
 }
 
-impl<T: Display> Display for ColorBase<T> {
+impl<T: Display> Display for Color<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)
     }
 }
 
-impl<T: Zero> Default for ColorBase<T> {
+impl<T: Zero> Default for Color<T> {
     fn default() -> Self {
         Self::rgba(T::zero(), T::zero(), T::zero(), T::zero())
     }
 }
 
-impl<T: PartialEq> Eq for ColorBase<T> {}
+impl<T: PartialEq> Eq for Color<T> {}

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use gm::flat::IntSize;
+use gm::flat::Size;
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
     AddressMode, Device, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Queue, Sampler,
@@ -11,7 +11,7 @@ pub struct Texture {
     pub texture:  wgpu::Texture,
     pub view:     TextureView,
     pub sampler:  Sampler,
-    pub size:     IntSize,
+    pub size:     Size<u32>,
     pub channels: u8,
 }
 
@@ -25,7 +25,7 @@ impl Texture {
         device: &Device,
         queue: &Queue,
         data: &[u8],
-        size: IntSize,
+        size: Size<u32>,
         channels: u8,
         label: &str,
     ) -> Self {

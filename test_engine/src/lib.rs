@@ -7,7 +7,7 @@ mod paths;
 pub mod ui {
     pub use ::ui::*;
     pub use gm::{
-        flat::{IntSize, Point, Points, Size},
+        flat::{Point, Points, Size},
         sign::Sign,
         Color, U8Color,
     };

@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, IntSize, IntView, SubView, ViewData, ViewSetup, ViewTest},
+    ui::{view, IntView, Size, SubView, ViewData, ViewSetup, ViewTest},
     App,
 };
 
@@ -21,7 +21,7 @@ impl ViewSetup for IntTestView {
 }
 
 impl ViewTest for IntTestView {
-    fn test_size() -> IntSize
+    fn test_size() -> Size<u32>
     where Self: Sized {
         (400, 400).into()
     }

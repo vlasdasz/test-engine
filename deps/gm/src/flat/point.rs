@@ -30,14 +30,14 @@ pub struct Point<T = f32> {
     pub y: T,
 }
 
+unsafe impl<T: Zeroable> Zeroable for Point<T> {}
+unsafe impl<T: Pod> Pod for Point<T> {}
+
 impl<T> Point<T> {
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 }
-
-unsafe impl Zeroable for Point<f32> {}
-unsafe impl Pod for Point<f32> {}
 
 impl Point<f32> {
     pub fn angle(&self) -> f32 {

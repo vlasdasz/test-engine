@@ -21,14 +21,14 @@ pub struct AppCore {
 mod desktop {
     use std::path::PathBuf;
 
-    use gm::flat::IntSize;
+    use gm::flat::Size;
     use refs::Own;
     use ui::View;
 
     use crate::{AppCore, Screen};
 
     impl AppCore {
-        pub fn new(size: IntSize, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
+        pub fn new(size: Size<u32>, assets_path: impl Into<PathBuf>, root_view: Own<dyn View>) -> Self {
             trace!("AppCore::new");
 
             let screen = Screen::new(assets_path, root_view, size);

@@ -7,7 +7,7 @@ use std::{
     },
 };
 
-use gm::flat::{IntSize, Point, Rect, Size};
+use gm::flat::{Point, Rect, Size};
 use refs::{Own, Weak};
 
 use crate::{layout::Placer, Container, UIEvent, View};
@@ -23,7 +23,7 @@ pub struct UIManager {
 
     display_scale: Mutex<f32>,
 
-    window_size: Mutex<IntSize>,
+    window_size: Mutex<Size<u32>>,
 
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<Vec<PathBuf>>,
@@ -56,11 +56,11 @@ impl UIManager {
         UI_MANAGER.get_or_init(Self::init)
     }
 
-    pub fn set_window_size(size: IntSize) {
+    pub fn set_window_size(size: Size<u32>) {
         *Self::get().window_size.lock().unwrap() = size;
     }
 
-    pub fn window_size() -> IntSize {
+    pub fn window_size() -> Size<u32> {
         *Self::get().window_size.lock().unwrap()
     }
 

@@ -3,7 +3,7 @@
 use std::{future::Future, marker::PhantomData, path::PathBuf};
 
 use anyhow::Result;
-use gm::flat::IntSize;
+use gm::flat::Size;
 use refs::{set_current_thread_as_main, Own};
 use ui::{View, ViewTest};
 
@@ -41,7 +41,7 @@ impl<T: View + Default + 'static> OldApp for ViewApp<T> {
     where Self: Sized {
     }
 
-    fn screen_size() -> IntSize
+    fn screen_size() -> Size<u32>
     where Self: Sized {
         T::test_size()
     }

@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use gm::{flat::IntSize, volume::GyroData};
+use gm::{flat::Size, volume::GyroData};
 use refs::{MainLock, Weak};
 use vents::Event;
 
@@ -14,7 +14,7 @@ pub struct UIEvents {
     pub scroll:       Event<f32>,
     pub gyro_changed: Event<GyroData>,
     pub on_touch:     Event<Touch>,
-    pub size_changed: Event<IntSize>,
+    pub size_changed: Event<Size<u32>>,
     selected_view:    RefCell<Weak<dyn View>>,
 }
 
@@ -31,7 +31,7 @@ impl UIEvents {
         &Self::get().on_touch
     }
 
-    pub fn size_changed() -> &'static Event<IntSize> {
+    pub fn size_changed() -> &'static Event<Size<u32>> {
         &Self::get().size_changed
     }
 }

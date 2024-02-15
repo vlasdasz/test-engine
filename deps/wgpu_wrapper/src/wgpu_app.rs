@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use anyhow::Result;
-use gm::flat::IntSize;
+use gm::flat::Size;
 use log::{error, trace};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
@@ -112,7 +112,7 @@ impl WGPUApp {
         self.state.window.set_title(&title.to_string());
     }
 
-    pub fn set_window_size(&self, size: impl Into<IntSize>) {
+    pub fn set_window_size(&self, size: impl Into<Size<u32>>) {
         let size = size.into();
         let _ = self.state.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }

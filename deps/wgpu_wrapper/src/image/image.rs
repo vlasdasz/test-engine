@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use anyhow::Result;
-use gm::flat::IntSize;
+use gm::flat::Size;
 use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
 use refs::Weak;
 use rtools::file::File;
@@ -14,7 +14,7 @@ use crate::{image::Texture, render::state::State, WGPUApp};
 
 #[derive(Debug)]
 pub struct Image {
-    pub size:        IntSize,
+    pub size:        Size<u32>,
     pub channels:    u8,
     pub(crate) bind: BindGroup,
 }
@@ -52,7 +52,7 @@ impl Image {
         state: &State,
         data: &[u8],
         name: impl ToString,
-        size: IntSize,
+        size: Size<u32>,
         channels: u8,
     ) -> Result<Weak<Image>> {
         let name = name.to_string();

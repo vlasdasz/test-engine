@@ -1,8 +1,8 @@
 use bytemuck::{Pod, Zeroable};
 
-use crate::{Color, ColorBase};
+use crate::Color;
 
-pub type U8Color = ColorBase<u8>;
+pub type U8Color = Color<u8>;
 unsafe impl Zeroable for U8Color {}
 unsafe impl Pod for U8Color {}
 

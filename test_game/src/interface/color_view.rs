@@ -2,7 +2,7 @@ use test_engine::{
     cast_slice, on_main,
     refs::Weak,
     ui::{
-        view, AlertErr, Button, Color, Container, Image, ImageView, IntSize, SubView, U8Color, UIEvents,
+        view, AlertErr, Button, Color, Container, Image, ImageView, Size, SubView, U8Color, UIEvents,
         ViewData, ViewSetup,
     },
     App, DataManager,
@@ -21,7 +21,7 @@ pub struct ColorView {
 }
 
 impl ColorView {
-    fn update_screenshot(mut self: Weak<Self>, size: IntSize) {
+    fn update_screenshot(mut self: Weak<Self>, size: Size<u32>) {
         spawn(async move {
             let Ok((buffer, _width_bytes)) = App::request_read_display().await else {
                 return;

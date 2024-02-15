@@ -2,7 +2,7 @@
 use core::ffi::{c_float, c_int};
 use std::path::PathBuf;
 
-use gm::flat::IntSize;
+use gm::flat::Size;
 use refs::{set_current_thread_as_main, Own};
 use ui::View;
 
@@ -13,7 +13,7 @@ pub trait OldApp {
     where Self: Sized {
     }
 
-    fn screen_size() -> IntSize
+    fn screen_size() -> Size<u32>
     where Self: Sized;
 
     fn make_root_view() -> Own<dyn View>

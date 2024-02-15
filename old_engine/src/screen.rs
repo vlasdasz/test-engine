@@ -4,7 +4,7 @@ use std::{ops::DerefMut, path::PathBuf, ptr::null_mut, sync::atomic::Ordering};
 use chrono::Utc;
 use dispatch::from_main;
 use gm::{
-    flat::{IntSize, Point, Rect},
+    flat::{Point, Rect, Size},
     Color,
 };
 use refs::{assert_main_thread, Own};
@@ -36,7 +36,7 @@ impl Screen {
         // });
     }
 
-    fn init(&mut self, #[cfg(desktop)] window_size: IntSize, view: Own<dyn View>) {
+    fn init(&mut self, #[cfg(desktop)] window_size: Size<u32>, view: Own<dyn View>) {
         UIManager::root_view().add_subview(view).place().back();
 
         if SHOW_DEBUG_VIEW.load(Ordering::Relaxed) {
@@ -144,9 +144,9 @@ impl Screen {
     }
 
     #[cfg(desktop)]
-    pub fn set_size(&mut self, _size: impl Into<IntSize>) {}
+    pub fn set_size(&mut self, _size: impl Into<Size<u32>>) {}
 
-    pub fn size_changed(&mut self, size: IntSize) {
+    pub fn size_changed(&mut self, size: Size<u32>) {
         trace!("Size changed: {:?}", size);
         UIManager::set_window_size(size);
 
@@ -190,7 +190,7 @@ impl Screen {
     pub fn new(
         assets_path: impl Into<PathBuf>,
         root_view: Own<dyn View>,
-        #[cfg(desktop)] window_size: IntSize,
+        #[cfg(desktop)] window_size: Size<u32>,
     ) -> Own<Self> {
         trace!("Creating screen");
 

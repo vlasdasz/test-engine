@@ -2,7 +2,7 @@ use gen::noise::TerrainParams;
 use test_engine::{
     refs::Weak,
     ui::{
-        view, AddLabel, Anchor, Color, DrawingView, Image, ImageView, IntSize, IntView, Points, SubView,
+        view, AddLabel, Anchor, Color, DrawingView, Image, ImageView, IntView, Points, Size, SubView,
         ViewData, ViewSetup, ViewTest, ViewTouch,
     },
 };
@@ -20,7 +20,7 @@ pub struct NoiseView {
 
 impl NoiseView {
     fn update_image(mut self: Weak<Self>) {
-        let resolution: IntSize = (100, 100).into();
+        let resolution: Size<u32> = (100, 100).into();
 
         let (image, _islands) = generate_image(TerrainParams {
             seed: self.seed,
@@ -94,7 +94,7 @@ impl ViewSetup for NoiseView {
 }
 
 impl ViewTest for NoiseView {
-    fn test_size() -> IntSize
+    fn test_size() -> Size<u32>
     where Self: Sized {
         (1200, 1000).into()
     }
