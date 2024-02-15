@@ -25,7 +25,7 @@ const VERTICES: &[Point] = &[
     Point::new(1.0, -1.0),
 ];
 
-const INDICES: &[u16] = &[2, 3, 1, 0];
+const INDICES: &[u16] = &[0, 1, 2, 1, 2, 3];
 
 #[allow(clippy::cast_possible_truncation)]
 const VERTEX_RANGE: Range<u32> = 0..(VERTICES.len() as u32);
