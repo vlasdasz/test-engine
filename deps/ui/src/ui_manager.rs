@@ -30,6 +30,8 @@ pub struct UIManager {
 
     pub open_keyboard:  AtomicBool,
     pub close_keyboard: AtomicBool,
+
+    pub display_touches: AtomicBool,
 }
 
 impl UIManager {
@@ -49,6 +51,7 @@ impl UIManager {
             on_drop_file: Default::default(),
             open_keyboard: false.into(),
             close_keyboard: false.into(),
+            display_touches: false.into(),
         }
     }
 

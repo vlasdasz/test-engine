@@ -2,6 +2,7 @@ use std::{
     future::Future,
     ops::{Deref, DerefMut},
     ptr::null_mut,
+    sync::atomic::Ordering,
 };
 
 use anyhow::Result;
@@ -39,6 +40,13 @@ pub struct App {
 
 impl App {
     pub fn current() -> &'static Self {
+        unsafe {
+            assert!(!APP.is_null(), "App was not initialized");
+            APP.as_mut().unwrap()
+        }
+    }
+
+    pub fn current_mut() -> &'static mut Self {
         unsafe {
             assert!(!APP.is_null(), "App was not initialized");
             APP.as_mut().unwrap()
@@ -197,7 +205,7 @@ impl App {
         }
     }
 
-    fn touch_event(&mut self, mut touch: Touch) -> bool {
+    pub fn touch_event(&mut self, mut touch: Touch) -> bool {
         const LOG_TOUCHES: bool = false;
         const DISPLAY_TOUCHES: bool = false;
 
@@ -211,7 +219,7 @@ impl App {
             warn!("{touch:?}");
         }
 
-        if DISPLAY_TOUCHES && !touch.is_moved() {
+        if UIManager::get().display_touches.load(Ordering::Relaxed) && !touch.is_moved() {
             let mut view = Container::new();
             view.set_size((5, 5)).set_color(Color::random());
             view.set_center(touch.position);

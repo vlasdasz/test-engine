@@ -1,14 +1,16 @@
 use std::fmt::{Debug, Display};
 
 use anyhow::{bail, Result};
-use log::error;
+use log::{error, warn};
 use serde::de::DeserializeOwned;
 use test_engine::{
     from_main, on_main,
     refs::ToOwn,
     sleep,
     ui::{Touch, UIEvents},
+    App,
 };
+use tokio::sync::mpsc::channel;
 
 use crate::view_tests::state::{clear_state, get_state};
 
@@ -40,14 +42,10 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     Ok(())
 }
 
-async fn inject_touch(touch: impl Into<Touch>) {
+async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
     sleep(INJECT_TOUCH_DELAY);
-    let _touch = touch.into();
     from_main(move || {
-        // let events = SystemEvents::get();
-        // events.cursor_moved.trigger(touch.position);
-        // events.mouse_click.trigger((MouseButtonLeft,
-        // touch.event.glfw_action()));
+        App::current_mut().touch_event(touch.into());
     })
     .await;
 }
@@ -63,7 +61,7 @@ pub async fn record_touches() {
     let touches = Vec::<Touch>::new().to_own();
     let mut touches = touches.weak();
 
-    //    let (s, mut r) = channel::<()>(1);
+    let (_s, mut r) = channel::<()>(1);
 
     on_main(move || {
         UIEvents::on_touch().val(move |touch| {
@@ -83,9 +81,9 @@ pub async fn record_touches() {
         // });
     });
 
-    // if let None = r.recv().await {
-    //     warn!("Failed to receive record_touches result");
-    // }
+    if let None = r.recv().await {
+        warn!("Failed to receive record_touches result");
+    }
 
     on_main(|| {
         UIEvents::on_touch().remove_subscribers();

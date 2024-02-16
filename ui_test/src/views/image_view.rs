@@ -8,6 +8,8 @@ use test_engine::{
     App, DataManager,
 };
 
+use crate::view_tests::record_touches;
+
 #[view]
 struct ImageTestView {
     image_view: SubView<ImageView>,
@@ -61,6 +63,8 @@ pub async fn test_image_view() -> Result<()> {
     App::set_test_view::<ImageTestView>(400, 400).await;
 
     dbg!(TouchStack::dump());
+
+    record_touches().await;
 
     sleep(0.1);
 

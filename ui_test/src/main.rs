@@ -4,9 +4,11 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
+use std::sync::atomic::Ordering;
+
 use anyhow::Result;
 use test_engine::{
-    ui::{Container, ViewSetup},
+    ui::{Container, UIManager, ViewSetup},
     App,
 };
 
@@ -22,11 +24,11 @@ mod views;
 #[tokio::main]
 async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
-        //UILayer::display_touches();
+        UIManager::get().display_touches.store(true, Ordering::Relaxed);
 
-        test_render_image_path().await?;
         test_image_view().await?;
         test_label().await?;
+        test_render_image_path().await?;
         test_touch_stack().await?;
         test_button().await?;
         test_switch().await?;
