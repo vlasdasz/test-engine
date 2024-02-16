@@ -26,6 +26,9 @@ impl ViewCallbacks for ColorMeter {
             return;
         }
         let pos = App::current().cursor_position;
+
+        #[allow(clippy::cast_sign_loss)]
+        #[allow(clippy::cast_possible_truncation)]
         let pos = Size::<usize>::new(pos.x as _, pos.y as _);
         let index = pos.height * self.scrennshot_size.width + pos.width;
         let Some(color) = self.screenshot.get(index) else {

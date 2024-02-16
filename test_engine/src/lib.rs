@@ -26,7 +26,7 @@ pub mod ui {
 
 pub mod refs {
     pub use refs::{
-        set_current_thread_as_main,
+        current_thread_id, set_current_thread_as_main,
         vec::{OwnVec, ToOwnVec},
         weak_from_ref, AsAny, Own, ToOwn, Weak,
     };

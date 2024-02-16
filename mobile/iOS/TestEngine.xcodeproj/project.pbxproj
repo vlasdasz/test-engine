@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D100A8AA27EF2B8800254154 /* TestEngineController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100A8A927EF2B8800254154 /* TestEngineController.m */; };
-		D1392BE928CE4325000D8CF5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1392BEA28CE4325000D8CF5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E8F2617166800F3F18B /* main.m */; };
-		D1392BEB28CE4325000D8CF5 /* TestEngineController.m in Sources */ = {isa = PBXBuildFile; fileRef = D100A8A927EF2B8800254154 /* TestEngineController.m */; };
 		D1392BED28CE4325000D8CF5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */; };
 		D1392BEE28CE4325000D8CF5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC23261C457000B81CFB /* SystemConfiguration.framework */; };
 		D1392BEF28CE4325000D8CF5 /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC24261C457000B81CFB /* libSystem.B.tbd */; };
@@ -22,7 +19,6 @@
 		D1392BF628CE4325000D8CF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
 		D1392BF728CE4325000D8CF5 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = D17B6FB1262EE65200D61876 /* Assets */; };
 		D1392BF828CE4325000D8CF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
-		D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E7E2617166700F3F18B /* AppDelegate.m */; };
 		D1411E8A2617166800F3F18B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1411E892617166800F3F18B /* Assets.xcassets */; };
 		D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
 		D1411E902617166800F3F18B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E8F2617166800F3F18B /* main.m */; };
@@ -34,6 +30,8 @@
 		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
 		D1918C3B28C02F1C00C46568 /* libtest_game_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1918C3A28C02F1C00C46568 /* libtest_game_lib.a */; };
 		D1B6DA7B28039818003C4BF3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */; };
+		D1D265C92B7F858000739891 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265C82B7F858000739891 /* Metal.framework */; };
+		D1D265CB2B7F85EC00739891 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265CA2B7F85EC00739891 /* UIKit.framework */; };
 		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
@@ -51,17 +49,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D100A8A827EF2B8800254154 /* TestEngineController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEngineController.h; sourceTree = "<group>"; };
-		D100A8A927EF2B8800254154 /* TestEngineController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEngineController.m; sourceTree = "<group>"; };
 		D1392BFC28CE4325000D8CF5 /* TestEngine Release.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestEngine Release.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1411E7D2617166700F3F18B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		D1411E7E2617166700F3F18B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D1411E892617166800F3F18B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D1411E8C2617166800F3F18B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D1411E8E2617166800F3F18B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D1411E8F2617166800F3F18B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D14901F72617215B0044E630 /* test_engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = test_engine.h; path = ../../../src/test_engine.h; sourceTree = "<group>"; };
 		D17B6FB1262EE65200D61876 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../../Assets; sourceTree = "<group>"; };
 		D17CC3E42617174D00F55C2E /* TestEngine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestEngine.entitlements; sourceTree = "<group>"; };
 		D180CC20261C455B00B81CFB /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
@@ -71,6 +64,8 @@
 		D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.B_asan.tbd; path = usr/lib/libSystem.B_asan.tbd; sourceTree = SDKROOT; };
 		D1918C3A28C02F1C00C46568 /* libtest_game_lib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtest_game_lib.a; path = ../../../target/universal/release/libtest_game_lib.a; sourceTree = "<group>"; };
 		D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		D1D265C82B7F858000739891 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		D1D265CA2B7F85EC00739891 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D1D524F3261BB078005C1426 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -94,6 +89,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1D265CB2B7F85EC00739891 /* UIKit.framework in Frameworks */,
+				D1D265C92B7F858000739891 /* Metal.framework in Frameworks */,
 				D1B6DA7B28039818003C4BF3 /* AudioToolbox.framework in Frameworks */,
 				D180CC29261C457000B81CFB /* SystemConfiguration.framework in Frameworks */,
 				D180CC2A261C457000B81CFB /* libSystem.B.tbd in Frameworks */,
@@ -131,12 +128,7 @@
 			children = (
 				D17B6FB1262EE65200D61876 /* Assets */,
 				D17CC3E42617174D00F55C2E /* TestEngine.entitlements */,
-				D14901F72617215B0044E630 /* test_engine.h */,
 				D1918C3A28C02F1C00C46568 /* libtest_game_lib.a */,
-				D1411E7D2617166700F3F18B /* AppDelegate.h */,
-				D1411E7E2617166700F3F18B /* AppDelegate.m */,
-				D100A8A827EF2B8800254154 /* TestEngineController.h */,
-				D100A8A927EF2B8800254154 /* TestEngineController.m */,
 				D1411E892617166800F3F18B /* Assets.xcassets */,
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
 				D1411E8E2617166800F3F18B /* Info.plist */,
@@ -148,6 +140,8 @@
 		D1D524F2261BB078005C1426 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D1D265CA2B7F85EC00739891 /* UIKit.framework */,
+				D1D265C82B7F858000739891 /* Metal.framework */,
 				D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */,
 				D180CC27261C457000B81CFB /* libSystem_asan.tbd */,
 				D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */,
@@ -299,9 +293,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1392BE928CE4325000D8CF5 /* AppDelegate.m in Sources */,
 				D1392BEA28CE4325000D8CF5 /* main.m in Sources */,
-				D1392BEB28CE4325000D8CF5 /* TestEngineController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,9 +301,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1411E7F2617166700F3F18B /* AppDelegate.m in Sources */,
 				D1411E902617166800F3F18B /* main.m in Sources */,
-				D100A8AA27EF2B8800254154 /* TestEngineController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,7 +330,7 @@
 				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
-				INFOPLIST_FILE = "TestEngine/Info.plist";
+				INFOPLIST_FILE = TestEngine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -369,7 +359,7 @@
 				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
-				INFOPLIST_FILE = "TestEngine/Info.plist";
+				INFOPLIST_FILE = TestEngine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

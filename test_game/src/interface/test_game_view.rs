@@ -2,8 +2,8 @@ use test_engine::{
     async_after, on_main,
     refs::Weak,
     ui::{
-        async_link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, Image,
-        ImageView, IntView, Label, Spinner, SubView, ViewData, ViewSetup, ViewTouch,
+        view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, Image, ImageView, IntView,
+        Label, Spinner, SubView, ViewData, ViewSetup, ViewTouch,
     },
     App, DataManager,
 };
@@ -27,20 +27,6 @@ pub struct TestGameView {
     alert:   SubView<Button>,
 
     color_meter: SubView<ColorMeter>,
-}
-
-impl TestGameView {
-    async fn spinner_pressed(self: Weak<Self>) {
-        Spinner::start();
-        async_after(4, async {
-            Spinner::stop();
-        });
-    }
-
-    async fn alert_pressed(self: Weak<Self>) {
-        Alert::show("Hello!");
-        on_main(|| App::set_window_size((600, 600)))
-    }
 }
 
 impl ViewSetup for TestGameView {
@@ -87,7 +73,12 @@ impl ViewSetup for TestGameView {
         self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.int, 10);
         self.spinner.set_text("Spinner");
         self.spinner.set_text_size(20);
-        async_link_button!(self, spinner, spinner_pressed);
+        self.spinner.on_tap(|| {
+            Spinner::start();
+            async_after(4, async {
+                Spinner::stop();
+            });
+        });
 
         self.alert.place().size(100, 28).anchor(Anchor::Left, self.int, 10).anchor(
             Anchor::Bot,
@@ -96,7 +87,10 @@ impl ViewSetup for TestGameView {
         );
         self.alert.set_text("Alert");
         self.alert.set_text_size(20);
-        async_link_button!(self, alert, alert_pressed);
+        self.alert.on_tap(|| {
+            Alert::show("Hello!");
+            on_main(|| App::set_window_size((600, 600)))
+        });
 
         self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);
     }

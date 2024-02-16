@@ -4,8 +4,11 @@
 #![feature(const_trait_impl)]
 
 mod interface;
-mod test_game;
+pub mod test_game;
 
-fn main() {
-    test_game::start_test_game()
+#[cfg(mobile)]
+#[no_mangle]
+extern "C" fn test_game() -> std::ffi::c_int {
+    test_game::start_test_game();
+    0
 }

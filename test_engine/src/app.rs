@@ -25,7 +25,7 @@ use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, State, WGPUApp, WGPUDrawer};
 
-use crate::{assets::Assets, git_root};
+use crate::assets::Assets;
 
 static mut APP: *mut App = null_mut();
 
@@ -62,11 +62,14 @@ impl App {
     }
 
     fn make_app(first_view: Own<dyn View>) -> Box<Self> {
-        Assets::init(git_root().expect("git_root()"));
+        #[cfg(desktop)]
+        Assets::init(crate::git_root().expect("git_root()"));
+        #[cfg(mobile)]
+        Assets::init(std::path::PathBuf::default());
         let mut app = Self::new(first_view);
         unsafe {
             assert!(APP.is_null(), "Another App already exists");
-            APP = app.as_mut() as _
+            APP = std::ptr::from_mut(app.as_mut());
         }
         app
     }
@@ -118,7 +121,7 @@ impl App {
         rect * display_scale
     }
 
-    fn update_view(&self, view: &mut dyn View) {
+    fn update_view(view: &mut dyn View) {
         if view.is_hidden() {
             return;
         }
@@ -127,12 +130,11 @@ impl App {
         view.calculate_absolute_frame();
         view.update();
         for view in view.subviews_mut() {
-            self.update_view(view.deref_mut());
+            Self::update_view(view.deref_mut());
         }
     }
 
     fn draw<'a>(
-        &'a self,
         pass: &mut RenderPass<'a>,
         drawer: &'a WGPUDrawer,
         view: &'a dyn View,
@@ -200,7 +202,7 @@ impl App {
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {
-                self.draw(pass, drawer, view.deref(), sections)
+                Self::draw(pass, drawer, view.deref(), sections)
             }
         }
     }
@@ -247,7 +249,7 @@ impl App {
         //     }
         // }
 
-        return DISPLAY_TOUCHES;
+        DISPLAY_TOUCHES
     }
 
     pub fn set_window_title(title: impl ToString) {
@@ -273,12 +275,12 @@ impl wgpu_wrapper::App for App {
 
     fn update(&mut self) {
         invoke_dispatched();
-        self.update_view(UIManager::root_view().deref_mut())
+        Self::update_view(UIManager::root_view().deref_mut())
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
         let mut sections: Vec<Section> = vec![];
-        self.draw(pass, drawer, self.root_view.deref(), &mut sections);
+        Self::draw(pass, drawer, self.root_view.deref(), &mut sections);
 
         Font::helvetice().brush.queue(&drawer.device, &drawer.queue, sections).unwrap()
     }

@@ -7,9 +7,9 @@ version = "0.1.0"
 [[bin]]
 name = "test_game"
 
-#[lib]
-#crate-type = ["rlib", "staticlib", "dylib"]
-#name = "test_game_lib"
+[lib]
+crate-type = ["rlib", "staticlib", "dylib"]
+name = "test_game_lib"
 
 [dependencies]
 anyhow = { workspace = true }
@@ -18,9 +18,6 @@ log = { workspace = true }
 tokio = { workspace = true }
 
 test_engine = { workspace = true }
-
-[target.'cfg(target_os="android")'.dependencies]
-android-ndk-sys = "0.2"
 
 [build-dependencies]
 cfg_aliases = { workspace = true }
