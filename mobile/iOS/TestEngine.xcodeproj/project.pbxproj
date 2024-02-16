@@ -3,18 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		D1392BEA28CE4325000D8CF5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E8F2617166800F3F18B /* main.m */; };
-		D1392BED28CE4325000D8CF5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */; };
-		D1392BEE28CE4325000D8CF5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC23261C457000B81CFB /* SystemConfiguration.framework */; };
-		D1392BEF28CE4325000D8CF5 /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC24261C457000B81CFB /* libSystem.B.tbd */; };
-		D1392BF028CE4325000D8CF5 /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
-		D1392BF128CE4325000D8CF5 /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
-		D1392BF228CE4325000D8CF5 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC20261C455B00B81CFB /* libSystem.tbd */; };
-		D1392BF328CE4325000D8CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; platformFilter = ios; };
 		D1392BF428CE4325000D8CF5 /* libtest_game_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1918C3A28C02F1C00C46568 /* libtest_game_lib.a */; };
 		D1392BF628CE4325000D8CF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
 		D1392BF728CE4325000D8CF5 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = D17B6FB1262EE65200D61876 /* Assets */; };
@@ -23,16 +16,13 @@
 		D1411E8D2617166800F3F18B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */; };
 		D1411E902617166800F3F18B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D1411E8F2617166800F3F18B /* main.m */; };
 		D17B6FB2262EE65200D61876 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = D17B6FB1262EE65200D61876 /* Assets */; };
-		D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC20261C455B00B81CFB /* libSystem.tbd */; };
-		D180CC29261C457000B81CFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC23261C457000B81CFB /* SystemConfiguration.framework */; };
-		D180CC2A261C457000B81CFB /* libSystem.B.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC24261C457000B81CFB /* libSystem.B.tbd */; };
-		D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC27261C457000B81CFB /* libSystem_asan.tbd */; };
-		D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D180CC28261C457000B81CFB /* libSystem.B_asan.tbd */; };
 		D1918C3B28C02F1C00C46568 /* libtest_game_lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1918C3A28C02F1C00C46568 /* libtest_game_lib.a */; };
-		D1B6DA7B28039818003C4BF3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */; };
+		D1D129092B7F90B0004AF69A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265DA2B7F8DF100739891 /* AudioToolbox.framework */; };
+		D1D1290A2B7F90BA004AF69A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265CA2B7F85EC00739891 /* UIKit.framework */; };
+		D1D1290B2B7F90BE004AF69A /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265C82B7F858000739891 /* Metal.framework */; };
 		D1D265C92B7F858000739891 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265C82B7F858000739891 /* Metal.framework */; };
 		D1D265CB2B7F85EC00739891 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265CA2B7F85EC00739891 /* UIKit.framework */; };
-		D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D524F3261BB078005C1426 /* OpenGLES.framework */; platformFilter = ios; };
+		D1D265DB2B7F8DF100739891 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D265DA2B7F8DF100739891 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,6 +56,7 @@
 		D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		D1D265C82B7F858000739891 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		D1D265CA2B7F85EC00739891 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D1D265DA2B7F8DF100739891 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		D1D524F3261BB078005C1426 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -74,13 +65,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1392BED28CE4325000D8CF5 /* AudioToolbox.framework in Frameworks */,
-				D1392BEE28CE4325000D8CF5 /* SystemConfiguration.framework in Frameworks */,
-				D1392BEF28CE4325000D8CF5 /* libSystem.B.tbd in Frameworks */,
-				D1392BF028CE4325000D8CF5 /* libSystem_asan.tbd in Frameworks */,
-				D1392BF128CE4325000D8CF5 /* libSystem.B_asan.tbd in Frameworks */,
-				D1392BF228CE4325000D8CF5 /* libSystem.tbd in Frameworks */,
-				D1392BF328CE4325000D8CF5 /* OpenGLES.framework in Frameworks */,
+				D1D1290B2B7F90BE004AF69A /* Metal.framework in Frameworks */,
+				D1D1290A2B7F90BA004AF69A /* UIKit.framework in Frameworks */,
+				D1D129092B7F90B0004AF69A /* AudioToolbox.framework in Frameworks */,
 				D1392BF428CE4325000D8CF5 /* libtest_game_lib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,15 +76,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1D265DB2B7F8DF100739891 /* AudioToolbox.framework in Frameworks */,
 				D1D265CB2B7F85EC00739891 /* UIKit.framework in Frameworks */,
 				D1D265C92B7F858000739891 /* Metal.framework in Frameworks */,
-				D1B6DA7B28039818003C4BF3 /* AudioToolbox.framework in Frameworks */,
-				D180CC29261C457000B81CFB /* SystemConfiguration.framework in Frameworks */,
-				D180CC2A261C457000B81CFB /* libSystem.B.tbd in Frameworks */,
-				D180CC2D261C457000B81CFB /* libSystem_asan.tbd in Frameworks */,
-				D180CC2E261C457000B81CFB /* libSystem.B_asan.tbd in Frameworks */,
-				D180CC21261C455B00B81CFB /* libSystem.tbd in Frameworks */,
-				D1D524F4261BB078005C1426 /* OpenGLES.framework in Frameworks */,
 				D1918C3B28C02F1C00C46568 /* libtest_game_lib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +121,7 @@
 		D1D524F2261BB078005C1426 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D1D265DA2B7F8DF100739891 /* AudioToolbox.framework */,
 				D1D265CA2B7F85EC00739891 /* UIKit.framework */,
 				D1D265C82B7F858000739891 /* Metal.framework */,
 				D1B6DA7A28039818003C4BF3 /* AudioToolbox.framework */,
