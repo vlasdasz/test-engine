@@ -22,7 +22,7 @@ pub struct State {
     pub(crate) config: wgpu::SurfaceConfiguration,
     pub(crate) window: Arc<Window>,
 
-    pub(crate) drawer: WGPUDrawer,
+    pub drawer: WGPUDrawer,
 
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,

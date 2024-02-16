@@ -169,4 +169,26 @@ impl RectState {
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         self.draw_vertices(render_pass, polygon_mode);
     }
+
+    pub fn draw_buffer<'a>(
+        &'a self,
+        device: &Device,
+        render_pass: &mut RenderPass<'a>,
+        rect: &Rect,
+        color: &Color,
+        polygon_mode: PolygonMode,
+        buffer: &'a Buffer,
+    ) {
+        render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
+        render_pass.set_pipeline(self.pipeline(polygon_mode));
+
+        let bind = BINDS
+            .get_mut()
+            .entry(*color)
+            .or_insert_with(|| Self::bind_group_with_color(&self.bind_group_layout, device, color));
+
+        render_pass.set_bind_group(0, bind, &[]);
+        render_pass.set_vertex_buffer(0, buffer.slice(..));
+        self.draw_vertices(render_pass, polygon_mode);
+    }
 }

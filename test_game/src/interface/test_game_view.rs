@@ -2,8 +2,8 @@ use test_engine::{
     async_after, on_main,
     refs::Weak,
     ui::{
-        view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, Image, ImageView, IntView,
-        Label, Spinner, SubView, ViewData, ViewSetup, ViewTouch,
+        view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView, Image, ImageView,
+        IntView, Label, Spinner, SubView, ViewData, ViewSetup,
     },
     App, DataManager,
 };
@@ -27,12 +27,13 @@ pub struct TestGameView {
     alert:   SubView<Button>,
 
     color_meter: SubView<ColorMeter>,
+
+    drawing: SubView<DrawingView>,
 }
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::LIGHTER_GRAY);
-        self.enable_touch();
 
         self.tl.set_color(Color::RED).place().size(100, 100).tl(10);
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
@@ -93,5 +94,10 @@ impl ViewSetup for TestGameView {
         });
 
         self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);
+
+        self.drawing.place().size(280, 280).t(10).anchor(Anchor::Right, self.tr, 10);
+
+        self.drawing
+            .add_path([(0.0, 0.0), (0.4, 0.2), (0.2, 0.6), (0.8, 0.2), (0.2, 0.5)]);
     }
 }

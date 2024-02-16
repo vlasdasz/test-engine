@@ -19,7 +19,7 @@ use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
     ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
 };
-use ui_views::{ImageView, Label};
+use ui_views::{DrawingView, ImageView, Label};
 use vents::OnceEvent;
 use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
@@ -141,7 +141,7 @@ impl App {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
     ) {
-        const DRAW_DEBUG_FRAMES: bool = false;
+        const DRAW_DEBUG_FRAMES: bool = true;
 
         if view.is_hidden() {
             return;
@@ -195,6 +195,17 @@ impl App {
                 .with_screen_position((center.x, center.y));
 
             sections.push(section);
+        } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
+            for path in drawing_view.paths() {
+                drawer.draw_buffer(
+                    &drawer.device,
+                    pass,
+                    &frame,
+                    &Color::GREEN,
+                    drawing_view.mode,
+                    &path.buffer,
+                );
+            }
         }
 
         if DRAW_DEBUG_FRAMES {

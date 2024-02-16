@@ -8,7 +8,7 @@ mod frame_counter;
 mod render;
 
 pub use app::*;
-pub use render::{state::State, wgpu_drawer::WGPUDrawer};
+pub use render::{path_data::PathData, state::State, wgpu_drawer::WGPUDrawer};
 pub use text::*;
 pub use wgpu;
 pub use wgpu_app::*;

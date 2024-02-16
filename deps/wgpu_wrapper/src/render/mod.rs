@@ -1,4 +1,5 @@
 pub mod image_state;
+pub mod path_data;
 pub mod rect_state;
 pub mod state;
 pub mod vertex_layout;
