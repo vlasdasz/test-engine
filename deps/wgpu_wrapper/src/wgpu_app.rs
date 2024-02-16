@@ -27,15 +27,11 @@ impl WGPUApp {
         APP.get_mut().as_mut().expect("App has not been initialized yet.")
     }
 
-    pub async fn start(app: Box<dyn App>, width: u32, height: u32) -> Result<()> {
+    pub async fn start(app: Box<dyn App>) -> Result<()> {
         env_logger::init();
         let event_loop = EventLoop::new()?;
-        let window = Arc::new(
-            WindowBuilder::new()
-                .with_title("Test Engine")
-                .with_inner_size(PhysicalSize::new(width, height))
-                .build(&event_loop)?,
-        );
+
+        let window = Arc::new(WindowBuilder::new().with_title("Test Engine").build(&event_loop)?);
 
         let state = State::new(app, window.clone()).await?;
 
@@ -65,6 +61,11 @@ impl WGPUApp {
                 }
                 WindowEvent::MouseInput { state, button, .. } => {
                     if self.state.app.mouse_event(state, button) {
+                        self.state.window.request_redraw();
+                    }
+                }
+                WindowEvent::Touch(touch) => {
+                    if self.state.app.touch_event(touch) {
                         self.state.window.request_redraw();
                     }
                 }

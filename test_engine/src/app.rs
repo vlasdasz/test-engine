@@ -24,6 +24,7 @@ use vents::OnceEvent;
 use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, State, WGPUApp, WGPUDrawer};
+use winit::event::TouchPhase;
 
 use crate::assets::Assets;
 
@@ -74,8 +75,8 @@ impl App {
         app
     }
 
-    pub async fn start(first_view: Own<dyn View>, width: u32, height: u32) -> Result<()> {
-        WGPUApp::start(Self::make_app(first_view), width, height).await
+    pub async fn start(first_view: Own<dyn View>) -> Result<()> {
+        WGPUApp::start(Self::make_app(first_view)).await
     }
 
     pub async fn start_with_actor(
@@ -90,7 +91,7 @@ impl App {
             let _ = actions.await;
         });
 
-        WGPUApp::start(app, 800, 600).await
+        WGPUApp::start(app).await
     }
 
     pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) {
@@ -207,7 +208,7 @@ impl App {
         }
     }
 
-    pub fn touch_event(&mut self, mut touch: Touch) -> bool {
+    pub fn process_touch_event(&mut self, mut touch: Touch) -> bool {
         const LOG_TOUCHES: bool = false;
         const DISPLAY_TOUCHES: bool = false;
 
@@ -293,7 +294,7 @@ impl wgpu_wrapper::App for App {
 
     fn mouse_moved(&mut self, position: Point) -> bool {
         self.cursor_position = position;
-        self.touch_event(Touch {
+        self.process_touch_event(Touch {
             id: 1,
             position,
             event: TouchEvent::Moved,
@@ -302,11 +303,24 @@ impl wgpu_wrapper::App for App {
     }
 
     fn mouse_event(&mut self, state: ElementState, button: MouseButton) -> bool {
-        self.touch_event(Touch {
+        self.process_touch_event(Touch {
             id: 1,
             position: self.cursor_position,
             event: state.into(),
             button,
+        })
+    }
+
+    fn touch_event(&mut self, touch: winit::event::Touch) -> bool {
+        self.process_touch_event(Touch {
+            id:       1,
+            position: (touch.location.x, touch.location.y).into(),
+            event:    match touch.phase {
+                TouchPhase::Started => TouchEvent::Began,
+                TouchPhase::Moved => TouchEvent::Moved,
+                TouchPhase::Ended | TouchPhase::Cancelled => TouchEvent::Ended,
+            },
+            button:   MouseButton::Left,
         })
     }
 

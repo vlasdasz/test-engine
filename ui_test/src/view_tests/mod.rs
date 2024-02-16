@@ -45,7 +45,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
     sleep(INJECT_TOUCH_DELAY);
     from_main(move || {
-        App::current_mut().touch_event(touch.into());
+        App::current_mut().process_touch_event(touch.into());
     })
     .await;
 }
