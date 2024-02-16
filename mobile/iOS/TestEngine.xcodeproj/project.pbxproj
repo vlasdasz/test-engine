@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -54,7 +54,6 @@
 		D100A8A827EF2B8800254154 /* TestEngineController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestEngineController.h; sourceTree = "<group>"; };
 		D100A8A927EF2B8800254154 /* TestEngineController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestEngineController.m; sourceTree = "<group>"; };
 		D1392BFC28CE4325000D8CF5 /* TestEngine Release.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestEngine Release.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1392BFD28CE4325000D8CF5 /* TestEngine copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TestEngine copy-Info.plist"; path = "/Users/vladas/test_engine/mobile/iOS/TestEngine copy-Info.plist"; sourceTree = "<absolute>"; };
 		D1411E7A2617166700F3F18B /* TestEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1411E7D2617166700F3F18B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D1411E7E2617166700F3F18B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -115,7 +114,6 @@
 				D1411E7C2617166700F3F18B /* TestEngine */,
 				D1411E7B2617166700F3F18B /* Products */,
 				D1D524F2261BB078005C1426 /* Frameworks */,
-				D1392BFD28CE4325000D8CF5 /* TestEngine copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -342,7 +340,7 @@
 				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
-				INFOPLIST_FILE = "TestEngine copy-Info.plist";
+				INFOPLIST_FILE = "TestEngine/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -371,7 +369,7 @@
 				DEVELOPMENT_TEAM = 2545JX4S8U;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../\"/**";
-				INFOPLIST_FILE = "TestEngine copy-Info.plist";
+				INFOPLIST_FILE = "TestEngine/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
