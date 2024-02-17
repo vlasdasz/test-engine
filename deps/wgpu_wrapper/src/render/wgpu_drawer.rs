@@ -7,27 +7,30 @@ use wgpu::{Buffer, Device, PolygonMode, Queue, RenderPass, TextureFormat};
 
 use crate::{
     image::Image,
-    render::{image_state::ImageState, rect_state::RectState},
+    render::{image_state::ImageState, path_state::PathState, rect_state::RectState},
 };
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
-    pub window_size:     Size,
-    pub device:          Device,
-    pub queue:           Queue,
-    rect_state:          RectState,
-    colored_image_state: ImageState,
+    pub window_size:       Size,
+    pub device:            Device,
+    pub queue:             Queue,
+    rect_state:            RectState,
+    colored_image_state:   ImageState,
+    pub(crate) path_state: PathState,
 }
 
 impl WGPUDrawer {
     pub fn new(device: Device, queue: Queue, texture_format: TextureFormat) -> Result<Self> {
         let rect_state = RectState::new(&device, texture_format);
+        let path_state = PathState::new(&device, texture_format);
         let colored_image_state = ImageState::new(&device);
         Ok(Self {
             window_size: Default::default(),
             device,
             queue,
             rect_state,
+            path_state,
             colored_image_state,
         })
     }

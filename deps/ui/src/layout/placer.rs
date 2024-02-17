@@ -4,10 +4,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{
-    axis::Axis,
-    flat::{Rect, Size},
-};
+use gm::{axis::Axis, flat::Size};
 use itertools::Itertools;
 use refs::{Own, Rglica, ToRglica, Weak};
 use rtools::IntoF32;
@@ -23,7 +20,6 @@ pub struct Placer {
     pub(crate) sub_rules: RefCell<Vec<LayoutRule>>,
 
     view:      Weak<dyn View>,
-    frame:     Rglica<Rect>,
     s_content: Rglica<Size>,
 
     all_margin: RefCell<f32>,
@@ -37,7 +33,6 @@ impl Placer {
             rules:      RefCell::new(vec![]),
             sub_rules:  RefCell::new(vec![]),
             view:       Default::default(),
-            frame:      Default::default(),
             s_content:  Default::default(),
             all_margin: RefCell::new(0.0),
             has:        RefCell::new(Default::default()),
@@ -55,7 +50,6 @@ impl Placer {
             rules: vec![].into(),
             sub_rules: vec![].into(),
             view,
-            frame: view.frame().to_rglica(),
             s_content: s_content.to_rglica(),
             all_margin: Default::default(),
             has: Default::default(),
@@ -126,7 +120,7 @@ impl Placer {
     pub fn relative_y(&self, position: impl IntoF32) -> &Self {
         let position = position.into_f32();
         self.custom(move |mut view, s_content| {
-            view.frame_mut().origin.y = s_content.height * position;
+            view.set_y(s_content.height * position);
         })
     }
 
@@ -352,8 +346,11 @@ impl Placer {
 impl Placer {
     fn simple_layout(&mut self, rule: &LayoutRule) {
         let has = *self.has();
-        let frame = self.frame.deref_mut();
         let s_content = self.s_content.deref();
+
+        let view = self.view.deref_mut();
+        let mut frame = *view.frame();
+
         match rule.side {
             Anchor::Top => frame.origin.y = rule.offset,
             Anchor::Bot => {
@@ -390,11 +387,14 @@ impl Placer {
                 }
             }
             _ => unimplemented!(),
-        }
+        };
+
+        view.set_frame(frame);
     }
 
     fn anchor_layout(&mut self, rule: &LayoutRule) {
-        let frame = self.frame.deref_mut();
+        let view = self.view.deref_mut();
+        let mut frame = *view.frame();
         let a_frame = rule.anchor_view.frame();
         match rule.side {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
@@ -402,11 +402,13 @@ impl Placer {
             Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
             Anchor::Right => frame.origin.x = a_frame.x() - rule.offset - frame.width(),
             _ => unimplemented!(),
-        }
+        };
+        view.set_frame(frame);
     }
 
     fn relative_layout(&mut self, rule: &LayoutRule) {
-        let frame = self.frame.deref_mut();
+        let view = self.view.deref_mut();
+        let mut frame = *view.frame();
         let a_frame = rule.anchor_view.frame();
         match rule.side {
             Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
@@ -415,19 +417,19 @@ impl Placer {
             Anchor::X => frame.origin.x = a_frame.origin.x * rule.offset,
             Anchor::Y => frame.origin.y = a_frame.origin.y * rule.offset,
             _ => unimplemented!(),
-        }
+        };
+        view.set_frame(frame);
     }
 
     fn tiling_layout(&mut self, tiling: &Tiling) {
-        let mut frame = self.frame;
-        let frame = frame.deref_mut();
+        let mut frame = *self.view.frame();
         match tiling {
-            Tiling::Background => *frame = (*self.s_content.deref()).into(),
+            Tiling::Background => frame = (*self.s_content.deref()).into(),
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
-            Tiling::LeftHalf => *frame = (0, 0, self.s_content.width / 2.0, self.s_content.height).into(),
+            Tiling::LeftHalf => frame = (0, 0, self.s_content.width / 2.0, self.s_content.height).into(),
             Tiling::RightHalf => {
-                *frame = (
+                frame = (
                     self.s_content.width / 2.0,
                     0,
                     self.s_content.width / 2.0,
@@ -435,10 +437,9 @@ impl Placer {
                 )
                     .into()
             }
-            Tiling::Distribute(ratio) => {
-                distribute_with_ratio(self.frame.size, self.view.subviews_mut(), ratio)
-            }
-        }
+            Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_mut(), ratio),
+        };
+        self.view.set_frame(frame);
     }
 
     fn between_layout(&mut self, rule: &LayoutRule) {
@@ -453,25 +454,30 @@ impl Placer {
         let center_a = rule.anchor_view.frame().center();
         let center_b = rule.anchor_view2.frame().center();
         let center = center_a.middle(&center_b);
-        self.frame.set_center(center);
+        self.view.edit_frame(|frame| frame.set_center(center));
     }
 
     fn between_s_layout(&mut self, rule: &LayoutRule) {
         let f = rule.anchor_view.frame();
         let cen = f.center();
+
+        let view = self.view.deref_mut();
+        let mut frame = *view.frame();
+
         match rule.side {
-            Anchor::Top => self.frame.set_center((cen.x, f.y() / 2.0)),
-            Anchor::Bot => self.frame.set_center((
+            Anchor::Top => frame.set_center((cen.x, f.y() / 2.0)),
+            Anchor::Bot => frame.set_center((
                 cen.x,
                 self.s_content.height - (self.s_content.height - f.max_y()) / 2.0,
             )),
-            Anchor::Left => self.frame.set_center((f.x() / 2.0, cen.y)),
-            Anchor::Right => self.frame.set_center((
+            Anchor::Left => frame.set_center((f.x() / 2.0, cen.y)),
+            Anchor::Right => frame.set_center((
                 self.s_content.width - (self.s_content.width - f.max_x()) / 2.0,
                 cen.y,
             )),
             _ => unimplemented!(),
-        }
+        };
+        view.set_frame(frame);
     }
 }
 
@@ -505,11 +511,15 @@ fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
 
     let mut last_pos: f32 = 0.0;
 
-    for frame in views.iter_mut().map(|v| v.frame_mut()) {
+    for view in views.iter_mut() {
+        let mut frame = *view.frame();
+
         frame.set_position::<AXIS>(last_pos);
         frame.set_other_position::<AXIS>(0);
         frame.set_length::<AXIS>(length);
         frame.set_other_length::<AXIS>(other_length);
+
+        view.set_frame(frame);
 
         last_pos += length + margin;
     }

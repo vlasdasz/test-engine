@@ -52,6 +52,12 @@ pub struct ViewBase {
     pub dont_hide: bool,
 
     pub(crate) loaded: Event,
+
+    pub(crate) trigger_pos_changed:  bool,
+    pub(crate) trigger_size_changed: bool,
+
+    pub(crate) position_changed: Event,
+    pub(crate) size_changed:     Event,
 }
 
 #[derive(Default)]

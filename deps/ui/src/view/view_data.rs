@@ -30,7 +30,9 @@ pub trait ViewData {
     fn priority(&self) -> u8;
     fn dont_hide(&self) -> bool;
 
-    fn loaded(&mut self) -> &mut Event;
+    fn loaded(&self) -> &Event;
+    fn position_changed(&self) -> &Event;
+    fn size_changed(&self) -> &Event;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -98,7 +100,15 @@ impl<T: ?Sized + View> ViewData for T {
         self.base().dont_hide
     }
 
-    fn loaded(&mut self) -> &mut Event {
-        &mut self.base_mut().loaded
+    fn loaded(&self) -> &Event {
+        &self.base().loaded
+    }
+
+    fn position_changed(&self) -> &Event {
+        &self.base().position_changed
+    }
+
+    fn size_changed(&self) -> &Event {
+        &self.base().size_changed
     }
 }

@@ -32,9 +32,10 @@ impl ViewSetup for ScrollView {
 impl ViewCallbacks for ScrollView {
     fn update(&mut self) {
         let co = self.content_offset;
-        self.slider.frame_mut().origin.y = -co.y;
+        self.slider.set_y(-co.y);
         let range = self.content_size.height - self.height();
-        self.slider.frame_mut().size.height = self.height();
+        let height = self.height();
+        self.slider.set_height(height);
         self.slider.set_range(-range, 0);
         let hidden = self.height() >= self.content_size.height;
         self.slider.set_hidden(hidden);

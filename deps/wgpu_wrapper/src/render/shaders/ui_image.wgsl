@@ -14,7 +14,7 @@ fn v_main(
 ) -> VertexOutput {
     var out: VertexOutput;
     out.tex_coords = vertex.tex_coords;
-    out.clip_position = vec4<f32>(vertex.position, 0.0, 1.0);
+    out.clip_position = vec4<f32>(vertex.position, 1.0, 1.0);
     return out;
 }
 

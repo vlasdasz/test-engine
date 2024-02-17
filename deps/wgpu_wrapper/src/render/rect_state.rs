@@ -44,7 +44,7 @@ pub struct RectState {
 
 impl RectState {
     pub fn new(device: &Device, texture_format: TextureFormat) -> Self {
-        let shader = device.create_shader_module(include_wgsl!("../shaders/rect.wgsl"));
+        let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
         let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label:   Some("rect_bind_group_layout"),

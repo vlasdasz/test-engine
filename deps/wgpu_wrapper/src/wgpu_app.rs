@@ -5,6 +5,7 @@ use gm::{flat::Size, U8Color};
 use log::{error, trace};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
+use wgpu::BindGroupLayout;
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
@@ -119,5 +120,9 @@ impl WGPUApp {
 
     pub fn request_read_display(&self) -> Receiver<(Vec<U8Color>, Size<u32>)> {
         self.state.request_read_display()
+    }
+
+    pub fn path_layout() -> &'static BindGroupLayout {
+        &Self::current().state.drawer.path_state.bind_group_layout
     }
 }

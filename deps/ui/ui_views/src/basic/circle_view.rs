@@ -18,7 +18,7 @@ pub struct CircleView {
 impl CircleView {
     pub fn set_radius(&mut self, radius: impl IntoF32) -> &mut Self {
         let diameter = radius.into_f32() * 2.0;
-        self.frame_mut().size = (diameter, diameter).into();
+        self.set_size((diameter, diameter));
         self.redraw();
         self
     }
@@ -41,7 +41,7 @@ impl CircleView {
 
 impl ViewSetup for CircleView {
     fn setup(mut self: Weak<Self>) {
-        self.frame_mut().size = (10, 10).into();
+        self.set_size((10, 10));
         self.drawing.place().back();
     }
 }
