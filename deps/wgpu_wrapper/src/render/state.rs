@@ -70,19 +70,13 @@ impl State {
 
         dbg!(&surface_caps);
 
-        let alpha_mode = if surface_caps.alpha_modes.contains(&CompositeAlphaMode::PostMultiplied) {
-            CompositeAlphaMode::PostMultiplied
-        } else {
-            CompositeAlphaMode::Auto
-        };
-
         let config = wgpu::SurfaceConfiguration {
-            usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
-            format: TextureFormat::Bgra8UnormSrgb,
-            width: size.width,
-            height: size.height,
+            usage:        wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+            format:       TextureFormat::Bgra8UnormSrgb,
+            width:        size.width,
+            height:       size.height,
             present_mode: PresentMode::AutoVsync,
-            alpha_mode,
+            alpha_mode:   CompositeAlphaMode::Auto,
             view_formats: vec![],
 
             desired_maximum_frame_latency: 2,

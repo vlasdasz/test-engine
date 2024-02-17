@@ -15,10 +15,13 @@ pub struct TestGameView {
     bl: SubView<Container>,
     br: SubView<Container>,
 
+    drawing: SubView<DrawingView>,
+    stick:   SubView<AnalogStickView>,
+
     image: SubView<ImageView>,
 
     label_l: SubView<Label>,
-    label_r: SubView<Label>,
+    image_r: SubView<ImageView>,
 
     dpad: SubView<DPadView>,
     int:  SubView<IntView>,
@@ -27,10 +30,6 @@ pub struct TestGameView {
     alert:   SubView<Button>,
 
     color_meter: SubView<ColorMeter>,
-
-    drawing: SubView<DrawingView>,
-
-    stick: SubView<AnalogStickView>,
 }
 
 impl ViewSetup for TestGameView {
@@ -51,12 +50,12 @@ impl ViewSetup for TestGameView {
         self.label_l.text = "Łėŵœ Ы".into();
         self.label_l.set_text_size(64.0);
 
-        self.label_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
+        self.image_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
             Anchor::Left,
             self.image,
             20,
         );
-        self.label_r.text = "щКыЩъ".into();
+        self.image_r.image = Image::get("palm.png");
 
         self.dpad.place().size(200, 140).b(20).anchor(Anchor::Left, self.bl, 10);
 
