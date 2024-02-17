@@ -1,6 +1,7 @@
 use gm::{
     axis::Axis,
     flat::{Point, Points, Size},
+    Color,
 };
 use refs::Weak;
 use wgpu_wrapper::PathData;
@@ -9,7 +10,7 @@ mod test_engine {
     pub(crate) use ui;
 }
 
-use ui::{view, ViewFrame, ViewSetup};
+use ui::{view, ViewData, ViewFrame, ViewSetup};
 use wgpu_wrapper::wgpu::PolygonMode;
 
 #[view]
@@ -22,6 +23,7 @@ pub struct DrawingView {
 impl ViewSetup for DrawingView {
     fn setup(mut self: Weak<Self>) {
         self.mode = PolygonMode::Line;
+        self.size_changed().sub(move || self.update_buffers());
     }
 }
 
@@ -40,7 +42,8 @@ impl DrawingView {
         if path.is_empty() {
             return self;
         }
-        self.paths.push(path.into());
+
+        self.paths.push(PathData::new(Color::GREEN, self.size(), path));
         self
     }
 
@@ -59,6 +62,13 @@ impl DrawingView {
         let ratios = path_size.ratios(fitted_size);
 
         path.into_iter().map(|point| point * ratios).collect()
+    }
+
+    fn update_buffers(mut self: Weak<Self>) {
+        let size = self.size();
+        for path in &mut self.paths {
+            path.resize(size);
+        }
     }
 
     pub fn remove_all_paths(&mut self) {

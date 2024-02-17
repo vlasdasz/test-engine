@@ -199,12 +199,12 @@ impl App {
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths() {
                 drawer.draw_buffer(
-                    &drawer.device,
                     pass,
                     &frame,
-                    &Color::GREEN,
                     drawing_view.mode,
-                    &path.buffer,
+                    path.buffer(),
+                    path.bind_group(),
+                    path.vertex_range(),
                 );
             }
         }

@@ -95,9 +95,12 @@ impl ViewSetup for TestGameView {
 
         self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);
 
-        self.drawing.place().size(280, 280).t(10).anchor(Anchor::Right, self.tr, 10);
+        self.drawing.place().w(280).t(10).anchor(Anchor::Right, self.tr, 10).relative(
+            Anchor::Height,
+            self,
+            0.2,
+        );
 
-        self.drawing
-            .add_path([(0.0, 0.0), (0.4, 0.2), (0.2, 0.6), (0.8, 0.2), (0.2, 0.5)]);
+        self.drawing.add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)]);
     }
 }

@@ -1,3 +1,5 @@
+#![allow(clippy::struct_excessive_bools)]
+
 use derivative::Derivative;
 use gm::{
     flat::{Point, Rect},

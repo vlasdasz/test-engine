@@ -1,9 +1,11 @@
+use std::ops::Range;
+
 use anyhow::Result;
 use gm::{
     flat::{Rect, Size},
     Color,
 };
-use wgpu::{Buffer, Device, PolygonMode, Queue, RenderPass, TextureFormat};
+use wgpu::{BindGroup, Buffer, Device, PolygonMode, Queue, RenderPass, TextureFormat};
 
 use crate::{
     image::Image,
@@ -49,15 +51,15 @@ impl WGPUDrawer {
 
     pub fn draw_buffer<'a>(
         &'a self,
-        device: &Device,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
-        color: &Color,
         polygon_mode: PolygonMode,
         buffer: &'a Buffer,
+        bind_group: &'a BindGroup,
+        vertex_range: Range<u32>,
     ) {
-        self.rect_state
-            .draw_buffer(device, render_pass, rect, color, polygon_mode, buffer)
+        self.path_state
+            .draw_buffer(render_pass, rect, polygon_mode, buffer, bind_group, vertex_range)
     }
 
     pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {

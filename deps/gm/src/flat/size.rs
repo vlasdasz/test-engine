@@ -23,9 +23,13 @@ pub struct Size<T = f32> {
 unsafe impl<T: Zeroable> Zeroable for Size<T> {}
 unsafe impl<T: Pod> Pod for Size<T> {}
 
-impl<T> Size<T> {
+impl<T: Copy> Size<T> {
     pub fn new(width: T, height: T) -> Self {
         Self { width, height }
+    }
+
+    pub const fn as_slice(&self) -> [T; 2] {
+        [self.width, self.height]
     }
 }
 
