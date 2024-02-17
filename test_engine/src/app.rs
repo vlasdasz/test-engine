@@ -14,6 +14,7 @@ use gm::{
 use log::{trace, warn};
 use manage::data_manager::DataManager;
 use refs::{Own, Rglica, Weak};
+use rtools::platform::Platform;
 use tokio::{spawn, sync::oneshot::Receiver};
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -299,7 +300,11 @@ impl wgpu_wrapper::App for App {
     }
 
     fn resize(&mut self, size: Size<u32>) {
-        UIManager::root_view().set_size(size);
+        if Platform::IOS {
+            UIManager::root_view().set_frame((0, 100, size.width, size.height - 280));
+        } else {
+            UIManager::root_view().set_size(size);
+        }
         UIEvents::size_changed().trigger(size);
         self.update();
     }

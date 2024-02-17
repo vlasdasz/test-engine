@@ -15,7 +15,7 @@ mod test_engine {
 use crate::DrawingView;
 
 const SIZE: f32 = 200.0;
-const OUTLINE_WIDTH: f32 = 5.0;
+const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 const PRECISION: u16 = 50;
 

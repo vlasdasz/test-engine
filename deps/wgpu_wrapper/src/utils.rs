@@ -27,7 +27,7 @@ pub fn make_pipeline<Vertex: VertexLayout>(
             entry_point: "f_main",
             targets:     &[Some(ColorTargetState {
                 format:     texture_format,
-                blend:      Some(BlendState::REPLACE),
+                blend:      Some(BlendState::ALPHA_BLENDING),
                 write_mask: ColorWrites::ALL,
             })],
         }

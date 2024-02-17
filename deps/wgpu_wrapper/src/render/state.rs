@@ -76,7 +76,7 @@ impl State {
             width:        size.width,
             height:       size.height,
             present_mode: PresentMode::AutoVsync,
-            alpha_mode:   CompositeAlphaMode::Auto,
+            alpha_mode:   CompositeAlphaMode::PostMultiplied,
             view_formats: vec![],
 
             desired_maximum_frame_latency: 2,

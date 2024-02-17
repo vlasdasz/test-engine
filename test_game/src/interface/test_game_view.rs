@@ -35,8 +35,6 @@ pub struct TestGameView {
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::LIGHTER_GRAY);
-
         self.tl.set_color(Color::RED).place().size(100, 100).tl(10);
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
         self.bl.set_color(Color::BLUE).place().size(100, 100).bl(10);
