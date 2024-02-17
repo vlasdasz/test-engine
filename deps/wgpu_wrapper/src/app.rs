@@ -9,7 +9,7 @@ pub trait App {
     fn window_ready(&mut self);
     fn update(&mut self);
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer);
-    fn resize(&mut self, size: Size<u32>);
+    fn resize(&mut self, position: Point, size: Size<u32>);
     fn mouse_moved(&mut self, position: Point) -> bool;
     fn mouse_event(&mut self, state: ElementState, button: MouseButton) -> bool;
     fn touch_event(&mut self, touch: Touch) -> bool;

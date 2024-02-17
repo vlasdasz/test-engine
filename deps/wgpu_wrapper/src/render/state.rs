@@ -3,6 +3,8 @@ use std::{cell::RefCell, collections::HashMap, mem::size_of, sync::Arc};
 use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
 use gm::{flat::Size, U8Color};
+use log::error;
+use rtools::platform::Platform;
 use tokio::{
     spawn,
     sync::oneshot::{channel, Receiver, Sender},
@@ -111,7 +113,31 @@ impl State {
                     &self.drawer.queue,
                 );
             }
-            self.app.resize((new_size.width, new_size.height).into());
+
+            let inner_size = self.window.inner_size();
+
+            dbg!(&new_size);
+            dbg!(&inner_size);
+
+            let position = if Platform::IOS {
+                match self.window.inner_position() {
+                    Ok(pos) => (pos.x, pos.y),
+                    Err(err) => {
+                        error!("{err}");
+                        (0, 0)
+                    }
+                }
+            } else {
+                (0, 0)
+            };
+
+            dbg!(&position);
+
+            #[allow(clippy::cast_sign_loss)]
+            self.app.resize(
+                position.into(),
+                (inner_size.width, inner_size.height - position.1 as u32).into(),
+            );
         }
     }
 
