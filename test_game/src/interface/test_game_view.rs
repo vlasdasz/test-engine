@@ -2,8 +2,8 @@ use test_engine::{
     async_after, on_main,
     refs::Weak,
     ui::{
-        view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView, Image, ImageView,
-        IntView, Label, Spinner, SubView, ViewData, ViewSetup,
+        view, Alert, AnalogStickView, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
+        Image, ImageView, IntView, Label, PointsPath, PolygonMode, Spinner, SubView, ViewData, ViewSetup,
     },
     App, DataManager,
 };
@@ -29,6 +29,8 @@ pub struct TestGameView {
     color_meter: SubView<ColorMeter>,
 
     drawing: SubView<DrawingView>,
+
+    stick: SubView<AnalogStickView>,
 }
 
 impl ViewSetup for TestGameView {
@@ -101,6 +103,18 @@ impl ViewSetup for TestGameView {
             0.2,
         );
 
-        self.drawing.add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)]);
+        self.drawing.add_path(
+            [(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)],
+            Color::GREEN,
+            PolygonMode::Fill,
+        );
+
+        self.drawing.add_path(
+            PointsPath::circle_triangles_with((200, 100), 50, 5),
+            Color::TURQUOISE,
+            PolygonMode::Fill,
+        );
+
+        self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
     }
 }

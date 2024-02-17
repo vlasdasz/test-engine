@@ -15,14 +15,12 @@ use wgpu_wrapper::wgpu::PolygonMode;
 
 #[view]
 pub struct DrawingView {
-    pub mode:    PolygonMode,
     pub rescale: bool,
     paths:       Vec<PathData>,
 }
 
 impl ViewSetup for DrawingView {
-    fn setup(mut self: Weak<Self>) {
-        self.mode = PolygonMode::Line;
+    fn setup(self: Weak<Self>) {
         self.size_changed().sub(move || self.update_buffers());
     }
 }
@@ -32,7 +30,7 @@ impl DrawingView {
         &self.paths
     }
 
-    pub fn add_path<Container, P>(&mut self, path: Container) -> &mut Self
+    pub fn add_path<Container, P>(&mut self, path: Container, color: Color, mode: PolygonMode) -> &mut Self
     where
         P: Into<Point>,
         Container: IntoIterator<Item = P>, {
@@ -43,7 +41,7 @@ impl DrawingView {
             return self;
         }
 
-        self.paths.push(PathData::new(Color::GREEN, self.size(), path));
+        self.paths.push(PathData::new(color, self.size(), path, mode));
         self
     }
 

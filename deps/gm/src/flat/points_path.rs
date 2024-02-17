@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use std::{f32::consts::PI, iter::once};
 
 use rtools::IntoF32;
 
@@ -9,13 +9,21 @@ pub type Points = Vec<Point>;
 pub struct PointsPath {}
 
 impl PointsPath {
-    pub fn circle_with(center: Point, radius: f32, precision: u16) -> Points {
-        let mut path = vec![];
+    pub fn circle_with(center: impl Into<Point>, radius: impl IntoF32, precision: u16) -> Points {
+        let radius = radius.into_f32();
+        let center = center.into();
         let angle_step = PI * 2.0 / f32::from(precision);
-        for i in 0..precision {
-            path.push(point_on_circle(radius, angle_step * f32::from(i), center));
-        }
-        path
+        (0..precision)
+            .map(|i| point_on_circle(radius, angle_step * f32::from(i), center))
+            .collect()
+    }
+
+    pub fn circle_triangles_with(center: impl Into<Point>, radius: impl IntoF32, precision: u16) -> Points {
+        let radius = radius.into_f32();
+        let center = center.into();
+        let circle = Self::circle_with(center, radius, precision);
+
+        pairs(circle).into_iter().flat_map(|(a, b)| [a, b, center]).collect()
     }
 
     pub fn rounded_rect(rect: impl Into<Rect>, radius: impl IntoF32, precision: u16) -> Points {
@@ -53,4 +61,18 @@ impl PointsPath {
 pub fn point_on_circle(radius: f32, angle: f32, center: impl Into<Point>) -> Point {
     let center = center.into();
     (radius * angle.cos() + center.x, radius * angle.sin() + center.y).into()
+}
+
+fn pairs<T: Copy>(data: Vec<T>) -> Vec<(T, T)> {
+    let first = *data.first().unwrap();
+    let last = *data.last().unwrap();
+    data.windows(2)
+        .chain(once([first, last].as_ref()))
+        .map(|data| (data[1], data[0]))
+        .collect()
+}
+
+#[test]
+fn test_pairs() {
+    assert_eq!(pairs(vec![1, 2, 3]), vec![(2, 1), (3, 2), (3, 1)]);
 }

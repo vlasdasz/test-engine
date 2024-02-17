@@ -8,12 +8,14 @@ use gm::{
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
     BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, Buffer, BufferBinding, BufferUsages, Device,
+    PolygonMode,
 };
 
 use crate::WGPUApp;
 
 #[derive(Debug)]
 pub struct PathData {
+    pub mode:     PolygonMode,
     pub color:    Color,
     buffer:       Buffer,
     bind_group:   BindGroup,
@@ -33,7 +35,7 @@ impl PathData {
         self.vertex_range.clone()
     }
 
-    pub fn new(color: Color, size: Size, points: Points) -> Self {
+    pub fn new(color: Color, size: Size, points: Points, mode: PolygonMode) -> Self {
         let device = &WGPUApp::current().state.drawer.device;
         let path_layout = WGPUApp::path_layout();
 
@@ -46,6 +48,7 @@ impl PathData {
         let bind_group = make_bind_group(path_layout, device, &color, size);
 
         Self {
+            mode,
             color,
             buffer,
             bind_group,

@@ -201,7 +201,7 @@ impl App {
                 drawer.draw_buffer(
                     pass,
                     &frame,
-                    drawing_view.mode,
+                    path.mode,
                     path.buffer(),
                     path.bind_group(),
                     path.vertex_range(),

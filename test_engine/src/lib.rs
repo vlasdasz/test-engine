@@ -12,14 +12,14 @@ mod views;
 pub mod ui {
     pub use ::ui::*;
     pub use gm::{
-        flat::{Point, Points, Size},
+        flat::{Point, Points, PointsPath, Size},
         sign::Sign,
         Color, U8Color,
     };
     pub use ui_proc::view;
     pub use ui_views::*;
     pub use views::color_meter::ColorMeter;
-    pub use wgpu_wrapper::image::Image;
+    pub use wgpu_wrapper::{image::Image, wgpu::PolygonMode};
 
     use crate::views;
 }

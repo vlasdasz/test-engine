@@ -1,7 +1,12 @@
-use gm::flat::Point;
+use gm::{
+    flat::{Point, PointsPath},
+    Color,
+};
 use refs::Weak;
 use ui::{view, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
 use vents::Event;
+use wgpu_wrapper::wgpu::PolygonMode;
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -9,10 +14,10 @@ mod test_engine {
 
 use crate::DrawingView;
 
-const SIZE: f32 = 80.0;
-const _OUTLINE_WIDTH: f32 = 5.0;
+const SIZE: f32 = 200.0;
+const OUTLINE_WIDTH: f32 = 5.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
-const _PRECISION: u16 = 50;
+const PRECISION: u16 = 50;
 
 #[view]
 pub struct AnalogStickView {
@@ -61,22 +66,22 @@ impl ViewSetup for AnalogStickView {
 
         self.background.set_frame((SIZE, SIZE));
 
-        let _frame = *self.frame();
-        // self.background.add_path(
-        //     PointsPath::circle_with(frame.size.center(), frame.size.width / 2.0,
-        // PRECISION),     &Color::BLACK,
-        //     DrawMode::Fill,
-        // );
+        let frame = *self.frame();
+        self.background.add_path(
+            PointsPath::circle_triangles_with(frame.size.center(), frame.size.width / 2.0, PRECISION),
+            Color::BLACK,
+            PolygonMode::Fill,
+        );
 
-        // self.background.add_path(
-        //     PointsPath::circle_with(
-        //         frame.size.center(),
-        //         (frame.size.width - OUTLINE_WIDTH) / 2.0,
-        //         PRECISION,
-        //     ),
-        //     &Color::WHITE,
-        //     DrawMode::Fill,
-        // );
+        self.background.add_path(
+            PointsPath::circle_triangles_with(
+                frame.size.center(),
+                (frame.size.width - OUTLINE_WIDTH) / 2.0,
+                PRECISION,
+            ),
+            Color::WHITE,
+            PolygonMode::Fill,
+        );
 
         let center = self.frame().size.center();
 
@@ -84,18 +89,22 @@ impl ViewSetup for AnalogStickView {
             .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE))
             .set_center(center);
 
-        let _stick_center = self.direction_stick.frame().size.center();
+        let stick_center = self.direction_stick.frame().size.center();
 
-        // self.direction_stick
-        //     .add_path(
-        //         PointsPath::circle_with(stick_center, STICK_VIEW_SIZE / 2.0,
-        // PRECISION),         &Color::BLACK,
-        //         DrawMode::Fill,
-        //     )
-        //     .add_path(
-        //         PointsPath::circle_with(stick_center, (STICK_VIEW_SIZE -
-        // OUTLINE_WIDTH) / 2.0, PRECISION),         &Color::LIGHT_GRAY,
-        //         DrawMode::Fill,
-        //     );
+        self.direction_stick
+            .add_path(
+                PointsPath::circle_triangles_with(stick_center, STICK_VIEW_SIZE / 2.0, PRECISION),
+                Color::BLACK,
+                PolygonMode::Fill,
+            )
+            .add_path(
+                PointsPath::circle_triangles_with(
+                    stick_center,
+                    (STICK_VIEW_SIZE - OUTLINE_WIDTH) / 2.0,
+                    PRECISION,
+                ),
+                Color::LIGHT_GRAY,
+                PolygonMode::Fill,
+            );
     }
 }
