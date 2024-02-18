@@ -1,9 +1,7 @@
-use refs::Weak;
-
 use crate::{
     input::UIEvents,
     view::{view_data::ViewData, view_touch_internal::ViewTouchInternal, ViewFrame},
-    Touch, TouchStack, View, ViewTouchCallbacks,
+    Touch, TouchStack, View, ViewTouchCallbacks, WeakView,
 };
 
 pub trait ViewTouch {
@@ -41,7 +39,7 @@ impl<T: ?Sized + View> ViewTouch for T {
     }
 }
 
-pub fn check_touch(mut view: Weak<dyn View>, touch: &mut Touch) -> bool {
+pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
     if view.is_null() || view.is_hidden() {
         return false;
     }

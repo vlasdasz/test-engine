@@ -3,11 +3,11 @@ use std::ops::DerefMut;
 use refs::{Own, Weak};
 use rtools::Random;
 
-use crate::{layout::Placer, Container, SubView, UIManager, View, ViewFrame};
+use crate::{layout::Placer, Container, SubView, UIManager, View, ViewFrame, WeakView};
 pub trait ViewSubviews {
     /// Use this only if you know what you are doing
-    fn manually_set_superview(&mut self, superview: Weak<dyn View>);
-    fn superview(&self) -> Weak<dyn View>;
+    fn manually_set_superview(&mut self, superview: WeakView);
+    fn superview(&self) -> WeakView;
     fn subviews(&self) -> &[Own<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Own<dyn View>];
     fn remove_from_superview(&mut self);
@@ -16,7 +16,7 @@ pub trait ViewSubviews {
 
     fn __internal_add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
     fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V>;
-    fn add_subview(&mut self, view: Own<dyn View>) -> Weak<dyn View>;
+    fn add_subview(&mut self, view: Own<dyn View>) -> WeakView;
 
     fn add_dummy_view(&mut self);
 
@@ -25,12 +25,12 @@ pub trait ViewSubviews {
 
 impl<T: ?Sized + View> ViewSubviews for T {
     /// Use this only if you know what you are doing
-    fn manually_set_superview(&mut self, superview: Weak<dyn View>) {
+    fn manually_set_superview(&mut self, superview: WeakView) {
         self.base_mut().superview = superview;
         self.base_mut().placer = Placer::new(self.weak_view());
     }
 
-    fn superview(&self) -> Weak<dyn View> {
+    fn superview(&self) -> WeakView {
         self.base().superview
     }
 
@@ -75,7 +75,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         self.__internal_add_view::<V>().weak()
     }
 
-    fn add_subview(&mut self, mut view: Own<dyn View>) -> Weak<dyn View> {
+    fn add_subview(&mut self, mut view: Own<dyn View>) -> WeakView {
         if view.base().priority < self.base().priority {
             view.base_mut().priority = self.base().priority;
         }

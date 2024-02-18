@@ -1,10 +1,10 @@
 use std::cell::RefCell;
 
 use gm::{flat::Size, volume::GyroData};
-use refs::{MainLock, Weak};
+use refs::MainLock;
 use vents::Event;
 
-use crate::{input::keyboard::KeyEvent, view::ViewTouch, Touch, View};
+use crate::{input::keyboard::KeyEvent, view::ViewTouch, Touch, WeakView};
 
 static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 
@@ -15,7 +15,7 @@ pub struct UIEvents {
     pub gyro_changed: Event<GyroData>,
     pub on_touch:     Event<Touch>,
     pub size_changed: Event<Size<u32>>,
-    selected_view:    RefCell<Weak<dyn View>>,
+    selected_view:    RefCell<WeakView>,
 }
 
 impl UIEvents {
@@ -47,7 +47,7 @@ impl UIEvents {
         *selected_view = Default::default();
     }
 
-    pub fn set_selected(&self, mut view: Weak<dyn View>, selected: bool) {
+    pub fn set_selected(&self, mut view: WeakView, selected: bool) {
         let mut selected_view = self.selected_view.borrow_mut();
 
         if let Some(selected) = selected_view.get() {

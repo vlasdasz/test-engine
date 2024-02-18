@@ -8,5 +8,7 @@ pub trait View: ViewCallbacks + ViewInternalSetup + AsAny + Debug {
     fn init_views(&mut self);
     fn base(&self) -> &ViewBase;
     fn base_mut(&mut self) -> &mut ViewBase;
-    fn weak_view(&self) -> Weak<dyn View>;
+    fn weak_view(&self) -> WeakView;
 }
+
+pub type WeakView = Weak<dyn View>;

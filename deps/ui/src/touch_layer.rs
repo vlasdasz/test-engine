@@ -1,14 +1,14 @@
 use refs::Weak;
 
-use crate::{View, ViewData};
+use crate::{ViewData, WeakView};
 
 pub(crate) struct TouchLayer {
-    root:    Weak<dyn View>,
-    touches: Vec<Weak<dyn View>>,
+    root:    WeakView,
+    touches: Vec<WeakView>,
 }
 
 impl TouchLayer {
-    pub(crate) fn add(&mut self, view: Weak<dyn View>, priority: bool) {
+    pub(crate) fn add(&mut self, view: WeakView, priority: bool) {
         self.touches.retain(Weak::is_ok);
         if priority {
             self.touches.insert(0, view);
@@ -17,11 +17,11 @@ impl TouchLayer {
         }
     }
 
-    pub(crate) fn remove(&mut self, view: Weak<dyn View>) {
+    pub(crate) fn remove(&mut self, view: WeakView) {
         self.touches.retain(|a| a.addr() != view.addr());
     }
 
-    pub(crate) fn views(&self) -> Vec<Weak<dyn View>> {
+    pub(crate) fn views(&self) -> Vec<WeakView> {
         self.touches.clone()
     }
 
@@ -34,8 +34,8 @@ impl TouchLayer {
     }
 }
 
-impl From<Weak<dyn View>> for TouchLayer {
-    fn from(root: Weak<dyn View>) -> Self {
+impl From<WeakView> for TouchLayer {
+    fn from(root: WeakView) -> Self {
         Self {
             root,
             touches: vec![],

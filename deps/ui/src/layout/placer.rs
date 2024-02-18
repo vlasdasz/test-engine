@@ -6,20 +6,20 @@ use std::{
 
 use gm::{axis::Axis, flat::Size};
 use itertools::Itertools;
-use refs::{Own, Rglica, ToRglica, Weak};
+use refs::{Own, Rglica, ToRglica};
 use rtools::IntoF32;
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},
     view::ViewFrame,
-    View, ViewSubviews,
+    View, ViewSubviews, WeakView,
 };
 
 pub struct Placer {
     pub(crate) rules:     RefCell<Vec<LayoutRule>>,
     pub(crate) sub_rules: RefCell<Vec<LayoutRule>>,
 
-    view:      Weak<dyn View>,
+    view:      WeakView,
     s_content: Rglica<Size>,
 
     all_margin: RefCell<f32>,
@@ -39,7 +39,7 @@ impl Placer {
         }
     }
 
-    pub fn new(view: Weak<dyn View>) -> Self {
+    pub fn new(view: WeakView) -> Self {
         let s_content = if view.superview().is_ok() {
             view.base().superview.content_size()
         } else {
@@ -234,7 +234,7 @@ impl Placer {
         self
     }
 
-    pub fn custom(&self, action: impl FnMut(Weak<dyn View>, &Size) + 'static) -> &Self {
+    pub fn custom(&self, action: impl FnMut(WeakView, &Size) + 'static) -> &Self {
         self.rules().push(LayoutRule::custom(action));
         self
     }

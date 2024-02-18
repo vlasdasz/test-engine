@@ -12,25 +12,28 @@ use gm::{
 };
 use log::{trace, warn};
 use manage::data_manager::DataManager;
-use refs::{Own, Rglica, Weak};
+use refs::{Own, Rglica};
 use tokio::{spawn, sync::oneshot::Receiver};
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
-    ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
+    ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest, WeakView,
 };
 use ui_views::{DrawingView, ImageView, Label};
 use vents::OnceEvent;
 use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, State, WGPUApp, WGPUDrawer};
-use winit::event::TouchPhase;
+use winit::{
+    event::{KeyEvent, TouchPhase},
+    keyboard,
+};
 
 use crate::assets::Assets;
 
 static mut APP: *mut App = null_mut();
 
 pub struct App {
-    root_view:    Weak<dyn View>,
+    root_view:    WeakView,
     window_ready: OnceEvent,
     wgpu_app:     Rglica<WGPUApp>,
 
@@ -93,7 +96,7 @@ impl App {
         WGPUApp::start(app).await
     }
 
-    pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) {
+    pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) -> WeakView {
         from_main(move || {
             let view = T::new();
             let mut root = UIManager::root_view();
@@ -102,6 +105,7 @@ impl App {
             view.place().back();
             trace!("{width} - {height}");
             App::set_window_size((width, height));
+            view
         })
         .await
     }
@@ -332,6 +336,15 @@ impl wgpu_wrapper::App for App {
             },
             button:   MouseButton::Left,
         })
+    }
+
+    fn key_event(&mut self, event: KeyEvent) {
+        match event.logical_key {
+            keyboard::Key::Character(st) => {
+                UIManager::keymap().check(st.to_string().chars().last().unwrap());
+            }
+            _ => (),
+        }
     }
 
     fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>) {

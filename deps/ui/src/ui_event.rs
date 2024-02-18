@@ -1,11 +1,9 @@
 use std::{ops::Deref, sync::Mutex};
 
-use refs::Weak;
-
-use crate::View;
+use crate::{View, WeakView};
 
 struct Subscriber<T: Send> {
-    view:   Weak<dyn View>,
+    view:   WeakView,
     action: Box<dyn FnMut(T) + Send>,
 }
 

@@ -1,12 +1,11 @@
 use std::sync::{Mutex, MutexGuard, OnceLock};
 
 use nonempty::NonEmpty;
-use refs::Weak;
 
 use crate::{
     touch_layer::TouchLayer,
     view::{ViewData, ViewSubviews},
-    UIManager, View,
+    UIManager, WeakView,
 };
 
 static STACK: OnceLock<Mutex<TouchStack>> = OnceLock::new();
@@ -29,7 +28,7 @@ impl TouchStack {
 }
 
 impl TouchStack {
-    fn layer_for(&mut self, view: Weak<dyn View>) -> &mut TouchLayer {
+    fn layer_for(&mut self, view: WeakView) -> &mut TouchLayer {
         let mut view_stack = vec![];
 
         view_stack.push(view.label().to_string());
@@ -54,23 +53,23 @@ impl TouchStack {
 }
 
 impl TouchStack {
-    pub fn touch_views() -> Vec<Weak<dyn View>> {
+    pub fn touch_views() -> Vec<WeakView> {
         Self::get().stack.last().views()
     }
 
-    pub fn enable_for(view: Weak<dyn View>, priority: bool) {
+    pub fn enable_for(view: WeakView, priority: bool) {
         Self::get().layer_for(view).add(view, priority)
     }
 
-    pub fn disable_for(view: Weak<dyn View>) {
+    pub fn disable_for(view: WeakView) {
         Self::get().layer_for(view).remove(view)
     }
 
-    pub fn push_layer(view: Weak<dyn View>) {
+    pub fn push_layer(view: WeakView) {
         Self::get().stack.push(view.into())
     }
 
-    pub fn pop_layer(view: Weak<dyn View>) {
+    pub fn pop_layer(view: WeakView) {
         let pop = Self::get().stack.pop().unwrap();
         assert_eq!(
             pop.root_addr(),

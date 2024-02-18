@@ -7,7 +7,7 @@ use test_engine::{
     from_main, on_main,
     refs::ToOwn,
     sleep,
-    ui::{Touch, UIEvents},
+    ui::{Touch, UIEvents, UIManager, WeakView},
     App,
 };
 use tokio::sync::mpsc::channel;
@@ -57,11 +57,11 @@ pub async fn inject_touches(data: &str) {
 }
 
 #[allow(dead_code)]
-pub async fn record_touches() {
+pub async fn record_touches(view: WeakView) {
     let touches = Vec::<Touch>::new().to_own();
     let mut touches = touches.weak();
 
-    let (_s, mut r) = channel::<()>(1);
+    let (s, mut r) = channel::<()>(1);
 
     on_main(move || {
         UIEvents::on_touch().val(move |touch| {
@@ -76,9 +76,9 @@ pub async fn record_touches() {
             touches.push(touch);
         });
 
-        // UILayer::keymap().add('a', move || {
-        //     _ = s.try_send(());
-        // });
+        UIManager::keymap().add(view, 'a', move || {
+            _ = s.try_send(());
+        })
     });
 
     if let None = r.recv().await {

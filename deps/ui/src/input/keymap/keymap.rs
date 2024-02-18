@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use crate::KeyAction;
+use crate::{KeyAction, WeakView};
 
 #[derive(Default)]
 pub struct Keymap {
@@ -8,11 +8,11 @@ pub struct Keymap {
 }
 
 impl Keymap {
-    pub fn add(&self, key: char, action: impl FnMut() + 'static) {
-        self.keys.borrow_mut().push(KeyAction::new(key, action))
+    pub fn add(&self, view: WeakView, key: char, action: impl FnMut() + 'static) {
+        self.keys.borrow_mut().push(KeyAction::new(view, key, action))
     }
 
     pub fn check(&self, key: char) {
-        self.keys.borrow().iter().for_each(|a| a.check(key))
+        self.keys.borrow_mut().retain(|a| a.check(key));
     }
 }

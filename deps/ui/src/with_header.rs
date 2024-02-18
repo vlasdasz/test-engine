@@ -1,12 +1,11 @@
 use gm::Color;
-use refs::Weak;
 use rtools::platform::Platform;
 
-use crate::{layout::Anchor, View, ViewData};
+use crate::{layout::Anchor, View, ViewData, WeakView};
 
 pub trait WithHeader: View {
-    fn header(&self) -> Weak<dyn View>;
-    fn main_view(&self) -> Weak<dyn View>;
+    fn header(&self) -> WeakView;
+    fn main_view(&self) -> WeakView;
     fn header_size(&self) -> f32;
     fn header_margin(&self) -> f32;
     fn layout_header(&self) {
@@ -34,11 +33,11 @@ pub trait WithHeader: View {
 }
 
 impl<T: View> WithHeader for T {
-    default fn header(&self) -> Weak<dyn View> {
+    default fn header(&self) -> WeakView {
         Default::default()
     }
 
-    default fn main_view(&self) -> Weak<dyn View> {
+    default fn main_view(&self) -> WeakView {
         Default::default()
     }
 

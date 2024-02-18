@@ -68,9 +68,7 @@ impl State {
             )
             .await?;
 
-        let surface_caps = surface.get_capabilities(&adapter);
-
-        dbg!(&surface_caps);
+        let _surface_caps = surface.get_capabilities(&adapter);
 
         let config = wgpu::SurfaceConfiguration {
             usage:        wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,

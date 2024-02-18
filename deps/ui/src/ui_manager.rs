@@ -8,9 +8,9 @@ use std::{
 };
 
 use gm::flat::{Point, Rect, Size};
-use refs::{Own, Weak};
+use refs::Own;
 
-use crate::{layout::Placer, Container, Keymap, UIEvent, View};
+use crate::{layout::Placer, Container, Keymap, UIEvent, View, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -74,7 +74,7 @@ impl UIManager {
         Self::window_size().into() // / UIManager::ui_scale()
     }
 
-    pub fn root_view() -> Weak<dyn View> {
+    pub fn root_view() -> WeakView {
         Self::get().root_view.weak()
     }
 

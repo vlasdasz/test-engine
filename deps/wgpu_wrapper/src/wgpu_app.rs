@@ -8,9 +8,8 @@ use tokio::sync::oneshot::Receiver;
 use wgpu::BindGroupLayout;
 use winit::{
     dpi::PhysicalSize,
-    event::{Event, KeyEvent, WindowEvent},
+    event::{Event, WindowEvent},
     event_loop::EventLoop,
-    keyboard,
     keyboard::{KeyCode, PhysicalKey},
     window::WindowBuilder,
 };
@@ -78,7 +77,7 @@ impl WGPUApp {
                     if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
                         elwt.exit()
                     }
-                    self.on_keyboard_event(event);
+                    self.state.app.key_event(event);
                 }
                 WindowEvent::Resized(physical_size) => {
                     self.state.resize(physical_size);
@@ -109,16 +108,6 @@ impl WGPUApp {
         })?;
 
         Ok(())
-    }
-
-    fn on_keyboard_event(&self, event: KeyEvent) {
-        match event.logical_key {
-            keyboard::Key::Character(st) => {
-                dbg!(st.to_string().chars().last().unwrap());
-                //UIManager
-            }
-            _ => (),
-        }
     }
 
     pub fn set_title(&self, title: impl ToString) {

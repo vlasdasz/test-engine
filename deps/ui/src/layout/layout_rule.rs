@@ -1,14 +1,13 @@
 use derivative::Derivative;
 use gm::flat::Size;
-use refs::Weak;
 use rtools::IntoF32;
 
 use crate::{
     layout::{Anchor, Tiling},
-    View,
+    WeakView,
 };
 
-pub(crate) type CustomCallback = Box<dyn FnMut(Weak<dyn View>, &Size)>;
+pub(crate) type CustomCallback = Box<dyn FnMut(WeakView, &Size)>;
 
 #[derive(Derivative)]
 #[derivative(Debug)]
@@ -18,9 +17,9 @@ pub(crate) struct LayoutRule {
     pub(crate) offset: f32,
 
     #[derivative(Debug = "ignore")]
-    pub(crate) anchor_view:  Weak<dyn View>,
+    pub(crate) anchor_view:  WeakView,
     #[derivative(Debug = "ignore")]
-    pub(crate) anchor_view2: Weak<dyn View>,
+    pub(crate) anchor_view2: WeakView,
 
     pub(crate) relative: bool,
     pub(crate) between:  bool,
@@ -56,7 +55,7 @@ impl LayoutRule {
         }
     }
 
-    pub fn anchor(side: Anchor, offset: impl IntoF32, anchor_view: Weak<dyn View>) -> Self {
+    pub fn anchor(side: Anchor, offset: impl IntoF32, anchor_view: WeakView) -> Self {
         Self {
             side,
             tiling: None,
@@ -69,7 +68,7 @@ impl LayoutRule {
         }
     }
 
-    pub fn relative(side: Anchor, ratio: impl IntoF32, anchor_view: Weak<dyn View>) -> Self {
+    pub fn relative(side: Anchor, ratio: impl IntoF32, anchor_view: WeakView) -> Self {
         Self {
             side,
             tiling: None,
@@ -82,7 +81,7 @@ impl LayoutRule {
         }
     }
 
-    pub fn between(view_a: Weak<dyn View>, view_b: Weak<dyn View>, side: Anchor) -> Self {
+    pub fn between(view_a: WeakView, view_b: WeakView, side: Anchor) -> Self {
         Self {
             side,
             tiling: None,
@@ -95,7 +94,7 @@ impl LayoutRule {
         }
     }
 
-    pub fn custom(action: impl FnMut(Weak<dyn View>, &Size) + 'static) -> Self {
+    pub fn custom(action: impl FnMut(WeakView, &Size) + 'static) -> Self {
         Self {
             side:         Anchor::Bot,
             tiling:       None,

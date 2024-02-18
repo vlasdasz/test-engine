@@ -1,6 +1,6 @@
 use gm::flat::Size;
 use refs::{weak_from_ref, Weak};
-use ui::{view, SubView, View, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -29,7 +29,7 @@ impl CollectionLayout {
 pub struct CollectionView {
     pub data_source: Weak<dyn CollectionData>,
     pub layout:      CollectionLayout,
-    cells:           Vec<Weak<dyn View>>,
+    cells:           Vec<WeakView>,
     scroll:          SubView<ScrollView>,
 }
 

@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Button, DropDown, SubView, TouchStack, View, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Button, DropDown, SubView, TouchStack, ViewData, ViewSetup, ViewSubviews, WeakView},
     App,
 };
 
@@ -14,7 +14,7 @@ struct DropDownTestView {
     bot: SubView<DropDown>,
 }
 
-fn add_test_button(mut view: Weak<dyn View>, action: impl FnMut() + 'static) {
+fn add_test_button(mut view: WeakView, action: impl FnMut() + 'static) {
     let mut button = view.add_view::<Button>();
     button.set_text("TAP").place().size(100, 20).center();
     button.on_tap(action)

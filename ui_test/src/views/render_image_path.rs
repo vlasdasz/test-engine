@@ -26,9 +26,9 @@ impl ViewSetup for RenderImagePath {
 }
 
 pub async fn test_render_image_path() -> Result<()> {
-    App::set_test_view::<RenderImagePath>(400, 400).await;
+    let view = App::set_test_view::<RenderImagePath>(400, 400).await;
 
-    record_touches().await;
+    record_touches(view).await;
 
     debug!("Image view test: OK");
 

@@ -35,20 +35,16 @@ async fn check_pixel_color(_pos: Point, _color: Color) {
     .await
 }
 
-async fn check_colors<const N: usize>(data: [((f32, f32), (f32, f32, f32, f32)); N]) {
+async fn check_colors<const N: usize>(data: [(impl Into<Point>, impl Into<Color>); N]) {
     for val in data {
-        check_pixel_color(
-            (val.0 .0, val.0 .1).into(),
-            Color::rgba(val.1 .0, val.1 .1, val.1 .2, val.1 .3),
-        )
-        .await
+        check_pixel_color(val.0.into(), val.1.into()).await
     }
 }
 
 pub async fn test_image_view() -> Result<()> {
-    App::set_test_view::<ImageTestView>(400, 400).await;
+    let view = App::set_test_view::<ImageTestView>(400, 400).await;
 
-    record_touches().await;
+    record_touches(view).await;
 
     sleep(0.1);
 

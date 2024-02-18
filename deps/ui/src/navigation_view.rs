@@ -4,6 +4,8 @@ use refs::{Own, ToOwn, Weak};
 use rtools::Animation;
 use ui_proc::view;
 
+use crate::WeakView;
+
 mod test_engine {
     pub(crate) use refs;
 
@@ -90,7 +92,7 @@ impl NavigationView {
         to_pop.add_animation(anim);
     }
 
-    fn below_pop(&self) -> Weak<dyn View> {
+    fn below_pop(&self) -> WeakView {
         self.subviews[self.subviews.len() - 2].weak_view()
     }
 }

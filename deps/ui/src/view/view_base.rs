@@ -8,7 +8,7 @@ use gm::{
 use refs::{Own, Weak};
 use vents::Event;
 
-use crate::{layout::Placer, NavigationView, Touch, UIAnimation, View};
+use crate::{layout::Placer, NavigationView, Touch, UIAnimation, View, WeakView};
 
 #[derive(Derivative)]
 #[derivative(Default, Debug)]
@@ -26,7 +26,7 @@ pub struct ViewBase {
     pub content_offset: Point,
 
     #[derivative(Debug = "ignore")]
-    pub(crate) superview: Weak<dyn View>,
+    pub(crate) superview: WeakView,
 
     #[derivative(Debug = "ignore")]
     pub(crate) subviews: Vec<Own<dyn View>>,
