@@ -2,7 +2,6 @@ use std::{
     future::Future,
     ops::{Deref, DerefMut},
     ptr::null_mut,
-    sync::atomic::Ordering,
 };
 
 use anyhow::Result;
@@ -102,8 +101,7 @@ impl App {
             let view = root.add_subview(view);
             view.place().back();
             trace!("{width} - {height}");
-            // #[cfg(desktop)]
-            // Screen::current().set_size((width, height));
+            App::set_window_size((width, height));
         })
         .await
     }
@@ -234,7 +232,7 @@ impl App {
             warn!("{touch:?}");
         }
 
-        if UIManager::get().display_touches.load(Ordering::Relaxed) && !touch.is_moved() {
+        if UIManager::display_touches() && !touch.is_moved() {
             let mut view = Container::new();
             view.set_size((5, 5)).set_color(Color::random());
             view.set_center(touch.position);

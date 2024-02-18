@@ -4,8 +4,6 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
-use std::sync::atomic::Ordering;
-
 use anyhow::Result;
 use test_engine::{
     ui::{Container, UIManager, ViewSetup},
@@ -24,7 +22,7 @@ mod views;
 #[tokio::main]
 async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
-        UIManager::get().display_touches.store(true, Ordering::Relaxed);
+        UIManager::set_display_touches(true);
 
         test_image_view().await?;
         test_label().await?;

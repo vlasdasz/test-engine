@@ -116,9 +116,6 @@ impl State {
 
             let inner_size = self.window.inner_size();
 
-            dbg!(&new_size);
-            dbg!(&inner_size);
-
             let position = if Platform::IOS {
                 match self.window.inner_position() {
                     Ok(pos) => (pos.x, pos.y),
@@ -130,8 +127,6 @@ impl State {
             } else {
                 (0, 0)
             };
-
-            dbg!(&position);
 
             #[allow(clippy::cast_sign_loss)]
             self.app.resize(

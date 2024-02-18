@@ -10,7 +10,7 @@ use std::{
 use gm::flat::{Point, Rect, Size};
 use refs::{Own, Weak};
 
-use crate::{layout::Placer, Container, UIEvent, View};
+use crate::{layout::Placer, Container, Keymap, UIEvent, View};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -31,7 +31,9 @@ pub struct UIManager {
     pub open_keyboard:  AtomicBool,
     pub close_keyboard: AtomicBool,
 
-    pub display_touches: AtomicBool,
+    display_touches: AtomicBool,
+
+    keymap: Own<Keymap>,
 }
 
 impl UIManager {
@@ -52,6 +54,7 @@ impl UIManager {
             open_keyboard: false.into(),
             close_keyboard: false.into(),
             display_touches: false.into(),
+            keymap: Default::default(),
         }
     }
 
@@ -77,6 +80,18 @@ impl UIManager {
 
     pub fn update() {
         Self::get().deleted_views.lock().unwrap().clear()
+    }
+
+    pub fn display_touches() -> bool {
+        Self::get().display_touches.load(Ordering::Relaxed)
+    }
+
+    pub fn set_display_touches(display: bool) {
+        Self::get().display_touches.store(display, Ordering::Relaxed)
+    }
+
+    pub fn keymap() -> &'static Keymap {
+        Self::get().keymap.deref()
     }
 }
 

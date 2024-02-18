@@ -18,20 +18,6 @@ struct ImageTestView {
 impl ViewSetup for ImageTestView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        // self.touch.began.val(|touch| {
-        //     let color = Screen::read_pixel(touch.position);
-        //
-        //     println!(
-        //         "(({}, {}), ({}, {}, {}, {})),",
-        //         touch.position.x, touch.position.y, color.r, color.g, color.b,
-        // color.a     );
-        // });
-
-        // SystemEvents::get().after_draw.sub(move || {
-        //     let pos = UILayer::get().cursor_position;
-        //     let color = Screen::read_pixel(pos);
-        //     self.button.set_color(color);
-        // });
 
         self.image_view.place().center().relative(Anchor::Size, self, 0.5);
         self.image_view.image = Image::get("blue.png");
@@ -61,8 +47,6 @@ async fn check_colors<const N: usize>(data: [((f32, f32), (f32, f32, f32, f32));
 
 pub async fn test_image_view() -> Result<()> {
     App::set_test_view::<ImageTestView>(400, 400).await;
-
-    dbg!(TouchStack::dump());
 
     record_touches().await;
 
