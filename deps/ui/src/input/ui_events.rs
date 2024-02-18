@@ -4,13 +4,12 @@ use gm::{flat::Size, volume::GyroData};
 use refs::MainLock;
 use vents::Event;
 
-use crate::{input::keyboard::KeyEvent, view::ViewTouch, Touch, WeakView};
+use crate::{view::ViewTouch, Touch, WeakView};
 
 static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 
 #[derive(Default)]
 pub struct UIEvents {
-    pub key_pressed:  Event<KeyEvent>,
     pub scroll:       Event<f32>,
     pub gyro_changed: Event<GyroData>,
     pub on_touch:     Event<Touch>,
@@ -21,10 +20,6 @@ pub struct UIEvents {
 impl UIEvents {
     pub(crate) fn get() -> &'static Self {
         &UI_EVENTS
-    }
-
-    pub fn key_pressed() -> &'static Event<KeyEvent> {
-        &Self::get().key_pressed
     }
 
     pub fn on_touch() -> &'static Event<Touch> {

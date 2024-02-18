@@ -56,6 +56,10 @@ pub async fn inject_touches(data: &str) {
     }
 }
 
+pub async fn inject_key(key: char) {
+    from_main(move || App::current_mut().on_char(key)).await
+}
+
 #[allow(dead_code)]
 pub async fn record_touches(view: WeakView) {
     let touches = Vec::<Touch>::new().to_own();

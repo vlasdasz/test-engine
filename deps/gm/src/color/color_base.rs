@@ -6,7 +6,7 @@ use std::{
 use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 
-use crate::num::{Abs, Zero};
+use crate::num::{Abs, One, Zero};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -51,6 +51,18 @@ impl<T: Copy + Abs + Sub<Output = T> + Add<Output = T>> Color<T> {
             + (self.g - other.g).abs()
             + (self.b - other.b).abs()
             + (self.a - other.a).abs()
+    }
+}
+
+impl<T: One> From<(T, T, T)> for Color<T> {
+    fn from(value: (T, T, T)) -> Self {
+        Self::rgba(value.0, value.1, value.2, T::one())
+    }
+}
+
+impl<T> From<(T, T, T, T)> for Color<T> {
+    fn from(value: (T, T, T, T)) -> Self {
+        Self::rgba(value.0, value.1, value.2, value.3)
     }
 }
 

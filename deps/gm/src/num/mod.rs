@@ -17,3 +17,14 @@ impl Zero for f32 {
         0.0
     }
 }
+
+#[const_trait]
+pub trait One {
+    fn one() -> Self;
+}
+
+impl const One for f32 {
+    fn one() -> Self {
+        1.0
+    }
+}

@@ -1,8 +1,8 @@
-use std::{cell::RefCell, collections::HashMap, mem::size_of, sync::Arc};
+use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
-use gm::{flat::Size, U8Color};
+use gm::{flat::Size, Color, U8Color};
 use log::error;
 use rtools::platform::Platform;
 use tokio::{
@@ -157,10 +157,10 @@ impl State {
                     resolve_target: None,
                     ops:            wgpu::Operations {
                         load:  wgpu::LoadOp::Clear(wgpu::Color {
-                            r: 0.1,
-                            g: 0.2,
-                            b: 0.3,
-                            a: 1.0,
+                            r: f64::from(Color::GRAY_BLUE.r),
+                            g: f64::from(Color::GRAY_BLUE.g),
+                            b: f64::from(Color::GRAY_BLUE.b),
+                            a: f64::from(Color::GRAY_BLUE.a),
                         }),
                         store: wgpu::StoreOp::Store,
                     },

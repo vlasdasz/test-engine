@@ -78,7 +78,7 @@ impl UIManager {
         Self::get().root_view.weak()
     }
 
-    pub fn update() {
+    pub fn free_deleted_views() {
         Self::get().deleted_views.lock().unwrap().clear()
     }
 

@@ -29,7 +29,6 @@ impl WGPUApp {
     }
 
     pub async fn start(app: Box<dyn App>) -> Result<()> {
-        env_logger::init();
         let event_loop = EventLoop::new()?;
 
         let window = Arc::new(WindowBuilder::new().with_title("Test Engine").build(&event_loop)?);

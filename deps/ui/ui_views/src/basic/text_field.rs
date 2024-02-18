@@ -3,8 +3,7 @@ use std::sync::atomic::Ordering::Relaxed;
 use gm::Color;
 use refs::{weak_from_ref, Weak};
 use ui::{
-    view, AcceptChar, ControlButton, KeyboardButton, SubView, TextFieldConstraint, ToLabel, UIEvents,
-    UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
+    view, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
 };
 use vents::Event;
 mod test_engine {
@@ -119,37 +118,37 @@ impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
             UIManager::get().open_keyboard.store(true, Relaxed);
-            let mut this = weak_from_ref(self);
-            UIEvents::key_pressed().val(move |key| {
-                let mut text = this.label.text().to_string();
-
-                if this.is_selected() {
-                    match key.button {
-                        KeyboardButton::Letter(char) => {
-                            if this.constraint.accept_char(char, &text) {
-                                if this.placeholding {
-                                    text = String::default();
-                                    this.placeholding = false;
-                                }
-                                text.push(char);
-                            }
-                        }
-                        KeyboardButton::Control(control) => {
-                            if this.placeholding {
-                                return;
-                            }
-                            if let ControlButton::Backspace = control {
-                                text.pop();
-                            }
-                        }
-                    };
-                }
-                this.set_text(text);
-                this.changed.trigger(this.text().to_string());
-            });
+            let _this = weak_from_ref(self);
+            // UIEvents::key_pressed().val(move |key| {
+            //     let mut text = this.label.text().to_string();
+            //
+            //     if this.is_selected() {
+            //         match key.button {
+            //             KeyboardButton::Letter(char) => {
+            //                 if this.constraint.accept_char(char, &text) {
+            //                     if this.placeholding {
+            //                         text = String::default();
+            //                         this.placeholding = false;
+            //                     }
+            //                     text.push(char);
+            //                 }
+            //             }
+            //             KeyboardButton::Control(control) => {
+            //                 if this.placeholding {
+            //                     return;
+            //                 }
+            //                 if let ControlButton::Backspace = control {
+            //                     text.pop();
+            //                 }
+            //             }
+            //         };
+            //     }
+            //     this.set_text(text);
+            //     this.changed.trigger(this.text().to_string());
+            // });
         } else {
             UIManager::get().close_keyboard.store(true, Relaxed);
-            UIEvents::key_pressed().remove_subscribers();
+            //  UIEvents::key_pressed().remove_subscribers();
         }
 
         self.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
@@ -158,6 +157,6 @@ impl ViewCallbacks for TextField {
 
 impl Drop for TextField {
     fn drop(&mut self) {
-        UIEvents::key_pressed().remove_subscribers()
+        //  UIEvents::key_pressed().remove_subscribers()
     }
 }

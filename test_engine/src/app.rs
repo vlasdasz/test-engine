@@ -1,18 +1,21 @@
 use std::{
     future::Future,
+    io::Write,
     ops::{Deref, DerefMut},
     ptr::null_mut,
 };
 
 use anyhow::Result;
+use colored::Colorize;
 use dispatch::{from_main, invoke_dispatched};
+use env_logger::Builder;
 use gm::{
     flat::{Point, Rect, Size},
     Color, U8Color,
 };
-use log::{trace, warn};
+use log::{trace, warn, Level, LevelFilter};
 use manage::data_manager::DataManager;
-use refs::{Own, Rglica};
+use refs::{Own, Rglica, Weak};
 use tokio::{spawn, sync::oneshot::Receiver};
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -65,6 +68,34 @@ impl App {
     }
 
     fn make_app(first_view: Own<dyn View>) -> Box<Self> {
+        Builder::from_default_env()
+            .filter_level(LevelFilter::Debug)
+            .filter_module("wgpu_core::device", LevelFilter::Warn)
+            .filter_module("wgpu_core::present", LevelFilter::Warn)
+            .filter_module("wgpu_core::resource", LevelFilter::Warn)
+            .filter_module("wgpu_core::instance", LevelFilter::Warn)
+            .filter_module("wgpu_hal::metal::surface", LevelFilter::Warn)
+            .filter_module("wgpu_hal::metal::device", LevelFilter::Warn)
+            .filter_module("wgpu_hal::metal", LevelFilter::Warn)
+            .filter_module("naga::front", LevelFilter::Warn)
+            .filter_module("naga::proc::constant_evaluator", LevelFilter::Warn)
+            .filter_module("naga::valid::interface", LevelFilter::Warn)
+            .filter_module("naga::valid::function", LevelFilter::Warn)
+            .format(|f, record| {
+                let level = match record.level() {
+                    Level::Error => "🔴",
+                    Level::Warn => "🟡",
+                    Level::Info => "🟢",
+                    Level::Debug => "🔵",
+                    Level::Trace => "⚪",
+                };
+
+                record.level().to_string().green();
+
+                writeln!(f, "{level} {}", record.args())
+            })
+            .init();
+
         #[cfg(desktop)]
         Assets::init(crate::git_root().expect("git_root()"));
         #[cfg(mobile)]
@@ -96,16 +127,17 @@ impl App {
         WGPUApp::start(app).await
     }
 
-    pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) -> WeakView {
+    pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) -> Weak<T> {
         from_main(move || {
             let view = T::new();
+            let weak = view.weak();
             let mut root = UIManager::root_view();
             root.remove_all_subviews();
             let view = root.add_subview(view);
             view.place().back();
             trace!("{width} - {height}");
             App::set_window_size((width, height));
-            view
+            weak
         })
         .await
     }
@@ -278,6 +310,10 @@ impl App {
     pub fn read_display() -> Receiver<(Vec<U8Color>, Size<u32>)> {
         Self::current().wgpu_app.request_read_display()
     }
+
+    pub fn on_char(&mut self, ch: char) {
+        UIManager::keymap().check(ch);
+    }
 }
 
 impl wgpu_wrapper::App for App {
@@ -289,6 +325,7 @@ impl wgpu_wrapper::App for App {
     }
 
     fn update(&mut self) {
+        UIManager::free_deleted_views();
         invoke_dispatched();
         Self::update_view(UIManager::root_view().deref_mut())
     }
@@ -339,9 +376,14 @@ impl wgpu_wrapper::App for App {
     }
 
     fn key_event(&mut self, event: KeyEvent) {
+        if !event.state.is_pressed() {
+            return;
+        }
+
+        #[allow(clippy::single_match)]
         match event.logical_key {
             keyboard::Key::Character(st) => {
-                UIManager::keymap().check(st.to_string().chars().last().unwrap());
+                self.on_char(st.to_string().chars().last().unwrap());
             }
             _ => (),
         }

@@ -46,6 +46,10 @@ where
     res
 }
 
+pub async fn wait_for_next_frame() {
+    from_main(|| {}).await
+}
+
 pub fn on_main(action: impl FnOnce() + Send + 'static) {
     if is_main_thread() {
         action();

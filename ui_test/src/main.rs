@@ -12,8 +12,9 @@ use test_engine::{
 
 use crate::views::{
     alert::test_alert, button::test_button, drop_down::test_drop_down, image_view::test_image_view,
-    int_view::test_int_view, label::test_label, layout::test_layout, multiline_label::test_multiline,
-    render_image_path::test_render_image_path, switch::test_switch, touch_stack::test_touch_stack,
+    int_view::test_int_view, keymap::test_keymap, label::test_label, layout::test_layout,
+    multiline_label::test_multiline, render_image_path::test_render_image_path, switch::test_switch,
+    touch_stack::test_touch_stack,
 };
 
 mod view_tests;
@@ -24,6 +25,7 @@ async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
         UIManager::set_display_touches(true);
 
+        test_keymap().await?;
         test_image_view().await?;
         test_label().await?;
         test_render_image_path().await?;
