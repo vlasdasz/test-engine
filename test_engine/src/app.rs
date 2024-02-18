@@ -6,7 +6,6 @@ use std::{
 };
 
 use anyhow::Result;
-use colored::Colorize;
 use dispatch::{from_main, invoke_dispatched};
 use env_logger::Builder;
 use gm::{
@@ -89,8 +88,6 @@ impl App {
                     Level::Debug => "🔵",
                     Level::Trace => "⚪",
                 };
-
-                record.level().to_string().green();
 
                 writeln!(f, "{level} {}", record.args())
             })

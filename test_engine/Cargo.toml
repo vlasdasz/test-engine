@@ -10,7 +10,6 @@ name = "test_engine"
 [dependencies]
 anyhow = { workspace = true }
 bytemuck = { workspace = true }
-colored = { workspace = true }
 derivative = { workspace = true }
 env_logger = { workspace = true }
 home = { workspace = true }
