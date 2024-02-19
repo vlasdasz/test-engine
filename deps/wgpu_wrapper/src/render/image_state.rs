@@ -2,6 +2,7 @@ use std::ops::Range;
 
 use gm::{
     flat::{Point, Rect},
+    num::checked_convert::checked_usize_to_u32,
     volume::UIVertex,
 };
 use wgpu::{
@@ -30,8 +31,7 @@ const VERTICES: &[UIVertex] = &[
     },
 ];
 
-#[allow(clippy::cast_possible_truncation)]
-const RANGE: Range<u32> = 0..(VERTICES.len() as u32);
+const RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 #[derive(Debug)]
 pub struct ImageState {

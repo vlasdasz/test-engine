@@ -63,6 +63,10 @@ impl Point<f32> {
     pub fn positive(&self) -> bool {
         self.x >= 0.0 && self.y >= 0.0
     }
+
+    pub fn negative(&self) -> bool {
+        !self.positive()
+    }
 }
 
 impl Point<f32> {

@@ -21,8 +21,6 @@ pub struct Maker {
 }
 
 impl Maker {
-    #[allow(clippy::cast_possible_truncation)]
-    #[allow(clippy::cast_possible_wrap)]
     pub fn new(width: usize, height: usize) -> Self {
         Self {
             size:        Size {

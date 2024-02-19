@@ -1,6 +1,6 @@
 use std::{fmt::Display, str::FromStr};
 
-use gm::flat::Point;
+use gm::{flat::Point, num::lossy_convert::LossyConvert};
 use itertools::Itertools;
 use wgpu_wrapper::MouseButton;
 
@@ -42,13 +42,11 @@ impl Touch {
 }
 
 impl Display for Touch {
-    #[allow(clippy::cast_possible_truncation)]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{:<4} {:<4} {}",
-            self.position.x as isize, self.position.y as isize, self.event
-        )
+        let x: isize = self.position.x.lossy_convert();
+        let y: isize = self.position.y.lossy_convert();
+
+        write!(f, "{:<4} {:<4} {}", x, y, self.event)
     }
 }
 

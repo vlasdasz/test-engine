@@ -191,7 +191,7 @@ impl App {
         let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
 
         if !frame.origin.positive() {
-            warn!("A");
+            warn!("Frame origin is negative");
             return;
         }
 

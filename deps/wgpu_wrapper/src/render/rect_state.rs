@@ -3,6 +3,7 @@ use std::{collections::HashMap, ops::Range};
 use bytemuck::cast_slice;
 use gm::{
     flat::{Point, Rect},
+    num::checked_convert::checked_usize_to_u32,
     Color,
 };
 use refs::MainLock;
@@ -27,11 +28,8 @@ const VERTICES: &[Point] = &[
 
 const INDICES: &[u16] = &[0, 1, 2, 1, 2, 3];
 
-#[allow(clippy::cast_possible_truncation)]
-const VERTEX_RANGE: Range<u32> = 0..(VERTICES.len() as u32);
-
-#[allow(clippy::cast_possible_truncation)]
-const INDEX_RANGE: Range<u32> = 0..(INDICES.len() as u32);
+const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
+const INDEX_RANGE: Range<u32> = 0..checked_usize_to_u32(INDICES.len());
 
 #[derive(Debug)]
 pub struct RectState {

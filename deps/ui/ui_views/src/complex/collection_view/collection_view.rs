@@ -1,4 +1,4 @@
-use gm::flat::Size;
+use gm::{flat::Size, num::lossy_convert::LossyConvert};
 use refs::{weak_from_ref, Weak};
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
 mod test_engine {
@@ -103,12 +103,8 @@ impl CollectionView {
 
         let content_height = content_end - content_start;
 
-        #[allow(clippy::cast_possible_truncation)]
-        #[allow(clippy::cast_sign_loss)]
-        let first_cell_index = (content_start / cell_height).floor() as usize;
-        #[allow(clippy::cast_possible_truncation)]
-        #[allow(clippy::cast_sign_loss)]
-        let number_of_cells_fit = (content_height / cell_height).ceil() as usize;
+        let first_cell_index: usize = (content_start / cell_height).floor().lossy_convert();
+        let number_of_cells_fit: usize = (content_height / cell_height).ceil().lossy_convert();
 
         let mut last_cell_index = first_cell_index + number_of_cells_fit;
 

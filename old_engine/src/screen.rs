@@ -89,8 +89,6 @@ impl Screen {
         // Screen::current().glfw.set_window_title(&title.to_label()));
     }
 
-    #[allow(clippy::cast_possible_truncation)]
-    #[allow(clippy::cast_sign_loss)]
     fn calculate_fps(&mut self) {
         let now = Utc::now().timestamp_micros();
 

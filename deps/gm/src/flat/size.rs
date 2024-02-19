@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     axis::Axis,
     flat::{Point, Rect},
+    num::lossy_convert::LossyConvert,
 };
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -148,11 +149,9 @@ impl From<Size<u32>> for Size<f32> {
 
 impl From<Size<f32>> for Size<u32> {
     fn from(value: Size<f32>) -> Self {
-        #[allow(clippy::cast_possible_truncation)]
-        #[allow(clippy::cast_sign_loss)]
         Self {
-            width:  value.width as _,
-            height: value.height as _,
+            width:  value.width.lossy_convert(),
+            height: value.height.lossy_convert(),
         }
     }
 }

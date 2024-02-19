@@ -2,7 +2,7 @@ use std::hash::{Hash, Hasher};
 
 use rtools::Random;
 
-use crate::{Color, U8Color};
+use crate::{num::lossy_convert::LossyConvert, Color, U8Color};
 
 impl Color {
     pub const fn rgb(r: f32, g: f32, b: f32) -> Self {
@@ -19,14 +19,12 @@ impl Color {
 }
 
 impl From<Color> for U8Color {
-    #[allow(clippy::cast_possible_truncation)]
-    #[allow(clippy::cast_sign_loss)]
     fn from(value: Color) -> Self {
         U8Color::rgba(
-            (255.0 * value.r) as u8,
-            (255.0 * value.g) as u8,
-            (255.0 * value.b) as u8,
-            (255.0 * value.a) as u8,
+            (255.0 * value.r).lossy_convert(),
+            (255.0 * value.g).lossy_convert(),
+            (255.0 * value.b).lossy_convert(),
+            (255.0 * value.a).lossy_convert(),
         )
     }
 }

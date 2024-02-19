@@ -1,6 +1,7 @@
 use dispatch::on_main;
 use gm::{
     flat::{Point, Size},
+    num::lossy_convert::LossyConvert,
     U8Color,
 };
 use refs::Weak;
@@ -23,9 +24,8 @@ impl ColorMeter {
             return Default::default();
         }
         let pos = pos.into();
-        #[allow(clippy::cast_sign_loss)]
-        #[allow(clippy::cast_possible_truncation)]
-        let pos: Point<usize> = Point::new(pos.x as usize, pos.y as usize);
+
+        let pos: Point<usize> = Point::new(pos.x.lossy_convert(), pos.y.lossy_convert());
         self.screenshot[pos.x + pos.y * self.scrennshot_size.width]
     }
 }
@@ -43,9 +43,11 @@ impl ViewCallbacks for ColorMeter {
         }
         let pos = App::current().cursor_position;
 
-        #[allow(clippy::cast_sign_loss)]
-        #[allow(clippy::cast_possible_truncation)]
-        let pos = Size::<usize>::new(pos.x as _, pos.y as _);
+        if pos.negative() {
+            return;
+        }
+
+        let pos = Size::<usize>::new(pos.x.lossy_convert(), pos.y.lossy_convert());
         let index = pos.height * self.scrennshot_size.width + pos.width;
         let Some(color) = self.screenshot.get(index) else {
             return;
