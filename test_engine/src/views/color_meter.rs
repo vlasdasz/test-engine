@@ -1,5 +1,8 @@
 use dispatch::on_main;
-use gm::{flat::Size, U8Color};
+use gm::{
+    flat::{Point, Size},
+    U8Color,
+};
 use refs::Weak;
 use tokio::spawn;
 use ui::{UIEvents, ViewCallbacks, ViewData, ViewSetup};
@@ -12,6 +15,19 @@ use crate::App;
 pub struct ColorMeter {
     screenshot:      Vec<U8Color>,
     scrennshot_size: Size<usize>,
+}
+
+impl ColorMeter {
+    pub fn get_pixel(&self, pos: impl Into<Point>) -> U8Color {
+        if self.screenshot.is_empty() {
+            return Default::default();
+        }
+        let pos = pos.into();
+        #[allow(clippy::cast_sign_loss)]
+        #[allow(clippy::cast_possible_truncation)]
+        let pos: Point<usize> = Point::new(pos.x as usize, pos.y as usize);
+        self.screenshot[pos.x + pos.y * self.scrennshot_size.width]
+    }
 }
 
 impl ViewSetup for ColorMeter {

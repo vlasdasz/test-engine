@@ -18,6 +18,12 @@ impl Zero for f32 {
     }
 }
 
+impl Zero for u8 {
+    fn zero() -> Self {
+        0
+    }
+}
+
 #[const_trait]
 pub trait One {
     fn one() -> Self;

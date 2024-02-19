@@ -167,7 +167,7 @@ impl App {
         }
     }
 
-    fn draw<'a>(
+    fn draw_view<'a>(
         pass: &mut RenderPass<'a>,
         drawer: &'a WGPUDrawer,
         view: &'a dyn View,
@@ -246,7 +246,7 @@ impl App {
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {
-                Self::draw(pass, drawer, view.deref(), sections)
+                Self::draw_view(pass, drawer, view.deref(), sections)
             }
         }
     }
@@ -329,7 +329,7 @@ impl wgpu_wrapper::App for App {
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
         let mut sections: Vec<Section> = vec![];
-        Self::draw(pass, drawer, self.root_view.deref(), &mut sections);
+        Self::draw_view(pass, drawer, self.root_view.deref(), &mut sections);
 
         Font::helvetice().brush.queue(&drawer.device, &drawer.queue, sections).unwrap()
     }
