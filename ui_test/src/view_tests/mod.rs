@@ -137,8 +137,8 @@ pub async fn record_touches_with_colors(meter: SubView<ColorMeter>) {
         let x: u32 = touch.position.x.lossy_convert();
         let y: u32 = touch.position.y.lossy_convert();
         println!(
-            "{:>4} {:>4} - {:>3} {:>3} {:>3} {:>3}",
-            x, y, color.r, color.g, color.b, color.a
+            "            {:>4} {:>4} - {:>3} {:>3} {:>3}",
+            x, y, color.r, color.g, color.b
         );
     }
 }
