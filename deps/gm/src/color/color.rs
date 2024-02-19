@@ -2,9 +2,13 @@ use std::hash::{Hash, Hasher};
 
 use rtools::Random;
 
-use crate::{num::lossy_convert::LossyConvert, Color, U8Color};
+use crate::{
+    color::helpers::{linear_to_srgb, srgb_to_linear},
+    num::lossy_convert::LossyConvert,
+    Color, U8Color,
+};
 
-impl Color {
+impl Color<f32> {
     pub const fn rgb(r: f32, g: f32, b: f32) -> Self {
         Self::rgba(r, g, b, 1.0)
     }
@@ -15,6 +19,24 @@ impl Color {
 
     pub fn is_visible(&self) -> bool {
         self.a > 0.02
+    }
+
+    pub fn to_srgb(self) -> Self {
+        Self::rgba(
+            linear_to_srgb(self.r),
+            linear_to_srgb(self.g),
+            linear_to_srgb(self.b),
+            linear_to_srgb(self.a),
+        )
+    }
+
+    pub fn from_srgb(self) -> Self {
+        Self::rgba(
+            srgb_to_linear(self.r),
+            srgb_to_linear(self.g),
+            srgb_to_linear(self.b),
+            srgb_to_linear(self.a),
+        )
     }
 }
 

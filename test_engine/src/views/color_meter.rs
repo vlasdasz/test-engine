@@ -2,7 +2,7 @@ use dispatch::on_main;
 use gm::{
     flat::{Point, Size},
     num::lossy_convert::LossyConvert,
-    U8Color,
+    Color, U8Color,
 };
 use refs::Weak;
 use tokio::spawn;
@@ -23,10 +23,16 @@ impl ColorMeter {
         if self.screenshot.is_empty() {
             return Default::default();
         }
-        let pos = pos.into();
 
-        let pos: Point<usize> = Point::new(pos.x.lossy_convert(), pos.y.lossy_convert());
-        self.screenshot[pos.x + pos.y * self.scrennshot_size.width]
+        let pos: Point<usize> = pos.into().lossy_convert();
+
+        let Some(color) = self.screenshot.get(pos.x + pos.y * self.scrennshot_size.width) else {
+            return Default::default();
+        };
+
+        let color: Color<f32> = (*color).into();
+
+        color.from_srgb().into()
     }
 }
 
@@ -47,12 +53,7 @@ impl ViewCallbacks for ColorMeter {
             return;
         }
 
-        let pos = Size::<usize>::new(pos.x.lossy_convert(), pos.y.lossy_convert());
-        let index = pos.height * self.scrennshot_size.width + pos.width;
-        let Some(color) = self.screenshot.get(index) else {
-            return;
-        };
-        self.set_color(*color);
+        self.set_color(self.get_pixel(pos));
     }
 }
 

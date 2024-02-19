@@ -7,7 +7,7 @@ use bytemuck::{Pod, Zeroable};
 use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
-use crate::flat::Size;
+use crate::{flat::Size, num::lossy_convert::LossyConvert};
 
 #[derive(Copy, Debug, Clone)]
 pub enum Direction {
@@ -36,6 +36,12 @@ unsafe impl<T: Pod> Pod for Point<T> {}
 impl<T> Point<T> {
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
+    }
+}
+
+impl<T: LossyConvert<U>, U> LossyConvert<Point<U>> for Point<T> {
+    fn lossy_convert(self) -> Point<U> {
+        Point::new(self.x.lossy_convert(), self.y.lossy_convert())
     }
 }
 

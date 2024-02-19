@@ -40,6 +40,12 @@ impl<T: Mul<Output = T> + Copy> Size<T> {
     }
 }
 
+impl<T: LossyConvert<U>, U: Copy> LossyConvert<Size<U>> for Size<T> {
+    fn lossy_convert(self) -> Size<U> {
+        Size::new(self.width.lossy_convert(), self.height.lossy_convert())
+    }
+}
+
 impl Size<f32> {
     pub fn diagonal(&self) -> f32 {
         (self.width * self.width + self.height * self.height).sqrt()
@@ -141,17 +147,8 @@ impl Hash for Size<f32> {
 impl From<Size<u32>> for Size<f32> {
     fn from(value: Size<u32>) -> Self {
         Self {
-            width:  value.width as _,
-            height: value.height as _,
-        }
-    }
-}
-
-impl From<Size<f32>> for Size<u32> {
-    fn from(value: Size<f32>) -> Self {
-        Self {
-            width:  value.width.lossy_convert(),
-            height: value.height.lossy_convert(),
+            width:  value.width as f32,
+            height: value.height as f32,
         }
     }
 }

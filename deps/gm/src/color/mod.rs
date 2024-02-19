@@ -1,5 +1,6 @@
 mod color;
 mod color_base;
+mod helpers;
 mod u8_color;
 
 pub use color_base::*;
