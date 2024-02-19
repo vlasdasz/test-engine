@@ -3,7 +3,6 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    sleep,
     ui::{
         view, Anchor, Color, ColorMeter, Container, Image, ImageView, Point, SubView, TouchStack,
         ViewCallbacks, ViewData, ViewSetup, ViewTouch,
@@ -11,7 +10,7 @@ use test_engine::{
     wait_for_next_frame, App, DataManager,
 };
 
-use crate::view_tests::record_touches;
+use crate::view_tests::{record_touches, record_touches_with_colors};
 
 #[view]
 struct ImageTestView {
@@ -60,11 +59,11 @@ async fn check_colors<const N: usize>(
 pub async fn test_image_view() -> Result<()> {
     let view = App::set_test_view::<ImageTestView>(400, 400).await;
 
-    record_touches(view).await;
-
-    sleep(0.1);
+    record_touches_with_colors(view.meter).await;
 
     wait_for_next_frame().await;
+
+    record_touches(view).await;
 
     check_colors(
         view.meter,

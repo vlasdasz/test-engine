@@ -4,6 +4,7 @@ use gm::{
     num::lossy_convert::LossyConvert,
     Color, U8Color,
 };
+use log::debug;
 use refs::Weak;
 use tokio::spawn;
 use ui::{UIEvents, ViewCallbacks, ViewData, ViewSetup};
@@ -38,6 +39,7 @@ impl ColorMeter {
 
 impl ViewSetup for ColorMeter {
     fn setup(self: Weak<Self>) {
+        self.update_screenshot();
         UIEvents::size_changed().sub(move || self.update_screenshot());
     }
 }
@@ -58,7 +60,11 @@ impl ViewCallbacks for ColorMeter {
 }
 
 impl ColorMeter {
-    fn update_screenshot(mut self: Weak<Self>) {
+    pub fn update_screenshot(mut self: Weak<Self>) {
+        debug!("Update");
+
+        debug!("{:?}", App::root_view_size());
+
         spawn(async move {
             let Some((data, size)) = App::read_display().await.ok() else {
                 return;
@@ -67,6 +73,9 @@ impl ColorMeter {
             on_main(move || {
                 self.screenshot = data;
                 self.scrennshot_size = Size::new(size.width as _, size.height as _);
+
+                debug!("Data updated");
+                debug!("{:?}", App::root_view_size());
 
                 // Image::free_with_name("Screenshot");
 

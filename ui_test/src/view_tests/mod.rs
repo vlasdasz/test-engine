@@ -1,14 +1,19 @@
-use std::fmt::{Debug, Display};
+use std::{
+    fmt::{Debug, Display},
+    ops::Deref,
+};
 
 use anyhow::{bail, Result};
 use log::{error, warn};
 use serde::de::DeserializeOwned;
 use test_engine::{
-    from_main, on_main,
+    from_main,
+    gm::lossy_convert::LossyConvert,
+    on_main,
     refs::ToOwn,
     sleep,
-    ui::{Touch, UIEvents, UIManager, WeakView},
-    App,
+    ui::{ColorMeter, SubView, Touch, U8Color, UIEvents, UIManager, WeakView},
+    wait_for_next_frame, App,
 };
 use tokio::sync::mpsc::channel;
 
@@ -69,10 +74,6 @@ pub async fn record_touches(view: WeakView) {
 
     on_main(move || {
         UIEvents::on_touch().val(move |touch| {
-            if touches.is_null() {
-                return;
-            }
-
             if touch.is_moved() {
                 return;
             }
@@ -89,11 +90,57 @@ pub async fn record_touches(view: WeakView) {
         warn!("Failed to receive record_touches result");
     }
 
+    from_main(|| {
+        UIEvents::on_touch().remove_subscribers();
+    })
+    .await;
+
+    println!("{}", Touch::str_from_vec(touches.to_vec()));
+}
+
+#[allow(dead_code)]
+pub async fn record_touches_with_colors(meter: SubView<ColorMeter>) {
+    meter.weak().update_screenshot();
+
+    sleep(0.1);
+
+    wait_for_next_frame().await;
+
+    let touches = Vec::<(Touch, U8Color)>::new().to_own();
+    let mut touches = touches.weak();
+
+    let (s, mut r) = channel::<()>(1);
+
+    on_main(move || {
+        UIEvents::on_touch().val(move |touch| {
+            if !touch.is_began() {
+                return;
+            }
+
+            touches.push((touch, meter.get_pixel(touch.position)));
+        });
+
+        UIManager::keymap().add(meter.weak(), 'a', move || {
+            _ = s.try_send(());
+        })
+    });
+
+    if let None = r.recv().await {
+        warn!("Failed to receive record_touches_with_colors result");
+    }
+
     on_main(|| {
         UIEvents::on_touch().remove_subscribers();
     });
 
-    println!("{}", Touch::str_from_vec(touches.to_vec()));
+    for (touch, color) in touches.deref() {
+        let x: u32 = touch.position.x.lossy_convert();
+        let y: u32 = touch.position.y.lossy_convert();
+        println!(
+            "{:>4} {:>4} - {:>3} {:>3} {:>3} {:>3}",
+            x, y, color.r, color.g, color.b, color.a
+        );
+    }
 }
 
 pub fn assert_eq<T: PartialEq<U> + Debug, U: Debug>(a: T, b: U) -> Result<()> {

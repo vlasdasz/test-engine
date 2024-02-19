@@ -44,6 +44,10 @@ pub mod input {
     pub use winit::event::KeyEvent;
 }
 
+pub mod gm {
+    pub use gm::num::{checked_convert, lossy_convert};
+}
+
 pub use app::App;
 pub use audio;
 pub use bytemuck::cast_slice;
