@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched};
+use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
 use env_logger::Builder;
 use gm::{
     flat::{Point, Rect, Size},
@@ -15,6 +15,7 @@ use gm::{
 use log::{trace, warn, Level, LevelFilter};
 use manage::data_manager::DataManager;
 use refs::{Own, Rglica, Weak};
+use rtools::sleep;
 use tokio::{spawn, sync::oneshot::Receiver};
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -125,7 +126,7 @@ impl App {
     }
 
     pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) -> Weak<T> {
-        from_main(move || {
+        let view = from_main(move || {
             let view = T::new();
             let weak = view.weak();
             let mut root = UIManager::root_view();
@@ -136,7 +137,11 @@ impl App {
             App::set_window_size((width, height));
             weak
         })
-        .await
+        .await;
+
+        sleep(0.1);
+
+        view
     }
 
     fn new(first_view: Own<dyn View>) -> Box<Self> {
@@ -253,7 +258,6 @@ impl App {
 
     pub fn process_touch_event(&mut self, mut touch: Touch) -> bool {
         const LOG_TOUCHES: bool = false;
-        const DISPLAY_TOUCHES: bool = false;
 
         if UIManager::touch_disabled() {
             return false;
@@ -293,7 +297,7 @@ impl App {
         //     }
         // }
 
-        DISPLAY_TOUCHES
+        false
     }
 
     pub fn set_window_title(title: impl ToString) {

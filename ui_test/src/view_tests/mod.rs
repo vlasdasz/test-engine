@@ -101,6 +101,9 @@ pub async fn record_touches(view: WeakView) {
 #[allow(dead_code)]
 pub async fn record_touches_with_colors(meter: SubView<ColorMeter>) {
     meter.weak().update_screenshot();
+    let recv = meter.weak().load_receiver().unwrap();
+
+    recv.await.unwrap();
 
     sleep(0.1);
 

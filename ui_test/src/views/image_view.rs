@@ -1,16 +1,16 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    from_main,
     refs::Weak,
+    sleep,
     ui::{
         view, Anchor, Color, ColorMeter, Container, Image, ImageView, Point, SubView, TouchStack, U8Color,
         ViewCallbacks, ViewData, ViewSetup, ViewTouch,
     },
-    wait_for_next_frame, App, DataManager,
+    App, DataManager,
 };
 
-use crate::view_tests::{record_touches, record_touches_with_colors};
+use crate::view_tests::record_touches_with_colors;
 
 #[view]
 struct ImageTestView {
@@ -21,7 +21,9 @@ struct ImageTestView {
 
 impl ViewCallbacks for ImageTestView {
     fn update(&mut self) {
-        self.indicator.set_color(self.meter.get_pixel(App::current().cursor_position));
+        if self.meter.screenshot_ready() {
+            self.indicator.set_color(self.meter.get_pixel(App::current().cursor_position));
+        }
     }
 }
 
@@ -37,23 +39,29 @@ impl ViewSetup for ImageTestView {
 }
 
 fn check_pixel_color(meter: Weak<ColorMeter>, pos: Point, color: U8Color) {
-    let pixel = meter.get_pixel(pos).into();
+    let pixel = meter.get_pixel(pos);
+    let pixel_f32: Color<f32> = pixel.into();
+    let color_f32: Color<f32> = color.into();
 
-    let diff = meter.get_pixel(pos).diff(color);
+    let diff = pixel_f32.diff(color_f32);
 
-    dbg!(&diff);
+    let max_diff = 0.012;
 
-    // from_main(move || {
-    //     // let diff = Screen::read_pixel(pos).diff(color);
-    //     // let max_diff = 0.012;
-    //     // if diff > max_diff {
-    //     //     panic!("Color diff is too big: {diff}. Max: {max_diff}.
-    // Position:     // {pos:?}") }
-    // })
-    // .await
+    if diff > max_diff {
+        panic!(
+            "Color diff is too big: {diff}. Max: {max_diff}. Position: {pos:?}. \nExpected: {color}, got: \
+             {pixel}"
+        )
+    }
 }
 
 async fn check_colors(meter: SubView<ColorMeter>, data: &str) {
+    if let Some(meter_loaded) = meter.weak().load_receiver() {
+        meter_loaded.await.unwrap();
+    }
+
+    sleep(0.1);
+
     let lines: Vec<_> = data.split("\n").collect();
 
     for line in lines {
@@ -88,14 +96,38 @@ pub async fn test_image_view() -> Result<()> {
 
     check_colors(
         view.meter,
-        r#"   60  224 -  25  51  76
-             108  255 - 120  15   3
-             144  230 -  25  51  76
+        r#"   59  103 -  25  51  76
+             113  104 -  38 207  16
+             191  110 -  12  63  40
+             269  109 -   1   5 147
+             347  132 -  25  51  76
+             292  182 -  36  36  67
+             277  189 -  25  51  76
+             121  190 -  25  51  76
+             109  195 -  51  59   5
+              81  195 -  25  51  76
+              77  281 -  25  51  76
+             137  292 - 192  15   4
+             251  290 - 209 139  14
+             293  256 - 145 145  20
+             322  256 -  25  51  76
+             259  253 -  25  51  76
+             278  318 -  25  51  76
+             320  290 -  25  51  76
+             186  326 -  25  51  76
+             107  316 -  25  51  76
+              41  304 -  25  51  76
+             154   78 -  25  51  76
+             233   83 -  25  51  76
+             180  170 -  25  51  76
+             220  220 -  25  51  76
         "#,
     )
     .await;
 
-    record_touches(view).await;
+    App::set_window_size((1000, 80));
+
+    record_touches_with_colors(view.meter).await;
 
     // from_main(|| {
     //     Screen::current().set_size((200, 600));

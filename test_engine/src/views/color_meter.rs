@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+
 use dispatch::on_main;
 use gm::{
     flat::{Point, Size},
@@ -5,7 +7,10 @@ use gm::{
     Color, U8Color,
 };
 use refs::Weak;
-use tokio::spawn;
+use tokio::{
+    spawn,
+    sync::oneshot::{channel, Receiver},
+};
 use ui::{UIEvents, ViewCallbacks, ViewData, ViewSetup};
 use ui_proc::view;
 
@@ -16,10 +21,14 @@ use crate::App;
 pub struct ColorMeter {
     screenshot:      Vec<U8Color>,
     scrennshot_size: Size<usize>,
+    loaded:          bool,
+    load_receiver:   RefCell<Option<Receiver<()>>>,
 }
 
 impl ColorMeter {
     pub fn get_pixel(&self, pos: impl Into<Point>) -> U8Color {
+        assert!(self.loaded);
+
         if self.screenshot.is_empty() {
             return Default::default();
         }
@@ -33,6 +42,14 @@ impl ColorMeter {
         let color: Color<f32> = (*color).into();
 
         color.from_srgb().into()
+    }
+
+    pub fn load_receiver(self: Weak<Self>) -> Option<Receiver<()>> {
+        self.load_receiver.borrow_mut().take()
+    }
+
+    pub fn screenshot_ready(&self) -> bool {
+        self.loaded
     }
 }
 
@@ -60,6 +77,10 @@ impl ViewCallbacks for ColorMeter {
 
 impl ColorMeter {
     pub fn update_screenshot(mut self: Weak<Self>) {
+        let (sender, recv) = channel();
+
+        self.load_receiver = Some(recv).into();
+
         spawn(async move {
             let Some((data, size)) = App::read_display().await.ok() else {
                 return;
@@ -68,6 +89,9 @@ impl ColorMeter {
             on_main(move || {
                 self.screenshot = data;
                 self.scrennshot_size = Size::new(size.width as _, size.height as _);
+                self.loaded = true;
+
+                sender.send(()).unwrap();
 
                 // Image::free_with_name("Screenshot");
 

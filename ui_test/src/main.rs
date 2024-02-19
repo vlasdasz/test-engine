@@ -23,7 +23,7 @@ mod views;
 #[tokio::main]
 async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
-        UIManager::set_display_touches(true);
+        // UIManager::set_display_touches(true);
 
         test_keymap().await?;
         test_image_view().await?;
