@@ -24,7 +24,7 @@ impl Label {
         self
     }
 
-    pub fn set_text_color(&mut self, _color: Color) -> &mut Self {
+    pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
         warn!("unimplemented");
         self
     }

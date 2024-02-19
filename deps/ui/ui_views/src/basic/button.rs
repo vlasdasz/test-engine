@@ -21,8 +21,8 @@ pub struct Button {
 
 impl Button {
     pub fn on_tap(&self, action: impl FnMut() + 'static) {
-        self.on_tap.sub(action);
         self.enable_touch();
+        self.on_tap.sub(action);
     }
 
     pub fn text(&self) -> &str {
@@ -41,8 +41,8 @@ impl Button {
         self
     }
 
-    pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
-        //self.label.set_text_color(color);
+    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.label.set_text_color(color);
         self
     }
 

@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, IntView, Label, SubView, TouchStack, ViewData, ViewSetup},
+    ui::{view, Anchor, IntView, Label, SubView, ViewData, ViewSetup},
     App,
 };
 

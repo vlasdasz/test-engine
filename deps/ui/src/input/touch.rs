@@ -63,7 +63,7 @@ impl FromStr for Touch {
         let vals = s.split_whitespace().collect_vec();
 
         let touch = Touch {
-            id:       0,
+            id:       1,
             position: Point {
                 x: vals[0].parse()?,
                 y: vals[1].parse()?,
@@ -87,31 +87,31 @@ mod test {
     fn touch_to_string() {
         let touches = [
             Touch {
-                id:       0,
+                id:       1,
                 position: (0, 0).into(),
                 event:    TouchEvent::Began,
                 button:   MouseButton::Left,
             },
             Touch {
-                id:       0,
+                id:       1,
                 position: (2000, 10).into(),
                 event:    TouchEvent::Ended,
                 button:   MouseButton::Left,
             },
             Touch {
-                id:       0,
+                id:       1,
                 position: (100, 4000).into(),
                 event:    TouchEvent::Ended,
                 button:   MouseButton::Left,
             },
             Touch {
-                id:       0,
+                id:       1,
                 position: (1, 4000).into(),
                 event:    TouchEvent::Moved,
                 button:   MouseButton::Left,
             },
             Touch {
-                id:       0,
+                id:       1,
                 position: (4000, 1).into(),
                 event:    TouchEvent::Moved,
                 button:   MouseButton::Left,
@@ -148,7 +148,7 @@ mod test {
 
         assert_eq!(
             vec![Touch {
-                id:       0,
+                id:       1,
                 position: (10, 20).into(),
                 event:    TouchEvent::Began,
                 button:   MouseButton::Left,

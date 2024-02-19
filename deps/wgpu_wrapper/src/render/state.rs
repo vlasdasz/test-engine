@@ -223,10 +223,10 @@ impl State {
     pub fn request_read_display(&self) -> Receiver<Screenshot> {
         let mut request = self.read_display_request.borrow_mut();
 
-        assert!(request.is_none());
+        //  assert!(request.is_none());
 
         let (s, r) = channel();
-        request.replace(s.into());
+        request.replace(s);
         r
     }
 

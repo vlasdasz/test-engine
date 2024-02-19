@@ -3,13 +3,11 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{
-        view, Anchor, Color, Image, ImageView, Point, Screenshot, SubView, TouchStack, U8Color, ViewData,
-        ViewSetup, ViewTouch,
+        view, Anchor, Color, Image, ImageView, Point, Screenshot, SubView, U8Color, ViewData, ViewSetup,
+        ViewTouch,
     },
     App, DataManager,
 };
-
-use crate::view_tests::record_touches_with_colors;
 
 #[view]
 struct ImageTestView {
@@ -75,7 +73,7 @@ async fn check_colors(data: &str) -> Result<()> {
 }
 
 pub async fn test_image_view() -> Result<()> {
-    let view = App::set_test_view::<ImageTestView>(400, 400).await;
+    App::set_test_view::<ImageTestView>(400, 400).await;
 
     check_colors(
         r#"   59  103 -  25  51  76

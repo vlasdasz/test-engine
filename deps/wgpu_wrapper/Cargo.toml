@@ -11,6 +11,7 @@ name = "wgpu_wrapper"
 [dependencies]
 anyhow = { workspace = true }
 bytemuck = { workspace = true }
+dispatch = { workspace = true }
 env_logger = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
@@ -18,7 +19,6 @@ tokio = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
 winit = { workspace = true }
-dispatch = { workspace = true }
 
 manage = { workspace = true }
 refs = { workspace = true }
