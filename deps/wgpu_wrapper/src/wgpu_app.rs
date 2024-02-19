@@ -1,7 +1,11 @@
-use std::sync::Arc;
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc,
+};
 
 use anyhow::Result;
-use gm::{flat::Size, U8Color};
+use dispatch::on_main;
+use gm::flat::Size;
 use log::{error, trace};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
@@ -14,18 +18,25 @@ use winit::{
     window::WindowBuilder,
 };
 
-use crate::{app::App, render::state::State};
+use crate::{app::App, render::state::State, Screenshot};
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
 pub struct WGPUApp {
     pub state:  State,
     event_loop: Option<EventLoop<()>>,
+    close:      AtomicBool,
 }
 
 impl WGPUApp {
     pub(crate) fn current() -> &'static mut Self {
         APP.get_mut().as_mut().expect("App has not been initialized yet.")
+    }
+
+    pub fn close() {
+        on_main(|| {
+            Self::current().close.store(true, Ordering::Relaxed);
+        });
     }
 
     pub async fn start(app: Box<dyn App>) -> Result<()> {
@@ -40,6 +51,7 @@ impl WGPUApp {
         *APP.get_mut() = Self {
             state,
             event_loop: event_loop.into(),
+            close: Default::default(),
         }
         .into();
 
@@ -90,6 +102,10 @@ impl WGPUApp {
                     //state.resize(**new_inner_size);
                 }
                 WindowEvent::RedrawRequested => {
+                    if self.close.load(Ordering::Relaxed) {
+                        elwt.exit();
+                    }
+
                     self.state.update();
 
                     match self.state.render() {
@@ -118,7 +134,7 @@ impl WGPUApp {
         let _ = self.state.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn request_read_display(&self) -> Receiver<(Vec<U8Color>, Size<u32>)> {
+    pub fn request_read_display(&self) -> Receiver<Screenshot> {
         self.state.request_read_display()
     }
 

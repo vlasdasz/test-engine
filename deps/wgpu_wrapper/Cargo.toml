@@ -18,6 +18,7 @@ tokio = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
 winit = { workspace = true }
+dispatch = { workspace = true }
 
 manage = { workspace = true }
 refs = { workspace = true }

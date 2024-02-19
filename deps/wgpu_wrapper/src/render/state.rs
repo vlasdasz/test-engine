@@ -15,9 +15,9 @@ use wgpu::{
 };
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::{app::App, frame_counter::FrameCounter, render::wgpu_drawer::WGPUDrawer, text::Font};
+use crate::{app::App, frame_counter::FrameCounter, render::wgpu_drawer::WGPUDrawer, text::Font, Screenshot};
 
-type ReadDisplayRequest = Sender<(Vec<U8Color>, Size<u32>)>;
+type ReadDisplayRequest = Sender<Screenshot>;
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -213,16 +213,20 @@ impl State {
                 let data: Vec<U8Color> =
                     cast_slice(bytes).iter().map(|color: &U8Color| color.bgra_to_rgba()).collect();
 
-                buffer_sender.send((data, size)).unwrap();
+                buffer_sender.send(Screenshot::new(data, size)).unwrap();
             });
         }
 
         Ok(())
     }
 
-    pub fn request_read_display(&self) -> Receiver<(Vec<U8Color>, Size<u32>)> {
+    pub fn request_read_display(&self) -> Receiver<Screenshot> {
+        let mut request = self.read_display_request.borrow_mut();
+
+        assert!(request.is_none());
+
         let (s, r) = channel();
-        self.read_display_request.replace(s.into());
+        request.replace(s.into());
         r
     }
 

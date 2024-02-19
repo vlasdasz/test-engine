@@ -39,9 +39,7 @@ impl ViewSetup for LabelTestView {
 pub async fn test_label() -> Result<()> {
     App::set_test_view::<LabelTestView>(400, 400).await;
 
-    debug!("Int view test: OK");
-
-    dbg!(TouchStack::dump());
+    debug!("Label test: OK");
 
     Ok(())
 }

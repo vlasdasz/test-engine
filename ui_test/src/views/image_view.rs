@@ -2,10 +2,9 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    sleep,
     ui::{
-        view, Anchor, Color, ColorMeter, Container, Image, ImageView, Point, SubView, TouchStack, U8Color,
-        ViewCallbacks, ViewData, ViewSetup, ViewTouch,
+        view, Anchor, Color, Image, ImageView, Point, Screenshot, SubView, TouchStack, U8Color, ViewData,
+        ViewSetup, ViewTouch,
     },
     App, DataManager,
 };
@@ -14,17 +13,7 @@ use crate::view_tests::record_touches_with_colors;
 
 #[view]
 struct ImageTestView {
-    meter:      SubView<ColorMeter>,
     image_view: SubView<ImageView>,
-    indicator:  SubView<Container>,
-}
-
-impl ViewCallbacks for ImageTestView {
-    fn update(&mut self) {
-        if self.meter.screenshot_ready() {
-            self.indicator.set_color(self.meter.get_pixel(App::current().cursor_position));
-        }
-    }
 }
 
 impl ViewSetup for ImageTestView {
@@ -33,13 +22,11 @@ impl ViewSetup for ImageTestView {
 
         self.image_view.place().center().relative(Anchor::Size, self, 0.5);
         self.image_view.image = Image::get("gradient.png");
-
-        self.indicator.place().size(100, 100).br(0);
     }
 }
 
-fn check_pixel_color(meter: Weak<ColorMeter>, pos: Point, color: U8Color) {
-    let pixel = meter.get_pixel(pos);
+fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
+    let pixel: Color = screenshot.get_pixel(pos).into();
     let pixel_f32: Color<f32> = pixel.into();
     let color_f32: Color<f32> = color.into();
 
@@ -55,12 +42,8 @@ fn check_pixel_color(meter: Weak<ColorMeter>, pos: Point, color: U8Color) {
     }
 }
 
-async fn check_colors(meter: SubView<ColorMeter>, data: &str) {
-    if let Some(meter_loaded) = meter.weak().load_receiver() {
-        meter_loaded.await.unwrap();
-    }
-
-    sleep(0.1);
+async fn check_colors(data: &str) -> Result<()> {
+    let screenshot = App::take_screenshot().await?;
 
     let lines: Vec<_> = data.split("\n").collect();
 
@@ -85,17 +68,16 @@ async fn check_colors(meter: SubView<ColorMeter>, data: &str) {
             255,
         );
 
-        check_pixel_color(meter.weak(), pos, color);
+        check_pixel_color(&screenshot, pos, color);
     }
+
+    Ok(())
 }
 
 pub async fn test_image_view() -> Result<()> {
     let view = App::set_test_view::<ImageTestView>(400, 400).await;
 
-    record_touches_with_colors(view.meter).await;
-
     check_colors(
-        view.meter,
         r#"   59  103 -  25  51  76
              113  104 -  38 207  16
              191  110 -  12  63  40
@@ -123,23 +105,57 @@ pub async fn test_image_view() -> Result<()> {
              220  220 -  25  51  76
         "#,
     )
-    .await;
+    .await?;
 
-    App::set_window_size((1000, 80));
+    App::set_window_size((1000, 120));
 
-    record_touches_with_colors(view.meter).await;
+    check_colors(
+        r#"  235   42 -  25  51  76
+             263   44 -  34 131  10
+             301   46 -  25  51  76
+             702   52 -  25  51  76
+             735   52 -  30  30  77
+             781   53 -  25  51  76
+             764   83 -  25  51  76
+             734   82 - 188 188  19
+             674   66 -  25  51  76
+             299   60 -  25  51  76
+             263   66 -  74  33   4
+             379  102 -  25  51  76
+             517   90 -  25  51  76
+             519   34 -  25  51  76
+             524   20 -  25  51  76
+        "#,
+    )
+    .await?;
 
-    // from_main(|| {
-    //     Screen::current().set_size((200, 600));
-    // })
-    // .await;
+    App::set_window_size((200, 600));
 
-    // from_main(|| {
-    //     Screen::current().set_size((600, 250));
-    // })
-    // .await;
+    check_colors(
+        r#"   36  158 -  25  51  76
+              62  158 -  33 180  16
+              94  158 -  12  66  40
+             116  159 -   4  23  88
+             129  159 -   2   8 129
+             183  165 -  25  51  76
+             163  435 -  25  51  76
+             121  435 - 207 123  13
+              88  435 - 192  38   6
+              70  435 - 188  16   4
+              29  412 -  25  51  76
+              57  248 -  25  51  76
+              55  286 -  47  64   6
+              82  274 -  25  51  76
+             128  333 -  25  51  76
+             177  337 -  25  51  76
+             127  471 -  25  51  76
+             127  405 -  25  51  76
+             117  109 -  25  51  76
+             106  184 -  25  51  76
 
-    dbg!(TouchStack::dump());
+        "#,
+    )
+    .await?;
 
     debug!("Image view test: OK");
 

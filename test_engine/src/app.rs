@@ -6,17 +6,17 @@ use std::{
 };
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
+use dispatch::{from_main, invoke_dispatched};
 use env_logger::Builder;
 use gm::{
     flat::{Point, Rect, Size},
-    Color, U8Color,
+    Color,
 };
 use log::{trace, warn, Level, LevelFilter};
 use manage::data_manager::DataManager;
 use refs::{Own, Rglica, Weak};
 use rtools::sleep;
-use tokio::{spawn, sync::oneshot::Receiver};
+use tokio::spawn;
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
     ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest, WeakView,
@@ -25,7 +25,7 @@ use ui_views::{DrawingView, ImageView, Label};
 use vents::OnceEvent;
 use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{ElementState, Font, MouseButton, State, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, State, WGPUApp, WGPUDrawer};
 use winit::{
     event::{KeyEvent, TouchPhase},
     keyboard,
@@ -120,6 +120,7 @@ impl App {
             let recv = from_main(|| App::current().window_ready.once_async()).await;
             recv.await.unwrap();
             let _ = actions.await;
+            WGPUApp::close();
         });
 
         WGPUApp::start(app).await
@@ -308,8 +309,10 @@ impl App {
         Self::current().wgpu_app.set_window_size(size);
     }
 
-    pub fn read_display() -> Receiver<(Vec<U8Color>, Size<u32>)> {
-        Self::current().wgpu_app.request_read_display()
+    pub async fn take_screenshot() -> Result<Screenshot> {
+        let recv = from_main(|| Self::current().wgpu_app.request_read_display()).await;
+        let screenshot = recv.await?;
+        Ok(screenshot)
     }
 
     pub fn on_char(&mut self, ch: char) {

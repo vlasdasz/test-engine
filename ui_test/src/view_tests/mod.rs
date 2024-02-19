@@ -12,7 +12,7 @@ use test_engine::{
     on_main,
     refs::ToOwn,
     sleep,
-    ui::{ColorMeter, SubView, Touch, U8Color, UIEvents, UIManager, WeakView},
+    ui::{Touch, U8Color, UIEvents, UIManager, WeakView},
     wait_for_next_frame, App,
 };
 use tokio::sync::mpsc::channel;
@@ -99,13 +99,8 @@ pub async fn record_touches(view: WeakView) {
 }
 
 #[allow(dead_code)]
-pub async fn record_touches_with_colors(meter: SubView<ColorMeter>) {
-    meter.weak().update_screenshot();
-    let recv = meter.weak().load_receiver().unwrap();
-
-    recv.await.unwrap();
-
-    sleep(0.1);
+pub async fn record_touches_with_colors(view: WeakView) -> Result<()> {
+    let screenshot = App::take_screenshot().await?;
 
     wait_for_next_frame().await;
 
@@ -120,10 +115,10 @@ pub async fn record_touches_with_colors(meter: SubView<ColorMeter>) {
                 return;
             }
 
-            touches.push((touch, meter.get_pixel(touch.position)));
+            touches.push((touch, screenshot.get_pixel(touch.position)));
         });
 
-        UIManager::keymap().add(meter.weak(), 'a', move || {
+        UIManager::keymap().add(view, 'a', move || {
             _ = s.try_send(());
         })
     });
@@ -144,6 +139,8 @@ pub async fn record_touches_with_colors(meter: SubView<ColorMeter>) {
             x, y, color.r, color.g, color.b
         );
     }
+
+    Ok(())
 }
 
 pub fn assert_eq<T: PartialEq<U> + Debug, U: Debug>(a: T, b: U) -> Result<()> {

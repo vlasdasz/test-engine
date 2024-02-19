@@ -6,7 +6,7 @@
 
 use anyhow::Result;
 use test_engine::{
-    ui::{Container, UIManager, ViewSetup},
+    ui::{Container, ViewSetup},
     App,
 };
 
@@ -27,13 +27,13 @@ async fn main() -> Result<()> {
 
         test_keymap().await?;
         test_image_view().await?;
+        test_button().await?;
+        test_int_view().await?;
+        test_switch().await?;
+        test_layout().await?;
         test_label().await?;
         test_render_image_path().await?;
         test_touch_stack().await?;
-        test_button().await?;
-        test_switch().await?;
-        test_layout().await?;
-        test_int_view().await?;
         test_drop_down().await?;
         test_alert().await?;
         test_multiline().await?;

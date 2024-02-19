@@ -19,7 +19,7 @@ pub mod ui {
     pub use ui_proc::view;
     pub use ui_views::*;
     pub use views::color_meter::ColorMeter;
-    pub use wgpu_wrapper::{image::Image, wgpu::PolygonMode};
+    pub use wgpu_wrapper::{image::Image, wgpu::PolygonMode, Screenshot};
 
     use crate::views;
 }
