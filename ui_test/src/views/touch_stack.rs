@@ -30,17 +30,15 @@ impl ViewSetup for TouchStackTestView {
 pub async fn test_touch_stack() -> Result<()> {
     dbg!(TouchStack::dump());
 
-    App::set_test_view::<TouchStackTestView>(600, 600).await;
+    let view = App::set_test_view::<TouchStackTestView>(600, 600).await;
 
     dbg!(TouchStack::dump());
-
-    let this = TouchStackTestView::instance();
 
     dbg!(TouchStack::dump());
 
     assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 
-    this.button.on_tap(|| append_state("1"));
+    view.button.on_tap(|| append_state("1"));
 
     sleep(0.1);
 
@@ -62,7 +60,7 @@ pub async fn test_touch_stack() -> Result<()> {
 
     assert_eq(get_str_state(), "1")?;
 
-    this.button2.on_tap(|| {
+    view.button2.on_tap(|| {
         append_state("2");
     });
 

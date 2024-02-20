@@ -28,11 +28,9 @@ impl ViewTest for IntTestView {
 }
 
 pub async fn test_int_view() -> Result<()> {
-    App::set_test_view::<IntTestView>(400, 400).await;
+    let mut view = App::set_test_view::<IntTestView>(400, 400).await;
 
-    let mut this = IntTestView::instance();
-
-    assert_eq(1.0, this.int.value())?;
+    assert_eq(1.0, view.int.value())?;
 
     inject_touches(
         r#"
@@ -54,10 +52,10 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq(5.0, this.int.value())?;
+    assert_eq(5.0, view.int.value())?;
 
     from_main(move || {
-        this.int.set_step(4.5);
+        view.int.set_step(4.5);
     })
     .await;
 
@@ -77,7 +75,7 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq(-8.5, this.int.value())?;
+    assert_eq(-8.5, view.int.value())?;
 
     debug!("Int view test: OK");
 

@@ -25,8 +25,6 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
     let generics = &stream.generics;
 
-    let no_generics = generics.params.is_empty();
-
     let type_param_names: Vec<_> = generics
         .params
         .iter()
@@ -47,29 +45,6 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
     let inits = add_inits(name, fields);
     let links = add_links(fields);
-
-    let instance_global_var = Ident::new(&format!("__INSTANCE_{name}"), Span::call_site());
-
-    let (instance_global, instance_link, instance_method) = if no_generics {
-        (
-            quote! {
-                static #instance_global_var: std::sync::Mutex< test_engine::refs::Weak<#name>> =
-                    std::sync::Mutex::new(test_engine::refs::Weak::const_default());
-            },
-            quote! {
-                *#instance_global_var.lock().expect("*#instance_global_var.lock()") = self;
-            },
-            quote! {
-                impl #name {
-                    pub fn instance() -> test_engine::refs::Weak<Self> {
-                        #instance_global_var.lock().expect("#instance_global_var.lock()").clone()
-                    }
-                }
-            },
-        )
-    } else {
-        (quote! {}, quote! {}, quote! {})
-    };
 
     fields.named.push(
         Field::parse_named
@@ -120,13 +95,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             }
         }
 
-        #instance_global
-
-        #instance_method
-
         impl #generics  #name <#type_params> {
             fn __link(mut self: test_engine::refs::Weak<Self>) {
-                #instance_link
                 #links
             }
         }

@@ -35,9 +35,7 @@ impl ViewSetup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    App::set_test_view::<DropDownTestView>(280, 280).await;
-
-    let view = DropDownTestView::instance();
+    let view = App::set_test_view::<DropDownTestView>(280, 280).await;
 
     assert_eq(view.top.text(), "Dog")?;
     assert_eq(view.bot.text(), "Car")?;

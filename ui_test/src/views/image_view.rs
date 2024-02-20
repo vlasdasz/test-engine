@@ -24,7 +24,7 @@ impl ViewSetup for ImageTestView {
 }
 
 fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
-    let pixel: Color = screenshot.get_pixel(pos).into();
+    let pixel: U8Color = screenshot.get_pixel(pos);
     let pixel_f32: Color<f32> = pixel.into();
     let color_f32: Color<f32> = color.into();
 

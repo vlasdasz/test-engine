@@ -1,5 +1,4 @@
 use gm::Color;
-use log::warn;
 use refs::Weak;
 use rtools::IntoF32;
 use ui::{view, ToLabel, View, ViewData, ViewSetup, ViewSubviews};
@@ -10,8 +9,9 @@ mod test_engine {
 
 #[view]
 pub struct Label {
-    pub text:  String,
-    text_size: f32,
+    pub text:   String,
+    text_color: Color,
+    text_size:  f32,
 }
 
 impl Label {
@@ -24,8 +24,12 @@ impl Label {
         self
     }
 
-    pub fn set_text_color(&mut self, _color: impl Into<Color>) -> &mut Self {
-        warn!("unimplemented");
+    pub fn text_color(&self) -> &Color {
+        &self.text_color
+    }
+
+    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.text_color = color.into();
         self
     }
 
@@ -42,6 +46,7 @@ impl Label {
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
         self.text_size = 32.0;
+        self.text_color = Color::BLACK;
         self.set_color(Color::WHITE);
     }
 }

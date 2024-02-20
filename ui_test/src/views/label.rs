@@ -1,8 +1,9 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
+    from_main,
     refs::Weak,
-    ui::{view, Anchor, IntView, Label, SubView, ViewData, ViewSetup},
+    ui::{view, Anchor, Color, IntView, Label, SubView, ViewData, ViewSetup},
     App,
 };
 
@@ -33,7 +34,7 @@ impl ViewSetup for LabelTestView {
 }
 
 pub async fn test_label() -> Result<()> {
-    App::set_test_view::<LabelTestView>(400, 400).await;
+    let mut view = App::set_test_view::<LabelTestView>(400, 400).await;
 
     check_colors(
         r#"
@@ -91,16 +92,21 @@ pub async fn test_label() -> Result<()> {
     )
     .await;
 
+    from_main(move || {
+        view.label.set_text_color(Color::BLUE);
+    })
+    .await;
+
     check_colors(
         r#"
               87  150 - 255 255 255
               85  181 - 255 255 255
               84  200 - 255 255 255
-              93  214 - 180 180 180
+              93  214 - 180 180 239
               94  239 - 255 255 255
              123  234 - 255 255 255
              129  208 - 255 255 255
-             131  183 -   0   0   0
+             131  183 -   0   0 203
              135  161 - 255 255 255
              158  149 - 255 255 255
              180  156 - 255 255 255
@@ -109,7 +115,7 @@ pub async fn test_label() -> Result<()> {
              176  237 - 255 255 255
              217  234 - 255 255 255
              230  228 - 255 255 255
-             229  215 -   1   1   1
+             229  215 -   1   1 203
              227  202 - 255 255 255
              220  174 - 255 255 255
              219  141 - 255 255 255
@@ -119,21 +125,21 @@ pub async fn test_label() -> Result<()> {
              261  215 - 255 255 255
              261  228 - 255 255 255
              292  225 - 255 255 255
-             289  206 -   1   1   1
+             289  206 -   1   1 203
              298  149 - 255 255 255
              320  146 - 255 255 255
-             326  169 -   0   0   0
+             326  169 -   0   0 203
              318  199 - 255 255 255
-             316  216 -   1   1   1
-             316  234 -  23  23  23
+             316  216 -   1   1 203
+             316  234 -  23  23 207
              336  232 - 255 255 255
-             318  229 -   1   1   1
+             318  229 -   1   1 203
              305  229 - 255 255 255
              303  210 - 255 255 255
-             285  205 -  36  36  36
+             285  205 -  36  36 211
              238  202 - 255 255 255
-             204  199 -   0   0   0
-             160  196 -   1   1   1
+             204  199 -   0   0 203
+             160  196 -   1   1 203
              112  199 - 255 255 255
               82  206 - 255 255 255
     "#,

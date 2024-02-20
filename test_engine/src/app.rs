@@ -90,7 +90,19 @@ impl App {
                     Level::Trace => "⚪",
                 };
 
-                writeln!(f, "{level} {}", record.args())
+                let location = false;
+
+                let mut log = format!("{level} {}", record.args());
+
+                if location {
+                    log = format!(
+                        "[{}::{}] {log}",
+                        record.file().unwrap_or_default(),
+                        record.line().unwrap_or_default()
+                    );
+                }
+
+                writeln!(f, "{log}")
             })
             .init();
 
@@ -220,7 +232,7 @@ impl App {
                 .add_text(
                     Text::new(&label.text)
                         .with_scale(label.text_size())
-                        .with_color(Color::BLACK.as_slice()),
+                        .with_color(label.text_color().as_slice()),
                 )
                 .with_bounds((frame.width(), frame.height()))
                 .with_layout(
