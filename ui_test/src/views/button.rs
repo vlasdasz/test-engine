@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::{record_touches, state::increment_state, test_combinations};
+use crate::view_tests::{state::increment_state, test_combinations};
 
 #[view]
 struct ButtonTestView {
@@ -25,9 +25,7 @@ impl ViewSetup for ButtonTestView {
 }
 
 pub async fn test_button() -> Result<()> {
-    let view = App::set_test_view::<ButtonTestView>(200, 100).await;
-
-    record_touches(view).await;
+    App::set_test_view::<ButtonTestView>(200, 100).await;
 
     test_combinations([
         ("0 0 b", 0),

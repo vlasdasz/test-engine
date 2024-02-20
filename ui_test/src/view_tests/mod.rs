@@ -12,8 +12,8 @@ use test_engine::{
     on_main,
     refs::ToOwn,
     sleep,
-    ui::{Touch, U8Color, UIEvents, UIManager, WeakView},
-    wait_for_next_frame, App,
+    ui::{Touch, U8Color, UIEvents, UIManager},
+    App,
 };
 use tokio::sync::mpsc::channel;
 
@@ -66,7 +66,7 @@ pub async fn inject_key(key: char) {
 }
 
 #[allow(dead_code)]
-pub async fn record_touches(view: WeakView) {
+pub async fn record_touches() {
     let touches = Vec::<Touch>::new().to_own();
     let mut touches = touches.weak();
 
@@ -81,7 +81,7 @@ pub async fn record_touches(view: WeakView) {
             touches.push(touch);
         });
 
-        UIManager::keymap().add(view, 'a', move || {
+        UIManager::keymap().add(UIManager::root_view(), 'a', move || {
             _ = s.try_send(());
         })
     });
@@ -99,10 +99,8 @@ pub async fn record_touches(view: WeakView) {
 }
 
 #[allow(dead_code)]
-pub async fn record_touches_with_colors(view: WeakView) -> Result<()> {
+pub async fn record_touches_with_colors() -> Result<()> {
     let screenshot = App::take_screenshot().await?;
-
-    wait_for_next_frame().await;
 
     let touches = Vec::<(Touch, U8Color)>::new().to_own();
     let mut touches = touches.weak();
@@ -118,7 +116,7 @@ pub async fn record_touches_with_colors(view: WeakView) -> Result<()> {
             touches.push((touch, screenshot.get_pixel(touch.position)));
         });
 
-        UIManager::keymap().add(view, 'a', move || {
+        UIManager::keymap().add(UIManager::root_view(), 'a', move || {
             _ = s.try_send(());
         })
     });

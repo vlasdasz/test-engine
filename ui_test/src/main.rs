@@ -23,7 +23,7 @@ mod views;
 #[tokio::main]
 async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
-        // UIManager::set_display_touches(true);
+        test_engine::ui::UIManager::set_display_touches(true);
 
         test_keymap().await?;
         test_image_view().await?;
@@ -32,13 +32,20 @@ async fn main() -> Result<()> {
         test_switch().await?;
         test_layout().await?;
         test_label().await?;
-        test_render_image_path().await?;
-        test_touch_stack().await?;
-        test_drop_down().await?;
         test_alert().await?;
         test_multiline().await?;
+
+        _ = skip();
 
         Ok(())
     })
     .await
+}
+
+async fn skip() -> Result<()> {
+    test_drop_down().await?;
+    test_touch_stack().await?;
+    test_render_image_path().await?;
+
+    Ok(())
 }

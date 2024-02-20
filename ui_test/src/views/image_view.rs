@@ -40,7 +40,7 @@ fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
     }
 }
 
-async fn check_colors(data: &str) -> Result<()> {
+pub async fn check_colors(data: &str) -> Result<()> {
     let screenshot = App::take_screenshot().await?;
 
     let lines: Vec<_> = data.split("\n").collect();
