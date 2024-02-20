@@ -23,9 +23,9 @@ use crate::{app::App, render::state::State, Screenshot};
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
 pub struct WGPUApp {
-    pub state:  State,
+    pub state: State,
     event_loop: Option<EventLoop<()>>,
-    close:      AtomicBool,
+    close: AtomicBool,
 }
 
 impl WGPUApp {
@@ -53,7 +53,7 @@ impl WGPUApp {
             event_loop: event_loop.into(),
             close: Default::default(),
         }
-        .into();
+            .into();
 
         let app = Self::current();
 
@@ -112,7 +112,7 @@ impl WGPUApp {
                         Ok(()) => {}
                         // Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),
                         // Err(wgpu::SurfaceError::OutOfMemory) => elwt.exit(),
-                        Err(e) => error!("{e:?}"),
+                        Err(e) => error!("Render error: {e:?}"),
                     };
                     // TODO: think about good redraw strategy
                     self.state.window.request_redraw();

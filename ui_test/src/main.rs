@@ -27,8 +27,8 @@ async fn main() -> Result<()> {
 
         test_keymap().await?;
         test_image_view().await?;
-        test_button().await?;
         test_int_view().await?;
+        test_button().await?;
         test_switch().await?;
         test_layout().await?;
         test_label().await?;
@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
 
         Ok(())
     })
-    .await
+        .await
 }
 
 async fn skip() -> Result<()> {
