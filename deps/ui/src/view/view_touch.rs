@@ -6,7 +6,6 @@ use crate::{
 
 pub trait ViewTouch {
     fn is_selected(&self) -> bool;
-    fn set_selected(&mut self, selected: bool);
     fn enable_touch(&self);
     fn enable_touch_low_priority(&self);
     fn disable_touch(&self);
@@ -16,10 +15,6 @@ pub trait ViewTouch {
 impl<T: ?Sized + View> ViewTouch for T {
     fn is_selected(&self) -> bool {
         self.base().is_selected
-    }
-
-    fn set_selected(&mut self, selected: bool) {
-        UIEvents::get().set_selected(self.weak_view(), selected);
     }
 
     fn enable_touch(&self) {
@@ -72,6 +67,7 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         if touch.is_began() {
             view.set_touch_id(touch.id);
             view.base().touch.began.trigger(*touch);
+            UIEvents::get().set_selected(view, true);
         }
         view.base().touch.all.trigger(*touch);
         return true;

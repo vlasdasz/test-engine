@@ -8,5 +8,7 @@ pub mod label;
 pub mod layout;
 pub mod multiline_label;
 pub mod render_image_path;
+pub mod selection;
 pub mod switch;
+pub mod text_field;
 pub mod touch_stack;

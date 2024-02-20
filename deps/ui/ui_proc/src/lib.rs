@@ -133,7 +133,7 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
                     res = quote! {
                         #res
                         self.#name = self.__internal_add_view();
-                        self.#name.label += #label;
+                        self.#name.label = format!("{}: {}", #label, self.#name.label);
                     }
                 }
             }

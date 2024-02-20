@@ -6,6 +6,7 @@ use ui::{
     view, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
 };
 use vents::Event;
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -108,9 +109,6 @@ impl ViewSetup for TextField {
         self.set_color(Color::LIGHT_GRAY);
 
         self.enable_touch();
-        self.touch.began.sub(move || {
-            self.set_selected(true);
-        });
     }
 }
 

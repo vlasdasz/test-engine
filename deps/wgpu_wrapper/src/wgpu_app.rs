@@ -23,9 +23,9 @@ use crate::{app::App, render::state::State, Screenshot};
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
 pub struct WGPUApp {
-    pub state: State,
+    pub state:  State,
     event_loop: Option<EventLoop<()>>,
-    close: AtomicBool,
+    close:      AtomicBool,
 }
 
 impl WGPUApp {
@@ -53,7 +53,7 @@ impl WGPUApp {
             event_loop: event_loop.into(),
             close: Default::default(),
         }
-            .into();
+        .into();
 
         let app = Self::current();
 
