@@ -20,6 +20,9 @@ pub struct ViewBase {
 
     pub(crate) is_hidden: bool,
 
+    #[derivative(Default(value = "0.5"))]
+    pub(crate) z_position: f32,
+
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,
 
@@ -48,8 +51,6 @@ pub struct ViewBase {
 
     #[derivative(Debug = "ignore")]
     pub touch: ViewTouchCallbacks,
-
-    pub priority: u8,
 
     pub dont_hide: bool,
 

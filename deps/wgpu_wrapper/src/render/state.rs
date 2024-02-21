@@ -10,12 +10,15 @@ use tokio::{
     sync::oneshot::{channel, Receiver, Sender},
 };
 use wgpu::{
-    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Extent3d, PresentMode, Texture,
-    TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT,
+    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Extent3d, PresentMode, TextureFormat,
+    COPY_BYTES_PER_ROW_ALIGNMENT,
 };
 use winit::{dpi::PhysicalSize, window::Window};
 
-use crate::{app::App, frame_counter::FrameCounter, render::wgpu_drawer::WGPUDrawer, text::Font, Screenshot};
+use crate::{
+    app::App, frame_counter::FrameCounter, image::Texture, render::wgpu_drawer::WGPUDrawer, text::Font,
+    Screenshot,
+};
 
 type ReadDisplayRequest = Sender<Screenshot>;
 
@@ -23,6 +26,8 @@ pub struct State {
     surface:           wgpu::Surface<'static>,
     pub(crate) config: wgpu::SurfaceConfiguration,
     pub(crate) window: Arc<Window>,
+
+    pub(crate) depth_texture: Texture,
 
     pub drawer: WGPUDrawer,
 
@@ -84,12 +89,16 @@ impl State {
 
         surface.configure(&device, &config);
 
+        let depth_texture =
+            Texture::create_depth_texture(&device, (config.width, config.height).into(), "depth_texture");
+
         let drawer = WGPUDrawer::new(device, queue, config.format)?;
 
         Ok(Self {
             surface,
             config,
             window,
+            depth_texture,
             drawer,
             fonts: Default::default(),
             app,
@@ -100,6 +109,11 @@ impl State {
 
     pub fn resize(&mut self, new_size: PhysicalSize<u32>) {
         if new_size.width > 0 && new_size.height > 0 {
+            self.depth_texture = Texture::create_depth_texture(
+                &self.drawer.device,
+                (new_size.width, new_size.height).into(),
+                "depth_texture",
+            );
             self.drawer.window_size = (new_size.width, new_size.height).into();
             self.config.width = new_size.width;
             self.config.height = new_size.height;
@@ -164,7 +178,14 @@ impl State {
                         store: wgpu::StoreOp::Store,
                     },
                 })],
-                depth_stencil_attachment: None,
+                depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
+                    view:        &self.depth_texture.view,
+                    depth_ops:   Some(wgpu::Operations {
+                        load:  wgpu::LoadOp::Clear(1.0),
+                        store: wgpu::StoreOp::Store,
+                    }),
+                    stencil_ops: None,
+                }),
                 occlusion_query_set:      None,
                 timestamp_writes:         None,
             });
@@ -197,7 +218,9 @@ impl State {
         if let Some(buffer_sender) = self.read_display_request.take() {
             let (sender, receiver) = channel();
 
-            let Some(buffer) = buffer else { return Ok(()) };
+            let Some(buffer) = buffer else {
+                return Ok(());
+            };
 
             let buffer_slice = buffer.0.slice(..);
 
@@ -230,7 +253,7 @@ impl State {
         r
     }
 
-    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &Texture) -> (Buffer, Size<u32>) {
+    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &wgpu::Texture) -> (Buffer, Size<u32>) {
         let screen_width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
         let number_of_align = screen_width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;

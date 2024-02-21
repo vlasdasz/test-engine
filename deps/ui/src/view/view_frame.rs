@@ -6,6 +6,7 @@ use rtools::IntoF32;
 use crate::{view::view_subviews::ViewSubviews, View};
 
 pub trait ViewFrame {
+    fn z_position(&self) -> f32;
     fn frame(&self) -> &Rect;
     fn super_frame(&self) -> &Rect;
     fn absolute_frame(&self) -> &Rect;
@@ -28,6 +29,10 @@ pub trait ViewFrame {
 }
 
 impl<T: ?Sized + View> ViewFrame for T {
+    fn z_position(&self) -> f32 {
+        self.base().z_position
+    }
+
     fn frame(&self) -> &Rect {
         &self.base().frame
     }

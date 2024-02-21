@@ -1,6 +1,7 @@
 use gm::{flat::Size, num::lossy_convert::LossyConvert};
 use refs::{weak_from_ref, Weak};
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -41,11 +42,6 @@ impl ViewSetup for CollectionView {
 }
 
 impl CollectionView {
-    pub fn set_priority(&mut self, p: u8) {
-        self.priority = p;
-        self.scroll.priority = p;
-    }
-
     pub fn reload_data(&mut self) {
         if self.layout.is_table() {
             self.layout();

@@ -211,7 +211,7 @@ impl App {
             return;
         }
 
-        drawer.draw_rect(pass, &frame, view.color(), PolygonMode::Fill);
+        drawer.draw_rect(pass, &frame, view.color(), PolygonMode::Fill, view.z_position());
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
@@ -231,7 +231,8 @@ impl App {
                 .add_text(
                     Text::new(&label.text)
                         .with_scale(label.text_size())
-                        .with_color(label.text_color().as_slice()),
+                        .with_color(label.text_color().as_slice())
+                        .with_z(view.z_position() - 0.001),
                 )
                 .with_bounds((frame.width(), frame.height()))
                 .with_layout(
@@ -257,7 +258,13 @@ impl App {
         }
 
         if DRAW_DEBUG_FRAMES {
-            drawer.draw_rect(pass, &frame, &Color::TURQUOISE, PolygonMode::Line);
+            drawer.draw_rect(
+                pass,
+                &frame,
+                &Color::TURQUOISE,
+                PolygonMode::Line,
+                view.z_position(),
+            );
         }
 
         for view in view.subviews() {

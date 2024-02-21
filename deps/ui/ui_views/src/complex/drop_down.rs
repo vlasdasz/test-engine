@@ -5,6 +5,7 @@ use itertools::Itertools;
 use refs::{Own, Weak};
 use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -80,7 +81,6 @@ impl ViewSetup for DropDown {
         self.label.place().back();
 
         self.table.data_source = collection_data!(self);
-        self.table.set_priority(1);
         self.table.set_hidden(true);
     }
 }

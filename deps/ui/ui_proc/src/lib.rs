@@ -121,7 +121,7 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
 
     let mut res = quote!();
 
-    for field in &mut fields.named {
+    for field in fields.named.iter_mut().rev() {
         let name = field.ident.as_ref().expect("let name = field.ident.as_ref()");
 
         if let Type::Path(path) = &field.ty {

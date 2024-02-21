@@ -4,6 +4,7 @@ use refs::{Own, Weak};
 use rtools::Random;
 
 use crate::{layout::Placer, Container, SubView, UIManager, View, ViewFrame, WeakView};
+
 pub trait ViewSubviews {
     /// Use this only if you know what you are doing
     fn manually_set_superview(&mut self, superview: WeakView);
@@ -76,13 +77,14 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_subview(&mut self, mut view: Own<dyn View>) -> WeakView {
-        if view.base().priority < self.base().priority {
-            view.base_mut().priority = self.base().priority;
-        }
         if view.base().navigation_view.is_null() {
             view.base_mut().navigation_view = self.base().navigation_view;
         }
         let mut weak = view.weak_view();
+        weak.base_mut().z_position = self.z_position() - 0.01;
+        if let Some(last_subview) = self.subviews().last() {
+            weak.base_mut().z_position = last_subview.z_position() + 0.001;
+        }
         self.base_mut().subviews.push(view);
         weak.manually_set_superview(self.weak_view());
         weak.init_views();

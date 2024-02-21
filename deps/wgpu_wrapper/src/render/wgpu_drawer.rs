@@ -45,8 +45,10 @@ impl WGPUDrawer {
         rect: &Rect,
         color: &Color,
         polygon_mode: PolygonMode,
+        z_position: f32,
     ) {
-        self.rect_state.draw(&self.device, render_pass, rect, color, polygon_mode);
+        self.rect_state
+            .draw(&self.device, render_pass, rect, color, polygon_mode, z_position);
     }
 
     pub fn draw_buffer<'a>(
