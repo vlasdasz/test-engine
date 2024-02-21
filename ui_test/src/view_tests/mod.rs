@@ -61,6 +61,13 @@ pub async fn inject_touches(data: &str) {
     }
 }
 
+pub async fn inject_keys(s: impl ToString) {
+    let s = s.to_string();
+    for ch in s.chars() {
+        inject_key(ch).await
+    }
+}
+
 pub async fn inject_key(key: char) {
     from_main(move || App::current_mut().on_char(key)).await
 }

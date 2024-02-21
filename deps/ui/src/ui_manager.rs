@@ -28,12 +28,39 @@ pub struct UIManager {
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<Vec<PathBuf>>,
 
-    pub open_keyboard:  AtomicBool,
-    pub close_keyboard: AtomicBool,
-
     display_touches: AtomicBool,
 
     keymap: Own<Keymap>,
+
+    selected_view: Mutex<WeakView>,
+}
+
+impl UIManager {
+    pub fn unselect_view(&self) {
+        let mut selected_view = self.selected_view.lock().unwrap();
+        if selected_view.is_null() {
+            return;
+        }
+        selected_view.base_mut().is_selected = false;
+        selected_view.on_selection_changed(false);
+        *selected_view = Default::default();
+    }
+
+    pub fn set_selected(&self, mut view: WeakView, selected: bool) {
+        let mut selected_view = self.selected_view.lock().unwrap();
+
+        if let Some(selected) = selected_view.get() {
+            selected.on_selection_changed(false);
+            *selected_view = Default::default();
+        }
+
+        if selected {
+            *selected_view = view;
+        }
+
+        view.base_mut().is_selected = selected;
+        view.on_selection_changed(selected);
+    }
 }
 
 impl UIManager {
@@ -51,10 +78,9 @@ impl UIManager {
             window_size: Default::default(),
             on_scroll: Default::default(),
             on_drop_file: Default::default(),
-            open_keyboard: false.into(),
-            close_keyboard: false.into(),
             display_touches: false.into(),
             keymap: Default::default(),
+            selected_view: Mutex::new(Default::default()),
         }
     }
 

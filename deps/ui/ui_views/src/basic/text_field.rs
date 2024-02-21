@@ -1,9 +1,9 @@
-use std::sync::atomic::Ordering::Relaxed;
-
 use gm::Color;
 use refs::{weak_from_ref, Weak};
+use rtools::IntoF32;
 use ui::{
-    view, SubView, TextFieldConstraint, ToLabel, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewTouch,
+    view, AcceptChar, SubView, TextFieldConstraint, ToLabel, UIEvents, ViewCallbacks, ViewData, ViewSetup,
+    ViewTouch,
 };
 use vents::Event;
 
@@ -91,6 +91,11 @@ impl TextField {
         self
     }
 
+    pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
+        self.label.set_text_size(size);
+        self
+    }
+
     pub fn set_placeholder(&mut self, placeholder: impl ToLabel) {
         self.placeholder = placeholder.to_label();
         if self.placeholding {
@@ -115,41 +120,39 @@ impl ViewSetup for TextField {
 impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
         if selected {
-            UIManager::get().open_keyboard.store(true, Relaxed);
-            let _this = weak_from_ref(self);
-            // UIEvents::key_pressed().val(move |key| {
-            //     let mut text = this.label.text().to_string();
-            //
-            //     if this.is_selected() {
-            //         match key.button {
-            //             KeyboardButton::Letter(char) => {
-            //                 if this.constraint.accept_char(char, &text) {
-            //                     if this.placeholding {
-            //                         text = String::default();
-            //                         this.placeholding = false;
-            //                     }
-            //                     text.push(char);
-            //                 }
-            //             }
-            //             KeyboardButton::Control(control) => {
-            //                 if this.placeholding {
-            //                     return;
-            //                 }
-            //                 if let ControlButton::Backspace = control {
-            //                     text.pop();
-            //                 }
-            //             }
-            //         };
-            //     }
-            //     this.set_text(text);
-            //     this.changed.trigger(this.text().to_string());
-            // });
+            let mut this = weak_from_ref(self);
+            UIEvents::keyboard_input().val(move |key| {
+                if this.is_null() {
+                    return;
+                }
+
+                let mut text = this.label.text().to_string();
+
+                let backspace = key as u32 == 8;
+
+                if this.is_selected() {
+                    if backspace {
+                        if this.placeholding {
+                            return;
+                        }
+                        text.pop();
+                    } else if this.constraint.accept_char(key, &text) {
+                        if this.placeholding {
+                            text = String::default();
+                            this.placeholding = false;
+                        }
+                        text.push(key);
+                    }
+                }
+
+                this.set_text(text);
+                this.changed.trigger(this.text().to_string());
+            });
         } else {
-            UIManager::get().close_keyboard.store(true, Relaxed);
-            //  UIEvents::key_pressed().remove_subscribers();
+            UIEvents::keyboard_input().remove_subscribers();
         }
 
-        self.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
+        self.label.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
     }
 }
 

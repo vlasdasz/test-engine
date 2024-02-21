@@ -26,10 +26,7 @@ use vents::OnceEvent;
 use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, State, WGPUApp, WGPUDrawer};
-use winit::{
-    event::{KeyEvent, TouchPhase},
-    keyboard,
-};
+use winit::event::{KeyEvent, TouchPhase};
 
 use crate::assets::Assets;
 
@@ -201,7 +198,7 @@ impl App {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
     ) {
-        const DRAW_DEBUG_FRAMES: bool = true;
+        const DRAW_DEBUG_FRAMES: bool = false;
 
         if view.is_hidden() {
             return;
@@ -338,6 +335,7 @@ impl App {
 
     pub fn on_char(&mut self, ch: char) {
         UIManager::keymap().check(ch);
+        UIEvents::keyboard_input().trigger(ch);
     }
 }
 
@@ -405,12 +403,8 @@ impl wgpu_wrapper::App for App {
             return;
         }
 
-        #[allow(clippy::single_match)]
-        match event.logical_key {
-            keyboard::Key::Character(st) => {
-                self.on_char(st.to_string().chars().last().unwrap());
-            }
-            _ => (),
+        if let Some(ch) = event.logical_key.to_text() {
+            self.on_char(ch.chars().last().unwrap());
         }
     }
 

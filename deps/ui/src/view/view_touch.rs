@@ -1,7 +1,6 @@
 use crate::{
-    input::UIEvents,
     view::{view_data::ViewData, view_touch_internal::ViewTouchInternal, ViewFrame},
-    Touch, TouchStack, View, ViewTouchCallbacks, WeakView,
+    Touch, TouchStack, UIManager, View, ViewTouchCallbacks, WeakView,
 };
 
 pub trait ViewTouch {
@@ -67,14 +66,14 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         if touch.is_began() {
             view.set_touch_id(touch.id);
             view.base().touch.began.trigger(*touch);
-            UIEvents::get().set_selected(view, true);
+            UIManager::get().set_selected(view, true);
         }
         view.base().touch.all.trigger(*touch);
         return true;
     }
 
     if touch.is_began() {
-        UIEvents::get().unselect_view();
+        UIManager::get().unselect_view();
     }
 
     false
