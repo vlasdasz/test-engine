@@ -1,6 +1,7 @@
 use std::{
     fmt::{Debug, Display},
     ops::Deref,
+    sync::{Arc, Mutex},
 };
 
 use anyhow::{bail, Result};
@@ -74,14 +75,37 @@ pub async fn inject_key(key: char) {
 
 #[allow(dead_code)]
 pub async fn record_touches() {
+    record_touches_internal(true).await
+}
+
+#[allow(dead_code)]
+pub async fn record_moved_touches() {
+    record_touches_internal(false).await
+}
+
+async fn record_touches_internal(skip_moved: bool) {
     let touches = Vec::<Touch>::new().to_own();
     let mut touches = touches.weak();
 
     let (s, mut r) = channel::<()>(1);
 
+    let moved_record_skip = 10;
+
+    let moved_counter = Arc::new(Mutex::new(0));
+
     on_main(move || {
         UIEvents::on_touch().val(move |touch| {
             if touch.is_moved() {
+                let mut counter = moved_counter.lock().unwrap();
+                *counter += 1;
+                if *counter == moved_record_skip {
+                    *counter = 0;
+                } else {
+                    return;
+                }
+            }
+
+            if skip_moved && touch.is_moved() {
                 return;
             }
 

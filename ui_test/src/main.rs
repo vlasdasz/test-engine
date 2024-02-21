@@ -26,8 +26,8 @@ async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
-        test_slider().await?;
         test_text_field().await?;
+        test_slider().await?;
         test_selection().await?;
         test_keymap().await?;
         test_image_view().await?;
@@ -44,7 +44,7 @@ async fn main() -> Result<()> {
 
         Ok(())
     })
-        .await
+    .await
 }
 
 async fn skip() -> Result<()> {

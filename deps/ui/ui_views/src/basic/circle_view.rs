@@ -1,7 +1,8 @@
-use gm::Color;
+use gm::{flat::PointsPath, Color};
 use refs::Weak;
 use rtools::IntoF32;
 use ui::{view, SubView, ViewData, ViewFrame, ViewSetup};
+use wgpu_wrapper::wgpu::PolygonMode;
 
 use crate::DrawingView;
 mod test_engine {
@@ -30,12 +31,12 @@ impl CircleView {
 
     fn redraw(&mut self) {
         self.drawing.remove_all_paths();
-        let _frame = self.frame().with_zero_origin();
-        // self.drawing.add_path(
-        //     PointsPath::circle_with(frame.size.center(), frame.size.width /
-        // 2.0, 50),     &self.color,
-        //     DrawMode::Fill,
-        // );
+        let frame = self.frame().with_zero_origin();
+        self.drawing.add_path(
+            PointsPath::circle_triangles_with(frame.size.center(), frame.size.width / 2.0, 50),
+            self.color,
+            PolygonMode::Fill,
+        );
     }
 }
 
