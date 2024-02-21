@@ -25,7 +25,7 @@ use ui_views::{DrawingView, ImageView, Label};
 use vents::OnceEvent;
 use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, State, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, WGPUApp, WGPUDrawer};
 use winit::event::{KeyEvent, TouchPhase};
 
 use crate::assets::Assets;
@@ -54,14 +54,6 @@ impl App {
             assert!(!APP.is_null(), "App was not initialized");
             APP.as_mut().unwrap()
         }
-    }
-
-    pub fn state() -> &'static State {
-        &Self::current().wgpu_app.state
-    }
-
-    pub fn root_view_size() -> Size {
-        Self::current().root_view.size()
     }
 
     fn make_app(first_view: Own<dyn View>) -> Box<Self> {

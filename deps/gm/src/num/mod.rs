@@ -11,12 +11,6 @@ impl Abs for f32 {
     }
 }
 
-impl Abs for u8 {
-    fn abs(self) -> Self {
-        self
-    }
-}
-
 pub trait Zero {
     fn zero() -> Self;
 }

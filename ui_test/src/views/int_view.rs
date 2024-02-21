@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, IntView, Size, SubView, ViewData, ViewSetup, ViewTest},
+    ui::{view, IntView, SubView, ViewData, ViewSetup},
     App,
 };
 
@@ -17,13 +17,6 @@ struct IntTestView {
 impl ViewSetup for IntTestView {
     fn setup(self: Weak<Self>) {
         self.int.place().size(50, 150).center();
-    }
-}
-
-impl ViewTest for IntTestView {
-    fn test_size() -> Size<u32>
-    where Self: Sized {
-        (400, 400).into()
     }
 }
 

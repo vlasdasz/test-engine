@@ -88,16 +88,8 @@ impl UIManager {
         UI_MANAGER.get_or_init(Self::init)
     }
 
-    pub fn set_window_size(size: Size<u32>) {
-        *Self::get().window_size.lock().unwrap() = size;
-    }
-
     pub fn window_size() -> Size<u32> {
         *Self::get().window_size.lock().unwrap()
-    }
-
-    pub fn root_view_size() -> Size {
-        Self::window_size().into() // / UIManager::ui_scale()
     }
 
     pub fn root_view() -> WeakView {
