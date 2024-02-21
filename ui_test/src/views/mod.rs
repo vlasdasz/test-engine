@@ -9,6 +9,7 @@ pub mod layout;
 pub mod multiline_label;
 pub mod render_image_path;
 pub mod selection;
+pub mod slider;
 pub mod switch;
 pub mod text_field;
 pub mod text_occlusion;
