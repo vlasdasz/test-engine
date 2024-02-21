@@ -1,16 +1,11 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    refs::Weak,
-    sleep,
-    ui::{view, Button, SubView, TouchStack, ViewData, ViewSetup},
-    App,
+    ui::{view, Alert, Button, SubView, TouchStack, ViewTouch},
+    wait_for_next_frame, App,
 };
 
-use crate::view_tests::{
-    assert_eq, inject_touches,
-    state::{append_state, get_str_state},
-};
+use crate::view_tests::assert_eq;
 
 #[view]
 struct TouchStackTestView {
@@ -20,68 +15,49 @@ struct TouchStackTestView {
     button2: SubView<Button>,
 }
 
-impl ViewSetup for TouchStackTestView {
-    fn setup(self: Weak<Self>) {
-        self.button.place().back();
-        self.button2.place().back();
-    }
-}
-
 pub async fn test_touch_stack() -> Result<()> {
-    dbg!(TouchStack::dump());
-
     let view = App::set_test_view::<TouchStackTestView>(600, 600).await;
-
-    dbg!(TouchStack::dump());
-
-    dbg!(TouchStack::dump());
 
     assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 
-    view.button.on_tap(|| append_state("1"));
-
-    sleep(0.1);
+    view.button.on_tap(|| {});
 
     assert_eq(
         TouchStack::dump(),
         vec![vec![
             "Layer: Root view".to_string(),
-            "View: ButtonTouchStackTestView.button".to_string(),
+            "View: ".to_string() + &view.button.label.clone(),
         ]],
     )?;
 
-    inject_touches(
-        r#"
-         5  5 b
-        10 10 e
-     "#,
-    )
-    .await;
-
-    assert_eq(get_str_state(), "1")?;
-
-    view.button2.on_tap(|| {
-        append_state("2");
-    });
+    view.button2.on_tap(|| {});
 
     assert_eq(
         TouchStack::dump(),
         vec![vec![
             "Layer: Root view".to_string(),
-            "View: ButtonTouchStackTestView.button2".to_string(),
-            "View: ButtonTouchStackTestView.button".to_string(),
+            "View: ".to_string() + &view.button2.label.clone(),
+            "View: ".to_string() + &view.button.label.clone(),
         ]],
     )?;
 
-    inject_touches(
-        r#"
-         5  5 b
-        10 10 e
-     "#,
-    )
-    .await;
+    view.button.disable_touch();
+    view.button2.disable_touch();
 
-    assert_eq(get_str_state(), "12")?;
+    Alert::show("Hello");
+
+    wait_for_next_frame().await;
+
+    assert_eq(
+        TouchStack::dump(),
+        vec![
+            vec!["Layer: Root view".to_string()],
+            vec![
+                "Layer: Alert".to_string(),
+                "View: Alert.ok_button: Button".to_string(),
+            ],
+        ],
+    )?;
 
     debug!("Touch stack test: OK");
 

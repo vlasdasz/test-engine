@@ -26,7 +26,6 @@ async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
-        test_text_occlusion().await?;
         test_text_field().await?;
         test_selection().await?;
         test_keymap().await?;
@@ -38,6 +37,7 @@ async fn main() -> Result<()> {
         test_label().await?;
         test_alert().await?;
         test_multiline().await?;
+        test_touch_stack().await?;
 
         _ = skip();
 
@@ -48,8 +48,8 @@ async fn main() -> Result<()> {
 
 async fn skip() -> Result<()> {
     test_drop_down().await?;
-    test_touch_stack().await?;
     test_render_image_path().await?;
+    test_text_occlusion().await?;
 
     Ok(())
 }

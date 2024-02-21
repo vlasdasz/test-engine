@@ -22,6 +22,7 @@ pub fn get_state<T: DeserializeOwned + Default>() -> T {
     from_str(&get()).unwrap_or_default()
 }
 
+#[allow(dead_code)]
 pub fn get_str_state() -> String {
     get_state::<String>()
 }
