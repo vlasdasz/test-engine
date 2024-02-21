@@ -15,7 +15,7 @@ use crate::views::{
     int_view::test_int_view, keymap::test_keymap, label::test_label, layout::test_layout,
     multiline_label::test_multiline, render_image_path::test_render_image_path, selection::test_selection,
     slider::test_slider, switch::test_switch, text_field::test_text_field,
-    text_occlusion::test_text_occlusion, touch_stack::test_touch_stack,
+    text_occlusion::test_text_occlusion, touch_stack::test_touch_stack, view_order::test_view_order,
 };
 
 mod view_tests;
@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
-        test_text_occlusion().await?;
+        test_view_order().await?;
 
         _ = skip();
 
@@ -36,6 +36,7 @@ async fn main() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
+    test_text_occlusion().await?;
     test_drop_down().await?;
     test_render_image_path().await?;
     test_text_field().await?;

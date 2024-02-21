@@ -36,6 +36,8 @@ pub struct UIManager {
 }
 
 impl UIManager {
+    pub const Z_OFFSET: f32 = 0.000_001;
+
     pub fn unselect_view(&self) {
         let mut selected_view = self.selected_view.lock().unwrap();
         if selected_view.is_null() {

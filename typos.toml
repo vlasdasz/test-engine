@@ -1,2 +1,6 @@
 [files]
 extend-exclude = ["*.pbxproj"]
+
+[default.extend-words]
+# LOD - level of detail
+lod = "lod"

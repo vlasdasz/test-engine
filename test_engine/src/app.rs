@@ -267,7 +267,7 @@ impl App {
             );
         }
 
-        for view in view.subviews() {
+        for view in view.subviews().iter().rev() {
             if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {
                 Self::draw_view(pass, drawer, view.deref(), sections)
             }

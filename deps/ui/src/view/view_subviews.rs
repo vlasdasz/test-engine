@@ -81,10 +81,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
             view.base_mut().navigation_view = self.base().navigation_view;
         }
         let mut weak = view.weak_view();
-        weak.base_mut().z_position = self.z_position() - 0.01;
-        if let Some(last_subview) = self.subviews().last() {
-            weak.base_mut().z_position = last_subview.z_position() + 0.001;
-        }
+        weak.base_mut().z_position = self.z_position() - UIManager::Z_OFFSET;
         self.base_mut().subviews.push(view);
         weak.manually_set_superview(self.weak_view());
         weak.init_views();
