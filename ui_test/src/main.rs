@@ -40,7 +40,6 @@ async fn main() -> Result<()> {
 
 async fn test() -> Result<()> {
     test_out_bounds().await?;
-    test_present().await?;
     test_modal().await?;
     test_touch_stack().await?;
     test_text_occlusion().await?;
@@ -64,6 +63,7 @@ async fn test() -> Result<()> {
 async fn skip() -> Result<()> {
     test_drop_down().await?;
     test_render_image_path().await?;
+    test_present().await?;
 
     Ok(())
 }

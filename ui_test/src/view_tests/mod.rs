@@ -126,7 +126,19 @@ async fn record_touches_internal(skip_moved: bool) {
     })
     .await;
 
-    println!("{}", Touch::str_from_vec(touches.to_vec()));
+    println!(
+        r#"
+        inject_touches(
+        {}
+{}
+        {},
+    )
+        .await;
+    "#,
+        "r#\"",
+        Touch::str_from_vec(touches.to_vec()),
+        "\"#"
+    );
 }
 
 #[allow(dead_code)]
@@ -160,6 +172,8 @@ pub async fn record_touches_with_colors() -> Result<()> {
         UIEvents::on_touch().remove_subscribers();
     });
 
+    println!("check_colors( r#\"");
+
     for (touch, color) in touches.deref() {
         let x: u32 = touch.position.x.lossy_convert();
         let y: u32 = touch.position.y.lossy_convert();
@@ -168,6 +182,9 @@ pub async fn record_touches_with_colors() -> Result<()> {
             x, y, color.r, color.g, color.b
         );
     }
+
+    println!("        \"#");
+    println!(").await?;");
 
     Ok(())
 }

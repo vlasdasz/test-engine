@@ -32,12 +32,12 @@ use crate::assets::Assets;
 static mut APP: *mut App = null_mut();
 
 pub struct App {
-    root_view: WeakView,
+    root_view:    WeakView,
     window_ready: OnceEvent,
-    wgpu_app: Rglica<WGPUApp>,
+    wgpu_app:     Rglica<WGPUApp>,
 
     pub(crate) first_view: Option<Own<dyn View>>,
-    pub cursor_position: Point,
+    pub cursor_position:   Point,
 }
 
 impl App {
@@ -126,7 +126,7 @@ impl App {
 
     pub async fn start_with_actor(
         first_view: Own<dyn View>,
-        actions: impl Future<Output=Result<()>> + Send + 'static,
+        actions: impl Future<Output = Result<()>> + Send + 'static,
     ) -> Result<()> {
         let app = Self::make_app(first_view);
 
@@ -156,7 +156,7 @@ impl App {
             trace!("{width} - {height}");
             weak
         })
-            .await;
+        .await;
         wait_for_next_frame().await;
         view
     }
@@ -164,10 +164,10 @@ impl App {
     fn new(first_view: Own<dyn View>) -> Box<Self> {
         Box::new(Self {
             cursor_position: Default::default(),
-            root_view: UIManager::root_view(),
-            first_view: first_view.into(),
-            window_ready: Default::default(),
-            wgpu_app: Default::default(),
+            root_view:       UIManager::root_view(),
+            first_view:      first_view.into(),
+            window_ready:    Default::default(),
+            wgpu_app:        Default::default(),
         })
     }
 
@@ -407,14 +407,14 @@ impl wgpu_wrapper::App for App {
 
     fn touch_event(&mut self, touch: winit::event::Touch) -> bool {
         self.process_touch_event(Touch {
-            id: 1,
+            id:       1,
             position: (touch.location.x, touch.location.y).into(),
-            event: match touch.phase {
+            event:    match touch.phase {
                 TouchPhase::Started => TouchEvent::Began,
                 TouchPhase::Moved => TouchEvent::Moved,
                 TouchPhase::Ended | TouchPhase::Cancelled => TouchEvent::Ended,
             },
-            button: MouseButton::Left,
+            button:   MouseButton::Left,
         })
     }
 

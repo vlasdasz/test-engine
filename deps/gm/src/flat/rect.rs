@@ -13,7 +13,7 @@ use crate::{
 #[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize, Zeroable, Pod)]
 pub struct Rect {
     pub origin: Point,
-    pub size: Size,
+    pub size:   Size,
 }
 
 impl Rect {
@@ -201,11 +201,11 @@ impl From<Size> for Rect {
 }
 
 impl<X, Y, W, H> const From<(X, Y, W, H)> for Rect
-    where
-        X: ~ const IntoF32,
-        Y: ~ const IntoF32,
-        W: ~ const IntoF32,
-        H: ~ const IntoF32,
+where
+    X: ~const IntoF32,
+    Y: ~const IntoF32,
+    W: ~const IntoF32,
+    H: ~const IntoF32,
 {
     fn from(tup: (X, Y, W, H)) -> Self {
         Self {
@@ -213,28 +213,28 @@ impl<X, Y, W, H> const From<(X, Y, W, H)> for Rect
                 x: tup.0.into_f32(),
                 y: tup.1.into_f32(),
             },
-            size: Size {
-                width: tup.2.into_f32(),
+            size:   Size {
+                width:  tup.2.into_f32(),
                 height: tup.3.into_f32(),
             },
         }
     }
 }
 
-impl<W: ~ const IntoF32, H: ~ const IntoF32> const From<(W, H)> for Rect {
+impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Rect {
     fn from(tup: (W, H)) -> Self {
         Self {
             origin: Point { x: 0.0, y: 0.0 },
-            size: (tup.0, tup.1).into(),
+            size:   (tup.0, tup.1).into(),
         }
     }
 }
 
-impl<X: ~ const IntoF32, Y: ~ const IntoF32> const From<(X, Y, Size)> for Rect {
+impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y, Size)> for Rect {
     fn from(tup: (X, Y, Size)) -> Self {
         Self {
             origin: (tup.0, tup.1).into(),
-            size: tup.2,
+            size:   tup.2,
         }
     }
 }
