@@ -334,6 +334,10 @@ impl App {
         UIManager::keymap().check(ch);
         UIEvents::keyboard_input().trigger(ch);
     }
+
+    pub fn fps() -> f32 {
+        Self::current().wgpu_app.fps()
+    }
 }
 
 impl wgpu_wrapper::App for App {

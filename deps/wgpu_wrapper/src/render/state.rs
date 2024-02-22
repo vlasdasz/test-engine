@@ -34,6 +34,8 @@ pub struct State {
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
 
+    pub(crate) fps: f32,
+
     read_display_request: RefCell<Option<ReadDisplayRequest>>,
 
     frame_counter: FrameCounter,
@@ -102,6 +104,7 @@ impl State {
             drawer,
             fonts: Default::default(),
             app,
+            fps: 0.0,
             read_display_request: Default::default(),
             frame_counter: Default::default(),
         })
@@ -149,9 +152,11 @@ impl State {
 
     pub fn update(&mut self) {
         self.app.update();
-        if let Some(fps) = self.frame_counter.update() {
+        if let Some((frame_time, fps)) = self.frame_counter.update() {
+            let a = format!("{frame_time:.2}ms frame {fps:.1} FPS");
+            self.fps = fps;
             self.window
-                .set_title(&format!("{fps} {} x {}", self.config.width, self.config.height));
+                .set_title(&format!("{a} {} x {}", self.config.width, self.config.height));
         }
     }
 

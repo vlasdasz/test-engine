@@ -15,7 +15,7 @@ impl Default for FrameCounter {
 }
 
 impl FrameCounter {
-    pub fn update(&mut self) -> Option<String> {
+    pub fn update(&mut self) -> Option<(f32, f32)> {
         self.frame_count += 1;
         let new_instant = web_time::Instant::now();
         let elapsed_secs = (new_instant - self.last_printed_instant).as_secs_f32();
@@ -27,7 +27,7 @@ impl FrameCounter {
             self.last_printed_instant = new_instant;
             self.frame_count = 0;
 
-            return format!("{frame_time:.2}ms frame {fps:.1} FPS").into();
+            return Some((frame_time, fps));
         }
 
         None

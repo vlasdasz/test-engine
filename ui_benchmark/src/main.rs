@@ -7,8 +7,11 @@
 mod benchmark_view;
 
 use anyhow::Result;
+use test_engine::{ui::ViewSetup, App};
 
-fn main() -> Result<()> {
-    //old_engine::ViewApp::<BenchmarkView>::start()
-    Ok(())
+use crate::benchmark_view::BenchmarkView;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    App::start(BenchmarkView::new()).await
 }
