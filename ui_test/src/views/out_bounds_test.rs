@@ -2,11 +2,17 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, IntView, Label, SubView, ViewData, ViewFrame, ViewSetup},
+    ui::{
+        view, AnalogStickView, Anchor, ImageView, IntView, Label, SubView, ViewData, ViewFrame, ViewSetup,
+        ViewSubviews,
+    },
     App,
 };
 
-use crate::{view_tests::inject_touches, views::image_view::check_colors};
+use crate::{
+    view_tests::{inject_touches, record_touches},
+    views::image_view::check_colors,
+};
 
 #[view]
 struct OutBoundsView {
@@ -18,6 +24,13 @@ struct OutBoundsView {
 impl ViewSetup for OutBoundsView {
     fn setup(mut self: Weak<Self>) {
         self.test.set_text("AA").set_text_size(100).set_frame((200, 200, 200, 200));
+
+        // let mut image = self.test.add_view::<ImageView>();
+        // image.set_image("cat.png");
+        // image.place().left_half();
+
+        //  self.test.add_view::<AnalogStickView>();
+
         self.x.set_step(50);
         self.x
             .on_change(move |val| {
@@ -41,6 +54,8 @@ impl ViewSetup for OutBoundsView {
 
 pub async fn test_out_bounds() -> Result<()> {
     App::init_test_view::<OutBoundsView>(600, 600).await;
+
+    record_touches().await;
 
     inject_touches(
         r#"

@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{
-        view, Anchor, Color, Image, ImageView, Point, Screenshot, SubView, U8Color, ViewData, ViewSetup,
-        ViewTouch,
+        view, Anchor, Color, ImageView, Point, Screenshot, SubView, U8Color, ViewData, ViewSetup, ViewTouch,
     },
-    App, DataManager,
+    App,
 };
 
 #[view]
@@ -19,7 +18,7 @@ impl ViewSetup for ImageTestView {
         self.enable_touch();
 
         self.image_view.place().center().relative(Anchor::Size, self, 0.5);
-        self.image_view.image = Image::get("gradient.png");
+        self.image_view.set_image("gradient.png");
     }
 }
 

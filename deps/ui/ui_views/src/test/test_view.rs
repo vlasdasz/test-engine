@@ -1,7 +1,8 @@
 use refs::Weak;
 use rtools::Animation;
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
-use wgpu_wrapper::image::Image;
+use wgpu_wrapper::image::{Image, ToImage};
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -23,8 +24,8 @@ pub struct ViewWithCat {
 }
 
 impl ViewWithCat {
-    pub fn set_image(&mut self, image: Weak<Image>) -> &mut Self {
-        self.image.image = image;
+    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.image.set_image(image);
         self
     }
 
@@ -33,8 +34,8 @@ impl ViewWithCat {
         self
     }
 
-    pub fn set_animation_image(&mut self, image: Weak<Image>) -> &mut Self {
-        self.animated.image = image;
+    pub fn set_animation_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.animated.set_image(image);
         self
     }
 }

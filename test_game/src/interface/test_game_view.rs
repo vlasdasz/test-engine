@@ -3,9 +3,9 @@ use test_engine::{
     refs::Weak,
     ui::{
         view, Alert, AnalogStickView, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        Image, ImageView, IntView, Label, PointsPath, PolygonMode, Spinner, SubView, ViewData, ViewSetup,
+        ImageView, IntView, Label, PointsPath, PolygonMode, Spinner, SubView, ViewData, ViewSetup,
     },
-    App, DataManager,
+    App,
 };
 
 #[view]
@@ -40,7 +40,7 @@ impl ViewSetup for TestGameView {
         self.br.set_color(Color::ORANGE).place().size(100, 100).br(10);
 
         self.image.place().center().relative(Anchor::Size, self, 0.2);
-        self.image.image = Image::get("cat.png");
+        self.image.set_image("cat.png");
 
         self.label_l.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
             Anchor::Right,
@@ -55,7 +55,7 @@ impl ViewSetup for TestGameView {
             self.image,
             20,
         );
-        self.image_r.image = Image::get("palm.png");
+        self.image_r.set_image("palm.png");
 
         self.dpad.place().size(200, 140).b(20).anchor(Anchor::Left, self.bl, 10);
 

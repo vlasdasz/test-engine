@@ -3,9 +3,10 @@ use refs::Weak;
 use rtools::IntoF32;
 use ui::{view, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
 use vents::Event;
-use wgpu_wrapper::image::Image;
+use wgpu_wrapper::image::ToImage;
 
 use crate::{ImageView, Label};
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -35,9 +36,9 @@ impl Button {
         self
     }
 
-    pub fn set_image(&mut self, image: Weak<Image>) -> &mut Self {
+    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image.set_hidden(false);
-        self.image.image = image;
+        self.image.set_image(image);
         self
     }
 
