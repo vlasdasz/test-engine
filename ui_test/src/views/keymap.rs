@@ -9,7 +9,7 @@ use test_engine::{
 use crate::view_tests::inject_key;
 
 pub async fn test_keymap() -> Result<()> {
-    let view = App::set_test_view::<Container>(400, 400).await;
+    let view = App::init_test_view::<Container>(400, 400).await;
 
     let presses = Own::new(0);
     let mut presses = presses.weak();
@@ -37,7 +37,7 @@ pub async fn test_keymap() -> Result<()> {
     inject_key('g').await;
     assert_eq!(*presses, 2);
 
-    App::set_test_view::<Container>(400, 400).await;
+    App::init_test_view::<Container>(400, 400).await;
     wait_for_next_frame().await;
 
     inject_key('g').await;

@@ -22,7 +22,7 @@ impl ViewSetup for MultilineTestView {
 }
 
 pub async fn test_multiline() -> Result<()> {
-    App::set_test_view::<MultilineTestView>(600, 600).await;
+    App::init_test_view::<MultilineTestView>(600, 600).await;
 
     debug!("Multiline test: OK");
 

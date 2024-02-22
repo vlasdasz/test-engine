@@ -26,7 +26,7 @@ impl ViewSetup for OrderTestView {
 }
 
 pub async fn test_view_order() -> Result<()> {
-    let view = App::set_test_view::<OrderTestView>(600, 600).await;
+    let view = App::init_test_view::<OrderTestView>(600, 600).await;
 
     assert_eq!(
         view.z_position(),

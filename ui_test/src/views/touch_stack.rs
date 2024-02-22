@@ -17,7 +17,7 @@ struct TouchStackTestView {
 }
 
 pub async fn test_touch_stack() -> Result<()> {
-    let mut view = App::set_test_view::<TouchStackTestView>(600, 600).await;
+    let mut view = App::init_test_view::<TouchStackTestView>(600, 600).await;
 
     assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 

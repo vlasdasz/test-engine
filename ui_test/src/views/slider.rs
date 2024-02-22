@@ -29,7 +29,7 @@ impl ViewSetup for SliderTestView {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let view = App::set_test_view::<SliderTestView>(600, 600).await;
+    let view = App::init_test_view::<SliderTestView>(600, 600).await;
 
     inject_touches(
         r#"

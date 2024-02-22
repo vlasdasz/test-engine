@@ -21,7 +21,7 @@ impl ViewSetup for IntTestView {
 }
 
 pub async fn test_int_view() -> Result<()> {
-    let mut view = App::set_test_view::<IntTestView>(400, 400).await;
+    let mut view = App::init_test_view::<IntTestView>(400, 400).await;
 
     assert_eq(1.0, view.int.value())?;
 

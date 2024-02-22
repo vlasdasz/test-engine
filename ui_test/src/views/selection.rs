@@ -40,7 +40,7 @@ impl ViewSetup for SelectionTestView {
 }
 
 pub async fn test_selection() -> Result<()> {
-    App::set_test_view::<SelectionTestView>(600, 600).await;
+    App::init_test_view::<SelectionTestView>(600, 600).await;
 
     check_colors(
         r#"

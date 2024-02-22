@@ -24,7 +24,7 @@ impl ViewSetup for SwitchTestView {
 }
 
 pub async fn test_switch() -> Result<()> {
-    App::set_test_view::<SwitchTestView>(200, 100).await;
+    App::init_test_view::<SwitchTestView>(200, 100).await;
 
     test_combinations([
         (

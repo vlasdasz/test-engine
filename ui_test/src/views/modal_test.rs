@@ -43,7 +43,7 @@ impl ModalView for Modal {
 }
 
 pub async fn test_modal() -> Result<()> {
-    App::set_test_view::<ModalTestView>(600, 600).await;
+    App::init_test_view::<ModalTestView>(600, 600).await;
 
     Modal::show_modally((), |_| {});
 

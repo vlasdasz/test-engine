@@ -33,7 +33,7 @@ impl ViewSetup for TextOccclusionTestView {
 }
 
 pub async fn test_text_occlusion() -> Result<()> {
-    App::set_test_view::<TextOccclusionTestView>(600, 600).await;
+    App::init_test_view::<TextOccclusionTestView>(600, 600).await;
 
     check_colors(
         r#"

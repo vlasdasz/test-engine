@@ -30,7 +30,7 @@ impl ViewSetup for TextFieldTestView {
 }
 
 pub async fn test_text_field() -> Result<()> {
-    let mut view = App::set_test_view::<TextFieldTestView>(800, 800).await;
+    let mut view = App::init_test_view::<TextFieldTestView>(800, 800).await;
 
     inject_touches(
         r#"
