@@ -1,9 +1,13 @@
 use std::ops::DerefMut;
 
+use fake::Fake;
+use gm::{
+    flat::{Point, Size},
+    Color,
+};
 use refs::{Own, Weak};
-use rtools::Random;
 
-use crate::{layout::Placer, Container, SubView, UIManager, View, ViewFrame, WeakView};
+use crate::{layout::Placer, Container, SubView, UIManager, View, ViewData, ViewFrame, WeakView};
 
 pub trait ViewSubviews {
     /// Use this only if you know what you are doing
@@ -81,10 +85,14 @@ impl<T: ?Sized + View> ViewSubviews for T {
             view.base_mut().navigation_view = self.base().navigation_view;
         }
         let mut weak = view.weak_view();
-        weak.base_mut().z_position = self.z_position() - UIManager::SUPERVIEW_Z_OFFSET;
-        if let Some(last_subview) = self.subviews().last() {
-            weak.base_mut().z_position = last_subview.z_position() - UIManager::subview_z_offset();
+
+        if weak.z_position() == UIManager::ROOT_VIEW_Z_OFFSET {
+            weak.base_mut().z_position = self.z_position() - UIManager::SUPERVIEW_Z_OFFSET;
+            if let Some(last_subview) = self.subviews().last() {
+                weak.base_mut().z_position = last_subview.z_position() - UIManager::subview_z_offset();
+            }
         }
+
         self.base_mut().subviews.push(view);
         weak.manually_set_superview(self.weak_view());
         weak.init_views();
@@ -94,8 +102,23 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_dummy_view(&mut self) {
+        const MAX_SIZE: f32 = 200.0;
+        const MAX_POSITION: f32 = 400.0;
+
         let mut view = self.__internal_add_view::<Container>();
-        view.set_size((f32::random(), f32::random()));
+
+        let size: Size = ((10.0..MAX_SIZE).fake::<f32>(), (10.0..MAX_SIZE).fake::<f32>()).into();
+        view.set_size(size);
+
+        let origin: Point = (
+            (10.0..MAX_POSITION).fake::<f32>(),
+            (10.0..MAX_POSITION).fake::<f32>(),
+        )
+            .into();
+
+        view.set_origin(origin);
+
+        view.set_color(Color::random());
     }
 
     fn apply_to_all_subviews(&mut self, mut action: impl FnMut(&mut dyn View) + Clone + 'static) {

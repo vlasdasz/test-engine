@@ -20,7 +20,7 @@ pub struct ViewBase {
 
     pub(crate) is_hidden: bool,
 
-    #[derivative(Default(value = "0.5"))]
+    #[derivative(Default(value = "crate::UIManager::ROOT_VIEW_Z_OFFSET"))]
     pub(crate) z_position: f32,
 
     pub(crate) frame:          Rect,

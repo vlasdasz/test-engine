@@ -3,11 +3,12 @@ use gm::{flat::Size, Color};
 use refs::{Own, Weak};
 use vents::OnceEvent;
 
-use crate::{view::ViewSubviews, TouchStack, UIManager, View, ViewData};
+use crate::{view::ViewSubviews, TouchStack, UIManager, View, ViewData, ViewFrame};
 
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     fn prepare_modally(input: In) -> Weak<Self> {
         let mut view = Own::<Self>::default();
+        view.set_z_position(UIManager::MODAL_Z_OFFSET);
         view.set_color(Color::WHITE);
         let size = Self::modal_size();
         let weak = view.weak();

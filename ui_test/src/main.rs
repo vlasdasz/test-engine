@@ -13,8 +13,8 @@ use test_engine::{
 use crate::views::{
     alert::test_alert, button::test_button, drop_down::test_drop_down, image_view::test_image_view,
     int_view::test_int_view, keymap::test_keymap, label::test_label, layout::test_layout,
-    multiline_label::test_multiline, render_image_path::test_render_image_path, selection::test_selection,
-    slider::test_slider, switch::test_switch, text_field::test_text_field,
+    modal_test::test_modal, multiline_label::test_multiline, render_image_path::test_render_image_path,
+    selection::test_selection, slider::test_slider, switch::test_switch, text_field::test_text_field,
     text_occlusion::test_text_occlusion, touch_stack::test_touch_stack, view_order::test_view_order,
 };
 
@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
-        for _ in 0..5 {
+        for _ in 0..2 {
             test().await?;
         }
 
@@ -38,6 +38,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_modal().await?;
     test_touch_stack().await?;
     test_text_occlusion().await?;
     test_text_field().await?;

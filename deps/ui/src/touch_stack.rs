@@ -85,7 +85,11 @@ impl TouchStack {
     }
 
     pub fn clear_freed() {
-        for layer in Self::get().stack.iter_mut() {
+        let mut this = Self::get();
+
+        this.stack.tail.retain(|a| a.root.is_ok());
+
+        for layer in this.stack.iter_mut() {
             layer.clear_freed();
         }
     }

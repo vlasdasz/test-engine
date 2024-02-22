@@ -6,6 +6,7 @@ pub mod int_view;
 pub mod keymap;
 pub mod label;
 pub mod layout;
+pub mod modal_test;
 pub mod multiline_label;
 pub mod render_image_path;
 pub mod selection;
