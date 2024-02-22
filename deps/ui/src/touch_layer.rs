@@ -8,21 +8,16 @@ pub(crate) struct TouchLayer {
 }
 
 impl TouchLayer {
-    pub(crate) fn add(&mut self, view: WeakView, priority: bool) {
-        self.touches.retain(Weak::is_ok);
-        if priority {
-            self.touches.insert(0, view);
-        } else {
-            self.touches.push(view);
-        }
+    pub(crate) fn add(&mut self, view: WeakView) {
+        self.touches.push(view);
     }
 
     pub(crate) fn remove(&mut self, view: WeakView) {
         self.touches.retain(|a| a.addr() != view.addr());
     }
 
-    pub(crate) fn views(&self) -> Vec<WeakView> {
-        self.touches.clone()
+    pub(crate) fn views(&self) -> &[WeakView] {
+        &self.touches
     }
 
     pub(crate) fn root_addr(&self) -> usize {
@@ -33,9 +28,9 @@ impl TouchLayer {
         self.root.label()
     }
 
-    pub(crate) fn clear_freed(&mut self) -> &mut Self {
+    pub(crate) fn clear_freed(&mut self) {
+        assert!(self.root.is_ok());
         self.touches.retain(Weak::is_ok);
-        self
     }
 }
 

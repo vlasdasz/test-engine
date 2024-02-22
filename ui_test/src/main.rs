@@ -34,10 +34,11 @@ async fn main() -> Result<()> {
 
         Ok(())
     })
-    .await
+        .await
 }
 
 async fn test() -> Result<()> {
+    test_touch_stack().await?;
     test_text_occlusion().await?;
     test_text_field().await?;
     test_slider().await?;
@@ -52,14 +53,13 @@ async fn test() -> Result<()> {
     test_alert().await?;
     test_multiline().await?;
     test_view_order().await?;
+
     Ok(())
 }
 
 async fn skip() -> Result<()> {
     test_drop_down().await?;
     test_render_image_path().await?;
-
-    test_touch_stack().await?;
 
     Ok(())
 }

@@ -40,14 +40,10 @@ impl TouchStack {
             sup = sup.superview();
         }
 
-        while self.stack.last().root.is_null() {
-            self.stack.pop();
-        }
-
         for layer in self.stack.iter_mut().rev() {
             for label in &view_stack {
                 if layer.root_name() == *label {
-                    return layer.clear_freed();
+                    return layer;
                 }
             }
         }
@@ -58,11 +54,11 @@ impl TouchStack {
 
 impl TouchStack {
     pub fn touch_views() -> Vec<WeakView> {
-        Self::get().stack.last().views()
+        Self::get().stack.last().views().to_vec()
     }
 
-    pub fn enable_for(view: WeakView, priority: bool) {
-        Self::get().layer_for(view).add(view, priority)
+    pub fn enable_for(view: WeakView) {
+        Self::get().layer_for(view).add(view)
     }
 
     pub fn disable_for(view: WeakView) {
@@ -88,6 +84,12 @@ impl TouchStack {
         Self::get().stack.last().root_name().to_string()
     }
 
+    pub fn clear_freed() {
+        for layer in Self::get().stack.iter_mut() {
+            layer.clear_freed();
+        }
+    }
+
     pub fn dump() -> Vec<Vec<String>> {
         let mut result = vec![];
 
@@ -97,9 +99,7 @@ impl TouchStack {
             layer_vec.push(format!("Layer: {}", layer.root_name()));
 
             for view in layer.views() {
-                if view.is_null() {
-                    continue;
-                }
+                assert!(view.is_ok(), "Null view in touch stack");
                 layer_vec.push(format!("View: {}", view.label()));
             }
 

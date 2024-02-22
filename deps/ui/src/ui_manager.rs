@@ -10,7 +10,7 @@ use std::{
 use gm::flat::{Point, Rect, Size};
 use refs::Own;
 
-use crate::{layout::Placer, Container, Keymap, UIEvent, View, WeakView};
+use crate::{layout::Placer, Container, Keymap, TouchStack, UIEvent, View, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -107,7 +107,8 @@ impl UIManager {
     }
 
     pub fn free_deleted_views() {
-        Self::get().deleted_views.lock().unwrap().clear()
+        Self::get().deleted_views.lock().unwrap().clear();
+        TouchStack::clear_freed();
     }
 
     pub fn display_touches() -> bool {

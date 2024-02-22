@@ -1,7 +1,8 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    ui::{view, Alert, Button, SubView, TouchStack, ViewTouch},
+    from_main,
+    ui::{view, Alert, Button, SubView, TouchStack, ViewSubviews, ViewTouch},
     wait_for_next_frame, App,
 };
 
@@ -16,12 +17,27 @@ struct TouchStackTestView {
 }
 
 pub async fn test_touch_stack() -> Result<()> {
-    let view = App::set_test_view::<TouchStackTestView>(600, 600).await;
+    let mut view = App::set_test_view::<TouchStackTestView>(600, 600).await;
 
-    view.button.enable_touch();
-    view.button.disable_touch();
-    view.button2.enable_touch();
-    view.button2.disable_touch();
+    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+
+    let mut button = from_main(move || view.add_view::<Button>()).await;
+
+    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+
+    button.on_tap(|| {});
+
+    assert_eq(
+        TouchStack::dump(),
+        vec![vec![
+            "Layer: Root view".to_string(),
+            "View: ".to_string() + &button.label.clone(),
+        ]],
+    )?;
+
+    from_main(move || button.remove_from_superview()).await;
+
+    wait_for_next_frame().await;
 
     assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 
@@ -41,8 +57,8 @@ pub async fn test_touch_stack() -> Result<()> {
         TouchStack::dump(),
         vec![vec![
             "Layer: Root view".to_string(),
-            "View: ".to_string() + &view.button2.label.clone(),
             "View: ".to_string() + &view.button.label.clone(),
+            "View: ".to_string() + &view.button2.label.clone(),
         ]],
     )?;
 

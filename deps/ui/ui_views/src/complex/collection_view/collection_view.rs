@@ -113,7 +113,8 @@ impl CollectionView {
             let mut cell = self.scroll.add_subview(cell);
             self.data_source.setup_cell_for_index(cell.as_any_mut(), index);
             cell.set_frame((0, index as f32 * cell_height, width, cell_height));
-            cell.enable_touch_low_priority();
+            //     cell.enable_touch_low_priority();
+            cell.enable_touch();
             let mut this = weak_from_ref(self);
             cell.touch().began.sub(move || this.data_source.cell_selected(index));
             self.cells.push(cell);

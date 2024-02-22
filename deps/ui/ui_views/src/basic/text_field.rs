@@ -156,9 +156,3 @@ impl ViewCallbacks for TextField {
         self.label.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
     }
 }
-
-impl Drop for TextField {
-    fn drop(&mut self) {
-        //  UIEvents::key_pressed().remove_subscribers()
-    }
-}
