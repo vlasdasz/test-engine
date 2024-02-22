@@ -41,16 +41,16 @@ impl Uniform {
 
     fn layout(device: &Device, label: &'static str, shader: ShaderStages) -> BindGroupLayout {
         device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            label: label.into(),
+            label:   label.into(),
             entries: &[BindGroupLayoutEntry {
-                binding: 0,
+                binding:    0,
                 visibility: shader,
-                ty: BindingType::Buffer {
-                    ty: BufferBindingType::Uniform,
+                ty:         BindingType::Buffer {
+                    ty:                 BufferBindingType::Uniform,
                     has_dynamic_offset: false,
-                    min_binding_size: None,
+                    min_binding_size:   None,
                 },
-                count: None,
+                count:      None,
             }],
         })
     }
@@ -58,20 +58,20 @@ impl Uniform {
 
 fn bind_group_with_color(layout: &BindGroupLayout, device: &Device, color: &Color) -> BindGroup {
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
-        label: Some("Color Uniform Buffer"),
+        label:    Some("Color Uniform Buffer"),
         contents: cast_slice(&color.as_slice()),
-        usage: BufferUsages::UNIFORM,
+        usage:    BufferUsages::UNIFORM,
     });
 
     device.create_bind_group(&wgpu::BindGroupDescriptor {
         label: Some("rect_color_bind_group"),
         layout,
         entries: &[BindGroupEntry {
-            binding: 0,
+            binding:  0,
             resource: BindingResource::Buffer(BufferBinding {
                 buffer: &buffer,
                 offset: 0,
-                size: None,
+                size:   None,
             }),
         }],
     })
@@ -79,20 +79,20 @@ fn bind_group_with_color(layout: &BindGroupLayout, device: &Device, color: &Colo
 
 fn z_bind_group(layout: &BindGroupLayout, device: &Device, z: f32) -> BindGroup {
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
-        label: Some("Color Uniform Buffer"),
+        label:    Some("Color Uniform Buffer"),
         contents: cast_slice(&[z]),
-        usage: BufferUsages::UNIFORM,
+        usage:    BufferUsages::UNIFORM,
     });
 
     device.create_bind_group(&wgpu::BindGroupDescriptor {
         label: Some("rect_z_position_bind_group"),
         layout,
         entries: &[BindGroupEntry {
-            binding: 0,
+            binding:  0,
             resource: BindingResource::Buffer(BufferBinding {
                 buffer: &buffer,
                 offset: 0,
-                size: None,
+                size:   None,
             }),
         }],
     })

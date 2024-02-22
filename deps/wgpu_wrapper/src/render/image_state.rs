@@ -15,19 +15,19 @@ use crate::{image::Image, render::uniform::Uniform, utils::make_pipeline};
 const VERTICES: &[UIVertex] = &[
     UIVertex {
         pos: Point::new(-1.0, 1.0),
-        uv: Point::new(0.0, 0.0),
+        uv:  Point::new(0.0, 0.0),
     },
     UIVertex {
         pos: Point::new(-1.0, -1.0),
-        uv: Point::new(0.0, 1.0),
+        uv:  Point::new(0.0, 1.0),
     },
     UIVertex {
         pos: Point::new(1.0, 1.0),
-        uv: Point::new(1.0, 0.0),
+        uv:  Point::new(1.0, 0.0),
     },
     UIVertex {
         pos: Point::new(1.0, -1.0),
-        uv: Point::new(1.0, 1.0),
+        uv:  Point::new(1.0, 1.0),
     },
 ];
 
@@ -36,8 +36,8 @@ const RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 #[derive(Debug)]
 pub struct ImageState {
     render_pipeline: RenderPipeline,
-    vertex_buffer: Buffer,
-    z_layout: BindGroupLayout,
+    vertex_buffer:   Buffer,
+    z_layout:        BindGroupLayout,
 }
 
 impl ImageState {
@@ -48,8 +48,8 @@ impl ImageState {
         let image_layout = Image::bind_group_layout(device);
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-            label: Some("Colored Image Pipeline Layout"),
-            bind_group_layouts: &[&z_layout, &image_layout],
+            label:                Some("Colored Image Pipeline Layout"),
+            bind_group_layouts:   &[&z_layout, &image_layout],
             push_constant_ranges: &[],
         });
 
@@ -63,9 +63,9 @@ impl ImageState {
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label: "Colored Image Vertex Buffer".into(),
+            label:    "Colored Image Vertex Buffer".into(),
             contents: bytemuck::cast_slice(VERTICES),
-            usage: wgpu::BufferUsages::VERTEX,
+            usage:    wgpu::BufferUsages::VERTEX,
         });
 
         Self {

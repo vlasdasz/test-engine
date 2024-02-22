@@ -10,9 +10,9 @@ mod test_engine {
 
 #[view]
 pub struct Label {
-    pub text: String,
+    pub text:   String,
     text_color: Color,
-    text_size: f32,
+    text_size:  f32,
 }
 
 impl Label {
