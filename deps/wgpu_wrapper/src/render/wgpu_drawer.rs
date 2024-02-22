@@ -64,7 +64,14 @@ impl WGPUDrawer {
             .draw_buffer(render_pass, rect, polygon_mode, buffer, bind_group, vertex_range)
     }
 
-    pub fn draw_image<'a>(&'a self, render_pass: &mut RenderPass<'a>, image: &'static Image, rect: &Rect) {
-        self.colored_image_state.draw(image, rect, render_pass);
+    pub fn draw_image<'a>(
+        &'a self,
+        device: &Device,
+        render_pass: &mut RenderPass<'a>,
+        image: &'static Image,
+        rect: &Rect,
+        z_position: f32,
+    ) {
+        self.colored_image_state.draw(device, image, rect, render_pass, z_position);
     }
 }

@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
 
         Ok(())
     })
-        .await
+    .await
 }
 
 async fn test() -> Result<()> {

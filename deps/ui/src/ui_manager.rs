@@ -46,6 +46,14 @@ impl UIManager {
         Self::subview_z_offset() / 10.0
     }
 
+    pub const fn image_z_offset() -> f32 {
+        Self::text_z_offset() * 2.0
+    }
+
+    pub const fn outline_z_offset() -> f32 {
+        Self::text_z_offset() * 3.0
+    }
+
     pub fn unselect_view(&self) {
         let mut selected_view = self.selected_view.lock().unwrap();
         if selected_view.is_null() {

@@ -56,7 +56,7 @@ impl BenchmarkView {
 
                     filled
                 })
-                    .await;
+                .await;
 
                 if finish {
                     on_main(move || {

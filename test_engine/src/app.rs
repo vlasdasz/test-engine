@@ -218,7 +218,13 @@ impl App {
                 // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
-                drawer.draw_image(pass, image.get_static(), &frame);
+                drawer.draw_image(
+                    &drawer.device,
+                    pass,
+                    image.get_static(),
+                    &frame,
+                    view.z_position() - UIManager::image_z_offset(),
+                );
             }
         } else if let Some(label) = view.as_any().downcast_ref::<Label>()
             && !label.text.is_empty()
@@ -261,7 +267,7 @@ impl App {
                 &frame,
                 &Color::TURQUOISE,
                 PolygonMode::Line,
-                view.z_position() + UIManager::text_z_offset(),
+                view.z_position() - UIManager::outline_z_offset(),
             );
         }
 

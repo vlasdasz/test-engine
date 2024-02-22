@@ -47,6 +47,7 @@ impl Label {
 impl ViewSetup for Label {
     fn setup(mut self: Weak<Self>) {
         self.text_size = 32.0;
+        self.set_color(Color::WHITE);
         self.text_color = Color::BLACK;
     }
 }
