@@ -55,6 +55,10 @@ impl App {
         }
     }
 
+    pub fn root_view_size() -> Size {
+        Self::current().root_view.size()
+    }
+
     fn make_app(first_view: Own<dyn View>) -> Box<Self> {
         Builder::from_default_env()
             .filter_level(LevelFilter::Debug)
@@ -208,11 +212,17 @@ impl App {
 
         let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
 
-        if !frame.origin.positive() {
-            return;
-        }
+        let clamped_frame = frame.clamp_to(App::root_view_size());
 
-        drawer.draw_rect(pass, &frame, view.color(), PolygonMode::Fill, view.z_position());
+        if view.color().a > 0.0 {
+            drawer.draw_rect(
+                pass,
+                &clamped_frame,
+                view.color(),
+                PolygonMode::Fill,
+                view.z_position(),
+            );
+        }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image.is_ok() {
@@ -225,7 +235,7 @@ impl App {
                     &drawer.device,
                     pass,
                     image.get_static(),
-                    &frame,
+                    &clamped_frame,
                     view.z_position() - UIManager::image_z_offset(),
                 );
             }
@@ -255,7 +265,7 @@ impl App {
             for path in drawing_view.paths() {
                 drawer.draw_buffer(
                     pass,
-                    &frame,
+                    &clamped_frame,
                     path.mode,
                     path.buffer(),
                     path.bind_group(),
@@ -267,7 +277,7 @@ impl App {
         if DRAW_DEBUG_FRAMES {
             drawer.draw_rect(
                 pass,
-                &frame,
+                &clamped_frame,
                 &Color::TURQUOISE,
                 PolygonMode::Line,
                 view.z_position() - UIManager::outline_z_offset(),

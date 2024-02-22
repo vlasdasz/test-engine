@@ -17,31 +17,31 @@ struct LayoutTestView {
     center: SubView<Button>,
 
     #[text = top]
-    top: SubView<Button>,
+    top:    SubView<Button>,
     #[text = bottom]
     bottom: SubView<Button>,
     #[text = left]
-    left: SubView<Button>,
+    left:   SubView<Button>,
     #[text = right]
-    right: SubView<Button>,
+    right:  SubView<Button>,
 
     #[text = tp_ct]
-    top_center: SubView<Button>,
+    top_center:    SubView<Button>,
     #[text = bt_ct]
     bottom_center: SubView<Button>,
     #[text = le_ct]
-    left_center: SubView<Button>,
+    left_center:   SubView<Button>,
     #[text = ri_ct]
-    right_center: SubView<Button>,
+    right_center:  SubView<Button>,
 
     #[text = to_s_ct]
-    top_s_center: SubView<Button>,
+    top_s_center:    SubView<Button>,
     #[text = bo_s_ct]
     bottom_s_center: SubView<Button>,
     #[text = le_s_ct]
-    left_s_center: SubView<Button>,
+    left_s_center:   SubView<Button>,
     #[text = ri_s_ct]
-    right_s_center: SubView<Button>,
+    right_s_center:  SubView<Button>,
 }
 
 impl ViewSetup for LayoutTestView {
@@ -140,7 +140,7 @@ pub async fn test_layout() -> Result<()> {
             118  18   e
             "#,
     )
-        .await;
+    .await;
 
     assert_eq(
         get_state::<String>(),
@@ -245,7 +245,7 @@ pub async fn test_layout() -> Result<()> {
             200  11   e
             "#,
     )
-        .await;
+    .await;
 
     assert_eq(
         get_state::<String>(),

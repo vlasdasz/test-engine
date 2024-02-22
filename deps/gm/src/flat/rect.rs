@@ -13,21 +13,12 @@ use crate::{
 #[derive(Copy, Clone, Default, Debug, PartialEq, Serialize, Deserialize, Zeroable, Pod)]
 pub struct Rect {
     pub origin: Point,
-    pub size:   Size,
+    pub size: Size,
 }
 
 impl Rect {
-    pub const fn from_vals(vals: [f32; 4]) -> Self {
-        Self {
-            origin: Point {
-                x: vals[0],
-                y: vals[1],
-            },
-            size:   Size {
-                width:  vals[2],
-                height: vals[3],
-            },
-        }
+    pub fn new(x: f32, y: f32, w: f32, h: f32) -> Self {
+        (x, y, w, h).into()
     }
 
     pub fn max_x(&self) -> f32 {
@@ -107,6 +98,39 @@ impl Rect {
     pub fn with_zero_origin(&self) -> Rect {
         (0, 0, self.size.width, self.size.height).into()
     }
+
+    pub fn clamp_to(mut self, size: Size) -> Rect {
+        self.size.width = if self.origin.x < 0.0 {
+            self.size.width + self.origin.x
+        } else {
+            self.size.width
+        };
+
+        self.size.height = if self.origin.y < 0.0 {
+            self.size.height + self.origin.y
+        } else {
+            self.size.height
+        };
+
+        self.origin.x = if self.origin.x < 0.0 { 0.0 } else { self.origin.x };
+        self.origin.y = if self.origin.y < 0.0 { 0.0 } else { self.origin.y };
+
+        let x_clamped = self.max_x() > size.width;
+        let y_clamped = self.max_y() > size.height;
+
+        let width = if x_clamped {
+            size.width - self.x()
+        } else {
+            self.width()
+        };
+        let height = if y_clamped {
+            size.height - self.y()
+        } else {
+            self.height()
+        };
+
+        (self.x(), self.y(), width, height).into()
+    }
 }
 
 impl Rect {
@@ -177,11 +201,11 @@ impl From<Size> for Rect {
 }
 
 impl<X, Y, W, H> const From<(X, Y, W, H)> for Rect
-where
-    X: ~const IntoF32,
-    Y: ~const IntoF32,
-    W: ~const IntoF32,
-    H: ~const IntoF32,
+    where
+        X: ~ const IntoF32,
+        Y: ~ const IntoF32,
+        W: ~ const IntoF32,
+        H: ~ const IntoF32,
 {
     fn from(tup: (X, Y, W, H)) -> Self {
         Self {
@@ -189,28 +213,28 @@ where
                 x: tup.0.into_f32(),
                 y: tup.1.into_f32(),
             },
-            size:   Size {
-                width:  tup.2.into_f32(),
+            size: Size {
+                width: tup.2.into_f32(),
                 height: tup.3.into_f32(),
             },
         }
     }
 }
 
-impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Rect {
+impl<W: ~ const IntoF32, H: ~ const IntoF32> const From<(W, H)> for Rect {
     fn from(tup: (W, H)) -> Self {
         Self {
             origin: Point { x: 0.0, y: 0.0 },
-            size:   (tup.0, tup.1).into(),
+            size: (tup.0, tup.1).into(),
         }
     }
 }
 
-impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y, Size)> for Rect {
+impl<X: ~ const IntoF32, Y: ~ const IntoF32> const From<(X, Y, Size)> for Rect {
     fn from(tup: (X, Y, Size)) -> Self {
         Self {
             origin: (tup.0, tup.1).into(),
-            size:   tup.2,
+            size: tup.2,
         }
     }
 }
@@ -240,5 +264,33 @@ impl<T: IntoF32> Mul<T> for Rect {
             self.size.height * mul,
         )
             .into()
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::flat::Rect;
+
+    #[test]
+    fn clamp() {
+        assert_eq!(
+            Rect::new(5.0, 5.0, 100.0, 100.0).clamp_to((1000, 1000).into()),
+            (5, 5, 100, 100).into()
+        );
+
+        assert_eq!(
+            Rect::new(5.0, 5.0, 1050.0, 100.0).clamp_to((1000, 1000).into()),
+            (5, 5, 995, 100).into()
+        );
+
+        assert_eq!(
+            Rect::new(5.0, 5.0, 100.0, 1050.0).clamp_to((1000, 1000).into()),
+            (5, 5, 100, 995).into()
+        );
+
+        assert_eq!(
+            Rect::new(5.0, 5.0, 1050.0, 1050.0).clamp_to((1000, 1000).into()),
+            (5, 5, 995, 995).into()
+        );
     }
 }

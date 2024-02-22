@@ -8,6 +8,7 @@ pub mod label;
 pub mod layout;
 pub mod modal_test;
 pub mod multiline_label;
+pub mod out_bounds_test;
 pub mod present_test;
 pub mod render_image_path;
 pub mod selection;
