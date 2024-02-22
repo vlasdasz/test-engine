@@ -37,6 +37,10 @@ impl<T: Send> UIEvent<T> {
         })
     }
 
+    pub fn unsibscribe(&self, view: WeakView) {
+        self.subscribers.lock().unwrap().retain(|a| a.view.addr() != view.addr())
+    }
+
     pub fn trigger(&self, val: T)
     where T: Clone {
         let mut subs = self.subscribers.lock().unwrap();

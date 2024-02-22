@@ -33,7 +33,7 @@ struct SelectionTestView {
 
 impl ViewSetup for SelectionTestView {
     fn setup(self: Weak<Self>) {
-        self.a.place().center().size(100, 100);
+        self.a.place().size(100, 100).center();
         self.b.place().same_size(self.a).center_y().anchor(Anchor::Right, self.a, 40);
         self.c.place().same_size(self.a).center_y().anchor(Anchor::Left, self.a, 40);
     }

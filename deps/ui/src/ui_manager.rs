@@ -36,7 +36,15 @@ pub struct UIManager {
 }
 
 impl UIManager {
-    pub const Z_OFFSET: f32 = 0.000_001;
+    pub const SUPERVIEW_Z_OFFSET: f32 = 0.000_01;
+
+    pub const fn subview_z_offset() -> f32 {
+        Self::SUPERVIEW_Z_OFFSET / 10.0
+    }
+
+    pub const fn text_z_offset() -> f32 {
+        Self::subview_z_offset() / 10.0
+    }
 
     pub fn unselect_view(&self) {
         let mut selected_view = self.selected_view.lock().unwrap();

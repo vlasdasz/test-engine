@@ -30,13 +30,26 @@ pub async fn test_view_order() -> Result<()> {
 
     assert_eq!(
         view.z_position(),
-        UIManager::root_view().z_position() - UIManager::Z_OFFSET
+        UIManager::root_view().z_position() - UIManager::SUPERVIEW_Z_OFFSET
     );
 
-    assert_eq!(view.view_1.z_position(), view.z_position() - UIManager::Z_OFFSET);
-    assert_eq!(view.view_1.z_position(), view.view_2.z_position());
-    assert_eq!(view.view_1.z_position(), view.view_3.z_position());
-    assert_eq!(view.view_1.z_position(), view.view_4.z_position());
+    assert_eq!(
+        view.view_1.z_position(),
+        view.z_position() - UIManager::SUPERVIEW_Z_OFFSET
+    );
+
+    assert_eq!(
+        view.view_1.z_position(),
+        view.view_2.z_position() + UIManager::subview_z_offset()
+    );
+    assert_eq!(
+        view.view_2.z_position(),
+        view.view_3.z_position() + UIManager::subview_z_offset()
+    );
+    assert_eq!(
+        view.view_3.z_position(),
+        view.view_4.z_position() + UIManager::subview_z_offset()
+    );
 
     assert_eq!(view.view_1.label, "OrderTestView.view_1: Container");
     assert_eq!(view.view_2.label, "OrderTestView.view_2: Container");

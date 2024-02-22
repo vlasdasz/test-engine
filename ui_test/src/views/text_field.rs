@@ -20,7 +20,7 @@ struct TextFieldTestView {
 
 impl ViewSetup for TextFieldTestView {
     fn setup(self: Weak<Self>) {
-        self.field.place().center().size(600, 200);
+        self.field.place().size(600, 200).center();
         self.smol_field
             .place()
             .size(200, 50)

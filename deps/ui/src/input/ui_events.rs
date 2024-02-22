@@ -2,7 +2,7 @@ use gm::flat::Size;
 use refs::MainLock;
 use vents::Event;
 
-use crate::Touch;
+use crate::{Touch, UIEvent};
 
 static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 
@@ -10,7 +10,7 @@ static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 pub struct UIEvents {
     on_touch:       Event<Touch>,
     size_changed:   Event<Size<u32>>,
-    keyboard_input: Event<char>,
+    keyboard_input: UIEvent<char>,
 }
 
 impl UIEvents {
@@ -26,7 +26,7 @@ impl UIEvents {
         &Self::get().size_changed
     }
 
-    pub fn keyboard_input() -> &'static Event<char> {
+    pub fn keyboard_input() -> &'static UIEvent<char> {
         &Self::get().keyboard_input
     }
 }

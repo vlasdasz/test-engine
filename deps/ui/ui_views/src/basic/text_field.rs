@@ -119,9 +119,10 @@ impl ViewSetup for TextField {
 
 impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
+        let mut this = weak_from_ref(self);
+
         if selected {
-            let mut this = weak_from_ref(self);
-            UIEvents::keyboard_input().val(move |key| {
+            UIEvents::keyboard_input().val(this, move |key| {
                 if this.is_null() {
                     return;
                 }
@@ -149,7 +150,7 @@ impl ViewCallbacks for TextField {
                 this.changed.trigger(this.text().to_string());
             });
         } else {
-            UIEvents::keyboard_input().remove_subscribers();
+            UIEvents::keyboard_input().unsibscribe(this);
         }
 
         self.label.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });

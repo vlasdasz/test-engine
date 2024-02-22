@@ -176,6 +176,7 @@ pub fn assert_eq<T: PartialEq<U> + Debug, U: Debug>(a: T, b: U) -> Result<()> {
     if a == b {
         return Ok(());
     }
+
     let message = format!("Assertion failed: {a:?} != {b:?}");
     error!("{message}");
 

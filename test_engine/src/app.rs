@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched};
+use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
 use env_logger::Builder;
 use gm::{
     flat::{Point, Rect, Size},
@@ -15,7 +15,6 @@ use gm::{
 use log::{trace, warn, Level, LevelFilter};
 use manage::data_manager::DataManager;
 use refs::{Own, Rglica, Weak};
-use rtools::sleep;
 use tokio::spawn;
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -138,6 +137,8 @@ impl App {
     }
 
     pub async fn set_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) -> Weak<T> {
+        App::set_window_size((width, height));
+        wait_for_next_frame().await;
         let view = from_main(move || {
             let view = T::new();
             let weak = view.weak();
@@ -146,13 +147,10 @@ impl App {
             let view = root.add_subview(view);
             view.place().back();
             trace!("{width} - {height}");
-            App::set_window_size((width, height));
             weak
         })
         .await;
-
-        sleep(0.1);
-
+        wait_for_next_frame().await;
         view
     }
 
@@ -232,7 +230,7 @@ impl App {
                     Text::new(&label.text)
                         .with_scale(label.text_size())
                         .with_color(label.text_color().as_slice())
-                        .with_z(view.z_position() - 0.001),
+                        .with_z(view.z_position() - UIManager::text_z_offset()),
                 )
                 .with_bounds((frame.width(), frame.height()))
                 .with_layout(
@@ -263,11 +261,11 @@ impl App {
                 &frame,
                 &Color::TURQUOISE,
                 PolygonMode::Line,
-                view.z_position(),
+                view.z_position() + UIManager::text_z_offset(),
             );
         }
 
-        for view in view.subviews().iter().rev() {
+        for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {
                 Self::draw_view(pass, drawer, view.deref(), sections)
             }

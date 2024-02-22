@@ -5,7 +5,7 @@ use test_engine::{
     wait_for_next_frame, App,
 };
 
-use crate::view_tests::assert_eq;
+use crate::view_tests::{assert_eq, inject_touches};
 
 #[view]
 struct TouchStackTestView {
@@ -17,6 +17,11 @@ struct TouchStackTestView {
 
 pub async fn test_touch_stack() -> Result<()> {
     let view = App::set_test_view::<TouchStackTestView>(600, 600).await;
+
+    view.button.enable_touch();
+    view.button.disable_touch();
+    view.button2.enable_touch();
+    view.button2.disable_touch();
 
     assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 
@@ -44,6 +49,8 @@ pub async fn test_touch_stack() -> Result<()> {
     view.button.disable_touch();
     view.button2.disable_touch();
 
+    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+
     Alert::show("Hello");
 
     wait_for_next_frame().await;
@@ -58,6 +65,16 @@ pub async fn test_touch_stack() -> Result<()> {
             ],
         ],
     )?;
+
+    inject_touches(
+        r#"
+            320  383  b
+            320  383  e
+    "#,
+    )
+    .await;
+
+    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
 
     debug!("Touch stack test: OK");
 

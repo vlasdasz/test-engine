@@ -1,5 +1,5 @@
 use anyhow::Result;
-use log::info;
+use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Color, Label, SubView, ViewData, ViewSetup},
@@ -20,8 +20,8 @@ impl ViewSetup for TextOccclusionTestView {
             .set_text_size(100)
             .set_text("OOOOOOOO")
             .place()
-            .center()
-            .size(400, 400);
+            .size(400, 400)
+            .center();
 
         self.label_above
             .set_text_size(140)
@@ -97,7 +97,7 @@ pub async fn test_text_occlusion() -> Result<()> {
     )
     .await?;
 
-    info!("Text occlusion: OK");
+    debug!("Text occlusion: OK");
 
     Ok(())
 }

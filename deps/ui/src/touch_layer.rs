@@ -3,8 +3,8 @@ use refs::Weak;
 use crate::{ViewData, WeakView};
 
 pub(crate) struct TouchLayer {
-    root:    WeakView,
-    touches: Vec<WeakView>,
+    pub(crate) root: WeakView,
+    touches:         Vec<WeakView>,
 }
 
 impl TouchLayer {
@@ -31,6 +31,11 @@ impl TouchLayer {
 
     pub(crate) fn root_name(&self) -> &str {
         self.root.label()
+    }
+
+    pub(crate) fn clear_freed(&mut self) -> &mut Self {
+        self.touches.retain(Weak::is_ok);
+        self
     }
 }
 

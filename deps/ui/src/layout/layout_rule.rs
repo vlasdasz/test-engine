@@ -108,6 +108,12 @@ impl LayoutRule {
     }
 }
 
+impl LayoutRule {
+    pub(crate) fn is_center(&self) -> bool {
+        matches!(self.side, Anchor::Center | Anchor::CenterX | Anchor::CenterY)
+    }
+}
+
 impl From<Anchor> for LayoutRule {
     fn from(anchor: Anchor) -> Self {
         Self::make(anchor, 0)

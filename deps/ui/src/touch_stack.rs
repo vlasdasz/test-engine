@@ -40,10 +40,14 @@ impl TouchStack {
             sup = sup.superview();
         }
 
+        while self.stack.last().root.is_null() {
+            self.stack.pop();
+        }
+
         for layer in self.stack.iter_mut().rev() {
             for label in &view_stack {
                 if layer.root_name() == *label {
-                    return layer;
+                    return layer.clear_freed();
                 }
             }
         }

@@ -102,6 +102,7 @@ impl Placer {
     }
 
     pub fn size(&self, width: impl IntoF32, height: impl IntoF32) -> &Self {
+        assert!(!self.has_center(), "Size place after center");
         self.w(width).h(height)
     }
 
@@ -478,6 +479,12 @@ impl Placer {
             _ => unimplemented!(),
         };
         view.set_frame(frame);
+    }
+}
+
+impl Placer {
+    fn has_center(&self) -> bool {
+        self.rules().iter().any(LayoutRule::is_center)
     }
 }
 
