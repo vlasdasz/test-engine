@@ -13,6 +13,7 @@ pub mod present_test;
 pub mod render_image_path;
 pub mod selection;
 pub mod slider;
+pub mod stick;
 pub mod switch;
 pub mod text_field;
 pub mod text_occlusion;

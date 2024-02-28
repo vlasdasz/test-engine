@@ -2,8 +2,8 @@ use test_engine::{
     async_after, on_main,
     refs::Weak,
     ui::{
-        view, Alert, AnalogStickView, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        ImageView, IntView, Label, PointsPath, PolygonMode, Spinner, SubView, ViewData, ViewSetup,
+        view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView, ImageView, IntView,
+        Label, PointsPath, PolygonMode, Spinner, StickView, SubView, ViewData, ViewSetup,
     },
     App,
 };
@@ -16,7 +16,7 @@ pub struct TestGameView {
     br: SubView<Container>,
 
     drawing: SubView<DrawingView>,
-    stick:   SubView<AnalogStickView>,
+    stick:   SubView<StickView>,
 
     image: SubView<ImageView>,
 

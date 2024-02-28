@@ -53,15 +53,25 @@ impl WGPUDrawer {
 
     pub fn draw_buffer<'a>(
         &'a self,
+        device: &Device,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         polygon_mode: PolygonMode,
         buffer: &'a Buffer,
         bind_group: &'a BindGroup,
         vertex_range: Range<u32>,
+        z_position: f32,
     ) {
-        self.path_state
-            .draw_buffer(render_pass, rect, polygon_mode, buffer, bind_group, vertex_range)
+        self.path_state.draw_buffer(
+            device,
+            render_pass,
+            rect,
+            polygon_mode,
+            buffer,
+            bind_group,
+            vertex_range,
+            z_position,
+        )
     }
 
     pub fn draw_image<'a>(

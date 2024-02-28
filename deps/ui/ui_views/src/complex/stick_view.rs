@@ -20,14 +20,14 @@ const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 const PRECISION: u16 = 50;
 
 #[view]
-pub struct AnalogStickView {
+pub struct StickView {
     background:      SubView<DrawingView>,
     direction_stick: SubView<DrawingView>,
     pub on_change:   Event<Point>,
     pub flaccid:     bool,
 }
 
-impl AnalogStickView {
+impl StickView {
     fn on_touch_moved(&mut self, touch: Point) {
         let max_length = self.frame().size.height / 2.0;
         let center = self.frame().size.center();
@@ -55,7 +55,7 @@ impl AnalogStickView {
     }
 }
 
-impl ViewSetup for AnalogStickView {
+impl ViewSetup for StickView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.touch.all.val(move |touch| {

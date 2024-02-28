@@ -6,11 +6,12 @@ use wgpu::{
     Device, PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
-use crate::utils::make_pipeline;
+use crate::{render::uniform::Uniform, utils::make_pipeline};
 
 #[derive(Debug)]
 pub struct PathState {
-    pub(crate) bind_group_layout: BindGroupLayout,
+    z_layout:                     BindGroupLayout,
+    pub(crate) color_size_layout: BindGroupLayout,
     fill_pipeline:                RenderPipeline,
     line_pipeline:                RenderPipeline,
 }
@@ -19,7 +20,21 @@ impl PathState {
     pub fn new(device: &Device, texture_format: TextureFormat) -> Self {
         let shader = device.create_shader_module(include_wgsl!("shaders/path.wgsl"));
 
-        let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        let z_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label:   Some("path_bind_group_layout"),
+            entries: &[BindGroupLayoutEntry {
+                binding:    0,
+                visibility: ShaderStages::VERTEX,
+                ty:         BindingType::Buffer {
+                    ty:                 BufferBindingType::Uniform,
+                    has_dynamic_offset: false,
+                    min_binding_size:   None,
+                },
+                count:      None,
+            }],
+        });
+
+        let color_size_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label:   Some("path_bind_group_layout"),
             entries: &[
                 BindGroupLayoutEntry {
@@ -47,7 +62,7 @@ impl PathState {
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Path Pipeline Layout"),
-            bind_group_layouts:   &[&bind_group_layout],
+            bind_group_layouts:   &[&z_layout, &color_size_layout],
             push_constant_ranges: &[],
         });
 
@@ -70,7 +85,8 @@ impl PathState {
         );
 
         Self {
-            bind_group_layout,
+            z_layout,
+            color_size_layout,
             fill_pipeline,
             line_pipeline,
         }
@@ -86,17 +102,20 @@ impl PathState {
 
     pub fn draw_buffer<'a>(
         &'a self,
+        device: &Device,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         polygon_mode: PolygonMode,
         buffer: &'a Buffer,
         bind_group: &'a BindGroup,
         vertex_range: Range<u32>,
+        z_position: f32,
     ) {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(self.pipeline(polygon_mode));
 
-        render_pass.set_bind_group(0, bind_group, &[]);
+        render_pass.set_bind_group(0, Uniform::z(device, &self.z_layout, z_position), &[]);
+        render_pass.set_bind_group(1, bind_group, &[]);
         render_pass.set_vertex_buffer(0, buffer.slice(..));
         render_pass.draw(vertex_range, 0..1);
     }

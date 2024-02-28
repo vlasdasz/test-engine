@@ -1,6 +1,5 @@
 mod alert;
 mod alert_err;
-mod analog_stick_view;
 mod back_button;
 mod collection_view;
 mod dpad_view;
@@ -15,10 +14,10 @@ mod labeled_text_field;
 mod labeled_view;
 mod question;
 mod spinner;
+mod stick_view;
 
 pub use alert::*;
 pub use alert_err::*;
-pub use analog_stick_view::AnalogStickView;
 pub use back_button::*;
 pub use collection_view::*;
 pub use dpad_view::DPadView;
@@ -33,3 +32,4 @@ pub use labeled_text_field::LabeledTextField;
 pub use labeled_view::LabeledView;
 pub use question::Question;
 pub use spinner::*;
+pub use stick_view::StickView;

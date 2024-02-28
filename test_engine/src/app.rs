@@ -195,7 +195,7 @@ impl App {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
     ) {
-        const DRAW_DEBUG_FRAMES: bool = false;
+        const DRAW_DEBUG_FRAMES: bool = true;
 
         if view.is_hidden() {
             return;
@@ -267,14 +267,16 @@ impl App {
 
             sections.push(section);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
-            for path in drawing_view.paths() {
+            for path in drawing_view.paths().iter().rev() {
                 drawer.draw_buffer(
+                    &drawer.device,
                     pass,
                     &clamped_frame,
                     path.mode,
                     path.buffer(),
                     path.bind_group(),
                     path.vertex_range(),
+                    drawing_view.z_position() + UIManager::path_z_offset(),
                 );
             }
         }

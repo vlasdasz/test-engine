@@ -15,7 +15,7 @@ use crate::views::{
     int_view::test_int_view, keymap::test_keymap, label::test_label, layout::test_layout,
     modal_test::test_modal, multiline_label::test_multiline, out_bounds_test::test_out_bounds,
     present_test::test_present, render_image_path::test_render_image_path, selection::test_selection,
-    slider::test_slider, switch::test_switch, text_field::test_text_field,
+    slider::test_slider, stick::test_stick, switch::test_switch, text_field::test_text_field,
     text_occlusion::test_text_occlusion, touch_stack::test_touch_stack, view_order::test_view_order,
 };
 
@@ -39,6 +39,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_stick().await?;
     test_out_bounds().await?;
     test_modal().await?;
     test_touch_stack().await?;

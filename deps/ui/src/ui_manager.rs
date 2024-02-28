@@ -52,8 +52,12 @@ impl UIManager {
         Self::text_z_offset() * 2.0
     }
 
-    pub const fn outline_z_offset() -> f32 {
+    pub const fn path_z_offset() -> f32 {
         Self::text_z_offset() * 3.0
+    }
+
+    pub const fn outline_z_offset() -> f32 {
+        Self::text_z_offset() * 4.0
     }
 
     pub fn unselect_view(&self) {
