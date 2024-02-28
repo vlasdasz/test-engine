@@ -2,10 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{
-        view, Anchor, ImageView, IntView, Label, StickView, SubView, ViewData, ViewFrame, ViewSetup,
-        ViewSubviews,
-    },
+    ui::{view, Anchor, ImageView, IntView, Label, SubView, ViewData, ViewFrame, ViewSetup, ViewSubviews},
     App,
 };
 
@@ -25,8 +22,6 @@ impl ViewSetup for OutBoundsView {
         let mut image = self.test.add_view::<ImageView>();
         image.set_image("cat.png");
         image.place().left_half();
-
-        self.test.add_view::<StickView>();
 
         self.x.set_step(50);
         self.x

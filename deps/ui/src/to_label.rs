@@ -1,4 +1,5 @@
 use chrono::NaiveDateTime;
+use gm::flat::Point;
 use rust_decimal::Decimal;
 
 pub trait ToLabel {
@@ -50,6 +51,12 @@ impl ToLabel for f32 {
 impl ToLabel for Decimal {
     fn to_label(&self) -> String {
         format!("{self:.2}")
+    }
+}
+
+impl ToLabel for Point {
+    fn to_label(&self) -> String {
+        format!("x: {} y: {}", self.x.to_label(), self.y.to_label())
     }
 }
 

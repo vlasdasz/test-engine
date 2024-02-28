@@ -14,7 +14,7 @@ struct StickTestView {
 
 impl ViewSetup for StickTestView {
     fn setup(self: Weak<Self>) {
-        self.stick.place().size(200, 200).center();
+        self.stick.place().size(200, 200).tl(100);
     }
 }
 
