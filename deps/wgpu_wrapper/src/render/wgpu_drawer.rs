@@ -70,8 +70,10 @@ impl WGPUDrawer {
         render_pass: &mut RenderPass<'a>,
         image: &'static Image,
         rect: &Rect,
+        vertices: Option<&'a Buffer>,
         z_position: f32,
     ) {
-        self.colored_image_state.draw(device, image, rect, render_pass, z_position);
+        self.colored_image_state
+            .draw(device, image, rect, render_pass, vertices, z_position);
     }
 }

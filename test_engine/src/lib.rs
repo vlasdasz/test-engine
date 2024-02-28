@@ -19,7 +19,7 @@ pub mod ui {
     pub use ui_proc::view;
     pub use ui_views::*;
     pub use views::color_meter::ColorMeter;
-    pub use wgpu_wrapper::{image::Image, wgpu::PolygonMode, Screenshot};
+    pub use wgpu_wrapper::{image::Image, PolygonMode, Screenshot};
 
     use crate::views;
 }
@@ -50,9 +50,9 @@ pub mod gm {
 
 pub use app::App;
 pub use audio;
-pub use bytemuck::cast_slice;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};
 pub use manage::data_manager::DataManager;
 pub use paths::*;
 pub use rtools::{file::File, platform::Platform, sleep, Apply, Random, RandomContainer, Stored};
 pub use vents::{DelayedEvent, Event, OnceEvent};
+pub use wgpu_wrapper::cast_slice;

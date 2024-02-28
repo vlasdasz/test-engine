@@ -5,7 +5,7 @@ use gm::{
 use refs::Weak;
 use ui::{view, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
 use vents::Event;
-use wgpu_wrapper::wgpu::PolygonMode;
+use wgpu_wrapper::PolygonMode;
 
 mod test_engine {
     pub(crate) use refs;

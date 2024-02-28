@@ -5,13 +5,14 @@ use gm::{
 };
 use refs::Weak;
 use wgpu_wrapper::PathData;
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
 }
 
 use ui::{view, ViewData, ViewFrame, ViewSetup};
-use wgpu_wrapper::wgpu::PolygonMode;
+use wgpu_wrapper::PolygonMode;
 
 #[view]
 pub struct DrawingView {

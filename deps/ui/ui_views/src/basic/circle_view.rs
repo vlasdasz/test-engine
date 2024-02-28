@@ -2,9 +2,10 @@ use gm::{flat::PointsPath, Color};
 use refs::Weak;
 use rtools::IntoF32;
 use ui::{view, SubView, ViewData, ViewFrame, ViewSetup};
-use wgpu_wrapper::wgpu::PolygonMode;
+use wgpu_wrapper::PolygonMode;
 
 use crate::DrawingView;
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;

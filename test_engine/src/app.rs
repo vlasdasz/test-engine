@@ -14,7 +14,7 @@ use gm::{
 };
 use log::{trace, warn, Level, LevelFilter};
 use manage::data_manager::DataManager;
-use refs::{Own, Rglica, Weak};
+use refs::{weak_from_ref, Own, Rglica, Weak};
 use tokio::spawn;
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -226,6 +226,8 @@ impl App {
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image().is_ok() {
+                weak_from_ref(image_view).check_cropped(&drawer.device, &clamped_frame);
+
                 let image = image_view.image();
                 // let size: Size = image.size.into();
                 // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
@@ -236,6 +238,7 @@ impl App {
                     pass,
                     image.get_static(),
                     &clamped_frame,
+                    image_view.cropped(),
                     view.z_position() - UIManager::image_z_offset(),
                 );
             } else {

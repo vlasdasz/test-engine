@@ -142,6 +142,14 @@ async fn record_touches_internal(skip_moved: bool) {
 }
 
 #[allow(dead_code)]
+pub async fn record_ui_test() -> Result<()> {
+    loop {
+        record_touches().await;
+        record_touches_with_colors().await?;
+    }
+}
+
+#[allow(dead_code)]
 pub async fn record_touches_with_colors() -> Result<()> {
     let screenshot = App::take_screenshot().await?;
 
