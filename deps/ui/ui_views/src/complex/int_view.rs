@@ -1,7 +1,8 @@
+use gm::IntoF32;
 use refs::Weak;
-use rtools::IntoF32;
 use ui::{view, SubView, ViewData, ViewSetup};
 use vents::Event;
+
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;

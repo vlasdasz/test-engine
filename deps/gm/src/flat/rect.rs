@@ -1,12 +1,12 @@
 use std::ops::Mul;
 
 use bytemuck::{Pod, Zeroable};
-use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
 use crate::{
     axis::Axis,
     flat::{Point, Size},
+    num::into_f32::IntoF32,
 };
 
 #[repr(C)]

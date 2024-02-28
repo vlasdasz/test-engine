@@ -36,3 +36,11 @@ impl LossyConvert<u8> for f32 {
         self as u8
     }
 }
+
+impl LossyConvert<f32> for f64 {
+    fn lossy_convert(self) -> f32 {
+        assert!(self <= f64::from(f32::MAX), "Lossy convert overflow");
+        assert!(self > f64::from(f32::MIN), "Lossy convert underflow");
+        self as f32
+    }
+}

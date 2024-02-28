@@ -1,6 +1,6 @@
 use std::{fmt::Display, str::FromStr};
 
-use gm::{flat::Point, num::lossy_convert::LossyConvert};
+use gm::{flat::Point, LossyConvert};
 use itertools::Itertools;
 use wgpu_wrapper::MouseButton;
 

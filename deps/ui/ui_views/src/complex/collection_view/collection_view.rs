@@ -1,4 +1,4 @@
-use gm::{flat::Size, num::lossy_convert::LossyConvert};
+use gm::{flat::Size, LossyConvert};
 use refs::{weak_from_ref, Weak};
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
 

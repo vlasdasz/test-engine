@@ -60,7 +60,7 @@ impl ViewSetup for ViewWithCat {
 
         self.animated.set_frame((100, 100));
 
-        self.animation = Animation::new(0, 200, 10);
+        self.animation = Animation::new(0.0, 200.0, 10.0);
     }
 }
 

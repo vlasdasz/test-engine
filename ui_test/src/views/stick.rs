@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{view, StickView, SubView, ViewData, ViewSetup},
+    ui::{view, PointView, StickView, SubView, ViewData, ViewFrame, ViewSetup},
     App,
 };
 
@@ -10,11 +10,16 @@ use crate::view_tests::record_ui_test;
 #[view]
 struct StickTestView {
     stick: SubView<StickView>,
+    pos:   SubView<PointView>,
 }
 
 impl ViewSetup for StickTestView {
-    fn setup(self: Weak<Self>) {
-        self.stick.place().size(200, 200).tl(100);
+    fn setup(mut self: Weak<Self>) {
+        self.stick.set_size((200, 200));
+        self.pos.place().size(200, 200).bl(0);
+        self.pos.changed.val(move |pos| {
+            self.stick.set_origin(pos);
+        });
     }
 }
 

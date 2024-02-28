@@ -1,7 +1,9 @@
 #![allow(clippy::float_cmp)]
 
-use gm::flat::{Point, Rect, Size};
-use rtools::IntoF32;
+use gm::{
+    flat::{Point, Rect, Size},
+    IntoF32,
+};
 
 use crate::{view::view_subviews::ViewSubviews, View};
 

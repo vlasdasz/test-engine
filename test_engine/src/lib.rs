@@ -44,13 +44,10 @@ pub mod input {
     pub use winit::event::KeyEvent;
 }
 
-pub mod gm {
-    pub use gm::num::{checked_convert, lossy_convert};
-}
-
 pub use app::App;
 pub use audio;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};
+pub use gm;
 pub use manage::data_manager::DataManager;
 pub use paths::*;
 pub use rtools::{file::File, platform::Platform, sleep, Apply, Random, RandomContainer, Stored};

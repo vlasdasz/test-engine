@@ -11,6 +11,7 @@ mod test_engine {
 
     pub(crate) use crate as ui;
 }
+
 use crate::{
     view::{ViewAnimation, ViewFrame, ViewSubviews},
     TouchStack, UIAnimation, UIManager, View, ViewData, ViewSetup,
@@ -57,7 +58,7 @@ impl NavigationView {
             view.set_navigation_view(self);
             view.set_frame(self.frame().with_zero_origin());
 
-            let anim = UIAnimation::new(Animation::new(self.width(), 0, 0.5), |view, x| {
+            let anim = UIAnimation::new(Animation::new(self.width(), 0.0, 0.5), |view, x| {
                 view.set_x(x);
             });
 
@@ -79,7 +80,7 @@ impl NavigationView {
         below.set_hidden(false);
         let mut to_pop = self.subviews.last().unwrap().weak_view();
 
-        let anim = UIAnimation::new(Animation::new(0, self.width(), 0.5), |view, x| {
+        let anim = UIAnimation::new(Animation::new(0.0, self.width(), 0.5), |view, x| {
             view.set_x(x);
         });
 

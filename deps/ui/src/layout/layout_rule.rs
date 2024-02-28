@@ -1,6 +1,5 @@
 use derivative::Derivative;
-use gm::flat::Size;
-use rtools::IntoF32;
+use gm::{flat::Size, IntoF32};
 
 use crate::{
     layout::{Anchor, Tiling},

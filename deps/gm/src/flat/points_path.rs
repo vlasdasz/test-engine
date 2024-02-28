@@ -1,8 +1,9 @@
 use std::{f32::consts::PI, iter::once};
 
-use rtools::IntoF32;
-
-use crate::flat::{Point, Rect};
+use crate::{
+    flat::{Point, Rect},
+    num::into_f32::IntoF32,
+};
 
 pub type Points = Vec<Point>;
 

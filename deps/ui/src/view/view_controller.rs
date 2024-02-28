@@ -2,6 +2,7 @@ use refs::Own;
 use rtools::Animation;
 
 use crate::{NavigationView, UIAnimation, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
+
 pub trait ViewController {
     fn navigation(&self) -> Weak<NavigationView>;
     fn present(self: Weak<Self>, view: Own<dyn View>);
@@ -32,7 +33,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
             view.set_color(Color::WHITE);
             let mut view = UIManager::root_view().add_subview(view);
             view.set_frame(self.frame().with_zero_origin());
-            let anim = UIAnimation::new(Animation::new(self.height(), 0, 0.4), |view, y| {
+            let anim = UIAnimation::new(Animation::new(self.height(), 0.0, 0.4), |view, y| {
                 view.set_y(y);
             });
 

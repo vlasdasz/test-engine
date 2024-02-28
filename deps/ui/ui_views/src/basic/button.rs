@@ -1,6 +1,5 @@
-use gm::Color;
+use gm::{Color, IntoF32};
 use refs::Weak;
-use rtools::IntoF32;
 use ui::{view, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
 use vents::Event;
 use wgpu_wrapper::image::ToImage;

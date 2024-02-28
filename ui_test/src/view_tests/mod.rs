@@ -9,7 +9,7 @@ use log::{error, warn};
 use serde::de::DeserializeOwned;
 use test_engine::{
     from_main,
-    gm::lossy_convert::LossyConvert,
+    gm::LossyConvert,
     on_main,
     refs::ToOwn,
     sleep,
@@ -205,7 +205,7 @@ pub fn assert_eq<T: PartialEq<U> + Debug, U: Debug>(a: T, b: U) -> Result<()> {
     let message = format!("Assertion failed: {a:?} != {b:?}");
     error!("{message}");
 
-    sleep(20);
+    sleep(20.0);
 
     bail!(message)
 }

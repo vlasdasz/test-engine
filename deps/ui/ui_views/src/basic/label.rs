@@ -1,6 +1,5 @@
-use gm::Color;
+use gm::{Color, IntoF32};
 use refs::Weak;
-use rtools::IntoF32;
 use ui::{view, ToLabel, View, ViewData, ViewSetup, ViewSubviews};
 
 mod test_engine {

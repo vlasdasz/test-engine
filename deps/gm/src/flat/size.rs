@@ -6,13 +6,13 @@ use std::{
 };
 
 use bytemuck::{Pod, Zeroable};
-use rtools::{IntoF32, Random};
+use rtools::Random;
 use serde::{Deserialize, Serialize};
 
 use crate::{
     axis::Axis,
     flat::{Point, Rect},
-    num::lossy_convert::LossyConvert,
+    num::{into_f32::IntoF32, lossy_convert::LossyConvert},
 };
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -22,6 +22,7 @@ pub struct Size<T = f32> {
 }
 
 unsafe impl<T: Zeroable> Zeroable for Size<T> {}
+
 unsafe impl<T: Pod> Pod for Size<T> {}
 
 impl<T: Copy> Size<T> {

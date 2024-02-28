@@ -4,10 +4,9 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{axis::Axis, flat::Size};
+use gm::{axis::Axis, flat::Size, IntoF32};
 use itertools::Itertools;
 use refs::{Own, Rglica, ToRglica};
-use rtools::IntoF32;
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},

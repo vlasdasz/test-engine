@@ -1,6 +1,5 @@
-use gm::Color;
+use gm::{Color, IntoF32};
 use refs::Weak;
-use rtools::IntoF32;
 use vents::Event;
 
 use crate::{layout::Placer, NavigationView, UIAnimation, View};

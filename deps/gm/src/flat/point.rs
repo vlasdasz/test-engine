@@ -4,10 +4,12 @@ use std::{
 };
 
 use bytemuck::{Pod, Zeroable};
-use rtools::IntoF32;
 use serde::{Deserialize, Serialize};
 
-use crate::{flat::Size, num::lossy_convert::LossyConvert};
+use crate::{
+    flat::Size,
+    num::{into_f32::IntoF32, lossy_convert::LossyConvert},
+};
 
 #[derive(Copy, Debug, Clone)]
 pub enum Direction {
@@ -31,6 +33,7 @@ pub struct Point<T = f32> {
 }
 
 unsafe impl<T: Zeroable> Zeroable for Point<T> {}
+
 unsafe impl<T: Pod> Pod for Point<T> {}
 
 impl<T> Point<T> {

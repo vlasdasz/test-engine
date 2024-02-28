@@ -12,5 +12,6 @@ name = "dispatch"
 log = { workspace = true }
 tokio = { workspace = true }
 
+gm = { workspace = true }
 refs = { workspace = true }
 rtools = { workspace = true }

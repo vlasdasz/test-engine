@@ -1,8 +1,8 @@
 use std::ops::Range;
 
 use gm::{
+    checked_usize_to_u32,
     flat::{Point, Rect},
-    num::checked_convert::checked_usize_to_u32,
     volume::UIVertex,
 };
 use wgpu::{

@@ -1,4 +1,5 @@
 pub mod checked_convert;
+pub mod into_f32;
 pub mod lossy_convert;
 
 pub trait Abs {

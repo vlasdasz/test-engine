@@ -1,6 +1,5 @@
-use gm::{flat::PointsPath, Color};
+use gm::{flat::PointsPath, Color, IntoF32};
 use refs::Weak;
-use rtools::IntoF32;
 use ui::{view, SubView, ViewData, ViewFrame, ViewSetup};
 use wgpu_wrapper::PolygonMode;
 

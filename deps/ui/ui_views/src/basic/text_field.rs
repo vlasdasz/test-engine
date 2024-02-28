@@ -1,6 +1,5 @@
-use gm::Color;
+use gm::{Color, IntoF32};
 use refs::{weak_from_ref, Weak};
-use rtools::IntoF32;
 use ui::{
     view, AcceptChar, SubView, TextFieldConstraint, ToLabel, UIEvents, ViewCallbacks, ViewData, ViewSetup,
     ViewTouch,

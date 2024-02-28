@@ -195,7 +195,7 @@ impl App {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
     ) {
-        const DRAW_DEBUG_FRAMES: bool = false;
+        const DRAW_DEBUG_FRAMES: bool = true;
 
         if view.is_hidden() {
             return;

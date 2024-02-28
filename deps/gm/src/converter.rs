@@ -1,5 +1,6 @@
-use rtools::IntoF32;
 use smart_default::SmartDefault;
+
+use crate::num::into_f32::IntoF32;
 
 #[derive(Debug, SmartDefault)]
 pub struct Converter {
