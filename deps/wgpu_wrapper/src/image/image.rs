@@ -6,11 +6,11 @@ use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader
 use refs::Weak;
 use rtools::file::File;
 use wgpu::{
-    BindGroup, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType,
-    SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
+    BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
+    BindingResource, BindingType, SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-use crate::{image::Texture, render::state::State, WGPUApp};
+use crate::{image::Texture, WGPUApp};
 
 #[derive(Debug)]
 pub struct Image {
@@ -20,8 +20,8 @@ pub struct Image {
 }
 
 impl Image {
-    fn load_to_wgpu(state: &State, name: &str, data: &[u8]) -> Result<Self> {
-        let texture = Texture::from_file_bytes(&state.drawer.queue, data, name)?;
+    fn load_to_wgpu(name: &str, data: &[u8]) -> Result<Self> {
+        let texture = Texture::from_file_bytes(data, name)?;
         Self::from_texture(texture)
     }
 
@@ -32,13 +32,13 @@ impl Image {
             label:   Some("diffuse_bind_group"),
             layout:  &Self::bind_group_layout(),
             entries: &[
-                wgpu::BindGroupEntry {
+                BindGroupEntry {
                     binding:  0,
-                    resource: wgpu::BindingResource::TextureView(&texture.view),
+                    resource: BindingResource::TextureView(&texture.view),
                 },
-                wgpu::BindGroupEntry {
+                BindGroupEntry {
                     binding:  1,
-                    resource: wgpu::BindingResource::Sampler(&texture.sampler),
+                    resource: BindingResource::Sampler(&texture.sampler),
                 },
             ],
         });
@@ -51,22 +51,20 @@ impl Image {
     }
 
     pub fn from_raw_data(
-        state: &State,
         data: &[u8],
         name: impl ToString,
         size: Size<u32>,
         channels: u8,
     ) -> Result<Weak<Image>> {
         let name = name.to_string();
-        let texture = Texture::from_raw_data(&state.drawer.queue, data, size, channels, &name);
+        let texture = Texture::from_raw_data(data, size, channels, &name);
         let image = Self::from_texture(texture)?;
         Ok(Image::add_with_name(&name, || image))
     }
 
     pub fn from_file_data(data: &[u8], name: String) -> Weak<Image> {
         Image::add_with_name(&name.clone(), || {
-            Self::load_to_wgpu(&WGPUApp::current().state, &name, data)
-                .expect("Failed to load image {name} to wgpu")
+            Self::load_to_wgpu(&name, data).expect("Failed to load image {name} to wgpu")
         })
     }
 
@@ -85,7 +83,7 @@ impl ResourceLoader for Image {
     fn load_data(data: &[u8], name: impl ToString) -> Self {
         let name = name.to_string();
 
-        Image::load_to_wgpu(&WGPUApp::current().state, &name.to_string(), data)
+        Image::load_to_wgpu(&name.to_string(), data)
             .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
     }
 }

@@ -60,7 +60,6 @@ impl ImageState {
 
         let render_pipeline = make_pipeline::<UIVertex>(
             "Colored Image Render Pipeline",
-            device,
             &pipeline_layout,
             &shader,
             TextureFormat::Bgra8UnormSrgb,

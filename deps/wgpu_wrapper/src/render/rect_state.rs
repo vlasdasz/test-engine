@@ -54,7 +54,6 @@ impl RectState {
 
         let fill_pipeline = make_pipeline::<Point>(
             "Rect Fill Render Pipeline",
-            device,
             &pipeline_layout,
             &shader,
             texture_format,
@@ -63,7 +62,6 @@ impl RectState {
 
         let line_pipeline = make_pipeline::<Point>(
             "Rect Line Render Pipeline",
-            device,
             &pipeline_layout,
             &shader,
             texture_format,

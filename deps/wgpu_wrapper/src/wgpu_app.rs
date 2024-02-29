@@ -9,7 +9,7 @@ use gm::flat::Size;
 use log::{error, trace};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
-use wgpu::{BindGroupLayout, Device};
+use wgpu::{BindGroupLayout, Device, Queue};
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
@@ -20,7 +20,7 @@ use winit::{
 
 use crate::{
     app::App,
-    render::state::{State, DEVICE},
+    render::state::{State, DEVICE, QUEUE},
     Screenshot,
 };
 
@@ -39,6 +39,10 @@ impl WGPUApp {
 
     pub fn device() -> &'static Device {
         DEVICE.get_mut().as_mut().expect("Device has not been initialized yet.")
+    }
+
+    pub fn queue() -> &'static Queue {
+        QUEUE.get_mut().as_mut().expect("Queue has not been initialized yet.")
     }
 
     pub fn close() {

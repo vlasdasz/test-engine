@@ -2,7 +2,7 @@ use anyhow::Result;
 use gm::flat::Size;
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
-    AddressMode, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Queue, Sampler, SamplerDescriptor,
+    AddressMode, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler, SamplerDescriptor,
     TextureAspect, TextureView, TextureViewDescriptor,
 };
 
@@ -20,12 +20,12 @@ pub struct Texture {
 impl Texture {
     pub const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
 
-    pub fn from_file_bytes(queue: &Queue, bytes: &[u8], label: &str) -> Result<Self> {
+    pub fn from_file_bytes(bytes: &[u8], label: &str) -> Result<Self> {
         let img = image::load_from_memory(bytes)?;
-        Ok(Self::from_dynamic_image(queue, &img, label))
+        Ok(Self::from_dynamic_image(&img, label))
     }
 
-    pub fn from_raw_data(queue: &Queue, data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
+    pub fn from_raw_data(data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
         let extend_size = wgpu::Extent3d {
             width:                 size.width,
             height:                size.height,
@@ -51,7 +51,7 @@ impl Texture {
             view_formats: &[],
         });
 
-        queue.write_texture(
+        WGPUApp::queue().write_texture(
             ImageCopyTexture {
                 aspect:    TextureAspect::All,
                 texture:   &texture,
@@ -89,11 +89,10 @@ impl Texture {
         }
     }
 
-    fn from_dynamic_image(queue: &Queue, img: &DynamicImage, label: &str) -> Self {
+    fn from_dynamic_image(img: &DynamicImage, label: &str) -> Self {
         let dimensions = img.dimensions();
 
         Self::from_raw_data(
-            queue,
             &img.to_rgba8(),
             (dimensions.0, dimensions.1).into(),
             img.color().channel_count(),

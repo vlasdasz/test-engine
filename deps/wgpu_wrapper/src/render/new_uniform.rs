@@ -5,10 +5,10 @@ use gm::Color;
 use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, BufferBinding, Device,
+    BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, BufferBinding,
 };
 
-use crate::BufferUsages;
+use crate::{BufferUsages, WGPUApp};
 
 static _COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 
@@ -24,7 +24,9 @@ impl _Uniform<Color> for _ColorUniform {
     }
 }
 
-fn _bind_group_with_color(layout: &BindGroupLayout, device: &Device, color: &Color) -> BindGroup {
+fn _bind_group_with_color(layout: &BindGroupLayout, color: &Color) -> BindGroup {
+    let device = WGPUApp::device();
+
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
         label:    Some("Color Uniform Buffer"),
         contents: cast_slice(&color.as_slice()),

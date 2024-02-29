@@ -5,7 +5,7 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use wgpu::{BindGroup, Buffer, PolygonMode, Queue, RenderPass, TextureFormat};
+use wgpu::{BindGroup, Buffer, PolygonMode, RenderPass, TextureFormat};
 
 use crate::{
     image::Image,
@@ -15,20 +15,18 @@ use crate::{
 #[derive(Debug)]
 pub struct WGPUDrawer {
     pub window_size:       Size,
-    pub queue:             Queue,
     rect_state:            RectState,
     colored_image_state:   ImageState,
     pub(crate) path_state: PathState,
 }
 
 impl WGPUDrawer {
-    pub fn new(queue: Queue, texture_format: TextureFormat) -> Result<Self> {
+    pub fn new(texture_format: TextureFormat) -> Result<Self> {
         let rect_state = RectState::new(texture_format);
         let path_state = PathState::new(texture_format);
         let colored_image_state = ImageState::new();
         Ok(Self {
             window_size: Default::default(),
-            queue,
             rect_state,
             path_state,
             colored_image_state,

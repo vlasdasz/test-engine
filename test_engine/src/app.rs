@@ -384,7 +384,7 @@ impl wgpu_wrapper::App for App {
 
         Font::helvetice()
             .brush
-            .queue(WGPUApp::device(), &drawer.queue, sections)
+            .queue(WGPUApp::device(), WGPUApp::queue(), sections)
             .unwrap()
     }
 

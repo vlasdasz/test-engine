@@ -70,7 +70,6 @@ impl PathState {
 
         let fill_pipeline = make_pipeline::<Point>(
             "Path Fill Render Pipeline",
-            device,
             &pipeline_layout,
             &shader,
             texture_format,
@@ -79,7 +78,6 @@ impl PathState {
 
         let line_pipeline = make_pipeline::<Point>(
             "Path Line Render Pipeline",
-            device,
             &pipeline_layout,
             &shader,
             texture_format,

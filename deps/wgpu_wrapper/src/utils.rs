@@ -1,30 +1,29 @@
 use wgpu::{
-    BlendState, ColorTargetState, ColorWrites, DepthStencilState, Device, Face, FragmentState, FrontFace,
+    BlendState, ColorTargetState, ColorWrites, DepthStencilState, Face, FragmentState, FrontFace,
     MultisampleState, PipelineLayout, PolygonMode, PrimitiveState, PrimitiveTopology,
     RenderPipelineDescriptor, ShaderModule, TextureFormat, VertexState,
 };
 
-use crate::{image::Texture, render::vertex_layout::VertexLayout};
+use crate::{image::Texture, render::vertex_layout::VertexLayout, WGPUApp};
 
 pub fn depth_stencil_state() -> DepthStencilState {
     DepthStencilState {
         format:              Texture::DEPTH_FORMAT,
         depth_write_enabled: true,
-        depth_compare:       wgpu::CompareFunction::Less, // 1.
-        stencil:             wgpu::StencilState::default(), // 2.
+        depth_compare:       wgpu::CompareFunction::Less,
+        stencil:             wgpu::StencilState::default(),
         bias:                wgpu::DepthBiasState::default(),
     }
 }
 
 pub fn make_pipeline<Vertex: VertexLayout>(
     label: &str,
-    device: &Device,
     layout: &PipelineLayout,
     shader: &ShaderModule,
     texture_format: TextureFormat,
     polygon_mode: PolygonMode,
 ) -> wgpu::RenderPipeline {
-    device.create_render_pipeline(&RenderPipelineDescriptor {
+    WGPUApp::device().create_render_pipeline(&RenderPipelineDescriptor {
         label:         label.into(),
         layout:        layout.into(),
         vertex:        VertexState {

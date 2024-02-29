@@ -11,7 +11,7 @@ use tokio::{
     sync::oneshot::{channel, Receiver, Sender},
 };
 use wgpu::{
-    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Device, Extent3d, PresentMode,
+    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Device, Extent3d, PresentMode, Queue,
     TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT,
 };
 use winit::{dpi::PhysicalSize, window::Window};
@@ -24,6 +24,7 @@ use crate::{
 type ReadDisplayRequest = Sender<Screenshot>;
 
 pub(crate) static DEVICE: MainLock<Option<Device>> = MainLock::new();
+pub(crate) static QUEUE: MainLock<Option<Queue>> = MainLock::new();
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -95,11 +96,12 @@ impl State {
         surface.configure(&device, &config);
 
         *DEVICE.get_mut() = device.into();
+        *QUEUE.get_mut() = queue.into();
 
         let depth_texture =
             Texture::create_depth_texture((config.width, config.height).into(), "depth_texture");
 
-        let drawer = WGPUDrawer::new(queue, config.format)?;
+        let drawer = WGPUDrawer::new(config.format)?;
 
         Ok(Self {
             surface,
@@ -123,12 +125,12 @@ impl State {
             self.config.width = new_size.width;
             self.config.height = new_size.height;
             self.surface.configure(WGPUApp::device(), &self.config);
+
+            let queue = WGPUApp::queue();
+
             for font in self.fonts.values() {
-                font.brush.resize_view(
-                    self.config.width as f32,
-                    self.config.height as f32,
-                    &self.drawer.queue,
-                );
+                font.brush
+                    .resize_view(self.config.width as f32, self.config.height as f32, queue);
             }
 
             let inner_size = self.window.inner_size();
@@ -219,7 +221,7 @@ impl State {
             None
         };
 
-        self.drawer.queue.submit(std::iter::once(encoder.finish()));
+        WGPUApp::queue().submit(std::iter::once(encoder.finish()));
         surface_texture.present();
 
         if let Some(buffer_sender) = self.read_display_request.take() {
