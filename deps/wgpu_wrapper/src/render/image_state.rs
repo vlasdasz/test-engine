@@ -7,10 +7,10 @@ use gm::{
 };
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroupLayout, Buffer, BufferUsages, Device, PolygonMode, RenderPipeline, TextureFormat,
+    BindGroupLayout, Buffer, BufferUsages, PolygonMode, RenderPipeline, TextureFormat,
 };
 
-use crate::{image::Image, render::uniform::Uniform, utils::make_pipeline};
+use crate::{image::Image, render::uniform::OldUniform, utils::make_pipeline, WGPUApp};
 
 pub const fn image_vertices_with_shrink(x: f32, y: f32, width: f32, height: f32) -> [UIVertex; 4] {
     [
@@ -45,11 +45,12 @@ pub struct ImageState {
 }
 
 impl ImageState {
-    pub fn new(device: &Device) -> Self {
+    pub fn new() -> Self {
+        let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
-        let z_layout = Uniform::z_layout(device);
-        let image_layout = Image::bind_group_layout(device);
+        let z_layout = OldUniform::z_layout();
+        let image_layout = Image::bind_group_layout();
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                "Colored Image Pipeline Layout".into(),
@@ -81,7 +82,6 @@ impl ImageState {
 
     pub fn draw<'a>(
         &'a self,
-        device: &Device,
         image: &'static Image,
         rect: &Rect,
         render_pass: &mut wgpu::RenderPass<'a>,
@@ -91,7 +91,7 @@ impl ImageState {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(&self.render_pipeline);
 
-        render_pass.set_bind_group(0, Uniform::z(device, &self.z_layout, z_position), &[]);
+        render_pass.set_bind_group(0, OldUniform::z(&self.z_layout, z_position), &[]);
         render_pass.set_bind_group(1, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, vertices.unwrap_or(&self.vertex_buffer).slice(..));
         render_pass.draw(RANGE, 0..1);

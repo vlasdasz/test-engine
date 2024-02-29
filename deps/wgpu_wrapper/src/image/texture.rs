@@ -2,9 +2,11 @@ use anyhow::Result;
 use gm::flat::Size;
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
-    AddressMode, Device, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Queue, Sampler,
-    SamplerDescriptor, TextureAspect, TextureView, TextureViewDescriptor,
+    AddressMode, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Queue, Sampler, SamplerDescriptor,
+    TextureAspect, TextureView, TextureViewDescriptor,
 };
+
+use crate::WGPUApp;
 
 #[derive(Debug)]
 pub struct Texture {
@@ -18,19 +20,12 @@ pub struct Texture {
 impl Texture {
     pub const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
 
-    pub fn from_file_bytes(device: &Device, queue: &Queue, bytes: &[u8], label: &str) -> Result<Self> {
+    pub fn from_file_bytes(queue: &Queue, bytes: &[u8], label: &str) -> Result<Self> {
         let img = image::load_from_memory(bytes)?;
-        Ok(Self::from_dynamic_image(device, queue, &img, label))
+        Ok(Self::from_dynamic_image(queue, &img, label))
     }
 
-    pub fn from_raw_data(
-        device: &Device,
-        queue: &Queue,
-        data: &[u8],
-        size: Size<u32>,
-        channels: u8,
-        label: &str,
-    ) -> Self {
+    pub fn from_raw_data(queue: &Queue, data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
         let extend_size = wgpu::Extent3d {
             width:                 size.width,
             height:                size.height,
@@ -42,6 +37,8 @@ impl Texture {
             4 => wgpu::TextureFormat::Rgba8UnormSrgb,
             ch => panic!("Invalid number of channels: {ch}"),
         };
+
+        let device = WGPUApp::device();
 
         let texture = device.create_texture(&wgpu::TextureDescriptor {
             label: label.into(),
@@ -92,11 +89,10 @@ impl Texture {
         }
     }
 
-    fn from_dynamic_image(device: &Device, queue: &Queue, img: &DynamicImage, label: &str) -> Self {
+    fn from_dynamic_image(queue: &Queue, img: &DynamicImage, label: &str) -> Self {
         let dimensions = img.dimensions();
 
         Self::from_raw_data(
-            device,
             queue,
             &img.to_rgba8(),
             (dimensions.0, dimensions.1).into(),
@@ -105,7 +101,7 @@ impl Texture {
         )
     }
 
-    pub fn create_depth_texture(device: &wgpu::Device, size: Size<u32>, label: &str) -> Self {
+    pub fn create_depth_texture(size: Size<u32>, label: &str) -> Self {
         let extend = wgpu::Extent3d {
             // 2.
             width:                 size.width,
@@ -123,6 +119,9 @@ impl Texture {
                 | wgpu::TextureUsages::TEXTURE_BINDING,
             view_formats:    &[],
         };
+
+        let device = WGPUApp::device();
+
         let texture = device.create_texture(&desc);
 
         let view = texture.create_view(&wgpu::TextureViewDescriptor::default());

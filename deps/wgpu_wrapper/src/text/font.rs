@@ -13,7 +13,7 @@ impl Font {
         let state = &WGPUApp::current().state;
         let brush = BrushBuilder::using_font_bytes(data)?.with_depth_stencil(depth_stencil_state().into())
             /* .initial_cache_size((16_384, 16_384))) */ // use this to avoid resizing cache texture
-            .build(&state.drawer.device, state.config.width, state.config.height, state.config.format);
+            .build(WGPUApp::device(), state.config.width, state.config.height, state.config.format);
         Ok(Self { name, brush })
     }
 }

@@ -9,11 +9,11 @@ use gm::{
 use wgpu::{
     include_wgsl,
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroupLayout, Buffer, BufferUsages, Device, IndexFormat, PipelineLayoutDescriptor, PolygonMode,
-    RenderPass, RenderPipeline, TextureFormat,
+    BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor, PolygonMode, RenderPass,
+    RenderPipeline, TextureFormat,
 };
 
-use crate::{render::uniform::Uniform, utils::make_pipeline};
+use crate::{render::uniform::OldUniform, utils::make_pipeline, WGPUApp};
 
 const VERTICES: &[Point] = &[
     Point::new(-1.0, 1.0),
@@ -38,11 +38,13 @@ pub struct RectState {
 }
 
 impl RectState {
-    pub fn new(device: &Device, texture_format: TextureFormat) -> Self {
+    pub fn new(texture_format: TextureFormat) -> Self {
+        let device = WGPUApp::device();
+
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
-        let z_layout = Uniform::z_layout(device);
-        let color_group_layout = Uniform::color_layout(device);
+        let z_layout = OldUniform::z_layout();
+        let color_group_layout = OldUniform::color_layout();
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Rect Pipeline Layout"),
@@ -111,7 +113,6 @@ impl RectState {
 
     pub fn draw<'a>(
         &'a self,
-        device: &Device,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         color: &Color,
@@ -121,8 +122,8 @@ impl RectState {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(self.pipeline(polygon_mode));
 
-        render_pass.set_bind_group(0, Uniform::z(device, &self.z_layout, z_position), &[]);
-        render_pass.set_bind_group(1, Uniform::color(device, &self.color_group_layout, color), &[]);
+        render_pass.set_bind_group(0, OldUniform::z(&self.z_layout, z_position), &[]);
+        render_pass.set_bind_group(1, OldUniform::color(&self.color_group_layout, color), &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         self.draw_vertices(render_pass, polygon_mode);
     }

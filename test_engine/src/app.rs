@@ -195,7 +195,7 @@ impl App {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
     ) {
-        const DRAW_DEBUG_FRAMES: bool = true;
+        const DRAW_DEBUG_FRAMES: bool = false;
 
         if view.is_hidden() {
             return;
@@ -226,7 +226,7 @@ impl App {
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image().is_ok() {
-                weak_from_ref(image_view).check_cropped(&drawer.device, &clamped_frame);
+                weak_from_ref(image_view).check_cropped(&clamped_frame);
 
                 let image = image_view.image();
                 // let size: Size = image.size.into();
@@ -234,7 +234,6 @@ impl App {
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
                 drawer.draw_image(
-                    &drawer.device,
                     pass,
                     image.get_static(),
                     &clamped_frame,
@@ -269,7 +268,6 @@ impl App {
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
                 drawer.draw_buffer(
-                    &drawer.device,
                     pass,
                     &clamped_frame,
                     path.mode,
@@ -384,7 +382,10 @@ impl wgpu_wrapper::App for App {
         let mut sections: Vec<Section> = vec![];
         Self::draw_view(pass, drawer, self.root_view.deref(), &mut sections);
 
-        Font::helvetice().brush.queue(&drawer.device, &drawer.queue, sections).unwrap()
+        Font::helvetice()
+            .brush
+            .queue(WGPUApp::device(), &drawer.queue, sections)
+            .unwrap()
     }
 
     fn resize(&mut self, _position: Point, size: Size<u32>) {

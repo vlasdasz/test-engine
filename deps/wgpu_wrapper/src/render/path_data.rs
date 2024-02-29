@@ -7,7 +7,7 @@ use gm::{
 };
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, Buffer, BufferBinding, BufferUsages, Device,
+    BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, Buffer, BufferBinding, BufferUsages,
     PolygonMode,
 };
 
@@ -36,7 +36,7 @@ impl PathData {
     }
 
     pub fn new(color: Color, size: Size, points: Points, mode: PolygonMode) -> Self {
-        let device = &WGPUApp::current().state.drawer.device;
+        let device = WGPUApp::device();
         let path_layout = WGPUApp::path_layout();
 
         let buffer = device.create_buffer_init(&BufferInitDescriptor {
@@ -45,7 +45,7 @@ impl PathData {
             usage:    BufferUsages::VERTEX,
         });
 
-        let bind_group = make_bind_group(path_layout, device, &color, size);
+        let bind_group = make_bind_group(path_layout, &color, size);
 
         Self {
             mode,
@@ -57,18 +57,14 @@ impl PathData {
     }
 
     pub fn resize(&mut self, size: Size) {
-        let device = &WGPUApp::current().state.drawer.device;
         let path_layout = WGPUApp::path_layout();
-        self.bind_group = make_bind_group(path_layout, device, &self.color, size);
+        self.bind_group = make_bind_group(path_layout, &self.color, size);
     }
 }
 
-fn make_bind_group(
-    bind_group_layout: &BindGroupLayout,
-    device: &Device,
-    color: &Color,
-    size: Size,
-) -> BindGroup {
+fn make_bind_group(bind_group_layout: &BindGroupLayout, color: &Color, size: Size) -> BindGroup {
+    let device = WGPUApp::device();
+
     let size_uniform_buffer = device.create_buffer_init(&BufferInitDescriptor {
         label:    Some("Path Color Uniform Buffer"),
         contents: cast_slice(&size.as_slice()),

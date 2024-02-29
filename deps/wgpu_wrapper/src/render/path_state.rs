@@ -3,10 +3,10 @@ use std::ops::Range;
 use gm::flat::{Point, Rect};
 use wgpu::{
     include_wgsl, BindGroup, BindGroupLayout, BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType,
-    Device, PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
+    PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
-use crate::{render::uniform::Uniform, utils::make_pipeline};
+use crate::{render::uniform::OldUniform, utils::make_pipeline, WGPUApp};
 
 #[derive(Debug)]
 pub struct PathState {
@@ -17,7 +17,9 @@ pub struct PathState {
 }
 
 impl PathState {
-    pub fn new(device: &Device, texture_format: TextureFormat) -> Self {
+    pub fn new(texture_format: TextureFormat) -> Self {
+        let device = WGPUApp::device();
+
         let shader = device.create_shader_module(include_wgsl!("shaders/path.wgsl"));
 
         let z_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -102,7 +104,6 @@ impl PathState {
 
     pub fn draw_buffer<'a>(
         &'a self,
-        device: &Device,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         polygon_mode: PolygonMode,
@@ -114,7 +115,7 @@ impl PathState {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(self.pipeline(polygon_mode));
 
-        render_pass.set_bind_group(0, Uniform::z(device, &self.z_layout, z_position), &[]);
+        render_pass.set_bind_group(0, OldUniform::z(&self.z_layout, z_position), &[]);
         render_pass.set_bind_group(1, bind_group, &[]);
         render_pass.set_vertex_buffer(0, buffer.slice(..));
         render_pass.draw(vertex_range, 0..1);

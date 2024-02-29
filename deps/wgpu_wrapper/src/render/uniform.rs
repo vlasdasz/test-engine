@@ -6,41 +6,40 @@ use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
     BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutEntry, BindingResource, BindingType,
-    BufferBinding, BufferBindingType, BufferUsages, Device, ShaderStages,
+    BufferBinding, BufferBindingType, BufferUsages, ShaderStages,
 };
+
+use crate::WGPUApp;
 
 static COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 static Z_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
 
-pub struct Uniform {}
+pub struct OldUniform {}
 
-impl Uniform {
-    pub fn color(device: &Device, layout: &BindGroupLayout, color: &Color) -> &'static BindGroup {
+impl OldUniform {
+    pub fn color(layout: &BindGroupLayout, color: &Color) -> &'static BindGroup {
         COLOR_BINDS
             .get_mut()
             .entry(*color)
-            .or_insert_with(|| bind_group_with_color(layout, device, color))
+            .or_insert_with(|| bind_group_with_color(layout, color))
     }
 
-    pub fn z(device: &Device, layout: &BindGroupLayout, z: f32) -> &'static BindGroup {
-        Z_BINDS
-            .get_mut()
-            .entry(z.to_bits())
-            .or_insert_with(|| z_bind_group(layout, device, z))
+    pub fn z(layout: &BindGroupLayout, z: f32) -> &'static BindGroup {
+        Z_BINDS.get_mut().entry(z.to_bits()).or_insert_with(|| z_bind_group(layout, z))
     }
 }
 
-impl Uniform {
-    pub fn color_layout(device: &Device) -> BindGroupLayout {
-        Self::layout(device, "color_bind_group_layout", ShaderStages::FRAGMENT)
+impl OldUniform {
+    pub fn color_layout() -> BindGroupLayout {
+        Self::layout("color_bind_group_layout", ShaderStages::FRAGMENT)
     }
 
-    pub fn z_layout(device: &Device) -> BindGroupLayout {
-        Self::layout(device, "z_position_bind_group_layout", ShaderStages::VERTEX)
+    pub fn z_layout() -> BindGroupLayout {
+        Self::layout("z_position_bind_group_layout", ShaderStages::VERTEX)
     }
 
-    fn layout(device: &Device, label: &'static str, shader: ShaderStages) -> BindGroupLayout {
-        device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+    fn layout(label: &'static str, shader: ShaderStages) -> BindGroupLayout {
+        WGPUApp::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label:   label.into(),
             entries: &[BindGroupLayoutEntry {
                 binding:    0,
@@ -56,7 +55,9 @@ impl Uniform {
     }
 }
 
-fn bind_group_with_color(layout: &BindGroupLayout, device: &Device, color: &Color) -> BindGroup {
+fn bind_group_with_color(layout: &BindGroupLayout, color: &Color) -> BindGroup {
+    let device = WGPUApp::device();
+
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
         label:    Some("Color Uniform Buffer"),
         contents: cast_slice(&color.as_slice()),
@@ -77,7 +78,9 @@ fn bind_group_with_color(layout: &BindGroupLayout, device: &Device, color: &Colo
     })
 }
 
-fn z_bind_group(layout: &BindGroupLayout, device: &Device, z: f32) -> BindGroup {
+fn z_bind_group(layout: &BindGroupLayout, z: f32) -> BindGroup {
+    let device = WGPUApp::device();
+
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
         label:    Some("Color Uniform Buffer"),
         contents: cast_slice(&[z]),

@@ -4,23 +4,26 @@ use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
 use gm::{flat::Size, CheckedConvert, Color, U8Color};
 use log::error;
+use refs::MainLock;
 use rtools::platform::Platform;
 use tokio::{
     spawn,
     sync::oneshot::{channel, Receiver, Sender},
 };
 use wgpu::{
-    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Extent3d, PresentMode, TextureFormat,
-    COPY_BYTES_PER_ROW_ALIGNMENT,
+    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Device, Extent3d, PresentMode,
+    TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT,
 };
 use winit::{dpi::PhysicalSize, window::Window};
 
 use crate::{
     app::App, frame_counter::FrameCounter, image::Texture, render::wgpu_drawer::WGPUDrawer, text::Font,
-    Screenshot,
+    Screenshot, WGPUApp,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;
+
+pub(crate) static DEVICE: MainLock<Option<Device>> = MainLock::new();
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -91,10 +94,12 @@ impl State {
 
         surface.configure(&device, &config);
 
-        let depth_texture =
-            Texture::create_depth_texture(&device, (config.width, config.height).into(), "depth_texture");
+        *DEVICE.get_mut() = device.into();
 
-        let drawer = WGPUDrawer::new(device, queue, config.format)?;
+        let depth_texture =
+            Texture::create_depth_texture((config.width, config.height).into(), "depth_texture");
+
+        let drawer = WGPUDrawer::new(queue, config.format)?;
 
         Ok(Self {
             surface,
@@ -112,15 +117,12 @@ impl State {
 
     pub fn resize(&mut self, new_size: PhysicalSize<u32>) {
         if new_size.width > 0 && new_size.height > 0 {
-            self.depth_texture = Texture::create_depth_texture(
-                &self.drawer.device,
-                (new_size.width, new_size.height).into(),
-                "depth_texture",
-            );
+            self.depth_texture =
+                Texture::create_depth_texture((new_size.width, new_size.height).into(), "depth_texture");
             self.drawer.window_size = (new_size.width, new_size.height).into();
             self.config.width = new_size.width;
             self.config.height = new_size.height;
-            self.surface.configure(&self.drawer.device, &self.config);
+            self.surface.configure(WGPUApp::device(), &self.config);
             for font in self.fonts.values() {
                 font.brush.resize_view(
                     self.config.width as f32,
@@ -163,7 +165,7 @@ impl State {
     pub fn render(&mut self) -> Result<()> {
         let surface_texture = self.surface.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
-        let mut encoder = self.drawer.device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+        let mut encoder = WGPUApp::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
         });
 
@@ -212,7 +214,7 @@ impl State {
         }
 
         let buffer = if self.read_display_request.borrow().is_some() {
-            Some(self.read_screen(&mut encoder, &surface_texture.texture))
+            Some(Self::read_screen(&mut encoder, &surface_texture.texture))
         } else {
             None
         };
@@ -258,14 +260,14 @@ impl State {
         r
     }
 
-    fn read_screen(&self, encoder: &mut CommandEncoder, texture: &wgpu::Texture) -> (Buffer, Size<u32>) {
+    fn read_screen(encoder: &mut CommandEncoder, texture: &wgpu::Texture) -> (Buffer, Size<u32>) {
         let screen_width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
         let number_of_align = screen_width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
 
         let width_bytes = number_of_align * u64::from(COPY_BYTES_PER_ROW_ALIGNMENT);
 
-        let buffer = self.drawer.device.create_buffer(&BufferDescriptor {
+        let buffer = WGPUApp::device().create_buffer(&BufferDescriptor {
             label:              Some("Read Screen Buffer"),
             size:               width_bytes * u64::from(texture.size().height),
             usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,

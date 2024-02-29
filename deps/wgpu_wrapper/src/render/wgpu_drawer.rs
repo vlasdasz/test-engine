@@ -5,7 +5,7 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use wgpu::{BindGroup, Buffer, Device, PolygonMode, Queue, RenderPass, TextureFormat};
+use wgpu::{BindGroup, Buffer, PolygonMode, Queue, RenderPass, TextureFormat};
 
 use crate::{
     image::Image,
@@ -15,7 +15,6 @@ use crate::{
 #[derive(Debug)]
 pub struct WGPUDrawer {
     pub window_size:       Size,
-    pub device:            Device,
     pub queue:             Queue,
     rect_state:            RectState,
     colored_image_state:   ImageState,
@@ -23,13 +22,12 @@ pub struct WGPUDrawer {
 }
 
 impl WGPUDrawer {
-    pub fn new(device: Device, queue: Queue, texture_format: TextureFormat) -> Result<Self> {
-        let rect_state = RectState::new(&device, texture_format);
-        let path_state = PathState::new(&device, texture_format);
-        let colored_image_state = ImageState::new(&device);
+    pub fn new(queue: Queue, texture_format: TextureFormat) -> Result<Self> {
+        let rect_state = RectState::new(texture_format);
+        let path_state = PathState::new(texture_format);
+        let colored_image_state = ImageState::new();
         Ok(Self {
             window_size: Default::default(),
-            device,
             queue,
             rect_state,
             path_state,
@@ -47,13 +45,11 @@ impl WGPUDrawer {
         polygon_mode: PolygonMode,
         z_position: f32,
     ) {
-        self.rect_state
-            .draw(&self.device, render_pass, rect, color, polygon_mode, z_position);
+        self.rect_state.draw(render_pass, rect, color, polygon_mode, z_position);
     }
 
     pub fn draw_buffer<'a>(
         &'a self,
-        device: &Device,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         polygon_mode: PolygonMode,
@@ -63,7 +59,6 @@ impl WGPUDrawer {
         z_position: f32,
     ) {
         self.path_state.draw_buffer(
-            device,
             render_pass,
             rect,
             polygon_mode,
@@ -76,14 +71,12 @@ impl WGPUDrawer {
 
     pub fn draw_image<'a>(
         &'a self,
-        device: &Device,
         render_pass: &mut RenderPass<'a>,
         image: &'static Image,
         rect: &Rect,
         vertices: Option<&'a Buffer>,
         z_position: f32,
     ) {
-        self.colored_image_state
-            .draw(device, image, rect, render_pass, vertices, z_position);
+        self.colored_image_state.draw(image, rect, render_pass, vertices, z_position);
     }
 }

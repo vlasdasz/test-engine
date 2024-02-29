@@ -6,7 +6,7 @@ use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader
 use refs::Weak;
 use rtools::file::File;
 use wgpu::{
-    BindGroup, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType, Device,
+    BindGroup, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType,
     SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
@@ -21,14 +21,16 @@ pub struct Image {
 
 impl Image {
     fn load_to_wgpu(state: &State, name: &str, data: &[u8]) -> Result<Self> {
-        let texture = Texture::from_file_bytes(&state.drawer.device, &state.drawer.queue, data, name)?;
-        Self::from_texture(texture, &state.drawer.device)
+        let texture = Texture::from_file_bytes(&state.drawer.queue, data, name)?;
+        Self::from_texture(texture)
     }
 
-    pub fn from_texture(texture: Texture, device: &Device) -> Result<Self> {
+    pub fn from_texture(texture: Texture) -> Result<Self> {
+        let device = WGPUApp::device();
+
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label:   Some("diffuse_bind_group"),
-            layout:  &Self::bind_group_layout(device),
+            layout:  &Self::bind_group_layout(),
             entries: &[
                 wgpu::BindGroupEntry {
                     binding:  0,
@@ -56,15 +58,8 @@ impl Image {
         channels: u8,
     ) -> Result<Weak<Image>> {
         let name = name.to_string();
-        let texture = Texture::from_raw_data(
-            &state.drawer.device,
-            &state.drawer.queue,
-            data,
-            size,
-            channels,
-            &name,
-        );
-        let image = Self::from_texture(texture, &state.drawer.device)?;
+        let texture = Texture::from_raw_data(&state.drawer.queue, data, size, channels, &name);
+        let image = Self::from_texture(texture)?;
         Ok(Image::add_with_name(&name, || image))
     }
 
@@ -96,8 +91,8 @@ impl ResourceLoader for Image {
 }
 
 impl Image {
-    pub(crate) fn bind_group_layout(device: &Device) -> BindGroupLayout {
-        device.create_bind_group_layout(&BindGroupLayoutDescriptor {
+    pub(crate) fn bind_group_layout() -> BindGroupLayout {
+        WGPUApp::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
             label:   "image_bind_group_layout".into(),
             entries: &[
                 BindGroupLayoutEntry {

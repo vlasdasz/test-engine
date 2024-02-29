@@ -9,7 +9,7 @@ use gm::flat::Size;
 use log::{error, trace};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
-use wgpu::BindGroupLayout;
+use wgpu::{BindGroupLayout, Device};
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
@@ -18,7 +18,11 @@ use winit::{
     window::WindowBuilder,
 };
 
-use crate::{app::App, render::state::State, Screenshot};
+use crate::{
+    app::App,
+    render::state::{State, DEVICE},
+    Screenshot,
+};
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
@@ -31,6 +35,10 @@ pub struct WGPUApp {
 impl WGPUApp {
     pub(crate) fn current() -> &'static mut Self {
         APP.get_mut().as_mut().expect("App has not been initialized yet.")
+    }
+
+    pub fn device() -> &'static Device {
+        DEVICE.get_mut().as_mut().expect("Device has not been initialized yet.")
     }
 
     pub fn close() {

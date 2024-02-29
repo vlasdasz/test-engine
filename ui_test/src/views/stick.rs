@@ -16,7 +16,7 @@ struct StickTestView {
 impl ViewSetup for StickTestView {
     fn setup(mut self: Weak<Self>) {
         self.stick.set_size((200, 200));
-        self.pos.place().size(200, 200).bl(0);
+        self.pos.set_multiplier(20).place().size(200, 200).bl(0);
         self.pos.changed.val(move |pos| {
             self.stick.set_origin(pos);
         });

@@ -4,7 +4,7 @@ use ui::{view, ViewFrame};
 use wgpu_wrapper::{
     cast_slice,
     image::{Image, ToImage},
-    image_vertices_with_shrink, Buffer, BufferInitDescriptor, BufferUsages, Device, DeviceExt,
+    image_vertices_with_shrink, Buffer, BufferInitDescriptor, BufferUsages, DeviceExt, WGPUApp,
 };
 
 mod test_engine {
@@ -34,7 +34,7 @@ impl ImageView {
         self.cropped.as_ref()
     }
 
-    pub fn check_cropped(mut self: Weak<Self>, device: &Device, frame: &Rect) {
+    pub fn check_cropped(mut self: Weak<Self>, frame: &Rect) {
         if frame == self.absolute_frame() {
             self.cropped = None;
             return;
@@ -55,7 +55,7 @@ impl ImageView {
 
         let vertices = image_vertices_with_shrink(x_offset, y_offset, width_shrink, height_shrink);
 
-        let buffer = device.create_buffer_init(&BufferInitDescriptor {
+        let buffer = WGPUApp::device().create_buffer_init(&BufferInitDescriptor {
             label:    "Colored Image Cropped Vertex Buffer".into(),
             contents: cast_slice(&vertices),
             usage:    BufferUsages::VERTEX,
