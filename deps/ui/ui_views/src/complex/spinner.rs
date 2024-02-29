@@ -103,7 +103,7 @@ impl ViewCallbacks for Spinner {
             .collect();
 
         for (view, point) in self.circles.iter_mut().zip(points) {
-            view.set_origin((point.x - 8.0, point.y - 8.0));
+            view.set_position((point.x - 8.0, point.y - 8.0));
         }
     }
 }

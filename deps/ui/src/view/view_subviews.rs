@@ -116,7 +116,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         )
             .into();
 
-        view.set_origin(origin);
+        view.set_position(origin);
 
         view.set_color(Color::random());
     }

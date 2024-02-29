@@ -137,6 +137,13 @@ impl Point<i32> {
     }
 }
 
+impl<T: IntoF32> Add<T> for Point<f32> {
+    type Output = Self;
+    fn add(self, rhs: T) -> Self::Output {
+        Self::new(self.x + rhs.into_f32(), self.y + rhs.into_f32())
+    }
+}
+
 impl<T: Add<Output = T>> Add for Point<T> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self {

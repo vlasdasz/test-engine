@@ -40,6 +40,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_stick().await?;
     test_point_view().await?;
     test_out_bounds().await?;
     test_modal().await?;
@@ -63,8 +64,6 @@ async fn test() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
-    test_stick().await?;
-
     test_drop_down().await?;
     test_render_image_path().await?;
     test_present().await?;

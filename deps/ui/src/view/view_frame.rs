@@ -23,7 +23,7 @@ pub trait ViewFrame {
     fn set_x(&mut self, x: impl IntoF32) -> &mut Self;
     fn set_y(&mut self, y: impl IntoF32) -> &mut Self;
     fn set_height(&mut self, height: impl IntoF32) -> &mut Self;
-    fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self;
+    fn set_position(&mut self, origin: impl Into<Point>) -> &mut Self;
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
     fn set_size(&mut self, size: impl Into<Size>) -> &mut Self;
@@ -114,7 +114,7 @@ impl<T: ?Sized + View> ViewFrame for T {
         self
     }
 
-    fn set_origin(&mut self, origin: impl Into<Point>) -> &mut Self {
+    fn set_position(&mut self, origin: impl Into<Point>) -> &mut Self {
         let origin = origin.into();
         let frame = &mut self.base_mut().frame;
         let pos_changed = frame.origin != origin;

@@ -161,7 +161,7 @@ pub async fn record_touches_with_colors() -> Result<()> {
     let (s, mut r) = channel::<()>(1);
 
     on_main(move || {
-        UIEvents::on_touch().val(move |touch| {
+        UIEvents::on_debug_touch().val(move |touch| {
             if !touch.is_began() {
                 return;
             }
