@@ -131,7 +131,7 @@ impl App {
         let app = Self::make_app(first_view);
 
         spawn(async move {
-            let recv = from_main(|| App::current().window_ready.once_async()).await;
+            let recv = from_main(|| App::current().window_ready.val_async()).await;
             recv.await.unwrap();
             let _ = actions.await;
             WGPUApp::close();
@@ -298,6 +298,8 @@ impl App {
 
     pub fn process_touch_event(&mut self, mut touch: Touch) -> bool {
         const LOG_TOUCHES: bool = false;
+
+        UIEvents::on_debug_touch().trigger(touch);
 
         if UIManager::touch_disabled() {
             return false;

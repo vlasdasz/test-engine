@@ -2,7 +2,7 @@ use std::ops::DerefMut;
 
 use derivative::Derivative;
 use rtools::Animation;
-use vents::Event;
+use vents::OnceEvent;
 
 use crate::{view::view_data::ViewData, View};
 
@@ -15,7 +15,7 @@ pub struct UIAnimation {
     #[derivative(Debug = "ignore")]
     action:        Action,
     #[derivative(Debug = "ignore")]
-    pub on_finish: Event,
+    pub on_finish: OnceEvent,
 }
 
 impl UIAnimation {

@@ -33,16 +33,16 @@ impl Uniform<Color> for Color {
 
         *layout = WGPUApp::device()
             .create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                label: Some("color_bind_group_layout"),
+                label:   Some("color_bind_group_layout"),
                 entries: &[BindGroupLayoutEntry {
-                    binding: 0,
+                    binding:    0,
                     visibility: ShaderStages::FRAGMENT,
-                    ty: BindingType::Buffer {
-                        ty: BufferBindingType::Uniform,
+                    ty:         BindingType::Buffer {
+                        ty:                 BufferBindingType::Uniform,
                         has_dynamic_offset: false,
-                        min_binding_size: None,
+                        min_binding_size:   None,
                     },
-                    count: None,
+                    count:      None,
                 }],
             })
             .into();
@@ -55,20 +55,20 @@ fn bind_group_with_color(color: &Color) -> BindGroup {
     let device = WGPUApp::device();
 
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
-        label: Some("Color Uniform Buffer"),
+        label:    Some("Color Uniform Buffer"),
         contents: cast_slice(&color.as_slice()),
-        usage: BufferUsages::UNIFORM,
+        usage:    BufferUsages::UNIFORM,
     });
 
     device.create_bind_group(&wgpu::BindGroupDescriptor {
-        label: Some("color_bind_group"),
-        layout: Color::layout(),
+        label:   Some("color_bind_group"),
+        layout:  Color::layout(),
         entries: &[BindGroupEntry {
-            binding: 0,
+            binding:  0,
             resource: BindingResource::Buffer(BufferBinding {
                 buffer: &buffer,
                 offset: 0,
-                size: None,
+                size:   None,
             }),
         }],
     })

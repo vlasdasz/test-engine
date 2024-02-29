@@ -4,7 +4,7 @@ use gm::{flat::Point, LossyConvert};
 use itertools::Itertools;
 use wgpu_wrapper::MouseButton;
 
-use crate::input::TouchEvent;
+use crate::{input::TouchEvent, TouchLock};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Touch {
@@ -25,6 +25,10 @@ impl Touch {
 
     pub fn is_ended(&self) -> bool {
         self.event == TouchEvent::Ended
+    }
+
+    pub fn lock() -> TouchLock {
+        TouchLock::new()
     }
 }
 

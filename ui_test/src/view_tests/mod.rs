@@ -151,6 +151,8 @@ pub async fn record_ui_test() -> Result<()> {
 
 #[allow(dead_code)]
 pub async fn record_touches_with_colors() -> Result<()> {
+    let touch_lock = Touch::lock();
+
     let screenshot = App::take_screenshot().await?;
 
     let touches = Vec::<(Touch, U8Color)>::new().to_own();
@@ -193,6 +195,8 @@ pub async fn record_touches_with_colors() -> Result<()> {
 
     println!("        \"#");
     println!(").await?;");
+
+    drop(touch_lock);
 
     Ok(())
 }

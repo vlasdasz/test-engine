@@ -38,7 +38,7 @@ reflected = "=0.7.0"
 reflected_proc = "=0.7.0"
 refs = { version = "=0.6.16", features = [] }
 rtools = "=0.8.0"
-vents = "=0.4.0"
+vents = "=0.5.0"
 
 audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }

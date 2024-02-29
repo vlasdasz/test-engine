@@ -4,7 +4,7 @@ use refs::{Own, ToOwn, Weak};
 use rtools::Animation;
 use ui_proc::view;
 
-use crate::WeakView;
+use crate::{Touch, WeakView};
 
 mod test_engine {
     pub(crate) use refs;
@@ -14,7 +14,7 @@ mod test_engine {
 
 use crate::{
     view::{ViewAnimation, ViewFrame, ViewSubviews},
-    TouchStack, UIAnimation, UIManager, View, ViewData, ViewSetup,
+    TouchStack, UIAnimation, View, ViewData, ViewSetup,
 };
 
 #[view]
@@ -45,7 +45,7 @@ impl NavigationView {
     pub fn push(mut self: Weak<Self>, mut view: Own<dyn View>) {
         assert!(!self.subviews.is_empty(), "BUG: push from empty navigation");
 
-        UIManager::disable_touch();
+        let touch_lock = Touch::lock();
 
         on_main(move || {
             TouchStack::push_layer(view.weak_view());
@@ -63,7 +63,7 @@ impl NavigationView {
             });
 
             anim.on_finish.sub(move || {
-                UIManager::enable_touch();
+                drop(touch_lock);
                 prev_view.set_hidden(true);
             });
 
@@ -74,7 +74,7 @@ impl NavigationView {
     pub fn pop(self: Weak<Self>) {
         assert!(self.subviews.len() > 1, "BUG: Nowhere to pop");
 
-        UIManager::disable_touch();
+        let touch_lock = Touch::lock();
 
         let mut below = self.below_pop();
         below.set_hidden(false);
@@ -87,7 +87,7 @@ impl NavigationView {
         anim.on_finish.sub(move || {
             to_pop.remove_from_superview();
             TouchStack::pop_layer(to_pop);
-            UIManager::enable_touch();
+            drop(touch_lock);
         });
 
         to_pop.add_animation(anim);

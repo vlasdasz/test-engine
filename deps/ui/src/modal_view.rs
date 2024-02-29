@@ -25,7 +25,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
         Out: Send, {
         on_main(move || {
             let weak = Self::prepare_modally(input);
-            weak.modal_event().once(callback);
+            weak.modal_event().val(callback);
         })
     }
 
@@ -34,7 +34,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where
         In: 'static + Send,
         Out: Send, {
-        from_main(|| Self::prepare_modally(input).modal_event().once_async())
+        from_main(|| Self::prepare_modally(input).modal_event().val_async())
             .await
             .await
             .unwrap()

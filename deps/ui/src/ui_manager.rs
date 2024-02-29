@@ -143,11 +143,11 @@ impl UIManager {
         Self::get().touch_disabled.load(Ordering::Relaxed)
     }
 
-    pub fn disable_touch() {
+    fn disable_touch() {
         Self::get().touch_disabled.store(true, Ordering::Relaxed)
     }
 
-    pub fn enable_touch() {
+    fn enable_touch() {
         Self::get().touch_disabled.store(false, Ordering::Relaxed)
     }
 }
@@ -231,5 +231,20 @@ impl UIManager {
         action: impl FnMut(Vec<PathBuf>) + Send + 'static,
     ) {
         Self::get().on_drop_file.val(view, action)
+    }
+}
+
+pub struct TouchLock;
+
+impl TouchLock {
+    pub(crate) fn new() -> Self {
+        UIManager::disable_touch();
+        TouchLock
+    }
+}
+
+impl Drop for TouchLock {
+    fn drop(&mut self) {
+        UIManager::enable_touch();
     }
 }

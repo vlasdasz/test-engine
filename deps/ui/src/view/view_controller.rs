@@ -1,7 +1,9 @@
 use refs::Own;
 use rtools::Animation;
 
-use crate::{NavigationView, UIAnimation, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews};
+use crate::{
+    NavigationView, Touch, UIAnimation, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews,
+};
 
 pub trait ViewController {
     fn navigation(&self) -> Weak<NavigationView>;
@@ -27,7 +29,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     fn present(mut self: Weak<Self>, mut view: Own<dyn View>) {
-        UIManager::disable_touch();
+        let touch_lock = Touch::lock();
 
         on_main(move || {
             view.set_color(Color::WHITE);
@@ -40,7 +42,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
             anim.on_finish.sub(move || {
                 self.remove_from_superview();
                 view.place().back();
-                UIManager::enable_touch();
+                drop(touch_lock);
             });
 
             view.add_animation(anim);
