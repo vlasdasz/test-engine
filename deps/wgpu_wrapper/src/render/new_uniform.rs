@@ -5,26 +5,56 @@ use gm::Color;
 use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, BufferBinding,
+    BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutEntry, BindingResource, BindingType,
+    BufferBinding, BufferBindingType, ShaderStages,
 };
 
 use crate::{BufferUsages, WGPUApp};
 
-static _COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
+static BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 
-pub trait _Uniform<T> {
+static LAYOUT: MainLock<Option<BindGroupLayout>> = MainLock::new();
+
+pub trait Uniform<T> {
     fn bind(val: T) -> &'static BindGroup;
+    fn layout() -> &'static BindGroupLayout;
 }
 
-pub struct _ColorUniform {}
+pub struct ColorUniform {}
 
-impl _Uniform<Color> for _ColorUniform {
-    fn bind(_color: Color) -> &'static BindGroup {
-        todo!()
+impl Uniform<Color> for ColorUniform {
+    fn bind(color: Color) -> &'static BindGroup {
+        BINDS.get_mut().entry(color).or_insert_with(|| bind_group_with_color(&color))
+    }
+
+    fn layout() -> &'static BindGroupLayout {
+        let layout = LAYOUT.get_mut();
+
+        if let Some(layout) = layout {
+            return layout;
+        }
+
+        *layout = WGPUApp::device()
+            .create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                label:   Some("color_bind_group_layout"),
+                entries: &[BindGroupLayoutEntry {
+                    binding:    0,
+                    visibility: ShaderStages::FRAGMENT,
+                    ty:         BindingType::Buffer {
+                        ty:                 BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size:   None,
+                    },
+                    count:      None,
+                }],
+            })
+            .into();
+
+        LAYOUT.get_mut().as_ref().unwrap()
     }
 }
 
-fn _bind_group_with_color(layout: &BindGroupLayout, color: &Color) -> BindGroup {
+fn bind_group_with_color(color: &Color) -> BindGroup {
     let device = WGPUApp::device();
 
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
@@ -34,8 +64,8 @@ fn _bind_group_with_color(layout: &BindGroupLayout, color: &Color) -> BindGroup 
     });
 
     device.create_bind_group(&wgpu::BindGroupDescriptor {
-        label: Some("rect_color_bind_group"),
-        layout,
+        label:   Some("color_bind_group"),
+        layout:  ColorUniform::layout(),
         entries: &[BindGroupEntry {
             binding:  0,
             resource: BindingResource::Buffer(BufferBinding {
