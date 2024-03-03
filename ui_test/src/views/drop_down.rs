@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::assert_eq;
+use crate::view_tests::{assert_eq, record_ui_test};
 
 #[view]
 struct DropDownTestView {
@@ -39,6 +39,8 @@ pub async fn test_drop_down() -> Result<()> {
 
     assert_eq(view.top.text(), "Dog")?;
     assert_eq(view.bot.text(), "Car")?;
+
+    record_ui_test().await?;
 
     // inject_touches(
     //     r#"
