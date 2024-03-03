@@ -2,36 +2,76 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     from_main,
-    refs::Weak,
-    ui::{view, Color, Container, NavigationView, ViewController, ViewData, ViewSetup},
+    ui::{
+        view, Color, Container, NavigationView, TouchStack, ViewController, ViewData, ViewSetup,
+        PRESENT_ANIMATION_DURATION,
+    },
     App,
 };
+use tokio::time::Instant;
 
-use crate::view_tests::record_touches;
+use crate::{view_tests::assert_eq, views::image_view::check_colors};
 
 #[view]
 struct PresentTestView {}
-
-impl ViewSetup for PresentTestView {
-    fn setup(self: Weak<Self>) {}
-}
 
 pub async fn test_present() -> Result<()> {
     let present = PresentTestView::new();
 
     let view = present.weak();
 
-    let _navigation = App::set_test_view(NavigationView::with_view(present), 600, 600).await;
+    App::set_test_view(NavigationView::with_view(present), 600, 600).await;
 
-    from_main(move || {
+    check_colors(
+        r#"
+              32   28 -  25  51  76
+             306  347 -  25  51  76
+             547  566 -  25  51  76
+        "#,
+    )
+    .await?;
+
+    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+
+    let now = Instant::now();
+
+    let presented = from_main(move || {
         let mut presented = Container::new();
         presented.set_color(Color::RED);
 
-        view.present(presented);
+        view.present(presented)
     })
     .await;
 
-    record_touches().await;
+    check_colors(
+        r#"
+              32   28 -  25  51  76
+             306  347 -  25  51  76
+             547  566 -  25  51  76
+        "#,
+    )
+    .await?;
+
+    presented.await?;
+
+    let duration_error = now.elapsed().as_secs_f32() - PRESENT_ANIMATION_DURATION;
+    let allowed_error = 0.02;
+
+    assert!(
+        duration_error < allowed_error,
+        "Duration error is: {duration_error}. Allowed: {allowed_error}"
+    );
+
+    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+
+    check_colors(
+        r#"
+              53   22 - 255 255 255
+             222  255 - 255 255 255
+             490  551 - 255 255 255
+        "#,
+    )
+    .await?;
 
     debug!("Present test: OK");
 

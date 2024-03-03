@@ -34,18 +34,19 @@ pub fn make_pipeline<Vertex: VertexLayout>(
         fragment:      FragmentState {
             module:      shader,
             entry_point: "f_main",
-            targets:     &[Some(ColorTargetState {
+            targets:     &[ColorTargetState {
                 format:     texture_format,
-                blend:      Some(BlendState::ALPHA_BLENDING),
+                blend:      BlendState::ALPHA_BLENDING.into(),
                 write_mask: ColorWrites::ALL,
-            })],
+            }
+            .into()],
         }
         .into(),
         primitive:     PrimitiveState {
             topology: PrimitiveTopology::TriangleStrip,
             strip_index_format: None,
             front_face: FrontFace::Ccw,
-            cull_mode: Some(Face::Back),
+            cull_mode: Face::Back.into(),
             polygon_mode,
             unclipped_depth: false,
             conservative: false,
