@@ -13,6 +13,7 @@ pub mod out_bounds_test;
 pub mod point_view;
 pub mod present_test;
 pub mod render_image_path;
+pub mod scroll_view;
 pub mod selection;
 pub mod slider;
 pub mod stick;
