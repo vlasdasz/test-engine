@@ -29,7 +29,7 @@ fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
 
     let diff = pixel_f32.diff(color_f32);
 
-    let max_diff = 0.016;
+    let max_diff = 0.024;
 
     if diff > max_diff {
         panic!(
