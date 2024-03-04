@@ -104,7 +104,7 @@ impl TouchStack {
 
             for view in layer.views() {
                 assert!(view.is_ok(), "Null view in touch stack");
-                layer_vec.push(format!("{}", view.label()));
+                layer_vec.push(view.label().to_string());
             }
 
             result.push(layer_vec);

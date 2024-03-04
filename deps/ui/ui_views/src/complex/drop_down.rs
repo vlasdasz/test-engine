@@ -80,7 +80,7 @@ impl ViewSetup for DropDown {
 
         self.label.place().back();
 
-        self.table.weak().set_data_source(self.deref());
+        self.table.set_data_source(self.deref());
         self.table.set_hidden(true);
     }
 }

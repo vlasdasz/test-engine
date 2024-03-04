@@ -29,10 +29,7 @@ pub async fn test_touch_stack() -> Result<()> {
 
     assert_eq(
         TouchStack::dump(),
-        vec![vec![
-            "Layer: Root view".to_string(),
-            "View: ".to_string() + &button.label.clone(),
-        ]],
+        vec![vec!["Layer: Root view".to_string(), button.label.clone()]],
     )?;
 
     from_main(move || button.remove_from_superview()).await;
@@ -45,10 +42,7 @@ pub async fn test_touch_stack() -> Result<()> {
 
     assert_eq(
         TouchStack::dump(),
-        vec![vec![
-            "Layer: Root view".to_string(),
-            "View: ".to_string() + &view.button.label.clone(),
-        ]],
+        vec![vec!["Layer: Root view".to_string(), view.button.label.clone()]],
     )?;
 
     view.button2.on_tap(|| {});
@@ -57,8 +51,8 @@ pub async fn test_touch_stack() -> Result<()> {
         TouchStack::dump(),
         vec![vec![
             "Layer: Root view".to_string(),
-            "View: ".to_string() + &view.button.label.clone(),
-            "View: ".to_string() + &view.button2.label.clone(),
+            view.button.label.clone(),
+            view.button2.label.clone(),
         ]],
     )?;
 
@@ -75,10 +69,7 @@ pub async fn test_touch_stack() -> Result<()> {
         TouchStack::dump(),
         vec![
             vec!["Layer: Root view".to_string()],
-            vec![
-                "Layer: Alert".to_string(),
-                "View: Alert.ok_button: Button".to_string(),
-            ],
+            vec!["Layer: Alert".to_string(), "Alert.ok_button: Button".to_string()],
         ],
     )?;
 

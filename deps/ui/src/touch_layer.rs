@@ -9,9 +9,6 @@ pub(crate) struct TouchLayer {
 
 impl TouchLayer {
     pub(crate) fn add(&mut self, view: WeakView) {
-        if view.label() == "Label" {
-            dbg!("A");
-        }
         self.touches.push(view);
     }
 

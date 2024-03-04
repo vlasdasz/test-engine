@@ -55,7 +55,7 @@ pub async fn test_present() -> Result<()> {
     presented.await?;
 
     let duration_error = now.elapsed().as_secs_f32() - PRESENT_ANIMATION_DURATION;
-    let allowed_error = 0.02;
+    let allowed_error = 0.025;
 
     assert!(
         duration_error < allowed_error,

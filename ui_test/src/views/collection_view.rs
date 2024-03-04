@@ -43,8 +43,8 @@ impl CollectionData for CollectionTestView {
 impl ViewSetup for CollectionTestView {
     fn setup(self: Weak<Self>) {
         self.table.place().back();
-        self.table.weak().set_data_source(self.deref());
-        self.collection.weak().set_data_source(self.deref());
+        self.table.set_data_source(self.deref());
+        self.collection.set_data_source(self.deref());
     }
 }
 

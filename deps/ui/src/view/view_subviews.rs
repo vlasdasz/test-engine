@@ -73,11 +73,11 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let view = Own::<V>::default();
         let result = view.weak();
         self.add_subview(view);
-        result.into()
+        result
     }
 
     fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V> {
-        self.__internal_add_view::<V>().weak()
+        self.__internal_add_view::<V>()
     }
 
     fn add_subview(&mut self, mut view: Own<dyn View>) -> WeakView {
