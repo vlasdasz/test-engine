@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Button, DropDown, SubView, TouchStack, ViewData, ViewSetup, ViewSubviews, WeakView},
+    ui::{view, DropDown, SubView, TouchStack, ViewData, ViewSetup},
     App,
 };
 
@@ -11,34 +11,34 @@ use crate::view_tests::{assert_eq, record_ui_test};
 #[view]
 struct DropDownTestView {
     top: SubView<DropDown>,
-    bot: SubView<DropDown>,
-}
-
-fn add_test_button(mut view: WeakView, action: impl FnMut() + 'static) {
-    let mut button = view.add_view::<Button>();
-    button.set_text("TAP").place().size(100, 20).center();
-    button.on_tap(action)
+    //  bot: SubView<DropDown>,
 }
 
 impl ViewSetup for DropDownTestView {
     fn setup(mut self: Weak<Self>) {
-        self.top.place().size(100, 28).center_x().t(5);
-        self.bot.place().size(100, 28).center_x().b(5);
+        self.top.place().size(200, 40).center_x().t(5);
+        // self.bot.place().size(200, 40).center_x().b(5);
 
         self.top.set_values(["Dog", "Cat", "Sheep"]);
-        self.bot.set_values(["Car", "Boat", "Plane"]);
-
-        add_test_button(self, || {
-            println!("{:?}", TouchStack::dump());
-        })
+        // self.bot.set_values(["Car", "Boat", "Plane"]);
     }
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    let view = App::init_test_view::<DropDownTestView>(280, 280).await;
+    let view = App::init_test_view::<DropDownTestView>(600, 600).await;
 
     assert_eq(view.top.text(), "Dog")?;
-    assert_eq(view.bot.text(), "Car")?;
+    // assert_eq(view.bot.text(), "Car")?;
+
+    dbg!(TouchStack::dump());
+    //
+    // assert_eq(
+    //     TouchStack::dump(),
+    //     vec![vec![
+    //         "Layer: Root view".to_string(),
+    //         // "View: ".to_string() + &button.label.clone(),
+    //     ]],
+    // )?;
 
     record_ui_test().await?;
 

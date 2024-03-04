@@ -91,7 +91,9 @@ impl CollectionData for DropDown {
     }
 
     fn make_cell(&self) -> Own<dyn View> {
-        Label::new()
+        let mut label = Label::new();
+        label.label += "DropDown cell: ";
+        label
     }
 
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {

@@ -102,6 +102,7 @@ impl Placer {
 
     pub fn size(&self, width: impl IntoF32, height: impl IntoF32) -> &Self {
         assert!(!self.has_center(), "Size place after center");
+        self.view.weak_view().set_size((width, height));
         self.w(width).h(height)
     }
 
