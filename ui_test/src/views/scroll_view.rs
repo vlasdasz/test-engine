@@ -8,7 +8,7 @@ use test_engine::{
 };
 
 use crate::{
-    view_tests::inject_scroll,
+    view_tests::{inject_scroll, inject_touches},
     views::{helpers::add_corners, image_view::check_colors},
 };
 
@@ -154,6 +154,33 @@ pub async fn test_scroll_view() -> Result<()> {
         view.scroll.content_size = (600, 1200).into();
     })
     .await;
+
+    inject_touches(
+        r#"
+            583  25   b
+            503  580  m
+            503  580  e
+        "#,
+    )
+    .await;
+
+    check_colors(
+        r#"
+             540  479 -  25  51  76
+             537  529 -   0 255 255
+             510  541 -   0 255 255
+             488  541 -  25  51  76
+             115  561 -  25  51  76
+              72  559 -   0 255 255
+              72  510 -   0 255 255
+              72  476 -  25  51  76
+              31   27 -  25  51  76
+              55   27 -  25  51  76
+             533   46 -  25  51  76
+             582   46 -  25  51  76
+        "#,
+    )
+    .await?;
 
     debug!("Scroll view test: OK");
 
