@@ -1,4 +1,4 @@
-use std::any::Any;
+use std::{any::Any, ops::Deref};
 
 use gm::{flat::Size, Color};
 use itertools::Itertools;
@@ -11,7 +11,7 @@ mod test_engine {
     pub(crate) use ui;
 }
 
-use crate::{self as ui_views, collection_data, Button, CollectionData, CollectionView, Label};
+use crate::{self as ui_views, Button, CollectionData, CollectionView, Label};
 
 #[view]
 pub struct DropDown {
@@ -80,7 +80,7 @@ impl ViewSetup for DropDown {
 
         self.label.place().back();
 
-        self.table.data_source = collection_data!(self);
+        self.table.weak().set_data_source(self.deref());
         self.table.set_hidden(true);
     }
 }

@@ -28,10 +28,11 @@ impl CollectionLayout {
 
 #[view]
 pub struct CollectionView {
-    pub data_source: Weak<dyn CollectionData>,
-    pub layout:      CollectionLayout,
-    cells:           Vec<WeakView>,
-    scroll:          SubView<ScrollView>,
+    pub layout: CollectionLayout,
+
+    data_source: Weak<dyn CollectionData>,
+    cells:       Vec<WeakView>,
+    scroll:      SubView<ScrollView>,
 }
 
 impl ViewSetup for CollectionView {
@@ -42,6 +43,10 @@ impl ViewSetup for CollectionView {
 }
 
 impl CollectionView {
+    pub fn set_data_source(mut self: Weak<Self>, data: &(impl CollectionData + 'static)) {
+        self.data_source = weak_from_ref(data);
+    }
+
     pub fn reload_data(&mut self) {
         if self.layout.is_table() {
             self.layout();
@@ -76,6 +81,11 @@ impl CollectionView {
             cell.remove_from_superview();
         }
         self.cells.clear();
+
+        assert!(
+            self.data_source.is_ok(),
+            "Set data source for CollectionView before using"
+        );
 
         let number_of_cells = self.data_source.number_of_cells();
 
