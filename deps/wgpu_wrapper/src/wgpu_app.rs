@@ -5,7 +5,7 @@ use std::sync::{
 
 use anyhow::Result;
 use dispatch::on_main;
-use gm::flat::Size;
+use gm::flat::{Point, Size};
 use log::error;
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
@@ -93,13 +93,15 @@ impl WGPUApp {
                         self.state.window.request_redraw();
                     }
                 }
-                WindowEvent::MouseWheel { delta, .. } => {
-                    let MouseScrollDelta::PixelDelta(delta) = delta else {
-                        unimplemented!();
-                    };
-
-                    self.state.app.mouse_scroll((delta.x, delta.y).into());
-                }
+                WindowEvent::MouseWheel { delta, .. } => match delta {
+                    MouseScrollDelta::LineDelta(x, y) => {
+                        let point: Point = (x, y).into();
+                        self.state.app.mouse_scroll(point * 28);
+                    }
+                    MouseScrollDelta::PixelDelta(delta) => {
+                        self.state.app.mouse_scroll((delta.x, delta.y).into())
+                    }
+                },
                 WindowEvent::KeyboardInput { event, .. } => {
                     if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
                         elwt.exit()
