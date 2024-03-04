@@ -9,7 +9,7 @@ use log::{error, warn};
 use serde::de::DeserializeOwned;
 use test_engine::{
     from_main,
-    gm::LossyConvert,
+    gm::{IntoF32, LossyConvert},
     on_main,
     refs::ToOwn,
     sleep,
@@ -20,7 +20,7 @@ use tokio::sync::mpsc::channel;
 
 use crate::view_tests::state::{clear_state, get_state};
 
-const INJECT_TOUCH_DELAY: f32 = 0.0;
+const INJECT_INPUT_DELAY: f32 = 0.0;
 
 pub mod state;
 
@@ -49,9 +49,18 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 }
 
 async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
-    sleep(INJECT_TOUCH_DELAY);
+    sleep(INJECT_INPUT_DELAY);
     from_main(move || {
         App::current_mut().process_touch_event(touch.into());
+    })
+    .await;
+}
+
+#[allow(dead_code)]
+pub async fn inject_scroll(scroll: impl IntoF32) {
+    sleep(INJECT_INPUT_DELAY);
+    from_main(move || {
+        UIManager::trigger_scroll((0, scroll).into());
     })
     .await;
 }

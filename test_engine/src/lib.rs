@@ -13,7 +13,6 @@ pub mod ui {
     pub use ::ui::*;
     pub use gm::{
         flat::{Point, Points, PointsPath, Size},
-        sign::Sign,
         Color, U8Color,
     };
     pub use ui_proc::view;
@@ -44,10 +43,13 @@ pub mod input {
     pub use winit::event::KeyEvent;
 }
 
+pub mod gm {
+    pub use gm::{sign::Sign, IntoF32, LossyConvert};
+}
+
 pub use app::App;
 pub use audio;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};
-pub use gm;
 pub use manage::data_manager::DataManager;
 pub use paths::*;
 pub use rtools::{file::File, platform::Platform, sleep, Apply, Random, RandomContainer, Stored};

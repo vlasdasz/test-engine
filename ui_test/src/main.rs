@@ -40,6 +40,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_scroll_view().await?;
     test_collection_view().await?;
     test_present().await?;
     test_stick().await?;
@@ -66,8 +67,6 @@ async fn test() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
-    test_scroll_view().await?;
-
     test_drop_down().await?;
     test_render_image_path().await?;
 

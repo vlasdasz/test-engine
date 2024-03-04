@@ -6,13 +6,13 @@ use std::sync::{
 use anyhow::Result;
 use dispatch::on_main;
 use gm::flat::Size;
-use log::{error, trace};
+use log::error;
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{BindGroupLayout, Device, Queue};
 use winit::{
     dpi::PhysicalSize,
-    event::{Event, WindowEvent},
+    event::{Event, MouseScrollDelta, WindowEvent},
     event_loop::EventLoop,
     keyboard::{KeyCode, PhysicalKey},
     window::WindowBuilder,
@@ -94,7 +94,11 @@ impl WGPUApp {
                     }
                 }
                 WindowEvent::MouseWheel { delta, .. } => {
-                    trace!("{delta:?}");
+                    let MouseScrollDelta::PixelDelta(delta) = delta else {
+                        unimplemented!();
+                    };
+
+                    self.state.app.mouse_scroll((delta.x, delta.y).into());
                 }
                 WindowEvent::KeyboardInput { event, .. } => {
                     if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {

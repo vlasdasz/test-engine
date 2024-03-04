@@ -12,6 +12,7 @@ pub trait App {
     fn resize(&mut self, position: Point, size: Size<u32>);
     fn mouse_moved(&mut self, position: Point) -> bool;
     fn mouse_event(&mut self, state: ElementState, button: MouseButton) -> bool;
+    fn mouse_scroll(&mut self, delta: Point);
     fn touch_event(&mut self, touch: Touch) -> bool;
     fn key_event(&mut self, event: KeyEvent);
     fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>);

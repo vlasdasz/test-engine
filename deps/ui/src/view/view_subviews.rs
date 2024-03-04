@@ -7,11 +7,10 @@ use gm::{
 };
 use refs::{Own, Weak};
 
-use crate::{layout::Placer, Container, SubView, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{layout::Placer, Container, UIManager, View, ViewData, ViewFrame, WeakView};
 
 pub trait ViewSubviews {
-    /// Use this only if you know what you are doing
-    fn manually_set_superview(&mut self, superview: WeakView);
+    fn __manually_set_superview(&mut self, superview: WeakView);
     fn superview(&self) -> WeakView;
     fn subviews(&self) -> &[Own<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Own<dyn View>];
@@ -19,7 +18,6 @@ pub trait ViewSubviews {
     fn take_from_superview(&mut self) -> Own<dyn View>;
     fn remove_all_subviews(&mut self);
 
-    fn __internal_add_view<V: View + Default + 'static>(&mut self) -> SubView<V>;
     fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V>;
     fn add_subview(&mut self, view: Own<dyn View>) -> WeakView;
 
@@ -29,8 +27,7 @@ pub trait ViewSubviews {
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
-    /// Use this only if you know what you are doing
-    fn manually_set_superview(&mut self, superview: WeakView) {
+    fn __manually_set_superview(&mut self, superview: WeakView) {
         self.base_mut().superview = superview;
         self.base_mut().placer = Placer::new(self.weak_view());
     }
@@ -69,15 +66,11 @@ impl<T: ?Sized + View> ViewSubviews for T {
             .append(&mut self.base_mut().subviews);
     }
 
-    fn __internal_add_view<V: 'static + View + Default>(&mut self) -> SubView<V> {
+    fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V> {
         let view = Own::<V>::default();
         let result = view.weak();
         self.add_subview(view);
         result
-    }
-
-    fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V> {
-        self.__internal_add_view::<V>()
     }
 
     fn add_subview(&mut self, mut view: Own<dyn View>) -> WeakView {
@@ -94,7 +87,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         }
 
         self.base_mut().subviews.push(view);
-        weak.manually_set_superview(self.weak_view());
+        weak.__manually_set_superview(self.weak_view());
         weak.init_views();
         weak.__internal_setup();
         weak.base().loaded.trigger(());
@@ -105,7 +98,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         const MAX_SIZE: f32 = 200.0;
         const MAX_POSITION: f32 = 400.0;
 
-        let mut view = self.__internal_add_view::<Container>();
+        let mut view = self.add_view::<Container>();
 
         let size: Size = ((10.0..MAX_SIZE).fake::<f32>(), (10.0..MAX_SIZE).fake::<f32>()).into();
         view.set_size(size);

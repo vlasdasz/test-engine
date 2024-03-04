@@ -212,7 +212,7 @@ impl UIManager {
 
 impl UIManager {
     pub fn trigger_scroll(scroll: Point) {
-        Self::get().on_scroll.trigger(scroll * 10)
+        Self::get().on_scroll.trigger(scroll)
     }
 
     pub fn on_scroll(

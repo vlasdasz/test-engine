@@ -50,7 +50,7 @@ impl DebugView {
     }
 
     pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
-        let mut button = self.__internal_add_view::<Button>();
+        let mut button = self.add_view::<Button>();
         button.set_text(label);
         button.on_tap(action);
     }
@@ -61,7 +61,7 @@ impl DebugView {
         let label = if let Some(label) = self.custom_labels.get_mut(&label_text) {
             label
         } else {
-            let label_view = self.__internal_add_view::<Label>();
+            let label_view = self.add_view::<Label>();
             self.custom_labels.insert(label_text.clone(), label_view);
             self.custom_labels.get_mut(&label_text).unwrap()
         };
@@ -77,7 +77,7 @@ impl ViewSetup for DebugView {
         self.set_hidden(false);
         self.set_color(Color::WHITE);
 
-        self.manually_set_superview(UIManager::root_view());
+        self.__manually_set_superview(UIManager::root_view());
 
         self.place().size(400, 200).bl(10).all_ver();
 

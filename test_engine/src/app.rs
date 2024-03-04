@@ -415,6 +415,10 @@ impl wgpu_wrapper::App for App {
         })
     }
 
+    fn mouse_scroll(&mut self, delta: Point) {
+        UIManager::trigger_scroll(delta);
+    }
+
     fn touch_event(&mut self, touch: winit::event::Touch) -> bool {
         self.process_touch_event(Touch {
             id:       1,
