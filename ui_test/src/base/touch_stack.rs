@@ -6,7 +6,7 @@ use test_engine::{
     wait_for_next_frame, App,
 };
 
-use crate::utils::{assert_eq, inject_touches};
+use crate::utils::inject_touches;
 
 #[view]
 struct TouchStackTestView {
@@ -19,59 +19,59 @@ struct TouchStackTestView {
 pub async fn test_touch_stack() -> Result<()> {
     let mut view = App::init_test_view::<TouchStackTestView>(600, 600).await;
 
-    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+    assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     let mut button = from_main(move || view.add_view::<Button>()).await;
 
-    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+    assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     button.on_tap(|| {});
 
-    assert_eq(
+    assert_eq!(
         TouchStack::dump(),
         vec![vec!["Layer: Root view".to_string(), button.label.clone()]],
-    )?;
+    );
 
     from_main(move || button.remove_from_superview()).await;
 
     wait_for_next_frame().await;
 
-    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+    assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     view.button.on_tap(|| {});
 
-    assert_eq(
+    assert_eq!(
         TouchStack::dump(),
         vec![vec!["Layer: Root view".to_string(), view.button.label.clone()]],
-    )?;
+    );
 
     view.button2.on_tap(|| {});
 
-    assert_eq(
+    assert_eq!(
         TouchStack::dump(),
         vec![vec![
             "Layer: Root view".to_string(),
             view.button.label.clone(),
             view.button2.label.clone(),
         ]],
-    )?;
+    );
 
     view.button.disable_touch();
     view.button2.disable_touch();
 
-    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+    assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     Alert::show("Hello");
 
     wait_for_next_frame().await;
 
-    assert_eq(
+    assert_eq!(
         TouchStack::dump(),
         vec![
             vec!["Layer: Root view".to_string()],
             vec!["Layer: Alert".to_string(), "Alert.ok_button: Button".to_string()],
         ],
-    )?;
+    );
 
     inject_touches(
         r#"
@@ -81,7 +81,7 @@ pub async fn test_touch_stack() -> Result<()> {
     )
     .await;
 
-    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+    assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     debug!("Touch stack test: OK");
 

@@ -7,7 +7,7 @@ use test_engine::{
     App,
 };
 
-use crate::utils::{assert_eq, inject_touches};
+use crate::utils::inject_touches;
 
 #[view]
 struct IntTestView {
@@ -23,7 +23,7 @@ impl ViewSetup for IntTestView {
 pub async fn test_int_view() -> Result<()> {
     let mut view = App::init_test_view::<IntTestView>(400, 400).await;
 
-    assert_eq(1.0, view.int.value())?;
+    assert_eq!(1.0, view.int.value());
 
     inject_touches(
         r#"
@@ -45,7 +45,7 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq(5.0, view.int.value())?;
+    assert_eq!(5.0, view.int.value());
 
     from_main(move || {
         view.int.set_step(4.5);
@@ -68,7 +68,7 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq(-8.5, view.int.value())?;
+    assert_eq!(-8.5, view.int.value());
 
     debug!("Int view test: OK");
 

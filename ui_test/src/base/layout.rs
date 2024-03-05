@@ -7,7 +7,7 @@ use test_engine::{
 };
 
 use crate::utils::{
-    assert_eq, inject_touches,
+    inject_touches,
     state::{append_state, clear_state, get_state},
 };
 
@@ -142,10 +142,10 @@ pub async fn test_layout() -> Result<()> {
     )
     .await;
 
-    assert_eq(
+    assert_eq!(
         get_state::<String>(),
         "|le_s_ct|left|le_ct|center|ri_ct|right|ri_s_ct|bo_s_ct|bottom|bt_ct|center|tp_ct|top|to_s_ct",
-    )?;
+    );
 
     App::set_window_size((400, 400));
 
@@ -247,10 +247,10 @@ pub async fn test_layout() -> Result<()> {
     )
     .await;
 
-    assert_eq(
+    assert_eq!(
         get_state::<String>(),
         "|le_s_ct|left|le_ct|center|ri_ct|right|ri_s_ct|bo_s_ct|bottom|bt_ct|center|tp_ct|top|to_s_ct",
-    )?;
+    );
 
     debug!("Layout test: OK");
     Ok(())

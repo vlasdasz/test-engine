@@ -1,5 +1,5 @@
 use std::{
-    fmt::{Debug, Display},
+    fmt::Display,
     ops::Deref,
     sync::{Arc, Mutex},
 };
@@ -14,7 +14,7 @@ use test_engine::{
     refs::ToOwn,
     sleep,
     ui::{Touch, U8Color, UIEvents, UIManager},
-    App,
+    wait_for_next_frame, App,
 };
 use tokio::sync::mpsc::channel;
 
@@ -69,6 +69,13 @@ pub async fn inject_scroll(scroll: impl IntoF32) {
 pub async fn inject_touches(data: &str) {
     for touch in Touch::vec_from_str(data) {
         inject_touch(touch).await;
+    }
+}
+
+pub async fn inject_touches_delayed(data: &str) {
+    for touch in Touch::vec_from_str(data) {
+        inject_touch(touch).await;
+        wait_for_next_frame().await;
     }
 }
 
@@ -209,17 +216,4 @@ pub async fn record_touches_with_colors() -> Result<()> {
     drop(touch_lock);
 
     Ok(())
-}
-
-pub fn assert_eq<T: PartialEq<U> + Debug, U: Debug>(a: T, b: U) -> Result<()> {
-    if a == b {
-        return Ok(());
-    }
-
-    let message = format!("Assertion failed: {a:?} != {b:?}");
-    error!("{message}");
-
-    sleep(20.0);
-
-    bail!(message)
 }

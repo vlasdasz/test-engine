@@ -10,7 +10,7 @@ use test_engine::{
 };
 use tokio::time::Instant;
 
-use crate::utils::{assert_eq, helpers::check_colors};
+use crate::utils::helpers::check_colors;
 
 #[view]
 struct PresentTestView {}
@@ -31,7 +31,7 @@ pub async fn test_present() -> Result<()> {
     )
     .await?;
 
-    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+    assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     let now = Instant::now();
 
@@ -62,7 +62,7 @@ pub async fn test_present() -> Result<()> {
         "Duration error is: {duration_error}. Allowed: {allowed_error}"
     );
 
-    assert_eq(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]])?;
+    assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     check_colors(
         r#"

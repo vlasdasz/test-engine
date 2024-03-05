@@ -7,7 +7,7 @@ use test_engine::{
 };
 
 use crate::utils::{
-    assert_eq, inject_touches,
+    inject_touches,
     state::{append_state, clear_state, get_state},
 };
 
@@ -40,7 +40,7 @@ impl ViewSetup for TouchOrderView {
 pub async fn test_touch_order() -> Result<()> {
     App::init_test_view::<TouchOrderView>(600, 600).await;
 
-    assert_eq(
+    assert_eq!(
         TouchStack::dump(),
         vec![vec![
             "Layer: Root view".to_string(),
@@ -49,7 +49,7 @@ pub async fn test_touch_order() -> Result<()> {
             "TouchOrderView.view_3: Container".to_string(),
             "TouchOrderView.view_4: Container".to_string(),
         ]],
-    )?;
+    );
 
     clear_state();
 
