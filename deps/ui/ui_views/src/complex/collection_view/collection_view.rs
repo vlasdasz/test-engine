@@ -57,10 +57,12 @@ impl CollectionView {
             cell.remove_from_superview();
         }
         self.cells.clear();
+
         for i in 0..self.data_source.number_of_cells() {
             let mut cell = self.data_source.make_cell();
             self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
-            let cell = self.scroll.add_subview(cell);
+            let mut cell = self.scroll.add_subview(cell);
+            cell.base_mut().label = format!("Table cell: {}", cell.label());
             // cell.enable_touch_low_priority();
             cell.enable_touch();
             let mut this = weak_from_ref(self);
@@ -108,6 +110,10 @@ impl CollectionView {
         }
 
         let content_height = content_end - content_start;
+
+        if content_height <= 0.0 {
+            return;
+        }
 
         let first_cell_index: usize = (content_start / cell_height).floor().lossy_convert();
         let number_of_cells_fit: usize = (content_height / cell_height).ceil().lossy_convert();

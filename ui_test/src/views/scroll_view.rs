@@ -9,7 +9,7 @@ use test_engine::{
 
 use crate::{
     view_tests::{inject_scroll, inject_touches},
-    views::{helpers::add_corners, image_view::check_colors},
+    views::helpers::{add_corners, check_colors},
 };
 
 #[view]

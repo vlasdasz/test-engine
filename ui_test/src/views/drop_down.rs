@@ -6,7 +6,10 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::{assert_eq, record_ui_test};
+use crate::{
+    view_tests::{assert_eq, record_ui_test},
+    views::helpers::add_action,
+};
 
 #[view]
 struct DropDownTestView {
@@ -17,10 +20,19 @@ struct DropDownTestView {
 impl ViewSetup for DropDownTestView {
     fn setup(mut self: Weak<Self>) {
         self.top.place().size(200, 40).center_x().t(5);
+
+        self.top.on_changed(|val| {
+            dbg!(&val);
+        });
+
         // self.bot.place().size(200, 40).center_x().b(5);
 
         self.top.set_values(["Dog", "Cat", "Sheep"]);
         // self.bot.set_values(["Car", "Boat", "Plane"]);
+
+        add_action(|| {
+            dbg!(TouchStack::dump());
+        });
     }
 }
 

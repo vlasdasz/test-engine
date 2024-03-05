@@ -9,7 +9,7 @@ use test_engine::{
 
 use crate::{
     view_tests::{inject_keys, inject_touches},
-    views::image_view::check_colors,
+    views::helpers::check_colors,
 };
 
 #[view]

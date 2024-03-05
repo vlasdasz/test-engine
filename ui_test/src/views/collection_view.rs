@@ -6,13 +6,13 @@ use test_engine::{
     from_main,
     refs::{Own, Weak},
     ui::{
-        view, CollectionData, CollectionLayout, CollectionView, Label, Size, SubView, View, ViewData,
-        ViewSetup,
+        view, CollectionData, CollectionLayout, CollectionView, Label, Size, SubView, TouchStack, View,
+        ViewData, ViewSetup,
     },
     App,
 };
 
-use crate::views::image_view::check_colors;
+use crate::views::helpers::{add_action, check_colors};
 
 #[view]
 struct CollectionTestView {
@@ -45,6 +45,10 @@ impl ViewSetup for CollectionTestView {
         self.table.place().back();
         self.table.set_data_source(self.deref());
         self.collection.set_data_source(self.deref());
+
+        add_action(|| {
+            dbg!(TouchStack::dump());
+        });
     }
 }
 

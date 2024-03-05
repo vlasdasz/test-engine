@@ -10,14 +10,29 @@ use test_engine::{
     App,
 };
 
-use crate::views::{
-    alert::test_alert, button::test_button, collection_view::test_collection_view, drop_down::test_drop_down,
-    image_view::test_image_view, int_view::test_int_view, keymap::test_keymap, label::test_label,
-    layout::test_layout, modal_test::test_modal, multiline_label::test_multiline,
-    out_bounds_test::test_out_bounds, point_view::test_point_view, present_test::test_present,
-    render_image_path::test_render_image_path, scroll_view::test_scroll_view, selection::test_selection,
-    slider::test_slider, stick::test_stick, switch::test_switch, text_field::test_text_field,
-    text_occlusion::test_text_occlusion, touch_stack::test_touch_stack, view_order::test_view_order,
+use crate::{
+    alert::test_alert,
+    basic::{
+        button::test_button, image_view::test_image_view, label::test_label, slider::test_slider,
+        stick::test_stick, switch::test_switch, text_field::test_text_field,
+    },
+    collection_view::test_collection_view,
+    drop_down::test_drop_down,
+    int_view::test_int_view,
+    keymap::test_keymap,
+    layout::test_layout,
+    modal_test::test_modal,
+    multiline_label::test_multiline,
+    out_bounds_test::test_out_bounds,
+    point_view::test_point_view,
+    present_test::test_present,
+    render_image_path::test_render_image_path,
+    scroll_view::test_scroll_view,
+    selection::test_selection,
+    text_occlusion::test_text_occlusion,
+    touch_stack::test_touch_stack,
+    view_order::test_view_order,
+    views::*,
 };
 
 mod view_tests;

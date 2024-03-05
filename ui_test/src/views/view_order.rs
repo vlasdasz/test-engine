@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::views::image_view::check_colors;
+use crate::views::helpers::check_colors;
 
 #[view]
 pub struct OrderTestView {

@@ -5,6 +5,7 @@ use itertools::Itertools;
 use refs::{Own, Weak};
 use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+use vents::Event;
 
 mod test_engine {
     pub(crate) use refs;
@@ -16,14 +17,19 @@ use crate::{self as ui_views, Button, CollectionData, CollectionView, Label};
 #[view]
 pub struct DropDown {
     #[link = tapped]
-    button: SubView<Button>,
-    label:  SubView<Label>,
-    table:  SubView<CollectionView>,
-    values: Vec<String>,
-    opened: bool,
+    button:  SubView<Button>,
+    label:   SubView<Label>,
+    table:   SubView<CollectionView>,
+    values:  Vec<String>,
+    opened:  bool,
+    changed: Event<String>,
 }
 
 impl DropDown {
+    pub fn on_changed(&self, action: impl FnMut(String) + 'static) {
+        self.changed.val(action)
+    }
+
     pub fn text(&self) -> &str {
         self.label.text()
     }
@@ -35,7 +41,6 @@ impl DropDown {
         let values = values.into_iter().map(|a| a.to_label()).collect_vec();
         self.label.set_text(values.first().unwrap());
         self.values = values;
-        self.table.reload_data();
         let table_size = (self.width(), self.height() * self.number_of_cells() as f32);
         self.table.set_size(table_size);
     }
@@ -108,6 +113,7 @@ impl CollectionData for DropDown {
     fn cell_selected(&mut self, index: usize) {
         let val = &self.values[index];
         self.label.set_text(val);
+        self.changed.trigger(val.clone());
         self.tapped();
     }
 }

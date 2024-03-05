@@ -2,11 +2,11 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{
-        view, Anchor, Color, ImageView, Point, Screenshot, SubView, U8Color, ViewData, ViewSetup, ViewTouch,
-    },
+    ui::{view, Anchor, ImageView, SubView, ViewData, ViewSetup, ViewTouch},
     App,
 };
+
+use crate::views::helpers::check_colors;
 
 #[view]
 struct ImageTestView {
@@ -20,55 +20,6 @@ impl ViewSetup for ImageTestView {
         self.image_view.place().center().relative(Anchor::Size, self, 0.5);
         self.image_view.set_image("gradient.png");
     }
-}
-
-fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
-    let pixel: U8Color = screenshot.get_pixel(pos);
-    let pixel_f32: Color<f32> = pixel.into();
-    let color_f32: Color<f32> = color.into();
-
-    let diff = pixel_f32.diff(color_f32);
-
-    let max_diff = 0.024;
-
-    if diff > max_diff {
-        panic!(
-            "Color diff is too big: {diff}. Max: {max_diff}. Position: {pos:?}. \nExpected: {color}, got: \
-             {pixel}"
-        )
-    }
-}
-
-pub async fn check_colors(data: &str) -> Result<()> {
-    let screenshot = App::take_screenshot().await?;
-
-    let lines: Vec<_> = data.split("\n").collect();
-
-    for line in lines {
-        let parts: Vec<_> = line.split("-").collect();
-
-        if parts.len() != 2 {
-            continue;
-        }
-
-        let pos = parts[0];
-        let color = parts[1];
-
-        let pos: Vec<_> = pos.split(" ").filter(|a| !a.is_empty()).collect();
-        let color: Vec<_> = color.split(" ").filter(|a| !a.is_empty()).collect();
-
-        let pos: Point = Point::new(pos[0].parse().unwrap(), pos[1].parse().unwrap());
-        let color: U8Color = U8Color::rgba(
-            color[0].parse().unwrap(),
-            color[1].parse().unwrap(),
-            color[2].parse().unwrap(),
-            255,
-        );
-
-        check_pixel_color(&screenshot, pos, color);
-    }
-
-    Ok(())
 }
 
 pub async fn test_image_view() -> Result<()> {

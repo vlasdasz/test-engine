@@ -95,6 +95,9 @@ impl TouchStack {
     }
 
     pub fn dump() -> Vec<Vec<String>> {
+        UIManager::free_deleted_views();
+        TouchStack::clear_freed();
+
         let mut result = vec![];
 
         for layer in &Self::get().stack {

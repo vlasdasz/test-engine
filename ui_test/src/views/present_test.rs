@@ -10,7 +10,7 @@ use test_engine::{
 };
 use tokio::time::Instant;
 
-use crate::{view_tests::assert_eq, views::image_view::check_colors};
+use crate::{view_tests::assert_eq, views::helpers::check_colors};
 
 #[view]
 struct PresentTestView {}

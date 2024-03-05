@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::{view_tests::inject_touches, views::image_view::check_colors};
+use crate::{view_tests::inject_touches, views::helpers::check_colors};
 
 #[view]
 struct OutBoundsView {
