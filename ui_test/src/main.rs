@@ -14,7 +14,8 @@ use crate::{
     base::{
         keymap::test_keymap, layout::test_layout, modal_test::test_modal, out_bounds_test::test_out_bounds,
         present_test::test_present, selection::test_selection, template::test_template,
-        text_occlusion::test_text_occlusion, touch_stack::test_touch_stack, view_order::test_view_order,
+        text_occlusion::test_text_occlusion, touch_order::test_touch_order, touch_stack::test_touch_stack,
+        view_order::test_view_order,
     },
     views::{
         alert::test_alert,
@@ -52,6 +53,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_touch_order().await?;
     test_template().await?;
     test_scroll_view().await?;
     test_collection_view().await?;

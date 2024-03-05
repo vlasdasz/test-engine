@@ -49,7 +49,7 @@ pub async fn test_drop_down() -> Result<()> {
     //     ]],
     // )?;
 
-    record_ui_test().await?;
+    record_ui_test().await;
 
     // inject_touches(
     //     r#"

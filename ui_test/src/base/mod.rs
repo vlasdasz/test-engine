@@ -6,5 +6,6 @@ pub mod present_test;
 pub mod selection;
 pub mod template;
 pub mod text_occlusion;
+pub mod touch_order;
 pub mod touch_stack;
 pub mod view_order;

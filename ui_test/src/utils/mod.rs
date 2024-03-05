@@ -152,10 +152,10 @@ async fn record_touches_internal(skip_moved: bool) {
 }
 
 #[allow(dead_code)]
-pub async fn record_ui_test() -> Result<()> {
+pub async fn record_ui_test() {
     loop {
         record_touches().await;
-        record_touches_with_colors().await?;
+        record_touches_with_colors().await.unwrap();
     }
 }
 

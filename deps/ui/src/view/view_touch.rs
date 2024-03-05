@@ -5,7 +5,7 @@ use crate::{
 
 pub trait ViewTouch {
     fn is_selected(&self) -> bool;
-    fn enable_touch(&self);
+    fn enable_touch(&self) -> &Self;
     fn disable_touch(&self);
     fn touch(&self) -> &ViewTouchCallbacks;
 }
@@ -15,8 +15,9 @@ impl<T: ?Sized + View> ViewTouch for T {
         self.base().is_selected
     }
 
-    fn enable_touch(&self) {
+    fn enable_touch(&self) -> &Self {
         TouchStack::enable_for(self.weak_view());
+        self
     }
 
     fn disable_touch(&self) {

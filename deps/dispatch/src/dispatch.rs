@@ -28,11 +28,11 @@ where
         "This is already main thread. Just call it without `from_main`"
     );
 
-    let res = Arc::<Mutex<Option<T>>>::default();
+    let result = Arc::<Mutex<Option<T>>>::default();
 
     let (sender, receiver) = channel::<()>();
 
-    let capture = res.clone();
+    let capture = result.clone();
     SIGNALLED.lock().unwrap().push((
         sender,
         Box::new(move || {
@@ -41,9 +41,9 @@ where
         }),
     ));
 
-    receiver.await.unwrap();
+    receiver.await.expect("Failed to receive result in on_main");
 
-    let res = res.lock().unwrap().take().unwrap();
+    let res = result.lock().unwrap().take().unwrap();
     res
 }
 
