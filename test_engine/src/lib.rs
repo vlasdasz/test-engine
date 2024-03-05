@@ -44,7 +44,7 @@ pub mod input {
 }
 
 pub mod gm {
-    pub use gm::{sign::Sign, Apply, IntoF32, LossyConvert};
+    pub use gm::{sign::Sign, Apply, IntoF32, LossyConvert, Platform};
 }
 
 pub use app::App;
