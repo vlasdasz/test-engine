@@ -6,7 +6,7 @@ use test_engine::{
     wait_for_next_frame, App,
 };
 
-use crate::view_tests::{assert_eq, inject_touches};
+use crate::utils::{assert_eq, inject_touches};
 
 #[view]
 struct TouchStackTestView {

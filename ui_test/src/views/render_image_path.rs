@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::record_touches;
+use crate::utils::record_touches;
 
 #[view]
 struct RenderImagePath {

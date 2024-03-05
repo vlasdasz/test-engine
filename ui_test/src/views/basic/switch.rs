@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::{state::set_state, test_combinations};
+use crate::utils::{state::set_state, test_combinations};
 
 #[view]
 struct SwitchTestView {

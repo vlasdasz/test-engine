@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::{
+use crate::utils::{
     assert_eq, inject_touches,
     state::{append_state, clear_state, get_state},
 };

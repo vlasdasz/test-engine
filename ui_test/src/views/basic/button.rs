@@ -6,7 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::{state::increment_state, test_combinations};
+use crate::utils::{state::increment_state, test_combinations};
 
 #[view]
 struct ButtonTestView {

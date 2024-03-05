@@ -12,7 +12,7 @@ use test_engine::{
     App,
 };
 
-use crate::views::helpers::{add_action, check_colors};
+use crate::utils::helpers::{add_action, check_colors};
 
 #[view]
 struct CollectionTestView {

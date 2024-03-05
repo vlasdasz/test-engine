@@ -7,9 +7,9 @@ use test_engine::{
     App,
 };
 
-use crate::{
-    view_tests::{inject_scroll, inject_touches},
-    views::helpers::{add_corners, check_colors},
+use crate::utils::{
+    helpers::{add_corners, check_colors},
+    inject_scroll, inject_touches,
 };
 
 #[view]

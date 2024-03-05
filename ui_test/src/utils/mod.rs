@@ -18,10 +18,11 @@ use test_engine::{
 };
 use tokio::sync::mpsc::channel;
 
-use crate::view_tests::state::{clear_state, get_state};
+use crate::utils::state::{clear_state, get_state};
 
 const INJECT_INPUT_DELAY: f32 = 0.0;
 
+pub mod helpers;
 pub mod state;
 
 pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>

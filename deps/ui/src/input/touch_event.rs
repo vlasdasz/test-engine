@@ -45,14 +45,3 @@ impl From<ElementState> for TouchEvent {
         }
     }
 }
-
-impl From<i32> for TouchEvent {
-    fn from(value: i32) -> Self {
-        match value {
-            0 => TouchEvent::Began,
-            1 => TouchEvent::Moved,
-            2 => TouchEvent::Ended,
-            _ => unreachable!("Invalid value for touch event"),
-        }
-    }
-}

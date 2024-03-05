@@ -6,7 +6,7 @@ use test_engine::{
     wait_for_next_frame, App,
 };
 
-use crate::view_tests::inject_key;
+use crate::utils::inject_key;
 
 pub async fn test_keymap() -> Result<()> {
     let view = App::init_test_view::<Container>(400, 400).await;

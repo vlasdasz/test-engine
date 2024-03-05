@@ -6,7 +6,7 @@ use test_engine::{
     wait_for_next_frame, App, OnceEvent,
 };
 
-use crate::views::helpers::check_colors;
+use crate::utils::helpers::check_colors;
 
 #[view]
 struct ModalTestView {}

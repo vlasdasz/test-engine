@@ -7,7 +7,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::{assert_eq, inject_touches};
+use crate::utils::{assert_eq, inject_touches};
 
 #[view]
 struct IntTestView {

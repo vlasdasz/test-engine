@@ -7,10 +7,7 @@ use test_engine::{
     App,
 };
 
-use crate::{
-    view_tests::{inject_keys, inject_touches},
-    views::helpers::check_colors,
-};
+use crate::utils::{helpers::check_colors, inject_keys, inject_touches};
 
 #[view]
 struct TextFieldTestView {

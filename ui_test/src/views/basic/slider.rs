@@ -5,7 +5,7 @@ use test_engine::{
     App,
 };
 
-use crate::view_tests::inject_touches;
+use crate::utils::inject_touches;
 
 #[view]
 pub struct SliderTestView {

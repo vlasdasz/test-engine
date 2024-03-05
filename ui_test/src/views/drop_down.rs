@@ -6,10 +6,7 @@ use test_engine::{
     App,
 };
 
-use crate::{
-    view_tests::{assert_eq, record_ui_test},
-    views::helpers::add_action,
-};
+use crate::utils::{assert_eq, helpers::add_action, record_ui_test};
 
 #[view]
 struct DropDownTestView {
