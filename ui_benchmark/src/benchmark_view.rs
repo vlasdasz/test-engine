@@ -1,6 +1,10 @@
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::{
+    sync::atomic::{AtomicU64, Ordering},
+    thread::sleep,
+    time::Duration,
+};
 
-use rtools::{sleep, Random};
+use fake::Fake;
 use test_engine::{
     from_main, on_main,
     refs::Weak,
@@ -46,7 +50,7 @@ impl BenchmarkView {
     fn start_spawning_views(self: Weak<Self>) {
         spawn(async move {
             loop {
-                sleep(0.05);
+                sleep(Duration::from_secs_f32(0.05));
                 let finish = from_main(move || {
                     let filled = self.filled();
 
@@ -81,7 +85,7 @@ impl BenchmarkView {
 
 impl ViewSetup for BenchmarkView {
     fn setup(mut self: Weak<Self>) {
-        self.label.set_text(String::random());
+        self.label.set_text((5..10).fake::<String>());
         self.label.place().back();
         self.label.set_color(Color::random());
         self.label.set_text_color(Color::random());

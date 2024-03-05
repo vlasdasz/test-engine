@@ -22,7 +22,6 @@ winit = { workspace = true }
 
 manage = { workspace = true }
 refs = { workspace = true }
-rtools = { workspace = true }
 
 gm = { workspace = true }
 

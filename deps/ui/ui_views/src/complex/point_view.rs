@@ -1,6 +1,5 @@
-use gm::{flat::Point, IntoF32};
+use gm::{flat::Point, Apply, IntoF32};
 use refs::Weak;
-use rtools::Apply;
 use ui::{view, SubView, ViewData, ViewSetup};
 use vents::Event;
 

@@ -1,7 +1,6 @@
 use dispatch::on_main;
-use gm::Color;
+use gm::{Animation, Color};
 use refs::{Own, ToOwn, Weak};
-use rtools::Animation;
 use ui_proc::view;
 
 use crate::{Touch, WeakView};

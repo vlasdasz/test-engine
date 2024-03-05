@@ -1,7 +1,8 @@
 use anyhow::Result;
 use test_engine::{
+    gm::Apply,
     ui::{Button, Color, Container, Point, Screenshot, U8Color, UIManager, ViewData, ViewSubviews, WeakView},
-    App, Apply,
+    App,
 };
 
 pub fn add_corners(mut view: WeakView, color: Color) {

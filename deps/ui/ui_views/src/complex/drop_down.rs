@@ -1,9 +1,8 @@
 use std::{any::Any, ops::Deref};
 
-use gm::{flat::Size, Color};
+use gm::{flat::Size, Color, Toggle};
 use itertools::Itertools;
 use refs::{Own, Weak};
-use rtools::Toggle;
 use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 use vents::Event;
 

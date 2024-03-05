@@ -1,5 +1,4 @@
-use gm::Color;
-use rtools::platform::Platform;
+use gm::{Color, Platform};
 
 use crate::{layout::Anchor, View, ViewData, WeakView};
 

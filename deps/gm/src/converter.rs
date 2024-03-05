@@ -45,7 +45,7 @@ impl Converter {
 
 #[cfg(test)]
 mod test {
-    use rtools::Random;
+    use fake::Fake;
 
     use crate::converter::Converter;
 
@@ -74,7 +74,7 @@ mod test {
             assert_eq!(edited_conv.convert(1), max);
 
             for _ in 0..100 {
-                let val = f32::random_in(-5.0..5.0);
+                let val = (-5.0..5.0).fake::<f32>();
                 assert_eq!(conv.convert(val), min + val * (max - min));
                 assert_eq!(edited_conv.convert(val), min + val * (max - min));
             }

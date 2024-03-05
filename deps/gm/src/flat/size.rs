@@ -6,7 +6,6 @@ use std::{
 };
 
 use bytemuck::{Pod, Zeroable};
-use rtools::Random;
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -159,15 +158,6 @@ impl From<(u32, u32)> for Size<u32> {
         Self {
             width:  tup.0,
             height: tup.1,
-        }
-    }
-}
-
-impl Random for Size<u32> {
-    fn random() -> Self {
-        Self {
-            width:  u32::random_in(200..800),
-            height: u32::random_in(200..800),
         }
     }
 }

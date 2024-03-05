@@ -16,7 +16,6 @@ gm = { workspace = true }
 manage = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
-rtools = { workspace = true }
 ui = { workspace = true }
 vents = { workspace = true }
 wgpu_wrapper = { workspace = true }

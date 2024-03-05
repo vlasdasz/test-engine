@@ -1,6 +1,8 @@
-use gm::flat::{Direction, Size};
+use gm::{
+    flat::{Direction, Size},
+    Apply,
+};
 use refs::Weak;
-use rtools::Apply;
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewTest};
 use vents::Event;
 mod test_engine {

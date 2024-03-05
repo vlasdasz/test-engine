@@ -20,7 +20,6 @@ log = { workspace = true }
 nonempty = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
-rtools = { workspace = true }
 rust_decimal = { workspace = true }
 tokio = { workspace = true }
 vents = { workspace = true }

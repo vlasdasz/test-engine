@@ -1,12 +1,13 @@
 use std::{
     future::Future,
     sync::{Arc, Mutex},
+    thread::sleep,
+    time::Duration,
 };
 
 use gm::IntoF32;
 use log::warn;
 use refs::is_main_thread;
-use rtools::sleep;
 use tokio::{
     spawn,
     sync::oneshot::{channel, Sender},
@@ -71,14 +72,14 @@ pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
 
 pub fn after(delay: impl IntoF32, action: impl FnOnce() + Send + 'static) {
     spawn(async move {
-        sleep(delay.into_f32());
+        sleep(Duration::from_secs_f32(delay.into_f32()));
         CALLBACKS.lock().unwrap().push(Box::new(action));
     });
 }
 
 pub fn async_after(delay: impl IntoF32, action: impl Future + Send + 'static) {
     spawn(async move {
-        sleep(delay.into_f32());
+        sleep(Duration::from_secs_f32(delay.into_f32()));
         action.await;
     });
 }

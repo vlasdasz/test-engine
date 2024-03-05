@@ -27,7 +27,6 @@ gen = { workspace = true }
 gm = { workspace = true }
 manage = { workspace = true }
 rest = { workspace = true }
-rtools = { workspace = true }
 #sprites = { workspace = true }
 valid = { workspace = true }
 wgpu_wrapper = { workspace = true }

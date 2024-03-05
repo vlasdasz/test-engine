@@ -1,10 +1,9 @@
-use std::path::Path;
+use std::{fs::read, path::Path};
 
 use anyhow::Result;
 use gm::flat::Size;
 use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
 use refs::Weak;
-use rtools::file::File;
 use wgpu::{
     BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
     BindingResource, BindingType, SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
@@ -77,7 +76,7 @@ managed!(Image);
 
 impl ResourceLoader for Image {
     fn load_path(path: &Path) -> Self {
-        Self::load_data(&File::read(path), path.display())
+        Self::load_data(&read(path).unwrap(), path.display())
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {

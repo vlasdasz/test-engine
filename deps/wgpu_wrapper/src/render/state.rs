@@ -2,10 +2,9 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
-use gm::{flat::Size, CheckedConvert, Color, U8Color};
+use gm::{flat::Size, CheckedConvert, Color, Platform, U8Color};
 use log::error;
 use refs::MainLock;
-use rtools::platform::Platform;
 use tokio::{
     spawn,
     sync::oneshot::{channel, Receiver, Sender},

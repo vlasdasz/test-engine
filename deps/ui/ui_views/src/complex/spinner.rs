@@ -3,6 +3,7 @@ use std::{
     sync::{Mutex, MutexGuard},
 };
 
+use gm::Animation;
 use vents::OnceEvent;
 
 mod test_engine {
@@ -18,7 +19,6 @@ use gm::{
 };
 use log::{trace, warn};
 use refs::Weak;
-use rtools::Animation;
 use ui::{
     view, Container, ModalView, TouchStack, UIAnimation, View, ViewAnimation, ViewCallbacks, ViewData,
     ViewFrame, ViewSetup, ViewSubviews, MICROSECONDS_IN_ONE_SECOND,

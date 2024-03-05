@@ -2,6 +2,8 @@ use std::{
     fmt::Display,
     ops::Deref,
     sync::{Arc, Mutex},
+    thread::sleep,
+    time::Duration,
 };
 
 use anyhow::{bail, Result};
@@ -12,7 +14,6 @@ use test_engine::{
     gm::{IntoF32, LossyConvert},
     on_main,
     refs::ToOwn,
-    sleep,
     ui::{Touch, U8Color, UIEvents, UIManager},
     wait_for_next_frame, App,
 };
@@ -50,7 +51,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 }
 
 async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
-    sleep(INJECT_INPUT_DELAY);
+    sleep(Duration::from_secs_f32(INJECT_INPUT_DELAY));
     from_main(move || {
         App::current_mut().process_touch_event(touch.into());
     })
@@ -59,7 +60,7 @@ async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
 
 #[allow(dead_code)]
 pub async fn inject_scroll(scroll: impl IntoF32) {
-    sleep(INJECT_INPUT_DELAY);
+    sleep(Duration::from_secs_f32(INJECT_INPUT_DELAY));
     from_main(move || {
         UIManager::trigger_scroll((0, scroll).into());
     })

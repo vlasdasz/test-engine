@@ -16,7 +16,6 @@ dispatch = { workspace = true }
 gm = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
-rtools = { workspace = true }
 ui = { workspace = true }
 ui_views = { workspace = true }
 

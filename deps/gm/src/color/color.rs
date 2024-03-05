@@ -1,6 +1,6 @@
 use std::hash::{Hash, Hasher};
 
-use rtools::Random;
+use fake::Fake;
 
 use crate::{color::helpers::srgb_to_linear, num::lossy_convert::LossyConvert, Color, U8Color};
 
@@ -66,7 +66,7 @@ impl Color {
     ];
 
     pub fn random() -> Self {
-        Self::ALL[usize::random_in(0..Self::ALL.len())]
+        Self::ALL[(0..Self::ALL.len()).fake::<usize>()]
     }
 }
 

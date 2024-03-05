@@ -22,7 +22,6 @@ dispatch = { workspace = true }
 manage = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
-rtools = { workspace = true }
 vents = { workspace = true }
 
 audio = { workspace = true }

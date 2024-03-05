@@ -44,7 +44,7 @@ pub mod input {
 }
 
 pub mod gm {
-    pub use gm::{sign::Sign, IntoF32, LossyConvert};
+    pub use gm::{sign::Sign, Apply, IntoF32, LossyConvert};
 }
 
 pub use app::App;
@@ -52,6 +52,5 @@ pub use audio;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};
 pub use manage::data_manager::DataManager;
 pub use paths::*;
-pub use rtools::{file::File, platform::Platform, sleep, Apply, Random, RandomContainer, Stored};
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use wgpu_wrapper::cast_slice;

@@ -10,6 +10,7 @@ name = "gm"
 
 [dependencies]
 bytemuck = { workspace = true }
-rtools = { workspace = true }
+chrono = { workspace = true }
+fake = { workspace = true }
 serde = { workspace = true }
 smart-default = { workspace = true }

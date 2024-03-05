@@ -1,5 +1,5 @@
+use gm::Animation;
 use refs::Weak;
-use rtools::Animation;
 use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 use wgpu_wrapper::image::{Image, ToImage};
 

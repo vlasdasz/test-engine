@@ -1,7 +1,7 @@
 use std::ops::DerefMut;
 
 use derivative::Derivative;
-use rtools::Animation;
+use gm::Animation;
 use vents::OnceEvent;
 
 use crate::{view::view_data::ViewData, View};

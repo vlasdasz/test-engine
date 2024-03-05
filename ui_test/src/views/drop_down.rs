@@ -1,9 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
+    gm::Apply,
     refs::Weak,
     ui::{view, DropDown, SubView, ViewData, ViewSetup},
-    App, Apply,
+    App,
 };
 
 use crate::utils::{
