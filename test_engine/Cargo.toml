@@ -7,6 +7,10 @@ version = "0.1.0"
 crate-type = ["rlib", "staticlib", "dylib"]
 name = "test_engine"
 
+[features]
+default = ["audio"]
+audio = ["dep:audio"]
+
 [dependencies]
 anyhow = { workspace = true }
 derivative = { workspace = true }
@@ -24,7 +28,7 @@ reflected = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }
 
-audio = { workspace = true }
+audio = { workspace = true, optional = true }
 gm = { workspace = true }
 rest = { workspace = true }
 ui = { workspace = true }
