@@ -35,10 +35,6 @@ pub mod reflect {
     pub use reflected::{FieldRef, Reflected};
 }
 
-pub mod rest {
-    pub use rest::{req, GetReq, Req, API};
-}
-
 pub mod input {
     pub use winit::event::KeyEvent;
 }

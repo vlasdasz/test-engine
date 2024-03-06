@@ -8,8 +8,8 @@ crate-type = ["rlib", "staticlib", "dylib"]
 name = "test_engine"
 
 [features]
-default = ["audio"]
 audio = ["dep:audio"]
+default = ["audio"]
 
 [dependencies]
 anyhow = { workspace = true }
@@ -30,7 +30,6 @@ vents = { workspace = true }
 
 audio = { workspace = true, optional = true }
 gm = { workspace = true }
-rest = { workspace = true }
 ui = { workspace = true }
 ui_proc = { workspace = true }
 ui_views = { workspace = true }
