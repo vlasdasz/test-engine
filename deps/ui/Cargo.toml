@@ -16,7 +16,6 @@ derivative = { workspace = true }
 dispatch = { workspace = true }
 fake = { workspace = true }
 itertools = { workspace = true }
-log = { workspace = true }
 nonempty = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }

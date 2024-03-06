@@ -8,7 +8,6 @@ chrono = { workspace = true }
 derivative = { workspace = true }
 itertools = { workspace = true }
 log = { workspace = true }
-smart-default = { workspace = true }
 tokio = { workspace = true }
 
 dispatch = { workspace = true }

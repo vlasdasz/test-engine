@@ -12,7 +12,6 @@ name = "wgpu_wrapper"
 anyhow = { workspace = true }
 bytemuck = { workspace = true }
 dispatch = { workspace = true }
-env_logger = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }

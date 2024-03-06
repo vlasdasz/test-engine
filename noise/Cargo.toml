@@ -11,7 +11,6 @@ path = "src/main.rs"
 [dependencies]
 anyhow = { workspace = true }
 derivative = { workspace = true }
-tokio = { workspace = true }
 
 gen = { workspace = true }
 test_engine = { workspace = true }
