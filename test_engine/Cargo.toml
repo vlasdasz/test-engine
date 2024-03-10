@@ -31,6 +31,7 @@ vents = { workspace = true }
 
 audio = { workspace = true, optional = true }
 gm = { workspace = true }
+store = { workspace = true }
 ui = { workspace = true }
 ui_proc = { workspace = true }
 ui_views = { workspace = true }

@@ -43,6 +43,10 @@ pub mod gm {
     pub use gm::{sign::Sign, Apply, IntoF32, LossyConvert, Platform};
 }
 
+pub mod store {
+    pub use store::OnDisk;
+}
+
 pub use app::App;
 pub use audio;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};

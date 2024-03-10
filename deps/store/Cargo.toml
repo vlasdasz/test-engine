@@ -1,0 +1,17 @@
+[package]
+edition = "2021"
+name = "store"
+version = "0.1.0"
+
+
+[dependencies]
+dirs = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+gm = { workspace = true }
+
+[dev-dependencies]
+anyhow = { workspace = true }
+fake = { workspace = true }
+tokio = { workspace = true }
