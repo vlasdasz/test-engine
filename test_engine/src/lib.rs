@@ -45,6 +45,7 @@ pub mod gm {
 
 pub mod store {
     pub use store::{OnDisk, OnDiskEncrypted};
+    pub use store::EncryptionKey;
 }
 
 pub use app::App;

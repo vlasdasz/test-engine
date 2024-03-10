@@ -5,3 +5,4 @@ mod storable;
 
 pub use on_disk::OnDisk;
 pub use on_disk_encrypted::OnDiskEncrypted;
+pub use encrypt::EncryptionKey;

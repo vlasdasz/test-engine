@@ -3,7 +3,7 @@ use std::{marker::PhantomData, str::from_utf8};
 use serde_json::{from_str, to_string};
 
 use crate::{
-    encrypt::{decrypt, encrypt, Key},
+    encrypt::{decrypt, encrypt, EncryptionKey},
     storable::Storable,
     OnDisk,
 };
@@ -21,20 +21,23 @@ impl<T: Storable> OnDiskEncrypted<T> {
         }
     }
 
-    pub fn set(&self, val: impl Into<T>, key: &Key) {
+    pub fn set(&self, val: impl Into<T>, key: &EncryptionKey) {
         let val = val.into();
         let string = to_string(&val).unwrap();
         let encrypted = encrypt(string.as_bytes(), key);
         self.inner.set(encrypted)
     }
 
-    pub fn get(&self, key: &Key) -> T {
+    pub fn get(&self, key: &EncryptionKey) -> T {
         let encrypted = self.inner.get();
+        if encrypted.is_empty() {
+            return T::default();
+        }
         let string = decrypt(encrypted.as_slice(), key);
         from_str(from_utf8(&string).unwrap()).unwrap()
     }
 
-    pub fn reset(&self, key: &Key) {
+    pub fn reset(&self, key: &EncryptionKey) {
         self.set(T::default(), &key)
     }
 }

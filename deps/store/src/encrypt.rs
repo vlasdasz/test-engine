@@ -7,9 +7,9 @@ const AES_KEY_SIZE: usize = 32;
 const NONCE_SIZE: usize = 12;
 pub const KEY_SIZE: usize = AES_KEY_SIZE + NONCE_SIZE;
 
-pub type Key = [u8; KEY_SIZE];
+pub type EncryptionKey = [u8; KEY_SIZE];
 
-fn to_key_nonce(key: &Key) -> (aes_gcm::Key<Aes256Gcm>, Nonce<Aes256Gcm>) {
+fn to_key_nonce(key: &EncryptionKey) -> (aes_gcm::Key<Aes256Gcm>, Nonce<Aes256Gcm>) {
     let nonce = &key[AES_KEY_SIZE..];
     let key = &key[..AES_KEY_SIZE];
 
@@ -19,13 +19,13 @@ fn to_key_nonce(key: &Key) -> (aes_gcm::Key<Aes256Gcm>, Nonce<Aes256Gcm>) {
     )
 }
 
-pub fn encrypt(data: &[u8], key: &Key) -> Vec<u8> {
+pub fn encrypt(data: &[u8], key: &EncryptionKey) -> Vec<u8> {
     let (key, nonce) = to_key_nonce(key);
     let cipher = Aes256Gcm::new(&key);
     cipher.encrypt(&nonce, data).unwrap()
 }
 
-pub fn decrypt(data: &[u8], key: &Key) -> Vec<u8> {
+pub fn decrypt(data: &[u8], key: &EncryptionKey) -> Vec<u8> {
     let (key, nonce) = to_key_nonce(key);
     let cipher = Aes256Gcm::new(&key);
     cipher.decrypt(&nonce, data).unwrap()
