@@ -18,12 +18,6 @@ rustflags = ["-Zshare-generics=off"]
 linker = "rust-lld.exe"
 rustflags = ["-Zshare-generics=off"]
 
-[profile.r2]
-inherits = "release"
-#debug = true
-lto = "fat"
-strip = true
-
 [profile.size]
 inherits = "release-plus"
 opt-level = "z"
@@ -31,6 +25,12 @@ opt-level = "z"
 [profile.release-debug]
 debug = true
 inherits = "release"
+
+[profile.r2]
+inherits = "release"
+#debug = true
+lto = "fat"
+strip = true
 
 [profile.r3]
 codegen-units = 1
