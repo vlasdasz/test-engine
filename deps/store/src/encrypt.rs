@@ -1,42 +1,58 @@
+use aes_gcm::{
+    aead::{Aead, KeyInit, Nonce},
+    Aes256Gcm,
+};
+
+const AES_KEY_SIZE: usize = 32;
+const NONCE_SIZE: usize = 12;
+pub const KEY_SIZE: usize = AES_KEY_SIZE + NONCE_SIZE;
+
+pub type Key = [u8; KEY_SIZE];
+
+fn to_key_nonce(key: &Key) -> (aes_gcm::Key<Aes256Gcm>, Nonce<Aes256Gcm>) {
+    let nonce = &key[AES_KEY_SIZE..];
+    let key = &key[..AES_KEY_SIZE];
+
+    (
+        *aes_gcm::Key::<Aes256Gcm>::from_slice(key),
+        *Nonce::<Aes256Gcm>::from_slice(nonce),
+    )
+}
+
+pub fn encrypt(data: &[u8], key: &Key) -> Vec<u8> {
+    let (key, nonce) = to_key_nonce(key);
+    let cipher = Aes256Gcm::new(&key);
+    cipher.encrypt(&nonce, data).unwrap()
+}
+
+pub fn decrypt(data: &[u8], key: &Key) -> Vec<u8> {
+    let (key, nonce) = to_key_nonce(key);
+    let cipher = Aes256Gcm::new(&key);
+    cipher.decrypt(&nonce, data).unwrap()
+}
+
 #[cfg(test)]
 mod test {
 
-    use hex_literal::hex;
-    // Import relevant traits
-    use salsa20::cipher::{KeyIvInit, StreamCipher, StreamCipherSeek};
-    use salsa20::Salsa20;
+    use rand::{thread_rng, RngCore};
+
+    use crate::encrypt::{decrypt, encrypt, Key, KEY_SIZE};
 
     #[test]
     fn test() {
-        let key = [0x42; 32];
-        let nonce = [0x24; 8];
-        let plaintext = hex!("00010203 04050607 08090A0B 0C0D0E0F");
-        let ciphertext = hex!("85843cc5 d58cce7b 5dd3dd04 fa005ded");
+        let mut key: Key = [0; KEY_SIZE];
+        thread_rng().fill_bytes(&mut key);
 
-        // Key and IV must be references to the `GenericArray` type.
-        // Here we use the `Into` trait to convert arrays into it.
-        let mut cipher = Salsa20::new(&key.into(), &nonce.into());
+        let encrypted = encrypt(
+            b"SOKOLLL!! fjdsa fjasd;k flkdsa hfjklsda lfdkkadshksalkjaskjd jljljsdslkjsksj",
+            &key,
+        );
 
-        let mut buffer = plaintext.clone();
+        let decrypted = decrypt(&encrypted, &key);
 
-        // apply keystream (encrypt)
-        cipher.apply_keystream(&mut buffer);
-        assert_eq!(buffer, ciphertext);
-
-        let ciphertext = buffer.clone();
-
-        // Salsa ciphers support seeking
-        cipher.seek(0u32);
-
-        // decrypt ciphertext by applying keystream again
-        cipher.apply_keystream(&mut buffer);
-        assert_eq!(buffer, plaintext);
-
-        // stream ciphers can be used with streaming messages
-        cipher.seek(0u32);
-        for chunk in buffer.chunks_mut(3) {
-            cipher.apply_keystream(chunk);
-        }
-        assert_eq!(buffer, ciphertext);
+        assert_eq!(
+            decrypted,
+            b"SOKOLLL!! fjdsa fjasd;k flkdsa hfjklsda lfdkkadshksalkjaskjd jljljsdslkjsksj"
+        );
     }
 }

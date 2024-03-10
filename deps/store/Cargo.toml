@@ -5,8 +5,7 @@ version = "0.1.0"
 
 
 [dependencies]
-salsa20 = "0.10"
-hex-literal = "0.4.1"
+aes-gcm = "0.10.3"
 
 dirs = { workspace = true }
 rand = { workspace = true }
