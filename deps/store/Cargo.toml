@@ -5,7 +5,11 @@ version = "0.1.0"
 
 
 [dependencies]
+salsa20 = "0.10"
+hex-literal = "0.4.1"
+
 dirs = { workspace = true }
+rand = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 

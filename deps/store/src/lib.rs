@@ -1,3 +1,4 @@
+mod encrypt;
 mod on_disk;
 mod storable;
 
