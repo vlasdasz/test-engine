@@ -51,10 +51,15 @@ pub async fn test_scroll_view() -> Result<()> {
     )
     .await?;
 
-    inject_scroll(5).await;
-    inject_scroll(20).await;
-    inject_scroll(30).await;
+    assert_eq!(view.scroll.content_offset.y, 0.0);
 
+    inject_scroll(5).await;
+    assert_eq!(view.scroll.content_offset.y, 5.0);
+
+    inject_scroll(20).await;
+    assert_eq!(view.scroll.content_offset.y, 25.0);
+
+    inject_scroll(30).await;
     assert_eq!(view.scroll.content_offset.y, 55.0);
 
     check_colors(
@@ -84,6 +89,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await?;
 
     inject_scroll(-55).await;
+    assert_eq!(view.scroll.content_offset.y, 0.0);
 
     check_colors(
         r#"
