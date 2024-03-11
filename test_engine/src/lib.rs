@@ -46,6 +46,7 @@ pub mod gm {
 }
 
 pub mod store {
+    pub(crate) use store;
     pub use store::{EncryptionKey, OnDisk, OnDiskEncrypted};
 }
 
@@ -54,5 +55,6 @@ pub use audio;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};
 pub use manage::data_manager::DataManager;
 pub use paths::*;
+pub use store::store::executable_name;
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use wgpu_wrapper::cast_slice;

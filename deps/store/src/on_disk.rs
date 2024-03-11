@@ -9,7 +9,7 @@ use gm::Platform;
 
 use crate::storable::Storable;
 
-fn executable_name() -> String {
+pub fn executable_name() -> String {
     std::env::current_exe()
         .expect("Failed to get std::env::current_exe()")
         .file_name()
