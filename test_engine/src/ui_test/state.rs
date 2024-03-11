@@ -1,4 +1,7 @@
-use std::sync::{Mutex, MutexGuard, OnceLock};
+use std::{
+    fmt::Display,
+    sync::{Mutex, MutexGuard, OnceLock},
+};
 
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{from_str, to_string};
@@ -36,9 +39,9 @@ pub fn increment_state() {
     set_state(val + 1);
 }
 
-pub fn append_state(val: &str) {
+pub fn append_state(val: impl Display) {
     let mut stored: String = get_state();
-    stored += val;
+    stored += &format!("{val}");
     set_state(stored);
 }
 

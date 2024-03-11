@@ -61,6 +61,10 @@ impl TouchStack {
         Self::get().layer_for(view).add(view)
     }
 
+    pub fn enable_for_low_priority(view: WeakView) {
+        Self::get().layer_for(view).add_low_priority(view)
+    }
+
     pub fn disable_for(view: WeakView) {
         Self::get().layer_for(view).remove(view)
     }

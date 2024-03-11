@@ -1,6 +1,6 @@
 use gm::{flat::Size, LossyConvert};
 use refs::{weak_from_ref, Weak};
-use ui::{view, Sub, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
+use ui::{view, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
 
 mod test_engine {
     pub(crate) use refs;
@@ -39,6 +39,9 @@ impl ViewSetup for CollectionView {
     fn setup(mut self: Weak<Self>) {
         self.scroll.content_size = (1000, 1500).into();
         self.scroll.place().back();
+        self.size_changed().sub(move || {
+            self.reload_data();
+        });
     }
 }
 
@@ -63,8 +66,7 @@ impl CollectionView {
             self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
             let mut cell = self.scroll.add_subview(cell);
             cell.base_mut().label = format!("Table cell: {}", cell.label());
-            // cell.enable_touch_low_priority();
-            cell.enable_touch();
+            cell.enable_touch_low_priority();
             let mut this = weak_from_ref(self);
             cell.touch().up_inside.sub(move || this.data_source.cell_selected(i));
             self.cells.push(cell);
@@ -131,8 +133,7 @@ impl CollectionView {
 
             self.data_source.setup_cell_for_index(cell.as_any_mut(), index);
             cell.set_frame((0, index as f32 * cell_height, width, cell_height));
-            //     cell.enable_touch_low_priority();
-            cell.enable_touch();
+            cell.enable_touch_low_priority();
             let mut this = weak_from_ref(self);
             cell.touch().began.sub(move || this.data_source.cell_selected(index));
             self.cells.push(cell);
@@ -164,11 +165,5 @@ impl CollectionView {
         for (i, cell) in self.cells.iter_mut().enumerate() {
             cell.set_frame(rectangles[i]);
         }
-    }
-}
-
-impl ViewCallbacks for CollectionView {
-    fn update(&mut self) {
-        self.layout()
     }
 }

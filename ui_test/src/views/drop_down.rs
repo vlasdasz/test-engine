@@ -5,8 +5,8 @@ use test_engine::{
     refs::Weak,
     ui::{view, DropDown, Sub, ViewData, ViewSetup},
     ui_test::{
-        inject_touches, inject_touches_delayed,
-        state::{append_state, clear_state, get_state},
+        inject_touches, inject_touches_delayed, record_ui_test,
+        state::{append_state, get_state},
     },
     App,
 };
@@ -37,8 +37,6 @@ impl ViewSetup for DropDownTestView {
 pub async fn test_drop_down() -> Result<()> {
     let view = App::init_test_view::<DropDownTestView>().await;
 
-    clear_state();
-
     assert_eq!(view.top.text(), "Dog");
     assert_eq!(view.bot.text(), "Car");
 
@@ -55,6 +53,8 @@ pub async fn test_drop_down() -> Result<()> {
         "#,
     )
     .await;
+
+    record_ui_test().await;
 
     assert_eq!(view.top.text(), "Cat");
     assert_eq!(view.bot.text(), "Boat");

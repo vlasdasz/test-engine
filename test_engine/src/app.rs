@@ -27,7 +27,7 @@ use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Sectio
 use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, WGPUApp, WGPUDrawer};
 use winit::event::{KeyEvent, TouchPhase};
 
-use crate::assets::Assets;
+use crate::{assets::Assets, ui_test::state::clear_state};
 
 static mut APP: *mut App = null_mut();
 
@@ -145,6 +145,8 @@ impl App {
     }
 
     pub async fn set_test_view<T: View + 'static>(view: Own<T>, width: u32, height: u32) -> Weak<T> {
+        clear_state();
+
         App::set_window_size((width, height));
         wait_for_next_frame().await;
         let view = from_main(move || {

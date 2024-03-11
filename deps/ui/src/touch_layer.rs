@@ -12,6 +12,10 @@ impl TouchLayer {
         self.touches.push(view);
     }
 
+    pub(crate) fn add_low_priority(&mut self, view: WeakView) {
+        self.touches.insert(0, view);
+    }
+
     pub(crate) fn remove(&mut self, view: WeakView) {
         self.touches.retain(|a| a.addr() != view.addr());
     }
