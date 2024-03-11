@@ -53,6 +53,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_buttons_on_table_view().await?;
     test_drop_down().await?;
     test_touch_order().await?;
     test_template().await?;
@@ -83,7 +84,6 @@ async fn test() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
-    test_buttons_on_table_view().await?;
     test_render_image_path().await?;
 
     Ok(())

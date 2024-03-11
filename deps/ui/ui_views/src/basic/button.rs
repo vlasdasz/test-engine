@@ -20,9 +20,10 @@ pub struct Button {
 }
 
 impl Button {
-    pub fn on_tap(&self, action: impl FnMut() + 'static) {
+    pub fn on_tap(&self, action: impl FnMut() + 'static) -> &Self {
         self.enable_touch();
         self.on_tap.sub(action);
+        self
     }
 
     pub fn text(&self) -> &str {

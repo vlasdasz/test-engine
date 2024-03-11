@@ -1,4 +1,4 @@
-use std::ops::DerefMut;
+use std::{any::type_name, ops::DerefMut};
 
 use fake::Fake;
 use gm::{
@@ -24,6 +24,8 @@ pub trait ViewSubviews {
     fn add_dummy_view(&mut self);
 
     fn apply_to_all_subviews(&mut self, action: impl FnMut(&mut dyn View) + Clone + 'static);
+
+    fn get_subview<V: 'static + View + Default>(&mut self) -> Weak<V>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -119,5 +121,15 @@ impl<T: ?Sized + View> ViewSubviews for T {
         for view in &mut self.base_mut().subviews {
             view.apply_to_all_subviews(action.clone());
         }
+    }
+
+    fn get_subview<V: 'static + View + Default>(&mut self) -> Weak<V> {
+        for sub in self.subviews() {
+            if let Some(view) = sub.downcast::<V>() {
+                return view;
+            }
+        }
+
+        panic!("View of type: {} not found", type_name::<V>());
     }
 }

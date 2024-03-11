@@ -54,7 +54,7 @@ impl ViewSetup for LayoutTestView {
 
             button.on_tap(move || {
                 append_state(&format!("|{}", button.text()));
-            })
+            });
         }
 
         self.center.place().center();
