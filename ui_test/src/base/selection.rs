@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Anchor, Color, SubView, ViewCallbacks, ViewData, ViewSetup, ViewTouch},
+    ui_test::{helpers::check_colors, inject_touches},
     App,
 };
-
-use crate::utils::{helpers::check_colors, inject_touches};
 
 #[view]
 struct Selectable {}

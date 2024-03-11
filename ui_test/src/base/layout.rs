@@ -3,12 +3,11 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Anchor, Button, Color, SubView, ViewData, ViewSetup, ViewSubviews},
+    ui_test::{
+        inject_touches,
+        state::{append_state, clear_state, get_state},
+    },
     App,
-};
-
-use crate::utils::{
-    inject_touches,
-    state::{append_state, clear_state, get_state},
 };
 
 #[view]

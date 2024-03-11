@@ -9,10 +9,9 @@ use test_engine::{
         view, CollectionData, CollectionLayout, CollectionView, Label, Size, SubView, TouchStack, View,
         ViewData, ViewSetup,
     },
+    ui_test::helpers::{add_action, check_colors},
     App,
 };
-
-use crate::utils::helpers::{add_action, check_colors};
 
 #[view]
 struct CollectionTestView {

@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, ImageView, SubView, ViewData, ViewSetup},
+    ui_test::record_touches,
     App,
 };
-
-use crate::utils::record_touches;
 
 #[view]
 struct RenderImagePath {

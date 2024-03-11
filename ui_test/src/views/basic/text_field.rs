@@ -4,10 +4,9 @@ use test_engine::{
     from_main,
     refs::Weak,
     ui::{view, Anchor, SubView, TextField, ViewData, ViewSetup},
+    ui_test::{helpers::check_colors, inject_keys, inject_touches},
     App,
 };
-
-use crate::utils::{helpers::check_colors, inject_keys, inject_touches};
 
 #[view]
 struct TextFieldTestView {

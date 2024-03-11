@@ -2,10 +2,9 @@ use anyhow::Result;
 use test_engine::{
     refs::{Own, Weak},
     ui::{view, Label, Point, PointView, SubView, ViewData, ViewSetup},
+    ui_test::inject_touches,
     App,
 };
-
-use crate::utils::inject_touches;
 
 #[view]
 struct PointTestView {

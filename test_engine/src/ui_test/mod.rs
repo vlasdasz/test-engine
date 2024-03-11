@@ -9,17 +9,17 @@ use std::{
 use anyhow::{bail, Result};
 use log::{error, warn};
 use serde::de::DeserializeOwned;
-use test_engine::{
+use tokio::sync::mpsc::channel;
+
+use crate::{
     from_main,
     gm::{IntoF32, LossyConvert},
     on_main,
     refs::ToOwn,
     ui::{Touch, U8Color, UIEvents, UIManager},
+    ui_test::state::{clear_state, get_state},
     wait_for_next_frame, App,
 };
-use tokio::sync::mpsc::channel;
-
-use crate::utils::state::{clear_state, get_state};
 
 const INJECT_INPUT_DELAY: f32 = 0.0;
 
@@ -135,7 +135,7 @@ async fn record_touches_internal(skip_moved: bool) {
         })
     });
 
-    if let None = r.recv().await {
+    if r.recv().await.is_none() {
         warn!("Failed to receive record_touches result");
     }
 
@@ -147,15 +147,13 @@ async fn record_touches_internal(skip_moved: bool) {
     println!(
         r#"
         inject_touches(
-        {}
+        "
 {}
-        {},
+        ",
     )
         .await;
     "#,
-        "r#\"",
         Touch::str_from_vec(touches.to_vec()),
-        "\"#"
     );
 }
 
@@ -192,7 +190,7 @@ pub async fn record_touches_with_colors() -> Result<()> {
         })
     });
 
-    if let None = r.recv().await {
+    if r.recv().await.is_none() {
         warn!("Failed to receive record_touches_with_colors result");
     }
 

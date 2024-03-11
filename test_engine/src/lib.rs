@@ -9,6 +9,8 @@ mod assets;
 mod paths;
 mod views;
 
+pub mod ui_test;
+
 pub mod ui {
     pub use ::ui::*;
     pub use gm::{

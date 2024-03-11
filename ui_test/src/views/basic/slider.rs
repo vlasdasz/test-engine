@@ -2,10 +2,9 @@ use anyhow::Result;
 use test_engine::{
     refs::Weak,
     ui::{view, Anchor, Color, Label, Slider, SubView, ViewData, ViewSetup},
+    ui_test::inject_touches,
     App,
 };
-
-use crate::utils::inject_touches;
 
 #[view]
 pub struct SliderTestView {

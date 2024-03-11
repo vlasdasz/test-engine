@@ -18,7 +18,7 @@ fn executable_name() -> String {
         .into()
 }
 
-fn storage_dir() -> PathBuf {
+pub(crate) fn storage_dir() -> PathBuf {
     let home = if Platform::MOBILE {
         dirs::document_dir()
     } else {
@@ -32,7 +32,7 @@ fn storage_dir() -> PathBuf {
 fn set_value<T: serde::ser::Serialize>(value: T, key: &str) {
     let json = serde_json::to_string_pretty(&value).expect("Failed to serialize data");
     let dir = storage_dir();
-    fs::create_dir_all(&dir).unwrap();
+    _ = fs::create_dir_all(&dir);
     fs::write(dir.join(key), json).expect("Failed to write to file");
 }
 
@@ -86,17 +86,13 @@ impl<T: Storable + Debug> Debug for OnDisk<T> {
 
 #[cfg(test)]
 mod test {
-    use std::fs;
 
     use anyhow::Result;
     use fake::{Fake, Faker};
     use serde::{Deserialize, Serialize};
     use tokio::spawn;
 
-    use crate::{
-        on_disk::{executable_name, storage_dir},
-        OnDisk,
-    };
+    use crate::{on_disk::executable_name, OnDisk};
 
     #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
     struct Data {
@@ -112,8 +108,6 @@ mod test {
 
     #[tokio::test]
     async fn stored() -> Result<()> {
-        _ = fs::remove_dir_all(storage_dir());
-
         check_send(&STORED);
         check_sync(&STORED);
         check_send(&STORED_STRUCT);

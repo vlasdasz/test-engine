@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::{Own, Weak},
     ui::{view, Color, Container, Point, PointView, StickView, SubView, ViewData, ViewFrame, ViewSetup},
+    ui_test::{helpers::check_colors, inject_touches},
     App,
 };
-
-use crate::utils::{helpers::check_colors, inject_touches};
 
 #[view]
 struct StickTestView {

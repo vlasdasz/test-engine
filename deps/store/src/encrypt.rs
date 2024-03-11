@@ -36,11 +36,14 @@ mod test {
 
     use rand::{thread_rng, RngCore};
 
-    use crate::encrypt::{decrypt, encrypt, Key, KEY_SIZE};
+    use crate::{
+        encrypt::{decrypt, encrypt, KEY_SIZE},
+        EncryptionKey,
+    };
 
     #[test]
     fn test() {
-        let mut key: Key = [0; KEY_SIZE];
+        let mut key: EncryptionKey = [0; KEY_SIZE];
         thread_rng().fill_bytes(&mut key);
 
         let encrypted = encrypt(

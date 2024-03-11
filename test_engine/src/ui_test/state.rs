@@ -44,7 +44,11 @@ pub fn append_state(val: &str) {
 
 #[cfg(test)]
 mod test {
-    use crate::utils::state::{append_state, clear_state, get_state, increment_state};
+
+    use crate::ui_test::{
+        clear_state, get_state,
+        state::{append_state, increment_state},
+    };
 
     #[test]
     fn test_state() {

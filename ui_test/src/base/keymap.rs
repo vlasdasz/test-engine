@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Own,
     ui::{Container, UIManager},
+    ui_test::inject_key,
     wait_for_next_frame, App,
 };
-
-use crate::utils::inject_key;
 
 pub async fn test_keymap() -> Result<()> {
     let view = App::init_test_view::<Container>(400, 400).await;

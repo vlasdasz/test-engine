@@ -4,10 +4,9 @@ use test_engine::{
     from_main,
     refs::Weak,
     ui::{view, IntView, SubView, ViewData, ViewSetup},
+    ui_test::inject_touches,
     App,
 };
-
-use crate::utils::inject_touches;
 
 #[view]
 struct IntTestView {

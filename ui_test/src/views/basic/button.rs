@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Button, SubView, ViewData, ViewSetup},
+    ui_test::{state::increment_state, test_combinations},
     App,
 };
-
-use crate::utils::{state::increment_state, test_combinations};
 
 #[view]
 struct ButtonTestView {

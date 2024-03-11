@@ -4,12 +4,11 @@ use test_engine::{
     gm::Apply,
     refs::Weak,
     ui::{view, Color, Container, SubView, TouchStack, ViewData, ViewSetup, ViewTouch},
+    ui_test::{
+        inject_touches,
+        state::{append_state, clear_state, get_state},
+    },
     App,
-};
-
-use crate::utils::{
-    inject_touches,
-    state::{append_state, clear_state, get_state},
 };
 
 #[view]

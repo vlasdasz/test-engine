@@ -4,10 +4,9 @@ use test_engine::{
     from_main,
     refs::Weak,
     ui::{view, Anchor, Color, IntView, Label, SubView, ViewData, ViewSetup},
+    ui_test::{helpers::check_colors, inject_touches},
     App,
 };
-
-use crate::utils::{helpers::check_colors, inject_touches};
 
 #[view]
 struct LabelTestView {

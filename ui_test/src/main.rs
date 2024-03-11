@@ -33,7 +33,6 @@ use crate::{
 };
 
 mod base;
-mod utils;
 mod views;
 
 #[tokio::main]

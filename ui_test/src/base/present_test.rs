@@ -6,11 +6,10 @@ use test_engine::{
         view, Color, Container, NavigationView, TouchStack, ViewController, ViewData, ViewSetup,
         PRESENT_ANIMATION_DURATION,
     },
+    ui_test::helpers::check_colors,
     App,
 };
 use tokio::time::Instant;
-
-use crate::utils::helpers::check_colors;
 
 #[view]
 struct PresentTestView {}

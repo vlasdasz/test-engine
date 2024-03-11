@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     from_main,
     ui::{view, Alert, Button, SubView, TouchStack, ViewSubviews, ViewTouch},
+    ui_test::inject_touches,
     wait_for_next_frame, App,
 };
-
-use crate::utils::inject_touches;
 
 #[view]
 struct TouchStackTestView {

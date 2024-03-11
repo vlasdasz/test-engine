@@ -4,12 +4,11 @@ use test_engine::{
     gm::Apply,
     refs::Weak,
     ui::{view, DropDown, SubView, ViewData, ViewSetup},
+    ui_test::{
+        inject_touches, inject_touches_delayed,
+        state::{append_state, clear_state, get_state},
+    },
     App,
-};
-
-use crate::utils::{
-    inject_touches, inject_touches_delayed,
-    state::{append_state, clear_state, get_state},
 };
 
 #[view]

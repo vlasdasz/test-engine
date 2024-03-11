@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Anchor, ImageView, IntView, Label, SubView, ViewData, ViewFrame, ViewSetup, ViewSubviews},
+    ui_test::{helpers::check_colors, inject_touches},
     App,
 };
-
-use crate::utils::{helpers::check_colors, inject_touches};
 
 #[view]
 struct OutBoundsView {

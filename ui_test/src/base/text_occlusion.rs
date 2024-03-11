@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Color, Label, SubView, ViewData, ViewSetup},
+    ui_test::helpers::check_colors,
     App,
 };
-
-use crate::utils::helpers::check_colors;
 
 #[view]
 pub struct TextOccclusionTestView {

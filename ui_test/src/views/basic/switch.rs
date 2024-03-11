@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, SubView, Switch, ViewData, ViewSetup},
+    ui_test::{state::set_state, test_combinations},
     App,
 };
-
-use crate::utils::{state::set_state, test_combinations};
 
 #[view]
 struct SwitchTestView {

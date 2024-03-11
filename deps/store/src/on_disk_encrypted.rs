@@ -38,19 +38,18 @@ impl<T: Storable> OnDiskEncrypted<T> {
     }
 
     pub fn reset(&self, key: &EncryptionKey) {
-        self.set(T::default(), &key)
+        self.set(T::default(), key)
     }
 }
 
 #[cfg(test)]
 mod test {
-
     use anyhow::Result;
     use fake::{Fake, Faker};
     use serde::{Deserialize, Serialize};
     use tokio::spawn;
 
-    use crate::{encrypt::Key, on_disk_encrypted::OnDiskEncrypted};
+    use crate::{on_disk_encrypted::OnDiskEncrypted, EncryptionKey};
 
     #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
     struct Data {
@@ -61,7 +60,7 @@ mod test {
     static STORED: OnDiskEncrypted<i32> = OnDiskEncrypted::new("stored_i32_encrypted_test");
     static STORED_STRUCT: OnDiskEncrypted<Data> = OnDiskEncrypted::new("stored_struct_encrypted_test");
 
-    static KEY: Key = [
+    static KEY: EncryptionKey = [
         1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1, 2, 5, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 2, 3, 4, 5, 6,
         7, 8, 9, 0, 9, 87, 6, 5, 3, 3,
     ];

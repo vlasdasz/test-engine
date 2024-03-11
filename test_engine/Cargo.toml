@@ -18,6 +18,8 @@ derivative = { workspace = true }
 env_logger = { workspace = true }
 home = { workspace = true }
 log = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 tokio = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }

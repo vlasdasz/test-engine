@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Anchor, ImageView, SubView, ViewData, ViewSetup, ViewTouch},
+    ui_test::helpers::check_colors,
     App,
 };
-
-use crate::utils::helpers::check_colors;
 
 #[view]
 struct ImageTestView {

@@ -3,10 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Label, ModalView, Size, SubView, ViewData, ViewSetup, ViewSubviews},
+    ui_test::helpers::check_colors,
     wait_for_next_frame, App, OnceEvent,
 };
-
-use crate::utils::helpers::check_colors;
 
 #[view]
 struct ModalTestView {}

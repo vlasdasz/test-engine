@@ -4,12 +4,11 @@ use test_engine::{
     from_main,
     refs::Weak,
     ui::{view, Color, ScrollView, SubView, ViewData, ViewSetup},
+    ui_test::{
+        helpers::{add_corners, check_colors},
+        inject_scroll, inject_touches,
+    },
     App,
-};
-
-use crate::utils::{
-    helpers::{add_corners, check_colors},
-    inject_scroll, inject_touches,
 };
 
 #[view]
