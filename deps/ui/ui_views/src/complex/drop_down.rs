@@ -50,11 +50,11 @@ impl DropDown {
             self.table.set_hidden(true);
         } else {
             self.label.set_hidden(true);
-            self.table.reload_data();
             self.table.set_hidden(false);
             let table_height = self.height() * self.number_of_cells() as f32;
             let table_size = (self.width(), table_height);
             self.table.set_size(table_size);
+            self.table.reload_data();
 
             if self.superview().height() - self.max_y() < table_height {
                 let y = -table_height + self.height();

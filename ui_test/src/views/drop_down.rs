@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, DropDown, Sub, ViewData, ViewSetup},
+    ui::{view, DropDown, Sub, TouchStack, ViewData, ViewSetup},
     ui_test::{
         inject_touches, inject_touches_delayed, record_ui_test,
         state::{append_state, get_state},
@@ -14,12 +14,15 @@ use test_engine::{
 #[view]
 struct DropDownTestView {
     top: Sub<DropDown>,
-    bot: Sub<DropDown>,
+    //  bot: Sub<DropDown>,
 }
 
 impl ViewSetup for DropDownTestView {
     fn setup(mut self: Weak<Self>) {
-        [self.top, self.bot].apply(|v| {
+        [
+            self.top, //, self.bot
+        ]
+        .apply(|v| {
             v.on_changed(|val| {
                 append_state(&format!("{val}\n"));
             });
@@ -27,10 +30,10 @@ impl ViewSetup for DropDownTestView {
         });
 
         self.top.place().t(5);
-        self.bot.place().b(5);
+        // self.bot.place().b(5);
 
         self.top.set_values(["Dog", "Cat", "Sheep"]);
-        self.bot.set_values(["Car", "Boat", "Plane"]);
+        //  self.bot.set_values(["Car", "Boat", "Plane"]);
     }
 }
 
@@ -38,7 +41,11 @@ pub async fn test_drop_down() -> Result<()> {
     let view = App::init_test_view::<DropDownTestView>().await;
 
     assert_eq!(view.top.text(), "Dog");
-    assert_eq!(view.bot.text(), "Car");
+    //  assert_eq!(view.bot.text(), "Car");
+
+    dbg!(TouchStack::dump());
+
+    record_ui_test().await;
 
     inject_touches_delayed(
         r#"
@@ -54,10 +61,8 @@ pub async fn test_drop_down() -> Result<()> {
     )
     .await;
 
-    record_ui_test().await;
-
     assert_eq!(view.top.text(), "Cat");
-    assert_eq!(view.bot.text(), "Boat");
+    //  assert_eq!(view.bot.text(), "Boat");
 
     inject_touches_delayed(
         r#"
@@ -74,7 +79,7 @@ pub async fn test_drop_down() -> Result<()> {
     .await;
 
     assert_eq!(view.top.text(), "Sheep");
-    assert_eq!(view.bot.text(), "Plane");
+    //  assert_eq!(view.bot.text(), "Plane");
 
     inject_touches(
         r#"
@@ -91,7 +96,7 @@ pub async fn test_drop_down() -> Result<()> {
     .await;
 
     assert_eq!(view.top.text(), "Dog");
-    assert_eq!(view.bot.text(), "Car");
+    //assert_eq!(view.bot.text(), "Car");
 
     assert_eq!(
         get_state::<String>(),

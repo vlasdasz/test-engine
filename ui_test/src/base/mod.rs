@@ -1,6 +1,7 @@
 pub mod keymap;
 pub mod layout;
 pub mod modal_test;
+pub mod on_tap_add;
 pub mod out_bounds_test;
 pub mod present_test;
 pub mod selection;

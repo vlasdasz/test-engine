@@ -46,8 +46,9 @@ impl ViewSetup for CollectionView {
 }
 
 impl CollectionView {
-    pub fn set_data_source(mut self: Weak<Self>, data: &(impl CollectionData + 'static)) {
+    pub fn set_data_source(mut self: Weak<Self>, data: &(impl CollectionData + 'static)) -> Weak<Self> {
         self.data_source = weak_from_ref(data);
+        self
     }
 
     pub fn reload_data(&mut self) {
@@ -92,6 +93,12 @@ impl CollectionView {
         );
 
         let number_of_cells = self.data_source.number_of_cells();
+
+        // dbg!(&number_of_cells);
+        // dbg!(self.frame());
+        // dbg!(self.is_hidden());
+        // dbg!(self.absolute_frame());
+        // dbg!(self.subviews());
 
         if number_of_cells == 0 {
             return;
