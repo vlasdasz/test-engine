@@ -1,6 +1,6 @@
 use gm::Animation;
 use refs::Weak;
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use ui::{view, Sub, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 use wgpu_wrapper::image::{Image, ToImage};
 
 mod test_engine {
@@ -12,11 +12,11 @@ use crate::{Button, ImageView, Label};
 
 #[view]
 pub struct ViewWithCat {
-    label:    SubView<Label>,
-    button:   SubView<Button>,
-    image:    SubView<ImageView>,
+    label:    Sub<Label>,
+    button:   Sub<Button>,
+    image:    Sub<ImageView>,
     // drawing:  SubView<DrawingView>,
-    animated: SubView<ImageView>,
+    animated: Sub<ImageView>,
 
     animation: Animation,
 

@@ -1,6 +1,6 @@
 use gm::{flat::PointsPath, Color, IntoF32};
 use refs::Weak;
-use ui::{view, SubView, ViewData, ViewFrame, ViewSetup};
+use ui::{view, Sub, ViewData, ViewFrame, ViewSetup};
 use wgpu_wrapper::PolygonMode;
 
 use crate::DrawingView;
@@ -12,7 +12,7 @@ mod test_engine {
 
 #[view]
 pub struct CircleView {
-    drawing: SubView<DrawingView>,
+    drawing: Sub<DrawingView>,
     color:   Color,
 }
 

@@ -1,6 +1,6 @@
 use gm::flat::Size;
 use refs::Weak;
-use ui::{view, SubView, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use ui::{view, Sub, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -10,7 +10,7 @@ use crate::Slider;
 
 #[view]
 pub struct ScrollView {
-    slider:           SubView<Slider>,
+    slider:           Sub<Slider>,
     pub content_size: Size,
 }
 

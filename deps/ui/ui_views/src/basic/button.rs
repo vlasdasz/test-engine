@@ -1,6 +1,6 @@
 use gm::{Color, IntoF32};
 use refs::Weak;
-use ui::{view, SubView, ToLabel, ViewData, ViewSetup, ViewTouch};
+use ui::{view, Sub, ToLabel, ViewData, ViewSetup, ViewTouch};
 use vents::Event;
 use wgpu_wrapper::image::ToImage;
 
@@ -13,8 +13,8 @@ mod test_engine {
 
 #[view]
 pub struct Button {
-    label: SubView<Label>,
-    image: SubView<ImageView>,
+    label: Sub<Label>,
+    image: Sub<ImageView>,
 
     on_tap: Event,
 }

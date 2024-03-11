@@ -1,6 +1,6 @@
 use gm::{flat::Point, Apply, IntoF32};
 use refs::Weak;
-use ui::{view, SubView, ViewData, ViewSetup};
+use ui::{view, Sub, ViewData, ViewSetup};
 use vents::Event;
 
 use crate::IntView;
@@ -12,8 +12,8 @@ mod test_engine {
 
 #[view]
 pub struct PointView {
-    x: SubView<IntView>,
-    y: SubView<IntView>,
+    x: Sub<IntView>,
+    y: Sub<IntView>,
 
     mul: f32,
 

@@ -1,6 +1,6 @@
 use gm::{flat::Size, LossyConvert};
 use refs::{weak_from_ref, Weak};
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
+use ui::{view, Sub, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch, WeakView};
 
 mod test_engine {
     pub(crate) use refs;
@@ -32,7 +32,7 @@ pub struct CollectionView {
 
     data_source: Weak<dyn CollectionData>,
     cells:       Vec<WeakView>,
-    scroll:      SubView<ScrollView>,
+    scroll:      Sub<ScrollView>,
 }
 
 impl ViewSetup for CollectionView {

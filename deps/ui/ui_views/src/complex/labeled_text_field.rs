@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use refs::{weak_from_ref, Weak};
-use ui::{view, Anchor, Labeled, SubView, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
+use ui::{view, Anchor, Labeled, Sub, TextFieldConstraint, ToLabel, ViewData, ViewSetup};
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -11,8 +11,8 @@ use crate::{Label, TextField};
 
 #[view]
 pub struct LabeledTextField {
-    label:      SubView<Label>,
-    text_field: SubView<TextField>,
+    label:      Sub<Label>,
+    text_field: Sub<TextField>,
 }
 
 impl Labeled for LabeledTextField {

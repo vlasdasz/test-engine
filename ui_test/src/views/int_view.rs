@@ -3,14 +3,14 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, IntView, SubView, ViewData, ViewSetup},
+    ui::{view, IntView, Sub, ViewData, ViewSetup},
     ui_test::inject_touches,
     App,
 };
 
 #[view]
 struct IntTestView {
-    int: SubView<IntView>,
+    int: Sub<IntView>,
 }
 
 impl ViewSetup for IntTestView {
@@ -20,7 +20,9 @@ impl ViewSetup for IntTestView {
 }
 
 pub async fn test_int_view() -> Result<()> {
-    let mut view = App::init_test_view::<IntTestView>(400, 400).await;
+    let mut view = App::init_test_view::<IntTestView>().await;
+
+    App::set_window_size((400, 400));
 
     assert_eq!(1.0, view.int.value());
 
@@ -44,7 +46,7 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq!(5.0, view.int.value());
+    assert_eq!(4.0, view.int.value());
 
     from_main(move || {
         view.int.set_step(4.5);
@@ -67,7 +69,7 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq!(-8.5, view.int.value());
+    assert_eq!(-9.5, view.int.value());
 
     debug!("Int view test: OK");
 

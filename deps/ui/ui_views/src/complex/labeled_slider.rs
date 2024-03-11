@@ -1,6 +1,6 @@
 use gm::IntoF32;
 use refs::Weak;
-use ui::{view, SubView, ViewSetup};
+use ui::{view, Sub, ViewSetup};
 use vents::Event;
 
 mod test_engine {
@@ -12,8 +12,8 @@ use crate::{Label, Slider};
 
 #[view]
 pub struct LabeledSlider {
-    label:  SubView<Label>,
-    slider: SubView<Slider>,
+    label:  Sub<Label>,
+    slider: Sub<Slider>,
 
     pub on_change: Event<f32>,
 }

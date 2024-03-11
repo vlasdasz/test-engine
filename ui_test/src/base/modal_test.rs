@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Label, ModalView, Size, SubView, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Label, ModalView, Size, Sub, ViewData, ViewSetup, ViewSubviews},
     ui_test::helpers::check_colors,
     wait_for_next_frame, App, OnceEvent,
 };
@@ -20,7 +20,7 @@ impl ViewSetup for ModalTestView {
 
 #[view]
 struct Modal {
-    label: SubView<Label>,
+    label: Sub<Label>,
     event: OnceEvent,
 }
 
@@ -42,7 +42,7 @@ impl ModalView for Modal {
 }
 
 pub async fn test_modal() -> Result<()> {
-    App::init_test_view::<ModalTestView>(600, 600).await;
+    App::init_test_view::<ModalTestView>().await;
 
     Modal::show_modally((), |_| {});
 

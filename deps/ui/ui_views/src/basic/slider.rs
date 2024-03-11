@@ -1,6 +1,6 @@
 use gm::{converter::Converter, Color, IntoF32};
 use refs::Weak;
-use ui::{view, SubView, Touch, ViewCallbacks, ViewFrame, ViewSetup, ViewTouch};
+use ui::{view, Sub, Touch, ViewCallbacks, ViewFrame, ViewSetup, ViewTouch};
 use vents::Event;
 
 mod test_engine {
@@ -12,7 +12,7 @@ use crate::CircleView;
 
 #[view]
 pub struct Slider {
-    circle:    SubView<CircleView>,
+    circle:    Sub<CircleView>,
     raw_value: f32,
 
     converter: Converter,

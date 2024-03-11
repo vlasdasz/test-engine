@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, Button, Color, SubView, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Anchor, Button, Color, Sub, ViewData, ViewSetup, ViewSubviews},
     ui_test::{
         inject_touches,
         state::{append_state, clear_state, get_state},
@@ -13,34 +13,34 @@ use test_engine::{
 #[view]
 struct LayoutTestView {
     #[text = center]
-    center: SubView<Button>,
+    center: Sub<Button>,
 
     #[text = top]
-    top:    SubView<Button>,
+    top:    Sub<Button>,
     #[text = bottom]
-    bottom: SubView<Button>,
+    bottom: Sub<Button>,
     #[text = left]
-    left:   SubView<Button>,
+    left:   Sub<Button>,
     #[text = right]
-    right:  SubView<Button>,
+    right:  Sub<Button>,
 
     #[text = tp_ct]
-    top_center:    SubView<Button>,
+    top_center:    Sub<Button>,
     #[text = bt_ct]
-    bottom_center: SubView<Button>,
+    bottom_center: Sub<Button>,
     #[text = le_ct]
-    left_center:   SubView<Button>,
+    left_center:   Sub<Button>,
     #[text = ri_ct]
-    right_center:  SubView<Button>,
+    right_center:  Sub<Button>,
 
     #[text = to_s_ct]
-    top_s_center:    SubView<Button>,
+    top_s_center:    Sub<Button>,
     #[text = bo_s_ct]
-    bottom_s_center: SubView<Button>,
+    bottom_s_center: Sub<Button>,
     #[text = le_s_ct]
-    left_s_center:   SubView<Button>,
+    left_s_center:   Sub<Button>,
     #[text = ri_s_ct]
-    right_s_center:  SubView<Button>,
+    right_s_center:  Sub<Button>,
 }
 
 impl ViewSetup for LayoutTestView {
@@ -77,7 +77,9 @@ impl ViewSetup for LayoutTestView {
 }
 
 pub async fn test_layout() -> Result<()> {
-    App::init_test_view::<LayoutTestView>(240, 240).await;
+    App::init_test_view::<LayoutTestView>().await;
+
+    App::set_window_size((240, 240));
 
     inject_touches(
         r#"

@@ -2,14 +2,14 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, ImageView, SubView, ViewData, ViewSetup, ViewTouch},
+    ui::{view, Anchor, ImageView, Sub, ViewData, ViewSetup, ViewTouch},
     ui_test::helpers::check_colors,
     App,
 };
 
 #[view]
 struct ImageTestView {
-    image_view: SubView<ImageView>,
+    image_view: Sub<ImageView>,
 }
 
 impl ViewSetup for ImageTestView {
@@ -22,7 +22,9 @@ impl ViewSetup for ImageTestView {
 }
 
 pub async fn test_image_view() -> Result<()> {
-    App::init_test_view::<ImageTestView>(400, 400).await;
+    App::init_test_view::<ImageTestView>().await;
+
+    App::set_window_size((400, 400));
 
     check_colors(
         r#"   59  103 -  25  51  76

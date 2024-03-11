@@ -1,7 +1,7 @@
 use gm::{Color, IntoF32};
 use refs::{weak_from_ref, Weak};
 use ui::{
-    view, AcceptChar, SubView, TextFieldConstraint, ToLabel, UIEvents, ViewCallbacks, ViewData, ViewSetup,
+    view, AcceptChar, Sub, TextFieldConstraint, ToLabel, UIEvents, ViewCallbacks, ViewData, ViewSetup,
     ViewTouch,
 };
 use vents::Event;
@@ -15,7 +15,7 @@ use crate::Label;
 
 #[view]
 pub struct TextField {
-    label:                 SubView<Label>,
+    label:                 Sub<Label>,
     pub(crate) constraint: Option<TextFieldConstraint>,
 
     placeholder:  String,

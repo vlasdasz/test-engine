@@ -25,6 +25,7 @@ use crate::{
             stick::test_stick, switch::test_switch, text_field::test_text_field,
         },
         collection_view::test_collection_view,
+        complex::buttons_on_table::test_buttons_on_table_view,
         drop_down::test_drop_down,
         int_view::test_int_view,
         point_view::test_point_view,
@@ -82,6 +83,7 @@ async fn test() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
+    test_buttons_on_table_view().await?;
     test_render_image_path().await?;
 
     Ok(())

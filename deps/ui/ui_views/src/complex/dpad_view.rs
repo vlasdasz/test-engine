@@ -3,7 +3,7 @@ use gm::{
     Apply,
 };
 use refs::Weak;
-use ui::{view, SubView, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewTest};
+use ui::{view, Sub, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewTest};
 use vents::Event;
 mod test_engine {
     pub(crate) use refs;
@@ -14,10 +14,10 @@ use crate::{Button, UIImages};
 
 #[view]
 pub struct DPadView {
-    up:           SubView<Button>,
-    down:         SubView<Button>,
-    left:         SubView<Button>,
-    right:        SubView<Button>,
+    up:           Sub<Button>,
+    down:         Sub<Button>,
+    left:         Sub<Button>,
+    right:        Sub<Button>,
     pub on_press: Event<Direction>,
 }
 

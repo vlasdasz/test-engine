@@ -2,14 +2,14 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, ImageView, SubView, ViewData, ViewSetup},
+    ui::{view, ImageView, Sub, ViewData, ViewSetup},
     ui_test::record_touches,
     App,
 };
 
 #[view]
 struct RenderImagePath {
-    image_view: SubView<ImageView>,
+    image_view: Sub<ImageView>,
 }
 
 impl ViewSetup for RenderImagePath {
@@ -25,7 +25,7 @@ impl ViewSetup for RenderImagePath {
 }
 
 pub async fn test_render_image_path() -> Result<()> {
-    App::init_test_view::<RenderImagePath>(400, 400).await;
+    App::init_test_view::<RenderImagePath>().await;
 
     record_touches().await;
 

@@ -1,5 +1,5 @@
 use gm::Color;
-use ui::{view, SubView, ViewData, ViewSetup};
+use ui::{view, Sub, ViewData, ViewSetup};
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -10,7 +10,7 @@ use crate::{self as ui_views, Button};
 #[view]
 pub struct TouchTestView {
     #[link = tap]
-    button: SubView<Button>,
+    button: Sub<Button>,
 }
 
 impl TouchTestView {

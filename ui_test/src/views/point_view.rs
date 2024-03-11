@@ -1,15 +1,15 @@
 use anyhow::Result;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, Label, Point, PointView, SubView, ViewData, ViewSetup},
+    ui::{view, Label, Point, PointView, Sub, ViewData, ViewSetup},
     ui_test::inject_touches,
     App,
 };
 
 #[view]
 struct PointTestView {
-    point_view: SubView<PointView>,
-    label:      SubView<Label>,
+    point_view: Sub<PointView>,
+    label:      Sub<Label>,
     point:      Own<Point>,
 }
 
@@ -27,7 +27,7 @@ impl ViewSetup for PointTestView {
 }
 
 pub async fn test_point_view() -> Result<()> {
-    let view = App::init_test_view::<PointTestView>(600, 600).await;
+    let view = App::init_test_view::<PointTestView>().await;
 
     inject_touches(
         r#"

@@ -1,6 +1,6 @@
 use gm::IntoF32;
 use refs::Weak;
-use ui::{view, SubView, ViewData, ViewSetup};
+use ui::{view, Sub, ViewData, ViewSetup};
 use vents::Event;
 
 mod test_engine {
@@ -14,13 +14,13 @@ use crate::{Button, Label, UIImages};
 #[view]
 pub struct IntView {
     value: f32,
-    label: SubView<Label>,
+    label: Sub<Label>,
 
     #[link = up_tap]
-    up: SubView<Button>,
+    up: Sub<Button>,
 
     #[link = down_tap]
-    down: SubView<Button>,
+    down: Sub<Button>,
 
     on_change_event: Event<f32>,
     pub step:        f32,

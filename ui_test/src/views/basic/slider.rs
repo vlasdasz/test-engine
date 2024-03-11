@@ -1,15 +1,15 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, Color, Label, Slider, SubView, ViewData, ViewSetup},
+    ui::{view, Anchor, Color, Label, Slider, Sub, ViewData, ViewSetup},
     ui_test::inject_touches,
     App,
 };
 
 #[view]
 pub struct SliderTestView {
-    slider: SubView<Slider>,
-    label:  SubView<Label>,
+    slider: Sub<Slider>,
+    label:  Sub<Label>,
 }
 
 impl ViewSetup for SliderTestView {
@@ -28,7 +28,7 @@ impl ViewSetup for SliderTestView {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let view = App::init_test_view::<SliderTestView>(600, 600).await;
+    let view = App::init_test_view::<SliderTestView>().await;
 
     inject_touches(
         r#"

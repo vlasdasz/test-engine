@@ -8,7 +8,7 @@ use fake::Fake;
 use test_engine::{
     from_main, on_main,
     refs::Weak,
-    ui::{view, Anchor, Color, Label, SubView, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Anchor, Color, Label, Sub, ViewData, ViewSetup, ViewSubviews},
     App,
 };
 use tokio::spawn;
@@ -17,7 +17,7 @@ static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
 #[view]
 pub struct BenchmarkView {
-    label: SubView<Label>,
+    label: Sub<Label>,
     index: u32,
 }
 

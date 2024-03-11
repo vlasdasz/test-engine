@@ -140,8 +140,8 @@ impl App {
         WGPUApp::start(app).await
     }
 
-    pub async fn init_test_view<T: View + ViewTest + Default + 'static>(width: u32, height: u32) -> Weak<T> {
-        Self::set_test_view(T::new(), width, height).await
+    pub async fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set_test_view(T::new(), 600, 600).await
     }
 
     pub async fn set_test_view<T: View + 'static>(view: Own<T>, width: u32, height: u32) -> Weak<T> {

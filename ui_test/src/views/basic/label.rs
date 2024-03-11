@@ -3,15 +3,15 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, IntView, Label, SubView, ViewData, ViewSetup},
+    ui::{view, Anchor, Color, IntView, Label, Sub, ViewData, ViewSetup},
     ui_test::{helpers::check_colors, inject_touches},
     App,
 };
 
 #[view]
 struct LabelTestView {
-    label:          SubView<Label>,
-    text_size_view: SubView<IntView>,
+    label:          Sub<Label>,
+    text_size_view: Sub<IntView>,
 }
 
 impl ViewSetup for LabelTestView {
@@ -33,7 +33,9 @@ impl ViewSetup for LabelTestView {
 }
 
 pub async fn test_label() -> Result<()> {
-    let mut view = App::init_test_view::<LabelTestView>(400, 400).await;
+    let mut view = App::init_test_view::<LabelTestView>().await;
+
+    App::set_window_size((400, 400));
 
     check_colors(
         r#"

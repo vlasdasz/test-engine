@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{view, SubView, ViewController, ViewData, ViewSetup};
+use ui::{view, Sub, ViewController, ViewData, ViewSetup};
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -9,7 +9,7 @@ use crate::Button;
 
 #[view]
 pub struct BackButton {
-    button: SubView<Button>,
+    button: Sub<Button>,
 }
 
 impl ViewSetup for BackButton {

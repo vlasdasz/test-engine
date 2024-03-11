@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{view, Anchor, SubView, ToLabel, ViewData, ViewSetup};
+use ui::{view, Anchor, Sub, ToLabel, ViewData, ViewSetup};
 use vents::Event;
 mod test_engine {
     pub(crate) use refs;
@@ -10,8 +10,8 @@ use crate::{Label, Switch};
 
 #[view]
 pub struct LabeledSwitch {
-    label:  SubView<Label>,
-    switch: SubView<Switch>,
+    label:  Sub<Label>,
+    switch: Sub<Switch>,
 
     pub selected: Event<bool>,
 }

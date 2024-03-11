@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, DropDown, SubView, ViewData, ViewSetup},
+    ui::{view, DropDown, Sub, ViewData, ViewSetup},
     ui_test::{
         inject_touches, inject_touches_delayed,
         state::{append_state, clear_state, get_state},
@@ -13,8 +13,8 @@ use test_engine::{
 
 #[view]
 struct DropDownTestView {
-    top: SubView<DropDown>,
-    bot: SubView<DropDown>,
+    top: Sub<DropDown>,
+    bot: Sub<DropDown>,
 }
 
 impl ViewSetup for DropDownTestView {
@@ -35,7 +35,7 @@ impl ViewSetup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    let view = App::init_test_view::<DropDownTestView>(600, 600).await;
+    let view = App::init_test_view::<DropDownTestView>().await;
 
     clear_state();
 

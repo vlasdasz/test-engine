@@ -14,7 +14,7 @@ impl ViewSetup for AlertTestView {
 }
 
 pub async fn test_alert() -> Result<()> {
-    App::init_test_view::<AlertTestView>(600, 600).await;
+    App::init_test_view::<AlertTestView>().await;
 
     // let answer = Question::ask_async(
     //     "Plati mne dengi bistrenko pliz. Ja kuplu dengushki.\n Plati mne dengi

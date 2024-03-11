@@ -14,7 +14,7 @@ impl ViewSetup for TemplateTestView {
 }
 
 pub async fn test_template() -> Result<()> {
-    App::init_test_view::<TemplateTestView>(600, 600).await;
+    App::init_test_view::<TemplateTestView>().await;
 
     debug!("Template test: OK");
 

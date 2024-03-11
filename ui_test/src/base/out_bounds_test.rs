@@ -2,16 +2,16 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, ImageView, IntView, Label, SubView, ViewData, ViewFrame, ViewSetup, ViewSubviews},
+    ui::{view, Anchor, ImageView, IntView, Label, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews},
     ui_test::{helpers::check_colors, inject_touches},
     App,
 };
 
 #[view]
 struct OutBoundsView {
-    test: SubView<Label>,
-    x:    SubView<IntView>,
-    y:    SubView<IntView>,
+    test: Sub<Label>,
+    x:    Sub<IntView>,
+    y:    Sub<IntView>,
 }
 
 impl ViewSetup for OutBoundsView {
@@ -44,7 +44,7 @@ impl ViewSetup for OutBoundsView {
 }
 
 pub async fn test_out_bounds() -> Result<()> {
-    App::init_test_view::<OutBoundsView>(600, 600).await;
+    App::init_test_view::<OutBoundsView>().await;
 
     inject_touches(
         r#"

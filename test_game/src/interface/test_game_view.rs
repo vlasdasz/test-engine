@@ -3,33 +3,33 @@ use test_engine::{
     refs::Weak,
     ui::{
         view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView, ImageView, IntView,
-        Label, PointsPath, PolygonMode, Spinner, StickView, SubView, ViewData, ViewSetup,
+        Label, PointsPath, PolygonMode, Spinner, StickView, Sub, ViewData, ViewSetup,
     },
     App,
 };
 
 #[view]
 pub struct TestGameView {
-    tl: SubView<Container>,
-    tr: SubView<Container>,
-    bl: SubView<Container>,
-    br: SubView<Container>,
+    tl: Sub<Container>,
+    tr: Sub<Container>,
+    bl: Sub<Container>,
+    br: Sub<Container>,
 
-    drawing: SubView<DrawingView>,
-    stick:   SubView<StickView>,
+    drawing: Sub<DrawingView>,
+    stick:   Sub<StickView>,
 
-    image: SubView<ImageView>,
+    image: Sub<ImageView>,
 
-    label_l: SubView<Label>,
-    image_r: SubView<ImageView>,
+    label_l: Sub<Label>,
+    image_r: Sub<ImageView>,
 
-    dpad: SubView<DPadView>,
-    int:  SubView<IntView>,
+    dpad: Sub<DPadView>,
+    int:  Sub<IntView>,
 
-    spinner: SubView<Button>,
-    alert:   SubView<Button>,
+    spinner: Sub<Button>,
+    alert:   Sub<Button>,
 
-    color_meter: SubView<ColorMeter>,
+    color_meter: Sub<ColorMeter>,
 }
 
 impl ViewSetup for TestGameView {

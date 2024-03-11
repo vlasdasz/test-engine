@@ -2,13 +2,13 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Label, SubView, ViewData, ViewSetup},
+    ui::{view, Label, Sub, ViewData, ViewSetup},
     App,
 };
 
 #[view]
 struct MultilineTestView {
-    label: SubView<Label>,
+    label: Sub<Label>,
 }
 
 impl ViewSetup for MultilineTestView {
@@ -22,7 +22,7 @@ impl ViewSetup for MultilineTestView {
 }
 
 pub async fn test_multiline() -> Result<()> {
-    App::init_test_view::<MultilineTestView>(600, 600).await;
+    App::init_test_view::<MultilineTestView>().await;
 
     debug!("Multiline test: OK");
 

@@ -1,6 +1,6 @@
 use gm::{flat::Size, Color};
 use refs::Weak;
-use ui::{view, ModalView, SubView, ViewData, ViewSetup};
+use ui::{view, ModalView, Sub, ViewData, ViewSetup};
 use vents::OnceEvent;
 mod test_engine {
     pub(crate) use refs;
@@ -11,9 +11,9 @@ use crate::{Button, Label};
 
 #[view]
 pub struct Question {
-    label:         SubView<Label>,
-    ok_button:     SubView<Button>,
-    cancel_button: SubView<Button>,
+    label:         Sub<Label>,
+    ok_button:     Sub<Button>,
+    cancel_button: Sub<Button>,
     event:         OnceEvent<bool>,
 }
 

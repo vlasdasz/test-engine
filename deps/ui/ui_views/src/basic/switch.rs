@@ -1,6 +1,6 @@
 use gm::Color;
 use refs::{weak_from_ref, Weak};
-use ui::{view, Anchor, Container, SubView, ViewData, ViewSetup, ViewTouch};
+use ui::{view, Anchor, Container, Sub, ViewData, ViewSetup, ViewTouch};
 use vents::Event;
 mod test_engine {
     pub(crate) use refs;
@@ -9,7 +9,7 @@ mod test_engine {
 
 #[view]
 pub struct Switch {
-    center: SubView<Container>,
+    center: Sub<Container>,
     on:     bool,
 
     pub selected: Event<bool>,

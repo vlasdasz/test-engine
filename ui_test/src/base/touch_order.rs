@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, Color, Container, SubView, TouchStack, ViewData, ViewSetup, ViewTouch},
+    ui::{view, Color, Container, Sub, TouchStack, ViewData, ViewSetup, ViewTouch},
     ui_test::{
         inject_touches,
         state::{append_state, clear_state, get_state},
@@ -13,10 +13,10 @@ use test_engine::{
 
 #[view]
 struct TouchOrderView {
-    view_1: SubView<Container>,
-    view_2: SubView<Container>,
-    view_3: SubView<Container>,
-    view_4: SubView<Container>,
+    view_1: Sub<Container>,
+    view_2: Sub<Container>,
+    view_3: Sub<Container>,
+    view_4: Sub<Container>,
 }
 
 impl ViewSetup for TouchOrderView {
@@ -38,7 +38,7 @@ impl ViewSetup for TouchOrderView {
 }
 
 pub async fn test_touch_order() -> Result<()> {
-    App::init_test_view::<TouchOrderView>(600, 600).await;
+    App::init_test_view::<TouchOrderView>().await;
 
     assert_eq!(
         TouchStack::dump(),

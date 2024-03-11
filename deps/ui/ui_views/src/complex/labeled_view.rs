@@ -1,5 +1,5 @@
 use refs::Weak;
-use ui::{view, SubView, ToLabel, ViewData, ViewSetup};
+use ui::{view, Sub, ToLabel, ViewData, ViewSetup};
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -9,8 +9,8 @@ use crate::Label;
 
 #[view]
 pub struct LabeledView {
-    title: SubView<Label>,
-    text:  SubView<Label>,
+    title: Sub<Label>,
+    text:  Sub<Label>,
 }
 
 impl LabeledView {

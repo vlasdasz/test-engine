@@ -2,17 +2,17 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Container, SubView, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews},
+    ui::{view, Color, Container, Sub, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews},
     ui_test::helpers::check_colors,
     App,
 };
 
 #[view]
 pub struct OrderTestView {
-    view_1: SubView<Container>,
-    view_2: SubView<Container>,
-    view_3: SubView<Container>,
-    view_4: SubView<Container>,
+    view_1: Sub<Container>,
+    view_2: Sub<Container>,
+    view_3: Sub<Container>,
+    view_4: Sub<Container>,
 }
 
 impl ViewSetup for OrderTestView {
@@ -25,7 +25,7 @@ impl ViewSetup for OrderTestView {
 }
 
 pub async fn test_view_order() -> Result<()> {
-    let view = App::init_test_view::<OrderTestView>(600, 600).await;
+    let view = App::init_test_view::<OrderTestView>().await;
 
     assert_eq!(
         view.z_position(),

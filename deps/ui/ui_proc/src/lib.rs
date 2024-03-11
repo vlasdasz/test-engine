@@ -117,7 +117,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 }
 
 fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
-    let subview = Ident::new("SubView", Span::call_site());
+    let subview = Ident::new("Sub", Span::call_site());
 
     let mut res = quote!();
 

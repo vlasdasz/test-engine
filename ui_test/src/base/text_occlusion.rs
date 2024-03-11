@@ -2,15 +2,15 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Label, SubView, ViewData, ViewSetup},
+    ui::{view, Color, Label, Sub, ViewData, ViewSetup},
     ui_test::helpers::check_colors,
     App,
 };
 
 #[view]
 pub struct TextOccclusionTestView {
-    label_below: SubView<Label>,
-    label_above: SubView<Label>,
+    label_below: Sub<Label>,
+    label_above: Sub<Label>,
 }
 
 impl ViewSetup for TextOccclusionTestView {
@@ -32,7 +32,7 @@ impl ViewSetup for TextOccclusionTestView {
 }
 
 pub async fn test_text_occlusion() -> Result<()> {
-    App::init_test_view::<TextOccclusionTestView>(600, 600).await;
+    App::init_test_view::<TextOccclusionTestView>().await;
 
     check_colors(
         r#"

@@ -3,7 +3,7 @@ use std::{any::Any, ops::Deref};
 use gm::{flat::Size, Color, Toggle};
 use itertools::Itertools;
 use refs::{Own, Weak};
-use ui::{view, SubView, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
+use ui::{view, Sub, ToLabel, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, ViewTouch};
 use vents::Event;
 
 mod test_engine {
@@ -16,9 +16,9 @@ use crate::{self as ui_views, Button, CollectionData, CollectionView, Label};
 #[view]
 pub struct DropDown {
     #[link = tapped]
-    button:  SubView<Button>,
-    label:   SubView<Label>,
-    table:   SubView<CollectionView>,
+    button:  Sub<Button>,
+    label:   Sub<Label>,
+    table:   Sub<CollectionView>,
     values:  Vec<String>,
     opened:  bool,
     changed: Event<String>,

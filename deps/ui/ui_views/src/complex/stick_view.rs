@@ -3,7 +3,7 @@ use gm::{
     Color,
 };
 use refs::Weak;
-use ui::{view, SubView, Touch, ViewFrame, ViewSetup, ViewTouch};
+use ui::{view, Sub, Touch, ViewFrame, ViewSetup, ViewTouch};
 use vents::Event;
 use wgpu_wrapper::PolygonMode;
 
@@ -21,8 +21,8 @@ const PRECISION: u16 = 50;
 
 #[view]
 pub struct StickView {
-    background:      SubView<DrawingView>,
-    direction_stick: SubView<DrawingView>,
+    background:      Sub<DrawingView>,
+    direction_stick: Sub<DrawingView>,
     pub on_change:   Event<Point>,
     pub flaccid:     bool,
 }

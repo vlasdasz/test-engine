@@ -6,8 +6,8 @@ use test_engine::{
     from_main,
     refs::{Own, Weak},
     ui::{
-        view, CollectionData, CollectionLayout, CollectionView, Label, Size, SubView, TouchStack, View,
-        ViewData, ViewSetup,
+        view, CollectionData, CollectionLayout, CollectionView, Label, Size, Sub, TouchStack, View, ViewData,
+        ViewSetup,
     },
     ui_test::helpers::{add_action, check_colors},
     App,
@@ -15,8 +15,8 @@ use test_engine::{
 
 #[view]
 struct CollectionTestView {
-    table:      SubView<CollectionView>,
-    collection: SubView<CollectionView>,
+    table:      Sub<CollectionView>,
+    collection: Sub<CollectionView>,
     records:    Vec<String>,
 }
 
@@ -52,7 +52,7 @@ impl ViewSetup for CollectionTestView {
 }
 
 pub async fn test_collection_view() -> Result<()> {
-    let mut view = App::init_test_view::<CollectionTestView>(600, 600).await;
+    let mut view = App::init_test_view::<CollectionTestView>().await;
 
     check_colors(
         r#"
