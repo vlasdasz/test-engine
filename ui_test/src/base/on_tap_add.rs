@@ -3,13 +3,12 @@ use std::{any::Any, ops::Deref};
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    from_main,
     refs::{Own, Weak},
     ui::{
-        view, CollectionData, CollectionView, Color, Container, ImageView, Label, Size, Sub, View, ViewData,
-        ViewSetup,
+        view, Button, CollectionData, CollectionView, Color, Container, ImageView, Label, Size, Sub, View,
+        ViewData, ViewSetup, ViewSubviews,
     },
-    ui_test::record_ui_test,
+    ui_test::{helpers::check_colors, inject_touches},
     App,
 };
 
@@ -24,7 +23,6 @@ struct SomeView {
 impl ViewSetup for SomeView {
     fn setup(mut self: Weak<Self>) {
         self.table.set_data_source(self.deref()).place().size(400, 400);
-        self.table.reload_data();
         self.label
             .set_text("Hello")
             .set_color(Color::GREEN)
@@ -38,7 +36,7 @@ impl ViewSetup for SomeView {
 
 impl CollectionData for SomeView {
     fn number_of_cells(&self) -> usize {
-        5
+        2
     }
 
     fn make_cell(&self) -> Own<dyn View> {
@@ -55,17 +53,86 @@ impl CollectionData for SomeView {
 }
 
 #[view]
-struct OnTapAddTestView {}
+struct OnTapAddTestView {
+    btn: Sub<Button>,
+}
+
+impl ViewSetup for OnTapAddTestView {
+    fn setup(mut self: Weak<Self>) {
+        self.btn.set_text("A").place().size(50, 50);
+        self.btn.on_tap(move || {
+            let view = self.add_view::<SomeView>();
+            view.place().size(600, 500).br(5);
+        });
+    }
+}
 
 pub async fn test_add_on_tap() -> Result<()> {
-    let mut view = App::init_test_view::<SomeView>().await;
+    let view = App::init_test_view::<OnTapAddTestView>().await;
 
-    from_main(move || {
-        view.table.reload_data();
-    })
+    assert_eq!(
+        view.dump_subviews(),
+        vec!["OnTapAddTestView.btn: Button".to_string()]
+    );
+
+    inject_touches(
+        "
+            25   25   b
+            25   25   e
+        ",
+    )
     .await;
 
-    record_ui_test().await;
+    assert_eq!(
+        view.dump_subviews(),
+        vec!["OnTapAddTestView.btn: Button".to_string(), "SomeView".to_string()]
+    );
+
+    check_colors(
+        r#"
+              19  561 -  25  51  76
+              42  551 -   3  77 228
+              89  521 -   3  77 228
+             154  469 -   3  77 228
+             164  455 -   3  77 228
+             132  452 -   3  77 228
+             156  397 -  25  51  76
+             155  254 -  25  51  76
+             191  210 -  25  51  76
+             205  167 - 255 255 255
+             203  151 - 255 255 255
+             198  165 - 255 255 255
+             179  167 - 255 255 255
+             185  127 - 255 255 255
+             191  114 - 255 255 255
+             193  109 - 232 232 232
+             266   27 -  25  51  76
+             345   64 -  25  51  76
+             362   87 -  25  51  76
+             413  148 -   0 255   0
+             497  179 -   0 255   0
+             514  122 -   0 255   0
+             521   78 -  25  51  76
+             545   97 -  25  51  76
+             529  150 -   0 255   0
+             483  217 -   0 255   0
+             463  302 -   0 255   0
+             486  435 -   0 255 255
+             498  489 -   0 255 255
+             389  539 -   0 255 255
+             281  446 -  25  51  76
+             397  369 -  25  51  76
+             482  310 -  25  51  76
+             446  211 -   0 255   0
+             266  126 - 255 255 255
+             150  109 - 255 255 255
+             115  114 - 255 255 255
+             111   82 -  25  51  76
+             176   41 -  25  51  76
+             237   37 -  25  51  76
+        "#,
+    )
+    .await?;
 
     debug!("Add on tap: OK");
 

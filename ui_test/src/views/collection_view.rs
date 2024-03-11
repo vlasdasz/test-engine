@@ -7,7 +7,7 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         view, CollectionData, CollectionLayout, CollectionView, Label, Size, Sub, TouchStack, View, ViewData,
-        ViewSetup,
+        ViewFrame, ViewSetup,
     },
     ui_test::helpers::{add_action, check_colors},
     App,
@@ -45,8 +45,9 @@ impl ViewSetup for CollectionTestView {
         self.table.set_data_source(self.deref());
         self.collection.set_data_source(self.deref());
 
-        add_action(|| {
+        add_action(move || {
             dbg!(TouchStack::dump());
+            dbg!(self.collection.frame());
         });
     }
 }

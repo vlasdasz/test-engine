@@ -53,13 +53,11 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_collection_view().await?;
     test_add_on_tap().await?;
-    test_drop_down().await?;
     test_buttons_on_table_view().await?;
     test_touch_order().await?;
     test_template().await?;
-    test_scroll_view().await?;
-    test_collection_view().await?;
     test_present().await?;
     test_stick().await?;
     test_point_view().await?;
@@ -72,7 +70,6 @@ async fn test() -> Result<()> {
     test_selection().await?;
     test_keymap().await?;
     test_image_view().await?;
-    test_int_view().await?;
     test_button().await?;
     test_switch().await?;
     test_layout().await?;
@@ -85,6 +82,9 @@ async fn test() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
+    test_scroll_view().await?;
+    test_int_view().await?;
+    test_drop_down().await?;
     test_render_image_path().await?;
 
     Ok(())

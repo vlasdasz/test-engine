@@ -4,7 +4,7 @@ use test_engine::{
     from_main,
     refs::Weak,
     ui::{view, IntView, Sub, ViewData, ViewSetup},
-    ui_test::inject_touches,
+    ui_test::{inject_touches, inject_touches_delayed},
     App,
 };
 
@@ -26,7 +26,7 @@ pub async fn test_int_view() -> Result<()> {
 
     assert_eq!(1.0, view.int.value());
 
-    inject_touches(
+    inject_touches_delayed(
         r#"
         218.80078    217.51563    b
         218.80078    217.51563    e

@@ -26,6 +26,7 @@ pub trait ViewSubviews {
     fn apply_to_all_subviews(&mut self, action: impl FnMut(&mut dyn View) + Clone + 'static);
 
     fn get_subview<V: 'static + View + Default>(&mut self) -> Weak<V>;
+    fn dump_subviews(&self) -> Vec<String>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -131,5 +132,9 @@ impl<T: ?Sized + View> ViewSubviews for T {
         }
 
         panic!("View of type: {} not found", type_name::<V>());
+    }
+
+    fn dump_subviews(&self) -> Vec<String> {
+        self.subviews().iter().map(|v| v.label().to_string()).collect()
     }
 }

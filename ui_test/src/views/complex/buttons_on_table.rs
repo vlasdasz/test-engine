@@ -3,7 +3,6 @@ use std::{any::Any, ops::Deref};
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    from_main,
     refs::{Own, Weak},
     ui::{
         view, Button, CollectionData, CollectionView, Container, Label, Size, Sub, TouchStack, View,
@@ -11,7 +10,7 @@ use test_engine::{
     },
     ui_test::{
         inject_touches,
-        state::{append_state, clear_state, get_str_state},
+        state::{append_state, get_str_state},
     },
     App,
 };
@@ -66,22 +65,7 @@ impl CollectionData for ButtonsOnTableView {
 }
 
 pub async fn test_buttons_on_table_view() -> Result<()> {
-    let mut view = App::init_test_view::<ButtonsOnTableView>().await;
-
-    clear_state();
-
-    assert_eq!(
-        TouchStack::dump(),
-        vec![vec![
-            "Layer: Root view".to_string(),
-            "ScrollView.slider: Slider".to_string()
-        ]],
-    );
-
-    from_main(move || {
-        view.table.reload_data();
-    })
-    .await;
+    App::init_test_view::<ButtonsOnTableView>().await;
 
     assert_eq!(
         TouchStack::dump(),

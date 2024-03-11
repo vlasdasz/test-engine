@@ -52,36 +52,10 @@ impl CollectionView {
     }
 
     pub fn reload_data(&mut self) {
-        if self.layout.is_table() {
-            self.layout();
-            return;
-        }
-
-        for cell in &mut self.cells {
-            cell.remove_from_superview();
-        }
-        self.cells.clear();
-
-        for i in 0..self.data_source.number_of_cells() {
-            let mut cell = self.data_source.make_cell();
-            self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
-            let mut cell = self.scroll.add_subview(cell);
-            cell.base_mut().label = format!("Table cell: {}", cell.label());
-            cell.enable_touch_low_priority();
-            let mut this = weak_from_ref(self);
-            cell.touch().up_inside.sub(move || this.data_source.cell_selected(i));
-            self.cells.push(cell);
-        }
+        self.layout();
     }
 
     fn layout(&mut self) {
-        match self.layout {
-            CollectionLayout::Table => self.table_layout(),
-            CollectionLayout::Cards => self.cards_layout(),
-        }
-    }
-
-    fn table_layout(&mut self) {
         for cell in &mut self.cells {
             cell.remove_from_superview();
         }
@@ -92,27 +66,29 @@ impl CollectionView {
             "Set data source for CollectionView before using"
         );
 
-        let number_of_cells = self.data_source.number_of_cells();
+        match self.layout {
+            CollectionLayout::Table => self.table_layout(),
+            CollectionLayout::Cards => self.cards_layout(),
+        }
+    }
 
-        // dbg!(&number_of_cells);
-        // dbg!(self.frame());
-        // dbg!(self.is_hidden());
-        // dbg!(self.absolute_frame());
-        // dbg!(self.subviews());
+    fn table_layout(&mut self) {
+        let number_of_cells = self.data_source.number_of_cells();
 
         if number_of_cells == 0 {
             return;
         }
 
         let cell_height = self.data_source.size_for_index(0).height;
+        let table_height = number_of_cells as f32 * cell_height;
 
         self.scroll.content_size.width = self.width();
-        self.scroll.content_size.height = number_of_cells as f32 * cell_height;
+        self.scroll.content_size.height = table_height;
 
         let width = self.width();
 
         let mut content_start = -self.scroll.content_offset.y;
-        let content_end = content_start + self.scroll.height();
+        let content_end = content_start + table_height;
 
         if content_start < 0.0 {
             content_start = 0.0;
@@ -148,6 +124,17 @@ impl CollectionView {
     }
 
     fn cards_layout(&mut self) {
+        for i in 0..self.data_source.number_of_cells() {
+            let mut cell = self.data_source.make_cell();
+            self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
+            let mut cell = self.scroll.add_subview(cell);
+            cell.base_mut().label = format!("Table cell: {}", cell.label());
+            cell.enable_touch_low_priority();
+            let mut this = weak_from_ref(self);
+            cell.touch().up_inside.sub(move || this.data_source.cell_selected(i));
+            self.cells.push(cell);
+        }
+
         self.scroll.content_size = self.size();
 
         let area_width = self.width();
