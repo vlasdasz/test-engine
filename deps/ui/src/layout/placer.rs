@@ -533,15 +533,9 @@ fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
 }
 
 fn distribute_with_ratio(size: Size, views: &mut [Own<dyn View>], ratios: &[f32]) {
-    assert_eq!(
-        views.len(),
-        ratios.len(),
-        "distribute_ratio should have the same number as subviews"
-    );
-
     let total_ratio = 1.0 / ratios.iter().sum::<f32>();
 
-    for i in 0..views.len() {
+    for i in 0..ratios.len() {
         let is_first = i == 0;
         let x_pos = if is_first { 0.0 } else { views[i - 1].max_x() };
         views[i].set_frame((x_pos, 0, ratios[i] * size.width * total_ratio, size.height));

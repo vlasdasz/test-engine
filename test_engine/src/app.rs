@@ -2,9 +2,9 @@ use std::{
     future::Future,
     io::Write,
     ops::{Deref, DerefMut},
+    path::PathBuf,
     ptr::null_mut,
 };
-use std::path::PathBuf;
 
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
