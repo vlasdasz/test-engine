@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    refs::Weak,
+    refs::{dump_ref_stats, Weak},
     ui::{view, Color, Container, Sub, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews},
     ui_test::helpers::check_colors,
     App,
@@ -97,6 +97,8 @@ pub async fn test_view_order() -> Result<()> {
     .await?;
 
     debug!("View order: OK");
+
+    dump_ref_stats();
 
     Ok(())
 }

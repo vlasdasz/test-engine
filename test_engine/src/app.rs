@@ -14,7 +14,7 @@ use gm::{
 };
 use log::{trace, warn, Level, LevelFilter};
 use manage::data_manager::DataManager;
-use refs::{weak_from_ref, Own, Rglica, Weak};
+use refs::{current_thread_id, weak_from_ref, Own, Rglica, Weak};
 use tokio::spawn;
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
@@ -299,6 +299,8 @@ impl App {
     }
 
     pub fn process_touch_event(&mut self, mut touch: Touch) -> bool {
+        dbg!(current_thread_id());
+
         const LOG_TOUCHES: bool = false;
 
         UIEvents::on_debug_touch().trigger(touch);

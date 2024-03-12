@@ -1,5 +1,5 @@
 use gm::flat::Size;
-use refs::Weak;
+use refs::{Address, Weak};
 use ui::{view, Sub, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
 mod test_engine {
     pub(crate) use refs;
@@ -23,7 +23,11 @@ impl ViewSetup for ScrollView {
             self.content_offset.y = val;
         });
 
+        dbg!(&self.addr());
+
         UIManager::on_scroll(self, move |scroll| {
+            dbg!(self.content_offset.y);
+            dbg!(scroll);
             self.content_offset.y += scroll.y;
         });
     }
@@ -43,5 +47,11 @@ impl ViewCallbacks for ScrollView {
 
     fn content_size(&self) -> &Size {
         &self.content_size
+    }
+}
+
+impl Drop for ScrollView {
+    fn drop(&mut self) {
+        dbg!(self.address());
     }
 }

@@ -212,6 +212,8 @@ impl UIManager {
 
 impl UIManager {
     pub fn trigger_scroll(scroll: Point) {
+        dbg!(scroll);
+        dbg!(Self::get().on_scroll.dump_subscribers());
         Self::get().on_scroll.trigger(scroll)
     }
 
@@ -219,6 +221,7 @@ impl UIManager {
         view: impl Deref<Target = impl View + ?Sized>,
         action: impl FnMut(Point) + Send + 'static,
     ) {
+        dbg!(Self::get().on_scroll.dump_subscribers());
         Self::get().on_scroll.val(view, action)
     }
 

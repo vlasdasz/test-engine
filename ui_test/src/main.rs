@@ -9,6 +9,7 @@ use test_engine::{
     ui::{Container, ViewSetup},
     App,
 };
+use test_engine::refs::enable_ref_stats_counter;
 
 use crate::{
     base::{
@@ -38,10 +39,13 @@ mod views;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+
+    enable_ref_stats_counter(true);
+
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
-        for _ in 0..2 {
+        for _ in 0..20 {
             test().await?;
         }
 
@@ -53,6 +57,8 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_scroll_view().await?;
+    test_int_view().await?;
     test_collection_view().await?;
     test_add_on_tap().await?;
     test_buttons_on_table_view().await?;
@@ -82,8 +88,6 @@ async fn test() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
-    test_scroll_view().await?;
-    test_int_view().await?;
     test_drop_down().await?;
     test_render_image_path().await?;
 
