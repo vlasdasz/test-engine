@@ -4,6 +4,7 @@ use std::{
     ops::{Deref, DerefMut},
     ptr::null_mut,
 };
+use std::path::PathBuf;
 
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
@@ -446,5 +447,9 @@ impl wgpu_wrapper::App for App {
 
     fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>) {
         self.wgpu_app = app;
+    }
+
+    fn dropped_file(&mut self, path: PathBuf) {
+        UIManager::trigger_drop_file(path);
     }
 }

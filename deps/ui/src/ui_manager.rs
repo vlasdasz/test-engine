@@ -26,7 +26,7 @@ pub struct UIManager {
     window_size: Mutex<Size<u32>>,
 
     on_scroll:    UIEvent<Point>,
-    on_drop_file: UIEvent<Vec<PathBuf>>,
+    on_drop_file: UIEvent<PathBuf>,
 
     display_touches: AtomicBool,
 
@@ -222,13 +222,13 @@ impl UIManager {
         Self::get().on_scroll.val(view, action)
     }
 
-    pub fn trigger_drop_file(files: Vec<PathBuf>) {
-        Self::get().on_drop_file.trigger(files)
+    pub fn trigger_drop_file(file: PathBuf) {
+        Self::get().on_drop_file.trigger(file)
     }
 
     pub fn on_drop_file(
         view: impl Deref<Target = impl View + ?Sized>,
-        action: impl FnMut(Vec<PathBuf>) + Send + 'static,
+        action: impl FnMut(PathBuf) + Send + 'static,
     ) {
         Self::get().on_drop_file.val(view, action)
     }

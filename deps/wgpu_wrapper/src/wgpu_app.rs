@@ -108,6 +108,9 @@ impl WGPUApp {
                     }
                     self.state.app.key_event(event);
                 }
+                WindowEvent::DroppedFile(path) => {
+                    self.state.app.dropped_file(path);
+                }
                 WindowEvent::Resized(physical_size) => {
                     self.state.resize(physical_size);
                 }

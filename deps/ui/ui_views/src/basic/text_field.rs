@@ -99,7 +99,7 @@ impl TextField {
         self.placeholder = placeholder.to_label();
         if self.placeholding {
             self.label.set_text(self.placeholder.clone());
-            self.label.set_text_color(Color::LIGHTER_GRAY);
+            self.label.set_text_color(Color::GRAY);
         }
     }
 }

@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use gm::flat::{Point, Size};
 use refs::Rglica;
 use wgpu::RenderPass;
@@ -16,4 +17,5 @@ pub trait App {
     fn touch_event(&mut self, touch: Touch) -> bool;
     fn key_event(&mut self, event: KeyEvent);
     fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>);
+    fn dropped_file(&mut self, path: PathBuf);
 }
