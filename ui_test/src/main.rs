@@ -5,6 +5,7 @@
 #![feature(arbitrary_self_types)]
 
 use anyhow::Result;
+use log::info;
 use test_engine::{
     ui::{Container, ViewSetup},
     App,
@@ -41,8 +42,9 @@ async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
-        for _ in 0..20 {
+        for i in 0..20 {
             test().await?;
+            info!("Cycle {i}: OK")
         }
 
         _ = skip();
