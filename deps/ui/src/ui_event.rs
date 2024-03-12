@@ -1,7 +1,5 @@
 use std::{ops::Deref, sync::Mutex};
 
-use refs::dump_ref_stats;
-
 use crate::{View, ViewData, WeakView};
 
 struct Subscriber<T: Send> {
@@ -27,6 +25,7 @@ impl<T: Send> UIEvent<T> {
         mut action: impl FnMut() + Send + 'static,
     ) {
         let mut subs = self.subscribers.lock().unwrap();
+        subs.retain(|a| a.view.is_ok());
 
         let view = view.weak_view();
 
@@ -43,16 +42,14 @@ impl<T: Send> UIEvent<T> {
 
     pub fn val(&self, view: impl Deref<Target = impl View + ?Sized>, action: impl FnMut(T) + Send + 'static) {
         let mut subs = self.subscribers.lock().unwrap();
+        subs.retain(|a| a.view.is_ok());
 
         let view = view.weak_view();
 
-        let ok = !subs.iter().any(|s| s.view.addr() == view.addr());
-
-        if !ok {
-            dump_ref_stats();
-        }
-
-        assert!(ok, "This view is already subscribed to this event");
+        assert!(
+            !subs.iter().any(|s| s.view.addr() == view.addr()),
+            "This view is already subscribed to this event"
+        );
 
         subs.push(Subscriber {
             view:   view.weak_view(),
@@ -76,8 +73,6 @@ impl<T: Send> UIEvent<T> {
     pub fn dump_subscribers(&self) -> Vec<String> {
         let mut subs = self.subscribers.lock().unwrap();
         subs.retain(|a| a.view.is_ok());
-        subs.iter()
-            .map(|s| format!("{} - {}", s.view.label().to_string(), s.view.addr()))
-            .collect()
+        subs.iter().map(|s| format!("{} - {}", s.view.label(), s.view.addr())).collect()
     }
 }

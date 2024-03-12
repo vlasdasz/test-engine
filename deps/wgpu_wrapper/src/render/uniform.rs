@@ -10,7 +10,7 @@ use wgpu::{
 
 use crate::WGPUApp;
 
-static Z_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
+static Z_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::const_new();
 
 pub struct OldUniform {}
 

@@ -4,7 +4,7 @@ use vents::Event;
 
 use crate::{Touch, UIEvent};
 
-static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
+static UI_EVENTS: MainLock<UIEvents> = MainLock::const_new();
 
 #[derive(Default)]
 pub struct UIEvents {

@@ -9,7 +9,6 @@ use test_engine::{
     ui::{Container, ViewSetup},
     App,
 };
-use test_engine::refs::enable_ref_stats_counter;
 
 use crate::{
     base::{
@@ -39,9 +38,6 @@ mod views;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-
-    enable_ref_stats_counter(true);
-
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 

@@ -11,8 +11,8 @@ use wgpu::{
 
 use crate::{BufferUsages, WGPUApp};
 
-static BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
-static LAYOUT: MainLock<Option<BindGroupLayout>> = MainLock::new();
+static BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::const_new();
+static LAYOUT: MainLock<Option<BindGroupLayout>> = MainLock::const_new();
 
 pub trait Uniform<T> {
     fn bind(val: T) -> &'static BindGroup;
