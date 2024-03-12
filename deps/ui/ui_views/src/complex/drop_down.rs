@@ -47,9 +47,11 @@ impl DropDown {
     fn tapped(&mut self) {
         if self.opened.toggle() {
             self.label.set_hidden(false);
+            self.button.set_hidden(false);
             self.table.set_hidden(true);
         } else {
             self.label.set_hidden(true);
+            self.button.set_hidden(true);
             self.table.set_hidden(false);
             let table_height = self.height() * self.number_of_cells() as f32;
             let table_size = (self.width(), table_height);

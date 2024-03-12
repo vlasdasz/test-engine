@@ -4,6 +4,8 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
+use std::env::var;
+
 use anyhow::Result;
 use log::info;
 use test_engine::{
@@ -42,7 +44,9 @@ async fn main() -> Result<()> {
     App::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
-        for i in 0..20 {
+        let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
+
+        for i in 1..=cycles {
             test().await?;
             info!("Cycle {i}: OK")
         }
@@ -55,6 +59,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_drop_down().await?;
     test_scroll_view().await?;
     test_int_view().await?;
     test_collection_view().await?;
@@ -86,7 +91,6 @@ async fn test() -> Result<()> {
 }
 
 async fn skip() -> Result<()> {
-    test_drop_down().await?;
     test_render_image_path().await?;
 
     Ok(())
