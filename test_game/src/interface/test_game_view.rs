@@ -2,8 +2,9 @@ use test_engine::{
     async_after, on_main,
     refs::Weak,
     ui::{
-        view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView, ImageView, IntView,
-        Label, PointsPath, PolygonMode, Spinner, StickView, Sub, TextField, ViewData, ViewSetup,
+        link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
+        ImageView, IntView, Label, PointsPath, PolygonMode, Spinner, StickView, Sub, TextField, ViewData,
+        ViewSetup,
     },
     App,
 };
@@ -32,6 +33,8 @@ pub struct TestGameView {
     color_meter: Sub<ColorMeter>,
 
     text_field: Sub<TextField>,
+
+    objc: Sub<Button>,
 }
 
 impl ViewSetup for TestGameView {
@@ -118,5 +121,41 @@ impl ViewSetup for TestGameView {
 
         self.text_field.set_placeholder("Type here");
         self.text_field.place().size(200, 50).t(10).anchor(Anchor::Left, self.tl, 10);
+
+        self.objc.set_text("objc");
+        link_button!(self, objc, call_obj);
+        self.objc
+            .place()
+            .size(100, 100)
+            .t(200)
+            .anchor(Anchor::Left, self.text_field, 10);
+    }
+}
+
+impl TestGameView {
+    fn call_obj(self: Weak<Self>) {
+        use objc::{
+            class, msg_send,
+            runtime::{Class, Object, Sel},
+            sel, sel_impl,
+        };
+
+        dbg!("Helloy??");
+
+        // UIWindow *currentWindow = [UIApplication sharedApplication].keyWindow;
+
+        let ui_application_class: *const Class = class!(UIApplication);
+
+        let shared_application: *mut Object = unsafe { msg_send![ui_application_class, sharedApplication] };
+
+        let key_window_sel: Sel = sel!(keyWindow);
+
+        let key_window: *mut Object =
+            unsafe { msg_send![shared_application, performSelector: key_window_sel] };
+
+        dbg!(&shared_application);
+        dbg!(&key_window);
+
+        dbg!("A");
     }
 }

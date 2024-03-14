@@ -12,6 +12,8 @@ crate-type = ["rlib", "staticlib", "dylib"]
 name = "test_game_lib"
 
 [dependencies]
+objc = "0.2.7"
+
 derivative = { workspace = true }
 tokio = { workspace = true }
 
