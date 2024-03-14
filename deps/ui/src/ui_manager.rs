@@ -212,7 +212,7 @@ impl UIManager {
         *Self::get().display_scale.lock().unwrap() = scale
     }
 
-    pub fn open_keyboard() {
+    pub fn open_keyboard(frame: &Rect) {
         dbg!("Open");
 
         #[cfg(ios)]
@@ -221,17 +221,29 @@ impl UIManager {
                 unsafe { crate::mobile::ios::ios_init_text_field() };
             });
 
-            unsafe { crate::mobile::ios::ios_open_keyboard() }
+            unsafe {
+                crate::mobile::ios::ios_open_keyboard(
+                    frame.origin.x,
+                    frame.origin.y,
+                    frame.size.width,
+                    frame.size.height,
+                )
+            }
         }
     }
 
-    pub fn close_keyboard() {
+    pub fn close_keyboard() -> Option<String> {
         dbg!("Close");
 
         #[cfg(ios)]
         unsafe {
-            crate::mobile::ios::ios_close_keyboard()
+            let str_ptr = crate::mobile::ios::ios_close_keyboard();
+            let cstr = std::ffi::CStr::from_ptr(str_ptr);
+            return cstr.to_string_lossy().into_owned().into();
         }
+
+        #[cfg(not(ios))]
+        None
     }
 }
 

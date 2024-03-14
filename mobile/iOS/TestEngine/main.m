@@ -23,24 +23,23 @@ void ios_init_text_field(void) {
     assert(text_field == nil);
     UIViewController *controller = [UIApplication sharedApplication].keyWindow.rootViewController;
     text_field = [UITextField new];
-    [text_field setFrame:CGRectMake(100, 100, 300, 100)];
-    [text_field setBackgroundColor:UIColor.grayColor];
+    text_field.textAlignment = NSTextAlignmentCenter;
     [controller.view addSubview:text_field];
     
     NSLog(@"UITextField initialized");
 }
 
-void ios_open_keyboard(void) {
+void ios_open_keyboard(float x, float y, float width, float height) {
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    [text_field setFrame:CGRectMake(x / scale, y / scale, width / scale, height / scale)];
+    [text_field setHidden:NO];
     NSLog(@"ios_open_keyboard");
-
-    
-    
-    NSLog(@"A?");
-    NSLog(@"%@", [text_field description]);
     [text_field becomeFirstResponder];
 }
 
-void ios_close_keyboard(void) {
+const char* ios_close_keyboard(void) {
     NSLog(@"ios_close_keyboard");
     [text_field resignFirstResponder];
+    [text_field setHidden:YES];
+    return [text_field.text UTF8String];
 }

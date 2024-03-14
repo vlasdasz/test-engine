@@ -2,7 +2,7 @@ use gm::{Color, IntoF32};
 use refs::{weak_from_ref, Weak};
 use ui::{
     view, AcceptChar, Sub, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks, ViewData,
-    ViewSetup, ViewTouch,
+    ViewFrame, ViewSetup, ViewTouch,
 };
 use vents::Event;
 
@@ -149,9 +149,11 @@ impl ViewCallbacks for TextField {
                 this.set_text(text);
                 this.changed.trigger(this.text().to_string());
             });
-            UIManager::open_keyboard();
+            UIManager::open_keyboard(self.absolute_frame());
         } else {
-            UIManager::close_keyboard();
+            if let Some(string) = UIManager::close_keyboard() {
+                self.set_text(string);
+            };
             UIEvents::keyboard_input().unsibscribe(this);
         }
 
