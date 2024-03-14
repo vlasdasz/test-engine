@@ -57,6 +57,17 @@ impl Platform {
     pub const DESKTOP: bool = !Self::MOBILE;
 }
 
+impl Platform {
+    pub fn dump() {
+        dbg!(Self::MAC);
+        dbg!(Self::WIN);
+        dbg!(Self::IOS);
+        dbg!(Self::ANDROID);
+        dbg!(Self::MOBILE);
+        dbg!(Self::DESKTOP);
+    }
+}
+
 #[cfg(test)]
 mod test {
     use fake::{Fake, Faker};

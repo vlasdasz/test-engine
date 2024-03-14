@@ -158,8 +158,7 @@ impl State {
         if let Some((frame_time, fps)) = self.frame_counter.update() {
             let a = format!("{frame_time:.2}ms frame {fps:.1} FPS");
             self.fps = fps;
-            self.window
-                .set_title(&format!("{a} {} x {}", self.config.width, self.config.height));
+            WGPUApp::current().set_title(format!("{a} {} x {}", self.config.width, self.config.height))
         }
     }
 

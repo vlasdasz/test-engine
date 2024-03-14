@@ -5,7 +5,10 @@ use std::sync::{
 
 use anyhow::Result;
 use dispatch::on_main;
-use gm::flat::{Point, Size};
+use gm::{
+    flat::{Point, Size},
+    Platform,
+};
 use log::error;
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
@@ -79,19 +82,13 @@ impl WGPUApp {
             Event::WindowEvent { event, window_id } if window_id == self.state.window.id() => match event {
                 WindowEvent::CloseRequested => elwt.exit(),
                 WindowEvent::CursorMoved { position, .. } => {
-                    if self.state.app.mouse_moved((position.x, position.y).into()) {
-                        self.state.window.request_redraw();
-                    }
+                    self.state.app.mouse_moved((position.x, position.y).into());
                 }
                 WindowEvent::MouseInput { state, button, .. } => {
-                    if self.state.app.mouse_event(state, button) {
-                        self.state.window.request_redraw();
-                    }
+                    self.state.app.mouse_event(state, button);
                 }
                 WindowEvent::Touch(touch) => {
-                    if self.state.app.touch_event(touch) {
-                        self.state.window.request_redraw();
-                    }
+                    self.state.app.touch_event(touch);
                 }
                 WindowEvent::MouseWheel { delta, .. } => match delta {
                     MouseScrollDelta::LineDelta(x, y) => {
@@ -120,7 +117,6 @@ impl WGPUApp {
                 } => {
                     dbg!(&scale_factor);
                     dbg!(&inner_size_writer);
-                    //state.resize(**new_inner_size);
                 }
                 WindowEvent::RedrawRequested => {
                     if self.close.load(Ordering::Relaxed) {
@@ -131,15 +127,14 @@ impl WGPUApp {
 
                     match self.state.render() {
                         Ok(()) => {}
-                        // Err(wgpu::SurfaceError::Lost) => self.state.resize(self.state.size),
-                        // Err(wgpu::SurfaceError::OutOfMemory) => elwt.exit(),
                         Err(e) => error!("Render error: {e:?}"),
                     };
-                    // TODO: think about good redraw strategy
-                    self.state.window.request_redraw();
                 }
                 _ => {}
             },
+            Event::AboutToWait => {
+                self.state.window.request_redraw();
+            }
             _ => {}
         })?;
 
@@ -147,7 +142,9 @@ impl WGPUApp {
     }
 
     pub fn set_title(&self, title: impl ToString) {
-        self.state.window.set_title(&title.to_string());
+        if Platform::DESKTOP {
+            self.state.window.set_title(&title.to_string());
+        }
     }
 
     pub fn set_window_size(&self, size: impl Into<Size<u32>>) {

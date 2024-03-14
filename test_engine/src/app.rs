@@ -60,9 +60,10 @@ impl App {
         Self::current().root_view.size()
     }
 
-    fn make_app(first_view: Own<dyn View>) -> Box<Self> {
+    fn setup_log() {
         Builder::from_default_env()
             .filter_level(LevelFilter::Debug)
+            .filter_module("winit::platform_impl::platform::app_state", LevelFilter::Error)
             .filter_module("wgpu_core::device", LevelFilter::Warn)
             .filter_module("wgpu_core::present", LevelFilter::Warn)
             .filter_module("wgpu_core::resource", LevelFilter::Warn)
@@ -108,6 +109,10 @@ impl App {
                 writeln!(f, "{log}")
             })
             .init();
+    }
+
+    fn make_app(first_view: Own<dyn View>) -> Box<Self> {
+        Self::setup_log();
 
         #[cfg(desktop)]
         Assets::init(crate::git_root().expect("git_root()"));
