@@ -8,7 +8,7 @@ version = "0.1.0"
 name = "test_game"
 
 [lib]
-crate-type = ["rlib", "staticlib", "dylib"]
+crate-type = ["rlib", "staticlib"]
 name = "test_game_lib"
 
 [dependencies]

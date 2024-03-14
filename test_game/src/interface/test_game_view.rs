@@ -129,6 +129,10 @@ impl ViewSetup for TestGameView {
             .size(100, 100)
             .t(200)
             .anchor(Anchor::Left, self.text_field, 10);
+
+        unsafe {
+            ios_init_text_field();
+        }
     }
 }
 
@@ -157,5 +161,15 @@ impl TestGameView {
         dbg!(&key_window);
 
         dbg!("A");
+
+        unsafe {
+            ios_show_keyboard();
+        }
     }
+}
+
+extern "C" {
+    fn ios_init_text_field();
+    fn ios_show_keyboard();
+    fn ios_callback();
 }
