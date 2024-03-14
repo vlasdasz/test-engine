@@ -3,7 +3,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView, ImageView, IntView,
-        Label, PointsPath, PolygonMode, Spinner, StickView, Sub, ViewData, ViewSetup,
+        Label, PointsPath, PolygonMode, Spinner, StickView, Sub, TextField, ViewData, ViewSetup,
     },
     App,
 };
@@ -30,6 +30,8 @@ pub struct TestGameView {
     alert:   Sub<Button>,
 
     color_meter: Sub<ColorMeter>,
+
+    text_field: Sub<TextField>,
 }
 
 impl ViewSetup for TestGameView {
@@ -113,5 +115,8 @@ impl ViewSetup for TestGameView {
         );
 
         self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
+
+        self.text_field.set_placeholder("Type here");
+        self.text_field.place().size(200, 50).t(10).anchor(Anchor::Left, self.tl, 10);
     }
 }

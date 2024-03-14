@@ -95,12 +95,13 @@ impl TextField {
         self
     }
 
-    pub fn set_placeholder(&mut self, placeholder: impl ToLabel) {
+    pub fn set_placeholder(&mut self, placeholder: impl ToLabel) -> &mut Self {
         self.placeholder = placeholder.to_label();
         if self.placeholding {
             self.label.set_text(self.placeholder.clone());
             self.label.set_text_color(Color::GRAY);
         }
+        self
     }
 }
 
