@@ -22,3 +22,6 @@ wgpu_wrapper = { workspace = true }
 
 [dev-dependencies]
 serial_test = { workspace = true }
+
+[build-dependencies]
+cfg_aliases = { workspace = true }

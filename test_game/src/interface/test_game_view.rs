@@ -120,7 +120,7 @@ impl ViewSetup for TestGameView {
         self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
 
         self.text_field.set_placeholder("Type here");
-        self.text_field.place().size(200, 50).t(10).anchor(Anchor::Left, self.tl, 10);
+        self.text_field.place().size(200, 50).t(200).anchor(Anchor::Left, self.tl, 10);
 
         self.objc.set_text("objc");
         link_button!(self, objc, call_obj);
@@ -129,47 +129,9 @@ impl ViewSetup for TestGameView {
             .size(100, 100)
             .t(200)
             .anchor(Anchor::Left, self.text_field, 10);
-
-        unsafe {
-            ios_init_text_field();
-        }
     }
 }
 
 impl TestGameView {
-    fn call_obj(self: Weak<Self>) {
-        use objc::{
-            class, msg_send,
-            runtime::{Class, Object, Sel},
-            sel, sel_impl,
-        };
-
-        dbg!("Helloy??");
-
-        // UIWindow *currentWindow = [UIApplication sharedApplication].keyWindow;
-
-        let ui_application_class: *const Class = class!(UIApplication);
-
-        let shared_application: *mut Object = unsafe { msg_send![ui_application_class, sharedApplication] };
-
-        let key_window_sel: Sel = sel!(keyWindow);
-
-        let key_window: *mut Object =
-            unsafe { msg_send![shared_application, performSelector: key_window_sel] };
-
-        dbg!(&shared_application);
-        dbg!(&key_window);
-
-        dbg!("A");
-
-        unsafe {
-            ios_show_keyboard();
-        }
-    }
-}
-
-extern "C" {
-    fn ios_init_text_field();
-    fn ios_show_keyboard();
-    fn ios_callback();
+    fn call_obj(self: Weak<Self>) {}
 }

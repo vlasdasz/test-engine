@@ -123,6 +123,7 @@ impl App {
             assert!(APP.is_null(), "Another App already exists");
             APP = std::ptr::from_mut(app.as_mut());
         }
+
         app
     }
 
