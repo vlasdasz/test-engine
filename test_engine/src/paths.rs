@@ -6,6 +6,7 @@ use std::{
 
 use anyhow::Result;
 use home::home_dir;
+use log::warn;
 
 pub fn home() -> PathBuf {
     home_dir().unwrap()
@@ -13,6 +14,12 @@ pub fn home() -> PathBuf {
 
 pub fn git_root() -> Result<PathBuf> {
     let output = Command::new("git").args(["rev-parse", "--show-toplevel"]).output()?;
+
+    if !output.status.success() {
+        warn!("Failed to get Git repository root path");
+        return Ok(PathBuf::from("~/dev/money"));
+    }
+
     assert!(output.status.success(), "Failed to get Git repository root path");
     let git_root = String::from_utf8_lossy(&output.stdout).trim_end_matches('\n').to_string();
 

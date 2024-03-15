@@ -133,5 +133,7 @@ impl ViewSetup for TestGameView {
 }
 
 impl TestGameView {
-    fn call_obj(self: Weak<Self>) {}
+    fn call_obj(self: Weak<Self>) {
+        dbg!(&self.label);
+    }
 }

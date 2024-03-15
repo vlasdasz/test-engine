@@ -3,7 +3,7 @@ use std::{
     path::PathBuf,
     sync::{
         atomic::{AtomicBool, Ordering},
-        Mutex, Once, OnceLock,
+        Mutex, OnceLock,
     },
 };
 
@@ -15,7 +15,7 @@ use crate::{layout::Placer, Container, Keymap, TouchStack, UIEvent, View, WeakVi
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
 #[cfg(ios)]
-static IOS_KEYBOARD_INIT: Once = Once::new();
+static IOS_KEYBOARD_INIT: std::sync::Once = std::sync::Once::new();
 
 pub struct UIManager {
     pub(crate) root_view: Own<dyn View>,
@@ -212,7 +212,7 @@ impl UIManager {
         *Self::get().display_scale.lock().unwrap() = scale
     }
 
-    pub fn open_keyboard(frame: &Rect) {
+    pub fn open_keyboard(#[allow(unused_variables)] frame: &Rect) {
         dbg!("Open");
 
         #[cfg(ios)]
