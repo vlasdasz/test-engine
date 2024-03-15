@@ -19,7 +19,7 @@ use refs::{weak_from_ref, Own, Rglica, Weak};
 use tokio::spawn;
 use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
-    ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest, WeakView,
+    ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
 };
 use ui_views::{DrawingView, ImageView, Label};
 use vents::OnceEvent;
@@ -33,7 +33,6 @@ use crate::{assets::Assets, ui_test::state::clear_state};
 static mut APP: *mut App = null_mut();
 
 pub struct App {
-    root_view:    WeakView,
     window_ready: OnceEvent,
     wgpu_app:     Rglica<WGPUApp>,
 
@@ -57,7 +56,7 @@ impl App {
     }
 
     pub fn root_view_size() -> Size {
-        Self::current().root_view.size()
+        UIManager::root_view().size()
     }
 
     fn setup_log() {
@@ -158,7 +157,7 @@ impl App {
         wait_for_next_frame().await;
         let view = from_main(move || {
             let weak = view.weak();
-            let mut root = UIManager::root_view();
+            let mut root = UIManager::root_view_mut();
             root.remove_all_subviews();
             let view = root.add_subview(view);
             view.place().back();
@@ -173,7 +172,6 @@ impl App {
     fn new(first_view: Own<dyn View>) -> Box<Self> {
         Box::new(Self {
             cursor_position: Default::default(),
-            root_view:       UIManager::root_view(),
             first_view:      first_view.into(),
             window_ready:    Default::default(),
             wgpu_app:        Default::default(),
@@ -234,7 +232,7 @@ impl App {
         }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
-            if image_view.image().is_ok() {
+            if image_view.image().was_initialized() {
                 weak_from_ref(image_view).check_cropped(&clamped_frame);
 
                 let image = image_view.image();
@@ -299,7 +297,8 @@ impl App {
         }
 
         for view in view.subviews() {
-            if view.dont_hide() || view.absolute_frame().intersects(UIManager::root_view().frame()) {
+            let root_frame = UIManager::root_view().frame();
+            if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
                 Self::draw_view(pass, drawer, view.deref(), sections)
             }
         }
@@ -324,7 +323,7 @@ impl App {
             let mut view = Container::new();
             view.set_size((5, 5)).set_color(Color::random());
             view.set_center(touch.position);
-            UIManager::root_view().add_subview(view);
+            UIManager::root_view_mut().add_subview(view);
         }
 
         let _level_touch = touch;
@@ -377,7 +376,7 @@ impl App {
 
 impl wgpu_wrapper::App for App {
     fn window_ready(&mut self) {
-        let view = UIManager::root_view().add_subview(self.first_view.take().unwrap());
+        let view = UIManager::root_view_mut().add_subview(self.first_view.take().unwrap());
         view.place().back();
         self.update();
         self.window_ready.trigger(());
@@ -386,12 +385,12 @@ impl wgpu_wrapper::App for App {
     fn update(&mut self) {
         UIManager::free_deleted_views();
         invoke_dispatched();
-        Self::update_view(UIManager::root_view().deref_mut())
+        Self::update_view(UIManager::root_view_mut().deref_mut())
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
         let mut sections: Vec<Section> = vec![];
-        Self::draw_view(pass, drawer, self.root_view.deref(), &mut sections);
+        Self::draw_view(pass, drawer, UIManager::root_view(), &mut sections);
 
         Font::helvetice()
             .brush
@@ -400,7 +399,7 @@ impl wgpu_wrapper::App for App {
     }
 
     fn resize(&mut self, _position: Point, size: Size<u32>) {
-        UIManager::root_view().set_size(size); //.set_origin(position);
+        UIManager::root_view_mut().set_size(size); //.set_origin(position);
         UIEvents::size_changed().trigger(size);
         self.update();
     }

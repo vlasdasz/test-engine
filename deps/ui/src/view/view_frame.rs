@@ -5,13 +5,12 @@ use gm::{
     IntoF32,
 };
 
-use crate::{view::view_subviews::ViewSubviews, View};
+use crate::View;
 
 pub trait ViewFrame {
     fn z_position(&self) -> f32;
     fn set_z_position(&mut self, z: f32) -> &mut Self;
     fn frame(&self) -> &Rect;
-    fn super_frame(&self) -> &Rect;
     fn absolute_frame(&self) -> &Rect;
     fn x(&self) -> f32;
     fn y(&self) -> f32;
@@ -43,13 +42,6 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn frame(&self) -> &Rect {
         &self.base().frame
-    }
-
-    fn super_frame(&self) -> &Rect {
-        if self.superview().is_ok() {
-            return self.base().superview.frame();
-        }
-        self.frame()
     }
 
     fn absolute_frame(&self) -> &Rect {

@@ -76,7 +76,7 @@ impl UIManager {
     pub fn set_selected(&self, mut view: WeakView, selected: bool) {
         let mut selected_view = self.selected_view.lock().unwrap();
 
-        if let Some(selected) = selected_view.get() {
+        if let Some(selected) = selected_view.get_mut() {
             selected.on_selection_changed(false);
             *selected_view = Default::default();
         }
@@ -119,8 +119,12 @@ impl UIManager {
         *Self::get().window_size.lock().unwrap()
     }
 
-    pub fn root_view() -> WeakView {
-        Self::get().root_view.weak()
+    pub fn root_view() -> &'static dyn View {
+        Self::get().root_view.deref()
+    }
+
+    pub fn root_view_mut() -> WeakView {
+        Self::get().root_view.weak_view()
     }
 
     pub fn free_deleted_views() {
@@ -213,8 +217,6 @@ impl UIManager {
     }
 
     pub fn open_keyboard(#[allow(unused_variables)] frame: &Rect) {
-        dbg!("Open");
-
         #[cfg(ios)]
         {
             crate::ui_manager::IOS_KEYBOARD_INIT.call_once(|| {
@@ -233,8 +235,6 @@ impl UIManager {
     }
 
     pub fn close_keyboard() -> Option<String> {
-        dbg!("Close");
-
         #[cfg(ios)]
         unsafe {
             let str_ptr = crate::mobile::ios::ios_close_keyboard();

@@ -18,7 +18,8 @@ pub struct Placer {
     pub(crate) rules:     RefCell<Vec<LayoutRule>>,
     pub(crate) sub_rules: RefCell<Vec<LayoutRule>>,
 
-    view:      WeakView,
+    // Since `Placer` is owned by `View` this should be OK. I hope.
+    view:      Rglica<dyn View>,
     s_content: Rglica<Size>,
 
     all_margin: RefCell<f32>,
@@ -46,12 +47,12 @@ impl Placer {
         };
 
         Self {
-            rules: vec![].into(),
-            sub_rules: vec![].into(),
-            view,
-            s_content: s_content.to_rglica(),
+            rules:      vec![].into(),
+            sub_rules:  vec![].into(),
+            view:       unsafe { view.to_rglica() },
+            s_content:  s_content.to_rglica(),
             all_margin: Default::default(),
-            has: Default::default(),
+            has:        Default::default(),
         }
     }
 
@@ -322,10 +323,10 @@ impl Placer {
 
         for rule in this.rules().iter_mut() {
             if let Some(custom) = &mut rule.custom {
-                custom(self.view, &self.s_content)
+                custom(self.view.weak_view(), &self.s_content)
             } else if rule.between {
                 self.between_layout(rule);
-            } else if rule.anchor_view.is_ok() {
+            } else if rule.anchor_view.was_initialized() {
                 if rule.relative {
                     self.relative_layout(rule)
                 } else {

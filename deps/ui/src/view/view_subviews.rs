@@ -11,7 +11,7 @@ use crate::{layout::Placer, Container, UIManager, View, ViewData, ViewFrame, Wea
 
 pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
-    fn superview(&self) -> WeakView;
+    fn superview(&self) -> &WeakView;
     fn subviews(&self) -> &[Own<dyn View>];
     fn subviews_mut(&mut self) -> &mut [Own<dyn View>];
     fn remove_from_superview(&mut self);
@@ -35,8 +35,8 @@ impl<T: ?Sized + View> ViewSubviews for T {
         self.base_mut().placer = Placer::new(self.weak_view());
     }
 
-    fn superview(&self) -> WeakView {
-        self.base().superview
+    fn superview(&self) -> &WeakView {
+        &self.base().superview
     }
 
     fn subviews(&self) -> &[Own<dyn View>] {

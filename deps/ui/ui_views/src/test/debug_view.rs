@@ -76,7 +76,7 @@ impl ViewSetup for DebugView {
         self.set_hidden(false);
         self.set_color(Color::WHITE);
 
-        self.__manually_set_superview(UIManager::root_view());
+        self.__manually_set_superview(UIManager::root_view_mut());
 
         self.place().size(400, 200).bl(10).all_ver();
 

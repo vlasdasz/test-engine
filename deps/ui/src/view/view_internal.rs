@@ -11,9 +11,13 @@ pub(crate) trait ViewInternal {
 
 impl<T: ?Sized + View> ViewInternal for T {
     fn super_absolute_frame(&self) -> &Rect {
-        if self.superview().is_ok() {
-            return self.base().superview.absolute_frame();
+        let sup = self.superview();
+
+        // Since superview owns subview this should be fine I hope.
+        if sup.was_initialized() {
+            return unsafe { sup.deref_unchecked().absolute_frame() };
         }
+
         self.absolute_frame()
     }
 }
