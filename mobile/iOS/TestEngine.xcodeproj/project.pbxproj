@@ -45,6 +45,7 @@
 		D1411E8C2617166800F3F18B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D1411E8E2617166800F3F18B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D1411E8F2617166800F3F18B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D1753F532BA3CEC10076158C /* test_engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_engine.h; sourceTree = "<group>"; };
 		D17B6FB1262EE65200D61876 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets; path = ../../../Assets; sourceTree = "<group>"; };
 		D17CC3E42617174D00F55C2E /* TestEngine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestEngine.entitlements; sourceTree = "<group>"; };
 		D180CC20261C455B00B81CFB /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = usr/lib/libSystem.tbd; sourceTree = SDKROOT; };
@@ -114,6 +115,7 @@
 				D1411E8B2617166800F3F18B /* LaunchScreen.storyboard */,
 				D1411E8E2617166800F3F18B /* Info.plist */,
 				D1411E8F2617166800F3F18B /* main.m */,
+				D1753F532BA3CEC10076158C /* test_engine.h */,
 			);
 			path = TestEngine;
 			sourceTree = "<group>";
