@@ -7,7 +7,7 @@ use anyhow::Result;
 use dispatch::on_main;
 use gm::{
     flat::{Point, Size},
-    Platform,
+    LossyConvert, Platform,
 };
 use log::error;
 use refs::{MainLock, Rglica};
@@ -48,6 +48,10 @@ impl WGPUApp {
         QUEUE.get_mut().as_mut().expect("Queue has not been initialized yet.")
     }
 
+    pub fn screen_scale() -> f64 {
+        Self::current().state.window.scale_factor()
+    }
+
     pub fn close() {
         on_main(|| {
             Self::current().close.store(true, Ordering::Relaxed);
@@ -58,6 +62,10 @@ impl WGPUApp {
         let event_loop = EventLoop::new()?;
 
         let window = Arc::new(WindowBuilder::new().with_title("Test Engine").build(&event_loop)?);
+
+        let scale: u32 = window.scale_factor().lossy_convert();
+
+        _ = window.request_inner_size(PhysicalSize::new(800 * scale, 600 * scale));
 
         let state = State::new(app, window.clone()).await?;
 

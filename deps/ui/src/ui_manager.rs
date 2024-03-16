@@ -7,10 +7,14 @@ use std::{
     },
 };
 
-use gm::flat::{Point, Rect, Size};
+use gm::{
+    flat::{Point, Rect, Size},
+    LossyConvert,
+};
 use refs::Own;
+use wgpu_wrapper::WGPUApp;
 
-use crate::{layout::Placer, Container, Keymap, TouchStack, UIEvent, View, WeakView};
+use crate::{layout::Placer, Container, Keymap, TouchStack, UIEvent, View, ViewFrame, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -23,10 +27,6 @@ pub struct UIManager {
     pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
 
     touch_disabled: AtomicBool,
-
-    display_scale: Mutex<f32>,
-
-    window_size: Mutex<Size<u32>>,
 
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<PathBuf>,
@@ -101,8 +101,6 @@ impl UIManager {
             root_view,
             deleted_views: Default::default(),
             touch_disabled: false.into(),
-            display_scale: 1.0.into(),
-            window_size: Default::default(),
             on_scroll: Default::default(),
             on_drop_file: Default::default(),
             display_touches: false.into(),
@@ -115,8 +113,12 @@ impl UIManager {
         UI_MANAGER.get_or_init(Self::init)
     }
 
-    pub fn window_size() -> Size<u32> {
-        *Self::get().window_size.lock().unwrap()
+    pub fn window_size() -> Size {
+        Self::root_view().size()
+    }
+
+    pub fn display_scale() -> f64 {
+        WGPUApp::screen_scale()
     }
 
     pub fn root_view() -> &'static dyn View {
@@ -164,13 +166,12 @@ impl UIManager {
     /// Display scale - constant for display on mac and iPhones, always 1 on
     /// other OS (probably) UI scale - adjustable in runtime
     pub fn rescale_frame(rect: &Rect) -> Rect {
-        let scale = Self::display_scale();
+        let scale: f32 = Self::display_scale().lossy_convert();
         // let rect = rect * UIManager::ui_scale();
 
         let rect: Rect = (
             rect.origin.x * scale,
-            (Self::window_size().height as f32 /* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height)
-                * scale,
+            (Self::window_size().height/* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height) * scale,
             rect.size.width * scale,
             rect.size.height * scale,
         )
@@ -195,26 +196,6 @@ impl UIManager {
     //     UIManager::root_view().set_frame(Self::scaled_ui_window_size());
     // }
     //
-    #[cfg(not(any(macos, ios)))]
-    /// On windows and linux display scale is always 1. Only ui scale is
-    /// responsible for elements size
-    pub fn display_scale() -> f32 {
-        1.0
-    }
-
-    #[cfg(macos)]
-    pub fn display_scale() -> f32 {
-        *Self::get().display_scale.lock().unwrap()
-    }
-
-    #[cfg(ios)]
-    pub fn display_scale() -> f32 {
-        *Self::get().display_scale.lock().unwrap()
-    }
-
-    pub fn set_display_scale(scale: f32) {
-        *Self::get().display_scale.lock().unwrap() = scale
-    }
 
     pub fn open_keyboard(#[allow(unused_variables)] frame: &Rect) {
         #[cfg(ios)]

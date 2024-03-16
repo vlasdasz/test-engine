@@ -75,6 +75,7 @@ impl App {
             .filter_module("wgpu_hal::dx12::instance", LevelFilter::Warn)
             .filter_module("wgpu_hal::gles::adapter", LevelFilter::Warn)
             .filter_module("wgpu_hal::gles::wgl", LevelFilter::Warn)
+            .filter_module("wgpu_hal::gles::egl", LevelFilter::Warn)
             .filter_module("naga::front", LevelFilter::Warn)
             .filter_module("naga::proc::constant_evaluator", LevelFilter::Warn)
             .filter_module("naga::valid::interface", LevelFilter::Warn)
