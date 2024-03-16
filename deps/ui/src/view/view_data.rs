@@ -23,6 +23,7 @@ pub trait ViewData {
     fn set_navigation_view(&mut self, nav: Weak<NavigationView>) -> &mut Self;
 
     fn label(&self) -> &str;
+    fn set_label(&mut self, label: impl ToString) -> &mut Self;
 
     fn animations(&mut self) -> &mut Vec<UIAnimation>;
 
@@ -70,6 +71,10 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn place(&self) -> &Placer {
+        assert!(
+            self.base().placer.is_ok(),
+            "Placer is not initialized yet. Place view only after it was added on superview."
+        );
         &self.base().placer
     }
 
@@ -84,6 +89,11 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn label(&self) -> &str {
         &self.base().label
+    }
+
+    fn set_label(&mut self, label: impl ToString) -> &mut Self {
+        self.base_mut().label = label.to_string();
+        self
     }
 
     fn animations(&mut self) -> &mut Vec<UIAnimation> {

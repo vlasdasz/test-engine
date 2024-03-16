@@ -14,7 +14,7 @@ use gm::{
 use refs::Own;
 use wgpu_wrapper::WGPUApp;
 
-use crate::{layout::Placer, Container, Keymap, TouchStack, UIEvent, View, ViewFrame, WeakView};
+use crate::{Container, Keymap, TouchStack, UIEvent, View, ViewFrame, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -94,8 +94,6 @@ impl UIManager {
     fn init() -> Self {
         let mut root_view = Own::<Container>::default();
         root_view.label = "Root view".to_string();
-        let weak_root = root_view.weak_view();
-        root_view.placer = Placer::new(weak_root);
 
         Self {
             root_view,

@@ -16,6 +16,7 @@ mod point_view;
 mod question;
 mod spinner;
 mod stick_view;
+mod table_view;
 
 pub use alert::*;
 pub use alert_err::*;
@@ -35,3 +36,4 @@ pub use point_view::PointView;
 pub use question::Question;
 pub use spinner::*;
 pub use stick_view::StickView;
+pub use table_view::*;

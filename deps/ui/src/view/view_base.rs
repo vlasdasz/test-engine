@@ -13,9 +13,12 @@ use crate::{layout::Placer, NavigationView, Touch, UIAnimation, View, WeakView};
 #[derive(Derivative)]
 #[derivative(Default, Debug)]
 pub struct ViewBase {
+    #[derivative(Debug = "ignore")]
     pub(crate) color: Color,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) corner_radius: f32,
+    #[derivative(Debug = "ignore")]
     pub(crate) border_color:  Color,
 
     pub(crate) is_hidden: bool,
@@ -34,13 +37,16 @@ pub struct ViewBase {
     #[derivative(Debug = "ignore")]
     pub(crate) subviews: Vec<Own<dyn View>>,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) touch_id: u64,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) is_selected: bool,
 
     #[derivative(Debug = "ignore")]
     pub(crate) navigation_view: Weak<NavigationView>,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) animations: Vec<UIAnimation>,
 
     pub label: String,
@@ -52,14 +58,20 @@ pub struct ViewBase {
     #[derivative(Debug = "ignore")]
     pub touch: ViewTouchCallbacks,
 
+    #[derivative(Debug = "ignore")]
     pub dont_hide: bool,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) loaded: Event,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) trigger_pos_changed:  bool,
+    #[derivative(Debug = "ignore")]
     pub(crate) trigger_size_changed: bool,
 
+    #[derivative(Debug = "ignore")]
     pub(crate) position_changed: Event,
+    #[derivative(Debug = "ignore")]
     pub(crate) size_changed:     Event,
 }
 

@@ -39,12 +39,12 @@ impl Placer {
         }
     }
 
+    pub fn is_ok(&self) -> bool {
+        self.view.is_ok()
+    }
+
     pub fn new(view: WeakView) -> Self {
-        let s_content = if view.superview().is_ok() {
-            view.base().superview.content_size()
-        } else {
-            view.content_size()
-        };
+        let s_content = view.base().superview.content_size();
 
         Self {
             rules:      vec![].into(),
@@ -286,6 +286,10 @@ impl Placer {
     pub fn lrb(&self, offset: impl IntoF32) -> &Self {
         self.l(offset).r(offset).b(offset)
     }
+
+    pub fn all_sides(&self, offset: impl IntoF32) -> &Self {
+        self.t(offset).b(offset).l(offset).r(offset)
+    }
 }
 
 impl Placer {
@@ -367,7 +371,7 @@ impl Placer {
                 if has.width {
                     frame.origin.x = s_content.width - frame.width() - rule.offset;
                 } else {
-                    frame.size.width = frame.width() + s_content.width - frame.max_x() - rule.offset
+                    frame.size.width = s_content.width - frame.origin.x - rule.offset;
                 }
             }
             Anchor::Width => frame.size.width = rule.offset,

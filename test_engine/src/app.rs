@@ -210,11 +210,11 @@ impl App {
         }
 
         if view.absolute_frame().size.is_invalid() {
-            warn!(
-                "View has invalid frame: {}. Frame: {:?} ",
-                view.label(),
-                view.frame()
-            );
+            // warn!(
+            //     "View has invalid frame: {}. Frame: {:?} ",
+            //     view.label(),
+            //     view.frame()
+            // );
             return;
         }
 
