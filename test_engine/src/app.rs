@@ -324,7 +324,7 @@ impl App {
             let mut view = Container::new();
             view.set_size((5, 5)).set_color(Color::random());
             view.set_center(touch.position);
-            UIManager::root_view_mut().add_subview(view);
+            UIManager::root_view_mut().__add_subview_internal(view, true);
         }
 
         let _level_touch = touch;
