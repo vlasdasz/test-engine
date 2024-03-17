@@ -160,7 +160,7 @@ impl App {
             let weak = view.weak();
             let mut root = UIManager::root_view_mut();
             root.remove_all_subviews();
-            let view = root.add_subview(view);
+            let view = root.__add_subview_internal(view, true);
             view.place().back();
             trace!("{width} - {height}");
             weak
@@ -210,11 +210,11 @@ impl App {
         }
 
         if view.absolute_frame().size.is_invalid() {
-            // warn!(
-            //     "View has invalid frame: {}. Frame: {:?} ",
-            //     view.label(),
-            //     view.frame()
-            // );
+            warn!(
+                "View has invalid frame: {}. Frame: {:?} ",
+                view.label(),
+                view.frame()
+            );
             return;
         }
 
@@ -287,7 +287,7 @@ impl App {
             }
         }
 
-        if DRAW_DEBUG_FRAMES {
+        if DRAW_DEBUG_FRAMES && clamped_frame.size.is_valid() {
             drawer.draw_rect(
                 pass,
                 &clamped_frame,
@@ -377,7 +377,7 @@ impl App {
 
 impl wgpu_wrapper::App for App {
     fn window_ready(&mut self) {
-        let view = UIManager::root_view_mut().add_subview(self.first_view.take().unwrap());
+        let view = UIManager::root_view_mut().__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();
         self.update();
         self.window_ready.trigger(());

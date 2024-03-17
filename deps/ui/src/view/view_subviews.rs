@@ -20,6 +20,7 @@ pub trait ViewSubviews {
 
     fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V>;
     fn add_subview(&mut self, view: Own<dyn View>) -> WeakView;
+    fn __add_subview_internal(&mut self, view: Own<dyn View>, is_root: bool) -> WeakView;
 
     fn add_dummy_view(&mut self);
 
@@ -77,7 +78,16 @@ impl<T: ?Sized + View> ViewSubviews for T {
         result
     }
 
-    fn add_subview(&mut self, mut view: Own<dyn View>) -> WeakView {
+    fn add_subview(&mut self, view: Own<dyn View>) -> WeakView {
+        self.__add_subview_internal(view, false)
+    }
+
+    fn __add_subview_internal(&mut self, mut view: Own<dyn View>, is_root: bool) -> WeakView {
+        assert!(
+            is_root || self.superview().was_initialized(),
+            "Adding subview to view without superview is not allowed"
+        );
+
         if view.base().navigation_view.is_null() {
             view.base_mut().navigation_view = self.base().navigation_view;
         }

@@ -12,6 +12,7 @@ use crate::ScrollView;
 
 #[view]
 pub struct TableView {
+    #[derivative(Debug = "ignore")]
     data:       Weak<dyn TableData>,
     pub scroll: Sub<ScrollView>,
 }
@@ -55,7 +56,8 @@ impl TableView {
 
             let mut cell = self.scroll.add_subview(cell);
 
-            self.data.setup_cell_for_index(cell.as_any_mut(), i);
+            self.data.setup_cell(cell.as_any_mut());
+            self.data.setup_cell_for_reuse(cell.as_any_mut(), i);
         }
     }
 }

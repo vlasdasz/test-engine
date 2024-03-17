@@ -280,6 +280,27 @@ impl Placer {
         self.l(offset).r(offset).b(offset)
     }
 
+    pub fn sides(&self, sides: &str, offset: impl IntoF32) -> &Self {
+        for ch in sides.chars() {
+            match ch {
+                't' => {
+                    self.t(offset);
+                }
+                'b' => {
+                    self.b(offset);
+                }
+                'l' => {
+                    self.l(offset);
+                }
+                'r' => {
+                    self.r(offset);
+                }
+                _ => panic!("Invalid side. Use tblr"),
+            }
+        }
+        self
+    }
+
     pub fn all_sides(&self, offset: impl IntoF32) -> &Self {
         self.t(offset).b(offset).l(offset).r(offset)
     }
