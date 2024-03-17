@@ -71,10 +71,6 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn place(&self) -> &Placer {
-        assert!(
-            self.base().placer.is_ok(),
-            "Placer is not initialized yet. Place view only after it was added on superview."
-        );
         &self.base().placer
     }
 

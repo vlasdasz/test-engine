@@ -43,17 +43,10 @@ impl Placer {
         self.view.is_ok()
     }
 
-    pub fn new(view: WeakView) -> Self {
+    pub fn init(&mut self, view: WeakView) {
         let s_content = view.base().superview.content_size();
-
-        Self {
-            rules:      vec![].into(),
-            sub_rules:  vec![].into(),
-            view:       unsafe { view.to_rglica() },
-            s_content:  s_content.to_rglica(),
-            all_margin: Default::default(),
-            has:        Default::default(),
-        }
+        self.view = unsafe { view.to_rglica() };
+        self.s_content = s_content.to_rglica();
     }
 
     pub fn clear(&self) -> &Self {

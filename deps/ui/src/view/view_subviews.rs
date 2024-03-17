@@ -7,7 +7,7 @@ use gm::{
 };
 use refs::{Own, Weak};
 
-use crate::{layout::Placer, Container, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};
 
 pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
@@ -32,7 +32,8 @@ pub trait ViewSubviews {
 impl<T: ?Sized + View> ViewSubviews for T {
     fn __manually_set_superview(&mut self, superview: WeakView) {
         self.base_mut().superview = superview;
-        self.base_mut().placer = Placer::new(self.weak_view());
+        let weak = self.weak_view();
+        self.base_mut().placer.init(weak);
     }
 
     fn superview(&self) -> &WeakView {

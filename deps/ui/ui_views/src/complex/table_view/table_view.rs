@@ -43,9 +43,7 @@ impl TableView {
         self.scroll.content_size.height = total_height;
 
         for i in 0..self.data.number_of_cells() {
-            let cell = self.data.make_cell();
-
-            let mut cell = self.scroll.add_subview(cell);
+            let mut cell = self.data.make_cell();
 
             cell.place()
                 .h(self.data.cell_height())
@@ -54,6 +52,8 @@ impl TableView {
 
             let label = format!("TableView cell: {}", cell.label());
             cell.set_label(label);
+
+            let mut cell = self.scroll.add_subview(cell);
 
             self.data.setup_cell_for_index(cell.as_any_mut(), i);
         }

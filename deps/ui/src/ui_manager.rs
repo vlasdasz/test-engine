@@ -41,10 +41,10 @@ pub struct UIManager {
 impl UIManager {
     pub const ROOT_VIEW_Z_OFFSET: f32 = 0.5;
     pub const MODAL_Z_OFFSET: f32 = 0.4;
-    pub const SUPERVIEW_Z_OFFSET: f32 = 0.000_01;
+    pub const SUPERVIEW_Z_OFFSET: f32 = 0.001;
 
     pub const fn subview_z_offset() -> f32 {
-        Self::SUPERVIEW_Z_OFFSET / 10.0
+        Self::SUPERVIEW_Z_OFFSET / 1000.0
     }
 
     pub const fn text_z_offset() -> f32 {

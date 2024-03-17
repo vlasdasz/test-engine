@@ -27,7 +27,7 @@ impl TableData for TestTableView {
     }
 
     fn number_of_cells(&self) -> usize {
-        500
+        5000
     }
 
     fn make_cell(&self) -> Own<dyn View> {
