@@ -1,6 +1,7 @@
 use gm::flat::Size;
 use refs::Weak;
-use ui::{view, Sub, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup};
+use ui::{view, Sub, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
+use vents::Event;
 mod test_engine {
     pub(crate) use refs;
     pub(crate) use ui;
@@ -12,6 +13,21 @@ use crate::Slider;
 pub struct ScrollView {
     slider:           Sub<Slider>,
     pub content_size: Size,
+    pub on_scroll:    Event<f32>,
+}
+
+impl ScrollView {
+    pub fn remove_all_subviews(&mut self) {
+        let slider_addr = self.slider.addr();
+
+        for mut view in self.subviews_mut() {
+            if view.addr() == slider_addr {
+                continue;
+            }
+
+            view.remove_from_superview();
+        }
+    }
 }
 
 impl ViewSetup for ScrollView {
@@ -22,6 +38,7 @@ impl ViewSetup for ScrollView {
             let val = 1.0 - val;
             let range = self.content_size.height - self.height();
             self.content_offset.y = -range * val;
+            self.on_scroll.trigger(self.content_offset.y);
         });
 
         UIManager::on_scroll(self, move |scroll| {
@@ -59,5 +76,7 @@ impl ScrollView {
         self.content_offset.y = self.content_offset.y.clamp(-range, 0.0);
         let slider_val = -self.content_offset.y / range;
         self.slider.set_value_without_event(1.0 - slider_val);
+
+        self.on_scroll.trigger(self.content_offset.y);
     }
 }

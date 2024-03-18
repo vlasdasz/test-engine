@@ -1,3 +1,4 @@
+use gm::LossyConvert;
 use refs::{weak_from_ref, Weak};
 use ui::{view, Sub, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
 
@@ -26,6 +27,13 @@ impl ViewCallbacks for TableView {
 impl ViewSetup for TableView {
     fn setup(self: Weak<Self>) {
         self.scroll.place().back();
+        self.scroll.on_scroll.sub(move || {
+            self.layout_cells();
+        });
+
+        self.size_changed().sub(move || {
+            self.layout_cells();
+        })
     }
 }
 
@@ -37,13 +45,28 @@ impl TableView {
 }
 
 impl TableView {
-    pub fn layout_cells(mut self: Weak<Self>) {
-        let number_of_cells = self.data.number_of_cells() as f32;
+    fn layout_cells(mut self: Weak<Self>) {
+        self.scroll.remove_all_subviews();
 
-        let total_height = number_of_cells * self.data.cell_height();
+        let number_of_cells = self.data.number_of_cells();
+        let cell_height = self.data.cell_height();
+
+        let total_height = number_of_cells as f32 * cell_height;
         self.scroll.content_size.height = total_height;
 
-        for i in 0..self.data.number_of_cells() {
+        let number_of_cells_fits: usize = (self.height() / cell_height).ceil().lossy_convert();
+
+        let offset = self.scroll.content_offset.y;
+
+        let first_index: usize = (-offset / cell_height).floor().lossy_convert();
+
+        let mut last_index = first_index + number_of_cells_fits + 1;
+
+        if last_index > number_of_cells {
+            last_index = number_of_cells;
+        }
+
+        for i in first_index..last_index {
             let mut cell = self.data.make_cell();
 
             cell.place()

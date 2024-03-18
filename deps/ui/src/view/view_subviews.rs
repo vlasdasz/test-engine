@@ -13,7 +13,7 @@ pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
     fn superview(&self) -> &WeakView;
     fn subviews(&self) -> &[Own<dyn View>];
-    fn subviews_mut(&mut self) -> &mut [Own<dyn View>];
+    fn subviews_mut(&mut self) -> Vec<WeakView>;
     fn remove_from_superview(&mut self);
     fn take_from_superview(&mut self) -> Own<dyn View>;
     fn remove_all_subviews(&mut self);
@@ -45,8 +45,8 @@ impl<T: ?Sized + View> ViewSubviews for T {
         &self.base().subviews
     }
 
-    fn subviews_mut(&mut self) -> &mut [Own<dyn View>] {
-        &mut self.base_mut().subviews
+    fn subviews_mut(&mut self) -> Vec<WeakView> {
+        self.base_mut().subviews.iter().map(Own::weak).collect()
     }
 
     fn remove_from_superview(&mut self) {

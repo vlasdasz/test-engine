@@ -6,7 +6,7 @@ use std::{
 
 use gm::{axis::Axis, flat::Size, IntoF32};
 use itertools::Itertools;
-use refs::{Own, Rglica, ToRglica};
+use refs::{Rglica, ToRglica};
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},
@@ -507,15 +507,15 @@ impl Placer {
     }
 }
 
-fn place_vertically(views: &mut [Own<dyn View>], margin: f32) {
+fn place_vertically(views: Vec<WeakView>, margin: f32) {
     distribute::<{ Axis::Y }>(views, margin);
 }
 
-fn place_horizontally(views: &mut [Own<dyn View>], margin: f32) {
+fn place_horizontally(views: Vec<WeakView>, margin: f32) {
     distribute::<{ Axis::X }>(views, margin);
 }
 
-fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
+fn distribute<const AXIS: Axis>(mut views: Vec<WeakView>, margin: f32) {
     let Some(mut last) = views.last_mut().map(|v| v.weak_view()) else {
         return;
     };
@@ -537,7 +537,7 @@ fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
 
     let mut last_pos: f32 = 0.0;
 
-    for view in views.iter_mut() {
+    for view in &mut views {
         let mut frame = *view.frame();
 
         frame.set_position::<AXIS>(last_pos);
@@ -551,7 +551,7 @@ fn distribute<const AXIS: Axis>(views: &mut [Own<dyn View>], margin: f32) {
     }
 }
 
-fn distribute_with_ratio(size: Size, views: &mut [Own<dyn View>], ratios: &[f32]) {
+fn distribute_with_ratio(size: Size, mut views: Vec<WeakView>, ratios: &[f32]) {
     let total_ratio = 1.0 / ratios.iter().sum::<f32>();
 
     for i in 0..ratios.len() {

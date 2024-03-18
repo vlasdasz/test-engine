@@ -192,7 +192,7 @@ impl App {
         view.calculate_absolute_frame();
         view.update();
         view.trigger_events();
-        for view in view.subviews_mut() {
+        for mut view in view.subviews_mut() {
             Self::update_view(view.deref_mut());
         }
     }
