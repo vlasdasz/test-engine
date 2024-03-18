@@ -18,23 +18,50 @@ pub struct Slider {
     converter: Converter,
 
     pub on_change: Event<f32>,
-
-    pub value: f32,
 }
 
 impl Slider {
+    pub fn value(&self) -> f32 {
+        self.converter.convert(self.raw_value)
+    }
+
+    pub fn set_value(&mut self, val: impl IntoF32) -> &mut Self {
+        self.raw_value = self.converter.reverse_convert(val);
+
+        let val = 1.0 - self.raw_value;
+
+        let circle_range = self.height() - self.circle.frame().height();
+        let y_pos = circle_range * val;
+        self.circle.set_y(y_pos);
+
+        self.value_changed();
+        self
+    }
+
+    pub fn indicator_position(&self) -> f32 {
+        self.circle.frame().center().y
+    }
+
     pub fn set_range(&mut self, min: impl IntoF32, max: impl IntoF32) -> &mut Self {
-        self.set_min(min).set_max(max)
+        self.set_min(min).set_max(max);
+        self.value_changed();
+        self
     }
 
     pub fn set_min(&mut self, min: impl IntoF32) -> &mut Self {
         self.converter.set_min(min);
+        self.value_changed();
         self
     }
 
     pub fn set_max(&mut self, max: impl IntoF32) -> &mut Self {
         self.converter.set_max(max);
+        self.value_changed();
         self
+    }
+
+    fn value_changed(&self) {
+        self.on_change.trigger(self.value());
     }
 }
 
@@ -68,8 +95,6 @@ impl Slider {
         self.circle.set_y(y_pos - half_circle);
         self.raw_value = 1.0 - (y_pos - half_circle) / (self.height() - half_circle * 2.0);
 
-        let val = self.converter.convert(self.raw_value);
-        self.value = val;
-        self.on_change.trigger(val);
+        self.value_changed();
     }
 }

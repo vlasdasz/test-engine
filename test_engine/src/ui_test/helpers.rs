@@ -1,4 +1,5 @@
 use anyhow::Result;
+use ui::ViewSetup;
 
 use crate::{
     gm::Apply,
@@ -25,7 +26,10 @@ pub fn add_corners(mut view: WeakView, color: Color) {
 
 #[allow(dead_code)]
 pub fn add_action(action: impl FnMut() + 'static) {
-    let mut button = UIManager::root_view_mut().add_view::<Button>();
+    let mut button = UIManager::root_view_mut()
+        .__add_subview_internal(Button::new(), true)
+        .downcast::<Button>()
+        .unwrap();
     button.place().size(100, 100).bl(0);
     button.set_color(Color::LIGHT_GRAY);
     button.on_tap(action);

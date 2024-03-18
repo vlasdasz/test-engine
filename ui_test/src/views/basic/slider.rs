@@ -1,8 +1,10 @@
 use anyhow::Result;
+use log::debug;
 use test_engine::{
+    from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, Label, Slider, Sub, ViewData, ViewSetup},
-    ui_test::inject_touches,
+    ui::{view, Anchor, Color, Label, Slider, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews},
+    ui_test::{helpers::check_colors, inject_touches},
     App,
 };
 
@@ -28,7 +30,7 @@ impl ViewSetup for SliderTestView {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let view = App::init_test_view::<SliderTestView>().await;
+    let mut view = App::init_test_view::<SliderTestView>().await;
 
     inject_touches(
         r#"
@@ -38,7 +40,7 @@ pub async fn test_slider() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.slider.value, 0.78);
+    assert_eq!(view.slider.value(), 0.78);
     assert_eq!(view.label.text(), "0.78");
 
     inject_touches(
@@ -67,7 +69,7 @@ pub async fn test_slider() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.slider.value, 0.78);
+    assert_eq!(view.slider.value(), 0.78);
     assert_eq!(view.label.text(), "0.78");
 
     inject_touches(
@@ -107,7 +109,7 @@ pub async fn test_slider() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.slider.value, 0.12285715);
+    assert_eq!(view.slider.value(), 0.12285715);
     assert_eq!(view.label.text(), "0.12");
 
     inject_touches(
@@ -129,7 +131,7 @@ pub async fn test_slider() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.slider.value, 0.0);
+    assert_eq!(view.slider.value(), 0.0);
     assert_eq!(view.label.text(), "0.00");
 
     inject_touches(
@@ -154,8 +156,95 @@ pub async fn test_slider() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.slider.value, 1.0);
+    assert_eq!(view.slider.value(), 1.0);
     assert_eq!(view.label.text(), "1.00");
+
+    from_main(move || {
+        view.slider.set_range(-5, 5);
+    })
+    .await;
+
+    assert_eq!(view.slider.value(), 5.0);
+    assert_eq!(view.label.text(), "5.00");
+
+    inject_touches(
+        "
+            301  136  b
+            303  186  m
+            307  313  m
+            306  446  m
+            304  507  m
+            303  543  m
+            303  542  e
+        ",
+    )
+    .await;
+
+    assert_eq!(view.slider.value(), -5.0);
+    assert_eq!(view.label.text(), "-5.00");
+
+    for i in -5..=5 {
+        from_main(move || {
+            view.slider.set_value(i);
+            let mut label = view.add_view::<Label>();
+            label.set_text(i);
+            label.set_size((50, 20));
+            label.set_x(340);
+            label.set_y(view.slider.indicator_position() - 10.0 + view.slider.y());
+        })
+        .await;
+    }
+
+    check_colors(
+        r#"
+             357  503 -  25  51  76
+             357  497 -  25  51  76
+             360  490 -  25  51  76
+             365  471 -   0   0   0
+             362  461 -  25  51  76
+             362  441 -  61  61  61
+             363  410 -  35  35  35
+             364  396 -   1   1   1
+             362  382 -  25  51  76
+             362  374 - 255 255 255
+             362  364 - 255 255 255
+             362  330 - 255 255 255
+             362  321 -  25  51  76
+             364  311 -  25  51  76
+             363  296 - 255 255 255
+             363  275 -  25  51  76
+             365  252 -  25  51  76
+             365  226 - 255 255 255
+             370  181 -  25  51  76
+             370  156 - 255 255 255
+             369  145 -  25  51  76
+             366  131 -  94  94  94
+             360  115 -   0   0   0
+             327   86 -  25  51  76
+             293   90 -  25  51  76
+             281  121 -   0   0 203
+             343  128 - 255 255 255
+             356  128 - 255 255 255
+             380  128 - 255 255 255
+             367  153 -   1   1   1
+             375  203 - 255 255 255
+             373  204 - 255 255 255
+             375  229 - 255 255 255
+             374  258 - 255 255 255
+             372  269 - 255 255 255
+             374  297 - 255 255 255
+             373  323 -  25  51  76
+             368  349 -  25  51  76
+             367  365 - 255 255 255
+             368  411 - 132 132 132
+             369  465 - 255 255 255
+             368  482 -   1   1   1
+             369  501 -  25  51  76
+        "#,
+    )
+    .await?;
+
+    debug!("Slider test: OK");
 
     Ok(())
 }

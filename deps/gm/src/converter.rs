@@ -24,22 +24,23 @@ impl Converter {
     }
 
     pub fn set_min(&mut self, min: impl IntoF32) -> &mut Self {
-        let min = min.into_f32();
-        self.min = min;
+        self.min = min.into_f32();
         self.span = self.max - self.min;
         self
     }
 
     pub fn set_max(&mut self, max: impl IntoF32) -> &mut Self {
-        let max = max.into_f32();
-        self.max = max;
+        self.max = max.into_f32();
         self.span = self.max - self.min;
         self
     }
 
     pub fn convert(&self, val: impl IntoF32) -> f32 {
-        let val = val.into_f32();
-        self.min + val * self.span
+        self.min + val.into_f32() * self.span
+    }
+
+    pub fn reverse_convert(&self, val: impl IntoF32) -> f32 {
+        (val.into_f32() - self.min) / self.span
     }
 }
 
@@ -70,13 +71,24 @@ mod test {
             assert_eq!(conv.convert(0), min);
             assert_eq!(conv.convert(1), max);
 
+            assert_eq!(conv.reverse_convert(min), 0.0);
+            assert_eq!(conv.reverse_convert(max), 1.0);
+
             assert_eq!(edited_conv.convert(0), min);
             assert_eq!(edited_conv.convert(1), max);
+
+            assert_eq!(edited_conv.reverse_convert(min), 0.0);
+            assert_eq!(edited_conv.reverse_convert(max), 1.0);
 
             for _ in 0..100 {
                 let val = (-5.0..5.0).fake::<f32>();
                 assert_eq!(conv.convert(val), min + val * (max - min));
                 assert_eq!(edited_conv.convert(val), min + val * (max - min));
+
+                let converted = conv.convert(val);
+                let rev = conv.reverse_convert(converted);
+
+                assert!((rev - val).abs() < 0.000001);
             }
         }
     }

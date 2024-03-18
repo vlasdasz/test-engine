@@ -65,6 +65,7 @@ pub async fn inject_scroll(scroll: impl IntoF32) {
         UIManager::trigger_scroll((0, scroll).into());
     })
     .await;
+    wait_for_next_frame().await
 }
 
 pub async fn inject_touches(data: &str) {

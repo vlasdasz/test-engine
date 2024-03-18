@@ -36,6 +36,12 @@ impl ToLabel for u32 {
     }
 }
 
+impl ToLabel for i32 {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
 impl ToLabel for usize {
     fn to_label(&self) -> String {
         self.to_string()

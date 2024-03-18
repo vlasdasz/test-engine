@@ -21,12 +21,19 @@ impl ViewSetup for ScrollView {
         self.slider.place().w(40).r(0);
         self.slider.on_change.val(move |val| {
             self.content_offset.y = val;
+            //dbg!(&val);
         });
 
         UIManager::on_scroll(self, move |scroll| {
             self.content_offset.y += scroll.y;
+            // dbg!(&self.content_offset);
+            //self.slider.se_
         });
     }
+}
+
+impl ScrollView {
+    fn position_slider(mut self: Weak<Self>) {}
 }
 
 impl ViewCallbacks for ScrollView {
