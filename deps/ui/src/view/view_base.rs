@@ -6,7 +6,7 @@ use gm::{
     Color,
 };
 use refs::{Own, Weak};
-use vents::Event;
+use vents::{Event, OnceEvent};
 
 use crate::{layout::Placer, NavigationView, Touch, UIAnimation, View, WeakView};
 
@@ -73,6 +73,9 @@ pub struct ViewBase {
     pub(crate) position_changed: Event,
     #[derivative(Debug = "ignore")]
     pub(crate) size_changed:     Event,
+
+    #[derivative(Debug = "ignore")]
+    pub(crate) after_setup: OnceEvent,
 }
 
 #[derive(Default)]

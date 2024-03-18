@@ -1,6 +1,6 @@
 use gm::{Color, IntoF32};
-use refs::Weak;
-use vents::Event;
+use refs::{Own, Weak};
+use vents::{Event, OnceEvent};
 
 use crate::{layout::Placer, NavigationView, UIAnimation, View};
 
@@ -32,6 +32,8 @@ pub trait ViewData {
     fn loaded(&self) -> &Event;
     fn position_changed(&self) -> &Event;
     fn size_changed(&self) -> &Event;
+
+    fn __after_setup_event(&self) -> &OnceEvent;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -110,5 +112,23 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn size_changed(&self) -> &Event {
         &self.base().size_changed
+    }
+
+    fn __after_setup_event(&self) -> &OnceEvent {
+        &self.base().after_setup
+    }
+}
+
+pub trait AfterSetup {
+    fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + 'static) -> Own<Self>;
+}
+
+impl<T: ?Sized + View + 'static> AfterSetup for T {
+    fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + 'static) -> Own<Self> {
+        let weak = self.weak();
+        self.base().after_setup.sub(move || {
+            action(weak);
+        });
+        self
     }
 }

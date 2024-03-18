@@ -88,10 +88,13 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             fn __internal_setup(&mut self) {
                 use test_engine::ui::ViewSetup;
                 use test_engine::ui::WithHeader;
+                use test_engine::ui::ViewData;
                 self.view.label += &#name_str.to_string();
                 self.layout_header();
-                test_engine::refs::weak_from_ref(self).__link();
-                test_engine::refs::weak_from_ref(self).setup();
+                let weak = test_engine::refs::weak_from_ref(self);
+                weak.__link();
+                weak.setup();
+                self.__after_setup_event().trigger(());
             }
         }
 

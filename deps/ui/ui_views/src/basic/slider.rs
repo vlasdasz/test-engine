@@ -26,6 +26,12 @@ impl Slider {
     }
 
     pub fn set_value(&mut self, val: impl IntoF32) -> &mut Self {
+        self.set_value_without_event(val);
+        self.value_changed();
+        self
+    }
+
+    pub fn set_value_without_event(&mut self, val: impl IntoF32) -> &mut Self {
         self.raw_value = self.converter.reverse_convert(val);
 
         let val = 1.0 - self.raw_value;
@@ -34,7 +40,6 @@ impl Slider {
         let y_pos = circle_range * val;
         self.circle.set_y(y_pos);
 
-        self.value_changed();
         self
     }
 

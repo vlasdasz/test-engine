@@ -56,8 +56,7 @@ impl TableView {
 
             let mut cell = self.scroll.add_subview(cell);
 
-            self.data.setup_cell(cell.as_any_mut());
-            self.data.setup_cell_for_reuse(cell.as_any_mut(), i);
+            self.data.setup_cell(cell.as_any_mut(), i);
         }
     }
 }

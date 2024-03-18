@@ -3,7 +3,10 @@ use std::{any::Any, ops::Deref};
 use anyhow::Result;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, Color, Container, Label, Sub, TableData, TableView, View, ViewData, ViewSetup, ViewSubviews},
+    ui::{
+        view, AfterSetup, Color, Container, Label, Sub, TableData, TableView, View, ViewData, ViewSetup,
+        ViewSubviews,
+    },
     App,
 };
 
@@ -30,27 +33,23 @@ impl TableData for TestTableView {
     }
 
     fn make_cell(&self) -> Own<dyn View> {
-        Label::new()
+        Label::new().after_setup(|mut label| {
+            label
+                .add_view::<Container>()
+                .set_color(Color::GRAY)
+                .place()
+                .w(4)
+                .sides("tlb", 0);
+            label
+                .add_view::<Container>()
+                .set_color(Color::GRAY)
+                .place()
+                .h(4)
+                .sides("ltr", 0);
+        })
     }
 
-    fn setup_cell(&self, cell: &mut dyn Any) {
-        let label = cell.downcast_mut::<Label>().unwrap();
-
-        label
-            .add_view::<Container>()
-            .set_color(Color::GRAY)
-            .place()
-            .w(4)
-            .sides("tlb", 0);
-        label
-            .add_view::<Container>()
-            .set_color(Color::GRAY)
-            .place()
-            .h(4)
-            .sides("ltr", 0);
-    }
-
-    fn setup_cell_for_reuse(&self, cell: &mut dyn Any, index: usize) {
+    fn setup_cell(&self, cell: &mut dyn Any, index: usize) {
         let label = cell.downcast_mut::<Label>().unwrap();
         label.set_text(format!("Cell number: {index}"));
     }
@@ -61,7 +60,7 @@ pub async fn test_table_view() -> Result<()> {
 
     App::set_window_size((1000, 1000));
 
-    // record_ui_test().await;
+    //record_ui_test().await;
 
     Ok(())
 }

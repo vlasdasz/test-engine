@@ -25,8 +25,12 @@ impl ViewSetup for ScrollView {
         });
 
         UIManager::on_scroll(self, move |scroll| {
-            self.content_offset.y += scroll.y;
+            self.on_scroll(scroll.y);
         });
+
+        self.size_changed().sub(move || {
+            self.on_scroll(0.0);
+        })
     }
 }
 
@@ -42,5 +46,18 @@ impl ViewCallbacks for ScrollView {
 
     fn content_size(&self) -> &Size {
         &self.content_size
+    }
+}
+
+impl ScrollView {
+    fn on_scroll(mut self: Weak<Self>, scroll: f32) {
+        if self.height() >= self.content_size.height {
+            return;
+        }
+        self.content_offset.y += scroll;
+        let range = self.content_size.height - self.height();
+        self.content_offset.y = self.content_offset.y.clamp(-range, 0.0);
+        let slider_val = -self.content_offset.y / range;
+        self.slider.set_value_without_event(1.0 - slider_val);
     }
 }
