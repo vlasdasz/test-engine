@@ -4,7 +4,6 @@ use anyhow::Result;
 use test_engine::{
     refs::{Own, Weak},
     ui::{view, Color, Container, Label, Sub, TableData, TableView, View, ViewData, ViewSetup, ViewSubviews},
-    ui_test::record_ui_test,
     App,
 };
 
@@ -62,7 +61,7 @@ pub async fn test_table_view() -> Result<()> {
 
     App::set_window_size((1000, 1000));
 
-    record_ui_test().await;
+    // record_ui_test().await;
 
     Ok(())
 }

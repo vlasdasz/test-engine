@@ -33,22 +33,22 @@ impl CollectionData for ButtonsOnTableView {
     }
 
     fn make_cell(&self) -> Own<dyn View> {
-        let mut view = Container::new();
+        let view = Container::new();
+        view
+    }
 
-        view.add_view::<Button>()
+    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
+        let cell = cell.downcast_mut::<Container>().unwrap();
+
+        cell.add_view::<Button>()
             .set_image("plus.png")
             .place()
             .size(40, 40)
             .center_y()
             .r(20);
 
-        view.add_view::<Label>().place().size(100, 40).center_y().l(20);
+        cell.add_view::<Label>().place().size(100, 40).center_y().l(20);
 
-        view
-    }
-
-    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
-        let cell = cell.downcast_mut::<Container>().unwrap();
         cell.get_subview::<Label>().set_text(format!("{index}"));
         cell.get_subview::<Button>().on_tap(move || {
             append_state(format!("button_pressed: {index}\n"));

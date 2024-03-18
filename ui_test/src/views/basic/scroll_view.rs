@@ -53,7 +53,6 @@ pub async fn test_scroll_view() -> Result<()> {
     assert_eq!(view.scroll.content_offset.y, 0.0);
 
     inject_scroll(5).await;
-    dbg!(view.scroll.content_offset.y);
     assert_eq!(view.scroll.content_offset.y, 5.0);
 
     inject_scroll(20).await;
