@@ -1,16 +1,23 @@
-use std::{any::Any, ops::Deref};
+use std::{
+    any::Any,
+    ops::Deref,
+    sync::atomic::{AtomicUsize, Ordering},
+};
 
 use anyhow::Result;
 use log::debug;
 use test_engine::{
+    from_main,
     refs::{Own, Weak},
     ui::{
         view, AfterSetup, Color, Container, Label, Sub, TableData, TableView, View, ViewData, ViewSetup,
         ViewSubviews,
     },
-    ui_test::inject_touches,
+    ui_test::{inject_touches, record_ui_test},
     wait_for_next_frame, App,
 };
+
+static N_CELLS: AtomicUsize = AtomicUsize::new(2_000_000);
 
 #[view]
 struct TestTableView {
@@ -30,7 +37,7 @@ impl TableData for TestTableView {
     }
 
     fn number_of_cells(&self) -> usize {
-        2_000_000
+        N_CELLS.load(Ordering::Relaxed)
     }
 
     fn make_cell(&self) -> Own<dyn View> {
@@ -112,6 +119,14 @@ pub async fn test_table_view() -> Result<()> {
         view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
         "Cell number: 2000000"
     );
+
+    from_main(move || {
+        N_CELLS.store(2_000_000 - 5, Ordering::Relaxed);
+        view.table.reload_data();
+    })
+    .await;
+
+    record_ui_test().await;
 
     debug!("Table view test: OK");
 

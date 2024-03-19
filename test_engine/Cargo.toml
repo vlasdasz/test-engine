@@ -36,7 +36,6 @@ gm = { workspace = true }
 store = { workspace = true }
 ui = { workspace = true }
 ui_proc = { workspace = true }
-ui_views = { workspace = true }
 wgpu_wrapper = { workspace = true }
 
 [build-dependencies]

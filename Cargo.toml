@@ -52,6 +52,5 @@ store = { path = "deps/store" }
 test_engine = { path = "test_engine" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
-ui_views = { path = "deps/ui/ui_views" }
 valid = { path = "deps/valid" }
 wgpu_wrapper = { path = "deps/wgpu_wrapper" }

@@ -176,7 +176,7 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
                 res = quote! {
                     #res
                     {
-                        use ui_views::AlertErr;
+                        use test_engine::ui::AlertErr;
                         self.#field_name.on_tap(move || { self.#parameter().alert_err(); });
                     }
                 };
@@ -186,7 +186,7 @@ fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
                     #res
                     self.#field_name.on_tap(move || {
                         tokio::spawn(async move {
-                            use ui_views::AlertErr;
+                            use test_engine::ui::AlertErr;
                             self.#parameter().await.alert_err();
                         });
                     });

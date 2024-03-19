@@ -18,7 +18,6 @@ pub mod ui {
         Color, U8Color,
     };
     pub use ui_proc::view;
-    pub use ui_views::*;
     pub use views::color_meter::ColorMeter;
     pub use wgpu_wrapper::{image::Image, PolygonMode, Screenshot};
 

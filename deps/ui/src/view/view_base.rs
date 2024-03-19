@@ -1,10 +1,7 @@
 #![allow(clippy::struct_excessive_bools)]
 
 use derivative::Derivative;
-use gm::{
-    flat::{Point, Rect},
-    Color,
-};
+use gm::{flat::Rect, Color};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
@@ -28,8 +25,6 @@ pub struct ViewBase {
 
     pub(crate) frame:          Rect,
     pub(crate) absolute_frame: Rect,
-
-    pub content_offset: Point,
 
     #[derivative(Debug = "ignore")]
     pub(crate) superview: WeakView,

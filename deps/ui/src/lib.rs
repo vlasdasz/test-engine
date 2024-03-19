@@ -7,6 +7,7 @@
 #![feature(generic_const_exprs)]
 #![feature(const_fn_floating_point_arithmetic)]
 
+mod images;
 mod input;
 mod labeled;
 mod layout;
@@ -20,8 +21,10 @@ mod touch_stack;
 mod ui_event;
 mod ui_manager;
 mod view;
+mod views;
 mod with_header;
 
+pub use images::*;
 pub use input::*;
 pub use labeled::*;
 pub use layout::*;
@@ -34,6 +37,7 @@ pub use ui_event::*;
 pub use ui_manager::*;
 pub use ui_proc::*;
 pub use view::*;
+pub use views::*;
 pub use with_header::*;
 
 extern crate core;

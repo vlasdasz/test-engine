@@ -21,14 +21,17 @@ use ui::{
     check_touch, Container, Touch, TouchEvent, TouchStack, UIEvents, UIManager, View, ViewAnimation,
     ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
 };
-use ui_views::{DrawingView, ImageView, Label};
 use vents::OnceEvent;
 use wgpu::{PolygonMode, RenderPass};
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, WGPUApp, WGPUDrawer};
 use winit::event::{KeyEvent, TouchPhase};
 
-use crate::{assets::Assets, ui_test::state::clear_state};
+use crate::{
+    assets::Assets,
+    ui::{DrawingView, ImageView, Label},
+    ui_test::state::clear_state,
+};
 
 static mut APP: *mut App = null_mut();
 

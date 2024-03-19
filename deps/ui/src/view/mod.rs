@@ -7,7 +7,7 @@ mod view_callbacks;
 mod view_controller;
 mod view_data;
 mod view_frame;
-mod view_internal;
+pub(crate) mod view_internal;
 mod view_layout;
 mod view_subviews;
 mod view_test;

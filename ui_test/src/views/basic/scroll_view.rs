@@ -50,16 +50,16 @@ pub async fn test_scroll_view() -> Result<()> {
     )
     .await?;
 
-    assert_eq!(view.scroll.content_offset.y, 0.0);
+    assert_eq!(view.scroll.content_offset(), 0.0);
 
     inject_scroll(-5).await;
-    assert_eq!(view.scroll.content_offset.y, -0.0);
+    assert_eq!(view.scroll.content_offset(), -0.0);
 
     inject_scroll(-20).await;
-    assert_eq!(view.scroll.content_offset.y, -0.0);
+    assert_eq!(view.scroll.content_offset(), -0.0);
 
     inject_scroll(-30).await;
-    assert_eq!(view.scroll.content_offset.y, -0.0);
+    assert_eq!(view.scroll.content_offset(), -0.0);
 
     check_colors(
         r#"
@@ -154,7 +154,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await?;
 
     inject_scroll(-150).await;
-    assert_eq!(view.scroll.content_offset.y, -150.0);
+    assert_eq!(view.scroll.content_offset(), -150.0);
 
     check_colors(
         r#"
@@ -176,7 +176,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await?;
 
     inject_scroll(-1500).await;
-    assert_eq!(view.scroll.content_offset.y, -200.0);
+    assert_eq!(view.scroll.content_offset(), -200.0);
 
     check_colors(
         r#"
@@ -273,6 +273,13 @@ pub async fn test_scroll_view() -> Result<()> {
         "#,
     )
     .await?;
+
+    // from_main(move || {
+    //     view.scroll.content_offset = -400.0;
+    // })
+    // .await;
+    //
+    // record_ui_test().await;
 
     debug!("Scroll view test: OK");
 
