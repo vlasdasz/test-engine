@@ -5,11 +5,12 @@ use gm::{
     IntoF32,
 };
 
-use crate::View;
+use crate::{UIManager, View, ViewSubviews};
 
 pub trait ViewFrame {
     fn z_position(&self) -> f32;
     fn set_z_position(&mut self, z: f32) -> &mut Self;
+    fn bump_z_position(&mut self, z: f32) -> &mut Self;
     fn frame(&self) -> &Rect;
     fn absolute_frame(&self) -> &Rect;
     fn x(&self) -> f32;
@@ -37,6 +38,14 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn set_z_position(&mut self, z: f32) -> &mut Self {
         self.base_mut().z_position = z;
+        self
+    }
+
+    fn bump_z_position(&mut self, z: f32) -> &mut Self {
+        self.base_mut().z_position -= z;
+        for mut sub in self.subviews_mut() {
+            sub.bump_z_position(z + UIManager::subview_z_offset());
+        }
         self
     }
 

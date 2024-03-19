@@ -3,7 +3,6 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
 use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
 use gm::{flat::Size, CheckedConvert, Color, Platform, U8Color};
-use log::error;
 use refs::MainLock;
 use tokio::{
     spawn,
@@ -135,13 +134,13 @@ impl State {
             let inner_size = self.window.inner_size();
 
             let position = if Platform::IOS {
-                match self.window.inner_position() {
-                    Ok(pos) => (pos.x, pos.y),
-                    Err(err) => {
-                        error!("{err}");
-                        (0, 0)
-                    }
-                }
+                // match self.window.inner_position() {
+                //     Ok(pos) => (pos.x, pos.y),
+                //     Err(err) => {
+                //         error!("{err}");
+                (0, 0)
+                //      }
+                //    }
             } else {
                 (0, 0)
             };

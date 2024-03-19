@@ -26,7 +26,7 @@ nonempty = "0.10.0"
 rand = "0.8"
 rapier2d = { version = "0.18.0", features = ["parallel", "simd-stable"] }
 reqwest = { version = "0.11.18", default-features = false, features = ["native-tls-vendored"] }
-rodio = "0.17.1"
+rodio = "0.17.3"
 rust_decimal = "1.29.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -36,7 +36,7 @@ tokio = { version = "1.36.0", features = ["full"] }
 web-time = "1.0.0"
 wgpu = "0.19.1"
 wgpu_text = "0.8.6"
-winit = "0.29.10"
+winit = "0.29.15"
 
 manage = "=0.4.8"
 reflected = "=0.7.1"

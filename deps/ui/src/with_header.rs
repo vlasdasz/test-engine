@@ -1,6 +1,7 @@
-use gm::{Color, Platform};
+use gm::Platform;
+use log::trace;
 
-use crate::{layout::Anchor, View, ViewData, WeakView};
+use crate::{layout::Anchor, UIManager, View, ViewData, ViewFrame, WeakView};
 
 pub trait WithHeader: View {
     fn header(&self) -> WeakView;
@@ -11,10 +12,11 @@ pub trait WithHeader: View {
         let mut header = self.header();
 
         if header.is_null() {
+            trace!("No header");
             return;
         }
 
-        header.set_color(Color::WHITE);
+        header.bump_z_position(UIManager::subview_z_offset() * 10.0);
 
         if Platform::IOS {
             header.place().lr(0).t(40).h(self.header_size());
