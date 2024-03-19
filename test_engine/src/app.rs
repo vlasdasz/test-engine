@@ -59,6 +59,10 @@ impl App {
         UIManager::root_view().size()
     }
 
+    pub fn stop() {
+        WGPUApp::close();
+    }
+
     fn setup_log() {
         Builder::from_default_env()
             .filter_level(LevelFilter::Debug)
@@ -141,7 +145,6 @@ impl App {
             let recv = from_main(|| App::current().window_ready.val_async()).await;
             recv.await.unwrap();
             let _ = actions.await;
-            WGPUApp::close();
         });
 
         WGPUApp::start(app).await
@@ -296,7 +299,7 @@ impl App {
                 &clamped_frame,
                 &Color::TURQUOISE,
                 PolygonMode::Line,
-                view.z_position() - UIManager::additional_z_offset(),
+                view.z_position() - 0.2,
             );
         }
 

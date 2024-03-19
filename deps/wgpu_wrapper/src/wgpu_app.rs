@@ -65,7 +65,7 @@ impl WGPUApp {
 
         let scale: u32 = window.scale_factor().lossy_convert();
 
-        _ = window.request_inner_size(PhysicalSize::new(800 * scale, 600 * scale));
+        _ = window.request_inner_size(PhysicalSize::new(1200 * scale, 1000 * scale));
 
         let state = State::new(app, window.clone()).await?;
 

@@ -2,7 +2,10 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Label, ModalView, Size, Sub, ViewData, ViewSetup, ViewSubviews},
+    ui::{
+        view, Color, Container, Label, ModalView, Size, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews,
+        WeakView,
+    },
     ui_test::helpers::check_colors,
     wait_for_next_frame, App, OnceEvent,
 };
@@ -12,9 +15,20 @@ struct ModalTestView {}
 
 impl ViewSetup for ModalTestView {
     fn setup(mut self: Weak<Self>) {
-        for _ in 0..1000 {
-            self.add_dummy_view();
+        let mut view = WeakView::default();
+
+        for _ in 0..280 {
+            if view.was_initialized() {
+                view = view.add_view::<Container>();
+                view.set_color(Color::random()).place().all_sides(1);
+            } else {
+                view = self.add_dummy_view();
+                view.set_color(Color::random()).place().all_sides(1);
+                assert_eq!(view.z_position(), 0.49999797);
+            }
         }
+
+        assert_eq!(view.z_position(), 0.49971527);
     }
 }
 
@@ -36,6 +50,7 @@ impl ModalView for Modal {
     fn modal_event(&self) -> &OnceEvent<()> {
         &self.event
     }
+
     fn modal_size() -> Size {
         (400, 400).into()
     }

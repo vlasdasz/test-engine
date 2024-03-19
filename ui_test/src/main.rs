@@ -53,12 +53,15 @@ async fn main() -> Result<()> {
 
         _ = skip();
 
+        App::stop();
+
         Ok(())
     })
     .await
 }
 
 async fn test() -> Result<()> {
+    test_modal().await?;
     test_view_order().await?;
     test_scroll_view().await?;
     test_table_view().await?;
@@ -74,7 +77,6 @@ async fn test() -> Result<()> {
     test_stick().await?;
     test_point_view().await?;
     test_out_bounds().await?;
-    test_modal().await?;
     test_touch_stack().await?;
     test_text_occlusion().await?;
     test_text_field().await?;

@@ -48,6 +48,10 @@ impl TableView {
     fn layout_cells(mut self: Weak<Self>) {
         self.scroll.remove_all_subviews();
 
+        if self.height() <= 0.0 {
+            return;
+        }
+
         let number_of_cells = self.data.number_of_cells();
         let cell_height = self.data.cell_height();
 

@@ -22,7 +22,7 @@ pub trait ViewSubviews {
     fn add_subview(&mut self, view: Own<dyn View>) -> WeakView;
     fn __add_subview_internal(&mut self, view: Own<dyn View>, is_root: bool) -> WeakView;
 
-    fn add_dummy_view(&mut self);
+    fn add_dummy_view(&mut self) -> WeakView;
 
     fn apply_to_all_subviews(&mut self, action: impl FnMut(&mut dyn View) + Clone + 'static);
 
@@ -93,7 +93,9 @@ impl<T: ?Sized + View> ViewSubviews for T {
         }
         let mut weak = view.weak_view();
 
-        weak.base_mut().z_position = self.z_position() - UIManager::subview_z_offset();
+        if weak.z_position() == UIManager::ROOT_VIEW_Z_OFFSET {
+            weak.base_mut().z_position = self.z_position() - UIManager::subview_z_offset()
+        }
 
         self.base_mut().subviews.push(view);
         weak.__manually_set_superview(self.weak_view());
@@ -103,7 +105,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         weak
     }
 
-    fn add_dummy_view(&mut self) {
+    fn add_dummy_view(&mut self) -> WeakView {
         const MAX_SIZE: f32 = 200.0;
         const MAX_POSITION: f32 = 400.0;
 
@@ -121,6 +123,8 @@ impl<T: ?Sized + View> ViewSubviews for T {
         view.set_position(origin);
 
         view.set_color(Color::random());
+
+        view
     }
 
     fn apply_to_all_subviews(&mut self, mut action: impl FnMut(&mut dyn View) + Clone + 'static) {
