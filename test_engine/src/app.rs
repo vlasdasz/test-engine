@@ -202,6 +202,7 @@ impl App {
         drawer: &'a WGPUDrawer,
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
+        text_offset: &mut f32,
     ) {
         const DRAW_DEBUG_FRAMES: bool = false;
 
@@ -228,7 +229,7 @@ impl App {
                 &clamped_frame,
                 view.color(),
                 PolygonMode::Fill,
-                view.z_position(),
+                view.z_position() + *text_offset,
             );
         }
 
@@ -246,7 +247,7 @@ impl App {
                     image.get_static(),
                     &clamped_frame,
                     image_view.cropped(),
-                    view.z_position() - UIManager::image_z_offset(),
+                    view.z_position() - UIManager::additional_z_offset(),
                 );
             } else {
                 warn!("Image is not OK");
@@ -261,7 +262,7 @@ impl App {
                     Text::new(&label.text)
                         .with_scale(label.text_size())
                         .with_color(label.text_color().as_slice())
-                        .with_z(view.z_position() - UIManager::text_z_offset()),
+                        .with_z(view.z_position() - UIManager::additional_z_offset() + *text_offset),
                 )
                 .with_bounds((frame.width(), frame.height()))
                 .with_layout(
@@ -271,6 +272,8 @@ impl App {
                         .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
                 )
                 .with_screen_position((center.x, center.y));
+
+            *text_offset += UIManager::additional_z_offset();
 
             sections.push(section);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
@@ -282,7 +285,7 @@ impl App {
                     path.buffer(),
                     path.bind_group(),
                     path.vertex_range(),
-                    drawing_view.z_position() + UIManager::path_z_offset(),
+                    drawing_view.z_position() - UIManager::additional_z_offset(),
                 );
             }
         }
@@ -293,14 +296,16 @@ impl App {
                 &clamped_frame,
                 &Color::TURQUOISE,
                 PolygonMode::Line,
-                view.z_position() - UIManager::outline_z_offset(),
+                view.z_position() - UIManager::additional_z_offset(),
             );
         }
 
-        for view in view.subviews() {
+        let mut text_offset = 0.0;
+
+        for view in view.subviews().iter().rev() {
             let root_frame = UIManager::root_view().frame();
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(pass, drawer, view.deref(), sections)
+                Self::draw_view(pass, drawer, view.deref(), sections, &mut text_offset)
             }
         }
     }
@@ -391,7 +396,7 @@ impl wgpu_wrapper::App for App {
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
         let mut sections: Vec<Section> = vec![];
-        Self::draw_view(pass, drawer, UIManager::root_view(), &mut sections);
+        Self::draw_view(pass, drawer, UIManager::root_view(), &mut sections, &mut 0.0);
 
         Font::helvetice()
             .brush

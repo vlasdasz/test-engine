@@ -41,26 +41,13 @@ pub struct UIManager {
 impl UIManager {
     pub const ROOT_VIEW_Z_OFFSET: f32 = 0.5;
     pub const MODAL_Z_OFFSET: f32 = 0.4;
-    pub const SUPERVIEW_Z_OFFSET: f32 = 0.001;
 
     pub const fn subview_z_offset() -> f32 {
-        Self::SUPERVIEW_Z_OFFSET / 1000.0
+        0.000_001
     }
 
-    pub const fn text_z_offset() -> f32 {
+    pub const fn additional_z_offset() -> f32 {
         Self::subview_z_offset() / 10.0
-    }
-
-    pub const fn image_z_offset() -> f32 {
-        Self::text_z_offset() * 2.0
-    }
-
-    pub const fn path_z_offset() -> f32 {
-        Self::text_z_offset() * 3.0
-    }
-
-    pub const fn outline_z_offset() -> f32 {
-        Self::text_z_offset() * 4.0
     }
 
     pub fn unselect_view(&self) {

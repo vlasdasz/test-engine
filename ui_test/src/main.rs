@@ -59,6 +59,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_view_order().await?;
     test_scroll_view().await?;
     test_table_view().await?;
     test_collection_view().await?;
@@ -86,7 +87,6 @@ async fn test() -> Result<()> {
     test_label().await?;
     test_alert().await?;
     test_multiline().await?;
-    test_view_order().await?;
 
     Ok(())
 }
