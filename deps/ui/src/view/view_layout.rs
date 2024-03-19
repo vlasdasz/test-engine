@@ -12,9 +12,11 @@ pub trait ViewLayout {
 }
 
 impl<T: ?Sized + View> ViewLayout for T {
-    default fn calculate_absolute_frame(&mut self) {
+    fn calculate_absolute_frame(&mut self) {
         self.base_mut().absolute_frame = *self.frame();
         let orig = self.super_absolute_frame().origin;
         self.base_mut().absolute_frame.origin += orig;
+        let offset = self.base().content_offset;
+        self.base_mut().absolute_frame.origin.y += offset;
     }
 }

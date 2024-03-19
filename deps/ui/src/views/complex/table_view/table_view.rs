@@ -23,7 +23,8 @@ pub struct TableView {
 
 impl ViewCallbacks for TableView {
     fn update(&mut self) {
-        self.scroll.content_size.width = self.width();
+        let width = self.width();
+        self.scroll.set_content_width(width);
     }
 }
 
@@ -64,7 +65,7 @@ impl TableView {
 
         let total_height = number_of_cells as f32 * cell_height;
 
-        self.scroll.content_size.height = total_height;
+        self.scroll.set_content_height(total_height);
 
         let number_of_cells_fits: usize = (self.height() / cell_height).ceil().lossy_convert();
 

@@ -1,11 +1,11 @@
-use gm::flat::Size;
+use gm::{flat::Size, IntoF32};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    view::{view_internal::ViewInternal, View, ViewData, ViewFrame, ViewSubviews},
-    Slider, Sub, UIManager, ViewCallbacks, ViewLayout, ViewSetup,
+    view::{ViewData, ViewFrame, ViewSubviews},
+    Slider, Sub, UIManager, ViewCallbacks, ViewSetup,
 };
 mod test_engine {
     pub(crate) use refs;
@@ -15,10 +15,9 @@ mod test_engine {
 
 #[view]
 pub struct ScrollView {
-    slider:                    Sub<Slider>,
-    pub(crate) content_offset: f32,
-    pub content_size:          Size,
-    pub on_scroll:             Event<f32>,
+    slider:        Sub<Slider>,
+    content_size:  Size,
+    pub on_scroll: Event<f32>,
 }
 
 impl ScrollView {
@@ -34,8 +33,42 @@ impl ScrollView {
         }
     }
 
+    fn max_offset(&self) -> f32 {
+        -(self.content_size.height - self.height())
+    }
+
     pub fn content_offset(&self) -> f32 {
         self.content_offset
+    }
+
+    pub fn set_content_offset(&mut self, offset: impl IntoF32) -> &mut Self {
+        self.content_offset = offset.into_f32();
+
+        if self.content_offset < self.max_offset() {
+            self.content_offset = self.max_offset()
+        }
+
+        self
+    }
+
+    pub fn set_content_size(&mut self, size: impl Into<Size>) -> &mut Self {
+        self.content_size = size.into();
+        self
+    }
+
+    pub fn set_content_width(&mut self, width: impl IntoF32) -> &mut Self {
+        self.content_size.width = width.into_f32();
+        self
+    }
+
+    pub fn set_content_height(&mut self, height: impl IntoF32) -> &mut Self {
+        self.content_size.height = height.into_f32();
+
+        if self.content_offset < self.max_offset() {
+            self.content_offset = self.max_offset()
+        }
+
+        self
     }
 }
 
@@ -87,15 +120,5 @@ impl ScrollView {
         self.slider.set_value_without_event(1.0 - slider_val);
 
         self.on_scroll.trigger(self.content_offset);
-    }
-}
-
-impl ViewLayout for ScrollView {
-    fn calculate_absolute_frame(&mut self) {
-        self.base_mut().absolute_frame = *self.frame();
-        let orig = self.super_absolute_frame().origin;
-        self.base_mut().absolute_frame.origin += orig;
-        let offset = self.content_offset;
-        self.base_mut().absolute_frame.origin.y += offset;
     }
 }

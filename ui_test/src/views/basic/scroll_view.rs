@@ -18,7 +18,7 @@ struct ScrollViewTest {
 
 impl ViewSetup for ScrollViewTest {
     fn setup(mut self: Weak<Self>) {
-        self.scroll.content_size = (600, 600).into();
+        self.scroll.set_content_size((600, 600));
         self.scroll.place().back();
         add_corners(self.scroll, Color::TURQUOISE);
     }
@@ -85,7 +85,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await?;
 
     from_main(move || {
-        view.scroll.content_size = (400, 400).into();
+        view.scroll.set_content_size((400, 400));
     })
     .await;
 
@@ -125,7 +125,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await?;
 
     from_main(move || {
-        view.scroll.content_size = (600, 800).into();
+        view.scroll.set_content_size((600, 800));
     })
     .await;
 
@@ -274,12 +274,40 @@ pub async fn test_scroll_view() -> Result<()> {
     )
     .await?;
 
-    // from_main(move || {
-    //     view.scroll.content_offset = -400.0;
-    // })
-    // .await;
-    //
-    // record_ui_test().await;
+    from_main(move || {
+        view.scroll.set_content_offset(-400.0);
+    })
+    .await;
+
+    check_colors(
+        r#"
+             545  489 -  25  51  76
+             545  497 -  25  51  76
+             545  500 -   0 255 255
+             545  501 -   0 255 255
+             545  509 -   0 255 255
+             545  512 -   0 255 255
+             545  512 -   0 255 255
+             545  512 -   0 255 255
+             533  512 -   0 255 255
+             512  540 -   0 255 255
+             488  540 -  25  51  76
+             488  540 -  25  51  76
+             120  553 -  25  51  76
+             110  553 -  25  51  76
+             108  553 -  25  51  76
+              99  553 -   0 255 255
+              97  553 -   0 255 255
+              97  547 -   0 255 255
+              47  517 -   0 255 255
+              47  515 -   0 255 255
+              47  495 -  25  51  76
+              47  495 -  25  51  76
+              48   24 -  25  51  76
+             483   44 -  25  51  76
+        "#,
+    )
+    .await?;
 
     debug!("Scroll view test: OK");
 

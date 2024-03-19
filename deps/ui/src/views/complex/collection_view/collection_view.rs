@@ -43,7 +43,7 @@ pub struct CollectionView {
 
 impl ViewSetup for CollectionView {
     fn setup(mut self: Weak<Self>) {
-        self.scroll.content_size = (1000, 1500).into();
+        self.scroll.set_content_size((1000, 1500));
         self.scroll.place().back();
         self.size_changed().sub(move || {
             self.reload_data();
@@ -88,9 +88,8 @@ impl CollectionView {
         let cell_height = self.data_source.size_for_index(0).height;
         let table_height = number_of_cells as f32 * cell_height;
 
-        self.scroll.content_size.width = self.width();
-        self.scroll.content_size.height = table_height;
-
+        let width = self.width();
+        self.scroll.set_content_size((width, table_height));
         let width = self.width();
 
         let mut content_start = -self.scroll.content_offset;
@@ -141,7 +140,8 @@ impl CollectionView {
             self.cells.push(cell);
         }
 
-        self.scroll.content_size = self.size();
+        let size = self.size();
+        self.scroll.set_content_size(size);
 
         let area_width = self.width();
 

@@ -18,6 +18,8 @@ pub struct ViewBase {
     #[derivative(Debug = "ignore")]
     pub(crate) border_color:  Color,
 
+    pub(crate) content_offset: f32,
+
     pub(crate) is_hidden: bool,
 
     #[derivative(Default(value = "crate::UIManager::ROOT_VIEW_Z_OFFSET"))]

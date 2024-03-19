@@ -13,7 +13,7 @@ use test_engine::{
         view, AfterSetup, Color, Container, Label, Sub, TableData, TableView, View, ViewData, ViewSetup,
         ViewSubviews,
     },
-    ui_test::{inject_touches, record_ui_test},
+    ui_test::{helpers::check_colors, inject_touches},
     wait_for_next_frame, App,
 };
 
@@ -64,6 +64,8 @@ impl TableData for TestTableView {
 }
 
 pub async fn test_table_view() -> Result<()> {
+    N_CELLS.store(2_000_000, Ordering::Relaxed);
+
     let view = App::init_test_view::<TestTableView>().await;
 
     App::set_window_size((1000, 1000));
@@ -126,7 +128,30 @@ pub async fn test_table_view() -> Result<()> {
     })
     .await;
 
-    record_ui_test().await;
+    check_colors(
+        r#"
+             666  983 - 255 255 255
+             652  983 - 162 162 162
+             625  983 -  59  59  59
+             591  983 - 255 255 255
+             540  983 - 239 239 239
+             511  983 - 255 255 255
+             477  983 - 255 255 255
+             441  983 - 255 255 255
+             389  983 - 255 255 255
+             367  973 - 255 255 255
+             351  973 - 255 255 255
+             293  976 - 255 255 255
+             252  976 -  25  51  76
+             743  977 -  25  51  76
+        "#,
+    )
+    .await?;
+
+    assert_eq!(
+        view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
+        "Cell number: 1999995"
+    );
 
     debug!("Table view test: OK");
 
