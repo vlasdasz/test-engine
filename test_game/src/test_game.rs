@@ -8,7 +8,6 @@ pub fn start_test_game() {
         .block_on(async {
             #[cfg(mobile)]
             test_engine::refs::set_current_thread_as_main();
-            App::start(TestGameView::new()).await
-        })
-        .unwrap();
+            App::start(TestGameView::new()).await.unwrap()
+        });
 }

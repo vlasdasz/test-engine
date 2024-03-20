@@ -65,7 +65,7 @@ impl State {
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
-                    required_features: wgpu::Features::POLYGON_MODE_LINE,
+                    required_features: wgpu::Features::empty(), //wgpu::Features::POLYGON_MODE_LINE,
                     required_limits:   if cfg!(target_arch = "wasm32") {
                         wgpu::Limits::downlevel_webgl2_defaults()
                     } else {
