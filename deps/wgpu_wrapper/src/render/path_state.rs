@@ -81,7 +81,7 @@ impl PathState {
             &pipeline_layout,
             &shader,
             texture_format,
-            PolygonMode::Line,
+            PolygonMode::Fill,
         );
 
         Self {

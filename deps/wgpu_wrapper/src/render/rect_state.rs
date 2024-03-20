@@ -67,7 +67,7 @@ impl RectState {
             &pipeline_layout,
             &shader,
             texture_format,
-            PolygonMode::Line,
+            PolygonMode::Fill,
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
