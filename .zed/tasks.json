@@ -1,0 +1,13 @@
+// Static tasks configuration.
+//
+// Example:
+[
+  {
+    "label": "Run Test Game",
+    "command": "cargo run -p test_game"
+  },
+  {
+    "label": "Run UI Test",
+    "command": "cargo run -p ui_test"
+  }
+]
