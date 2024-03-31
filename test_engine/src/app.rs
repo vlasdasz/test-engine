@@ -22,7 +22,7 @@ use ui::{
     ViewData, ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
 };
 use vents::OnceEvent;
-use wgpu::{PolygonMode, RenderPass};
+use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, WGPUApp, WGPUDrawer};
 use winit::event::{KeyEvent, TouchPhase};
@@ -230,11 +230,10 @@ impl App {
         let clamped_frame = frame.clamp_to(App::root_view_size());
 
         if view.color().a > 0.0 {
-            drawer.draw_rect(
+            drawer.fill_rect(
                 pass,
                 &clamped_frame,
                 view.color(),
-                PolygonMode::Fill,
                 view.z_position() + *text_offset,
             );
         }
@@ -287,7 +286,6 @@ impl App {
                 drawer.draw_buffer(
                     pass,
                     &clamped_frame,
-                    path.mode,
                     path.buffer(),
                     path.bind_group(),
                     path.vertex_range(),
@@ -297,12 +295,12 @@ impl App {
         }
 
         if DRAW_DEBUG_FRAMES && clamped_frame.size.is_valid() {
-            drawer.draw_rect(
+            drawer.outline_rect(
                 pass,
                 &clamped_frame,
                 &Color::TURQUOISE,
-                PolygonMode::Line,
                 view.z_position() - 0.2,
+                2.0,
             );
         }
 

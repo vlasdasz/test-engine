@@ -2,7 +2,7 @@ use std::{f32::consts::PI, iter::once};
 
 use crate::{
     flat::{Point, Rect},
-    num::into_f32::IntoF32,
+    num::into_f32::ToF32,
 };
 
 pub type Points = Vec<Point>;
@@ -10,8 +10,8 @@ pub type Points = Vec<Point>;
 pub struct PointsPath {}
 
 impl PointsPath {
-    pub fn circle_with(center: impl Into<Point>, radius: impl IntoF32, precision: u16) -> Points {
-        let radius = radius.into_f32();
+    pub fn circle_with(center: impl Into<Point>, radius: impl ToF32, precision: u16) -> Points {
+        let radius = radius.to_f32();
         let center = center.into();
         let angle_step = PI * 2.0 / f32::from(precision);
         (0..precision)
@@ -19,18 +19,18 @@ impl PointsPath {
             .collect()
     }
 
-    pub fn circle_triangles_with(center: impl Into<Point>, radius: impl IntoF32, precision: u16) -> Points {
-        let radius = radius.into_f32();
+    pub fn circle_triangles_with(center: impl Into<Point>, radius: impl ToF32, precision: u16) -> Points {
+        let radius = radius.to_f32();
         let center = center.into();
         let circle = Self::circle_with(center, radius, precision);
 
         pairs(circle).into_iter().flat_map(|(a, b)| [a, b, center]).collect()
     }
 
-    pub fn rounded_rect(rect: impl Into<Rect>, radius: impl IntoF32, precision: u16) -> Points {
+    pub fn rounded_rect(rect: impl Into<Rect>, radius: impl ToF32, precision: u16) -> Points {
         let mut path = vec![];
         let rect = rect.into();
-        let radius = radius.into_f32();
+        let radius = radius.to_f32();
 
         let a = (rect.x() + radius, rect.y() + radius);
         let b = (rect.max_x() - radius, rect.y() + radius);

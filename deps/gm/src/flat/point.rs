@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     flat::Size,
-    num::{into_f32::IntoF32, lossy_convert::LossyConvert},
+    num::{into_f32::ToF32, lossy_convert::LossyConvert},
 };
 
 #[derive(Copy, Debug, Clone)]
@@ -137,10 +137,10 @@ impl Point<i32> {
     }
 }
 
-impl<T: IntoF32> Add<T> for Point<f32> {
+impl<T: ToF32> Add<T> for Point<f32> {
     type Output = Self;
     fn add(self, rhs: T) -> Self::Output {
-        Self::new(self.x + rhs.into_f32(), self.y + rhs.into_f32())
+        Self::new(self.x + rhs.to_f32(), self.y + rhs.to_f32())
     }
 }
 
@@ -198,10 +198,10 @@ impl<T: SubAssign> SubAssign for Point<T> {
     }
 }
 
-impl<T: IntoF32> Mul<T> for Point<f32> {
+impl<T: ToF32> Mul<T> for Point<f32> {
     type Output = Self;
     fn mul(self, rhs: T) -> Self {
-        let rhs = rhs.into_f32();
+        let rhs = rhs.to_f32();
         (self.x * rhs, self.y * rhs).into()
     }
 }
@@ -213,25 +213,25 @@ impl Mul<Size> for Point<f32> {
     }
 }
 
-impl<T: IntoF32> MulAssign<T> for Point<f32> {
+impl<T: ToF32> MulAssign<T> for Point<f32> {
     fn mul_assign(&mut self, rhs: T) {
-        let rhs = rhs.into_f32();
+        let rhs = rhs.to_f32();
         self.x *= rhs;
         self.y *= rhs;
     }
 }
 
-impl<T: IntoF32> Div<T> for Point<f32> {
+impl<T: ToF32> Div<T> for Point<f32> {
     type Output = Self;
     fn div(self, rhs: T) -> Self {
-        let rhs = rhs.into_f32();
+        let rhs = rhs.to_f32();
         (self.x / rhs, self.y / rhs).into()
     }
 }
 
-impl<T: IntoF32> DivAssign<T> for Point<f32> {
+impl<T: ToF32> DivAssign<T> for Point<f32> {
     fn div_assign(&mut self, rhs: T) {
-        let rhs = rhs.into_f32();
+        let rhs = rhs.to_f32();
         self.x /= rhs;
         self.y /= rhs;
     }
@@ -239,19 +239,19 @@ impl<T: IntoF32> DivAssign<T> for Point<f32> {
 
 impl<X, Y> const From<(X, Y)> for Point<f32>
 where
-    X: ~const IntoF32,
-    Y: ~const IntoF32,
+    X: ~const ToF32,
+    Y: ~const ToF32,
 {
     fn from(tup: (X, Y)) -> Self {
         Self {
-            x: tup.0.into_f32(),
-            y: tup.1.into_f32(),
+            x: tup.0.to_f32(),
+            y: tup.1.to_f32(),
         }
     }
 }
 
-impl<T: IntoF32> Display for Point<T> {
+impl<T: ToF32> Display for Point<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "x: {:.2}, y: {:.2}", self.x.into_f32(), self.y.into_f32())
+        write!(f, "x: {:.2}, y: {:.2}", self.x.to_f32(), self.y.to_f32())
     }
 }

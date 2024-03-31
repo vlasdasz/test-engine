@@ -1,4 +1,4 @@
-use gm::{Color, IntoF32};
+use gm::{Color, ToF32};
 use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 use vents::Event;
@@ -92,7 +92,7 @@ impl TextField {
         self
     }
 
-    pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
+    pub fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
         self.label.set_text_size(size);
         self
     }

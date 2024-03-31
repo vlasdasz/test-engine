@@ -1,4 +1,4 @@
-use gm::{Color, IntoF32};
+use gm::{Color, ToF32};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
@@ -51,7 +51,7 @@ impl Button {
         self
     }
 
-    pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
+    pub fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
         self.label.set_text_size(size);
         self
     }

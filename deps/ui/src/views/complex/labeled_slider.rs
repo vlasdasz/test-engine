@@ -1,4 +1,4 @@
-use gm::IntoF32;
+use gm::ToF32;
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
@@ -22,12 +22,12 @@ pub struct LabeledSlider {
 }
 
 impl LabeledSlider {
-    pub fn set_start(&mut self, start: impl IntoF32) -> &mut Self {
+    pub fn set_start(&mut self, start: impl ToF32) -> &mut Self {
         self.slider.set_min(start);
         self
     }
 
-    pub fn set_finish(&mut self, finish: impl IntoF32) -> &mut Self {
+    pub fn set_finish(&mut self, finish: impl ToF32) -> &mut Self {
         self.slider.set_max(finish);
         self
     }

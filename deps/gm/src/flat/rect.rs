@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     axis::Axis,
     flat::{Point, Size},
-    num::into_f32::IntoF32,
+    num::into_f32::ToF32,
 };
 
 #[repr(C)]
@@ -131,6 +131,17 @@ impl Rect {
 
         (self.x(), self.y(), width, height).into()
     }
+
+    pub fn to_borders(self, width: impl ToF32) -> [Rect; 4] {
+        let width = width.to_f32();
+
+        [
+            (self.x(), self.y(), self.width(), width).into(),
+            (self.x() + self.width() - width, self.y(), width, self.height()).into(),
+            (self.x(), self.y() + self.height() - width, self.width(), width).into(),
+            (self.x(), self.y(), width, self.height()).into(),
+        ]
+    }
 }
 
 impl Rect {
@@ -162,31 +173,31 @@ impl Rect {
         }
     }
 
-    pub fn set_position<const AXIS: Axis>(&mut self, pos: impl IntoF32) {
+    pub fn set_position<const AXIS: Axis>(&mut self, pos: impl ToF32) {
         match AXIS {
-            Axis::X => self.origin.x = pos.into_f32(),
-            Axis::Y => self.origin.y = pos.into_f32(),
+            Axis::X => self.origin.x = pos.to_f32(),
+            Axis::Y => self.origin.y = pos.to_f32(),
         }
     }
 
-    pub fn set_other_position<const AXIS: Axis>(&mut self, pos: impl IntoF32) {
+    pub fn set_other_position<const AXIS: Axis>(&mut self, pos: impl ToF32) {
         match AXIS {
-            Axis::X => self.origin.y = pos.into_f32(),
-            Axis::Y => self.origin.x = pos.into_f32(),
+            Axis::X => self.origin.y = pos.to_f32(),
+            Axis::Y => self.origin.x = pos.to_f32(),
         }
     }
 
-    pub fn set_length<const AXIS: Axis>(&mut self, length: impl IntoF32) {
+    pub fn set_length<const AXIS: Axis>(&mut self, length: impl ToF32) {
         match AXIS {
-            Axis::X => self.size.width = length.into_f32(),
-            Axis::Y => self.size.height = length.into_f32(),
+            Axis::X => self.size.width = length.to_f32(),
+            Axis::Y => self.size.height = length.to_f32(),
         }
     }
 
-    pub fn set_other_length<const AXIS: Axis>(&mut self, length: impl IntoF32) {
+    pub fn set_other_length<const AXIS: Axis>(&mut self, length: impl ToF32) {
         match AXIS {
-            Axis::X => self.size.height = length.into_f32(),
-            Axis::Y => self.size.width = length.into_f32(),
+            Axis::X => self.size.height = length.to_f32(),
+            Axis::Y => self.size.width = length.to_f32(),
         }
     }
 }
@@ -202,26 +213,26 @@ impl From<Size> for Rect {
 
 impl<X, Y, W, H> const From<(X, Y, W, H)> for Rect
 where
-    X: ~const IntoF32,
-    Y: ~const IntoF32,
-    W: ~const IntoF32,
-    H: ~const IntoF32,
+    X: ~const ToF32,
+    Y: ~const ToF32,
+    W: ~const ToF32,
+    H: ~const ToF32,
 {
     fn from(tup: (X, Y, W, H)) -> Self {
         Self {
             origin: Point {
-                x: tup.0.into_f32(),
-                y: tup.1.into_f32(),
+                x: tup.0.to_f32(),
+                y: tup.1.to_f32(),
             },
             size:   Size {
-                width:  tup.2.into_f32(),
-                height: tup.3.into_f32(),
+                width:  tup.2.to_f32(),
+                height: tup.3.to_f32(),
             },
         }
     }
 }
 
-impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Rect {
+impl<W: ~const ToF32, H: ~const ToF32> const From<(W, H)> for Rect {
     fn from(tup: (W, H)) -> Self {
         Self {
             origin: Point { x: 0.0, y: 0.0 },
@@ -230,7 +241,7 @@ impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Rect {
     }
 }
 
-impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y, Size)> for Rect {
+impl<X: ~const ToF32, Y: ~const ToF32> const From<(X, Y, Size)> for Rect {
     fn from(tup: (X, Y, Size)) -> Self {
         Self {
             origin: (tup.0, tup.1).into(),
@@ -239,10 +250,10 @@ impl<X: ~const IntoF32, Y: ~const IntoF32> const From<(X, Y, Size)> for Rect {
     }
 }
 
-impl<T: IntoF32> Mul<T> for &Rect {
+impl<T: ToF32> Mul<T> for &Rect {
     type Output = Rect;
     fn mul(self, rhs: T) -> Rect {
-        let mul = rhs.into_f32();
+        let mul = rhs.to_f32();
         (
             self.origin.x * mul,
             self.origin.y * mul,
@@ -253,10 +264,10 @@ impl<T: IntoF32> Mul<T> for &Rect {
     }
 }
 
-impl<T: IntoF32> Mul<T> for Rect {
+impl<T: ToF32> Mul<T> for Rect {
     type Output = Rect;
     fn mul(self, rhs: T) -> Rect {
-        let mul = rhs.into_f32();
+        let mul = rhs.to_f32();
         (
             self.origin.x * mul,
             self.origin.y * mul,

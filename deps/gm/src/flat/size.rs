@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     axis::Axis,
     flat::{Point, Rect},
-    num::{into_f32::IntoF32, lossy_convert::LossyConvert},
+    num::{into_f32::ToF32, lossy_convert::LossyConvert},
 };
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -84,13 +84,13 @@ impl Size<f32> {
         }
     }
 
-    pub fn fit_height(&self, height: impl IntoF32) -> Size {
-        let ratio = height.into_f32() / self.height;
+    pub fn fit_height(&self, height: impl ToF32) -> Size {
+        let ratio = height.to_f32() / self.height;
         *self * ratio
     }
 
-    pub fn fit_width(&self, width: impl IntoF32) -> Size {
-        let ratio = width.into_f32() / self.width;
+    pub fn fit_width(&self, width: impl ToF32) -> Size {
+        let ratio = width.to_f32() / self.width;
         *self * ratio
     }
 
@@ -114,26 +114,26 @@ impl Size<f32> {
     }
 }
 
-impl<W: ~const IntoF32, H: ~const IntoF32> const From<(W, H)> for Size<f32> {
+impl<W: ~const ToF32, H: ~const ToF32> const From<(W, H)> for Size<f32> {
     fn from(tup: (W, H)) -> Self {
         Self {
-            width:  tup.0.into_f32(),
-            height: tup.1.into_f32(),
+            width:  tup.0.to_f32(),
+            height: tup.1.to_f32(),
         }
     }
 }
 
-impl<T: IntoF32> Mul<T> for Size<f32> {
+impl<T: ToF32> Mul<T> for Size<f32> {
     type Output = Size;
     fn mul(self, rhs: T) -> Self::Output {
-        (self.width * rhs.into_f32(), self.height * rhs.into_f32()).into()
+        (self.width * rhs.to_f32(), self.height * rhs.to_f32()).into()
     }
 }
 
-impl<T: IntoF32> Div<T> for Size<f32> {
+impl<T: ToF32> Div<T> for Size<f32> {
     type Output = Self;
     fn div(self, rhs: T) -> Self::Output {
-        (self.width / rhs.into_f32(), self.height / rhs.into_f32()).into()
+        (self.width / rhs.to_f32(), self.height / rhs.to_f32()).into()
     }
 }
 

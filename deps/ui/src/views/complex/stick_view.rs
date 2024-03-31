@@ -5,7 +5,6 @@ use gm::{
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
-use wgpu_wrapper::PolygonMode;
 
 use crate::{
     view::{ViewFrame, ViewTouch},
@@ -76,7 +75,6 @@ impl ViewSetup for StickView {
         self.background.add_path(
             PointsPath::circle_triangles_with(frame.size.center(), frame.size.width / 2.0, PRECISION),
             Color::BLACK,
-            PolygonMode::Fill,
         );
 
         self.background.add_path(
@@ -86,7 +84,6 @@ impl ViewSetup for StickView {
                 PRECISION,
             ),
             Color::WHITE,
-            PolygonMode::Fill,
         );
 
         let center = self.frame().size.center();
@@ -101,7 +98,6 @@ impl ViewSetup for StickView {
             .add_path(
                 PointsPath::circle_triangles_with(stick_center, STICK_VIEW_SIZE / 2.0, PRECISION),
                 Color::BLACK,
-                PolygonMode::Fill,
             )
             .add_path(
                 PointsPath::circle_triangles_with(
@@ -110,7 +106,6 @@ impl ViewSetup for StickView {
                     PRECISION,
                 ),
                 Color::LIGHT_GRAY,
-                PolygonMode::Fill,
             );
     }
 }

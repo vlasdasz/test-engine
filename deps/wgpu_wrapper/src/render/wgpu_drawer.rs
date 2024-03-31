@@ -5,7 +5,7 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use wgpu::{BindGroup, Buffer, PolygonMode, RenderPass, TextureFormat};
+use wgpu::{BindGroup, Buffer, RenderPass, TextureFormat};
 
 use crate::{
     image::Image,
@@ -35,36 +35,40 @@ impl WGPUDrawer {
 }
 
 impl WGPUDrawer {
-    pub fn draw_rect<'a>(
+    pub fn fill_rect<'a>(
         &'a self,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
         color: &Color,
-        polygon_mode: PolygonMode,
         z_position: f32,
     ) {
-        self.rect_state.draw(render_pass, rect, color, polygon_mode, z_position);
+        self.rect_state.draw(render_pass, rect, color, z_position);
+    }
+
+    pub fn outline_rect<'a>(
+        &'a self,
+        render_pass: &mut RenderPass<'a>,
+        rect: &Rect,
+        color: &Color,
+        z_position: f32,
+        width: f32,
+    ) {
+        for rect in rect.to_borders(width) {
+            self.rect_state.draw(render_pass, &rect, color, z_position)
+        }
     }
 
     pub fn draw_buffer<'a>(
         &'a self,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
-        polygon_mode: PolygonMode,
         buffer: &'a Buffer,
         bind_group: &'a BindGroup,
         vertex_range: Range<u32>,
         z_position: f32,
     ) {
-        self.path_state.draw_buffer(
-            render_pass,
-            rect,
-            polygon_mode,
-            buffer,
-            bind_group,
-            vertex_range,
-            z_position,
-        )
+        self.path_state
+            .draw_buffer(render_pass, rect, buffer, bind_group, vertex_range, z_position)
     }
 
     pub fn draw_image<'a>(

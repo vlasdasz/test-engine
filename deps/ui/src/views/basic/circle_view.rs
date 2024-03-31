@@ -1,7 +1,6 @@
-use gm::{flat::PointsPath, Color, IntoF32};
+use gm::{flat::PointsPath, Color, ToF32};
 use refs::Weak;
 use ui_proc::view;
-use wgpu_wrapper::PolygonMode;
 
 use crate::{
     view::{ViewData, ViewFrame},
@@ -21,8 +20,8 @@ pub struct CircleView {
 }
 
 impl CircleView {
-    pub fn set_radius(&mut self, radius: impl IntoF32) -> &mut Self {
-        let diameter = radius.into_f32() * 2.0;
+    pub fn set_radius(&mut self, radius: impl ToF32) -> &mut Self {
+        let diameter = radius.to_f32() * 2.0;
         self.set_size((diameter, diameter));
         self.redraw();
         self
@@ -39,7 +38,6 @@ impl CircleView {
         self.drawing.add_path(
             PointsPath::circle_triangles_with(frame.size.center(), frame.size.width / 2.0, 50),
             self.color,
-            PolygonMode::Fill,
         );
     }
 }

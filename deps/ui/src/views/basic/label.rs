@@ -1,4 +1,4 @@
-use gm::{Color, IntoF32};
+use gm::{Color, ToF32};
 use refs::Weak;
 use ui_proc::view;
 
@@ -43,8 +43,8 @@ impl Label {
         self.text_size
     }
 
-    pub fn set_text_size(&mut self, size: impl IntoF32) -> &mut Self {
-        self.text_size = size.into_f32();
+    pub fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
+        self.text_size = size.to_f32();
         self
     }
 }

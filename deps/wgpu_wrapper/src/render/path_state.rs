@@ -10,10 +10,10 @@ use crate::{render::uniform::OldUniform, utils::make_pipeline, WGPUApp};
 
 #[derive(Debug)]
 pub struct PathState {
-    z_layout:                     BindGroupLayout,
+    z_layout: BindGroupLayout,
+    pipeline: RenderPipeline,
+
     pub(crate) color_size_layout: BindGroupLayout,
-    fill_pipeline:                RenderPipeline,
-    line_pipeline:                RenderPipeline,
 }
 
 impl PathState {
@@ -68,16 +68,8 @@ impl PathState {
             push_constant_ranges: &[],
         });
 
-        let fill_pipeline = make_pipeline::<Point>(
+        let pipeline = make_pipeline::<Point>(
             "Path Fill Render Pipeline",
-            &pipeline_layout,
-            &shader,
-            texture_format,
-            PolygonMode::Fill,
-        );
-
-        let line_pipeline = make_pipeline::<Point>(
-            "Path Line Render Pipeline",
             &pipeline_layout,
             &shader,
             texture_format,
@@ -86,17 +78,8 @@ impl PathState {
 
         Self {
             z_layout,
+            pipeline,
             color_size_layout,
-            fill_pipeline,
-            line_pipeline,
-        }
-    }
-
-    fn pipeline(&self, polygon_mode: PolygonMode) -> &RenderPipeline {
-        match polygon_mode {
-            PolygonMode::Fill => &self.fill_pipeline,
-            PolygonMode::Line => &self.line_pipeline,
-            PolygonMode::Point => unimplemented!(),
         }
     }
 
@@ -104,14 +87,13 @@ impl PathState {
         &'a self,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
-        polygon_mode: PolygonMode,
         buffer: &'a Buffer,
         bind_group: &'a BindGroup,
         vertex_range: Range<u32>,
         z_position: f32,
     ) {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
-        render_pass.set_pipeline(self.pipeline(polygon_mode));
+        render_pass.set_pipeline(&self.pipeline);
 
         render_pass.set_bind_group(0, OldUniform::z(&self.z_layout, z_position), &[]);
         render_pass.set_bind_group(1, bind_group, &[]);

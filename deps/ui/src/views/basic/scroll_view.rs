@@ -1,4 +1,4 @@
-use gm::{flat::Size, IntoF32};
+use gm::{flat::Size, ToF32};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
@@ -41,8 +41,8 @@ impl ScrollView {
         self.content_offset
     }
 
-    pub fn set_content_offset(&mut self, offset: impl IntoF32) -> &mut Self {
-        self.content_offset = offset.into_f32();
+    pub fn set_content_offset(&mut self, offset: impl ToF32) -> &mut Self {
+        self.content_offset = offset.to_f32();
 
         if self.content_offset < self.max_offset() {
             self.content_offset = self.max_offset()
@@ -56,13 +56,13 @@ impl ScrollView {
         self
     }
 
-    pub fn set_content_width(&mut self, width: impl IntoF32) -> &mut Self {
-        self.content_size.width = width.into_f32();
+    pub fn set_content_width(&mut self, width: impl ToF32) -> &mut Self {
+        self.content_size.width = width.to_f32();
         self
     }
 
-    pub fn set_content_height(&mut self, height: impl IntoF32) -> &mut Self {
-        self.content_size.height = height.into_f32();
+    pub fn set_content_height(&mut self, height: impl ToF32) -> &mut Self {
+        self.content_size.height = height.to_f32();
 
         if self.content_offset < self.max_offset() {
             self.content_offset = self.max_offset()

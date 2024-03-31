@@ -1,4 +1,4 @@
-use gm::{Color, IntoF32};
+use gm::{Color, ToF32};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
@@ -12,7 +12,7 @@ pub trait ViewData {
     fn set_border_color(&mut self, color: Color) -> &mut Self;
 
     fn corner_radius(&self) -> f32;
-    fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self;
+    fn set_corner_radius(&mut self, radius: impl ToF32) -> &mut Self;
 
     fn is_hidden(&self) -> bool;
     fn set_hidden(&mut self, is_hidden: bool) -> &mut Self;
@@ -59,8 +59,8 @@ impl<T: ?Sized + View> ViewData for T {
         self.base().corner_radius
     }
 
-    fn set_corner_radius(&mut self, radius: impl IntoF32) -> &mut Self {
-        self.base_mut().corner_radius = radius.into_f32();
+    fn set_corner_radius(&mut self, radius: impl ToF32) -> &mut Self {
+        self.base_mut().corner_radius = radius.to_f32();
         self
     }
     fn is_hidden(&self) -> bool {

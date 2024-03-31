@@ -3,8 +3,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        ImageView, IntView, Label, PointsPath, PolygonMode, Spinner, StickView, Sub, TextField, ViewData,
-        ViewSetup,
+        ImageView, IntView, Label, PointsPath, Spinner, StickView, Sub, TextField, ViewData, ViewSetup,
     },
     App,
 };
@@ -105,16 +104,12 @@ impl ViewSetup for TestGameView {
             0.2,
         );
 
-        self.drawing.add_path(
-            [(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)],
-            Color::GREEN,
-            PolygonMode::Fill,
-        );
+        self.drawing
+            .add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)], Color::GREEN);
 
         self.drawing.add_path(
             PointsPath::circle_triangles_with((200, 100), 50, 5),
             Color::TURQUOISE,
-            PolygonMode::Fill,
         );
 
         self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);

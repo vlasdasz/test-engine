@@ -20,6 +20,6 @@ pub use color::*;
 pub use misc::{Apply, Platform, Toggle};
 pub use num::{
     checked_convert::{checked_usize_to_u32, CheckedConvert},
-    into_f32::IntoF32,
+    into_f32::ToF32,
     lossy_convert::LossyConvert,
 };

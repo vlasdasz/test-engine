@@ -4,7 +4,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{axis::Axis, flat::Size, IntoF32};
+use gm::{axis::Axis, flat::Size, ToF32};
 use itertools::Itertools;
 use refs::{Rglica, ToRglica};
 
@@ -74,27 +74,27 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn t(&self, offset: impl IntoF32) -> &Self {
-        self.rules().push(LayoutRule::make(Anchor::Top, offset.into_f32()));
+    pub fn t(&self, offset: impl ToF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Top, offset.to_f32()));
         self
     }
 
-    pub fn b(&self, offset: impl IntoF32) -> &Self {
-        self.rules().push(LayoutRule::make(Anchor::Bot, offset.into_f32()));
+    pub fn b(&self, offset: impl ToF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Bot, offset.to_f32()));
         self
     }
 
-    pub fn l(&self, offset: impl IntoF32) -> &Self {
-        self.rules().push(LayoutRule::make(Anchor::Left, offset.into_f32()));
+    pub fn l(&self, offset: impl ToF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Left, offset.to_f32()));
         self
     }
 
-    pub fn r(&self, offset: impl IntoF32) -> &Self {
-        self.rules().push(LayoutRule::make(Anchor::Right, offset.into_f32()));
+    pub fn r(&self, offset: impl ToF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::Right, offset.to_f32()));
         self
     }
 
-    pub fn size(&self, width: impl IntoF32, height: impl IntoF32) -> &Self {
+    pub fn size(&self, width: impl ToF32, height: impl ToF32) -> &Self {
         assert!(!self.has_center(), "Size place after center");
         self.view.weak_view().set_size((width, height));
         self.w(width).h(height)
@@ -104,16 +104,16 @@ impl Placer {
         self.relative(Anchor::Size, view, 1)
     }
 
-    pub fn relative_width(&self, view: impl Deref<Target = impl View>, multiplier: impl IntoF32) -> &Self {
+    pub fn relative_width(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
         self.relative(Anchor::Width, view, multiplier)
     }
 
-    pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl IntoF32) -> &Self {
+    pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
         self.relative(Anchor::Size, view, multiplier)
     }
 
-    pub fn relative_y(&self, position: impl IntoF32) -> &Self {
-        let position = position.into_f32();
+    pub fn relative_y(&self, position: impl ToF32) -> &Self {
+        let position = position.to_f32();
         self.custom(move |mut view, s_content| {
             view.set_y(s_content.height * position);
         })
@@ -130,13 +130,13 @@ impl Placer {
         self
     }
 
-    pub fn w(&self, w: impl IntoF32) -> &Self {
+    pub fn w(&self, w: impl ToF32) -> &Self {
         self.rules().push(LayoutRule::make(Anchor::Width, w));
         self.has().width = true;
         self
     }
 
-    pub fn h(&self, h: impl IntoF32) -> &Self {
+    pub fn h(&self, h: impl ToF32) -> &Self {
         self.rules().push(LayoutRule::make(Anchor::Height, h));
         self.has().height = true;
         self
@@ -182,25 +182,25 @@ impl Placer {
         self
     }
 
-    pub fn distribute_ratio(&self, ratios: &[impl IntoF32]) -> &Self {
+    pub fn distribute_ratio(&self, ratios: &[impl ToF32]) -> &Self {
         self.sub_rules()
-            .push(Tiling::Distribute(ratios.iter().map(|f| f.into_f32()).collect_vec()).into());
+            .push(Tiling::Distribute(ratios.iter().map(|f| f.to_f32()).collect_vec()).into());
         self
     }
 
-    pub fn all(&self, margin: impl IntoF32) -> &Self {
-        *self.all_margin.borrow_mut() = margin.into_f32();
+    pub fn all(&self, margin: impl ToF32) -> &Self {
+        *self.all_margin.borrow_mut() = margin.to_f32();
         self
     }
 }
 
 impl Placer {
-    pub fn max_width(&self, w: impl IntoF32) -> &Self {
+    pub fn max_width(&self, w: impl ToF32) -> &Self {
         self.rules().push(LayoutRule::make(Anchor::MaxWidth, w));
         self
     }
 
-    pub fn max_height(&self, h: impl IntoF32) -> &Self {
+    pub fn max_height(&self, h: impl ToF32) -> &Self {
         self.rules().push(LayoutRule::make(Anchor::MaxHeight, h));
         self
     }
@@ -211,13 +211,13 @@ impl Placer {
         &self,
         side: Anchor,
         view: impl Deref<Target = impl View + ?Sized>,
-        offset: impl IntoF32,
+        offset: impl ToF32,
     ) -> &Self {
         self.rules().push(LayoutRule::anchor(side, offset, view.weak_view()));
         self
     }
 
-    pub fn relative(&self, side: Anchor, view: impl Deref<Target = impl View>, ratio: impl IntoF32) -> &Self {
+    pub fn relative(&self, side: Anchor, view: impl Deref<Target = impl View>, ratio: impl ToF32) -> &Self {
         self.has().width = if side.has_width() { true } else { self.has().width };
         self.has().height = if side.has_height() {
             true
@@ -236,51 +236,51 @@ impl Placer {
 }
 
 impl Placer {
-    pub fn lr(&self, offset: impl IntoF32) -> &Self {
+    pub fn lr(&self, offset: impl ToF32) -> &Self {
         self.l(offset).r(offset)
     }
 
-    pub fn tl(&self, offset: impl IntoF32) -> &Self {
+    pub fn tl(&self, offset: impl ToF32) -> &Self {
         self.t(offset).l(offset)
     }
 
-    pub fn tr(&self, offset: impl IntoF32) -> &Self {
+    pub fn tr(&self, offset: impl ToF32) -> &Self {
         self.t(offset).r(offset)
     }
 
-    pub fn bl(&self, offset: impl IntoF32) -> &Self {
+    pub fn bl(&self, offset: impl ToF32) -> &Self {
         self.b(offset).l(offset)
     }
 
-    pub fn br(&self, offset: impl IntoF32) -> &Self {
+    pub fn br(&self, offset: impl ToF32) -> &Self {
         self.b(offset).r(offset)
     }
 
-    pub fn tb(&self, offset: impl IntoF32) -> &Self {
+    pub fn tb(&self, offset: impl ToF32) -> &Self {
         self.t(offset).b(offset)
     }
 
-    pub fn tlb(&self, offset: impl IntoF32) -> &Self {
+    pub fn tlb(&self, offset: impl ToF32) -> &Self {
         self.t(offset).l(offset).b(offset)
     }
 
-    pub fn blt(&self, offset: impl IntoF32) -> &Self {
+    pub fn blt(&self, offset: impl ToF32) -> &Self {
         self.b(offset).l(offset).t(offset)
     }
 
-    pub fn trb(&self, offset: impl IntoF32) -> &Self {
+    pub fn trb(&self, offset: impl ToF32) -> &Self {
         self.t(offset).r(offset).b(offset)
     }
 
-    pub fn lrt(&self, offset: impl IntoF32) -> &Self {
+    pub fn lrt(&self, offset: impl ToF32) -> &Self {
         self.l(offset).r(offset).t(offset)
     }
 
-    pub fn lrb(&self, offset: impl IntoF32) -> &Self {
+    pub fn lrb(&self, offset: impl ToF32) -> &Self {
         self.l(offset).r(offset).b(offset)
     }
 
-    pub fn sides(&self, sides: &str, offset: impl IntoF32) -> &Self {
+    pub fn sides(&self, sides: &str, offset: impl ToF32) -> &Self {
         for ch in sides.chars() {
             match ch {
                 't' => {
@@ -301,17 +301,17 @@ impl Placer {
         self
     }
 
-    pub fn all_sides(&self, offset: impl IntoF32) -> &Self {
+    pub fn all_sides(&self, offset: impl ToF32) -> &Self {
         self.t(offset).b(offset).l(offset).r(offset)
     }
 }
 
 impl Placer {
-    pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
+    pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
         self.anchor(Anchor::Bot, view, offset)
     }
 
-    pub fn below(&self, view: impl Deref<Target = impl View> + Copy, offset: impl IntoF32) -> &Self {
+    pub fn below(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
         self.anchor(Anchor::Top, view, offset)
     }
 

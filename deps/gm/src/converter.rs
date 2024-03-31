@@ -1,6 +1,6 @@
 use smart_default::SmartDefault;
 
-use crate::num::into_f32::IntoF32;
+use crate::num::into_f32::ToF32;
 
 #[derive(Debug, SmartDefault)]
 pub struct Converter {
@@ -13,9 +13,9 @@ pub struct Converter {
 }
 
 impl Converter {
-    pub fn new(min: impl IntoF32, max: impl IntoF32) -> Self {
-        let min = min.into_f32();
-        let max = max.into_f32();
+    pub fn new(min: impl ToF32, max: impl ToF32) -> Self {
+        let min = min.to_f32();
+        let max = max.to_f32();
         Self {
             min,
             max,
@@ -23,24 +23,24 @@ impl Converter {
         }
     }
 
-    pub fn set_min(&mut self, min: impl IntoF32) -> &mut Self {
-        self.min = min.into_f32();
+    pub fn set_min(&mut self, min: impl ToF32) -> &mut Self {
+        self.min = min.to_f32();
         self.span = self.max - self.min;
         self
     }
 
-    pub fn set_max(&mut self, max: impl IntoF32) -> &mut Self {
-        self.max = max.into_f32();
+    pub fn set_max(&mut self, max: impl ToF32) -> &mut Self {
+        self.max = max.to_f32();
         self.span = self.max - self.min;
         self
     }
 
-    pub fn convert(&self, val: impl IntoF32) -> f32 {
-        self.min + val.into_f32() * self.span
+    pub fn convert(&self, val: impl ToF32) -> f32 {
+        self.min + val.to_f32() * self.span
     }
 
-    pub fn reverse_convert(&self, val: impl IntoF32) -> f32 {
-        (val.into_f32() - self.min) / self.span
+    pub fn reverse_convert(&self, val: impl ToF32) -> f32 {
+        (val.to_f32() - self.min) / self.span
     }
 }
 

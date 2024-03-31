@@ -13,7 +13,7 @@ use tokio::sync::mpsc::channel;
 
 use crate::{
     from_main,
-    gm::{IntoF32, LossyConvert},
+    gm::{LossyConvert, ToF32},
     on_main,
     refs::ToOwn,
     ui::{Touch, U8Color, UIEvents, UIManager},
@@ -59,7 +59,7 @@ async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
 }
 
 #[allow(dead_code)]
-pub async fn inject_scroll(scroll: impl IntoF32) {
+pub async fn inject_scroll(scroll: impl ToF32) {
     sleep(Duration::from_secs_f32(INJECT_INPUT_DELAY));
     from_main(move || {
         UIManager::trigger_scroll((0, scroll).into());

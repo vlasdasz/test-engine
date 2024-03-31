@@ -18,8 +18,6 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
-use wgpu_wrapper::PolygonMode;
-
 #[view]
 pub struct DrawingView {
     pub rescale: bool,
@@ -37,7 +35,7 @@ impl DrawingView {
         &self.paths
     }
 
-    pub fn add_path<Container, P>(&mut self, path: Container, color: Color, mode: PolygonMode) -> &mut Self
+    pub fn add_path<Container, P>(&mut self, path: Container, color: Color) -> &mut Self
     where
         P: Into<Point>,
         Container: IntoIterator<Item = P>, {
@@ -48,7 +46,7 @@ impl DrawingView {
             return self;
         }
 
-        self.paths.push(PathData::new(color, self.size(), path, mode));
+        self.paths.push(PathData::new(color, self.size(), path));
         self
     }
 

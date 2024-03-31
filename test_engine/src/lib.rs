@@ -41,7 +41,7 @@ pub mod input {
 }
 
 pub mod gm {
-    pub use gm::{sign::Sign, Apply, IntoF32, LossyConvert, Platform};
+    pub use gm::{sign::Sign, Apply, LossyConvert, Platform, ToF32};
 }
 
 pub mod store {

@@ -2,7 +2,7 @@
 
 use gm::{
     flat::{Point, Rect, Size},
-    IntoF32,
+    ToF32,
 };
 
 use crate::{UIManager, View, ViewSubviews};
@@ -20,9 +20,9 @@ pub trait ViewFrame {
     fn size(&self) -> Size;
     fn width(&self) -> f32;
     fn height(&self) -> f32;
-    fn set_x(&mut self, x: impl IntoF32) -> &mut Self;
-    fn set_y(&mut self, y: impl IntoF32) -> &mut Self;
-    fn set_height(&mut self, height: impl IntoF32) -> &mut Self;
+    fn set_x(&mut self, x: impl ToF32) -> &mut Self;
+    fn set_y(&mut self, y: impl ToF32) -> &mut Self;
+    fn set_height(&mut self, height: impl ToF32) -> &mut Self;
     fn set_position(&mut self, origin: impl Into<Point>) -> &mut Self;
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
@@ -85,8 +85,8 @@ impl<T: ?Sized + View> ViewFrame for T {
         self.frame().size.height
     }
 
-    fn set_x(&mut self, x: impl IntoF32) -> &mut Self {
-        let x = x.into_f32();
+    fn set_x(&mut self, x: impl ToF32) -> &mut Self {
+        let x = x.to_f32();
         let frame = &mut self.base_mut().frame;
         let pos_changed = frame.origin.x != x;
         frame.origin.x = x;
@@ -95,8 +95,8 @@ impl<T: ?Sized + View> ViewFrame for T {
         self
     }
 
-    fn set_y(&mut self, y: impl IntoF32) -> &mut Self {
-        let y = y.into_f32();
+    fn set_y(&mut self, y: impl ToF32) -> &mut Self {
+        let y = y.to_f32();
         let frame = &mut self.base_mut().frame;
         let pos_changed = frame.origin.y != y;
         frame.origin.y = y;
@@ -105,8 +105,8 @@ impl<T: ?Sized + View> ViewFrame for T {
         self
     }
 
-    fn set_height(&mut self, height: impl IntoF32) -> &mut Self {
-        let height = height.into_f32();
+    fn set_height(&mut self, height: impl ToF32) -> &mut Self {
+        let height = height.to_f32();
         let frame = &mut self.base_mut().frame;
         let size_changed = frame.size.height != height;
         frame.size.height = height;

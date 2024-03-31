@@ -1,5 +1,5 @@
 use derivative::Derivative;
-use gm::{flat::Size, IntoF32};
+use gm::{flat::Size, ToF32};
 
 use crate::{
     layout::{Anchor, Tiling},
@@ -28,11 +28,11 @@ pub(crate) struct LayoutRule {
 }
 
 impl LayoutRule {
-    pub fn tiling(tiling: Tiling, offset: impl IntoF32) -> Self {
+    pub fn tiling(tiling: Tiling, offset: impl ToF32) -> Self {
         Self {
             side:         Anchor::Top,
             tiling:       tiling.into(),
-            offset:       offset.into_f32(),
+            offset:       offset.to_f32(),
             anchor_view:  Default::default(),
             anchor_view2: Default::default(),
             relative:     false,
@@ -41,11 +41,11 @@ impl LayoutRule {
         }
     }
 
-    pub fn make(side: Anchor, offset: impl IntoF32) -> Self {
+    pub fn make(side: Anchor, offset: impl ToF32) -> Self {
         Self {
             side,
             tiling: None,
-            offset: offset.into_f32(),
+            offset: offset.to_f32(),
             anchor_view: Default::default(),
             anchor_view2: Default::default(),
             relative: false,
@@ -54,11 +54,11 @@ impl LayoutRule {
         }
     }
 
-    pub fn anchor(side: Anchor, offset: impl IntoF32, anchor_view: WeakView) -> Self {
+    pub fn anchor(side: Anchor, offset: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
             side,
             tiling: None,
-            offset: offset.into_f32(),
+            offset: offset.to_f32(),
             anchor_view,
             anchor_view2: Default::default(),
             relative: false,
@@ -67,11 +67,11 @@ impl LayoutRule {
         }
     }
 
-    pub fn relative(side: Anchor, ratio: impl IntoF32, anchor_view: WeakView) -> Self {
+    pub fn relative(side: Anchor, ratio: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
             side,
             tiling: None,
-            offset: ratio.into_f32(),
+            offset: ratio.to_f32(),
             anchor_view,
             anchor_view2: Default::default(),
             relative: true,

@@ -1,4 +1,4 @@
-use gm::{converter::Converter, Color, IntoF32};
+use gm::{converter::Converter, Color, ToF32};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
@@ -29,13 +29,13 @@ impl Slider {
         self.converter.convert(self.raw_value)
     }
 
-    pub fn set_value(&mut self, val: impl IntoF32) -> &mut Self {
+    pub fn set_value(&mut self, val: impl ToF32) -> &mut Self {
         self.set_value_without_event(val);
         self.value_changed();
         self
     }
 
-    pub fn set_value_without_event(&mut self, val: impl IntoF32) -> &mut Self {
+    pub fn set_value_without_event(&mut self, val: impl ToF32) -> &mut Self {
         self.raw_value = self.converter.reverse_convert(val);
 
         let val = 1.0 - self.raw_value;
@@ -51,19 +51,19 @@ impl Slider {
         self.circle.frame().center().y
     }
 
-    pub fn set_range(&mut self, min: impl IntoF32, max: impl IntoF32) -> &mut Self {
+    pub fn set_range(&mut self, min: impl ToF32, max: impl ToF32) -> &mut Self {
         self.set_min(min).set_max(max);
         self.value_changed();
         self
     }
 
-    pub fn set_min(&mut self, min: impl IntoF32) -> &mut Self {
+    pub fn set_min(&mut self, min: impl ToF32) -> &mut Self {
         self.converter.set_min(min);
         self.value_changed();
         self
     }
 
-    pub fn set_max(&mut self, max: impl IntoF32) -> &mut Self {
+    pub fn set_max(&mut self, max: impl ToF32) -> &mut Self {
         self.converter.set_max(max);
         self.value_changed();
         self

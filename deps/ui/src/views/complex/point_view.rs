@@ -1,4 +1,4 @@
-use gm::{flat::Point, Apply, IntoF32};
+use gm::{flat::Point, Apply, ToF32};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
@@ -26,8 +26,8 @@ impl PointView {
         (self.x.value(), self.y.value()).into()
     }
 
-    pub fn set_multiplier(&mut self, mul: impl IntoF32) -> &mut Self {
-        self.mul = mul.into_f32();
+    pub fn set_multiplier(&mut self, mul: impl ToF32) -> &mut Self {
+        self.mul = mul.to_f32();
         self
     }
 }

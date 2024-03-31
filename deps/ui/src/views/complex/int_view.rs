@@ -1,4 +1,4 @@
-use gm::IntoF32;
+use gm::ToF32;
 use refs::Weak;
 use vents::Event;
 
@@ -46,16 +46,16 @@ impl IntView {
         self.value
     }
 
-    pub fn set_value(&mut self, val: impl IntoF32) -> &mut Self {
-        let val = val.into_f32();
+    pub fn set_value(&mut self, val: impl ToF32) -> &mut Self {
+        let val = val.to_f32();
         self.value = val;
         self.label.text = format!("{val:.1}");
         self.on_change_event.trigger(val);
         self
     }
 
-    pub fn set_step(&mut self, step: impl IntoF32) -> &mut Self {
-        self.step = step.into_f32();
+    pub fn set_step(&mut self, step: impl ToF32) -> &mut Self {
+        self.step = step.to_f32();
         self
     }
 
