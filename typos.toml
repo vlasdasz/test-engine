@@ -4,3 +4,5 @@ extend-exclude = ["*.pbxproj"]
 [default.extend-words]
 # LOD - level of detail
 lod = "lod"
+# FULL HD
+hd = "hd"
