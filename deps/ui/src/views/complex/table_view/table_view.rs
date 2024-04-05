@@ -61,6 +61,11 @@ impl TableView {
         }
 
         let number_of_cells = self.data.number_of_cells();
+
+        if number_of_cells == 0 {
+            return;
+        }
+
         let cell_height = self.data.cell_height();
 
         let total_height = number_of_cells as f32 * cell_height;

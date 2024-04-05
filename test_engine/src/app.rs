@@ -87,6 +87,10 @@ impl App {
             .filter_module("naga::proc::constant_evaluator", LevelFilter::Warn)
             .filter_module("naga::valid::interface", LevelFilter::Warn)
             .filter_module("naga::valid::function", LevelFilter::Warn)
+            .filter_module("sqlx_core::logger", LevelFilter::Warn)
+            .filter_module("hyper_util::client::legacy::pool", LevelFilter::Warn)
+            .filter_module("hyper_util::client::legacy::connect::dns", LevelFilter::Warn)
+            .filter_module("hyper_util::client::legacy::connect::http", LevelFilter::Warn)
             .format(|f, record| {
                 let level = match record.level() {
                     Level::Error => "🔴",
@@ -227,7 +231,9 @@ impl App {
 
         let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
 
-        let clamped_frame = frame.clamp_to(App::root_view_size());
+        let root_size = App::root_view_size();
+
+        let clamped_frame = frame.clamp_to(root_size);
 
         if view.color().a > 0.0 {
             drawer.fill_rect(
@@ -294,7 +300,11 @@ impl App {
             }
         }
 
-        if DRAW_DEBUG_FRAMES && clamped_frame.size.is_valid() {
+        if DRAW_DEBUG_FRAMES
+            && clamped_frame.size.is_valid()
+            && clamped_frame.x() + 2.0 <= root_size.width
+            && clamped_frame.y() + 2.0 <= root_size.height
+        {
             drawer.outline_rect(
                 pass,
                 &clamped_frame,
