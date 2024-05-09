@@ -27,14 +27,16 @@ pub fn make_pipeline<Vertex: VertexLayout>(
         label:         label.into(),
         layout:        layout.into(),
         vertex:        VertexState {
-            module:      shader,
-            entry_point: "v_main",
-            buffers:     &[Vertex::vertex_layout()],
+            module:              shader,
+            entry_point:         "v_main",
+            compilation_options: Default::default(),
+            buffers:             &[Vertex::vertex_layout()],
         },
         fragment:      FragmentState {
-            module:      shader,
-            entry_point: "f_main",
-            targets:     &[ColorTargetState {
+            module:              shader,
+            entry_point:         "f_main",
+            compilation_options: Default::default(),
+            targets:             &[ColorTargetState {
                 format:     texture_format,
                 blend:      BlendState::ALPHA_BLENDING.into(),
                 write_mask: ColorWrites::ALL,
