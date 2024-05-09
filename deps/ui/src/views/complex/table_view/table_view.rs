@@ -68,7 +68,7 @@ impl TableView {
 
         let cell_height = self.data.cell_height();
 
-        let total_height = number_of_cells as f32 * cell_height;
+        let total_height = number_of_cells.lossy_convert() * cell_height;
 
         self.scroll.set_content_height(total_height);
 
@@ -89,7 +89,7 @@ impl TableView {
 
             cell.place()
                 .h(self.data.cell_height())
-                .t(i as f32 * self.data.cell_height())
+                .t(i.lossy_convert() * self.data.cell_height())
                 .lr(0);
 
             let label = format!("TableView cell: {}", cell.label());

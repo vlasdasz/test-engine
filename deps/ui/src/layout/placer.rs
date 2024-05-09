@@ -4,7 +4,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{axis::Axis, flat::Size, ToF32};
+use gm::{axis::Axis, flat::Size, LossyConvert, ToF32};
 use itertools::Itertools;
 use refs::{Rglica, ToRglica};
 
@@ -528,11 +528,11 @@ fn distribute<const AXIS: Axis>(mut views: Vec<WeakView>, margin: f32) {
         return;
     }
 
-    let all_margins = margin * (views.len() - 1) as f32;
+    let all_margins = margin * (views.len() - 1).lossy_convert();
 
     let left_length = super_frame.length::<AXIS>() - all_margins;
 
-    let length = left_length / views.len() as f32;
+    let length = left_length / views.len().lossy_convert();
     let other_length = super_frame.other_length::<AXIS>();
 
     let mut last_pos: f32 = 0.0;

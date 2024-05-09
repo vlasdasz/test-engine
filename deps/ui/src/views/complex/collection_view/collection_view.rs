@@ -86,7 +86,7 @@ impl CollectionView {
         }
 
         let cell_height = self.data_source.size_for_index(0).height;
-        let table_height = number_of_cells as f32 * cell_height;
+        let table_height = number_of_cells.lossy_convert() * cell_height;
 
         let width = self.width();
         self.scroll.set_content_size((width, table_height));
@@ -120,7 +120,7 @@ impl CollectionView {
             let mut cell = self.scroll.add_subview(cell);
 
             self.data_source.setup_cell_for_index(cell.as_any_mut(), index);
-            cell.set_frame((0, index as f32 * cell_height, width, cell_height));
+            cell.set_frame((0, index.lossy_convert() * cell_height, width, cell_height));
             cell.enable_touch_low_priority();
             let mut this = weak_from_ref(self);
             cell.touch().began.sub(move || this.data_source.cell_selected(index));

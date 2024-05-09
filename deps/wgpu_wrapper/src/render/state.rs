@@ -2,7 +2,7 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
-use gm::{flat::Size, CheckedConvert, Color, Platform, U8Color};
+use gm::{flat::Size, CheckedConvert, Color, LossyConvert, Platform, U8Color};
 use refs::MainLock;
 use tokio::{
     spawn,
@@ -127,8 +127,11 @@ impl State {
             let queue = WGPUApp::queue();
 
             for font in self.fonts.values() {
-                font.brush
-                    .resize_view(self.config.width as f32, self.config.height as f32, queue);
+                font.brush.resize_view(
+                    self.config.width.lossy_convert(),
+                    self.config.height.lossy_convert(),
+                    queue,
+                );
             }
 
             let inner_size = self.window.inner_size();
@@ -201,8 +204,8 @@ impl State {
             render_pass.set_viewport(
                 0.0,
                 0.0,
-                self.config.width as f32,
-                self.config.height as f32,
+                self.config.width.lossy_convert(),
+                self.config.height.lossy_convert(),
                 0.0,
                 1.0,
             );

@@ -1,3 +1,5 @@
+use gm::LossyConvert;
+
 pub(crate) struct FrameCounter {
     // Instant of the last time we printed the frame time.
     last_printed_instant: web_time::Instant,
@@ -21,8 +23,8 @@ impl FrameCounter {
         let elapsed_secs = (new_instant - self.last_printed_instant).as_secs_f32();
         if elapsed_secs > 1.0 {
             let elapsed_ms = elapsed_secs * 1000.0;
-            let frame_time = elapsed_ms / self.frame_count as f32;
-            let fps = self.frame_count as f32 / elapsed_secs;
+            let frame_time = elapsed_ms / self.frame_count.lossy_convert();
+            let fps = self.frame_count.lossy_convert() / elapsed_secs;
 
             self.last_printed_instant = new_instant;
             self.frame_count = 0;

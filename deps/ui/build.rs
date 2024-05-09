@@ -1,6 +1,11 @@
 use cfg_aliases::cfg_aliases;
 
 fn main() {
+    println!("cargo::rustc-check-cfg=cfg(ios)");
+    println!("cargo::rustc-check-cfg=cfg(android)");
+    println!("cargo::rustc-check-cfg=cfg(mobile)");
+    println!("cargo::rustc-check-cfg=cfg(desktop)");
+
     cfg_aliases! {
         android: { target_os = "android" },
         ios:     { target_os = "ios" },

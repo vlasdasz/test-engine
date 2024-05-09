@@ -9,31 +9,31 @@ pub trait ToF32: Copy + Sized + Sync + Send + Debug + Display + 'static {
 
 impl const ToF32 for i32 {
     fn to_f32(self) -> f32 {
-        self as f32
+        self.lossy_convert()
     }
 }
 
 impl const ToF32 for i64 {
     fn to_f32(self) -> f32 {
-        self as f32
+        self.lossy_convert()
     }
 }
 
 impl const ToF32 for u32 {
     fn to_f32(self) -> f32 {
-        self as f32
+        self.lossy_convert()
     }
 }
 
 impl const ToF32 for u64 {
     fn to_f32(self) -> f32 {
-        self as f32
+        self.lossy_convert()
     }
 }
 
 impl const ToF32 for usize {
     fn to_f32(self) -> f32 {
-        self as f32
+        self.lossy_convert()
     }
 }
 

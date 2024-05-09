@@ -1,6 +1,6 @@
 use std::{any::Any, ops::Deref};
 
-use gm::{flat::Size, Color, Toggle};
+use gm::{flat::Size, Color, LossyConvert, Toggle};
 use itertools::Itertools;
 use refs::{Own, Weak};
 use ui_proc::view;
@@ -44,7 +44,10 @@ impl DropDown {
         let values = values.into_iter().map(|a| a.to_label()).collect_vec();
         self.label.set_text(values.first().unwrap());
         self.values = values;
-        let table_size = (self.width(), self.height() * self.number_of_cells() as f32);
+        let table_size = (
+            self.width(),
+            self.height() * self.number_of_cells().lossy_convert(),
+        );
         self.table.set_size(table_size);
     }
 
@@ -57,7 +60,7 @@ impl DropDown {
             self.label.set_hidden(true);
             self.button.set_hidden(true);
             self.table.set_hidden(false);
-            let table_height = self.height() * self.number_of_cells() as f32;
+            let table_height = self.height() * self.number_of_cells().lossy_convert();
             let table_size = (self.width(), table_height);
             self.table.set_size(table_size);
             self.table.reload_data();

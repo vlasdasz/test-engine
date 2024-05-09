@@ -147,8 +147,8 @@ impl Hash for Size<f32> {
 impl From<Size<u32>> for Size<f32> {
     fn from(value: Size<u32>) -> Self {
         Self {
-            width:  value.width as f32,
-            height: value.height as f32,
+            width:  value.width.lossy_convert(),
+            height: value.height.lossy_convert(),
         }
     }
 }

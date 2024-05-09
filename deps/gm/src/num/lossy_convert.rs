@@ -1,5 +1,6 @@
 #![allow(clippy::cast_possible_truncation)]
 #![allow(clippy::cast_sign_loss)]
+#![allow(clippy::cast_precision_loss)]
 
 pub trait LossyConvert<To> {
     fn lossy_convert(self) -> To;
@@ -75,5 +76,36 @@ impl LossyConvert<u32> for f64 {
         assert!(self <= f64::from(u32::MAX), "Lossy convert overflow");
         assert!(self > f64::from(u32::MIN), "Lossy convert underflow");
         self as u32
+    }
+}
+
+// TODO: add some asserts below
+impl LossyConvert<f32> for usize {
+    fn lossy_convert(self) -> f32 {
+        self as f32
+    }
+}
+
+impl LossyConvert<f32> for u64 {
+    fn lossy_convert(self) -> f32 {
+        self as f32
+    }
+}
+
+impl LossyConvert<f32> for i64 {
+    fn lossy_convert(self) -> f32 {
+        self as f32
+    }
+}
+
+impl LossyConvert<f32> for u32 {
+    fn lossy_convert(self) -> f32 {
+        self as f32
+    }
+}
+
+impl LossyConvert<f32> for i32 {
+    fn lossy_convert(self) -> f32 {
+        self as f32
     }
 }

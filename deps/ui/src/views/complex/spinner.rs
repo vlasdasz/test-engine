@@ -3,7 +3,7 @@ use std::{
     sync::{Mutex, MutexGuard},
 };
 
-use gm::Animation;
+use gm::{Animation, LossyConvert};
 use ui_proc::view;
 use vents::OnceEvent;
 
@@ -92,17 +92,18 @@ impl ViewCallbacks for Spinner {
     fn update(&mut self) {
         let current_time: i64 = Utc::now().timestamp_micros();
 
-        let val = ((current_time % MICROSECONDS_IN_ONE_SECOND) as f32) / MICROSECONDS_IN_ONE_SECOND as f32;
+        let val = ((current_time % MICROSECONDS_IN_ONE_SECOND).lossy_convert())
+            / MICROSECONDS_IN_ONE_SECOND.lossy_convert();
 
         let span = PI * 2.0;
         let start = -PI;
 
         let angle = start + span * val;
 
-        let step = 2.0 * PI / CIRCLES_N as f32;
+        let step = 2.0 * PI / CIRCLES_N.lossy_convert();
 
         let points: Vec<_> = (0..CIRCLES_N)
-            .map(|index| point_on_circle(40.0, angle + step * index as f32, self.size().center()))
+            .map(|index| point_on_circle(40.0, angle + step * index.lossy_convert(), self.size().center()))
             .collect();
 
         for (view, point) in self.circles.iter_mut().zip(points) {
