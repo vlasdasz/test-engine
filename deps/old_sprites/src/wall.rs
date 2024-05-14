@@ -1,9 +1,7 @@
-use gm::{
-    flat::{Point, Shape},
-    ToF32,
-};
+use gm::flat::{Point, Shape};
 use rapier2d::na::Vector2;
 use refs::{Own, Weak};
+use rtools::IntoF32;
 
 use crate::{sprite::SpriteTemplates, Level, Sprite, SpriteData, ToCollider};
 
@@ -12,15 +10,15 @@ pub struct Wall {
 }
 
 impl Wall {
-    pub fn set_x(&mut self, x: impl ToF32) {
+    pub fn set_x(&mut self, x: impl IntoF32) {
         let mut pos = self.position();
-        pos.x = x.to_f32();
+        pos.x = x.into_f32();
         self.set_position(pos);
     }
 
-    pub fn set_y(&mut self, y: impl ToF32) {
+    pub fn set_y(&mut self, y: impl IntoF32) {
         let mut pos = self.position();
-        pos.y = y.to_f32();
+        pos.y = y.into_f32();
         self.set_position(pos);
     }
 }

@@ -1,9 +1,11 @@
+use gl_image::GlImage;
 use gm::{
     flat::{Point, Rect, Shape},
-    Color, ToF32,
+    Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use refs::{Own, Weak};
+use rtools::IntoF32;
 use vents::Event;
 
 use crate::{Level, Sprite};
@@ -21,12 +23,12 @@ pub struct SpriteData {
 
     pub tag:   String,
     pub color: Color,
+    pub image: Weak<GlImage>,
 
-    // pub image: Weak<GlImage>,
     pub on_collision: Event<Weak<dyn Sprite>>,
 }
 
-impl<X: ToF32, Y: ToF32, W: ToF32, H: ToF32> From<(X, Y, W, H)> for SpriteData {
+impl<X: IntoF32, Y: IntoF32, W: IntoF32, H: IntoF32> From<(X, Y, W, H)> for SpriteData {
     fn from(data: (X, Y, W, H)) -> Self {
         let rect: Rect = (data).into();
         Self {

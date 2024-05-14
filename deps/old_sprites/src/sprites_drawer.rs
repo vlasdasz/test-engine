@@ -1,6 +1,6 @@
 use std::ops::DerefMut;
 
-use gm::flat::{Point, Size};
+use gm::flat::{IntSize, Point};
 
 use crate::Sprite;
 
@@ -9,8 +9,8 @@ static mut DRAWER: Option<Box<dyn SpritesDrawer>> = None;
 pub trait SpritesDrawer {
     fn scale(&self) -> f32;
     fn set_scale(&mut self, scale: f32);
-    fn resolution(&self) -> Size<u32>;
-    fn set_resolution(&mut self, size: Size<u32>);
+    fn resolution(&self) -> IntSize;
+    fn set_resolution(&mut self, size: IntSize);
     fn set_camera_rotation(&self, angle: f32);
     fn camera_position(&self) -> Point;
     fn set_camera_position(&mut self, pos: Point);

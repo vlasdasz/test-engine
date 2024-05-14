@@ -1,0 +1,18 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2021"
+name = "sprites"
+version = "0.1.0"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "sprites"
+
+[dependencies]
+anyhow = { workspace = true }
+rapier2d = { workspace = true }
+smart-default = { workspace = true }
+
+gm = { workspace = true }
+refs = { workspace = true }
+vents = { workspace = true }

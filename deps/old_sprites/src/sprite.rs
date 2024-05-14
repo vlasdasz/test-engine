@@ -1,12 +1,14 @@
+use gl_image::{GlImage, ToImage};
 use gm::{
     flat::{Point, Shape, Size},
-    Color, ToF32,
+    Color,
 };
 use rapier2d::{
     geometry::Collider,
     prelude::{RigidBody, Rotation},
 };
 use refs::{Address, Own, Weak};
+use rtools::IntoF32;
 
 use crate::{get_sprites_drawer, Level, SpriteData};
 
@@ -73,9 +75,9 @@ pub trait Sprite {
         &self.data().color
     }
 
-    // fn image(&self) -> Weak<GlImage> {
-    //     self.data().image.to_image()
-    // }
+    fn image(&self) -> Weak<GlImage> {
+        self.data().image.to_image()
+    }
 
     fn is_selected(&self) -> bool {
         self.data().is_selected
@@ -109,10 +111,10 @@ pub trait Sprite {
 pub trait SpriteTemplates {
     fn set_color(&mut self, _: Color) -> &mut Self;
     fn set_selected(&mut self, _: bool) -> &mut Self;
-    // fn set_image(&mut self, _: impl ToImage) -> &mut Self;
+    fn set_image(&mut self, _: impl ToImage) -> &mut Self;
     fn set_restitution(&mut self, _: f32) -> &mut Self;
     fn set_position(&mut self, _: Point) -> &mut Self;
-    fn set_rotation(&mut self, _: impl ToF32) -> &mut Self;
+    fn set_rotation(&mut self, _: impl IntoF32) -> &mut Self;
 }
 
 impl<T: ?Sized + Sprite> SpriteTemplates for T {
@@ -126,10 +128,10 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         self
     }
 
-    // fn set_image(&mut self, image: impl ToImage) -> &mut Self {
-    //     self.data_mut().image = image.to_image();
-    //     self
-    // }
+    fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.data_mut().image = image.to_image();
+        self
+    }
 
     fn set_restitution(&mut self, res: f32) -> &mut Self {
         self.collider_mut().set_restitution(res);
@@ -146,8 +148,8 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         self
     }
 
-    fn set_rotation(&mut self, rotation: impl ToF32) -> &mut Self {
-        let rotation = rotation.to_f32();
+    fn set_rotation(&mut self, rotation: impl IntoF32) -> &mut Self {
+        let rotation = rotation.into_f32();
         if self.data().rigid_handle.is_some() {
             self.rigid_body_mut().set_rotation(Rotation::new(rotation), true);
         }
