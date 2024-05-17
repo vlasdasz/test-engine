@@ -1,7 +1,6 @@
 use std::{fmt::Display, str::FromStr};
 
 use gm::{flat::Point, LossyConvert};
-use itertools::Itertools;
 use wgpu_wrapper::MouseButton;
 
 use crate::{input::TouchEvent, TouchLock};
@@ -41,7 +40,9 @@ impl Touch {
     }
 
     pub fn str_from_vec(v: Vec<Touch>) -> String {
-        v.into_iter().map(|t| "            ".to_string() + &t.to_string()).join("\n")
+        v.into_iter()
+            .map(|t| "            ".to_string() + &t.to_string() + "\n")
+            .collect()
     }
 }
 
@@ -64,7 +65,7 @@ impl FromStr for Touch {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let vals = s.split_whitespace().collect_vec();
+        let vals: Vec<_> = s.split_whitespace().collect();
 
         let touch = Touch {
             id:       1,
@@ -82,7 +83,6 @@ impl FromStr for Touch {
 
 #[cfg(test)]
 mod test {
-    use itertools::Itertools;
     use wgpu_wrapper::MouseButton;
 
     use crate::{input::TouchEvent, Touch};
@@ -122,7 +122,7 @@ mod test {
             },
         ];
 
-        let result = touches.into_iter().map(|t| t.to_string()).join("\n");
+        let result: String = touches.into_iter().map(|t| t.to_string() + "\n").collect();
 
         println!("{}", result);
 
@@ -132,7 +132,8 @@ mod test {
 2000 10   e
 100  4000 e
 1    4000 m
-4000 1    m"#
+4000 1    m
+"#
         );
 
         assert_eq!(touches.as_slice(), &Touch::vec_from_str(&result));

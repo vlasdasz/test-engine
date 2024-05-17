@@ -5,7 +5,6 @@ use std::{
 };
 
 use gm::{axis::Axis, flat::Size, LossyConvert, ToF32};
-use itertools::Itertools;
 use refs::{Rglica, ToRglica};
 
 use crate::{
@@ -184,7 +183,7 @@ impl Placer {
 
     pub fn distribute_ratio(&self, ratios: &[impl ToF32]) -> &Self {
         self.sub_rules()
-            .push(Tiling::Distribute(ratios.iter().map(|f| f.to_f32()).collect_vec()).into());
+            .push(Tiling::Distribute(ratios.iter().map(|f| f.to_f32()).collect()).into());
         self
     }
 

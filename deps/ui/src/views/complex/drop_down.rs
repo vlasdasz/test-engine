@@ -1,7 +1,6 @@
 use std::{any::Any, ops::Deref};
 
 use gm::{flat::Size, Color, LossyConvert, Toggle};
-use itertools::Itertools;
 use refs::{Own, Weak};
 use ui_proc::view;
 use vents::Event;
@@ -41,9 +40,9 @@ impl DropDown {
     where
         Val: ToLabel,
         Values: IntoIterator<Item = Val>, {
-        let values = values.into_iter().map(|a| a.to_label()).collect_vec();
-        self.label.set_text(values.first().unwrap());
+        let values = values.into_iter().map(|a| a.to_label()).collect();
         self.values = values;
+        self.label.set_text(self.values.first().unwrap());
         let table_size = (
             self.width(),
             self.height() * self.number_of_cells().lossy_convert(),

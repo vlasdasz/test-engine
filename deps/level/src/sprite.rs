@@ -87,12 +87,12 @@ pub trait Sprite {
     }
 
     fn level(&self) -> &Weak<dyn Level> {
-        debug_assert!(self.data().level.is_ok(), "Null Level");
+        assert!(self.data().level.is_ok(), "Null Level");
         &self.data().level
     }
 
     fn level_mut(&mut self) -> &mut Weak<dyn Level> {
-        debug_assert!(self.data().level.is_ok(), "Null Level");
+        assert!(self.data().level.is_ok(), "Null Level");
         &mut self.data_mut().level
     }
 

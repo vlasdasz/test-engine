@@ -34,7 +34,7 @@ vents = { workspace = true }
 audio = { workspace = true, optional = true }
 call_counter = { workspace = true }
 gm = { workspace = true }
-sprites = { workspace = true }
+level = { workspace = true }
 store = { workspace = true }
 ui = { workspace = true }
 ui_proc = { workspace = true }

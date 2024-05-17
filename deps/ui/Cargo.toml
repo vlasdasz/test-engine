@@ -15,7 +15,6 @@ chrono = { workspace = true }
 derivative = { workspace = true }
 dispatch = { workspace = true }
 fake = { workspace = true }
-itertools = { workspace = true }
 log = { workspace = true }
 manage = { workspace = true }
 nonempty = { workspace = true }
