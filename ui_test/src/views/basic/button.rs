@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Button, Sub, ViewData, ViewSetup},
+    ui::{view, Button, Sub, ViewData, ViewSetup, UI},
     ui_test::{state::increment_state, test_combinations},
     App,
 };
@@ -24,7 +24,7 @@ impl ViewSetup for ButtonTestView {
 }
 
 pub async fn test_button() -> Result<()> {
-    App::init_test_view::<ButtonTestView>().await;
+    UI::init_test_view::<ButtonTestView>().await;
 
     App::set_window_size((200, 100));
 

@@ -3,12 +3,11 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Color, ScrollView, Sub, ViewData, ViewSetup},
+    ui::{view, Color, ScrollView, Sub, ViewData, ViewSetup, UI},
     ui_test::{
         helpers::{add_corners, check_colors},
         inject_scroll, inject_touches,
     },
-    App,
 };
 
 #[view]
@@ -25,7 +24,7 @@ impl ViewSetup for ScrollViewTest {
 }
 
 pub async fn test_scroll_view() -> Result<()> {
-    let mut view = App::init_test_view::<ScrollViewTest>().await;
+    let mut view = UI::init_test_view::<ScrollViewTest>().await;
 
     check_colors(
         r#"

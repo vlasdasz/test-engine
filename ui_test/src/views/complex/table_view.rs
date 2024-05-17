@@ -11,7 +11,7 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         view, AfterSetup, Color, Container, Label, Sub, TableData, TableView, View, ViewData, ViewSetup,
-        ViewSubviews,
+        ViewSubviews, UI,
     },
     ui_test::{helpers::check_colors, inject_touches},
     wait_for_next_frame, App,
@@ -66,7 +66,7 @@ impl TableData for TestTableView {
 pub async fn test_table_view() -> Result<()> {
     N_CELLS.store(2_000_000, Ordering::Relaxed);
 
-    let view = App::init_test_view::<TestTableView>().await;
+    let view = UI::init_test_view::<TestTableView>().await;
 
     App::set_window_size((1000, 1000));
 

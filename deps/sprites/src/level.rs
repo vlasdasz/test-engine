@@ -1,4 +1,4 @@
-use gm::{flat::Point, volume::GyroData};
+use gm::{flat::Point, volume::GyroData, LossyConvert};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
 use refs::{Own, Weak};
 
@@ -30,8 +30,8 @@ pub trait Level {
         let mut pos = pos;
         let size = get_sprites_drawer().resolution();
 
-        pos.x -= size.width as f32 / 2.0;
-        pos.y -= size.height as f32 / 2.0;
+        pos.x -= size.width.lossy_convert() / 2.0;
+        pos.y -= size.height.lossy_convert() / 2.0;
         pos.y = -pos.y;
         pos /= 10;
 
@@ -44,9 +44,9 @@ pub trait Level {
     }
 
     fn sprite_at(&self, point: Point) -> Option<Weak<dyn Sprite>> {
-        for bx in self.sprites() {
-            if bx.contains(point) {
-                return bx.weak().into();
+        for sprite in self.sprites() {
+            if sprite.contains(point) {
+                return sprite.weak().into();
             }
         }
         None

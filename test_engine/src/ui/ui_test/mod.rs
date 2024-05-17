@@ -1,3 +1,6 @@
+pub mod helpers;
+pub mod state;
+
 use std::{
     fmt::Display,
     ops::Deref,
@@ -7,8 +10,10 @@ use std::{
 };
 
 use anyhow::{bail, Result};
+pub use helpers::*;
 use log::{error, warn};
 use serde::de::DeserializeOwned;
+pub use state::*;
 use tokio::sync::mpsc::channel;
 
 use crate::{
@@ -16,15 +21,11 @@ use crate::{
     gm::{LossyConvert, ToF32},
     on_main,
     refs::ToOwn,
-    ui::{Touch, U8Color, UIEvents, UIManager},
-    ui_test::state::{clear_state, get_state},
+    ui::{Input, Touch, U8Color, UIEvents, UIManager},
     wait_for_next_frame, App,
 };
 
 const INJECT_INPUT_DELAY: f32 = 0.0;
-
-pub mod helpers;
-pub mod state;
 
 pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
@@ -53,7 +54,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
     sleep(Duration::from_secs_f32(INJECT_INPUT_DELAY));
     from_main(move || {
-        App::current_mut().process_touch_event(touch.into());
+        Input::process_touch_event(touch.into());
     })
     .await;
 }
@@ -89,7 +90,7 @@ pub async fn inject_keys(s: impl ToString) {
 }
 
 pub async fn inject_key(key: char) {
-    from_main(move || App::current_mut().on_char(key)).await
+    from_main(move || Input::on_char(key)).await
 }
 
 #[allow(dead_code)]

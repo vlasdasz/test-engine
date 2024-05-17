@@ -2,9 +2,8 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, ImageView, Sub, ViewData, ViewSetup},
+    ui::{view, ImageView, Sub, ViewData, ViewSetup, UI},
     ui_test::record_touches,
-    App,
 };
 
 #[view]
@@ -25,7 +24,7 @@ impl ViewSetup for RenderImagePath {
 }
 
 pub async fn test_render_image_path() -> Result<()> {
-    App::init_test_view::<RenderImagePath>().await;
+    UI::init_test_view::<RenderImagePath>().await;
 
     record_touches().await;
 

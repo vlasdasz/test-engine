@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, ImageView, Sub, ViewData, ViewSetup, ViewTouch},
+    ui::{view, Anchor, ImageView, Sub, ViewData, ViewSetup, ViewTouch, UI},
     ui_test::helpers::check_colors,
     App,
 };
@@ -22,7 +22,7 @@ impl ViewSetup for ImageTestView {
 }
 
 pub async fn test_image_view() -> Result<()> {
-    App::init_test_view::<ImageTestView>().await;
+    UI::init_test_view::<ImageTestView>().await;
 
     App::set_window_size((400, 400));
 

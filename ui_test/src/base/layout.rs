@@ -2,10 +2,12 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, Button, Color, Sub, ViewData, ViewSetup, ViewSubviews},
-    ui_test::{
-        inject_touches,
-        state::{append_state, clear_state, get_state},
+    ui::{
+        ui_test::{
+            inject_touches,
+            state::{append_state, clear_state, get_state},
+        },
+        view, Anchor, Button, Color, Sub, ViewData, ViewSetup, ViewSubviews, UI,
     },
     App,
 };
@@ -77,7 +79,7 @@ impl ViewSetup for LayoutTestView {
 }
 
 pub async fn test_layout() -> Result<()> {
-    App::init_test_view::<LayoutTestView>().await;
+    UI::init_test_view::<LayoutTestView>().await;
 
     App::set_window_size((240, 240));
 

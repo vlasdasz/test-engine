@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, IntView, Sub, ViewData, ViewSetup},
+    ui::{view, IntView, Sub, ViewData, ViewSetup, UI},
     ui_test::inject_touches,
     App,
 };
@@ -20,7 +20,7 @@ impl ViewSetup for IntTestView {
 }
 
 pub async fn test_int_view() -> Result<()> {
-    let mut view = App::init_test_view::<IntTestView>().await;
+    let mut view = UI::init_test_view::<IntTestView>().await;
 
     App::set_window_size((400, 400));
 

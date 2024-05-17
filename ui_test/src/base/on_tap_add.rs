@@ -5,11 +5,10 @@ use log::debug;
 use test_engine::{
     refs::{Own, Weak},
     ui::{
+        ui_test::{helpers::check_colors, inject_touches},
         view, Button, CollectionData, CollectionView, Color, Container, ImageView, Label, Size, Sub, View,
-        ViewData, ViewSetup, ViewSubviews,
+        ViewData, ViewSetup, ViewSubviews, UI,
     },
-    ui_test::{helpers::check_colors, inject_touches},
-    App,
 };
 
 #[view]
@@ -68,7 +67,7 @@ impl ViewSetup for OnTapAddTestView {
 }
 
 pub async fn test_add_on_tap() -> Result<()> {
-    let view = App::init_test_view::<OnTapAddTestView>().await;
+    let view = UI::init_test_view::<OnTapAddTestView>().await;
 
     assert_eq!(
         view.dump_subviews(),

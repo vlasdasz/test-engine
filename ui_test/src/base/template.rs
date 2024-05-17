@@ -2,8 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, ViewSetup},
-    App,
+    ui::{view, ViewSetup, UI},
 };
 
 #[view]
@@ -14,7 +13,7 @@ impl ViewSetup for TemplateTestView {
 }
 
 pub async fn test_template() -> Result<()> {
-    App::init_test_view::<TemplateTestView>().await;
+    UI::init_test_view::<TemplateTestView>().await;
 
     debug!("Template test: OK");
 

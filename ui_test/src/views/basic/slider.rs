@@ -3,9 +3,8 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, Label, Slider, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews},
+    ui::{view, Anchor, Color, Label, Slider, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI},
     ui_test::{helpers::check_colors, inject_touches},
-    App,
 };
 
 #[view]
@@ -30,7 +29,7 @@ impl ViewSetup for SliderTestView {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let mut view = App::init_test_view::<SliderTestView>().await;
+    let mut view = UI::init_test_view::<SliderTestView>().await;
 
     inject_touches(
         r#"

@@ -48,7 +48,7 @@ pub fn append_state(val: impl Display) {
 #[cfg(test)]
 mod test {
 
-    use crate::ui_test::{
+    use crate::ui::ui_test::{
         clear_state, get_state,
         state::{append_state, increment_state},
     };

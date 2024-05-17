@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Sub, TextField, ViewData, ViewSetup},
+    ui::{view, Anchor, Sub, TextField, ViewData, ViewSetup, UI},
     ui_test::{helpers::check_colors, inject_keys, inject_touches},
     App,
 };
@@ -26,7 +26,7 @@ impl ViewSetup for TextFieldTestView {
 }
 
 pub async fn test_text_field() -> Result<()> {
-    let mut view = App::init_test_view::<TextFieldTestView>().await;
+    let mut view = UI::init_test_view::<TextFieldTestView>().await;
 
     App::set_window_size((800, 800));
 

@@ -7,22 +7,10 @@
 mod app;
 mod assets;
 mod paths;
-mod views;
 
-pub mod ui_test;
+pub mod ui;
 
-pub mod ui {
-    pub use ::ui::*;
-    pub use gm::{
-        flat::{Point, Points, PointsPath, Size},
-        Color, U8Color,
-    };
-    pub use ui_proc::view;
-    pub use views::color_meter::ColorMeter;
-    pub use wgpu_wrapper::{image::Image, PolygonMode, Screenshot};
-
-    use crate::views;
-}
+pub use ui::ui_test;
 
 pub mod refs {
     pub use refs::{
@@ -34,10 +22,6 @@ pub mod refs {
 
 pub mod reflect {
     pub use reflected::{FieldRef, Reflected};
-}
-
-pub mod input {
-    pub use winit::event::KeyEvent;
 }
 
 pub mod gm {

@@ -3,12 +3,11 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, DropDown, Sub, ViewData, ViewSetup},
+    ui::{view, DropDown, Sub, ViewData, ViewSetup, UI},
     ui_test::{
         inject_touches, inject_touches_delayed,
         state::{append_state, get_state},
     },
-    App,
 };
 
 #[view]
@@ -35,7 +34,7 @@ impl ViewSetup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    let view = App::init_test_view::<DropDownTestView>().await;
+    let view = UI::init_test_view::<DropDownTestView>().await;
 
     assert_eq!(view.top.text(), "Dog");
     assert_eq!(view.bot.text(), "Car");

@@ -6,13 +6,12 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         view, Button, CollectionData, CollectionView, Container, Label, Size, Sub, TouchStack, View,
-        ViewData, ViewSetup, ViewSubviews,
+        ViewData, ViewSetup, ViewSubviews, UI,
     },
     ui_test::{
         inject_touches,
         state::{append_state, get_str_state},
     },
-    App,
 };
 
 #[view]
@@ -65,7 +64,7 @@ impl CollectionData for ButtonsOnTableView {
 }
 
 pub async fn test_buttons_on_table_view() -> Result<()> {
-    App::init_test_view::<ButtonsOnTableView>().await;
+    UI::init_test_view::<ButtonsOnTableView>().await;
 
     assert_eq!(
         TouchStack::dump(),

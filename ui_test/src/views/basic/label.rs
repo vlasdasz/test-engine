@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, IntView, Label, Sub, ViewData, ViewSetup},
+    ui::{view, Anchor, Color, IntView, Label, Sub, ViewData, ViewSetup, UI},
     ui_test::{helpers::check_colors, inject_touches},
     App,
 };
@@ -33,7 +33,7 @@ impl ViewSetup for LabelTestView {
 }
 
 pub async fn test_label() -> Result<()> {
-    let mut view = App::init_test_view::<LabelTestView>().await;
+    let mut view = UI::init_test_view::<LabelTestView>().await;
 
     App::set_window_size((400, 400));
 

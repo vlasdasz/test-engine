@@ -4,10 +4,9 @@ use test_engine::{
     from_main,
     ui::{
         view, Color, Container, NavigationView, TouchStack, ViewController, ViewData, ViewSetup,
-        PRESENT_ANIMATION_DURATION,
+        PRESENT_ANIMATION_DURATION, UI,
     },
     ui_test::helpers::check_colors,
-    App,
 };
 use tokio::time::Instant;
 
@@ -19,7 +18,7 @@ pub async fn test_present() -> Result<()> {
 
     let view = present.weak();
 
-    App::set_test_view(NavigationView::with_view(present), 600, 600).await;
+    UI::set_test_view(NavigationView::with_view(present), 600, 600).await;
 
     check_colors(
         r#"

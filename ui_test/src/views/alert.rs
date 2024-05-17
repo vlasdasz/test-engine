@@ -2,8 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, ViewSetup},
-    App,
+    ui::{view, ViewSetup, UI},
 };
 
 #[view]
@@ -14,7 +13,7 @@ impl ViewSetup for AlertTestView {
 }
 
 pub async fn test_alert() -> Result<()> {
-    App::init_test_view::<AlertTestView>().await;
+    UI::init_test_view::<AlertTestView>().await;
 
     // let answer = Question::ask_async(
     //     "Plati mne dengi bistrenko pliz. Ja kuplu dengushki.\n Plati mne dengi

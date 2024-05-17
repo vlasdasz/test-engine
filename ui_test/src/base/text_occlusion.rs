@@ -2,9 +2,8 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Label, Sub, ViewData, ViewSetup},
+    ui::{view, Color, Label, Sub, ViewData, ViewSetup, UI},
     ui_test::helpers::check_colors,
-    App,
 };
 
 #[view]
@@ -32,7 +31,7 @@ impl ViewSetup for TextOccclusionTestView {
 }
 
 pub async fn test_text_occlusion() -> Result<()> {
-    App::init_test_view::<TextOccclusionTestView>().await;
+    UI::init_test_view::<TextOccclusionTestView>().await;
 
     check_colors(
         r#"

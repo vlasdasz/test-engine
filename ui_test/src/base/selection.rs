@@ -2,9 +2,8 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, Color, Sub, ViewCallbacks, ViewData, ViewSetup, ViewTouch},
+    ui::{view, Anchor, Color, Sub, ViewCallbacks, ViewData, ViewSetup, ViewTouch, UI},
     ui_test::{helpers::check_colors, inject_touches},
-    App,
 };
 
 #[view]
@@ -39,7 +38,7 @@ impl ViewSetup for SelectionTestView {
 }
 
 pub async fn test_selection() -> Result<()> {
-    App::init_test_view::<SelectionTestView>().await;
+    UI::init_test_view::<SelectionTestView>().await;
 
     check_colors(
         r#"

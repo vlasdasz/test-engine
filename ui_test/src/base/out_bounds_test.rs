@@ -2,9 +2,10 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, ImageView, IntView, Label, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews},
-    ui_test::{helpers::check_colors, inject_touches},
-    App,
+    ui::{
+        ui_test::{helpers::check_colors, inject_touches},
+        view, Anchor, ImageView, IntView, Label, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI,
+    },
 };
 
 #[view]
@@ -44,7 +45,7 @@ impl ViewSetup for OutBoundsView {
 }
 
 pub async fn test_out_bounds() -> Result<()> {
-    App::init_test_view::<OutBoundsView>().await;
+    UI::init_test_view::<OutBoundsView>().await;
 
     inject_touches(
         r#"

@@ -1,4 +1,4 @@
-use std::ops::{Deref, DerefMut};
+use std::ops::Deref;
 
 use gm::flat::Point;
 use rapier2d::{
@@ -6,8 +6,8 @@ use rapier2d::{
     na::Vector2,
     parry::partitioning::IndexedData,
     prelude::{
-        BroadPhase, CCDSolver, CollisionEvent, IntegrationParameters, IslandManager, MultibodyJointSet,
-        NarrowPhase, PhysicsPipeline,
+        BroadPhaseMultiSap, CCDSolver, CollisionEvent, IntegrationParameters, IslandManager,
+        MultibodyJointSet, NarrowPhase, PhysicsPipeline,
     },
 };
 use refs::{weak_from_ref, Own, Weak};
@@ -36,13 +36,10 @@ pub struct LevelBase {
     pub(crate) physics_pipeline: PhysicsPipeline,
 
     pub(crate) island_manager:   IslandManager,
-    #[default(todo!())]
-    pub(crate) broad_phase:      Box<dyn BroadPhase>,
-    #[default(NarrowPhase::new())]
+    pub(crate) broad_phase:      BroadPhaseMultiSap,
     pub(crate) narrow_phase:     NarrowPhase,
     pub(crate) impulse_joints:   ImpulseJointSet,
     pub(crate) multibody_joints: MultibodyJointSet,
-    #[default(CCDSolver::new())]
     pub(crate) ccd_solver:       CCDSolver,
 
     pub(crate) events: EventHandler,
@@ -58,7 +55,7 @@ impl LevelBase {
             &self.gravity,
             &self.integration_parameters,
             &mut self.island_manager,
-            self.broad_phase.deref_mut(),
+            &mut self.broad_phase,
             &mut self.narrow_phase,
             &mut self.sets.rigid_body,
             &mut self.sets.collider,

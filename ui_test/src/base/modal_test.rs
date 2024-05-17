@@ -3,11 +3,10 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{
-        view, Color, Container, Label, ModalView, Size, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews,
-        WeakView,
+        ui_test::helpers::check_colors, view, Color, Container, Label, ModalView, Size, Sub, ViewData,
+        ViewFrame, ViewSetup, ViewSubviews, WeakView, UI,
     },
-    ui_test::helpers::check_colors,
-    wait_for_next_frame, App, OnceEvent,
+    wait_for_next_frame, OnceEvent,
 };
 
 #[view]
@@ -57,7 +56,7 @@ impl ModalView for Modal {
 }
 
 pub async fn test_modal() -> Result<()> {
-    App::init_test_view::<ModalTestView>().await;
+    UI::init_test_view::<ModalTestView>().await;
 
     Modal::show_modally((), |_| {});
 

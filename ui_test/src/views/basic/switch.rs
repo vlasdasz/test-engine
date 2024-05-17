@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Sub, Switch, ViewData, ViewSetup},
+    ui::{view, Sub, Switch, ViewData, ViewSetup, UI},
     ui_test::{state::set_state, test_combinations},
     App,
 };
@@ -23,7 +23,7 @@ impl ViewSetup for SwitchTestView {
 }
 
 pub async fn test_switch() -> Result<()> {
-    App::init_test_view::<SwitchTestView>().await;
+    UI::init_test_view::<SwitchTestView>().await;
 
     App::set_window_size((200, 100));
 

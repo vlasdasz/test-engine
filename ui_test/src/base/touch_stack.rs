@@ -2,9 +2,9 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     from_main,
-    ui::{view, Alert, Button, Sub, TouchStack, ViewSubviews, ViewTouch},
+    ui::{view, Alert, Button, Sub, TouchStack, ViewSubviews, ViewTouch, UI},
     ui_test::inject_touches,
-    wait_for_next_frame, App,
+    wait_for_next_frame,
 };
 
 #[view]
@@ -16,7 +16,7 @@ struct TouchStackTestView {
 }
 
 pub async fn test_touch_stack() -> Result<()> {
-    let mut view = App::init_test_view::<TouchStackTestView>().await;
+    let mut view = UI::init_test_view::<TouchStackTestView>().await;
 
     assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 

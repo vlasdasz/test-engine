@@ -7,10 +7,9 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         view, CollectionData, CollectionLayout, CollectionView, Label, Size, Sub, TouchStack, View, ViewData,
-        ViewFrame, ViewSetup,
+        ViewFrame, ViewSetup, UI,
     },
     ui_test::helpers::{add_action, check_colors},
-    App,
 };
 
 #[view]
@@ -53,7 +52,7 @@ impl ViewSetup for CollectionTestView {
 }
 
 pub async fn test_collection_view() -> Result<()> {
-    let mut view = App::init_test_view::<CollectionTestView>().await;
+    let mut view = UI::init_test_view::<CollectionTestView>().await;
 
     check_colors(
         r#"

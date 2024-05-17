@@ -50,10 +50,10 @@ call_counter = { path = "deps/call_counter" }
 dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
+sprites = { path = "deps/sprites" }
 store = { path = "deps/store" }
 test_engine = { path = "test_engine" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
 valid = { path = "deps/valid" }
 wgpu_wrapper = { path = "deps/wgpu_wrapper" }
-sprites = { path = "deps/sprites" }
