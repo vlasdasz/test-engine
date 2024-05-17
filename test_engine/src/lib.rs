@@ -8,6 +8,7 @@ mod app;
 mod assets;
 mod paths;
 
+mod te_level;
 pub mod ui;
 
 pub use ui::ui_test;

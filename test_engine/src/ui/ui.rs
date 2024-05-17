@@ -14,7 +14,7 @@ use ui::{
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::WGPUDrawer;
+use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
 
 use crate::{ui::ui_test::state::clear_state, App};
 
@@ -22,7 +22,17 @@ pub struct UI;
 
 impl UI {
     pub(crate) fn update() {
-        Self::update_view(UIManager::root_view_mut().deref_mut())
+        Self::update_view(UIManager::root_view_weak().deref_mut())
+    }
+
+    pub(crate) fn draw<'a>(pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
+        let mut sections: Vec<Section> = vec![];
+        Self::draw_view(pass, drawer, UIManager::root_view(), &mut sections, &mut 0.0);
+
+        Font::helvetice()
+            .brush
+            .queue(WGPUApp::device(), WGPUApp::queue(), sections)
+            .unwrap()
     }
 
     fn update_view(view: &mut dyn View) {
@@ -39,7 +49,7 @@ impl UI {
         }
     }
 
-    pub(crate) fn draw_view<'a>(
+    fn draw_view<'a>(
         pass: &mut RenderPass<'a>,
         drawer: &'a WGPUDrawer,
         view: &'a dyn View,
@@ -177,7 +187,7 @@ impl UI {
         wait_for_next_frame().await;
         let view = from_main(move || {
             let weak = view.weak();
-            let mut root = UIManager::root_view_mut();
+            let mut root = UIManager::root_view_weak();
             root.remove_all_subviews();
             let view = root.__add_subview_internal(view, true);
             view.place().back();

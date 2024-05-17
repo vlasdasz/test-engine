@@ -13,7 +13,7 @@ mod screenshot;
 pub use app::*;
 pub use bytemuck::cast_slice;
 pub use render::{
-    image_state::image_vertices_with_shrink, path_data::PathData, state::State, wgpu_drawer::WGPUDrawer,
+    image_drawer::image_vertices_with_shrink, path_data::PathData, state::State, wgpu_drawer::WGPUDrawer,
 };
 pub use screenshot::*;
 pub use text::*;

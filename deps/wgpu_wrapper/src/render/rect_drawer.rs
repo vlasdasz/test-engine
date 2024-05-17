@@ -9,15 +9,10 @@ use gm::{
 use wgpu::{
     include_wgsl,
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline,
-    TextureFormat,
+    Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline, TextureFormat,
 };
 
-use crate::{
-    render::{new_uniform::Uniform, uniform::OldUniform},
-    utils::make_pipeline,
-    WGPUApp,
-};
+use crate::{render::uniform::Uniform, utils::make_pipeline, WGPUApp};
 
 const VERTICES: &[Point] = &[
     Point::new(-1.0, 1.0),
@@ -29,23 +24,20 @@ const VERTICES: &[Point] = &[
 const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 #[derive(Debug)]
-pub struct RectState {
-    z_layout:      BindGroupLayout,
+pub struct RectDrawer {
     pipeline:      RenderPipeline,
     vertex_buffer: Buffer,
 }
 
-impl RectState {
+impl RectDrawer {
     pub fn new(texture_format: TextureFormat) -> Self {
         let device = WGPUApp::device();
 
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
-        let z_layout = OldUniform::z_layout();
-
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Rect Pipeline Layout"),
-            bind_group_layouts:   &[&z_layout, Color::layout()],
+            bind_group_layouts:   &[f32::layout(), Color::layout()],
             push_constant_ranges: &[],
         });
 
@@ -64,7 +56,6 @@ impl RectState {
         });
 
         Self {
-            z_layout,
             pipeline,
             vertex_buffer,
         }
@@ -74,8 +65,8 @@ impl RectState {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(&self.pipeline);
 
-        render_pass.set_bind_group(0, OldUniform::z(&self.z_layout, z_position), &[]);
-        render_pass.set_bind_group(1, Color::bind(*color), &[]);
+        render_pass.set_bind_group(0, z_position.bind(), &[]);
+        render_pass.set_bind_group(1, color.bind(), &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.draw(VERTEX_RANGE, 0..1);
     }

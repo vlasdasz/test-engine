@@ -11,12 +11,12 @@ use tokio::spawn;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 use vents::OnceEvent;
 use wgpu::RenderPass;
-use wgpu_text::glyph_brush::Section;
-use wgpu_wrapper::{ElementState, Font, MouseButton, Screenshot, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{ElementState, MouseButton, Screenshot, WGPUApp, WGPUDrawer};
 use winit::event::{KeyEvent, TouchPhase};
 
 use crate::{
     assets::Assets,
+    te_level::TELevel,
     ui::{Input, UI},
 };
 
@@ -166,7 +166,7 @@ impl App {
 
 impl wgpu_wrapper::App for App {
     fn window_ready(&mut self) {
-        let view = UIManager::root_view_mut().__add_subview_internal(self.first_view.take().unwrap(), true);
+        let view = UIManager::root_view_weak().__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();
         self.update();
         self.window_ready.trigger(());
@@ -175,21 +175,17 @@ impl wgpu_wrapper::App for App {
     fn update(&mut self) {
         UIManager::free_deleted_views();
         invoke_dispatched();
+        TELevel::update();
         UI::update();
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
-        let mut sections: Vec<Section> = vec![];
-        UI::draw_view(pass, drawer, UIManager::root_view(), &mut sections, &mut 0.0);
-
-        Font::helvetice()
-            .brush
-            .queue(WGPUApp::device(), WGPUApp::queue(), sections)
-            .unwrap()
+        TELevel::draw(pass, drawer);
+        UI::draw(pass, drawer);
     }
 
     fn resize(&mut self, _position: Point, size: Size<u32>) {
-        UIManager::root_view_mut().set_size(size); //.set_origin(position);
+        UIManager::root_view_weak().set_size(size); //.set_origin(position);
         UIEvents::size_changed().trigger(size);
         self.update();
     }

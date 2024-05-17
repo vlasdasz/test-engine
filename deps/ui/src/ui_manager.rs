@@ -110,7 +110,7 @@ impl UIManager {
         Self::get().root_view.deref()
     }
 
-    pub fn root_view_mut() -> WeakView {
+    pub fn root_view_weak() -> WeakView {
         Self::get().root_view.weak_view()
     }
 

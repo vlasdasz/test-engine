@@ -1,9 +1,8 @@
-pub mod image_state;
-mod new_uniform;
+pub mod image_drawer;
 pub mod path_data;
-pub mod path_state;
-pub mod rect_state;
+pub mod path_drawer;
+pub mod rect_drawer;
 pub mod state;
-pub mod uniform;
+mod uniform;
 pub mod vertex_layout;
 pub mod wgpu_drawer;

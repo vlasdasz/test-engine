@@ -132,7 +132,7 @@ async fn record_touches_internal(skip_moved: bool) {
             touches.push(touch);
         });
 
-        UIManager::keymap().add(UIManager::root_view_mut(), 'a', move || {
+        UIManager::keymap().add(UIManager::root_view_weak(), 'a', move || {
             _ = s.try_send(());
         })
     });
@@ -187,7 +187,7 @@ pub async fn record_touches_with_colors() -> Result<()> {
             touches.push((touch, screenshot.get_pixel(touch.position)));
         });
 
-        UIManager::keymap().add(UIManager::root_view_mut(), 'a', move || {
+        UIManager::keymap().add(UIManager::root_view_weak(), 'a', move || {
             _ = s.try_send(());
         })
     });

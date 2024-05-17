@@ -6,35 +6,20 @@ use wgpu::{
     PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
-use crate::{render::uniform::OldUniform, utils::make_pipeline, WGPUApp};
+use crate::{render::uniform::Uniform, utils::make_pipeline, WGPUApp};
 
 #[derive(Debug)]
-pub struct PathState {
-    z_layout: BindGroupLayout,
+pub struct PathDrawer {
     pipeline: RenderPipeline,
 
     pub(crate) color_size_layout: BindGroupLayout,
 }
 
-impl PathState {
+impl PathDrawer {
     pub fn new(texture_format: TextureFormat) -> Self {
         let device = WGPUApp::device();
 
         let shader = device.create_shader_module(include_wgsl!("shaders/path.wgsl"));
-
-        let z_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            label:   Some("path_bind_group_layout"),
-            entries: &[BindGroupLayoutEntry {
-                binding:    0,
-                visibility: ShaderStages::VERTEX,
-                ty:         BindingType::Buffer {
-                    ty:                 BufferBindingType::Uniform,
-                    has_dynamic_offset: false,
-                    min_binding_size:   None,
-                },
-                count:      None,
-            }],
-        });
 
         let color_size_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label:   Some("path_bind_group_layout"),
@@ -64,7 +49,7 @@ impl PathState {
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Path Pipeline Layout"),
-            bind_group_layouts:   &[&z_layout, &color_size_layout],
+            bind_group_layouts:   &[f32::layout(), &color_size_layout],
             push_constant_ranges: &[],
         });
 
@@ -77,7 +62,6 @@ impl PathState {
         );
 
         Self {
-            z_layout,
             pipeline,
             color_size_layout,
         }
@@ -95,7 +79,7 @@ impl PathState {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(&self.pipeline);
 
-        render_pass.set_bind_group(0, OldUniform::z(&self.z_layout, z_position), &[]);
+        render_pass.set_bind_group(0, z_position.bind(), &[]);
         render_pass.set_bind_group(1, bind_group, &[]);
         render_pass.set_vertex_buffer(0, buffer.slice(..));
         render_pass.draw(vertex_range, 0..1);

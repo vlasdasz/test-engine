@@ -110,31 +110,7 @@ pub trait Level {
         self.base().player
     }
 
-    fn is_placeholder(&self) -> bool {
-        false
-    }
-
     fn base(&self) -> &LevelBase;
     fn base_mut(&mut self) -> &mut LevelBase;
     fn weak_level(&self) -> Weak<dyn Level>;
-}
-
-pub struct PlaceholderLevel;
-
-impl Level for PlaceholderLevel {
-    fn is_placeholder(&self) -> bool {
-        true
-    }
-
-    fn base(&self) -> &LevelBase {
-        todo!()
-    }
-
-    fn base_mut(&mut self) -> &mut LevelBase {
-        todo!()
-    }
-
-    fn weak_level(&self) -> Weak<dyn Level> {
-        todo!()
-    }
 }
