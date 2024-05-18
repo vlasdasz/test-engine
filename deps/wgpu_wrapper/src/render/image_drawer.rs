@@ -7,10 +7,15 @@ use gm::{
 };
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    Buffer, BufferUsages, PolygonMode, RenderPipeline, TextureFormat,
+    Buffer, BufferUsages, PolygonMode, RenderPipeline, ShaderStages, TextureFormat,
 };
 
-use crate::{image::Image, render::uniform::Uniform, utils::make_pipeline, WGPUApp};
+use crate::{
+    image::Image,
+    render::uniform::{make_bind, make_layout},
+    utils::make_pipeline,
+    WGPUApp,
+};
 
 pub const fn image_vertices_with_shrink(x: f32, y: f32, width: f32, height: f32) -> [UIVertex; 4] {
     [
@@ -52,7 +57,7 @@ impl ImageDrawer {
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                "Colored Image Pipeline Layout".into(),
-            bind_group_layouts:   &[f32::layout(), &image_layout],
+            bind_group_layouts:   &[make_layout(ShaderStages::VERTEX), &image_layout],
             push_constant_ranges: &[],
         });
 
@@ -87,7 +92,7 @@ impl ImageDrawer {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(&self.render_pipeline);
 
-        render_pass.set_bind_group(0, z_position.bind(), &[]);
+        render_pass.set_bind_group(0, make_bind(z_position, 0, ShaderStages::VERTEX), &[]);
         render_pass.set_bind_group(1, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, vertices.unwrap_or(&self.vertex_buffer).slice(..));
         render_pass.draw(RANGE, 0..1);

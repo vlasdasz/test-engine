@@ -17,6 +17,7 @@ pub struct WGPUDrawer {
     pub window_size:        Size,
     rect_drawer:            RectDrawer,
     image_drawer:           ImageDrawer,
+    // sprite_drawer:          SpriteDrawer,
     pub(crate) path_drawer: PathDrawer,
 }
 
@@ -26,6 +27,7 @@ impl WGPUDrawer {
             window_size:  Default::default(),
             rect_drawer:  RectDrawer::new(texture_format),
             path_drawer:  PathDrawer::new(texture_format),
+            //     sprite_drawer: SpriteDrawer::new(texture_format),
             image_drawer: ImageDrawer::new(),
         })
     }

@@ -18,7 +18,7 @@ use crate::{
     app::App,
     frame_counter::FrameCounter,
     image::Texture,
-    render::{uniform::clear_uniform_buffer, wgpu_drawer::WGPUDrawer},
+    render::{uniform::clear_uniform_buffers, wgpu_drawer::WGPUDrawer},
     text::Font,
     Screenshot, WGPUApp,
 };
@@ -169,7 +169,7 @@ impl State {
     }
 
     pub fn render(&mut self) -> Result<()> {
-        clear_uniform_buffer();
+        clear_uniform_buffers();
         let surface_texture = self.surface.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = WGPUApp::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {

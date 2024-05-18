@@ -6,7 +6,11 @@ use wgpu::{
     PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
-use crate::{render::uniform::Uniform, utils::make_pipeline, WGPUApp};
+use crate::{
+    render::uniform::{make_bind, make_layout},
+    utils::make_pipeline,
+    WGPUApp,
+};
 
 #[derive(Debug)]
 pub struct PathDrawer {
@@ -49,7 +53,7 @@ impl PathDrawer {
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Path Pipeline Layout"),
-            bind_group_layouts:   &[f32::layout(), &color_size_layout],
+            bind_group_layouts:   &[make_layout(ShaderStages::VERTEX), &color_size_layout],
             push_constant_ranges: &[],
         });
 
@@ -79,7 +83,7 @@ impl PathDrawer {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
         render_pass.set_pipeline(&self.pipeline);
 
-        render_pass.set_bind_group(0, z_position.bind(), &[]);
+        render_pass.set_bind_group(0, make_bind(z_position, 0, ShaderStages::VERTEX), &[]);
         render_pass.set_bind_group(1, bind_group, &[]);
         render_pass.set_vertex_buffer(0, buffer.slice(..));
         render_pass.draw(vertex_range, 0..1);
