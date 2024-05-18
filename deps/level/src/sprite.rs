@@ -8,7 +8,7 @@ use rapier2d::{
 };
 use refs::{Address, Own, Weak};
 
-use crate::{get_sprites_drawer, Level, SpriteData};
+use crate::{Level, SpriteData};
 
 pub trait Sprite {
     fn update(&mut self) {}
@@ -95,10 +95,10 @@ pub trait Sprite {
         assert!(self.data().level.is_ok(), "Null Level");
         &mut self.data_mut().level
     }
-
-    fn draw(&self) {
-        get_sprites_drawer().draw(self.data())
-    }
+    //
+    // fn draw(&self) {
+    //     //get_sprites_drawer().draw(self.data())
+    // }
 
     fn data(&self) -> &SpriteData;
     fn data_mut(&mut self) -> &mut SpriteData;

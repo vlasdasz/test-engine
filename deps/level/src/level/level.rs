@@ -1,8 +1,8 @@
-use gm::{flat::Point, volume::GyroData, LossyConvert};
+use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
 use refs::{Own, Weak};
 
-use crate::{get_sprites_drawer, LevelBase, Player, Sprite};
+use crate::{LevelBase, Player, Sprite};
 
 pub trait Level {
     fn setup(&mut self) {}
@@ -27,19 +27,20 @@ pub trait Level {
     }
 
     fn convert_touch(&self, pos: Point) -> Point {
-        let mut pos = pos;
-        let size = get_sprites_drawer().resolution();
-
-        pos.x -= size.width.lossy_convert() / 2.0;
-        pos.y -= size.height.lossy_convert() / 2.0;
-        pos.y = -pos.y;
-        pos /= 10;
-
-        pos *= 2;
-        pos /= get_sprites_drawer().scale();
-
-        pos += get_sprites_drawer().camera_position();
-
+        // let mut pos = pos;
+        // let size = get_sprites_drawer().resolution();
+        //
+        // pos.x -= size.width.lossy_convert() / 2.;
+        // pos.y -= size.height.lossy_convert() / 2.;
+        // pos.y = -pos.y;
+        // pos /= 10;
+        //
+        // pos *= 2;
+        // pos /= get_sprites_drawer().scale();
+        //
+        // pos += get_sprites_drawer().camera_position();
+        //
+        // pos
         pos
     }
 
@@ -53,7 +54,8 @@ pub trait Level {
     }
 
     fn scale(&self) -> f32 {
-        get_sprites_drawer().scale()
+        //get_sprites_drawer().scale()
+        1.0
     }
 
     fn multiply_scale(&mut self, mul: f32) {
@@ -61,8 +63,8 @@ pub trait Level {
         self.set_scale(scale);
     }
 
-    fn set_scale(&mut self, scale: f32) {
-        get_sprites_drawer().set_scale(scale)
+    fn set_scale(&mut self, _scale: f32) {
+        //get_sprites_drawer().set_scale(scale)
     }
 
     fn gravity(&self) -> Point {
@@ -94,12 +96,12 @@ pub trait Level {
         &mut self.base_mut().sets.collider
     }
 
-    fn set_camera_position(&mut self, pos: Point) {
-        get_sprites_drawer().set_camera_position(pos)
+    fn set_camera_position(&mut self, _pos: Point) {
+        //get_sprites_drawer().set_camera_position(pos)
     }
 
-    fn set_camera_rotation(&mut self, angle: f32) {
-        get_sprites_drawer().set_camera_rotation(angle)
+    fn set_camera_rotation(&mut self, _angle: f32) {
+        //get_sprites_drawer().set_camera_rotation(angle)
     }
 
     fn remove(&mut self, sprite: usize) {

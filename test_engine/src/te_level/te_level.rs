@@ -1,4 +1,7 @@
-use level::LevelManager;
+use std::ops::Deref;
+
+use gm::flat::Point;
+use level::{LevelManager, Sprite};
 use wgpu::RenderPass;
 use wgpu_wrapper::WGPUDrawer;
 
@@ -9,7 +12,28 @@ impl TELevel {
         LevelManager::update();
     }
 
-    pub(crate) fn draw<'a>(_pass: &mut RenderPass<'a>, _drawer: &'a WGPUDrawer) {}
+    pub(crate) fn draw<'a>(pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
+        if LevelManager::no_level() {
+            return;
+        }
+        for sprite in LevelManager::level_mut().sprites() {
+            Self::draw_sprite(sprite.deref(), pass, drawer)
+        }
+    }
+
+    fn draw_sprite<'a>(sprite: &dyn Sprite, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
+        drawer.sprite_drawer.draw(
+            pass,
+            sprite.size(),
+            sprite.position(),
+            sprite.rotation(),
+            1.0,
+            0.0,
+            Point::default(),
+            (1000, 1000).into(),
+            *sprite.color(),
+        );
+    }
 }
 
 // pub struct TESpritesDrawer {
@@ -21,11 +45,11 @@ impl TELevel {
 // impl TESpritesDrawer {
 //     pub fn new() -> Box<Self> {
 //         let mut new = Self {
-//             scale:           0.0,
+//             scale:           0.,
 //             resolution:      Default::default(),
 //             camera_position: Default::default(),
 //         };
-//         new.set_scale(1.0);
+//         new.set_scale(1.);
 //         Box::new(new)
 //     }
 // }
@@ -52,7 +76,7 @@ impl TELevel {
 // into());     }
 //
 //     fn set_camera_rotation(&self, angle: f32) {
-//         let angle = angle + std::f32::consts::PI / 2.0;
+//         let angle = angle + std::f32::consts::PI / 2.;
 //         SpriteShaders::sprite().enable().set_camera_rotation(angle);
 //         SpriteShaders::textured_sprite().enable().set_camera_rotation(angle);
 //     }

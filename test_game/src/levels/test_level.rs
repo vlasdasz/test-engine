@@ -1,7 +1,7 @@
 use test_engine::{
     audio::Sound,
-    gm::Shape,
-    level::{Body, Level, LevelBase, LevelCreation, Player, Sprite, SpriteTemplates},
+    gm::{LossyConvert, Shape},
+    level::{Body, Level, LevelBase, LevelCreation, Player, Sprite, SpriteTemplates, Wall},
     refs::{weak_from_ref, Weak},
     ui::{Image, Point},
     DataManager,
@@ -51,13 +51,11 @@ impl Level for TestLevel {
 
         let _square = Image::get("square.png");
 
-        // self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, 0))
-        //     .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(),
-        // 64));
-        // self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60,
-        // 0)).set_image(square);
-        // self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0))
-        //     .set_image(square);
+        self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, 0));
+        // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0)); //.set_image(square);
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0));
+        //.set_image(square);
 
         // self.add_sprite::<Body>(Shape::triangle((-10, -10), (10, -10), (-10, 10)),
         // (0, 50))     .set_image("triangle.png");
@@ -72,8 +70,11 @@ impl Level for TestLevel {
         // self.add_sprite::<Body>(Shape::Polygon(concave_points), (0, 100))
         //     .set_image("triangle.png");
 
-        for i in 0..500 {
-            self.add_sprite::<Body>(Shape::Rect((0.5, 0.5).into()), (0.1 * i as f32, i * 2));
+        for i in 0..5 {
+            self.add_sprite::<Body>(
+                Shape::Rect((0.5, 0.5).into()),
+                (0.1f32 * i.lossy_convert(), i * 2),
+            );
             //.set_image(square);
         }
 

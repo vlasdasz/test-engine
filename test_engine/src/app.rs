@@ -180,6 +180,10 @@ impl wgpu_wrapper::App for App {
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
+        let window_size = UIManager::window_size();
+
+        pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
+
         TELevel::draw(pass, drawer);
         UI::draw(pass, drawer);
     }

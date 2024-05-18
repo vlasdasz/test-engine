@@ -1,5 +1,6 @@
 use std::ops::Range;
 
+use bytemuck::bytes_of;
 use gm::flat::{Point, Rect};
 use wgpu::{
     include_wgsl, BindGroup, BindGroupLayout, BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType,
@@ -16,6 +17,7 @@ use crate::{
 pub struct PathDrawer {
     pipeline: RenderPipeline,
 
+    z_pos_layout:                 BindGroupLayout,
     pub(crate) color_size_layout: BindGroupLayout,
 }
 
@@ -51,9 +53,11 @@ impl PathDrawer {
             ],
         });
 
+        let z_pos_layout = make_layout("path_z_pos_layput", ShaderStages::VERTEX, 1);
+
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Path Pipeline Layout"),
-            bind_group_layouts:   &[make_layout(ShaderStages::VERTEX), &color_size_layout],
+            bind_group_layouts:   &[&z_pos_layout, &color_size_layout],
             push_constant_ranges: &[],
         });
 
@@ -67,6 +71,7 @@ impl PathDrawer {
 
         Self {
             pipeline,
+            z_pos_layout,
             color_size_layout,
         }
     }
@@ -80,10 +85,10 @@ impl PathDrawer {
         vertex_range: Range<u32>,
         z_position: f32,
     ) {
-        render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
+        render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.pipeline);
 
-        render_pass.set_bind_group(0, make_bind(z_position, 0, ShaderStages::VERTEX), &[]);
+        render_pass.set_bind_group(0, make_bind([bytes_of(&z_position)], &self.z_pos_layout), &[]);
         render_pass.set_bind_group(1, bind_group, &[]);
         render_pass.set_vertex_buffer(0, buffer.slice(..));
         render_pass.draw(vertex_range, 0..1);

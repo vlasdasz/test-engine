@@ -25,7 +25,7 @@ use crate::{
     wait_for_next_frame, App,
 };
 
-const INJECT_INPUT_DELAY: f32 = 0.0;
+const INJECT_INPUT_DELAY: f32 = 0.;
 
 pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {

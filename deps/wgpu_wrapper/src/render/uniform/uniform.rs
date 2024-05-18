@@ -1,6 +1,3 @@
-use std::collections::HashMap;
-
-use bytemuck::{cast_slice, Pod};
 use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
@@ -10,7 +7,6 @@ use wgpu::{
 
 use crate::{BufferUsages, WGPUApp};
 
-static LAYOUTS: MainLock<HashMap<ShaderStages, BindGroupLayout>> = MainLock::const_new();
 static BINDS: MainLock<Vec<BindGroup>> = MainLock::const_new();
 
 pub(super) fn bind_group_to_ref(bind: BindGroup) -> &'static BindGroup {
@@ -23,45 +19,61 @@ pub(crate) fn clear_uniform_buffers() {
     BINDS.get_mut().clear();
 }
 
-pub(crate) fn make_bind<T: Pod>(data: T, binding: u32, shader: ShaderStages) -> &'static BindGroup {
+pub(crate) fn make_bind<const SIZE: usize>(
+    data: [&[u8]; SIZE],
+    layout: &BindGroupLayout,
+) -> &'static BindGroup {
     let device = WGPUApp::device();
 
-    let buffer = device.create_buffer_init(&BufferInitDescriptor {
-        label:    Some("uniform_buffer"),
-        contents: cast_slice(&[data]),
-        usage:    BufferUsages::UNIFORM,
-    });
+    let buffers: Vec<_> = data
+        .into_iter()
+        .map(|contents| {
+            device.create_buffer_init(&BufferInitDescriptor {
+                label: Some("uniform_buffer"),
+                contents,
+                usage: BufferUsages::UNIFORM,
+            })
+        })
+        .collect();
+
+    let entries: Vec<_> = buffers
+        .iter()
+        .enumerate()
+        .map(|(binding, buffer)| BindGroupEntry {
+            binding:  binding.try_into().unwrap(),
+            resource: BindingResource::Buffer(BufferBinding {
+                buffer,
+                offset: 0,
+                size: None,
+            }),
+        })
+        .collect();
 
     let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
-        label:   Some("uniform bind group"),
-        layout:  make_layout(shader),
-        entries: &[BindGroupEntry {
-            binding,
-            resource: BindingResource::Buffer(BufferBinding {
-                buffer: &buffer,
-                offset: 0,
-                size:   None,
-            }),
-        }],
+        label: Some("uniform bind group"),
+        layout,
+        entries: &entries,
     });
 
     bind_group_to_ref(bind)
 }
 
-pub(crate) fn make_layout(shader: ShaderStages) -> &'static BindGroupLayout {
-    LAYOUTS.get_mut().entry(shader).or_insert_with(|| {
-        WGPUApp::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            label:   Some("uniform_bind_group_layout"),
-            entries: &[BindGroupLayoutEntry {
-                binding:    0,
-                visibility: shader,
-                ty:         BindingType::Buffer {
-                    ty:                 BufferBindingType::Uniform,
-                    has_dynamic_offset: false,
-                    min_binding_size:   None,
-                },
-                count:      None,
-            }],
+pub(crate) fn make_layout(name: &'static str, shader: ShaderStages, binds_count: u32) -> BindGroupLayout {
+    let entries: Vec<_> = (0..binds_count)
+        .map(|binding| BindGroupLayoutEntry {
+            binding,
+            visibility: shader,
+            ty: BindingType::Buffer {
+                ty:                 BufferBindingType::Uniform,
+                has_dynamic_offset: false,
+                min_binding_size:   None,
+            },
+            count: None,
         })
+        .collect();
+
+    WGPUApp::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        label:   name.into(),
+        entries: &entries,
     })
 }

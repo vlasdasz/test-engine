@@ -32,11 +32,11 @@ impl Sprite for Player {
     fn rotation(&self) -> f32 {
         self.unit.rotation()
     }
-
-    fn draw(&self) {
-        self.unit.draw();
-        self.weapon.draw();
-    }
+    //
+    // fn draw(&self) {
+    //     self.unit.draw();
+    //     self.weapon.draw();
+    // }
 
     fn data(&self) -> &SpriteData {
         self.unit.data()

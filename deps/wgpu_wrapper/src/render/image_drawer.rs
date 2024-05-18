@@ -1,5 +1,6 @@
 use std::ops::Range;
 
+use bytemuck::bytes_of;
 use gm::{
     checked_usize_to_u32,
     flat::{Point, Rect},
@@ -7,7 +8,7 @@ use gm::{
 };
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    Buffer, BufferUsages, PolygonMode, RenderPipeline, ShaderStages, TextureFormat,
+    BindGroupLayout, Buffer, BufferUsages, PolygonMode, RenderPipeline, ShaderStages, TextureFormat,
 };
 
 use crate::{
@@ -20,25 +21,25 @@ use crate::{
 pub const fn image_vertices_with_shrink(x: f32, y: f32, width: f32, height: f32) -> [UIVertex; 4] {
     [
         UIVertex {
-            pos: Point::new(-1.0, 1.0),
-            uv:  Point::new(0.0 + x, 0.0 + y),
+            pos: Point::new(-1., 1.),
+            uv:  Point::new(0. + x, 0. + y),
         },
         UIVertex {
-            pos: Point::new(-1.0, -1.0),
-            uv:  Point::new(0.0 + x, 1.0 * height + y),
+            pos: Point::new(-1., -1.),
+            uv:  Point::new(0. + x, 1. * height + y),
         },
         UIVertex {
-            pos: Point::new(1.0, 1.0),
-            uv:  Point::new(1.0 * width + x, 0.0 + y),
+            pos: Point::new(1., 1.),
+            uv:  Point::new(1. * width + x, 0. + y),
         },
         UIVertex {
-            pos: Point::new(1.0, -1.0),
-            uv:  Point::new(1.0 * width + x, 1.0 * height + y),
+            pos: Point::new(1., -1.),
+            uv:  Point::new(1. * width + x, 1. * height + y),
         },
     ]
 }
 
-const VERTICES: [UIVertex; 4] = image_vertices_with_shrink(0.0, 0.0, 1.0, 1.0);
+const VERTICES: [UIVertex; 4] = image_vertices_with_shrink(0., 0., 1., 1.);
 
 const RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
@@ -46,6 +47,7 @@ const RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 pub struct ImageDrawer {
     render_pipeline: RenderPipeline,
     vertex_buffer:   Buffer,
+    vertex_layout:   BindGroupLayout,
 }
 
 impl ImageDrawer {
@@ -53,11 +55,13 @@ impl ImageDrawer {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
+        let vertex_layout = make_layout("image_drawer_vertex_layout", ShaderStages::VERTEX, 1);
+
         let image_layout = Image::bind_group_layout();
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                "Colored Image Pipeline Layout".into(),
-            bind_group_layouts:   &[make_layout(ShaderStages::VERTEX), &image_layout],
+            bind_group_layouts:   &[&vertex_layout, &image_layout],
             push_constant_ranges: &[],
         });
 
@@ -78,6 +82,7 @@ impl ImageDrawer {
         Self {
             render_pipeline,
             vertex_buffer,
+            vertex_layout,
         }
     }
 
@@ -89,10 +94,10 @@ impl ImageDrawer {
         vertices: Option<&'a Buffer>,
         z_position: f32,
     ) {
-        render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0.0, 1.0);
+        render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.render_pipeline);
 
-        render_pass.set_bind_group(0, make_bind(z_position, 0, ShaderStages::VERTEX), &[]);
+        render_pass.set_bind_group(0, make_bind([bytes_of(&z_position)], &self.vertex_layout), &[]);
         render_pass.set_bind_group(1, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, vertices.unwrap_or(&self.vertex_buffer).slice(..));
         render_pass.draw(RANGE, 0..1);

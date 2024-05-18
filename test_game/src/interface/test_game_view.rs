@@ -1,5 +1,7 @@
 use test_engine::{
-    async_after, on_main,
+    async_after,
+    level::LevelManager,
+    on_main,
     refs::Weak,
     ui::{
         link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
@@ -7,6 +9,8 @@ use test_engine::{
     },
     App,
 };
+
+use crate::levels::TestLevel;
 
 #[view]
 pub struct TestGameView {
@@ -38,6 +42,8 @@ pub struct TestGameView {
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
+        LevelManager::set_level(TestLevel::default());
+
         self.tl.set_color(Color::PURPLE).place().size(100, 100).tl(10);
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
         self.bl.set_color(Color::BLUE).place().size(100, 100).bl(10);
@@ -52,7 +58,7 @@ impl ViewSetup for TestGameView {
             20,
         );
         self.label_l.text = "Łėŵœ Ы".into();
-        self.label_l.set_text_size(64.0);
+        self.label_l.set_text_size(64.);
 
         self.image_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
             Anchor::Left,

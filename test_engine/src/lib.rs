@@ -14,7 +14,9 @@ pub mod ui;
 pub use ui::ui_test;
 
 pub mod level {
-    pub use ::level::{Body, Level, LevelBase, LevelCreation, Player, Sprite, SpriteTemplates, Wall};
+    pub use ::level::{
+        Body, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall,
+    };
 }
 
 pub mod refs {

@@ -4,6 +4,7 @@
 #![feature(const_trait_impl)]
 
 mod interface;
+mod levels;
 mod test_game;
 
 fn main() {
