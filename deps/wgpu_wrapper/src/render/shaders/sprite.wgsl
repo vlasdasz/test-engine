@@ -24,9 +24,7 @@ fn rotation_z_matrix(angle: f32) -> mat4x4<f32> {
 fn v_main(
     @location(0) vertex_pos: vec2<f32>,
 ) -> @builtin(position) vec4<f32>  {
-
-
-    var out_pos: vec4<f32> = vec4<f32>(vertex_pos, 1.0, 1.0); //    gl_Position = vec4(vertex_position.xy, 1.0, 1.0);
+    var out_pos: vec4<f32> = vec4<f32>(vertex_pos, 0.0, 1.0); //    gl_Position = vec4(vertex_position.xy, 1.0, 1.0);
 
     out_pos.x *= size.x; //gl_Position.x *= size.x;
     out_pos.y *= size.y; //gl_Position.y *= size.y;

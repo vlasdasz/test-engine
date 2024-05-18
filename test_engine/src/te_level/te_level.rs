@@ -1,7 +1,8 @@
 use std::ops::Deref;
 
-use gm::flat::Point;
+use gm::flat::{Point, Size};
 use level::{LevelManager, Sprite};
+use ui::UIManager;
 use wgpu::RenderPass;
 use wgpu_wrapper::WGPUDrawer;
 
@@ -16,12 +17,18 @@ impl TELevel {
         if LevelManager::no_level() {
             return;
         }
+        let resolution = UIManager::window_size();
         for sprite in LevelManager::level_mut().sprites() {
-            Self::draw_sprite(sprite.deref(), pass, drawer)
+            Self::draw_sprite(sprite.deref(), pass, drawer, resolution)
         }
     }
 
-    fn draw_sprite<'a>(sprite: &dyn Sprite, pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
+    fn draw_sprite<'a>(
+        sprite: &dyn Sprite,
+        pass: &mut RenderPass<'a>,
+        drawer: &'a WGPUDrawer,
+        resolution: Size,
+    ) {
         drawer.sprite_drawer.draw(
             pass,
             sprite.size(),
@@ -30,7 +37,7 @@ impl TELevel {
             1.0,
             0.0,
             Point::default(),
-            (1000, 1000).into(),
+            resolution,
             *sprite.color(),
         );
     }

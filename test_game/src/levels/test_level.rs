@@ -3,7 +3,7 @@ use test_engine::{
     gm::{LossyConvert, Shape},
     level::{Body, Level, LevelBase, LevelCreation, Player, Sprite, SpriteTemplates, Wall},
     refs::{weak_from_ref, Weak},
-    ui::{Image, Point},
+    ui::{Color, Image, Point},
     DataManager,
 };
 
@@ -51,10 +51,13 @@ impl Level for TestLevel {
 
         let _square = Image::get("square.png");
 
-        self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, 0));
+        self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, 0))
+            .set_color(Color::random());
         // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
-        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0)); //.set_image(square);
-        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0));
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0))
+            .set_color(Color::random()); //.set_image(square);
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0))
+            .set_color(Color::random());
         //.set_image(square);
 
         // self.add_sprite::<Body>(Shape::triangle((-10, -10), (10, -10), (-10, 10)),
@@ -70,17 +73,19 @@ impl Level for TestLevel {
         // self.add_sprite::<Body>(Shape::Polygon(concave_points), (0, 100))
         //     .set_image("triangle.png");
 
-        for i in 0..5 {
+        for i in 0..10 {
             self.add_sprite::<Body>(
                 Shape::Rect((0.5, 0.5).into()),
                 (0.1f32 * i.lossy_convert(), i * 2),
-            );
+            )
+            .set_color(Color::random());
             //.set_image(square);
         }
 
         let mut player: Weak<Player> = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
         self.base_mut().player = player;
-        player //.set_image("frisk.png")
+        player
+            .set_color(Color::random()) //.set_image("frisk.png")
             .enable_collision_detection();
         // player.weapon.set_image("ak.png");
         let mut this = weak_from_ref(self);
