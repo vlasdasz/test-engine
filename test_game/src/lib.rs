@@ -4,6 +4,7 @@
 #![feature(const_trait_impl)]
 
 mod interface;
+mod levels;
 pub mod test_game;
 
 #[cfg(mobile)]

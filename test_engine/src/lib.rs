@@ -13,6 +13,10 @@ pub mod ui;
 
 pub use ui::ui_test;
 
+pub mod level {
+    pub use ::level::{Body, Level, LevelBase, LevelCreation, Player, Sprite, SpriteTemplates, Wall};
+}
+
 pub mod refs {
     pub use refs::{
         current_thread_id, dump_ref_stats, enable_ref_stats_counter, set_current_thread_as_main,
@@ -26,7 +30,7 @@ pub mod reflect {
 }
 
 pub mod gm {
-    pub use gm::{sign::Sign, Apply, LossyConvert, Platform, ToF32};
+    pub use gm::{flat::Shape, sign::Sign, Apply, LossyConvert, Platform, ToF32};
 }
 
 pub mod store {
