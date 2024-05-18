@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use bytemuck::{bytes_of, cast_slice};
+use bytemuck::{cast_slice};
 use gm::{
     checked_usize_to_u32,
     flat::{Point, Rect},
@@ -77,8 +77,8 @@ impl RectDrawer {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.pipeline);
 
-        render_pass.set_bind_group(0, make_bind([bytes_of(&z_position)], &self.vertex_layout), &[]);
-        render_pass.set_bind_group(1, make_bind([bytes_of(color)], &self.fragment_layout), &[]);
+        render_pass.set_bind_group(0, make_bind(&z_position, &self.vertex_layout), &[]);
+        render_pass.set_bind_group(1, make_bind(color, &self.fragment_layout), &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.draw(VERTEX_RANGE, 0..1);
     }

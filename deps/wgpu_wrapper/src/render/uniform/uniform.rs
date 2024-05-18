@@ -1,3 +1,4 @@
+use bytemuck::{bytes_of, Pod};
 use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
@@ -19,40 +20,32 @@ pub(crate) fn clear_uniform_buffers() {
     BINDS.get_mut().clear();
 }
 
-pub(crate) fn make_bind<const SIZE: usize>(
-    data: [&[u8]; SIZE],
+pub(crate) fn make_bind<T: Pod>(
+    data: &T,
     layout: &BindGroupLayout,
 ) -> &'static BindGroup {
     let device = WGPUApp::device();
 
-    let buffers: Vec<_> = data
-        .into_iter()
-        .map(|contents| {
+    let buffer =
             device.create_buffer_init(&BufferInitDescriptor {
                 label: Some("uniform_buffer"),
-                contents,
+                contents: bytes_of(data),
                 usage: BufferUsages::UNIFORM,
-            })
-        })
-        .collect();
+            });
 
-    let entries: Vec<_> = buffers
-        .iter()
-        .enumerate()
-        .map(|(binding, buffer)| BindGroupEntry {
-            binding:  binding.try_into().unwrap(),
+    let entry = BindGroupEntry {
+            binding:  0,
             resource: BindingResource::Buffer(BufferBinding {
-                buffer,
+                buffer: &buffer,
                 offset: 0,
                 size: None,
             }),
-        })
-        .collect();
+        };
 
     let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
         label: Some("uniform bind group"),
         layout,
-        entries: &entries,
+        entries: &[entry],
     });
 
     bind_group_to_ref(bind)
