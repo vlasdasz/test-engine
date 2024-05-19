@@ -52,7 +52,7 @@ impl PathDrawer {
             ],
         });
 
-        let z_pos_layout = make_layout("path_z_pos_layput", ShaderStages::VERTEX, 1);
+        let z_pos_layout = make_layout("path_z_pos_layput", ShaderStages::VERTEX);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Path Pipeline Layout"),

@@ -55,8 +55,8 @@ impl SpriteDrawer {
 
         let shader = device.create_shader_module(include_wgsl!("shaders/sprite.wgsl"));
 
-        let vertex_layout = make_layout("sprites_vertex_layout", ShaderStages::VERTEX, 1);
-        let fragment_layout = make_layout("sprites_fragment_layout", ShaderStages::FRAGMENT, 1);
+        let vertex_layout = make_layout("sprites_vertex_layout", ShaderStages::VERTEX);
+        let fragment_layout = make_layout("sprites_fragment_layout", ShaderStages::FRAGMENT);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Rect Pipeline Layout"),

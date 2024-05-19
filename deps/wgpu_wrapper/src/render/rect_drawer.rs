@@ -42,8 +42,8 @@ impl RectDrawer {
 
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
-        let vertex_layout = make_layout("rect_vertext_layout", ShaderStages::VERTEX, 1);
-        let fragment_layout = make_layout("rect_vertext_layout", ShaderStages::FRAGMENT, 1);
+        let vertex_layout = make_layout("rect_vertext_layout", ShaderStages::VERTEX);
+        let fragment_layout = make_layout("rect_vertext_layout", ShaderStages::FRAGMENT);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Rect Pipeline Layout"),

@@ -47,22 +47,18 @@ pub(crate) fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> &'static 
     bind_group_to_ref(bind)
 }
 
-pub(crate) fn make_layout(name: &'static str, shader: ShaderStages, binds_count: u32) -> BindGroupLayout {
-    let entries: Vec<_> = (0..binds_count)
-        .map(|binding| BindGroupLayoutEntry {
-            binding,
+pub(crate) fn make_layout(name: &'static str, shader: ShaderStages) -> BindGroupLayout {
+    WGPUApp::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        label:   name.into(),
+        entries: &[BindGroupLayoutEntry {
+            binding:    0,
             visibility: shader,
-            ty: BindingType::Buffer {
+            ty:         BindingType::Buffer {
                 ty:                 BufferBindingType::Uniform,
                 has_dynamic_offset: false,
                 min_binding_size:   None,
             },
-            count: None,
-        })
-        .collect();
-
-    WGPUApp::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-        label:   name.into(),
-        entries: &entries,
+            count:      None,
+        }],
     })
 }

@@ -54,7 +54,7 @@ impl ImageDrawer {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
-        let vertex_layout = make_layout("image_drawer_vertex_layout", ShaderStages::VERTEX, 1);
+        let vertex_layout = make_layout("image_drawer_vertex_layout", ShaderStages::VERTEX);
 
         let image_layout = Image::bind_group_layout();
 
