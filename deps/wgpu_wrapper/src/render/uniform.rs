@@ -16,7 +16,10 @@ pub struct OldUniform {}
 
 impl OldUniform {
     pub fn z(layout: &BindGroupLayout, z: f32) -> &'static BindGroup {
-        Z_BINDS.get_mut().entry(z.to_bits()).or_insert_with(|| z_bind_group(layout, z))
+        Z_BINDS
+            .get_mut()
+            .entry(z.to_bits())
+            .or_insert_with(|| make_z_bind_group(layout, z))
     }
 }
 
@@ -42,7 +45,7 @@ impl OldUniform {
     }
 }
 
-fn z_bind_group(layout: &BindGroupLayout, z: f32) -> BindGroup {
+fn make_z_bind_group(layout: &BindGroupLayout, z: f32) -> BindGroup {
     let device = WGPUApp::device();
 
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
