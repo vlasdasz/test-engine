@@ -42,18 +42,18 @@ struct SpriteVertexData {
 }
 
 #[derive(Debug)]
-pub struct SpriteDrawer {
+pub struct InstancedSpriteDrawer {
     pipeline:        RenderPipeline,
     vertex_buffer:   Buffer,
     vertex_layout:   BindGroupLayout,
     fragment_layout: BindGroupLayout,
 }
 
-impl SpriteDrawer {
+impl InstancedSpriteDrawer {
     pub fn new(texture_format: TextureFormat) -> Self {
         let device = WGPUApp::device();
 
-        let shader = device.create_shader_module(include_wgsl!("shaders/sprite.wgsl"));
+        let shader = device.create_shader_module(include_wgsl!("shaders/instanced_sprite.wgsl"));
 
         let vertex_layout = make_uniform_layout("sprites_vertex_layout", ShaderStages::VERTEX);
         let fragment_layout = make_uniform_layout("sprites_fragment_layout", ShaderStages::FRAGMENT);

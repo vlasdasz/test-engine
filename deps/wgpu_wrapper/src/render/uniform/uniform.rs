@@ -47,7 +47,7 @@ pub(crate) fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> &'static 
     bind_group_to_ref(bind)
 }
 
-pub(crate) fn make_layout(name: &'static str, shader: ShaderStages) -> BindGroupLayout {
+pub(crate) fn make_uniform_layout(name: &'static str, shader: ShaderStages) -> BindGroupLayout {
     WGPUApp::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
         label:   name.into(),
         entries: &[BindGroupLayoutEntry {

@@ -22,6 +22,7 @@ pub fn make_pipeline<Vertex: VertexLayout>(
     shader: &ShaderModule,
     texture_format: TextureFormat,
     polygon_mode: PolygonMode,
+    topology: PrimitiveTopology,
 ) -> wgpu::RenderPipeline {
     WGPUApp::device().create_render_pipeline(&RenderPipelineDescriptor {
         label:         label.into(),
@@ -45,7 +46,7 @@ pub fn make_pipeline<Vertex: VertexLayout>(
         }
         .into(),
         primitive:     PrimitiveState {
-            topology: PrimitiveTopology::TriangleStrip,
+            topology,
             strip_index_format: None,
             front_face: FrontFace::Ccw,
             cull_mode: Face::Back.into(),

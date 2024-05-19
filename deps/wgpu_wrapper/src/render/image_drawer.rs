@@ -7,12 +7,13 @@ use gm::{
 };
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroupLayout, Buffer, BufferUsages, PolygonMode, RenderPipeline, ShaderStages, TextureFormat,
+    BindGroupLayout, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPipeline, ShaderStages,
+    TextureFormat,
 };
 
 use crate::{
     image::Image,
-    render::uniform::{make_bind, make_layout},
+    render::uniform::{make_bind, make_uniform_layout},
     utils::make_pipeline,
     WGPUApp,
 };
@@ -54,7 +55,7 @@ impl ImageDrawer {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
-        let vertex_layout = make_layout("image_drawer_vertex_layout", ShaderStages::VERTEX);
+        let vertex_layout = make_uniform_layout("image_drawer_vertex_layout", ShaderStages::VERTEX);
 
         let image_layout = Image::bind_group_layout();
 
@@ -70,6 +71,7 @@ impl ImageDrawer {
             &shader,
             TextureFormat::Bgra8UnormSrgb,
             PolygonMode::Fill,
+            PrimitiveTopology::TriangleStrip,
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {

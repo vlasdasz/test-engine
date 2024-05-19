@@ -10,28 +10,30 @@ use wgpu::{BindGroup, Buffer, RenderPass, TextureFormat};
 use crate::{
     image::Image,
     render::{
-        image_drawer::ImageDrawer, path_drawer::PathDrawer, rect_drawer::RectDrawer,
-        sprite_drawer::SpriteDrawer,
+        image_drawer::ImageDrawer, instanced_sprite_drawer::InstancedSpriteDrawer, path_drawer::PathDrawer,
+        rect_drawer::RectDrawer, sprite_drawer::SpriteDrawer,
     },
 };
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
-    pub window_size:        Size,
-    rect_drawer:            RectDrawer,
-    image_drawer:           ImageDrawer,
-    pub sprite_drawer:      SpriteDrawer,
-    pub(crate) path_drawer: PathDrawer,
+    pub window_size:             Size,
+    rect_drawer:                 RectDrawer,
+    image_drawer:                ImageDrawer,
+    pub sprite_drawer:           SpriteDrawer,
+    pub instanced_sprite_drawer: InstancedSpriteDrawer,
+    pub(crate) path_drawer:      PathDrawer,
 }
 
 impl WGPUDrawer {
     pub fn new(texture_format: TextureFormat) -> Result<Self> {
         Ok(Self {
-            window_size:   Default::default(),
-            rect_drawer:   RectDrawer::new(texture_format),
-            path_drawer:   PathDrawer::new(texture_format),
-            sprite_drawer: SpriteDrawer::new(texture_format),
-            image_drawer:  ImageDrawer::new(),
+            window_size:             Default::default(),
+            rect_drawer:             RectDrawer::new(texture_format),
+            path_drawer:             PathDrawer::new(texture_format),
+            sprite_drawer:           SpriteDrawer::new(texture_format),
+            instanced_sprite_drawer: InstancedSpriteDrawer::new(texture_format),
+            image_drawer:            ImageDrawer::new(),
         })
     }
 }

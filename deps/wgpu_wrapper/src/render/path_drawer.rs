@@ -3,11 +3,12 @@ use std::ops::Range;
 use gm::flat::{Point, Rect};
 use wgpu::{
     include_wgsl, BindGroup, BindGroupLayout, BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType,
-    PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
+    PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    TextureFormat,
 };
 
 use crate::{
-    render::uniform::{make_bind, make_layout},
+    render::uniform::{make_bind, make_uniform_layout},
     utils::make_pipeline,
     WGPUApp,
 };
@@ -52,7 +53,7 @@ impl PathDrawer {
             ],
         });
 
-        let z_pos_layout = make_layout("path_z_pos_layput", ShaderStages::VERTEX);
+        let z_pos_layout = make_uniform_layout("path_z_pos_layput", ShaderStages::VERTEX);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Path Pipeline Layout"),
@@ -66,6 +67,7 @@ impl PathDrawer {
             &shader,
             texture_format,
             PolygonMode::Fill,
+            PrimitiveTopology::TriangleStrip,
         );
 
         Self {

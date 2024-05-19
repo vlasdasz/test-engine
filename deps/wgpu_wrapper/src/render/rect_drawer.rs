@@ -9,22 +9,33 @@ use gm::{
 use wgpu::{
     include_wgsl,
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, RenderPass, RenderPipeline,
-    ShaderStages, TextureFormat,
+    BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology,
+    RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
 use crate::{
-    render::uniform::{make_bind, make_layout},
+    render::uniform::{make_bind, make_uniform_layout},
     utils::make_pipeline,
     WGPUApp,
 };
 
 const VERTICES: &[Point] = &[
-    Point::new(-1., 1.),
-    Point::new(-1., -1.),
-    Point::new(1., 1.),
-    Point::new(1., -1.),
+    Point::new(-1.0, 1.0),
+    Point::new(-1.0, -1.0),
+    Point::new(1.0, 1.0),
+    Point::new(1.0, -1.0),
 ];
+
+fn gen_vertices(index: u32) -> Point {
+    (index & 1, (index & 2) >> 1).into()
+}
+
+#[test]
+fn test_gen() {
+    for i in 0..6 {
+        dbg!(gen_vertices(i));
+    }
+}
 
 const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
@@ -42,8 +53,8 @@ impl RectDrawer {
 
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
-        let vertex_layout = make_layout("rect_vertext_layout", ShaderStages::VERTEX);
-        let fragment_layout = make_layout("rect_vertext_layout", ShaderStages::FRAGMENT);
+        let vertex_layout = make_uniform_layout("rect_vertext_layout", ShaderStages::VERTEX);
+        let fragment_layout = make_uniform_layout("rect_vertext_layout", ShaderStages::FRAGMENT);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Rect Pipeline Layout"),
@@ -57,6 +68,7 @@ impl RectDrawer {
             &shader,
             texture_format,
             PolygonMode::Fill,
+            PrimitiveTopology::TriangleStrip,
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
