@@ -185,10 +185,7 @@ impl wgpu_wrapper::App for App {
         pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
         TELevel::draw(pass, drawer);
-
-        if false {
-            UI::draw(pass, drawer);
-        }
+        UI::draw(pass, drawer);
     }
 
     fn resize(&mut self, _position: Point, size: Size<u32>) {
