@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use bytemuck::{cast_slice};
+use bytemuck::cast_slice;
 use gm::{
     checked_usize_to_u32,
     flat::{Point, Rect},

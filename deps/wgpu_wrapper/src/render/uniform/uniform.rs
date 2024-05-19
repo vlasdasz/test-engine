@@ -20,27 +20,23 @@ pub(crate) fn clear_uniform_buffers() {
     BINDS.get_mut().clear();
 }
 
-pub(crate) fn make_bind<T: Pod>(
-    data: &T,
-    layout: &BindGroupLayout,
-) -> &'static BindGroup {
+pub(crate) fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> &'static BindGroup {
     let device = WGPUApp::device();
 
-    let buffer =
-            device.create_buffer_init(&BufferInitDescriptor {
-                label: Some("uniform_buffer"),
-                contents: bytes_of(data),
-                usage: BufferUsages::UNIFORM,
-            });
+    let buffer = device.create_buffer_init(&BufferInitDescriptor {
+        label:    Some("uniform_buffer"),
+        contents: bytes_of(data),
+        usage:    BufferUsages::UNIFORM,
+    });
 
     let entry = BindGroupEntry {
-            binding:  0,
-            resource: BindingResource::Buffer(BufferBinding {
-                buffer: &buffer,
-                offset: 0,
-                size: None,
-            }),
-        };
+        binding:  0,
+        resource: BindingResource::Buffer(BufferBinding {
+            buffer: &buffer,
+            offset: 0,
+            size:   None,
+        }),
+    };
 
     let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
         label: Some("uniform bind group"),
