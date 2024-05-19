@@ -44,6 +44,7 @@ refs = { version = "=0.7.6", default-features = true }
 vents = "=0.5.0"
 
 audio = { path = "deps/audio" }
+call_counter = { path = "deps/call_counter" }
 dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }

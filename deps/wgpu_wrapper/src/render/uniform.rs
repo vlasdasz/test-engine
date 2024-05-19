@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use bytemuck::cast_slice;
+use call_counter::count_calls;
 use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
@@ -46,6 +47,8 @@ impl OldUniform {
 }
 
 fn make_z_bind_group(layout: &BindGroupLayout, z: f32) -> BindGroup {
+    count_calls!();
+
     let device = WGPUApp::device();
 
     let buffer = device.create_buffer_init(&BufferInitDescriptor {

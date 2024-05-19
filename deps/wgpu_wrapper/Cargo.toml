@@ -23,5 +23,6 @@ manage = { workspace = true }
 refs = { workspace = true }
 
 gm = { workspace = true }
+call_counter = { workspace = true }
 
 wgpu_text = { workspace = true }
