@@ -1,4 +1,7 @@
+use std::collections::HashMap;
+
 use bytemuck::{bytes_of, Pod};
+use gm::Color;
 use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
@@ -8,19 +11,24 @@ use wgpu::{
 
 use crate::{BufferUsages, WGPUApp};
 
-static BINDS: MainLock<Vec<BindGroup>> = MainLock::new();
+static Z_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
+static COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 
-pub(super) fn bind_group_to_ref(bind: BindGroup) -> &'static BindGroup {
-    let buf = BINDS.get_mut();
-    buf.push(bind);
-    buf.last().unwrap()
+pub(crate) fn cached_z_bind(z: f32, layout: &BindGroupLayout) -> &'static BindGroup {
+    Z_BINDS
+        .get_mut()
+        .entry(z.to_bits())
+        .or_insert_with(|| make_bind_internal(&z, layout))
 }
 
-pub(crate) fn clear_uniform_buffers() {
-    BINDS.get_mut().clear();
+pub(crate) fn cached_color_bind(color: Color, layout: &BindGroupLayout) -> &'static BindGroup {
+    COLOR_BINDS
+        .get_mut()
+        .entry(color)
+        .or_insert_with(|| make_bind_internal(&color, layout))
 }
 
-pub(crate) fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> &'static BindGroup {
+fn make_bind_internal<T: Pod>(data: &T, layout: &BindGroupLayout) -> BindGroup {
     let device = WGPUApp::device();
 
     let buffer = device.create_buffer_init(&BufferInitDescriptor {
@@ -38,13 +46,11 @@ pub(crate) fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> &'static 
         }),
     };
 
-    let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
+    device.create_bind_group(&wgpu::BindGroupDescriptor {
         label: Some("uniform bind group"),
         layout,
         entries: &[entry],
-    });
-
-    bind_group_to_ref(bind)
+    })
 }
 
 pub(crate) fn make_uniform_layout(name: &'static str, shader: ShaderStages) -> BindGroupLayout {

@@ -15,7 +15,7 @@ use wgpu::{
 
 use crate::{
     render::{
-        uniform::{make_bind, make_uniform_layout},
+        uniform::{cached_color_bind, cached_z_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::make_pipeline,
@@ -82,8 +82,8 @@ impl RectDrawer {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.pipeline);
 
-        render_pass.set_bind_group(0, make_bind(&z_position, &self.vertex_layout), &[]);
-        render_pass.set_bind_group(1, make_bind(color, &self.fragment_layout), &[]);
+        render_pass.set_bind_group(0, cached_z_bind(z_position, &self.vertex_layout), &[]);
+        render_pass.set_bind_group(1, cached_color_bind(*color, &self.fragment_layout), &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.draw(VERTEX_RANGE, 0..1);
     }

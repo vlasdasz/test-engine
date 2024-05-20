@@ -14,7 +14,7 @@ use wgpu::{
 use crate::{
     image::Image,
     render::{
-        uniform::{make_bind, make_uniform_layout},
+        uniform::{cached_z_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::make_pipeline,
@@ -102,7 +102,7 @@ impl ImageDrawer {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.render_pipeline);
 
-        render_pass.set_bind_group(0, make_bind(&z_position, &self.vertex_layout), &[]);
+        render_pass.set_bind_group(0, cached_z_bind(z_position, &self.vertex_layout), &[]);
         render_pass.set_bind_group(1, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, vertices.unwrap_or(&self.vertex_buffer).slice(..));
         render_pass.draw(RANGE, 0..1);

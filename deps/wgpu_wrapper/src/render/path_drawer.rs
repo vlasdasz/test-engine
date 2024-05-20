@@ -9,7 +9,7 @@ use wgpu::{
 
 use crate::{
     render::{
-        uniform::{make_bind, make_uniform_layout},
+        uniform::{cached_z_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::make_pipeline,
@@ -93,7 +93,7 @@ impl PathDrawer {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.pipeline);
 
-        render_pass.set_bind_group(0, make_bind(&z_position, &self.z_pos_layout), &[]);
+        render_pass.set_bind_group(0, cached_z_bind(z_position, &self.z_pos_layout), &[]);
         render_pass.set_bind_group(1, bind_group, &[]);
         render_pass.set_vertex_buffer(0, buffer.slice(..));
         render_pass.draw(vertex_range, 0..1);

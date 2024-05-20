@@ -15,6 +15,8 @@ use tokio::spawn;
 
 static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
+const TARGET_FPS: f32 = 30.0;
+
 #[view]
 pub struct BenchmarkView {
     label: Sub<Label>,
@@ -27,7 +29,7 @@ impl BenchmarkView {
     }
 
     fn add_bench_view(mut self: Weak<Self>) {
-        if App::fps() < 60.0 {
+        if App::fps() < TARGET_FPS {
             return;
         }
 
@@ -64,7 +66,7 @@ impl BenchmarkView {
 
                 if finish {
                     on_main(move || {
-                        if App::fps() < 60.0 {
+                        if App::fps() < TARGET_FPS {
                             dbg!(VIEWS_COUNT.load(Ordering::Relaxed));
                             return;
                         }
