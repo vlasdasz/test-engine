@@ -27,7 +27,7 @@ use crate::{
     Screenshot,
 };
 
-static APP: MainLock<Option<WGPUApp>> = MainLock::const_new();
+static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
 pub struct WGPUApp {
     pub state:  State,

@@ -4,7 +4,7 @@ use refs::{MainLock, Own};
 
 use crate::Level;
 
-static SELF: MainLock<LevelManager> = MainLock::const_new();
+static SELF: MainLock<LevelManager> = MainLock::new();
 
 #[derive(Default)]
 pub struct LevelManager {

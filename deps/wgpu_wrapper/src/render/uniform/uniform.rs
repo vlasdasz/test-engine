@@ -8,7 +8,7 @@ use wgpu::{
 
 use crate::{BufferUsages, WGPUApp};
 
-static BINDS: MainLock<Vec<BindGroup>> = MainLock::const_new();
+static BINDS: MainLock<Vec<BindGroup>> = MainLock::new();
 
 pub(super) fn bind_group_to_ref(bind: BindGroup) -> &'static BindGroup {
     let buf = BINDS.get_mut();

@@ -25,8 +25,8 @@ use crate::{
 
 type ReadDisplayRequest = Sender<Screenshot>;
 
-pub(crate) static DEVICE: MainLock<Option<Device>> = MainLock::const_new();
-pub(crate) static QUEUE: MainLock<Option<Queue>> = MainLock::const_new();
+pub(crate) static DEVICE: MainLock<Option<Device>> = MainLock::new();
+pub(crate) static QUEUE: MainLock<Option<Queue>> = MainLock::new();
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
