@@ -22,7 +22,6 @@ winit = { workspace = true }
 manage = { workspace = true }
 refs = { workspace = true }
 
-call_counter = { workspace = true }
 gm = { workspace = true }
 
 wgpu_text = { workspace = true }

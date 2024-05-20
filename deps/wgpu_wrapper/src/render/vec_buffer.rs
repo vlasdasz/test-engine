@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
     Buffer,

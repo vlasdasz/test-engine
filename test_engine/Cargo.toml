@@ -32,7 +32,6 @@ refs = { workspace = true }
 vents = { workspace = true }
 
 audio = { workspace = true, optional = true }
-call_counter = { workspace = true }
 gm = { workspace = true }
 level = { workspace = true }
 store = { workspace = true }

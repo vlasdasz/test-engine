@@ -4,6 +4,7 @@ use bytemuck::{Pod, Zeroable};
 use gm::{
     checked_usize_to_u32,
     flat::{Point, Size},
+    Color,
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};
 
@@ -32,13 +33,14 @@ pub(super) struct SpriteView {
 pub(super) struct SpriteInstance {
     pub size:     Size,
     pub position: Point,
+    pub color:    Color,
     pub rotation: f32,
     pub paddind:  u32,
 }
 
 impl VertexLayout for SpriteInstance {
     const ATTRIBS: &'static [wgpu::VertexAttribute] =
-        &wgpu::vertex_attr_array![1 => Float32x2, 2 => Float32x2, 3 => Float32, 4 => Uint32];
+        &wgpu::vertex_attr_array![1 => Float32x2, 2 => Float32x2, 3 => Float32x4, 4 => Float32, 5 => Uint32];
     const VERTEX_LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {
         array_stride: size_of::<Self>() as BufferAddress,
         step_mode:    VertexStepMode::Instance,

@@ -29,17 +29,6 @@ const VERTICES: &[Point] = &[
     Point::new(1.0, -1.0),
 ];
 
-fn gen_vertices(index: u32) -> Point {
-    (index & 1, (index & 2) >> 1).into()
-}
-
-#[test]
-fn test_gen() {
-    for i in 0..6 {
-        dbg!(gen_vertices(i));
-    }
-}
-
 const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 #[derive(Debug)]

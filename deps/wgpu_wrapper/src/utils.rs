@@ -26,15 +26,15 @@ pub fn make_pipeline(
     vertex_layout: &'static [VertexBufferLayout],
 ) -> wgpu::RenderPipeline {
     WGPUApp::device().create_render_pipeline(&RenderPipelineDescriptor {
-        label:         label.into(),
-        layout:        layout.into(),
-        vertex:        VertexState {
+        label: label.into(),
+        layout,
+        vertex: VertexState {
             module:              shader,
             entry_point:         "v_main",
             compilation_options: Default::default(),
             buffers:             vertex_layout,
         },
-        fragment:      FragmentState {
+        fragment: FragmentState {
             module:              shader,
             entry_point:         "f_main",
             compilation_options: Default::default(),
@@ -46,7 +46,7 @@ pub fn make_pipeline(
             .into()],
         }
         .into(),
-        primitive:     PrimitiveState {
+        primitive: PrimitiveState {
             topology,
             strip_index_format: None,
             front_face: FrontFace::Ccw,
@@ -56,11 +56,11 @@ pub fn make_pipeline(
             conservative: false,
         },
         depth_stencil: depth_stencil_state().into(),
-        multisample:   MultisampleState {
+        multisample: MultisampleState {
             count:                     1,
             mask:                      !0,
             alpha_to_coverage_enabled: false,
         },
-        multiview:     None,
+        multiview: None,
     })
 }
