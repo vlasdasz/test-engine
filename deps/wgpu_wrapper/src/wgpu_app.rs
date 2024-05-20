@@ -23,8 +23,8 @@ use winit::{
 
 use crate::{
     app::App,
-    render::state::{State, DEVICE, QUEUE},
-    Screenshot,
+    render::state::{State, DEVICE, DRAWER, QUEUE},
+    Screenshot, WGPUDrawer,
 };
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
@@ -46,6 +46,10 @@ impl WGPUApp {
 
     pub fn queue() -> &'static Queue {
         QUEUE.get_mut().as_mut().expect("Queue has not been initialized yet.")
+    }
+
+    pub fn drawer() -> &'static mut WGPUDrawer {
+        DRAWER.get_mut().as_mut().expect("WGPUDrawer has not been initialized yet.")
     }
 
     pub fn screen_scale() -> f64 {
@@ -165,7 +169,7 @@ impl WGPUApp {
     }
 
     pub fn path_layout() -> &'static BindGroupLayout {
-        &Self::current().state.drawer.path_drawer.color_size_layout
+        &Self::drawer().path_drawer.color_size_layout
     }
 
     pub fn fps(&self) -> f32 {

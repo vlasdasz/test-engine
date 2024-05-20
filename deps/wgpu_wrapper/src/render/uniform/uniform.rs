@@ -2,8 +2,8 @@ use bytemuck::{bytes_of, Pod};
 use refs::MainLock;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutEntry, BindingResource, BindingType,
-    BufferBinding, BufferBindingType, ShaderStages,
+    BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
+    BindingResource, BindingType, BufferBinding, BufferBindingType, ShaderStages,
 };
 
 use crate::{BufferUsages, WGPUApp};
@@ -48,7 +48,7 @@ pub(crate) fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> &'static 
 }
 
 pub(crate) fn make_uniform_layout(name: &'static str, shader: ShaderStages) -> BindGroupLayout {
-    WGPUApp::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+    WGPUApp::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
         label:   name.into(),
         entries: &[BindGroupLayoutEntry {
             binding:    0,

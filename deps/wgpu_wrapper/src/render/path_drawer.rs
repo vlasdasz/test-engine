@@ -8,7 +8,10 @@ use wgpu::{
 };
 
 use crate::{
-    render::uniform::{make_bind, make_uniform_layout},
+    render::{
+        uniform::{make_bind, make_uniform_layout},
+        vertex_layout::VertexLayout,
+    },
     utils::make_pipeline,
     WGPUApp,
 };
@@ -61,13 +64,14 @@ impl PathDrawer {
             push_constant_ranges: &[],
         });
 
-        let pipeline = make_pipeline::<Point>(
+        let pipeline = make_pipeline(
             "Path Fill Render Pipeline",
-            &pipeline_layout,
+            Some(&pipeline_layout),
             &shader,
             texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
+            &[Point::VERTEX_LAYOUT],
         );
 
         Self {

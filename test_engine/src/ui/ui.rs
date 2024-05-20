@@ -25,8 +25,9 @@ impl UI {
         Self::update_view(UIManager::root_view_weak().deref_mut())
     }
 
-    pub(crate) fn draw<'a>(pass: &mut RenderPass<'a>, drawer: &'a WGPUDrawer) {
+    pub(crate) fn draw<'a>(pass: &mut RenderPass<'a>) {
         let mut sections: Vec<Section> = vec![];
+        let drawer = WGPUApp::drawer();
         Self::draw_view(pass, drawer, UIManager::root_view(), &mut sections, &mut 0.0);
 
         Font::helvetice()

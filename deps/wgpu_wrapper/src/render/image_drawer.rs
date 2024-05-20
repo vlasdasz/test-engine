@@ -13,7 +13,10 @@ use wgpu::{
 
 use crate::{
     image::Image,
-    render::uniform::{make_bind, make_uniform_layout},
+    render::{
+        uniform::{make_bind, make_uniform_layout},
+        vertex_layout::VertexLayout,
+    },
     utils::make_pipeline,
     WGPUApp,
 };
@@ -65,13 +68,14 @@ impl ImageDrawer {
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = make_pipeline::<UIVertex>(
+        let render_pipeline = make_pipeline(
             "Colored Image Render Pipeline",
-            &pipeline_layout,
+            Some(&pipeline_layout),
             &shader,
             TextureFormat::Bgra8UnormSrgb,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
+            &[UIVertex::VERTEX_LAYOUT],
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {

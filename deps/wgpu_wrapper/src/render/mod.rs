@@ -1,5 +1,4 @@
 pub mod image_drawer;
-pub mod instanced_sprite_drawer;
 pub mod path_data;
 pub mod path_drawer;
 pub mod rect_drawer;

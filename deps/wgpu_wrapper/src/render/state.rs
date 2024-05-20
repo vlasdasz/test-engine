@@ -27,6 +27,7 @@ type ReadDisplayRequest = Sender<Screenshot>;
 
 pub(crate) static DEVICE: MainLock<Option<Device>> = MainLock::new();
 pub(crate) static QUEUE: MainLock<Option<Queue>> = MainLock::new();
+pub(crate) static DRAWER: MainLock<Option<WGPUDrawer>> = MainLock::new();
 
 pub struct State {
     surface:           wgpu::Surface<'static>,
@@ -34,8 +35,6 @@ pub struct State {
     pub(crate) window: Arc<Window>,
 
     pub(crate) depth_texture: Texture,
-
-    pub drawer: WGPUDrawer,
 
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
@@ -103,14 +102,13 @@ impl State {
         let depth_texture =
             Texture::create_depth_texture((config.width, config.height).into(), "depth_texture");
 
-        let drawer = WGPUDrawer::new(config.format)?;
+        *DRAWER.get_mut() = WGPUDrawer::new(config.format)?.into();
 
         Ok(Self {
             surface,
             config,
             window,
             depth_texture,
-            drawer,
             fonts: Default::default(),
             app,
             fps: 0.0,
@@ -123,7 +121,7 @@ impl State {
         if new_size.width > 0 && new_size.height > 0 {
             self.depth_texture =
                 Texture::create_depth_texture((new_size.width, new_size.height).into(), "depth_texture");
-            self.drawer.window_size = (new_size.width, new_size.height).into();
+            WGPUApp::drawer().window_size = (new_size.width, new_size.height).into();
             self.config.width = new_size.width;
             self.config.height = new_size.height;
             self.surface.configure(WGPUApp::device(), &self.config);
@@ -204,7 +202,7 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            self.app.render(&mut render_pass, &self.drawer);
+            self.app.render(&mut render_pass);
 
             render_pass.set_viewport(
                 0.0,

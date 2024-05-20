@@ -14,7 +14,10 @@ use wgpu::{
 };
 
 use crate::{
-    render::uniform::{make_bind, make_uniform_layout},
+    render::{
+        uniform::{make_bind, make_uniform_layout},
+        vertex_layout::VertexLayout,
+    },
     utils::make_pipeline,
     WGPUApp,
 };
@@ -62,13 +65,14 @@ impl RectDrawer {
             push_constant_ranges: &[],
         });
 
-        let pipeline = make_pipeline::<Point>(
+        let pipeline = make_pipeline(
             "Rect Fill Render Pipeline",
-            &pipeline_layout,
+            Some(&pipeline_layout),
             &shader,
             texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
+            &[Point::VERTEX_LAYOUT],
         );
 
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {

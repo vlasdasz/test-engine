@@ -1,10 +1,10 @@
 use wgpu::{
     BlendState, ColorTargetState, ColorWrites, DepthStencilState, Face, FragmentState, FrontFace,
     MultisampleState, PipelineLayout, PolygonMode, PrimitiveState, PrimitiveTopology,
-    RenderPipelineDescriptor, ShaderModule, TextureFormat, VertexState,
+    RenderPipelineDescriptor, ShaderModule, TextureFormat, VertexBufferLayout, VertexState,
 };
 
-use crate::{image::Texture, render::vertex_layout::VertexLayout, WGPUApp};
+use crate::{image::Texture, WGPUApp};
 
 pub fn depth_stencil_state() -> DepthStencilState {
     DepthStencilState {
@@ -16,13 +16,14 @@ pub fn depth_stencil_state() -> DepthStencilState {
     }
 }
 
-pub fn make_pipeline<Vertex: VertexLayout>(
+pub fn make_pipeline(
     label: &str,
-    layout: &PipelineLayout,
+    layout: Option<&PipelineLayout>,
     shader: &ShaderModule,
     texture_format: TextureFormat,
     polygon_mode: PolygonMode,
     topology: PrimitiveTopology,
+    vertex_layout: &'static [VertexBufferLayout],
 ) -> wgpu::RenderPipeline {
     WGPUApp::device().create_render_pipeline(&RenderPipelineDescriptor {
         label:         label.into(),
@@ -31,7 +32,7 @@ pub fn make_pipeline<Vertex: VertexLayout>(
             module:              shader,
             entry_point:         "v_main",
             compilation_options: Default::default(),
-            buffers:             &[Vertex::vertex_layout()],
+            buffers:             vertex_layout,
         },
         fragment:      FragmentState {
             module:              shader,
