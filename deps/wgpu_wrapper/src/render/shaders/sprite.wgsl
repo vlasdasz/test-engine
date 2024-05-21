@@ -38,27 +38,27 @@ fn v_main(
     @location(0) model: vec2<f32>,
     instance: SpriteInstance,
 ) -> VertexOutput {
-    var out_pos: vec4<f32> = vec4<f32>(model, 0.9, 1.0); //    gl_Position = vec4(vertex_position.xy, 1.0, 1.0);
+    var out_pos: vec4<f32> = vec4<f32>(model, 0.9, 1.0);
 
-    out_pos.x *= instance.size.x; //gl_Position.x *= size.x;
-    out_pos.y *= instance.size.y; //gl_Position.y *= size.y;
+    out_pos.x *= instance.size.x;
+    out_pos.y *= instance.size.y;
 
-    out_pos *= rotation_z_matrix(-instance.rotation);//gl_Position *= rotation_z_matrix(-rotation);
+    out_pos *= rotation_z_matrix(-instance.rotation);
 
-    out_pos.x += instance.position.x - view.camera_pos.x; //    gl_Position.xy += position - camera_position;
-    out_pos.y += instance.position.y - view.camera_pos.y; //    gl_Position.xy += position - camera_position;
+    out_pos.x += instance.position.x - view.camera_pos.x;
+    out_pos.y += instance.position.y - view.camera_pos.y;
 
-    out_pos *=  rotation_z_matrix(view.camera_rotation);//    gl_Position *= rotation_z_matrix(camera_rotation);
+    out_pos *=  rotation_z_matrix(view.camera_rotation);
 
-    out_pos *= view.resolution.y / view.resolution.x;  //    gl_Position.x *= resolution.y / resolution.x;
+    out_pos.x *= view.resolution.y / view.resolution.x;
 
-    out_pos.x *= view.scale;  //    gl_Position.xy *= scale;
-    out_pos.y *= view.scale;  //    gl_Position.xy *= scale;
+    out_pos.x *= view.scale;
+    out_pos.y *= view.scale;
 
-    let scale: f32 = view.resolution.y / 10.0; //    float scale = resolution.y / 10.0;
+    let scale: f32 = view.resolution.y / 10.0;
 
-    out_pos.x /= scale; //    gl_Position.xy /= scale;
-    out_pos.y /= scale; //    gl_Position.xy /= scale;
+    out_pos.x /= scale;
+    out_pos.y /= scale;
 
     var out: VertexOutput;
     out.pos   = out_pos;
