@@ -51,7 +51,7 @@ impl Level for TestLevel {
 
         let _square = Image::get("square.png");
 
-        self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, 0))
+        self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, -5))
             .set_color(Color::random());
         // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
         self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0))
@@ -73,19 +73,20 @@ impl Level for TestLevel {
         // self.add_sprite::<Body>(Shape::Polygon(concave_points), (0, 100))
         //     .set_image("triangle.png");
 
-        for i in 0..100 {
+        for i in 0..150 {
             self.add_sprite::<Body>(
-                Shape::Rect((0.5, 0.5).into()),
+                Shape::Rect((0.6, 0.6).into()),
                 (0.1f32 * i.lossy_convert(), i * 2),
             )
             .set_color(Color::random());
             //.set_image(square);
         }
 
-        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
+        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1, 2).into()), (0, 5));
         self.base_mut().player = player;
         player
-            .set_color(Color::random()) //.set_image("frisk.png")
+            .set_color(Color::random())
+            //.set_image("frisk.png")
             .enable_collision_detection();
         // player.weapon.set_image("ak.png");
         let mut this = weak_from_ref(self);

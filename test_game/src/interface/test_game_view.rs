@@ -41,33 +41,15 @@ pub struct TestGameView {
 
     objc: Sub<Button>,
 
-    benchmark: Sub<Button>,
+    benchmark:  Sub<Button>,
+    test_level: Sub<Button>,
 }
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
         LevelManager::set_level(TestLevel::default());
 
-        [
-            (' ', Direction::Up),
-            ('w', Direction::Up),
-            ('s', Direction::Down),
-            ('d', Direction::Right),
-            ('a', Direction::Left),
-        ]
-        .apply(|(key, direction)| {
-            UIManager::keymap().add(self, key, move || {
-                LevelManager::level_mut().player().move_by_direction(direction);
-            });
-        });
-
-        UIManager::keymap().add(self, '=', || {
-            *LevelManager::scale() *= 2.0;
-        });
-
-        UIManager::keymap().add(self, '-', || {
-            *LevelManager::scale() /= 2.0;
-        });
+        self.setup_keymap();
 
         self.tl.set_color(Color::PURPLE).place().size(100, 100).tl(10);
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
@@ -155,22 +137,52 @@ impl ViewSetup for TestGameView {
 
         self.objc.set_text("objc");
         link_button!(self, objc, call_obj);
-        self.objc
-            .place()
-            .size(100, 100)
-            .t(200)
-            .anchor(Anchor::Left, self.text_field, 10);
+        self.objc.place().size(100, 50).t(200).anchor(Anchor::Left, self.text_field, 10);
 
         self.benchmark.set_text("bench");
-        self.benchmark.place().size(100, 100).t(200).anchor(Anchor::Left, self.objc, 10);
+        self.benchmark.place().size(100, 50).t(200).anchor(Anchor::Left, self.objc, 10);
         self.benchmark.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());
+        });
+
+        self.test_level.set_text("test");
+        self.test_level
+            .place()
+            .size(100, 50)
+            .t(200)
+            .anchor(Anchor::Left, self.benchmark, 10);
+        self.test_level.on_tap(|| {
+            *LevelManager::camera_pos() = Point::default();
+            LevelManager::set_level(TestLevel::default());
         });
     }
 }
 
 impl TestGameView {
+    fn setup_keymap(self: Weak<Self>) {
+        [
+            (' ', Direction::Up),
+            ('w', Direction::Up),
+            ('s', Direction::Down),
+            ('d', Direction::Right),
+            ('a', Direction::Left),
+        ]
+        .apply(|(key, direction)| {
+            UIManager::keymap().add(self, key, move || {
+                LevelManager::level_mut().player().move_by_direction(direction);
+            });
+        });
+
+        UIManager::keymap().add(self, '=', || {
+            *LevelManager::scale() *= 2.0;
+        });
+
+        UIManager::keymap().add(self, '-', || {
+            *LevelManager::scale() /= 2.0;
+        });
+    }
+
     fn call_obj(self: Weak<Self>) {
         dbg!(&self.label);
     }

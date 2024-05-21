@@ -55,7 +55,7 @@ fn v_main(
     out_pos.x *= view.scale;
     out_pos.y *= view.scale;
 
-    let scale: f32 = view.resolution.y / 10.0;
+    let scale: f32 = view.resolution.y / 20.0;
 
     out_pos.x /= scale;
     out_pos.y /= scale;

@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rapier2d::prelude::ActiveEvents;
+use rapier2d::{dynamics::CoefficientCombineRule, prelude::ActiveEvents};
 use refs::{weak_from_ref, Own, Weak};
 
 use crate::{Body, Level, LevelManager, Sprite, SpriteData};
@@ -38,6 +38,7 @@ impl Sprite for Unit {
 
         body.lock_rotations();
         body.collider_mut().set_restitution(0.0);
+        body.collider_mut().set_restitution_combine_rule(CoefficientCombineRule::Min);
 
         Own::new(Unit { body })
     }
