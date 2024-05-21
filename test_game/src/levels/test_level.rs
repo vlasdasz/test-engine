@@ -1,7 +1,7 @@
 use test_engine::{
     audio::Sound,
     gm::{LossyConvert, Shape},
-    level::{Body, Level, LevelBase, LevelCreation, Player, Sprite, SpriteTemplates, Wall},
+    level::{Body, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall},
     refs::{weak_from_ref, Weak},
     ui::{Color, Image, Point},
     DataManager,
@@ -100,7 +100,7 @@ impl Level for TestLevel {
 
     fn update(&mut self) {
         let pos = self.player().position();
-        self.set_camera_position(pos);
+        LevelManager::set_camera_pos(pos);
     }
 
     fn base(&self) -> &LevelBase {

@@ -38,15 +38,15 @@ fn v_main(
     @location(0) model: vec2<f32>,
     instance: SpriteInstance,
 ) -> VertexOutput {
-    var out_pos: vec4<f32> = vec4<f32>(model, 0.0, 0.5); //    gl_Position = vec4(vertex_position.xy, 1.0, 1.0);
+    var out_pos: vec4<f32> = vec4<f32>(model, 0.9, 1.0); //    gl_Position = vec4(vertex_position.xy, 1.0, 1.0);
 
     out_pos.x *= instance.size.x; //gl_Position.x *= size.x;
     out_pos.y *= instance.size.y; //gl_Position.y *= size.y;
 
     out_pos *= rotation_z_matrix(-instance.rotation);//gl_Position *= rotation_z_matrix(-rotation);
 
-    out_pos.x += instance.position.x;// - data.camera_position.x; //    gl_Position.xy += position - camera_position;
-    out_pos.y += instance.position.y;// - data.camera_position.y; //    gl_Position.xy += position - camera_position;
+    out_pos.x += instance.position.x - view.camera_pos.x; //    gl_Position.xy += position - camera_position;
+    out_pos.y += instance.position.y - view.camera_pos.y; //    gl_Position.xy += position - camera_position;
 
     out_pos *=  rotation_z_matrix(view.camera_rotation);//    gl_Position *= rotation_z_matrix(camera_rotation);
 

@@ -1,5 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
+use gm::flat::Point;
 use refs::{MainLock, Own};
 
 use crate::Level;
@@ -8,6 +9,8 @@ static SELF: MainLock<LevelManager> = MainLock::new();
 
 #[derive(Default)]
 pub struct LevelManager {
+    camera_pos: Point,
+
     level: Option<Own<dyn Level>>,
 }
 
@@ -39,5 +42,13 @@ impl LevelManager {
 
     pub fn no_level() -> bool {
         SELF.level.is_none()
+    }
+
+    pub fn camera_pos() -> Point {
+        SELF.camera_pos
+    }
+
+    pub fn set_camera_pos(pos: impl Into<Point>) {
+        SELF.get_mut().camera_pos = pos.into();
     }
 }

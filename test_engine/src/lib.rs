@@ -15,7 +15,7 @@ pub use ui::ui_test;
 
 pub mod level {
     pub use ::level::{
-        Body, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall,
+        Body, Control, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall,
     };
 }
 
@@ -32,7 +32,11 @@ pub mod reflect {
 }
 
 pub mod gm {
-    pub use gm::{flat::Shape, sign::Sign, Apply, LossyConvert, Platform, ToF32};
+    pub use gm::{
+        flat::{Direction, Shape},
+        sign::Sign,
+        Apply, LossyConvert, Platform, ToF32,
+    };
 }
 
 pub mod store {

@@ -1,11 +1,13 @@
 use test_engine::{
     async_after,
-    level::LevelManager,
+    gm::{Apply, Direction},
+    level::{Control, LevelManager},
     on_main,
     refs::Weak,
     ui::{
         link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        ImageView, IntView, Label, PointsPath, Spinner, StickView, Sub, TextField, ViewData, ViewSetup,
+        ImageView, IntView, Label, PointsPath, Spinner, StickView, Sub, TextField, UIManager, ViewData,
+        ViewSetup,
     },
     App,
 };
@@ -44,15 +46,28 @@ impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
         LevelManager::set_level(TestLevel::default());
 
+        [
+            (' ', Direction::Up),
+            ('w', Direction::Up),
+            ('s', Direction::Down),
+            ('d', Direction::Right),
+            ('a', Direction::Left),
+        ]
+        .apply(|(key, direction)| {
+            UIManager::keymap().add(self, key, move || {
+                LevelManager::level_mut().player().move_by_direction(&direction);
+            });
+        });
+
         self.tl.set_color(Color::PURPLE).place().size(100, 100).tl(10);
         self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
         self.bl.set_color(Color::BLUE).place().size(100, 100).bl(10);
         self.br.set_color(Color::ORANGE).place().size(100, 100).br(10);
 
-        self.image.place().center().relative(Anchor::Size, self, 0.2);
+        self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
         self.image.set_image("cat.png");
 
-        self.label_l.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
+        self.label_l.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
             Anchor::Right,
             self.image,
             20,
@@ -60,7 +75,7 @@ impl ViewSetup for TestGameView {
         self.label_l.text = "Łėŵœ Ы".into();
         self.label_l.set_text_size(64.);
 
-        self.image_r.place().center_y().relative(Anchor::Size, self, 0.2).anchor(
+        self.image_r.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
             Anchor::Left,
             self.image,
             20,

@@ -96,14 +96,6 @@ pub trait Level {
         &mut self.base_mut().sets.collider
     }
 
-    fn set_camera_position(&mut self, _pos: Point) {
-        //get_sprites_drawer().set_camera_position(pos)
-    }
-
-    fn set_camera_rotation(&mut self, _angle: f32) {
-        //get_sprites_drawer().set_camera_rotation(angle)
-    }
-
     fn remove(&mut self, sprite: usize) {
         self.base_mut().remove(sprite)
     }

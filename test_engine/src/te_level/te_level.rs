@@ -1,4 +1,3 @@
-use gm::flat::Point;
 use level::LevelManager;
 use ui::UIManager;
 use wgpu::RenderPass;
@@ -28,6 +27,8 @@ impl TELevel {
             );
         }
 
-        drawer.instanced_sprite_drawer.draw(pass, 0.0, Point::default(), resolution);
+        drawer
+            .instanced_sprite_drawer
+            .draw(pass, 0.0, LevelManager::camera_pos(), resolution);
     }
 }
