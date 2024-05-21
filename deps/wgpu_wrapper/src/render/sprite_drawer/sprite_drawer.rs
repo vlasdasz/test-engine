@@ -102,6 +102,7 @@ impl SpriteDrawer {
     pub fn draw<'a>(
         &'a mut self,
         render_pass: &mut RenderPass<'a>,
+        scale: f32,
         camera_rotation: f32,
         camera_pos: Point,
         resolution: Size,
@@ -117,7 +118,7 @@ impl SpriteDrawer {
                 camera_pos,
                 resolution,
                 camera_rotation,
-                scale: 1.0,
+                scale,
             }),
         );
 

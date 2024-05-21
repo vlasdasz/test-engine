@@ -9,6 +9,7 @@ use test_engine::{
 #[derive(Default)]
 pub struct BenchmarkLevel {
     base:       LevelBase,
+    top_wall:   Weak<Wall>,
     left_wall:  Weak<Wall>,
     right_wall: Weak<Wall>,
     floor:      Weak<Wall>,
@@ -25,21 +26,24 @@ impl BenchmarkLevel {
     fn make_walls(&mut self) {
         let _square = Image::get("square.png");
 
-        self.floor = self.add_sprite(Shape::Rect((100, 10).into()), (0, 0));
+        self.top_wall = self.add_sprite(Shape::Rect((100, 5).into()), (0, 110));
+        self.top_wall.set_color(Color::random());
+
+        self.floor = self.add_sprite(Shape::Rect((100, 5).into()), (0, 0));
         self.floor.set_color(Color::random());
         //  self.floor.set_image(square);
 
-        self.left_wall = self.add_sprite(Shape::Rect((10, 200).into()), (-40, 0));
+        self.left_wall = self.add_sprite(Shape::Rect((5, 50).into()), (-40, 0));
         self.left_wall.set_color(Color::random());
         //  self.left_wall.set_image(square);
 
-        self.right_wall = self.add_sprite(Shape::Rect((10, 200).into()), (40, 0));
+        self.right_wall = self.add_sprite(Shape::Rect((5, 50).into()), (40, 0));
         self.right_wall.set_color(Color::random());
         //  self.right_wall.set_image(square);
 
-        self.left_animation = Animation::new(-60.0, -55.0, 10.0);
-        self.right_animation = Animation::new(60.0, 55.0, 10.0);
-        self.floor_animation = Animation::new(-10.0, 0.0, 4.0);
+        self.left_animation = Animation::new(-80.0, -20.0, 2.0);
+        self.right_animation = Animation::new(80.0, 20.0, 2.0);
+        self.floor_animation = Animation::new(-25.0, 0.0, 0.5);
     }
 }
 
@@ -60,10 +64,15 @@ impl Level for BenchmarkLevel {
     }
 
     fn update(&mut self) {
+        self.player.weapon.weak().shoot_at((0, 15));
         self.player.weapon.weak().shoot_at((10, 15));
-        self.bullets_count += 1;
+        self.player.weapon.weak().shoot_at((15, 10));
+        self.player.weapon.weak().shoot_at((-10, 15));
+        self.player.weapon.weak().shoot_at((-15, 10));
+        self.bullets_count += 5;
         self.left_wall.set_x(self.left_animation.value());
         self.right_wall.set_x(self.right_animation.value());
+        self.floor.set_y(self.floor_animation.value());
     }
 
     fn base(&self) -> &LevelBase {

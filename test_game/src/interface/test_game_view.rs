@@ -6,8 +6,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        ImageView, IntView, Label, PointsPath, Spinner, StickView, Sub, TextField, UIManager, ViewData,
-        ViewSetup,
+        ImageView, IntView, Label, Point, PointsPath, Spinner, StickView, Sub, TextField, UIManager,
+        ViewData, ViewSetup,
     },
     App,
 };
@@ -57,8 +57,16 @@ impl ViewSetup for TestGameView {
         ]
         .apply(|(key, direction)| {
             UIManager::keymap().add(self, key, move || {
-                LevelManager::level_mut().player().move_by_direction(&direction);
+                LevelManager::level_mut().player().move_by_direction(direction);
             });
+        });
+
+        UIManager::keymap().add(self, '=', || {
+            *LevelManager::scale() *= 2.0;
+        });
+
+        UIManager::keymap().add(self, '-', || {
+            *LevelManager::scale() /= 2.0;
         });
 
         self.tl.set_color(Color::PURPLE).place().size(100, 100).tl(10);
@@ -87,6 +95,8 @@ impl ViewSetup for TestGameView {
         self.dpad.place().size(200, 140).b(20).anchor(Anchor::Left, self.bl, 10);
 
         self.dpad.on_press.val(move |direction| {
+            LevelManager::level_mut().player().move_by_direction(direction);
+
             self.label_l.set_text(format!("{direction:?}"));
             App::set_window_title(format!("{direction:?}"));
 
@@ -96,6 +106,9 @@ impl ViewSetup for TestGameView {
         });
 
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
+        self.int.on_change(|val| {
+            *LevelManager::scale() = val;
+        });
 
         self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.int, 10);
         self.spinner.set_text("Spinner");
@@ -151,6 +164,7 @@ impl ViewSetup for TestGameView {
         self.benchmark.set_text("bench");
         self.benchmark.place().size(100, 100).t(200).anchor(Anchor::Left, self.objc, 10);
         self.benchmark.on_tap(|| {
+            *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());
         });
     }

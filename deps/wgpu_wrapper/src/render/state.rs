@@ -35,7 +35,8 @@ pub struct State {
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
 
-    pub(crate) fps: f32,
+    pub(crate) fps:        f32,
+    pub(crate) frame_time: f32,
 
     read_display_request: RefCell<Option<ReadDisplayRequest>>,
 
@@ -108,6 +109,7 @@ impl State {
             fonts: Default::default(),
             app,
             fps: 0.0,
+            frame_time: 0.0,
             read_display_request: Default::default(),
             frame_counter: Default::default(),
         })
@@ -156,8 +158,9 @@ impl State {
     pub fn update(&mut self) {
         self.app.update();
         if let Some((frame_time, fps)) = self.frame_counter.update() {
-            let a = format!("{frame_time:.2}ms frame {fps:.1} FPS");
+            let a = format!("{:.2}ms frame {fps:.1} FPS", frame_time * 1000.0);
             self.fps = fps;
+            self.frame_time = frame_time;
             WGPUApp::current().set_title(format!("{a} {} x {}", self.config.width, self.config.height))
         }
     }

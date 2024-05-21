@@ -36,7 +36,7 @@ pub struct WGPUApp {
 }
 
 impl WGPUApp {
-    pub(crate) fn current() -> &'static mut Self {
+    pub fn current() -> &'static mut Self {
         APP.get_mut().as_mut().expect("App has not been initialized yet.")
     }
 
@@ -174,5 +174,9 @@ impl WGPUApp {
 
     pub fn fps(&self) -> f32 {
         self.state.fps
+    }
+
+    pub fn frame_time(&self) -> f32 {
+        self.state.frame_time
     }
 }

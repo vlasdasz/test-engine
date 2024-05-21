@@ -7,7 +7,7 @@ pub(crate) struct TELevel;
 
 impl TELevel {
     pub(crate) fn update() {
-        LevelManager::update();
+        LevelManager::update(WGPUApp::current().frame_time());
     }
 
     pub(crate) fn draw(pass: &mut RenderPass) {
@@ -27,8 +27,12 @@ impl TELevel {
             );
         }
 
-        drawer
-            .instanced_sprite_drawer
-            .draw(pass, 0.0, LevelManager::camera_pos(), resolution);
+        drawer.instanced_sprite_drawer.draw(
+            pass,
+            *LevelManager::scale(),
+            0.0,
+            *LevelManager::camera_pos(),
+            resolution,
+        );
     }
 }

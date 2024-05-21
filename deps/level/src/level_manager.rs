@@ -2,24 +2,27 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::Point;
 use refs::{MainLock, Own};
+use smart_default::SmartDefault;
 
 use crate::Level;
 
 static SELF: MainLock<LevelManager> = MainLock::new();
 
-#[derive(Default)]
+#[derive(SmartDefault)]
 pub struct LevelManager {
+    #[default(1.0)]
+    scale:      f32,
     camera_pos: Point,
 
     level: Option<Own<dyn Level>>,
 }
 
 impl LevelManager {
-    pub fn update() {
+    pub fn update(frame_time: f32) {
         if Self::no_level() {
             return;
         }
-        Self::level_mut().base_mut().update_physics(1. / 60.);
+        Self::level_mut().base_mut().update_physics(frame_time);
         Self::level_mut().update();
     }
 }
@@ -44,11 +47,11 @@ impl LevelManager {
         SELF.level.is_none()
     }
 
-    pub fn camera_pos() -> Point {
-        SELF.camera_pos
+    pub fn scale() -> &'static mut f32 {
+        &mut SELF.get_mut().scale
     }
 
-    pub fn set_camera_pos(pos: impl Into<Point>) {
-        SELF.get_mut().camera_pos = pos.into();
+    pub fn camera_pos() -> &'static mut Point {
+        &mut SELF.get_mut().camera_pos
     }
 }

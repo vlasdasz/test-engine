@@ -7,7 +7,7 @@ pub trait Control {
     fn go_down(&mut self);
     fn add_impulse(&mut self, impulse: Point);
 
-    fn move_by_direction(&mut self, direction: &Direction) {
+    fn move_by_direction(&mut self, direction: Direction) {
         match direction {
             Direction::Up => self.jump(),
             Direction::Down => self.go_down(),

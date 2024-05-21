@@ -48,14 +48,13 @@ impl Color {
     pub const LIGHTER_GRAY: Color = Color::rgb(0.9, 0.9, 0.9);
     pub const CLEAR: Color = Color::rgba(0.0, 0.0, 0.0, 0.0);
 
-    const ALL: [Color; 14] = [
+    const ALL: [Color; 13] = [
         Color::BLACK,
         Color::WHITE,
         Color::RED,
         Color::GREEN,
         Color::BLUE,
         Color::LIGHT_BLUE,
-        Color::GRAY_BLUE,
         Color::YELLOW,
         Color::ORANGE,
         Color::PURPLE,

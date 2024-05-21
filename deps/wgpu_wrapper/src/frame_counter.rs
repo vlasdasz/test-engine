@@ -22,7 +22,7 @@ impl FrameCounter {
         let new_instant = web_time::Instant::now();
         let elapsed_secs = (new_instant - self.last_printed_instant).as_secs_f32();
         if elapsed_secs > 1.0 {
-            let elapsed_ms = elapsed_secs * 1000.0;
+            let elapsed_ms = elapsed_secs;
             let frame_time = elapsed_ms / self.frame_count.lossy_convert();
             let fps = self.frame_count.lossy_convert() / elapsed_secs;
 

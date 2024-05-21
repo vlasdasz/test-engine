@@ -100,7 +100,7 @@ impl Level for TestLevel {
 
     fn update(&mut self) {
         let pos = self.player().position();
-        LevelManager::set_camera_pos(pos);
+        *LevelManager::camera_pos() = pos;
     }
 
     fn base(&self) -> &LevelBase {
