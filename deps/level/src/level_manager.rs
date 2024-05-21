@@ -23,9 +23,10 @@ impl LevelManager {
 
 impl LevelManager {
     pub fn set_level(level: impl Level + 'static) {
-        let mut level = Own::new(level);
-        level.setup();
+        let level = Own::new(level);
+        let mut weak = level.weak();
         SELF.get_mut().level = Some(level);
+        weak.setup();
     }
 
     pub fn level() -> &'static dyn Level {

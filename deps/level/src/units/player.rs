@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use gm::flat::{Point, Shape};
 use refs::{Own, Weak};
 
-use crate::{Level, Sprite, SpriteData, Unit, Weapon};
+use crate::{Level, LevelManager, Sprite, SpriteData, Unit, Weapon};
 
 pub struct Player {
     unit:       Own<Unit>,
@@ -12,7 +12,7 @@ pub struct Player {
 
 impl Sprite for Player {
     fn update(&mut self) {
-        let cursor = self.level().cursor_position();
+        let cursor = LevelManager::level().cursor_position();
         self.weapon.rotation = self.position().angle_to(cursor);
         self.weapon.position = self.unit.position();
         self.weapon.velocity = self.velocity();

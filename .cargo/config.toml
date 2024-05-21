@@ -41,3 +41,11 @@ debug = false
 lto = "fat"
 #panic = "abort"
 overflow-checks = false
+
+[profile.profile]
+codegen-units = 1
+debug = "full"
+inherits = "dev"
+lto = "off"
+opt-level = 0
+strip = false

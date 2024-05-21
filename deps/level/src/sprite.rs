@@ -8,7 +8,7 @@ use rapier2d::{
 };
 use refs::{Address, Own, Weak};
 
-use crate::{Level, SpriteData};
+use crate::{Level, LevelManager, SpriteData};
 
 pub trait Sprite {
     fn update(&mut self) {}
@@ -19,11 +19,8 @@ pub trait Sprite {
 
     fn position(&self) -> Point {
         if self.data().rigid_handle.is_some() {
-            return (
-                self.rigid_body().translation().x,
-                self.rigid_body().translation().y,
-            )
-                .into();
+            let rigid_body = self.rigid_body();
+            return (rigid_body.translation().x, rigid_body.translation().y).into();
         }
         self.data().position
     }
@@ -43,21 +40,21 @@ pub trait Sprite {
     }
 
     fn rigid_body(&self) -> &RigidBody {
-        &self.level().rigid_bodies()[self.data().rigid_handle.unwrap()]
+        &LevelManager::level().rigid_bodies()[self.data().rigid_handle.unwrap()]
     }
 
     fn rigid_body_mut(&mut self) -> &mut RigidBody {
         let handle = self.data().rigid_handle.unwrap();
-        &mut self.level_mut().rigid_bodies_mut()[handle]
+        &mut LevelManager::level_mut().rigid_bodies_mut()[handle]
     }
 
     fn collider(&self) -> &Collider {
-        &self.level().colliders()[self.data().collider_handle.unwrap()]
+        &LevelManager::level().colliders()[self.data().collider_handle.unwrap()]
     }
 
     fn collider_mut(&mut self) -> &mut Collider {
         let handle = self.data().collider_handle.unwrap();
-        &mut self.level_mut().colliders_mut()[handle]
+        &mut LevelManager::level_mut().colliders_mut()[handle]
     }
 
     fn contains(&self, point: Point) -> bool {
@@ -83,18 +80,9 @@ pub trait Sprite {
 
     fn remove(&mut self) {
         let address = self.address();
-        self.level_mut().remove(address);
+        LevelManager::level_mut().remove(address);
     }
 
-    fn level(&self) -> &Weak<dyn Level> {
-        assert!(self.data().level.is_ok(), "Null Level");
-        &self.data().level
-    }
-
-    fn level_mut(&mut self) -> &mut Weak<dyn Level> {
-        assert!(self.data().level.is_ok(), "Null Level");
-        &mut self.data_mut().level
-    }
     //
     // fn draw(&self) {
     //     //get_sprites_drawer().draw(self.data())

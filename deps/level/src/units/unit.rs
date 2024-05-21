@@ -4,7 +4,7 @@ use gm::flat::{Point, Shape};
 use rapier2d::prelude::ActiveEvents;
 use refs::{weak_from_ref, Own, Weak};
 
-use crate::{Body, Level, Sprite, SpriteData};
+use crate::{Body, Level, LevelManager, Sprite, SpriteData};
 
 pub struct Unit {
     body: Own<Body>,
@@ -14,7 +14,7 @@ impl Unit {
     pub fn enable_collision_detection(&mut self) -> &mut Self {
         self.collider_mut().set_active_events(ActiveEvents::COLLISION_EVENTS);
         let weak = weak_from_ref(self);
-        self.level_mut().base_mut().colliding_sprites.push(weak);
+        LevelManager::level_mut().base_mut().colliding_sprites.push(weak);
         self
     }
 }

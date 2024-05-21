@@ -15,7 +15,7 @@ use tokio::spawn;
 
 static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
-const TARGET_FPS: f32 = 30.0;
+const TARGET_FPS: f32 = 60.0;
 
 #[view]
 pub struct BenchmarkView {
