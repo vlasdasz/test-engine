@@ -12,7 +12,7 @@ use test_engine::{
     App,
 };
 
-use crate::levels::TestLevel;
+use crate::levels::{BenchmarkLevel, TestLevel};
 
 #[view]
 pub struct TestGameView {
@@ -40,6 +40,8 @@ pub struct TestGameView {
     text_field: Sub<TextField>,
 
     objc: Sub<Button>,
+
+    benchmark: Sub<Button>,
 }
 
 impl ViewSetup for TestGameView {
@@ -145,6 +147,12 @@ impl ViewSetup for TestGameView {
             .size(100, 100)
             .t(200)
             .anchor(Anchor::Left, self.text_field, 10);
+
+        self.benchmark.set_text("bench");
+        self.benchmark.place().size(100, 100).t(200).anchor(Anchor::Left, self.objc, 10);
+        self.benchmark.on_tap(|| {
+            LevelManager::set_level(BenchmarkLevel::default());
+        });
     }
 }
 

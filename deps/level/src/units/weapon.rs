@@ -1,6 +1,9 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::flat::{Point, Shape};
+use gm::{
+    flat::{Point, Shape},
+    Color,
+};
 use refs::{Own, Weak};
 
 use crate::{sprite::SpriteTemplates, Body, Level, LevelCreation, Sprite, SpriteData};
@@ -27,6 +30,7 @@ impl Weapon {
         bullet.set_velocity(vel);
         bullet.set_restitution(0.5);
         bullet.data_mut().tag = "bullet".into();
+        bullet.set_color(Color::random());
         //bullet.set_image(self.bullet_image);
     }
 }

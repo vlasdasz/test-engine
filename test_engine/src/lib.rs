@@ -35,7 +35,7 @@ pub mod gm {
     pub use gm::{
         flat::{Direction, Shape},
         sign::Sign,
-        Apply, LossyConvert, Platform, ToF32,
+        Animation, Apply, LossyConvert, Platform, ToF32,
     };
 }
 
