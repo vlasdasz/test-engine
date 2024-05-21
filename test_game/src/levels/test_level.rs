@@ -73,7 +73,7 @@ impl Level for TestLevel {
         // self.add_sprite::<Body>(Shape::Polygon(concave_points), (0, 100))
         //     .set_image("triangle.png");
 
-        for i in 0..500 {
+        for i in 0..100 {
             self.add_sprite::<Body>(
                 Shape::Rect((0.5, 0.5).into()),
                 (0.1f32 * i.lossy_convert(), i * 2),
