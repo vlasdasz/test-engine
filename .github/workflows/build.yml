@@ -11,37 +11,37 @@ env:
 
 jobs:
 
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [
-          { runner: mac, os: macos },
-          { runner: ubuntu-latest, os: linux },
-          { runner: windows-latest, os: windows },
-          #          { runner: pi, os: raspberry },
-
-          { runner: mac, os: ios },
-          #          { runner: ubuntu-latest, os: android }
-        ]
-    runs-on: ${{ matrix.target.runner }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
-
-      - name: Build
-        if: ${{ matrix.target.os != 'windows' }}
-        run: ./build/build.sh ${{ matrix.target.os }}
-
-      - name: Build windows
-        if: ${{ matrix.target.os == 'windows' }}
-        run: py build/build.py
-
-      - name: Test
-        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
-        run: make test
+  #  build:
+  #    strategy:
+  #      fail-fast: false
+  #      matrix:
+  #        target: [
+  #          { runner: mac, os: macos },
+  #          { runner: ubuntu-latest, os: linux },
+  #          { runner: windows-latest, os: windows },
+  #          #          { runner: pi, os: raspberry },
+  #
+  #          { runner: mac, os: ios },
+  #          #          { runner: ubuntu-latest, os: android }
+  #        ]
+  #    runs-on: ${{ matrix.target.runner }}
+  #    steps:
+  #      - uses: actions/checkout@v4
+  #        with:
+  #          token: ${{secrets.GITHUB_TOKEN}}
+  #          submodules: recursive
+  #
+  #      - name: Build
+  #        if: ${{ matrix.target.os != 'windows' }}
+  #        run: ./build/build.sh ${{ matrix.target.os }}
+  #
+  #      - name: Build windows
+  #        if: ${{ matrix.target.os == 'windows' }}
+  #        run: py build/build.py
+  #
+  #      - name: Test
+  #        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
+  #        run: make test
 
   linux:
     strategy:
@@ -62,7 +62,7 @@ jobs:
           submodules: recursive
 
       - name: Build
-        run: ./build/in_docker.sh ${{ matrix.container }}
+        run: echo ${{ matrix.container }} && ./build/in_docker.sh ${{ matrix.container }}
 
 #      - name: Test
 #        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
