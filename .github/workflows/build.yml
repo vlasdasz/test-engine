@@ -71,7 +71,3 @@ jobs:
 
       - name: Build
         run: echo ${{ matrix.target.container }} && ./build/in_docker.sh ${{ matrix.target.container }}
-
-#      - name: Test
-#        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
-#        run: make test
