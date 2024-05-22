@@ -62,9 +62,9 @@ jobs:
           { container: "fedora:40" },
           { container: "fedora:41" },
 
-          { container: "archlinux:latest" }
+          { container: "archlinux:latest" },
 
-          { container: "amazonlinux:latest" }
+          { container: "amazonlinux:latest" },
         ]
     runs-on: ubuntu-latest
     steps:
