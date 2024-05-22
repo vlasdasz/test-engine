@@ -11,37 +11,35 @@ env:
 
 jobs:
 
-  #  build:
-  #    strategy:
-  #      fail-fast: false
-  #      matrix:
-  #        target: [
-  #          { runner: mac, os: macos },
-  #          { runner: ubuntu-latest, os: linux },
-  #          { runner: windows-latest, os: windows },
-  #          #          { runner: pi, os: raspberry },
-  #
-  #          { runner: mac, os: ios },
-  #          #          { runner: ubuntu-latest, os: android }
-  #        ]
-  #    runs-on: ${{ matrix.target.runner }}
-  #    steps:
-  #      - uses: actions/checkout@v4
-  #        with:
-  #          token: ${{secrets.GITHUB_TOKEN}}
-  #          submodules: recursive
-  #
-  #      - name: Build
-  #        if: ${{ matrix.target.os != 'windows' }}
-  #        run: ./build/build.sh ${{ matrix.target.os }}
-  #
-  #      - name: Build windows
-  #        if: ${{ matrix.target.os == 'windows' }}
-  #        run: py build/build.py
-  #
-  #      - name: Test
-  #        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
-  #        run: make test
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [
+          { runner: mac, os: macos },
+          { runner: windows-latest, os: windows },
+
+          { runner: mac, os: ios },
+          #          { runner: ubuntu-latest, os: android }
+        ]
+    runs-on: ${{ matrix.target.runner }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          submodules: recursive
+
+      - name: Build
+        if: ${{ matrix.target.os != 'windows' }}
+        run: ./build/build.sh ${{ matrix.target.os }}
+
+      - name: Build windows
+        if: ${{ matrix.target.os == 'windows' }}
+        run: py build/build.py
+
+      - name: Test
+        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
+        run: make test
 
   linux:
     strategy:
@@ -49,7 +47,6 @@ jobs:
       matrix:
         target: [
           { container: "ubuntu:18.04" },
-          { container: "ubuntu:20.04" },
           { container: "ubuntu:22.04" },
           { container: "ubuntu:24.04" },
 
@@ -57,13 +54,7 @@ jobs:
           { container: "debian:11" },
           { container: "debian:12" },
 
-          { container: "fedora:26" },
-          { container: "fedora:27" },
-          { container: "fedora:28" },
-          { container: "fedora:29" },
           { container: "fedora:30" },
-          { container: "fedora:38" },
-          { container: "fedora:39" },
           { container: "fedora:40" },
           { container: "fedora:41" },
 
