@@ -1,11 +1,6 @@
 # TestEngine
 
-[BUILD]: https://github.com/vlasdasz/test_engine/actions/workflows/build.yml/badge.svg
-
-[LBUILD]: https://github.com/vlasdasz/test_engine/actions/workflows/build.yml
-
-
-[![BUILD][BUILD]][LBUILD]
+[![](http://github-actions.40ants.com/vlasdasz/test-engine/matrix.svg)](https://github.com/vlasdasz/test-engine)
 
 ---
 
