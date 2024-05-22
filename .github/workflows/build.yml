@@ -60,11 +60,13 @@ jobs:
           { container: "fedora:40" },
           { container: "fedora:41" },
 
-          { container: "archlinux:latest" },
+          { container: "archlinux" },
 
           { container: "manjarolinux/base" },
 
-          { container: "amazonlinux:latest" },
+          { container: "amazonlinux" },
+
+          { container: "opensuse/leap" },
         ]
     runs-on: ubuntu-latest
     steps:
