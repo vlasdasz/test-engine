@@ -9,7 +9,7 @@ name = "test_game"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name = "test_game_lib"
+name = "test_game"
 
 [dependencies]
 derivative = { workspace = true }
