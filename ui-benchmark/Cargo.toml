@@ -1,17 +1,17 @@
 [package]
 edition = "2021"
-name = "ui_test"
+name = "ui-benchmark"
 version = "0.1.0"
 
 [[bin]]
-name = "ui_test"
+name = "ui-benchmark"
 path = "src/main.rs"
 
 
 [dependencies]
 anyhow = { workspace = true }
 derivative = { workspace = true }
-log = { workspace = true }
+fake = { workspace = true }
 tokio = { workspace = true }
 
-test_engine = { workspace = true }
+test-engine = { workspace = true }

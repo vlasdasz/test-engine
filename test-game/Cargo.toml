@@ -1,11 +1,11 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2021"
-name = "test_game"
+name = "test-game"
 version = "0.1.0"
 
 [[bin]]
-name = "test_game"
+name = "test-game"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
@@ -15,7 +15,7 @@ name = "test_game"
 derivative = { workspace = true }
 tokio = { workspace = true }
 
-test_engine = { workspace = true }
+test-engine = { workspace = true }
 
 [build-dependencies]
 cfg_aliases = { workspace = true }
