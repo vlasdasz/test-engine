@@ -88,7 +88,7 @@ impl UI {
         }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
-            if image_view.image().was_initialized() {
+            if image_view.image().is_ok() {
                 weak_from_ref(image_view).check_cropped(&clamped_frame);
 
                 let image = image_view.image();

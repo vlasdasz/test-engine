@@ -24,22 +24,21 @@ pub struct BenchmarkLevel {
 
 impl BenchmarkLevel {
     fn make_walls(&mut self) {
-        let _square = Image::get("square.png");
+        let square = Image::get("square.png");
 
         self.top_wall = self.add_sprite(Shape::Rect((100, 5).into()), (0, 110));
         self.top_wall.set_color(Color::random());
 
         self.floor = self.add_sprite(Shape::Rect((100, 5).into()), (0, 0));
-        self.floor.set_color(Color::random());
-        //  self.floor.set_image(square);
+        self.floor.set_image(square);
 
         self.left_wall = self.add_sprite(Shape::Rect((5, 50).into()), (-40, 0));
         self.left_wall.set_color(Color::random());
-        //  self.left_wall.set_image(square);
+        self.left_wall.set_image(square);
 
         self.right_wall = self.add_sprite(Shape::Rect((5, 50).into()), (40, 0));
         self.right_wall.set_color(Color::random());
-        //  self.right_wall.set_image(square);
+        self.right_wall.set_image(square);
 
         self.left_animation = Animation::new(-80.0, -20.0, 2.0);
         self.right_animation = Animation::new(80.0, 20.0, 2.0);
@@ -52,10 +51,10 @@ impl Level for BenchmarkLevel {
         self.player = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
         self.player.set_color(Color::random());
 
-        //  self.player.set_image("frisk.png");
+        self.player.set_image("frisk.png");
 
-        //  self.player.weapon.set_image("ak.png");
-        // self.player.weapon.bullet_image = Image::get("bullet.png");
+        self.player.weapon.set_image("ak.png");
+        self.player.weapon.bullet_image = Image::get("bullet.png");
         self.player.weapon.bullet_speed = 100.0;
         self.player.weapon.bullet_shape = Shape::Rect((1, 0.28).into());
 

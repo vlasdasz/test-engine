@@ -14,6 +14,7 @@ use crate::{
     render::{
         sprite_drawer::shader_data::{SpriteInstance, SpriteView, VERTEX_RANGE, VERTICES},
         uniform::make_uniform_layout,
+        vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
     utils::make_pipeline,
@@ -27,10 +28,9 @@ pub struct SpriteDrawer {
     view_buffer:     Buffer,
     view_bind_group: BindGroup,
 
-    vertex_buffer:   Buffer,
-    instance_buffer: Buffer,
+    vertex_buffer: Buffer,
 
-    instances: Vec<SpriteInstance>,
+    instances: VecBuffer<SpriteInstance>,
 }
 
 impl SpriteDrawer {
@@ -83,20 +83,23 @@ impl SpriteDrawer {
             usage:    BufferUsages::VERTEX,
         });
 
-        let instance_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    Some("Rect Instance Buffer"),
-            contents: cast_slice(VERTICES),
-            usage:    BufferUsages::VERTEX,
-        });
-
         Self {
             pipeline,
             view_buffer,
             view_bind_group,
             vertex_buffer,
-            instance_buffer,
-            instances: vec![],
+            instances: VecBuffer::default(),
         }
+    }
+
+    pub fn add_instance(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
+        self.instances.push(SpriteInstance {
+            size,
+            position,
+            color,
+            rotation,
+            paddind: 0,
+        });
     }
 
     pub fn draw<'a>(
@@ -122,31 +125,13 @@ impl SpriteDrawer {
             }),
         );
 
-        let device = WGPUApp::device();
-
-        self.instance_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    Some("Rect Instance Buffer"),
-            contents: cast_slice(&self.instances),
-            usage:    BufferUsages::VERTEX,
-        });
+        self.instances.load();
 
         render_pass.set_bind_group(0, &self.view_bind_group, &[]);
 
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-        render_pass.set_vertex_buffer(1, self.instance_buffer.slice(..));
+        render_pass.set_vertex_buffer(1, self.instances.buffer().slice(..));
 
-        render_pass.draw(VERTEX_RANGE, 0..self.instances.len().try_into().unwrap());
-
-        self.instances.clear();
-    }
-
-    pub fn add_instance(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
-        self.instances.push(SpriteInstance {
-            size,
-            position,
-            color,
-            rotation,
-            paddind: 0,
-        });
+        render_pass.draw(VERTEX_RANGE, 0..self.instances.len());
     }
 }

@@ -40,7 +40,7 @@ pub(super) struct SpriteInstance {
 
 impl VertexLayout for SpriteInstance {
     const ATTRIBS: &'static [wgpu::VertexAttribute] =
-        &wgpu::vertex_attr_array![1 => Float32x2, 2 => Float32x2, 3 => Float32x4, 4 => Float32, 5 => Uint32];
+        &wgpu::vertex_attr_array![2 => Float32x2, 3 => Float32x2, 4 => Float32x4, 5 => Float32];
     const VERTEX_LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {
         array_stride: size_of::<Self>() as BufferAddress,
         step_mode:    VertexStepMode::Instance,

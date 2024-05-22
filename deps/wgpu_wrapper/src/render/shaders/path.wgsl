@@ -1,6 +1,5 @@
 
 @group(0) @binding(0) var<uniform> z_position: f32;
-
 @group(1) @binding(0) var<uniform> size: vec2<f32>;
 
 @vertex

@@ -89,7 +89,7 @@ impl ViewSetup for TestGameView {
 
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
         self.int.on_change(|val| {
-            *LevelManager::scale() = val;
+            *LevelManager::scale() = val / 8.0;
         });
 
         self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.int, 10);

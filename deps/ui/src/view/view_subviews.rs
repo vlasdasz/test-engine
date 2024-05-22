@@ -84,7 +84,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn __add_subview_internal(&mut self, mut view: Own<dyn View>, is_root: bool) -> WeakView {
         assert!(
-            is_root || self.superview().was_initialized(),
+            is_root || self.superview().is_ok(),
             "Adding subview to view without superview is not allowed"
         );
 

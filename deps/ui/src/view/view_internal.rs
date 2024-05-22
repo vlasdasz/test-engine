@@ -14,7 +14,7 @@ impl<T: ?Sized + View> ViewInternal for T {
         let sup = self.superview();
 
         // Since superview owns subview this should be fine I hope.
-        if sup.was_initialized() {
+        if sup.is_ok() {
             return unsafe { sup.deref_unchecked().absolute_frame() };
         }
 

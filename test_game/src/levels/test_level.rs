@@ -3,7 +3,7 @@ use test_engine::{
     gm::{LossyConvert, Shape},
     level::{Body, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall},
     refs::{weak_from_ref, Weak},
-    ui::{Color, Image, Point},
+    ui::{Color, Point},
     DataManager,
 };
 
@@ -49,16 +49,13 @@ impl Level for TestLevel {
 
         // self.add_rect((30, 30, 40, 25)).set_image(drawn);
 
-        let _square = Image::get("square.png");
-
         self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, -5))
             .set_color(Color::random());
         // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
         self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0))
-            .set_color(Color::random()); //.set_image(square);
+            .set_image("square.png");
         self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0))
-            .set_color(Color::random());
-        //.set_image(square);
+            .set_image("square.png");
 
         // self.add_sprite::<Body>(Shape::triangle((-10, -10), (10, -10), (-10, 10)),
         // (0, 50))     .set_image("triangle.png");
@@ -78,17 +75,13 @@ impl Level for TestLevel {
                 Shape::Rect((0.6, 0.6).into()),
                 (0.1f32 * i.lossy_convert(), i * 2),
             )
-            .set_color(Color::random());
-            //.set_image(square);
+            .set_image("square.png");
         }
 
-        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1, 2).into()), (0, 5));
+        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 5));
         self.base_mut().player = player;
-        player
-            .set_color(Color::random())
-            //.set_image("frisk.png")
-            .enable_collision_detection();
-        // player.weapon.set_image("ak.png");
+        player.set_image("frisk.png").enable_collision_detection();
+        player.weapon.set_image("ak.png");
         let mut this = weak_from_ref(self);
         player.on_collision.sub(move || {
             this.collision_sound.play();

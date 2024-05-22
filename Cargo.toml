@@ -22,8 +22,8 @@ image = "0.25"
 log = "0.4"
 nonempty = "0.10.0"
 rand = "0.8"
-#rapier2d = { version = "0.19.0", features = ["parallel", "simd-stable"] }
-rapier2d = { version = "0.19.0", features = ["enhanced-determinism"] }
+rapier2d = { version = "0.19.0", features = ["parallel", "simd-stable"] }
+#rapier2d = { version = "0.19.0", features = ["enhanced-determinism"] }
 rodio = "0.18.0"
 rust_decimal = "1.35"
 serde = { version = "1.0", features = ["derive"] }
@@ -41,7 +41,7 @@ winit = "0.29.15"
 manage = "=0.4.10"
 reflected = "=0.8.1"
 reflected_proc = "=0.8.1"
-refs = { version = "=0.8.0", default-features = true }
+refs = { version = "=0.8.2", default-features = true }
 vents = "=0.5.0"
 
 audio = { path = "deps/audio" }

@@ -7,6 +7,7 @@ use rapier2d::{
     prelude::{RigidBody, Rotation},
 };
 use refs::{Address, Own, Weak};
+use wgpu_wrapper::image::{Image, ToImage};
 
 use crate::{Level, LevelManager, SpriteData};
 
@@ -70,9 +71,9 @@ pub trait Sprite {
         &self.data().color
     }
 
-    // fn image(&self) -> Weak<GlImage> {
-    //     self.data().image.to_image()
-    // }
+    fn image(&self) -> Weak<Image> {
+        self.data().image
+    }
 
     fn is_selected(&self) -> bool {
         self.data().is_selected
@@ -83,11 +84,6 @@ pub trait Sprite {
         LevelManager::level_mut().remove(address);
     }
 
-    //
-    // fn draw(&self) {
-    //     //get_sprites_drawer().draw(self.data())
-    // }
-
     fn data(&self) -> &SpriteData;
     fn data_mut(&mut self) -> &mut SpriteData;
     fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Own<Self>
@@ -97,7 +93,7 @@ pub trait Sprite {
 pub trait SpriteTemplates {
     fn set_color(&mut self, _: Color) -> &mut Self;
     fn set_selected(&mut self, _: bool) -> &mut Self;
-    // fn set_image(&mut self, _: impl ToImage) -> &mut Self;
+    fn set_image(&mut self, _: impl ToImage) -> &mut Self;
     fn set_restitution(&mut self, _: f32) -> &mut Self;
     fn set_position(&mut self, _: Point) -> &mut Self;
     fn set_rotation(&mut self, _: impl ToF32) -> &mut Self;
@@ -114,10 +110,10 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         self
     }
 
-    // fn set_image(&mut self, image: impl ToImage) -> &mut Self {
-    //     self.data_mut().image = image.to_image();
-    //     self
-    // }
+    fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.data_mut().image = image.to_image();
+        self
+    }
 
     fn set_restitution(&mut self, res: f32) -> &mut Self {
         self.collider_mut().set_restitution(res);

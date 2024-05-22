@@ -17,7 +17,7 @@ impl ViewSetup for ModalTestView {
         let mut view = WeakView::default();
 
         for _ in 0..280 {
-            if view.was_initialized() {
+            if view.is_ok() {
                 view = view.add_view::<Container>();
                 view.set_color(Color::random()).place().all_sides(1);
             } else {

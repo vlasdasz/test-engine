@@ -19,15 +19,32 @@ impl TELevel {
         let drawer = WGPUApp::drawer();
 
         for sprite in LevelManager::level_mut().sprites() {
-            drawer.instanced_sprite_drawer.add_instance(
-                sprite.size(),
-                sprite.position(),
-                sprite.rotation(),
-                *sprite.color(),
-            );
+            if sprite.image().is_ok() {
+                drawer.textured_sprite_drawer.add_instance(
+                    sprite.image(),
+                    sprite.size(),
+                    sprite.position(),
+                    sprite.rotation(),
+                    *sprite.color(),
+                );
+            } else {
+                drawer.sprite_drawer.add_instance(
+                    sprite.size(),
+                    sprite.position(),
+                    sprite.rotation(),
+                    *sprite.color(),
+                );
+            }
         }
 
-        drawer.instanced_sprite_drawer.draw(
+        drawer.sprite_drawer.draw(
+            pass,
+            *LevelManager::scale(),
+            0.0,
+            *LevelManager::camera_pos(),
+            resolution,
+        );
+        drawer.textured_sprite_drawer.draw(
             pass,
             *LevelManager::scale(),
             0.0,

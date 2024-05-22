@@ -343,7 +343,7 @@ impl Placer {
                 custom(self.view.weak_view(), &self.s_content)
             } else if rule.between {
                 self.between_layout(rule);
-            } else if rule.anchor_view.was_initialized() {
+            } else if rule.anchor_view.is_ok() {
                 if rule.relative {
                     self.relative_layout(rule)
                 } else {

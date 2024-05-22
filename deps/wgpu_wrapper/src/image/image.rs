@@ -28,8 +28,8 @@ impl Image {
         let device = WGPUApp::device();
 
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            label:   Some("diffuse_bind_group"),
-            layout:  &Self::bind_group_layout(),
+            label:   Some("image_bind_group"),
+            layout:  &Self::uniform_layout(),
             entries: &[
                 BindGroupEntry {
                     binding:  0,
@@ -88,7 +88,7 @@ impl ResourceLoader for Image {
 }
 
 impl Image {
-    pub(crate) fn bind_group_layout() -> BindGroupLayout {
+    pub(crate) fn uniform_layout() -> BindGroupLayout {
         WGPUApp::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
             label:   "image_bind_group_layout".into(),
             entries: &[

@@ -5,6 +5,7 @@ use gm::{
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use refs::{Own, Weak};
 use vents::Event;
+use wgpu_wrapper::image::Image;
 
 use crate::{Level, Sprite};
 
@@ -22,7 +23,7 @@ pub struct SpriteData {
     pub tag:   String,
     pub color: Color,
 
-    // pub image: Weak<GlImage>,
+    pub image:        Weak<Image>,
     pub on_collision: Event<Weak<dyn Sprite>>,
 }
 
