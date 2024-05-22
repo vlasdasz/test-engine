@@ -1,7 +1,9 @@
+use std::any::Any;
+
 use test_engine::{
     gm::{Animation, Shape},
     level::{Level, LevelBase, LevelCreation, Player, SpriteTemplates, Wall},
-    refs::{weak_from_ref, Weak},
+    refs::{weak_from_ref, AsAny, Weak},
     ui::{Color, Image},
     DataManager,
 };
@@ -84,5 +86,15 @@ impl Level for BenchmarkLevel {
 
     fn weak_level(&self) -> Weak<dyn Level> {
         weak_from_ref(self as &dyn Level)
+    }
+}
+
+impl AsAny for BenchmarkLevel {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }

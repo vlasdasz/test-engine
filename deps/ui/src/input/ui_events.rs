@@ -1,4 +1,4 @@
-use gm::flat::Size;
+use gm::{flat::Size, volume::GyroData};
 use refs::MainLock;
 use vents::Event;
 
@@ -11,6 +11,7 @@ pub struct UIEvents {
     on_touch:       Event<Touch>,
     on_debug_touch: Event<Touch>,
     size_changed:   Event<Size<u32>>,
+    gyro:           Event<GyroData>,
     keyboard_input: UIEvent<char>,
 }
 
@@ -30,5 +31,9 @@ impl UIEvents {
 
     pub fn keyboard_input() -> &'static UIEvent<char> {
         &UI_EVENTS.keyboard_input
+    }
+
+    pub fn gyro() -> &'static Event<GyroData> {
+        &UI_EVENTS.gyro
     }
 }

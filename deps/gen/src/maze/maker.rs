@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use gm::flat::{Point as PointBase, Size as SizeBase};
-use rtools::Random;
+use fake::Fake;
+use gm::flat::Size;
 use tokio::{
     sync::mpsc::{self, UnboundedReceiver},
     time::sleep,
@@ -9,12 +9,11 @@ use tokio::{
 
 use crate::maze::{Cell, Grid};
 
-type Size = SizeBase<i32>;
-type Point = PointBase<i32>;
+type Point = gm::flat::Point<i32>;
 
 #[derive(Debug)]
 pub struct Maker {
-    size:        Size,
+    size:        Size<i32>,
     current_pos: Point,
     stack:       Vec<Point>,
     grid:        Grid,
@@ -24,8 +23,8 @@ impl Maker {
     pub fn new(width: usize, height: usize) -> Self {
         Self {
             size:        Size {
-                width:  width as _,
-                height: height as _,
+                width:  width.try_into().unwrap(),
+                height: height.try_into().unwrap(),
             },
             current_pos: Default::default(),
             stack:       Default::default(),
@@ -52,7 +51,7 @@ impl Maker {
                     continue;
                 }
 
-                let next = unvisited[usize::random_in(0..unvisited.len())];
+                let next = unvisited[(0..unvisited.len()).fake::<usize>()];
 
                 maker.stack.push(maker.current_pos);
 

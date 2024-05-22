@@ -1,5 +1,8 @@
 use contour::ContourBuilder;
-use gm::flat::{Point, Points, Size};
+use gm::{
+    flat::{Point, Points, Size},
+    LossyConvert,
+};
 use noise::{
     utils::{NoiseMapBuilder, PlaneMapBuilder},
     OpenSimplex,
@@ -42,7 +45,7 @@ pub fn generate_terrain(
     let mut pixels: Vec<u8> = Vec::with_capacity(width * height);
 
     for i in map {
-        let val = ((i * 0.5 + 0.5).clamp(0.0, 1.0) * 255.0) as u8;
+        let val: u8 = ((i * 0.5 + 0.5).clamp(0.0, 1.0) * 255.0).lossy_convert();
         pixels.push(if val > threshold { 0 } else { 255 });
     }
 

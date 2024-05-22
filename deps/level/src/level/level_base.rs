@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{any::Any, ops::Deref};
 
 use gm::flat::Point;
 use rapier2d::{
@@ -10,7 +10,7 @@ use rapier2d::{
         MultibodyJointSet, NarrowPhase, PhysicsPipeline,
     },
 };
-use refs::{weak_from_ref, Own, Weak};
+use refs::{weak_from_ref, AsAny, Own, Weak};
 use smart_default::SmartDefault;
 use vents::Event;
 
@@ -130,6 +130,16 @@ impl LevelBase {
         }
 
         self.sprites.remove(index);
+    }
+}
+
+impl AsAny for LevelBase {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }
 

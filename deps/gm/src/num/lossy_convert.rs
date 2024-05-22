@@ -79,6 +79,16 @@ impl LossyConvert<u32> for f64 {
     }
 }
 
+impl LossyConvert<u8> for f64 {
+    fn lossy_convert(self) -> u8 {
+        assert!(!self.is_nan(), "Lossy convert from Nan f64");
+        assert!(self >= 0.0, "Lossy convert sign loss");
+        assert!(self <= f64::from(u8::MAX), "Lossy convert overflow");
+        assert!(self > f64::from(u8::MIN), "Lossy convert underflow");
+        self as u8
+    }
+}
+
 // TODO: add some asserts below
 impl LossyConvert<f32> for usize {
     fn lossy_convert(self) -> f32 {

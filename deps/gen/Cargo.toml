@@ -9,9 +9,10 @@ crate-type = ["rlib", "staticlib"]
 name = "gen"
 
 [dependencies]
-contour = { version = "0.12.0", features = ["f32"] }
-noise = "0.8.2"
+contour = { version = "0.12", features = ["f32"] }
+noise = "0.8"
 
+fake = { workspace = true }
 tokio = { workspace = true }
 
 gm = { workspace = true }

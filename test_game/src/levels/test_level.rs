@@ -1,8 +1,10 @@
+use std::any::Any;
+
 use test_engine::{
     audio::Sound,
     gm::{LossyConvert, Shape},
     level::{Body, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall},
-    refs::{weak_from_ref, Weak},
+    refs::{weak_from_ref, AsAny, Weak},
     ui::{Color, Point},
     DataManager,
 };
@@ -107,5 +109,15 @@ impl Level for TestLevel {
 
     fn weak_level(&self) -> Weak<dyn Level> {
         weak_from_ref(self as &dyn Level)
+    }
+}
+
+impl AsAny for TestLevel {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }

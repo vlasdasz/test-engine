@@ -1,10 +1,10 @@
 use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
-use refs::{Own, Weak};
+use refs::{AsAny, Own, Weak};
 
 use crate::{LevelBase, Player, Sprite};
 
-pub trait Level {
+pub trait Level: AsAny {
     fn setup(&mut self) {}
 
     fn update(&mut self) {}
