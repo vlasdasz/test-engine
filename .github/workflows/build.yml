@@ -48,9 +48,9 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          #          { container: "ubuntu:20.04" },
+          { container: "ubuntu:20.04" },
           { container: "ubuntu:22.04" },
-          #          { container: "ubuntu:23.10" }, Africa
+          { container: "ubuntu:23.10" },
           { container: "ubuntu:24.04" },
 
           { container: "debian:10" },
@@ -63,6 +63,8 @@ jobs:
           { container: "fedora:41" },
 
           { container: "archlinux:latest" }
+
+          { container: "amazonlinux:latest" }
         ]
     runs-on: ubuntu-latest
     steps:
