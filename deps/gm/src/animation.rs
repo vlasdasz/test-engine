@@ -57,8 +57,8 @@ mod test {
     fn test() {
         let anim = Animation::new(0.0, 1.0, 0.5);
 
-        assert_eq!(anim.finished(), false);
         assert_eq!(anim.value(), 0.0);
+        assert_eq!(anim.finished(), false);
 
         sleep(Duration::from_secs_f32(0.25));
 
