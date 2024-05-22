@@ -54,7 +54,7 @@ jobs:
           { container: "debian:11" },
           { container: "debian:12" },
 
-          { container: "dockerscripts/linuxmint:cinnamon-minimal" }
+          { container: "dockerscripts/linuxmint:cinnamon-minimal" },
 
           { container: "fedora:30" },
           { container: "fedora:40" },
