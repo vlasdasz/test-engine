@@ -65,8 +65,6 @@ jobs:
           { container: "manjarolinux/base" },
 
           { container: "amazonlinux" },
-
-          { container: "opensuse/leap" },
         ]
     runs-on: ubuntu-latest
     steps:
