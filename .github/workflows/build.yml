@@ -48,19 +48,19 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { container: ubuntu:20.04 },
-          { container: ubuntu:22.04 },
-          { container: ubuntu:23.10 },
-          { container: ubuntu:24.10 },
+          { container: "ubuntu:20.04" },
+          { container: "ubuntu:22.04" },
+          { container: "ubuntu:23.10" },
+          { container: "ubuntu:24.10" },
 
-          { container: debian:10 },
-          { container: debian:11 },
-          { container: debian:12 },
+          { container: "debian:10" },
+          { container: "debian:11" },
+          { container: "debian:12" },
 
-          { container: fedora:38 },
-          { container: fedora:39 },
-          { container: fedora:40 },
-          { container: fedora:41 },
+          { container: "fedora:38" },
+          { container: "fedora:39" },
+          { container: "fedora:40" },
+          { container: "fedora:41" },
 
         ]
     runs-on: ubuntu-latest
