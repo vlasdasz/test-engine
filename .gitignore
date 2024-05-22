@@ -112,6 +112,7 @@ ndk/
 temp/
 extern/
 generated/
+mobile/
 
 **/jniLibs/
 
