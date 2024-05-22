@@ -62,7 +62,7 @@ jobs:
           submodules: recursive
 
       - name: Build
-        run: echo ${{ matrix.container }} && ./build/in_docker.sh ${{ matrix.container }}
+        run: echo ${{ matrix.target.container }} && ./build/in_docker.sh ${{ matrix.target.container }}
 
 #      - name: Test
 #        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
