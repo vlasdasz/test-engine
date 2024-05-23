@@ -12,3 +12,9 @@ fix:
 
 bench:
 	cargo run -p ui-benchmark --release
+
+mobile:
+	cargo install test-mobile
+	test-mobile --path=../test-mobile/mobile-template
+
+.PHONY: mobile
