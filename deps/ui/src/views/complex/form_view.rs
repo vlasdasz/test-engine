@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, fmt::Debug, marker::PhantomData};
+use std::{collections::HashMap, fmt::Debug, marker::PhantomData};
 
 use reflected::{FieldRef, Reflected};
 use refs::Weak;
@@ -18,10 +18,11 @@ use crate::{LabeledDrop, LabeledTextField};
 
 #[view]
 pub struct FormView<T: Debug + Reflected + 'static> {
-    labels:          Vec<Weak<dyn Labeled>>,
     editind_enabled: bool,
-    variants:        RefCell<HashMap<FieldRef<T>, Vec<String>>>,
-    _p:              PhantomData<T>,
+
+    labels:   Vec<Weak<dyn Labeled>>,
+    variants: HashMap<FieldRef<T>, Vec<String>>,
+    _p:       PhantomData<T>,
 }
 
 impl<T: Debug + Reflected> ViewSetup for FormView<T> {
@@ -32,8 +33,8 @@ impl<T: Debug + Reflected> ViewSetup for FormView<T> {
 }
 
 impl<T: Debug + Reflected> FormView<T> {
-    pub fn add_variants(&self, field: FieldRef<T>, vals: Vec<String>) {
-        self.variants.borrow_mut().insert(field, vals);
+    pub fn add_variants(&mut self, field: FieldRef<T>, vals: Vec<String>) {
+        self.variants.insert(field, vals);
     }
 
     pub fn set_data(&mut self, data: Weak<T>) {
@@ -41,7 +42,7 @@ impl<T: Debug + Reflected> FormView<T> {
         self.labels.clear();
 
         for field in T::simple_fields() {
-            let variant = self.variants.borrow().get(field).cloned();
+            let variant = self.variants.get(field).cloned();
 
             let mut view = if let Some(variants) = variant {
                 let variants = variants.clone();

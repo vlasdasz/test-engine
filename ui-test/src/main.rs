@@ -4,7 +4,7 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
-use std::env::var;
+use std::{env::var, future::IntoFuture};
 
 use anyhow::Result;
 use log::info;
@@ -29,7 +29,8 @@ use crate::{
         },
         complex::{
             buttons_on_table::test_buttons_on_table_view, collection_view::test_collection_view,
-            drop_down::test_drop_down, int_view::test_int_view, table_view::test_table_view,
+            drop_down::test_drop_down, form::test_form_view, int_view::test_int_view,
+            table_view::test_table_view,
         },
         point_view::test_point_view,
         render_image_path::test_render_image_path,
@@ -60,7 +61,21 @@ async fn main() -> Result<()> {
     .await
 }
 
+async fn test_fe<Out: std::future::Future<Output = Result<()>>, F: FnOnce() -> Out, const SIZE: usize>(
+    test: [F; SIZE],
+) -> Result<()> {
+    for f in test {
+        f().await?;
+    }
+    Ok(())
+}
+
 async fn test() -> Result<()> {
+    test_fe([test_form_view, test_scroll_view]).await?;
+
+    return Ok(());
+
+    test_form_view().await?;
     test_scroll_view().await?;
     test_table_view().await?;
     test_modal().await?;
