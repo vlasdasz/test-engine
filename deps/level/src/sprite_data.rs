@@ -11,7 +11,8 @@ use crate::{Level, Sprite};
 
 #[derive(Default)]
 pub struct SpriteData {
-    pub(crate) position:    Point,
+    pub(crate) position: Point,
+
     pub(crate) shape:       Shape,
     pub(crate) rotation:    f32,
     pub(crate) level:       Weak<dyn Level>,

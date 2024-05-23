@@ -2,7 +2,7 @@ use gm::{flat::Point, volume::GyroData};
 use rapier2d::prelude::{ColliderSet, RigidBodySet};
 use refs::{AsAny, Own, Weak};
 
-use crate::{LevelBase, Player, Sprite};
+use crate::{LevelBase, LevelManager, Player, Sprite};
 
 pub trait Level: AsAny {
     fn setup(&mut self) {}
@@ -12,6 +12,12 @@ pub trait Level: AsAny {
     fn on_key_pressed(&mut self, _: char) {}
 
     fn on_gyro_changed(&mut self, _: GyroData) {}
+
+    fn update_camera(&mut self) {
+        if let Some(player) = self.player().get() {
+            *LevelManager::camera_pos() = player.position();
+        }
+    }
 
     fn cursor_position(&self) -> Point {
         self.base().cursor_position

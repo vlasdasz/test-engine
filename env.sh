@@ -1,6 +1,4 @@
-#!/bin/bash
-
-export ANDROID_LIB_NAME="test_game"
-export IOS_PROJECT_NAME="TestGame"
+export ANDROID_LIB_NAME="labirintas"
+export IOS_SIMULATOR_SCHEME="TestGame Simulator"
+export IOS_RELEASE_SCHEME="TestGame"
 export PROJECT_NAME="TestGame"
-export SCHEME_NAME="TestGame Release"

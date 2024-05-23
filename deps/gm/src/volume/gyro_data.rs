@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Default, Debug, Copy, Clone)]
 pub struct GyroData {
     pub pitch: f32,
     pub roll:  f32,

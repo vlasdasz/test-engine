@@ -1,11 +1,6 @@
-use std::time::Duration;
-
 use fake::Fake;
 use gm::flat::Size;
-use tokio::{
-    sync::mpsc::{self, UnboundedReceiver},
-    time::sleep,
-};
+use tokio::sync::mpsc::{self, UnboundedReceiver};
 
 use crate::maze::{Cell, Grid};
 
@@ -56,8 +51,6 @@ impl Maker {
                 maker.stack.push(maker.current_pos);
 
                 sender.send(maker.grid.clone()).unwrap();
-
-                sleep(Duration::from_millis(1)).await;
 
                 maker.remove_walls(next);
 

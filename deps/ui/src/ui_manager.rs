@@ -11,10 +11,10 @@ use gm::{
     flat::{Point, Rect, Size},
     LossyConvert,
 };
-use refs::Own;
+use refs::{Own, Weak};
 use wgpu_wrapper::WGPUApp;
 
-use crate::{Container, Keymap, TouchStack, UIEvent, View, ViewFrame, WeakView};
+use crate::{Container, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -210,6 +210,15 @@ impl UIManager {
 
         #[cfg(not(ios))]
         None
+    }
+
+    pub fn set_view<T: View + 'static>(view: Own<T>) -> Weak<T> {
+        let weak = view.weak();
+        let mut root = UIManager::root_view_weak();
+        root.remove_all_subviews();
+        let view = root.__add_subview_internal(view, true);
+        view.place().back();
+        weak
     }
 }
 

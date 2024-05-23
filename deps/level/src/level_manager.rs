@@ -22,6 +22,7 @@ impl LevelManager {
         if Self::no_level() {
             return;
         }
+        Self::level_mut().update_camera();
         Self::level_mut().base_mut().update_physics(frame_time);
         Self::level_mut().update();
     }
@@ -33,6 +34,10 @@ impl LevelManager {
         let mut weak = level.weak();
         SELF.get_mut().level = Some(level);
         weak.setup();
+    }
+
+    pub fn stop_level() {
+        SELF.get_mut().level = None;
     }
 
     pub fn level() -> &'static dyn Level {
