@@ -12,6 +12,7 @@ name = "ui"
 [dependencies]
 anyhow = { workspace = true }
 chrono = { workspace = true }
+convert_case = { workspace = true }
 derivative = { workspace = true }
 dispatch = { workspace = true }
 fake = { workspace = true }

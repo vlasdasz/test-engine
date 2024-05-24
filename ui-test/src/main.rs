@@ -62,6 +62,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_label().await?;
     test_form_view().await?;
     test_scroll_view().await?;
     test_table_view().await?;
@@ -88,7 +89,6 @@ async fn test() -> Result<()> {
     test_button().await?;
     test_switch().await?;
     test_layout().await?;
-    test_label().await?;
     test_alert().await?;
     test_multiline().await?;
 

@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, IntView, Label, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Anchor, Color, IntView, Label, Sub, TextAlignment, ViewData, ViewSetup, ViewSubviews, UI},
     ui_test::{helpers::check_colors, inject_touches},
     App,
 };
@@ -144,6 +144,64 @@ pub async fn test_label() -> Result<()> {
              112  199 - 255 255 255
               82  206 - 255 255 255
     "#,
+    )
+    .await?;
+
+    from_main(move || {
+        view.label.set_text_size(28);
+        view.add_view::<Label>()
+            .set_text("Left Left")
+            .set_alignment(TextAlignment::Left)
+            .place()
+            .lrt(60)
+            .h(60);
+        view.add_view::<Label>()
+            .set_text("Right")
+            .set_alignment(TextAlignment::Right)
+            .place()
+            .lrb(60)
+            .h(60);
+    })
+    .await;
+
+    check_colors(
+        r#"
+             221  306 - 255 255 255
+             239  305 - 255 255 255
+             258  304 - 255 255 255
+             267  304 -   0   0   0
+             279  304 - 255 255 255
+             293  305 -   0   0   0
+             314  302 - 255 255 255
+             319  302 -   0   0   0
+             329  302 - 255 255 255
+             348  306 -  25  51  76
+             274  282 - 255 255 255
+             282  290 - 255 255 255
+             293  301 - 255 255 255
+             300  315 -   1   1   1
+             305  328 - 255 255 255
+             312  341 -  25  51  76
+             318  348 -  25  51  76
+              42   78 -  25  51  76
+              54   79 -  25  51  76
+              70   83 - 255 255 255
+              91   85 - 255 255 255
+             126   87 - 255 255 255
+             149   88 - 255 255 255
+             156   89 - 255 255 255
+             179   88 - 152 152 152
+             181   88 - 255 255 255
+             191   88 - 255 255 255
+             214   88 - 255 255 255
+             224   89 - 255 255 255
+             181   52 -  25  51  76
+             176   53 -  25  51  76
+             128   73 - 255 255 255
+             113   92 - 255 255 255
+             111  100 - 255 255 255
+             102  114 - 255 255 255
+        "#,
     )
     .await?;
 

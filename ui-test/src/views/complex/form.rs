@@ -8,16 +8,15 @@ use test_engine::{
         view, Button, FormView, InputView, Labeled, Sub, Switch, TextField, ViewData, ViewSetup,
         ViewSubviews, UI,
     },
-    ui_test::record_ui_test,
     wait_for_next_frame,
 };
 
 #[derive(Default, Debug, Reflected)]
 struct Data {
-    float:   f32,
-    integer: u32,
-    boolean: bool,
-    string:  String,
+    float_field:   f32,
+    integer_field: u32,
+    boolean:       bool,
+    string:        String,
 }
 
 #[view]
@@ -37,10 +36,10 @@ impl ViewSetup for FormTestView {
 
         self.form.place().lrb(0).t(100);
         self.form.set_data(&Data {
-            float:   10.0,
-            integer: 20,
-            boolean: true,
-            string:  "hello".to_string(),
+            float_field:   10.0,
+            integer_field: 20,
+            boolean:       true,
+            string:        "hello".to_string(),
         });
     }
 }
@@ -63,8 +62,6 @@ pub async fn test_form_view() -> Result<()> {
     assert_eq!(string.text(), "hello");
 
     wait_for_next_frame().await;
-
-    record_ui_test().await;
 
     debug!("Form view: OK");
 

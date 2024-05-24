@@ -13,8 +13,18 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
+#[derive(Debug, Default)]
+pub enum TextAlignment {
+    Left,
+    #[default]
+    Center,
+    Right,
+}
+
 #[view]
 pub struct Label {
+    pub alignment: TextAlignment,
+
     pub text:   String,
     text_color: Color,
     text_size:  f32,
@@ -27,6 +37,11 @@ impl Label {
 
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         self.text = text.to_label();
+        self
+    }
+
+    pub fn set_alignment(&mut self, alignment: TextAlignment) -> &mut Self {
+        self.alignment = alignment;
         self
     }
 

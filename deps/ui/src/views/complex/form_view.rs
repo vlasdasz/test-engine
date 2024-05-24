@@ -1,5 +1,6 @@
 use std::{collections::HashMap, fmt::Debug, marker::PhantomData};
 
+use convert_case::{Case, Casing};
 use reflected::{FieldRef, Reflected};
 use refs::Weak;
 use ui_proc::view;
@@ -60,7 +61,7 @@ impl<T: Debug + Reflected> FormView<T> {
                 view.as_input_view()
             };
 
-            view.set_title(field.name);
+            view.set_title(&field.name.to_case(Case::Title));
 
             if self.editind_enabled {
                 view.enable_editing();
