@@ -1,6 +1,6 @@
 use std::ops::DerefMut;
 
-use derivative::Derivative;
+use educe::Educe;
 use gm::Animation;
 use vents::OnceEvent;
 
@@ -8,13 +8,13 @@ use crate::{view::view_data::ViewData, View};
 
 type Action = Box<dyn FnMut(&mut dyn View, f32)>;
 
-#[derive(Derivative)]
-#[derivative(Debug)]
+#[derive(Educe)]
+#[educe(Debug)]
 pub struct UIAnimation {
     animation:     Animation,
-    #[derivative(Debug = "ignore")]
+    #[educe(Debug(ignore))]
     action:        Action,
-    #[derivative(Debug = "ignore")]
+    #[educe(Debug(ignore))]
     pub on_finish: OnceEvent,
 }
 

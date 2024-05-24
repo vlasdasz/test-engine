@@ -9,6 +9,7 @@ use crate::{
 };
 
 mod test_engine {
+    pub(crate) use educe;
     pub(crate) use refs;
 
     pub(crate) use crate as ui;

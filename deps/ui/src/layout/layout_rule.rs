@@ -1,4 +1,4 @@
-use derivative::Derivative;
+use educe::Educe;
 use gm::{flat::Size, ToF32};
 
 use crate::{
@@ -8,22 +8,22 @@ use crate::{
 
 pub(crate) type CustomCallback = Box<dyn FnMut(WeakView, &Size)>;
 
-#[derive(Derivative)]
-#[derivative(Debug)]
+#[derive(Educe)]
+#[educe(Debug)]
 pub(crate) struct LayoutRule {
     pub(crate) side:   Anchor,
     pub(crate) tiling: Option<Tiling>,
     pub(crate) offset: f32,
 
-    #[derivative(Debug = "ignore")]
+    #[educe(Debug(ignore))]
     pub(crate) anchor_view:  WeakView,
-    #[derivative(Debug = "ignore")]
+    #[educe(Debug(ignore))]
     pub(crate) anchor_view2: WeakView,
 
     pub(crate) relative: bool,
     pub(crate) between:  bool,
 
-    #[derivative(Debug = "ignore")]
+    #[educe(Debug(ignore))]
     pub(crate) custom: Option<CustomCallback>,
 }
 

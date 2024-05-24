@@ -6,6 +6,7 @@ use ui_proc::view;
 
 use crate::{view::ViewData, Anchor, Container, InputView, Sub, TextAlignment, ViewSetup, ViewSubviews};
 mod test_engine {
+    pub(crate) use educe;
     pub(crate) use refs;
 
     pub(crate) use crate as ui;

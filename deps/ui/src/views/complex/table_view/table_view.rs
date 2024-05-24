@@ -8,6 +8,7 @@ use crate::{
 };
 
 mod test_engine {
+    pub(crate) use educe;
     pub(crate) use refs;
 
     pub(crate) use crate as ui;
@@ -16,7 +17,7 @@ use crate::{ScrollView, Sub};
 
 #[view]
 pub struct TableView {
-    #[derivative(Debug = "ignore")]
+    #[educe(Debug(ignore))]
     data:       Weak<dyn TableData>,
     pub scroll: Sub<ScrollView>,
 }

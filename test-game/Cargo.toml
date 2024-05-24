@@ -12,7 +12,6 @@ crate-type = ["rlib", "staticlib"]
 name = "test_game"
 
 [dependencies]
-derivative = { workspace = true }
 tokio = { workspace = true }
 
 test-engine = { workspace = true }

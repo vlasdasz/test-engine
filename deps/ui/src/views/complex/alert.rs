@@ -5,6 +5,7 @@ use vents::OnceEvent;
 
 use crate::{view::ViewData, Button, Label, ModalView, Sub, ViewSetup};
 mod test_engine {
+    pub(crate) use educe;
     pub(crate) use refs;
 
     pub(crate) use crate as ui;

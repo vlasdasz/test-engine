@@ -6,15 +6,15 @@ members = ["test-engine", "test-game", "ui-test", "ui-benchmark"]
 resolver = "2"
 
 [workspace.metadata.cargo-machete]
-ignored = ["derivative"]
+ignored = []
 
 [workspace.dependencies]
 anyhow = "1.0"
 bytemuck = { version = "1.15", features = ["derive"] }
 cfg_aliases = "0.2"
 chrono = "0.4"
-derivative = "2.2"
 dirs = "5.0"
+educe = "0.5"
 env_logger = "0.11"
 fake = "2.9.2"
 home = "0.5"

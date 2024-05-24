@@ -10,6 +10,7 @@ use crate::{
     DropDown, InputView, Labeled, Switch, TextField, TextFieldConstraint, ViewSetup,
 };
 mod test_engine {
+    pub(crate) use educe;
     pub(crate) use refs;
 
     pub(crate) use crate as ui;
