@@ -88,7 +88,7 @@ impl State {
             format:       TextureFormat::Bgra8UnormSrgb,
             width:        size.width,
             height:       size.height,
-            present_mode: PresentMode::AutoVsync,
+            present_mode: PresentMode::AutoNoVsync,
             alpha_mode:   CompositeAlphaMode::Auto,
             view_formats: vec![],
 

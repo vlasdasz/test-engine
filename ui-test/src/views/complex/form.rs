@@ -8,6 +8,7 @@ use test_engine::{
         view, Button, FormView, InputView, Labeled, Sub, Switch, TextField, ViewData, ViewSetup,
         ViewSubviews, UI,
     },
+    ui_test::record_ui_test,
     wait_for_next_frame,
 };
 
@@ -62,6 +63,8 @@ pub async fn test_form_view() -> Result<()> {
     assert_eq!(string.text(), "hello");
 
     wait_for_next_frame().await;
+
+    record_ui_test().await;
 
     debug!("Form view: OK");
 
