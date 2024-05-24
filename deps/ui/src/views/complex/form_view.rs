@@ -6,7 +6,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewSubviews},
-    DropDown, InputView, Labeled, TextField, TextFieldConstraint, ViewSetup,
+    DropDown, InputView, Labeled, Switch, TextField, TextFieldConstraint, ViewSetup,
 };
 mod test_engine {
     pub(crate) use refs;
@@ -42,14 +42,20 @@ impl<T: Debug + Reflected> FormView<T> {
         for field in T::simple_fields() {
             let variant = self.variants.get(field).cloned();
 
-            let mut view = if let Some(variants) = variant {
+            let text = &data.get_value(field);
+
+            let mut view = if field.is_bool() {
+                let mut view = self.add_view::<Labeled<Switch>>();
+                view.input.set_on(text == "1");
+                view.as_input_view()
+            } else if let Some(variants) = variant {
                 let variants = variants.clone();
                 let mut view = self.add_view::<Labeled<DropDown>>();
                 view.input.set_values(&variants);
                 view.as_input_view()
             } else {
                 let mut view = self.add_view::<Labeled<TextField>>();
-                view.input.set_text(&data.get_value(field));
+                view.input.set_text(text);
                 view.input.constraint = TextFieldConstraint::from_field(field);
                 view.as_input_view()
             };

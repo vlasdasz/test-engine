@@ -3,7 +3,7 @@ use test_engine::{
     reflected,
     reflected::Reflected,
     refs::Weak,
-    ui::{view, Button, FormView, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Button, FormView, Sub, ViewData, ViewSetup, ViewSubviews, UI},
     ui_test::record_ui_test,
 };
 
@@ -41,7 +41,9 @@ impl ViewSetup for FormTestView {
 }
 
 pub async fn test_form_view() -> Result<()> {
-    let _view = UI::init_test_view::<FormTestView>().await;
+    let view = UI::init_test_view::<FormTestView>().await;
+
+    dbg!(view.form.dump_subviews());
 
     record_ui_test().await;
 

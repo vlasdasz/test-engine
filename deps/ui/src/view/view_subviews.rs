@@ -28,6 +28,8 @@ pub trait ViewSubviews {
 
     fn get_subview<V: 'static + View + Default>(&mut self) -> Weak<V>;
     fn dump_subviews(&self) -> Vec<String>;
+
+    fn downcast_view<V: 'static + View>(&self) -> Option<Weak<V>>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -146,5 +148,9 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn dump_subviews(&self) -> Vec<String> {
         self.subviews().iter().map(|v| v.label().to_string()).collect()
+    }
+
+    fn downcast_view<V: 'static + View>(&self) -> Option<Weak<V>> {
+        self.weak_view().downcast::<V>()
     }
 }

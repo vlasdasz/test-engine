@@ -16,10 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { runner: mac, os: macos },
-          { runner: windows-latest, os: windows },
+          { os: macos, runner: mac, },
+          { os: windows , runner: windows-latest },
 
-          { runner: mac, os: ios },
+          { os: ios, runner: mac },
           #          { runner: ubuntu-latest, os: android }
         ]
     runs-on: ${{ matrix.target.runner }}
@@ -41,7 +41,7 @@ jobs:
         if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
         run: make test
 
-  linux:
+  debian:
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +55,23 @@ jobs:
           { container: "debian:12" },
 
           { container: "dockerscripts/linuxmint:cinnamon-minimal" },
+        ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          submodules: recursive
 
+      - name: Build
+        run: echo ${{ matrix.target.container }} && ./build/in_docker.sh ${{ matrix.target.container }}
+
+
+  linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [
           { container: "fedora:30" },
           { container: "fedora:40" },
           { container: "fedora:41" },

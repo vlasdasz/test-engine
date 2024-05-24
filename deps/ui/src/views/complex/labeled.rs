@@ -1,7 +1,10 @@
+use std::any::type_name;
+
+use gm::Color;
 use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 
-use crate::{view::ViewData, Anchor, InputView, Sub, ViewSetup};
+use crate::{view::ViewData, Anchor, Container, InputView, Sub, ViewSetup, ViewSubviews};
 mod test_engine {
     pub(crate) use refs;
 
@@ -13,13 +16,27 @@ use crate::Label;
 #[view]
 pub struct Labeled<T: InputView + Default + 'static> {
     label:     Sub<Label>,
-    pub input: Sub<T>,
+    pub input: Weak<T>,
 }
 
 impl<T: InputView + Default> ViewSetup for Labeled<T> {
-    fn setup(self: Weak<Self>) {
-        self.label.place().lrt(0).h(10).relative(Anchor::Height, self, 1.0 / 3.0);
-        self.input.place().lrb(0).h(20).relative(Anchor::Height, self, 2.0 / 3.0);
+    fn setup(mut self: Weak<Self>) {
+        self.view_label += &format!(": {}", type_name::<T>());
+
+        self.label.place().tlb(0).relative(Anchor::Width, self, 0.5);
+
+        if type_name::<T>() == "ui::views::basic::switch::Switch" {
+            let mut container = self.add_view::<Container>();
+            container.set_color(Color::WHITE);
+
+            self.input = container.add_view::<T>();
+            self.input.place().center().relative_size(container, 0.6);
+
+            container.place().trb(0).relative(Anchor::Width, self, 0.5);
+        } else {
+            self.input = self.add_view::<T>();
+            self.input.place().trb(0).relative(Anchor::Width, self, 0.5);
+        }
     }
 }
 
