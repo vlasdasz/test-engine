@@ -86,11 +86,11 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn label(&self) -> &str {
-        &self.base().label
+        &self.base().view_label
     }
 
     fn set_label(&mut self, label: impl ToString) -> &mut Self {
-        self.base_mut().label = label.to_string();
+        self.base_mut().view_label = label.to_string();
         self
     }
 

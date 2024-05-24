@@ -30,7 +30,7 @@ pub fn add_action(action: impl FnMut() + 'static) {
     button.place().size(100, 100).bl(0);
     button.set_color(Color::LIGHT_GRAY);
     button.on_tap(action);
-    button.label = "Debug Action Button".into();
+    button.view_label = "Debug Action Button".into();
 }
 
 pub async fn check_colors(data: &str) -> Result<()> {

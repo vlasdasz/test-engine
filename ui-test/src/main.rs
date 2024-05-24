@@ -4,7 +4,7 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
-use std::{env::var, future::IntoFuture};
+use std::env::var;
 
 use anyhow::Result;
 use log::info;
@@ -61,20 +61,7 @@ async fn main() -> Result<()> {
     .await
 }
 
-async fn test_fe<Out: std::future::Future<Output = Result<()>>, F: FnOnce() -> Out, const SIZE: usize>(
-    test: [F; SIZE],
-) -> Result<()> {
-    for f in test {
-        f().await?;
-    }
-    Ok(())
-}
-
 async fn test() -> Result<()> {
-    test_fe([test_form_view, test_scroll_view]).await?;
-
-    return Ok(());
-
     test_form_view().await?;
     test_scroll_view().await?;
     test_table_view().await?;

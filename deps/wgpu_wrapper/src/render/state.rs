@@ -62,9 +62,9 @@ impl State {
             .await
             .ok_or(anyhow!("Failed to request adapter"))?;
 
-        let info = adapter.get_info();
+        let _info = adapter.get_info();
 
-        dbg!(&info.backend);
+        // dbg!(&info.backend);
 
         let (device, queue) = adapter
             .request_device(

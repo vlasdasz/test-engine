@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, DropDown, Sub, ViewData, ViewSetup, UI},
+    ui::{view, DropDown, InputView, Sub, ViewData, ViewSetup, UI},
     ui_test::{
         inject_touches, inject_touches_delayed,
         state::{append_state, get_state},

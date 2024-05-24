@@ -1,13 +1,13 @@
 use std::{any::Any, ops::Deref};
 
 use gm::{flat::Size, Color, LossyConvert, Toggle};
-use refs::{Own, Weak};
+use refs::{weak_from_ref, Own, Weak};
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    Button, CollectionData, CollectionView, Label, Sub, ToLabel, View, ViewSetup,
+    Button, CollectionData, CollectionView, InputView, Label, Sub, ToLabel, View, ViewSetup,
 };
 
 mod test_engine {
@@ -30,10 +30,6 @@ pub struct DropDown {
 impl DropDown {
     pub fn on_changed(&self, action: impl FnMut(String) + 'static) {
         self.changed.val(action)
-    }
-
-    pub fn text(&self) -> &str {
-        self.label.text()
     }
 
     pub fn set_values<Values, Val>(&mut self, values: Values)
@@ -72,17 +68,29 @@ impl DropDown {
             }
         }
     }
+}
 
-    pub fn enable_editing(&mut self) -> &mut Self {
-        self.button.enable_touch();
-        self.set_color(Color::LIGHT_GRAY);
-        self
+impl InputView for DropDown {
+    fn set_title(&mut self, _title: &str) {
+        unimplemented!("DropDown doesn't have title")
     }
 
-    pub fn disable_editing(&mut self) -> &mut Self {
+    fn text(&self) -> &str {
+        self.label.text()
+    }
+
+    fn enable_editing(&mut self) {
+        self.button.enable_touch();
+        self.set_color(Color::LIGHT_GRAY);
+    }
+
+    fn disable_editing(&mut self) {
         self.button.disable_touch();
         self.set_color(Color::CLEAR);
-        self
+    }
+
+    fn as_input_view(&self) -> Weak<dyn InputView> {
+        weak_from_ref(self as &dyn InputView)
     }
 }
 
@@ -104,7 +112,7 @@ impl CollectionData for DropDown {
 
     fn make_cell(&self) -> Own<dyn View> {
         let mut label = Label::new();
-        label.label += "DropDown cell: ";
+        label.view_label += "DropDown cell: ";
         label
     }
 

@@ -9,7 +9,6 @@
 
 mod images;
 mod input;
-mod labeled;
 mod layout;
 pub mod mobile;
 mod modal_view;
@@ -26,7 +25,6 @@ mod with_header;
 
 pub use images::*;
 pub use input::*;
-pub use labeled::*;
 pub use layout::*;
 pub use modal_view::*;
 pub use navigation_view::*;

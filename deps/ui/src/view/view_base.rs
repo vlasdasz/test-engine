@@ -46,7 +46,7 @@ pub struct ViewBase {
     #[derivative(Debug = "ignore")]
     pub(crate) animations: Vec<UIAnimation>,
 
-    pub label: String,
+    pub view_label: String,
 
     #[derivative(Debug = "ignore")]
     #[derivative(Default(value = "Placer::empty()"))]

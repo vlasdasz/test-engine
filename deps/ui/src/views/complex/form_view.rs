@@ -6,7 +6,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewSubviews},
-    Labeled, TextFieldConstraint, ViewSetup,
+    DropDown, InputView, Labeled, TextField, TextFieldConstraint, ViewSetup,
 };
 mod test_engine {
     pub(crate) use refs;
@@ -14,13 +14,11 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
-use crate::{LabeledDrop, LabeledTextField};
-
 #[view]
 pub struct FormView<T: Debug + Reflected + 'static> {
     editind_enabled: bool,
 
-    labels:   Vec<Weak<dyn Labeled>>,
+    labels:   Vec<Weak<dyn InputView>>,
     variants: HashMap<FieldRef<T>, Vec<String>>,
     _p:       PhantomData<T>,
 }
@@ -37,7 +35,7 @@ impl<T: Debug + Reflected> FormView<T> {
         self.variants.insert(field, vals);
     }
 
-    pub fn set_data(&mut self, data: Weak<T>) {
+    pub fn set_data(&mut self, data: &T) {
         self.remove_all_subviews();
         self.labels.clear();
 
@@ -46,17 +44,17 @@ impl<T: Debug + Reflected> FormView<T> {
 
             let mut view = if let Some(variants) = variant {
                 let variants = variants.clone();
-                let mut view = self.add_view::<LabeledDrop>();
-                view.set_values(&variants);
-                view.labeled()
+                let mut view = self.add_view::<Labeled<DropDown>>();
+                view.input.set_values(&variants);
+                view.as_input_view()
             } else {
-                let mut view = self.add_view::<LabeledTextField>();
-                view.set_text(&data.get_value(field));
-                view.set_constraint(TextFieldConstraint::from_field(field));
-                view.labeled()
+                let mut view = self.add_view::<Labeled<TextField>>();
+                view.input.set_text(&data.get_value(field));
+                view.input.constraint = TextFieldConstraint::from_field(field);
+                view.as_input_view()
             };
 
-            view.set_title(&field.name);
+            view.set_title(field.name);
 
             if self.editind_enabled {
                 view.enable_editing();

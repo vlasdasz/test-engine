@@ -184,6 +184,6 @@ impl TestGameView {
     }
 
     fn call_obj(self: Weak<Self>) {
-        dbg!(&self.label);
+        dbg!(&self.view_label);
     }
 }

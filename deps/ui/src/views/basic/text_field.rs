@@ -6,7 +6,7 @@ use vents::Event;
 use crate::{
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
-    Label, Sub, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks, ViewSetup,
+    InputView, Label, Sub, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks, ViewSetup,
 };
 
 mod test_engine {
@@ -28,14 +28,6 @@ pub struct TextField {
 }
 
 impl TextField {
-    pub fn text(&self) -> &str {
-        if self.placeholding {
-            ""
-        } else {
-            self.label.text()
-        }
-    }
-
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         let text = self.filter_constraint(text);
 
@@ -68,18 +60,6 @@ impl TextField {
         }
     }
 
-    pub fn enable_editing(&mut self) -> &mut Self {
-        self.enable_touch();
-        self.set_color(Color::LIGHT_GRAY);
-        self
-    }
-
-    pub fn disable_editing(&mut self) -> &mut Self {
-        self.disable_touch();
-        self.set_color(Color::CLEAR);
-        self
-    }
-
     pub fn float_only(&mut self) -> &mut Self {
         self.constraint = TextFieldConstraint::Float.into();
         self
@@ -104,6 +84,34 @@ impl TextField {
             self.label.set_text_color(Color::GRAY);
         }
         self
+    }
+}
+
+impl InputView for TextField {
+    fn set_title(&mut self, _title: &str) {
+        todo!()
+    }
+
+    fn text(&self) -> &str {
+        if self.placeholding {
+            ""
+        } else {
+            self.label.text()
+        }
+    }
+
+    fn enable_editing(&mut self) {
+        self.enable_touch();
+        self.set_color(Color::LIGHT_GRAY);
+    }
+
+    fn disable_editing(&mut self) {
+        self.disable_touch();
+        self.set_color(Color::CLEAR);
+    }
+
+    fn as_input_view(&self) -> Weak<dyn InputView> {
+        weak_from_ref(self as &dyn InputView)
     }
 }
 

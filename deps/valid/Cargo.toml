@@ -10,4 +10,3 @@ version = "0.1.0"
 strum_macros = "0.24"
 
 reflected = { workspace = true }
-reflected_proc = { workspace = true }

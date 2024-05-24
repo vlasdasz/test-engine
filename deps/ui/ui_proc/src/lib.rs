@@ -48,8 +48,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
     fields.named.push(
         Field::parse_named
-            .parse2(quote! { view: test_engine::ui::ViewBase })
-            .expect("parse2(quote! { view: test_engine::ui::ViewBase })"),
+            .parse2(quote! { __view_base: test_engine::ui::ViewBase })
+            .expect("parse2(quote! { __view_base: test_engine::ui::ViewBase })"),
     );
 
     quote! {
@@ -62,10 +62,10 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 test_engine::refs::weak_from_ref(self as &dyn test_engine::ui::View)
             }
             fn base(&self) -> &test_engine::ui::ViewBase {
-                &self.view
+                &self.__view_base
             }
             fn base_mut(&mut self) -> &mut test_engine::ui::ViewBase {
-                &mut self.view
+                &mut self.__view_base
             }
             fn init_views(&mut self) {
                 use test_engine::ui::ViewSubviews;
@@ -89,7 +89,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use test_engine::ui::ViewSetup;
                 use test_engine::ui::WithHeader;
                 use test_engine::ui::ViewData;
-                self.view.label += &#name_str.to_string();
+                self.__view_base.view_label += &#name_str.to_string();
                 self.layout_header();
                 let weak = test_engine::refs::weak_from_ref(self);
                 weak.__link();
@@ -107,12 +107,12 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
         impl #generics std::ops::Deref for #name <#type_params> {
             type Target = test_engine::ui::ViewBase;
             fn deref(&self) -> &test_engine::ui::ViewBase {
-                &self.view
+                &self.__view_base
             }
         }
         impl #generics std::ops::DerefMut for #name <#type_params>  {
             fn deref_mut(&mut self) -> &mut test_engine::ui::ViewBase {
-                &mut self.view
+                &mut self.__view_base
             }
         }
     }
@@ -136,7 +136,7 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
                     res = quote! {
                         #res
                         self.#name = self.add_view();
-                        self.#name.label = format!("{}: {}", #label, self.#name.label);
+                        self.#name.base_mut().view_label = format!("{}: {}", #label, self.#name.base().view_label);
                     }
                 }
             }

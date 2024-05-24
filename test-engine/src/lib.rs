@@ -46,6 +46,10 @@ pub mod store {
     pub use store::{EncryptionKey, OnDisk, OnDiskEncrypted};
 }
 
+pub mod reflected {
+    pub use ::reflected::{Field, Reflected, ToReflectedString, ToReflectedVal, Type};
+}
+
 pub use app::App;
 pub use audio;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};
