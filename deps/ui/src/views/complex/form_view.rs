@@ -7,7 +7,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewSubviews},
-    DropDown, InputView, Labeled, Switch, TextField, TextFieldConstraint, ViewSetup,
+    DropDown, InputView, Labeled, Switch, TextAlignment, TextField, TextFieldConstraint, ViewSetup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -58,6 +58,7 @@ impl<T: Debug + Reflected> FormView<T> {
             } else {
                 let mut view = self.add_view::<Labeled<TextField>>();
                 view.input.set_text(text);
+                view.input.set_alignment(TextAlignment::Right);
                 view.input.constraint = TextFieldConstraint::from_field(field);
                 view.as_input_view()
             };

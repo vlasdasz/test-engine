@@ -8,7 +8,6 @@ use test_engine::{
         view, Button, FormView, InputView, Labeled, Sub, Switch, TextField, ViewData, ViewSetup,
         ViewSubviews, UI,
     },
-    ui_test::record_ui_test,
 };
 
 #[derive(Default, Debug, Reflected)]
@@ -61,7 +60,7 @@ pub async fn test_form_view() -> Result<()> {
     let string = sub[3].downcast_view::<Labeled<TextField>>().unwrap().input;
     assert_eq!(string.text(), "hello");
 
-    record_ui_test().await;
+    // record_ui_test().await;
 
     debug!("Form view: OK");
 

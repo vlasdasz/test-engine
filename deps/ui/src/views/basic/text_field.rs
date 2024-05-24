@@ -6,7 +6,8 @@ use vents::Event;
 use crate::{
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
-    InputView, Label, Sub, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks, ViewSetup,
+    InputView, Label, Sub, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks,
+    ViewSetup,
 };
 
 mod test_engine {
@@ -29,6 +30,11 @@ pub struct TextField {
 }
 
 impl TextField {
+    pub fn set_alignment(&mut self, alignment: TextAlignment) -> &mut Self {
+        self.label.set_alignment(alignment);
+        self
+    }
+
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         let text = self.filter_constraint(text);
 
