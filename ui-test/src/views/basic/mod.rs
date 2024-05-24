@@ -1,5 +1,6 @@
 pub mod button;
 pub mod image_view;
+pub mod inject_touch;
 pub mod label;
 pub mod multiline_label;
 pub mod scroll_view;

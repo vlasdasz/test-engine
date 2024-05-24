@@ -81,7 +81,7 @@ impl ViewSetup for LayoutTestView {
 pub async fn test_layout() -> Result<()> {
     UI::init_test_view::<LayoutTestView>().await;
 
-    App::set_window_size((240, 240));
+    App::set_window_size((240, 240)).await;
 
     inject_touches(
         r#"
@@ -150,7 +150,7 @@ pub async fn test_layout() -> Result<()> {
         "|le_s_ct|left|le_ct|center|ri_ct|right|ri_s_ct|bo_s_ct|bottom|bt_ct|center|tp_ct|top|to_s_ct",
     );
 
-    App::set_window_size((400, 400));
+    App::set_window_size((400, 400)).await;
 
     clear_state();
 

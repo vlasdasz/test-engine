@@ -209,7 +209,7 @@ impl UI {
     pub async fn set_test_view<T: View + 'static>(view: Own<T>, width: u32, height: u32) -> Weak<T> {
         clear_state();
 
-        App::set_window_size((width, height));
+        App::set_window_size((width, height)).await;
         wait_for_next_frame().await;
         let view = from_main(move || {
             let weak = view.weak();

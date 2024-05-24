@@ -28,7 +28,7 @@ impl ViewSetup for TextFieldTestView {
 pub async fn test_text_field() -> Result<()> {
     let mut view = UI::init_test_view::<TextFieldTestView>().await;
 
-    App::set_window_size((800, 800));
+    App::set_window_size((800, 800)).await;
 
     inject_touches(
         r#"

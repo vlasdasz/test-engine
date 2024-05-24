@@ -23,9 +23,9 @@ use crate::{
     views::{
         alert::test_alert,
         basic::{
-            button::test_button, image_view::test_image_view, label::test_label,
-            multiline_label::test_multiline, scroll_view::test_scroll_view, slider::test_slider,
-            stick::test_stick, switch::test_switch, text_field::test_text_field,
+            button::test_button, image_view::test_image_view, inject_touch::test_inject_touch,
+            label::test_label, multiline_label::test_multiline, scroll_view::test_scroll_view,
+            slider::test_slider, stick::test_stick, switch::test_switch, text_field::test_text_field,
         },
         complex::{
             buttons_on_table::test_buttons_on_table_view, collection_view::test_collection_view,
@@ -62,6 +62,8 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_int_view().await?;
+    test_inject_touch().await?;
     test_highlight().await?;
     test_label().await?;
     test_form_view().await?;
@@ -72,7 +74,6 @@ async fn test() -> Result<()> {
     test_collection_view().await?;
     test_slider().await?;
     test_drop_down().await?;
-    test_int_view().await?;
     test_add_on_tap().await?;
     test_buttons_on_table_view().await?;
     test_touch_order().await?;

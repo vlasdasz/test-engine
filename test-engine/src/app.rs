@@ -1,4 +1,4 @@
-use std::{any::type_name, future::Future, io::Write, path::PathBuf, ptr::null_mut};
+use std::{any::type_name, future::Future, io::Write, path::PathBuf, ptr::null_mut, time::Duration};
 
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
@@ -7,7 +7,7 @@ use gm::flat::{Point, Size};
 use level::LevelBase;
 use log::{Level, LevelFilter};
 use refs::{Own, Rglica};
-use tokio::spawn;
+use tokio::{spawn, time::sleep};
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 use vents::OnceEvent;
 use wgpu::RenderPass;
@@ -149,8 +149,12 @@ impl App {
         Self::current().wgpu_app.set_title(title);
     }
 
-    pub fn set_window_size(size: impl Into<Size<u32>>) {
-        Self::current().wgpu_app.set_window_size(size);
+    pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
+        from_main(|| {
+            Self::current().wgpu_app.set_window_size(size);
+        })
+        .await;
+        sleep(Duration::from_secs_f32(0.02)).await;
     }
 
     pub async fn take_screenshot() -> Result<Screenshot> {

@@ -26,7 +26,7 @@ impl ViewSetup for ButtonTestView {
 pub async fn test_button() -> Result<()> {
     UI::init_test_view::<ButtonTestView>().await;
 
-    App::set_window_size((200, 100));
+    App::set_window_size((200, 100)).await;
 
     test_combinations([
         ("0 0 b", 0),

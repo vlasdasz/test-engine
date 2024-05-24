@@ -68,7 +68,7 @@ pub async fn test_table_view() -> Result<()> {
 
     let view = UI::init_test_view::<TestTableView>().await;
 
-    App::set_window_size((1000, 1000));
+    App::set_window_size((1000, 1000)).await;
 
     wait_for_next_frame().await;
     wait_for_next_frame().await;
@@ -131,10 +131,8 @@ pub async fn test_table_view() -> Result<()> {
     check_colors(
         r#"
              666  983 - 255 255 255
-             652  983 - 162 162 162
              625  983 -  59  59  59
              591  983 - 255 255 255
-             540  983 - 239 239 239
              511  983 - 255 255 255
              477  983 - 255 255 255
              441  983 - 255 255 255

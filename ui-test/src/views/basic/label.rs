@@ -35,7 +35,7 @@ impl ViewSetup for LabelTestView {
 pub async fn test_label() -> Result<()> {
     let mut view = UI::init_test_view::<LabelTestView>().await;
 
-    App::set_window_size((400, 400));
+    App::set_window_size((400, 400)).await;
 
     check_colors(
         r#"

@@ -2,7 +2,6 @@ use test_engine::{
     async_after,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
-    on_main,
     refs::Weak,
     ui::{
         link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
@@ -111,7 +110,7 @@ impl ViewSetup for TestGameView {
         self.alert.set_text_size(20);
         self.alert.on_tap(|| {
             Alert::show("Hello!");
-            on_main(|| App::set_window_size((600, 600)))
+            App::set_window_size((600, 600))
         });
 
         self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use dispatch::{from_main, wait_for_next_frame};
+use dispatch::from_main;
 use gm::{flat::Point, Color, U8Color};
 use ui::{
     Button, Container, HighlightView, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews, WeakView,
@@ -37,9 +37,6 @@ pub fn add_action(action: impl FnMut() + 'static) {
 }
 
 pub async fn check_colors(data: &str) -> Result<()> {
-    wait_for_next_frame().await;
-    wait_for_next_frame().await;
-
     let screenshot = App::take_screenshot().await?;
 
     let lines: Vec<_> = data.split('\n').collect();

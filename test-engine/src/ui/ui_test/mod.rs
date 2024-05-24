@@ -31,7 +31,10 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
         let touches = Touch::vec_from_str(comb.0);
 
         for touch in touches {
-            inject_touch(touch).await;
+            from_main(move || {
+                inject_touch(touch);
+            })
+            .await;
         }
 
         if get_state::<Val>() != comb.1 {
@@ -47,32 +50,34 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     Ok(())
 }
 
-async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
-    wait_for_next_frame().await;
-    from_main(move || {
-        Input::process_touch_event(touch.into());
-    })
-    .await;
+fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
+    Input::process_touch_event(touch.into());
 }
 
 #[allow(dead_code)]
 pub async fn inject_scroll(scroll: impl ToF32) {
-    wait_for_next_frame().await;
     from_main(move || {
         UIManager::trigger_scroll((0, scroll).into());
     })
     .await;
 }
 
-pub async fn inject_touches(data: &str) {
-    for touch in Touch::vec_from_str(data) {
-        inject_touch(touch).await;
-    }
+pub async fn inject_touches(data: impl ToString + Send + 'static) {
+    from_main(move || {
+        for touch in Touch::vec_from_str(&data.to_string()) {
+            inject_touch(touch);
+        }
+    })
+    .await
 }
 
 pub async fn inject_touches_delayed(data: &str) {
     for touch in Touch::vec_from_str(data) {
-        inject_touch(touch).await;
+        wait_for_next_frame().await;
+        from_main(move || {
+            inject_touch(touch);
+        })
+        .await;
         wait_for_next_frame().await;
     }
 }

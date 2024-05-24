@@ -25,7 +25,7 @@ impl ViewSetup for SwitchTestView {
 pub async fn test_switch() -> Result<()> {
     UI::init_test_view::<SwitchTestView>().await;
 
-    App::set_window_size((200, 100));
+    App::set_window_size((200, 100)).await;
 
     test_combinations([
         (

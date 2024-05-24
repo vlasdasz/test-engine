@@ -24,7 +24,7 @@ impl ViewSetup for ImageTestView {
 pub async fn test_image_view() -> Result<()> {
     UI::init_test_view::<ImageTestView>().await;
 
-    App::set_window_size((400, 400));
+    App::set_window_size((400, 400)).await;
 
     check_colors(
         r#"   59  103 -  25  51  76
@@ -56,7 +56,7 @@ pub async fn test_image_view() -> Result<()> {
     )
     .await?;
 
-    App::set_window_size((1000, 120));
+    App::set_window_size((1000, 120)).await;
 
     check_colors(
         r#"  235   42 -  25  51  76
@@ -78,7 +78,7 @@ pub async fn test_image_view() -> Result<()> {
     )
     .await?;
 
-    App::set_window_size((200, 600));
+    App::set_window_size((200, 600)).await;
 
     check_colors(
         r#"   36  158 -  25  51  76
