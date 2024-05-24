@@ -57,7 +57,7 @@ impl UI {
         sections: &mut Vec<Section<'a>>,
         text_offset: &mut f32,
     ) {
-        const DRAW_DEBUG_FRAMES: bool = true;
+        const DRAW_DEBUG_FRAMES: bool = false;
 
         if view.is_hidden() {
             return;

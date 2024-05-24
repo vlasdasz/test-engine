@@ -1,10 +1,14 @@
 use anyhow::Result;
+use log::debug;
 use test_engine::{
     reflected,
     reflected::Reflected,
     refs::Weak,
-    ui::{view, Button, FormView, Sub, ViewData, ViewSetup, ViewSubviews, UI},
-    ui_test::record_ui_test,
+    ui::{
+        view, Button, FormView, InputView, Labeled, Sub, Switch, TextField, ViewData, ViewSetup,
+        ViewSubviews, UI,
+    },
+    wait_for_next_frame,
 };
 
 #[derive(Default, Debug, Reflected)]
@@ -43,9 +47,23 @@ impl ViewSetup for FormTestView {
 pub async fn test_form_view() -> Result<()> {
     let view = UI::init_test_view::<FormTestView>().await;
 
-    dbg!(view.form.dump_subviews());
+    let sub = view.form.subviews();
 
-    record_ui_test().await;
+    let float = sub[0].downcast_view::<Labeled<TextField>>().unwrap().input;
+    assert_eq!(float.text(), "10.0");
+
+    let integer = sub[1].downcast_view::<Labeled<TextField>>().unwrap().input;
+    assert_eq!(integer.text(), "20");
+
+    let boolean = sub[2].downcast_view::<Labeled<Switch>>().unwrap().input;
+    assert_eq!(boolean.text(), "1");
+
+    let string = sub[3].downcast_view::<Labeled<TextField>>().unwrap().input;
+    assert_eq!(string.text(), "hello");
+
+    wait_for_next_frame().await;
+
+    debug!("Form view: OK");
 
     Ok(())
 }
