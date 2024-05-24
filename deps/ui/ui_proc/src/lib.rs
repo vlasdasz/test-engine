@@ -53,8 +53,8 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     );
 
     quote! {
-        #[derive(derivative::Derivative, Default)]
-        #[derivative(Debug)]
+        #[derive(derivative::Derivative)]
+        #[derivative(Debug, Default)]
         #stream
 
         impl #generics test_engine::ui::View for #name <#type_params> {

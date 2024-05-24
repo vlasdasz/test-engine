@@ -4,7 +4,7 @@ use gm::Color;
 use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 
-use crate::{view::ViewData, Anchor, Container, InputView, Sub, ViewSetup, ViewSubviews};
+use crate::{view::ViewData, Anchor, Container, InputView, Sub, TextAlignment, ViewSetup, ViewSubviews};
 mod test_engine {
     pub(crate) use refs;
 
@@ -24,6 +24,7 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
         self.view_label += &format!(": {}", type_name::<T>());
 
         self.label.place().tlb(0).relative(Anchor::Width, self, 0.5);
+        self.label.set_alignment(TextAlignment::Left);
 
         if type_name::<T>() == "ui::views::basic::switch::Switch" {
             let mut container = self.add_view::<Container>();

@@ -8,7 +8,7 @@ use test_engine::{
         view, Button, FormView, InputView, Labeled, Sub, Switch, TextField, ViewData, ViewSetup,
         ViewSubviews, UI,
     },
-    wait_for_next_frame,
+    ui_test::record_ui_test,
 };
 
 #[derive(Default, Debug, Reflected)]
@@ -34,7 +34,7 @@ impl ViewSetup for FormTestView {
             dbg!(&data);
         });
 
-        self.form.place().lrb(0).t(100);
+        self.form.place().lrb(80).t(100);
         self.form.set_data(&Data {
             float_field:   10.0,
             integer_field: 20,
@@ -61,7 +61,7 @@ pub async fn test_form_view() -> Result<()> {
     let string = sub[3].downcast_view::<Labeled<TextField>>().unwrap().input;
     assert_eq!(string.text(), "hello");
 
-    wait_for_next_frame().await;
+    record_ui_test().await;
 
     debug!("Form view: OK");
 

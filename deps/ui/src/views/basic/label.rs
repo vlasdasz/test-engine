@@ -31,6 +31,9 @@ impl TextAlignment {
 pub struct Label {
     pub alignment: TextAlignment,
 
+    #[derivative(Default(value = "5.0"))]
+    pub margin: f32,
+
     pub text:   String,
     text_color: Color,
     text_size:  f32,

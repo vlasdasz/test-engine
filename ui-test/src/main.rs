@@ -62,11 +62,11 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_form_view().await?;
     test_int_view().await?;
     test_inject_touch().await?;
     test_highlight().await?;
     test_label().await?;
-    test_form_view().await?;
     test_scroll_view().await?;
     test_table_view().await?;
     test_modal().await?;
