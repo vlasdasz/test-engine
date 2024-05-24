@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Debug, marker::PhantomData};
+use std::{collections::HashMap, marker::PhantomData};
 
 use convert_case::{Case, Casing};
 use reflected::{FieldRef, Reflected};
@@ -17,7 +17,7 @@ mod test_engine {
 }
 
 #[view]
-pub struct FormView<T: Debug + Reflected + 'static> {
+pub struct FormView<T: Reflected + 'static> {
     editind_enabled: bool,
 
     labels:   Vec<Weak<dyn InputView>>,
@@ -25,14 +25,14 @@ pub struct FormView<T: Debug + Reflected + 'static> {
     _p:       PhantomData<T>,
 }
 
-impl<T: Debug + Reflected> ViewSetup for FormView<T> {
+impl<T: Reflected> ViewSetup for FormView<T> {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
         self.editind_enabled = true;
     }
 }
 
-impl<T: Debug + Reflected> FormView<T> {
+impl<T: Reflected> FormView<T> {
     pub fn add_variants(&mut self, field: FieldRef<T>, vals: Vec<String>) {
         self.variants.insert(field, vals);
     }
@@ -74,10 +74,12 @@ impl<T: Debug + Reflected> FormView<T> {
         }
     }
 
-    pub fn get_data(&self, data: &mut T) {
+    pub fn get_data(&self) -> T {
+        let mut data = T::default();
         for (field, label) in T::simple_fields().iter().zip(self.labels.iter()) {
             data.set_value(field, label.text().into());
         }
+        data
     }
 
     pub fn enable_editing(&mut self) -> &mut Self {

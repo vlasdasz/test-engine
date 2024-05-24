@@ -4,7 +4,7 @@ use gm::{
 };
 use rapier2d::{
     geometry::Collider,
-    prelude::{RigidBody, Rotation},
+    prelude::{CoefficientCombineRule, RigidBody, Rotation},
 };
 use refs::{Address, Own, Weak};
 use wgpu_wrapper::image::{Image, ToImage};
@@ -94,7 +94,7 @@ pub trait SpriteTemplates {
     fn set_color(&mut self, _: Color) -> &mut Self;
     fn set_selected(&mut self, _: bool) -> &mut Self;
     fn set_image(&mut self, _: impl ToImage) -> &mut Self;
-    fn set_restitution(&mut self, _: f32) -> &mut Self;
+    fn set_restitution(&mut self, _: f32, _: CoefficientCombineRule) -> &mut Self;
     fn set_position(&mut self, _: Point) -> &mut Self;
     fn set_rotation(&mut self, _: impl ToF32) -> &mut Self;
 }
@@ -115,8 +115,9 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         self
     }
 
-    fn set_restitution(&mut self, res: f32) -> &mut Self {
+    fn set_restitution(&mut self, res: f32, rule: CoefficientCombineRule) -> &mut Self {
         self.collider_mut().set_restitution(res);
+        self.collider_mut().set_restitution_combine_rule(rule);
         self
     }
 

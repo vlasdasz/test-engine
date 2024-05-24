@@ -4,6 +4,7 @@ use gm::{
     flat::{Point, Shape},
     Color,
 };
+use rapier2d::dynamics::CoefficientCombineRule;
 use refs::{Own, Weak};
 use wgpu_wrapper::image::Image;
 
@@ -29,7 +30,7 @@ impl Weapon {
 
         bullet.set_rotation(self.rotation());
         bullet.set_velocity(vel);
-        bullet.set_restitution(0.5);
+        bullet.set_restitution(0.5, CoefficientCombineRule::Average);
         bullet.data_mut().tag = "bullet".into();
         bullet.set_color(Color::random());
         bullet.set_image(self.bullet_image);

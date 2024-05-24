@@ -7,7 +7,7 @@ use gm::{
 };
 use refs::{weak_from_ref, Own, Weak};
 
-use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{Container, GoTo, UIManager, View, ViewData, ViewFrame, WeakView};
 
 pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
@@ -32,6 +32,8 @@ pub trait ViewSubviews {
     fn downcast_view<V: 'static + View>(&self) -> Option<Weak<V>>;
 
     fn outline(&mut self, color: Color) -> Weak<Self>;
+
+    fn add_transition<V: 'static + View + Default>(&mut self) -> Weak<GoTo<V>>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -165,5 +167,9 @@ impl<T: ?Sized + View> ViewSubviews for T {
         self.add_view::<Container>().set_color(color).place().t(0).r(0).b(0).w(WIDTH);
 
         weak_from_ref(self)
+    }
+
+    fn add_transition<V: 'static + View + Default>(&mut self) -> Weak<GoTo<V>> {
+        self.add_view::<GoTo<V>>()
     }
 }

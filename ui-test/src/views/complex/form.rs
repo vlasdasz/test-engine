@@ -28,8 +28,7 @@ impl ViewSetup for FormTestView {
     fn setup(mut self: Weak<Self>) {
         self.button.set_text("Save").place().lrt(0).h(100);
         self.button.on_tap(move || {
-            let mut data = Data::default();
-            self.form.get_data(&mut data);
+            let data = self.form.get_data();
             dbg!(&data);
         });
 
