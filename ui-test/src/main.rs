@@ -29,8 +29,8 @@ use crate::{
         },
         complex::{
             buttons_on_table::test_buttons_on_table_view, collection_view::test_collection_view,
-            drop_down::test_drop_down, form::test_form_view, int_view::test_int_view,
-            table_view::test_table_view,
+            drop_down::test_drop_down, form::test_form_view, highlight::test_highlight,
+            int_view::test_int_view, table_view::test_table_view,
         },
         point_view::test_point_view,
         render_image_path::test_render_image_path,
@@ -62,6 +62,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_highlight().await?;
     test_label().await?;
     test_form_view().await?;
     test_scroll_view().await?;

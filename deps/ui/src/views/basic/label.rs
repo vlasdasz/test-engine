@@ -21,6 +21,12 @@ pub enum TextAlignment {
     Right,
 }
 
+impl TextAlignment {
+    pub fn center(&self) -> bool {
+        matches!(self, Self::Center)
+    }
+}
+
 #[view]
 pub struct Label {
     pub alignment: TextAlignment,

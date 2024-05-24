@@ -164,7 +164,10 @@ impl UI {
                     .with_color(label.text_color().as_slice())
                     .with_z(label.z_position() - UIManager::additional_z_offset() + *text_offset),
             )
-            .with_bounds((frame.width() - margin, frame.height()))
+            .with_bounds((
+                frame.width() - if label.alignment.center() { 0.0 } else { margin },
+                frame.height(),
+            ))
             .with_layout(
                 Layout::default_single_line()
                     .v_align(VerticalAlign::Center)

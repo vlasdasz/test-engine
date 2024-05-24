@@ -1,6 +1,9 @@
 use anyhow::Result;
+use dispatch::{from_main, wait_for_next_frame};
 use gm::{flat::Point, Color, U8Color};
-use ui::{Button, Container, UIManager, ViewData, ViewSetup, ViewSubviews, WeakView};
+use ui::{
+    Button, Container, HighlightView, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews, WeakView,
+};
 
 use crate::{gm::Apply, ui::Screenshot, App};
 
@@ -34,6 +37,9 @@ pub fn add_action(action: impl FnMut() + 'static) {
 }
 
 pub async fn check_colors(data: &str) -> Result<()> {
+    wait_for_next_frame().await;
+    wait_for_next_frame().await;
+
     let screenshot = App::take_screenshot().await?;
 
     let lines: Vec<_> = data.split('\n').collect();
@@ -59,13 +65,13 @@ pub async fn check_colors(data: &str) -> Result<()> {
             255,
         );
 
-        check_pixel_color(&screenshot, pos, color);
+        check_pixel_color(&screenshot, pos, color).await;
     }
 
     Ok(())
 }
 
-pub fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
+pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
     let pixel: U8Color = screenshot.get_pixel(pos);
     let pixel_f32: Color<f32> = pixel.into();
     let color_f32: Color<f32> = color.into();
@@ -73,6 +79,20 @@ pub fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
     let diff = pixel_f32.diff(color_f32);
 
     let max_diff = 0.071;
+
+    if diff > max_diff {
+        from_main(move || {
+            let mut high = HighlightView::new();
+            high.set_z_position(0.1);
+
+            UIManager::root_view_weak()
+                .__add_subview_internal(high, true)
+                .downcast_view::<HighlightView>()
+                .unwrap()
+                .set(pos, color_f32, pixel_f32);
+        })
+        .await;
+    }
 
     assert!(
         diff <= max_diff,

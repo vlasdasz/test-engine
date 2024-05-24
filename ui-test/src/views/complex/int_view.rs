@@ -80,7 +80,7 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq!(19.0, view.int.value());
+    assert_eq!(20.0, view.int.value());
 
     from_main(move || {
         view.int.set_step(4.5);
@@ -117,7 +117,7 @@ pub async fn test_int_view() -> Result<()> {
     )
     .await;
 
-    assert_eq!(-26.0, view.int.value());
+    assert_eq!(-25.0, view.int.value());
 
     debug!("Int view test: OK");
 

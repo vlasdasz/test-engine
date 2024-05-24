@@ -5,7 +5,7 @@ use gm::{
     flat::{Point, Size},
     Color,
 };
-use refs::{Own, Weak};
+use refs::{weak_from_ref, Own, Weak};
 
 use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};
 
@@ -30,6 +30,8 @@ pub trait ViewSubviews {
     fn dump_subviews(&self) -> Vec<String>;
 
     fn downcast_view<V: 'static + View>(&self) -> Option<Weak<V>>;
+
+    fn outline(&mut self, color: Color) -> Weak<Self>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -152,5 +154,16 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn downcast_view<V: 'static + View>(&self) -> Option<Weak<V>> {
         self.weak_view().downcast::<V>()
+    }
+
+    fn outline(&mut self, color: Color) -> Weak<Self> {
+        const WIDTH: f32 = 2.0;
+
+        self.add_view::<Container>().set_color(color).place().lrt(0).h(WIDTH);
+        self.add_view::<Container>().set_color(color).place().lrb(0).h(WIDTH);
+        self.add_view::<Container>().set_color(color).place().t(0).l(0).b(0).w(WIDTH);
+        self.add_view::<Container>().set_color(color).place().t(0).r(0).b(0).w(WIDTH);
+
+        weak_from_ref(self)
     }
 }

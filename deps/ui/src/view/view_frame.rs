@@ -37,6 +37,10 @@ impl<T: ?Sized + View> ViewFrame for T {
     }
 
     fn set_z_position(&mut self, z: f32) -> &mut Self {
+        assert!(
+            self.superview().is_null(),
+            "Z position must be set before adding to superview"
+        );
         self.base_mut().z_position = z;
         self
     }

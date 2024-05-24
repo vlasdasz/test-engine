@@ -5,8 +5,6 @@ use std::{
     fmt::Display,
     ops::Deref,
     sync::{Arc, Mutex},
-    thread::sleep,
-    time::Duration,
 };
 
 use anyhow::{bail, Result};
@@ -24,8 +22,6 @@ use crate::{
     ui::{Input, Touch, U8Color, UIEvents, UIManager},
     wait_for_next_frame, App,
 };
-
-const INJECT_INPUT_DELAY: f32 = 0.;
 
 pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
@@ -52,7 +48,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
 }
 
 async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
-    sleep(Duration::from_secs_f32(INJECT_INPUT_DELAY));
+    wait_for_next_frame().await;
     from_main(move || {
         Input::process_touch_event(touch.into());
     })
@@ -61,12 +57,11 @@ async fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
 
 #[allow(dead_code)]
 pub async fn inject_scroll(scroll: impl ToF32) {
-    sleep(Duration::from_secs_f32(INJECT_INPUT_DELAY));
+    wait_for_next_frame().await;
     from_main(move || {
         UIManager::trigger_scroll((0, scroll).into());
     })
     .await;
-    wait_for_next_frame().await
 }
 
 pub async fn inject_touches(data: &str) {
