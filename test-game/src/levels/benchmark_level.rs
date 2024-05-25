@@ -101,7 +101,7 @@ impl Level for BenchmarkLevel {
             return;
         }
 
-        if UIManager::fps() < 60.0 {
+        if UIManager::fps() < 40.0 {
             self.finish = true;
             Alert::show(format!("{} sprites", self.bullets_count));
         }
