@@ -154,7 +154,7 @@ impl App {
             Self::current().wgpu_app.set_window_size(size);
         })
         .await;
-        sleep(Duration::from_secs_f32(0.02)).await;
+        sleep(Duration::from_secs_f32(0.05)).await;
     }
 
     pub async fn take_screenshot() -> Result<Screenshot> {

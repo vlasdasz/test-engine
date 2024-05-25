@@ -17,4 +17,12 @@ mobile:
 	cargo install test-mobile
 	test-mobile --path=../test-mobile/mobile-template
 
+ios-lib:
+	cargo lipo -p test-game --release
+
+ios-debug:
+	cargo lipo -p test-game
+	rm -f ./target/universal/release/libtest_game.a
+	cp ./target/universal/debug/libtest_game.a ./target/universal/release/libtest_game.a
+
 .PHONY: mobile

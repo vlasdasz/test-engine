@@ -56,3 +56,7 @@ ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
 valid = { path = "deps/valid" }
 wgpu_wrapper = { path = "deps/wgpu_wrapper" }
+
+[patch.crates-io]
+wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "b2cc37132280e34cdd906a5939b8c472406704f7" }
+#wgpu = { path = "../3/wgpu/wgpu" }
