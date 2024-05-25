@@ -3,27 +3,19 @@
 
 extern crate core;
 
-mod body;
 mod control;
 mod event_handler;
 mod level;
 mod level_manager;
 mod sets;
-mod sprite;
 mod sprite_data;
-mod terrain;
 mod to_collider;
 mod units;
-mod wall;
 
-pub use body::Body;
 pub use control::Control;
 pub use level::{Level, LevelBase, LevelCreation, LevelTemplates};
 pub use level_manager::LevelManager;
 pub use rapier2d::dynamics::CoefficientCombineRule;
-pub use sprite::{Sprite, SpriteTemplates};
 pub use sprite_data::SpriteData;
-pub use terrain::*;
 pub use to_collider::ToCollider;
-pub use units::{Player, Unit, Weapon};
-pub use wall::Wall;
+pub use units::*;

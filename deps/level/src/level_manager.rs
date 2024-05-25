@@ -23,7 +23,7 @@ impl LevelManager {
             return;
         }
         Self::level_mut().update_camera();
-        Self::level_mut().base_mut().update_physics(frame_time);
+        Self::level_mut().update_physics(frame_time);
         Self::level_mut().update();
     }
 }

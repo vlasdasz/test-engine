@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::{na::Vector2, prelude::RigidBodyBuilder};
-use refs::{Own, Weak};
+use refs::Own;
 
-use crate::{control::Control, Level, Sprite, SpriteData, ToCollider};
+use crate::{control::Control, LevelManager, Sprite, SpriteData, ToCollider};
 
 pub struct Body {
-    sprite: Own<SpriteData>,
+    sprite: SpriteData,
 }
 
 impl Body {
@@ -41,7 +41,7 @@ impl Sprite for Body {
         &mut self.sprite
     }
 
-    fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Own<Self>
+    fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         let rigid_body = RigidBodyBuilder::dynamic()
             .translation(Vector2::new(position.x, position.y))
@@ -49,21 +49,20 @@ impl Sprite for Body {
 
         let collider = shape.make_collider().build();
 
-        let level_base = level.base_mut();
+        let level = LevelManager::level_mut().deref_mut();
 
-        let rigid_handle = level_base.sets.rigid_body.insert(rigid_body);
+        let rigid_handle = level.sets.rigid_body.insert(rigid_body);
 
-        let collider_handle = level_base.sets.collider.insert_with_parent(
-            collider,
-            rigid_handle,
-            &mut level_base.sets.rigid_body,
-        );
+        let collider_handle =
+            level
+                .sets
+                .collider
+                .insert_with_parent(collider, rigid_handle, &mut level.sets.rigid_body);
 
-        let mut sprite = SpriteData::make(shape, position, level);
+        let mut sprite = SpriteData::make(shape, position);
 
         sprite.collider_handle = collider_handle.into();
         sprite.rigid_handle = rigid_handle.into();
-        sprite.level = level;
 
         Own::new(Self { sprite })
     }

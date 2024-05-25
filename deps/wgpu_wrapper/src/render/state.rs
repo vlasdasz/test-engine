@@ -2,8 +2,8 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
-use log::info;
 use gm::{flat::Size, CheckedConvert, Color, LossyConvert, Platform, U8Color};
+use log::info;
 use refs::MainLock;
 use tokio::{
     spawn,

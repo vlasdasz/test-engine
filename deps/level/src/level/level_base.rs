@@ -1,4 +1,4 @@
-use std::{any::Any, ops::Deref};
+use std::ops::Deref;
 
 use gm::flat::Point;
 use rapier2d::{
@@ -10,7 +10,7 @@ use rapier2d::{
         MultibodyJointSet, NarrowPhase, PhysicsPipeline,
     },
 };
-use refs::{weak_from_ref, AsAny, Own, Weak};
+use refs::{Own, Weak};
 use smart_default::SmartDefault;
 use vents::Event;
 
@@ -133,28 +133,6 @@ impl LevelBase {
     }
 }
 
-impl AsAny for LevelBase {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any {
-        self
-    }
-}
-
-impl Level for LevelBase {
-    fn base(&self) -> &LevelBase {
-        self
-    }
-    fn base_mut(&mut self) -> &mut LevelBase {
-        self
-    }
-    fn weak_level(&self) -> Weak<dyn Level> {
-        weak_from_ref(self as &dyn Level)
-    }
-}
-
 pub trait LevelTemplates {
     fn set_gravity(&mut self, g: impl Into<Point>);
 }
@@ -162,6 +140,6 @@ pub trait LevelTemplates {
 impl<T: ?Sized + Level> LevelTemplates for T {
     fn set_gravity(&mut self, g: impl Into<Point>) {
         let g = g.into();
-        self.base_mut().gravity = Vector2::new(g.x, g.y)
+        self.gravity = Vector2::new(g.x, g.y)
     }
 }

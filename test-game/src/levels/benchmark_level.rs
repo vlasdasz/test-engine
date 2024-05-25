@@ -1,9 +1,12 @@
-use std::any::Any;
+use std::{
+    any::Any,
+    ops::{Deref, DerefMut},
+};
 
 use test_engine::{
     gm::{Animation, Shape},
     level::{Level, LevelBase, LevelCreation, Player, SpriteTemplates, Wall},
-    refs::{weak_from_ref, AsAny, Weak},
+    refs::{AsAny, Weak},
     ui::{Color, Image},
     DataManager,
 };
@@ -48,6 +51,20 @@ impl BenchmarkLevel {
     }
 }
 
+impl Deref for BenchmarkLevel {
+    type Target = LevelBase;
+
+    fn deref(&self) -> &Self::Target {
+        &self.base
+    }
+}
+
+impl DerefMut for BenchmarkLevel {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.base
+    }
+}
+
 impl Level for BenchmarkLevel {
     fn setup(&mut self) {
         self.player = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
@@ -60,7 +77,6 @@ impl Level for BenchmarkLevel {
         self.player.weapon.bullet_speed = 100.0;
         self.player.weapon.bullet_shape = Shape::Rect((1, 0.28).into());
 
-        self.set_scale(1.0);
         self.make_walls();
     }
 
@@ -74,18 +90,6 @@ impl Level for BenchmarkLevel {
         self.left_wall.set_x(self.left_animation.value());
         self.right_wall.set_x(self.right_animation.value());
         self.floor.set_y(self.floor_animation.value());
-    }
-
-    fn base(&self) -> &LevelBase {
-        &self.base
-    }
-
-    fn base_mut(&mut self) -> &mut LevelBase {
-        &mut self.base
-    }
-
-    fn weak_level(&self) -> Weak<dyn Level> {
-        weak_from_ref(self as &dyn Level)
     }
 }
 

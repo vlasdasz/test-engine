@@ -1,4 +1,7 @@
-use std::any::Any;
+use std::{
+    any::Any,
+    ops::{Deref, DerefMut},
+};
 
 use test_engine::{
     audio::Sound,
@@ -20,7 +23,7 @@ impl TestLevel {
     fn on_touch(&mut self, pos: Point) {
         if let Some(mut sprite) = self.sprite_at(pos) {
             sprite.set_selected(true);
-            self.base_mut().on_sprite_selected.trigger(sprite);
+            self.on_sprite_selected.trigger(sprite);
             if let Some(mut old) = self.selected_sprite {
                 old.set_selected(false);
             }
@@ -31,8 +34,22 @@ impl TestLevel {
         if let Some(mut sprite) = self.selected_sprite {
             sprite.set_selected(false);
             self.selected_sprite = None;
-            self.base_mut().on_sprite_selected.trigger(Weak::default());
+            self.on_sprite_selected.trigger(Weak::default());
         }
+    }
+}
+
+impl Deref for TestLevel {
+    type Target = LevelBase;
+
+    fn deref(&self) -> &Self::Target {
+        &self.base
+    }
+}
+
+impl DerefMut for TestLevel {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.base
     }
 }
 
@@ -81,7 +98,7 @@ impl Level for TestLevel {
         }
 
         let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 5));
-        self.base_mut().player = player;
+        self.player = player;
         player.set_image("frisk.png").enable_collision_detection();
         player.weapon.set_image("ak.png");
         let mut this = weak_from_ref(self);
@@ -95,20 +112,8 @@ impl Level for TestLevel {
     }
 
     fn update(&mut self) {
-        let pos = self.player().position();
+        let pos = self.player.position();
         *LevelManager::camera_pos() = pos;
-    }
-
-    fn base(&self) -> &LevelBase {
-        &self.base
-    }
-
-    fn base_mut(&mut self) -> &mut LevelBase {
-        &mut self.base
-    }
-
-    fn weak_level(&self) -> Weak<dyn Level> {
-        weak_from_ref(self as &dyn Level)
     }
 }
 

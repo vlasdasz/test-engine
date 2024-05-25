@@ -3,12 +3,12 @@ use gm::{
     ToF32,
 };
 use rapier2d::na::Vector2;
-use refs::{Own, Weak};
+use refs::Own;
 
-use crate::{sprite::SpriteTemplates, Level, Sprite, SpriteData, ToCollider};
+use crate::{LevelManager, Sprite, SpriteData, SpriteTemplates, ToCollider};
 
 pub struct Wall {
-    data: Own<SpriteData>,
+    data: SpriteData,
 }
 
 impl Wall {
@@ -34,14 +34,14 @@ impl Sprite for Wall {
         &mut self.data
     }
 
-    fn make(shape: Shape, position: Point, mut level: Weak<dyn Level>) -> Own<Self> {
+    fn make(shape: Shape, position: Point) -> Own<Self> {
         let collider = shape
             .make_collider()
             .translation(Vector2::new(position.x, position.y))
             .restitution(1.0)
             .build();
-        let mut sprite = SpriteData::make(shape, position, level);
-        sprite.collider_handle = level.base_mut().sets.collider.insert(collider).into();
+        let mut sprite = SpriteData::make(shape, position);
+        sprite.collider_handle = LevelManager::level_mut().sets.collider.insert(collider).into();
         Own::new(Wall { data: sprite })
     }
 }

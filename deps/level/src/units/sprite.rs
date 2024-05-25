@@ -9,7 +9,7 @@ use rapier2d::{
 use refs::{Address, Own, Weak};
 use wgpu_wrapper::image::{Image, ToImage};
 
-use crate::{Level, LevelManager, SpriteData};
+use crate::{LevelManager, SpriteData};
 
 pub trait Sprite {
     fn update(&mut self) {}
@@ -41,20 +41,22 @@ pub trait Sprite {
     }
 
     fn rigid_body(&self) -> &RigidBody {
-        &LevelManager::level().rigid_bodies()[self.data().rigid_handle.unwrap()]
+        &LevelManager::level().rigid_bodies()
+            [self.data().rigid_handle.expect("This sprite doesn't have rigid body")]
     }
 
     fn rigid_body_mut(&mut self) -> &mut RigidBody {
-        let handle = self.data().rigid_handle.unwrap();
+        let handle = self.data().rigid_handle.expect("This sprite doesn't have rigid body");
         &mut LevelManager::level_mut().rigid_bodies_mut()[handle]
     }
 
     fn collider(&self) -> &Collider {
-        &LevelManager::level().colliders()[self.data().collider_handle.unwrap()]
+        &LevelManager::level().colliders()
+            [self.data().collider_handle.expect("This sprite doesn't have collider")]
     }
 
     fn collider_mut(&mut self) -> &mut Collider {
-        let handle = self.data().collider_handle.unwrap();
+        let handle = self.data().collider_handle.expect("This sprite doesn't have collider");
         &mut LevelManager::level_mut().colliders_mut()[handle]
     }
 
@@ -86,7 +88,7 @@ pub trait Sprite {
 
     fn data(&self) -> &SpriteData;
     fn data_mut(&mut self) -> &mut SpriteData;
-    fn make(shape: Shape, position: Point, level: Weak<dyn Level>) -> Own<Self>
+    fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized;
 }
 
@@ -95,7 +97,7 @@ pub trait SpriteTemplates {
     fn set_selected(&mut self, _: bool) -> &mut Self;
     fn set_image(&mut self, _: impl ToImage) -> &mut Self;
     fn set_restitution(&mut self, _: f32, _: CoefficientCombineRule) -> &mut Self;
-    fn set_position(&mut self, _: Point) -> &mut Self;
+    fn set_position(&mut self, _: impl Into<Point>) -> &mut Self;
     fn set_rotation(&mut self, _: impl ToF32) -> &mut Self;
 }
 
@@ -121,7 +123,8 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         self
     }
 
-    fn set_position(&mut self, pos: Point) -> &mut Self {
+    fn set_position(&mut self, pos: impl Into<Point>) -> &mut Self {
+        let pos = pos.into();
         if self.data().collider_handle.is_some() {
             self.collider_mut().set_position([pos.x, pos.y].into());
         } else if self.data().rigid_handle.is_some() {
