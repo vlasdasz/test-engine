@@ -17,7 +17,6 @@ log = { workspace = true }
 tokio = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
-winit = { workspace = true }
 
 manage = { workspace = true }
 refs = { workspace = true }
@@ -25,3 +24,10 @@ refs = { workspace = true }
 gm = { workspace = true }
 
 wgpu_text = { workspace = true }
+
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = { workspace = true }
+winit = { workspace = true, features = ["android-game-activity"] }
+
+[target.'cfg(not(target_os = "android"))'.dependencies]
+winit = { workspace = true }

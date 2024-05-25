@@ -55,3 +55,8 @@ pub use paths::*;
 pub use store::store::{executable_name, OnDisk};
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use wgpu_wrapper::cast_slice;
+
+#[cfg(target_os = "android")]
+pub type AndroidApp = winit::platform::android::activity::AndroidApp;
+#[cfg(target_os = "android")]
+pub type EventLoop = winit::event_loop::EventLoop<wgpu_wrapper::Events>;

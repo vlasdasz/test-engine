@@ -1,4 +1,4 @@
-use std::{any::type_name, future::Future, io::Write, path::PathBuf, ptr::null_mut, time::Duration};
+use std::{any::type_name, io::Write, path::PathBuf, ptr::null_mut, time::Duration};
 
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
@@ -7,7 +7,7 @@ use gm::flat::{Point, Size};
 use level::LevelBase;
 use log::{Level, LevelFilter};
 use refs::{Own, Rglica};
-use tokio::{spawn, time::sleep};
+use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 use vents::OnceEvent;
 use wgpu::RenderPass;
@@ -126,17 +126,24 @@ impl App {
         app
     }
 
+    #[cfg(not(target_os = "android"))]
     pub async fn start(first_view: Own<dyn View>) -> Result<()> {
         WGPUApp::start(Self::new(first_view)).await
     }
 
+    #[cfg(target_os = "android")]
+    pub async fn start(first_view: Own<dyn View>, event_loop: crate::EventLoop) -> Result<()> {
+        WGPUApp::start(Self::new(first_view), event_loop).await
+    }
+
+    #[cfg(not(target_os = "android"))]
     pub async fn start_with_actor(
         first_view: Own<dyn View>,
-        actions: impl Future<Output = Result<()>> + Send + 'static,
+        actions: impl std::future::Future<Output = Result<()>> + Send + 'static,
     ) -> Result<()> {
         let app = Self::new(first_view);
 
-        spawn(async move {
+        tokio::spawn(async move {
             let recv = from_main(|| App::current().window_ready.val_async()).await;
             recv.await.unwrap();
             let _ = actions.await;

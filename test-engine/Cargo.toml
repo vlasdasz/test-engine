@@ -40,5 +40,12 @@ ui = { workspace = true }
 ui_proc = { workspace = true }
 wgpu_wrapper = { workspace = true }
 
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = { workspace = true }
+winit = { workspace = true, features = ["android-game-activity"] }
+
+[target.'cfg(not(target_os = "android"))'.dependencies]
+winit = { workspace = true }
+
 [build-dependencies]
 cfg_aliases = { workspace = true }

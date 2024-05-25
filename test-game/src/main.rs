@@ -8,5 +8,6 @@ mod levels;
 mod test_game;
 
 fn main() {
+    #[cfg(desktop)]
     test_game::start_test_game()
 }

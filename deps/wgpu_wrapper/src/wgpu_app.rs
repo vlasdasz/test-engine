@@ -29,9 +29,15 @@ use crate::{
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
+#[cfg(target_os = "android")]
+pub type Events = winit::platform::android::activity::AndroidApp;
+
+#[cfg(not(target_os = "android"))]
+pub type Events = ();
+
 pub struct WGPUApp {
     pub state:  State,
-    event_loop: Option<EventLoop<()>>,
+    event_loop: Option<EventLoop<Events>>,
     close:      AtomicBool,
 }
 
@@ -62,9 +68,7 @@ impl WGPUApp {
         });
     }
 
-    pub async fn start(app: Box<dyn App>) -> Result<()> {
-        let event_loop = EventLoop::new()?;
-
+    async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
         let window = Arc::new(WindowBuilder::new().with_title("Test Engine").build(&event_loop)?);
 
         let scale: u32 = window.scale_factor().lossy_convert();
@@ -87,6 +91,16 @@ impl WGPUApp {
         app.state.app.set_wgpu_app(Rglica::from_ref(app));
         app.state.app.window_ready();
         app.start_event_loop()
+    }
+
+    #[cfg(not(target_os = "android"))]
+    pub async fn start(app: Box<dyn App>) -> Result<()> {
+        Self::start_internal(app, EventLoop::new()?).await
+    }
+
+    #[cfg(target_os = "android")]
+    pub async fn start(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
+        Self::start_internal(app, event_loop).await
     }
 
     fn start_event_loop(&mut self) -> Result<()> {
