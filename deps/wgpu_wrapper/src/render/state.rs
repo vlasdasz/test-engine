@@ -2,6 +2,7 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
 
 use anyhow::{anyhow, Result};
 use bytemuck::cast_slice;
+use log::info;
 use gm::{flat::Size, CheckedConvert, Color, LossyConvert, Platform, U8Color};
 use refs::MainLock;
 use tokio::{
@@ -62,9 +63,9 @@ impl State {
             .await
             .ok_or(anyhow!("Failed to request adapter"))?;
 
-        let _info = adapter.get_info();
+        let info = adapter.get_info();
 
-        // dbg!(&info.backend);
+        info!("{}", &info.backend);
 
         let (device, queue) = adapter
             .request_device(
