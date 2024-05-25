@@ -23,6 +23,8 @@ use crate::{
 
 #[derive(Debug)]
 pub struct SpriteDrawer {
+    view: SpriteView,
+
     pipeline: RenderPipeline,
 
     view_buffer:     Buffer,
@@ -84,6 +86,7 @@ impl SpriteDrawer {
         });
 
         Self {
+            view: Default::default(),
             pipeline,
             view_buffer,
             view_bind_group,
@@ -112,18 +115,17 @@ impl SpriteDrawer {
     ) {
         render_pass.set_pipeline(&self.pipeline);
 
-        let queue = WGPUApp::queue();
+        let view = SpriteView {
+            camera_pos,
+            resolution,
+            camera_rotation,
+            scale,
+        };
 
-        queue.write_buffer(
-            &self.view_buffer,
-            0,
-            bytes_of(&SpriteView {
-                camera_pos,
-                resolution,
-                camera_rotation,
-                scale,
-            }),
-        );
+        if view != self.view {
+            self.view = view;
+            WGPUApp::queue().write_buffer(&self.view_buffer, 0, bytes_of(&view));
+        }
 
         self.instances.load();
 

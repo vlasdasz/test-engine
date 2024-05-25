@@ -6,7 +6,7 @@ use refs::Own;
 use crate::{LevelManager, Sprite, SpriteData, Unit, Weapon};
 
 pub struct Player {
-    unit:       Own<Unit>,
+    pub unit:   Own<Unit>,
     pub weapon: Own<Weapon>,
 }
 
@@ -15,7 +15,7 @@ impl Sprite for Player {
         let cursor = LevelManager::level().cursor_position;
         self.weapon.rotation = self.position().angle_to(cursor);
         self.weapon.position = self.unit.position();
-        self.weapon.velocity = self.velocity();
+        self.weapon.velocity = self.unit.body.velocity();
 
         // if !self.image.is_empty() {
         //     self.image().flipped = cursor.x < self.position().x;
@@ -38,14 +38,6 @@ impl Sprite for Player {
     //     self.weapon.draw();
     // }
 
-    fn data(&self) -> &SpriteData {
-        self.unit.data()
-    }
-
-    fn data_mut(&mut self) -> &mut SpriteData {
-        self.unit.data_mut()
-    }
-
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         Own::new(Player {
@@ -56,14 +48,15 @@ impl Sprite for Player {
 }
 
 impl Deref for Player {
-    type Target = Unit;
-    fn deref(&self) -> &Unit {
-        &self.unit
+    type Target = SpriteData;
+
+    fn deref(&self) -> &Self::Target {
+        &self.unit.body
     }
 }
 
 impl DerefMut for Player {
-    fn deref_mut(&mut self) -> &mut Unit {
-        &mut self.unit
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.unit.body
     }
 }

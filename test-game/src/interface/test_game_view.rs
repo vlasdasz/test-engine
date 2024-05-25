@@ -46,7 +46,8 @@ pub struct TestGameView {
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
-        LevelManager::set_level(TestLevel::default());
+        //        LevelManager::set_level(TestLevel::default());
+        LevelManager::set_level(BenchmarkLevel::default());
 
         self.setup_keymap();
 
@@ -76,7 +77,7 @@ impl ViewSetup for TestGameView {
         self.dpad.place().size(200, 140).b(20).anchor(Anchor::Left, self.bl, 10);
 
         self.dpad.on_press.val(move |direction| {
-            LevelManager::level_mut().player.move_by_direction(direction);
+            LevelManager::level_mut().player.unit.body.move_by_direction(direction);
 
             self.label_l.set_text(format!("{direction:?}"));
             App::set_window_title(format!("{direction:?}"));
@@ -169,7 +170,7 @@ impl TestGameView {
         ]
         .apply(|(key, direction)| {
             UIManager::keymap().add(self, key, move || {
-                LevelManager::level_mut().player.move_by_direction(direction);
+                LevelManager::level_mut().player.unit.body.move_by_direction(direction);
             });
         });
 

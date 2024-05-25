@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use gm::{
     flat::{Point, Shape},
     ToF32,
@@ -26,14 +28,6 @@ impl Wall {
 }
 
 impl Sprite for Wall {
-    fn data(&self) -> &SpriteData {
-        &self.data
-    }
-
-    fn data_mut(&mut self) -> &mut SpriteData {
-        &mut self.data
-    }
-
     fn make(shape: Shape, position: Point) -> Own<Self> {
         let collider = shape
             .make_collider()
@@ -43,5 +37,19 @@ impl Sprite for Wall {
         let mut sprite = SpriteData::make(shape, position);
         sprite.collider_handle = LevelManager::level_mut().sets.colliders.insert(collider).into();
         Own::new(Wall { data: sprite })
+    }
+}
+
+impl Deref for Wall {
+    type Target = SpriteData;
+
+    fn deref(&self) -> &Self::Target {
+        &self.data
+    }
+}
+
+impl DerefMut for Wall {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.data
     }
 }

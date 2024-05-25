@@ -1,7 +1,11 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::Point;
-use refs::{MainLock, Own};
+use rapier2d::{
+    dynamics::{RigidBody, RigidBodyHandle},
+    prelude::{Collider, ColliderHandle},
+};
+use refs::MainLock;
 use smart_default::SmartDefault;
 
 use crate::Level;
@@ -14,7 +18,7 @@ pub struct LevelManager {
     scale:      f32,
     camera_pos: Point,
 
-    level: Option<Own<dyn Level>>,
+    level: Option<Box<dyn Level>>,
 }
 
 impl LevelManager {
@@ -30,10 +34,9 @@ impl LevelManager {
 
 impl LevelManager {
     pub fn set_level(level: impl Level + 'static) {
-        let level = Own::new(level);
-        let mut weak = level.weak();
-        SELF.get_mut().level = Some(level);
-        weak.setup();
+        let l = SELF.get_mut();
+        l.level = Some(Box::new(level));
+        l.level.as_mut().unwrap().setup();
     }
 
     pub fn stop_level() {
@@ -46,6 +49,18 @@ impl LevelManager {
 
     pub fn level_mut() -> &'static mut dyn Level {
         SELF.get_mut().level.as_mut().expect("No Level").deref_mut()
+    }
+
+    pub(crate) unsafe fn level_unchecked() -> &'static mut dyn Level {
+        SELF.get_unchecked().level.as_mut().expect("No Level").deref_mut()
+    }
+
+    pub(crate) fn get_rigid_body(handle: RigidBodyHandle) -> &'static RigidBody {
+        unsafe { &LevelManager::level_unchecked().sets.rigid_bodies[handle] }
+    }
+
+    pub(crate) fn get_collider(handle: ColliderHandle) -> &'static Collider {
+        unsafe { &LevelManager::level_unchecked().sets.colliders[handle] }
     }
 
     pub fn no_level() -> bool {

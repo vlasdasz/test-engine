@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use gm::flat::{Point, Shape};
 use refs::Own;
 
@@ -7,15 +9,21 @@ pub struct Object {
     sprite: SpriteData,
 }
 
-impl Sprite for Object {
-    fn data(&self) -> &SpriteData {
+impl Deref for Object {
+    type Target = SpriteData;
+
+    fn deref(&self) -> &Self::Target {
         &self.sprite
     }
+}
 
-    fn data_mut(&mut self) -> &mut SpriteData {
+impl DerefMut for Object {
+    fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.sprite
     }
+}
 
+impl Sprite for Object {
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         Own::new(Self {

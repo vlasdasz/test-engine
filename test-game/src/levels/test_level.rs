@@ -7,7 +7,7 @@ use test_engine::{
     audio::Sound,
     gm::{LossyConvert, Shape},
     level::{Body, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall},
-    refs::{weak_from_ref, AsAny, Weak},
+    refs::{AsAny, Weak},
     ui::{Color, Point},
     DataManager,
 };
@@ -99,16 +99,27 @@ impl Level for TestLevel {
 
         let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 5));
         self.player = player;
-        player.set_image("frisk.png").enable_collision_detection();
+        player.set_image("frisk.png").unit.enable_collision_detection();
         player.weapon.set_image("ak.png");
-        let mut this = weak_from_ref(self);
+
         player.on_collision.sub(move || {
-            this.collision_sound.play();
+            LevelManager::level_mut()
+                .as_any_mut()
+                .downcast_mut::<Self>()
+                .unwrap()
+                .collision_sound
+                .play();
         });
 
         self.collision_sound = Sound::get("pek.wav");
 
-        self.base.on_tap.val(move |pos| this.on_touch(pos));
+        self.base.on_tap.val(move |pos| {
+            LevelManager::level_mut()
+                .as_any_mut()
+                .downcast_mut::<Self>()
+                .unwrap()
+                .on_touch(pos)
+        });
     }
 
     fn update(&mut self) {

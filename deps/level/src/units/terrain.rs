@@ -11,14 +11,6 @@ pub struct Terrain {
 }
 
 impl Sprite for Terrain {
-    fn data(&self) -> &SpriteData {
-        &self.sprite
-    }
-
-    fn data_mut(&mut self) -> &mut SpriteData {
-        &mut self.sprite
-    }
-
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         let rigid_body = RigidBodyBuilder::fixed()

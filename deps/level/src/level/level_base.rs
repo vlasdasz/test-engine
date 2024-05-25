@@ -77,7 +77,7 @@ impl LevelBase {
             };
 
             for sprite in &self.colliding_sprites {
-                let handle = sprite.data().collider_handle.unwrap();
+                let handle = sprite.collider_handle.unwrap();
 
                 let other_index = if b == handle {
                     a
@@ -88,7 +88,7 @@ impl LevelBase {
                 };
 
                 if let Some(other) = self.sprite_with_index(other_index.index()) {
-                    sprite.clone().data_mut().on_collision.trigger(other);
+                    sprite.on_collision.trigger(other);
                 }
             }
         }
@@ -97,7 +97,7 @@ impl LevelBase {
     fn sprite_with_index(&self, index: usize) -> Option<Weak<dyn Sprite>> {
         self.sprites
             .iter()
-            .find(|a| match a.data().collider_handle {
+            .find(|a| match a.collider_handle {
                 Some(handle) => handle.index() == index,
                 None => false,
             })
@@ -109,7 +109,7 @@ impl LevelBase {
 
         let sprite = self.sprites[index].deref();
 
-        if let Some(collider) = sprite.data().collider_handle {
+        if let Some(collider) = sprite.collider_handle {
             self.sets.colliders.remove(
                 collider,
                 &mut self.island_manager,
@@ -118,7 +118,7 @@ impl LevelBase {
             );
         }
 
-        if let Some(rigid_body) = sprite.data().rigid_handle {
+        if let Some(rigid_body) = sprite.rigid_handle {
             self.sets.rigid_bodies.remove(
                 rigid_body,
                 &mut self.island_manager,

@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use gm::{
     flat::{Point, Shape, Size},
     Color, ToF32,
@@ -6,34 +8,35 @@ use rapier2d::{
     geometry::Collider,
     prelude::{CoefficientCombineRule, RigidBody, Rotation},
 };
-use refs::{Address, Own, Weak};
-use wgpu_wrapper::image::{Image, ToImage};
+use refs::{Address, Own};
+use wgpu_wrapper::image::ToImage;
 
 use crate::{LevelManager, SpriteData};
 
-pub trait Sprite {
+pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
     fn update(&mut self) {}
 
     fn size(&self) -> Size {
-        self.data().shape.size()
+        self.size
     }
 
     fn position(&self) -> Point {
-        if self.data().rigid_handle.is_some() {
-            let rigid_body = self.rigid_body();
-            return (rigid_body.translation().x, rigid_body.translation().y).into();
+        if let Some(handle) = self.rigid_handle {
+            let rigid_body = LevelManager::get_rigid_body(handle);
+            let translation = rigid_body.translation();
+            return Point::new(translation.x, translation.y);
         }
-        self.data().position
+        self.position
     }
 
     fn rotation(&self) -> f32 {
-        if self.data().rigid_handle.is_some() {
-            return self.rigid_body().rotation().angle();
+        if let Some(handle) = self.rigid_handle {
+            LevelManager::get_rigid_body(handle).rotation().angle()
+        } else if let Some(handle) = self.collider_handle {
+            LevelManager::get_collider(handle).rotation().angle()
+        } else {
+            self.rotation
         }
-        if self.data().collider_handle.is_some() {
-            return self.collider().rotation().angle();
-        }
-        self.data().rotation
     }
 
     fn restitution(&mut self) -> f32 {
@@ -41,23 +44,27 @@ pub trait Sprite {
     }
 
     fn rigid_body(&self) -> &RigidBody {
-        &LevelManager::level().sets.rigid_bodies
-            [self.data().rigid_handle.expect("This sprite doesn't have rigid body")]
+        unsafe {
+            &LevelManager::level_unchecked().sets.rigid_bodies
+                [self.rigid_handle.expect("This sprite doesn't have rigid body")]
+        }
     }
 
     fn rigid_body_mut(&mut self) -> &mut RigidBody {
-        let handle = self.data().rigid_handle.expect("This sprite doesn't have rigid body");
-        &mut LevelManager::level_mut().sets.rigid_bodies[handle]
+        let handle = self.rigid_handle.expect("This sprite doesn't have rigid body");
+        unsafe { &mut LevelManager::level_unchecked().sets.rigid_bodies[handle] }
     }
 
     fn collider(&self) -> &Collider {
-        &LevelManager::level().sets.colliders
-            [self.data().collider_handle.expect("This sprite doesn't have collider")]
+        unsafe {
+            &LevelManager::level_unchecked().sets.colliders
+                [self.collider_handle.expect("This sprite doesn't have collider")]
+        }
     }
 
     fn collider_mut(&mut self) -> &mut Collider {
-        let handle = self.data().collider_handle.expect("This sprite doesn't have collider");
-        &mut LevelManager::level_mut().sets.colliders[handle]
+        let handle = self.collider_handle.expect("This sprite doesn't have collider");
+        unsafe { &mut LevelManager::level_unchecked().sets.colliders[handle] }
     }
 
     fn contains(&self, point: Point) -> bool {
@@ -70,15 +77,11 @@ pub trait Sprite {
     }
 
     fn color(&self) -> &Color {
-        &self.data().color
-    }
-
-    fn image(&self) -> Weak<Image> {
-        self.data().image
+        &self.color
     }
 
     fn is_selected(&self) -> bool {
-        self.data().is_selected
+        self.is_selected
     }
 
     fn remove(&mut self) {
@@ -86,8 +89,6 @@ pub trait Sprite {
         LevelManager::level_mut().remove(address);
     }
 
-    fn data(&self) -> &SpriteData;
-    fn data_mut(&mut self) -> &mut SpriteData;
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized;
 }
@@ -103,17 +104,17 @@ pub trait SpriteTemplates {
 
 impl<T: ?Sized + Sprite> SpriteTemplates for T {
     fn set_color(&mut self, color: Color) -> &mut Self {
-        self.data_mut().color = color;
+        self.color = color;
         self
     }
 
     fn set_selected(&mut self, selected: bool) -> &mut Self {
-        self.data_mut().is_selected = selected;
+        self.is_selected = selected;
         self
     }
 
     fn set_image(&mut self, image: impl ToImage) -> &mut Self {
-        self.data_mut().image = image.to_image();
+        self.image = image.to_image();
         self
     }
 
@@ -125,24 +126,24 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
 
     fn set_position(&mut self, pos: impl Into<Point>) -> &mut Self {
         let pos = pos.into();
-        if self.data().collider_handle.is_some() {
+        if self.collider_handle.is_some() {
             self.collider_mut().set_position([pos.x, pos.y].into());
-        } else if self.data().rigid_handle.is_some() {
+        } else if self.rigid_handle.is_some() {
             self.rigid_body_mut().set_position([pos.x, pos.y].into(), true)
         }
-        self.data_mut().position = pos;
+        self.position = pos;
         self
     }
 
     fn set_rotation(&mut self, rotation: impl ToF32) -> &mut Self {
         let rotation = rotation.to_f32();
-        if self.data().rigid_handle.is_some() {
+        if self.rigid_handle.is_some() {
             self.rigid_body_mut().set_rotation(Rotation::new(rotation), true);
         }
-        if self.data().collider_handle.is_some() {
+        if self.collider_handle.is_some() {
             self.collider_mut().set_rotation(Rotation::new(rotation));
         } else {
-            self.data_mut().rotation = rotation
+            self.rotation = rotation
         }
         self
     }

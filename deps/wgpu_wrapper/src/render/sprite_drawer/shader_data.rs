@@ -20,7 +20,7 @@ pub(super) const VERTICES: &[Point] = &[
 pub(super) const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 #[repr(C)]
-#[derive(Default, Copy, Clone, Zeroable, Pod)]
+#[derive(Debug, Default, Copy, Clone, Zeroable, Pod, PartialEq)]
 pub(super) struct SpriteView {
     pub camera_pos:      Point,
     pub resolution:      Size,

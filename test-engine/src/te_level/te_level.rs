@@ -1,4 +1,5 @@
 use level::LevelManager;
+use manage::ExistsManaged;
 use ui::UIManager;
 use wgpu::RenderPass;
 use wgpu_wrapper::WGPUApp;
@@ -19,9 +20,9 @@ impl TELevel {
         let drawer = WGPUApp::drawer();
 
         for sprite in LevelManager::level_mut().sprites() {
-            if sprite.image().is_ok() {
+            if sprite.image.exists_managed() {
                 drawer.textured_sprite_drawer.add_instance(
-                    sprite.image(),
+                    sprite.image,
                     sprite.size(),
                     sprite.position(),
                     sprite.rotation(),

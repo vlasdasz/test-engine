@@ -1,5 +1,5 @@
 use gm::{
-    flat::{Point, Shape},
+    flat::{Point, Shape, Size},
     Color,
 };
 use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
@@ -13,7 +13,7 @@ use crate::Sprite;
 pub struct SpriteData {
     pub(crate) position: Point,
 
-    pub(crate) shape:       Shape,
+    pub(crate) size:        Size,
     pub(crate) rotation:    f32,
     pub(crate) is_selected: bool,
 
@@ -30,7 +30,7 @@ impl SpriteData {
     pub fn make(shape: Shape, position: Point) -> Self {
         Self {
             position,
-            shape,
+            size: shape.size(),
             ..Default::default()
         }
     }

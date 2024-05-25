@@ -7,7 +7,7 @@ use refs::{weak_from_ref, Own};
 use crate::{Body, LevelManager, Sprite, SpriteData};
 
 pub struct Unit {
-    body: Own<Body>,
+    pub body: Own<Body>,
 }
 
 impl Unit {
@@ -24,14 +24,6 @@ impl Sprite for Unit {
         self.body.update()
     }
 
-    fn data(&self) -> &SpriteData {
-        self.body.data()
-    }
-
-    fn data_mut(&mut self) -> &mut SpriteData {
-        self.body.data_mut()
-    }
-
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         let mut body = Body::make(shape, position);
@@ -45,14 +37,14 @@ impl Sprite for Unit {
 }
 
 impl Deref for Unit {
-    type Target = Body;
-    fn deref(&self) -> &Body {
+    type Target = SpriteData;
+    fn deref(&self) -> &SpriteData {
         &self.body
     }
 }
 
 impl DerefMut for Unit {
-    fn deref_mut(&mut self) -> &mut Body {
+    fn deref_mut(&mut self) -> &mut SpriteData {
         &mut self.body
     }
 }
