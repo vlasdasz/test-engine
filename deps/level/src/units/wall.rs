@@ -41,7 +41,7 @@ impl Sprite for Wall {
             .restitution(1.0)
             .build();
         let mut sprite = SpriteData::make(shape, position);
-        sprite.collider_handle = LevelManager::level_mut().sets.collider.insert(collider).into();
+        sprite.collider_handle = LevelManager::level_mut().sets.colliders.insert(collider).into();
         Own::new(Wall { data: sprite })
     }
 }

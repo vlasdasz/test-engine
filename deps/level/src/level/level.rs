@@ -1,7 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::{flat::Point, volume::GyroData};
-use rapier2d::prelude::{ColliderSet, RigidBodySet};
 use refs::{AsAny, Own, Weak};
 
 use crate::{LevelBase, LevelManager, Sprite};
@@ -53,20 +52,6 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut {
         None
     }
 
-    // fn scale(&self) -> f32 {
-    //     //get_sprites_drawer().scale()
-    //     1.0
-    // }
-    //
-    // fn multiply_scale(&mut self, mul: f32) {
-    //     let scale = self.scale() * mul;
-    //     self.set_scale(scale);
-    // }
-    //
-    // fn set_scale(&mut self, _scale: f32) {
-    //     //get_sprites_drawer().set_scale(scale)
-    // }
-
     fn gravity(&self) -> Point {
         let gravity = &self.gravity;
         (gravity[0], gravity[1]).into()
@@ -78,21 +63,5 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut {
 
     fn sprites_mut(&mut self) -> &mut [Own<dyn Sprite>] {
         &mut self.sprites
-    }
-
-    fn rigid_bodies(&self) -> &RigidBodySet {
-        &self.sets.rigid_body
-    }
-
-    fn rigid_bodies_mut(&mut self) -> &mut RigidBodySet {
-        &mut self.sets.rigid_body
-    }
-
-    fn colliders(&self) -> &ColliderSet {
-        &self.sets.collider
-    }
-
-    fn colliders_mut(&mut self) -> &mut ColliderSet {
-        &mut self.sets.collider
     }
 }

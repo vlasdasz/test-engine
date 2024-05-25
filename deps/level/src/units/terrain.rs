@@ -29,13 +29,13 @@ impl Sprite for Terrain {
 
         let level = LevelManager::level_mut().deref_mut();
 
-        let rigid_handle = level.sets.rigid_body.insert(rigid_body);
+        let rigid_handle = level.sets.rigid_bodies.insert(rigid_body);
 
         let collider_handle =
             level
                 .sets
-                .collider
-                .insert_with_parent(collider, rigid_handle, &mut level.sets.rigid_body);
+                .colliders
+                .insert_with_parent(collider, rigid_handle, &mut level.sets.rigid_bodies);
 
         let mut sprite = SpriteData::make(shape, position);
 

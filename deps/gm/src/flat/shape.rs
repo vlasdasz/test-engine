@@ -1,4 +1,7 @@
-use crate::flat::{Point, ProcessPoints, Size};
+use crate::{
+    flat::{Point, ProcessPoints, Size},
+    ToF32,
+};
 
 #[derive(Clone, Debug)]
 pub enum Shape {
@@ -9,6 +12,10 @@ pub enum Shape {
 }
 
 impl Shape {
+    pub fn rect(width: impl ToF32, height: impl ToF32) -> Self {
+        Self::Rect((width, height).into())
+    }
+
     pub fn triangle(a: impl Into<Point>, b: impl Into<Point>, c: impl Into<Point>) -> Self {
         Self::Triangle(a.into(), b.into(), c.into())
     }

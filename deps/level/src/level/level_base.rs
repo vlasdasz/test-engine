@@ -57,8 +57,8 @@ impl LevelBase {
             &mut self.island_manager,
             &mut self.broad_phase,
             &mut self.narrow_phase,
-            &mut self.sets.rigid_body,
-            &mut self.sets.collider,
+            &mut self.sets.rigid_bodies,
+            &mut self.sets.colliders,
             &mut self.impulse_joints,
             &mut self.multibody_joints,
             &mut self.ccd_solver,
@@ -110,19 +110,19 @@ impl LevelBase {
         let sprite = self.sprites[index].deref();
 
         if let Some(collider) = sprite.data().collider_handle {
-            self.sets.collider.remove(
+            self.sets.colliders.remove(
                 collider,
                 &mut self.island_manager,
-                &mut self.sets.rigid_body,
+                &mut self.sets.rigid_bodies,
                 true,
             );
         }
 
         if let Some(rigid_body) = sprite.data().rigid_handle {
-            self.sets.rigid_body.remove(
+            self.sets.rigid_bodies.remove(
                 rigid_body,
                 &mut self.island_manager,
-                &mut self.sets.collider,
+                &mut self.sets.colliders,
                 &mut self.impulse_joints,
                 &mut self.multibody_joints,
                 true,

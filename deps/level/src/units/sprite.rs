@@ -41,23 +41,23 @@ pub trait Sprite {
     }
 
     fn rigid_body(&self) -> &RigidBody {
-        &LevelManager::level().rigid_bodies()
+        &LevelManager::level().sets.rigid_bodies
             [self.data().rigid_handle.expect("This sprite doesn't have rigid body")]
     }
 
     fn rigid_body_mut(&mut self) -> &mut RigidBody {
         let handle = self.data().rigid_handle.expect("This sprite doesn't have rigid body");
-        &mut LevelManager::level_mut().rigid_bodies_mut()[handle]
+        &mut LevelManager::level_mut().sets.rigid_bodies[handle]
     }
 
     fn collider(&self) -> &Collider {
-        &LevelManager::level().colliders()
+        &LevelManager::level().sets.colliders
             [self.data().collider_handle.expect("This sprite doesn't have collider")]
     }
 
     fn collider_mut(&mut self) -> &mut Collider {
         let handle = self.data().collider_handle.expect("This sprite doesn't have collider");
-        &mut LevelManager::level_mut().colliders_mut()[handle]
+        &mut LevelManager::level_mut().sets.colliders[handle]
     }
 
     fn contains(&self, point: Point) -> bool {

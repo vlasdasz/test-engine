@@ -50,6 +50,10 @@ impl UIManager {
         Self::subview_z_offset() / 10.0
     }
 
+    pub fn fps() -> f32 {
+        WGPUApp::current().fps()
+    }
+
     pub fn unselect_view(&self) {
         let mut selected_view = self.selected_view.lock().unwrap();
         if selected_view.is_null() {
