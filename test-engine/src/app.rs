@@ -5,7 +5,7 @@ use dispatch::{from_main, invoke_dispatched};
 use env_logger::Builder;
 use gm::flat::{Point, Size};
 use level::LevelBase;
-use log::{Level, LevelFilter};
+use log::{error, Level, LevelFilter};
 use refs::{Own, Rglica};
 use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
@@ -75,12 +75,20 @@ impl App {
             .filter_module("hyper_util::client::legacy::connect::dns", LevelFilter::Warn)
             .filter_module("hyper_util::client::legacy::connect::http", LevelFilter::Warn)
             .format(|f, record| {
+                // let level = match record.level() {
+                //     Level::Error => "🔴",
+                //     Level::Warn => "🟡",
+                //     Level::Info => "🟢",
+                //     Level::Debug => "🔵",
+                //     Level::Trace => "⚪",
+                // };
+
                 let level = match record.level() {
-                    Level::Error => "🔴",
-                    Level::Warn => "🟡",
-                    Level::Info => "🟢",
-                    Level::Debug => "🔵",
-                    Level::Trace => "⚪",
+                    Level::Error => "ERROR",
+                    Level::Warn => "WARNING",
+                    Level::Info => "INFO",
+                    Level::Debug => "DEBUG",
+                    Level::Trace => "TRACE",
                 };
 
                 let location = false;
@@ -132,7 +140,28 @@ impl App {
     }
 
     #[cfg(target_os = "android")]
-    pub async fn start(first_view: Own<dyn View>, event_loop: crate::EventLoop) -> Result<()> {
+    pub async fn start(first_view: Own<dyn View>, app: crate::AndroidApp) -> Result<()> {
+        dbg!("PENIJEE");
+
+        use env_logger::try_init;
+        use log::LevelFilter;
+        use winit::{event_loop::EventLoopBuilder, platform::android::EventLoopBuilderExtAndroid};
+
+        // android_logger::try_init(android_logger::Config::default().
+        // with_max_level(LevelFilter::Trace));
+
+        // try_init();
+
+        // android_logger::try_init(android_logger::Config::default().
+        // with_max_level(LevelFilter::Trace));
+
+        error!("AAAASOOOOOO");
+
+        let event_loop: crate::EventLoop =
+            EventLoopBuilder::with_user_event().with_android_app(app).build().unwrap();
+
+        error!("EVANTO");
+
         WGPUApp::start(Self::new(first_view), event_loop).await
     }
 

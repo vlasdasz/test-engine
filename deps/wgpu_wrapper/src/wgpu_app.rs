@@ -69,13 +69,23 @@ impl WGPUApp {
     }
 
     async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
+        dbg!("start_internal");
+
         let window = Arc::new(WindowBuilder::new().with_title("Test Engine").build(&event_loop)?);
+
+        dbg!("start_internal");
 
         let scale: u32 = window.scale_factor().lossy_convert();
 
+        dbg!("start_internal");
+
         _ = window.request_inner_size(PhysicalSize::new(1200 * scale, 1000 * scale));
 
+        dbg!("start_internal");
+
         let state = State::new(app, window.clone()).await?;
+
+        dbg!("start_internal");
 
         assert!(APP.is_none(), "Another instance of App already exists.");
 
@@ -160,6 +170,9 @@ impl WGPUApp {
             },
             Event::AboutToWait => {
                 self.state.window.request_redraw();
+            }
+            Event::Resumed => {
+                dbg!("resumed");
             }
             _ => {}
         })?;

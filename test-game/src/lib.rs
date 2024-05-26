@@ -5,6 +5,7 @@
 
 mod interface;
 mod levels;
+mod test_game;
 
 #[cfg(target_os = "ios")]
 #[no_mangle]
@@ -13,23 +14,18 @@ extern "C" fn test_game() -> std::ffi::c_int {
     0
 }
 
-// #[cfg(target_os = "android")]
-// #[no_mangle]
-// fn android_main(app: test_engine::AndroidApp) {
-//     test_game::start_test_game(app);
-// }
-
 #[cfg(target_os = "android")]
-pub fn start_android(event_loop: test_engine::EventLoop) {
-    use test_engine::ui::ViewSetup;
-    let runtime = tokio::runtime::Runtime::new().unwrap();
-    runtime.block_on(async {
-        test_engine::refs::set_current_thread_as_main();
-        App::start(TestGameView::new(), event_loop).await.unwrap()
-    });
+#[no_mangle]
+fn android_main(app: test_engine::AndroidApp) {
+    test_game::start_test_game(app);
 }
 
-// fn main() {
-//     // #[cfg(desktop)]
-//     // test_game::start_test_game()
+// #[cfg(target_os = "android")]
+// pub fn start_android(event_loop: test_engine::EventLoop) {
+//     use test_engine::ui::ViewSetup;
+//     let runtime = tokio::runtime::Runtime::new().unwrap();
+//     runtime.block_on(async {
+//         test_engine::refs::set_current_thread_as_main();
+//         App::start(TestGameView::new(), event_loop).await.unwrap()
+//     });
 // }

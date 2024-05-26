@@ -11,12 +11,13 @@ pub fn start_test_game() {
     });
 }
 
-// #[cfg(target_os = "android")]
-// pub fn start_test_game(app: test_engine::AndroidApp) {
-//     dbg!("HELLOOOddO");
-//     let runtime = tokio::runtime::Runtime::new().unwrap();
-//     runtime.block_on(async {
-//         test_engine::refs::set_current_thread_as_main();
-//         App::start(TestGameView::new(), app).await.unwrap()
-//     });
-// }
+#[cfg(target_os = "android")]
+pub fn start_test_game(app: test_engine::AndroidApp) {
+    use test_engine::ui::ViewSetup;
+    dbg!("HELLOOOddO");
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    runtime.block_on(async {
+        test_engine::refs::set_current_thread_as_main();
+        dbg!(test_engine::App::start(TestGameView::new(), app).await).unwrap()
+    });
+}

@@ -46,14 +46,19 @@ pub struct State {
 
 impl State {
     pub async fn new(app: Box<dyn App>, window: Arc<Window>) -> Result<Self> {
+        dbg!("State::new");
+
         let size = window.inner_size();
+        dbg!("State::new");
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
         });
+        dbg!("State::new");
 
-        let surface = instance.create_surface(window.clone())?;
+        let surface = instance.create_surface(window.clone())?; // Android fail
+        dbg!("State::new");
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -62,10 +67,13 @@ impl State {
             })
             .await
             .ok_or(anyhow!("Failed to request adapter"))?;
+        dbg!("State::new");
 
         let info = adapter.get_info();
+        dbg!("State::new");
 
         info!("{}", &info.backend);
+        dbg!("State::new");
 
         let (device, queue) = adapter
             .request_device(
@@ -81,6 +89,7 @@ impl State {
                 None,
             )
             .await?;
+        dbg!("State::new");
 
         let _surface_caps = surface.get_capabilities(&adapter);
 
