@@ -14,7 +14,10 @@ use crate::{app::App, frame_counter::FrameCounter, image::Texture, text::Font, S
 
 type ReadDisplayRequest = Sender<Screenshot>;
 
+#[cfg(not(target_os = "android"))]
 pub(crate) const TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
+#[cfg(target_os = "android")]
+pub(crate) const TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8UnormSrgb;
 
 pub struct State {
     pub(crate) fonts: HashMap<&'static str, Font>,
@@ -41,51 +44,55 @@ impl State {
     }
 
     pub fn resize(&mut self, new_size: PhysicalSize<u32>) {
-        if new_size.width > 0 && new_size.height > 0 {
-            let app = WGPUApp::current();
+        if new_size.width == 0 || new_size.height == 0 {
+            return;
+        }
 
-            app.window_size = (new_size.width, new_size.height).into();
-            app.config.width = new_size.width;
-            app.config.height = new_size.height;
+        let app = WGPUApp::current();
 
-            if let Some(surface) = &mut app.surface {
-                surface.depth_texture = Texture::create_depth_texture(
-                    &app.device,
-                    (new_size.width, new_size.height).into(),
-                    "depth_texture",
-                );
-                surface.presentable.configure(&app.device, &app.config);
-            }
+        app.window_size = (new_size.width, new_size.height).into();
+        app.config.width = new_size.width;
+        app.config.height = new_size.height;
 
-            let queue = WGPUApp::queue();
+        if let Some(surface) = &mut app.surface {
+            surface.depth_texture = Texture::create_depth_texture(
+                &app.device,
+                (new_size.width, new_size.height).into(),
+                "depth_texture",
+            );
+            surface.presentable.configure(&app.device, &app.config);
+        } else if app.resumed && app.create_surface().unwrap() {
+            app.state.app.window_ready();
+        }
 
-            for font in self.fonts.values() {
-                font.brush.resize_view(
-                    app.config.width.lossy_convert(),
-                    app.config.height.lossy_convert(),
-                    queue,
-                );
-            }
+        let queue = WGPUApp::queue();
 
-            let inner_size = app.window.inner_size();
-
-            let position = if Platform::IOS {
-                // match self.window.inner_position() {
-                //     Ok(pos) => (pos.x, pos.y),
-                //     Err(err) => {
-                //         error!("{err}");
-                (0, 0)
-                //      }
-                //    }
-            } else {
-                (0, 0)
-            };
-
-            self.app.resize(
-                position.into(),
-                (inner_size.width, inner_size.height - position.1.checked_convert()).into(),
+        for font in self.fonts.values() {
+            font.brush.resize_view(
+                app.config.width.lossy_convert(),
+                app.config.height.lossy_convert(),
+                queue,
             );
         }
+
+        let inner_size = app.window.inner_size();
+
+        let position = if Platform::IOS {
+            // match self.window.inner_position() {
+            //     Ok(pos) => (pos.x, pos.y),
+            //     Err(err) => {
+            //         error!("{err}");
+            (0, 0)
+            //      }
+            //    }
+        } else {
+            (0, 0)
+        };
+
+        self.app.resize(
+            position.into(),
+            (inner_size.width, inner_size.height - position.1.checked_convert()).into(),
+        );
     }
 
     pub fn update(&mut self) {

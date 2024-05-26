@@ -51,6 +51,8 @@ pub struct WGPUApp {
     adapter:  Adapter,
     instance: Instance,
 
+    pub(crate) resumed: bool,
+
     pub(crate) surface: Option<Surface>,
     pub(crate) drawer:  Option<WGPUDrawer>,
 
@@ -85,19 +87,23 @@ impl WGPUApp {
         });
     }
 
-    pub(crate) fn create_surface(&mut self) -> Result<()> {
-        self.surface = Surface::new(
+    pub(crate) fn create_surface(&mut self) -> Result<bool> {
+        let Some(surface) = Surface::new(
             &self.instance,
             &self.adapter,
             &self.device,
             &self.config,
             self.window.clone(),
         )?
-        .into();
+        else {
+            return Ok(false);
+        };
+
+        self.surface = surface.into();
 
         self.drawer = WGPUDrawer::new()?.into();
 
-        Ok(())
+        Ok(true)
     }
 
     async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
@@ -163,6 +169,7 @@ impl WGPUApp {
             queue,
             adapter,
             instance,
+            resumed: false,
             surface: None,
             drawer: None,
             event_loop: event_loop.into(),
@@ -245,8 +252,11 @@ impl WGPUApp {
                 self.window.request_redraw();
             }
             Event::Resumed => {
-                self.create_surface().unwrap();
-                self.state.app.window_ready();
+                dbg!("Resumed");
+                if self.create_surface().unwrap() {
+                    self.state.app.window_ready();
+                }
+                self.resumed = true;
             }
             _ => {}
         })?;

@@ -153,12 +153,12 @@ impl App {
         // android_logger::try_init(android_logger::Config::default().
         // with_max_level(LevelFilter::Trace));
 
-        error!("AAAASOOOOOO");
+        log::error!("AAAASOOOOOO");
 
         let event_loop: crate::EventLoop =
             EventLoopBuilder::with_user_event().with_android_app(app).build().unwrap();
 
-        error!("EVANTO");
+        log::error!("EVANTO");
 
         WGPUApp::start(Self::new(first_view), event_loop).await
     }

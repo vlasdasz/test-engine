@@ -2,11 +2,12 @@
 
 use std::{
     fmt::{Debug, Formatter},
-    fs::File,
-    io::{Cursor, Read},
+    fs::read,
+    io::Cursor,
     path::{Path, PathBuf},
 };
 
+use log::error;
 use manage::resource_loader::ResourceLoader;
 use rodio::{Decoder, OutputStream, OutputStreamHandle, Sink};
 
@@ -30,13 +31,20 @@ impl Sound {
     }
 }
 
+static DEFAULT_SOUND_DATA: &[u8] = include_bytes!("pek.wav");
+
 impl ResourceLoader for Sound {
     fn load_path(path: &Path) -> Self {
-        let mut file = File::open(path)
-            .unwrap_or_else(|_| panic!("Failed to load sound at path: {}", path.to_string_lossy()));
-
-        let mut data = Vec::new();
-        file.read_to_end(&mut data).unwrap();
+        let data = match read(path) {
+            Ok(data) => data,
+            Err(err) => {
+                error!(
+                    "Failed to read sound file: {}. Error: {err} Returning default sound",
+                    path.display()
+                );
+                DEFAULT_SOUND_DATA.into()
+            }
+        };
 
         Self::load_data(&data, path.display())
     }

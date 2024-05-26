@@ -46,7 +46,8 @@ pub struct TestGameView {
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
-        LevelManager::set_level(TestLevel::default());
+        // LevelManager::set_level(TestLevel::default());
+        LevelManager::set_level(BenchmarkLevel::default());
 
         self.setup_keymap();
 

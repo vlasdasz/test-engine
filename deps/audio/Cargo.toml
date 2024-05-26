@@ -9,6 +9,7 @@ crate-type = ["rlib", "staticlib"]
 name = "audio"
 
 [dependencies]
+log = { workspace = true }
 manage = { workspace = true }
 
 rodio = { workspace = true }

@@ -2,6 +2,7 @@ use std::{fs::read, path::Path};
 
 use anyhow::Result;
 use gm::flat::Size;
+use log::error;
 use manage::{data_manager::DataManager, managed, resource_loader::ResourceLoader};
 use refs::Weak;
 use wgpu::{
@@ -74,9 +75,21 @@ impl Image {
 
 managed!(Image);
 
+static DEFAULT_IMAGE_DATA: &[u8] = include_bytes!("delete.png");
+
 impl ResourceLoader for Image {
     fn load_path(path: &Path) -> Self {
-        Self::load_data(&read(path).unwrap(), path.display())
+        let data = match read(path) {
+            Ok(data) => data,
+            Err(err) => {
+                error!(
+                    "Failed to read image file: {}. Error: {err} Returning default image",
+                    path.display()
+                );
+                DEFAULT_IMAGE_DATA.into()
+            }
+        };
+        Self::load_data(&data, path.display())
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {
