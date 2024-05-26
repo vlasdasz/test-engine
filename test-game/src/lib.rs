@@ -30,12 +30,12 @@ pub fn start_test_game(app: test_engine::AndroidApp) {
     });
 }
 
+#[cfg(target_os = "android")]
+pub use test_engine::AndroidApp;
+
 #[cfg(target_os = "ios")]
 #[no_mangle]
 extern "C" fn test_game() -> std::ffi::c_int {
     start_test_game();
     0
 }
-
-#[cfg(target_os = "android")]
-pub use test_engine::AndroidApp;
