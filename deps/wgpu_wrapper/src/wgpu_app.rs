@@ -3,27 +3,29 @@ use std::sync::{
     Arc,
 };
 
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use dispatch::on_main;
 use gm::{
     flat::{Point, Size},
     LossyConvert, Platform,
 };
-use log::error;
+use log::{error, info};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
-use wgpu::{BindGroupLayout, Device, Queue};
+use wgpu::{
+    Adapter, BindGroupLayout, CompositeAlphaMode, Device, Instance, PresentMode, Queue, SurfaceConfiguration,
+};
 use winit::{
     dpi::PhysicalSize,
     event::{Event, MouseScrollDelta, WindowEvent},
     event_loop::EventLoop,
     keyboard::{KeyCode, PhysicalKey},
-    window::WindowBuilder,
+    window::{Window, WindowBuilder},
 };
 
 use crate::{
     app::App,
-    state::{State, DRAWER, SURFACE},
+    state::{State, TEXTURE_FORMAT},
     surface::Surface,
     Screenshot, WGPUDrawer,
 };
@@ -37,7 +39,21 @@ pub type Events = winit::platform::android::activity::AndroidApp;
 pub type Events = ();
 
 pub struct WGPUApp {
-    pub state:  State,
+    pub state:         State,
+    pub(crate) window: Arc<Window>,
+
+    pub window_size: Size,
+
+    pub(crate) config: SurfaceConfiguration,
+    pub(crate) device: Device,
+    pub(crate) queue:  Queue,
+
+    adapter:  Adapter,
+    instance: Instance,
+
+    pub(crate) surface: Option<Surface>,
+    pub(crate) drawer:  Option<WGPUDrawer>,
+
     event_loop: Option<EventLoop<Events>>,
     close:      AtomicBool,
 }
@@ -47,28 +63,20 @@ impl WGPUApp {
         APP.get_mut().as_mut().expect("App has not been initialized yet.")
     }
 
-    pub(crate) fn surface() -> &'static Surface {
-        SURFACE.get_mut().as_mut().expect("Sufrace has not been initialized yet.")
-    }
-
-    pub(crate) fn surface_mut() -> &'static mut Surface {
-        SURFACE.get_mut().as_mut().expect("Sufrace has not been initialized yet.")
-    }
-
     pub fn device() -> &'static Device {
-        &Self::surface().device
+        &Self::current().device
     }
 
     pub fn queue() -> &'static Queue {
-        &Self::surface().queue
+        &Self::current().queue
     }
 
     pub fn drawer() -> &'static mut WGPUDrawer {
-        DRAWER.get_mut().as_mut().expect("WGPUDrawer has not been initialized yet.")
+        Self::current().drawer.as_mut().expect("Drawer has not been initialized yet.")
     }
 
     pub fn screen_scale() -> f64 {
-        Self::current().state.window.scale_factor()
+        Self::current().window.scale_factor()
     }
 
     pub fn close() {
@@ -77,29 +85,86 @@ impl WGPUApp {
         });
     }
 
+    pub(crate) fn create_surface(&mut self) -> Result<()> {
+        self.surface = Surface::new(
+            &self.instance,
+            &self.adapter,
+            &self.device,
+            &self.config,
+            self.window.clone(),
+        )?
+        .into();
+
+        self.drawer = WGPUDrawer::new()?.into();
+
+        Ok(())
+    }
+
     async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
-        dbg!("start_internal");
-
         let window = Arc::new(WindowBuilder::new().with_title("Test Engine").build(&event_loop)?);
-
-        dbg!("start_internal");
 
         let scale: u32 = window.scale_factor().lossy_convert();
 
-        dbg!("start_internal");
-
         _ = window.request_inner_size(PhysicalSize::new(1200 * scale, 1000 * scale));
 
-        dbg!("start_internal");
+        let instance = Instance::new(wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::all(),
+            ..Default::default()
+        });
 
-        let state = State::new(app, window.clone()).await?;
+        let adapter = instance
+            .request_adapter(&wgpu::RequestAdapterOptions::default())
+            .await
+            .ok_or(anyhow!("Failed to request adapter"))?;
 
-        dbg!("start_internal");
+        let info = adapter.get_info();
+
+        info!("{}", &info.backend);
+
+        let (device, queue) = adapter
+            .request_device(
+                &wgpu::DeviceDescriptor {
+                    required_features: wgpu::Features::empty(), //wgpu::Features::POLYGON_MODE_LINE,
+                    required_limits:   if cfg!(target_arch = "wasm32") {
+                        wgpu::Limits::downlevel_webgl2_defaults()
+                    } else {
+                        wgpu::Limits::default()
+                    },
+                    label:             None,
+                },
+                None,
+            )
+            .await?;
+
+        let size = window.inner_size();
+
+        let config = SurfaceConfiguration {
+            usage:        wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+            format:       TEXTURE_FORMAT,
+            width:        size.width,
+            height:       size.height,
+            present_mode: PresentMode::AutoNoVsync,
+            alpha_mode:   CompositeAlphaMode::Auto,
+            view_formats: vec![],
+
+            desired_maximum_frame_latency: 2,
+        };
+
+        let state = State::new(app);
 
         assert!(APP.is_none(), "Another instance of App already exists.");
 
         *APP.get_mut() = Self {
             state,
+            window,
+            window_size: Default::default(),
+            config,
+            device,
+            queue,
+            adapter,
+            instance,
+            surface: None,
+            drawer: None,
             event_loop: event_loop.into(),
             close: Default::default(),
         }
@@ -108,7 +173,6 @@ impl WGPUApp {
         let app = Self::current();
 
         app.state.app.set_wgpu_app(Rglica::from_ref(app));
-        app.state.app.window_ready();
         app.start_event_loop()
     }
 
@@ -124,7 +188,7 @@ impl WGPUApp {
 
     fn start_event_loop(&mut self) -> Result<()> {
         self.event_loop.take().unwrap().run(|event, elwt| match event {
-            Event::WindowEvent { event, window_id } if window_id == self.state.window.id() => match event {
+            Event::WindowEvent { event, window_id } if window_id == self.window.id() => match event {
                 WindowEvent::CloseRequested => elwt.exit(),
                 WindowEvent::CursorMoved { position, .. } => {
                     self.state.app.mouse_moved((position.x, position.y).into());
@@ -178,10 +242,11 @@ impl WGPUApp {
                 _ => {}
             },
             Event::AboutToWait => {
-                self.state.window.request_redraw();
+                self.window.request_redraw();
             }
             Event::Resumed => {
-                dbg!("resumed");
+                self.create_surface().unwrap();
+                self.state.app.window_ready();
             }
             _ => {}
         })?;
@@ -191,13 +256,13 @@ impl WGPUApp {
 
     pub fn set_title(&self, title: impl ToString) {
         if Platform::DESKTOP {
-            self.state.window.set_title(&title.to_string());
+            self.window.set_title(&title.to_string());
         }
     }
 
     pub fn set_window_size(&self, size: impl Into<Size<u32>>) {
         let size = size.into();
-        let _ = self.state.window.request_inner_size(PhysicalSize::new(size.width, size.height));
+        let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
     pub fn request_read_display(&self) -> Receiver<Screenshot> {

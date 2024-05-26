@@ -1,10 +1,7 @@
 use std::ops::Range;
 
 use anyhow::Result;
-use gm::{
-    flat::{Rect, Size},
-    Color,
-};
+use gm::{flat::Rect, Color};
 use wgpu::{BindGroup, Buffer, RenderPass};
 
 use crate::{
@@ -20,7 +17,6 @@ use crate::{
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
-    pub window_size:        Size,
     rect_drawer:            RectDrawer,
     image_drawer:           ImageDrawer,
     pub(crate) path_drawer: PathDrawer,
@@ -32,7 +28,6 @@ pub struct WGPUDrawer {
 impl WGPUDrawer {
     pub fn new() -> Result<Self> {
         Ok(Self {
-            window_size:  Default::default(),
             rect_drawer:  RectDrawer::new(TEXTURE_FORMAT),
             image_drawer: ImageDrawer::new(TEXTURE_FORMAT),
             path_drawer:  PathDrawer::new(TEXTURE_FORMAT),

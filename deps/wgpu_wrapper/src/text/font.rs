@@ -10,10 +10,10 @@ pub struct Font {
 
 impl Font {
     fn new(name: &'static str, data: &'static [u8]) -> Result<Self> {
-        let surface = WGPUApp::surface();
+        let app = WGPUApp::current();
         let brush = BrushBuilder::using_font_bytes(data)?.with_depth_stencil(depth_stencil_state().into())
             /* .initial_cache_size((16_384, 16_384))) */ // use this to avoid resizing cache texture
-            .build(&surface.device, surface.config.width, surface.config.height, surface.config.format);
+            .build(&app.device, app.config.width, app.config.height, app.config.format);
         Ok(Self { name, brush })
     }
 }

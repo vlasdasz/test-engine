@@ -1,32 +1,22 @@
-use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
+use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
 
 use anyhow::Result;
 use bytemuck::cast_slice;
 use gm::{flat::Size, CheckedConvert, Color, LossyConvert, Platform, U8Color};
-use refs::MainLock;
 use tokio::{
     spawn,
     sync::oneshot::{channel, Receiver, Sender},
 };
 use wgpu::{Buffer, BufferDescriptor, CommandEncoder, Extent3d, TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT};
-use winit::{dpi::PhysicalSize, window::Window};
+use winit::dpi::PhysicalSize;
 
-use crate::{
-    app::App, frame_counter::FrameCounter, image::Texture, render::wgpu_drawer::WGPUDrawer, surface::Surface,
-    text::Font, Screenshot, WGPUApp,
-};
+use crate::{app::App, frame_counter::FrameCounter, image::Texture, text::Font, Screenshot, WGPUApp};
 
 type ReadDisplayRequest = Sender<Screenshot>;
-
-pub(crate) static SURFACE: MainLock<Option<Surface>> = MainLock::new();
-
-pub(crate) static DRAWER: MainLock<Option<WGPUDrawer>> = MainLock::new();
 
 pub(crate) const TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
 
 pub struct State {
-    pub(crate) window: Arc<Window>,
-
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
 
@@ -39,45 +29,45 @@ pub struct State {
 }
 
 impl State {
-    pub async fn new(app: Box<dyn App>, window: Arc<Window>) -> Result<Self> {
-        *SURFACE.get_mut() = Surface::new(window.clone()).await?.into();
-        *DRAWER.get_mut() = WGPUDrawer::new()?.into();
-
-        Ok(Self {
-            window,
+    pub fn new(app: Box<dyn App>) -> Self {
+        Self {
             fonts: Default::default(),
             app,
             fps: 0.0,
             frame_time: 0.0,
             read_display_request: Default::default(),
             frame_counter: Default::default(),
-        })
+        }
     }
 
     pub fn resize(&mut self, new_size: PhysicalSize<u32>) {
         if new_size.width > 0 && new_size.height > 0 {
-            let surface = WGPUApp::surface_mut();
-            surface.depth_texture = Texture::create_depth_texture(
-                &surface.device,
-                (new_size.width, new_size.height).into(),
-                "depth_texture",
-            );
-            WGPUApp::drawer().window_size = (new_size.width, new_size.height).into();
-            surface.config.width = new_size.width;
-            surface.config.height = new_size.height;
-            surface.presentable.configure(WGPUApp::device(), &surface.config);
+            let app = WGPUApp::current();
+
+            app.window_size = (new_size.width, new_size.height).into();
+            app.config.width = new_size.width;
+            app.config.height = new_size.height;
+
+            if let Some(surface) = &mut app.surface {
+                surface.depth_texture = Texture::create_depth_texture(
+                    &app.device,
+                    (new_size.width, new_size.height).into(),
+                    "depth_texture",
+                );
+                surface.presentable.configure(&app.device, &app.config);
+            }
 
             let queue = WGPUApp::queue();
 
             for font in self.fonts.values() {
                 font.brush.resize_view(
-                    surface.config.width.lossy_convert(),
-                    surface.config.height.lossy_convert(),
+                    app.config.width.lossy_convert(),
+                    app.config.height.lossy_convert(),
                     queue,
                 );
             }
 
-            let inner_size = self.window.inner_size();
+            let inner_size = app.window.inner_size();
 
             let position = if Platform::IOS {
                 // match self.window.inner_position() {
@@ -104,16 +94,16 @@ impl State {
             let a = format!("{:.2}ms frame {fps:.1} FPS", frame_time * 1000.0);
             self.fps = fps;
             self.frame_time = frame_time;
-            let surface = WGPUApp::surface();
-            WGPUApp::current().set_title(format!(
-                "{a} {} x {}",
-                surface.config.width, surface.config.height
-            ))
+            let app = WGPUApp::current();
+            WGPUApp::current().set_title(format!("{a} {} x {}", app.config.width, app.config.height))
         }
     }
 
     pub fn render(&mut self) -> Result<()> {
-        let surface = WGPUApp::surface();
+        let app = WGPUApp::current();
+        let Some(ref surface) = app.surface else {
+            return Ok(());
+        };
         let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = WGPUApp::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
@@ -153,8 +143,8 @@ impl State {
             render_pass.set_viewport(
                 0.0,
                 0.0,
-                surface.config.width.lossy_convert(),
-                surface.config.height.lossy_convert(),
+                app.config.width.lossy_convert(),
+                app.config.height.lossy_convert(),
                 0.0,
                 1.0,
             );
