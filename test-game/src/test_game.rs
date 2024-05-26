@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::interface::test_game_view::TestGameView;
 
 #[cfg(not(target_os = "android"))]

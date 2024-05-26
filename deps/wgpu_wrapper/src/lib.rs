@@ -9,12 +9,12 @@ mod wgpu_app;
 mod frame_counter;
 mod render;
 mod screenshot;
+mod state;
+mod surface;
 
 pub use app::*;
 pub use bytemuck::cast_slice;
-pub use render::{
-    image_drawer::image_vertices_with_shrink, path_data::PathData, state::State, wgpu_drawer::WGPUDrawer,
-};
+pub use render::{image_drawer::image_vertices_with_shrink, path_data::PathData, wgpu_drawer::WGPUDrawer};
 pub use screenshot::*;
 pub use text::*;
 pub use wgpu::{

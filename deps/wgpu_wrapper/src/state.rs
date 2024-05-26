@@ -1,37 +1,31 @@
 use std::{cell::RefCell, collections::HashMap, f64, mem::size_of, sync::Arc};
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use bytemuck::cast_slice;
 use gm::{flat::Size, CheckedConvert, Color, LossyConvert, Platform, U8Color};
-use log::info;
 use refs::MainLock;
 use tokio::{
     spawn,
     sync::oneshot::{channel, Receiver, Sender},
 };
-use wgpu::{
-    Buffer, BufferDescriptor, CommandEncoder, CompositeAlphaMode, Device, Extent3d, PresentMode, Queue,
-    TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT,
-};
+use wgpu::{Buffer, BufferDescriptor, CommandEncoder, Extent3d, TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT};
 use winit::{dpi::PhysicalSize, window::Window};
 
 use crate::{
-    app::App, frame_counter::FrameCounter, image::Texture, render::wgpu_drawer::WGPUDrawer, text::Font,
-    Screenshot, WGPUApp,
+    app::App, frame_counter::FrameCounter, image::Texture, render::wgpu_drawer::WGPUDrawer, surface::Surface,
+    text::Font, Screenshot, WGPUApp,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;
 
-pub(crate) static DEVICE: MainLock<Option<Device>> = MainLock::new();
-pub(crate) static QUEUE: MainLock<Option<Queue>> = MainLock::new();
+pub(crate) static SURFACE: MainLock<Option<Surface>> = MainLock::new();
+
 pub(crate) static DRAWER: MainLock<Option<WGPUDrawer>> = MainLock::new();
 
-pub struct State {
-    surface:           wgpu::Surface<'static>,
-    pub(crate) config: wgpu::SurfaceConfiguration,
-    pub(crate) window: Arc<Window>,
+pub(crate) const TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
 
-    pub(crate) depth_texture: Texture,
+pub struct State {
+    pub(crate) window: Arc<Window>,
 
     pub(crate) fonts: HashMap<&'static str, Font>,
     pub(crate) app:   Box<dyn App>,
@@ -46,80 +40,11 @@ pub struct State {
 
 impl State {
     pub async fn new(app: Box<dyn App>, window: Arc<Window>) -> Result<Self> {
-        dbg!("State::new");
-
-        let size = window.inner_size();
-        dbg!("State::new");
-
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
-            ..Default::default()
-        });
-        dbg!("State::new");
-
-        let surface = instance.create_surface(window.clone())?; // Android fail
-        dbg!("State::new");
-
-        let adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                compatible_surface: Some(&surface),
-                ..Default::default()
-            })
-            .await
-            .ok_or(anyhow!("Failed to request adapter"))?;
-        dbg!("State::new");
-
-        let info = adapter.get_info();
-        dbg!("State::new");
-
-        info!("{}", &info.backend);
-        dbg!("State::new");
-
-        let (device, queue) = adapter
-            .request_device(
-                &wgpu::DeviceDescriptor {
-                    required_features: wgpu::Features::empty(), //wgpu::Features::POLYGON_MODE_LINE,
-                    required_limits:   if cfg!(target_arch = "wasm32") {
-                        wgpu::Limits::downlevel_webgl2_defaults()
-                    } else {
-                        wgpu::Limits::default()
-                    },
-                    label:             None,
-                },
-                None,
-            )
-            .await?;
-        dbg!("State::new");
-
-        let _surface_caps = surface.get_capabilities(&adapter);
-
-        let config = wgpu::SurfaceConfiguration {
-            usage:        wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
-            format:       TextureFormat::Bgra8UnormSrgb,
-            width:        size.width,
-            height:       size.height,
-            present_mode: PresentMode::AutoNoVsync,
-            alpha_mode:   CompositeAlphaMode::Auto,
-            view_formats: vec![],
-
-            desired_maximum_frame_latency: 2,
-        };
-
-        surface.configure(&device, &config);
-
-        *DEVICE.get_mut() = device.into();
-        *QUEUE.get_mut() = queue.into();
-
-        let depth_texture =
-            Texture::create_depth_texture((config.width, config.height).into(), "depth_texture");
-
-        *DRAWER.get_mut() = WGPUDrawer::new(config.format)?.into();
+        *SURFACE.get_mut() = Surface::new(window.clone()).await?.into();
+        *DRAWER.get_mut() = WGPUDrawer::new()?.into();
 
         Ok(Self {
-            surface,
-            config,
             window,
-            depth_texture,
             fonts: Default::default(),
             app,
             fps: 0.0,
@@ -131,19 +56,23 @@ impl State {
 
     pub fn resize(&mut self, new_size: PhysicalSize<u32>) {
         if new_size.width > 0 && new_size.height > 0 {
-            self.depth_texture =
-                Texture::create_depth_texture((new_size.width, new_size.height).into(), "depth_texture");
+            let surface = WGPUApp::surface_mut();
+            surface.depth_texture = Texture::create_depth_texture(
+                &surface.device,
+                (new_size.width, new_size.height).into(),
+                "depth_texture",
+            );
             WGPUApp::drawer().window_size = (new_size.width, new_size.height).into();
-            self.config.width = new_size.width;
-            self.config.height = new_size.height;
-            self.surface.configure(WGPUApp::device(), &self.config);
+            surface.config.width = new_size.width;
+            surface.config.height = new_size.height;
+            surface.presentable.configure(WGPUApp::device(), &surface.config);
 
             let queue = WGPUApp::queue();
 
             for font in self.fonts.values() {
                 font.brush.resize_view(
-                    self.config.width.lossy_convert(),
-                    self.config.height.lossy_convert(),
+                    surface.config.width.lossy_convert(),
+                    surface.config.height.lossy_convert(),
                     queue,
                 );
             }
@@ -175,12 +104,17 @@ impl State {
             let a = format!("{:.2}ms frame {fps:.1} FPS", frame_time * 1000.0);
             self.fps = fps;
             self.frame_time = frame_time;
-            WGPUApp::current().set_title(format!("{a} {} x {}", self.config.width, self.config.height))
+            let surface = WGPUApp::surface();
+            WGPUApp::current().set_title(format!(
+                "{a} {} x {}",
+                surface.config.width, surface.config.height
+            ))
         }
     }
 
     pub fn render(&mut self) -> Result<()> {
-        let surface_texture = self.surface.get_current_texture()?;
+        let surface = WGPUApp::surface();
+        let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = WGPUApp::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
@@ -203,7 +137,7 @@ impl State {
                     },
                 })],
                 depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
-                    view:        &self.depth_texture.view,
+                    view:        &surface.depth_texture.view,
                     depth_ops:   Some(wgpu::Operations {
                         load:  wgpu::LoadOp::Clear(1.0),
                         store: wgpu::StoreOp::Store,
@@ -219,8 +153,8 @@ impl State {
             render_pass.set_viewport(
                 0.0,
                 0.0,
-                self.config.width.lossy_convert(),
-                self.config.height.lossy_convert(),
+                surface.config.width.lossy_convert(),
+                surface.config.height.lossy_convert(),
                 0.0,
                 1.0,
             );

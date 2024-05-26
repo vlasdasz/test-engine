@@ -5,7 +5,7 @@ use dispatch::{from_main, invoke_dispatched};
 use env_logger::Builder;
 use gm::flat::{Point, Size};
 use level::LevelBase;
-use log::{error, Level, LevelFilter};
+use log::{Level, LevelFilter};
 use refs::{Own, Rglica};
 use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
@@ -143,8 +143,6 @@ impl App {
     pub async fn start(first_view: Own<dyn View>, app: crate::AndroidApp) -> Result<()> {
         dbg!("PENIJEE");
 
-        use env_logger::try_init;
-        use log::LevelFilter;
         use winit::{event_loop::EventLoopBuilder, platform::android::EventLoopBuilderExtAndroid};
 
         // android_logger::try_init(android_logger::Config::default().

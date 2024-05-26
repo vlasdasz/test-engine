@@ -2,8 +2,8 @@ use anyhow::Result;
 use gm::flat::Size;
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
-    AddressMode, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler, SamplerDescriptor,
-    TextureAspect, TextureView, TextureViewDescriptor,
+    AddressMode, Device, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler, SamplerDescriptor,
+    TextureAspect, TextureDescriptor, TextureDimension, TextureUsages, TextureView, TextureViewDescriptor,
 };
 
 use crate::WGPUApp;
@@ -100,38 +100,36 @@ impl Texture {
         )
     }
 
-    pub fn create_depth_texture(size: Size<u32>, label: &str) -> Self {
+    pub fn create_depth_texture(device: &Device, size: Size<u32>, label: &str) -> Self {
         let extend = wgpu::Extent3d {
             // 2.
             width:                 size.width,
             height:                size.height,
             depth_or_array_layers: 1,
         };
-        let desc = wgpu::TextureDescriptor {
+        let desc = TextureDescriptor {
             label:           Some(label),
             size:            extend,
             mip_level_count: 1,
             sample_count:    1,
-            dimension:       wgpu::TextureDimension::D2,
+            dimension:       TextureDimension::D2,
             format:          Self::DEPTH_FORMAT,
-            usage:           wgpu::TextureUsages::RENDER_ATTACHMENT // 3.
-                | wgpu::TextureUsages::TEXTURE_BINDING,
+            usage:           TextureUsages::RENDER_ATTACHMENT // 3.
+                | TextureUsages::TEXTURE_BINDING,
             view_formats:    &[],
         };
 
-        let device = WGPUApp::device();
-
         let texture = device.create_texture(&desc);
 
-        let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
-        let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+        let view = texture.create_view(&TextureViewDescriptor::default());
+        let sampler = device.create_sampler(&SamplerDescriptor {
             // 4.
-            address_mode_u: wgpu::AddressMode::ClampToEdge,
-            address_mode_v: wgpu::AddressMode::ClampToEdge,
-            address_mode_w: wgpu::AddressMode::ClampToEdge,
-            mag_filter: wgpu::FilterMode::Linear,
-            min_filter: wgpu::FilterMode::Linear,
-            mipmap_filter: wgpu::FilterMode::Nearest,
+            address_mode_u: AddressMode::ClampToEdge,
+            address_mode_v: AddressMode::ClampToEdge,
+            address_mode_w: AddressMode::ClampToEdge,
+            mag_filter: FilterMode::Linear,
+            min_filter: FilterMode::Linear,
+            mipmap_filter: FilterMode::Nearest,
             compare: None, // doesn't work on iOS 12 Some(wgpu::CompareFunction::LessEqual), // 5.
             // compare: Some(wgpu::CompareFunction::LessEqual),
             lod_min_clamp: 0.0,

@@ -23,7 +23,8 @@ use winit::{
 
 use crate::{
     app::App,
-    render::state::{State, DEVICE, DRAWER, QUEUE},
+    state::{State, DRAWER, SURFACE},
+    surface::Surface,
     Screenshot, WGPUDrawer,
 };
 
@@ -46,12 +47,20 @@ impl WGPUApp {
         APP.get_mut().as_mut().expect("App has not been initialized yet.")
     }
 
+    pub(crate) fn surface() -> &'static Surface {
+        SURFACE.get_mut().as_mut().expect("Sufrace has not been initialized yet.")
+    }
+
+    pub(crate) fn surface_mut() -> &'static mut Surface {
+        SURFACE.get_mut().as_mut().expect("Sufrace has not been initialized yet.")
+    }
+
     pub fn device() -> &'static Device {
-        DEVICE.get_mut().as_mut().expect("Device has not been initialized yet.")
+        &Self::surface().device
     }
 
     pub fn queue() -> &'static Queue {
-        QUEUE.get_mut().as_mut().expect("Queue has not been initialized yet.")
+        &Self::surface().queue
     }
 
     pub fn drawer() -> &'static mut WGPUDrawer {

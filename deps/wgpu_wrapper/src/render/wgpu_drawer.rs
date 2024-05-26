@@ -5,7 +5,7 @@ use gm::{
     flat::{Rect, Size},
     Color,
 };
-use wgpu::{BindGroup, Buffer, RenderPass, TextureFormat};
+use wgpu::{BindGroup, Buffer, RenderPass};
 
 use crate::{
     image::Image,
@@ -15,6 +15,7 @@ use crate::{
         rect_drawer::RectDrawer,
         sprite_drawer::{SpriteDrawer, TexturedSpriteDrawer},
     },
+    state::TEXTURE_FORMAT,
 };
 
 #[derive(Debug)]
@@ -29,15 +30,15 @@ pub struct WGPUDrawer {
 }
 
 impl WGPUDrawer {
-    pub fn new(texture_format: TextureFormat) -> Result<Self> {
+    pub fn new() -> Result<Self> {
         Ok(Self {
             window_size:  Default::default(),
-            rect_drawer:  RectDrawer::new(texture_format),
-            image_drawer: ImageDrawer::new(texture_format),
-            path_drawer:  PathDrawer::new(texture_format),
+            rect_drawer:  RectDrawer::new(TEXTURE_FORMAT),
+            image_drawer: ImageDrawer::new(TEXTURE_FORMAT),
+            path_drawer:  PathDrawer::new(TEXTURE_FORMAT),
 
-            sprite_drawer:          SpriteDrawer::new(texture_format),
-            textured_sprite_drawer: TexturedSpriteDrawer::new(texture_format),
+            sprite_drawer:          SpriteDrawer::new(TEXTURE_FORMAT),
+            textured_sprite_drawer: TexturedSpriteDrawer::new(TEXTURE_FORMAT),
         })
     }
 }
