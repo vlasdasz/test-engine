@@ -41,45 +41,18 @@ jobs:
         if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
         run: make test
 
-  debian:
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [
-          { container: "ubuntu:18.04" },
-          { container: "ubuntu:22.04" },
-          { container: "ubuntu:24.04" },
-
-          { container: "debian:10" },
-          { container: "debian:11" },
-          { container: "debian:12" },
-
-          { container: "dockerscripts/linuxmint:cinnamon-minimal" },
-        ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
-
-      - name: Build
-        run: echo ${{ matrix.target.container }} && ./build/in_docker.sh ${{ matrix.target.container }}
-
   linux:
     strategy:
       fail-fast: false
       matrix:
         target: [
-          { container: "fedora:30" },
-          { container: "fedora:40" },
-          { container: "fedora:41" },
-
+          { container: "ubuntu" },
+          { container: "debian" },
+          { container: "fedora" },
           { container: "archlinux" },
-
           { container: "manjarolinux/base" },
-
           { container: "amazonlinux" },
+          { container: "dockerscripts/linuxmint:cinnamon-minimal" },
         ]
     runs-on: ubuntu-latest
     steps:
