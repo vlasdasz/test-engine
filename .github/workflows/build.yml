@@ -20,7 +20,7 @@ jobs:
           #          { os: windows , runner: windows-latest },
           #
           #          { os: ios, runner: mac },
-          { os: android, runner: "ubuntu:ubuntu:22.04" },
+          { os: android, runner: "ubuntu:22.04" },
         ]
     runs-on: ${{ matrix.target.runner }}
     steps:
