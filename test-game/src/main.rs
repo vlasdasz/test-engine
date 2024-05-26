@@ -5,7 +5,6 @@
 
 mod interface;
 mod levels;
-mod test_game;
 
 fn main() {
     #[cfg(desktop)]
