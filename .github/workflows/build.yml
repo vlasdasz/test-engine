@@ -29,6 +29,11 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           submodules: recursive
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '21'
+
       - name: Build
         if: ${{ matrix.target.os != 'windows' }}
         run: sudo ./build/build.sh ${{ matrix.target.os }}
