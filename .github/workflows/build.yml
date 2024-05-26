@@ -31,7 +31,7 @@ jobs:
 
       - name: Build
         if: ${{ matrix.target.os != 'windows' }}
-        run: ./build/build.sh ${{ matrix.target.os }}
+        run: sudo ./build/build.sh ${{ matrix.target.os }}
 
       - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
