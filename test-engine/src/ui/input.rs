@@ -16,6 +16,7 @@ impl Input {
 
     pub fn process_touch_event(mut touch: Touch) -> bool {
         const LOG_TOUCHES: bool = false;
+        const DRAW_TOUCHES: bool = true;
 
         UIEvents::on_debug_touch().trigger(touch);
 
@@ -29,7 +30,7 @@ impl Input {
             warn!("{touch:?}");
         }
 
-        if UIManager::display_touches() && !touch.is_moved() {
+        if (DRAW_TOUCHES || UIManager::draw_touches()) && !touch.is_moved() {
             let mut view = Container::new();
             view.set_z_position(0.1);
             view.set_size((5, 5)).set_color(Color::random());

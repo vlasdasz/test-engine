@@ -20,8 +20,6 @@ impl Surface {
         config: &SurfaceConfiguration,
         window: Arc<Window>,
     ) -> Result<Option<Self>> {
-        dbg!(config);
-
         if config.width == 0 || config.height == 0 {
             return Ok(None);
         }

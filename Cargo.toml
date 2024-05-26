@@ -1,7 +1,13 @@
 [workspace]
 
 default-members = ["test-game"]
-members = ["test-engine", "test-game", "ui-test", "ui-benchmark"]
+members = [
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "ui-test",
+  "ui-benchmark",
+]
 
 resolver = "2"
 
@@ -53,6 +59,7 @@ gm = { path = "deps/gm" }
 level = { path = "deps/level" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
+test-game = { path = "test-game" }
 ui = { path = "deps/ui" }
 ui_proc = { path = "deps/ui/ui_proc" }
 valid = { path = "deps/valid" }

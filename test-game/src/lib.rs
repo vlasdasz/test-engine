@@ -15,7 +15,6 @@ extern "C" fn test_game() -> std::ffi::c_int {
 }
 
 #[cfg(target_os = "android")]
-#[no_mangle]
-fn android_main(app: test_engine::AndroidApp) {
-    test_game::start_test_game(app);
-}
+pub use test_engine::AndroidApp;
+#[cfg(target_os = "android")]
+pub use test_game::start_test_game;

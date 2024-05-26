@@ -252,7 +252,6 @@ impl WGPUApp {
                 self.window.request_redraw();
             }
             Event::Resumed => {
-                dbg!("Resumed");
                 if self.create_surface().unwrap() {
                     self.state.app.window_ready();
                 }

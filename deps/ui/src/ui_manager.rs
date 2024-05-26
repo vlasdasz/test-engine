@@ -31,7 +31,7 @@ pub struct UIManager {
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<PathBuf>,
 
-    display_touches: AtomicBool,
+    draw_touches: AtomicBool,
 
     keymap: Own<Keymap>,
 
@@ -92,7 +92,7 @@ impl UIManager {
             touch_disabled: false.into(),
             on_scroll: Default::default(),
             on_drop_file: Default::default(),
-            display_touches: false.into(),
+            draw_touches: false.into(),
             keymap: Default::default(),
             selected_view: Mutex::new(Default::default()),
         }
@@ -123,12 +123,12 @@ impl UIManager {
         TouchStack::clear_freed();
     }
 
-    pub fn display_touches() -> bool {
-        Self::get().display_touches.load(Ordering::Relaxed)
+    pub fn draw_touches() -> bool {
+        Self::get().draw_touches.load(Ordering::Relaxed)
     }
 
     pub fn set_display_touches(display: bool) {
-        Self::get().display_touches.store(display, Ordering::Relaxed)
+        Self::get().draw_touches.store(display, Ordering::Relaxed)
     }
 
     pub fn keymap() -> &'static Keymap {

@@ -8,8 +8,8 @@ version = "0.1.0"
 name = "test-game"
 
 [lib]
-crate-type = ["rlib", "staticlib", "cdylib"]
-name = "test_game_lib"
+crate-type = ["rlib", "staticlib"]
+name = "test_game"
 
 [dependencies]
 tokio = { workspace = true }
@@ -18,8 +18,3 @@ test-engine = { workspace = true }
 
 [build-dependencies]
 cfg_aliases = { workspace = true }
-
-[package.metadata.android]
-build_targets = ["armv7-linux-androideabi", "aarch64-linux-android"]
-min_sdk_version = 23
-target_sdk_version = 29
