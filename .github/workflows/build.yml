@@ -20,7 +20,7 @@ jobs:
           #          { os: windows , runner: windows-latest },
           #
           #          { os: ios, runner: mac },
-          { os: android, runner: "ubuntu-22.04" },
+          { os: android, runner: mac },
         ]
     runs-on: ${{ matrix.target.runner }}
     steps:
@@ -29,14 +29,9 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           submodules: recursive
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'oracle'
-          java-version: '21'
-
       - name: Build
         if: ${{ matrix.target.os != 'windows' }}
-        run: sudo ./build/build.sh ${{ matrix.target.os }}
+        run: ./build/build.sh ${{ matrix.target.os }}
 
       - name: Build windows
         if: ${{ matrix.target.os == 'windows' }}
