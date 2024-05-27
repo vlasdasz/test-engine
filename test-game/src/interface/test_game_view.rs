@@ -1,5 +1,6 @@
 use test_engine::{
     async_after,
+    audio::Sound,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::Weak,
@@ -8,7 +9,7 @@ use test_engine::{
         ImageView, IntView, Label, Point, PointsPath, Spinner, StickView, Sub, TextField, UIManager,
         ViewData, ViewSetup,
     },
-    App,
+    App, DataManager,
 };
 
 use crate::levels::{BenchmarkLevel, TestLevel};
@@ -33,6 +34,7 @@ pub struct TestGameView {
 
     spinner: Sub<Button>,
     alert:   Sub<Button>,
+    sound:   Sub<Button>,
 
     color_meter: Sub<ColorMeter>,
 
@@ -46,8 +48,7 @@ pub struct TestGameView {
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
-        // LevelManager::set_level(TestLevel::default());
-        LevelManager::set_level(BenchmarkLevel::default());
+        LevelManager::set_level(TestLevel::default());
 
         self.setup_keymap();
 
@@ -113,6 +114,15 @@ impl ViewSetup for TestGameView {
             Alert::show("Hello!");
             App::set_window_size((600, 600))
         });
+
+        self.sound
+            .place()
+            .same_size(self.alert)
+            .anchor(Anchor::Left, self.int, 10)
+            .anchor(Anchor::Bot, self.alert, 10);
+        self.sound.set_text("Sound");
+        self.sound.set_text_size(20);
+        self.sound.on_tap(|| Sound::get("retro.wav").play());
 
         self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);
 

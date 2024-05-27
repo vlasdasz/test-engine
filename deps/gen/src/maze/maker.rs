@@ -1,6 +1,5 @@
 use fake::Fake;
 use gm::flat::Size;
-use tokio::sync::mpsc::{self, UnboundedReceiver};
 
 use crate::maze::{Cell, Grid};
 
@@ -8,70 +7,61 @@ type Point = gm::flat::Point<i32>;
 
 #[derive(Debug)]
 pub struct Maker {
-    size:        Size<i32>,
+    size:        Size<usize>,
     current_pos: Point,
     stack:       Vec<Point>,
     grid:        Grid,
 }
 
 impl Maker {
-    pub fn new(width: usize, height: usize) -> Self {
+    fn new(size: Size<usize>) -> Self {
+        assert!(!size.no_area());
         Self {
-            size:        Size {
-                width:  width.try_into().unwrap(),
-                height: height.try_into().unwrap(),
-            },
+            size,
             current_pos: Default::default(),
-            stack:       Default::default(),
-            grid:        vec![vec![Cell::default(); height]; width],
+            stack: Default::default(),
+            grid: vec![vec![Cell::default(); size.height]; size.width],
         }
     }
 
-    pub fn generate(width: usize, height: usize) -> UnboundedReceiver<Grid> {
-        let (sender, receiver) = mpsc::unbounded_channel::<Grid>();
+    pub fn generate(size: Size<usize>) -> Grid {
+        let mut maker = Maker::new(size);
+        maker.add_missing_side();
 
-        tokio::spawn(async move {
-            let mut maker = Maker::new(width, height);
-            maker.add_missing_side();
+        maker.current_mut().visited = true;
 
-            maker.current_mut().visited = true;
+        while maker.has_unvisited() {
+            let unvisited = maker.unvisited_neighbours();
 
-            while maker.has_unvisited() {
-                let unvisited = maker.unvisited_neighbours();
-
-                if unvisited.is_empty() {
-                    if let Some(pop) = maker.stack.pop() {
-                        maker.current_pos = pop;
-                    }
-                    continue;
+            if unvisited.is_empty() {
+                if let Some(pop) = maker.stack.pop() {
+                    maker.current_pos = pop;
                 }
-
-                let next = unvisited[(0..unvisited.len()).fake::<usize>()];
-
-                maker.stack.push(maker.current_pos);
-
-                sender.send(maker.grid.clone()).unwrap();
-
-                maker.remove_walls(next);
-
-                maker.current_pos = next;
-                maker.at_mut(next).visited = true;
+                continue;
             }
-            sender.send(maker.grid.clone()).unwrap();
-        });
 
-        receiver
+            let next = unvisited[(0..unvisited.len()).fake::<usize>()];
+
+            maker.stack.push(maker.current_pos);
+
+            maker.remove_walls(next);
+
+            maker.current_pos = next;
+            maker.at_mut(next).visited = true;
+        }
+
+        maker.grid
     }
 }
 
 impl Maker {
     fn add_missing_side(&mut self) {
         for i in 0..self.size.height {
-            self.grid[0][usize::try_from(i).unwrap()].left = true;
+            self.grid[0][i].left = true;
         }
 
         for i in 0..self.size.width {
-            self.grid[usize::try_from(i).unwrap()][0].bottom = true;
+            self.grid[i][0].bottom = true;
         }
     }
 
@@ -110,7 +100,7 @@ impl Maker {
 
         for neighbor in NEIGHBOURS {
             let pos = &self.current_pos + neighbor;
-            if pos.x >= self.size.width || pos.y >= self.size.height {
+            if pos.x >= self.size.width.try_into().unwrap() || pos.y >= self.size.height.try_into().unwrap() {
                 continue;
             }
             if pos.is_negative() || self.at(pos).visited {

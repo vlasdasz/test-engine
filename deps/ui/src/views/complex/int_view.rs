@@ -1,8 +1,8 @@
 use gm::ToF32;
-use refs::Weak;
+use refs::{weak_from_ref, Weak};
 use vents::Event;
 
-use crate::{view::ViewData, Button, Label, UIImages, ViewSetup};
+use crate::{view::ViewData, Button, InputView, Label, UIImages, ViewSetup, ViewTouch};
 
 mod test_engine {
     pub(crate) use educe;
@@ -73,5 +73,29 @@ impl IntView {
     pub fn on_change(&self, action: impl FnMut(f32) + 'static) -> &Self {
         self.on_change_event.val(action);
         self
+    }
+}
+
+impl InputView for IntView {
+    fn set_title(&mut self, _title: &str) {
+        unimplemented!()
+    }
+
+    fn text(&self) -> &str {
+        self.label.text()
+    }
+
+    fn enable_editing(&mut self) {
+        self.up.enable_touch();
+        self.down.enable_touch();
+    }
+
+    fn disable_editing(&mut self) {
+        self.up.disable_touch();
+        self.down.disable_touch();
+    }
+
+    fn as_input_view(&self) -> Weak<dyn InputView> {
+        weak_from_ref(self as _)
     }
 }

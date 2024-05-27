@@ -7,7 +7,7 @@ use gm::{
 };
 use refs::{weak_from_ref, Own, Weak};
 
-use crate::{Container, GoTo, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{Container, TransitionButton, UIManager, View, ViewData, ViewFrame, WeakView};
 
 pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
@@ -33,7 +33,9 @@ pub trait ViewSubviews {
 
     fn outline(&mut self, color: Color) -> Weak<Self>;
 
-    fn add_transition<V: 'static + View + Default>(&mut self) -> Weak<GoTo<V>>;
+    fn add_transition<From: View, To: View>(&mut self) -> Weak<TransitionButton<From, To>>;
+
+    fn find_superview<V: View + 'static>(&self) -> Weak<V>;
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -169,7 +171,20 @@ impl<T: ?Sized + View> ViewSubviews for T {
         weak_from_ref(self)
     }
 
-    fn add_transition<V: 'static + View + Default>(&mut self) -> Weak<GoTo<V>> {
-        self.add_view::<GoTo<V>>()
+    fn add_transition<From: View, To: View>(&mut self) -> Weak<TransitionButton<From, To>> {
+        self.add_view::<TransitionButton<From, To>>()
+    }
+
+    fn find_superview<V: View + 'static>(&self) -> Weak<V> {
+        let mut superview = self.base().superview;
+
+        while superview.is_ok() {
+            if let Some(view) = superview.downcast_view::<V>() {
+                return view;
+            }
+            superview = superview.base().superview;
+        }
+
+        panic!("This view doesn't have `{}` in superview chain", type_name::<V>());
     }
 }

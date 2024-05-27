@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     axis::Axis,
     flat::{Point, Rect},
-    num::{into_f32::ToF32, lossy_convert::LossyConvert},
+    num::{into_f32::ToF32, lossy_convert::LossyConvert, IsZero},
 };
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -31,6 +31,12 @@ impl<T: Copy> Size<T> {
 
     pub const fn as_slice(&self) -> [T; 2] {
         [self.width, self.height]
+    }
+}
+
+impl<T: IsZero> Size<T> {
+    pub fn no_area(&self) -> bool {
+        self.width.is_zero() || self.height.is_zero()
     }
 }
 

@@ -16,6 +16,22 @@ pub trait Zero {
     fn zero() -> Self;
 }
 
+pub trait IsZero: Zero + Copy {
+    fn is_zero(self) -> bool;
+}
+
+impl<T: Zero + PartialEq + Copy> IsZero for T {
+    fn is_zero(self) -> bool {
+        self == Self::zero()
+    }
+}
+
+impl Zero for usize {
+    fn zero() -> Self {
+        0
+    }
+}
+
 impl Zero for f32 {
     fn zero() -> Self {
         0.0

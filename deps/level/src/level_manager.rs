@@ -51,6 +51,10 @@ impl LevelManager {
         SELF.get_mut().level.as_mut().expect("No Level").deref_mut()
     }
 
+    pub fn downcast_level<T: Level>() -> &'static mut T {
+        Self::level_mut().as_any_mut().downcast_mut::<T>().unwrap()
+    }
+
     pub(crate) unsafe fn level_unchecked() -> &'static mut dyn Level {
         SELF.get_unchecked().level.as_mut().expect("No Level").deref_mut()
     }

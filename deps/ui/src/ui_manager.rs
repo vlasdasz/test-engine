@@ -118,6 +118,10 @@ impl UIManager {
         Self::get().root_view.weak_view()
     }
 
+    pub fn root_controller() -> WeakView {
+        Self::root_view().subviews().first().unwrap().weak()
+    }
+
     pub fn free_deleted_views() {
         Self::get().deleted_views.lock().unwrap().clear();
         TouchStack::clear_freed();
@@ -221,7 +225,9 @@ impl UIManager {
         let mut root = UIManager::root_view_weak();
         root.remove_all_subviews();
         let view = root.__add_subview_internal(view, true);
-        view.place().back();
+        if view.place().is_empty() {
+            view.place().back();
+        }
         weak
     }
 }

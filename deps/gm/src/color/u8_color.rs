@@ -1,10 +1,6 @@
-use bytemuck::{Pod, Zeroable};
-
 use crate::Color;
 
 pub type U8Color = Color<u8>;
-unsafe impl Zeroable for U8Color {}
-unsafe impl Pod for U8Color {}
 
 impl From<U8Color> for Color {
     fn from(value: U8Color) -> Self {

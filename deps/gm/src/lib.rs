@@ -1,7 +1,6 @@
 #![allow(incomplete_features)]
 #![feature(const_trait_impl)]
 #![feature(adt_const_params)]
-#![feature(specialization)]
 
 extern crate core;
 

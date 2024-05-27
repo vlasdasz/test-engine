@@ -13,6 +13,7 @@ mod view_subviews;
 mod view_test;
 mod view_touch;
 mod view_touch_internal;
+mod view_transition;
 
 pub use container::*;
 pub use subview::*;
@@ -27,3 +28,4 @@ pub use view_layout::*;
 pub use view_subviews::*;
 pub use view_test::*;
 pub use view_touch::*;
+pub use view_transition::*;

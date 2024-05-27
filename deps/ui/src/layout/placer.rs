@@ -38,6 +38,10 @@ impl Placer {
         }
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.rules.borrow().is_empty() && self.sub_rules.borrow().is_empty()
+    }
+
     pub fn is_ok(&self) -> bool {
         self.view.is_ok()
     }
