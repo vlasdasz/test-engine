@@ -1,4 +1,9 @@
-use gm::ToF32;
+use std::{
+    fmt::{Debug, Display},
+    num::NonZeroU32,
+};
+
+use gm::{CheckedSub, MyAdd, One, ZeroOrMinimal};
 use refs::{weak_from_ref, Weak};
 use vents::Event;
 
@@ -15,9 +20,21 @@ use ui_proc::view;
 
 use crate::Sub;
 
+pub trait ViewableNumber:
+    MyAdd + CheckedSub + ZeroOrMinimal + One + Copy + Debug + Display + Sized + 'static {
+}
+
+impl ViewableNumber for f32 {}
+impl ViewableNumber for u32 {}
+impl ViewableNumber for NonZeroU32 {}
+
 #[view]
-pub struct IntView {
-    value: f32,
+pub struct NumberView<T: ViewableNumber> {
+    #[educe(Default = T::one())]
+    value:    T,
+    #[educe(Default = T::one())]
+    pub step: T,
+
     label: Sub<Label>,
 
     #[link = up_tap]
@@ -26,57 +43,52 @@ pub struct IntView {
     #[link = down_tap]
     down: Sub<Button>,
 
-    on_change_event: Event<f32>,
-    pub step:        f32,
+    on_change_event: Event<T>,
 }
 
-impl ViewSetup for IntView {
+impl<T: ViewableNumber> ViewSetup for NumberView<T> {
     fn setup(mut self: Weak<Self>) {
-        self.value = 1.0;
-        self.step = 1.0;
-
         self.place().all_ver();
-        self.label.text = "1.0".into();
+        self.label.text = format!("{:.1}", self.value);
         self.up.set_image(UIImages::up());
         self.down.set_image(UIImages::down());
     }
 }
 
-impl IntView {
-    pub fn value(&self) -> f32 {
+impl<T: ViewableNumber> NumberView<T> {
+    pub fn value(&self) -> T {
         self.value
     }
 
-    pub fn set_value(&mut self, val: impl ToF32) -> &mut Self {
-        let val = val.to_f32();
+    pub fn set_value(&mut self, val: T) -> &mut Self {
         self.value = val;
         self.label.text = format!("{val:.1}");
         self.on_change_event.trigger(val);
         self
     }
 
-    pub fn set_step(&mut self, step: impl ToF32) -> &mut Self {
-        self.step = step.to_f32();
+    pub fn set_step(&mut self, step: T) -> &mut Self {
+        self.step = step;
         self
     }
 
     fn up_tap(mut self: Weak<Self>) {
-        let val = self.value + self.step;
+        let val = self.value.my_add(&self.step);
         self.set_value(val);
     }
 
     fn down_tap(mut self: Weak<Self>) {
-        let val = self.value - self.step;
-        self.set_value(val);
+        let val = self.value.sub_and_check(&self.step);
+        self.set_value(val.unwrap_or(T::zero()));
     }
 
-    pub fn on_change(&self, action: impl FnMut(f32) + 'static) -> &Self {
+    pub fn on_change(&self, action: impl FnMut(T) + 'static) -> &Self {
         self.on_change_event.val(action);
         self
     }
 }
 
-impl InputView for IntView {
+impl<T: ViewableNumber> InputView for NumberView<T> {
     fn set_title(&mut self, _title: &str) {
         unimplemented!()
     }

@@ -3,14 +3,14 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, IntView, Sub, ViewData, ViewSetup, UI},
+    ui::{view, NumberView, Sub, ViewData, ViewSetup, UI},
     ui_test::inject_touches,
     App,
 };
 
 #[view]
 struct IntTestView {
-    int: Sub<IntView>,
+    int: Sub<NumberView<f32>>,
 }
 
 impl ViewSetup for IntTestView {

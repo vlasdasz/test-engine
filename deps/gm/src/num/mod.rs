@@ -1,3 +1,5 @@
+use std::num::NonZeroU32;
+
 pub mod checked_convert;
 pub mod into_f32;
 pub mod lossy_convert;
@@ -12,35 +14,47 @@ impl Abs for f32 {
     }
 }
 
-pub trait Zero {
+pub trait ZeroOrMinimal {
     fn zero() -> Self;
 }
 
-pub trait IsZero: Zero + Copy {
+pub trait IsZero: ZeroOrMinimal + Copy {
     fn is_zero(self) -> bool;
 }
 
-impl<T: Zero + PartialEq + Copy> IsZero for T {
+impl<T: ZeroOrMinimal + PartialEq + Copy> IsZero for T {
     fn is_zero(self) -> bool {
         self == Self::zero()
     }
 }
 
-impl Zero for usize {
+impl ZeroOrMinimal for usize {
     fn zero() -> Self {
         0
     }
 }
 
-impl Zero for f32 {
+impl ZeroOrMinimal for u32 {
+    fn zero() -> Self {
+        0
+    }
+}
+
+impl ZeroOrMinimal for f32 {
     fn zero() -> Self {
         0.0
     }
 }
 
-impl Zero for u8 {
+impl ZeroOrMinimal for u8 {
     fn zero() -> Self {
         0
+    }
+}
+
+impl ZeroOrMinimal for NonZeroU32 {
+    fn zero() -> Self {
+        Self::one()
     }
 }
 
@@ -52,5 +66,62 @@ pub trait One {
 impl const One for f32 {
     fn one() -> Self {
         1.0
+    }
+}
+
+impl const One for u32 {
+    fn one() -> Self {
+        1
+    }
+}
+
+impl One for NonZeroU32 {
+    fn one() -> Self {
+        1.try_into().unwrap()
+    }
+}
+
+pub trait CheckedSub: Sized {
+    fn sub_and_check(&self, other: &Self) -> Option<Self>;
+}
+
+impl CheckedSub for u32 {
+    fn sub_and_check(&self, other: &Self) -> Option<Self> {
+        self.checked_sub(*other)
+    }
+}
+
+impl CheckedSub for f32 {
+    fn sub_and_check(&self, other: &Self) -> Option<Self> {
+        Some(self - other)
+    }
+}
+
+impl CheckedSub for NonZeroU32 {
+    fn sub_and_check(&self, other: &Self) -> Option<Self> {
+        let val = self.get().sub_and_check(&other.get())?;
+        val.try_into().ok()
+    }
+}
+
+pub trait MyAdd {
+    fn my_add(&self, other: &Self) -> Self;
+}
+
+impl MyAdd for f32 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for u32 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for NonZeroU32 {
+    fn my_add(&self, other: &Self) -> Self {
+        (self.get() + other.get()).try_into().unwrap()
     }
 }

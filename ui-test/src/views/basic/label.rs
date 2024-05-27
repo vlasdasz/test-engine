@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, IntView, Label, Sub, TextAlignment, ViewData, ViewSetup, ViewSubviews, UI},
+    ui::{view, Anchor, Color, Label, NumberView, Sub, TextAlignment, ViewData, ViewSetup, ViewSubviews, UI},
     ui_test::{helpers::check_colors, inject_touches},
     App,
 };
@@ -11,7 +11,7 @@ use test_engine::{
 #[view]
 struct LabelTestView {
     label:          Sub<Label>,
-    text_size_view: Sub<IntView>,
+    text_size_view: Sub<NumberView<f32>>,
 }
 
 impl ViewSetup for LabelTestView {
@@ -24,7 +24,7 @@ impl ViewSetup for LabelTestView {
             .size(50, 100)
             .center_y()
             .anchor(Anchor::Right, self.label, 10);
-        self.text_size_view.set_value(32).set_step(5);
+        self.text_size_view.set_value(32.0).set_step(5.0);
 
         self.text_size_view.on_change(move |size| {
             self.label.set_text_size(size);

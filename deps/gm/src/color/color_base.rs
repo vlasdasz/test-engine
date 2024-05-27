@@ -6,7 +6,7 @@ use std::{
 use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 
-use crate::num::{Abs, One, Zero};
+use crate::num::{Abs, One, ZeroOrMinimal};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -72,7 +72,7 @@ impl<T: Display> Display for Color<T> {
     }
 }
 
-impl<T: Zero> Default for Color<T> {
+impl<T: ZeroOrMinimal> Default for Color<T> {
     fn default() -> Self {
         Self::rgba(T::zero(), T::zero(), T::zero(), T::zero())
     }

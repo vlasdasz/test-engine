@@ -4,15 +4,15 @@ use test_engine::{
     refs::Weak,
     ui::{
         ui_test::{helpers::check_colors, inject_touches},
-        view, Anchor, ImageView, IntView, Label, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI,
+        view, Anchor, ImageView, Label, NumberView, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI,
     },
 };
 
 #[view]
 struct OutBoundsView {
     test: Sub<Label>,
-    x:    Sub<IntView>,
-    y:    Sub<IntView>,
+    x:    Sub<NumberView<f32>>,
+    y:    Sub<NumberView<f32>>,
 }
 
 impl ViewSetup for OutBoundsView {
@@ -23,7 +23,7 @@ impl ViewSetup for OutBoundsView {
         image.set_image("cat.png");
         image.place().left_half();
 
-        self.x.set_step(50);
+        self.x.set_step(50.0);
         self.x
             .on_change(move |val| {
                 self.test.set_x(200.0 + val);
@@ -32,7 +32,7 @@ impl ViewSetup for OutBoundsView {
             .size(60, 200)
             .center();
 
-        self.y.set_step(50);
+        self.y.set_step(50.0);
         self.y
             .on_change(move |val| {
                 self.test.set_y(200.0 + val);

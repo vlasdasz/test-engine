@@ -1,12 +1,14 @@
+use std::num::NonZeroU32;
+
 use test_engine::{
     async_after,
     audio::Sound,
-    gm::{Apply, Direction},
+    gm::{Apply, Direction, LossyConvert},
     level::{Control, LevelManager},
     refs::Weak,
     ui::{
         link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        ImageView, IntView, Label, Point, PointsPath, Spinner, StickView, Sub, TextField, UIManager,
+        ImageView, Label, NumberView, Point, PointsPath, Spinner, StickView, Sub, TextField, UIManager,
         ViewData, ViewSetup,
     },
     App, DataManager,
@@ -30,7 +32,7 @@ pub struct TestGameView {
     image_r: Sub<ImageView>,
 
     dpad: Sub<DPadView>,
-    int:  Sub<IntView>,
+    int:  Sub<NumberView<NonZeroU32>>,
 
     spinner: Sub<Button>,
     alert:   Sub<Button>,
@@ -90,7 +92,7 @@ impl ViewSetup for TestGameView {
 
         self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
         self.int.on_change(|val| {
-            *LevelManager::scale() = val / 8.0;
+            *LevelManager::scale() = val.get().lossy_convert() * 0.1;
         });
 
         self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.int, 10);
