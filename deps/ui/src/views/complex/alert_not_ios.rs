@@ -1,3 +1,4 @@
+#![cfg(not(target_os = "ios"))]
 use gm::{flat::Size, Color};
 use refs::Weak;
 use ui_proc::view;

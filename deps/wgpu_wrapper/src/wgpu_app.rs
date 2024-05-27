@@ -149,7 +149,11 @@ impl WGPUApp {
             format:       TEXTURE_FORMAT,
             width:        size.width,
             height:       size.height,
-            present_mode: PresentMode::AutoNoVsync,
+            present_mode: if Platform::MOBILE {
+                PresentMode::AutoVsync
+            } else {
+                PresentMode::AutoNoVsync
+            },
             alpha_mode:   CompositeAlphaMode::Auto,
             view_formats: vec![],
 

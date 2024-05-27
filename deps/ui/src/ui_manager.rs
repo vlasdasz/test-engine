@@ -194,11 +194,11 @@ impl UIManager {
         #[cfg(ios)]
         {
             crate::ui_manager::IOS_KEYBOARD_INIT.call_once(|| {
-                unsafe { crate::mobile::ios::ios_init_text_field() };
+                unsafe { crate::mobile::ios::test_engine_ios_init_text_field() };
             });
 
             unsafe {
-                crate::mobile::ios::ios_open_keyboard(
+                crate::mobile::ios::test_engine_ios_open_keyboard(
                     frame.origin.x,
                     frame.origin.y,
                     frame.size.width,
@@ -211,7 +211,7 @@ impl UIManager {
     pub fn close_keyboard() -> Option<String> {
         #[cfg(ios)]
         unsafe {
-            let str_ptr = crate::mobile::ios::ios_close_keyboard();
+            let str_ptr = crate::mobile::ios::test_engine_ios_close_keyboard();
             let cstr = std::ffi::CStr::from_ptr(str_ptr);
             return cstr.to_string_lossy().into_owned().into();
         }
