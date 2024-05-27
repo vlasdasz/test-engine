@@ -1,4 +1,4 @@
-use std::num::NonZeroU32;
+use std::{cmp::max, num::NonZeroU32};
 
 pub mod checked_convert;
 pub mod into_f32;
@@ -82,24 +82,25 @@ impl One for NonZeroU32 {
 }
 
 pub trait CheckedSub: Sized {
-    fn sub_and_check(&self, other: &Self) -> Option<Self>;
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self>;
 }
 
 impl CheckedSub for u32 {
-    fn sub_and_check(&self, other: &Self) -> Option<Self> {
-        self.checked_sub(*other)
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        self.checked_sub(*other).map(|a| max(a, *min))
     }
 }
 
 impl CheckedSub for f32 {
-    fn sub_and_check(&self, other: &Self) -> Option<Self> {
-        Some(self - other)
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        let res = self - other;
+        if res > *min { *min } else { res }.into()
     }
 }
 
 impl CheckedSub for NonZeroU32 {
-    fn sub_and_check(&self, other: &Self) -> Option<Self> {
-        let val = self.get().sub_and_check(&other.get())?;
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        let val = self.get().sub_and_check(&other.get(), &min.get())?;
         val.try_into().ok()
     }
 }

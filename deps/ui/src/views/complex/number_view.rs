@@ -34,6 +34,8 @@ pub struct NumberView<T: ViewableNumber> {
     value:    T,
     #[educe(Default = T::one())]
     pub step: T,
+    #[educe(Default = ZeroOrMinimal::zero())]
+    pub min:  T,
 
     label: Sub<Label>,
 
@@ -78,7 +80,7 @@ impl<T: ViewableNumber> NumberView<T> {
     }
 
     fn down_tap(mut self: Weak<Self>) {
-        let val = self.value.sub_and_check(&self.step);
+        let val = self.value.sub_and_check(&self.step, &self.min);
         self.set_value(val.unwrap_or(T::zero()));
     }
 

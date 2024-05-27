@@ -31,8 +31,8 @@ pub struct TestGameView {
     label_l: Sub<Label>,
     image_r: Sub<ImageView>,
 
-    dpad: Sub<DPadView>,
-    int:  Sub<NumberView<NonZeroU32>>,
+    dpad:  Sub<DPadView>,
+    scale: Sub<NumberView<NonZeroU32>>,
 
     spinner: Sub<Button>,
     alert:   Sub<Button>,
@@ -90,12 +90,13 @@ impl ViewSetup for TestGameView {
             }
         });
 
-        self.int.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
-        self.int.on_change(|val| {
+        self.scale.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
+        self.scale.min = 4.try_into().unwrap();
+        self.scale.on_change(|val| {
             *LevelManager::scale() = val.get().lossy_convert() * 0.1;
         });
 
-        self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.int, 10);
+        self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.scale, 10);
         self.spinner.set_text("Spinner");
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
@@ -105,7 +106,7 @@ impl ViewSetup for TestGameView {
             });
         });
 
-        self.alert.place().size(100, 28).anchor(Anchor::Left, self.int, 10).anchor(
+        self.alert.place().size(100, 28).anchor(Anchor::Left, self.scale, 10).anchor(
             Anchor::Bot,
             self.spinner,
             10,
@@ -120,7 +121,7 @@ impl ViewSetup for TestGameView {
         self.sound
             .place()
             .same_size(self.alert)
-            .anchor(Anchor::Left, self.int, 10)
+            .anchor(Anchor::Left, self.scale, 10)
             .anchor(Anchor::Bot, self.alert, 10);
         self.sound.set_text("Sound");
         self.sound.set_text_size(20);
