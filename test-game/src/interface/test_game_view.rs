@@ -91,7 +91,7 @@ impl ViewSetup for TestGameView {
         });
 
         self.scale.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
-        self.scale.min = 4.try_into().unwrap();
+        self.scale.set_min(4.try_into().unwrap());
         self.scale.on_change(|val| {
             *LevelManager::scale() = val.get().lossy_convert() * 0.1;
         });

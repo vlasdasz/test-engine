@@ -26,6 +26,7 @@ pub trait ViewableNumber:
 
 impl ViewableNumber for f32 {}
 impl ViewableNumber for u32 {}
+impl ViewableNumber for usize {}
 impl ViewableNumber for NonZeroU32 {}
 
 #[view]
@@ -35,7 +36,7 @@ pub struct NumberView<T: ViewableNumber> {
     #[educe(Default = T::one())]
     pub step: T,
     #[educe(Default = ZeroOrMinimal::zero())]
-    pub min:  T,
+    min:      T,
 
     label: Sub<Label>,
 
@@ -66,6 +67,12 @@ impl<T: ViewableNumber> NumberView<T> {
         self.value = val;
         self.label.text = format!("{val:.1}");
         self.on_change_event.trigger(val);
+        self
+    }
+
+    pub fn set_min(&mut self, min: T) -> &mut Self {
+        self.min = min;
+        self.set_value(min);
         self
     }
 

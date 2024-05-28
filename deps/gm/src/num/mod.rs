@@ -75,6 +75,12 @@ impl const One for u32 {
     }
 }
 
+impl const One for usize {
+    fn one() -> Self {
+        1
+    }
+}
+
 impl One for NonZeroU32 {
     fn one() -> Self {
         1.try_into().unwrap()
@@ -86,6 +92,12 @@ pub trait CheckedSub: Sized {
 }
 
 impl CheckedSub for u32 {
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        self.checked_sub(*other).map(|a| max(a, *min))
+    }
+}
+
+impl CheckedSub for usize {
     fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
         self.checked_sub(*other).map(|a| max(a, *min))
     }
@@ -116,6 +128,12 @@ impl MyAdd for f32 {
 }
 
 impl MyAdd for u32 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for usize {
     fn my_add(&self, other: &Self) -> Self {
         self + other
     }
