@@ -194,6 +194,11 @@ impl TestGameView {
         UIManager::keymap().add(self, '-', || {
             *LevelManager::scale() /= 2.0;
         });
+
+        UIManager::keymap().add(self, 'b', || {
+            *LevelManager::camera_pos() = Point::default();
+            LevelManager::set_level(BenchmarkLevel::default());
+        });
     }
 
     fn call_obj(self: Weak<Self>) {
