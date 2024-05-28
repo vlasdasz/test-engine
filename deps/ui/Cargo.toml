@@ -27,7 +27,7 @@ vents = { workspace = true }
 wgpu_wrapper = { workspace = true }
 
 gm = { workspace = true }
-ui_proc = { workspace = true }
+ui-proc = { workspace = true }
 
 
 [build-dependencies]

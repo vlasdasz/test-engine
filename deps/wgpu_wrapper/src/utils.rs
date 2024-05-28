@@ -1,7 +1,8 @@
 use wgpu::{
     BlendState, ColorTargetState, ColorWrites, DepthStencilState, Face, FragmentState, FrontFace,
-    MultisampleState, PipelineLayout, PolygonMode, PrimitiveState, PrimitiveTopology,
-    RenderPipelineDescriptor, ShaderModule, TextureFormat, VertexBufferLayout, VertexState,
+    MultisampleState, PipelineCompilationOptions, PipelineLayout, PolygonMode, PrimitiveState,
+    PrimitiveTopology, RenderPipelineDescriptor, ShaderModule, TextureFormat, VertexBufferLayout,
+    VertexState,
 };
 
 use crate::{image::Texture, WGPUApp};
@@ -31,13 +32,13 @@ pub fn make_pipeline(
         vertex: VertexState {
             module:              shader,
             entry_point:         "v_main",
-            compilation_options: Default::default(),
+            compilation_options: PipelineCompilationOptions::default(),
             buffers:             vertex_layout,
         },
         fragment: FragmentState {
             module:              shader,
             entry_point:         "f_main",
-            compilation_options: Default::default(),
+            compilation_options: PipelineCompilationOptions::default(),
             targets:             &[ColorTargetState {
                 format:     texture_format,
                 blend:      BlendState::ALPHA_BLENDING.into(),

@@ -15,7 +15,7 @@ pub fn start_test_game() {
     runtime.block_on(async {
         #[cfg(mobile)]
         test_engine::refs::set_current_thread_as_main();
-        test_engine::App::start(TestGameView::new()).await.unwrap()
+        test_engine::App::start(TestGameView::new()).await.unwrap();
     });
 }
 

@@ -24,7 +24,7 @@ impl PointsPath {
         let center = center.into();
         let circle = Self::circle_with(center, radius, precision);
 
-        pairs(circle).into_iter().flat_map(|(a, b)| [a, b, center]).collect()
+        pairs(&circle).into_iter().flat_map(|(a, b)| [a, b, center]).collect()
     }
 
     pub fn rounded_rect(rect: impl Into<Rect>, radius: impl ToF32, precision: u16) -> Points {
@@ -64,7 +64,7 @@ pub fn point_on_circle(radius: f32, angle: f32, center: impl Into<Point>) -> Poi
     (radius * angle.cos() + center.x, radius * angle.sin() + center.y).into()
 }
 
-fn pairs<T: Copy>(data: Vec<T>) -> Vec<(T, T)> {
+fn pairs<T: Copy>(data: &[T]) -> Vec<(T, T)> {
     let first = *data.first().unwrap();
     let last = *data.last().unwrap();
     data.windows(2)

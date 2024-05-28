@@ -19,16 +19,16 @@ pub struct Cell {
 impl Cell {
     pub fn all_sides(&self, mut action: impl FnMut(CellSide)) {
         if self.top {
-            action(CellSide::Up)
+            action(CellSide::Up);
         }
         if self.bottom {
-            action(CellSide::Down)
+            action(CellSide::Down);
         }
         if self.left {
-            action(CellSide::Left)
+            action(CellSide::Left);
         }
         if self.right {
-            action(CellSide::Right)
+            action(CellSide::Right);
         }
     }
 }

@@ -22,7 +22,7 @@ pub struct UI;
 
 impl UI {
     pub(crate) fn update() {
-        Self::update_view(UIManager::root_view_weak().deref_mut())
+        Self::update_view(UIManager::root_view_weak().deref_mut());
     }
 
     pub(crate) fn draw(pass: &mut RenderPass) {
@@ -33,7 +33,7 @@ impl UI {
         Font::helvetice()
             .brush
             .queue(WGPUApp::device(), WGPUApp::queue(), sections)
-            .unwrap()
+            .unwrap();
     }
 
     fn update_view(view: &mut dyn View) {
@@ -142,7 +142,7 @@ impl UI {
         for view in view.subviews().iter().rev() {
             let root_frame = UIManager::root_view().frame();
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(pass, drawer, view.deref(), sections, &mut text_offset)
+                Self::draw_view(pass, drawer, view.deref(), sections, &mut text_offset);
             }
         }
     }

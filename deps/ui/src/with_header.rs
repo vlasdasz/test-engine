@@ -1,5 +1,6 @@
 use gm::Platform;
 use log::trace;
+use refs::Weak;
 
 use crate::{layout::Anchor, UIManager, View, ViewData, ViewFrame, WeakView};
 
@@ -35,11 +36,11 @@ pub trait WithHeader: View {
 
 impl<T: View> WithHeader for T {
     default fn header(&self) -> WeakView {
-        Default::default()
+        Weak::default()
     }
 
     default fn main_view(&self) -> WeakView {
-        Default::default()
+        Weak::default()
     }
 
     default fn header_size(&self) -> f32 {

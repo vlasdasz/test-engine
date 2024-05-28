@@ -9,7 +9,7 @@ pub struct Keymap {
 
 impl Keymap {
     pub fn add(&self, view: WeakView, key: char, action: impl FnMut() + 'static) {
-        self.keys.borrow_mut().push(KeyAction::new(view, key, action))
+        self.keys.borrow_mut().push(KeyAction::new(view, key, action));
     }
 
     pub fn check(&self, key: char) {

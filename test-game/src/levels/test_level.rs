@@ -118,7 +118,7 @@ impl Level for TestLevel {
                 .as_any_mut()
                 .downcast_mut::<Self>()
                 .unwrap()
-                .on_touch(pos)
+                .on_touch(pos);
         });
     }
 

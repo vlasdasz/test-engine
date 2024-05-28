@@ -16,13 +16,13 @@ impl Screenshot {
 
     pub fn get_pixel(&self, pos: impl Into<Point>) -> U8Color {
         if self.data.is_empty() {
-            return Default::default();
+            return Color::default();
         }
 
         let pos: Point<usize> = pos.into().lossy_convert();
 
         let Some(color) = self.data.get(pos.x + pos.y * self.size.width as usize) else {
-            return Default::default();
+            return Color::default();
         };
 
         let color: Color<f32> = (*color).into();

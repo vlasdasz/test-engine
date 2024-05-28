@@ -33,13 +33,13 @@ impl PathData {
         self.vertex_range.clone()
     }
 
-    pub fn new(color: Color, size: Size, points: Points) -> Self {
+    pub fn new(color: Color, size: Size, points: &Points) -> Self {
         let device = WGPUApp::device();
         let path_layout = WGPUApp::path_layout();
 
         let buffer = device.create_buffer_init(&BufferInitDescriptor {
             label:    "PathData Buffer".into(),
-            contents: cast_slice(&points),
+            contents: cast_slice(points),
             usage:    BufferUsages::VERTEX,
         });
 

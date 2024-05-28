@@ -23,7 +23,7 @@ impl UIAnimation {
         Self {
             animation,
             action: Box::new(action),
-            on_finish: Default::default(),
+            on_finish: OnceEvent::default(),
         }
     }
 
@@ -43,7 +43,7 @@ pub trait ViewAnimation {
 
 impl<T: ?Sized + View> ViewAnimation for T {
     fn add_animation(&mut self, anim: UIAnimation) {
-        self.animations().push(anim)
+        self.animations().push(anim);
     }
 
     fn commit_animations(&mut self) {
@@ -56,7 +56,7 @@ impl<T: ?Sized + View> ViewAnimation for T {
         for animation in this.animations() {
             animation.commit(self.weak_view().deref_mut());
             if animation.finished() {
-                animation.on_finish.trigger(())
+                animation.on_finish.trigger(());
             }
         }
         self.animations().retain(|a| !a.finished());

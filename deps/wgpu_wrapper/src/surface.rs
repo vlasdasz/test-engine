@@ -24,7 +24,7 @@ impl Surface {
             return Ok(None);
         }
 
-        let surface = instance.create_surface(window.clone())?; // Android fail
+        let surface = instance.create_surface(window)?; // Android fail
 
         let _surface_caps = surface.get_capabilities(adapter);
 

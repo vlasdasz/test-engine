@@ -22,10 +22,10 @@ pub struct Image {
 impl Image {
     fn load_to_wgpu(name: &str, data: &[u8]) -> Result<Self> {
         let texture = Texture::from_file_bytes(data, name)?;
-        Self::from_texture(texture)
+        Self::from_texture(&texture)
     }
 
-    pub fn from_texture(texture: Texture) -> Result<Self> {
+    pub fn from_texture(texture: &Texture) -> Result<Self> {
         let device = WGPUApp::device();
 
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
@@ -52,19 +52,19 @@ impl Image {
 
     pub fn from_raw_data(
         data: &[u8],
-        name: impl ToString,
+        name: impl Into<String>,
         size: Size<u32>,
         channels: u8,
     ) -> Result<Weak<Image>> {
-        let name = name.to_string();
+        let name = name.into();
         let texture = Texture::from_raw_data(data, size, channels, &name);
-        let image = Self::from_texture(texture)?;
+        let image = Self::from_texture(&texture)?;
         Ok(Image::add_with_name(&name, || image))
     }
 
-    pub fn from_file_data(data: &[u8], name: String) -> Weak<Image> {
-        Image::add_with_name(&name.clone(), || {
-            Self::load_to_wgpu(&name, data).expect("Failed to load image {name} to wgpu")
+    pub fn from_file_data(data: &[u8], name: &str) -> Weak<Image> {
+        Image::add_with_name(name, || {
+            Self::load_to_wgpu(name, data).expect("Failed to load image {name} to wgpu")
         })
     }
 

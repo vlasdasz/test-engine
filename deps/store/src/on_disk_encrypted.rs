@@ -25,7 +25,7 @@ impl<T: Storable> OnDiskEncrypted<T> {
         let val = val.into();
         let string = to_string(&val).unwrap();
         let encrypted = encrypt(string.as_bytes(), key);
-        self.inner.set(encrypted)
+        self.inner.set(encrypted);
     }
 
     pub fn get(&self, key: &EncryptionKey) -> T {
@@ -38,7 +38,7 @@ impl<T: Storable> OnDiskEncrypted<T> {
     }
 
     pub fn reset(&self, key: &EncryptionKey) {
-        self.set(T::default(), key)
+        self.set(T::default(), key);
     }
 }
 

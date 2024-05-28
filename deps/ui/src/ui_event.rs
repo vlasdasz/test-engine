@@ -37,7 +37,7 @@ impl<T: Send> UIEvent<T> {
         subs.push(Subscriber {
             view,
             action: Box::new(move |_| action()),
-        })
+        });
     }
 
     pub fn val(&self, view: impl Deref<Target = impl View + ?Sized>, action: impl FnMut(T) + Send + 'static) {
@@ -54,11 +54,11 @@ impl<T: Send> UIEvent<T> {
         subs.push(Subscriber {
             view:   view.weak_view(),
             action: Box::new(action),
-        })
+        });
     }
 
     pub fn unsibscribe(&self, view: WeakView) {
-        self.subscribers.lock().unwrap().retain(|a| a.view.addr() != view.addr())
+        self.subscribers.lock().unwrap().retain(|a| a.view.addr() != view.addr());
     }
 
     pub fn trigger(&self, val: T)
@@ -66,7 +66,7 @@ impl<T: Send> UIEvent<T> {
         let mut subs = self.subscribers.lock().unwrap();
         subs.retain(|a| a.view.is_ok());
         for sub in subs.iter_mut() {
-            (sub.action)(val.clone())
+            (sub.action)(val.clone());
         }
     }
 

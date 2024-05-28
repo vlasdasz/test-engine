@@ -38,7 +38,7 @@ impl ViewSetup for TableView {
 
         self.size_changed().sub(move || {
             self.layout_cells();
-        })
+        });
     }
 }
 

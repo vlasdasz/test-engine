@@ -85,11 +85,11 @@ impl Point<f32> {
     }
 
     pub fn invert_x(&mut self) {
-        self.x = -self.x
+        self.x = -self.x;
     }
 
     pub fn invert_y(&mut self) {
-        self.y = -self.y
+        self.y = -self.y;
     }
 }
 
@@ -99,7 +99,7 @@ impl Point<f32> {
     }
 
     pub fn normalize(&mut self) {
-        self.set_length(1.0)
+        self.set_length(1.0);
     }
 }
 
@@ -122,7 +122,7 @@ impl Point<f32> {
         if self.length() < max_length {
             return;
         }
-        self.set_length(max_length)
+        self.set_length(max_length);
     }
 
     pub fn trimmed(mut self, max_length: f32) -> Self {
@@ -167,7 +167,7 @@ impl<T: Add<Output = T> + Copy> Add for &Point<T> {
 impl<T: AddAssign> AddAssign for Point<T> {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
-        self.y += rhs.y
+        self.y += rhs.y;
     }
 }
 
@@ -194,7 +194,7 @@ impl<T: Sub<Output = T> + Copy> Sub for &Point<T> {
 impl<T: SubAssign> SubAssign for Point<T> {
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
-        self.y -= rhs.y
+        self.y -= rhs.y;
     }
 }
 

@@ -52,6 +52,6 @@ impl Shape {
 
 impl Default for Shape {
     fn default() -> Self {
-        Shape::Rect(Default::default())
+        Shape::Rect(Size::default())
     }
 }

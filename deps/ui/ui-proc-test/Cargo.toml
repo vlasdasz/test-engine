@@ -1,0 +1,8 @@
+[package]
+edition = "2021"
+name = "ui-proc-test"
+version = "0.1.0"
+
+[dependencies]
+ui = { workspace = true }
+ui-proc = { workspace = true }

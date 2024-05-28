@@ -52,7 +52,7 @@ impl SpriteDrawer {
         let view_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label:    Some("Camera Buffer"),
             contents: bytes_of(&SpriteView {
-                camera_pos:      Default::default(),
+                camera_pos:      Point::default(),
                 resolution:      (1000, 1000).into(),
                 camera_rotation: 0.0,
                 scale:           1.0,
@@ -86,7 +86,7 @@ impl SpriteDrawer {
         });
 
         Self {
-            view: Default::default(),
+            view: SpriteView::default(),
             pipeline,
             view_buffer,
             view_bind_group,

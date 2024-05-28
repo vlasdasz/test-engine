@@ -58,7 +58,7 @@ impl WGPUDrawer {
         width: f32,
     ) {
         for rect in rect.to_borders(width) {
-            self.rect_drawer.draw(render_pass, &rect, color, z_position)
+            self.rect_drawer.draw(render_pass, &rect, color, z_position);
         }
     }
 
@@ -72,7 +72,7 @@ impl WGPUDrawer {
         z_position: f32,
     ) {
         self.path_drawer
-            .draw_buffer(render_pass, rect, buffer, bind_group, vertex_range, z_position)
+            .draw_buffer(render_pass, rect, buffer, bind_group, vertex_range, z_position);
     }
 
     pub fn draw_image<'a>(

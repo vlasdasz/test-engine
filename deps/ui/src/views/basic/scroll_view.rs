@@ -46,7 +46,7 @@ impl ScrollView {
         self.content_offset = offset.to_f32();
 
         if self.content_offset < self.max_offset() {
-            self.content_offset = self.max_offset()
+            self.content_offset = self.max_offset();
         }
 
         self
@@ -66,7 +66,7 @@ impl ScrollView {
         self.content_size.height = height.to_f32();
 
         if self.content_offset < self.max_offset() {
-            self.content_offset = self.max_offset()
+            self.content_offset = self.max_offset();
         }
 
         self
@@ -90,7 +90,7 @@ impl ViewSetup for ScrollView {
 
         self.size_changed().sub(move || {
             self.on_scroll(0.0);
-        })
+        });
     }
 }
 

@@ -1,5 +1,6 @@
 use educe::Educe;
 use gm::{flat::Size, ToF32};
+use refs::Weak;
 
 use crate::{
     layout::{Anchor, Tiling},
@@ -33,8 +34,8 @@ impl LayoutRule {
             side:         Anchor::Top,
             tiling:       tiling.into(),
             offset:       offset.to_f32(),
-            anchor_view:  Default::default(),
-            anchor_view2: Default::default(),
+            anchor_view:  Weak::default(),
+            anchor_view2: Weak::default(),
             relative:     false,
             between:      false,
             custom:       None,
@@ -46,8 +47,8 @@ impl LayoutRule {
             side,
             tiling: None,
             offset: offset.to_f32(),
-            anchor_view: Default::default(),
-            anchor_view2: Default::default(),
+            anchor_view: Weak::default(),
+            anchor_view2: Weak::default(),
             relative: false,
             between: false,
             custom: None,
@@ -60,7 +61,7 @@ impl LayoutRule {
             tiling: None,
             offset: offset.to_f32(),
             anchor_view,
-            anchor_view2: Default::default(),
+            anchor_view2: Weak::default(),
             relative: false,
             between: false,
             custom: None,
@@ -73,7 +74,7 @@ impl LayoutRule {
             tiling: None,
             offset: ratio.to_f32(),
             anchor_view,
-            anchor_view2: Default::default(),
+            anchor_view2: Weak::default(),
             relative: true,
             between: false,
             custom: None,
@@ -98,8 +99,8 @@ impl LayoutRule {
             side:         Anchor::Bot,
             tiling:       None,
             offset:       0.0,
-            anchor_view:  Default::default(),
-            anchor_view2: Default::default(),
+            anchor_view:  Weak::default(),
+            anchor_view2: Weak::default(),
             relative:     false,
             between:      false,
             custom:       Some(Box::new(action)),

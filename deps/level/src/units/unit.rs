@@ -21,7 +21,7 @@ impl Unit {
 
 impl Sprite for Unit {
     fn update(&mut self) {
-        self.body.update()
+        self.body.update();
     }
 
     fn make(shape: Shape, position: Point) -> Own<Self>

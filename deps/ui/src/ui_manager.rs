@@ -61,7 +61,7 @@ impl UIManager {
         }
         selected_view.base_mut().is_selected = false;
         selected_view.on_selection_changed(false);
-        *selected_view = Default::default();
+        *selected_view = Weak::default();
     }
 
     pub fn set_selected(&self, mut view: WeakView, selected: bool) {
@@ -69,7 +69,7 @@ impl UIManager {
 
         if let Some(selected) = selected_view.get_mut() {
             selected.on_selection_changed(false);
-            *selected_view = Default::default();
+            *selected_view = Weak::default();
         }
 
         if selected {
@@ -88,13 +88,13 @@ impl UIManager {
 
         Self {
             root_view,
-            deleted_views: Default::default(),
+            deleted_views: Mutex::default(),
             touch_disabled: false.into(),
-            on_scroll: Default::default(),
-            on_drop_file: Default::default(),
+            on_scroll: UIEvent::default(),
+            on_drop_file: UIEvent::default(),
             draw_touches: false.into(),
-            keymap: Default::default(),
-            selected_view: Mutex::new(Default::default()),
+            keymap: Own::default(),
+            selected_view: Mutex::new(Weak::default()),
         }
     }
 
@@ -132,7 +132,7 @@ impl UIManager {
     }
 
     pub fn set_display_touches(display: bool) {
-        Self::get().draw_touches.store(display, Ordering::Relaxed)
+        Self::get().draw_touches.store(display, Ordering::Relaxed);
     }
 
     pub fn keymap() -> &'static Keymap {
@@ -146,11 +146,11 @@ impl UIManager {
     }
 
     fn disable_touch() {
-        Self::get().touch_disabled.store(true, Ordering::Relaxed)
+        Self::get().touch_disabled.store(true, Ordering::Relaxed);
     }
 
     fn enable_touch() {
-        Self::get().touch_disabled.store(false, Ordering::Relaxed)
+        Self::get().touch_disabled.store(false, Ordering::Relaxed);
     }
 }
 
@@ -234,25 +234,25 @@ impl UIManager {
 
 impl UIManager {
     pub fn trigger_scroll(scroll: Point) {
-        Self::get().on_scroll.trigger(scroll)
+        Self::get().on_scroll.trigger(scroll);
     }
 
     pub fn on_scroll(
         view: impl Deref<Target = impl View + ?Sized>,
         action: impl FnMut(Point) + Send + 'static,
     ) {
-        Self::get().on_scroll.val(view, action)
+        Self::get().on_scroll.val(view, action);
     }
 
     pub fn trigger_drop_file(file: PathBuf) {
-        Self::get().on_drop_file.trigger(file)
+        Self::get().on_drop_file.trigger(file);
     }
 
     pub fn on_drop_file(
         view: impl Deref<Target = impl View + ?Sized>,
         action: impl FnMut(PathBuf) + Send + 'static,
     ) {
-        Self::get().on_drop_file.val(view, action)
+        Self::get().on_drop_file.val(view, action);
     }
 }
 

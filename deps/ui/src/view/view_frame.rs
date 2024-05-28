@@ -185,10 +185,10 @@ impl<T: ?Sized + View> ViewFrame for T {
         let view = self.base_mut();
 
         if view.trigger_size_changed {
-            view.size_changed.trigger(())
+            view.size_changed.trigger(());
         }
         if view.trigger_pos_changed {
-            view.position_changed.trigger(())
+            view.position_changed.trigger(());
         }
 
         view.trigger_size_changed = false;

@@ -41,9 +41,9 @@ impl Sprite for Weapon {
     where Self: Sized {
         Own::new(Self {
             sprite:       SpriteData::make(shape, position),
-            velocity:     Default::default(),
+            velocity:     Point::default(),
             bullet_speed: 1.0,
-            bullet_image: Default::default(),
+            bullet_image: Weak::default(),
             bullet_shape: Shape::Rect((1, 1).into()),
         })
     }

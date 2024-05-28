@@ -129,7 +129,7 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         if self.collider_handle.is_some() {
             self.collider_mut().set_position([pos.x, pos.y].into());
         } else if self.rigid_handle.is_some() {
-            self.rigid_body_mut().set_position([pos.x, pos.y].into(), true)
+            self.rigid_body_mut().set_position([pos.x, pos.y].into(), true);
         }
         self.position = pos;
         self
@@ -143,7 +143,7 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
         if self.collider_handle.is_some() {
             self.collider_mut().set_rotation(Rotation::new(rotation));
         } else {
-            self.rotation = rotation
+            self.rotation = rotation;
         }
         self
     }

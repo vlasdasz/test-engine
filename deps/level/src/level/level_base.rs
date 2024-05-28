@@ -140,6 +140,6 @@ pub trait LevelTemplates {
 impl<T: ?Sized + Level> LevelTemplates for T {
     fn set_gravity(&mut self, g: impl Into<Point>) {
         let g = g.into();
-        self.gravity = Vector2::new(g.x, g.y)
+        self.gravity = Vector2::new(g.x, g.y);
     }
 }

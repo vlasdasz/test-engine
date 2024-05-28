@@ -34,12 +34,12 @@ pub struct State {
 impl State {
     pub fn new(app: Box<dyn App>) -> Self {
         Self {
-            fonts: Default::default(),
+            fonts: HashMap::default(),
             app,
             fps: 0.0,
             frame_time: 0.0,
-            read_display_request: Default::default(),
-            frame_counter: Default::default(),
+            read_display_request: RefCell::default(),
+            frame_counter: FrameCounter::default(),
         }
     }
 
@@ -102,7 +102,7 @@ impl State {
             self.fps = fps;
             self.frame_time = frame_time;
             let app = WGPUApp::current();
-            WGPUApp::current().set_title(format!("{a} {} x {}", app.config.width, app.config.height))
+            WGPUApp::current().set_title(format!("{a} {} x {}", app.config.width, app.config.height));
         }
     }
 

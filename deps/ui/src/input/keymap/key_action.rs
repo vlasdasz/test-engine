@@ -26,7 +26,7 @@ impl KeyAction {
             return false;
         }
         if self.key == key {
-            self.action.trigger(())
+            self.action.trigger(());
         }
         true
     }

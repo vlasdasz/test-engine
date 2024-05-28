@@ -157,7 +157,7 @@ impl Spinner {
             animation.on_finish.sub(|| {
                 let mut spinner = Self::current();
                 spinner.remove_from_superview();
-                *spinner = Default::default();
+                *spinner = Weak::default();
             });
 
             spinner.add_animation(animation);
@@ -174,7 +174,7 @@ impl Spinner {
         }
 
         spinner.hide_modal(());
-        *spinner = Default::default();
+        *spinner = Weak::default();
     }
 }
 

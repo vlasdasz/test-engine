@@ -171,7 +171,7 @@ impl WGPUApp {
         *APP.get_mut() = Self {
             state,
             window,
-            window_size: Default::default(),
+            window_size: Size::default(),
             config,
             device,
             queue,
@@ -181,7 +181,7 @@ impl WGPUApp {
             surface: None,
             drawer: None,
             event_loop: event_loop.into(),
-            close: Default::default(),
+            close: AtomicBool::default(),
         }
         .into();
 
@@ -220,12 +220,12 @@ impl WGPUApp {
                         self.state.app.mouse_scroll(point * 28);
                     }
                     MouseScrollDelta::PixelDelta(delta) => {
-                        self.state.app.mouse_scroll((delta.x, delta.y).into())
+                        self.state.app.mouse_scroll((delta.x, delta.y).into());
                     }
                 },
                 WindowEvent::KeyboardInput { event, .. } => {
                     if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
-                        elwt.exit()
+                        elwt.exit();
                     }
                     self.state.app.key_event(event);
                 }
@@ -271,9 +271,9 @@ impl WGPUApp {
         Ok(())
     }
 
-    pub fn set_title(&self, title: impl ToString) {
+    pub fn set_title(&self, title: impl Into<String>) {
         if Platform::DESKTOP {
-            self.window.set_title(&title.to_string());
+            self.window.set_title(&title.into());
         }
     }
 

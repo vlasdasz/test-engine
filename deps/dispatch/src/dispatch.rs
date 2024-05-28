@@ -49,7 +49,7 @@ where
 }
 
 pub async fn wait_for_next_frame() {
-    from_main(|| {}).await
+    from_main(|| {}).await;
 }
 
 pub fn on_main(action: impl FnOnce() + Send + 'static) {
@@ -91,7 +91,7 @@ pub fn invoke_dispatched() {
     };
 
     for action in callback.drain(..) {
-        action()
+        action();
     }
     drop(callback);
 

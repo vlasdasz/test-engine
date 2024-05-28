@@ -47,7 +47,7 @@ impl DrawingView {
             return self;
         }
 
-        self.paths.push(PathData::new(color, self.size(), path));
+        self.paths.push(PathData::new(color, self.size(), &path));
         self
     }
 
@@ -76,6 +76,6 @@ impl DrawingView {
     }
 
     pub fn remove_all_paths(&mut self) {
-        self.paths.clear()
+        self.paths.clear();
     }
 }

@@ -58,19 +58,19 @@ impl TouchStack {
     }
 
     pub fn enable_for(view: WeakView) {
-        Self::get().layer_for(view).add(view)
+        Self::get().layer_for(view).add(view);
     }
 
     pub fn enable_for_low_priority(view: WeakView) {
-        Self::get().layer_for(view).add_low_priority(view)
+        Self::get().layer_for(view).add_low_priority(view);
     }
 
     pub fn disable_for(view: WeakView) {
-        Self::get().layer_for(view).remove(view)
+        Self::get().layer_for(view).remove(view);
     }
 
     pub fn push_layer(view: WeakView) {
-        Self::get().stack.push(view.into())
+        Self::get().stack.push(view.into());
     }
 
     pub fn pop_layer(view: WeakView) {

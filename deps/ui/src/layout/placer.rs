@@ -5,7 +5,7 @@ use std::{
 };
 
 use gm::{axis::Axis, flat::Size, LossyConvert, ToF32};
-use refs::{Rglica, ToRglica};
+use refs::{Rglica, ToRglica, Weak};
 
 use crate::{
     layout::{layout_rule::LayoutRule, Anchor, Tiling},
@@ -31,10 +31,10 @@ impl Placer {
         Self {
             rules:      RefCell::new(vec![]),
             sub_rules:  RefCell::new(vec![]),
-            view:       Default::default(),
-            s_content:  Default::default(),
+            view:       Rglica::default(),
+            s_content:  Rglica::default(),
             all_margin: RefCell::new(0.0),
-            has:        RefCell::new(Default::default()),
+            has:        RefCell::new(Size::default()),
         }
     }
 
@@ -55,7 +55,7 @@ impl Placer {
     pub fn clear(&self) -> &Self {
         self.rules.borrow_mut().clear();
         self.sub_rules.borrow_mut().clear();
-        *self.has.borrow_mut() = Default::default();
+        *self.has.borrow_mut() = Size::default();
         self
     }
 
@@ -333,7 +333,7 @@ impl Placer {
 
     pub fn between_super(&self, view: impl Deref<Target = impl View> + Copy, anchor: Anchor) -> &Self {
         self.rules()
-            .push(LayoutRule::between(view.weak_view(), Default::default(), anchor));
+            .push(LayoutRule::between(view.weak_view(), Weak::default(), anchor));
         self
     }
 }
@@ -344,19 +344,19 @@ impl Placer {
 
         for rule in this.rules().iter_mut() {
             if let Some(custom) = &mut rule.custom {
-                custom(self.view.weak_view(), &self.s_content)
+                custom(self.view.weak_view(), &self.s_content);
             } else if rule.between {
                 self.between_layout(rule);
             } else if rule.anchor_view.is_ok() {
                 if rule.relative {
-                    self.relative_layout(rule)
+                    self.relative_layout(rule);
                 } else {
-                    self.anchor_layout(rule)
+                    self.anchor_layout(rule);
                 }
             } else if let Some(tiling) = &rule.tiling {
                 self.tiling_layout(tiling);
             } else {
-                self.simple_layout(rule)
+                self.simple_layout(rule);
             }
         }
 
@@ -378,9 +378,9 @@ impl Placer {
             Anchor::Top => frame.origin.y = rule.offset,
             Anchor::Bot => {
                 if has.height {
-                    frame.origin.y = s_content.height - frame.height() - rule.offset
+                    frame.origin.y = s_content.height - frame.height() - rule.offset;
                 } else {
-                    frame.size.height = frame.height() + s_content.height - frame.max_y() - rule.offset
+                    frame.size.height = frame.height() + s_content.height - frame.max_y() - rule.offset;
                 }
             }
             Anchor::Left => frame.origin.x = rule.offset,
@@ -401,12 +401,12 @@ impl Placer {
             }
             Anchor::MaxWidth => {
                 if frame.size.width > rule.offset {
-                    frame.size.width = rule.offset
+                    frame.size.width = rule.offset;
                 }
             }
             Anchor::MaxHeight => {
                 if frame.size.height > rule.offset {
-                    frame.size.height = rule.offset
+                    frame.size.height = rule.offset;
                 }
             }
             _ => unimplemented!(),
@@ -458,7 +458,7 @@ impl Placer {
                     self.s_content.width / 2.0,
                     self.s_content.height,
                 )
-                    .into()
+                    .into();
             }
             Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_mut(), ratio),
         };
@@ -467,7 +467,7 @@ impl Placer {
 
     fn between_layout(&mut self, rule: &LayoutRule) {
         if rule.side.is_none() {
-            self.between_2_layout(rule)
+            self.between_2_layout(rule);
         } else {
             self.between_s_layout(rule);
         }

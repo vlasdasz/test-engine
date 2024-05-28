@@ -30,7 +30,7 @@ pub struct DropDown {
 
 impl DropDown {
     pub fn on_changed(&self, action: impl FnMut(String) + 'static) {
-        self.changed.val(action)
+        self.changed.val(action);
     }
 
     pub fn set_values<Values, Val>(&mut self, values: Values)

@@ -102,7 +102,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let mut weak = view.weak_view();
 
         if weak.z_position() == UIManager::ROOT_VIEW_Z_OFFSET {
-            weak.base_mut().z_position = self.z_position() - UIManager::subview_z_offset()
+            weak.base_mut().z_position = self.z_position() - UIManager::subview_z_offset();
         }
 
         self.base_mut().subviews.push(view);

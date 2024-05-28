@@ -121,10 +121,10 @@ impl App {
         #[cfg(mobile)]
         Assets::init(std::path::PathBuf::default());
         let mut app = Box::new(Self {
-            cursor_position: Default::default(),
+            cursor_position: Point::default(),
             first_view:      first_view.into(),
-            window_ready:    Default::default(),
-            wgpu_app:        Default::default(),
+            window_ready:    OnceEvent::default(),
+            wgpu_app:        Rglica::default(),
         });
         unsafe {
             assert!(APP.is_null(), "Another App already exists");
@@ -179,7 +179,7 @@ impl App {
         WGPUApp::start(app).await
     }
 
-    pub fn set_window_title(title: impl ToString) {
+    pub fn set_window_title(title: impl Into<String>) {
         Self::current().wgpu_app.set_title(title);
     }
 

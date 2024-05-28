@@ -18,8 +18,8 @@ impl Maker {
         assert!(!size.no_area());
         Self {
             size,
-            current_pos: Default::default(),
-            stack: Default::default(),
+            current_pos: Point::default(),
+            stack: vec![],
             grid: vec![vec![Cell::default(); size.height]; size.width],
         }
     }

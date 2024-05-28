@@ -7,6 +7,7 @@ members = [
   "test-game-android",
   "ui-test",
   "ui-benchmark",
+  "deps/ui/ui-proc-test",
 ]
 
 resolver = "2"
@@ -61,7 +62,7 @@ store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
 test-game = { path = "test-game" }
 ui = { path = "deps/ui" }
-ui_proc = { path = "deps/ui/ui_proc" }
+ui-proc = { path = "deps/ui/ui-proc" }
 valid = { path = "deps/valid" }
 wgpu_wrapper = { path = "deps/wgpu_wrapper" }
 

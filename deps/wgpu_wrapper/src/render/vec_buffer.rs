@@ -15,7 +15,7 @@ pub(crate) struct VecBuffer<T> {
 
 impl<T: Pod> VecBuffer<T> {
     pub fn push(&mut self, val: T) {
-        self.data.push(val)
+        self.data.push(val);
     }
 
     pub fn len(&self) -> u32 {

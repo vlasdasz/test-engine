@@ -26,7 +26,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
         on_main(move || {
             let weak = Self::prepare_modally(input);
             weak.modal_event().val(callback);
-        })
+        });
     }
 
     #[allow(async_fn_in_trait)]

@@ -68,7 +68,7 @@ pub async fn inject_touches(data: impl ToString + Send + 'static) {
             inject_touch(touch);
         }
     })
-    .await
+    .await;
 }
 
 pub async fn inject_touches_delayed(data: &str) {
@@ -85,22 +85,22 @@ pub async fn inject_touches_delayed(data: &str) {
 pub async fn inject_keys(s: impl ToString) {
     let s = s.to_string();
     for ch in s.chars() {
-        inject_key(ch).await
+        inject_key(ch).await;
     }
 }
 
 pub async fn inject_key(key: char) {
-    from_main(move || Input::on_char(key)).await
+    from_main(move || Input::on_char(key)).await;
 }
 
 #[allow(dead_code)]
 pub async fn record_touches() {
-    record_touches_internal(true).await
+    record_touches_internal(true).await;
 }
 
 #[allow(dead_code)]
 pub async fn record_moved_touches() {
-    record_touches_internal(false).await
+    record_touches_internal(false).await;
 }
 
 async fn record_touches_internal(skip_moved: bool) {
@@ -134,7 +134,7 @@ async fn record_touches_internal(skip_moved: bool) {
 
         UIManager::keymap().add(UIManager::root_view_weak(), 'a', move || {
             _ = s.try_send(());
-        })
+        });
     });
 
     if r.recv().await.is_none() {
@@ -189,7 +189,7 @@ pub async fn record_touches_with_colors() -> Result<()> {
 
         UIManager::keymap().add(UIManager::root_view_weak(), 'a', move || {
             _ = s.try_send(());
-        })
+        });
     });
 
     if r.recv().await.is_none() {
