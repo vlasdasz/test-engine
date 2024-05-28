@@ -127,16 +127,20 @@ impl WGPUApp {
 
         info!("{}", &info.backend);
 
+        let mut required_limits = if cfg!(target_arch = "wasm32") {
+            wgpu::Limits::downlevel_webgl2_defaults()
+        } else {
+            wgpu::Limits::default()
+        };
+
+        required_limits.max_compute_workgroups_per_dimension = 65535;
+
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
                     required_features: wgpu::Features::empty(), //wgpu::Features::POLYGON_MODE_LINE,
-                    required_limits:   if cfg!(target_arch = "wasm32") {
-                        wgpu::Limits::downlevel_webgl2_defaults()
-                    } else {
-                        wgpu::Limits::default()
-                    },
-                    label:             None,
+                    required_limits,
+                    label: None,
                 },
                 None,
             )
