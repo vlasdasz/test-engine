@@ -77,6 +77,12 @@ impl InputView for DropDown {
         unimplemented!("DropDown doesn't have title")
     }
 
+    fn set_text(&mut self, text: &str) {
+        assert!(self.values.contains(&text.to_string()));
+        self.label.set_text(text);
+        self.changed.trigger(text.to_string());
+    }
+
     fn text(&self) -> &str {
         self.label.text()
     }

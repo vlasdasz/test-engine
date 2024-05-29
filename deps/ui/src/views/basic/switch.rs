@@ -65,6 +65,14 @@ impl InputView for Switch {
         unimplemented!()
     }
 
+    fn set_text(&mut self, text: &str) {
+        match text {
+            "0" => self.set_on(false),
+            "1" => self.set_on(true),
+            _ => panic!(),
+        }
+    }
+
     fn text(&self) -> &str {
         if self.on {
             "1"

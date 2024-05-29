@@ -101,6 +101,10 @@ impl InputView for TextField {
         todo!()
     }
 
+    fn set_text(&mut self, text: &str) {
+        self.set_text(text);
+    }
+
     fn text(&self) -> &str {
         if self.placeholding {
             ""

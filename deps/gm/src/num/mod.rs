@@ -48,7 +48,7 @@ macro_rules! impl_one {
     )*};
 }
 
-impl_one!(1, i32, u32, usize);
+impl_one!(1, i8, u8, i16, u16, i32, u32, i64, u64, usize);
 impl_one!(1.0, f32, f64);
 
 #[const_trait]
@@ -68,6 +68,18 @@ impl CheckedSub for u32 {
     }
 }
 
+impl CheckedSub for i64 {
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        self.checked_sub(*other).map(|a| max(a, *min))
+    }
+}
+
+impl CheckedSub for u64 {
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        self.checked_sub(*other).map(|a| max(a, *min))
+    }
+}
+
 impl CheckedSub for usize {
     fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
         self.checked_sub(*other).map(|a| max(a, *min))
@@ -81,11 +93,36 @@ impl CheckedSub for f32 {
     }
 }
 
+impl CheckedSub for f64 {
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        let res = self - other;
+        if res < *min { *min } else { res }.into()
+    }
+}
+
 pub trait MyAdd {
     fn my_add(&self, other: &Self) -> Self;
 }
 
 impl MyAdd for f32 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for f64 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for i64 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for u64 {
     fn my_add(&self, other: &Self) -> Self {
         self + other
     }
@@ -119,4 +156,4 @@ macro_rules! impl_min {
     )*};
 }
 
-impl_min!(i8, u8, i32, u32, usize, f32, f64);
+impl_min!(i8, u8, i32, u32, i64, u64, usize, f32, f64);

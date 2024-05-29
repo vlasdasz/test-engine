@@ -1,4 +1,7 @@
-use std::fmt::{Debug, Display};
+use std::{
+    fmt::{Debug, Display},
+    str::FromStr,
+};
 
 use gm::{CheckedSub, Min, MyAdd, One, Zero};
 use refs::{weak_from_ref, Weak};
@@ -16,12 +19,15 @@ mod test_engine {
 use ui_proc::view;
 
 pub trait ViewableNumber:
-    MyAdd + CheckedSub + Zero + One + Min + Copy + Debug + Display + Sized + 'static {
+    MyAdd + CheckedSub + Zero + One + Min + Copy + Debug + Display + FromStr + Sized + 'static {
 }
 
 impl ViewableNumber for f32 {}
+impl ViewableNumber for f64 {}
 impl ViewableNumber for i32 {}
 impl ViewableNumber for u32 {}
+impl ViewableNumber for i64 {}
+impl ViewableNumber for u64 {}
 impl ViewableNumber for usize {}
 
 #[view]
@@ -94,6 +100,11 @@ impl<T: ViewableNumber> NumberView<T> {
 impl<T: ViewableNumber> InputView for NumberView<T> {
     fn set_title(&mut self, _title: &str) {
         unimplemented!()
+    }
+
+    fn set_text(&mut self, text: &str) {
+        let Ok(val) = text.parse() else { panic!() };
+        self.set_value(val);
     }
 
     fn text(&self) -> &str {

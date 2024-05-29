@@ -34,7 +34,15 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
             container.set_color(Color::WHITE);
 
             self.input = container.add_view::<T>();
-            self.input.place().center().relative_size(container, 0.6);
+            self.input.place().size(80, 46).center_y().r(10);
+
+            container.place().trb(0).relative(Anchor::Width, self, 0.5);
+        } else if type_name::<T>().contains("number_view::NumberView<") {
+            let mut container = self.add_view::<Container>();
+            container.set_color(Color::WHITE);
+
+            self.input = container.add_view::<T>();
+            self.input.place().size(80, 46).center_y().r(10);
 
             container.place().trb(0).relative(Anchor::Width, self, 0.5);
         } else {
@@ -47,6 +55,10 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
 impl<T: InputView + Default> InputView for Labeled<T> {
     fn set_title(&mut self, title: &str) {
         self.label.set_text(title);
+    }
+
+    fn set_text(&mut self, text: &str) {
+        self.input.set_text(text);
     }
 
     fn text(&self) -> &str {

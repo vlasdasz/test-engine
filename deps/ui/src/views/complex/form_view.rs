@@ -1,13 +1,17 @@
-use std::{collections::HashMap, marker::PhantomData};
+use std::{
+    collections::{HashMap, HashSet},
+    marker::PhantomData,
+};
 
 use convert_case::{Case, Casing};
 use reflected::{FieldRef, Reflected};
-use refs::Weak;
+use refs::{Own, Weak};
 use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewSubviews},
-    DropDown, InputView, Labeled, Switch, TextAlignment, TextField, TextFieldConstraint, ViewSetup,
+    DropDown, InputView, Labeled, NumberView, Switch, TextAlignment, TextField, TextFieldConstraint,
+    ViewSetup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -22,6 +26,7 @@ pub struct FormView<T: Reflected + 'static> {
 
     labels:   Vec<Weak<dyn InputView>>,
     variants: HashMap<FieldRef<T>, Vec<String>>,
+    buttons:  HashSet<FieldRef<T>>,
     _p:       PhantomData<T>,
 }
 
@@ -37,6 +42,10 @@ impl<T: Reflected> FormView<T> {
         self.variants.insert(field, vals);
     }
 
+    pub fn buttons(&mut self, field: FieldRef<T>) {
+        self.buttons.insert(field);
+    }
+
     pub fn set_data(&mut self, data: &T) {
         self.remove_all_subviews();
         self.labels.clear();
@@ -46,7 +55,7 @@ impl<T: Reflected> FormView<T> {
 
             let text = &data.get_value(field);
 
-            let mut view = if field.is_bool() {
+            let mut view: Weak<dyn InputView> = if field.is_bool() {
                 let mut view = self.add_view::<Labeled<Switch>>();
                 view.input.set_on(text == "1");
                 view.as_input_view()
@@ -55,6 +64,12 @@ impl<T: Reflected> FormView<T> {
                 let mut view = self.add_view::<Labeled<DropDown>>();
                 view.input.set_values(&variants);
                 view.as_input_view()
+            } else if field.is_number() && self.buttons.contains(field) {
+                let view = labeled_for_field(field);
+                let mut weak = view.as_input_view();
+                self.add_subview(view);
+                weak.set_text(text);
+                weak
             } else {
                 let mut view = self.add_view::<Labeled<TextField>>();
                 view.input.set_text(text);
@@ -104,5 +119,14 @@ impl<T: Reflected> FormView<T> {
 
     pub fn editing_disabled(&self) -> bool {
         !self.editing_enabled()
+    }
+}
+
+fn labeled_for_field<T>(field: FieldRef<T>) -> Own<dyn InputView> {
+    match field.type_name {
+        "i8" | "i16" | "i32" | "i64" => Labeled::<NumberView<i64>>::new(),
+        "u8" | "u16" | "u32" | "u64" => Labeled::<NumberView<u64>>::new(),
+        "f32" | "f64" => Labeled::<NumberView<f64>>::new(),
+        _ => unimplemented!(),
     }
 }
