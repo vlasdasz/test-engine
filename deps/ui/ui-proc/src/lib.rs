@@ -1,12 +1,15 @@
 use std::str::FromStr;
 
 use proc_macro::TokenStream;
-use quote::{quote, quote_spanned, ToTokens};
+use quote::{quote, quote_spanned};
 use syn::{
     parse::Parser,
     parse_macro_input, Data, DeriveInput, Field, Fields, FieldsNamed, GenericParam, Ident, Type,
     __private::{Span, TokenStream2},
+    parse_quote,
     spanned::Spanned,
+    token::{Bracket, Pound},
+    Attribute, Meta,
 };
 
 #[proc_macro_attribute]
@@ -44,9 +47,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
     };
 
     let inits = add_inits(name, fields);
-    let links = add_links(fields);
 
-    fields.named.push(
+    fields.named.insert(
+        0,
         Field::parse_named
             .parse2(quote! { __view_base: test_engine::ui::ViewBase })
             .expect("parse2(quote! { __view_base: test_engine::ui::ViewBase })"),
@@ -92,17 +95,11 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 self.__view_base.view_label += &#name_str.to_string();
                 self.layout_header();
                 let weak = test_engine::refs::weak_from_ref(self);
-                weak.__link();
                 weak.setup();
                 self.__after_setup_event().trigger(());
             }
         }
 
-        impl #generics  #name <#type_params> {
-            fn __link(mut self: test_engine::refs::Weak<Self>) {
-                #links
-            }
-        }
 
         impl #generics std::ops::Deref for #name <#type_params> {
             type Target = test_engine::ui::ViewBase;
@@ -127,6 +124,25 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
     for field in &mut fields.named {
         let name = field.ident.as_ref().expect("let name = field.ident.as_ref()");
 
+        let init_attr = Attribute {
+            pound_token:   Pound::default(),
+            style:         syn::AttrStyle::Outer,
+            bracket_token: Bracket::default(),
+            meta:          Meta::Path(parse_quote!(init)),
+        };
+
+        if let Some(idx) = field.attrs.iter().position(|a| *a == init_attr) {
+            field.attrs.remove(idx);
+        }
+
+        //let ty = &field.ty;
+
+        //   let wrapped_type: Type = quote! { i32 }.parse();
+
+        // let a = Type::parse.parse2(quote! { aa });
+
+        //dbg!(&field.ty);
+
         if let Type::Path(path) = &field.ty {
             for segment in &path.path.segments {
                 if segment.ident == subview {
@@ -140,68 +156,6 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
                     }
                 }
             }
-        }
-    }
-
-    res
-}
-
-fn add_links(fields: &mut FieldsNamed) -> TokenStream2 {
-    let mut res = quote!();
-
-    for field in &mut fields.named {
-        let field_name = field.ident.as_ref().expect("let field_name = field.ident.as_ref()");
-
-        let attrs = field.attrs.clone();
-
-        let attr = attrs.first();
-        let Some(attr) = attr else {
-            continue;
-        };
-
-        let attribute_name = attr.path.to_token_stream().to_string();
-        let tokens = attr.tokens.to_token_stream().to_string();
-
-        // Skip other macro. Should be smarter than that.
-        let Some(method) = tokens.strip_prefix("= ") else {
-            continue;
-        };
-
-        field.attrs = vec![];
-
-        let parameter = Ident::new(method, Span::call_site());
-
-        match attribute_name.as_str() {
-            "link" => {
-                res = quote! {
-                    #res
-                    {
-                        use test_engine::ui::AlertErr;
-                        self.#field_name.on_tap(move || { self.#parameter().alert_err(); });
-                    }
-                };
-            }
-            "link_async" => {
-                res = quote! {
-                    #res
-                    self.#field_name.on_tap(move || {
-                        tokio::spawn(async move {
-                            use test_engine::ui::AlertErr;
-                            self.#parameter().await.alert_err();
-                        });
-                    });
-                };
-            }
-            "text" => {
-                let param_str = TokenStream2::from_str(&format!("\"{parameter}\""))
-                    .expect("let param_str = TokenStream2::from_str(");
-
-                res = quote! {
-                    #res
-                    self.#field_name.set_text(#param_str);
-                };
-            }
-            _ => panic!("Invalid attribute. Only `link`, 'link_async' and 'text' are supported."),
         }
     }
 

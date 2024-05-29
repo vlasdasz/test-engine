@@ -4,5 +4,8 @@ name = "ui-proc-test"
 version = "0.1.0"
 
 [dependencies]
+educe = { workspace = true }
+refs = { workspace = true }
+
 ui = { workspace = true }
 ui-proc = { workspace = true }

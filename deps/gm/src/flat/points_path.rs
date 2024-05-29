@@ -75,5 +75,5 @@ fn pairs<T: Copy>(data: &[T]) -> Vec<(T, T)> {
 
 #[test]
 fn test_pairs() {
-    assert_eq!(pairs(vec![1, 2, 3]), vec![(2, 1), (3, 2), (3, 1)]);
+    assert_eq!(pairs(&[1, 2, 3]), vec![(2, 1), (3, 2), (3, 1)]);
 }

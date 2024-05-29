@@ -19,7 +19,6 @@ mod test_engine {
 
 #[view]
 pub struct DropDown {
-    #[link = tapped]
     button:  Sub<Button>,
     label:   Sub<Label>,
     table:   Sub<CollectionView>,
@@ -98,6 +97,7 @@ impl InputView for DropDown {
 impl ViewSetup for DropDown {
     fn setup(mut self: Weak<Self>) {
         self.button.place().back();
+        self.button.on_tap(move || self.tapped());
 
         self.label.place().back();
 

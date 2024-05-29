@@ -40,10 +40,7 @@ pub struct NumberView<T: ViewableNumber> {
 
     label: Sub<Label>,
 
-    #[link = up_tap]
-    up: Sub<Button>,
-
-    #[link = down_tap]
+    up:   Sub<Button>,
     down: Sub<Button>,
 
     on_change_event: Event<T>,
@@ -54,7 +51,9 @@ impl<T: ViewableNumber> ViewSetup for NumberView<T> {
         self.place().all_ver();
         self.label.text = format!("{:.1}", self.value);
         self.up.set_image(UIImages::up());
+        self.up.on_tap(move || self.up_tap());
         self.down.set_image(UIImages::down());
+        self.down.on_tap(move || self.down_tap());
     }
 }
 

@@ -14,34 +14,34 @@ use test_engine::{
 
 #[view]
 struct LayoutTestView {
-    #[text = center]
+    // #[text = center]
     center: Sub<Button>,
 
-    #[text = top]
+    // #[text = top]
     top:    Sub<Button>,
-    #[text = bottom]
+    // #[text = bottom]
     bottom: Sub<Button>,
-    #[text = left]
+    // #[text = left]
     left:   Sub<Button>,
-    #[text = right]
+    // #[text = right]
     right:  Sub<Button>,
 
-    #[text = tp_ct]
+    // #[text = tp_ct]
     top_center:    Sub<Button>,
-    #[text = bt_ct]
+    // #[text = bt_ct]
     bottom_center: Sub<Button>,
-    #[text = le_ct]
+    // #[text = le_ct]
     left_center:   Sub<Button>,
-    #[text = ri_ct]
+    // #[text = ri_ct]
     right_center:  Sub<Button>,
 
-    #[text = to_s_ct]
+    // #[text = to_s_ct]
     top_s_center:    Sub<Button>,
-    #[text = bo_s_ct]
+    // #[text = bo_s_ct]
     bottom_s_center: Sub<Button>,
-    #[text = le_s_ct]
+    // #[text = le_s_ct]
     left_s_center:   Sub<Button>,
-    #[text = ri_s_ct]
+    // #[text = ri_s_ct]
     right_s_center:  Sub<Button>,
 }
 

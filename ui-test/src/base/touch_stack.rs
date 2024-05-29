@@ -9,9 +9,9 @@ use test_engine::{
 
 #[view]
 struct TouchStackTestView {
-    #[text = a]
+    // #[text = a]
     button:  Sub<Button>,
-    #[text = b]
+    // #[text = b]
     button2: Sub<Button>,
 }
 
