@@ -5,7 +5,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewTouch},
-    Anchor, Container, InputView, Sub, ViewSetup,
+    Anchor, Container, InputView, ViewSetup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -16,10 +16,12 @@ mod test_engine {
 
 #[view]
 pub struct Switch {
-    center: Sub<Container>,
-    on:     bool,
+    on: bool,
 
     pub selected: Event<bool>,
+
+    #[init]
+    center: Container,
 }
 
 impl Switch {

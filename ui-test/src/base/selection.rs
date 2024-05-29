@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, Color, Sub, ViewCallbacks, ViewData, ViewSetup, ViewTouch, UI},
+    ui::{view, Anchor, Color, ViewCallbacks, ViewData, ViewSetup, ViewTouch, UI},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -24,9 +24,10 @@ impl ViewCallbacks for Selectable {
 
 #[view]
 struct SelectionTestView {
-    a: Sub<Selectable>,
-    b: Sub<Selectable>,
-    c: Sub<Selectable>,
+    #[init]
+    a: Selectable,
+    b: Selectable,
+    c: Selectable,
 }
 
 impl ViewSetup for SelectionTestView {

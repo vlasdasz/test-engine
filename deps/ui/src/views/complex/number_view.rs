@@ -18,8 +18,6 @@ mod test_engine {
 
 use ui_proc::view;
 
-use crate::Sub;
-
 pub trait ViewableNumber:
     MyAdd + CheckedSub + ZeroOrMinimal + One + Copy + Debug + Display + Sized + 'static {
 }
@@ -38,12 +36,12 @@ pub struct NumberView<T: ViewableNumber> {
     #[educe(Default = ZeroOrMinimal::zero())]
     min:      T,
 
-    label: Sub<Label>,
-
-    up:   Sub<Button>,
-    down: Sub<Button>,
-
     on_change_event: Event<T>,
+
+    #[init]
+    label: Label,
+    up:    Button,
+    down:  Button,
 }
 
 impl<T: ViewableNumber> ViewSetup for NumberView<T> {

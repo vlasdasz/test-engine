@@ -4,15 +4,16 @@ use test_engine::{
     refs::Weak,
     ui::{
         ui_test::{helpers::check_colors, inject_touches},
-        view, Anchor, ImageView, Label, NumberView, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI,
+        view, Anchor, ImageView, Label, NumberView, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI,
     },
 };
 
 #[view]
 struct OutBoundsView {
-    test: Sub<Label>,
-    x:    Sub<NumberView<f32>>,
-    y:    Sub<NumberView<f32>>,
+    #[init]
+    test: Label,
+    x:    NumberView<f32>,
+    y:    NumberView<f32>,
 }
 
 impl ViewSetup for OutBoundsView {

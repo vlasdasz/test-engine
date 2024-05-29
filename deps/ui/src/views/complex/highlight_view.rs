@@ -2,7 +2,7 @@ use gm::{flat::Point, Apply, Color};
 use refs::Weak;
 use ui_proc::view;
 
-use crate::{Container, Sub, ViewData, ViewFrame, ViewSetup, ViewSubviews};
+use crate::{Container, ViewData, ViewFrame, ViewSetup, ViewSubviews};
 
 mod test_engine {
     pub(crate) use educe;
@@ -13,10 +13,11 @@ mod test_engine {
 
 #[view]
 pub struct HighlightView {
-    t: Sub<Container>,
-    b: Sub<Container>,
-    l: Sub<Container>,
-    r: Sub<Container>,
+    #[init]
+    t: Container,
+    b: Container,
+    l: Container,
+    r: Container,
 }
 
 impl HighlightView {}

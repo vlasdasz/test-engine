@@ -5,7 +5,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews},
-    Slider, Sub, UIManager, ViewCallbacks, ViewSetup,
+    Slider, UIManager, ViewCallbacks, ViewSetup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -16,9 +16,11 @@ mod test_engine {
 
 #[view]
 pub struct ScrollView {
-    slider:        Sub<Slider>,
     content_size:  Size,
     pub on_scroll: Event<f32>,
+
+    #[init]
+    slider: Slider,
 }
 
 impl ScrollView {

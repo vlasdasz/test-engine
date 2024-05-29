@@ -5,7 +5,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewFrame, ViewTouch},
-    CircleView, Sub, Touch, ViewCallbacks, ViewSetup,
+    CircleView, Touch, ViewCallbacks, ViewSetup,
 };
 
 mod test_engine {
@@ -17,12 +17,14 @@ mod test_engine {
 
 #[view]
 pub struct Slider {
-    circle:    Sub<CircleView>,
     raw_value: f32,
 
     converter: Converter,
 
     pub on_change: Event<f32>,
+
+    #[init]
+    circle: CircleView,
 }
 
 impl Slider {

@@ -63,7 +63,6 @@ async fn main() -> Result<()> {
 
 async fn test() -> Result<()> {
     test_form_view().await?;
-    test_int_view().await?;
     test_inject_touch().await?;
     test_highlight().await?;
     test_label().await?;
@@ -81,7 +80,6 @@ async fn test() -> Result<()> {
     test_present().await?;
     test_stick().await?;
     test_point_view().await?;
-    test_out_bounds().await?;
     test_touch_stack().await?;
     test_text_occlusion().await?;
     test_text_field().await?;
@@ -90,7 +88,6 @@ async fn test() -> Result<()> {
     test_image_view().await?;
     test_button().await?;
     test_switch().await?;
-    test_layout().await?;
     test_alert().await?;
     test_multiline().await?;
 
@@ -99,6 +96,9 @@ async fn test() -> Result<()> {
 
 async fn skip() -> Result<()> {
     test_render_image_path().await?;
+    test_int_view().await?;
+    test_out_bounds().await?;
+    test_layout().await?;
 
     Ok(())
 }

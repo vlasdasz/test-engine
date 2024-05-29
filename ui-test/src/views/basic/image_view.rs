@@ -2,14 +2,15 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, ImageView, Sub, ViewData, ViewSetup, ViewTouch, UI},
+    ui::{view, Anchor, ImageView, ViewData, ViewSetup, ViewTouch, UI},
     ui_test::helpers::check_colors,
     App,
 };
 
 #[view]
 struct ImageTestView {
-    image_view: Sub<ImageView>,
+    #[init]
+    image_view: ImageView,
 }
 
 impl ViewSetup for ImageTestView {

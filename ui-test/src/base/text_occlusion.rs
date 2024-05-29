@@ -2,14 +2,15 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Label, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Color, Label, ViewData, ViewSetup, UI},
     ui_test::helpers::check_colors,
 };
 
 #[view]
 pub struct TextOccclusionTestView {
-    label_below: Sub<Label>,
-    label_above: Sub<Label>,
+    #[init]
+    label_below: Label,
+    label_above: Label,
 }
 
 impl ViewSetup for TextOccclusionTestView {

@@ -6,17 +6,18 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         ui_test::{helpers::check_colors, inject_touches},
-        view, Button, CollectionData, CollectionView, Color, Container, ImageView, Label, Size, Sub, View,
+        view, Button, CollectionData, CollectionView, Color, Container, ImageView, Label, Size, View,
         ViewData, ViewSetup, ViewSubviews, UI,
     },
 };
 
 #[view]
 struct SomeView {
-    table:  Sub<CollectionView>,
-    label:  Sub<Label>,
-    image:  Sub<ImageView>,
-    square: Sub<Container>,
+    #[init]
+    table:  CollectionView,
+    label:  Label,
+    image:  ImageView,
+    square: Container,
 }
 
 impl ViewSetup for SomeView {
@@ -53,7 +54,8 @@ impl CollectionData for SomeView {
 
 #[view]
 struct OnTapAddTestView {
-    btn: Sub<Button>,
+    #[init]
+    btn: Button,
 }
 
 impl ViewSetup for OnTapAddTestView {

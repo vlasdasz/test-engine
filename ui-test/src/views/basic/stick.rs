@@ -2,16 +2,18 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, Color, Container, Point, PointView, StickView, Sub, ViewData, ViewFrame, ViewSetup, UI},
+    ui::{view, Color, Container, Point, PointView, StickView, ViewData, ViewFrame, ViewSetup, UI},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
 #[view]
 struct StickTestView {
-    test:  Sub<Container>,
-    stick: Sub<StickView>,
-    pos:   Sub<PointView>,
-    vec:   Own<Point>,
+    vec: Own<Point>,
+
+    #[init]
+    test:  Container,
+    stick: StickView,
+    pos:   PointView,
 }
 
 impl ViewSetup for StickTestView {

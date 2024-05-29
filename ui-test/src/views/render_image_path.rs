@@ -2,13 +2,13 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, ImageView, Sub, ViewData, ViewSetup, UI},
+    ui::{view, ImageView, ViewData, ViewSetup, UI},
     ui_test::record_touches,
 };
 
 #[view]
 struct RenderImagePath {
-    image_view: Sub<ImageView>,
+    image_view: ImageView,
 }
 
 impl ViewSetup for RenderImagePath {

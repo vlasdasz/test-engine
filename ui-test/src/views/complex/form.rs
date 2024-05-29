@@ -5,8 +5,7 @@ use test_engine::{
     reflected::Reflected,
     refs::Weak,
     ui::{
-        view, Button, FormView, InputView, Labeled, Sub, Switch, TextField, ViewData, ViewSetup,
-        ViewSubviews, UI,
+        view, Button, FormView, InputView, Labeled, Switch, TextField, ViewData, ViewSetup, ViewSubviews, UI,
     },
 };
 
@@ -20,8 +19,9 @@ struct Data {
 
 #[view]
 struct FormTestView {
-    button: Sub<Button>,
-    form:   Sub<FormView<Data>>,
+    #[init]
+    button: Button,
+    form:   FormView<Data>,
 }
 
 impl ViewSetup for FormTestView {

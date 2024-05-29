@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    Sub, ViewSetup, WeakView,
+    ViewSetup, WeakView,
 };
 
 mod test_engine {
@@ -37,9 +37,11 @@ impl CollectionLayout {
 pub struct CollectionView {
     pub layout: CollectionLayout,
 
-    data_source:       Weak<dyn CollectionData>,
-    cells:             Vec<WeakView>,
-    pub(crate) scroll: Sub<ScrollView>,
+    data_source: Weak<dyn CollectionData>,
+    cells:       Vec<WeakView>,
+
+    #[init]
+    pub(crate) scroll: ScrollView,
 }
 
 impl ViewSetup for CollectionView {

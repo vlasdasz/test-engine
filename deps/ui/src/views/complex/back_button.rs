@@ -3,7 +3,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewController, ViewData},
-    Button, Sub, ViewSetup,
+    Button, ViewSetup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -14,7 +14,8 @@ mod test_engine {
 
 #[view]
 pub struct BackButton {
-    button: Sub<Button>,
+    #[init]
+    button: Button,
 }
 
 impl ViewSetup for BackButton {

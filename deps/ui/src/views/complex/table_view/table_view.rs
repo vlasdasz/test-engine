@@ -13,13 +13,15 @@ mod test_engine {
 
     pub(crate) use crate as ui;
 }
-use crate::{ScrollView, Sub};
+use crate::ScrollView;
 
 #[view]
 pub struct TableView {
     #[educe(Debug(ignore))]
-    data:       Weak<dyn TableData>,
-    pub scroll: Sub<ScrollView>,
+    data: Weak<dyn TableData>,
+
+    #[init]
+    pub scroll: ScrollView,
 }
 
 impl ViewCallbacks for TableView {

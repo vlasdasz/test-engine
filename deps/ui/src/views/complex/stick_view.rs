@@ -8,7 +8,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewFrame, ViewTouch},
-    Sub, Touch, ViewSetup,
+    Touch, ViewSetup,
 };
 
 mod test_engine {
@@ -27,10 +27,12 @@ const PRECISION: u16 = 50;
 
 #[view]
 pub struct StickView {
-    background:      Sub<DrawingView>,
-    direction_stick: Sub<DrawingView>,
-    pub on_change:   Event<Point>,
-    pub flaccid:     bool,
+    pub on_change: Event<Point>,
+    pub flaccid:   bool,
+
+    #[init]
+    background:      DrawingView,
+    direction_stick: DrawingView,
 }
 
 impl StickView {

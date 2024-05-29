@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewFrame},
-    DrawingView, Sub, ViewSetup,
+    DrawingView, ViewSetup,
 };
 
 mod test_engine {
@@ -16,8 +16,10 @@ mod test_engine {
 
 #[view]
 pub struct CircleView {
-    drawing: Sub<DrawingView>,
-    color:   Color,
+    color: Color,
+
+    #[init]
+    drawing: DrawingView,
 }
 
 impl CircleView {

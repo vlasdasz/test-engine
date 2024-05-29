@@ -4,7 +4,7 @@ use test_engine::{
     reflected,
     reflected::Reflected,
     refs::Weak,
-    ui::{view, Color, HighlightView, Sub, ViewSetup, UI},
+    ui::{view, Color, HighlightView, ViewSetup, UI},
     ui_test::check_colors,
 };
 
@@ -18,7 +18,8 @@ struct Data {
 
 #[view]
 struct HighLightTestView {
-    highlight: Sub<HighlightView>,
+    #[init]
+    highlight: HighlightView,
 }
 
 impl ViewSetup for HighLightTestView {

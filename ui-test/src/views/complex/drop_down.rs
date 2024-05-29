@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, DropDown, InputView, Sub, ViewData, ViewSetup, UI},
+    ui::{view, DropDown, InputView, ViewData, ViewSetup, UI},
     ui_test::{
         inject_touches, inject_touches_delayed,
         state::{append_state, get_state},
@@ -12,8 +12,9 @@ use test_engine::{
 
 #[view]
 struct DropDownTestView {
-    top: Sub<DropDown>,
-    bot: Sub<DropDown>,
+    #[init]
+    top: DropDown,
+    bot: DropDown,
 }
 
 impl ViewSetup for DropDownTestView {

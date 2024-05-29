@@ -7,7 +7,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    Button, CollectionData, CollectionView, InputView, Label, Sub, ToLabel, View, ViewSetup,
+    Button, CollectionData, CollectionView, InputView, Label, ToLabel, View, ViewSetup,
 };
 
 mod test_engine {
@@ -19,12 +19,14 @@ mod test_engine {
 
 #[view]
 pub struct DropDown {
-    button:  Sub<Button>,
-    label:   Sub<Label>,
-    table:   Sub<CollectionView>,
     values:  Vec<String>,
     opened:  bool,
     changed: Event<String>,
+
+    #[init]
+    button: Button,
+    label:  Label,
+    table:  CollectionView,
 }
 
 impl DropDown {

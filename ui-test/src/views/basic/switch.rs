@@ -2,14 +2,15 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Sub, Switch, ViewData, ViewSetup, UI},
+    ui::{view, Switch, ViewData, ViewSetup, UI},
     ui_test::{state::set_state, test_combinations},
     App,
 };
 
 #[view]
 struct SwitchTestView {
-    switch: Sub<Switch>,
+    #[init]
+    switch: Switch,
 }
 
 impl ViewSetup for SwitchTestView {

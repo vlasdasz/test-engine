@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     from_main,
-    ui::{view, Alert, Button, Sub, TouchStack, ViewSubviews, ViewTouch, UI},
+    ui::{view, Alert, Button, TouchStack, ViewSubviews, ViewTouch, UI},
     ui_test::inject_touches,
     wait_for_next_frame,
 };
@@ -10,9 +10,10 @@ use test_engine::{
 #[view]
 struct TouchStackTestView {
     // #[text = a]
-    button:  Sub<Button>,
+    #[init]
+    button:  Button,
     // #[text = b]
-    button2: Sub<Button>,
+    button2: Button,
 }
 
 pub async fn test_touch_stack() -> Result<()> {

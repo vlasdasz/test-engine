@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, Color, Container, Sub, TouchStack, ViewData, ViewSetup, ViewTouch, UI},
+    ui::{view, Color, Container, TouchStack, ViewData, ViewSetup, ViewTouch, UI},
     ui_test::{
         inject_touches,
         state::{append_state, clear_state, get_state},
@@ -12,10 +12,11 @@ use test_engine::{
 
 #[view]
 struct TouchOrderView {
-    view_1: Sub<Container>,
-    view_2: Sub<Container>,
-    view_3: Sub<Container>,
-    view_4: Sub<Container>,
+    #[init]
+    view_1: Container,
+    view_2: Container,
+    view_3: Container,
+    view_4: Container,
 }
 
 impl ViewSetup for TouchOrderView {

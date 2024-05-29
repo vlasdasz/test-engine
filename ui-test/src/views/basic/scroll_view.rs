@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Color, ScrollView, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Color, ScrollView, ViewData, ViewSetup, UI},
     ui_test::{
         helpers::{add_corners, check_colors},
         inject_scroll, inject_touches,
@@ -12,7 +12,8 @@ use test_engine::{
 
 #[view]
 struct ScrollViewTest {
-    scroll: Sub<ScrollView>,
+    #[init]
+    scroll: ScrollView,
 }
 
 impl ViewSetup for ScrollViewTest {

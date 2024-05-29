@@ -10,7 +10,7 @@ use test_engine::{
     from_main,
     refs::{Own, Weak},
     ui::{
-        view, AfterSetup, Color, Container, Label, Sub, TableData, TableView, View, ViewData, ViewSetup,
+        view, AfterSetup, Color, Container, Label, TableData, TableView, View, ViewData, ViewSetup,
         ViewSubviews, UI,
     },
     ui_test::{helpers::check_colors, inject_touches},
@@ -21,7 +21,8 @@ static N_CELLS: AtomicUsize = AtomicUsize::new(2_000_000);
 
 #[view]
 struct TestTableView {
-    table: Sub<TableView>,
+    #[init]
+    table: TableView,
 }
 
 impl ViewSetup for TestTableView {

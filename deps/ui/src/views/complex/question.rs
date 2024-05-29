@@ -3,7 +3,7 @@ use refs::Weak;
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate::{view::ViewData, ModalView, Sub, ViewSetup};
+use crate::{view::ViewData, ModalView, ViewSetup};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;
@@ -15,10 +15,12 @@ use crate::{Button, Label};
 
 #[view]
 pub struct Question {
-    label:         Sub<Label>,
-    ok_button:     Sub<Button>,
-    cancel_button: Sub<Button>,
-    event:         OnceEvent<bool>,
+    event: OnceEvent<bool>,
+
+    #[init]
+    label:         Label,
+    ok_button:     Button,
+    cancel_button: Button,
 }
 
 impl ModalView<String, bool> for Question {

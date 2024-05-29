@@ -3,15 +3,16 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, Label, NumberView, Sub, TextAlignment, ViewData, ViewSetup, ViewSubviews, UI},
+    ui::{view, Anchor, Color, Label, NumberView, TextAlignment, ViewData, ViewSetup, ViewSubviews, UI},
     ui_test::{helpers::check_colors, inject_touches},
     App,
 };
 
 #[view]
 struct LabelTestView {
-    label:          Sub<Label>,
-    text_size_view: Sub<NumberView<f32>>,
+    #[init]
+    label:          Label,
+    text_size_view: NumberView<f32>,
 }
 
 impl ViewSetup for LabelTestView {

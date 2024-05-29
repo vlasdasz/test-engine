@@ -12,9 +12,7 @@ mod test_engine {
 
 use gm::Color;
 use refs::{dump_ref_stats, Weak};
-use ui::{
-    view, Sub, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews,
-};
+use ui::{view, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
 
 use crate::{Button, Label};
 
@@ -24,19 +22,19 @@ static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 
 #[view]
 pub struct DebugView {
-    fps_label:          Sub<Label>,
-    frame_drawn_label:  Sub<Label>,
-    ui_scale_label:     Sub<Label>,
-    screen_scale_label: Sub<Label>,
-    root_frame:         Sub<Label>,
-    touch_enabled:      Sub<Label>,
-    exit:               Sub<Button>,
-    dump_mem:           Sub<Button>,
-    touch_root:         Sub<Label>,
+    fps_label:          Label,
+    frame_drawn_label:  Label,
+    ui_scale_label:     Label,
+    screen_scale_label: Label,
+    root_frame:         Label,
+    touch_enabled:      Label,
+    exit:               Button,
+    dump_mem:           Button,
+    touch_root:         Label,
 
-    hide: Sub<Button>,
+    hideButton>,
 
-    custom_labels: HashMap<String, Sub<Label>>,
+    custom_labels: HashMap<String, Label>,
 
     pub fps: Event<u64>,
 

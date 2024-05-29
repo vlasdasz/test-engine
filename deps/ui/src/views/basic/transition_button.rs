@@ -6,7 +6,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewTransition},
-    Button, Sub, ToLabel, UIManager, View, ViewSetup, ViewSubviews,
+    Button, ToLabel, UIManager, View, ViewSetup, ViewSubviews,
 };
 
 mod test_engine {
@@ -18,8 +18,9 @@ mod test_engine {
 
 #[view]
 pub struct TransitionButton<From: View + 'static, To: View + 'static> {
-    button: Sub<Button>,
     _p:     PhantomData<(From, To)>,
+    #[init]
+    button: Button,
 }
 
 impl<From: View, To: View> TransitionButton<From, To> {

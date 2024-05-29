@@ -6,7 +6,7 @@ use vents::Event;
 use crate::{
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
-    InputView, Label, Sub, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks,
+    InputView, Label, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks,
     ViewSetup,
 };
 
@@ -19,7 +19,6 @@ mod test_engine {
 
 #[view]
 pub struct TextField {
-    label:                 Sub<Label>,
     pub(crate) constraint: Option<TextFieldConstraint>,
 
     placeholder:  String,
@@ -27,6 +26,9 @@ pub struct TextField {
     placeholding: bool,
 
     pub changed: Event<String>,
+
+    #[init]
+    label: Label,
 }
 
 impl TextField {

@@ -2,14 +2,15 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Button, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Button, ViewData, ViewSetup, UI},
     ui_test::{state::increment_state, test_combinations},
     App,
 };
 
 #[view]
 struct ButtonTestView {
-    button: Sub<Button>,
+    #[init]
+    button: Button,
 }
 
 impl ViewSetup for ButtonTestView {

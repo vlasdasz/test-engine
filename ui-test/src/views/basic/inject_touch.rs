@@ -4,7 +4,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Button, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Button, ViewData, ViewSetup, UI},
     ui_test::inject_touches,
 };
 
@@ -12,7 +12,8 @@ static COUNTER: AtomicU16 = AtomicU16::new(0);
 
 #[view]
 struct InjectTouchTestView {
-    button: Sub<Button>,
+    #[init]
+    button: Button,
 }
 
 impl ViewSetup for InjectTouchTestView {

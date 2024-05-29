@@ -11,8 +11,9 @@ mod test_engine {
 
 #[view]
 struct ProcView {
+    button:      Button,
     #[init]
-    ala: Button,
+    weak_button: Button,
 }
 
 fn main() {

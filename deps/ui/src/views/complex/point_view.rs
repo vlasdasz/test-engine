@@ -3,7 +3,7 @@ use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
-use crate::{view::ViewData, NumberView, Sub, ViewSetup};
+use crate::{view::ViewData, NumberView, ViewSetup};
 
 mod test_engine {
     pub(crate) use educe;
@@ -14,12 +14,13 @@ mod test_engine {
 
 #[view]
 pub struct PointView {
-    x: Sub<NumberView<f32>>,
-    y: Sub<NumberView<f32>>,
-
     mul: f32,
 
     pub changed: Event<Point>,
+
+    #[init]
+    x: NumberView<f32>,
+    y: NumberView<f32>,
 }
 
 impl PointView {

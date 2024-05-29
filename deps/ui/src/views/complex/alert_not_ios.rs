@@ -4,7 +4,7 @@ use refs::Weak;
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate::{view::ViewData, Button, Label, ModalView, Sub, ViewSetup};
+use crate::{view::ViewData, Button, Label, ModalView, ViewSetup};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;
@@ -14,9 +14,11 @@ mod test_engine {
 
 #[view]
 pub struct Alert {
-    label:     Sub<Label>,
-    ok_button: Sub<Button>,
-    event:     OnceEvent,
+    event: OnceEvent,
+
+    #[init]
+    label:     Label,
+    ok_button: Button,
 }
 
 impl Alert {

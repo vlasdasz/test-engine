@@ -5,7 +5,7 @@ use quote::{quote, quote_spanned};
 use syn::{
     parse::Parser,
     parse_macro_input, Data, DeriveInput, Field, Fields, FieldsNamed, GenericParam, Ident, Type,
-    __private::{Span, TokenStream2},
+    __private::TokenStream2,
     parse_quote,
     spanned::Spanned,
     token::{Bracket, Pound},
@@ -117,45 +117,44 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 }
 
 fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
-    let subview = Ident::new("Sub", Span::call_site());
-
     let mut res = quote!();
 
+    let init_attr = Attribute {
+        pound_token:   Pound::default(),
+        style:         syn::AttrStyle::Outer,
+        bracket_token: Bracket::default(),
+        meta:          Meta::Path(parse_quote!(init)),
+    };
+
+    let mut inits_started = false;
+
     for field in &mut fields.named {
-        let name = field.ident.as_ref().expect("let name = field.ident.as_ref()");
-
-        let init_attr = Attribute {
-            pound_token:   Pound::default(),
-            style:         syn::AttrStyle::Outer,
-            bracket_token: Bracket::default(),
-            meta:          Meta::Path(parse_quote!(init)),
-        };
-
         if let Some(idx) = field.attrs.iter().position(|a| *a == init_attr) {
             field.attrs.remove(idx);
+            inits_started = true;
         }
 
-        //let ty = &field.ty;
+        if !inits_started {
+            continue;
+        }
 
-        //   let wrapped_type: Type = quote! { i32 }.parse();
+        let name = field.ident.as_ref().expect("let name = field.ident.as_ref()");
 
-        // let a = Type::parse.parse2(quote! { aa });
+        let ty = &field.ty;
 
-        //dbg!(&field.ty);
+        let weak_wrapped_type = Type::without_plus
+            .parse2(quote! { test_engine::refs::Weak<#ty> })
+            .expect("Type::without_plus.parse2(quote! { Weak<#ty> })");
 
-        if let Type::Path(path) = &field.ty {
-            for segment in &path.path.segments {
-                if segment.ident == subview {
-                    let label = TokenStream2::from_str(&format!("\"{root_name}.{name}\""))
-                        .expect("let label = TokenStream2::from_str()");
+        field.ty = weak_wrapped_type;
 
-                    res = quote! {
-                        #res
-                        self.#name = self.add_view();
-                        self.#name.base_mut().view_label = format!("{}: {}", #label, self.#name.base().view_label);
-                    }
-                }
-            }
+        let label = TokenStream2::from_str(&format!("\"{root_name}.{name}\""))
+            .expect("let label = TokenStream2::from_str()");
+
+        res = quote! {
+            #res
+            self.#name = self.add_view();
+            self.#name.base_mut().view_label = format!("{}: {}", #label, self.#name.base().view_label);
         }
     }
 

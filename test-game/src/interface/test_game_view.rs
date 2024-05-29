@@ -8,8 +8,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        ImageView, Label, NumberView, Point, PointsPath, Spinner, StickView, Sub, TextField, UIManager,
-        ViewData, ViewSetup,
+        ImageView, Label, NumberView, Point, PointsPath, Spinner, StickView, TextField, UIManager, ViewData,
+        ViewSetup,
     },
     App, DataManager,
 };
@@ -18,34 +18,35 @@ use crate::levels::{BenchmarkLevel, TestLevel};
 
 #[view]
 pub struct TestGameView {
-    tl: Sub<Container>,
-    tr: Sub<Container>,
-    bl: Sub<Container>,
-    br: Sub<Container>,
+    #[init]
+    tl: Container,
+    tr: Container,
+    bl: Container,
+    br: Container,
 
-    drawing: Sub<DrawingView>,
-    stick:   Sub<StickView>,
+    drawing: DrawingView,
+    stick:   StickView,
 
-    image: Sub<ImageView>,
+    image: ImageView,
 
-    label_l: Sub<Label>,
-    image_r: Sub<ImageView>,
+    label_l: Label,
+    image_r: ImageView,
 
-    dpad:  Sub<DPadView>,
-    scale: Sub<NumberView<NonZeroU32>>,
+    dpad:  DPadView,
+    scale: NumberView<NonZeroU32>,
 
-    spinner: Sub<Button>,
-    alert:   Sub<Button>,
-    sound:   Sub<Button>,
+    spinner: Button,
+    alert:   Button,
+    sound:   Button,
 
-    color_meter: Sub<ColorMeter>,
+    color_meter: ColorMeter,
 
-    text_field: Sub<TextField>,
+    text_field: TextField,
 
-    objc: Sub<Button>,
+    objc: Button,
 
-    benchmark:  Sub<Button>,
-    test_level: Sub<Button>,
+    benchmark:  Button,
+    test_level: Button,
 }
 
 impl ViewSetup for TestGameView {

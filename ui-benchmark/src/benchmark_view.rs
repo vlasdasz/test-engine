@@ -8,7 +8,7 @@ use fake::Fake;
 use test_engine::{
     from_main, on_main,
     refs::Weak,
-    ui::{view, Anchor, Color, Label, Sub, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Anchor, Color, Label, ViewData, ViewSetup, ViewSubviews},
     App,
 };
 use tokio::spawn;
@@ -19,8 +19,10 @@ const TARGET_FPS: f32 = 60.0;
 
 #[view]
 pub struct BenchmarkView {
-    label: Sub<Label>,
     index: u32,
+
+    #[init]
+    label: Label,
 }
 
 impl BenchmarkView {

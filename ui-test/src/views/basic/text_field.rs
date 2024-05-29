@@ -3,15 +3,16 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Sub, TextField, ViewData, ViewSetup, UI},
+    ui::{view, Anchor, TextField, ViewData, ViewSetup, UI},
     ui_test::{helpers::check_colors, inject_keys, inject_touches},
     App,
 };
 
 #[view]
 struct TextFieldTestView {
-    field:      Sub<TextField>,
-    smol_field: Sub<TextField>,
+    #[init]
+    field:      TextField,
+    smol_field: TextField,
 }
 
 impl ViewSetup for TextFieldTestView {

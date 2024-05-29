@@ -4,7 +4,7 @@ use gm::Color;
 use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 
-use crate::{view::ViewData, Anchor, Container, InputView, Sub, TextAlignment, ViewSetup, ViewSubviews};
+use crate::{view::ViewData, Anchor, Container, InputView, TextAlignment, ViewSetup, ViewSubviews};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;
@@ -16,8 +16,10 @@ use crate::Label;
 
 #[view]
 pub struct Labeled<T: InputView + Default + 'static> {
-    label:     Sub<Label>,
     pub input: Weak<T>,
+
+    #[init]
+    label: Label,
 }
 
 impl<T: InputView + Default> ViewSetup for Labeled<T> {

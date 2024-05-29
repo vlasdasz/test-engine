@@ -1,15 +1,18 @@
 use anyhow::Result;
+use log::debug;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, Label, Point, PointView, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Label, Point, PointView, ViewData, ViewSetup, UI},
     ui_test::inject_touches,
 };
 
 #[view]
 struct PointTestView {
-    point_view: Sub<PointView>,
-    label:      Sub<Label>,
-    point:      Own<Point>,
+    point: Own<Point>,
+
+    #[init]
+    point_view: PointView,
+    label:      Label,
 }
 
 impl ViewSetup for PointTestView {
@@ -82,6 +85,8 @@ pub async fn test_point_view() -> Result<()> {
 
     assert_eq!(view.point_view.point(), Point::new(16.0, -7.0));
     assert_eq!(view.point, Point::new(143.0, -133.0));
+
+    debug!("Point view: OK");
 
     Ok(())
 }

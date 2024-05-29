@@ -2,12 +2,12 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Label, Sub, ViewData, ViewSetup, UI},
+    ui::{view, Label, ViewData, ViewSetup, UI},
 };
 
 #[view]
 struct MultilineTestView {
-    label: Sub<Label>,
+    label: Label,
 }
 
 impl ViewSetup for MultilineTestView {

@@ -2,16 +2,17 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Container, Sub, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI},
+    ui::{view, Color, Container, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI},
     ui_test::helpers::check_colors,
 };
 
 #[view]
 pub struct OrderTestView {
-    view_1: Sub<Container>,
-    view_2: Sub<Container>,
-    view_3: Sub<Container>,
-    view_4: Sub<Container>,
+    #[init]
+    view_1: Container,
+    view_2: Container,
+    view_3: Container,
+    view_4: Container,
 }
 
 impl ViewSetup for OrderTestView {

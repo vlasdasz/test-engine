@@ -6,7 +6,7 @@ use wgpu_wrapper::image::ToImage;
 
 use crate::{
     view::{ViewData, ViewTouch},
-    ImageView, Label, Sub, ToLabel, ViewSetup,
+    ImageView, Label, ToLabel, ViewSetup,
 };
 
 mod test_engine {
@@ -18,10 +18,11 @@ mod test_engine {
 
 #[view]
 pub struct Button {
-    label: Sub<Label>,
-    image: Sub<ImageView>,
-
     on_tap: Event,
+
+    #[init]
+    label: Label,
+    image: ImageView,
 }
 
 impl Button {

@@ -7,7 +7,7 @@ use test_engine::{
             inject_touches,
             state::{append_state, clear_state, get_state},
         },
-        view, Anchor, Button, Color, Sub, ViewData, ViewSetup, ViewSubviews, UI,
+        view, Anchor, Button, Color, ViewData, ViewSetup, ViewSubviews, UI,
     },
     App,
 };
@@ -15,34 +15,35 @@ use test_engine::{
 #[view]
 struct LayoutTestView {
     // #[text = center]
-    center: Sub<Button>,
+    #[init]
+    center: Button,
 
     // #[text = top]
-    top:    Sub<Button>,
+    top:    Button,
     // #[text = bottom]
-    bottom: Sub<Button>,
+    bottom: Button,
     // #[text = left]
-    left:   Sub<Button>,
+    left:   Button,
     // #[text = right]
-    right:  Sub<Button>,
+    right:  Button,
 
     // #[text = tp_ct]
-    top_center:    Sub<Button>,
+    top_center:    Button,
     // #[text = bt_ct]
-    bottom_center: Sub<Button>,
+    bottom_center: Button,
     // #[text = le_ct]
-    left_center:   Sub<Button>,
+    left_center:   Button,
     // #[text = ri_ct]
-    right_center:  Sub<Button>,
+    right_center:  Button,
 
     // #[text = to_s_ct]
-    top_s_center:    Sub<Button>,
+    top_s_center:    Button,
     // #[text = bo_s_ct]
-    bottom_s_center: Sub<Button>,
+    bottom_s_center: Button,
     // #[text = le_s_ct]
-    left_s_center:   Sub<Button>,
+    left_s_center:   Button,
     // #[text = ri_s_ct]
-    right_s_center:  Sub<Button>,
+    right_s_center:  Button,
 }
 
 impl ViewSetup for LayoutTestView {

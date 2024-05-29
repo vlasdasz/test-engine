@@ -6,7 +6,7 @@ use test_engine::{
     from_main,
     refs::{Own, Weak},
     ui::{
-        view, CollectionData, CollectionLayout, CollectionView, Label, Size, Sub, TouchStack, View, ViewData,
+        view, CollectionData, CollectionLayout, CollectionView, Label, Size, TouchStack, View, ViewData,
         ViewFrame, ViewSetup, UI,
     },
     ui_test::helpers::{add_action, check_colors},
@@ -14,9 +14,11 @@ use test_engine::{
 
 #[view]
 struct CollectionTestView {
-    table:      Sub<CollectionView>,
-    collection: Sub<CollectionView>,
-    records:    Vec<String>,
+    records: Vec<String>,
+
+    #[init]
+    table:      CollectionView,
+    collection: CollectionView,
 }
 
 impl CollectionData for CollectionTestView {

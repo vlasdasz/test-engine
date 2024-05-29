@@ -8,7 +8,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewFrame},
-    Sub, ViewCallbacks, ViewSetup, ViewTest,
+    ViewCallbacks, ViewSetup, ViewTest,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -21,11 +21,13 @@ use crate::{Button, UIImages};
 
 #[view]
 pub struct DPadView {
-    up:           Sub<Button>,
-    down:         Sub<Button>,
-    left:         Sub<Button>,
-    right:        Sub<Button>,
     pub on_press: Event<Direction>,
+
+    #[init]
+    up:    Button,
+    down:  Button,
+    left:  Button,
+    right: Button,
 }
 
 impl ViewSetup for DPadView {
