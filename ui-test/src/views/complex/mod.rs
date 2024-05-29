@@ -3,5 +3,5 @@ pub mod collection_view;
 pub mod drop_down;
 pub mod form;
 pub mod highlight;
-pub mod int_view;
+pub mod number_view;
 pub mod table_view;

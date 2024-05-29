@@ -21,5 +21,5 @@ pub use num::{
     checked_convert::{checked_usize_to_u32, CheckedConvert},
     into_f32::ToF32,
     lossy_convert::LossyConvert,
-    CheckedSub, IsZero, MyAdd, One, ZeroOrMinimal,
+    CheckedSub, IsZero, Min, MyAdd, One, Zero,
 };

@@ -30,7 +30,7 @@ use crate::{
         complex::{
             buttons_on_table::test_buttons_on_table_view, collection_view::test_collection_view,
             drop_down::test_drop_down, form::test_form_view, highlight::test_highlight,
-            int_view::test_int_view, table_view::test_table_view,
+            number_view::test_number_view, table_view::test_table_view,
         },
         point_view::test_point_view,
         render_image_path::test_render_image_path,
@@ -62,6 +62,8 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_out_bounds().await?;
+    test_number_view().await?;
     test_form_view().await?;
     test_inject_touch().await?;
     test_highlight().await?;
@@ -96,8 +98,6 @@ async fn test() -> Result<()> {
 
 async fn skip() -> Result<()> {
     test_render_image_path().await?;
-    test_int_view().await?;
-    test_out_bounds().await?;
     test_layout().await?;
 
     Ok(())

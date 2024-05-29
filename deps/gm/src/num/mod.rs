@@ -1,4 +1,4 @@
-use std::{cmp::max, num::NonZeroU32};
+use std::cmp::max;
 
 pub mod checked_convert;
 pub mod into_f32;
@@ -14,47 +14,26 @@ impl Abs for f32 {
     }
 }
 
-pub trait ZeroOrMinimal {
+pub trait Zero {
     fn zero() -> Self;
 }
 
-pub trait IsZero: ZeroOrMinimal + Copy {
+macro_rules! impl_zero {
+    ($v:expr, $($t:ty),*) => {$(
+        impl const Zero for $t { fn zero() -> Self { $v } }
+    )*};
+}
+
+impl_zero!(0, i8, u8, i32, u32, i64, u64, usize);
+impl_zero!(0.0, f32, f64);
+
+pub trait IsZero: Zero + Copy {
     fn is_zero(self) -> bool;
 }
 
-impl<T: ZeroOrMinimal + PartialEq + Copy> IsZero for T {
+impl<T: Zero + PartialEq + Copy> IsZero for T {
     fn is_zero(self) -> bool {
         self == Self::zero()
-    }
-}
-
-impl ZeroOrMinimal for usize {
-    fn zero() -> Self {
-        0
-    }
-}
-
-impl ZeroOrMinimal for u32 {
-    fn zero() -> Self {
-        0
-    }
-}
-
-impl ZeroOrMinimal for f32 {
-    fn zero() -> Self {
-        0.0
-    }
-}
-
-impl ZeroOrMinimal for u8 {
-    fn zero() -> Self {
-        0
-    }
-}
-
-impl ZeroOrMinimal for NonZeroU32 {
-    fn zero() -> Self {
-        Self::one()
     }
 }
 
@@ -63,32 +42,24 @@ pub trait One {
     fn one() -> Self;
 }
 
-impl const One for f32 {
-    fn one() -> Self {
-        1.0
-    }
+macro_rules! impl_one {
+    ($v:expr, $($t:ty),*) => {$(
+        impl const One for $t { fn one() -> Self { $v } }
+    )*};
 }
 
-impl const One for u32 {
-    fn one() -> Self {
-        1
-    }
-}
+impl_one!(1, i32, u32, usize);
+impl_one!(1.0, f32, f64);
 
-impl const One for usize {
-    fn one() -> Self {
-        1
-    }
-}
-
-impl One for NonZeroU32 {
-    fn one() -> Self {
-        1.try_into().unwrap()
-    }
-}
-
+#[const_trait]
 pub trait CheckedSub: Sized {
     fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self>;
+}
+
+impl CheckedSub for i32 {
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        self.checked_sub(*other).map(|a| max(a, *min))
+    }
 }
 
 impl CheckedSub for u32 {
@@ -106,14 +77,7 @@ impl CheckedSub for usize {
 impl CheckedSub for f32 {
     fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
         let res = self - other;
-        if res > *min { *min } else { res }.into()
-    }
-}
-
-impl CheckedSub for NonZeroU32 {
-    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
-        let val = self.get().sub_and_check(&other.get(), &min.get())?;
-        val.try_into().ok()
+        if res < *min { *min } else { res }.into()
     }
 }
 
@@ -122,6 +86,12 @@ pub trait MyAdd {
 }
 
 impl MyAdd for f32 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for i32 {
     fn my_add(&self, other: &Self) -> Self {
         self + other
     }
@@ -139,8 +109,14 @@ impl MyAdd for usize {
     }
 }
 
-impl MyAdd for NonZeroU32 {
-    fn my_add(&self, other: &Self) -> Self {
-        (self.get() + other.get()).try_into().unwrap()
-    }
+pub trait Min {
+    fn min() -> Self;
 }
+
+macro_rules! impl_min {
+    ($($t:ty),*) => {$(
+        impl const Min for $t { fn min() -> Self { Self::MIN } }
+    )*};
+}
+
+impl_min!(i8, u8, i32, u32, usize, f32, f64);

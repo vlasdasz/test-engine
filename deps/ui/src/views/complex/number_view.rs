@@ -1,9 +1,6 @@
-use std::{
-    fmt::{Debug, Display},
-    num::NonZeroU32,
-};
+use std::fmt::{Debug, Display};
 
-use gm::{CheckedSub, MyAdd, One, ZeroOrMinimal};
+use gm::{CheckedSub, Min, MyAdd, One, Zero};
 use refs::{weak_from_ref, Weak};
 use vents::Event;
 
@@ -19,13 +16,13 @@ mod test_engine {
 use ui_proc::view;
 
 pub trait ViewableNumber:
-    MyAdd + CheckedSub + ZeroOrMinimal + One + Copy + Debug + Display + Sized + 'static {
+    MyAdd + CheckedSub + Zero + One + Min + Copy + Debug + Display + Sized + 'static {
 }
 
 impl ViewableNumber for f32 {}
+impl ViewableNumber for i32 {}
 impl ViewableNumber for u32 {}
 impl ViewableNumber for usize {}
-impl ViewableNumber for NonZeroU32 {}
 
 #[view]
 pub struct NumberView<T: ViewableNumber> {
@@ -33,7 +30,7 @@ pub struct NumberView<T: ViewableNumber> {
     value:    T,
     #[educe(Default = T::one())]
     pub step: T,
-    #[educe(Default = ZeroOrMinimal::zero())]
+    #[educe(Default = T::min())]
     min:      T,
 
     on_change_event: Event<T>,

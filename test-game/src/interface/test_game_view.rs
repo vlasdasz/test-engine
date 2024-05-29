@@ -1,5 +1,3 @@
-use std::num::NonZeroU32;
-
 use test_engine::{
     async_after,
     audio::Sound,
@@ -33,7 +31,7 @@ pub struct TestGameView {
     image_r: ImageView,
 
     dpad:  DPadView,
-    scale: NumberView<NonZeroU32>,
+    scale: NumberView<u32>,
 
     spinner: Button,
     alert:   Button,
@@ -94,7 +92,7 @@ impl ViewSetup for TestGameView {
         self.scale.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
         self.scale.set_min(4.try_into().unwrap());
         self.scale.on_change(|val| {
-            *LevelManager::scale() = val.get().lossy_convert() * 0.1;
+            *LevelManager::scale() = val.lossy_convert() * 0.1;
         });
 
         self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.scale, 10);
