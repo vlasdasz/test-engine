@@ -64,10 +64,10 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             fn weak_view(&self) -> test_engine::refs::Weak<dyn test_engine::ui::View> {
                 test_engine::refs::weak_from_ref(self as &dyn test_engine::ui::View)
             }
-            fn base(&self) -> &test_engine::ui::ViewBase {
+            fn base_view(&self) -> &test_engine::ui::ViewBase {
                 &self.__view_base
             }
-            fn base_mut(&mut self) -> &mut test_engine::ui::ViewBase {
+            fn base_view_mut(&mut self) -> &mut test_engine::ui::ViewBase {
                 &mut self.__view_base
             }
             fn init_views(&mut self) {
@@ -154,7 +154,7 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
         res = quote! {
             #res
             self.#name = self.add_view();
-            self.#name.base_mut().view_label = format!("{}: {}", #label, self.#name.base().view_label);
+            self.#name.base_view_mut().view_label = format!("{}: {}", #label, self.#name.base_view().view_label);
         }
     }
 

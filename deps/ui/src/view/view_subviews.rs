@@ -40,21 +40,21 @@ pub trait ViewSubviews {
 
 impl<T: ?Sized + View> ViewSubviews for T {
     fn __manually_set_superview(&mut self, superview: WeakView) {
-        self.base_mut().superview = superview;
+        self.base_view_mut().superview = superview;
         let weak = self.weak_view();
-        self.base_mut().placer.init(weak);
+        self.base_view_mut().placer.init(weak);
     }
 
     fn superview(&self) -> &WeakView {
-        &self.base().superview
+        &self.base_view().superview
     }
 
     fn subviews(&self) -> &[Own<dyn View>] {
-        &self.base().subviews
+        &self.base_view().subviews
     }
 
     fn subviews_mut(&mut self) -> Vec<WeakView> {
-        self.base_mut().subviews.iter().map(Own::weak).collect()
+        self.base_view_mut().subviews.iter().map(Own::weak).collect()
     }
 
     fn remove_from_superview(&mut self) {
@@ -64,7 +64,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn take_from_superview(&mut self) -> Own<dyn View> {
         let this_addr = self.weak_view().addr();
-        let super_subs = &mut self.base_mut().superview.base_mut().subviews;
+        let super_subs = &mut self.base_view_mut().superview.base_view_mut().subviews;
 
         let index = super_subs.iter().position(|a| a.addr() == this_addr).unwrap();
 
@@ -76,7 +76,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
             .deleted_views
             .lock()
             .unwrap()
-            .append(&mut self.base_mut().subviews);
+            .append(&mut self.base_view_mut().subviews);
     }
 
     fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V> {
@@ -96,20 +96,20 @@ impl<T: ?Sized + View> ViewSubviews for T {
             "Adding subview to view without superview is not allowed"
         );
 
-        if view.base().navigation_view.is_null() {
-            view.base_mut().navigation_view = self.base().navigation_view;
+        if view.base_view().navigation_view.is_null() {
+            view.base_view_mut().navigation_view = self.base_view().navigation_view;
         }
         let mut weak = view.weak_view();
 
         if weak.z_position() == UIManager::ROOT_VIEW_Z_OFFSET {
-            weak.base_mut().z_position = self.z_position() - UIManager::subview_z_offset();
+            weak.base_view_mut().z_position = self.z_position() - UIManager::subview_z_offset();
         }
 
-        self.base_mut().subviews.push(view);
+        self.base_view_mut().subviews.push(view);
         weak.__manually_set_superview(self.weak_view());
         weak.init_views();
         weak.__internal_setup();
-        weak.base().loaded.trigger(());
+        weak.base_view().loaded.trigger(());
         weak
     }
 
@@ -137,7 +137,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn apply_to_all_subviews(&mut self, mut action: impl FnMut(&mut dyn View) + Clone + 'static) {
         action(self.weak_view().deref_mut());
-        for view in &mut self.base_mut().subviews {
+        for view in &mut self.base_view_mut().subviews {
             view.apply_to_all_subviews(action.clone());
         }
     }
@@ -176,13 +176,13 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn find_superview<V: View + 'static>(&self) -> Weak<V> {
-        let mut superview = self.base().superview;
+        let mut superview = self.base_view().superview;
 
         while superview.is_ok() {
             if let Some(view) = superview.downcast_view::<V>() {
                 return view;
             }
-            superview = superview.base().superview;
+            superview = superview.base_view().superview;
         }
 
         panic!("This view doesn't have `{}` in superview chain", type_name::<V>());

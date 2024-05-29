@@ -13,7 +13,7 @@ pub trait ViewTouch {
 
 impl<T: ?Sized + View> ViewTouch for T {
     fn is_selected(&self) -> bool {
-        self.base().is_selected
+        self.base_view().is_selected
     }
 
     fn enable_touch(&self) -> &Self {
@@ -31,7 +31,7 @@ impl<T: ?Sized + View> ViewTouch for T {
     }
 
     fn touch(&self) -> &ViewTouchCallbacks {
-        &self.base().touch
+        &self.base_view().touch
     }
 }
 
@@ -42,7 +42,7 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
 
     if touch.is_moved() && view.touch_id() == touch.id {
         touch.position -= view.absolute_frame().origin;
-        view.base().touch.all.trigger(*touch);
+        view.base_view().touch.all.trigger(*touch);
         return true;
     }
 
@@ -55,10 +55,10 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
 
         touch.position -= view.absolute_frame().origin;
         view.set_touch_id(0);
-        view.base().touch.all.trigger(*touch);
+        view.base_view().touch.all.trigger(*touch);
 
         if inside {
-            view.base().touch.up_inside.trigger(*touch);
+            view.base_view().touch.up_inside.trigger(*touch);
         }
         return true;
     }
@@ -67,10 +67,10 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         touch.position -= view.absolute_frame().origin;
         if touch.is_began() {
             view.set_touch_id(touch.id);
-            view.base().touch.began.trigger(*touch);
+            view.base_view().touch.began.trigger(*touch);
             UIManager::get().set_selected(view, true);
         }
-        view.base().touch.all.trigger(*touch);
+        view.base_view().touch.all.trigger(*touch);
         return true;
     }
 

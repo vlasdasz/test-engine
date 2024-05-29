@@ -22,7 +22,7 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut {
 
     // fn add_touch(&mut self, pos: Point) {
     //     let pos = self.convert_touch(pos);
-    //     self.base_mut().on_tap.trigger(pos);
+    //     self.base_view_mut().on_tap.trigger(pos);
     // }
 
     // fn convert_touch(&self, pos: Point) -> Point {

@@ -59,7 +59,7 @@ impl UIManager {
         if selected_view.is_null() {
             return;
         }
-        selected_view.base_mut().is_selected = false;
+        selected_view.base_view_mut().is_selected = false;
         selected_view.on_selection_changed(false);
         *selected_view = Weak::default();
     }
@@ -76,7 +76,7 @@ impl UIManager {
             *selected_view = view;
         }
 
-        view.base_mut().is_selected = selected;
+        view.base_view_mut().is_selected = selected;
         view.on_selection_changed(selected);
     }
 }

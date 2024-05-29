@@ -136,7 +136,7 @@ impl CollectionView {
             let mut cell = self.data_source.make_cell();
             self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
             let mut cell = self.scroll.add_subview(cell);
-            cell.base_mut().view_label = format!("Table cell: {}", cell.label());
+            cell.base_view_mut().view_label = format!("Table cell: {}", cell.label());
             cell.enable_touch_low_priority();
             let mut this = weak_from_ref(self);
             cell.touch().up_inside.sub(move || this.data_source.cell_selected(i));
