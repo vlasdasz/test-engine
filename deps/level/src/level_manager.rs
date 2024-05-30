@@ -5,7 +5,7 @@ use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
 };
-use refs::MainLock;
+use refs::{MainLock, Own};
 use smart_default::SmartDefault;
 
 use crate::Level;
@@ -18,7 +18,7 @@ pub struct LevelManager {
     scale:      f32,
     camera_pos: Point,
 
-    level: Option<Box<dyn Level>>,
+    level: Option<Own<dyn Level>>,
 }
 
 impl LevelManager {
@@ -35,7 +35,7 @@ impl LevelManager {
 impl LevelManager {
     pub fn set_level(level: impl Level + 'static) {
         let l = SELF.get_mut();
-        l.level = Some(Box::new(level));
+        l.level = Some(Own::new(level));
         l.level.as_mut().unwrap().setup();
     }
 

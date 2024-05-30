@@ -6,25 +6,34 @@ use vents::OnceEvent;
 use crate::{view::ViewSubviews, TouchStack, UIManager, View, ViewData, ViewFrame};
 
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
-    fn prepare_modally(input: In) -> Weak<Self> {
-        let mut view = Own::<Self>::default();
+    fn make_modal(view: Self) -> Weak<Self> {
+        let mut view = Own::new(view);
         view.set_z_position(UIManager::MODAL_Z_OFFSET);
         view.set_color(Color::WHITE);
         let size = Self::modal_size();
         let weak = view.weak();
         TouchStack::push_layer(weak.weak_view());
         UIManager::root_view_weak().__add_subview_internal(view, true);
-        weak.setup_input(input);
         weak.place().size(size.width, size.height).center();
         weak
     }
 
-    fn show_modally(input: In, callback: impl FnOnce(Out) + 'static + Send)
+    fn prepare_modally() -> Weak<Self> {
+        Self::make_modal(Self::default())
+    }
+
+    fn prepare_modally_with_input(input: In) -> Weak<Self> {
+        let view = Self::prepare_modally();
+        view.setup_input(input);
+        view
+    }
+
+    fn show_modally_with_input(input: In, callback: impl FnOnce(Out) + 'static + Send)
     where
         In: 'static + Send,
         Out: Send, {
         on_main(move || {
-            let weak = Self::prepare_modally(input);
+            let weak = Self::prepare_modally_with_input(input);
             weak.modal_event().val(callback);
         });
     }
@@ -34,7 +43,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where
         In: 'static + Send,
         Out: Send, {
-        from_main(|| Self::prepare_modally(input).modal_event().val_async())
+        from_main(|| Self::prepare_modally_with_input(input).modal_event().val_async())
             .await
             .await
             .unwrap()

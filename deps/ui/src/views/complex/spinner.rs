@@ -129,7 +129,7 @@ impl Spinner {
         }
 
         on_main_sync(|| {
-            *Self::current() = Self::prepare_modally(());
+            *Self::current() = Self::prepare_modally();
         });
     }
 

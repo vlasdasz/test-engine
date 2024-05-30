@@ -5,6 +5,6 @@
   },
   {
     "label": "Run UI Test",
-    "command": "cargo run -p ui-test"
+    "command": "make ui"
   }
 ]

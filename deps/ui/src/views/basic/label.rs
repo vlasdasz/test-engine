@@ -35,7 +35,10 @@ pub struct Label {
     #[educe(Default = 5.0)]
     pub margin: f32,
 
-    pub text:   String,
+    pub text: String,
+
+    pub multiline: bool,
+
     text_color: Color,
     text_size:  f32,
 }

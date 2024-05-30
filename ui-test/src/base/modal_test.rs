@@ -60,7 +60,7 @@ impl ModalView for Modal {
 pub async fn test_modal() -> Result<()> {
     UI::init_test_view::<ModalTestView>().await;
 
-    Modal::show_modally((), |_| {});
+    Modal::show_modally_with_input((), |_| {});
 
     wait_for_next_frame().await;
 

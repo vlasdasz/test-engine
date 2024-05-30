@@ -18,6 +18,8 @@ use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
 
 use crate::{ui::ui_test::state::clear_state, App};
 
+const DRAW_DEBUG_FRAMES: bool = false;
+
 pub struct UI;
 
 impl UI {
@@ -57,8 +59,6 @@ impl UI {
         sections: &mut Vec<Section<'a>>,
         text_offset: &mut f32,
     ) {
-        const DRAW_DEBUG_FRAMES: bool = false;
-
         if view.is_hidden() {
             return;
         }
@@ -169,14 +169,18 @@ impl UI {
                 frame.height(),
             ))
             .with_layout(
-                Layout::default_single_line()
-                    .v_align(VerticalAlign::Center)
-                    .h_align(match label.alignment {
-                        TextAlignment::Left => HorizontalAlign::Left,
-                        TextAlignment::Center => HorizontalAlign::Center,
-                        TextAlignment::Right => HorizontalAlign::Right,
-                    })
-                    .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
+                if label.multiline {
+                    Layout::default_wrap()
+                } else {
+                    Layout::default_single_line()
+                }
+                .v_align(VerticalAlign::Center)
+                .h_align(match label.alignment {
+                    TextAlignment::Left => HorizontalAlign::Left,
+                    TextAlignment::Center => HorizontalAlign::Center,
+                    TextAlignment::Right => HorizontalAlign::Right,
+                })
+                .line_breaker(BuiltInLineBreaker::UnicodeLineBreaker),
             )
             .with_screen_position((
                 match label.alignment {

@@ -14,12 +14,7 @@ mod test_engine {
 use crate::{Anchor::Width, Button, Label, ViewSubviews};
 
 #[view]
-pub struct Question {
-    question: String,
-
-    left:  String,
-    right: String,
-
+pub struct Consent {
     event: OnceEvent<bool>,
 
     #[init]
@@ -28,52 +23,41 @@ pub struct Question {
     cancel_button: Button,
 }
 
-impl ModalView<(), bool> for Question {
+impl ModalView<String, bool> for Consent {
     fn modal_event(&self) -> &OnceEvent<bool> {
         &self.event
     }
 
     fn modal_size() -> Size {
-        (320, 240).into()
+        (280, 200).into()
+    }
+
+    fn setup_input(mut self: Weak<Self>, input: String) {
+        self.label.set_text(input);
     }
 }
 
-impl Question {
-    pub fn ask(question: impl Into<String>) -> Self {
-        Question {
-            question: question.into(),
-            ..Default::default()
-        }
+impl Consent {
+    pub fn ask(message: impl Into<String>, callback: impl FnOnce(bool) + 'static + Send) {
+        Self::show_modally_with_input(message.into(), callback);
     }
 
-    pub fn options(mut self, left: impl Into<String>, right: impl Into<String>) -> Self {
-        self.left = left.into();
-        self.right = right.into();
-        self
-    }
-
-    ///bool == true -> right choice
-    pub fn callback(self, callback: impl FnOnce(bool) + 'static) {
-        Self::make_modal(self).event.val(callback);
+    pub async fn ask_async(message: impl ToString) -> bool {
+        Self::show_modally_async(message.to_string()).await
     }
 }
 
-impl ViewSetup for Question {
+impl ViewSetup for Consent {
     fn setup(mut self: Weak<Self>) {
         self.set_corner_radius(10).set_border_color(Color::BLACK);
 
-        let question = self.question.clone();
-        let left = self.left.clone();
-        let right = self.right.clone();
-
         self.label.place().lrt(10).h(140);
-        self.label.set_text_size(35);
-        self.label.set_text(question);
+        self.label.set_text_size(28);
+        self.label.multiline = true;
 
         self.ok_button.place().h(50).br(2).relative(Width, self, 0.5);
-
         self.ok_button
-            .set_text(right)
+            .set_text("OK")
             .set_border_color(Color::GRAY)
             .set_text_color(Color::BLUE);
 
@@ -81,9 +65,9 @@ impl ViewSetup for Question {
 
         self.cancel_button.place().h(50).bl(2).relative(Width, self, 0.5);
         self.cancel_button
-            .set_text(left)
+            .set_text("Cancel")
             .set_border_color(Color::GRAY)
-            .set_text_color(Color::BLUE);
+            .set_text_color(Color::RED);
 
         self.cancel_button.on_tap(move || self.hide_modal(false));
 
