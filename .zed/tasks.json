@@ -4,10 +4,10 @@
 [
   {
     "label": "Run Test Game",
-    "command": "cargo run -p test_game"
+    "command": "cargo run -p test-game"
   },
   {
     "label": "Run UI Test",
-    "command": "cargo run -p ui_test"
+    "command": "cargo run -p ui-test"
   }
 ]

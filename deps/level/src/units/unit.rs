@@ -1,22 +1,13 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rapier2d::{dynamics::CoefficientCombineRule, prelude::ActiveEvents};
-use refs::{weak_from_ref, Own};
+use rapier2d::dynamics::CoefficientCombineRule;
+use refs::Own;
 
-use crate::{Body, LevelManager, Sprite, SpriteData};
+use crate::{Body, Sprite, SpriteData};
 
 pub struct Unit {
     pub body: Own<Body>,
-}
-
-impl Unit {
-    pub fn enable_collision_detection(&mut self) -> &mut Self {
-        self.collider_mut().set_active_events(ActiveEvents::COLLISION_EVENTS);
-        let weak = weak_from_ref(self);
-        LevelManager::level_mut().colliding_sprites.push(weak);
-        self
-    }
 }
 
 impl Sprite for Unit {

@@ -26,7 +26,7 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
     fn setup(mut self: Weak<Self>) {
         self.view_label += &format!(": {}", type_name::<T>());
 
-        self.label.place().tlb(0).relative(Anchor::Width, self, 0.5);
+        self.label.place().tlb(0).relative(Anchor::Width, self, 0.6);
         self.label.set_alignment(TextAlignment::Left);
 
         if type_name::<T>() == "ui::views::basic::switch::Switch" {
@@ -36,18 +36,18 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
             self.input = container.add_view::<T>();
             self.input.place().size(80, 46).center_y().r(10);
 
-            container.place().trb(0).relative(Anchor::Width, self, 0.5);
+            container.place().trb(0).relative(Anchor::Width, self, 0.4);
         } else if type_name::<T>().contains("number_view::NumberView<") {
             let mut container = self.add_view::<Container>();
             container.set_color(Color::WHITE);
 
             self.input = container.add_view::<T>();
-            self.input.place().size(80, 46).center_y().r(10);
+            self.input.place().size(60, 100).center_y().r(10);
 
-            container.place().trb(0).relative(Anchor::Width, self, 0.5);
+            container.place().trb(0).relative(Anchor::Width, self, 0.4);
         } else {
             self.input = self.add_view::<T>();
-            self.input.place().trb(0).relative(Anchor::Width, self, 0.5);
+            self.input.place().trb(0).relative(Anchor::Width, self, 0.4);
         }
     }
 }

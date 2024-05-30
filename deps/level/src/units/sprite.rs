@@ -6,9 +6,10 @@ use gm::{
 };
 use rapier2d::{
     geometry::Collider,
+    pipeline::ActiveEvents,
     prelude::{CoefficientCombineRule, RigidBody, Rotation},
 };
-use refs::{Address, Own};
+use refs::{weak_from_ref, Address, Own};
 use wgpu_wrapper::image::ToImage;
 
 use crate::{LevelManager, SpriteData};
@@ -65,6 +66,13 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
     fn collider_mut(&mut self) -> &mut Collider {
         let handle = self.collider_handle.expect("This sprite doesn't have collider");
         unsafe { &mut LevelManager::level_unchecked().sets.colliders[handle] }
+    }
+
+    fn enable_collision_detection(&mut self)
+    where Self: Sized + 'static {
+        self.collider_mut().set_active_events(ActiveEvents::COLLISION_EVENTS);
+        let weak = weak_from_ref(self);
+        LevelManager::level_mut().colliding_sprites.push(weak);
     }
 
     fn contains(&self, point: Point) -> bool {

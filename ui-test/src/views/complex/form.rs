@@ -5,7 +5,7 @@ use test_engine::{
     reflected::Reflected,
     refs::Weak,
     ui::{view, Button, FormView, ViewData, ViewSetup, ViewSubviews, UI},
-    ui_test::record_ui_test,
+    App,
 };
 
 #[derive(Default, Debug, Reflected)]
@@ -50,6 +50,8 @@ impl ViewSetup for FormTestView {
 pub async fn test_form_view() -> Result<()> {
     let view = UI::init_test_view::<FormTestView>().await;
 
+    App::set_window_size((600, 800)).await;
+
     let _sub = view.form.subviews();
 
     // let float = sub[0].downcast_view::<Labeled<TextField>>().unwrap().input;
@@ -64,7 +66,7 @@ pub async fn test_form_view() -> Result<()> {
     // let string = sub[3].downcast_view::<Labeled<TextField>>().unwrap().input;
     // assert_eq!(string.text(), "hello");
 
-    record_ui_test().await;
+    // record_ui_test().await;
 
     debug!("Form view: OK");
 

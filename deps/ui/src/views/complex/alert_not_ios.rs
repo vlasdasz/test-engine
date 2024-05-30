@@ -25,6 +25,10 @@ impl Alert {
     pub fn show(message: impl ToString) {
         Self::show_modally(message.to_string(), |()| {});
     }
+
+    pub fn show_and_wait(message: impl ToString, callback: impl FnOnce() + Send + 'static) {
+        Self::show_modally(message.to_string(), move |()| callback());
+    }
 }
 
 impl ViewSetup for Alert {

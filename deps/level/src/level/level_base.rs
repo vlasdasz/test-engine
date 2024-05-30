@@ -84,7 +84,7 @@ impl LevelBase {
                 } else if a == handle {
                     b
                 } else {
-                    panic!()
+                    continue;
                 };
 
                 if let Some(other) = self.sprite_with_index(other_index.index()) {
