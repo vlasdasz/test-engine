@@ -30,6 +30,8 @@ use crate::{
     Screenshot, WGPUDrawer,
 };
 
+const ENABLE_VSYNC: bool = true;
+
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
 #[cfg(target_os = "android")]
@@ -153,7 +155,7 @@ impl WGPUApp {
             format:       TEXTURE_FORMAT,
             width:        size.width,
             height:       size.height,
-            present_mode: if Platform::MOBILE {
+            present_mode: if ENABLE_VSYNC || Platform::MOBILE {
                 PresentMode::AutoVsync
             } else {
                 PresentMode::AutoNoVsync

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Display, sync::OnceLock};
+use std::{collections::HashMap, fmt::Display};
 
 use gm::Color;
 use refs::{dump_ref_stats, MainLock, Own, Weak};
@@ -19,7 +19,7 @@ use crate::{
 
 pub(crate) static DEBUG_VIEW: MainLock<Option<Own<dyn View>>> = MainLock::new();
 
-static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
+static CURRENT: MainLock<Weak<DebugView>> = MainLock::new();
 
 #[view]
 pub struct DebugView {
@@ -47,14 +47,11 @@ impl DebugView {
         let mut weak = new.weak();
         *DEBUG_VIEW.get_mut() = Some(new);
         let a = weak;
+        weak.set_z_position(UIManager::DEBUG_Z_OFFSET);
         weak.__manually_set_superview(a);
         weak.init_views();
         weak.__internal_setup();
         weak.base_view().loaded.trigger(());
-    }
-
-    pub fn current() -> Weak<Self> {
-        *CURRENT.get().unwrap()
     }
 
     pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
@@ -80,14 +77,14 @@ impl DebugView {
 
 impl ViewSetup for DebugView {
     fn setup(mut self: Weak<Self>) {
-        CURRENT.set(self).unwrap();
+        *CURRENT.get_mut() = self;
 
         self.set_hidden(false);
         self.set_color(Color::WHITE);
 
         self.__manually_set_superview(UIManager::root_view_weak());
 
-        self.place().size(400, 200).l(10).b(200).all_ver();
+        self.place().size(400, 200).l(10).b(10).all_ver();
 
         self.fps_label.set_text("fps label");
 
