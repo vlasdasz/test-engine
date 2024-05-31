@@ -106,7 +106,7 @@ impl ViewSetup for DebugView {
 
         self.hide.set_text("hide");
         self.hide.on_tap(move || {
-            self.remove_from_superview();
+            DEBUG_VIEW.get_mut().take();
         });
 
         self.dump_mem.set_text("dump mem");
