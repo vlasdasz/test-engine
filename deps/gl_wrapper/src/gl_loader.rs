@@ -51,8 +51,8 @@ impl GLLoader {
 
         window.make_current();
 
-        // glfw.set_swap_interval(SwapInterval::None);
-        glfw.set_swap_interval(SwapInterval::Sync(1));
+        glfw.set_swap_interval(SwapInterval::None);
+        // glfw.set_swap_interval(SwapInterval::Sync(1));
 
         GLLoader { glfw, window, events }
     }

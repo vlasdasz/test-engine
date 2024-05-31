@@ -116,3 +116,4 @@ generated/
 **/jniLibs/
 
 *.aab
+profile.json
