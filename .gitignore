@@ -117,3 +117,4 @@ mobile/
 **/jniLibs/
 
 *.aab
+profile.json
