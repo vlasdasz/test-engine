@@ -25,12 +25,18 @@ pub struct UI;
 impl UI {
     pub(crate) fn update() {
         Self::update_view(UIManager::root_view_weak().deref_mut());
+        if let Some(debug_view) = UIManager::debug_view() {
+            Self::update_view(debug_view);
+        }
     }
 
     pub(crate) fn draw(pass: &mut RenderPass) {
         let mut sections: Vec<Section> = vec![];
         let drawer = WGPUApp::drawer();
         Self::draw_view(pass, drawer, UIManager::root_view(), &mut sections, &mut 0.0);
+        if let Some(debug_view) = UIManager::debug_view() {
+            Self::draw_view(pass, drawer, debug_view, &mut sections, &mut 0.0);
+        }
 
         Font::helvetice()
             .brush

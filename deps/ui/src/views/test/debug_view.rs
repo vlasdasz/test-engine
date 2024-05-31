@@ -1,27 +1,33 @@
-use std::{
-    collections::HashMap,
-    fmt::Display,
-    sync::{atomic::AtomicBool, OnceLock},
-};
-
-use vents::Event;
-mod test_engine {
-    pub(crate) use refs;
-    pub(crate) use ui;
-}
+use std::{collections::HashMap, fmt::Display, sync::OnceLock};
 
 use gm::Color;
-use refs::{dump_ref_stats, Weak};
-use ui::{view, ToLabel, TouchStack, UIManager, ViewCallbacks, ViewData, ViewFrame, ViewSetup, ViewSubviews};
+use refs::{dump_ref_stats, MainLock, Own, Weak};
 
-use crate::{Button, Label};
+mod test_engine {
+    pub(crate) use educe;
+    pub(crate) use refs;
 
-pub static SHOW_DEBUG_VIEW: AtomicBool = AtomicBool::new(false);
+    pub(crate) use crate as ui;
+}
+
+use ui_proc::view;
+
+use crate::{
+    view::{ViewData, ViewFrame, ViewInternalSetup},
+    Button, Label, ToLabel, TouchStack, UIManager, View, ViewCallbacks, ViewSetup, ViewSubviews,
+};
+
+pub(crate) static DEBUG_VIEW: MainLock<Option<Own<dyn View>>> = MainLock::new();
 
 static CURRENT: OnceLock<Weak<DebugView>> = OnceLock::new();
 
 #[view]
 pub struct DebugView {
+    custom_labels: HashMap<String, Weak<Label>>,
+
+    frame_drawn: u64,
+
+    #[init]
     fps_label:          Label,
     frame_drawn_label:  Label,
     ui_scale_label:     Label,
@@ -32,16 +38,21 @@ pub struct DebugView {
     dump_mem:           Button,
     touch_root:         Label,
 
-    hideButton>,
-
-    custom_labels: HashMap<String, Label>,
-
-    pub fps: Event<u64>,
-
-    frame_drawn: u64,
+    hide: Button,
 }
 
 impl DebugView {
+    pub fn enable() {
+        let new = Self::new();
+        let mut weak = new.weak();
+        *DEBUG_VIEW.get_mut() = Some(new);
+        let a = weak;
+        weak.__manually_set_superview(a);
+        weak.init_views();
+        weak.__internal_setup();
+        weak.base_view().loaded.trigger(());
+    }
+
     pub fn current() -> Weak<Self> {
         *CURRENT.get().unwrap()
     }
@@ -74,9 +85,9 @@ impl ViewSetup for DebugView {
         self.set_hidden(false);
         self.set_color(Color::WHITE);
 
-        self.__manually_set_superview(UIManager::root_view_mut());
+        self.__manually_set_superview(UIManager::root_view_weak());
 
-        self.place().size(400, 200).bl(10).all_ver();
+        self.place().size(400, 200).l(10).b(200).all_ver();
 
         self.fps_label.set_text("fps label");
 
@@ -108,15 +119,13 @@ impl ViewSetup for DebugView {
 
             dump_ref_stats();
         });
-
-        self.fps.val(move |fps| {
-            self.fps_label.set_text(format!("FPS: {fps}"));
-        });
     }
 }
 
 impl ViewCallbacks for DebugView {
     fn update(&mut self) {
+        self.fps_label.set_text(format!("FPS: {:.1}", UIManager::fps()));
+
         self.frame_drawn += 1;
         self.frame_drawn_label.set_text(format!("Frame drawn: {}", self.frame_drawn));
 

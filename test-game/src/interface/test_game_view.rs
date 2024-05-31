@@ -5,9 +5,9 @@ use test_engine::{
     level::{Control, LevelManager},
     refs::Weak,
     ui::{
-        link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DrawingView,
-        ImageView, Label, NumberView, Point, PointsPath, Spinner, StickView, TextField, UIManager, ViewData,
-        ViewSetup,
+        link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DebugView,
+        DrawingView, ImageView, Label, NumberView, Point, PointsPath, Spinner, StickView, TextField,
+        UIManager, ViewData, ViewSetup,
     },
     App, DataManager,
 };
@@ -49,6 +49,8 @@ pub struct TestGameView {
 
 impl ViewSetup for TestGameView {
     fn setup(mut self: Weak<Self>) {
+        DebugView::enable();
+
         LevelManager::set_level(TestLevel::default());
 
         self.setup_keymap();

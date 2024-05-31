@@ -1,5 +1,5 @@
 use std::{
-    ops::Deref,
+    ops::{Deref, DerefMut},
     path::PathBuf,
     sync::{
         atomic::{AtomicBool, Ordering},
@@ -14,7 +14,9 @@ use gm::{
 use refs::{Own, Weak};
 use wgpu_wrapper::WGPUApp;
 
-use crate::{Container, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView};
+use crate::{
+    Container, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView, DEBUG_VIEW,
+};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -22,8 +24,7 @@ static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 static IOS_KEYBOARD_INIT: std::sync::Once = std::sync::Once::new();
 
 pub struct UIManager {
-    pub(crate) root_view: Own<dyn View>,
-
+    pub(crate) root_view:     Own<dyn View>,
     pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
 
     touch_disabled: AtomicBool,
@@ -108,6 +109,10 @@ impl UIManager {
 
     pub fn display_scale() -> f64 {
         WGPUApp::screen_scale()
+    }
+
+    pub fn debug_view() -> Option<&'static mut dyn View> {
+        DEBUG_VIEW.get_mut().as_mut().map(DerefMut::deref_mut)
     }
 
     pub fn root_view() -> &'static dyn View {
