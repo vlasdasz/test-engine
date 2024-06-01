@@ -2,7 +2,6 @@ use gm::{
     flat::{Point, Shape, Size},
     Color,
 };
-use rapier2d::prelude::{ColliderHandle, RigidBodyHandle};
 use refs::Weak;
 use vents::Event;
 use wgpu_wrapper::image::Image;
@@ -16,9 +15,6 @@ pub struct SpriteData {
     pub(crate) size:        Size,
     pub(crate) rotation:    f32,
     pub(crate) is_selected: bool,
-
-    pub(crate) rigid_handle:    Option<RigidBodyHandle>,
-    pub(crate) collider_handle: Option<ColliderHandle>,
 
     pub color: Color,
 

@@ -1,7 +1,10 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rapier2d::dynamics::CoefficientCombineRule;
+use rapier2d::{
+    dynamics::{CoefficientCombineRule, RigidBodyHandle},
+    geometry::ColliderHandle,
+};
 use refs::Own;
 
 use crate::{Body, Sprite, SpriteData};
@@ -24,6 +27,14 @@ impl Sprite for Unit {
         body.collider_mut().set_restitution_combine_rule(CoefficientCombineRule::Min);
 
         Own::new(Unit { body })
+    }
+
+    fn rigid_handle(&self) -> Option<RigidBodyHandle> {
+        self.body.rigid_handle()
+    }
+
+    fn collider_handle(&self) -> Option<ColliderHandle> {
+        self.body.collider_handle()
     }
 }
 

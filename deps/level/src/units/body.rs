@@ -1,13 +1,15 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rapier2d::{na::Vector2, prelude::RigidBodyBuilder};
+use rapier2d::{dynamics::RigidBodyHandle, geometry::ColliderHandle, na::Vector2, prelude::RigidBodyBuilder};
 use refs::Own;
 
 use crate::{control::Control, LevelManager, Sprite, SpriteData, ToCollider};
 
 pub struct Body {
-    sprite: SpriteData,
+    collider_handle: ColliderHandle,
+    rigid_handle:    RigidBodyHandle,
+    sprite:          SpriteData,
 }
 
 impl Body {
@@ -35,15 +37,15 @@ impl Body {
 impl Sprite for Body {
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
+        let level = LevelManager::level_mut().deref_mut();
+
         let rigid_body = RigidBodyBuilder::dynamic()
             .translation(Vector2::new(position.x, position.y))
             .build();
 
-        let collider = shape.make_collider().build();
-
-        let level = LevelManager::level_mut().deref_mut();
-
         let rigid_handle = level.sets.rigid_bodies.insert(rigid_body);
+
+        let collider = shape.make_collider().build();
 
         let collider_handle =
             level
@@ -51,12 +53,21 @@ impl Sprite for Body {
                 .colliders
                 .insert_with_parent(collider, rigid_handle, &mut level.sets.rigid_bodies);
 
-        let mut sprite = SpriteData::make(shape, position);
+        let sprite = SpriteData::make(shape, position);
 
-        sprite.collider_handle = collider_handle.into();
-        sprite.rigid_handle = rigid_handle.into();
+        Own::new(Self {
+            collider_handle,
+            rigid_handle,
+            sprite,
+        })
+    }
 
-        Own::new(Self { sprite })
+    fn collider_handle(&self) -> Option<ColliderHandle> {
+        self.collider_handle.into()
+    }
+
+    fn rigid_handle(&self) -> Option<RigidBodyHandle> {
+        self.rigid_handle.into()
     }
 }
 
