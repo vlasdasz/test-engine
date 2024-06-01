@@ -6,6 +6,9 @@ use ui::{
 };
 pub use winit::event::KeyEvent;
 
+const LOG_TOUCHES: bool = false;
+const DRAW_TOUCHES: bool = false;
+
 pub struct Input;
 
 impl Input {
@@ -15,9 +18,6 @@ impl Input {
     }
 
     pub fn process_touch_event(mut touch: Touch) -> bool {
-        const LOG_TOUCHES: bool = false;
-        const DRAW_TOUCHES: bool = true;
-
         UIEvents::on_debug_touch().trigger(touch);
 
         if UIManager::touch_disabled() {
