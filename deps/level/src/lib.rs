@@ -15,6 +15,7 @@ mod units;
 pub use control::Control;
 pub use level::{Level, LevelBase, LevelCreation, LevelTemplates};
 pub use level_manager::LevelManager;
+pub use level_proc::level;
 pub use rapier2d::dynamics::CoefficientCombineRule;
 pub use sprite_data::SpriteData;
 pub use to_collider::ToCollider;

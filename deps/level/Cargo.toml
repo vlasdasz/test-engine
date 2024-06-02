@@ -13,6 +13,7 @@ rapier2d = { workspace = true }
 smart-default = { workspace = true }
 
 gm = { workspace = true }
+level-proc = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }
 wgpu_wrapper = { workspace = true }

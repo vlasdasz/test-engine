@@ -2,5 +2,13 @@
   {
     "label": "Run UI Test",
     "command": "make ui"
+  },
+  {
+    "label": "Run Level Test",
+    "command": "cargo run -p level-test"
+  },
+  {
+    "label": "Build Level Test",
+    "command": "cargo build -p level-test"
   }
 ]

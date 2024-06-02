@@ -1,0 +1,20 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2021"
+name = "level-test"
+version = "0.1.0"
+
+[[bin]]
+name = "level-test"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "level_test"
+
+[dependencies]
+tokio = { workspace = true }
+
+test-engine = { workspace = true }
+
+[build-dependencies]
+cfg_aliases = { workspace = true }

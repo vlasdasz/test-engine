@@ -2,12 +2,13 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "ui-test",
+    "ui-benchmark",
+    "level-test",
+    "deps/ui/ui-proc-test",
 ]
 
 resolver = "2"
@@ -52,7 +53,7 @@ winit = "0.29.15"
 
 manage = "=0.4.11"
 reflected = "=0.9.1"
-refs = { version = "=0.8.4", default-features = true }
+refs = { version = "=0.8.6", default-features = true }
 vents = "=0.5.0"
 
 audio = { path = "deps/audio" }
@@ -61,6 +62,7 @@ dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
 level = { path = "deps/level" }
+level-proc = { path = "deps/level/level-proc" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
 test-game = { path = "test-game" }

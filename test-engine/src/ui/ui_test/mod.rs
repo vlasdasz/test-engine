@@ -10,6 +10,7 @@ use std::{
 use anyhow::{bail, Result};
 pub use helpers::*;
 use log::{error, warn};
+use refs::Own;
 use serde::de::DeserializeOwned;
 pub use state::*;
 use tokio::sync::mpsc::channel;
@@ -18,7 +19,6 @@ use crate::{
     from_main,
     gm::{LossyConvert, ToF32},
     on_main,
-    refs::ToOwn,
     ui::{Input, Touch, U8Color, UIEvents, UIManager},
     wait_for_next_frame, App,
 };
@@ -104,7 +104,7 @@ pub async fn record_moved_touches() {
 }
 
 async fn record_touches_internal(skip_moved: bool) {
-    let touches = Vec::<Touch>::new().to_own();
+    let touches: Own<_> = Vec::<Touch>::new().into();
     let mut touches = touches.weak();
 
     let (s, mut r) = channel::<()>(1);
@@ -173,7 +173,7 @@ pub async fn record_touches_with_colors() -> Result<()> {
 
     let screenshot = App::take_screenshot().await?;
 
-    let touches = Vec::<(Touch, U8Color)>::new().to_own();
+    let touches: Own<_> = Vec::<(Touch, U8Color)>::new().into();
     let mut touches = touches.weak();
 
     let (s, mut r) = channel::<()>(1);

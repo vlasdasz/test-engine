@@ -1,6 +1,6 @@
 use dispatch::on_main;
 use gm::{Animation, Color};
-use refs::{Own, ToOwn, Weak};
+use refs::{Own, Weak};
 use ui_proc::view;
 
 use crate::{Touch, WeakView};
@@ -27,7 +27,7 @@ impl NavigationView {
             first_view: Some(first_view),
             ..Default::default()
         }
-        .to_own()
+        .into()
     }
 }
 

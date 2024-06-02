@@ -15,16 +15,15 @@ pub use ui::ui_test;
 
 pub mod level {
     pub use ::level::{
-        Body, CoefficientCombineRule, Control, Level, LevelBase, LevelCreation, LevelManager, LevelTemplates,
-        Player, Sprite, SpriteData, SpriteTemplates, Wall,
+        level, Body, CoefficientCombineRule, Control, Level, LevelBase, LevelCreation, LevelManager,
+        LevelTemplates, Player, Sprite, SpriteData, SpriteTemplates, Wall,
     };
 }
 
 pub mod refs {
     pub use refs::{
-        current_thread_id, dump_ref_stats, enable_ref_stats_counter, set_current_thread_as_main,
-        vec::{OwnVec, ToOwnVec},
-        weak_from_ref, AsAny, Own, ToOwn, Weak,
+        current_thread_id, dump_ref_stats, enable_ref_stats_counter, set_current_thread_as_main, vec::OwnVec,
+        weak_from_ref, AsAny, Own, Weak,
     };
 }
 
