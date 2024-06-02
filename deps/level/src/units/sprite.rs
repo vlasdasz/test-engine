@@ -92,7 +92,7 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
         );
         self.collider_mut().set_active_events(ActiveEvents::COLLISION_EVENTS);
         let weak = weak_from_ref(self);
-        LevelManager::level_mut().colliding_sprites.push(weak);
+        LevelManager::level_weak().colliding_sprites.push(weak);
     }
 
     fn contains(&self, point: Point) -> bool {
@@ -114,7 +114,7 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
 
     fn remove(&mut self) {
         let address = self.address();
-        LevelManager::level_mut().remove(address);
+        LevelManager::level_weak().remove(address);
     }
 }
 

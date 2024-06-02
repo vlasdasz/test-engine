@@ -37,7 +37,8 @@ impl Body {
 impl Sprite for Body {
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
-        let level = LevelManager::level_mut().deref_mut();
+        let mut level = LevelManager::level_weak();
+        let level = level.deref_mut().deref_mut();
 
         let rigid_body = RigidBodyBuilder::dynamic()
             .translation(Vector2::new(position.x, position.y))
@@ -47,11 +48,10 @@ impl Sprite for Body {
 
         let collider = shape.make_collider().build();
 
-        let collider_handle =
-            level
-                .sets
-                .colliders
-                .insert_with_parent(collider, rigid_handle, &mut level.sets.rigid_bodies);
+        let colliders = &mut level.sets.colliders;
+        let rigid_bodies = &mut level.sets.rigid_bodies;
+
+        let collider_handle = colliders.insert_with_parent(collider, rigid_handle, rigid_bodies);
 
         let sprite = SpriteData::make(shape, position);
 

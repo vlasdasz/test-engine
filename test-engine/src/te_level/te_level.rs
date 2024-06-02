@@ -19,7 +19,7 @@ impl TELevel {
 
         let drawer = WGPUApp::drawer();
 
-        for sprite in LevelManager::level_mut().sprites() {
+        for sprite in LevelManager::level_weak().sprites() {
             if sprite.image.exists_managed() {
                 drawer.textured_sprite_drawer.add_instance(
                     sprite.image,

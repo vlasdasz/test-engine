@@ -53,6 +53,23 @@ pub fn level(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
         impl #generics test_engine::level::Level for #name <#type_params> { }
 
+        impl #generics test_engine::level::LevelInternal for #name <#type_params> {
+            fn __internal_setup(&self) {
+                use test_engine::level::LevelSetup;
+                let mut level = test_engine::refs::weak_from_ref(self);
+                level.setup();
+            }
+
+            fn __internal_update(&self, frame_time: f32) {
+                use test_engine::level::Level;
+                use test_engine::level::LevelSetup;
+                let mut level = test_engine::refs::weak_from_ref(self);
+                level.update_camera();
+                level.update_physics(frame_time);
+                level.update();
+            }
+        }
+
         impl #generics test_engine::refs::AsAny for #name <#type_params> {
             fn as_any(&self) -> &dyn std::any::Any {
                self

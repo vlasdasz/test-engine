@@ -5,7 +5,7 @@ use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
 };
-use refs::{MainLock, Own};
+use refs::{MainLock, Own, Weak};
 use smart_default::SmartDefault;
 
 use crate::Level;
@@ -26,9 +26,8 @@ impl LevelManager {
         if Self::no_level() {
             return;
         }
-        Self::level_mut().update_camera();
-        Self::level_mut().update_physics(frame_time);
-        Self::level_mut().update();
+
+        Self::level().__internal_update(frame_time);
     }
 }
 
@@ -36,7 +35,7 @@ impl LevelManager {
     pub fn set_level(level: impl Level + 'static) {
         let l = SELF.get_mut();
         l.level = Some(Own::new(level));
-        l.level.as_mut().unwrap().setup();
+        l.level.as_ref().unwrap().__internal_setup();
     }
 
     pub fn stop_level() {
@@ -47,12 +46,12 @@ impl LevelManager {
         SELF.level.as_ref().expect("No Level").deref()
     }
 
-    pub fn level_mut() -> &'static mut dyn Level {
-        SELF.get_mut().level.as_mut().expect("No Level").deref_mut()
+    pub fn level_weak() -> Weak<dyn Level> {
+        SELF.level.as_ref().expect("No Level").weak()
     }
 
-    pub fn downcast_level<T: Level>() -> &'static mut T {
-        Self::level_mut().as_any_mut().downcast_mut::<T>().unwrap()
+    pub fn downcast_level<T: Level + 'static>() -> Weak<T> {
+        Self::level_weak().downcast::<T>().unwrap()
     }
 
     pub(crate) unsafe fn level_unchecked() -> &'static mut dyn Level {

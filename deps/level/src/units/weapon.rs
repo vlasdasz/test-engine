@@ -8,7 +8,7 @@ use rapier2d::dynamics::CoefficientCombineRule;
 use refs::{Own, Weak};
 use wgpu_wrapper::image::Image;
 
-use crate::{Body, LevelCreation, LevelManager, Sprite, SpriteData, SpriteTemplates};
+use crate::{level::LevelCreation, Body, LevelManager, Sprite, SpriteData, SpriteTemplates};
 
 pub struct Weapon {
     sprite:              SpriteData,
@@ -26,7 +26,7 @@ impl Weapon {
         let vel = vector * self.bullet_speed + self.velocity;
 
         let shape = self.bullet_shape.clone();
-        let mut bullet = LevelManager::level_mut().add_sprite::<Body>(shape, pos);
+        let mut bullet = LevelManager::level_weak().add_sprite::<Body>(shape, pos);
 
         bullet.set_rotation(self.rotation());
         bullet.set_velocity(vel);

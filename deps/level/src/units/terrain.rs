@@ -21,7 +21,8 @@ impl Sprite for Terrain {
 
         let collider = shape.make_collider().build();
 
-        let level = LevelManager::level_mut().deref_mut();
+        let mut level = LevelManager::level_weak();
+        let level = level.deref_mut().deref_mut();
 
         let rigid_handle = level.sets.rigid_bodies.insert(rigid_body);
 

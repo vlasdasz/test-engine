@@ -1,20 +1,17 @@
-use std::{
-    any::Any,
-    ops::{Deref, DerefMut},
-};
-
 use test_engine::{
     audio::Sound,
     gm::{LossyConvert, Shape},
-    level::{Body, Level, LevelBase, LevelCreation, LevelManager, Player, Sprite, SpriteTemplates, Wall},
-    refs::{AsAny, Weak},
+    level::{
+        level, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
+    },
+    refs::Weak,
     ui::{Color, Point},
     DataManager,
 };
 
+#[level]
 #[derive(Default)]
 pub struct TestLevel {
-    base:            LevelBase,
     selected_sprite: Option<Weak<dyn Sprite>>,
     collision_sound: Weak<Sound>,
 }
@@ -39,21 +36,7 @@ impl TestLevel {
     }
 }
 
-impl Deref for TestLevel {
-    type Target = LevelBase;
-
-    fn deref(&self) -> &Self::Target {
-        &self.base
-    }
-}
-
-impl DerefMut for TestLevel {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.base
-    }
-}
-
-impl Level for TestLevel {
+impl LevelSetup for TestLevel {
     fn setup(&mut self) {
         // let drawn = Image::render("test_draw", (100, 100), |image| {
         //     GLWrapper::set_clear_color(Color::GREEN);
@@ -103,7 +86,7 @@ impl Level for TestLevel {
         player.weapon.set_image("ak.png");
 
         player.on_collision.sub(move || {
-            LevelManager::level_mut()
+            LevelManager::level_weak()
                 .as_any_mut()
                 .downcast_mut::<Self>()
                 .unwrap()
@@ -113,8 +96,8 @@ impl Level for TestLevel {
 
         self.collision_sound = Sound::get("pek.wav");
 
-        self.base.on_tap.val(move |pos| {
-            LevelManager::level_mut()
+        self.on_tap.val(move |pos| {
+            LevelManager::level_weak()
                 .as_any_mut()
                 .downcast_mut::<Self>()
                 .unwrap()
@@ -125,15 +108,5 @@ impl Level for TestLevel {
     fn update(&mut self) {
         let pos = self.player.position();
         *LevelManager::camera_pos() = pos;
-    }
-}
-
-impl AsAny for TestLevel {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any {
-        self
     }
 }

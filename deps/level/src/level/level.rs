@@ -1,19 +1,12 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::{flat::Point, volume::GyroData};
+use gm::flat::Point;
 use refs::{AsAny, Own, Weak};
 
+use super::LevelInternal;
 use crate::{LevelBase, LevelManager, Sprite};
 
-pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut {
-    fn setup(&mut self) {}
-
-    fn update(&mut self) {}
-
-    fn on_key_pressed(&mut self, _: char) {}
-
-    fn on_gyro_changed(&mut self, _: GyroData) {}
-
+pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut + LevelInternal {
     fn update_camera(&mut self) {
         if let Some(player) = self.player.get() {
             *LevelManager::camera_pos() = player.position();

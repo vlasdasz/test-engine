@@ -1,5 +1,7 @@
+#![allow(incomplete_features)]
 #![feature(box_into_inner)]
 #![feature(arbitrary_self_types)]
+#![feature(specialization)]
 
 extern crate core;
 
@@ -13,7 +15,7 @@ mod to_collider;
 mod units;
 
 pub use control::Control;
-pub use level::{Level, LevelBase, LevelCreation, LevelTemplates};
+pub use level::{Level, LevelBase, LevelCreation, LevelInternal, LevelSetup, LevelTemplates};
 pub use level_manager::LevelManager;
 pub use level_proc::level;
 pub use rapier2d::dynamics::CoefficientCombineRule;
