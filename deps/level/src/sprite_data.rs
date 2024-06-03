@@ -1,3 +1,4 @@
+use educe::Educe;
 use gm::{
     flat::{Point, Shape, Size},
     Color,
@@ -8,7 +9,8 @@ use wgpu_wrapper::image::Image;
 
 use crate::Sprite;
 
-#[derive(Default)]
+#[derive(Educe)]
+#[educe(Default)]
 pub struct SpriteData {
     pub(crate) position: Point,
 
@@ -16,6 +18,7 @@ pub struct SpriteData {
     pub(crate) rotation:    f32,
     pub(crate) is_selected: bool,
 
+    #[educe(Default = Color::random())]
     pub color: Color,
 
     pub image:        Weak<Image>,

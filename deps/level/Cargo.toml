@@ -9,6 +9,7 @@ crate-type = ["rlib", "staticlib"]
 name = "level"
 
 [dependencies]
+educe = { workspace = true }
 rapier2d = { workspace = true }
 smart-default = { workspace = true }
 

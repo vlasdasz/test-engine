@@ -134,6 +134,7 @@ pub trait SpriteTemplates {
     fn set_color(&mut self, _: Color) -> &mut Self;
     fn set_selected(&mut self, _: bool) -> &mut Self;
     fn set_image(&mut self, _: impl ToImage) -> &mut Self;
+    fn set_friction(&mut self, friction: impl ToF32) -> &mut Self;
     fn set_restitution(&mut self, _: f32, _: CoefficientCombineRule) -> &mut Self;
     fn set_position(&mut self, _: impl Into<Point>) -> &mut Self;
     fn set_rotation(&mut self, _: impl ToF32) -> &mut Self;
@@ -152,6 +153,11 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
 
     fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image = image.to_image();
+        self
+    }
+
+    fn set_friction(&mut self, friction: impl ToF32) -> &mut Self {
+        self.collider_mut().set_friction(friction.to_f32());
         self
     }
 
