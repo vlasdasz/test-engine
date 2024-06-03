@@ -2,6 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::Point;
 use refs::{AsAny, Own, Weak};
+use wgpu_wrapper::WGPUApp;
 
 use super::LevelInternal;
 use crate::{LevelBase, LevelManager, Sprite};
@@ -13,28 +14,28 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut + LevelInternal {
         }
     }
 
-    // fn add_touch(&mut self, pos: Point) {
-    //     let pos = self.convert_touch(pos);
-    //     self.base_view_mut().on_tap.trigger(pos);
-    // }
+    fn add_touch(&mut self, pos: Point) -> bool {
+        let pos = self.convert_touch(pos);
+        dbg!(pos);
+        true
+    }
 
-    // fn convert_touch(&self, pos: Point) -> Point {
-    //     // let mut pos = pos;
-    //     // let size = get_sprites_drawer().resolution();
-    //     //
-    //     // pos.x -= size.width.lossy_convert() / 2.;
-    //     // pos.y -= size.height.lossy_convert() / 2.;
-    //     // pos.y = -pos.y;
-    //     // pos /= 10;
-    //     //
-    //     // pos *= 2;
-    //     // pos /= get_sprites_drawer().scale();
-    //     //
-    //     // pos += get_sprites_drawer().camera_position();
-    //     //
-    //     // pos
-    //     pos
-    // }
+    fn convert_touch(&self, pos: Point) -> Point {
+        let mut pos = pos;
+        let size = WGPUApp::current().window_size;
+
+        pos.x -= size.width / 2.0;
+        pos.y -= size.height / 2.0;
+        pos.y = -pos.y;
+        pos /= 10;
+
+        pos *= 2;
+        pos /= WGPUApp::screen_scale();
+
+        pos += *LevelManager::camera_pos();
+
+        pos
+    }
 
     fn sprite_at(&self, point: Point) -> Option<Weak<dyn Sprite>> {
         for sprite in &self.sprites {

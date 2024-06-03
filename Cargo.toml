@@ -1,6 +1,7 @@
 [workspace]
 
 default-members = ["level-test"]
+# default-members = ["test-game"]
 members = [
   "test-engine",
   "test-game",

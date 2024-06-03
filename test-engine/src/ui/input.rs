@@ -1,4 +1,5 @@
 use gm::Color;
+use level::LevelManager;
 use log::warn;
 use ui::{
     check_touch, Container, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, ViewSetup,
@@ -58,6 +59,10 @@ impl Input {
         //         level.add_touch(level_touch.position)
         //     }
         // }
+
+        if touch.is_began() && !LevelManager::no_level() {
+            return LevelManager::level_weak().add_touch(touch.position);
+        }
 
         false
     }

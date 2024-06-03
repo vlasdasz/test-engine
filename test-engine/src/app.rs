@@ -75,21 +75,21 @@ impl App {
             .filter_module("hyper_util::client::legacy::connect::dns", LevelFilter::Warn)
             .filter_module("hyper_util::client::legacy::connect::http", LevelFilter::Warn)
             .format(|f, record| {
-                // let level = match record.level() {
-                //     Level::Error => "🔴",
-                //     Level::Warn => "🟡",
-                //     Level::Info => "🟢",
-                //     Level::Debug => "🔵",
-                //     Level::Trace => "⚪",
-                // };
-
                 let level = match record.level() {
-                    Level::Error => "ERROR",
-                    Level::Warn => "WARNING",
-                    Level::Info => "INFO",
-                    Level::Debug => "DEBUG",
-                    Level::Trace => "TRACE",
+                    Level::Error => "🔴",
+                    Level::Warn => "🟡",
+                    Level::Info => "🟢",
+                    Level::Debug => "🔵",
+                    Level::Trace => "⚪",
                 };
+
+                // let level = match record.level() {
+                //     Level::Error => "ERROR",
+                //     Level::Warn => "WARNING",
+                //     Level::Info => "INFO",
+                //     Level::Debug => "DEBUG",
+                //     Level::Trace => "TRACE",
+                // };
 
                 let location = false;
                 let module = false;
