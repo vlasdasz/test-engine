@@ -1,6 +1,6 @@
 use test_engine::{
     gm::{Animation, Shape},
-    level::{level, LevelCreation, LevelSetup, Player, SpriteTemplates, Wall},
+    level::{level, LevelCreation, LevelSetup, Player, Sprite, SpriteTemplates, Wall},
     refs::Weak,
     ui::{Alert, Color, Image, UIManager},
     DataManager,

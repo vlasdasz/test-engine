@@ -45,6 +45,18 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
         self.position
     }
 
+    fn set_x(&mut self, x: f32) {
+        let mut pos = self.position();
+        pos.x = x;
+        self.set_position(pos);
+    }
+
+    fn set_y(&mut self, y: f32) {
+        let mut pos = self.position();
+        pos.y = y;
+        self.set_position(pos);
+    }
+
     fn rotation(&self) -> f32 {
         if let Some(handle) = self.rigid_handle() {
             LevelManager::get_rigid_body(handle).rotation().angle()

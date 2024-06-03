@@ -1,31 +1,14 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::{
-    flat::{Point, Shape},
-    ToF32,
-};
+use gm::flat::{Point, Shape};
 use rapier2d::{geometry::ColliderHandle, na::Vector2};
 use refs::Own;
 
-use crate::{LevelManager, Sprite, SpriteData, SpriteTemplates, ToCollider};
+use crate::{LevelManager, Sprite, SpriteData, ToCollider};
 
 pub struct Wall {
     collider_handle: ColliderHandle,
     sprite:          SpriteData,
-}
-
-impl Wall {
-    pub fn set_x(&mut self, x: impl ToF32) {
-        let mut pos = self.position();
-        pos.x = x.to_f32();
-        self.set_position(pos);
-    }
-
-    pub fn set_y(&mut self, y: impl ToF32) {
-        let mut pos = self.position();
-        pos.y = y.to_f32();
-        self.set_position(pos);
-    }
 }
 
 impl Sprite for Wall {

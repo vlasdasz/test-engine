@@ -7,8 +7,8 @@ use refs::Own;
 use crate::{control::Control, LevelManager, Sprite, SpriteData, ToCollider};
 
 pub struct Body {
-    collider_handle: ColliderHandle,
     rigid_handle:    RigidBodyHandle,
+    collider_handle: ColliderHandle,
     sprite:          SpriteData,
 }
 
@@ -37,27 +37,19 @@ impl Body {
 impl Sprite for Body {
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
-        let mut level = LevelManager::level_weak();
-        let level = level.deref_mut().deref_mut();
-
         let rigid_body = RigidBodyBuilder::dynamic()
             .translation(Vector2::new(position.x, position.y))
             .build();
 
-        let rigid_handle = level.sets.rigid_bodies.insert(rigid_body);
-
         let collider = shape.make_collider().build();
 
-        let colliders = &mut level.sets.colliders;
-        let rigid_bodies = &mut level.sets.rigid_bodies;
-
-        let collider_handle = colliders.insert_with_parent(collider, rigid_handle, rigid_bodies);
+        let (rigid_handle, collider_handle) = LevelManager::level_weak().sets.insert(rigid_body, collider);
 
         let sprite = SpriteData::make(shape, position);
 
         Own::new(Self {
-            collider_handle,
             rigid_handle,
+            collider_handle,
             sprite,
         })
     }
