@@ -102,9 +102,12 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
             "{} doesn't have a collider.",
             type_name::<Self>()
         );
+        self.collision_enabled = true;
         self.collider_mut().set_active_events(ActiveEvents::COLLISION_EVENTS);
         let weak = weak_from_ref(self);
-        LevelManager::level_weak().colliding_sprites.push(weak);
+        LevelManager::level_weak()
+            .colliding_sprites
+            .insert(weak.collider_handle().unwrap(), weak);
     }
 
     fn contains(&self, point: Point) -> bool {

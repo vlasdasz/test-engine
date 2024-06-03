@@ -18,6 +18,8 @@ pub struct SpriteData {
     pub(crate) rotation:    f32,
     pub(crate) is_selected: bool,
 
+    pub(crate) collision_enabled: bool,
+
     pub tag: u32,
 
     #[educe(Default = Color::random())]

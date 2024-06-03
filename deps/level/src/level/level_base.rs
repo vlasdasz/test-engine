@@ -1,10 +1,10 @@
-use std::ops::Deref;
+use std::{collections::HashMap, ops::Deref};
 
 use gm::flat::Point;
 use rapier2d::{
     dynamics::ImpulseJointSet,
+    geometry::ColliderHandle,
     na::Vector2,
-    parry::partitioning::IndexedData,
     prelude::{
         BroadPhaseMultiSap, CCDSolver, CollisionEvent, IntegrationParameters, IslandManager,
         MultibodyJointSet, NarrowPhase, PhysicsPipeline,
@@ -25,7 +25,7 @@ pub struct LevelBase {
     pub on_tap:             Event<Point>,
     pub on_sprite_selected: Event<Weak<dyn Sprite>>,
 
-    pub(crate) colliding_sprites: Vec<Weak<dyn Sprite>>,
+    pub(crate) colliding_sprites: HashMap<ColliderHandle, Weak<dyn Sprite>>,
 
     pub(crate) sprites: Vec<Own<dyn Sprite>>,
     pub(crate) sets:    Sets,
@@ -76,29 +76,33 @@ impl LevelBase {
                 continue;
             };
 
-            for sprite in &self.colliding_sprites {
-                let handle = sprite.collider_handle().unwrap();
+            let a = self
+                .colliding_sprites
+                .get(&a)
+                .copied()
+                .unwrap_or_else(|| self.sprite_with_collider(a).unwrap());
 
-                let other_index = if b == handle {
-                    a
-                } else if a == handle {
-                    b
-                } else {
-                    continue;
-                };
+            let b = self
+                .colliding_sprites
+                .get(&b)
+                .copied()
+                .unwrap_or_else(|| self.sprite_with_collider(b).unwrap());
 
-                if let Some(other) = self.sprite_with_index(other_index.index()) {
-                    sprite.on_collision.trigger(other);
-                }
+            if a.collision_enabled {
+                a.on_collision.trigger(b);
+            }
+
+            if b.collision_enabled {
+                b.on_collision.trigger(a);
             }
         }
     }
 
-    fn sprite_with_index(&self, index: usize) -> Option<Weak<dyn Sprite>> {
+    fn sprite_with_collider(&self, collider_handle: ColliderHandle) -> Option<Weak<dyn Sprite>> {
         self.sprites
             .iter()
             .find(|a| match a.collider_handle() {
-                Some(handle) => handle.index() == index,
+                Some(handle) => handle == collider_handle,
                 None => false,
             })
             .map(Own::weak)
