@@ -293,10 +293,10 @@ impl WGPUApp {
     }
 
     pub fn fps(&self) -> f32 {
-        self.state.fps
+        self.state.frame_counter.fps
     }
 
     pub fn frame_time(&self) -> f32 {
-        self.state.frame_time
+        self.state.frame_counter.frame_time
     }
 }

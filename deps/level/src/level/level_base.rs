@@ -48,9 +48,8 @@ pub struct LevelBase {
 }
 
 impl LevelBase {
-    pub fn update_physics(&mut self, _frame_time: f32) {
-        self.integration_parameters.dt = 1.0 / 120.0; //frame_time;
-        self.integration_parameters.dt = _frame_time;
+    pub fn update_physics(&mut self, frame_time: f32) {
+        self.integration_parameters.dt = frame_time;
 
         self.physics_pipeline.step(
             &self.gravity,

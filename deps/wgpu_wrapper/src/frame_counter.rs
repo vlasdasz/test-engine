@@ -1,38 +1,44 @@
-use gm::LossyConvert;
+use web_time::Instant;
 
 pub(crate) struct FrameCounter {
-    // Instant of the last time we printed the frame time.
-    last_printed_instant: web_time::Instant,
-    // Number of frames since the last time we printed the frame time.
-    frame_count:          u32,
+    last_frame_update: Instant,
+    last_fps_update:   Instant,
+
+    pub(crate) fps:         f32,
+    pub(crate) frame_time:  f32,
+    pub(crate) frame_count: u32,
 }
 
 impl Default for FrameCounter {
     fn default() -> Self {
         Self {
-            last_printed_instant: web_time::Instant::now(),
-            frame_count:          0,
+            last_frame_update: Instant::now(),
+            last_fps_update:   Instant::now(),
+
+            fps:         0.0,
+            frame_time:  0.0,
+            frame_count: 0,
         }
     }
 }
 
 impl FrameCounter {
-    pub fn update(&mut self) -> Option<(f32, f32)> {
+    pub fn update(&mut self) -> bool {
         self.frame_count += 1;
-        let new_instant = web_time::Instant::now();
-        let elapsed_secs = (new_instant - self.last_printed_instant).as_secs_f32();
+        let now = Instant::now();
 
-        if elapsed_secs < 0.2 {
-            return None;
+        self.frame_time = (now - self.last_frame_update).as_secs_f32();
+        self.fps = 1.0 / self.frame_time;
+        self.last_frame_update = now;
+
+        let passed = (now - self.last_fps_update).as_secs_f32();
+
+        if passed < 1.0 {
+            return false;
         }
 
-        let elapsed_ms = elapsed_secs;
-        let frame_time = elapsed_ms / self.frame_count.lossy_convert();
-        let fps = self.frame_count.lossy_convert() / elapsed_secs;
+        self.last_fps_update = now;
 
-        self.last_printed_instant = new_instant;
-        self.frame_count = 0;
-
-        Some((frame_time, fps))
+        true
     }
 }
