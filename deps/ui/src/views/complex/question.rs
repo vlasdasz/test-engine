@@ -34,7 +34,7 @@ impl ModalView<(), bool> for Question {
     }
 
     fn modal_size() -> Size {
-        (320, 240).into()
+        (380, 240).into()
     }
 }
 
@@ -69,6 +69,7 @@ impl ViewSetup for Question {
         self.label.place().lrt(10).h(140);
         self.label.set_text_size(35);
         self.label.set_text(question);
+        self.label.multiline = true;
 
         self.ok_button.place().h(50).br(2).relative(Width, self, 0.5);
 

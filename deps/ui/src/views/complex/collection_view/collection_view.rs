@@ -72,7 +72,8 @@ impl CollectionView {
 
         assert!(
             self.data_source.is_ok(),
-            "Set data source for CollectionView before using"
+            "Set data source for: {} before using",
+            self.label()
         );
 
         match self.layout {

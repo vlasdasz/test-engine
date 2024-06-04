@@ -45,6 +45,10 @@ pub mod store {
     pub use store::{EncryptionKey, OnDisk, OnDiskEncrypted};
 }
 
+pub mod time {
+    pub use web_time::*;
+}
+
 pub use app::App;
 pub use audio;
 pub use dispatch::{async_after, from_main, on_main, wait_for_next_frame};
