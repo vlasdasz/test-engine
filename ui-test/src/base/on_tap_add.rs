@@ -90,7 +90,7 @@ pub async fn test_add_on_tap() -> Result<()> {
     );
 
     check_colors(
-        r#"
+        r"
               19  561 -  25  51  76
               42  551 -   3  77 228
               89  521 -   3  77 228
@@ -130,7 +130,7 @@ pub async fn test_add_on_tap() -> Result<()> {
              111   82 -  25  51  76
              176   41 -  25  51  76
              237   37 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 

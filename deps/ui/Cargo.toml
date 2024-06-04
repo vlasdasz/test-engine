@@ -23,6 +23,7 @@ reflected = { workspace = true }
 refs = { workspace = true }
 rust_decimal = { workspace = true }
 tokio = { workspace = true }
+utils = { workspace = true }
 vents = { workspace = true }
 wgpu_wrapper = { workspace = true }
 

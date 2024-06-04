@@ -77,10 +77,10 @@ pub async fn test_touch_stack() -> Result<()> {
     );
 
     inject_touches(
-        r#"
+        r"
             320  383  b
             320  383  e
-    "#,
+    ",
     )
     .await;
 

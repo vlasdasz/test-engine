@@ -28,7 +28,7 @@ pub async fn test_image_view() -> Result<()> {
     App::set_window_size((400, 400)).await;
 
     check_colors(
-        r#"   59  103 -  25  51  76
+        r"   59  103 -  25  51  76
              113  104 -  38 207  16
              191  110 -  12  63  40
              269  109 -   1   5 147
@@ -53,14 +53,14 @@ pub async fn test_image_view() -> Result<()> {
              233   83 -  25  51  76
              180  170 -  25  51  76
              220  220 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
     App::set_window_size((1000, 120)).await;
 
     check_colors(
-        r#"  235   42 -  25  51  76
+        r"  235   42 -  25  51  76
              263   44 -  34 131  10
              301   46 -  25  51  76
              702   52 -  25  51  76
@@ -75,14 +75,14 @@ pub async fn test_image_view() -> Result<()> {
              517   90 -  25  51  76
              519   34 -  25  51  76
              524   20 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
     App::set_window_size((200, 600)).await;
 
     check_colors(
-        r#"   36  158 -  25  51  76
+        r"   36  158 -  25  51  76
               62  158 -  33 180  16
               94  158 -  12  66  40
              116  159 -   4  23  88
@@ -103,7 +103,7 @@ pub async fn test_image_view() -> Result<()> {
              117  109 -  25  51  76
              106  184 -  25  51  76
 
-        "#,
+        ",
     )
     .await?;
 

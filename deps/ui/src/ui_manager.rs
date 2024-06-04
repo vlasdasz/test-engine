@@ -56,6 +56,10 @@ impl UIManager {
         WGPUApp::current().fps()
     }
 
+    pub fn frame_drawn() -> u32 {
+        WGPUApp::current().frame_drawn()
+    }
+
     pub fn unselect_view(&self) {
         let mut selected_view = self.selected_view.lock().unwrap();
         if selected_view.is_null() {

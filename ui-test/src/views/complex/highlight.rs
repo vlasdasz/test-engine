@@ -32,7 +32,7 @@ pub async fn test_highlight() -> Result<()> {
     UI::init_test_view::<HighLightTestView>().await;
 
     check_colors(
-        r#"
+        r"
               96  213 -  25  51  76
               97  213 -  25  51  76
              106  212 -  25  51  76
@@ -62,7 +62,7 @@ pub async fn test_highlight() -> Result<()> {
              212  286 -  25  51  76
              212  299 -  25  51  76
              218  358 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 

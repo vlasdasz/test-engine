@@ -38,7 +38,7 @@ pub async fn test_stick() -> Result<()> {
     let view = UI::init_test_view::<StickTestView>().await;
 
     check_colors(
-        r#"
+        r"
              178  231 -  25  51  76
              201  238 -  25  51  76
              221  244 -   0   0   0
@@ -80,12 +80,12 @@ pub async fn test_stick() -> Result<()> {
              235  325 - 255 255 255
              231  386 -  25  51  76
              233  393 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             126  352  m
             281  339  m
             367  325  m
@@ -172,11 +172,11 @@ pub async fn test_stick() -> Result<()> {
             11   319  m
             123  308  e
             549  342  m
-        "#,
+        ",
     )
     .await;
 
-    assert_eq!(view.vec, Point::new(12.244078, -26.364265));
+    assert_eq!(view.vec, Point::new(12.244_078, -26.364_265));
 
     debug!("Stick test: OK");
 

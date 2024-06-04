@@ -33,10 +33,10 @@ pub async fn test_slider() -> Result<()> {
     let mut view = UI::init_test_view::<SliderTestView>().await;
 
     inject_touches(
-        r#"
+        r"
             306  202  b
             306  202  e
-    "#,
+    ",
     )
     .await;
 
@@ -44,7 +44,7 @@ pub async fn test_slider() -> Result<()> {
     assert_eq!(view.label.text(), "0.78");
 
     inject_touches(
-        r#"
+        r"
             177  137  m
             183  139  m
             195  138  m
@@ -65,7 +65,7 @@ pub async fn test_slider() -> Result<()> {
             173  455  m
             173  455  e
             172  449  m
-    "#,
+    ",
     )
     .await;
 
@@ -73,7 +73,7 @@ pub async fn test_slider() -> Result<()> {
     assert_eq!(view.label.text(), "0.78");
 
     inject_touches(
-        r#"
+        r"
             317  218  m
             303  208  m
             300  205  m
@@ -105,15 +105,15 @@ pub async fn test_slider() -> Result<()> {
             389  459  m
             416  449  m
             482  405  m
-    "#,
+    ",
     )
     .await;
 
-    assert_eq!(view.slider.value(), 0.12285715);
+    assert_eq!(view.slider.value(), 0.122_857_15);
     assert_eq!(view.label.text(), "0.12");
 
     inject_touches(
-        r#"
+        r"
             322  443  m
             312  438  m
             308  437  m
@@ -127,7 +127,7 @@ pub async fn test_slider() -> Result<()> {
             247  536  e
             248  535  m
             323  538  m
-    "#,
+    ",
     )
     .await;
 
@@ -135,7 +135,7 @@ pub async fn test_slider() -> Result<()> {
     assert_eq!(view.label.text(), "0.00");
 
     inject_touches(
-        r#"
+        r"
             337  478  m
             306  475  m
             297  476  m
@@ -152,7 +152,7 @@ pub async fn test_slider() -> Result<()> {
             435  184  m
             469  194  m
             477  177  m
-    "#,
+    ",
     )
     .await;
 
@@ -196,7 +196,7 @@ pub async fn test_slider() -> Result<()> {
     }
 
     check_colors(
-        r#"
+        r"
              357  503 -  25  51  76
              357  497 -  25  51  76
              360  490 -  25  51  76
@@ -240,7 +240,7 @@ pub async fn test_slider() -> Result<()> {
              369  465 - 255 255 255
              368  482 -   1   1   1
              369  501 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 

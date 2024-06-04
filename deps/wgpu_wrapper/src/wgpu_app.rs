@@ -299,4 +299,8 @@ impl WGPUApp {
     pub fn frame_time(&self) -> f32 {
         self.state.frame_counter.frame_time
     }
+
+    pub fn frame_drawn(&self) -> u32 {
+        self.state.frame_counter.frame_count
+    }
 }

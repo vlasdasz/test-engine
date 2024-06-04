@@ -22,7 +22,7 @@ impl ViewSetup for KeyboardView {
     fn setup(mut self: refs::Weak<Self>) {
         self.place().all_ver();
 
-        for (i, row) in LAYOUT.into_iter().enumerate() {
+        for (i, row) in LAYOUT.iter().enumerate() {
             let mut container = self.add_view::<Container>();
 
             if i == 1 {

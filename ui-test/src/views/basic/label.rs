@@ -39,7 +39,7 @@ pub async fn test_label() -> Result<()> {
     App::set_window_size((400, 400)).await;
 
     check_colors(
-        r#"
+        r"
               36  109 -  25  51  76
              149  173 - 255 255 255
              191  171 - 255 255 255
@@ -63,12 +63,12 @@ pub async fn test_label() -> Result<()> {
              201  119 - 255 255 255
              192   42 -  25  51  76
              180  371 -  25  51  76
-    "#,
+    ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             1   200  b
             31   200  e
             30   200  b
@@ -90,7 +90,7 @@ pub async fn test_label() -> Result<()> {
             30   201  b
             30   201  e
 
-    "#,
+    ",
     )
     .await;
 
@@ -100,7 +100,7 @@ pub async fn test_label() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
               87  150 - 255 255 255
               85  181 - 255 255 255
               84  200 - 255 255 255
@@ -144,7 +144,7 @@ pub async fn test_label() -> Result<()> {
              160  196 -   1   1 203
              112  199 - 255 255 255
               82  206 - 255 255 255
-    "#,
+    ",
     )
     .await?;
 
@@ -166,7 +166,7 @@ pub async fn test_label() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
               27  321 -  25  51  76
               34  321 -  25  51  76
               41  321 -  25  51  76
@@ -235,7 +235,7 @@ pub async fn test_label() -> Result<()> {
              153   85 - 255 255 255
              160   85 -   1   1   1
              189   86 - 255 255 255
-        "#,
+        ",
     )
     .await?;
 

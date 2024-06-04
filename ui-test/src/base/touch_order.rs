@@ -54,7 +54,7 @@ pub async fn test_touch_order() -> Result<()> {
     clear_state();
 
     inject_touches(
-        r#"
+        r"
             376  385  b
             373  383  e
             310  331  b
@@ -71,20 +71,20 @@ pub async fn test_touch_order() -> Result<()> {
             74   87   e
             29   48   b
             29   48   e
-        "#,
+        ",
     )
     .await;
 
     assert_eq!(
         get_state::<String>(),
-        r#"TouchOrderView.view_4: Container
+        r"TouchOrderView.view_4: Container
 TouchOrderView.view_4: Container
 TouchOrderView.view_4: Container
 TouchOrderView.view_4: Container
 TouchOrderView.view_3: Container
 TouchOrderView.view_2: Container
 TouchOrderView.view_1: Container
-"#
+"
     );
 
     debug!("Touch order test: OK");

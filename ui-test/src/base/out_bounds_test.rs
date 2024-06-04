@@ -49,7 +49,7 @@ pub async fn test_out_bounds() -> Result<()> {
     UI::init_test_view::<OutBoundsView>().await;
 
     inject_touches(
-        r#"
+        r"
             372  307  b
             371  307  e
             372  304  b
@@ -62,12 +62,12 @@ pub async fn test_out_bounds() -> Result<()> {
             373  303  e
             373  304  b
             373  304  e
-        "#,
+        ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              168  577 -  25  51  76
              192  575 -  25  51  76
              234  576 -  20   7   3
@@ -87,12 +87,12 @@ pub async fn test_out_bounds() -> Result<()> {
              264  515 - 184 114 116
              344  527 - 255 255 255
              384  534 - 255 255 255
-        "#,
+        ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             308  305  b
             308  305  e
             308  304  b
@@ -107,12 +107,12 @@ pub async fn test_out_bounds() -> Result<()> {
             307  304  e
             307  304  b
             307  304  e
-        "#,
+        ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              504  560 -  25  51  76
              520  563 -  25  51  76
              554  567 - 201 131 132
@@ -124,12 +124,12 @@ pub async fn test_out_bounds() -> Result<()> {
              524  499 -  25  51  76
              539  543 -  25  51  76
              574  545 - 195 126 126
-        "#,
+        ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             365  376  b
             365  376  e
             365  377  b
@@ -158,12 +158,12 @@ pub async fn test_out_bounds() -> Result<()> {
             299  376  e
             299  375  b
             300  375  e
-        "#,
+        ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              413  102 -  25  51  76
              429   95 -  25  51  76
              456   65 - 190  88  93
@@ -186,12 +186,12 @@ pub async fn test_out_bounds() -> Result<()> {
              476   42 - 188 137 113
              443   30 -  25  51  76
              410   31 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             298  380  b
             298  380  e
             297  380  b
@@ -212,12 +212,12 @@ pub async fn test_out_bounds() -> Result<()> {
             298  380  e
             298  380  b
             298  380  e
-        "#,
+        ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              192   42 -  25  51  76
              189   42 -  25  51  76
              142   42 - 255 255 255
@@ -231,12 +231,12 @@ pub async fn test_out_bounds() -> Result<()> {
               91  139 -  25  51  76
              122  125 -  25  51  76
               67   10 -   0   0   0
-        "#,
+        ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             303  377  b
             303  377  e
             294  302  b
@@ -253,12 +253,12 @@ pub async fn test_out_bounds() -> Result<()> {
             373  293  e
             373  293  b
             373  293  e
-        "#,
+        ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              183  244 -  25  51  76
              163  237 -  25  51  76
               81  237 - 255 255 255
@@ -269,12 +269,12 @@ pub async fn test_out_bounds() -> Result<()> {
               76  345 - 255 255 255
              115  356 - 255 255 255
              168  365 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             372  364  b
             372  364  e
             381  275  b
@@ -291,12 +291,12 @@ pub async fn test_out_bounds() -> Result<()> {
             378  292  e
             378  292  b
             378  292  e
-        "#,
+        ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
               35  474 -  25  51  76
               27  490 -  25  51  76
               21  526 - 186 110 110
@@ -313,7 +313,7 @@ pub async fn test_out_bounds() -> Result<()> {
               98  517 - 255 255 255
               94  539 - 255 255 255
               84  566 -   1   1   1
-        "#,
+        ",
     )
     .await?;
 

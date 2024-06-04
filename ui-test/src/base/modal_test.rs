@@ -23,11 +23,11 @@ impl ViewSetup for ModalTestView {
             } else {
                 view = self.add_dummy_view();
                 view.set_color(Color::random()).place().all_sides(1);
-                assert_eq!(view.z_position(), 0.49999797);
+                assert_eq!(view.z_position(), 0.499_997_97);
             }
         }
 
-        assert_eq!(view.z_position(), 0.49971527);
+        assert_eq!(view.z_position(), 0.499_715_27);
     }
 }
 
@@ -60,12 +60,12 @@ impl ModalView for Modal {
 pub async fn test_modal() -> Result<()> {
     UI::init_test_view::<ModalTestView>().await;
 
-    Modal::show_modally_with_input((), |_| {});
+    Modal::show_modally_with_input((), |()| {});
 
     wait_for_next_frame().await;
 
     check_colors(
-        r#"
+        r"
              156  279 - 255 255 255
              170  282 - 255 255 255
              188  284 - 255 255 255
@@ -96,7 +96,7 @@ pub async fn test_modal() -> Result<()> {
              457  135 - 255 255 255
              158  142 - 255 255 255
              148  443 - 255 255 255
-    "#,
+    ",
     )
     .await?;
 

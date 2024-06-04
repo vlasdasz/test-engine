@@ -70,6 +70,7 @@ test-engine = { path = "test-engine" }
 test-game = { path = "test-game" }
 ui = { path = "deps/ui" }
 ui-proc = { path = "deps/ui/ui-proc" }
+utils = { path = "deps/utils" }
 valid = { path = "deps/valid" }
 wgpu_wrapper = { path = "deps/wgpu_wrapper" }
 

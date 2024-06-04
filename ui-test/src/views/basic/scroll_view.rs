@@ -28,7 +28,7 @@ pub async fn test_scroll_view() -> Result<()> {
     let mut view = UI::init_test_view::<ScrollViewTest>().await;
 
     check_colors(
-        r#"
+        r"
               53  554 -   0 255 255
              168  556 -  25  51  76
              340  553 -  25  51  76
@@ -46,7 +46,7 @@ pub async fn test_scroll_view() -> Result<()> {
               60   71 -   0 255 255
              135  403 -  25  51  76
              382  305 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -62,7 +62,7 @@ pub async fn test_scroll_view() -> Result<()> {
     assert_eq!(view.scroll.content_offset(), -0.0);
 
     check_colors(
-        r#"
+        r"
               53  554 -   0 255 255
              168  556 -  25  51  76
              340  553 -  25  51  76
@@ -80,7 +80,7 @@ pub async fn test_scroll_view() -> Result<()> {
               60   71 -   0 255 255
              135  403 -  25  51  76
              382  305 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -90,7 +90,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
               76  420 -  25  51  76
               65  379 -   0 255 255
               67  361 -   0 255 255
@@ -120,7 +120,7 @@ pub async fn test_scroll_view() -> Result<()> {
              376  372 -   0 255 255
              442  353 -  25  51  76
              474  355 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -130,7 +130,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
              552  132 -  25  51  76
              555  126 -  25  51  76
              553  111 -  25  51  76
@@ -149,7 +149,7 @@ pub async fn test_scroll_view() -> Result<()> {
               54   65 -   0 255 255
               52  124 -  25  51  76
               52  137 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -157,7 +157,7 @@ pub async fn test_scroll_view() -> Result<()> {
     assert_eq!(view.scroll.content_offset(), -150.0);
 
     check_colors(
-        r#"
+        r"
              542  514 -  25  51  76
              535  544 -  25  51  76
              534  555 -   0 255 255
@@ -171,7 +171,7 @@ pub async fn test_scroll_view() -> Result<()> {
               51  558 -   0 255 255
               52  543 -  25  51  76
               51  530 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -179,7 +179,7 @@ pub async fn test_scroll_view() -> Result<()> {
     assert_eq!(view.scroll.content_offset(), -200.0);
 
     check_colors(
-        r#"
+        r"
              532  478 -  25  51  76
              531  498 -  25  51  76
              529  517 -   0 255 255
@@ -196,7 +196,7 @@ pub async fn test_scroll_view() -> Result<()> {
               50  484 -  25  51  76
               51  438 -  25  51  76
               51  416 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -256,7 +256,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
              535  139 -  25  51  76
              535  121 -  25  51  76
              520   91 -   0 255 255
@@ -270,7 +270,7 @@ pub async fn test_scroll_view() -> Result<()> {
               56   93 -   0 255 255
               53  111 -  25  51  76
               53  117 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -280,7 +280,7 @@ pub async fn test_scroll_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
              545  489 -  25  51  76
              545  497 -  25  51  76
              545  500 -   0 255 255
@@ -305,7 +305,7 @@ pub async fn test_scroll_view() -> Result<()> {
               47  495 -  25  51  76
               48   24 -  25  51  76
              483   44 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 

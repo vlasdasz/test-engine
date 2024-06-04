@@ -41,7 +41,7 @@ pub async fn test_drop_down() -> Result<()> {
     assert_eq!(view.bot.text(), "Car");
 
     inject_touches_delayed(
-        r#"
+        r"
             334  35   b
             334  35   e
             322  68   b
@@ -50,7 +50,7 @@ pub async fn test_drop_down() -> Result<()> {
             352  585  e
             326  536  b
             326  536  e
-        "#,
+        ",
     )
     .await;
 
@@ -58,7 +58,7 @@ pub async fn test_drop_down() -> Result<()> {
     assert_eq!(view.bot.text(), "Boat");
 
     inject_touches_delayed(
-        r#"
+        r"
             363  31   b
             363  31   e
             318  105  b
@@ -67,7 +67,7 @@ pub async fn test_drop_down() -> Result<()> {
             355  580  e
             343  580  b
             343  579  e
-        "#,
+        ",
     )
     .await;
 
@@ -75,7 +75,7 @@ pub async fn test_drop_down() -> Result<()> {
     assert_eq!(view.bot.text(), "Plane");
 
     inject_touches(
-        r#"
+        r"
             342  29   b
             343  29   e
             325  30   b
@@ -84,7 +84,7 @@ pub async fn test_drop_down() -> Result<()> {
             346  574  e
             345  497  b
             345  497  e
-        "#,
+        ",
     )
     .await;
 
@@ -93,13 +93,13 @@ pub async fn test_drop_down() -> Result<()> {
 
     assert_eq!(
         get_state::<String>(),
-        r#"Cat
+        r"Cat
 Boat
 Sheep
 Plane
 Dog
 Car
-"#
+"
     );
 
     debug!("Drop down test: OK");

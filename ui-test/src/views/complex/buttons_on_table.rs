@@ -33,8 +33,7 @@ impl CollectionData for ButtonsOnTableView {
     }
 
     fn make_cell(&self) -> Own<dyn View> {
-        let view = Container::new();
-        view
+        Container::new()
     }
 
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
@@ -109,7 +108,7 @@ pub async fn test_buttons_on_table_view() -> Result<()> {
 
     assert_eq!(
         get_str_state(),
-        r#"cell_selected: 0
+        r"cell_selected: 0
 cell_selected: 0
 cell_selected: 0
 cell_selected: 0
@@ -118,7 +117,7 @@ cell_selected: 0
 button_pressed: 0
 button_pressed: 0
 button_pressed: 0
-"#
+"
     );
 
     debug!("Test buttons on table view: OK");

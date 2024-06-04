@@ -62,7 +62,7 @@ pub async fn test_view_order() -> Result<()> {
     assert_eq!(view.subviews()[3].label(), view.view_4.view_label);
 
     check_colors(
-        r#"
+        r"
               34   25 - 255   0   0
               35   26 - 255   0   0
               38   59 - 255   0   0
@@ -83,7 +83,7 @@ pub async fn test_view_order() -> Result<()> {
              485  498 -   0   0   0
              502  523 -  25  51  76
              518  523 -  25  51  76
-    "#,
+    ",
     )
     .await?;
 

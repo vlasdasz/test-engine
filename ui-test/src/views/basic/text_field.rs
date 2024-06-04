@@ -32,7 +32,7 @@ pub async fn test_text_field() -> Result<()> {
     App::set_window_size((800, 800)).await;
 
     inject_touches(
-        r#"
+        r"
             389  576  b
             389  576  e
             399  292  b
@@ -41,30 +41,30 @@ pub async fn test_text_field() -> Result<()> {
             427  147  e
             391  237  b
             391  235  e
-    "#,
+    ",
     )
     .await;
 
     inject_keys("HELLOY").await;
 
     inject_touches(
-        r#"
+        r"
             452  442  b
-    "#,
+    ",
     )
     .await;
 
     inject_keys("text").await;
 
     inject_touches(
-        r#"
+        r"
             10  10  b
-    "#,
+    ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              328  232 - 203 203 203
              342  232 -   9   9   9
              346  232 -  19  19  19
@@ -100,7 +100,7 @@ pub async fn test_text_field() -> Result<()> {
              377  224 - 203 203 203
              397  224 - 203 203 203
              441  235 - 203 203 203
-    "#,
+    ",
     )
     .await?;
 
@@ -111,16 +111,16 @@ pub async fn test_text_field() -> Result<()> {
     .await;
 
     inject_touches(
-        r#"
+        r"
             452  442  b
-    "#,
+    ",
     )
     .await;
 
     inject_keys("ŽĖЎФЪ").await;
 
     check_colors(
-        r#"
+        r"
              146  319 - 128 128 128
              189  319 -  84  84  84
              208  319 - 128 128 128
@@ -161,7 +161,7 @@ pub async fn test_text_field() -> Result<()> {
              374  402 -   0   0   0
              405  362 -   0   0   0
 
-    "#,
+    ",
     )
     .await?;
 

@@ -21,11 +21,11 @@ pub async fn test_present() -> Result<()> {
     UI::set_test_view(NavigationView::with_view(present), 600, 600).await;
 
     check_colors(
-        r#"
+        r"
               32   28 -  25  51  76
              306  347 -  25  51  76
              547  566 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -42,11 +42,11 @@ pub async fn test_present() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
               32   28 -  25  51  76
              306  347 -  25  51  76
              547  566 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -63,11 +63,11 @@ pub async fn test_present() -> Result<()> {
     assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     check_colors(
-        r#"
+        r"
               53   22 - 255 255 255
              222  255 - 255 255 255
              490  551 - 255 255 255
-        "#,
+        ",
     )
     .await?;
 

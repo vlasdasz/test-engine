@@ -57,14 +57,14 @@ pub async fn test_collection_view() -> Result<()> {
     let mut view = UI::init_test_view::<CollectionTestView>().await;
 
     check_colors(
-        r#"
+        r"
               33   34 -  25  51  76
              117  145 -  25  51  76
              229  255 -  25  51  76
              329  354 -  25  51  76
              449  467 -  25  51  76
              568  569 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -75,7 +75,7 @@ pub async fn test_collection_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
              238   61 -  25  51  76
              249   26 - 255 255 255
              258   25 - 255 255 255
@@ -84,7 +84,7 @@ pub async fn test_collection_view() -> Result<()> {
              300   23 -  19  19  19
              353   41 - 255 255 255
              355   72 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 
@@ -98,7 +98,7 @@ pub async fn test_collection_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
              296  474 -  25  51  76
              298  382 - 255 255 255
              299  327 - 255 255 255
@@ -116,7 +116,7 @@ pub async fn test_collection_view() -> Result<()> {
              342  413 -   0   0   0
              338  456 -  25  51  76
              338  557 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 

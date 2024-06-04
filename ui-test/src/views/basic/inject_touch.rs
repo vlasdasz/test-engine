@@ -32,10 +32,10 @@ pub async fn test_inject_touch() -> Result<()> {
     let mut touches = String::new();
 
     for _ in 0..100 {
-        touches += r#"
+        touches += r"
             5  5  b
             5  5  e
-    "#;
+    ";
     }
 
     inject_touches(touches).await;
@@ -44,10 +44,10 @@ pub async fn test_inject_touch() -> Result<()> {
 
     for _ in 0..10 {
         inject_touches(
-            r#"
+            r"
             5  5  b
             5  5  e
-    "#,
+    ",
         )
         .await;
     }

@@ -42,7 +42,7 @@ pub async fn test_selection() -> Result<()> {
     UI::init_test_view::<SelectionTestView>().await;
 
     check_colors(
-        r#"
+        r"
               84  283 -  25  51  76
              128  274 -   0   0   0
              236  275 -  25  51  76
@@ -50,74 +50,74 @@ pub async fn test_selection() -> Result<()> {
              378  272 -  25  51  76
              426  269 -   0   0   0
              535  288 -  25  51  76
-    "#,
+    ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             128  274  b
             128  274  e
-    "#,
+    ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              140  274 - 255 255 255
              280  271 -   0   0   0
              426  269 -   0   0   0
-    "#,
+    ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             260  260  b
             260  260  e
-    "#,
+    ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              140  274 -   0   0   0
              280  271 - 255 255 255
              426  269 -   0   0   0
-    "#,
+    ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
             420  260  b
             420  260  e
-    "#,
+    ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              140  274 -   0   0   0
              280  271 -   0   0   0
              426  269 - 255 255 255
-    "#,
+    ",
     )
     .await?;
 
     inject_touches(
-        r#"
+        r"
               5    5  b
-    "#,
+    ",
     )
     .await;
 
     check_colors(
-        r#"
+        r"
              140  274 -   0   0   0
              280  271 -   0   0   0
              426  269 -   0   0   0
-    "#,
+    ",
     )
     .await?;
 

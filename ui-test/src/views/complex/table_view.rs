@@ -130,7 +130,7 @@ pub async fn test_table_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
              666  983 - 255 255 255
              625  983 -  59  59  59
              591  983 - 255 255 255
@@ -143,7 +143,7 @@ pub async fn test_table_view() -> Result<()> {
              293  976 - 255 255 255
              252  976 -  25  51  76
              743  977 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 

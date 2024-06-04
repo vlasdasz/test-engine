@@ -85,7 +85,7 @@ pub async fn test_layout() -> Result<()> {
     App::set_window_size((240, 240)).await;
 
     inject_touches(
-        r#"
+        r"
             8    121  b
             9    121  e
             25   122  b
@@ -142,7 +142,7 @@ pub async fn test_layout() -> Result<()> {
             119  43   e
             118  18   b
             118  18   e
-            "#,
+            ",
     )
     .await;
 
@@ -156,7 +156,7 @@ pub async fn test_layout() -> Result<()> {
     clear_state();
 
     inject_touches(
-        r#"
+        r"
             4    201  b
             5    201  e
             27   201  b
@@ -247,7 +247,7 @@ pub async fn test_layout() -> Result<()> {
             200  30   e
             200  11   b
             200  11   e
-            "#,
+            ",
     )
     .await;
 

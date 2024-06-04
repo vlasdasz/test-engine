@@ -35,7 +35,7 @@ pub async fn test_text_occlusion() -> Result<()> {
     UI::init_test_view::<TextOccclusionTestView>().await;
 
     check_colors(
-        r#"
+        r"
               74  285 -  25  51  76
              114  284 - 255 255 255
              127  286 - 255 255 255
@@ -92,7 +92,7 @@ pub async fn test_text_occlusion() -> Result<()> {
              366  322 - 203 203 203
              405  284 -   0   0   0
              383  233 - 203 203 203
-    "#,
+    ",
     )
     .await?;
 

@@ -32,7 +32,7 @@ pub async fn test_point_view() -> Result<()> {
     let view = UI::init_test_view::<PointTestView>().await;
 
     inject_touches(
-        r#"
+        r"
             261  272  b
             261  272  e
             262  269  b
@@ -79,7 +79,7 @@ pub async fn test_point_view() -> Result<()> {
             141  187  e
             141  187  b
             141  187  e
-        "#,
+        ",
     )
     .await;
 

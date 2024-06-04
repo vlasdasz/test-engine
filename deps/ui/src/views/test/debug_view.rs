@@ -11,6 +11,7 @@ mod test_engine {
 }
 
 use ui_proc::view;
+use utils::Every;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewInternalSetup},
@@ -24,8 +25,6 @@ static CURRENT: MainLock<Weak<DebugView>> = MainLock::new();
 #[view]
 pub struct DebugView {
     custom_labels: HashMap<String, Weak<Label>>,
-
-    frame_drawn: u64,
 
     #[init]
     fps_label:          Label,
@@ -121,10 +120,12 @@ impl ViewSetup for DebugView {
 
 impl ViewCallbacks for DebugView {
     fn update(&mut self) {
-        self.fps_label.set_text(format!("FPS: {:.1}", UIManager::fps()));
+        Every::second(|| {
+            self.fps_label.set_text(format!("FPS: {:.1}", UIManager::fps()));
+        });
 
-        self.frame_drawn += 1;
-        self.frame_drawn_label.set_text(format!("Frame drawn: {}", self.frame_drawn));
+        self.frame_drawn_label
+            .set_text(format!("Frame drawn: {}", UIManager::frame_drawn()));
 
         // let ui_scale = UIManager::ui_scale();
         // self.ui_scale_label.set_text(format!("UI scale: {ui_scale}"));
