@@ -12,6 +12,12 @@ impl ToLabel for &str {
     }
 }
 
+impl ToLabel for &char {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
 impl ToLabel for String {
     fn to_label(&self) -> String {
         self.to_string()

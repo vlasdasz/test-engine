@@ -12,6 +12,7 @@ use test_engine::{
     ui::{Container, ViewSetup},
     App,
 };
+use views::complex::keyboard_view_test::test_keyboard_view;
 
 use crate::{
     base::{
@@ -49,7 +50,7 @@ async fn main() -> Result<()> {
 
         for i in 1..=cycles {
             test().await?;
-            info!("Cycle {i}: OK")
+            info!("Cycle {i}: OK");
         }
 
         _ = skip();
@@ -62,6 +63,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_keyboard_view().await?;
     test_out_bounds().await?;
     test_number_view().await?;
     test_form_view().await?;

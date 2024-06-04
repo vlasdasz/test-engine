@@ -1,15 +1,16 @@
 [workspace]
 
 # default-members = ["level-test"]
-default-members = ["test-game"]
+default-members = ["ui-test"]
+# default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "ui-test",
-    "ui-benchmark",
-    "level-test",
-    "deps/ui/ui-proc-test",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "ui-test",
+  "ui-benchmark",
+  "level-test",
+  "deps/ui/ui-proc-test",
 ]
 
 resolver = "2"

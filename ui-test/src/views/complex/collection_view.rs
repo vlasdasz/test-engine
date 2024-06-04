@@ -129,7 +129,7 @@ pub async fn test_collection_view() -> Result<()> {
     .await;
 
     check_colors(
-        r#"
+        r"
               14  467 -  25  51  76
               37  449 - 255 255 255
               58  431 - 255 255 255
@@ -157,7 +157,7 @@ pub async fn test_collection_view() -> Result<()> {
              320  118 -  74  74  74
              320  177 -  74  74  74
              320  252 -  25  51  76
-        "#,
+        ",
     )
     .await?;
 

@@ -1,14 +1,10 @@
 [
   {
     "label": "Run UI Test",
-    "command": "make ui"
+    "command": "cargo run -p ui-test"
   },
   {
     "label": "Run Level Test",
     "command": "cargo run -p level-test"
-  },
-  {
-    "label": "Build Level Test",
-    "command": "cargo build -p level-test"
   }
 ]
