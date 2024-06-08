@@ -1,8 +1,8 @@
 [workspace]
 
 # default-members = ["level-test"]
-default-members = ["ui-test"]
-# default-members = ["test-game"]
+#default-members = ["ui-test"]
+default-members = ["test-game"]
 members = [
   "test-engine",
   "test-game",
@@ -26,7 +26,7 @@ cfg_aliases = "0.2"
 chrono = "0.4"
 convert_case = "0.6"
 dirs = "5.0"
-educe = "0.5"
+educe = "0.6.0"
 env_logger = "0.11"
 fake = "2.9.2"
 home = "0.5"

@@ -5,8 +5,9 @@ use std::{
 
 use convert_case::{Case, Casing};
 use reflected::{FieldRef, Reflected};
-use refs::{Own, Weak};
+use refs::{weak_from_ref, Own, Weak};
 use ui_proc::view;
+use vents::Event;
 
 use crate::{
     view::{ViewData, ViewSubviews},
@@ -22,6 +23,8 @@ mod test_engine {
 
 #[view]
 pub struct FormView<T: Reflected + 'static> {
+    pub on_change: Event,
+
     editind_enabled: bool,
 
     labels:   Vec<Weak<dyn InputView>>,
@@ -50,6 +53,8 @@ impl<T: Reflected> FormView<T> {
         self.remove_all_subviews();
         self.labels.clear();
 
+        let weak_self = weak_from_ref(self);
+
         for field in T::simple_fields() {
             let variant = self.variants.get(field).cloned();
 
@@ -57,6 +62,9 @@ impl<T: Reflected> FormView<T> {
 
             let mut view: Weak<dyn InputView> = if field.is_bool() {
                 let mut view = self.add_view::<Labeled<Switch>>();
+                view.input.selected.sub(move || {
+                    weak_self.on_change.trigger(());
+                });
                 view.input.set_on(text == "1");
                 view.as_input_view()
             } else if let Some(variants) = variant {
