@@ -32,10 +32,13 @@ impl LevelManager {
 }
 
 impl LevelManager {
-    pub fn set_level(level: impl Level + 'static) {
+    pub fn set_level<T: Level + 'static>(level: T) -> Weak<T> {
         let l = SELF.get_mut();
-        l.level = Some(Own::new(level));
+        let level = Own::new(level);
+        let weak = level.weak();
+        l.level = Some(level);
         l.level.as_ref().unwrap().__internal_setup();
+        weak
     }
 
     pub fn stop_level() {

@@ -1,4 +1,3 @@
-#![cfg(not(target_os = "ios"))]
 use gm::{flat::Size, Color};
 use refs::Weak;
 use ui_proc::view;
@@ -26,7 +25,7 @@ impl Alert {
         Self::show_modally_with_input(message.to_string(), |()| {});
     }
 
-    pub fn show_and_wait(message: impl ToString, callback: impl FnOnce() + Send + 'static) {
+    pub fn show_callback(message: impl ToString, callback: impl FnOnce() + Send + 'static) {
         Self::show_modally_with_input(message.to_string(), move |()| callback());
     }
 }

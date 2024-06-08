@@ -1,6 +1,5 @@
+mod alert;
 mod alert_err;
-mod alert_ios;
-mod alert_not_ios;
 mod back_button;
 mod collection_view;
 mod consent;
@@ -18,13 +17,6 @@ mod question;
 mod spinner;
 mod stick_view;
 mod table_view;
-
-pub mod alert {
-    #[cfg(target_os = "ios")]
-    pub use super::alert_ios::*;
-    #[cfg(not(target_os = "ios"))]
-    pub use super::alert_not_ios::*;
-}
 
 pub use alert::*;
 pub use alert_err::*;
