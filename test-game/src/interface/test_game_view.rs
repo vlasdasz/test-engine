@@ -41,7 +41,7 @@ pub struct TestGameView {
 
     text_field: TextField,
 
-    objc: Button,
+    render: Button,
 
     benchmark:  Button,
     test_level: Button,
@@ -149,12 +149,12 @@ impl ViewSetup for TestGameView {
         self.text_field.set_placeholder("Type here");
         self.text_field.place().size(200, 50).t(200).anchor(Anchor::Left, self.tl, 10);
 
-        self.objc.set_text("objc");
-        link_button!(self, objc, call_obj);
-        self.objc.place().size(100, 50).t(200).anchor(Anchor::Left, self.text_field, 10);
+        self.render.set_text("objc");
+        link_button!(self, render, call_obj);
+        self.render.place().size(100, 50).t(200).anchor(Anchor::Left, self.text_field, 10);
 
         self.benchmark.set_text("bench");
-        self.benchmark.place().size(100, 50).t(200).anchor(Anchor::Left, self.objc, 10);
+        self.benchmark.place().size(100, 50).t(200).anchor(Anchor::Left, self.render, 10);
         self.benchmark.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());
