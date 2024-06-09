@@ -78,6 +78,8 @@ impl UI {
             return;
         }
 
+        view.render(pass);
+
         let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
 
         let root_size = UI::root_view_size();

@@ -5,14 +5,19 @@ use test_engine::{
     level::{Control, LevelManager},
     refs::Weak,
     ui::{
-        link_button, view, Alert, Anchor, Button, Color, ColorMeter, Container, DPadView, DebugView,
-        DrawingView, ImageView, Label, NumberView, Point, PointsPath, Spinner, StickView, TextField,
-        UIManager, ViewData, ViewSetup,
+        view, Alert, Anchor,
+        Anchor::{Height, Top, Width, X},
+        Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, ImageView, Label, NumberView,
+        Point, PointsPath, Spinner, StickView, TextField, UIManager, ViewData, ViewSetup,
     },
     App, DataManager,
 };
+use ui_benchmark::BenchmarkView;
 
-use crate::levels::{BenchmarkLevel, TestLevel};
+use crate::{
+    interface::render_view::RenderView,
+    levels::{BenchmarkLevel, TestLevel},
+};
 
 #[view]
 pub struct TestGameView {
@@ -41,6 +46,8 @@ pub struct TestGameView {
 
     text_field: TextField,
 
+    ui_bench: Button,
+
     render: Button,
 
     benchmark:  Button,
@@ -48,6 +55,7 @@ pub struct TestGameView {
 }
 
 impl ViewSetup for TestGameView {
+    #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         DebugView::enable();
 
@@ -149,12 +157,23 @@ impl ViewSetup for TestGameView {
         self.text_field.set_placeholder("Type here");
         self.text_field.place().size(200, 50).t(200).anchor(Anchor::Left, self.tl, 10);
 
-        self.render.set_text("objc");
-        link_button!(self, render, call_obj);
-        self.render.place().size(100, 50).t(200).anchor(Anchor::Left, self.text_field, 10);
+        self.render.set_text("render");
+        self.render
+            .place()
+            .size(100, 50)
+            .t(200)
+            .anchor(Anchor::Left, self.text_field, 10);
+        self.render.on_tap(|| {
+            LevelManager::stop_level();
+            UIManager::set_view(RenderView::new());
+        });
 
         self.benchmark.set_text("bench");
-        self.benchmark.place().size(100, 50).t(200).anchor(Anchor::Left, self.render, 10);
+        self.benchmark
+            .place()
+            .size(100, 50)
+            .t(200)
+            .anchor(Anchor::Left, self.render, 10);
         self.benchmark.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());
@@ -169,6 +188,16 @@ impl ViewSetup for TestGameView {
         self.test_level.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
+        });
+
+        self.ui_bench.set_text("ui bench");
+        self.ui_bench
+            .place()
+            .anchor(Top, self.text_field, 10)
+            .same([X, Width, Height], self.text_field);
+        self.ui_bench.on_tap(|| {
+            LevelManager::stop_level();
+            UIManager::set_view(BenchmarkView::new());
         });
     }
 }
@@ -200,9 +229,5 @@ impl TestGameView {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());
         });
-    }
-
-    fn call_obj(self: Weak<Self>) {
-        dbg!(&self.view_label);
     }
 }

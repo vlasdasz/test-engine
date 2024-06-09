@@ -15,6 +15,7 @@ name = "test_game"
 tokio = { workspace = true }
 
 test-engine = { workspace = true }
+ui-benchmark = { workspace = true }
 
 [build-dependencies]
 cfg_aliases = { workspace = true }

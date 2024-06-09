@@ -29,9 +29,7 @@ pub struct DebugView {
     #[init]
     fps_label:          Label,
     frame_drawn_label:  Label,
-    ui_scale_label:     Label,
     screen_scale_label: Label,
-    root_frame:         Label,
     touch_enabled:      Label,
     exit:               Button,
     dump_mem:           Button,
@@ -83,17 +81,13 @@ impl ViewSetup for DebugView {
 
         self.__manually_set_superview(UIManager::root_view_weak());
 
-        self.place().size(400, 200).l(10).b(10).all_ver();
+        self.place().size(240, 220).l(10).b(10).all_ver();
 
         self.fps_label.set_text("fps label");
 
         self.frame_drawn_label.set_text("frame drawn label");
 
-        self.ui_scale_label.set_text("ui scale");
-
         self.screen_scale_label.set_text("screen scale");
-
-        self.root_frame.set_text("root frame");
 
         self.exit.set_text("exit");
         self.exit.on_tap(|| {
@@ -124,23 +118,13 @@ impl ViewCallbacks for DebugView {
             self.fps_label.set_text(format!("FPS: {:.1}", UIManager::fps()));
         });
 
-        self.frame_drawn_label
-            .set_text(format!("Frame drawn: {}", UIManager::frame_drawn()));
-
-        // let ui_scale = UIManager::ui_scale();
-        // self.ui_scale_label.set_text(format!("UI scale: {ui_scale}"));
+        self.frame_drawn_label.set_text(format!("Frames: {}", UIManager::frame_drawn()));
 
         let screen_scale = UIManager::display_scale();
-        self.screen_scale_label.set_text(format!("Screen scale: {screen_scale}"));
+        self.screen_scale_label.set_text(format!("Scale: {screen_scale}"));
 
-        self.root_frame.set_text(format!(
-            "Root frame: {:?}",
-            UIManager::root_view().frame().short_display()
-        ));
+        self.touch_enabled.set_text(format!("Touch: {}", !UIManager::touch_disabled()));
 
-        self.touch_enabled
-            .set_text(format!("Touch enabled: {}", !UIManager::touch_disabled()));
-
-        self.touch_root.set_text(format!("Touch root: {}", TouchStack::root_name()));
+        self.touch_root.set_text(format!("Root: {}", TouchStack::root_name()));
     }
 }

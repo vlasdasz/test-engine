@@ -19,7 +19,7 @@ pub use screenshot::*;
 pub use text::*;
 pub use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    Buffer, BufferUsages, Device, PolygonMode,
+    Buffer, BufferUsages, Device, PolygonMode, RenderPass,
 };
 pub use wgpu_app::*;
 pub use winit::event::{ElementState, MouseButton};

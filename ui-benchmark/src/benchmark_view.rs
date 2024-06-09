@@ -1,5 +1,5 @@
 use std::{
-    sync::atomic::{AtomicU64, Ordering},
+    sync::atomic::{AtomicBool, AtomicU64, Ordering},
     thread::sleep,
     time::Duration,
 };
@@ -8,14 +8,15 @@ use fake::Fake;
 use test_engine::{
     from_main, on_main,
     refs::Weak,
-    ui::{view, Anchor, Color, Label, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Alert, Anchor, Color, Label, ViewData, ViewSetup, ViewSubviews},
     App,
 };
 use tokio::spawn;
 
+static FINISHED: AtomicBool = AtomicBool::new(false);
 static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
-const TARGET_FPS: f32 = 60.0;
+const TARGET_FPS: f32 = 40.0;
 
 #[view]
 pub struct BenchmarkView {
@@ -69,7 +70,13 @@ impl BenchmarkView {
                 if finish {
                     on_main(move || {
                         if App::fps() < TARGET_FPS {
-                            dbg!(VIEWS_COUNT.load(Ordering::Relaxed));
+                            if FINISHED.load(Ordering::Relaxed) {
+                                return;
+                            }
+
+                            Alert::show(format!("Views: {}", VIEWS_COUNT.load(Ordering::Relaxed)));
+
+                            FINISHED.store(true, Ordering::Relaxed);
                             return;
                         }
 
