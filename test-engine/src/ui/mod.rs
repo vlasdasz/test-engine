@@ -5,7 +5,7 @@ mod views;
 
 pub use ::ui::*;
 pub use gm::{
-    flat::{Point, Points, PointsPath, Size},
+    flat::{Point, Points, PointsPath, Rect, Size},
     Color, U8Color,
 };
 pub use input::*;

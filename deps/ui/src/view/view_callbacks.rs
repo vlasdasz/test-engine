@@ -6,14 +6,14 @@ use crate::{view::view_frame::ViewFrame, View};
 
 pub trait ViewCallbacks {
     fn update(&mut self);
-    fn render<'a>(&self, pass: &'a RenderPass<'a>);
+    fn render(&self, pass: &mut RenderPass);
     fn on_selection_changed(&mut self, selected: bool);
     fn content_size(&self) -> &Size;
 }
 
 impl<T: ?Sized + View> ViewCallbacks for T {
     default fn update(&mut self) {}
-    fn render<'a>(&self, _pass: &'a RenderPass<'a>) {}
+    default fn render(&self, _pass: &mut RenderPass) {}
     default fn on_selection_changed(&mut self, _: bool) {}
     default fn content_size(&self) -> &Size {
         &self.frame().size

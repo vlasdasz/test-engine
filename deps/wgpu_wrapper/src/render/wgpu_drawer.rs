@@ -17,10 +17,10 @@ use crate::{
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
-    rect_drawer:            RectDrawer,
     image_drawer:           ImageDrawer,
     pub(crate) path_drawer: PathDrawer,
 
+    pub rect_drawer:            RectDrawer,
     pub sprite_drawer:          SpriteDrawer,
     pub textured_sprite_drawer: TexturedSpriteDrawer,
 }
