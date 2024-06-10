@@ -1,11 +1,13 @@
+use bytemuck::Pod;
 use wgpu::{
-    BlendState, ColorTargetState, ColorWrites, DepthStencilState, Device, Face, FragmentState, FrontFace,
-    MultisampleState, PipelineCompilationOptions, PipelineLayout, PolygonMode, PrimitiveState,
+    util::{BufferInitDescriptor, DeviceExt},
+    BlendState, Buffer, ColorTargetState, ColorWrites, DepthStencilState, Device, Face, FragmentState,
+    FrontFace, MultisampleState, PipelineCompilationOptions, PipelineLayout, PolygonMode, PrimitiveState,
     PrimitiveTopology, RenderPipeline, RenderPipelineDescriptor, ShaderModule, TextureFormat,
     VertexBufferLayout, VertexState,
 };
 
-use crate::image::Texture;
+use crate::{image::Texture, BufferUsages};
 
 pub fn depth_stencil_state() -> DepthStencilState {
     DepthStencilState {
@@ -17,8 +19,26 @@ pub fn depth_stencil_state() -> DepthStencilState {
     }
 }
 
-pub(crate) trait DeviceHelper {
-    fn make_pipeline(
+pub trait ToBytes {
+    fn to_bytes(&self) -> &[u8];
+}
+
+impl<T: Pod> ToBytes for [T] {
+    fn to_bytes(&self) -> &[u8] {
+        bytemuck::cast_slice(self)
+    }
+}
+
+impl<T: Pod> ToBytes for T {
+    fn to_bytes(&self) -> &[u8] {
+        bytemuck::bytes_of(self)
+    }
+}
+
+pub trait DeviceHelper {
+    fn buffer<T: ToBytes + ?Sized>(&self, data: &T, usage: BufferUsages) -> Buffer;
+
+    fn pipeline(
         &self,
         label: &str,
         layout: Option<&PipelineLayout>,
@@ -31,7 +51,15 @@ pub(crate) trait DeviceHelper {
 }
 
 impl DeviceHelper for Device {
-    fn make_pipeline(
+    fn buffer<T: ToBytes + ?Sized>(&self, data: &T, usage: BufferUsages) -> Buffer {
+        self.create_buffer_init(&BufferInitDescriptor {
+            label: None,
+            contents: data.to_bytes(),
+            usage,
+        })
+    }
+
+    fn pipeline(
         &self,
         label: &str,
         layout: Option<&PipelineLayout>,

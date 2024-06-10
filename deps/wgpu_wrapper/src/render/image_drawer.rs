@@ -6,7 +6,6 @@ use gm::{
     volume::Vertex,
 };
 use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
     BindGroupLayout, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPipeline, ShaderStages,
     TextureFormat,
 };
@@ -66,7 +65,7 @@ impl ImageDrawer {
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = device.make_pipeline(
+        let render_pipeline = device.pipeline(
             "Colored Image Render Pipeline",
             Some(&pipeline_layout),
             &shader,
@@ -76,15 +75,9 @@ impl ImageDrawer {
             &[Vertex::VERTEX_LAYOUT],
         );
 
-        let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    "Colored Image Vertex Buffer".into(),
-            contents: bytemuck::cast_slice(&VERTICES),
-            usage:    BufferUsages::VERTEX,
-        });
-
         Self {
             render_pipeline,
-            vertex_buffer,
+            vertex_buffer: device.buffer(&VERTICES, BufferUsages::VERTEX),
             vertex_layout,
         }
     }

@@ -1,13 +1,11 @@
-use bytemuck::{bytes_of, cast_slice};
+use bytemuck::bytes_of;
 use gm::{
     flat::{Point, Size},
     Color,
 };
 use wgpu::{
-    include_wgsl,
-    util::{BufferInitDescriptor, DeviceExt},
-    BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
-    RenderPipeline, ShaderStages, TextureFormat,
+    include_wgsl, BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology,
+    RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
 use crate::{
@@ -49,16 +47,15 @@ impl SpriteDrawer {
             push_constant_ranges: &[],
         });
 
-        let view_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    Some("Camera Buffer"),
-            contents: bytes_of(&SpriteView {
+        let view_buffer = device.buffer(
+            &SpriteView {
                 camera_pos:      Point::default(),
                 resolution:      (1000, 1000).into(),
                 camera_rotation: 0.0,
                 scale:           1.0,
-            }),
-            usage:    BufferUsages::UNIFORM | BufferUsages::COPY_DST,
-        });
+            },
+            BufferUsages::UNIFORM | BufferUsages::COPY_DST,
+        );
 
         let view_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             layout:  &sprite_view_layout,
@@ -69,7 +66,7 @@ impl SpriteDrawer {
             label:   Some("Sprite View Bind Group"),
         });
 
-        let pipeline = device.make_pipeline(
+        let pipeline = device.pipeline(
             "Sprite Drawer Render Pipeline",
             Some(&uniform_layout),
             &shader,
@@ -79,18 +76,12 @@ impl SpriteDrawer {
             &[Point::VERTEX_LAYOUT, SpriteInstance::VERTEX_LAYOUT],
         );
 
-        let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    Some("Rect Vertex Buffer"),
-            contents: cast_slice(VERTICES),
-            usage:    BufferUsages::VERTEX,
-        });
-
         Self {
             view: SpriteView::default(),
             pipeline,
             view_buffer,
             view_bind_group,
-            vertex_buffer,
+            vertex_buffer: device.buffer(VERTICES, BufferUsages::VERTEX),
             instances: VecBuffer::default(),
         }
     }

@@ -1,16 +1,14 @@
 use std::ops::Range;
 
-use bytemuck::cast_slice;
 use gm::{
     flat::{Points, Size},
     Color,
 };
 use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
     BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, Buffer, BufferBinding, BufferUsages,
 };
 
-use crate::WGPUApp;
+use crate::{utils::DeviceHelper, WGPUApp};
 
 #[derive(Debug)]
 pub struct PathData {
@@ -37,11 +35,7 @@ impl PathData {
         let device = WGPUApp::device();
         let path_layout = WGPUApp::path_layout();
 
-        let buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    "PathData Buffer".into(),
-            contents: cast_slice(points),
-            usage:    BufferUsages::VERTEX,
-        });
+        let buffer = device.buffer(points.as_slice(), BufferUsages::VERTEX);
 
         let bind_group = make_bind_group(path_layout, &color, size);
 
@@ -62,17 +56,8 @@ impl PathData {
 fn make_bind_group(bind_group_layout: &BindGroupLayout, color: &Color, size: Size) -> BindGroup {
     let device = WGPUApp::device();
 
-    let size_uniform_buffer = device.create_buffer_init(&BufferInitDescriptor {
-        label:    Some("Path Color Uniform Buffer"),
-        contents: cast_slice(&size.as_slice()),
-        usage:    BufferUsages::UNIFORM,
-    });
-
-    let color_uniform_buffer = device.create_buffer_init(&BufferInitDescriptor {
-        label:    Some("Path Color Uniform Buffer"),
-        contents: cast_slice(&color.as_slice()),
-        usage:    BufferUsages::UNIFORM,
-    });
+    let size_uniform_buffer = device.buffer(&size, BufferUsages::UNIFORM);
+    let color_uniform_buffer = device.buffer(color, BufferUsages::UNIFORM);
 
     device.create_bind_group(&wgpu::BindGroupDescriptor {
         label:   Some("path_bind_group"),

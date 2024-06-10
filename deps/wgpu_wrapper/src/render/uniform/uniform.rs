@@ -1,15 +1,14 @@
 use std::collections::HashMap;
 
-use bytemuck::{bytes_of, Pod};
+use bytemuck::Pod;
 use gm::Color;
 use refs::MainLock;
 use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
     BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
     BindingResource, BindingType, BufferBinding, BufferBindingType, ShaderStages,
 };
 
-use crate::{BufferUsages, WGPUApp};
+use crate::{utils::DeviceHelper, BufferUsages, WGPUApp};
 
 static Z_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
 static COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
@@ -25,11 +24,7 @@ pub(crate) fn cached_color_bind(color: Color, layout: &BindGroupLayout) -> &'sta
 pub fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> BindGroup {
     let device = WGPUApp::device();
 
-    let buffer = device.create_buffer_init(&BufferInitDescriptor {
-        label:    Some("uniform_buffer"),
-        contents: bytes_of(data),
-        usage:    BufferUsages::UNIFORM,
-    });
+    let buffer = device.buffer(data, BufferUsages::UNIFORM);
 
     let entry = BindGroupEntry {
         binding:  0,

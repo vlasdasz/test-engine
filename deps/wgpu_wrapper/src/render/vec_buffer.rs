@@ -1,10 +1,7 @@
-use bytemuck::{cast_slice, Pod};
-use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
-    Buffer,
-};
+use bytemuck::Pod;
+use wgpu::Buffer;
 
-use crate::{BufferUsages, WGPUApp};
+use crate::{utils::DeviceHelper, BufferUsages, WGPUApp};
 
 #[derive(Debug)]
 pub(crate) struct VecBuffer<T> {
@@ -23,11 +20,7 @@ impl<T: Pod> VecBuffer<T> {
     }
 
     pub fn load(&mut self) {
-        self.buffer = WGPUApp::device().create_buffer_init(&BufferInitDescriptor {
-            label:    Some("Instance Buffer"),
-            contents: cast_slice(&self.data),
-            usage:    BufferUsages::VERTEX,
-        });
+        self.buffer = WGPUApp::device().buffer(self.data.as_slice(), BufferUsages::VERTEX);
         self.len = self.data.len().try_into().unwrap();
         self.data.clear();
     }
@@ -42,11 +35,7 @@ impl<T> Default for VecBuffer<T> {
         Self {
             len:    0,
             data:   vec![],
-            buffer: WGPUApp::device().create_buffer_init(&BufferInitDescriptor {
-                label:    Some("empty_buffer"),
-                contents: &[],
-                usage:    BufferUsages::VERTEX,
-            }),
+            buffer: WGPUApp::device().buffer(&(), BufferUsages::VERTEX),
         }
     }
 }

@@ -9,9 +9,8 @@ use gm::{
 };
 use refs::Weak;
 use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
-    BindGroup, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline,
-    ShaderStages, TextureFormat,
+    BindGroup, BindGroupDescriptor, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass,
+    RenderPipeline, ShaderStages, TextureFormat,
 };
 
 use crate::{
@@ -72,7 +71,7 @@ impl TexturedSpriteDrawer {
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = device.make_pipeline(
+        let render_pipeline = device.pipeline(
             "Textured Sprite Render Pipeline",
             Some(&pipeline_layout),
             &shader,
@@ -82,24 +81,19 @@ impl TexturedSpriteDrawer {
             &[Vertex::VERTEX_LAYOUT, SpriteInstance::VERTEX_LAYOUT],
         );
 
-        let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    "Textured Sprite Vertex Buffer".into(),
-            contents: bytemuck::cast_slice(&VERTICES),
-            usage:    BufferUsages::VERTEX,
-        });
+        let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);
 
-        let view_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    Some("Camera Buffer"),
-            contents: bytes_of(&SpriteView {
+        let view_buffer = device.buffer(
+            &SpriteView {
                 camera_pos:      Point::default(),
                 resolution:      (1000, 1000).into(),
                 camera_rotation: 0.0,
                 scale:           1.0,
-            }),
-            usage:    BufferUsages::UNIFORM | BufferUsages::COPY_DST,
-        });
+            },
+            BufferUsages::UNIFORM | BufferUsages::COPY_DST,
+        );
 
-        let view_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+        let view_bind_group = device.create_bind_group(&BindGroupDescriptor {
             layout:  &sprite_view_layout,
             entries: &[wgpu::BindGroupEntry {
                 binding:  0,

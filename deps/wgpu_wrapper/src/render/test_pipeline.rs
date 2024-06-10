@@ -3,7 +3,6 @@ use std::ops::Range;
 use bytemuck::{Pod, Zeroable};
 use gm::{checked_usize_to_u32, flat::Point, volume::Vertex};
 use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
     BindGroupLayout, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPipeline, ShaderStages,
     TextureFormat,
 };
@@ -73,7 +72,7 @@ impl TestPipeline {
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = device.make_pipeline(
+        let render_pipeline = device.pipeline(
             "background_pipeline",
             Some(&pipeline_layout),
             &shader,
@@ -83,20 +82,14 @@ impl TestPipeline {
             &[Vertex::VERTEX_LAYOUT],
         );
 
-        let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    "background_vertex_buffer".into(),
-            contents: bytemuck::cast_slice(&VERTICES),
-            usage:    BufferUsages::VERTEX,
-        });
-
-        let view_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    "background_view_buffer".into(),
-            contents: bytemuck::bytes_of(&BackgroundView {
-                pos: Default::default(),
+        let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);
+        let view_buffer = device.buffer(
+            &BackgroundView {
+                pos: Point::default(),
                 z:   0.0,
-            }),
-            usage:    BufferUsages::UNIFORM,
-        });
+            },
+            BufferUsages::UNIFORM,
+        );
 
         Self {
             render_pipeline,

@@ -64,7 +64,7 @@ impl PathDrawer {
             push_constant_ranges: &[],
         });
 
-        let pipeline = device.make_pipeline(
+        let pipeline = device.pipeline(
             "Path Fill Render Pipeline",
             Some(&pipeline_layout),
             &shader,

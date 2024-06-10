@@ -2,9 +2,8 @@ use gm::flat::Rect;
 use refs::Weak;
 use ui_proc::view;
 use wgpu_wrapper::{
-    cast_slice,
     image::{Image, ToImage},
-    image_vertices_with_shrink, Buffer, BufferInitDescriptor, BufferUsages, DeviceExt, WGPUApp,
+    image_vertices_with_shrink, Buffer, BufferUsages, DeviceHelper, WGPUApp,
 };
 
 use crate::view::ViewFrame;
@@ -59,11 +58,7 @@ impl ImageView {
 
         let vertices = image_vertices_with_shrink(x_offset, y_offset, width_shrink, height_shrink);
 
-        let buffer = WGPUApp::device().create_buffer_init(&BufferInitDescriptor {
-            label:    "Colored Image Cropped Vertex Buffer".into(),
-            contents: cast_slice(&vertices),
-            usage:    BufferUsages::VERTEX,
-        });
+        let buffer = WGPUApp::device().buffer(&vertices, BufferUsages::VERTEX);
 
         self.cropped = buffer.into();
     }

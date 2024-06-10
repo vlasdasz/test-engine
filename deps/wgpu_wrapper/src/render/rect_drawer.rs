@@ -1,16 +1,13 @@
 use std::ops::Range;
 
-use bytemuck::cast_slice;
 use gm::{
     checked_usize_to_u32,
     flat::{Point, Rect},
     Color,
 };
 use wgpu::{
-    include_wgsl,
-    util::{BufferInitDescriptor, DeviceExt},
-    BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology,
-    RenderPass, RenderPipeline, ShaderStages, TextureFormat,
+    include_wgsl, BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode,
+    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
 };
 
 use crate::{
@@ -54,8 +51,8 @@ impl RectDrawer {
             push_constant_ranges: &[],
         });
 
-        let pipeline = device.make_pipeline(
-            "Rect Fill Render Pipeline",
+        let pipeline = device.pipeline(
+            "rect_fill_pipeline",
             Some(&pipeline_layout),
             &shader,
             texture_format,
@@ -64,15 +61,9 @@ impl RectDrawer {
             &[Point::VERTEX_LAYOUT],
         );
 
-        let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label:    Some("Rect Vertex Buffer"),
-            contents: cast_slice(VERTICES),
-            usage:    BufferUsages::VERTEX,
-        });
-
         Self {
             pipeline,
-            vertex_buffer,
+            vertex_buffer: device.buffer(VERTICES, BufferUsages::VERTEX),
             vertex_layout,
             fragment_layout,
         }
