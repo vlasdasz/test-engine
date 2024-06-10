@@ -40,6 +40,10 @@ impl ColorMeter {
             };
 
             on_main(move || {
+                if self.is_null() {
+                    return;
+                }
+
                 self.screenshot = screenshot;
 
                 // Image::free_with_name("Screenshot");

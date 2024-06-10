@@ -11,6 +11,7 @@ use crate::{
         path_drawer::PathDrawer,
         rect_drawer::RectDrawer,
         sprite_drawer::{SpriteDrawer, TexturedSpriteDrawer},
+        test_pipeline::TestPipeline,
     },
     state::TEXTURE_FORMAT,
 };
@@ -20,6 +21,7 @@ pub struct WGPUDrawer {
     image_drawer:           ImageDrawer,
     pub(crate) path_drawer: PathDrawer,
 
+    pub test_pipeline:          TestPipeline,
     pub rect_drawer:            RectDrawer,
     pub sprite_drawer:          SpriteDrawer,
     pub textured_sprite_drawer: TexturedSpriteDrawer,
@@ -34,6 +36,7 @@ impl WGPUDrawer {
 
             sprite_drawer:          SpriteDrawer::new(TEXTURE_FORMAT),
             textured_sprite_drawer: TexturedSpriteDrawer::new(TEXTURE_FORMAT),
+            test_pipeline:          TestPipeline::new(TEXTURE_FORMAT),
         })
     }
 }

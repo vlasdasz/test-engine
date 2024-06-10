@@ -57,6 +57,11 @@ pub struct TestGameView {
 impl ViewSetup for TestGameView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
+        if true {
+            UIManager::set_view(RenderView::new());
+            return;
+        }
+
         DebugView::enable();
 
         LevelManager::set_level(TestLevel::default());

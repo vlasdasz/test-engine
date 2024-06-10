@@ -1,17 +1,27 @@
 use test_engine::{
-    ui::{view, Color, Rect, ViewCallbacks},
-    RenderPass, WGPUApp,
+    refs::Weak,
+    ui::{view, Image, NumberView, ViewCallbacks, ViewData, ViewSetup},
+    DataManager, RenderPass, WGPUApp,
 };
 
 #[view]
-pub struct RenderView {}
+pub struct RenderView {
+    #[init]
+    val: NumberView<f32>,
+}
+
+impl ViewSetup for RenderView {
+    fn setup(mut self: Weak<Self>) {
+        self.val.set_step(0.1).place().size(50, 100).bl(0);
+    }
+}
 
 impl ViewCallbacks for RenderView {
-    fn render<'a>(&self, pass: &mut RenderPass) {
+    fn render(&self, pass: &mut RenderPass) {
         let drawer = WGPUApp::drawer();
 
-        drawer
-            .rect_drawer
-            .draw(pass, &Rect::new(200.0, 500.0, 100.0, 150.0), &Color::GREEN, 0.5);
+        let image = Image::get("sky.png");
+
+        drawer.test_pipeline.draw(image.get_static(), pass, 0.5);
     }
 }

@@ -40,14 +40,14 @@ impl Texture {
 
         let device = WGPUApp::device();
 
-        let texture = device.create_texture(&wgpu::TextureDescriptor {
+        let texture = device.create_texture(&TextureDescriptor {
             label: label.into(),
             size: extend_size,
             mip_level_count: 1,
             sample_count: 1,
-            dimension: wgpu::TextureDimension::D2,
+            dimension: TextureDimension::D2,
             format,
-            usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
+            usage: TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_DST,
             view_formats: &[],
         });
 
@@ -71,9 +71,9 @@ impl Texture {
 
         let sampler = device.create_sampler(&SamplerDescriptor {
             label: "texture_sampler".into(),
-            address_mode_u: AddressMode::ClampToEdge,
-            address_mode_v: AddressMode::ClampToEdge,
-            address_mode_w: AddressMode::ClampToEdge,
+            address_mode_u: AddressMode::Repeat,
+            address_mode_v: AddressMode::Repeat,
+            address_mode_w: AddressMode::Repeat,
             mag_filter: FilterMode::Linear,
             min_filter: FilterMode::Nearest,
             mipmap_filter: FilterMode::Nearest,

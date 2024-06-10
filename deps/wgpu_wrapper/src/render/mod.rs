@@ -3,6 +3,7 @@ pub mod path_data;
 pub mod path_drawer;
 pub mod rect_drawer;
 pub mod sprite_drawer;
+pub mod test_pipeline;
 pub mod uniform;
 mod vec_buffer;
 pub mod vertex_layout;
