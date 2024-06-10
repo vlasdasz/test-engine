@@ -18,7 +18,7 @@ use crate::{
         uniform::{cached_color_bind, cached_z_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
-    utils::make_pipeline,
+    utils::DeviceHelper,
     WGPUApp,
 };
 
@@ -54,7 +54,7 @@ impl RectDrawer {
             push_constant_ranges: &[],
         });
 
-        let pipeline = make_pipeline(
+        let pipeline = device.make_pipeline(
             "Rect Fill Render Pipeline",
             Some(&pipeline_layout),
             &shader,

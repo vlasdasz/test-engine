@@ -22,7 +22,7 @@ use crate::{
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
-    utils::make_pipeline,
+    utils::DeviceHelper,
     WGPUApp,
 };
 
@@ -72,7 +72,7 @@ impl TexturedSpriteDrawer {
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = make_pipeline(
+        let render_pipeline = device.make_pipeline(
             "Textured Sprite Render Pipeline",
             Some(&pipeline_layout),
             &shader,

@@ -17,7 +17,7 @@ use crate::{
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
-    utils::make_pipeline,
+    utils::DeviceHelper,
     WGPUApp,
 };
 
@@ -69,7 +69,7 @@ impl SpriteDrawer {
             label:   Some("Sprite View Bind Group"),
         });
 
-        let pipeline = make_pipeline(
+        let pipeline = device.make_pipeline(
             "Sprite Drawer Render Pipeline",
             Some(&uniform_layout),
             &shader,

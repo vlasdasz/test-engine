@@ -15,20 +15,14 @@ static Z_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
 static COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 
 pub(crate) fn cached_z_bind(z: f32, layout: &BindGroupLayout) -> &'static BindGroup {
-    Z_BINDS
-        .get_mut()
-        .entry(z.to_bits())
-        .or_insert_with(|| make_bind_internal(&z, layout))
+    Z_BINDS.get_mut().entry(z.to_bits()).or_insert_with(|| make_bind(&z, layout))
 }
 
 pub(crate) fn cached_color_bind(color: Color, layout: &BindGroupLayout) -> &'static BindGroup {
-    COLOR_BINDS
-        .get_mut()
-        .entry(color)
-        .or_insert_with(|| make_bind_internal(&color, layout))
+    COLOR_BINDS.get_mut().entry(color).or_insert_with(|| make_bind(&color, layout))
 }
 
-fn make_bind_internal<T: Pod>(data: &T, layout: &BindGroupLayout) -> BindGroup {
+pub fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> BindGroup {
     let device = WGPUApp::device();
 
     let buffer = device.create_buffer_init(&BufferInitDescriptor {

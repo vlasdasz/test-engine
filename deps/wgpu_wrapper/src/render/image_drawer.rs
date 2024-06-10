@@ -17,7 +17,7 @@ use crate::{
         uniform::{cached_z_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
-    utils::make_pipeline,
+    utils::DeviceHelper,
     WGPUApp,
 };
 
@@ -66,7 +66,7 @@ impl ImageDrawer {
             push_constant_ranges: &[],
         });
 
-        let render_pipeline = make_pipeline(
+        let render_pipeline = device.make_pipeline(
             "Colored Image Render Pipeline",
             Some(&pipeline_layout),
             &shader,
