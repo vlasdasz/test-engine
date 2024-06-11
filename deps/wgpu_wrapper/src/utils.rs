@@ -1,10 +1,10 @@
 use bytemuck::Pod;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
-    BlendState, Buffer, ColorTargetState, ColorWrites, DepthStencilState, Device, Face, FragmentState,
-    FrontFace, MultisampleState, PipelineCompilationOptions, PipelineLayout, PolygonMode, PrimitiveState,
-    PrimitiveTopology, RenderPipeline, RenderPipelineDescriptor, ShaderModule, TextureFormat,
-    VertexBufferLayout, VertexState,
+    BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BlendState, Buffer, ColorTargetState,
+    ColorWrites, DepthStencilState, Device, Face, FragmentState, FrontFace, MultisampleState,
+    PipelineCompilationOptions, PipelineLayout, PolygonMode, PrimitiveState, PrimitiveTopology,
+    RenderPipeline, RenderPipelineDescriptor, ShaderModule, TextureFormat, VertexBufferLayout, VertexState,
 };
 
 use crate::{image::Texture, BufferUsages};
@@ -38,6 +38,8 @@ impl<T: Pod> ToBytes for T {
 pub trait DeviceHelper {
     fn buffer<T: ToBytes + ?Sized>(&self, data: &T, usage: BufferUsages) -> Buffer;
 
+    fn bind(&self, buffer: &Buffer, layout: &BindGroupLayout) -> BindGroup;
+
     fn pipeline(
         &self,
         label: &str,
@@ -56,6 +58,17 @@ impl DeviceHelper for Device {
             label: None,
             contents: data.to_bytes(),
             usage,
+        })
+    }
+
+    fn bind(&self, buffer: &Buffer, layout: &BindGroupLayout) -> BindGroup {
+        self.create_bind_group(&BindGroupDescriptor {
+            label: None,
+            layout,
+            entries: &[BindGroupEntry {
+                binding:  0,
+                resource: buffer.as_entire_binding(),
+            }],
         })
     }
 

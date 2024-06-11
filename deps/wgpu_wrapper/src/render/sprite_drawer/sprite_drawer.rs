@@ -57,14 +57,7 @@ impl SpriteDrawer {
             BufferUsages::UNIFORM | BufferUsages::COPY_DST,
         );
 
-        let view_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout:  &sprite_view_layout,
-            entries: &[wgpu::BindGroupEntry {
-                binding:  0,
-                resource: view_buffer.as_entire_binding(),
-            }],
-            label:   Some("Sprite View Bind Group"),
-        });
+        let view_bind_group = device.bind(&view_buffer, &sprite_view_layout);
 
         let pipeline = device.pipeline(
             "Sprite Drawer Render Pipeline",

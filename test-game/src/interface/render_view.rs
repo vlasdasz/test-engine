@@ -22,6 +22,8 @@ impl ViewCallbacks for RenderView {
 
         let image = Image::get("sky.png");
 
-        drawer.test_pipeline.draw(image.get_static(), pass, 0.5);
+        drawer
+            .test_pipeline
+            .draw(pass, image.get_static(), (self.val.value(), 0).into(), 0.5);
     }
 }

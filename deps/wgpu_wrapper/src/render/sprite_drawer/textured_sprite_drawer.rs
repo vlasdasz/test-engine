@@ -9,8 +9,8 @@ use gm::{
 };
 use refs::Weak;
 use wgpu::{
-    BindGroup, BindGroupDescriptor, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass,
-    RenderPipeline, ShaderStages, TextureFormat,
+    BindGroup, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline,
+    ShaderStages, TextureFormat,
 };
 
 use crate::{
@@ -93,14 +93,7 @@ impl TexturedSpriteDrawer {
             BufferUsages::UNIFORM | BufferUsages::COPY_DST,
         );
 
-        let view_bind_group = device.create_bind_group(&BindGroupDescriptor {
-            layout:  &sprite_view_layout,
-            entries: &[wgpu::BindGroupEntry {
-                binding:  0,
-                resource: view_buffer.as_entire_binding(),
-            }],
-            label:   Some("Sprite View Bind Group"),
-        });
+        let view_bind_group = device.bind(&view_buffer, &sprite_view_layout);
 
         Self {
             render_pipeline,

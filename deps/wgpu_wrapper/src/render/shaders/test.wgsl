@@ -11,9 +11,10 @@ struct VertexOutput {
 struct BackgroundView {
     pos: vec2<f32>,
     z: f32,
+    _padding: u32,
 }
 
-@group(0) @binding(0) var<uniform> z_pos: f32;
+@group(0) @binding(0) var<uniform> view: BackgroundView;
 
 @vertex
 fn v_main(
@@ -21,7 +22,7 @@ fn v_main(
 ) -> VertexOutput {
     var out: VertexOutput;
     out.uv = vertex.uv;
-    out.pos = vec4<f32>(vertex.pos, z_pos, 1.0);
+    out.pos = vec4<f32>(vertex.pos + view.pos, view.z, 1.0);
     return out;
 }
 

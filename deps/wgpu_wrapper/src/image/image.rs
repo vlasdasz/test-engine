@@ -29,7 +29,7 @@ impl Image {
         let device = WGPUApp::device();
 
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            label:   Some("image_bind_group"),
+            label:   "image_bind_group".into(),
             layout:  &Self::uniform_layout(),
             entries: &[
                 BindGroupEntry {
