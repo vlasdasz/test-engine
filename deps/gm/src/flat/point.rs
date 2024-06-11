@@ -69,12 +69,16 @@ impl Point<f32> {
         }
     }
 
-    pub fn positive(&self) -> bool {
+    pub fn is_positive(&self) -> bool {
         self.x >= 0.0 && self.y >= 0.0
     }
 
-    pub fn negative(&self) -> bool {
-        !self.positive()
+    pub fn is_negative(&self) -> bool {
+        !self.is_positive()
+    }
+
+    pub fn neg(&self) -> Self {
+        (-self.x, -self.y).into()
     }
 }
 

@@ -5,7 +5,7 @@ use test_engine::{
         level, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
     },
     refs::Weak,
-    ui::{Color, Point},
+    ui::{Color, Image, Point},
     DataManager,
 };
 
@@ -50,6 +50,8 @@ impl LevelSetup for TestLevel {
         // });
 
         // self.add_rect((30, 30, 40, 25)).set_image(drawn);
+
+        self.background = Image::get("sky.png");
 
         self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, -5))
             .set_color(Color::random());

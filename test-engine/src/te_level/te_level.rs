@@ -1,5 +1,5 @@
 use level::LevelManager;
-use manage::ExistsManaged;
+use manage::{data_manager::DataManager, ExistsManaged};
 use ui::UIManager;
 use wgpu::RenderPass;
 use wgpu_wrapper::WGPUApp;
@@ -18,8 +18,22 @@ impl TELevel {
         let resolution = UIManager::window_size();
 
         let drawer = WGPUApp::drawer();
+        let level = LevelManager::level();
+        let camera_pos = *LevelManager::camera_pos();
+        let scale = *LevelManager::scale();
 
-        for sprite in LevelManager::level_weak().sprites() {
+        if level.background.is_ok() {
+            drawer.background.draw(
+                pass,
+                level.background.get_static(),
+                resolution,
+                camera_pos.neg() / 10,
+                0.0,
+                scale,
+            );
+        }
+
+        for sprite in level.sprites() {
             if sprite.image.exists_managed() {
                 drawer.textured_sprite.add_instance(
                     sprite.image,
@@ -38,19 +52,8 @@ impl TELevel {
             }
         }
 
-        drawer.colored_sprite.draw(
-            pass,
-            *LevelManager::scale(),
-            0.0,
-            *LevelManager::camera_pos(),
-            resolution,
-        );
-        drawer.textured_sprite.draw(
-            pass,
-            *LevelManager::scale(),
-            0.0,
-            *LevelManager::camera_pos(),
-            resolution,
-        );
+        drawer.colored_sprite.draw(pass, scale, 0.0, camera_pos, resolution);
+
+        drawer.textured_sprite.draw(pass, scale, 0.0, camera_pos, resolution);
     }
 }

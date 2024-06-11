@@ -59,6 +59,8 @@ impl BenchmarkLevel {
 
 impl LevelSetup for BenchmarkLevel {
     fn setup(&mut self) {
+        self.background = Image::get("sky.png");
+
         self.player = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
         self.player.set_color(Color::random());
 

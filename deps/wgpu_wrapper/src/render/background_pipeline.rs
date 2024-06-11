@@ -1,7 +1,11 @@
 use std::ops::Range;
 
 use bytemuck::{Pod, Zeroable};
-use gm::{checked_usize_to_u32, flat::Point, volume::Vertex};
+use gm::{
+    checked_usize_to_u32,
+    flat::{Point, Size},
+    volume::Vertex,
+};
 use wgpu::{
     BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
     RenderPipeline, ShaderStages, TextureFormat,
@@ -14,25 +18,26 @@ use crate::{
     WGPUApp,
 };
 
-const VAL: f32 = 0.8;
+const VAL: f32 = 100_000.0;
+const UV: f32 = 500.0;
 
 const fn image_vertices() -> [Vertex; 4] {
     [
         Vertex {
             pos: Point::new(-VAL, VAL),
-            uv:  Point::new(-1.0, -1.0),
+            uv:  Point::new(-UV, -UV),
         },
         Vertex {
             pos: Point::new(-VAL, -VAL),
-            uv:  Point::new(-1.0, VAL * 2.0),
+            uv:  Point::new(-UV, UV),
         },
         Vertex {
             pos: Point::new(VAL, VAL),
-            uv:  Point::new(VAL * 2.0, -1.0),
+            uv:  Point::new(UV, -UV),
         },
         Vertex {
             pos: Point::new(VAL, -VAL),
-            uv:  Point::new(VAL * 2.0, VAL * 2.0),
+            uv:  Point::new(UV, UV),
         },
     ]
 }
@@ -44,9 +49,10 @@ const RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 #[repr(C)]
 #[derive(Debug, Default, Copy, Clone, Zeroable, Pod, PartialEq)]
 struct BackgroundView {
-    pos:      Point<f32>,
-    z:        f32,
-    _padding: u32,
+    camera_pos:      Point<f32>,
+    resolution:      Size<f32>,
+    camera_rotation: f32,
+    scale:           f32,
 }
 
 #[derive(Debug)]
@@ -82,9 +88,10 @@ impl BackgroundPipeline {
         );
 
         let view = BackgroundView {
-            pos:      Point::default(),
-            z:        0.0,
-            _padding: 0,
+            camera_pos:      Point::default(),
+            resolution:      (1000, 1000).into(),
+            camera_rotation: 0.0,
+            scale:           1.0,
         };
 
         let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);
@@ -105,12 +112,19 @@ impl BackgroundPipeline {
         &'a mut self,
         render_pass: &mut RenderPass<'a>,
         image: &'static Image,
-        pos: Point,
-        z: f32,
+        resolution: Size,
+        camera_pos: Point,
+        camera_rotation: f32,
+        scale: f32,
     ) {
         render_pass.set_pipeline(&self.render_pipeline);
 
-        let view = BackgroundView { pos, z, _padding: 0 };
+        let view = BackgroundView {
+            camera_pos,
+            resolution,
+            camera_rotation,
+            scale,
+        };
 
         if view != self.view {
             self.view = view;

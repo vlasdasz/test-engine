@@ -22,8 +22,13 @@ impl ViewCallbacks for RenderView {
 
         let image = Image::get("sky.png");
 
-        drawer
-            .background
-            .draw(pass, image.get_static(), (self.val.value(), 0).into(), 0.5);
+        drawer.background.draw(
+            pass,
+            image.get_static(),
+            (1000, 1000).into(),
+            (self.val.value(), 0).into(),
+            0.0,
+            1.0,
+        );
     }
 }

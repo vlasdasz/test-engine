@@ -13,12 +13,15 @@ use rapier2d::{
 use refs::{Own, Weak};
 use smart_default::SmartDefault;
 use vents::Event;
+use wgpu_wrapper::image::Image;
 
 use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
 
 #[derive(SmartDefault)]
 pub struct LevelBase {
     pub player: Weak<Player>,
+
+    pub background: Weak<Image>,
 
     pub cursor_position: Point,
 
