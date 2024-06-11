@@ -84,9 +84,9 @@ impl ImageDrawer {
 
     pub fn draw<'a>(
         &'a self,
+        render_pass: &mut wgpu::RenderPass<'a>,
         image: &'static Image,
         rect: &Rect,
-        render_pass: &mut wgpu::RenderPass<'a>,
         cropped_vertices: Option<&'a Buffer>,
         z_position: f32,
     ) {

@@ -2,8 +2,9 @@ use anyhow::Result;
 use gm::flat::Size;
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
-    AddressMode, Device, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler, SamplerDescriptor,
-    TextureAspect, TextureDescriptor, TextureDimension, TextureUsages, TextureView, TextureViewDescriptor,
+    AddressMode, Device, Extent3d, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler,
+    SamplerDescriptor, TextureAspect, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
+    TextureView, TextureViewDescriptor,
 };
 
 use crate::WGPUApp;
@@ -18,7 +19,7 @@ pub struct Texture {
 }
 
 impl Texture {
-    pub const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
+    pub const DEPTH_FORMAT: TextureFormat = TextureFormat::Depth32Float;
 
     pub fn from_file_bytes(bytes: &[u8], label: &str) -> Result<Self> {
         let img = image::load_from_memory(bytes)?;
@@ -33,8 +34,8 @@ impl Texture {
         };
 
         let format = match channels {
-            1 => wgpu::TextureFormat::R8Unorm,
-            4 => wgpu::TextureFormat::Rgba8UnormSrgb,
+            1 => TextureFormat::R8Unorm,
+            4 => TextureFormat::Rgba8UnormSrgb,
             ch => panic!("Invalid number of channels: {ch}"),
         };
 
@@ -101,29 +102,27 @@ impl Texture {
     }
 
     pub fn create_depth_texture(device: &Device, size: Size<u32>, label: &str) -> Self {
-        let extend = wgpu::Extent3d {
-            // 2.
+        let extend = Extent3d {
             width:                 size.width,
             height:                size.height,
             depth_or_array_layers: 1,
         };
-        let desc = TextureDescriptor {
-            label:           Some(label),
+
+        let texture = device.create_texture(&TextureDescriptor {
+            label:           label.into(),
             size:            extend,
             mip_level_count: 1,
             sample_count:    1,
             dimension:       TextureDimension::D2,
             format:          Self::DEPTH_FORMAT,
-            usage:           TextureUsages::RENDER_ATTACHMENT // 3.
-                | TextureUsages::TEXTURE_BINDING,
+            usage:           TextureUsages::RENDER_ATTACHMENT | TextureUsages::TEXTURE_BINDING,
             view_formats:    &[],
-        };
-
-        let texture = device.create_texture(&desc);
+        });
 
         let view = texture.create_view(&TextureViewDescriptor::default());
+
         let sampler = device.create_sampler(&SamplerDescriptor {
-            // 4.
+            label: "depth_texture_sampler".into(),
             address_mode_u: AddressMode::ClampToEdge,
             address_mode_v: AddressMode::ClampToEdge,
             address_mode_w: AddressMode::ClampToEdge,

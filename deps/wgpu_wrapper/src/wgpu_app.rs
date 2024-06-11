@@ -289,7 +289,7 @@ impl WGPUApp {
     }
 
     pub fn path_layout() -> &'static BindGroupLayout {
-        &Self::drawer().path_drawer.color_size_layout
+        &Self::drawer().path.color_size_layout
     }
 
     pub fn fps(&self) -> f32 {

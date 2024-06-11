@@ -1,39 +1,15 @@
-use bytemuck::Pod;
 use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BlendState, Buffer, ColorTargetState,
-    ColorWrites, DepthStencilState, Device, Face, FragmentState, FrontFace, MultisampleState,
-    PipelineCompilationOptions, PipelineLayout, PolygonMode, PrimitiveState, PrimitiveTopology,
-    RenderPipeline, RenderPipelineDescriptor, ShaderModule, TextureFormat, VertexBufferLayout, VertexState,
+    ColorWrites, Device, Face, FragmentState, FrontFace, MultisampleState, PipelineCompilationOptions,
+    PipelineLayout, PrimitiveState, PrimitiveTopology, RenderPipeline, RenderPipelineDescriptor,
+    ShaderModule, TextureFormat, VertexBufferLayout, VertexState,
 };
 
-use crate::{image::Texture, BufferUsages};
-
-pub fn depth_stencil_state() -> DepthStencilState {
-    DepthStencilState {
-        format:              Texture::DEPTH_FORMAT,
-        depth_write_enabled: true,
-        depth_compare:       wgpu::CompareFunction::Less,
-        stencil:             wgpu::StencilState::default(),
-        bias:                wgpu::DepthBiasState::default(),
-    }
-}
-
-pub trait ToBytes {
-    fn to_bytes(&self) -> &[u8];
-}
-
-impl<T: Pod> ToBytes for [T] {
-    fn to_bytes(&self) -> &[u8] {
-        bytemuck::cast_slice(self)
-    }
-}
-
-impl<T: Pod> ToBytes for T {
-    fn to_bytes(&self) -> &[u8] {
-        bytemuck::bytes_of(self)
-    }
-}
+use crate::{
+    utils::{depth_stencil_state, ToBytes},
+    BufferUsages, PolygonMode,
+};
 
 pub trait DeviceHelper {
     fn buffer<T: ToBytes + ?Sized>(&self, data: &T, usage: BufferUsages) -> Buffer;

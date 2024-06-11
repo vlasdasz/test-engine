@@ -1,4 +1,3 @@
-use bytemuck::bytes_of;
 use gm::{
     flat::{Point, Size},
     Color,
@@ -15,7 +14,7 @@ use crate::{
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
-    utils::DeviceHelper,
+    utils::{BufferHelper, DeviceHelper},
     WGPUApp,
 };
 
@@ -39,10 +38,10 @@ impl SpriteDrawer {
 
         let shader = device.create_shader_module(include_wgsl!("../shaders/sprite.wgsl"));
 
-        let sprite_view_layout = make_uniform_layout("Sprites View Layout", ShaderStages::VERTEX_FRAGMENT);
+        let sprite_view_layout = make_uniform_layout("sprites_view_layout", ShaderStages::VERTEX_FRAGMENT);
 
         let uniform_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label:                Some("Sprite Pipeline Layout"),
+            label:                "sprite_pipeline_layout".into(),
             bind_group_layouts:   &[&sprite_view_layout],
             push_constant_ranges: &[],
         });
@@ -60,7 +59,7 @@ impl SpriteDrawer {
         let view_bind_group = device.bind(&view_buffer, &sprite_view_layout);
 
         let pipeline = device.pipeline(
-            "Sprite Drawer Render Pipeline",
+            "sprite_driver_pipeline",
             Some(&uniform_layout),
             &shader,
             texture_format,
@@ -108,7 +107,7 @@ impl SpriteDrawer {
 
         if view != self.view {
             self.view = view;
-            WGPUApp::queue().write_buffer(&self.view_buffer, 0, bytes_of(&view));
+            self.view_buffer.update(view);
         }
 
         self.instances.load();

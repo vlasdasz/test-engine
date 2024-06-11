@@ -87,7 +87,7 @@ impl UI {
         let clamped_frame = frame.clamp_to(root_size);
 
         if view.color().a > 0.0 {
-            drawer.fill_rect(
+            drawer.rect.draw(
                 pass,
                 &clamped_frame,
                 view.color(),
@@ -104,7 +104,7 @@ impl UI {
                 // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
-                drawer.draw_image(
+                drawer.image.draw(
                     pass,
                     image.get_static(),
                     &clamped_frame,
@@ -120,7 +120,7 @@ impl UI {
             Self::draw_label(&frame, label, text_offset, sections);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
-                drawer.draw_buffer(
+                drawer.path.draw(
                     pass,
                     &clamped_frame,
                     path.buffer(),

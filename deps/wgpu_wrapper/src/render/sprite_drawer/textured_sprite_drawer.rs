@@ -1,6 +1,5 @@
 use std::{collections::HashMap, ops::Range};
 
-use bytemuck::bytes_of;
 use gm::{
     checked_usize_to_u32,
     flat::{Point, Size},
@@ -21,7 +20,7 @@ use crate::{
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
-    utils::DeviceHelper,
+    utils::{BufferHelper, DeviceHelper},
     WGPUApp,
 };
 
@@ -133,18 +132,12 @@ impl TexturedSpriteDrawer {
     ) {
         render_pass.set_pipeline(&self.render_pipeline);
 
-        let queue = WGPUApp::queue();
-
-        queue.write_buffer(
-            &self.view_buffer,
-            0,
-            bytes_of(&SpriteView {
-                camera_pos,
-                resolution,
-                camera_rotation,
-                scale,
-            }),
-        );
+        self.view_buffer.update(SpriteView {
+            camera_pos,
+            resolution,
+            camera_rotation,
+            scale,
+        });
 
         for (image, instances) in &mut self.instances {
             instances.load();

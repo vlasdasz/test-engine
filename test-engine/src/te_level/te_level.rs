@@ -21,7 +21,7 @@ impl TELevel {
 
         for sprite in LevelManager::level_weak().sprites() {
             if sprite.image.exists_managed() {
-                drawer.textured_sprite_drawer.add_instance(
+                drawer.textured_sprite.add_instance(
                     sprite.image,
                     sprite.size(),
                     sprite.position(),
@@ -29,7 +29,7 @@ impl TELevel {
                     *sprite.color(),
                 );
             } else {
-                drawer.sprite_drawer.add_instance(
+                drawer.colored_sprite.add_instance(
                     sprite.size(),
                     sprite.position(),
                     sprite.rotation(),
@@ -38,14 +38,14 @@ impl TELevel {
             }
         }
 
-        drawer.sprite_drawer.draw(
+        drawer.colored_sprite.draw(
             pass,
             *LevelManager::scale(),
             0.0,
             *LevelManager::camera_pos(),
             resolution,
         );
-        drawer.textured_sprite_drawer.draw(
+        drawer.textured_sprite.draw(
             pass,
             *LevelManager::scale(),
             0.0,

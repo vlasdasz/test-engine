@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use bytemuck::{bytes_of, Pod, Zeroable};
+use bytemuck::{Pod, Zeroable};
 use gm::{checked_usize_to_u32, flat::Point, volume::Vertex};
 use wgpu::{
     BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
@@ -10,7 +10,7 @@ use wgpu::{
 use crate::{
     image::Image,
     render::{uniform::make_uniform_layout, vertex_layout::VertexLayout},
-    utils::DeviceHelper,
+    utils::{BufferHelper, DeviceHelper},
     WGPUApp,
 };
 
@@ -50,7 +50,7 @@ struct BackgroundView {
 }
 
 #[derive(Debug)]
-pub struct TestPipeline {
+pub struct BackgroundPipeline {
     render_pipeline: RenderPipeline,
     vertex_buffer:   Buffer,
     view_buffer:     Buffer,
@@ -58,10 +58,10 @@ pub struct TestPipeline {
     view:            BackgroundView,
 }
 
-impl TestPipeline {
+impl BackgroundPipeline {
     pub fn new(texture_format: TextureFormat) -> Self {
         let device = WGPUApp::device();
-        let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/test.wgsl"));
+        let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/background.wgsl"));
 
         let vertex_layout = make_uniform_layout("background_drawer_vertex_layout", ShaderStages::VERTEX);
 
@@ -114,7 +114,7 @@ impl TestPipeline {
 
         if view != self.view {
             self.view = view;
-            WGPUApp::queue().write_buffer(&self.view_buffer, 0, bytes_of(&view));
+            self.view_buffer.update(view);
         }
 
         render_pass.set_bind_group(0, &self.view_bind, &[]);

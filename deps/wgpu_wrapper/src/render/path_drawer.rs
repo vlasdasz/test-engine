@@ -81,7 +81,7 @@ impl PathDrawer {
         }
     }
 
-    pub fn draw_buffer<'a>(
+    pub fn draw<'a>(
         &'a self,
         render_pass: &mut RenderPass<'a>,
         rect: &Rect,
