@@ -134,7 +134,7 @@ impl UIManager {
 
     pub fn free_deleted_views() {
         Self::get().deleted_views.lock().unwrap().clear();
-        TouchStack::clear_freed();
+        TouchStack::get().clear_freed();
     }
 
     pub fn draw_touches() -> bool {

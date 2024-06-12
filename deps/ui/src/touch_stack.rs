@@ -22,7 +22,7 @@ impl TouchStack {
         .into()
     }
 
-    fn get() -> MutexGuard<'static, Self> {
+    pub fn get() -> MutexGuard<'static, Self> {
         STACK.get_or_init(Self::init).lock().unwrap()
     }
 }
@@ -88,19 +88,17 @@ impl TouchStack {
         Self::get().stack.last().root_name().to_string()
     }
 
-    pub fn clear_freed() {
-        let mut this = Self::get();
+    pub fn clear_freed(&mut self) {
+        self.stack.tail.retain(|a| a.root.is_ok());
 
-        this.stack.tail.retain(|a| a.root.is_ok());
-
-        for layer in this.stack.iter_mut() {
+        for layer in self.stack.iter_mut() {
             layer.clear_freed();
         }
     }
 
     pub fn dump() -> Vec<Vec<String>> {
         UIManager::free_deleted_views();
-        TouchStack::clear_freed();
+        TouchStack::get().clear_freed();
 
         let mut result = vec![];
 

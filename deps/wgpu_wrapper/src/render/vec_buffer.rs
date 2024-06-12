@@ -10,7 +10,7 @@ pub(crate) struct VecBuffer<T> {
     buffer: Buffer,
 }
 
-impl<T: Pod> VecBuffer<T> {
+impl<T> VecBuffer<T> {
     pub fn push(&mut self, val: T) {
         self.data.push(val);
     }
@@ -19,14 +19,16 @@ impl<T: Pod> VecBuffer<T> {
         self.len
     }
 
+    pub fn buffer(&self) -> &Buffer {
+        &self.buffer
+    }
+}
+
+impl<T: Pod> VecBuffer<T> {
     pub fn load(&mut self) {
         self.buffer = WGPUApp::device().buffer(self.data.as_slice(), BufferUsages::VERTEX);
         self.len = self.data.len().try_into().unwrap();
         self.data.clear();
-    }
-
-    pub fn buffer(&self) -> &Buffer {
-        &self.buffer
     }
 }
 

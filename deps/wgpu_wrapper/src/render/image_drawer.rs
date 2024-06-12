@@ -67,7 +67,7 @@ impl ImageDrawer {
 
         let render_pipeline = device.pipeline(
             "Colored Image Render Pipeline",
-            Some(&pipeline_layout),
+            &pipeline_layout,
             &shader,
             texture_format,
             PolygonMode::Fill,

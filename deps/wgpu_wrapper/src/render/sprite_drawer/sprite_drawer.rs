@@ -1,5 +1,5 @@
 use gm::{
-    flat::{Point, Size},
+    flat::{Point, Points, Size},
     Color,
 };
 use wgpu::{
@@ -9,7 +9,9 @@ use wgpu::{
 
 use crate::{
     render::{
-        sprite_drawer::shader_data::{SpriteInstance, SpriteView, VERTEX_RANGE, VERTICES},
+        sprite_drawer::shader_data::{
+            SpriteInstance, SpriteView, FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES,
+        },
         uniform::make_uniform_layout,
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
@@ -29,7 +31,9 @@ pub struct SpriteDrawer {
 
     vertex_buffer: Buffer,
 
-    instances: VecBuffer<SpriteInstance>,
+    boxes: VecBuffer<SpriteInstance>,
+
+    shapes: Vec<Points>,
 }
 
 impl SpriteDrawer {
@@ -60,7 +64,7 @@ impl SpriteDrawer {
 
         let pipeline = device.pipeline(
             "sprite_driver_pipeline",
-            Some(&uniform_layout),
+            &uniform_layout,
             &shader,
             texture_format,
             PolygonMode::Fill,
@@ -73,13 +77,14 @@ impl SpriteDrawer {
             pipeline,
             view_buffer,
             view_bind_group,
-            vertex_buffer: device.buffer(VERTICES, BufferUsages::VERTEX),
-            instances: VecBuffer::default(),
+            vertex_buffer: device.buffer(FULL_SCREEN_VERTICES, BufferUsages::VERTEX),
+            boxes: VecBuffer::default(),
+            shapes: Vec::default(),
         }
     }
 
-    pub fn add_instance(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
-        self.instances.push(SpriteInstance {
+    pub fn add_box(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
+        self.boxes.push(SpriteInstance {
             size,
             position,
             color,
@@ -110,13 +115,15 @@ impl SpriteDrawer {
             self.view_buffer.update(view);
         }
 
-        self.instances.load();
+        self.boxes.load();
 
         render_pass.set_bind_group(0, &self.view_bind_group, &[]);
 
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-        render_pass.set_vertex_buffer(1, self.instances.buffer().slice(..));
+        render_pass.set_vertex_buffer(1, self.boxes.buffer().slice(..));
 
-        render_pass.draw(VERTEX_RANGE, 0..self.instances.len());
+        render_pass.draw(FULL_SCREEN_VERTEX_RANGE, 0..self.boxes.len());
+
+        //  self.shapes.load();
     }
 }

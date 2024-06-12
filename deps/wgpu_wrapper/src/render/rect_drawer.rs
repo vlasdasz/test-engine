@@ -53,7 +53,7 @@ impl RectDrawer {
 
         let pipeline = device.pipeline(
             "rect_fill_pipeline",
-            Some(&pipeline_layout),
+            &pipeline_layout,
             &shader,
             texture_format,
             PolygonMode::Fill,

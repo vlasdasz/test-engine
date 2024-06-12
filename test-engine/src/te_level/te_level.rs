@@ -35,7 +35,7 @@ impl TELevel {
 
         for sprite in level.sprites() {
             if sprite.image.exists_managed() {
-                drawer.textured_sprite.add_instance(
+                drawer.textured_sprite.add_box(
                     sprite.image,
                     sprite.size(),
                     sprite.position(),
@@ -43,7 +43,7 @@ impl TELevel {
                     *sprite.color(),
                 );
             } else {
-                drawer.colored_sprite.add_instance(
+                drawer.colored_sprite.add_box(
                     sprite.size(),
                     sprite.position(),
                     sprite.rotation(),

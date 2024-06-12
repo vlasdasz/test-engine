@@ -79,7 +79,7 @@ impl BackgroundPipeline {
 
         let render_pipeline = device.pipeline(
             "background_pipeline",
-            Some(&pipeline_layout),
+            &pipeline_layout,
             &shader,
             texture_format,
             PolygonMode::Fill,

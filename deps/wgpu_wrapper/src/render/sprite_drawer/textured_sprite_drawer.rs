@@ -62,7 +62,7 @@ impl TexturedSpriteDrawer {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/sprite_textured.wgsl"));
 
-        let sprite_view_layout = make_uniform_layout("Sprites View Layout", ShaderStages::VERTEX_FRAGMENT);
+        let sprite_view_layout = make_uniform_layout("sprites_view_layout", ShaderStages::VERTEX_FRAGMENT);
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label:                "Textured Sprite Pipeline Layout".into(),
@@ -71,8 +71,8 @@ impl TexturedSpriteDrawer {
         });
 
         let render_pipeline = device.pipeline(
-            "Textured Sprite Render Pipeline",
-            Some(&pipeline_layout),
+            "textured_sprite_render_pipeline",
+            &pipeline_layout,
             &shader,
             texture_format,
             PolygonMode::Fill,
@@ -103,14 +103,7 @@ impl TexturedSpriteDrawer {
         }
     }
 
-    pub fn add_instance(
-        &mut self,
-        image: Weak<Image>,
-        size: Size,
-        position: Point,
-        rotation: f32,
-        color: Color,
-    ) {
+    pub fn add_box(&mut self, image: Weak<Image>, size: Size, position: Point, rotation: f32, color: Color) {
         let image = self.instances.entry(image).or_default();
 
         image.push(SpriteInstance {

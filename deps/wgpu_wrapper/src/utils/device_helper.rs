@@ -19,7 +19,7 @@ pub trait DeviceHelper {
     fn pipeline(
         &self,
         label: &str,
-        layout: Option<&PipelineLayout>,
+        layout: &PipelineLayout,
         shader: &ShaderModule,
         texture_format: TextureFormat,
         polygon_mode: PolygonMode,
@@ -51,7 +51,7 @@ impl DeviceHelper for Device {
     fn pipeline(
         &self,
         label: &str,
-        layout: Option<&PipelineLayout>,
+        layout: &PipelineLayout,
         shader: &ShaderModule,
         texture_format: TextureFormat,
         polygon_mode: PolygonMode,
@@ -59,15 +59,15 @@ impl DeviceHelper for Device {
         vertex_layout: &'static [VertexBufferLayout],
     ) -> RenderPipeline {
         self.create_render_pipeline(&RenderPipelineDescriptor {
-            label: label.into(),
-            layout,
-            vertex: VertexState {
+            label:         label.into(),
+            layout:        layout.into(),
+            vertex:        VertexState {
                 module:              shader,
                 entry_point:         "v_main",
                 compilation_options: PipelineCompilationOptions::default(),
                 buffers:             vertex_layout,
             },
-            fragment: FragmentState {
+            fragment:      FragmentState {
                 module:              shader,
                 entry_point:         "f_main",
                 compilation_options: PipelineCompilationOptions::default(),
@@ -79,7 +79,7 @@ impl DeviceHelper for Device {
                 .into()],
             }
             .into(),
-            primitive: PrimitiveState {
+            primitive:     PrimitiveState {
                 topology,
                 strip_index_format: None,
                 front_face: FrontFace::Ccw,
@@ -89,12 +89,12 @@ impl DeviceHelper for Device {
                 conservative: false,
             },
             depth_stencil: depth_stencil_state().into(),
-            multisample: MultisampleState {
+            multisample:   MultisampleState {
                 count:                     1,
                 mask:                      !0,
                 alpha_to_coverage_enabled: false,
             },
-            multiview: None,
+            multiview:     None,
         })
     }
 }
