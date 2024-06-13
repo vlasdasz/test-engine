@@ -7,7 +7,7 @@ use gm::{
 };
 use wgpu::{
     include_wgsl, BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode,
-    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages, TextureFormat,
+    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
 };
 
 use crate::{

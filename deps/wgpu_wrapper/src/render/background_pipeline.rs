@@ -8,13 +8,12 @@ use gm::{
 };
 use wgpu::{
     BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
-    RenderPipeline, ShaderStages, TextureFormat,
+    RenderPipeline, ShaderStages,
 };
 
 use crate::{
     image::Image,
     render::{uniform::make_uniform_layout, vertex_layout::VertexLayout},
-    state::TEXTURE_FORMAT,
     utils::{BufferHelper, DeviceHelper},
     WGPUApp,
 };

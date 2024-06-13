@@ -4,7 +4,6 @@ use gm::flat::{Point, Rect};
 use wgpu::{
     include_wgsl, BindGroup, BindGroupLayout, BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType,
     PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
-    TextureFormat,
 };
 
 use crate::{

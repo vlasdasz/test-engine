@@ -4,7 +4,7 @@ use gm::{
 };
 use wgpu::{
     include_wgsl, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
-    RenderPipeline, ShaderStages, TextureFormat,
+    RenderPipeline, ShaderStages,
 };
 
 use crate::{
@@ -14,7 +14,7 @@ use crate::{
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
-    utils::{BufferHelper, DeviceHelper},
+    utils::DeviceHelper,
     WGPUApp,
 };
 
@@ -43,8 +43,6 @@ impl Default for BoxPipeline {
             push_constant_ranges: &[],
         });
 
-        let view = UniformBind::new(device, &sprite_view_layout);
-
         let pipeline = device.pipeline(
             "sprite_driver_pipeline",
             &uniform_layout,
@@ -56,7 +54,7 @@ impl Default for BoxPipeline {
 
         Self {
             pipeline,
-            view,
+            view: sprite_view_layout.into(),
             vertex_buffer: device.buffer(FULL_SCREEN_VERTICES, BufferUsages::VERTEX),
             boxes: VecBuffer::default(),
         }

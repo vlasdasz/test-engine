@@ -12,6 +12,7 @@ crate-type = ["rlib", "staticlib"]
 name = "test_game"
 
 [dependencies]
+fake = { workspace = true }
 tokio = { workspace = true }
 
 test-engine = { workspace = true }

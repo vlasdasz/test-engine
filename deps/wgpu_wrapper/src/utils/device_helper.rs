@@ -3,7 +3,7 @@ use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BlendState, Buffer, ColorTargetState,
     ColorWrites, Device, Face, FragmentState, FrontFace, MultisampleState, PipelineCompilationOptions,
     PipelineLayout, PrimitiveState, PrimitiveTopology, RenderPipeline, RenderPipelineDescriptor,
-    ShaderModule, TextureFormat, VertexBufferLayout, VertexState,
+    ShaderModule, VertexBufferLayout, VertexState,
 };
 
 use crate::{

@@ -1,10 +1,9 @@
 use bytemuck::Pod;
-use gm::flat::Point;
 use wgpu::{BindGroup, BindGroupLayout, Buffer, Device};
 
 use crate::{
     utils::{BufferHelper, DeviceHelper},
-    BufferUsages,
+    BufferUsages, WGPUApp,
 };
 
 #[derive(Debug)]
@@ -21,7 +20,7 @@ impl<T> UniformBind<T> {
 }
 
 impl<T: Default + Pod> UniformBind<T> {
-    pub fn new(device: &Device, layout: &BindGroupLayout) -> Self {
+    fn new(device: &Device, layout: &BindGroupLayout) -> Self {
         let data = T::default();
         let buffer = device.buffer(&data, BufferUsages::UNIFORM | BufferUsages::COPY_DST);
         let bind = device.bind(&buffer, &layout);
@@ -36,5 +35,11 @@ impl<T: Pod + PartialEq> UniformBind<T> {
         }
         self.buffer.update(data);
         self.data = data;
+    }
+}
+
+impl<T: Default + Pod> From<BindGroupLayout> for UniformBind<T> {
+    fn from(layout: BindGroupLayout) -> Self {
+        Self::new(WGPUApp::device(), &layout)
     }
 }

@@ -1,3 +1,4 @@
+use fake::{Fake, Faker};
 use test_engine::{
     audio::Sound,
     gm::{LossyConvert, Shape},
@@ -5,7 +6,7 @@ use test_engine::{
         level, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
     },
     refs::Weak,
-    ui::{Color, Image, Point},
+    ui::{Color, Image, Point, Size},
     DataManager,
 };
 
@@ -75,11 +76,16 @@ impl LevelSetup for TestLevel {
         //     .set_image("triangle.png");
 
         for i in 0..150 {
-            self.add_sprite::<Body>(
-                Shape::Rect((0.6, 0.6).into()),
-                (0.1f32 * i.lossy_convert(), i * 2),
-            )
-            .set_image("square.png");
+            let mut bx = self.add_sprite::<Body>(
+                Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake()).into()),
+                (0.1f32 * i.lossy_convert(), i * 4 + 20),
+            );
+
+            if Faker.fake() {
+                bx.set_image("crate.png");
+            } else {
+                bx.set_color(Color::random());
+            }
         }
 
         let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 5));

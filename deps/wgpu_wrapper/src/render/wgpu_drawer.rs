@@ -1,16 +1,12 @@
-use anyhow::Result;
 use gm::{flat::Rect, Color};
 use wgpu::RenderPass;
 
-use crate::{
-    render::{
-        background_pipeline::BackgroundPipeline,
-        image_drawer::ImageDrawer,
-        path_drawer::PathDrawer,
-        rect_drawer::RectDrawer,
-        sprite_drawer::{BoxPipeline, PolygonPipeline, TexturedBoxPipeline},
-    },
-    state::TEXTURE_FORMAT,
+use crate::render::{
+    background_pipeline::BackgroundPipeline,
+    image_drawer::ImageDrawer,
+    path_drawer::PathDrawer,
+    rect_drawer::RectDrawer,
+    sprite_drawer::{BoxPipeline, PolygonPipeline, TexturedBoxPipeline},
 };
 
 #[derive(Default, Debug)]

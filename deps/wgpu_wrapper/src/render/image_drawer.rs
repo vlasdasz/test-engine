@@ -7,7 +7,6 @@ use gm::{
 };
 use wgpu::{
     BindGroupLayout, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPipeline, ShaderStages,
-    TextureFormat,
 };
 
 use crate::{
@@ -16,7 +15,6 @@ use crate::{
         uniform::{cached_z_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
-    state::TEXTURE_FORMAT,
     utils::DeviceHelper,
     WGPUApp,
 };

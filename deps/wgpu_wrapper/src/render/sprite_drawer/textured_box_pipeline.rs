@@ -7,10 +7,7 @@ use gm::{
     Color,
 };
 use refs::Weak;
-use wgpu::{
-    Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
-    TextureFormat,
-};
+use wgpu::{Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages};
 
 use crate::{
     image::Image,
@@ -64,7 +61,7 @@ impl Default for TexturedBoxPipeline {
         let sprite_view_layout = make_uniform_layout("sprites_view_layout", ShaderStages::VERTEX_FRAGMENT);
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-            label:                "Textured Sprite Pipeline Layout".into(),
+            label:                "textured_sprite_pipeline_layout".into(),
             bind_group_layouts:   &[&sprite_view_layout, &Image::uniform_layout()],
             push_constant_ranges: &[],
         });
@@ -80,11 +77,9 @@ impl Default for TexturedBoxPipeline {
 
         let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);
 
-        let view = UniformBind::new(device, &sprite_view_layout);
-
         Self {
             render_pipeline,
-            view,
+            view: sprite_view_layout.into(),
             vertex_buffer,
             instances: HashMap::default(),
         }

@@ -27,15 +27,15 @@ impl Texture {
     }
 
     pub fn from_raw_data(data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
-        let extend_size = wgpu::Extent3d {
+        let extend_size = Extent3d {
             width:                 size.width,
             height:                size.height,
             depth_or_array_layers: 1,
         };
 
-        let format = match channels {
-            1 => TextureFormat::R8Unorm,
-            4 => TextureFormat::Rgba8UnormSrgb,
+        let (channels, format) = match channels {
+            1 => (1, TextureFormat::R8Unorm),
+            3 | 4 => (4, TextureFormat::Rgba8UnormSrgb),
             ch => panic!("Invalid number of channels: {ch}"),
         };
 
