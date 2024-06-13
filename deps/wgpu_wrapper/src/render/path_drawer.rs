@@ -24,8 +24,8 @@ pub struct PathDrawer {
     pub(crate) color_size_layout: BindGroupLayout,
 }
 
-impl PathDrawer {
-    pub fn new(texture_format: TextureFormat) -> Self {
+impl Default for PathDrawer {
+    fn default() -> Self {
         let device = WGPUApp::device();
 
         let shader = device.create_shader_module(include_wgsl!("shaders/path.wgsl"));
@@ -68,7 +68,6 @@ impl PathDrawer {
             "Path Fill Render Pipeline",
             &pipeline_layout,
             &shader,
-            texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Point::VERTEX_LAYOUT],
@@ -80,7 +79,9 @@ impl PathDrawer {
             color_size_layout,
         }
     }
+}
 
+impl PathDrawer {
     pub fn draw<'a>(
         &'a self,
         render_pass: &mut RenderPass<'a>,

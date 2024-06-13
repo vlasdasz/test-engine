@@ -56,8 +56,8 @@ pub struct TexturedBoxPipeline {
     instances: HashMap<Weak<Image>, VecBuffer<SpriteBox>>,
 }
 
-impl TexturedBoxPipeline {
-    pub fn new(texture_format: TextureFormat) -> Self {
+impl Default for TexturedBoxPipeline {
+    fn default() -> Self {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/sprite_textured.wgsl"));
 
@@ -73,7 +73,6 @@ impl TexturedBoxPipeline {
             "textured_sprite_render_pipeline",
             &pipeline_layout,
             &shader,
-            texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Vertex::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
@@ -90,7 +89,9 @@ impl TexturedBoxPipeline {
             instances: HashMap::default(),
         }
     }
+}
 
+impl TexturedBoxPipeline {
     pub fn add_box(&mut self, image: Weak<Image>, size: Size, position: Point, rotation: f32, color: Color) {
         let image = self.instances.entry(image).or_default();
 

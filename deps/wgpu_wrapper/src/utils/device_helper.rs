@@ -7,6 +7,7 @@ use wgpu::{
 };
 
 use crate::{
+    state::TEXTURE_FORMAT,
     utils::{depth_stencil_state, ToBytes},
     BufferUsages, PolygonMode,
 };
@@ -21,7 +22,6 @@ pub trait DeviceHelper {
         label: &str,
         layout: &PipelineLayout,
         shader: &ShaderModule,
-        texture_format: TextureFormat,
         polygon_mode: PolygonMode,
         topology: PrimitiveTopology,
         vertex_layout: &'static [VertexBufferLayout],
@@ -53,7 +53,6 @@ impl DeviceHelper for Device {
         label: &str,
         layout: &PipelineLayout,
         shader: &ShaderModule,
-        texture_format: TextureFormat,
         polygon_mode: PolygonMode,
         topology: PrimitiveTopology,
         vertex_layout: &'static [VertexBufferLayout],
@@ -72,7 +71,7 @@ impl DeviceHelper for Device {
                 entry_point:         "f_main",
                 compilation_options: PipelineCompilationOptions::default(),
                 targets:             &[ColorTargetState {
-                    format:     texture_format,
+                    format:     TEXTURE_FORMAT,
                     blend:      BlendState::ALPHA_BLENDING.into(),
                     write_mask: ColorWrites::ALL,
                 }

@@ -36,8 +36,8 @@ pub struct RectDrawer {
     fragment_layout: BindGroupLayout,
 }
 
-impl RectDrawer {
-    pub fn new(texture_format: TextureFormat) -> Self {
+impl Default for RectDrawer {
+    fn default() -> Self {
         let device = WGPUApp::device();
 
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
@@ -55,7 +55,6 @@ impl RectDrawer {
             "rect_fill_pipeline",
             &pipeline_layout,
             &shader,
-            texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Point::VERTEX_LAYOUT],
@@ -68,7 +67,9 @@ impl RectDrawer {
             fragment_layout,
         }
     }
+}
 
+impl RectDrawer {
     pub fn draw<'a>(&'a self, render_pass: &mut RenderPass<'a>, rect: &Rect, color: &Color, z_position: f32) {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.pipeline);

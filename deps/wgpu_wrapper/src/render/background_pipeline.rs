@@ -14,6 +14,7 @@ use wgpu::{
 use crate::{
     image::Image,
     render::{uniform::make_uniform_layout, vertex_layout::VertexLayout},
+    state::TEXTURE_FORMAT,
     utils::{BufferHelper, DeviceHelper},
     WGPUApp,
 };
@@ -64,8 +65,8 @@ pub struct BackgroundPipeline {
     view:            BackgroundView,
 }
 
-impl BackgroundPipeline {
-    pub fn new(texture_format: TextureFormat) -> Self {
+impl Default for BackgroundPipeline {
+    fn default() -> Self {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/background.wgsl"));
 
@@ -81,7 +82,6 @@ impl BackgroundPipeline {
             "background_pipeline",
             &pipeline_layout,
             &shader,
-            texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Vertex::VERTEX_LAYOUT],
@@ -107,7 +107,9 @@ impl BackgroundPipeline {
             view,
         }
     }
+}
 
+impl BackgroundPipeline {
     pub fn draw<'a>(
         &'a mut self,
         render_pass: &mut RenderPass<'a>,

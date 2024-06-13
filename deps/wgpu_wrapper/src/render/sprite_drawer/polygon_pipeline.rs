@@ -1,4 +1,5 @@
 use bytemuck::{Pod, Zeroable};
+use educe::Educe;
 use gm::{
     flat::{Point, Points, Size},
     Color,
@@ -19,23 +20,26 @@ use crate::{
 };
 
 #[repr(C)]
-#[derive(Debug, Default, Copy, Clone, Zeroable, Pod, PartialEq)]
+#[derive(Debug, Copy, Clone, Zeroable, Pod, PartialEq, Educe)]
+#[educe(Default)]
 struct PolygonView {
     pos:        Point,
     camera_pos: Point,
+    #[educe(Default = (1000, 1000).into())]
     resolution: Size,
     camera_rot: f32,
+    #[educe(Default = 1.0)]
     scale:      f32,
 }
 
 #[derive(Debug)]
 pub struct PolygonPipeline {
     pipeline: RenderPipeline,
-    view:     UniformBind<SpriteView>,
+    view:     UniformBind<PolygonView>,
 }
 
-impl PolygonPipeline {
-    pub fn new(texture_format: TextureFormat) -> Self {
+impl Default for PolygonPipeline {
+    fn default() -> Self {
         let device = WGPUApp::device();
 
         let shader = device.create_shader_module(include_wgsl!("../shaders/polygon.wgsl"));
@@ -54,7 +58,6 @@ impl PolygonPipeline {
             "polygon_pipeline",
             &uniform_layout,
             &shader,
-            texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Point::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
@@ -62,7 +65,9 @@ impl PolygonPipeline {
 
         Self { pipeline, view }
     }
+}
 
+impl PolygonPipeline {
     pub fn add(&mut self, _points: &Points, _pos: Point, _rot: f32, _col: Color) {}
 
     pub fn draw<'a>(

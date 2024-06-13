@@ -13,7 +13,7 @@ use crate::{
     state::TEXTURE_FORMAT,
 };
 
-#[derive(Debug)]
+#[derive(Default, Debug)]
 pub struct WGPUDrawer {
     /// UI:
     pub image: ImageDrawer,
@@ -26,21 +26,6 @@ pub struct WGPUDrawer {
     pub polygon:      PolygonPipeline,
     pub sprite_box:   BoxPipeline,
     pub textured_box: TexturedBoxPipeline,
-}
-
-impl WGPUDrawer {
-    pub fn new() -> Result<Self> {
-        Ok(Self {
-            rect:  RectDrawer::new(TEXTURE_FORMAT),
-            image: ImageDrawer::new(TEXTURE_FORMAT),
-            path:  PathDrawer::new(TEXTURE_FORMAT),
-
-            sprite_box:   BoxPipeline::new(TEXTURE_FORMAT),
-            textured_box: TexturedBoxPipeline::new(TEXTURE_FORMAT),
-            background:   BackgroundPipeline::new(TEXTURE_FORMAT),
-            polygon:      PolygonPipeline::new(TEXTURE_FORMAT),
-        })
-    }
 }
 
 impl WGPUDrawer {

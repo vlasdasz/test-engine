@@ -29,8 +29,8 @@ pub struct BoxPipeline {
     boxes: VecBuffer<SpriteBox>,
 }
 
-impl BoxPipeline {
-    pub fn new(texture_format: TextureFormat) -> Self {
+impl Default for BoxPipeline {
+    fn default() -> Self {
         let device = WGPUApp::device();
 
         let shader = device.create_shader_module(include_wgsl!("../shaders/sprite.wgsl"));
@@ -49,7 +49,6 @@ impl BoxPipeline {
             "sprite_driver_pipeline",
             &uniform_layout,
             &shader,
-            texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Point::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
@@ -62,7 +61,9 @@ impl BoxPipeline {
             boxes: VecBuffer::default(),
         }
     }
+}
 
+impl BoxPipeline {
     pub fn add(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
         self.boxes.push(SpriteBox {
             size,

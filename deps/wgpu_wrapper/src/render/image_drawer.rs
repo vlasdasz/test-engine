@@ -16,6 +16,7 @@ use crate::{
         uniform::{cached_z_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
+    state::TEXTURE_FORMAT,
     utils::DeviceHelper,
     WGPUApp,
 };
@@ -52,8 +53,8 @@ pub struct ImageDrawer {
     vertex_layout:   BindGroupLayout,
 }
 
-impl ImageDrawer {
-    pub fn new(texture_format: TextureFormat) -> Self {
+impl Default for ImageDrawer {
+    fn default() -> Self {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
@@ -69,7 +70,6 @@ impl ImageDrawer {
             "Colored Image Render Pipeline",
             &pipeline_layout,
             &shader,
-            texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Vertex::VERTEX_LAYOUT],
@@ -81,7 +81,9 @@ impl ImageDrawer {
             vertex_layout,
         }
     }
+}
 
+impl ImageDrawer {
     pub fn draw<'a>(
         &'a self,
         render_pass: &mut wgpu::RenderPass<'a>,

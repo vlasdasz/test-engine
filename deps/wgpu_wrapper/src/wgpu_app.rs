@@ -103,7 +103,7 @@ impl WGPUApp {
 
         self.surface = surface.into();
 
-        self.drawer = WGPUDrawer::new()?.into();
+        self.drawer = WGPUDrawer::default().into();
 
         Ok(true)
     }
