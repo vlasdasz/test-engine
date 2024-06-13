@@ -8,14 +8,18 @@ use gm::{flat::Point, Color};
 use refs::Weak;
 use ui_proc::view;
 
-use crate::{Container, Label, ViewData, ViewFrame, ViewSetup, ViewTouch};
+use crate::{Container, Label, UIEvent, ViewData, ViewFrame, ViewSetup, ViewTouch};
 
 #[view]
 pub struct PositionView {
     began_pos: Point,
+
+    #[educe(Debug(ignore))]
+    pub moved: UIEvent<Point>,
+
     #[init]
-    dot:       Container,
-    label:     Label,
+    dot:   Container,
+    label: Label,
 }
 
 impl ViewSetup for PositionView {
@@ -31,6 +35,7 @@ impl ViewSetup for PositionView {
             let new_pos = self.frame.origin + touch.position - self.began_pos;
             self.label.set_text(format!("{:.0} - {:.0}", new_pos.x, new_pos.y));
             self.set_position(new_pos);
+            self.moved.trigger(new_pos);
         });
     }
 }

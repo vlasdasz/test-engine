@@ -7,6 +7,7 @@ use rapier2d::{
 };
 use refs::{MainLock, Own, Weak};
 use smart_default::SmartDefault;
+use wgpu_wrapper::WGPUApp;
 
 use crate::Level;
 
@@ -79,5 +80,24 @@ impl LevelManager {
 
     pub fn camera_pos() -> &'static mut Point {
         &mut SELF.get_mut().camera_pos
+    }
+
+    pub fn convert_touch(pos: Point) -> Point {
+        let mut pos = pos;
+        let size = WGPUApp::current().window_size;
+
+        pos.x -= size.width / 2.0;
+        pos.y -= size.height / 2.0;
+        pos.y = -pos.y;
+        pos /= 10;
+
+        pos *= 2;
+        pos /= WGPUApp::screen_scale();
+
+        pos /= *Self::scale();
+
+        pos += *Self::camera_pos();
+
+        pos
     }
 }

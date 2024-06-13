@@ -1,9 +1,5 @@
 use bytemuck::cast_slice;
-use gm::{
-    checked_usize_to_u32,
-    flat::{Point, Points},
-    Color,
-};
+use gm::{checked_usize_to_u32, flat::Point, Color};
 use wgpu::{
     include_wgsl, BindGroup, BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode,
     PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
@@ -28,7 +24,7 @@ pub struct PolygonPipeline {
     pos_layout:   BindGroupLayout,
     color_layout: BindGroupLayout,
 
-    polygons: Vec<(Buffer, Points, BindGroup, BindGroup)>,
+    polygons: Vec<(Buffer, usize, BindGroup, BindGroup)>,
 }
 
 impl Default for PolygonPipeline {
@@ -67,10 +63,10 @@ impl Default for PolygonPipeline {
 }
 
 impl PolygonPipeline {
-    pub fn add(&mut self, points: Points, pos: Point, color: Color) {
+    pub fn add(&mut self, points: &[Point], pos: Point, color: Color) {
         self.polygons.push((
-            WGPUApp::device().buffer_from_bytes(cast_slice(points.as_slice()), BufferUsages::VERTEX),
-            points,
+            WGPUApp::device().buffer_from_bytes(cast_slice(points), BufferUsages::VERTEX),
+            points.len(),
             make_bind(&pos, &self.pos_layout),
             make_bind(&color, &self.color_layout),
         ));
@@ -83,13 +79,13 @@ impl PolygonPipeline {
 
         render_pass.set_bind_group(0, self.view.bind(), &[]);
 
-        for (buffer, points, pos, color) in &self.polygons {
+        for (buffer, points_len, pos, color) in &self.polygons {
             render_pass.set_bind_group(1, pos, &[]);
             render_pass.set_bind_group(2, color, &[]);
 
             render_pass.set_vertex_buffer(0, buffer.slice(..));
 
-            render_pass.draw(0..checked_usize_to_u32(points.len()), 0..1);
+            render_pass.draw(0..checked_usize_to_u32(*points_len), 0..1);
         }
     }
 

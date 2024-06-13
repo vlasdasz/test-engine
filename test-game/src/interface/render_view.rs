@@ -38,13 +38,13 @@ impl ViewCallbacks for RenderView {
         drawer.polygon.clear();
 
         drawer.polygon.add(
-            vec![(0, 0).into(), (20, 0).into(), (0, 20).into(), (20, 20).into()],
+            &[(0, 0).into(), (20, 0).into(), (0, 20).into(), (20, 20).into()],
             (-20, -20).into(),
             Color::GREEN,
         );
 
         drawer.polygon.add(
-            vec![
+            &[
                 (5, 5).into(),
                 (35, 0).into(),
                 (0, 20).into(),

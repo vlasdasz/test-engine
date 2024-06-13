@@ -70,6 +70,8 @@ pub struct ViewBase {
 
     #[educe(Debug(ignore))]
     pub(crate) after_setup: OnceEvent,
+
+    pub tag: usize,
 }
 
 #[derive(Default)]
