@@ -34,8 +34,8 @@ fn v_main(
 
 //    out *= rotation_z_matrix(-instance.rotation);
 
-//    out.x += instance.position.x - view.camera_pos.x;
-//    out.y += instance.position.y - view.camera_pos.y;
+    out.x += pos.x - view.camera_pos.x;
+    out.y += pos.y - view.camera_pos.y;
 
     out *=  rotation_z_matrix(view.camera_rotation);
 

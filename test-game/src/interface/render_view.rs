@@ -1,7 +1,7 @@
 use test_engine::{
     refs::Weak,
-    ui::{view, Image, NumberView, ViewCallbacks, ViewData, ViewSetup},
-    DataManager, RenderPass, WGPUApp,
+    ui::{view, Color, NumberView, UIManager, ViewCallbacks, ViewData, ViewSetup},
+    RenderPass, SpriteView, WGPUApp,
 };
 
 #[view]
@@ -20,15 +20,32 @@ impl ViewCallbacks for RenderView {
     fn render(&self, pass: &mut RenderPass) {
         let drawer = WGPUApp::drawer();
 
-        let image = Image::get("sky.png");
+        drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED);
+        drawer.sprite_box.add((2, 2).into(), (40, 0).into(), 0.0, Color::GREEN);
+        drawer.sprite_box.add((2, 2).into(), (40, 40).into(), 0.0, Color::BLUE);
+        drawer.sprite_box.add((2, 2).into(), (0, 40).into(), 0.0, Color::TURQUOISE);
+        drawer.sprite_box.draw(pass, 1.0, 0.0, (0, 0).into(), UIManager::resolution());
 
-        drawer.background.draw(
+        drawer.polygon.add(
+            vec![(0, 0).into(), (20, 0).into(), (0, 20).into(), (20, 20).into()],
+            (-20, -20).into(),
+            Color::GREEN,
+        );
+
+        drawer.polygon.add(
+            vec![(0, 0).into(), (40, 0).into(), (0, 40).into(), (40, 40).into()],
+            (10, 10).into(),
+            Color::BLUE,
+        );
+
+        drawer.polygon.draw(
             pass,
-            image.get_static(),
-            (1000, 1000).into(),
-            (self.val.value(), 0).into(),
-            0.0,
-            1.0,
+            SpriteView {
+                camera_pos:      Default::default(),
+                resolution:      UIManager::resolution(),
+                camera_rotation: 0.0,
+                scale:           1.0,
+            },
         );
     }
 }

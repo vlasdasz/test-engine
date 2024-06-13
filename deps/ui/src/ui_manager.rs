@@ -108,7 +108,7 @@ impl UIManager {
         UI_MANAGER.get_or_init(Self::init)
     }
 
-    pub fn window_size() -> Size {
+    pub fn resolution() -> Size {
         Self::root_view().size()
     }
 
@@ -174,7 +174,7 @@ impl UIManager {
 
         let rect: Rect = (
             rect.origin.x * scale,
-            (Self::window_size().height/* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height) * scale,
+            (Self::resolution().height/* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height) * scale,
             rect.size.width * scale,
             rect.size.height * scale,
         )

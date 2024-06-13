@@ -1,3 +1,5 @@
+use std::{cell::RefCell, ops::Deref};
+
 use bytemuck::Pod;
 use wgpu::{BindGroup, BindGroupLayout, Buffer, Device};
 
@@ -8,7 +10,7 @@ use crate::{
 
 #[derive(Debug)]
 pub struct UniformBind<T> {
-    data:   T,
+    data:   RefCell<T>,
     buffer: Buffer,
     bind:   BindGroup,
 }
@@ -24,17 +26,21 @@ impl<T: Default + Pod> UniformBind<T> {
         let data = T::default();
         let buffer = device.buffer(&data, BufferUsages::UNIFORM | BufferUsages::COPY_DST);
         let bind = device.bind(&buffer, &layout);
-        Self { data, buffer, bind }
+        Self {
+            data: data.into(),
+            buffer,
+            bind,
+        }
     }
 }
 
 impl<T: Pod + PartialEq> UniformBind<T> {
-    pub fn update(&mut self, data: T) {
-        if self.data == data {
+    pub fn update(&self, data: T) {
+        if self.data.borrow().deref() == &data {
             return;
         }
         self.buffer.update(data);
-        self.data = data;
+        self.data.replace(data);
     }
 }
 

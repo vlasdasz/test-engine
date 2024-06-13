@@ -15,6 +15,8 @@ use crate::{
 pub trait DeviceHelper {
     fn buffer<T: ToBytes + ?Sized>(&self, data: &T, usage: BufferUsages) -> Buffer;
 
+    fn buffer_from_bytes(&self, data: &[u8], usage: BufferUsages) -> Buffer;
+
     fn bind(&self, buffer: &Buffer, layout: &BindGroupLayout) -> BindGroup;
 
     fn pipeline(
@@ -30,9 +32,13 @@ pub trait DeviceHelper {
 
 impl DeviceHelper for Device {
     fn buffer<T: ToBytes + ?Sized>(&self, data: &T, usage: BufferUsages) -> Buffer {
+        self.buffer_from_bytes(data.to_bytes(), usage)
+    }
+
+    fn buffer_from_bytes(&self, data: &[u8], usage: BufferUsages) -> Buffer {
         self.create_buffer_init(&BufferInitDescriptor {
             label: None,
-            contents: data.to_bytes(),
+            contents: data,
             usage,
         })
     }

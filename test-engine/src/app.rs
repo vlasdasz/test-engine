@@ -218,7 +218,7 @@ impl wgpu_wrapper::App for App {
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>) {
-        let window_size = UIManager::window_size();
+        let window_size = UIManager::resolution();
 
         pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 

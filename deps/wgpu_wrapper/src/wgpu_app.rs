@@ -13,7 +13,9 @@ use log::{error, info};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
-    Adapter, BindGroupLayout, CompositeAlphaMode, Device, Instance, PresentMode, Queue, SurfaceConfiguration,
+    Adapter, Backends, BindGroupLayout, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance,
+    InstanceDescriptor, Limits, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
+    TextureUsages,
 };
 use winit::{
     dpi::PhysicalSize,
@@ -115,13 +117,13 @@ impl WGPUApp {
 
         _ = window.request_inner_size(PhysicalSize::new(1200 * scale, 1000 * scale));
 
-        let instance = Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
+        let instance = Instance::new(InstanceDescriptor {
+            backends: Backends::all(),
             ..Default::default()
         });
 
         let adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions::default())
+            .request_adapter(&RequestAdapterOptions::default())
             .await
             .ok_or(anyhow!("Failed to request adapter"))?;
 
@@ -130,17 +132,18 @@ impl WGPUApp {
         info!("{}", &info.backend);
 
         let mut required_limits = if cfg!(target_arch = "wasm32") {
-            wgpu::Limits::downlevel_webgl2_defaults()
+            Limits::downlevel_webgl2_defaults()
         } else {
-            wgpu::Limits::default()
+            Limits::default()
         };
 
         required_limits.max_compute_workgroups_per_dimension = 65535;
 
         let (device, queue) = adapter
             .request_device(
-                &wgpu::DeviceDescriptor {
-                    required_features: wgpu::Features::empty(), //wgpu::Features::POLYGON_MODE_LINE,
+                &DeviceDescriptor {
+                    // required_features: Features::empty(),
+                    required_features: Features::POLYGON_MODE_LINE,
                     required_limits,
                     label: None,
                 },
@@ -151,7 +154,7 @@ impl WGPUApp {
         let size = window.inner_size();
 
         let config = SurfaceConfiguration {
-            usage:        wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+            usage:        TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC,
             format:       TEXTURE_FORMAT,
             width:        size.width,
             height:       size.height,

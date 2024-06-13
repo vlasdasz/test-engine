@@ -23,7 +23,7 @@ pub(super) const FULL_SCREEN_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod, PartialEq, Educe)]
 #[educe(Default)]
-pub(super) struct SpriteView {
+pub struct SpriteView {
     pub camera_pos:      Point,
     #[educe(Default = (1000, 1000).into())]
     pub resolution:      Size,

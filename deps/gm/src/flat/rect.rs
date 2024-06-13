@@ -267,14 +267,7 @@ impl<T: ToF32> Mul<T> for &Rect {
 impl<T: ToF32> Mul<T> for Rect {
     type Output = Rect;
     fn mul(self, rhs: T) -> Rect {
-        let mul = rhs.to_f32();
-        (
-            self.origin.x * mul,
-            self.origin.y * mul,
-            self.size.width * mul,
-            self.size.height * mul,
-        )
-            .into()
+        (&self).mul(rhs)
     }
 }
 

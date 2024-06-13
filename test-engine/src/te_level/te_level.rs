@@ -15,7 +15,7 @@ impl TELevel {
         if LevelManager::no_level() {
             return;
         }
-        let resolution = UIManager::window_size();
+        let resolution = UIManager::resolution();
 
         let drawer = WGPUApp::drawer();
         let level = LevelManager::level();
