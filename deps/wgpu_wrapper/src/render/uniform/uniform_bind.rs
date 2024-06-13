@@ -25,7 +25,7 @@ impl<T: Default + Pod> UniformBind<T> {
     fn new(device: &Device, layout: &BindGroupLayout) -> Self {
         let data = T::default();
         let buffer = device.buffer(&data, BufferUsages::UNIFORM | BufferUsages::COPY_DST);
-        let bind = device.bind(&buffer, &layout);
+        let bind = device.bind(&buffer, layout);
         Self {
             data: data.into(),
             buffer,

@@ -16,7 +16,7 @@ pub struct ColorMeter {
 impl ViewSetup for ColorMeter {
     fn setup(self: Weak<Self>) {
         self.update_screenshot();
-        UIEvents::size_changed().sub(move || self.update_screenshot());
+        UIEvents::size_changed().sub(self, move || self.update_screenshot());
     }
 }
 

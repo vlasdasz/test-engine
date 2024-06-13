@@ -5,14 +5,14 @@ use gm::{
     Color,
 };
 use wgpu::{
-    include_wgsl, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
-    RenderPipeline, ShaderStages,
+    include_wgsl, BindGroup, BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode,
+    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
 };
 
 use crate::{
     render::{
         sprite_drawer::shader_data::SpriteView,
-        uniform::{make_uniform_layout, UniformBind},
+        uniform::{make_bind, make_uniform_layout, UniformBind},
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
@@ -23,11 +23,12 @@ use crate::{
 pub struct PolygonPipeline {
     pipeline: RenderPipeline,
 
-    view:  UniformBind<SpriteView>,
-    pos:   UniformBind<Point>,
-    color: UniformBind<Color>,
+    view: UniformBind<SpriteView>,
 
-    polygons: Vec<(Buffer, Points, Point, Color)>,
+    pos_layout:   BindGroupLayout,
+    color_layout: BindGroupLayout,
+
+    polygons: Vec<(Buffer, Points, BindGroup, BindGroup)>,
 }
 
 impl Default for PolygonPipeline {
@@ -58,8 +59,8 @@ impl Default for PolygonPipeline {
         Self {
             pipeline,
             view: view_layout.into(),
-            pos: pos_layout.into(),
-            color: color_layout.into(),
+            pos_layout,
+            color_layout,
             polygons: vec![],
         }
     }
@@ -70,9 +71,9 @@ impl PolygonPipeline {
         self.polygons.push((
             WGPUApp::device().buffer_from_bytes(cast_slice(points.as_slice()), BufferUsages::VERTEX),
             points,
-            pos,
-            color,
-        ))
+            make_bind(&pos, &self.pos_layout),
+            make_bind(&color, &self.color_layout),
+        ));
     }
 
     pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: SpriteView) {
@@ -80,18 +81,19 @@ impl PolygonPipeline {
 
         self.view.update(view);
 
-        render_pass.set_bind_group(0, &self.view.bind(), &[]);
+        render_pass.set_bind_group(0, self.view.bind(), &[]);
 
         for (buffer, points, pos, color) in &self.polygons {
-            self.pos.update(*pos);
-            self.color.update(*color);
-
-            render_pass.set_bind_group(1, &self.pos.bind(), &[]);
-            render_pass.set_bind_group(2, &self.color.bind(), &[]);
+            render_pass.set_bind_group(1, pos, &[]);
+            render_pass.set_bind_group(2, color, &[]);
 
             render_pass.set_vertex_buffer(0, buffer.slice(..));
 
             render_pass.draw(0..checked_usize_to_u32(points.len()), 0..1);
         }
+    }
+
+    pub fn clear(&mut self) {
+        self.polygons.clear();
     }
 }

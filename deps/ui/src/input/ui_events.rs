@@ -10,7 +10,7 @@ static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 pub struct UIEvents {
     on_touch:       Event<Touch>,
     on_debug_touch: Event<Touch>,
-    size_changed:   Event<Size<u32>>,
+    size_changed:   UIEvent<Size<u32>>,
     gyro:           UIEvent<GyroData>,
     keyboard_input: UIEvent<char>,
 }
@@ -25,7 +25,7 @@ impl UIEvents {
         &UI_EVENTS.on_debug_touch
     }
 
-    pub fn size_changed() -> &'static Event<Size<u32>> {
+    pub fn size_changed() -> &'static UIEvent<Size<u32>> {
         &UI_EVENTS.size_changed
     }
 

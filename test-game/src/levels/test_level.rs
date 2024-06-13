@@ -77,8 +77,8 @@ impl LevelSetup for TestLevel {
 
         for i in 0..150 {
             let mut bx = self.add_sprite::<Body>(
-                Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake()).into()),
-                (0.1f32 * i.lossy_convert(), i * 4 + 20),
+                Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake())),
+                (0.1f32 * i.lossy_convert(), i * 4 + 40),
             );
 
             if Faker.fake() {
