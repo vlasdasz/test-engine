@@ -79,5 +79,6 @@ pub struct ViewBase {
 pub struct ViewTouchCallbacks {
     pub all:       Event<Touch>,
     pub began:     Event<Touch>,
+    pub moved:     Event<Touch>,
     pub up_inside: Event<Touch>,
 }

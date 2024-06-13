@@ -2,13 +2,14 @@ use test_engine::{
     async_after,
     audio::Sound,
     gm::{Apply, Direction, LossyConvert},
-    level::{Control, LevelManager},
+    level::{Control, Level, LevelManager},
     refs::Weak,
     ui::{
         view, Alert, Anchor,
-        Anchor::{Height, Top, Width, X},
+        Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, ImageView, Label, NumberView,
-        Point, PointsPath, Spinner, StickView, TextField, UIManager, ViewData, ViewSetup,
+        Point, PointsPath, PositionView, Spinner, StickView, TextField, UIManager, ViewData, ViewFrame,
+        ViewSetup,
     },
     App, DataManager,
 };
@@ -52,6 +53,10 @@ pub struct TestGameView {
 
     benchmark:  Button,
     test_level: Button,
+
+    add_box: Button,
+
+    position: PositionView,
 }
 
 impl ViewSetup for TestGameView {
@@ -204,6 +209,19 @@ impl ViewSetup for TestGameView {
             LevelManager::stop_level();
             UIManager::set_view(BenchmarkView::new());
         });
+
+        self.add_box.set_text("add box");
+        self.add_box
+            .place()
+            .anchor(Left, self.ui_bench, 10)
+            .same([Y, Width, Height], self.ui_bench);
+        self.add_box.on_tap(move || {
+            let mut level = LevelManager::downcast_level::<TestLevel>();
+            let pos = level.convert_touch(self.position.frame().origin);
+            level.add_random_box(pos);
+        });
+
+        self.position.set_position((400, 400));
     }
 }
 

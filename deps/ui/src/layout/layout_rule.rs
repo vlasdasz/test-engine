@@ -1,13 +1,11 @@
 use educe::Educe;
-use gm::{flat::Size, ToF32};
+use gm::ToF32;
 use refs::Weak;
 
 use crate::{
     layout::{Anchor, Tiling},
     WeakView,
 };
-
-pub(crate) type CustomCallback = Box<dyn FnMut(WeakView, &Size)>;
 
 #[derive(Educe)]
 #[educe(Debug)]
@@ -23,9 +21,6 @@ pub(crate) struct LayoutRule {
 
     pub(crate) relative: bool,
     pub(crate) between:  bool,
-
-    #[educe(Debug(ignore))]
-    pub(crate) custom: Option<CustomCallback>,
 }
 
 impl LayoutRule {
@@ -38,7 +33,6 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative:     false,
             between:      false,
-            custom:       None,
         }
     }
 
@@ -51,7 +45,6 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative: false,
             between: false,
-            custom: None,
         }
     }
 
@@ -64,7 +57,6 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative: false,
             between: false,
-            custom: None,
         }
     }
 
@@ -77,7 +69,6 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative: true,
             between: false,
-            custom: None,
         }
     }
 
@@ -90,20 +81,6 @@ impl LayoutRule {
             anchor_view2: view_b,
             relative: false,
             between: true,
-            custom: None,
-        }
-    }
-
-    pub fn custom(action: impl FnMut(WeakView, &Size) + 'static) -> Self {
-        Self {
-            side:         Anchor::Bot,
-            tiling:       None,
-            offset:       0.0,
-            anchor_view:  Weak::default(),
-            anchor_view2: Weak::default(),
-            relative:     false,
-            between:      false,
-            custom:       Some(Box::new(action)),
         }
     }
 }

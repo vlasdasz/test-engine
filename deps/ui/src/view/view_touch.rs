@@ -43,6 +43,7 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
     if touch.is_moved() && view.touch_id() == touch.id {
         touch.position -= view.absolute_frame().origin;
         view.base_view().touch.all.trigger(*touch);
+        view.base_view().touch.moved.trigger(*touch);
         return true;
     }
 

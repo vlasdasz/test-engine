@@ -32,6 +32,8 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut + LevelInternal {
         pos *= 2;
         pos /= WGPUApp::screen_scale();
 
+        pos /= *LevelManager::scale();
+
         pos += *LevelManager::camera_pos();
 
         pos

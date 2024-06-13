@@ -18,6 +18,19 @@ pub struct TestLevel {
 }
 
 impl TestLevel {
+    pub fn add_random_box(&mut self, pos: impl Into<Point>) {
+        let mut bx = self.add_sprite::<Body>(
+            Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake())),
+            pos,
+        );
+
+        if Faker.fake() {
+            bx.set_image("crate.png");
+        } else {
+            bx.set_color(Color::random());
+        }
+    }
+
     fn on_touch(&mut self, pos: Point) {
         if let Some(mut sprite) = self.sprite_at(pos) {
             sprite.set_selected(true);
@@ -76,16 +89,7 @@ impl LevelSetup for TestLevel {
         //     .set_image("triangle.png");
 
         for i in 0..150 {
-            let mut bx = self.add_sprite::<Body>(
-                Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake())),
-                (0.1f32 * i.lossy_convert(), i * 4 + 40),
-            );
-
-            if Faker.fake() {
-                bx.set_image("crate.png");
-            } else {
-                bx.set_color(Color::random());
-            }
+            self.add_random_box((0.1f32 * i.lossy_convert(), i * 4 + 40));
         }
 
         let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 5));

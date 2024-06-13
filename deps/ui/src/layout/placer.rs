@@ -14,8 +14,8 @@ use crate::{
 };
 
 pub struct Placer {
-    pub(crate) rules:     RefCell<Vec<LayoutRule>>,
-    pub(crate) sub_rules: RefCell<Vec<LayoutRule>>,
+    pub(crate) rules:            RefCell<Vec<LayoutRule>>,
+    pub(crate) all_tiling_rules: RefCell<Vec<LayoutRule>>,
 
     // Since `Placer` is owned by `View` this should be OK. I hope.
     view:      Rglica<dyn View>,
@@ -29,17 +29,17 @@ pub struct Placer {
 impl Placer {
     pub fn empty() -> Self {
         Self {
-            rules:      RefCell::new(vec![]),
-            sub_rules:  RefCell::new(vec![]),
-            view:       Rglica::default(),
-            s_content:  Rglica::default(),
-            all_margin: RefCell::new(0.0),
-            has:        RefCell::new(Size::default()),
+            rules:            RefCell::new(vec![]),
+            all_tiling_rules: RefCell::new(vec![]),
+            view:             Rglica::default(),
+            s_content:        Rglica::default(),
+            all_margin:       RefCell::new(0.0),
+            has:              RefCell::new(Size::default()),
         }
     }
 
     pub fn is_empty(&self) -> bool {
-        self.rules.borrow().is_empty() && self.sub_rules.borrow().is_empty()
+        self.rules.borrow().is_empty() && self.all_tiling_rules.borrow().is_empty()
     }
 
     pub fn is_ok(&self) -> bool {
@@ -54,7 +54,7 @@ impl Placer {
 
     pub fn clear(&self) -> &Self {
         self.rules.borrow_mut().clear();
-        self.sub_rules.borrow_mut().clear();
+        self.all_tiling_rules.borrow_mut().clear();
         *self.has.borrow_mut() = Size::default();
         self
     }
@@ -67,8 +67,8 @@ impl Placer {
         self.rules.borrow_mut()
     }
 
-    fn sub_rules(&self) -> RefMut<Vec<LayoutRule>> {
-        self.sub_rules.borrow_mut()
+    fn all_tiling_rules(&self) -> RefMut<Vec<LayoutRule>> {
+        self.all_tiling_rules.borrow_mut()
     }
 
     fn has(&self) -> RefMut<Size<bool>> {
@@ -113,13 +113,6 @@ impl Placer {
 
     pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
         self.relative(Anchor::Size, view, multiplier)
-    }
-
-    pub fn relative_y(&self, position: impl ToF32) -> &Self {
-        let position = position.to_f32();
-        self.custom(move |mut view, s_content| {
-            view.set_y(s_content.height * position);
-        })
     }
 
     pub fn same<const S: usize>(
@@ -176,17 +169,17 @@ impl Placer {
     }
 
     pub fn all_ver(&self) -> &Self {
-        self.sub_rules().push(Tiling::Vertically.into());
+        self.all_tiling_rules().push(Tiling::Vertically.into());
         self
     }
 
     pub fn all_hor(&self) -> &Self {
-        self.sub_rules().push(Tiling::Horizontally.into());
+        self.all_tiling_rules().push(Tiling::Horizontally.into());
         self
     }
 
     pub fn distribute_ratio(&self, ratios: &[impl ToF32]) -> &Self {
-        self.sub_rules()
+        self.all_tiling_rules()
             .push(Tiling::Distribute(ratios.iter().map(|f| f.to_f32()).collect()).into());
         self
     }
@@ -229,11 +222,6 @@ impl Placer {
         };
 
         self.rules().push(LayoutRule::relative(side, ratio, view.weak_view()));
-        self
-    }
-
-    pub fn custom(&self, action: impl FnMut(WeakView, &Size) + 'static) -> &Self {
-        self.rules().push(LayoutRule::custom(action));
         self
     }
 }
@@ -298,7 +286,7 @@ impl Placer {
                 'r' => {
                     self.r(offset);
                 }
-                _ => panic!("Invalid side. Use tblr"),
+                _ => panic!("Invalid side. Use letters tblr"),
             }
         }
         self
@@ -343,9 +331,7 @@ impl Placer {
         let this = self.to_rglica();
 
         for rule in this.rules().iter_mut() {
-            if let Some(custom) = &mut rule.custom {
-                custom(self.view.weak_view(), &self.s_content);
-            } else if rule.between {
+            if rule.between {
                 self.between_layout(rule);
             } else if rule.anchor_view.is_ok() {
                 if rule.relative {
@@ -360,7 +346,7 @@ impl Placer {
             }
         }
 
-        for rule in this.sub_rules().iter() {
+        for rule in this.all_tiling_rules().iter() {
             self.tiling_layout(rule.tiling.as_ref().expect("BUG"));
         }
     }
