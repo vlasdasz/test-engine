@@ -77,7 +77,7 @@ impl ScrollView {
 
 impl ViewSetup for ScrollView {
     fn setup(mut self: Weak<Self>) {
-        self.dont_hide = true;
+        self.dont_hide_off_screen = true;
         self.slider.place().w(40).r(0);
         self.slider.on_change.val(move |val| {
             let val = 1.0 - val;

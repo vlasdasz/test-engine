@@ -48,7 +48,6 @@ impl DebugView {
         weak.__manually_set_superview(a);
         weak.init_views();
         weak.__internal_setup();
-        weak.base_view().loaded.trigger(());
     }
 
     pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {

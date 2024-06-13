@@ -56,10 +56,7 @@ pub struct ViewBase {
     pub touch: ViewTouchCallbacks,
 
     #[educe(Debug(ignore))]
-    pub dont_hide: bool,
-
-    #[educe(Debug(ignore))]
-    pub(crate) loaded: Event,
+    pub(crate) dont_hide_off_screen: bool,
 
     #[educe(Debug(ignore))]
     pub(crate) trigger_pos_changed:  bool,

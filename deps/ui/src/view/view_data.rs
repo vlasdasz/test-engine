@@ -29,7 +29,6 @@ pub trait ViewData {
 
     fn dont_hide(&self) -> bool;
 
-    fn loaded(&self) -> &Event;
     fn position_changed(&self) -> &Event;
     fn size_changed(&self) -> &Event;
 
@@ -99,11 +98,7 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn dont_hide(&self) -> bool {
-        self.base_view().dont_hide
-    }
-
-    fn loaded(&self) -> &Event {
-        &self.base_view().loaded
+        self.base_view().dont_hide_off_screen
     }
 
     fn position_changed(&self) -> &Event {

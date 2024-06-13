@@ -109,7 +109,6 @@ impl<T: ?Sized + View> ViewSubviews for T {
         weak.__manually_set_superview(self.weak_view());
         weak.init_views();
         weak.__internal_setup();
-        weak.base_view().loaded.trigger(());
         weak
     }
 
