@@ -124,7 +124,7 @@ impl UI {
                     pass,
                     &clamped_frame,
                     path.buffer(),
-                    path.bind_group(),
+                    path.bind(),
                     path.vertex_range(),
                     drawing_view.z_position() - UIManager::additional_z_offset(),
                 );

@@ -1,18 +1,16 @@
 use gm::{
-    flat::{Point, Points, Size},
+    flat::{Point, Size},
     Color,
 };
 use wgpu::{
-    include_wgsl, BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology,
-    RenderPass, RenderPipeline, ShaderStages, TextureFormat,
+    include_wgsl, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
+    RenderPipeline, ShaderStages, TextureFormat,
 };
 
 use crate::{
     render::{
-        sprite_drawer::shader_data::{
-            SpriteInstance, SpriteView, FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES,
-        },
-        uniform::make_uniform_layout,
+        sprite_drawer::shader_data::{SpriteBox, SpriteView, FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES},
+        uniform::{make_uniform_layout, UniformBind},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
@@ -21,28 +19,23 @@ use crate::{
 };
 
 #[derive(Debug)]
-pub struct SpriteDrawer {
-    view: SpriteView,
-
+pub struct BoxPipeline {
     pipeline: RenderPipeline,
 
-    view_buffer:     Buffer,
-    view_bind_group: BindGroup,
+    view: UniformBind<SpriteView>,
 
     vertex_buffer: Buffer,
 
-    boxes: VecBuffer<SpriteInstance>,
-
-    shapes: Vec<Points>,
+    boxes: VecBuffer<SpriteBox>,
 }
 
-impl SpriteDrawer {
+impl BoxPipeline {
     pub fn new(texture_format: TextureFormat) -> Self {
         let device = WGPUApp::device();
 
         let shader = device.create_shader_module(include_wgsl!("../shaders/sprite.wgsl"));
 
-        let sprite_view_layout = make_uniform_layout("sprites_view_layout", ShaderStages::VERTEX_FRAGMENT);
+        let sprite_view_layout = make_uniform_layout("sprite_view_layout", ShaderStages::VERTEX_FRAGMENT);
 
         let uniform_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                "sprite_pipeline_layout".into(),
@@ -50,17 +43,7 @@ impl SpriteDrawer {
             push_constant_ranges: &[],
         });
 
-        let view_buffer = device.buffer(
-            &SpriteView {
-                camera_pos:      Point::default(),
-                resolution:      (1000, 1000).into(),
-                camera_rotation: 0.0,
-                scale:           1.0,
-            },
-            BufferUsages::UNIFORM | BufferUsages::COPY_DST,
-        );
-
-        let view_bind_group = device.bind(&view_buffer, &sprite_view_layout);
+        let view = UniformBind::new(device, &sprite_view_layout);
 
         let pipeline = device.pipeline(
             "sprite_driver_pipeline",
@@ -69,22 +52,19 @@ impl SpriteDrawer {
             texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
-            &[Point::VERTEX_LAYOUT, SpriteInstance::VERTEX_LAYOUT],
+            &[Point::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
         );
 
         Self {
-            view: SpriteView::default(),
             pipeline,
-            view_buffer,
-            view_bind_group,
+            view,
             vertex_buffer: device.buffer(FULL_SCREEN_VERTICES, BufferUsages::VERTEX),
             boxes: VecBuffer::default(),
-            shapes: Vec::default(),
         }
     }
 
-    pub fn add_box(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
-        self.boxes.push(SpriteInstance {
+    pub fn add(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
+        self.boxes.push(SpriteBox {
             size,
             position,
             color,
@@ -103,27 +83,20 @@ impl SpriteDrawer {
     ) {
         render_pass.set_pipeline(&self.pipeline);
 
-        let view = SpriteView {
+        self.view.update(SpriteView {
             camera_pos,
             resolution,
             camera_rotation,
             scale,
-        };
-
-        if view != self.view {
-            self.view = view;
-            self.view_buffer.update(view);
-        }
+        });
 
         self.boxes.load();
 
-        render_pass.set_bind_group(0, &self.view_bind_group, &[]);
+        render_pass.set_bind_group(0, self.view.bind(), &[]);
 
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.set_vertex_buffer(1, self.boxes.buffer().slice(..));
 
         render_pass.draw(FULL_SCREEN_VERTEX_RANGE, 0..self.boxes.len());
-
-        //  self.shapes.load();
     }
 }

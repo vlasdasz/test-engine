@@ -16,6 +16,7 @@ image = { workspace = true }
 log = { workspace = true }
 tokio = { workspace = true }
 web-time = { workspace = true }
+educe = { workspace = true }
 wgpu = { workspace = true }
 
 manage = { workspace = true }

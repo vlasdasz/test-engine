@@ -1,6 +1,7 @@
 use std::{mem::size_of, ops::Range};
 
 use bytemuck::{Pod, Zeroable};
+use educe::Educe;
 use gm::{
     checked_usize_to_u32,
     flat::{Point, Size},
@@ -20,17 +21,20 @@ pub(super) const FULL_SCREEN_VERTICES: &[Point] = &[
 pub(super) const FULL_SCREEN_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(FULL_SCREEN_VERTICES.len());
 
 #[repr(C)]
-#[derive(Debug, Default, Copy, Clone, Zeroable, Pod, PartialEq)]
+#[derive(Debug, Copy, Clone, Zeroable, Pod, PartialEq, Educe)]
+#[educe(Default)]
 pub(super) struct SpriteView {
     pub camera_pos:      Point,
+    #[educe(Default = (1000, 1000).into())]
     pub resolution:      Size,
     pub camera_rotation: f32,
+    #[educe(Default = 1.0)]
     pub scale:           f32,
 }
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod)]
-pub(super) struct SpriteInstance {
+pub(super) struct SpriteBox {
     pub size:     Size,
     pub position: Point,
     pub color:    Color,
@@ -38,7 +42,7 @@ pub(super) struct SpriteInstance {
     pub paddind:  u32,
 }
 
-impl VertexLayout for SpriteInstance {
+impl VertexLayout for SpriteBox {
     const ATTRIBS: &'static [wgpu::VertexAttribute] =
         &wgpu::vertex_attr_array![2 => Float32x2, 3 => Float32x2, 4 => Float32x4, 5 => Float32];
     const VERTEX_LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {

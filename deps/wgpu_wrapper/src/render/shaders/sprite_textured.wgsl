@@ -11,7 +11,7 @@ struct Vertex {
     @location(1) uv: vec2<f32>,
 }
 
-struct SpriteInstance {
+struct SpriteBox {
     @location(2) size:     vec2<f32>,
     @location(3) position: vec2<f32>,
     @location(4) color:    vec4<f32>,
@@ -40,7 +40,7 @@ struct VertexOutput {
 @vertex
 fn v_main(
     model: Vertex,
-    instance: SpriteInstance,
+    instance: SpriteBox,
 ) -> VertexOutput {
     var out_pos: vec4<f32> = vec4<f32>(model.pos, 0.8, 1.0);
 

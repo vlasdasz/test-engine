@@ -8,19 +8,19 @@ use gm::{
 };
 use refs::Weak;
 use wgpu::{
-    BindGroup, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline,
-    ShaderStages, TextureFormat,
+    Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    TextureFormat,
 };
 
 use crate::{
     image::Image,
     render::{
-        sprite_drawer::shader_data::{SpriteInstance, SpriteView},
-        uniform::make_uniform_layout,
+        sprite_drawer::shader_data::{SpriteBox, SpriteView},
+        uniform::{make_uniform_layout, UniformBind},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
-    utils::{BufferHelper, DeviceHelper},
+    utils::DeviceHelper,
     WGPUApp,
 };
 
@@ -46,18 +46,17 @@ const VERTICES: [Vertex; 4] = [
 const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 #[derive(Debug)]
-pub struct TexturedSpriteDrawer {
+pub struct TexturedBoxPipeline {
     render_pipeline: RenderPipeline,
 
-    view_buffer:     Buffer,
-    view_bind_group: BindGroup,
+    view: UniformBind<SpriteView>,
 
     vertex_buffer: Buffer,
 
-    instances: HashMap<Weak<Image>, VecBuffer<SpriteInstance>>,
+    instances: HashMap<Weak<Image>, VecBuffer<SpriteBox>>,
 }
 
-impl TexturedSpriteDrawer {
+impl TexturedBoxPipeline {
     pub fn new(texture_format: TextureFormat) -> Self {
         let device = WGPUApp::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/sprite_textured.wgsl"));
@@ -77,27 +76,16 @@ impl TexturedSpriteDrawer {
             texture_format,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
-            &[Vertex::VERTEX_LAYOUT, SpriteInstance::VERTEX_LAYOUT],
+            &[Vertex::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
         );
 
         let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);
 
-        let view_buffer = device.buffer(
-            &SpriteView {
-                camera_pos:      Point::default(),
-                resolution:      (1000, 1000).into(),
-                camera_rotation: 0.0,
-                scale:           1.0,
-            },
-            BufferUsages::UNIFORM | BufferUsages::COPY_DST,
-        );
-
-        let view_bind_group = device.bind(&view_buffer, &sprite_view_layout);
+        let view = UniformBind::new(device, &sprite_view_layout);
 
         Self {
             render_pipeline,
-            view_buffer,
-            view_bind_group,
+            view,
             vertex_buffer,
             instances: HashMap::default(),
         }
@@ -106,7 +94,7 @@ impl TexturedSpriteDrawer {
     pub fn add_box(&mut self, image: Weak<Image>, size: Size, position: Point, rotation: f32, color: Color) {
         let image = self.instances.entry(image).or_default();
 
-        image.push(SpriteInstance {
+        image.push(SpriteBox {
             size,
             position,
             color,
@@ -125,7 +113,7 @@ impl TexturedSpriteDrawer {
     ) {
         render_pass.set_pipeline(&self.render_pipeline);
 
-        self.view_buffer.update(SpriteView {
+        self.view.update(SpriteView {
             camera_pos,
             resolution,
             camera_rotation,
@@ -135,7 +123,7 @@ impl TexturedSpriteDrawer {
         for (image, instances) in &mut self.instances {
             instances.load();
 
-            render_pass.set_bind_group(0, &self.view_bind_group, &[]);
+            render_pass.set_bind_group(0, self.view.bind(), &[]);
             render_pass.set_bind_group(1, &image.bind, &[]);
 
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));

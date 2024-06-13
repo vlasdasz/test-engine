@@ -14,7 +14,7 @@ use crate::{utils::DeviceHelper, WGPUApp};
 pub struct PathData {
     pub color:    Color,
     buffer:       Buffer,
-    bind_group:   BindGroup,
+    bind:         BindGroup,
     vertex_range: Range<u32>,
 }
 
@@ -23,8 +23,8 @@ impl PathData {
         &self.buffer
     }
 
-    pub fn bind_group(&self) -> &BindGroup {
-        &self.bind_group
+    pub fn bind(&self) -> &BindGroup {
+        &self.bind
     }
 
     pub fn vertex_range(&self) -> Range<u32> {
@@ -42,14 +42,14 @@ impl PathData {
         Self {
             color,
             buffer,
-            bind_group,
+            bind: bind_group,
             vertex_range: 0..u32::try_from(points.len()).unwrap(),
         }
     }
 
     pub fn resize(&mut self, size: Size) {
         let path_layout = WGPUApp::path_layout();
-        self.bind_group = make_bind_group(path_layout, &self.color, size);
+        self.bind = make_bind_group(path_layout, &self.color, size);
     }
 }
 

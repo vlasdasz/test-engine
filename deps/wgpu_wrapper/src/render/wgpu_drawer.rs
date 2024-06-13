@@ -8,21 +8,24 @@ use crate::{
         image_drawer::ImageDrawer,
         path_drawer::PathDrawer,
         rect_drawer::RectDrawer,
-        sprite_drawer::{SpriteDrawer, TexturedSpriteDrawer},
+        sprite_drawer::{BoxPipeline, PolygonPipeline, TexturedBoxPipeline},
     },
     state::TEXTURE_FORMAT,
 };
 
 #[derive(Debug)]
 pub struct WGPUDrawer {
+    /// UI:
     pub image: ImageDrawer,
     pub path:  PathDrawer,
     pub rect:  RectDrawer,
 
+    /// Sprites:
     pub background: BackgroundPipeline,
 
-    pub colored_sprite:  SpriteDrawer,
-    pub textured_sprite: TexturedSpriteDrawer,
+    pub polygon:      PolygonPipeline,
+    pub sprite_box:   BoxPipeline,
+    pub textured_box: TexturedBoxPipeline,
 }
 
 impl WGPUDrawer {
@@ -32,9 +35,10 @@ impl WGPUDrawer {
             image: ImageDrawer::new(TEXTURE_FORMAT),
             path:  PathDrawer::new(TEXTURE_FORMAT),
 
-            colored_sprite:  SpriteDrawer::new(TEXTURE_FORMAT),
-            textured_sprite: TexturedSpriteDrawer::new(TEXTURE_FORMAT),
-            background:      BackgroundPipeline::new(TEXTURE_FORMAT),
+            sprite_box:   BoxPipeline::new(TEXTURE_FORMAT),
+            textured_box: TexturedBoxPipeline::new(TEXTURE_FORMAT),
+            background:   BackgroundPipeline::new(TEXTURE_FORMAT),
+            polygon:      PolygonPipeline::new(TEXTURE_FORMAT),
         })
     }
 }
