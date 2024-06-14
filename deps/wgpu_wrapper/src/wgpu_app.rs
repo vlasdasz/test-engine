@@ -240,7 +240,7 @@ impl WGPUApp {
     }
 }
 
-impl ApplicationHandler for WGPUApp {
+impl ApplicationHandler<Events> for WGPUApp {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         if self.create_surface_and_window(event_loop).unwrap() {
             self.state.app.window_ready();
@@ -305,6 +305,8 @@ impl ApplicationHandler for WGPUApp {
     }
 
     fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
-        Self::window().request_redraw();
+        if self.resumed {
+            Self::window().request_redraw();
+        }
     }
 }

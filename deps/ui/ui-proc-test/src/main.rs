@@ -16,6 +16,4 @@ struct ProcView {
     weak_button: Button,
 }
 
-fn main() {
-    dbg!("A");
-}
+fn main() {}

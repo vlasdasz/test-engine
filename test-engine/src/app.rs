@@ -143,7 +143,7 @@ impl App {
     pub async fn start(first_view: Own<dyn View>, app: crate::AndroidApp) -> Result<()> {
         dbg!("PENIJEE");
 
-        use winit::{event_loop::EventLoopBuilder, platform::android::EventLoopBuilderExtAndroid};
+        use winit::platform::android::EventLoopBuilderExtAndroid;
 
         // android_logger::try_init(android_logger::Config::default().
         // with_max_level(LevelFilter::Trace));
@@ -156,7 +156,7 @@ impl App {
         log::error!("AAAASOOOOOO");
 
         let event_loop: crate::EventLoop =
-            EventLoopBuilder::with_user_event().with_android_app(app).build().unwrap();
+            crate::EventLoop::with_user_event().with_android_app(app).build().unwrap();
 
         log::error!("EVANTO");
 
