@@ -65,9 +65,9 @@ impl PolygonView {
     }
 
     fn add_first_points(self: Weak<Self>) {
-        self.add_point((100, 100).into());
-        self.add_point((100, 500).into());
-        self.add_point((500, 100).into());
+        self.add_point((200, 200).into());
+        self.add_point((200, 500).into());
+        self.add_point((500, 200).into());
     }
 }
 

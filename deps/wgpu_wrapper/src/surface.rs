@@ -7,9 +7,9 @@ use winit::window::Window;
 use crate::image::Texture;
 
 pub(crate) struct Surface {
-    pub presentable: wgpu::Surface<'static>,
-
+    pub presentable:   wgpu::Surface<'static>,
     pub depth_texture: Texture,
+    pub window:        Arc<Window>,
 }
 
 impl Surface {
@@ -24,7 +24,7 @@ impl Surface {
             return Ok(None);
         }
 
-        let surface = instance.create_surface(window)?;
+        let surface = instance.create_surface(window.clone())?;
 
         let _surface_caps = surface.get_capabilities(adapter);
 
@@ -36,6 +36,7 @@ impl Surface {
         Ok(Some(Self {
             presentable: surface,
             depth_texture,
+            window,
         }))
     }
 }

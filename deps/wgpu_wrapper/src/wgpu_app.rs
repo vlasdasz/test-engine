@@ -18,11 +18,12 @@ use wgpu::{
     TextureUsages,
 };
 use winit::{
+    application::ApplicationHandler,
     dpi::PhysicalSize,
-    event::{Event, MouseScrollDelta, WindowEvent},
-    event_loop::EventLoop,
+    event::{MouseScrollDelta, WindowEvent},
+    event_loop::{ActiveEventLoop, EventLoop},
     keyboard::{KeyCode, PhysicalKey},
-    window::{Window, WindowBuilder},
+    window::{Window, WindowAttributes, WindowId},
 };
 
 use crate::{
@@ -43,8 +44,7 @@ pub type Events = winit::platform::android::activity::AndroidApp;
 pub type Events = ();
 
 pub struct WGPUApp {
-    pub state:         State,
-    pub(crate) window: Arc<Window>,
+    pub state: State,
 
     pub window_size: Size,
 
@@ -60,8 +60,7 @@ pub struct WGPUApp {
     pub(crate) surface: Option<Surface>,
     pub(crate) drawer:  Option<WGPUDrawer>,
 
-    event_loop: Option<EventLoop<Events>>,
-    close:      AtomicBool,
+    close: AtomicBool,
 }
 
 impl WGPUApp {
@@ -77,12 +76,16 @@ impl WGPUApp {
         &Self::current().queue
     }
 
+    pub fn window() -> &'static Window {
+        &Self::current().surface.as_ref().expect("No surface yet").window
+    }
+
     pub fn drawer() -> &'static mut WGPUDrawer {
         Self::current().drawer.as_mut().expect("Drawer has not been initialized yet.")
     }
 
     pub fn screen_scale() -> f64 {
-        Self::current().window.scale_factor()
+        Self::window().scale_factor()
     }
 
     pub fn close() {
@@ -91,14 +94,18 @@ impl WGPUApp {
         });
     }
 
-    pub(crate) fn create_surface(&mut self) -> Result<bool> {
-        let Some(surface) = Surface::new(
-            &self.instance,
-            &self.adapter,
-            &self.device,
-            &self.config,
-            self.window.clone(),
-        )?
+    pub(crate) fn create_surface_and_window(&mut self, event_loop: &ActiveEventLoop) -> Result<bool> {
+        let window =
+            Arc::new(event_loop.create_window(WindowAttributes::default().with_title("Test Engine"))?);
+
+        let scale = window.scale_factor();
+
+        _ = window.request_inner_size(PhysicalSize::new(1200.0 * scale, 1000.0 * scale));
+
+        self.config.width = (1200.0 * scale).lossy_convert();
+        self.config.height = (1000.0 * scale).lossy_convert();
+
+        let Some(surface) = Surface::new(&self.instance, &self.adapter, &self.device, &self.config, window)?
         else {
             return Ok(false);
         };
@@ -111,12 +118,6 @@ impl WGPUApp {
     }
 
     async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
-        let window = Arc::new(WindowBuilder::new().with_title("Test Engine").build(&event_loop)?);
-
-        let scale: u32 = window.scale_factor().lossy_convert();
-
-        _ = window.request_inner_size(PhysicalSize::new(1200 * scale, 1000 * scale));
-
         let instance = Instance::new(InstanceDescriptor {
             backends: Backends::all(),
             ..Default::default()
@@ -151,13 +152,11 @@ impl WGPUApp {
             )
             .await?;
 
-        let size = window.inner_size();
-
         let config = SurfaceConfiguration {
             usage:        TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC,
             format:       TEXTURE_FORMAT,
-            width:        size.width,
-            height:       size.height,
+            width:        1000,
+            height:       1000,
             present_mode: if ENABLE_VSYNC || Platform::MOBILE {
                 PresentMode::AutoVsync
             } else {
@@ -175,7 +174,6 @@ impl WGPUApp {
 
         *APP.get_mut() = Self {
             state,
-            window,
             window_size: Size::default(),
             config,
             device,
@@ -185,7 +183,6 @@ impl WGPUApp {
             resumed: false,
             surface: None,
             drawer: None,
-            event_loop: event_loop.into(),
             close: AtomicBool::default(),
         }
         .into();
@@ -193,7 +190,7 @@ impl WGPUApp {
         let app = Self::current();
 
         app.state.app.set_wgpu_app(Rglica::from_ref(app));
-        app.start_event_loop()
+        app.start_event_loop(event_loop)
     }
 
     #[cfg(not(target_os = "android"))]
@@ -206,85 +203,20 @@ impl WGPUApp {
         Self::start_internal(app, event_loop).await
     }
 
-    fn start_event_loop(&mut self) -> Result<()> {
-        self.event_loop.take().unwrap().run(|event, elwt| match event {
-            Event::WindowEvent { event, window_id } if window_id == self.window.id() => match event {
-                WindowEvent::CloseRequested => elwt.exit(),
-                WindowEvent::CursorMoved { position, .. } => {
-                    self.state.app.mouse_moved((position.x, position.y).into());
-                }
-                WindowEvent::MouseInput { state, button, .. } => {
-                    self.state.app.mouse_event(state, button);
-                }
-                WindowEvent::Touch(touch) => {
-                    self.state.app.touch_event(touch);
-                }
-                WindowEvent::MouseWheel { delta, .. } => match delta {
-                    MouseScrollDelta::LineDelta(x, y) => {
-                        let point: Point = (x, y).into();
-                        self.state.app.mouse_scroll(point * 28);
-                    }
-                    MouseScrollDelta::PixelDelta(delta) => {
-                        self.state.app.mouse_scroll((delta.x, delta.y).into());
-                    }
-                },
-                WindowEvent::KeyboardInput { event, .. } => {
-                    if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
-                        elwt.exit();
-                    }
-                    self.state.app.key_event(event);
-                }
-                WindowEvent::DroppedFile(path) => {
-                    self.state.app.dropped_file(path);
-                }
-                WindowEvent::Resized(physical_size) => {
-                    self.state.resize(physical_size);
-                }
-                WindowEvent::ScaleFactorChanged {
-                    scale_factor,
-                    inner_size_writer,
-                } => {
-                    dbg!(&scale_factor);
-                    dbg!(&inner_size_writer);
-                }
-                WindowEvent::RedrawRequested => {
-                    if self.close.load(Ordering::Relaxed) {
-                        elwt.exit();
-                    }
-
-                    self.state.update();
-
-                    match self.state.render() {
-                        Ok(()) => {}
-                        Err(e) => error!("Render error: {e:?}"),
-                    };
-                }
-                _ => {}
-            },
-            Event::AboutToWait => {
-                self.window.request_redraw();
-            }
-            Event::Resumed => {
-                if self.create_surface().unwrap() {
-                    self.state.app.window_ready();
-                }
-                self.resumed = true;
-            }
-            _ => {}
-        })?;
-
+    fn start_event_loop(&mut self, event_loop: EventLoop<Events>) -> Result<()> {
+        event_loop.run_app(self)?;
         Ok(())
     }
 
     pub fn set_title(&self, title: impl Into<String>) {
         if Platform::DESKTOP {
-            self.window.set_title(&title.into());
+            Self::window().set_title(&title.into());
         }
     }
 
     pub fn set_window_size(&self, size: impl Into<Size<u32>>) {
         let size = size.into();
-        let _ = self.window.request_inner_size(PhysicalSize::new(size.width, size.height));
+        let _ = Self::window().request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
     pub fn request_read_display(&self) -> Receiver<Screenshot> {
@@ -305,5 +237,74 @@ impl WGPUApp {
 
     pub fn frame_drawn(&self) -> u32 {
         self.state.frame_counter.frame_count
+    }
+}
+
+impl ApplicationHandler for WGPUApp {
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        if self.create_surface_and_window(event_loop).unwrap() {
+            self.state.app.window_ready();
+        }
+        self.resumed = true;
+    }
+
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, _window_id: WindowId, event: WindowEvent) {
+        match event {
+            WindowEvent::CloseRequested => event_loop.exit(),
+            WindowEvent::CursorMoved { position, .. } => {
+                self.state.app.mouse_moved((position.x, position.y).into());
+            }
+            WindowEvent::MouseInput { state, button, .. } => {
+                self.state.app.mouse_event(state, button);
+            }
+            WindowEvent::Touch(touch) => {
+                self.state.app.touch_event(touch);
+            }
+            WindowEvent::MouseWheel { delta, .. } => match delta {
+                MouseScrollDelta::LineDelta(x, y) => {
+                    let point: Point = (x, y).into();
+                    self.state.app.mouse_scroll(point * 28);
+                }
+                MouseScrollDelta::PixelDelta(delta) => {
+                    self.state.app.mouse_scroll((delta.x, delta.y).into());
+                }
+            },
+            WindowEvent::KeyboardInput { event, .. } => {
+                if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
+                    event_loop.exit();
+                }
+                self.state.app.key_event(event);
+            }
+            WindowEvent::DroppedFile(path) => {
+                self.state.app.dropped_file(path);
+            }
+            WindowEvent::Resized(physical_size) => {
+                self.state.resize(physical_size, event_loop);
+            }
+            WindowEvent::ScaleFactorChanged {
+                scale_factor,
+                inner_size_writer,
+            } => {
+                dbg!(&scale_factor);
+                dbg!(&inner_size_writer);
+            }
+            WindowEvent::RedrawRequested => {
+                if self.close.load(Ordering::Relaxed) {
+                    event_loop.exit();
+                }
+
+                self.state.update();
+
+                match self.state.render() {
+                    Ok(()) => {}
+                    Err(e) => error!("Render error: {e:?}"),
+                };
+            }
+            _ => {}
+        };
+    }
+
+    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
+        Self::window().request_redraw();
     }
 }

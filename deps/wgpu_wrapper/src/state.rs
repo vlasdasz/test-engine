@@ -8,7 +8,7 @@ use tokio::{
     sync::oneshot::{channel, Receiver, Sender},
 };
 use wgpu::{Buffer, BufferDescriptor, CommandEncoder, Extent3d, TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT};
-use winit::dpi::PhysicalSize;
+use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{app::App, frame_counter::FrameCounter, image::Texture, text::Font, Screenshot, WGPUApp};
 
@@ -38,7 +38,7 @@ impl State {
         }
     }
 
-    pub fn resize(&mut self, new_size: PhysicalSize<u32>) {
+    pub fn resize(&mut self, new_size: PhysicalSize<u32>, event_loop: &ActiveEventLoop) {
         if new_size.width == 0 || new_size.height == 0 {
             return;
         }
@@ -56,7 +56,7 @@ impl State {
                 "depth_texture",
             );
             surface.presentable.configure(&app.device, &app.config);
-        } else if app.resumed && app.create_surface().unwrap() {
+        } else if app.resumed && app.create_surface_and_window(event_loop).unwrap() {
             app.state.app.window_ready();
         }
 
@@ -70,7 +70,7 @@ impl State {
             );
         }
 
-        let inner_size = app.window.inner_size();
+        let inner_size = WGPUApp::window().inner_size();
 
         let position = if Platform::IOS {
             // match self.window.inner_position() {
