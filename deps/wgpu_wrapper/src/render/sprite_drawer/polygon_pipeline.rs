@@ -12,6 +12,7 @@ use crate::{
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
+    vertex_buffer::VertexBuffer,
     WGPUApp,
 };
 
@@ -66,10 +67,10 @@ impl Default for PolygonPipeline {
 }
 
 impl PolygonPipeline {
-    pub fn add(&mut self, points: &[Point], pos: Point, color: Color, rot: f32) {
+    pub fn add(&mut self, buffer: &VertexBuffer, pos: Point, color: Color, rot: f32) {
         self.polygons.push((
-            WGPUApp::device().buffer_from_bytes(cast_slice(points), BufferUsages::VERTEX),
-            points.len(),
+            WGPUApp::device().buffer_from_bytes(cast_slice(&buffer.vertices), BufferUsages::VERTEX),
+            buffer.vertices.len(),
             make_bind(&pos, &self.pos_layout),
             make_bind(&color, &self.color_layout),
             make_bind(&rot, &self.rot_layout),

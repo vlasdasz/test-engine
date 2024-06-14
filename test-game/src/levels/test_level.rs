@@ -81,31 +81,32 @@ impl LevelSetup for TestLevel {
         self.add_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 80))
             .set_color(Color::BLUE);
 
-        let _concave_points: Vec<Point> = vec![
-            (5, -5).into(),
-            (-10, -10).into(),
-            (10, -10).into(),
-            (10, 10).into(),
-        ];
-
-        // self.add_sprite::<Body>(Shape::Polygon(concave_points), (0, 100))
-        //     .set_image("triangle.png");
-
         for i in 0..150 {
             self.add_random_box((0.1f32 * i.lossy_convert(), i * 4 + 40));
         }
 
-        let points = vec![
+        let convex_points = vec![
             Point { x: 2.37, y: 2.45 },
             Point { x: -12.89, y: -4.90 },
             Point { x: 10.09, y: -1.28 },
             Point { x: 3.75, y: -11.04 },
         ];
 
-        self.add_sprite::<Body>(Shape::Polygon(points, false), (-20, 40))
+        self.add_sprite::<Body>(Shape::Convex(convex_points), (-20, 40))
             .set_color(Color::GREEN);
 
-        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 5));
+        let concave_points = vec![
+            Point { x: -16.89, y: 4.16 },
+            Point { x: 8.59, y: 11.09 },
+            Point { x: 11.99, y: -0.36 },
+            Point { x: -9.97, y: -9.34 },
+            Point { x: -3.92, y: -0.85 },
+        ];
+
+        self.add_sprite::<Body>(Shape::Concave(concave_points), (-20, 60))
+            .set_color(Color::TURQUOISE);
+
+        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 20));
         self.player = player;
         player.set_image("frisk.png").unit.enable_collision_detection();
         player.weapon.set_image("ak.png");

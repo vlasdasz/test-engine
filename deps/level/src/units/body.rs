@@ -54,12 +54,12 @@ impl Sprite for Body {
         })
     }
 
-    fn collider_handle(&self) -> Option<ColliderHandle> {
-        self.collider_handle.into()
-    }
-
     fn rigid_handle(&self) -> Option<RigidBodyHandle> {
         self.rigid_handle.into()
+    }
+
+    fn collider_handle(&self) -> Option<ColliderHandle> {
+        self.collider_handle.into()
     }
 }
 

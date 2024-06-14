@@ -16,13 +16,8 @@ impl ToCollider for Shape {
             Shape::Triangle(a, b, c) => {
                 ColliderBuilder::triangle([a.x, a.y].into(), [b.x, b.y].into(), [c.x, c.y].into())
             }
-            Shape::Polygon(points, concave) => {
-                if *concave {
-                    concave_collider(points)
-                } else {
-                    convex_collider(points)
-                }
-            }
+            Shape::Convex(points) => convex_collider(points),
+            Shape::Concave(points) => concave_collider(points),
         }
     }
 }

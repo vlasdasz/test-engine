@@ -1,6 +1,6 @@
 use gm::{
     axis::Axis,
-    flat::{Point, Points, Size},
+    flat::{Point, Size},
     Color,
 };
 use refs::Weak;
@@ -51,7 +51,7 @@ impl DrawingView {
         self
     }
 
-    fn process_points(&self, path: Points) -> Points {
+    fn process_points(&self, path: Vec<Point>) -> Vec<Point> {
         if !self.rescale {
             return path;
         }

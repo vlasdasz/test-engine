@@ -1,7 +1,7 @@
 use std::ops::Range;
 
 use gm::{
-    flat::{Points, Size},
+    flat::{Point, Size},
     Color,
 };
 use wgpu::{
@@ -31,11 +31,11 @@ impl PathData {
         self.vertex_range.clone()
     }
 
-    pub fn new(color: Color, size: Size, points: &Points) -> Self {
+    pub fn new(color: Color, size: Size, points: &[Point]) -> Self {
         let device = WGPUApp::device();
         let path_layout = WGPUApp::path_layout();
 
-        let buffer = device.buffer(points.as_slice(), BufferUsages::VERTEX);
+        let buffer = device.buffer(points, BufferUsages::VERTEX);
 
         let bind_group = make_bind_group(path_layout, &color, size);
 

@@ -37,26 +37,6 @@ impl ViewCallbacks for RenderView {
 
         drawer.polygon.clear();
 
-        drawer.polygon.add(
-            &[(0, 0).into(), (20, 0).into(), (0, 20).into(), (20, 20).into()],
-            (-20, -20).into(),
-            Color::GREEN,
-            0.0,
-        );
-
-        drawer.polygon.add(
-            &[
-                (5, 5).into(),
-                (35, 0).into(),
-                (0, 20).into(),
-                (40, 40).into(),
-                (20, 50).into(),
-            ],
-            (10, 10).into(),
-            Color::BLUE,
-            0.0,
-        );
-
         drawer.polygon.draw(
             pass,
             SpriteView {

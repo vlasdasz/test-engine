@@ -38,6 +38,7 @@ rand = "0.8"
 rapier2d = { version = "0.20.0", features = ["simd-stable"] }
 #rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
+lyon = "1.0"
 rodio = "0.18.0"
 rust_decimal = "1.35"
 serde = { version = "1.0", features = ["derive"] }

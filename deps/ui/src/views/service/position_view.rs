@@ -17,6 +17,8 @@ pub struct PositionView {
     #[educe(Debug(ignore))]
     pub moved: UIEvent<Point>,
 
+    pub additional_label: Option<String>,
+
     #[init]
     dot:   Container,
     label: Label,
@@ -25,7 +27,7 @@ pub struct PositionView {
 impl ViewSetup for PositionView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        self.place().size(200, 50);
+        self.place().size(250, 50);
         self.dot.set_color(Color::BLACK).place().tl(-5).size(10, 10);
         self.label.set_text("Move me").place().back();
         self.touch.began.val(move |touch| {
@@ -33,7 +35,13 @@ impl ViewSetup for PositionView {
         });
         self.touch.moved.val(move |touch| {
             let new_pos = self.frame.origin + touch.position - self.began_pos;
-            self.label.set_text(format!("{:.0} - {:.0}", new_pos.x, new_pos.y));
+            let mut label = format!("{:.0} - {:.0}", new_pos.x, new_pos.y);
+
+            if let Some(additional_label) = &self.additional_label {
+                label = format!("{additional_label} {label}");
+            }
+
+            self.label.set_text(label);
             self.set_position(new_pos);
             self.moved.trigger(new_pos);
         });

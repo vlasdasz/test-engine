@@ -11,6 +11,7 @@ mod render;
 mod screenshot;
 mod state;
 mod surface;
+mod vertex_buffer;
 
 pub use app::*;
 pub use bytemuck::cast_slice;
@@ -21,6 +22,7 @@ pub use render::{
 pub use screenshot::*;
 pub use text::*;
 pub use utils::DeviceHelper;
+pub use vertex_buffer::VertexBuffer;
 pub use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
     Buffer, BufferUsages, Device, PolygonMode, RenderPass,

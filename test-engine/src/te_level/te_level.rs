@@ -44,9 +44,9 @@ impl TELevel {
                     sprite.rotation(),
                     *sprite.color(),
                 );
-            } else if sprite.shape.is_polygon() {
+            } else if let Some(vertex_buffer) = &sprite.vertex_buffer {
                 drawer.polygon.add(
-                    sprite.shape.points(),
+                    vertex_buffer,
                     sprite.position(),
                     *sprite.color(),
                     sprite.rotation(),

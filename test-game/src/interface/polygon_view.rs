@@ -5,17 +5,17 @@ use test_engine::{
     ui::{
         view,
         Anchor::{Size, Top, X},
-        Button, Color, Container, Point, Points, PositionView, UIManager, ViewCallbacks, ViewData, ViewFrame,
+        Button, Color, Container, Point, PositionView, UIManager, ViewCallbacks, ViewData, ViewFrame,
         ViewSetup, ViewSubviews,
     },
-    RenderPass, SpriteView, WGPUApp,
+    RenderPass, SpriteView, VertexBuffer, WGPUApp,
 };
 
 use crate::interface::test_game_view::TestGameView;
 
 #[view]
 pub struct PolygonView {
-    points: Points,
+    points: VertexBuffer,
     views:  Vec<Weak<PositionView>>,
     #[init]
     add:    Button,
@@ -55,12 +55,13 @@ impl PolygonView {
     fn add_point(mut self: Weak<Self>, pos: Point) {
         let mut view = self.add_view::<PositionView>();
         view.set_position(pos);
-        view.tag = self.points.len();
+        view.tag = self.points.vertices.len();
+        view.additional_label = format!("{}:", self.points.vertices.len()).into();
         let pos = LevelManager::convert_touch(pos);
-        self.points.push(pos);
+        self.points.vertices.push(pos);
 
         view.moved.val(self, move |new_pos| {
-            self.points[view.tag] = LevelManager::convert_touch(new_pos);
+            self.points.vertices[view.tag] = LevelManager::convert_touch(new_pos);
         });
     }
 

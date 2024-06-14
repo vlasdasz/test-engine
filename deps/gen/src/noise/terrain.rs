@@ -1,6 +1,6 @@
 use contour::ContourBuilder;
 use gm::{
-    flat::{Point, Points, Size},
+    flat::{Point, Size},
     LossyConvert,
 };
 use noise::{
@@ -18,7 +18,7 @@ pub struct TerrainParams {
 
 pub struct TerrainData {
     pub pixels:  Vec<u8>,
-    pub islands: Vec<Points>,
+    pub islands: Vec<Vec<Point>>,
 }
 
 pub fn generate_terrain(
@@ -54,7 +54,7 @@ pub fn generate_terrain(
     TerrainData { pixels, islands }
 }
 
-fn extract_shapes(data: &[u8], resolution: Size<u32>) -> Vec<Points> {
+fn extract_shapes(data: &[u8], resolution: Size<u32>) -> Vec<Vec<Point>> {
     let data: Vec<_> = data.iter().map(|val| f32::from(*val)).collect();
 
     let c = ContourBuilder::new(resolution.width, resolution.height, false);

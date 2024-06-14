@@ -283,10 +283,9 @@ impl ApplicationHandler<Events> for WGPUApp {
             }
             WindowEvent::ScaleFactorChanged {
                 scale_factor,
-                inner_size_writer,
+                inner_size_writer: _,
             } => {
                 dbg!(&scale_factor);
-                dbg!(&inner_size_writer);
             }
             WindowEvent::RedrawRequested => {
                 if self.close.load(Ordering::Relaxed) {
