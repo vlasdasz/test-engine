@@ -75,8 +75,11 @@ impl LevelSetup for TestLevel {
         self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0))
             .set_image("square.png");
 
-        // self.add_sprite::<Body>(Shape::triangle((-10, -10), (10, -10), (-10, 10)),
-        // (0, 50))     .set_image("triangle.png");
+        self.add_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 50))
+            .set_image("triangle.png");
+
+        self.add_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 80))
+            .set_color(Color::BLUE);
 
         let _concave_points: Vec<Point> = vec![
             (5, -5).into(),
@@ -91,6 +94,16 @@ impl LevelSetup for TestLevel {
         for i in 0..150 {
             self.add_random_box((0.1f32 * i.lossy_convert(), i * 4 + 40));
         }
+
+        let points = vec![
+            Point { x: 2.37, y: 2.45 },
+            Point { x: -12.89, y: -4.90 },
+            Point { x: 10.09, y: -1.28 },
+            Point { x: 3.75, y: -11.04 },
+        ];
+
+        self.add_sprite::<Body>(Shape::Polygon(points, false), (-20, 40))
+            .set_color(Color::GREEN);
 
         let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 5));
         self.player = player;

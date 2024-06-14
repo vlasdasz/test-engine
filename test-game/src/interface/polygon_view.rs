@@ -3,7 +3,9 @@ use test_engine::{
     level::LevelManager,
     refs::Weak,
     ui::{
-        view, Button, Color, Point, Points, PositionView, UIManager, ViewCallbacks, ViewData, ViewFrame,
+        view,
+        Anchor::{Size, Top, X},
+        Button, Color, Container, Point, Points, PositionView, UIManager, ViewCallbacks, ViewData, ViewFrame,
         ViewSetup, ViewSubviews,
     },
     RenderPass, SpriteView, WGPUApp,
@@ -17,6 +19,8 @@ pub struct PolygonView {
     views:  Vec<Weak<PositionView>>,
     #[init]
     add:    Button,
+    print:  Button,
+    center: Container,
 }
 
 impl ViewSetup for PolygonView {
@@ -34,6 +38,14 @@ impl ViewSetup for PolygonView {
         self.add.on_tap(move || {
             self.add_point((0, 0).into());
         });
+
+        self.print.set_text("Print");
+        self.print.place().anchor(Top, self.add, 10).same([Size, X], self.add);
+        self.print.on_tap(move || {
+            dbg!(&self.points);
+        });
+
+        self.center.set_color(Color::WHITE).place().size(5, 5).center();
 
         after(0.1, move || self.add_first_points());
     }
@@ -65,7 +77,7 @@ impl ViewCallbacks for PolygonView {
 
         drawer.polygon.clear();
 
-        drawer.polygon.add(&self.points, (0, 0).into(), Color::GREEN);
+        drawer.polygon.add(&self.points, (0, 0).into(), Color::GREEN, 0.0);
 
         drawer.polygon.draw(
             pass,

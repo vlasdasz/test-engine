@@ -42,7 +42,7 @@ fn v_main(
     model: Vertex,
     instance: SpriteBox,
 ) -> VertexOutput {
-    var out_pos: vec4<f32> = vec4<f32>(model.pos, 0.8, 1.0);
+    var out_pos: vec4<f32> = vec4<f32>(model.pos, 0.85, 1.0);
 
     out_pos.x *= instance.size.x;
     out_pos.y *= instance.size.y;

@@ -12,6 +12,9 @@ var<uniform> view: SpriteView;
 @group(1) @binding(0)
 var<uniform> pos: vec2<f32>;
 
+@group(2) @binding(0)
+var<uniform> rot: f32;
+
 fn rotation_z_matrix(angle: f32) -> mat4x4<f32> {
     let cos_z: f32 = cos(angle);
     let sin_z: f32 = sin(angle);
@@ -32,7 +35,7 @@ fn v_main(
 //    out.x *= instance.size.x;
 //    out.y *= instance.size.y;
 
-//    out *= rotation_z_matrix(-instance.rotation);
+    out *= rotation_z_matrix(-rot);
 
     out.x += pos.x - view.camera_pos.x;
     out.y += pos.y - view.camera_pos.y;
@@ -52,7 +55,7 @@ fn v_main(
     return out;
 }
 
-@group(2) @binding(0)
+@group(3) @binding(0)
 var<uniform> color: vec4<f32>;
 
 @fragment

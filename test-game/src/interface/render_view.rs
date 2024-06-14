@@ -41,6 +41,7 @@ impl ViewCallbacks for RenderView {
             &[(0, 0).into(), (20, 0).into(), (0, 20).into(), (20, 20).into()],
             (-20, -20).into(),
             Color::GREEN,
+            0.0,
         );
 
         drawer.polygon.add(
@@ -53,6 +54,7 @@ impl ViewCallbacks for RenderView {
             ],
             (10, 10).into(),
             Color::BLUE,
+            0.0,
         );
 
         drawer.polygon.draw(

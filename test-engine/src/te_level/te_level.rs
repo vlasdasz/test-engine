@@ -2,7 +2,7 @@ use level::LevelManager;
 use manage::{data_manager::DataManager, ExistsManaged};
 use ui::UIManager;
 use wgpu::RenderPass;
-use wgpu_wrapper::WGPUApp;
+use wgpu_wrapper::{SpriteView, WGPUApp};
 
 pub(crate) struct TELevel;
 
@@ -33,6 +33,8 @@ impl TELevel {
             );
         }
 
+        drawer.polygon.clear();
+
         for sprite in level.sprites() {
             if sprite.image.exists_managed() {
                 drawer.textured_box.add_box(
@@ -41,6 +43,13 @@ impl TELevel {
                     sprite.position(),
                     sprite.rotation(),
                     *sprite.color(),
+                );
+            } else if sprite.shape.is_polygon() {
+                drawer.polygon.add(
+                    sprite.shape.points(),
+                    sprite.position(),
+                    *sprite.color(),
+                    sprite.rotation(),
                 );
             } else {
                 drawer.sprite_box.add(
@@ -53,7 +62,16 @@ impl TELevel {
         }
 
         drawer.sprite_box.draw(pass, scale, 0.0, camera_pos, resolution);
-
         drawer.textured_box.draw(pass, scale, 0.0, camera_pos, resolution);
+
+        drawer.polygon.draw(
+            pass,
+            SpriteView {
+                camera_pos,
+                resolution,
+                camera_rotation: 0.0,
+                scale,
+            },
+        );
     }
 }

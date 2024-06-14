@@ -44,6 +44,8 @@ impl LevelManager {
 
     pub fn stop_level() {
         SELF.get_mut().level = None;
+        *Self::scale() = 1.0;
+        *Self::camera_pos() = (0, 0).into();
     }
 
     pub fn level() -> &'static dyn Level {

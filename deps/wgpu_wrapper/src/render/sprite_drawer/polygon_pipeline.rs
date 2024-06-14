@@ -23,8 +23,9 @@ pub struct PolygonPipeline {
 
     pos_layout:   BindGroupLayout,
     color_layout: BindGroupLayout,
+    rot_layout:   BindGroupLayout,
 
-    polygons: Vec<(Buffer, usize, BindGroup, BindGroup)>,
+    polygons: Vec<(Buffer, usize, BindGroup, BindGroup, BindGroup)>,
 }
 
 impl Default for PolygonPipeline {
@@ -35,11 +36,12 @@ impl Default for PolygonPipeline {
 
         let view_layout = make_uniform_layout("polygon_view_layout", ShaderStages::VERTEX);
         let pos_layout = make_uniform_layout("polygon_pos_layout", ShaderStages::VERTEX);
+        let rot_layout = make_uniform_layout("rot", ShaderStages::VERTEX);
         let color_layout = make_uniform_layout("polygon_color_layout", ShaderStages::FRAGMENT);
 
         let uniform_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                "polygon_pipeline_layout".into(),
-            bind_group_layouts:   &[&view_layout, &pos_layout, &color_layout],
+            bind_group_layouts:   &[&view_layout, &pos_layout, &rot_layout, &color_layout],
             push_constant_ranges: &[],
         });
 
@@ -47,7 +49,7 @@ impl Default for PolygonPipeline {
             "polygon_pipeline",
             &uniform_layout,
             &shader,
-            PolygonMode::Line,
+            PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
             &[Point::VERTEX_LAYOUT],
         );
@@ -57,18 +59,20 @@ impl Default for PolygonPipeline {
             view: view_layout.into(),
             pos_layout,
             color_layout,
+            rot_layout,
             polygons: vec![],
         }
     }
 }
 
 impl PolygonPipeline {
-    pub fn add(&mut self, points: &[Point], pos: Point, color: Color) {
+    pub fn add(&mut self, points: &[Point], pos: Point, color: Color, rot: f32) {
         self.polygons.push((
             WGPUApp::device().buffer_from_bytes(cast_slice(points), BufferUsages::VERTEX),
             points.len(),
             make_bind(&pos, &self.pos_layout),
             make_bind(&color, &self.color_layout),
+            make_bind(&rot, &self.rot_layout),
         ));
     }
 
@@ -79,9 +83,10 @@ impl PolygonPipeline {
 
         render_pass.set_bind_group(0, self.view.bind(), &[]);
 
-        for (buffer, points_len, pos, color) in &self.polygons {
+        for (buffer, points_len, pos, color, rot) in &self.polygons {
             render_pass.set_bind_group(1, pos, &[]);
-            render_pass.set_bind_group(2, color, &[]);
+            render_pass.set_bind_group(2, rot, &[]);
+            render_pass.set_bind_group(3, color, &[]);
 
             render_pass.set_vertex_buffer(0, buffer.slice(..));
 

@@ -20,6 +20,8 @@ pub struct SpriteData {
 
     pub(crate) collision_enabled: bool,
 
+    pub shape: Shape,
+
     pub tag: u32,
 
     #[educe(Default = Color::random())]
@@ -34,6 +36,7 @@ impl SpriteData {
         Self {
             position,
             size: shape.size(),
+            shape,
             ..Default::default()
         }
     }

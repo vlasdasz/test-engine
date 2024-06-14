@@ -16,12 +16,18 @@ impl ToCollider for Shape {
             Shape::Triangle(a, b, c) => {
                 ColliderBuilder::triangle([a.x, a.y].into(), [b.x, b.y].into(), [c.x, c.y].into())
             }
-            Shape::Polygon(points) => polygon_collider(points),
+            Shape::Polygon(points, concave) => {
+                if *concave {
+                    concave_collider(points)
+                } else {
+                    convex_collider(points)
+                }
+            }
         }
     }
 }
 
-fn polygon_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
+fn concave_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
     let points: Vec<_> = points.iter().map(|p| Point::<Real>::new(p.x, p.y)).collect();
     let indices: Vec<_> = (0..u32::try_from(points.len()).unwrap() - 1)
         .map(|i| [i, i + 1])
@@ -29,4 +35,9 @@ fn polygon_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
         .collect();
 
     ColliderBuilder::convex_decomposition(&points, &indices)
+}
+
+fn convex_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
+    let points: Vec<_> = points.iter().map(|p| Point::<Real>::new(p.x, p.y)).collect();
+    ColliderBuilder::convex_hull(&points).expect("This shape is not convex")
 }
