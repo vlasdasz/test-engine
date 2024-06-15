@@ -7,9 +7,13 @@ version = "0.1.0"
 name = "noise"
 path = "src/main.rs"
 
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "noise"
 
 [dependencies]
 anyhow = { workspace = true }
+tokio = { workspace = true }
 
 gen = { workspace = true }
-test_engine = { workspace = true }
+test-engine = { workspace = true }

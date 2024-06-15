@@ -1,3 +1,4 @@
+use noise::NoiseView;
 use test_engine::{
     async_after,
     audio::Sound,
@@ -59,6 +60,7 @@ pub struct TestGameView {
     position: PositionView,
 
     polygon: Button,
+    noise:   Button,
 }
 
 impl ViewSetup for TestGameView {
@@ -228,6 +230,18 @@ impl ViewSetup for TestGameView {
             .same([Y, Width, Height], self.add_box);
         self.polygon.on_tap(|| {
             UIManager::set_view(PolygonView::new());
+        });
+
+        self.noise.set_text("noise");
+        self.noise
+            .place()
+            .anchor(Left, self.polygon, 10)
+            .same([Y, Width, Height], self.polygon);
+        self.noise.on_tap(|| {
+            LevelManager::stop_level();
+            UIManager::set_view(NoiseView::new().on_back(|| {
+                UIManager::set_view(Self::new());
+            }));
         });
     }
 }

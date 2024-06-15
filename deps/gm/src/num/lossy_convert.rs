@@ -46,7 +46,7 @@ impl LossyConvert<isize> for f32 {
     fn lossy_convert(self) -> isize {
         assert!(!self.is_nan(), "Lossy convert from Nan f32");
         assert!(self <= isize::MAX as f32, "Lossy convert overflow");
-        assert!(self > isize::MIN as f32, "Lossy convert underflow");
+        assert!(self >= isize::MIN as f32, "Lossy convert underflow");
         self as isize
     }
 }
@@ -56,6 +56,7 @@ impl LossyConvert<u8> for f32 {
         assert!(!self.is_nan(), "Lossy convert from Nan f32");
         assert!(self >= 0.0, "Lossy convert sign loss");
         assert!(self <= f32::from(u8::MAX), "Lossy convert overflow");
+        assert!(self >= f32::from(u8::MIN), "Lossy convert underflow");
         self as u8
     }
 }
@@ -64,7 +65,7 @@ impl LossyConvert<f32> for f64 {
     fn lossy_convert(self) -> f32 {
         assert!(!self.is_nan(), "Lossy convert from Nan f64");
         assert!(self <= f64::from(f32::MAX), "Lossy convert overflow");
-        assert!(self > f64::from(f32::MIN), "Lossy convert underflow");
+        assert!(self >= f64::from(f32::MIN), "Lossy convert underflow");
         self as f32
     }
 }
@@ -74,7 +75,7 @@ impl LossyConvert<u32> for f64 {
         assert!(!self.is_nan(), "Lossy convert from Nan f64");
         assert!(self >= 0.0, "Lossy convert sign loss");
         assert!(self <= f64::from(u32::MAX), "Lossy convert overflow");
-        assert!(self > f64::from(u32::MIN), "Lossy convert underflow");
+        assert!(self >= f64::from(u32::MIN), "Lossy convert underflow");
         self as u32
     }
 }
@@ -84,7 +85,7 @@ impl LossyConvert<u8> for f64 {
         assert!(!self.is_nan(), "Lossy convert from Nan f64");
         assert!(self >= 0.0, "Lossy convert sign loss");
         assert!(self <= f64::from(u8::MAX), "Lossy convert overflow");
-        assert!(self > f64::from(u8::MIN), "Lossy convert underflow");
+        assert!(self >= f64::from(u8::MIN), "Lossy convert underflow");
         self as u8
     }
 }

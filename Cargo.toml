@@ -11,6 +11,7 @@ members = [
   "ui-benchmark",
   "level-test",
   "deps/ui/ui-proc-test",
+  "noise",
 ]
 
 resolver = "2"
@@ -66,6 +67,7 @@ gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
+noise = { path = "noise" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
 test-game = { path = "test-game" }

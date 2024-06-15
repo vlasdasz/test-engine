@@ -7,8 +7,12 @@
 mod noise_view;
 
 use anyhow::Result;
+use test_engine::{ui::ViewSetup, App};
 
-fn main() -> Result<()> {
-    //old_engine::ViewApp::<NoiseView>::start()
+use crate::noise_view::NoiseView;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    App::start(NoiseView::new()).await?;
     Ok(())
 }

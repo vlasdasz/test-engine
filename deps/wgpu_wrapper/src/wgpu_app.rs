@@ -144,7 +144,7 @@ impl WGPUApp {
             .request_device(
                 &DeviceDescriptor {
                     // required_features: Features::empty(),
-                    required_features: Features::POLYGON_MODE_LINE,
+                    required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
                     required_limits,
                     label: None,
                 },

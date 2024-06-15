@@ -14,6 +14,7 @@ pub struct TerrainParams {
     pub size:       Size,
     pub position:   Point,
     pub threshold:  u8,
+    pub skip:       usize,
 }
 
 pub struct TerrainData {
@@ -28,6 +29,7 @@ pub fn generate_terrain(
         size,
         position,
         threshold,
+        skip,
     }: TerrainParams,
 ) -> TerrainData {
     let open_simplex = OpenSimplex::new(seed);
@@ -49,16 +51,16 @@ pub fn generate_terrain(
         pixels.push(if val > threshold { 0 } else { 255 });
     }
 
-    let islands = extract_shapes(&pixels, resolution);
+    let islands = extract_shapes(&pixels, resolution, skip);
 
     TerrainData { pixels, islands }
 }
 
-fn extract_shapes(data: &[u8], resolution: Size<u32>) -> Vec<Vec<Point>> {
+fn extract_shapes(data: &[u8], resolution: Size<u32>, skip: usize) -> Vec<Vec<Point>> {
     let data: Vec<_> = data.iter().map(|val| f32::from(*val)).collect();
 
     let c = ContourBuilder::new(resolution.width, resolution.height, false);
-    let res = c.contours(&data, &[0.5]).unwrap(); //
+    let res = c.contours(&data, &[0.5]).unwrap();
 
     res.first()
         .unwrap()
@@ -72,7 +74,7 @@ fn extract_shapes(data: &[u8], resolution: Size<u32>) -> Vec<Vec<Point>> {
                     x: point.x,
                     y: point.y,
                 })
-                .step_by(5)
+                .step_by(skip)
                 .collect()
         })
         .collect()

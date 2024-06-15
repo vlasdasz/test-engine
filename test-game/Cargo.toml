@@ -15,6 +15,7 @@ name = "test_game"
 fake = { workspace = true }
 tokio = { workspace = true }
 
+noise = { workspace = true }
 test-engine = { workspace = true }
 ui-benchmark = { workspace = true }
 

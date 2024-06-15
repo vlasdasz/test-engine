@@ -50,6 +50,10 @@ impl DebugView {
         weak.__internal_setup();
     }
 
+    pub fn disable() {
+        DEBUG_VIEW.get_mut().take();
+    }
+
     pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
         let mut button = self.add_view::<Button>();
         button.set_text(label);
