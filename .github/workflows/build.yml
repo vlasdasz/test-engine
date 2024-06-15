@@ -29,6 +29,10 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           submodules: recursive
 
+      - name: Free Space
+        if: ${{ matrix.target.os != 'windows' }}
+        run: ./build/scripts/free_action_runner.sh
+
       - name: Build
         if: ${{ matrix.target.os != 'windows' }}
         run: ./build/build.sh ${{ matrix.target.os }}
@@ -60,6 +64,9 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           submodules: recursive
+
+      - name: Free Space
+        run: ./build/scripts/free_action_runner.sh
 
       - name: Build
         run: echo ${{ matrix.target.container }} && ./build/in_docker.sh ${{ matrix.target.container }}
