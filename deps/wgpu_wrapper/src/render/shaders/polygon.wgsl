@@ -6,14 +6,19 @@ struct SpriteView {
     scale: f32,
 }
 
+struct PolygonView {
+    color:    vec4<f32>,
+    pos:      vec2<f32>,
+    rot:      f32,
+    _padding: u32,
+}
+
 @group(0) @binding(0)
 var<uniform> view: SpriteView;
 
 @group(1) @binding(0)
-var<uniform> pos: vec2<f32>;
+var<uniform> polygon_view: PolygonView;
 
-@group(2) @binding(0)
-var<uniform> rot: f32;
 
 fn rotation_z_matrix(angle: f32) -> mat4x4<f32> {
     let cos_z: f32 = cos(angle);
@@ -35,10 +40,10 @@ fn v_main(
 //    out.x *= instance.size.x;
 //    out.y *= instance.size.y;
 
-    out *= rotation_z_matrix(-rot);
+    out *= rotation_z_matrix(-polygon_view.rot);
 
-    out.x += pos.x - view.camera_pos.x;
-    out.y += pos.y - view.camera_pos.y;
+    out.x += polygon_view.pos.x - view.camera_pos.x;
+    out.y += polygon_view.pos.y - view.camera_pos.y;
 
     out *=  rotation_z_matrix(view.camera_rotation);
 
@@ -55,10 +60,7 @@ fn v_main(
     return out;
 }
 
-@group(3) @binding(0)
-var<uniform> color: vec4<f32>;
-
 @fragment
 fn f_main() -> @location(0) vec4<f32> {
-    return color;
+    return polygon_view.color;
 }
