@@ -3,8 +3,8 @@ use test_engine::{
     gm::LossyConvert,
     refs::{Own, Weak},
     ui::{
-        view, AddLabel, Anchor, Button, Color, DebugView, DrawingView, Image, ImageView, NumberView, Point,
-        PointsPath, Size, ViewData, ViewSetup, ViewTouch,
+        view, AddLabel, Anchor, Button, Color, DebugView, DrawingView, Image, ImageView, Label, NumberView,
+        Point, PointsPath, Size, ViewData, ViewSetup, ViewTouch,
     },
     Event,
 };
@@ -21,8 +21,10 @@ pub struct NoiseView {
     x_view:         NumberView<f32>,
     y_view:         NumberView<f32>,
     size_view:      NumberView<f32>,
+    skip_view:      NumberView<f32>,
     image_view:     ImageView,
     back:           Button,
+    counter_label:  Label,
 }
 
 impl NoiseView {
@@ -35,8 +37,10 @@ impl NoiseView {
             size: (self.size_view.value(), self.size_view.value()).into(),
             position: (self.x_view.value(), self.y_view.value()).into(),
             threshold: self.threshold_view.value().lossy_convert(),
-            skip: 3,
+            skip: self.skip_view.value().lossy_convert(),
         });
+
+        self.counter_label.set_text(format!("{}", islands.len()));
 
         self.image_view.set_image(image);
 
@@ -108,6 +112,19 @@ impl ViewSetup for NoiseView {
             .on_change(update_image);
         self.size_view.place().size(40, 150).b(10).anchor(Anchor::Left, self.y_view, 10);
 
+        self.skip_view
+            .set_color(Color::WHITE)
+            .set_min(1.0)
+            .set_step(1.0)
+            .set_value(6.0)
+            .add_label("size")
+            .on_change(update_image);
+        self.skip_view
+            .place()
+            .size(40, 150)
+            .b(10)
+            .anchor(Anchor::Left, self.size_view, 10);
+
         self.image_view.place().size(400, 400).br(0);
 
         self.back.set_text("Back");
@@ -115,6 +132,8 @@ impl ViewSetup for NoiseView {
         self.back.on_tap(move || {
             self.on_back.trigger(());
         });
+
+        self.counter_label.place().t(200).r(5).size(100, 50);
 
         self.update_image();
     }

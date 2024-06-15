@@ -56,6 +56,12 @@ pub trait CheckedSub: Sized {
     fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self>;
 }
 
+impl CheckedSub for u8 {
+    fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
+        self.checked_sub(*other).map(|a| max(a, *min))
+    }
+}
+
 impl CheckedSub for i32 {
     fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self> {
         self.checked_sub(*other).map(|a| max(a, *min))
@@ -111,6 +117,12 @@ impl MyAdd for f32 {
 }
 
 impl MyAdd for f64 {
+    fn my_add(&self, other: &Self) -> Self {
+        self + other
+    }
+}
+
+impl MyAdd for u8 {
     fn my_add(&self, other: &Self) -> Self {
         self + other
     }

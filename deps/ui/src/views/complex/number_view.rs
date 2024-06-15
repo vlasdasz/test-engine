@@ -24,6 +24,7 @@ pub trait ViewableNumber:
 
 impl ViewableNumber for f32 {}
 impl ViewableNumber for f64 {}
+impl ViewableNumber for u8 {}
 impl ViewableNumber for i32 {}
 impl ViewableNumber for u32 {}
 impl ViewableNumber for i64 {}
