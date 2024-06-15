@@ -22,16 +22,6 @@ impl Body {
         self.rigid_body_mut().set_linvel([vel.x, vel.y].into(), true);
         self
     }
-
-    pub fn lock_rotations(&mut self) -> &mut Self {
-        self.rigid_body_mut().lock_rotations(true, true);
-        self
-    }
-
-    pub fn unlock_rotation(&mut self) -> &mut Self {
-        self.rigid_body_mut().lock_rotations(false, true);
-        self
-    }
 }
 
 impl Sprite for Body {

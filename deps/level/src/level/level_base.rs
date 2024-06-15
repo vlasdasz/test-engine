@@ -138,6 +138,30 @@ impl LevelBase {
 
         self.sprites.remove(index);
     }
+
+    pub fn remove_all_sprites(&mut self) {
+        for sprite in self.sprites.drain(..) {
+            if let Some(collider) = sprite.collider_handle() {
+                self.sets.colliders.remove(
+                    collider,
+                    &mut self.island_manager,
+                    &mut self.sets.rigid_bodies,
+                    true,
+                );
+            }
+
+            if let Some(rigid_body) = sprite.rigid_handle() {
+                self.sets.rigid_bodies.remove(
+                    rigid_body,
+                    &mut self.island_manager,
+                    &mut self.sets.colliders,
+                    &mut self.impulse_joints,
+                    &mut self.multibody_joints,
+                    true,
+                );
+            }
+        }
+    }
 }
 
 pub trait LevelTemplates {

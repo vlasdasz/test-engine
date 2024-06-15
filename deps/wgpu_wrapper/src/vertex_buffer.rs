@@ -6,6 +6,13 @@ pub struct VertexBuffer {
     pub indices:  Option<Vec<u16>>,
 }
 
+impl VertexBuffer {
+    pub fn clear(&mut self) {
+        self.vertices.clear();
+        self.indices = None;
+    }
+}
+
 impl From<Vec<Point>> for VertexBuffer {
     fn from(vertices: Vec<Point>) -> Self {
         Self {

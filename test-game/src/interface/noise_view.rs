@@ -1,19 +1,26 @@
-use gen::noise::{generate_terrain, TerrainData, TerrainParams};
 use test_engine::{
+    gen::noise::{generate_terrain, TerrainData, TerrainParams},
     gm::LossyConvert,
+    level::LevelManager,
     refs::{Own, Weak},
     ui::{
-        view, AddLabel, Anchor, Button, Color, DebugView, DrawingView, Image, ImageView, Label, NumberView,
-        Point, PointsPath, Size, ViewData, ViewSetup, ViewTouch,
+        view, AddLabel, Anchor,
+        Anchor::{Top, X},
+        Button, Color, DebugView, DrawingView, Image, ImageView, Label, NumberView, Point, PointsPath, Size,
+        ViewData, ViewSetup, ViewTouch,
     },
     Event,
 };
+
+use crate::{interface::polygon_view::PolygonView, levels::NoiseLevel};
 
 #[view]
 pub struct NoiseView {
     seed: u32,
 
     on_back: Event,
+
+    islands: Vec<Vec<Point>>,
 
     #[init]
     drawing_view:   DrawingView,
@@ -25,6 +32,8 @@ pub struct NoiseView {
     image_view:     ImageView,
     back:           Button,
     counter_label:  Label,
+    update_level:   Button,
+    polygon:        PolygonView,
 }
 
 impl NoiseView {
@@ -46,9 +55,11 @@ impl NoiseView {
 
         self.drawing_view.remove_all_paths();
 
-        for island in islands {
-            self.drawing_view.add_path(island.into_iter().map(|a| a * 20), Color::BLACK);
+        for island in &islands {
+            self.drawing_view.add_path(island.iter().map(|a| *a * 20), Color::BLACK);
         }
+
+        self.islands = islands;
 
         self.drawing_view.add_path(
             PointsPath::circle_triangles_with((200, 100), 50, 5),
@@ -66,8 +77,9 @@ impl ViewSetup for NoiseView {
     fn setup(mut self: Weak<Self>) {
         DebugView::disable();
 
+        LevelManager::set_level(NoiseLevel::default());
+
         self.drawing_view.place().back();
-        self.drawing_view.set_color(Color::WHITE);
 
         self.enable_touch_low_priority();
         self.touch.up_inside.sub(move || self.update_image());
@@ -125,6 +137,30 @@ impl ViewSetup for NoiseView {
             .b(10)
             .anchor(Anchor::Left, self.size_view, 10);
 
+        self.update_level.set_text("Level");
+        self.update_level
+            .place()
+            .anchor(Top, self.counter_label, 10)
+            .same([Anchor::Size, X], self.counter_label);
+        self.update_level.on_tap(move || {
+            LevelManager::downcast_level::<NoiseLevel>().add_islands(
+                self.islands
+                    .iter()
+                    .map(|p| p.iter().map(|p| (p.x, -p.y).into()).collect())
+                    .collect(),
+            );
+
+            let smallest_size = self.islands.iter().map(Vec::len).max().unwrap();
+
+            if smallest_size < 5 {
+                return;
+            }
+
+            let smallest_island = self.islands.iter().find(|i| i.len() == smallest_size).unwrap().clone();
+
+            self.polygon.display_points(smallest_island);
+        });
+
         self.image_view.place().size(400, 400).br(0);
 
         self.back.set_text("Back");
@@ -134,6 +170,8 @@ impl ViewSetup for NoiseView {
         });
 
         self.counter_label.place().t(200).r(5).size(100, 50);
+
+        self.polygon.place().size(800, 800).center_x();
 
         self.update_image();
     }

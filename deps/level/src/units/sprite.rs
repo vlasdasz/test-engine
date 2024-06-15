@@ -131,6 +131,18 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
         let address = self.address();
         LevelManager::level_weak().remove(address);
     }
+
+    fn lock_rotations(&mut self) {
+        if self.rigid_handle().is_some() {
+            self.rigid_body_mut().lock_rotations(true, true);
+        }
+    }
+
+    fn unlock_rotation(&mut self) {
+        if self.rigid_handle().is_some() {
+            self.rigid_body_mut().lock_rotations(false, true);
+        }
+    }
 }
 
 pub trait SpriteTemplates {

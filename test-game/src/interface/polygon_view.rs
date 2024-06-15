@@ -52,16 +52,33 @@ impl ViewSetup for PolygonView {
 }
 
 impl PolygonView {
+    pub fn display_points(mut self: Weak<Self>, points: Vec<Point>) {
+        let points = points.into_iter().map(|p| p * 50.0);
+
+        for mut view in self.views.drain(..) {
+            view.remove_from_superview();
+        }
+
+        self.points.clear();
+
+        for point in points {
+            self.add_point(point);
+        }
+
+        self.views.iter_mut().for_each(|v| v.update_label());
+    }
+
     fn add_point(mut self: Weak<Self>, pos: Point) {
         let mut view = self.add_view::<PositionView>();
         view.set_position(pos);
         view.tag = self.points.vertices.len();
         view.additional_label = format!("{}:", self.points.vertices.len()).into();
-        let pos = LevelManager::convert_touch(pos);
+        self.views.push(view);
+        let pos = LevelManager::convert_touch(pos + self.frame().origin);
         self.points.vertices.push(pos);
 
         view.moved.val(self, move |new_pos| {
-            self.points.vertices[view.tag] = LevelManager::convert_touch(new_pos);
+            self.points.vertices[view.tag] = LevelManager::convert_touch(new_pos + self.frame().origin);
         });
     }
 
@@ -76,11 +93,11 @@ impl ViewCallbacks for PolygonView {
     fn render(&self, pass: &mut RenderPass) {
         let drawer = WGPUApp::drawer();
 
-        drawer.polygon.clear();
+        drawer.polygon_test.clear();
 
-        drawer.polygon.add(&self.points, (0, 0).into(), Color::GREEN, 0.0);
+        drawer.polygon_test.add(&self.points, (0, 0).into(), Color::GREEN, 0.0);
 
-        drawer.polygon.draw(
+        drawer.polygon_test.draw(
             pass,
             SpriteView {
                 camera_pos:      Point::default(),

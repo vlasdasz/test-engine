@@ -19,6 +19,8 @@ pub struct WGPUDrawer {
     /// Sprites:
     pub background: BackgroundPipeline,
 
+    pub polygon_test: PolygonPipeline,
+
     pub polygon:      PolygonPipeline,
     pub sprite_box:   BoxPipeline,
     pub textured_box: TexturedBoxPipeline,

@@ -1,8 +1,8 @@
 use bytemuck::{cast_slice, Pod, Zeroable};
 use gm::{checked_usize_to_u32, flat::Point, Color};
 use wgpu::{
-    include_wgsl, BindGroup, BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode,
-    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    include_wgsl, BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor,
+    PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
 };
 
 use crate::{
@@ -33,7 +33,9 @@ pub struct PolygonPipeline {
 
     polygon_view_layout: BindGroupLayout,
 
-    polygons: Vec<(Buffer, usize, BindGroup)>,
+    // TODO:
+    #[allow(clippy::type_complexity)]
+    polygons: Vec<(Buffer, usize, Option<Buffer>, Option<usize>, BindGroup)>,
 }
 
 impl Default for PolygonPipeline {
@@ -56,7 +58,7 @@ impl Default for PolygonPipeline {
             &uniform_layout,
             &shader,
             PolygonMode::Fill,
-            PrimitiveTopology::TriangleStrip,
+            PrimitiveTopology::TriangleList,
             &[Point::VERTEX_LAYOUT],
         );
 
@@ -74,6 +76,11 @@ impl PolygonPipeline {
         self.polygons.push((
             WGPUApp::device().buffer_from_bytes(cast_slice(&buffer.vertices), BufferUsages::VERTEX),
             buffer.vertices.len(),
+            buffer
+                .indices
+                .as_ref()
+                .map(|a| WGPUApp::device().buffer_from_bytes(cast_slice(a), BufferUsages::INDEX)),
+            buffer.indices.as_ref().map(Vec::len),
             make_bind(
                 &PolygonView {
                     color,
@@ -93,10 +100,20 @@ impl PolygonPipeline {
 
         render_pass.set_bind_group(0, self.view.bind(), &[]);
 
-        for (buffer, points_len, view) in &self.polygons {
+        for (buffer, points_len, index_buffer, index_len, view) in &self.polygons {
             render_pass.set_bind_group(1, view, &[]);
             render_pass.set_vertex_buffer(0, buffer.slice(..));
-            render_pass.draw(0..checked_usize_to_u32(*points_len), 0..1);
+
+            if let (Some(index_buffer), Some(index_len)) = (index_buffer, index_len) {
+                render_pass.set_index_buffer(index_buffer.slice(..), IndexFormat::Uint16);
+                render_pass.draw_indexed(
+                    0..checked_usize_to_u32(*index_len),
+                    0,
+                    0..checked_usize_to_u32(*points_len),
+                );
+            } else {
+                render_pass.draw(0..checked_usize_to_u32(*points_len), 0..1);
+            }
         }
     }
 

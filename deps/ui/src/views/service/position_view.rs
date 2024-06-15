@@ -24,6 +24,18 @@ pub struct PositionView {
     label: Label,
 }
 
+impl PositionView {
+    pub fn update_label(&mut self) {
+        let mut label = format!("{:.0} - {:.0}", self.frame.origin.x, self.frame.origin.y);
+
+        if let Some(additional_label) = &self.additional_label {
+            label = format!("{additional_label} {label}");
+        }
+
+        self.label.set_text(label);
+    }
+}
+
 impl ViewSetup for PositionView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
@@ -35,14 +47,9 @@ impl ViewSetup for PositionView {
         });
         self.touch.moved.val(move |touch| {
             let new_pos = self.frame.origin + touch.position - self.began_pos;
-            let mut label = format!("{:.0} - {:.0}", new_pos.x, new_pos.y);
 
-            if let Some(additional_label) = &self.additional_label {
-                label = format!("{additional_label} {label}");
-            }
-
-            self.label.set_text(label);
             self.set_position(new_pos);
+            self.update_label();
             self.moved.trigger(new_pos);
         });
     }

@@ -1,4 +1,3 @@
-use noise::NoiseView;
 use test_engine::{
     async_after,
     audio::Sound,
@@ -17,7 +16,7 @@ use test_engine::{
 use ui_benchmark::BenchmarkView;
 
 use crate::{
-    interface::{polygon_view::PolygonView, render_view::RenderView},
+    interface::{noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView},
     levels::{BenchmarkLevel, TestLevel},
 };
 
