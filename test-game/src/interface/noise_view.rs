@@ -67,6 +67,25 @@ impl NoiseView {
         );
     }
 
+    fn update_level(self: Weak<Self>) {
+        LevelManager::downcast_level::<NoiseLevel>().add_islands(
+            self.islands
+                .iter()
+                .map(|p| p.iter().map(|p| (p.x, -p.y).into()).collect())
+                .collect(),
+        );
+
+        let biggest_size = self.islands.iter().map(Vec::len).max().unwrap();
+
+        if biggest_size < 5 {
+            return;
+        }
+
+        let smallest_island = self.islands.iter().find(|i| i.len() == biggest_size).unwrap().clone();
+
+        self.polygon.display_points(smallest_island);
+    }
+
     pub fn on_back(self: Own<Self>, callback: impl FnMut() + 'static) -> Own<Self> {
         self.on_back.sub(callback);
         self
@@ -143,22 +162,7 @@ impl ViewSetup for NoiseView {
             .anchor(Top, self.counter_label, 10)
             .same([Anchor::Size, X], self.counter_label);
         self.update_level.on_tap(move || {
-            LevelManager::downcast_level::<NoiseLevel>().add_islands(
-                self.islands
-                    .iter()
-                    .map(|p| p.iter().map(|p| (p.x, -p.y).into()).collect())
-                    .collect(),
-            );
-
-            let smallest_size = self.islands.iter().map(Vec::len).max().unwrap();
-
-            if smallest_size < 5 {
-                return;
-            }
-
-            let smallest_island = self.islands.iter().find(|i| i.len() == smallest_size).unwrap().clone();
-
-            self.polygon.display_points(smallest_island);
+            self.update_level();
         });
 
         self.image_view.place().size(400, 400).br(0);

@@ -1,6 +1,7 @@
 use fake::{Fake, Faker};
 use test_engine::{
     audio::Sound,
+    gen::noise::{generate_terrain, TerrainParams},
     gm::{LossyConvert, Shape},
     level::{
         level, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
@@ -67,12 +68,12 @@ impl LevelSetup for TestLevel {
 
         self.background = Image::get("sky.png");
 
-        self.add_sprite::<Wall>(Shape::Rect((100, 5).into()), (0, -5))
+        self.add_sprite::<Wall>(Shape::Rect((200, 5).into()), (0, -5))
             .set_color(Color::random());
         // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
-        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (60, 0))
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (120, 0))
             .set_image("square.png");
-        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-60, 0))
+        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-120, 0))
             .set_image("square.png");
 
         self.add_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 50))
@@ -86,13 +87,13 @@ impl LevelSetup for TestLevel {
         }
 
         let convex_points = vec![
-            Point { x: 2.37, y: 2.45 },
-            Point { x: -12.89, y: -4.90 },
-            Point { x: 10.09, y: -1.28 },
-            Point { x: 3.75, y: -11.04 },
+            Point { x: -0.93, y: 6.39 },
+            Point { x: -9.24, y: -1.83 },
+            Point { x: 12.08, y: -1.41 },
+            Point { x: 15.24, y: 3.65 },
         ];
 
-        self.add_sprite::<Body>(Shape::Convex(convex_points), (-20, 40))
+        self.add_sprite::<Body>(Shape::Polygon(convex_points), (-20, 40))
             .set_color(Color::GREEN);
 
         let concave_points = vec![
@@ -103,7 +104,7 @@ impl LevelSetup for TestLevel {
             Point { x: -3.92, y: -0.85 },
         ];
 
-        self.add_sprite::<Body>(Shape::Concave(concave_points), (-20, 60))
+        self.add_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
             .set_color(Color::TURQUOISE);
 
         let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 20));
@@ -129,6 +130,12 @@ impl LevelSetup for TestLevel {
                 .unwrap()
                 .on_touch(pos);
         });
+
+        let islands = generate_terrain(TerrainParams::default()).islands;
+        let max_size = islands.iter().map(Vec::len).max().unwrap();
+        let biggest_island = islands.into_iter().find(|i| i.len() == max_size).unwrap();
+
+        self.add_sprite::<Wall>(Shape::Polygon(biggest_island), (0, 20));
     }
 
     fn update(&mut self) {

@@ -1,6 +1,6 @@
 use test_engine::{
     gm::Shape,
-    level::{level, Body, LevelCreation, LevelSetup, Sprite, Wall},
+    level::{level, Body, LevelCreation, LevelSetup, Wall},
     refs::Weak,
     ui::Point,
 };
@@ -15,7 +15,10 @@ impl NoiseLevel {
         self.add_sprite::<Wall>(Shape::rect(200, 2), (0, -80));
 
         for island in islands {
-            self.add_sprite::<Body>(Shape::Concave(island), (0, 0)).lock_rotations();
+            self.add_sprite::<Body>(
+                Shape::Polygon(island.into_iter().map(|p| (p.x, p.y + 40.0).into()).collect()),
+                (0, 0),
+            );
         }
     }
 }

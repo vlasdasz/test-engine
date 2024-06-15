@@ -8,8 +8,7 @@ pub enum Shape {
     Rect(Size),
     Circle(f32),
     Triangle(Point, Point, Point),
-    Convex(Vec<Point>),
-    Concave(Vec<Point>),
+    Polygon(Vec<Point>),
 }
 
 impl Shape {
@@ -28,7 +27,7 @@ impl Shape {
             Self::Rect(size) => *size,
             Self::Circle(r) => (*r, *r).into(),
             Self::Triangle(a, b, c) => vec![*a, *b, *c].size() / 2.0,
-            Self::Convex(points) | Self::Concave(points) => points.size() / 2.0,
+            Self::Polygon(points) => points.size() / 2.0,
         }
     }
 
@@ -37,7 +36,7 @@ impl Shape {
             Self::Rect(size) => size.width,
             Self::Circle(r) => *r,
             Self::Triangle(a, b, c) => vec![*a, *b, *c].width() / 2.0,
-            Self::Convex(points) | Self::Concave(points) => points.width() / 2.0,
+            Self::Polygon(points) => points.width() / 2.0,
         }
     }
 
@@ -46,7 +45,7 @@ impl Shape {
             Self::Rect(size) => size.height,
             Self::Circle(r) => *r,
             Self::Triangle(a, b, c) => vec![*a, *b, *c].height() / 2.0,
-            Self::Convex(points) | Self::Concave(points) => points.height() / 2.0,
+            Self::Polygon(points) => points.height() / 2.0,
         }
     }
 }

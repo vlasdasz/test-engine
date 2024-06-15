@@ -8,6 +8,7 @@ use noise::{
     OpenSimplex,
 };
 
+#[derive(Debug)]
 pub struct TerrainParams {
     pub seed:       u32,
     pub resolution: Size<u32>,
@@ -15,6 +16,25 @@ pub struct TerrainParams {
     pub position:   Point,
     pub threshold:  u8,
     pub skip:       usize,
+}
+
+impl Default for TerrainParams {
+    fn default() -> Self {
+        TerrainParams {
+            seed:       0,
+            resolution: Size {
+                width:  100,
+                height: 100,
+            },
+            size:       Size {
+                width:  6.0,
+                height: 6.0,
+            },
+            position:   Point { x: 65.0, y: 8.0 },
+            threshold:  124,
+            skip:       6,
+        }
+    }
 }
 
 pub struct TerrainData {
