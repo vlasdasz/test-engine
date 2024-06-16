@@ -6,9 +6,13 @@ use test_engine::{
     DataManager,
 };
 
+use crate::levels::make_test_terrain;
+
 #[level]
 #[derive(Default)]
 pub struct BenchmarkLevel {
+    low_frames: usize,
+
     top_wall:   Weak<Wall>,
     left_wall:  Weak<Wall>,
     right_wall: Weak<Wall>,
@@ -54,6 +58,9 @@ impl BenchmarkLevel {
         self.add_sprite::<Wall>(Shape::rect(200, 2), (0, -85)).set_image(square);
         self.add_sprite::<Wall>(Shape::rect(2, 200), (120, 0)).set_image(square);
         self.add_sprite::<Wall>(Shape::rect(2, 200), (-120, 0)).set_image(square);
+
+        let terrain = make_test_terrain();
+        self.add_sprite::<Wall>(Shape::Polygon(terrain), (-20, 0));
     }
 }
 
@@ -85,6 +92,10 @@ impl LevelSetup for BenchmarkLevel {
         }
 
         if UIManager::fps() < 40.0 {
+            self.low_frames += 1;
+        }
+
+        if self.low_frames >= 120 {
             self.finish = true;
             Alert::show(format!("{} sprites", self.bullets_count));
         }

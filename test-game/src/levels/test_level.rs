@@ -131,15 +131,17 @@ impl LevelSetup for TestLevel {
                 .on_touch(pos);
         });
 
-        let islands = generate_terrain(TerrainParams::default()).islands;
-        let max_size = islands.iter().map(Vec::len).max().unwrap();
-        let biggest_island = islands.into_iter().find(|i| i.len() == max_size).unwrap();
-
-        self.add_sprite::<Wall>(Shape::Polygon(biggest_island), (0, 20));
+        self.add_sprite::<Wall>(Shape::Polygon(make_test_terrain()), (0, 20));
     }
 
     fn update(&mut self) {
         let pos = self.player.position();
         *LevelManager::camera_pos() = pos;
     }
+}
+
+pub fn make_test_terrain() -> Vec<Point> {
+    let islands = generate_terrain(TerrainParams::default()).islands;
+    let max_size = islands.iter().map(Vec::len).max().unwrap();
+    islands.into_iter().find(|i| i.len() == max_size).unwrap()
 }
