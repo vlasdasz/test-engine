@@ -11,7 +11,7 @@ name = "gm"
 [dependencies]
 bytemuck = { workspace = true }
 chrono = { workspace = true }
+educe = { workspace = true }
 fake = { workspace = true }
 lyon = { workspace = true }
 serde = { workspace = true }
-smart-default = { workspace = true }

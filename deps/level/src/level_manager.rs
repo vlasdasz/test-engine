@@ -1,21 +1,22 @@
 use std::ops::{Deref, DerefMut};
 
+use educe::Educe;
 use gm::flat::Point;
 use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
 };
 use refs::{MainLock, Own, Weak};
-use smart_default::SmartDefault;
 use wgpu_wrapper::WGPUApp;
 
 use crate::Level;
 
 static SELF: MainLock<LevelManager> = MainLock::new();
 
-#[derive(SmartDefault)]
+#[derive(Educe)]
+#[educe(Default)]
 pub struct LevelManager {
-    #[default(1.0)]
+    #[educe(Default = 1.0)]
     scale:      f32,
     camera_pos: Point,
 

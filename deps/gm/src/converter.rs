@@ -1,14 +1,15 @@
-use smart_default::SmartDefault;
+use educe::Educe;
 
 use crate::num::into_f32::ToF32;
 
-#[derive(Debug, SmartDefault)]
+#[derive(Debug, Educe)]
+#[educe(Default)]
 pub struct Converter {
-    #[default(0.0)]
+    #[educe(Default = 0.0)]
     min:  f32,
-    #[default(1.0)]
+    #[educe(Default = 1.0)]
     max:  f32,
-    #[default(1.0)]
+    #[educe(Default = 1.0)]
     span: f32,
 }
 

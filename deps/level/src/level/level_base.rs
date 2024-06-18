@@ -1,5 +1,6 @@
 use std::{collections::HashMap, ops::Deref};
 
+use educe::Educe;
 use gm::flat::Point;
 use rapier2d::{
     dynamics::ImpulseJointSet,
@@ -11,13 +12,13 @@ use rapier2d::{
     },
 };
 use refs::{Own, Weak};
-use smart_default::SmartDefault;
 use vents::Event;
 use wgpu_wrapper::image::Image;
 
 use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
 
-#[derive(SmartDefault)]
+#[derive(Educe)]
+#[educe(Default)]
 pub struct LevelBase {
     pub player: Weak<Player>,
 
@@ -33,7 +34,7 @@ pub struct LevelBase {
     pub(crate) sprites: Vec<Own<dyn Sprite>>,
     pub(crate) sets:    Sets,
 
-    #[default(Vector2::new(0.0, -9.81))]
+    #[educe(Default = Vector2::new(0.0, -9.81))]
     pub(crate) gravity: Vector2<f32>,
 
     pub(crate) physics_pipeline: PhysicsPipeline,
