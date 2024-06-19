@@ -1,10 +1,12 @@
-use std::{ops::Deref, sync::Mutex};
+use std::sync::Mutex;
 
-use crate::{View, ViewData, WeakView};
+use refs::Weak;
+
+use crate::WeakView;
 
 struct Subscriber<T: Send> {
-    view:   WeakView,
-    action: Box<dyn FnMut(T) + Send>,
+    subscriber: Weak,
+    action:     Box<dyn FnMut(T) + Send>,
 }
 
 #[derive(Default)]
@@ -19,60 +21,54 @@ impl<T: Send> UIEvent<T> {
         }
     }
 
-    pub fn sub(
-        &self,
-        view: impl Deref<Target = impl View + ?Sized>,
-        mut action: impl FnMut() + Send + 'static,
-    ) {
+    pub fn sub<U: ?Sized>(&self, subscriber: Weak<U>, mut action: impl FnMut() + Send + 'static) {
         let mut subs = self.subscribers.lock().unwrap();
-        subs.retain(|a| a.view.is_ok());
-
-        let view = view.weak_view();
+        subs.retain(|a| a.subscriber.is_ok());
 
         assert!(
-            !subs.iter().any(|s| s.view.addr() == view.addr()),
-            "This view is already subscribed to this event"
+            !subs.iter().any(|s| s.subscriber.addr() == subscriber.addr()),
+            "This object is already subscribed to this event"
         );
 
         subs.push(Subscriber {
-            view,
-            action: Box::new(move |_| action()),
+            subscriber: subscriber.erase(),
+            action:     Box::new(move |_| action()),
         });
     }
 
-    pub fn val(&self, view: impl Deref<Target = impl View + ?Sized>, action: impl FnMut(T) + Send + 'static) {
+    pub fn val<U: ?Sized>(&self, subscriber: Weak<U>, action: impl FnMut(T) + Send + 'static) {
         let mut subs = self.subscribers.lock().unwrap();
-        subs.retain(|a| a.view.is_ok());
-
-        let view = view.weak_view();
+        subs.retain(|a| a.subscriber.is_ok());
 
         assert!(
-            !subs.iter().any(|s| s.view.addr() == view.addr()),
-            "This view is already subscribed to this event"
+            !subs.iter().any(|s| s.subscriber.addr() == subscriber.addr()),
+            "This object is already subscribed to this event"
         );
 
         subs.push(Subscriber {
-            view:   view.weak_view(),
-            action: Box::new(action),
+            subscriber: subscriber.erase(),
+            action:     Box::new(action),
         });
     }
 
     pub fn unsibscribe(&self, view: WeakView) {
-        self.subscribers.lock().unwrap().retain(|a| a.view.addr() != view.addr());
+        self.subscribers.lock().unwrap().retain(|a| a.subscriber.addr() != view.addr());
     }
 
     pub fn trigger(&self, val: T)
     where T: Clone {
         let mut subs = self.subscribers.lock().unwrap();
-        subs.retain(|a| a.view.is_ok());
+        subs.retain(|a| a.subscriber.is_ok());
         for sub in subs.iter_mut() {
             (sub.action)(val.clone());
         }
     }
 
-    pub fn dump_subscribers(&self) -> Vec<String> {
-        let mut subs = self.subscribers.lock().unwrap();
-        subs.retain(|a| a.view.is_ok());
-        subs.iter().map(|s| format!("{} - {}", s.view.label(), s.view.addr())).collect()
-    }
+    // pub fn dump_subscribers(&self) -> Vec<String> {
+    //     let mut subs = self.subscribers.lock().unwrap();
+    //     subs.retain(|a| a.subscriber.is_ok());
+    //     subs.iter()
+    //         .map(|s| format!("{} - {}", s.subscriber.label(),
+    // s.subscriber.addr()))         .collect()
+    // }
 }

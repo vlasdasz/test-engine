@@ -254,6 +254,12 @@ where
     }
 }
 
+impl<T: Default> const From<()> for Point<T> {
+    fn from(_value: ()) -> Self {
+        Self::default()
+    }
+}
+
 impl<T: ToF32> Display for Point<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "x: {:.2}, y: {:.2}", self.x.to_f32(), self.y.to_f32())

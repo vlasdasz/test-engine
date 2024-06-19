@@ -60,6 +60,17 @@ pub struct TestGameView {
 
     polygon: Button,
     noise:   Button,
+
+    some_button: Button,
+}
+
+#[view]
+struct SobakaView {
+    #[init]
+    label: Label,
+
+    #[init]
+    button: Button,
 }
 
 impl ViewSetup for TestGameView {

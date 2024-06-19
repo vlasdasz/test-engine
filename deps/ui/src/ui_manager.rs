@@ -247,22 +247,16 @@ impl UIManager {
         Self::get().on_scroll.trigger(scroll);
     }
 
-    pub fn on_scroll(
-        view: impl Deref<Target = impl View + ?Sized>,
-        action: impl FnMut(Point) + Send + 'static,
-    ) {
-        Self::get().on_scroll.val(view, action);
+    pub fn on_scroll<T: ?Sized>(subscriber: Weak<T>, action: impl FnMut(Point) + Send + 'static) {
+        Self::get().on_scroll.val(subscriber, action);
     }
 
     pub fn trigger_drop_file(file: PathBuf) {
         Self::get().on_drop_file.trigger(file);
     }
 
-    pub fn on_drop_file(
-        view: impl Deref<Target = impl View + ?Sized>,
-        action: impl FnMut(PathBuf) + Send + 'static,
-    ) {
-        Self::get().on_drop_file.val(view, action);
+    pub fn on_drop_filel<T: ?Sized>(subscriber: Weak<T>, action: impl FnMut(PathBuf) + Send + 'static) {
+        Self::get().on_drop_file.val(subscriber, action);
     }
 }
 
