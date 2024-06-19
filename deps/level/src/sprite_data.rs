@@ -47,7 +47,7 @@ impl SpriteData {
         match shape {
             Shape::Circle(_) | Shape::Rect(_) => None,
             Shape::Triangle(a, b, c) => Some(vec![a, b, c].into()),
-            Shape::Polygon(points) => {
+            Shape::Polygon(points) | Shape::Polyline(points) => {
                 let (vertices, indices) = PointsPath::tessellate(points);
                 VertexBuffer {
                     vertices,

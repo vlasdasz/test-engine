@@ -182,22 +182,14 @@ impl ViewSetup for TestGameView {
         self.text_field.place().size(150, 50).t(200).anchor(Left, self.tl, 10);
 
         self.render.set_text("render");
-        self.render
-            .place()
-            .size(100, 50)
-            .t(200)
-            .anchor(Anchor::Left, self.text_field, 10);
+        self.render.place().size(100, 50).t(200).anchor(Left, self.text_field, 10);
         self.render.on_tap(|| {
             LevelManager::stop_level();
             UIManager::set_view(RenderView::new());
         });
 
         self.benchmark.set_text("bench");
-        self.benchmark
-            .place()
-            .size(100, 50)
-            .t(200)
-            .anchor(Anchor::Left, self.render, 10);
+        self.benchmark.place().size(100, 50).t(200).anchor(Left, self.render, 10);
         self.benchmark.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());

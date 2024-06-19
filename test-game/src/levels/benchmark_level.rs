@@ -59,8 +59,9 @@ impl BenchmarkLevel {
         self.make_sprite::<Wall>(Shape::rect(2, 200), (120, 0)).set_image(square);
         self.make_sprite::<Wall>(Shape::rect(2, 200), (-120, 0)).set_image(square);
 
-        let terrain = make_test_terrain();
-        self.make_sprite::<Wall>(Shape::Polygon(terrain), (-20, 0));
+        for island in make_test_terrain() {
+            self.make_sprite::<Wall>(Shape::Polygon(island), (-20, 0));
+        }
     }
 }
 
