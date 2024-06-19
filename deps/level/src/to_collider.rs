@@ -2,6 +2,7 @@ use std::panic::catch_unwind;
 
 use gm::{checked_usize_to_u32, flat::Shape};
 use rapier2d::{math::Real, parry::transformation::vhacd::VHACDParameters, prelude::ColliderBuilder};
+use utils::{elapsed, Elapsed};
 
 pub trait ToCollider {
     fn make_collider(&self) -> ColliderBuilder;
@@ -15,7 +16,7 @@ impl ToCollider for Shape {
             Shape::Triangle(a, b, c) => {
                 ColliderBuilder::triangle([a.x, a.y].into(), [b.x, b.y].into(), [c.x, c.y].into())
             }
-            Shape::Polygon(points) => concave_collider(points),
+            Shape::Polygon(points) => convex_collider(points),
             Shape::Polyline(points) => polyline_collider(points),
         }
     }
@@ -35,7 +36,16 @@ fn polyline_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
     ColliderBuilder::polyline(points, indices.into())
 }
 
-fn concave_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
+fn convex_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
+    let (points, _indices) = make_indices(points);
+    ColliderBuilder::convex_hull(&points).expect("Can't convex hull")
+}
+
+// This thing is super heavy. Around 10 seconds for simple polygon in debug
+// mode.
+fn _concave_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
+    elapsed!("concave_collider");
+
     let (points, indices) = make_indices(points);
 
     let result = catch_unwind(|| {
