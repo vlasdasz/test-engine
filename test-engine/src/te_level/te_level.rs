@@ -39,7 +39,7 @@ impl TELevel {
             if sprite.image.exists_managed() {
                 drawer.textured_box.add_box(
                     sprite.image,
-                    sprite.size(),
+                    sprite.render_size(),
                     sprite.position(),
                     sprite.rotation(),
                     *sprite.color(),
@@ -53,7 +53,7 @@ impl TELevel {
                 );
             } else {
                 drawer.sprite_box.add(
-                    sprite.size(),
+                    sprite.render_size(),
                     sprite.position(),
                     sprite.rotation(),
                     *sprite.color(),

@@ -12,7 +12,7 @@ pub trait ToCollider {
 impl ToCollider for Shape {
     fn make_collider(&self) -> ColliderBuilder {
         match self {
-            Shape::Rect(size) => ColliderBuilder::cuboid(size.width, size.height),
+            Shape::Rect(size) => ColliderBuilder::cuboid(size.width / 2.0, size.height / 2.0),
             Shape::Circle(r) => ColliderBuilder::ball(*r),
             Shape::Triangle(a, b, c) => {
                 ColliderBuilder::triangle([a.x, a.y].into(), [b.x, b.y].into(), [c.x, c.y].into())

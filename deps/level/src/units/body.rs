@@ -10,6 +10,8 @@ pub struct Body {
     rigid_handle:    RigidBodyHandle,
     collider_handle: ColliderHandle,
     sprite:          SpriteData,
+
+    pub jump_force: f32,
 }
 
 impl Body {
@@ -41,6 +43,7 @@ impl Sprite for Body {
             rigid_handle,
             collider_handle,
             sprite,
+            jump_force: 0.1,
         })
     }
 
@@ -53,22 +56,21 @@ impl Sprite for Body {
     }
 }
 
-const FORCE: f32 = 10.0;
 impl Control for Body {
     fn jump(&mut self) {
-        self.add_impulse((0, FORCE).into());
+        self.add_impulse((0, self.jump_force).into());
     }
 
     fn go_left(&mut self) {
-        self.add_impulse((-FORCE, 0).into());
+        self.add_impulse((-self.jump_force, 0).into());
     }
 
     fn go_right(&mut self) {
-        self.add_impulse((FORCE, 0).into());
+        self.add_impulse((self.jump_force, 0).into());
     }
 
     fn go_down(&mut self) {
-        self.add_impulse((0, -FORCE).into());
+        self.add_impulse((0, -self.jump_force).into());
     }
 
     fn add_impulse(&mut self, impulse: Point) {
