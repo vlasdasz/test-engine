@@ -26,7 +26,7 @@ impl Weapon {
         let vel = vector * self.bullet_speed + self.velocity;
 
         let shape = self.bullet_shape.clone();
-        let mut bullet = LevelManager::level_weak().add_sprite::<Body>(shape, pos);
+        let mut bullet = LevelManager::level_weak().make_sprite::<Body>(shape, pos);
 
         bullet.set_rotation(self.rotation());
         bullet.set_velocity(vel);

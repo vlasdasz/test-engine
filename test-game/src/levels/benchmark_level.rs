@@ -35,19 +35,19 @@ impl BenchmarkLevel {
     fn make_walls(&mut self) {
         let square = Image::get("square.png");
 
-        self.top_wall = self.add_sprite(Shape::Rect((100, 5).into()), (0, 110));
+        self.top_wall = self.make_sprite(Shape::Rect((100, 5).into()), (0, 110));
         self.top_wall.set_color(Color::random());
 
-        self.floor = self.add_sprite(Shape::Rect((100, 5).into()), (0, 0));
+        self.floor = self.make_sprite(Shape::Rect((100, 5).into()), (0, 0));
         self.floor.set_image(square);
 
-        self.left_wall = self.add_sprite(Shape::Rect((5, 50).into()), (-40, 0));
+        self.left_wall = self.make_sprite(Shape::Rect((5, 50).into()), (-40, 0));
         self.left_wall.set_image(square);
 
-        self.right_wall = self.add_sprite(Shape::Rect((5, 50).into()), (40, 0));
+        self.right_wall = self.make_sprite(Shape::Rect((5, 50).into()), (40, 0));
         self.right_wall.set_image(square);
 
-        self.bottom_moving = self.add_sprite(Shape::rect(5, 14), (0, -68));
+        self.bottom_moving = self.make_sprite(Shape::rect(5, 14), (0, -68));
         self.bottom_moving.set_image(square);
 
         self.left_animation = Animation::new(-80.0, -20.0, 2.0);
@@ -55,12 +55,12 @@ impl BenchmarkLevel {
         self.floor_animation = Animation::new(-25.0, 0.0, 0.5);
         self.bottom_animation = Animation::new(-100.0, 100.0, 4.0);
 
-        self.add_sprite::<Wall>(Shape::rect(200, 2), (0, -85)).set_image(square);
-        self.add_sprite::<Wall>(Shape::rect(2, 200), (120, 0)).set_image(square);
-        self.add_sprite::<Wall>(Shape::rect(2, 200), (-120, 0)).set_image(square);
+        self.make_sprite::<Wall>(Shape::rect(200, 2), (0, -85)).set_image(square);
+        self.make_sprite::<Wall>(Shape::rect(2, 200), (120, 0)).set_image(square);
+        self.make_sprite::<Wall>(Shape::rect(2, 200), (-120, 0)).set_image(square);
 
         let terrain = make_test_terrain();
-        self.add_sprite::<Wall>(Shape::Polygon(terrain), (-20, 0));
+        self.make_sprite::<Wall>(Shape::Polygon(terrain), (-20, 0));
     }
 }
 
@@ -68,7 +68,7 @@ impl LevelSetup for BenchmarkLevel {
     fn setup(&mut self) {
         self.background = Image::get("sky.png");
 
-        self.player = self.add_sprite(Shape::Rect((2, 2).into()), (0, 5));
+        self.player = self.make_sprite(Shape::Rect((2, 2).into()), (0, 5));
         self.player.set_color(Color::random());
 
         self.player.set_image("frisk.png");

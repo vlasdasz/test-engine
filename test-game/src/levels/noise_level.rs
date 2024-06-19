@@ -12,10 +12,10 @@ pub struct NoiseLevel {}
 impl NoiseLevel {
     pub fn add_islands(mut self: Weak<Self>, islands: Vec<Vec<Point>>) {
         self.remove_all_sprites();
-        self.add_sprite::<Wall>(Shape::rect(200, 2), (0, -80));
+        self.make_sprite::<Wall>(Shape::rect(200, 2), (0, -80));
 
         for island in islands {
-            self.add_sprite::<Body>(
+            self.make_sprite::<Body>(
                 Shape::Polygon(island.into_iter().map(|p| (p.x, p.y + 40.0).into()).collect()),
                 (0, 0),
             );
@@ -25,6 +25,6 @@ impl NoiseLevel {
 
 impl LevelSetup for NoiseLevel {
     fn setup(&mut self) {
-        self.add_sprite::<Wall>(Shape::rect(200, 2), (0, -80));
+        self.make_sprite::<Wall>(Shape::rect(200, 2), (0, -80));
     }
 }

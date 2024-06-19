@@ -20,7 +20,7 @@ pub struct TestLevel {
 
 impl TestLevel {
     pub fn add_random_box(&mut self, pos: impl Into<Point>) {
-        let mut bx = self.add_sprite::<Body>(
+        let mut bx = self.make_sprite::<Body>(
             Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake())),
             pos,
         );
@@ -68,18 +68,18 @@ impl LevelSetup for TestLevel {
 
         self.background = Image::get("sky.png");
 
-        self.add_sprite::<Wall>(Shape::Rect((200, 5).into()), (0, -5))
+        self.make_sprite::<Wall>(Shape::Rect((200, 5).into()), (0, -5))
             .set_color(Color::random());
         // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
-        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (120, 0))
+        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (120, 0))
             .set_image("square.png");
-        self.add_sprite::<Wall>(Shape::Rect((5, 100).into()), (-120, 0))
+        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (-120, 0))
             .set_image("square.png");
 
-        self.add_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 50))
+        self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 50))
             .set_image("triangle.png");
 
-        self.add_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 80))
+        self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 80))
             .set_color(Color::BLUE);
 
         for i in 0..150 {
@@ -93,7 +93,7 @@ impl LevelSetup for TestLevel {
             Point { x: 15.24, y: 3.65 },
         ];
 
-        self.add_sprite::<Body>(Shape::Polygon(convex_points), (-20, 40))
+        self.make_sprite::<Body>(Shape::Polygon(convex_points), (-20, 40))
             .set_color(Color::GREEN);
 
         let concave_points = vec![
@@ -104,10 +104,10 @@ impl LevelSetup for TestLevel {
             Point { x: -3.92, y: -0.85 },
         ];
 
-        self.add_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
+        self.make_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
             .set_color(Color::TURQUOISE);
 
-        let mut player: Weak<Player> = self.add_sprite(Shape::Rect((1.2, 2).into()), (0, 20));
+        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (0, 20));
         self.player = player;
         player.set_image("frisk.png").unit.enable_collision_detection();
         player.weapon.set_image("ak.png");
@@ -131,7 +131,7 @@ impl LevelSetup for TestLevel {
                 .on_touch(pos);
         });
 
-        self.add_sprite::<Wall>(Shape::Polygon(make_test_terrain()), (0, 20));
+        self.make_sprite::<Wall>(Shape::Polygon(make_test_terrain()), (0, 20));
     }
 
     fn update(&mut self) {
