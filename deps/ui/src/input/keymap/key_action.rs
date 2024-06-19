@@ -1,19 +1,18 @@
+use refs::Weak;
 use vents::Event;
 
-use crate::WeakView;
-
 pub struct KeyAction {
-    pub key: char,
-    action:  Event,
-    view:    WeakView,
+    pub key:    char,
+    action:     Event,
+    subscriber: Weak,
 }
 
 impl KeyAction {
-    pub fn new(view: WeakView, key: char, action: impl FnMut() + 'static) -> Self {
+    pub fn new<T: ?Sized>(subscriber: Weak<T>, key: char, action: impl FnMut() + 'static) -> Self {
         let event = Event::default();
         event.sub(action);
         Self {
-            view,
+            subscriber: subscriber.erase(),
             key,
             action: event,
         }
@@ -22,7 +21,7 @@ impl KeyAction {
 
 impl KeyAction {
     pub fn check(&self, key: char) -> bool {
-        if self.view.is_null() {
+        if self.subscriber.is_null() {
             return false;
         }
         if self.key == key {
