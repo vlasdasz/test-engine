@@ -225,17 +225,18 @@ impl<T: ToF32> MulAssign<T> for Point<f32> {
     }
 }
 
-impl<T: ToF32> Div<T> for Point<f32> {
+impl<T: Div<Output = T> + Copy> Div<T> for Point<T> {
     type Output = Self;
     fn div(self, rhs: T) -> Self {
-        let rhs = rhs.to_f32();
-        (self.x / rhs, self.y / rhs).into()
+        Self {
+            x: self.x / rhs,
+            y: self.y / rhs,
+        }
     }
 }
 
-impl<T: ToF32> DivAssign<T> for Point<f32> {
+impl<T: DivAssign<T> + Copy> DivAssign<T> for Point<T> {
     fn div_assign(&mut self, rhs: T) {
-        let rhs = rhs.to_f32();
         self.x /= rhs;
         self.y /= rhs;
     }

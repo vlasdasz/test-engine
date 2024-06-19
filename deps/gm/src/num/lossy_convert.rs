@@ -6,6 +6,15 @@ pub trait LossyConvert<To> {
     fn lossy_convert(self) -> To;
 }
 
+impl LossyConvert<i32> for f32 {
+    fn lossy_convert(self) -> i32 {
+        assert!(!self.is_nan(), "Lossy convert from Nan f32");
+        assert!(self <= i32::MAX as f32, "Lossy convert overflow");
+        assert!(self >= i32::MIN as f32, "Lossy convert overflow");
+        self as i32
+    }
+}
+
 impl LossyConvert<u32> for f32 {
     fn lossy_convert(self) -> u32 {
         assert!(!self.is_nan(), "Lossy convert from Nan f32");

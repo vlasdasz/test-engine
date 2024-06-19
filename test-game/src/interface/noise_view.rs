@@ -94,6 +94,8 @@ impl NoiseView {
 
 impl ViewSetup for NoiseView {
     fn setup(mut self: Weak<Self>) {
+        const WIDTH: u32 = 100;
+
         DebugView::disable();
 
         LevelManager::set_level(NoiseLevel::default());
@@ -112,7 +114,7 @@ impl ViewSetup for NoiseView {
             .add_label("there")
             .on_change(update_image)
             .place()
-            .size(40, 150)
+            .size(WIDTH, 150)
             .bl(10);
 
         self.x_view
@@ -123,7 +125,7 @@ impl ViewSetup for NoiseView {
             .on_change(update_image);
         self.x_view
             .place()
-            .size(40, 150)
+            .size(WIDTH, 150)
             .b(10)
             .anchor(Anchor::Left, self.threshold_view, 10);
 
@@ -133,7 +135,7 @@ impl ViewSetup for NoiseView {
             .set_step(0.5)
             .add_label("y")
             .on_change(update_image);
-        self.y_view.place().size(40, 150).b(10).anchor(Anchor::Left, self.x_view, 10);
+        self.y_view.place().size(WIDTH, 150).b(10).anchor(Anchor::Left, self.x_view, 10);
 
         self.size_view
             .set_color(Color::WHITE)
@@ -141,7 +143,11 @@ impl ViewSetup for NoiseView {
             .set_step(2.0)
             .add_label("size")
             .on_change(update_image);
-        self.size_view.place().size(40, 150).b(10).anchor(Anchor::Left, self.y_view, 10);
+        self.size_view
+            .place()
+            .size(WIDTH, 150)
+            .b(10)
+            .anchor(Anchor::Left, self.y_view, 10);
 
         self.skip_view
             .set_color(Color::WHITE)
@@ -152,7 +158,7 @@ impl ViewSetup for NoiseView {
             .on_change(update_image);
         self.skip_view
             .place()
-            .size(40, 150)
+            .size(WIDTH, 150)
             .b(10)
             .anchor(Anchor::Left, self.size_view, 10);
 

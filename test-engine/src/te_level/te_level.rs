@@ -27,7 +27,7 @@ impl TELevel {
                 pass,
                 level.background.get_static(),
                 resolution,
-                camera_pos.neg() / 10,
+                camera_pos.neg() / 10.0,
                 0.0,
                 scale,
             );

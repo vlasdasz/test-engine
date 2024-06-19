@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use educe::Educe;
-use gm::flat::Point;
+use gm::{flat::Point, LossyConvert};
 use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
@@ -92,10 +92,10 @@ impl LevelManager {
         pos.x -= size.width / 2.0;
         pos.y -= size.height / 2.0;
         pos.y = -pos.y;
-        pos /= 10;
+        pos /= 10.0;
 
         pos *= 2;
-        pos /= WGPUApp::screen_scale();
+        pos /= WGPUApp::screen_scale().lossy_convert();
 
         pos /= *Self::scale();
 
