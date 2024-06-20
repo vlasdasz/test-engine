@@ -263,7 +263,7 @@ impl ApplicationHandler<Events> for WGPUApp {
             WindowEvent::MouseWheel { delta, .. } => match delta {
                 MouseScrollDelta::LineDelta(x, y) => {
                     let point: Point = (x, y).into();
-                    self.state.app.mouse_scroll(point * 28);
+                    self.state.app.mouse_scroll(point * 28.0);
                 }
                 MouseScrollDelta::PixelDelta(delta) => {
                     self.state.app.mouse_scroll((delta.x, delta.y).into());

@@ -21,7 +21,7 @@ pub struct Weapon {
 impl Weapon {
     pub fn shoot_at(self: Weak<Self>, pos: impl Into<Point>) {
         let vector = (pos.into() - self.position()).normalized();
-        let pos = self.position() + vector * 4;
+        let pos = self.position() + vector * 4.0;
 
         let vel = vector * self.bullet_speed + self.velocity;
 

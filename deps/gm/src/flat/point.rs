@@ -92,8 +92,9 @@ impl Point<f32> {
         self.x = -self.x;
     }
 
-    pub fn invert_y(&mut self) {
+    pub fn invert_y(mut self) -> Self {
         self.y = -self.y;
+        self
     }
 }
 
@@ -202,11 +203,10 @@ impl<T: SubAssign> SubAssign for Point<T> {
     }
 }
 
-impl<T: ToF32> Mul<T> for Point<f32> {
+impl<T: Mul<Output = T> + Copy> Mul<T> for Point<T> {
     type Output = Self;
     fn mul(self, rhs: T) -> Self {
-        let rhs = rhs.to_f32();
-        (self.x * rhs, self.y * rhs).into()
+        Self::new(self.x * rhs, self.y * rhs)
     }
 }
 

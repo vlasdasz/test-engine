@@ -56,7 +56,7 @@ impl NoiseView {
         self.drawing_view.remove_all_paths();
 
         for island in &islands {
-            self.drawing_view.add_path(island.iter().map(|a| *a * 20), Color::BLACK);
+            self.drawing_view.add_path(island.iter().map(|a| *a * 20.0), Color::BLACK);
         }
 
         self.islands = islands;
