@@ -196,6 +196,13 @@ impl<T: Sub<Output = T> + Copy> Sub for &Point<T> {
     }
 }
 
+impl<T: SubAssign<T> + Copy> SubAssign<T> for Point<T> {
+    fn sub_assign(&mut self, rhs: T) {
+        self.x -= rhs;
+        self.y -= rhs;
+    }
+}
+
 impl<T: SubAssign> SubAssign for Point<T> {
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
