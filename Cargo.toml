@@ -19,7 +19,7 @@ resolver = "2"
 ignored = []
 
 [workspace.dependencies]
-android_logger = "0.13"
+android_logger = "0.14"
 anyhow = "1.0"
 bytemuck = { version = "1.15", features = ["derive"] }
 cfg_aliases = "0.2"
@@ -35,7 +35,7 @@ log = "0.4"
 nonempty = "0.10.0"
 quote = "1.0"
 rand = "0.8"
-rapier2d = { version = "0.20.0", features = ["simd-stable"] }
+rapier2d = { version = "0.21", features = ["simd-stable"] }
 #rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
 lyon = "1.0"
