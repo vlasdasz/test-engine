@@ -2,8 +2,8 @@
 include build/common.mk
 
 ui:
-	UI_TEST_CYCLES=2 cargo run -p ui-test
-	UI_TEST_CYCLES=4 cargo run -p ui-test --release
+	cargo run -p ui-test
+	cargo run -p ui-test --release
 
 ui3:
 	cargo run -p ui-benchmark --profile=r3
