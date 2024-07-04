@@ -75,7 +75,6 @@ impl Hash for Color<f32> {
         state.write_u32(self.g.to_bits());
         state.write_u32(self.b.to_bits());
         state.write_u32(self.a.to_bits());
-        state.finish();
     }
 }
 

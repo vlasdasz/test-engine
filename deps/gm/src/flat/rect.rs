@@ -211,12 +211,12 @@ impl From<Size> for Rect {
     }
 }
 
-impl<X, Y, W, H> const From<(X, Y, W, H)> for Rect
+impl<X, Y, W, H> From<(X, Y, W, H)> for Rect
 where
-    X: ~const ToF32,
-    Y: ~const ToF32,
-    W: ~const ToF32,
-    H: ~const ToF32,
+    X: ToF32,
+    Y: ToF32,
+    W: ToF32,
+    H: ToF32,
 {
     fn from(tup: (X, Y, W, H)) -> Self {
         Self {
@@ -228,24 +228,6 @@ where
                 width:  tup.2.to_f32(),
                 height: tup.3.to_f32(),
             },
-        }
-    }
-}
-
-impl<W: ~const ToF32, H: ~const ToF32> const From<(W, H)> for Rect {
-    fn from(tup: (W, H)) -> Self {
-        Self {
-            origin: Point { x: 0.0, y: 0.0 },
-            size:   (tup.0, tup.1).into(),
-        }
-    }
-}
-
-impl<X: ~const ToF32, Y: ~const ToF32> const From<(X, Y, Size)> for Rect {
-    fn from(tup: (X, Y, Size)) -> Self {
-        Self {
-            origin: (tup.0, tup.1).into(),
-            size:   tup.2,
         }
     }
 }

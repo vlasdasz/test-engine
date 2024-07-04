@@ -70,9 +70,9 @@ impl ViewSetup for StickView {
             self.on_touch(&touch);
         });
 
-        self.set_frame((SIZE, SIZE));
+        self.set_frame((0, 0, SIZE, SIZE));
 
-        self.background.set_frame((SIZE, SIZE));
+        self.background.set_frame((0, 0, SIZE, SIZE));
 
         let frame = *self.frame();
         self.background.add_path(
@@ -92,7 +92,7 @@ impl ViewSetup for StickView {
         let center = self.frame().size.center();
 
         self.direction_stick
-            .set_frame((STICK_VIEW_SIZE, STICK_VIEW_SIZE))
+            .set_frame((0, 0, STICK_VIEW_SIZE, STICK_VIEW_SIZE))
             .set_center(center);
 
         let stick_center = self.direction_stick.frame().size.center();

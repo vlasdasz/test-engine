@@ -20,7 +20,7 @@ pub trait Zero {
 
 macro_rules! impl_zero {
     ($v:expr, $($t:ty),*) => {$(
-        impl const Zero for $t { fn zero() -> Self { $v } }
+        impl Zero for $t { fn zero() -> Self { $v } }
     )*};
 }
 
@@ -37,21 +37,19 @@ impl<T: Zero + PartialEq + Copy> IsZero for T {
     }
 }
 
-#[const_trait]
 pub trait One {
     fn one() -> Self;
 }
 
 macro_rules! impl_one {
     ($v:expr, $($t:ty),*) => {$(
-        impl const One for $t { fn one() -> Self { $v } }
+        impl One for $t { fn one() -> Self { $v } }
     )*};
 }
 
 impl_one!(1, i8, u8, i16, u16, i32, u32, i64, u64, usize);
 impl_one!(1.0, f32, f64);
 
-#[const_trait]
 pub trait CheckedSub: Sized {
     fn sub_and_check(&self, other: &Self, min: &Self) -> Option<Self>;
 }
@@ -164,7 +162,7 @@ pub trait Min {
 
 macro_rules! impl_min {
     ($($t:ty),*) => {$(
-        impl const Min for $t { fn min() -> Self { Self::MIN } }
+        impl Min for $t { fn min() -> Self { Self::MIN } }
     )*};
 }
 

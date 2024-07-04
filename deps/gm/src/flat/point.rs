@@ -259,10 +259,10 @@ impl<T: DivAssign<T> + Copy> DivAssign<T> for Point<T> {
     }
 }
 
-impl<X, Y> const From<(X, Y)> for Point<f32>
+impl<X, Y> From<(X, Y)> for Point<f32>
 where
-    X: ~const ToF32,
-    Y: ~const ToF32,
+    X: ToF32,
+    Y: ToF32,
 {
     fn from(tup: (X, Y)) -> Self {
         Self {
@@ -272,7 +272,7 @@ where
     }
 }
 
-impl<T: Default> const From<()> for Point<T> {
+impl<T: Default> From<()> for Point<T> {
     fn from(_value: ()) -> Self {
         Self::default()
     }

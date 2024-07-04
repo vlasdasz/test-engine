@@ -111,7 +111,7 @@ impl Size<f32> {
         let pos = rect.other_position::<AXIS>() + rect.other_length::<AXIS>() / 2.0
             - size.other_size::<AXIS>() / 2.0;
 
-        let mut result: Rect = (size.width, size.height).into();
+        let mut result: Rect = (0, 0, size.width, size.height).into();
 
         result.set_position::<AXIS>(rect.position::<AXIS>());
         result.set_other_position::<AXIS>(pos);
@@ -120,7 +120,7 @@ impl Size<f32> {
     }
 }
 
-impl<W: ~const ToF32, H: ~const ToF32> const From<(W, H)> for Size<f32> {
+impl<W: ToF32, H: ToF32> From<(W, H)> for Size<f32> {
     fn from(tup: (W, H)) -> Self {
         Self {
             width:  tup.0.to_f32(),
