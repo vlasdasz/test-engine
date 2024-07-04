@@ -29,7 +29,7 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
     }
 
     fn render_size(&self) -> Size {
-        self.size / 2
+        self.render_size
     }
 
     fn rigid_handle(&self) -> Option<RigidBodyHandle> {

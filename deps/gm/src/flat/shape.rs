@@ -20,6 +20,10 @@ impl Shape {
     pub fn triangle(a: impl Into<Point>, b: impl Into<Point>, c: impl Into<Point>) -> Self {
         Self::Triangle(a.into(), b.into(), c.into())
     }
+
+    pub fn is_rect(&self) -> bool {
+        matches!(self, Shape::Rect(_))
+    }
 }
 
 impl Shape {

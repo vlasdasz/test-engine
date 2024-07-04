@@ -15,6 +15,7 @@ pub struct SpriteData {
     pub(crate) position: Point,
 
     pub(crate) size:        Size,
+    pub(crate) render_size: Size,
     pub(crate) rotation:    f32,
     pub(crate) is_selected: bool,
 
@@ -36,6 +37,12 @@ impl SpriteData {
         Self {
             position,
             size: shape.size(),
+            // Rapier rect size defined by half side
+            render_size: if shape.is_rect() {
+                shape.size() / 2.0
+            } else {
+                shape.size()
+            },
             vertex_buffer: Self::shape_to_buffer(shape),
             ..Default::default()
         }
