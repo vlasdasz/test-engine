@@ -39,7 +39,7 @@ rapier2d = { version = "0.21", features = ["simd-stable"] }
 #rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
 lyon = "1.0"
-rodio = "0.18.0"
+rodio = "0.19.0"
 rust_decimal = "1.35"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -53,9 +53,9 @@ wgpu = "0.20.1"
 wgpu_text = "0.8.8"
 winit = "0.30.1"
 
-manage = "=0.4.11"
+manage = "=0.5.0"
 reflected = "=0.9.1"
-refs = { version = "=0.8.7", default-features = true }
+refs = { version = "=0.10.1", default-features = true }
 vents = "=0.5.0"
 
 audio = { path = "deps/audio" }
