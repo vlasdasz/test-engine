@@ -1,20 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    reflected,
-    reflected::Reflected,
     refs::Weak,
     ui::{view, Color, HighlightView, ViewSetup, UI},
     ui_test::check_colors,
 };
-
-#[derive(Default, Debug, Reflected)]
-struct Data {
-    float_field:   f32,
-    integer_field: u32,
-    boolean:       bool,
-    string:        String,
-}
 
 #[view]
 struct HighLightTestView {

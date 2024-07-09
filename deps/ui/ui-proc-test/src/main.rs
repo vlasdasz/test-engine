@@ -10,10 +10,10 @@ mod test_engine {
 }
 
 #[view]
-struct ProcView {
-    button:      Button,
+struct _ProcView {
+    _button:      Button,
     #[init]
-    weak_button: Button,
+    _weak_button: Button,
 }
 
 fn main() {}

@@ -64,15 +64,6 @@ pub struct TestGameView {
     some_button: Button,
 }
 
-#[view]
-struct SobakaView {
-    #[init]
-    label: Label,
-
-    #[init]
-    button: Button,
-}
-
 impl ViewSetup for TestGameView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
