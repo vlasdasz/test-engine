@@ -4,10 +4,11 @@ use ui_proc::view;
 use vents::Event;
 
 use crate::{
+    has_data::HasText,
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
-    InputView, Label, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks,
-    ViewSetup,
+    HasTitle, InputView, Label, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
+    ViewCallbacks, ViewSetup,
 };
 
 mod test_engine {
@@ -96,11 +97,17 @@ impl TextField {
     }
 }
 
-impl InputView for TextField {
-    fn set_title(&mut self, _title: &str) {
+impl HasTitle for TextField {
+    fn title(&self) -> &str {
         todo!()
     }
 
+    fn set_title(&mut self, _title: &str) {
+        todo!()
+    }
+}
+
+impl InputView for TextField {
     fn set_text(&mut self, text: &str) {
         self.set_text(text);
     }

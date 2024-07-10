@@ -4,7 +4,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Button, ViewData, ViewSetup, UI},
+    ui::{view, Button, HasText, ViewData, ViewSetup, UI},
     ui_test::inject_touches,
 };
 

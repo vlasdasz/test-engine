@@ -3,6 +3,8 @@ use std::{collections::HashMap, fmt::Display};
 use gm::Color;
 use refs::{dump_ref_stats, MainLock, Own, Weak};
 
+use crate::has_data::HasText;
+
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;

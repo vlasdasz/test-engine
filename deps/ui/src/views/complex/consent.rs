@@ -3,7 +3,7 @@ use refs::Weak;
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate::{view::ViewData, ModalView, ViewSetup};
+use crate::{has_data::HasText, view::ViewData, ModalView, ViewSetup};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;

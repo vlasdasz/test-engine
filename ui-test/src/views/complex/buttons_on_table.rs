@@ -5,8 +5,8 @@ use log::debug;
 use test_engine::{
     refs::{Own, Weak},
     ui::{
-        view, Button, CollectionData, CollectionView, Container, Label, Size, TouchStack, View, ViewData,
-        ViewSetup, ViewSubviews, UI,
+        view, Button, CollectionData, CollectionView, Container, HasText, Label, Size, TouchStack, View,
+        ViewData, ViewSetup, ViewSubviews, UI,
     },
     ui_test::{
         inject_touches,

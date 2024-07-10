@@ -5,8 +5,8 @@ use test_engine::{
     ui::{
         view,
         Anchor::{Size, Top, X},
-        Button, Color, Container, Point, PositionView, UIManager, ViewCallbacks, ViewData, ViewFrame,
-        ViewSetup, ViewSubviews,
+        Button, Color, Container, HasText, Point, PositionView, UIManager, ViewCallbacks, ViewData,
+        ViewFrame, ViewSetup, ViewSubviews,
     },
     RenderPass, SpriteView, VertexBuffer, WGPUApp,
 };

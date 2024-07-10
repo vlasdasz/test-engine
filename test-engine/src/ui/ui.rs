@@ -9,8 +9,8 @@ use log::{trace, warn};
 use manage::data_manager::DataManager;
 use refs::{weak_from_ref, Own, Weak};
 use ui::{
-    DrawingView, ImageView, Label, TextAlignment, UIManager, View, ViewAnimation, ViewData, ViewFrame,
-    ViewLayout, ViewSetup, ViewSubviews, ViewTest,
+    DrawingView, HasText, ImageView, Label, TextAlignment, UIManager, View, ViewAnimation, ViewData,
+    ViewFrame, ViewLayout, ViewSetup, ViewSubviews, ViewTest,
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};

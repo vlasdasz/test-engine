@@ -4,7 +4,10 @@ use gm::Color;
 use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 
-use crate::{view::ViewData, Anchor, Container, InputView, TextAlignment, ViewSetup, ViewSubviews};
+use crate::{
+    has_data::HasText, view::ViewData, Anchor, Container, HasTitle, InputView, TextAlignment, ViewSetup,
+    ViewSubviews,
+};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;
@@ -52,11 +55,17 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
     }
 }
 
-impl<T: InputView + Default> InputView for Labeled<T> {
+impl<T: InputView + Default> HasTitle for Labeled<T> {
+    fn title(&self) -> &str {
+        self.label.text()
+    }
+
     fn set_title(&mut self, title: &str) {
         self.label.set_text(title);
     }
+}
 
+impl<T: InputView + Default> InputView for Labeled<T> {
     fn set_text(&mut self, text: &str) {
         self.input.set_text(text);
     }

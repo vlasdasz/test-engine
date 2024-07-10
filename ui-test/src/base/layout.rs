@@ -7,7 +7,7 @@ use test_engine::{
             inject_touches,
             state::{append_state, clear_state, get_state},
         },
-        view, Anchor, Button, Color, ViewData, ViewSetup, ViewSubviews, UI,
+        view, Anchor, Button, Color, HasText, ViewData, ViewSetup, ViewSubviews, UI,
     },
     App,
 };

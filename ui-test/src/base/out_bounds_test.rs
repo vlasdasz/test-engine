@@ -4,7 +4,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         ui_test::{helpers::check_colors, inject_touches},
-        view, Anchor, ImageView, Label, NumberView, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI,
+        view, Anchor, HasText, ImageView, Label, NumberView, ViewData, ViewFrame, ViewSetup, ViewSubviews,
+        UI,
     },
 };
 

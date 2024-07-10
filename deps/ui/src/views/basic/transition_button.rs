@@ -5,6 +5,7 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
+    has_data::HasText,
     view::{ViewData, ViewTransition},
     Button, ToLabel, UIManager, View, ViewSetup, ViewSubviews,
 };

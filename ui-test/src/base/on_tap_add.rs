@@ -6,8 +6,8 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         ui_test::{helpers::check_colors, inject_touches},
-        view, Button, CollectionData, CollectionView, Color, Container, ImageView, Label, Size, View,
-        ViewData, ViewSetup, ViewSubviews, UI,
+        view, Button, CollectionData, CollectionView, Color, Container, HasText, ImageView, Label, Size,
+        View, ViewData, ViewSetup, ViewSubviews, UI,
     },
 };
 

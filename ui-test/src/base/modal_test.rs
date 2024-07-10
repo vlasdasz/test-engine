@@ -3,8 +3,8 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{
-        ui_test::helpers::check_colors, view, Color, Container, Label, ModalView, Size, ViewData, ViewFrame,
-        ViewSetup, ViewSubviews, WeakView, UI,
+        ui_test::helpers::check_colors, view, Color, Container, HasText, Label, ModalView, Size, ViewData,
+        ViewFrame, ViewSetup, ViewSubviews, WeakView, UI,
     },
     wait_for_next_frame, OnceEvent,
 };

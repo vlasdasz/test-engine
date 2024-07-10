@@ -8,6 +8,7 @@
 #![feature(trait_upcasting)]
 #![feature(const_fn_floating_point_arithmetic)]
 
+mod has_data;
 mod images;
 mod input;
 mod layout;
@@ -24,6 +25,7 @@ mod view;
 mod views;
 mod with_header;
 
+pub use has_data::*;
 pub use images::*;
 pub use input::*;
 pub use layout::*;

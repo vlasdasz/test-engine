@@ -2,6 +2,7 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
+    has_data::HasText,
     view::{ViewController, ViewData},
     Button, ViewSetup,
 };

@@ -7,9 +7,9 @@ use test_engine::{
     ui::{
         view, Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
-        Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, ImageView, Label, NumberView,
-        Point, PointsPath, PositionView, Spinner, StickView, TextField, UIManager, ViewData, ViewFrame,
-        ViewSetup,
+        Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, HasText, ImageView, Label,
+        NumberView, Point, PointsPath, PositionView, Spinner, StickView, TextField, UIManager, ViewData,
+        ViewFrame, ViewSetup,
     },
     App, DataManager,
 };

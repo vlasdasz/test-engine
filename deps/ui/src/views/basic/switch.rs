@@ -5,7 +5,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewTouch},
-    Anchor, Container, InputView, ViewSetup,
+    Anchor, Container, HasTitle, InputView, ViewSetup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -60,11 +60,17 @@ impl ViewSetup for Switch {
     }
 }
 
-impl InputView for Switch {
-    fn set_title(&mut self, _title: &str) {
-        unimplemented!()
+impl HasTitle for Switch {
+    fn title(&self) -> &str {
+        todo!()
     }
 
+    fn set_title(&mut self, _title: &str) {
+        todo!()
+    }
+}
+
+impl InputView for Switch {
     fn set_text(&mut self, text: &str) {
         match text {
             "0" => self.set_on(false),

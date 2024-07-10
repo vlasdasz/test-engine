@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewSubviews},
-    ToLabel, View, ViewSetup,
+    HasText, ToLabel, View, ViewSetup,
 };
 
 mod test_engine {
@@ -43,36 +43,38 @@ pub struct Label {
     text_size:  f32,
 }
 
-impl Label {
-    pub fn text(&self) -> &str {
+impl HasText for Label {
+    fn text(&self) -> &str {
         &self.text
     }
 
-    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
+    fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         self.text = text.to_label();
         self
     }
 
-    pub fn set_alignment(&mut self, alignment: TextAlignment) -> &mut Self {
-        self.alignment = alignment;
-        self
-    }
-
-    pub fn text_color(&self) -> &Color {
+    fn text_color(&self) -> &Color {
         &self.text_color
     }
 
-    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+    fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
         self.text_color = color.into();
         self
     }
 
-    pub fn text_size(&self) -> f32 {
+    fn text_size(&self) -> f32 {
         self.text_size
     }
 
-    pub fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
+    fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
         self.text_size = size.to_f32();
+        self
+    }
+}
+
+impl Label {
+    pub fn set_alignment(&mut self, alignment: TextAlignment) -> &mut Self {
+        self.alignment = alignment;
         self
     }
 }

@@ -17,7 +17,10 @@ use test_engine::{
 
 use crate::{
     base::test_base_ui,
-    views::{basic::test_base_views, complex::test_complex_views, helpers::test_helper_views},
+    views::{
+        basic::test_base_views, complex::test_complex_views, containers::test_containers,
+        helpers::test_helper_views,
+    },
 };
 
 mod base;
@@ -43,6 +46,7 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_containers().await?;
     test_helper_views().await?;
     test_base_ui().await?;
     test_base_views().await?;

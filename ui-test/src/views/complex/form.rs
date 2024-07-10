@@ -4,7 +4,7 @@ use test_engine::{
     reflected,
     reflected::Reflected,
     refs::Weak,
-    ui::{view, Button, FormView, ViewData, ViewSetup, ViewSubviews, UI},
+    ui::{view, Button, FormView, HasText, ViewData, ViewSetup, ViewSubviews, UI},
     App,
 };
 

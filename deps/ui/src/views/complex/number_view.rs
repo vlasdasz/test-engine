@@ -7,7 +7,9 @@ use gm::{CheckedSub, Min, MyAdd, One, Zero};
 use refs::{weak_from_ref, Weak};
 use vents::Event;
 
-use crate::{view::ViewData, Button, InputView, Label, UIImages, ViewSetup, ViewTouch};
+use crate::{
+    has_data::HasText, view::ViewData, Button, HasTitle, InputView, Label, UIImages, ViewSetup, ViewTouch,
+};
 
 mod test_engine {
     pub(crate) use educe;
@@ -98,11 +100,17 @@ impl<T: ViewableNumber> NumberView<T> {
     }
 }
 
-impl<T: ViewableNumber> InputView for NumberView<T> {
-    fn set_title(&mut self, _title: &str) {
-        unimplemented!()
+impl<T: ViewableNumber> HasTitle for NumberView<T> {
+    fn title(&self) -> &str {
+        todo!()
     }
 
+    fn set_title(&mut self, _title: &str) {
+        todo!()
+    }
+}
+
+impl<T: ViewableNumber> InputView for NumberView<T> {
     fn set_text(&mut self, text: &str) {
         let Ok(val) = text.parse() else { panic!() };
         self.set_value(val);

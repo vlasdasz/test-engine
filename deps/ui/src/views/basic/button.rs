@@ -5,6 +5,7 @@ use vents::Event;
 use wgpu_wrapper::image::ToImage;
 
 use crate::{
+    has_data::HasText,
     view::{ViewData, ViewTouch},
     ImageView, Label, ToLabel, ViewSetup,
 };
@@ -25,6 +26,35 @@ pub struct Button {
     image: ImageView,
 }
 
+impl HasText for Button {
+    fn text(&self) -> &str {
+        self.label.text()
+    }
+
+    fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
+        self.label.set_text(text);
+        self
+    }
+
+    fn text_color(&self) -> &Color {
+        self.label.text_color()
+    }
+
+    fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.label.set_text_color(color);
+        self
+    }
+
+    fn text_size(&self) -> f32 {
+        self.label.text_size()
+    }
+
+    fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
+        self.label.set_text_size(size);
+        self
+    }
+}
+
 impl Button {
     pub fn on_tap<R>(&self, mut action: impl FnMut() -> R + 'static) -> &Self {
         self.enable_touch();
@@ -34,29 +64,9 @@ impl Button {
         self
     }
 
-    pub fn text(&self) -> &str {
-        &self.label.text
-    }
-
-    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
-        self.label.set_hidden(false);
-        self.label.text = text.to_label();
-        self
-    }
-
     pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image.set_hidden(false);
         self.image.set_image(image);
-        self
-    }
-
-    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.label.set_text_color(color);
-        self
-    }
-
-    pub fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
-        self.label.set_text_size(size);
         self
     }
 }

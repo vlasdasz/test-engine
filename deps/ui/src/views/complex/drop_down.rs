@@ -6,8 +6,9 @@ use ui_proc::view;
 use vents::Event;
 
 use crate::{
+    has_data::HasText,
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    Button, CollectionData, CollectionView, InputView, Label, ToLabel, View, ViewSetup,
+    Button, CollectionData, CollectionView, HasTitle, InputView, Label, ToLabel, View, ViewSetup,
 };
 
 mod test_engine {
@@ -72,11 +73,17 @@ impl DropDown {
     }
 }
 
-impl InputView for DropDown {
-    fn set_title(&mut self, _title: &str) {
-        unimplemented!("DropDown doesn't have title")
+impl HasTitle for DropDown {
+    fn title(&self) -> &str {
+        todo!()
     }
 
+    fn set_title(&mut self, _title: &str) {
+        todo!()
+    }
+}
+
+impl InputView for DropDown {
     fn set_text(&mut self, text: &str) {
         assert!(self.values.contains(&text.to_string()));
         self.label.set_text(text);

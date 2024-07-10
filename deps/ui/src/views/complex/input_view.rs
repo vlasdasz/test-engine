@@ -1,9 +1,8 @@
 use refs::Weak;
 
-use crate::View;
+use crate::{HasTitle, View};
 
-pub trait InputView: View {
-    fn set_title(&mut self, title: &str);
+pub trait InputView: View + HasTitle {
     fn set_text(&mut self, text: &str);
     fn text(&self) -> &str;
     fn enable_editing(&mut self);

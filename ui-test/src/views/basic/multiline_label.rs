@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Label, ViewData, ViewSetup, UI},
+    ui::{view, HasText, Label, ViewData, ViewSetup, UI},
 };
 
 #[view]
