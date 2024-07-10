@@ -4,6 +4,7 @@ mod test_engine {
 
     pub(crate) use crate as ui;
 }
+
 use gm::{flat::Point, Color};
 use refs::Weak;
 use ui_proc::view;
@@ -19,6 +20,8 @@ pub struct PositionView {
 
     pub additional_label: Option<String>,
 
+    pub position: Point,
+
     #[init]
     dot:   Container,
     label: Label,
@@ -26,6 +29,8 @@ pub struct PositionView {
 
 impl PositionView {
     pub fn update_label(&mut self) {
+        self.position = (self.frame.origin.x, self.frame.origin.y).into();
+
         let mut label = format!("{:.0} - {:.0}", self.frame.origin.x, self.frame.origin.y);
 
         if let Some(additional_label) = &self.additional_label {
