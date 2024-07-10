@@ -36,4 +36,8 @@ impl UIImages {
     pub fn delete() -> Weak<Image> {
         Image::load(include_bytes!("images/delete.png"), "ui::default::delete")
     }
+
+    pub fn rb_corner() -> Weak<Image> {
+        Image::load(include_bytes!("images/rb.png"), "ui::default::rb_corner")
+    }
 }
