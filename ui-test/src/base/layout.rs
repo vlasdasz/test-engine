@@ -46,6 +46,24 @@ struct LayoutTestView {
     right_s_center:  Button,
 }
 
+impl LayoutTestView {
+    fn setup_labels(&mut self) {
+        self.center.set_text("center");
+        self.top.set_text("top");
+        self.bottom.set_text("bottom");
+        self.left.set_text("left");
+        self.right.set_text("right");
+        self.top_center.set_text("tp_ct");
+        self.bottom_center.set_text("bt_ct");
+        self.left_center.set_text("le_ct");
+        self.right_center.set_text("ri_ct");
+        self.top_s_center.set_text("to_s_ct");
+        self.bottom_s_center.set_text("bo_s_ct");
+        self.left_s_center.set_text("le_s_ct");
+        self.right_s_center.set_text("ri_s_ct");
+    }
+}
+
 impl ViewSetup for LayoutTestView {
     fn setup(mut self: Weak<Self>) {
         for view in self.subviews_mut() {
@@ -76,6 +94,8 @@ impl ViewSetup for LayoutTestView {
         self.bottom_s_center.place().between_super(self.bottom, Anchor::Bot);
         self.left_s_center.place().between_super(self.left, Anchor::Left);
         self.right_s_center.place().between_super(self.right, Anchor::Right);
+
+        self.setup_labels();
     }
 }
 
