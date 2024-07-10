@@ -40,11 +40,23 @@ impl<T> Point<T> {
     pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
+
+    pub fn to_size(self) -> Size<T> {
+        Size::new(self.x, self.y)
+    }
 }
 
 impl<T: LossyConvert<U>, U> LossyConvert<Point<U>> for Point<T> {
     fn lossy_convert(self) -> Point<U> {
         Point::new(self.x.lossy_convert(), self.y.lossy_convert())
+    }
+}
+
+impl<T: PartialOrd> Point<T> {
+    pub fn clamp(self, x: T, y: T) -> Self {
+        let x = if x > self.x { x } else { self.x };
+        let y = if y > self.y { y } else { self.y };
+        Self::new(x, y)
     }
 }
 

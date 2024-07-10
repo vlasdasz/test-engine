@@ -1,8 +1,10 @@
+use gm::flat::{Point, Size};
 use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    Anchor::Top, HasText, HasTitle, ImageView, Label, UIImages, View, ViewData, ViewSetup, ViewSubviews,
+    Anchor::Top, HasText, HasTitle, ImageView, Label, UIImages, View, ViewData, ViewFrame, ViewSetup,
+    ViewSubviews, ViewTouch,
 };
 
 mod test_engine {
@@ -16,6 +18,9 @@ mod test_engine {
 pub struct MovableView<T: View + Default + 'static> {
     pub target_view: Weak<T>,
 
+    began_pos:  Point,
+    began_size: Size,
+
     #[init]
     title_label: Label,
     corner_view: ImageView,
@@ -24,11 +29,32 @@ pub struct MovableView<T: View + Default + 'static> {
 impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
     fn setup(mut self: Weak<Self>) {
         self.title_label.place().lrt(0).h(40);
+        self.title_label.enable_touch();
+
+        self.title_label.touch.began.val(move |touch| {
+            self.began_pos = touch.position;
+        });
+
+        self.title_label.touch.moved.val(move |touch| {
+            let new_pos = self.frame.origin + touch.position - self.began_pos;
+            self.set_position(new_pos);
+        });
 
         self.target_view = self.add_view();
         self.target_view.place().lrb(0).anchor(Top, self.title_label, 0);
 
         self.corner_view.set_image(UIImages::rb_corner()).place().size(28, 28).br(0);
+        self.corner_view.enable_touch();
+
+        self.corner_view.touch.began.val(move |touch| {
+            self.began_pos = touch.position;
+            self.began_size = self.size();
+        });
+
+        self.corner_view.touch.moved.val(move |touch| {
+            let new_size = self.size().to_point() + touch.position - self.began_pos;
+            self.set_size(new_size.clamp(100.0, 100.0).to_size());
+        });
     }
 }
 
