@@ -16,6 +16,7 @@ mod switch;
 mod text_field;
 
 pub async fn test_base_views() -> anyhow::Result<()> {
+    test_button().await?;
     test_inject_touch().await?;
     test_label().await?;
     test_scroll_view().await?;
@@ -23,7 +24,6 @@ pub async fn test_base_views() -> anyhow::Result<()> {
     test_stick().await?;
     test_text_field().await?;
     test_image_view().await?;
-    test_button().await?;
     test_switch().await?;
     test_multiline().await?;
 

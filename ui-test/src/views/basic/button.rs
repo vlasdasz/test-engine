@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{view, Button, HasText, ViewData, ViewSetup, UI},
-    ui_test::{state::increment_state, test_combinations},
+    ui_test::{check_colors, state::increment_state, test_combinations},
     App,
 };
 
@@ -28,6 +28,39 @@ pub async fn test_button() -> Result<()> {
     UI::init_test_view::<ButtonTestView>().await;
 
     App::set_window_size((200, 100)).await;
+
+    check_colors(
+        r#"
+              36   46 -  25  51  76
+              58   49 -   1   1   1
+              63   49 - 255 255 255
+              63   49 - 255 255 255
+              76   49 - 255 255 255
+              90   49 - 113 113 113
+             100   49 - 255 255 255
+             142   45 -   0   0   0
+             117   45 - 255 255 255
+             146   46 - 255 255 255
+             156   46 -  25  51  76
+             157   46 -  25  51  76
+             155   46 -  25  51  76
+             106   46 -   0   0   0
+             113   26 - 255 255 255
+             113   42 - 255 255 255
+             113   52 -   0   0   0
+             111   62 - 255 255 255
+             101   87 -  25  51  76
+             101   50 - 255 255 255
+              97   50 -   0   0   0
+              91   50 - 255 255 255
+              90   50 - 113 113 113
+              83   50 - 255 255 255
+              83   46 - 255 255 255
+              83   35 - 255 255 255
+              66   37 -   0   0   0
+        "#,
+    )
+    .await?;
 
     test_combinations([
         ("0 0 b", 0),

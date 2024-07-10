@@ -32,6 +32,7 @@ impl HasText for Button {
     }
 
     fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
+        self.label.set_hidden(false);
         self.label.set_text(text);
         self
     }
