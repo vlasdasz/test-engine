@@ -11,6 +11,7 @@ members = [
   "ui-benchmark",
   "level-test",
   "deps/ui/ui-proc-test",
+  "sand",
 ]
 
 resolver = "2"
@@ -44,8 +45,9 @@ rust_decimal = "1.35"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serial_test = "3.1"
+sqlx = { version = "0.7", features = ["postgres", "runtime-tokio-rustls"] }
 syn = { version = "2.0", features = ["full", "extra-traits"] }
-tokio = { version = "1.37.0", features = ["full"] }
+tokio = { version = "1.38.0", features = ["full"] }
 web-time = "1.0.0"
 
 glyph_brush = "0.7.8"
@@ -56,6 +58,7 @@ winit = "0.30.1"
 manage = "=0.5.0"
 reflected = "=0.9.1"
 refs = { version = "=0.10.1", default-features = true }
+tain = { path = "../deps/tain/tain" }
 vents = "=0.5.0"
 
 audio = { path = "deps/audio" }
