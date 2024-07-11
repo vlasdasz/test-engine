@@ -73,6 +73,10 @@ impl TouchStack {
         Self::get().stack.push(view.into());
     }
 
+    pub fn touch_root_name_for(view: WeakView) -> String {
+        Self::get().layer_for(view).root_name().to_string()
+    }
+
     pub fn pop_layer(view: WeakView) {
         let pop = Self::get().stack.pop().unwrap();
         assert_eq!(

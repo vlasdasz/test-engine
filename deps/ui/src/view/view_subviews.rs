@@ -36,6 +36,8 @@ pub trait ViewSubviews {
     fn add_transition<From: View, To: View>(&mut self) -> Weak<TransitionButton<From, To>>;
 
     fn find_superview<V: View + 'static>(&self) -> Weak<V>;
+
+    fn draw_on_top(&mut self);
 }
 
 impl<T: ?Sized + View> ViewSubviews for T {
@@ -185,5 +187,11 @@ impl<T: ?Sized + View> ViewSubviews for T {
         }
 
         panic!("This view doesn't have `{}` in superview chain", type_name::<V>());
+    }
+
+    fn draw_on_top(&mut self) {
+        let neighbours = self.superview().subviews();
+        let last_z_pos = neighbours.last().unwrap().z_position();
+        self.base_view_mut().z_position = last_z_pos - UIManager::subview_z_offset() * 2.0;
     }
 }

@@ -55,6 +55,7 @@ impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
             let new_size = self.size().to_point() + touch.position - self.began_pos;
             self.set_size(new_size.clamp(100.0, 100.0).to_size());
         });
+        self.corner_view.draw_on_top();
     }
 }
 

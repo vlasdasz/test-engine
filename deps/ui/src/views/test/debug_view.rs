@@ -17,7 +17,8 @@ use utils::Every;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewInternalSetup},
-    Button, Label, ToLabel, TouchStack, UIManager, View, ViewCallbacks, ViewSetup, ViewSubviews,
+    Button, HasTitle, Label, MovableView, ToLabel, TouchStack, UIManager, View, ViewCallbacks, ViewSetup,
+    ViewSubviews,
 };
 
 pub(crate) static DEBUG_VIEW: MainLock<Option<Own<dyn View>>> = MainLock::new();
@@ -42,14 +43,15 @@ pub struct DebugView {
 
 impl DebugView {
     pub fn enable() {
-        let new = Self::new();
-        let mut weak = new.weak();
+        let new = MovableView::<Self>::new();
+        let mut container = new.weak();
         *DEBUG_VIEW.get_mut() = Some(new);
-        let a = weak;
-        weak.set_z_position(UIManager::DEBUG_Z_OFFSET);
-        weak.__manually_set_superview(a);
-        weak.init_views();
-        weak.__internal_setup();
+        container.set_z_position(UIManager::DEBUG_Z_OFFSET);
+        container.__manually_set_superview(UIManager::root_view_weak());
+        container.init_views();
+        container.__internal_setup();
+        container.set_title("Debug");
+        container.set_size((200, 280));
     }
 
     pub fn disable() {
@@ -84,9 +86,7 @@ impl ViewSetup for DebugView {
         self.set_hidden(false);
         self.set_color(Color::WHITE);
 
-        self.__manually_set_superview(UIManager::root_view_weak());
-
-        self.place().size(240, 220).l(10).b(10).all_ver();
+        self.place().all_ver();
 
         self.fps_label.set_text("fps label");
 
