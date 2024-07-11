@@ -61,7 +61,7 @@ impl DebugView {
         DEBUG_VIEW.get_mut().take();
     }
 
-    pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + 'static) {
+    pub fn custom_button(&mut self, label: impl ToLabel, action: impl FnMut() + Send + 'static) {
         let mut button = self.add_view::<Button>();
         button.set_text(label);
         button.on_tap(action);

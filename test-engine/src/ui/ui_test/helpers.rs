@@ -25,7 +25,7 @@ pub fn add_corners(mut view: WeakView, color: Color) {
 }
 
 #[allow(dead_code)]
-pub fn add_action(action: impl FnMut() + 'static) {
+pub fn add_action(action: impl FnMut() + Send + 'static) {
     let mut button = UIManager::root_view_weak()
         .__add_subview_internal(Button::new(), true)
         .downcast::<Button>()

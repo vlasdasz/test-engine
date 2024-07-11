@@ -86,7 +86,7 @@ impl NoiseView {
         self.polygon.display_points(smallest_island);
     }
 
-    pub fn on_back(self: Own<Self>, callback: impl FnMut() + 'static) -> Own<Self> {
+    pub fn on_back(self: Own<Self>, callback: impl FnMut() + Send + 'static) -> Own<Self> {
         self.on_back.sub(callback);
         self
     }

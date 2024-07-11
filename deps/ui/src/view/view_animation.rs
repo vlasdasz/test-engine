@@ -6,7 +6,7 @@ use vents::OnceEvent;
 
 use crate::{view::view_data::ViewData, View};
 
-type Action = Box<dyn FnMut(&mut dyn View, f32)>;
+type Action = Box<dyn FnMut(&mut dyn View, f32) + Send>;
 
 #[derive(Educe)]
 #[educe(Debug)]
@@ -19,7 +19,7 @@ pub struct UIAnimation {
 }
 
 impl UIAnimation {
-    pub fn new(animation: Animation, action: impl FnMut(&mut dyn View, f32) + 'static) -> Self {
+    pub fn new(animation: Animation, action: impl FnMut(&mut dyn View, f32) + Send + 'static) -> Self {
         Self {
             animation,
             action: Box::new(action),

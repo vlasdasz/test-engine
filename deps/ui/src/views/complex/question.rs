@@ -1,5 +1,7 @@
+use dispatch::from_main;
 use gm::{flat::Size, Color};
 use refs::Weak;
+use tokio::sync::oneshot::channel;
 use ui_proc::view;
 use vents::OnceEvent;
 
@@ -53,8 +55,21 @@ impl Question {
     }
 
     ///bool == true -> right choice
-    pub fn callback(self, callback: impl FnOnce(bool) + 'static) {
+    pub fn callback(self, callback: impl FnOnce(bool) + Send + 'static) {
         Self::make_modal(self).event.val(callback);
+    }
+
+    async fn _callback_async(self) -> bool {
+        let (se, _rc) = channel::<bool>();
+
+        from_main(move || {
+            Self::make_modal(self).event.val(|answer| {
+                se.send(answer).unwrap();
+            });
+        })
+        .await;
+
+        false
     }
 }
 

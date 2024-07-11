@@ -115,11 +115,11 @@ impl<T: ?Sized + View> ViewData for T {
 }
 
 pub trait AfterSetup {
-    fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + 'static) -> Own<Self>;
+    fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + Send + 'static) -> Own<Self>;
 }
 
 impl<T: ?Sized + View + 'static> AfterSetup for T {
-    fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + 'static) -> Own<Self> {
+    fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + Send + 'static) -> Own<Self> {
         let weak = self.weak();
         self.base_view().after_setup.sub(move || {
             action(weak);

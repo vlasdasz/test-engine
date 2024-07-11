@@ -31,7 +31,7 @@ pub struct DropDown {
 }
 
 impl DropDown {
-    pub fn on_changed(&self, action: impl FnMut(String) + 'static) {
+    pub fn on_changed(&self, action: impl FnMut(String) + Send + 'static) {
         self.changed.val(action);
     }
 

@@ -94,7 +94,7 @@ impl<T: ViewableNumber> NumberView<T> {
         self.set_value(val.unwrap_or(T::zero()));
     }
 
-    pub fn on_change(&self, action: impl FnMut(T) + 'static) -> &Self {
+    pub fn on_change(&self, action: impl FnMut(T) + Send + 'static) -> &Self {
         self.on_change_event.val(action);
         self
     }

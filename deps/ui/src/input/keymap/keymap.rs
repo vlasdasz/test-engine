@@ -10,7 +10,7 @@ pub struct Keymap {
 }
 
 impl Keymap {
-    pub fn add<T: ?Sized>(&self, subscriber: Weak<T>, key: char, action: impl FnMut() + 'static) {
+    pub fn add<T: ?Sized>(&self, subscriber: Weak<T>, key: char, action: impl FnMut() + Send + 'static) {
         self.keys.borrow_mut().push(KeyAction::new(subscriber, key, action));
     }
 

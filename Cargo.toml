@@ -55,11 +55,11 @@ wgpu = "0.20.1"
 wgpu_text = "0.8.8"
 winit = "0.30.1"
 
-manage = "=0.5.0"
+manage = "=0.6.0"
 reflected = "=0.9.1"
-refs = { version = "=0.10.1", default-features = true }
+refs = { version = "=0.11.0", default-features = true }
 tain = { path = "../deps/tain/tain" }
-vents = "=0.5.0"
+vents = "=0.6.0"
 
 audio = { path = "deps/audio" }
 call_counter = { path = "deps/call_counter" }
@@ -81,3 +81,4 @@ wgpu_wrapper = { path = "deps/wgpu_wrapper" }
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "b2cc37132280e34cdd906a5939b8c472406704f7" }
 #wgpu = { path = "../3/wgpu/wgpu" }
+#vents = { path = "../deps/vents/vents" }

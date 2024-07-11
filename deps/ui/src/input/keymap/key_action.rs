@@ -8,7 +8,7 @@ pub struct KeyAction {
 }
 
 impl KeyAction {
-    pub fn new<T: ?Sized>(subscriber: Weak<T>, key: char, action: impl FnMut() + 'static) -> Self {
+    pub fn new<T: ?Sized>(subscriber: Weak<T>, key: char, action: impl FnMut() + Send + 'static) -> Self {
         let event = Event::default();
         event.sub(action);
         Self {
