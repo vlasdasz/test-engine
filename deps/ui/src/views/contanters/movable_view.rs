@@ -1,4 +1,7 @@
-use gm::flat::{Point, Size};
+use gm::{
+    flat::{Point, Size},
+    Platform,
+};
 use refs::Weak;
 use ui_proc::view;
 
@@ -43,7 +46,13 @@ impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
         self.target_view = self.add_view();
         self.target_view.place().lrb(0).anchor(Top, self.title_label, 0);
 
-        self.corner_view.set_image(UIImages::rb_corner()).place().size(28, 28).br(0);
+        let corner_size = if Platform::MOBILE { 50 } else { 28 };
+
+        self.corner_view
+            .set_image(UIImages::rb_corner())
+            .place()
+            .size(corner_size, corner_size)
+            .br(0);
         self.corner_view.enable_touch();
 
         self.corner_view.touch.began.val(move |touch| {

@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt::Display};
 
-use gm::Color;
+use gm::{Color, Platform};
 use refs::{dump_ref_stats, MainLock, Own, Weak};
 
 use crate::has_data::HasText;
@@ -51,6 +51,9 @@ impl DebugView {
         container.init_views();
         container.__internal_setup();
         container.set_title("Debug");
+        if Platform::MOBILE {
+            container.set_y(200);
+        }
         container.set_size((200, 280));
     }
 
