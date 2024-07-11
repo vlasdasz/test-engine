@@ -71,19 +71,22 @@ impl LevelSetup for TestLevel {
         self.make_sprite::<Wall>(Shape::Rect((200, 5).into()), (0, -5))
             .set_color(Color::random());
         // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
-        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (120, 0))
+        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (100, 0))
             .set_image("square.png");
-        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (-120, 0))
+        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (-100, 0))
             .set_image("square.png");
 
         self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 50))
             .set_image("triangle.png");
 
-        self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 80))
+        self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (-20, 80))
             .set_color(Color::BLUE);
 
-        for i in 0..150 {
-            self.add_random_box((0.1f32 * i.lossy_convert(), i * 4 + 40));
+        let boxes = 200;
+
+        for i in 0..boxes {
+            let coeff: f32 = if i < boxes / 2 { -0.4 } else { 0.4 };
+            self.add_random_box((coeff * i.lossy_convert(), i * 4 + 40));
         }
 
         let convex_points = vec![
@@ -107,7 +110,7 @@ impl LevelSetup for TestLevel {
         self.make_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
             .set_color(Color::TURQUOISE);
 
-        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (0, 20));
+        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (-10, 100));
         self.player = player;
         player.set_image("frisk.png").unit.enable_collision_detection();
         player.weapon.set_image("ak.png");
