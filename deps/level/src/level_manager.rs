@@ -20,16 +20,19 @@ pub struct LevelManager {
     scale:      f32,
     camera_pos: Point,
 
+    #[educe(Default = 1.0 / 60.0)]
+    update_interval: f32,
+
     level: Option<Own<dyn Level>>,
 }
 
 impl LevelManager {
-    pub fn update(frame_time: f32) {
+    pub fn update() {
         if Self::no_level() {
             return;
         }
 
-        Self::level().__internal_update(frame_time);
+        Self::level().__internal_update(*Self::update_interval());
     }
 }
 
@@ -79,6 +82,10 @@ impl LevelManager {
 
     pub fn scale() -> &'static mut f32 {
         &mut SELF.get_mut().scale
+    }
+
+    pub fn update_interval() -> &'static mut f32 {
+        &mut SELF.get_mut().update_interval
     }
 
     pub fn camera_pos() -> &'static mut Point {

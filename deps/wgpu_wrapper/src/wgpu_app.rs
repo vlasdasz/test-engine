@@ -238,6 +238,12 @@ impl WGPUApp {
     pub fn frame_drawn(&self) -> u32 {
         self.state.frame_counter.frame_count
     }
+
+    pub fn display_refresh_rate() -> u32 {
+        Self::window().current_monitor().map_or(60, |monitor| {
+            monitor.refresh_rate_millihertz().unwrap_or(60_000) / 1000
+        })
+    }
 }
 
 impl ApplicationHandler<Events> for WGPUApp {

@@ -3,8 +3,11 @@ use std::{any::type_name, io::Write, path::PathBuf, ptr::null_mut, time::Duratio
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
 use env_logger::Builder;
-use gm::flat::{Point, Size};
-use level::LevelBase;
+use gm::{
+    flat::{Point, Size},
+    LossyConvert,
+};
+use level::{LevelBase, LevelManager};
 use log::{Level, LevelFilter};
 use refs::{Own, Rglica};
 use tokio::time::sleep;
@@ -207,6 +210,7 @@ impl wgpu_wrapper::App for App {
         let view = UIManager::root_view_weak().__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();
         self.update();
+        *LevelManager::update_interval() = 1.0 / dbg!(WGPUApp::display_refresh_rate()).lossy_convert();
         self.window_ready.trigger(());
     }
 

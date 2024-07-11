@@ -8,7 +8,7 @@ pub(crate) struct TELevel;
 
 impl TELevel {
     pub(crate) fn update() {
-        LevelManager::update(WGPUApp::current().frame_time());
+        LevelManager::update();
     }
 
     pub(crate) fn draw(pass: &mut RenderPass) {
