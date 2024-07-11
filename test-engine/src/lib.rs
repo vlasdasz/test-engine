@@ -29,7 +29,7 @@ pub mod refs {
 }
 
 pub mod reflected {
-    pub use ::reflected::{Field, Reflected, ToReflectedString, ToReflectedVal, Type};
+    pub use ::reflected::{Field, Reflected, ToReflectedString, ToReflectedVal, FieldRef, Type};
 }
 
 pub mod gm {
