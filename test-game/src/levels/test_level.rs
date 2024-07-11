@@ -53,24 +53,10 @@ impl TestLevel {
 
 impl LevelSetup for TestLevel {
     fn setup(&mut self) {
-        // let drawn = Image::render("test_draw", (100, 100), |image| {
-        //     GLWrapper::set_clear_color(Color::GREEN);
-        //     GLWrapper::clear();
-        //     GLWrapper::scissor((5, 5, 20, 20), || {
-        //         GLWrapper::set_clear_color(Color::TURQUOISE);
-        //         GLWrapper::clear();
-        //     });
-        //     GLWrapper::set_clear_color(Color::GRAY);
-        //     image.channels = 1;
-        // });
-
-        // self.add_rect((30, 30, 40, 25)).set_image(drawn);
-
         self.background = Image::get("sky.png");
 
         self.make_sprite::<Wall>(Shape::Rect((200, 5).into()), (0, -5))
             .set_color(Color::random());
-        // .set_image(render_text("oo spolokolkok", Font::helvetica().deref_mut(), 64));
         self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (100, 0))
             .set_image("square.png");
         self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (-100, 0))
@@ -110,7 +96,9 @@ impl LevelSetup for TestLevel {
         self.make_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
             .set_color(Color::TURQUOISE);
 
-        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (-10, 100));
+        self.make_sprite::<Wall>(Shape::Rect((10, 1).into()), (-50, 55));
+
+        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (-50, 60));
         self.player = player;
         player.set_image("frisk.png").unit.enable_collision_detection();
         player.weapon.set_image("ak.png");
