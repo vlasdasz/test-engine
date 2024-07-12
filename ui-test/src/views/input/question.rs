@@ -111,7 +111,7 @@ pub async fn test_question() -> Result<()> {
     assert_eq!(rc.await.unwrap(), true);
 
     let a = spawn(async {
-        let val = Question::ask("Hello?").options("left", "right").callback_async().await;
+        let val = Question::ask("Hello?").options("left", "right").await;
         assert_eq!(val, false);
     });
 
@@ -130,7 +130,7 @@ pub async fn test_question() -> Result<()> {
     wait_for_next_frame().await;
 
     let a = spawn(async {
-        let val = Question::ask("Hello?").options("left", "right").callback_async().await;
+        let val = Question::ask("Hello?").options("left", "right").await;
         assert_eq!(val, true);
     });
 

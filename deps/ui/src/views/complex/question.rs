@@ -1,3 +1,8 @@
+use std::{
+    future::{Future, IntoFuture},
+    pin::Pin,
+};
+
 use dispatch::from_main;
 use gm::{flat::Size, Color};
 use refs::Weak;
@@ -59,7 +64,7 @@ impl Question {
         Self::make_modal(self).event.val(callback);
     }
 
-    pub async fn callback_async(self) -> bool {
+    async fn callback_async(self) -> bool {
         let (se, rc) = channel::<bool>();
 
         from_main(move || {
@@ -70,6 +75,15 @@ impl Question {
         .await;
 
         rc.await.unwrap()
+    }
+}
+
+impl IntoFuture for Question {
+    type Output = bool;
+    type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send>>;
+
+    fn into_future(self) -> Self::IntoFuture {
+        Box::pin(async move { self.callback_async().await })
     }
 }
 
