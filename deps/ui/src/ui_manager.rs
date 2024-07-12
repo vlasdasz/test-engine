@@ -255,7 +255,7 @@ impl UIManager {
         Self::get().on_drop_file.trigger(file);
     }
 
-    pub fn on_drop_filel<T: ?Sized>(subscriber: Weak<T>, action: impl FnMut(PathBuf) + Send + 'static) {
+    pub fn on_drop_file<T: ?Sized>(subscriber: Weak<T>, action: impl FnMut(PathBuf) + Send + 'static) {
         Self::get().on_drop_file.val(subscriber, action);
     }
 }
