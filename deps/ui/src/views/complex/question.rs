@@ -59,8 +59,8 @@ impl Question {
         Self::make_modal(self).event.val(callback);
     }
 
-    async fn _callback_async(self) -> bool {
-        let (se, _rc) = channel::<bool>();
+    pub async fn callback_async(self) -> bool {
+        let (se, rc) = channel::<bool>();
 
         from_main(move || {
             Self::make_modal(self).event.val(|answer| {
@@ -69,7 +69,7 @@ impl Question {
         })
         .await;
 
-        false
+        rc.await.unwrap()
     }
 }
 
