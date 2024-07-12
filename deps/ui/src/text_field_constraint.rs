@@ -11,7 +11,7 @@ pub enum TextFieldConstraint {
 }
 
 impl TextFieldConstraint {
-    pub fn from_field<T>(field: &Field<T>) -> Option<Self> {
+    pub fn from_field<T: Send>(field: &Field<T>) -> Option<Self> {
         if matches!(field.tp, Type::Integer) {
             Self::Integer.into()
         } else if matches!(field.tp, Type::Float) {

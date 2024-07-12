@@ -4,7 +4,7 @@ use std::{
 };
 
 use convert_case::{Case, Casing};
-use reflected::{FieldRef, Reflected};
+use reflected::{Field, Reflected};
 use refs::{weak_from_ref, Own, Weak};
 use ui_proc::view;
 use vents::Event;
@@ -28,8 +28,8 @@ pub struct FormView<T: Reflected + 'static> {
     editind_enabled: bool,
 
     labels:   Vec<Weak<dyn InputView>>,
-    variants: HashMap<FieldRef<T>, Vec<String>>,
-    buttons:  HashSet<FieldRef<T>>,
+    variants: HashMap<Field<T>, Vec<String>>,
+    buttons:  HashSet<Field<T>>,
     _p:       PhantomData<T>,
 }
 
@@ -41,11 +41,11 @@ impl<T: Reflected> ViewSetup for FormView<T> {
 }
 
 impl<T: Reflected> FormView<T> {
-    pub fn add_variants(&mut self, field: FieldRef<T>, vals: Vec<String>) {
+    pub fn add_variants(&mut self, field: Field<T>, vals: Vec<String>) {
         self.variants.insert(field, vals);
     }
 
-    pub fn buttons(&mut self, field: FieldRef<T>) {
+    pub fn buttons(&mut self, field: Field<T>) {
         self.buttons.insert(field);
     }
 
@@ -58,7 +58,7 @@ impl<T: Reflected> FormView<T> {
         for field in T::simple_fields() {
             let variant = self.variants.get(field).cloned();
 
-            let text = &data.get_value(field);
+            let text = &data.get_value(*field);
 
             let mut view: Weak<dyn InputView> = if field.is_bool() {
                 let mut view = self.add_view::<Labeled<Switch>>();
@@ -73,7 +73,7 @@ impl<T: Reflected> FormView<T> {
                 view.input.set_values(&variants);
                 view.as_input_view()
             } else if field.is_number() && self.buttons.contains(field) {
-                let view = labeled_for_field(field);
+                let view = labeled_for_field(*field);
                 let mut weak = view.as_input_view();
                 self.add_subview(view);
                 weak.set_text(text);
@@ -100,7 +100,7 @@ impl<T: Reflected> FormView<T> {
     pub fn get_data(&self) -> T {
         let mut data = T::default();
         for (field, label) in T::simple_fields().iter().zip(self.labels.iter()) {
-            data.set_value(field, label.text().into());
+            data.set_value(*field, label.text().into());
         }
         data
     }
@@ -130,7 +130,7 @@ impl<T: Reflected> FormView<T> {
     }
 }
 
-fn labeled_for_field<T>(field: FieldRef<T>) -> Own<dyn InputView> {
+fn labeled_for_field<T: Send>(field: Field<T>) -> Own<dyn InputView> {
     match field.type_name {
         "i8" | "i16" | "i32" | "i64" => Labeled::<NumberView<i64>>::new(),
         "u8" | "u16" | "u32" | "u64" => Labeled::<NumberView<u64>>::new(),
