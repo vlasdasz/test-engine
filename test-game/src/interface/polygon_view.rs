@@ -8,7 +8,7 @@ use test_engine::{
         Button, Color, Container, HasText, Point, PositionView, UIManager, ViewCallbacks, ViewData,
         ViewFrame, ViewSetup, ViewSubviews,
     },
-    RenderPass, SpriteView, VertexBuffer, WGPUApp,
+    RenderPass, SpriteRenderView, VertexBuffer, WGPUApp,
 };
 
 use crate::interface::test_game_view::TestGameView;
@@ -99,7 +99,7 @@ impl ViewCallbacks for PolygonView {
 
         drawer.polygon_test.draw(
             pass,
-            SpriteView {
+            SpriteRenderView {
                 camera_pos:      Point::default(),
                 resolution:      UIManager::resolution(),
                 camera_rotation: 0.0,

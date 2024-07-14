@@ -60,7 +60,7 @@ pub use paths::*;
 pub use store::store::{executable_name, OnDisk};
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use wgpu_wrapper::{
-    cast_slice, image::ToImage, RenderPass, SpriteView, VertexBuffer, WGPUApp, WGPUDrawer,
+    cast_slice, image::ToImage, RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, WGPUDrawer,
 };
 
 #[cfg(target_os = "android")]

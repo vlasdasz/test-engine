@@ -6,7 +6,6 @@ use test_engine::{
     level::LevelManager,
     refs::Weak,
     ui::{view, ImageView, ViewData, ViewSetup, UI},
-    ui_test::record_ui_test,
 };
 
 use crate::level::SkyboxLevel;
@@ -44,8 +43,6 @@ pub async fn test_transparency() -> Result<()> {
         LevelManager::set_level(SkyboxLevel::default());
     })
     .await;
-
-    record_ui_test().await;
 
     from_main(|| {
         LevelManager::stop_level();

@@ -7,7 +7,7 @@ use wgpu::{
 
 use crate::{
     render::{
-        sprite_drawer::shader_data::SpriteView,
+        sprite_drawer::shader_data::SpriteRenderView,
         uniform::{make_bind, make_uniform_layout, UniformBind},
         vertex_layout::VertexLayout,
     },
@@ -29,7 +29,7 @@ struct PolygonView {
 pub struct PolygonPipeline {
     pipeline: RenderPipeline,
 
-    view: UniformBind<SpriteView>,
+    view: UniformBind<SpriteRenderView>,
 
     polygon_view_layout: BindGroupLayout,
 
@@ -93,7 +93,7 @@ impl PolygonPipeline {
         ));
     }
 
-    pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: SpriteView) {
+    pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: SpriteRenderView) {
         render_pass.set_pipeline(&self.pipeline);
 
         self.view.update(view);

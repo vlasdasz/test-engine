@@ -2,7 +2,7 @@ use level::LevelManager;
 use manage::{data_manager::DataManager, ExistsManaged};
 use ui::UIManager;
 use wgpu::RenderPass;
-use wgpu_wrapper::{SpriteView, WGPUApp};
+use wgpu_wrapper::{SpriteRenderView, WGPUApp};
 
 pub(crate) struct TELevel;
 
@@ -68,7 +68,7 @@ impl TELevel {
 
         drawer.polygon.draw(
             pass,
-            SpriteView {
+            SpriteRenderView {
                 camera_pos,
                 resolution,
                 camera_rotation: 0.0,

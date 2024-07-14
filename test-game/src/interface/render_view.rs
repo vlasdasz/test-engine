@@ -1,7 +1,7 @@
 use test_engine::{
     refs::Weak,
     ui::{view, Color, NumberView, Point, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewSubviews},
-    RenderPass, SpriteView, WGPUApp,
+    RenderPass, SpriteRenderView, WGPUApp,
 };
 
 use crate::interface::test_game_view::TestGameView;
@@ -39,7 +39,7 @@ impl ViewCallbacks for RenderView {
 
         drawer.polygon.draw(
             pass,
-            SpriteView {
+            SpriteRenderView {
                 camera_pos:      Point::default(),
                 resolution:      UIManager::resolution(),
                 camera_rotation: 0.0,

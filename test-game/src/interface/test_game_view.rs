@@ -8,8 +8,8 @@ use test_engine::{
         view, Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, HasText, ImageView, Label,
-        NumberView, Point, PointsPath, PositionView, Spinner, StickView, TextField, UIManager, ViewData,
-        ViewFrame, ViewSetup,
+        NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView, TextField, UIManager,
+        ViewData, ViewFrame, ViewSetup,
     },
     App, DataManager,
 };
@@ -62,6 +62,8 @@ pub struct TestGameView {
     noise:   Button,
 
     some_button: Button,
+
+    sprite_view: SpriteView,
 }
 
 impl ViewSetup for TestGameView {
@@ -75,6 +77,9 @@ impl ViewSetup for TestGameView {
         DebugView::enable();
 
         LevelManager::set_level(TestLevel::default());
+
+        self.sprite_view.place().size(280, 80).center_y().r(0);
+        self.sprite_view.set_sprite(LevelManager::level_weak().player);
 
         self.setup_keymap();
 

@@ -12,7 +12,7 @@ use wgpu::{Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, Ren
 use crate::{
     image::Image,
     render::{
-        sprite_drawer::shader_data::{SpriteBox, SpriteView},
+        sprite_drawer::shader_data::{SpriteBox, SpriteRenderView},
         uniform::{make_uniform_layout, UniformBind},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
@@ -46,7 +46,7 @@ const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 pub struct TexturedBoxPipeline {
     render_pipeline: RenderPipeline,
 
-    view: UniformBind<SpriteView>,
+    view: UniformBind<SpriteRenderView>,
 
     vertex_buffer: Buffer,
 
@@ -117,7 +117,7 @@ impl TexturedBoxPipeline {
     ) {
         render_pass.set_pipeline(&self.render_pipeline);
 
-        self.view.update(SpriteView {
+        self.view.update(SpriteRenderView {
             camera_pos,
             resolution,
             camera_rotation,

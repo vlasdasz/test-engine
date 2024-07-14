@@ -9,7 +9,9 @@ use wgpu::{
 
 use crate::{
     render::{
-        sprite_drawer::shader_data::{SpriteBox, SpriteView, FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES},
+        sprite_drawer::shader_data::{
+            SpriteBox, SpriteRenderView, FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES,
+        },
         uniform::{make_uniform_layout, UniformBind},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
@@ -22,7 +24,7 @@ use crate::{
 pub struct BoxPipeline {
     pipeline: RenderPipeline,
 
-    view: UniformBind<SpriteView>,
+    view: UniformBind<SpriteRenderView>,
 
     vertex_buffer: Buffer,
 
@@ -82,7 +84,7 @@ impl BoxPipeline {
     ) {
         render_pass.set_pipeline(&self.pipeline);
 
-        self.view.update(SpriteView {
+        self.view.update(SpriteRenderView {
             camera_pos,
             resolution,
             camera_rotation,
