@@ -28,9 +28,7 @@ impl ViewCallbacks for SpriteView {
             return;
         };
 
-        let pos = sprite.position();
-
-        self.position.set_text(format!("{:.2} - {:.2}", pos.x, pos.y));
+        self.position.set_text(sprite.position());
         self.rotation.set_text(sprite.rotation().to_string());
         self.z_pos.set_text(sprite.z_position.to_string());
     }
