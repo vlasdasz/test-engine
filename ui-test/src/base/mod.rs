@@ -2,7 +2,7 @@ use crate::base::{
     keymap::test_keymap, layout::test_layout, modal_test::test_modal, on_tap_add::test_add_on_tap,
     out_bounds_test::test_out_bounds, present::test_present, selection::test_selection,
     template::test_template, text_occlusion::test_text_occlusion, touch_order::test_touch_order,
-    touch_stack::test_touch_stack, view_order::test_view_order,
+    touch_stack::test_touch_stack, transparency::test_transparency, view_order::test_view_order,
 };
 
 mod keymap;
@@ -16,9 +16,11 @@ mod template;
 mod text_occlusion;
 mod touch_order;
 mod touch_stack;
+mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_transparency().await?;
     test_layout().await?;
     test_out_bounds().await?;
     test_modal().await?;
