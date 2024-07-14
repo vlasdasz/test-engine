@@ -73,8 +73,11 @@ impl TestLevel {
 
     fn add_house(&mut self) {
         self.make_sprite::<Wall>(Shape::Rect((20, 1).into()), (-65, 55));
-        self.make_sprite::<Object>(Shape::Rect((1, 10).into()), (-55, 60.5));
-        self.make_sprite::<Object>(Shape::Rect((1, 10).into()), (-65, 60.5))
+        self.make_sprite::<Object>(Shape::Rect((10, 10).into()), (-58, 60.5))
+            .set_image("wood-window.png")
+            .to_foreground();
+        self.make_sprite::<Object>(Shape::Rect((10, 10).into()), (-65, 60.5))
+            .set_image("wood-window.png")
             .to_background();
     }
 }

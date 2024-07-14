@@ -149,7 +149,11 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
     }
 
     fn to_background(&mut self) {
-        self.z_position = LevelManager::default_z_position() + LevelManager::z_position_offset();
+        self.z_position = LevelManager::default_z_position() + LevelManager::z_position_offset() * 10.0;
+    }
+
+    fn to_foreground(&mut self) {
+        self.z_position = LevelManager::default_z_position() - LevelManager::z_position_offset() * 50_000.0;
     }
 }
 
