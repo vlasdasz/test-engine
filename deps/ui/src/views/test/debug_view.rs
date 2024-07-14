@@ -52,7 +52,7 @@ impl DebugView {
         container.__internal_setup();
         container.set_title("Debug");
         if Platform::MOBILE {
-            container.set_y(200);
+            container.set_y(400);
         }
         container.set_size((200, 280));
     }
