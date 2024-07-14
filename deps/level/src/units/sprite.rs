@@ -147,6 +147,10 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
             self.rigid_body_mut().lock_rotations(false, true);
         }
     }
+
+    fn to_background(&mut self) {
+        self.z_position = LevelManager::default_z_position() + LevelManager::z_position_offset();
+    }
 }
 
 pub trait SpriteTemplates {

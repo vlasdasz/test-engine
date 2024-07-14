@@ -26,4 +26,25 @@ ios-debug:
 	rm -f ./target/universal/release/libtest_game.a
 	cp ./target/universal/debug/libtest_game.a ./target/universal/release/libtest_game.a
 
+
+lint:
+	cargo clippy \
+      -- \
+      \
+      -W clippy::all \
+      -W clippy::pedantic \
+      \
+      -A clippy::missing_panics_doc \
+      -A clippy::module_name_repetitions \
+      -A clippy::explicit_deref_methods \
+      -A clippy::missing_errors_doc \
+      -A clippy::must_use_candidate \
+      -A clippy::module_inception \
+      -A clippy::needless_pass_by_value \
+      -A clippy::unnecessary_box_returns \
+      -A clippy::return_self_not_must_use \
+      \
+      -D warnings
+
+
 .PHONY: mobile

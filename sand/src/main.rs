@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use anyhow::Result;
 use sqlx::{migrate::Migrator, postgres::PgPoolOptions, query_as};
-use tain::Postgres;
+use tain::{AsyncRunner, Postgres};
 use tokio::time::sleep;
 
 static MIGRATOR: Migrator = sqlx::migrate!("./migrations/"); // defaults to "./migrations"
@@ -20,9 +20,9 @@ struct User {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let pg = Postgres::default().data("./tmp/pg").start_container();
+    let pg = Postgres::default().data("./tmp/pg").start().await?;
 
-    let pg_port = pg.get_host_port_ipv4(5432);
+    let pg_port = pg.get_host_port_ipv4(5432).await?;
 
     dbg!(&pg_port);
 

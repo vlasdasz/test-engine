@@ -15,7 +15,7 @@ use refs::{Own, Weak};
 use vents::Event;
 use wgpu_wrapper::image::Image;
 
-use crate::{event_handler::EventHandler, sets::Sets, Level, Player, Sprite};
+use crate::{event_handler::EventHandler, sets::Sets, Level, LevelManager, Player, Sprite};
 
 #[derive(Educe)]
 #[educe(Default)]
@@ -47,6 +47,9 @@ pub struct LevelBase {
     pub(crate) ccd_solver:       CCDSolver,
 
     pub(crate) events: EventHandler,
+
+    #[educe(Default = LevelManager::default_z_position())]
+    pub(crate) last_z_pos: f32,
 
     integration_parameters: IntegrationParameters,
 }

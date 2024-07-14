@@ -27,6 +27,14 @@ pub struct LevelManager {
 }
 
 impl LevelManager {
+    pub const fn default_z_position() -> f32 {
+        0.85
+    }
+
+    pub const fn z_position_offset() -> f32 {
+        0.000_001
+    }
+
     pub fn update() {
         if Self::no_level() {
             return;

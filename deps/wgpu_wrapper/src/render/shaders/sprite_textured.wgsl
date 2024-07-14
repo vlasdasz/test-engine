@@ -12,10 +12,11 @@ struct Vertex {
 }
 
 struct SpriteBox {
-    @location(2) size:     vec2<f32>,
-    @location(3) position: vec2<f32>,
-    @location(4) color:    vec4<f32>,
-    @location(5) rotation: f32,
+    @location(2) size:       vec2<f32>,
+    @location(3) position:   vec2<f32>,
+    @location(4) color:      vec4<f32>,
+    @location(5) rotation:   f32,
+    @location(6) z_position: f32,
 }
 
 @group(0) @binding(0)
@@ -42,7 +43,7 @@ fn v_main(
     model: Vertex,
     instance: SpriteBox,
 ) -> VertexOutput {
-    var out_pos: vec4<f32> = vec4<f32>(model.pos, 0.85, 1.0);
+    var out_pos: vec4<f32> = vec4<f32>(model.pos, instance.z_position, 1.0);
 
     out_pos.x *= instance.size.x;
     out_pos.y *= instance.size.y;

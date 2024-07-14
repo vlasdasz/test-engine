@@ -62,13 +62,13 @@ impl Default for BoxPipeline {
 }
 
 impl BoxPipeline {
-    pub fn add(&mut self, size: Size, position: Point, rotation: f32, color: Color) {
+    pub fn add(&mut self, size: Size, position: Point, rotation: f32, color: Color, z_position: f32) {
         self.boxes.push(SpriteBox {
             size,
             position,
             color,
             rotation,
-            paddind: 0,
+            z_position,
         });
     }
 

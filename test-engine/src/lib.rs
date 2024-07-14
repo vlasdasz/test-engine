@@ -17,7 +17,8 @@ pub use ui::ui_test;
 pub mod level {
     pub use ::level::{
         level, Body, CoefficientCombineRule, Control, Level, LevelBase, LevelCreation, LevelInternal,
-        LevelManager, LevelSetup, LevelTemplates, Player, Sensor, Sprite, SpriteData, SpriteTemplates, Wall,
+        LevelManager, LevelSetup, LevelTemplates, Object, Player, Sensor, Sprite, SpriteData,
+        SpriteTemplates, Wall,
     };
 }
 

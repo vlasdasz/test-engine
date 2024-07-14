@@ -26,6 +26,9 @@ pub struct SpriteData {
     #[educe(Default = Color::random())]
     pub color: Color,
 
+    #[educe(Default = 0.85)]
+    pub z_position: f32,
+
     pub image:        Weak<Image>,
     pub on_collision: Event<Weak<dyn Sprite>>,
 

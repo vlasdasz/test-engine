@@ -39,7 +39,7 @@ impl Input {
             UIManager::root_view_weak().__add_subview_internal(view, true);
         }
 
-        let _level_touch = touch;
+        // let _level_touch = touch;
         // TODO: Revisit scale
         // if Platform::DESKTOP {
         //     touch.position = self.cursor_position / UIManager::ui_scale();

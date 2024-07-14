@@ -4,7 +4,8 @@ use test_engine::{
     gen::noise::{generate_terrain, TerrainParams},
     gm::{LossyConvert, Shape},
     level::{
-        level, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
+        level, Body, Level, LevelCreation, LevelManager, LevelSetup, Object, Player, Sprite, SpriteTemplates,
+        Wall,
     },
     refs::Weak,
     ui::{Color, Image, Point, Size},
@@ -49,6 +50,33 @@ impl TestLevel {
             self.on_sprite_selected.trigger(Weak::default());
         }
     }
+
+    fn add_player(&mut self) {
+        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (-50, 60));
+        self.player = player;
+        player.set_image("frisk.png").unit.enable_collision_detection();
+        player.weapon.set_image("ak.png");
+
+        player.on_collision.sub(move || {
+            LevelManager::level_weak()
+                .as_any_mut()
+                .downcast_mut::<Self>()
+                .unwrap()
+                .collision_sound
+                .play();
+        });
+
+        self.make_sprite::<Wall>(Shape::Rect((10, 1).into()), (-50, 55));
+
+        self.collision_sound = Sound::get("pek.wav");
+    }
+
+    fn add_house(&mut self) {
+        self.make_sprite::<Wall>(Shape::Rect((20, 1).into()), (-65, 55));
+        self.make_sprite::<Object>(Shape::Rect((1, 10).into()), (-55, 60.5));
+        self.make_sprite::<Object>(Shape::Rect((1, 10).into()), (-65, 60.5))
+            .to_background();
+    }
 }
 
 impl LevelSetup for TestLevel {
@@ -68,9 +96,10 @@ impl LevelSetup for TestLevel {
         self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (-20, 80))
             .set_color(Color::BLUE);
 
-        let boxes = 200;
+        let boxes = 100;
 
         for i in 0..boxes {
+            let i = i * 2;
             let coeff: f32 = if i < boxes / 2 { -0.4 } else { 0.4 };
             self.add_random_box((coeff * i.lossy_convert(), i * 4 + 40));
         }
@@ -96,23 +125,8 @@ impl LevelSetup for TestLevel {
         self.make_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
             .set_color(Color::TURQUOISE);
 
-        self.make_sprite::<Wall>(Shape::Rect((10, 1).into()), (-50, 55));
-
-        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (-50, 60));
-        self.player = player;
-        player.set_image("frisk.png").unit.enable_collision_detection();
-        player.weapon.set_image("ak.png");
-
-        player.on_collision.sub(move || {
-            LevelManager::level_weak()
-                .as_any_mut()
-                .downcast_mut::<Self>()
-                .unwrap()
-                .collision_sound
-                .play();
-        });
-
-        self.collision_sound = Sound::get("pek.wav");
+        self.add_player();
+        self.add_house();
 
         self.on_tap.val(move |pos| {
             LevelManager::level_weak()

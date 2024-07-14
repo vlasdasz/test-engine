@@ -1,7 +1,7 @@
 use gm::flat::{Point, Rect, Shape};
 use refs::{Own, Weak};
 
-use crate::{Level, Object, Sprite};
+use crate::{Level, LevelManager, Object, Sprite};
 
 pub trait LevelCreation {
     fn add_sprite<S: 'static + Sprite>(&mut self, sprite: Own<S>) -> Weak<S>;
@@ -10,8 +10,11 @@ pub trait LevelCreation {
 }
 
 impl<T: ?Sized + Level> LevelCreation for T {
-    fn add_sprite<S: 'static + Sprite>(&mut self, sprite: Own<S>) -> Weak<S> {
+    fn add_sprite<S: 'static + Sprite>(&mut self, mut sprite: Own<S>) -> Weak<S> {
         let weak = sprite.weak();
+
+        self.last_z_pos -= LevelManager::z_position_offset();
+        sprite.z_position = self.last_z_pos;
         self.sprites.push(sprite);
         weak
     }

@@ -29,10 +29,10 @@ impl ViewCallbacks for RenderView {
     fn render(&self, pass: &mut RenderPass) {
         let drawer = WGPUApp::drawer();
 
-        drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED);
-        drawer.sprite_box.add((2, 2).into(), (40, 0).into(), 0.0, Color::GREEN);
-        drawer.sprite_box.add((2, 2).into(), (40, 40).into(), 0.0, Color::BLUE);
-        drawer.sprite_box.add((2, 2).into(), (0, 40).into(), 0.0, Color::TURQUOISE);
+        drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED, 0.5);
+        drawer.sprite_box.add((2, 2).into(), (40, 0).into(), 0.0, Color::GREEN, 0.5);
+        drawer.sprite_box.add((2, 2).into(), (40, 40).into(), 0.0, Color::BLUE, 0.5);
+        drawer.sprite_box.add((2, 2).into(), (0, 40).into(), 0.0, Color::TURQUOISE, 0.5);
         drawer.sprite_box.draw(pass, 1.0, 0.0, (0, 0).into(), UIManager::resolution());
 
         drawer.polygon.clear();

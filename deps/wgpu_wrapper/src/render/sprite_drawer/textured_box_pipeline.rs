@@ -87,7 +87,15 @@ impl Default for TexturedBoxPipeline {
 }
 
 impl TexturedBoxPipeline {
-    pub fn add(&mut self, image: Weak<Image>, size: Size, position: Point, rotation: f32, color: Color) {
+    pub fn add(
+        &mut self,
+        image: Weak<Image>,
+        size: Size,
+        position: Point,
+        rotation: f32,
+        color: Color,
+        z_position: f32,
+    ) {
         let image = self.instances.entry(image).or_default();
 
         image.push(SpriteBox {
@@ -95,7 +103,7 @@ impl TexturedBoxPipeline {
             position,
             color,
             rotation,
-            paddind: 0,
+            z_position,
         });
     }
 

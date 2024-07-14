@@ -43,6 +43,7 @@ impl TELevel {
                     sprite.position(),
                     sprite.rotation(),
                     *sprite.color(),
+                    sprite.z_position,
                 );
             } else if let Some(vertex_buffer) = &sprite.vertex_buffer {
                 drawer.polygon.add(
@@ -57,6 +58,7 @@ impl TELevel {
                     sprite.position(),
                     sprite.rotation(),
                     *sprite.color(),
+                    sprite.z_position,
                 );
             }
         }
