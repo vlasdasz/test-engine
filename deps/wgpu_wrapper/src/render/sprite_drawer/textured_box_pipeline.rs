@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Range};
+use std::ops::Range;
 
 use gm::{
     checked_usize_to_u32,
@@ -6,6 +6,7 @@ use gm::{
     volume::Vertex,
     Color,
 };
+use indexmap::IndexMap;
 use refs::Weak;
 use wgpu::{Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages};
 
@@ -50,7 +51,7 @@ pub struct TexturedBoxPipeline {
 
     vertex_buffer: Buffer,
 
-    instances: HashMap<Weak<Image>, VecBuffer<SpriteBox>>,
+    instances: IndexMap<Weak<Image>, VecBuffer<SpriteBox>>,
 }
 
 impl Default for TexturedBoxPipeline {
@@ -81,7 +82,7 @@ impl Default for TexturedBoxPipeline {
             render_pipeline,
             view: sprite_view_layout.into(),
             vertex_buffer,
-            instances: HashMap::default(),
+            instances: IndexMap::default(),
         }
     }
 }
