@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 use gm::{
     flat::{Point, Size},
@@ -37,6 +37,7 @@ impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
         self.title_label.enable_touch();
 
         self.title_label.touch().began.val(move |touch| {
+            self.place().clear();
             self.began_pos = touch.position;
         });
 
@@ -58,6 +59,7 @@ impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
         self.corner_view.enable_touch();
 
         self.corner_view.touch().began.val(move |touch| {
+            self.place().clear();
             self.began_pos = touch.position;
             self.began_size = self.size();
         });
@@ -85,5 +87,11 @@ impl<T: View + Default + 'static> Deref for MovableView<T> {
 
     fn deref(&self) -> &Self::Target {
         self.target_view.deref()
+    }
+}
+
+impl<T: View + Default + 'static> DerefMut for MovableView<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.target_view.deref_mut()
     }
 }

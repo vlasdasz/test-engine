@@ -7,9 +7,9 @@ use test_engine::{
     ui::{
         view, Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
-        Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, HasText, ImageView, Label,
-        NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView, TextField, UIManager,
-        ViewData, ViewFrame, ViewSetup,
+        Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, HasText, HasTitle, ImageView,
+        Label, MovableView, NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView,
+        TextField, UIManager, ViewData, ViewFrame, ViewSetup,
     },
     App, DataManager,
 };
@@ -63,7 +63,7 @@ pub struct TestGameView {
 
     some_button: Button,
 
-    sprite_view: SpriteView,
+    sprite_view: MovableView<SpriteView>,
 }
 
 impl ViewSetup for TestGameView {
@@ -77,9 +77,6 @@ impl ViewSetup for TestGameView {
         DebugView::enable();
 
         LevelManager::set_level(TestLevel::default());
-
-        self.sprite_view.place().size(280, 80).center_y().r(0);
-        self.sprite_view.set_sprite(LevelManager::level_weak().player);
 
         self.setup_keymap();
 
@@ -241,6 +238,10 @@ impl ViewSetup for TestGameView {
                 UIManager::set_view(Self::new());
             }));
         });
+
+        self.sprite_view.set_title("Sprite:");
+        self.sprite_view.place().size(280, 120).center_y().r(0);
+        self.sprite_view.set_sprite(LevelManager::level_weak().player);
     }
 }
 
