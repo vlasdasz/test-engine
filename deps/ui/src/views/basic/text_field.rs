@@ -2,6 +2,7 @@ use gm::{Color, ToF32};
 use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 use vents::Event;
+use wgpu_wrapper::NamedKey;
 
 use crate::{
     has_data::HasText,
@@ -25,11 +26,26 @@ pub struct TextField {
     placeholder:  String,
     text_color:   Color,
     placeholding: bool,
+    is_editing:   bool,
 
     pub changed: Event<String>,
 
+    pub editing_ended: Event<String>,
+
     #[init]
     label: Label,
+}
+
+impl ViewSetup for TextField {
+    fn setup(mut self: Weak<Self>) {
+        self.text_color = Color::BLACK;
+        self.placeholding = true;
+        self.label.place().back();
+        self.label.set_text_color(Color::LIGHTER_GRAY);
+        self.set_color(Color::LIGHT_GRAY);
+
+        self.enable_touch();
+    }
 }
 
 impl TextField {
@@ -53,6 +69,10 @@ impl TextField {
 
         self.changed.trigger(text);
         self
+    }
+
+    pub fn is_editing(&self) -> bool {
+        self.is_editing
     }
 
     pub fn clear(&mut self) -> &mut Self {
@@ -135,23 +155,19 @@ impl InputView for TextField {
     }
 }
 
-impl ViewSetup for TextField {
-    fn setup(mut self: Weak<Self>) {
-        self.text_color = Color::BLACK;
-        self.placeholding = true;
-        self.label.place().back();
-        self.label.set_text_color(Color::LIGHTER_GRAY);
-        self.set_color(Color::LIGHT_GRAY);
-
-        self.enable_touch();
-    }
-}
-
 impl ViewCallbacks for TextField {
     fn on_selection_changed(&mut self, selected: bool) {
         let mut this = weak_from_ref(self);
 
+        self.is_editing = selected;
+
         if selected {
+            UIEvents::keyboard_key().val(this, |key| {
+                if matches!(key, NamedKey::Enter) {
+                    UIManager::unselect_view();
+                }
+            });
+
             UIEvents::keyboard_input().val(this, move |key| {
                 if this.is_null() {
                     return;
@@ -185,6 +201,9 @@ impl ViewCallbacks for TextField {
                 self.set_text(string);
             };
             UIEvents::keyboard_input().unsibscribe(this);
+            UIEvents::keyboard_key().unsibscribe(this);
+
+            self.editing_ended.trigger(self.text().to_string());
         }
 
         self.label.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });

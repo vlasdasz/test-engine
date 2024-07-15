@@ -15,7 +15,10 @@ use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, View
 use vents::OnceEvent;
 use wgpu::RenderPass;
 use wgpu_wrapper::{ElementState, MouseButton, Screenshot, WGPUApp};
-use winit::event::{KeyEvent, TouchPhase};
+use winit::{
+    event::{KeyEvent, TouchPhase},
+    keyboard::Key,
+};
 
 use crate::{
     assets::Assets,
@@ -275,6 +278,10 @@ impl wgpu_wrapper::App for App {
     fn key_event(&mut self, event: KeyEvent) {
         if !event.state.is_pressed() {
             return;
+        }
+
+        if let Key::Named(key) = event.logical_key {
+            Input::on_key(key);
         }
 
         if let Some(ch) = event.logical_key.to_text() {

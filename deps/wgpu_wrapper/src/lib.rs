@@ -28,4 +28,7 @@ pub use wgpu::{
     Buffer, BufferUsages, Device, PolygonMode, RenderPass,
 };
 pub use wgpu_app::*;
-pub use winit::event::{ElementState, MouseButton};
+pub use winit::{
+    event::{ElementState, MouseButton},
+    keyboard::NamedKey,
+};

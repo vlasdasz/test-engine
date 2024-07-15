@@ -1,6 +1,6 @@
 use level::Sprite;
 use refs::Weak;
-use ui::{TextField, ViewCallbacks, ViewData, ViewSetup};
+use ui::{AlertErr, TextField, ViewCallbacks, ViewData, ViewSetup};
 use ui_proc::view;
 
 use crate as test_engine;
@@ -17,8 +17,15 @@ pub struct SpriteView {
 }
 
 impl ViewSetup for SpriteView {
-    fn setup(self: Weak<Self>) {
+    fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
+
+        self.z_pos.editing_ended.val(move |z_text| {
+            let Some(z) = z_text.parse::<f32>().alert_err() else {
+                return;
+            };
+            self.sprite.z_position = z;
+        });
     }
 }
 
@@ -30,7 +37,10 @@ impl ViewCallbacks for SpriteView {
 
         self.position.set_text(sprite.position());
         self.rotation.set_text(sprite.rotation().to_string());
-        self.z_pos.set_text(sprite.z_position.to_string());
+
+        if !self.z_pos.is_editing() {
+            self.z_pos.set_text(sprite.z_position.to_string());
+        }
     }
 }
 

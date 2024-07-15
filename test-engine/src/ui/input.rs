@@ -5,7 +5,7 @@ use ui::{
     check_touch, Container, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, ViewSetup,
     ViewSubviews,
 };
-pub use winit::event::KeyEvent;
+pub use winit::{event::KeyEvent, keyboard::NamedKey};
 
 const LOG_TOUCHES: bool = false;
 const DRAW_TOUCHES: bool = false;
@@ -16,6 +16,10 @@ impl Input {
     pub fn on_char(ch: char) {
         UIManager::keymap().check(ch);
         UIEvents::keyboard_input().trigger(ch);
+    }
+
+    pub fn on_key(key: NamedKey) {
+        UIEvents::keyboard_key().trigger(key);
     }
 
     pub fn process_touch_event(mut touch: Touch) -> bool {

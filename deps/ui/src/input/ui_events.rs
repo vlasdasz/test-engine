@@ -1,6 +1,7 @@
 use gm::{flat::Size, volume::GyroData};
 use refs::MainLock;
 use vents::Event;
+use wgpu_wrapper::NamedKey;
 
 use crate::{Touch, UIEvent};
 
@@ -13,6 +14,7 @@ pub struct UIEvents {
     size_changed:   UIEvent<Size<u32>>,
     gyro:           UIEvent<GyroData>,
     keyboard_input: UIEvent<char>,
+    keyboard_key:   UIEvent<NamedKey>,
 }
 
 impl UIEvents {
@@ -31,6 +33,10 @@ impl UIEvents {
 
     pub fn keyboard_input() -> &'static UIEvent<char> {
         &UI_EVENTS.keyboard_input
+    }
+
+    pub fn keyboard_key() -> &'static UIEvent<NamedKey> {
+        &UI_EVENTS.keyboard_key
     }
 
     pub fn gyro() -> &'static UIEvent<GyroData> {

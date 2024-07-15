@@ -60,8 +60,9 @@ impl UIManager {
         WGPUApp::current().frame_drawn()
     }
 
-    pub fn unselect_view(&self) {
-        let mut selected_view = self.selected_view.lock().unwrap();
+    pub fn unselect_view() {
+        let this = Self::get();
+        let mut selected_view = this.selected_view.lock().unwrap();
         if selected_view.is_null() {
             return;
         }
@@ -70,8 +71,10 @@ impl UIManager {
         *selected_view = Weak::default();
     }
 
-    pub fn set_selected(&self, mut view: WeakView, selected: bool) {
-        let mut selected_view = self.selected_view.lock().unwrap();
+    pub fn set_selected(mut view: WeakView, selected: bool) {
+        let this = Self::get();
+
+        let mut selected_view = this.selected_view.lock().unwrap();
 
         if let Some(selected) = selected_view.get_mut() {
             selected.on_selection_changed(false);
@@ -104,7 +107,7 @@ impl UIManager {
         }
     }
 
-    pub fn get() -> &'static Self {
+    pub(crate) fn get() -> &'static Self {
         UI_MANAGER.get_or_init(Self::init)
     }
 

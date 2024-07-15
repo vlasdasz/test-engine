@@ -69,14 +69,14 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         if touch.is_began() {
             view.set_touch_id(touch.id);
             view.base_view().touch.began.trigger(*touch);
-            UIManager::get().set_selected(view, true);
+            UIManager::set_selected(view, true);
         }
         view.base_view().touch.all.trigger(*touch);
         return true;
     }
 
     if touch.is_began() {
-        UIManager::get().unselect_view();
+        UIManager::unselect_view();
     }
 
     false
