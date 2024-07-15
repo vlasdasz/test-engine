@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    ViewSetup, WeakView,
+    View, ViewSetup, WeakView,
 };
 
 mod test_engine {
@@ -96,7 +96,7 @@ impl CollectionView {
         self.scroll.set_content_size((width, table_height));
         let width = self.width();
 
-        let mut content_start = -self.scroll.content_offset;
+        let mut content_start = -self.scroll.base_view().content_offset;
         let content_end = content_start + table_height;
 
         if content_start < 0.0 {

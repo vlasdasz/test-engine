@@ -27,7 +27,7 @@ pub struct Labeled<T: InputView + Default + 'static> {
 
 impl<T: InputView + Default> ViewSetup for Labeled<T> {
     fn setup(mut self: Weak<Self>) {
-        self.view_label += &format!(": {}", type_name::<T>());
+        self.__view_base.view_label += &format!(": {}", type_name::<T>());
 
         self.label.place().tlb(0).relative(Anchor::Width, self, 0.6);
         self.label.set_alignment(TextAlignment::Left);

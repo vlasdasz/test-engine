@@ -90,7 +90,7 @@ impl UIManager {
 impl UIManager {
     fn init() -> Self {
         let mut root_view = Own::<Container>::default();
-        root_view.view_label = "Root view".to_string();
+        root_view.base_view_mut().view_label = "Root view".to_string();
 
         Self {
             root_view,

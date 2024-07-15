@@ -2,7 +2,7 @@ use anyhow::Result;
 use dispatch::from_main;
 use gm::{flat::Point, Color, U8Color};
 use ui::{
-    Button, Container, HighlightView, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews, WeakView,
+    Button, Container, HighlightView, UIManager, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, WeakView,
 };
 
 use crate::{gm::Apply, ui::Screenshot, App};
@@ -33,7 +33,7 @@ pub fn add_action(action: impl FnMut() + Send + 'static) {
     button.place().size(100, 100).bl(0);
     button.set_color(Color::LIGHT_GRAY);
     button.on_tap(action);
-    button.view_label = "Debug Action Button".into();
+    button.base_view_mut().view_label = "Debug Action Button".into();
 }
 
 pub async fn check_colors(data: &str) -> Result<()> {

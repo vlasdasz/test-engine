@@ -42,14 +42,14 @@ impl ViewSetup for NavigationView {
 
 impl NavigationView {
     pub fn push(mut self: Weak<Self>, mut view: Own<dyn View>) {
-        assert!(!self.subviews.is_empty(), "BUG: push from empty navigation");
+        assert!(!self.subviews().is_empty(), "BUG: push from empty navigation");
 
         let touch_lock = Touch::lock();
 
         on_main(move || {
             TouchStack::push_layer(view.weak_view());
 
-            let mut prev_view = self.subviews.last().unwrap().weak_view();
+            let mut prev_view = self.subviews().last().unwrap().weak_view();
 
             view.set_color(Color::WHITE);
             let mut view = self.add_subview(view);
@@ -71,13 +71,13 @@ impl NavigationView {
     }
 
     pub fn pop(self: Weak<Self>) {
-        assert!(self.subviews.len() > 1, "BUG: Nowhere to pop");
+        assert!(self.subviews().len() > 1, "BUG: Nowhere to pop");
 
         let touch_lock = Touch::lock();
 
         let mut below = self.below_pop();
         below.set_hidden(false);
-        let mut to_pop = self.subviews.last().unwrap().weak_view();
+        let mut to_pop = self.subviews().last().unwrap().weak_view();
 
         let anim = UIAnimation::new(Animation::new(0.0, self.width(), 0.5), |view, x| {
             view.set_x(x);
@@ -93,6 +93,6 @@ impl NavigationView {
     }
 
     fn below_pop(&self) -> WeakView {
-        self.subviews[self.subviews.len() - 2].weak_view()
+        self.subviews()[self.subviews().len() - 2].weak_view()
     }
 }

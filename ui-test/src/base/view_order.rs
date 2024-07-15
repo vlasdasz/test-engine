@@ -51,15 +51,15 @@ pub async fn test_view_order() -> Result<()> {
     assert_eq!(view.view_2.z_position(), view.view_3.z_position());
     assert_eq!(view.view_3.z_position(), view.view_4.z_position());
 
-    assert_eq!(view.view_1.view_label, "OrderTestView.view_1: Container");
-    assert_eq!(view.view_2.view_label, "OrderTestView.view_2: Container");
-    assert_eq!(view.view_3.view_label, "OrderTestView.view_3: Container");
-    assert_eq!(view.view_4.view_label, "OrderTestView.view_4: Container");
+    assert_eq!(view.view_1.view_label(), "OrderTestView.view_1: Container");
+    assert_eq!(view.view_2.view_label(), "OrderTestView.view_2: Container");
+    assert_eq!(view.view_3.view_label(), "OrderTestView.view_3: Container");
+    assert_eq!(view.view_4.view_label(), "OrderTestView.view_4: Container");
 
-    assert_eq!(view.subviews()[0].label(), view.view_1.view_label);
-    assert_eq!(view.subviews()[1].label(), view.view_2.view_label);
-    assert_eq!(view.subviews()[2].label(), view.view_3.view_label);
-    assert_eq!(view.subviews()[3].label(), view.view_4.view_label);
+    assert_eq!(view.subviews()[0].label(), view.view_1.view_label());
+    assert_eq!(view.subviews()[1].label(), view.view_2.view_label());
+    assert_eq!(view.subviews()[2].label(), view.view_3.view_label());
+    assert_eq!(view.subviews()[3].label(), view.view_4.view_label());
 
     check_colors(
         r"

@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use gm::{
     flat::{Point, Size},
     Platform,
@@ -34,12 +36,12 @@ impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
         self.title_label.place().lrt(0).h(40);
         self.title_label.enable_touch();
 
-        self.title_label.touch.began.val(move |touch| {
+        self.title_label.touch().began.val(move |touch| {
             self.began_pos = touch.position;
         });
 
-        self.title_label.touch.moved.val(move |touch| {
-            let new_pos = self.frame.origin + touch.position - self.began_pos;
+        self.title_label.touch().moved.val(move |touch| {
+            let new_pos = self.frame().origin + touch.position - self.began_pos;
             self.set_position(new_pos);
         });
 
@@ -55,12 +57,12 @@ impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
             .br(0);
         self.corner_view.enable_touch();
 
-        self.corner_view.touch.began.val(move |touch| {
+        self.corner_view.touch().began.val(move |touch| {
             self.began_pos = touch.position;
             self.began_size = self.size();
         });
 
-        self.corner_view.touch.moved.val(move |touch| {
+        self.corner_view.touch().moved.val(move |touch| {
             let new_size = self.size().to_point() + touch.position - self.began_pos;
             self.set_size(new_size.clamp(100.0, 100.0).to_size());
         });
@@ -75,5 +77,13 @@ impl<T: View + Default + 'static> HasTitle for MovableView<T> {
 
     fn set_title(&mut self, title: &str) {
         self.title_label.set_text(title);
+    }
+}
+
+impl<T: View + Default + 'static> Deref for MovableView<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.target_view.deref()
     }
 }

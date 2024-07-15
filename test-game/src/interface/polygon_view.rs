@@ -71,14 +71,14 @@ impl PolygonView {
     fn add_point(mut self: Weak<Self>, pos: Point) {
         let mut view = self.add_view::<PositionView>();
         view.set_position(pos);
-        view.tag = self.points.vertices.len();
+        view.set_tag(self.points.vertices.len());
         view.additional_label = format!("{}:", self.points.vertices.len()).into();
         self.views.push(view);
         let pos = LevelManager::convert_touch(pos + self.frame().origin);
         self.points.vertices.push(pos);
 
         view.moved.val(self, move |new_pos| {
-            self.points.vertices[view.tag] = LevelManager::convert_touch(new_pos + self.frame().origin);
+            self.points.vertices[view.tag()] = LevelManager::convert_touch(new_pos + self.frame().origin);
         });
     }
 

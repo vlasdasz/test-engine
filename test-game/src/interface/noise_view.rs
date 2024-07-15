@@ -103,7 +103,7 @@ impl ViewSetup for NoiseView {
         self.drawing_view.place().back();
 
         self.enable_touch_low_priority();
-        self.touch.up_inside.sub(move || self.update_image());
+        self.touch().up_inside.sub(move || self.update_image());
 
         let update_image = move |_| self.update_image();
 

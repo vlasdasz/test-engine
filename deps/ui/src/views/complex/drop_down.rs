@@ -128,7 +128,7 @@ impl CollectionData for DropDown {
 
     fn make_cell(&self) -> Own<dyn View> {
         let mut label = Label::new();
-        label.view_label += "DropDown cell: ";
+        label.base_view_mut().view_label += "DropDown cell: ";
         label
     }
 

@@ -29,9 +29,9 @@ pub struct PositionView {
 
 impl PositionView {
     pub fn update_label(&mut self) {
-        self.position = (self.frame.origin.x, self.frame.origin.y).into();
+        self.position = (self.frame().origin.x, self.frame().origin.y).into();
 
-        let mut label = format!("{:.0} - {:.0}", self.frame.origin.x, self.frame.origin.y);
+        let mut label = format!("{:.0} - {:.0}", self.frame().origin.x, self.frame().origin.y);
 
         if let Some(additional_label) = &self.additional_label {
             label = format!("{additional_label} {label}");
@@ -47,11 +47,11 @@ impl ViewSetup for PositionView {
         self.place().size(250, 50);
         self.dot.set_color(Color::BLACK).place().tl(-5).size(10, 10);
         self.label.set_text("Move me").place().back();
-        self.touch.began.val(move |touch| {
+        self.touch().began.val(move |touch| {
             self.began_pos = touch.position;
         });
-        self.touch.moved.val(move |touch| {
-            let new_pos = self.frame.origin + touch.position - self.began_pos;
+        self.touch().moved.val(move |touch| {
+            let new_pos = self.frame().origin + touch.position - self.began_pos;
 
             self.set_position(new_pos);
             self.update_label();

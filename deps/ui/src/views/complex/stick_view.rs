@@ -66,7 +66,7 @@ impl StickView {
 impl ViewSetup for StickView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        self.touch.all.val(move |touch| {
+        self.touch().all.val(move |touch| {
             self.on_touch(&touch);
         });
 

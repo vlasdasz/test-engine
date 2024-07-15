@@ -99,19 +99,6 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 self.__after_setup_event().trigger(());
             }
         }
-
-
-        impl #generics std::ops::Deref for #name <#type_params> {
-            type Target = test_engine::ui::ViewBase;
-            fn deref(&self) -> &test_engine::ui::ViewBase {
-                &self.__view_base
-            }
-        }
-        impl #generics std::ops::DerefMut for #name <#type_params>  {
-            fn deref_mut(&mut self) -> &mut test_engine::ui::ViewBase {
-                &mut self.__view_base
-            }
-        }
     }
     .into()
 }

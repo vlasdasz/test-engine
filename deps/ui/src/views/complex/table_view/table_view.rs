@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews},
-    TableData, ViewCallbacks, ViewSetup,
+    TableData, View, ViewCallbacks, ViewSetup,
 };
 
 mod test_engine {
@@ -77,7 +77,7 @@ impl TableView {
 
         let number_of_cells_fits: usize = (self.height() / cell_height).ceil().lossy_convert();
 
-        let offset = self.scroll.content_offset;
+        let offset = self.scroll.base_view_mut().content_offset;
 
         let first_index: usize = (-offset / cell_height).floor().lossy_convert();
 

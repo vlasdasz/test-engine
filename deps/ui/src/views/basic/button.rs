@@ -80,7 +80,7 @@ impl ViewSetup for Button {
         self.image.place().back();
         self.image.set_hidden(true);
 
-        self.touch.up_inside.sub(move || self.on_tap.trigger(()));
+        self.touch().up_inside.sub(move || self.on_tap.trigger(()));
     }
 }
 

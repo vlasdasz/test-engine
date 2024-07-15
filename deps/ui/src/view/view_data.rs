@@ -5,6 +5,13 @@ use vents::{Event, OnceEvent};
 use crate::{layout::Placer, NavigationView, UIAnimation, View};
 
 pub trait ViewData {
+    fn tag(&self) -> usize;
+    fn set_tag(&mut self, tag: usize) -> &mut Self;
+
+    fn view_label(&self) -> &str;
+
+    fn content_offset(&self) -> f32;
+
     fn color(&self) -> &Color;
     fn set_color(&mut self, color: impl Into<Color>) -> &mut Self;
 
@@ -36,6 +43,23 @@ pub trait ViewData {
 }
 
 impl<T: ?Sized + View> ViewData for T {
+    fn tag(&self) -> usize {
+        self.base_view().tag
+    }
+
+    fn set_tag(&mut self, tag: usize) -> &mut Self {
+        self.base_view_mut().tag = tag;
+        self
+    }
+
+    fn view_label(&self) -> &str {
+        &self.base_view().view_label
+    }
+
+    fn content_offset(&self) -> f32 {
+        self.base_view().content_offset
+    }
+
     fn color(&self) -> &Color {
         &self.base_view().color
     }

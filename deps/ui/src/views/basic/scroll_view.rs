@@ -40,15 +40,11 @@ impl ScrollView {
         -(self.content_size.height - self.height())
     }
 
-    pub fn content_offset(&self) -> f32 {
-        self.content_offset
-    }
-
     pub fn set_content_offset(&mut self, offset: impl ToF32) -> &mut Self {
-        self.content_offset = offset.to_f32();
+        self.__view_base.content_offset = offset.to_f32();
 
-        if self.content_offset < self.max_offset() {
-            self.content_offset = self.max_offset();
+        if self.__view_base.content_offset < self.max_offset() {
+            self.__view_base.content_offset = self.max_offset();
         }
 
         self
@@ -67,8 +63,8 @@ impl ScrollView {
     pub fn set_content_height(&mut self, height: impl ToF32) -> &mut Self {
         self.content_size.height = height.to_f32();
 
-        if self.content_offset < self.max_offset() {
-            self.content_offset = self.max_offset();
+        if self.__view_base.content_offset < self.max_offset() {
+            self.__view_base.content_offset = self.max_offset();
         }
 
         self
@@ -77,13 +73,13 @@ impl ScrollView {
 
 impl ViewSetup for ScrollView {
     fn setup(mut self: Weak<Self>) {
-        self.dont_hide_off_screen = true;
+        self.__view_base.dont_hide_off_screen = true;
         self.slider.place().w(40).r(0);
         self.slider.on_change.val(move |val| {
             let val = 1.0 - val;
             let range = self.content_size.height - self.height();
-            self.content_offset = -range * val;
-            self.on_scroll.trigger(self.content_offset);
+            self.__view_base.content_offset = -range * val;
+            self.on_scroll.trigger(self.__view_base.content_offset);
         });
 
         UIManager::on_scroll(self, move |scroll| {
@@ -98,7 +94,7 @@ impl ViewSetup for ScrollView {
 
 impl ViewCallbacks for ScrollView {
     fn update(&mut self) {
-        let co = self.content_offset;
+        let co = self.__view_base.content_offset;
         self.slider.set_y(-co);
         let height = self.height();
         self.slider.set_height(height);
@@ -116,12 +112,12 @@ impl ScrollView {
         if self.height() >= self.content_size.height {
             return;
         }
-        self.content_offset += scroll;
+        self.__view_base.content_offset += scroll;
         let range = self.content_size.height - self.height();
-        self.content_offset = self.content_offset.clamp(-range, 0.0);
-        let slider_val = -self.content_offset / range;
+        self.__view_base.content_offset = self.__view_base.content_offset.clamp(-range, 0.0);
+        let slider_val = -self.__view_base.content_offset / range;
         self.slider.set_value_without_event(1.0 - slider_val);
 
-        self.on_scroll.trigger(self.content_offset);
+        self.on_scroll.trigger(self.__view_base.content_offset);
     }
 }
