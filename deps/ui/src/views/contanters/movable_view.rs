@@ -8,7 +8,7 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    Anchor::Top, HasText, HasTitle, ImageView, Label, UIImages, View, ViewData, ViewFrame, ViewSetup,
+    Anchor::Top, HasText, HasTitle, ImageView, Images, Label, View, ViewData, ViewFrame, ViewSetup,
     ViewSubviews, ViewTouch,
 };
 
@@ -52,7 +52,7 @@ impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
         let corner_size = if Platform::MOBILE { 50 } else { 28 };
 
         self.corner_view
-            .set_image(UIImages::rb_corner())
+            .set_image(Images::rb())
             .place()
             .size(corner_size, corner_size)
             .br(0);

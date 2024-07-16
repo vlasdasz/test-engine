@@ -49,6 +49,7 @@ serial_test = "3.1"
 sqlx = { version = "0.7", features = ["postgres", "runtime-tokio-rustls"] }
 syn = { version = "2.0", features = ["full", "extra-traits"] }
 tokio = { version = "1.38.0", features = ["full"] }
+walkdir = "2.5"
 web-time = "1.0.0"
 
 glyph_brush = "0.7.8"
@@ -67,6 +68,7 @@ call-counter = { path = "deps/call-counter" }
 dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
+image-proc = { path = "deps/wgpu-wrapper/image-proc" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
 store = { path = "deps/store" }

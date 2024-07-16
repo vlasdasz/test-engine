@@ -27,7 +27,7 @@ impl TestLevel {
         );
 
         if Faker.fake() {
-            bx.set_image("crate.png");
+            bx.set_image("crate_box.png");
         } else {
             bx.set_color(Color::random());
         }

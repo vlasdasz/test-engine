@@ -1,149 +1,80 @@
-use std::str::FromStr;
+#![feature(proc_macro_span)]
 
-use proc_macro::TokenStream;
-use quote::{quote, quote_spanned};
-use syn::{
-    parse::Parser,
-    parse_macro_input, Data, DeriveInput, Field, Fields, FieldsNamed, GenericParam, Ident, Type,
-    __private::TokenStream2,
-    parse_quote,
-    spanned::Spanned,
-    token::{Bracket, Pound},
-    Attribute, Meta,
-};
+extern crate proc_macro;
 
-#[proc_macro_attribute]
-#[allow(clippy::too_many_lines)]
-pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
-    let mut stream = parse_macro_input!(stream as DeriveInput);
+use std::path::PathBuf;
 
-    let Data::Struct(data) = &mut stream.data else {
-        panic!("`view` macro has to be used with structs")
+use proc_macro::{Span, TokenStream, TokenTree};
+use quote::quote;
+use syn::{parse_macro_input, LitStr};
+use walkdir::WalkDir;
+
+#[proc_macro]
+pub fn include_images(input: TokenStream) -> TokenStream {
+    // Get the span of the input
+    let span = match input.clone().into_iter().next() {
+        Some(TokenTree::Group(group)) => group.span(),
+        Some(token) => token.span(),
+        None => Span::call_site(),
     };
 
-    let name = &stream.ident;
+    // Get the file name from the span
+    let mut file_path = span.source_file().path();
 
-    let name_str =
-        TokenStream2::from_str(&format!("\"{name}\"")).expect("Failed to extract view struct name");
+    file_path.pop();
 
-    let generics = &stream.generics;
+    // Count the number of components in the path
+    let component_count = file_path.components().count();
 
-    let type_param_names: Vec<_> = generics
-        .params
-        .iter()
-        .filter_map(|param| match param {
-            GenericParam::Type(type_param) => Some(type_param.ident.clone()),
-            GenericParam::Const(const_param) => Some(const_param.ident.clone()),
-            GenericParam::Lifetime(_) => None,
-        })
-        .collect();
+    // Create a new PathBuf with the relative path
+    let mut relative_path = PathBuf::new();
+    for _ in 0..component_count {
+        relative_path.push("..");
+    }
 
-    let type_params = quote_spanned! {stream.generics.span()=>
-        #(#type_param_names),*
-    };
+    // Parse the input into a string literal
+    let input = parse_macro_input!(input as LitStr);
+    let folder_path = input.value();
 
-    let Fields::Named(fields) = &mut data.fields else {
-        panic!("No named fields");
-    };
-
-    let inits = add_inits(name, fields);
-
-    fields.named.insert(
-        0,
-        Field::parse_named
-            .parse2(quote! { __view_base: test_engine::ui::ViewBase })
-            .expect("parse2(quote! { __view_base: test_engine::ui::ViewBase })"),
-    );
-
-    quote! {
-        #[derive(test_engine::educe::Educe)]
-        #[educe(Debug, Default)]
-        #stream
-
-        impl #generics test_engine::ui::View for #name <#type_params> {
-            fn weak_view(&self) -> test_engine::refs::Weak<dyn test_engine::ui::View> {
-                test_engine::refs::weak_from_ref(self as &dyn test_engine::ui::View)
-            }
-            fn base_view(&self) -> &test_engine::ui::ViewBase {
-                &self.__view_base
-            }
-            fn base_view_mut(&mut self) -> &mut test_engine::ui::ViewBase {
-                &mut self.__view_base
-            }
-            fn init_views(&mut self) {
-                use test_engine::ui::ViewSubviews;
-                #inits
-            }
-
-        }
-
-        impl #generics test_engine::refs::AsAny for #name <#type_params> {
-            fn as_any(&self) -> &dyn std::any::Any {
-               self
-            }
-
-            fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
-               self
-            }
-        }
-
-        impl #generics test_engine::ui::ViewInternalSetup for #name <#type_params>  {
-            fn __internal_setup(&mut self) {
-                use test_engine::ui::ViewSetup;
-                use test_engine::ui::WithHeader;
-                use test_engine::ui::ViewData;
-                self.__view_base.view_label += &#name_str.to_string();
-                self.layout_header();
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.setup();
-                self.__after_setup_event().trigger(());
+    // Collect all image files in the specified folder
+    let mut image_files = Vec::new();
+    for entry in WalkDir::new(&folder_path) {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if path.is_file() {
+            let extension = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+            if ["png", "jpg", "jpeg", "gif", "bmp"].contains(&extension) {
+                image_files.push(path.to_path_buf());
             }
         }
     }
-    .into()
-}
 
-fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
-    let mut res = quote!();
+    // Generate the struct and methods
+    let struct_name = syn::Ident::new("Images", Span::call_site().into());
+    let mut methods = Vec::new();
 
-    let init_attr = Attribute {
-        pound_token:   Pound::default(),
-        style:         syn::AttrStyle::Outer,
-        bracket_token: Bracket::default(),
-        meta:          Meta::Path(parse_quote!(init)),
-    };
+    for image_path in image_files {
+        let image_name = image_path.file_stem().and_then(|s| s.to_str()).unwrap();
+        let image_name = image_name.replace('-', "_");
+        let method_name = syn::Ident::new(&image_name, Span::call_site().into());
+        let mut full_image_path = relative_path.clone();
+        full_image_path.push(image_path.clone());
+        let image_path_str = full_image_path.to_str().unwrap();
 
-    let mut inits_started = false;
-
-    for field in &mut fields.named {
-        if let Some(idx) = field.attrs.iter().position(|a| *a == init_attr) {
-            field.attrs.remove(idx);
-            inits_started = true;
-        }
-
-        if !inits_started {
-            continue;
-        }
-
-        let name = field.ident.as_ref().expect("let name = field.ident.as_ref()");
-
-        let ty = &field.ty;
-
-        let weak_wrapped_type = Type::without_plus
-            .parse2(quote! { test_engine::refs::Weak<#ty> })
-            .expect("Type::without_plus.parse2(quote! { Weak<#ty> })");
-
-        field.ty = weak_wrapped_type;
-
-        let label = TokenStream2::from_str(&format!("\"{root_name}.{name}\""))
-            .expect("let label = TokenStream2::from_str()");
-
-        res = quote! {
-            #res
-            self.#name = self.add_view();
-            self.#name.base_view_mut().view_label = format!("{}: {}", #label, self.#name.base_view().view_label);
-        }
+        methods.push(quote! {
+            pub fn #method_name() -> Weak<Image> {
+                Image::load(include_bytes!(#image_path_str), #image_path_str)
+            }
+        });
     }
 
-    res
+    let expanded = quote! {
+        pub struct #struct_name;
+
+        impl #struct_name {
+            #(#methods)*
+        }
+    };
+
+    TokenStream::from(expanded)
 }

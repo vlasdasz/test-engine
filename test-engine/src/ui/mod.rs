@@ -12,6 +12,6 @@ pub use input::*;
 pub use ui::UI;
 pub use ui_proc::view;
 pub use views::color_meter::ColorMeter;
-pub use wgpu_wrapper::{image::Image, PolygonMode, Screenshot};
+pub use wgpu_wrapper::{image::Image, include_images, PolygonMode, Screenshot};
 
 pub use crate::ui::views::sprite_view::SpriteView;

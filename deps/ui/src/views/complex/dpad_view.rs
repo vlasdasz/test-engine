@@ -17,7 +17,7 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
-use crate::{Button, UIImages};
+use crate::{Button, Images};
 
 #[view]
 pub struct DPadView {
@@ -33,10 +33,10 @@ pub struct DPadView {
 impl ViewSetup for DPadView {
     fn setup(self: Weak<Self>) {
         [
-            (self.up, Direction::Up, UIImages::up()),
-            (self.down, Direction::Down, UIImages::down()),
-            (self.left, Direction::Left, UIImages::left()),
-            (self.right, Direction::Right, UIImages::right()),
+            (self.up, Direction::Up, Images::up()),
+            (self.down, Direction::Down, Images::down()),
+            (self.left, Direction::Left, Images::left()),
+            (self.right, Direction::Right, Images::right()),
         ]
         .apply(|(mut view, direction, image)| {
             view.set_image(image);

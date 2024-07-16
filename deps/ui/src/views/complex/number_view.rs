@@ -8,7 +8,7 @@ use refs::{weak_from_ref, Weak};
 use vents::Event;
 
 use crate::{
-    has_data::HasText, view::ViewData, Button, HasTitle, InputView, Label, UIImages, ViewSetup, ViewTouch,
+    has_data::HasText, view::ViewData, Button, HasTitle, Images, InputView, Label, ViewSetup, ViewTouch,
 };
 
 mod test_engine {
@@ -54,9 +54,9 @@ impl<T: ViewableNumber> ViewSetup for NumberView<T> {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
         self.label.text = format!("{:.1}", self.value);
-        self.up.set_image(UIImages::up());
+        self.up.set_image(Images::up());
         self.up.on_tap(move || self.up_tap());
-        self.down.set_image(UIImages::down());
+        self.down.set_image(Images::down());
         self.down.on_tap(move || self.down_tap());
     }
 }
