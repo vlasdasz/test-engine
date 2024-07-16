@@ -6,8 +6,27 @@ use std::path::PathBuf;
 
 use proc_macro::{Span, TokenStream, TokenTree};
 use quote::quote;
-use syn::{parse_macro_input, LitStr};
+use syn::{
+    parse::{Parse, ParseStream},
+    parse_macro_input, LitStr, Token, Type,
+};
 use walkdir::WalkDir;
+
+// Custom struct to hold the parsed input
+struct MacroInput {
+    ty:  Type,
+    lit: LitStr,
+}
+
+// Implement the Parse trait for MacroInput
+impl Parse for MacroInput {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        let ty: Type = input.parse()?;
+        input.parse::<Token![,]>()?;
+        let lit: LitStr = input.parse()?;
+        Ok(MacroInput { ty, lit })
+    }
+}
 
 #[proc_macro]
 pub fn include_images(input: TokenStream) -> TokenStream {
@@ -32,11 +51,14 @@ pub fn include_images(input: TokenStream) -> TokenStream {
         relative_path.push("..");
     }
 
-    // Parse the input into a string literal
-    let input = parse_macro_input!(input as LitStr);
-    let folder_path = input.value();
+    // // Parse the input into a string literal
+    // let input = parse_macro_input!(input as LitStr);
+    // let folder_path = input.value();
 
-    let folder_path = format!("{}/{folder_path}", file_path.display());
+    // Parse the input tokens into a MacroInput struct
+    let MacroInput { ty, lit } = parse_macro_input!(input as MacroInput);
+
+    let folder_path = format!("{}/{}", file_path.display(), lit.value());
 
     // Collect all image files in the specified folder
     let mut image_files = Vec::new();
@@ -51,8 +73,6 @@ pub fn include_images(input: TokenStream) -> TokenStream {
         }
     }
 
-    // Generate the struct and methods
-    let struct_name = syn::Ident::new("Images", Span::call_site().into());
     let mut methods = Vec::new();
 
     for image_path in image_files {
@@ -71,9 +91,7 @@ pub fn include_images(input: TokenStream) -> TokenStream {
     }
 
     let expanded = quote! {
-        pub struct #struct_name;
-
-        impl #struct_name {
+        impl #ty {
             #(#methods)*
         }
     };
