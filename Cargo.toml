@@ -63,7 +63,7 @@ tain = "=0.3.0"
 vents = "=0.6.0"
 
 audio = { path = "deps/audio" }
-call_counter = { path = "deps/call_counter" }
+call-counter = { path = "deps/call-counter" }
 dispatch = { path = "deps/dispatch" }
 gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
@@ -77,7 +77,8 @@ ui-benchmark = { path = "ui-benchmark" }
 ui-proc = { path = "deps/ui/ui-proc" }
 utils = { path = "deps/utils" }
 valid = { path = "deps/valid" }
-wgpu_wrapper = { path = "deps/wgpu_wrapper" }
+wgpu-wrapper = { path = "deps/wgpu-wrapper" }
+
 
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "b2cc37132280e34cdd906a5939b8c472406704f7" }

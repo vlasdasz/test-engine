@@ -25,7 +25,7 @@ rust_decimal = { workspace = true }
 tokio = { workspace = true }
 utils = { workspace = true }
 vents = { workspace = true }
-wgpu_wrapper = { workspace = true }
+wgpu-wrapper = { workspace = true }
 
 gm = { workspace = true }
 ui-proc = { workspace = true }

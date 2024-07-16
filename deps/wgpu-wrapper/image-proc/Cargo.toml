@@ -1,0 +1,11 @@
+[package]
+edition = "2021"
+name = "image-proc"
+version = "0.1.0"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = { workspace = true }
+syn = { workspace = true }
