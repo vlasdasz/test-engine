@@ -36,6 +36,8 @@ pub fn include_images(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as LitStr);
     let folder_path = input.value();
 
+    let folder_path = format!("{}/{folder_path}", file_path.display());
+
     // Collect all image files in the specified folder
     let mut image_files = Vec::new();
     for entry in WalkDir::new(&folder_path) {
