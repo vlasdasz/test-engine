@@ -15,7 +15,6 @@ use crate::{has_data::HasText, Container, Label, UIEvent, ViewData, ViewFrame, V
 pub struct PositionView {
     began_pos: Point,
 
-    #[educe(Debug(ignore))]
     pub moved: UIEvent<Point>,
 
     pub additional_label: Option<String>,

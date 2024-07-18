@@ -7,7 +7,6 @@ use crate as test_engine;
 
 #[view]
 pub struct SpriteView {
-    #[educe(Debug(ignore))]
     sprite: Weak<dyn Sprite>,
 
     #[init]

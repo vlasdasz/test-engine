@@ -1,11 +1,11 @@
-use std::{any::Any, fmt::Debug};
+use std::any::Any;
 
 use gm::flat::Size;
 use refs::Own;
 
 use crate::{view::ViewSetup, Label, View};
 
-pub trait CollectionData: Debug {
+pub trait CollectionData {
     fn number_of_cells(&self) -> usize;
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize);
 

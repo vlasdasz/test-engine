@@ -17,7 +17,6 @@ use crate::ScrollView;
 
 #[view]
 pub struct TableView {
-    #[educe(Debug(ignore))]
     data: Weak<dyn TableData>,
 
     #[init]

@@ -9,7 +9,6 @@ mod test_engine {
 
 #[view]
 pub struct NewLabel<T: 'static> {
-    #[educe(Debug(ignore))]
     value: T,
 }
 
