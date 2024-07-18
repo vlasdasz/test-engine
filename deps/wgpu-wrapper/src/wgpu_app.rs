@@ -14,7 +14,7 @@ use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
     Adapter, Backends, BindGroupLayout, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance,
-    InstanceDescriptor, Limits, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
+    InstanceDescriptor, Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
     TextureUsages,
 };
 use winit::{
@@ -147,6 +147,7 @@ impl WGPUApp {
                     required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
                     required_limits,
                     label: None,
+                    memory_hints: MemoryHints::Performance,
                 },
                 None,
             )
