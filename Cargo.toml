@@ -54,7 +54,7 @@ web-time = "1.0.0"
 
 glyph_brush = "0.7.8"
 wgpu = "22.0.0"
-wgpu_text = "0.8.8"
+wgpu_text = "0.9.0"
 winit = "0.30.1"
 
 manage = "=0.6.0"
@@ -88,4 +88,4 @@ wgpu-wrapper = { path = "deps/wgpu-wrapper" }
 #vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
 #tain = { path = "../deps/tain/tain" }
-wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "55c4d955baae1c44c3336ff9ad5e671f561cf65e" }
+#wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "55c4d955baae1c44c3336ff9ad5e671f561cf65e" }
