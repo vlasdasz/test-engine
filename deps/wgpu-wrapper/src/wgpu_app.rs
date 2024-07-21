@@ -130,7 +130,7 @@ impl WGPUApp {
 
         let info = adapter.get_info();
 
-        info!("{}", &info.backend);
+        info!("Backend: {}", &info.backend);
 
         let mut required_limits = if cfg!(target_arch = "wasm32") {
             Limits::downlevel_webgl2_defaults()
@@ -143,8 +143,8 @@ impl WGPUApp {
         let (device, queue) = adapter
             .request_device(
                 &DeviceDescriptor {
-                    // required_features: Features::empty(),
-                    required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
+                    required_features: dbg!(Features::empty()),
+                    // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
                     required_limits,
                     label: None,
                     memory_hints: MemoryHints::Performance,
