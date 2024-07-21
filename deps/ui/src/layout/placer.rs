@@ -295,6 +295,12 @@ impl Placer {
     pub fn all_sides(&self, offset: impl ToF32) -> &Self {
         self.t(offset).b(offset).l(offset).r(offset)
     }
+
+    pub fn dump_rules(&self) {
+        let rules = format!("{:?}", self.rules.borrow());
+        let tiling_rules = format!("{:?}", self.all_tiling_rules.borrow());
+        println!("Rules: {rules}\nAll tiling rules: {tiling_rules}");
+    }
 }
 
 impl Placer {

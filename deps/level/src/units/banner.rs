@@ -5,11 +5,11 @@ use refs::Own;
 
 use crate::{Sprite, SpriteData};
 
-pub struct Object {
+pub struct Banner {
     sprite: SpriteData,
 }
 
-impl Deref for Object {
+impl Deref for Banner {
     type Target = SpriteData;
 
     fn deref(&self) -> &Self::Target {
@@ -17,13 +17,13 @@ impl Deref for Object {
     }
 }
 
-impl DerefMut for Object {
+impl DerefMut for Banner {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.sprite
     }
 }
 
-impl Sprite for Object {
+impl Sprite for Banner {
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         Own::new(Self {

@@ -4,7 +4,7 @@ use test_engine::{
     gen::noise::{generate_terrain, TerrainParams},
     gm::{LossyConvert, Shape},
     level::{
-        level, Body, Level, LevelCreation, LevelManager, LevelSetup, Object, Player, Sprite, SpriteTemplates,
+        level, Banner, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates,
         Wall,
     },
     refs::Weak,
@@ -73,10 +73,10 @@ impl TestLevel {
 
     fn add_house(&mut self) {
         self.make_sprite::<Wall>(Shape::Rect((20, 1).into()), (-65, 55));
-        self.make_sprite::<Object>(Shape::Rect((10, 10).into()), (-58, 60.5))
+        self.make_sprite::<Banner>(Shape::Rect((10, 10).into()), (-58, 60.5))
             .set_image("wood-window.png")
             .to_foreground();
-        self.make_sprite::<Object>(Shape::Rect((10, 10).into()), (-65, 60.5))
+        self.make_sprite::<Banner>(Shape::Rect((10, 10).into()), (-65, 60.5))
             .set_image("wood-window.png")
             .to_background();
     }

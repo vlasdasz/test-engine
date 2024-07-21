@@ -14,10 +14,6 @@ pub struct Unit {
 }
 
 impl Sprite for Unit {
-    fn update(&mut self) {
-        self.body.update();
-    }
-
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         let mut body = Body::make(shape, position);
@@ -27,6 +23,10 @@ impl Sprite for Unit {
         body.collider_mut().set_restitution_combine_rule(CoefficientCombineRule::Min);
 
         Own::new(Unit { body })
+    }
+
+    fn update(&mut self) {
+        self.body.update();
     }
 
     fn rigid_handle(&self) -> Option<RigidBodyHandle> {
