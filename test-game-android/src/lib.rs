@@ -15,7 +15,7 @@ pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir(
     _: JClass,
     input: JString,
 ) {
-    use test_game::test_engine::Paths;
+    use test_game::test_engine::store::Paths;
     let input: String = env.get_string(&input).expect("Couldn't get java string!").into();
     Paths::set_storage_path(input);
 }

@@ -1,37 +1,14 @@
 use std::{
     path::{Path, PathBuf},
-    process::Command,
     rc::Rc,
 };
 
-use anyhow::Result;
-use home::home_dir;
-use log::warn;
-
-pub fn home() -> PathBuf {
-    home_dir().unwrap()
-}
-
-pub fn git_root() -> Result<PathBuf> {
-    let output = Command::new("git").args(["rev-parse", "--show-toplevel"]).output()?;
-
-    if !output.status.success() {
-        warn!("Failed to get Git repository root path");
-        return Ok(PathBuf::from("~/dev/money"));
-    }
-
-    assert!(output.status.success(), "Failed to get Git repository root path");
-    let git_root = String::from_utf8_lossy(&output.stdout).trim_end_matches('\n').to_string();
-
-    Ok(PathBuf::from(git_root))
-}
-
-pub(crate) struct Paths {
+pub(crate) struct AssetsPaths {
     pub(crate) images: PathBuf,
     pub(crate) sounds: PathBuf,
 }
 
-impl Paths {
+impl AssetsPaths {
     pub fn new(root: PathBuf) -> Rc<Self> {
         let root = Self::root(&root);
         let assets = Self::assets(&root);
@@ -43,7 +20,7 @@ impl Paths {
 }
 
 #[allow(clippy::used_underscore_binding)]
-impl Paths {
+impl AssetsPaths {
     fn root(_base: &Path) -> PathBuf {
         #[cfg(ios)]
         return std::env::current_exe().unwrap_or_default().parent().unwrap().to_path_buf();

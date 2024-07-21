@@ -6,7 +6,7 @@
 
 mod app;
 mod assets;
-mod paths;
+mod assets_paths;
 
 mod te_level;
 pub mod ui;
@@ -55,8 +55,6 @@ pub use audio;
 pub use dispatch::{after, async_after, from_main, on_main, wait_for_next_frame};
 pub use gen;
 pub use manage::data_manager::DataManager;
-pub use paths::*;
-pub use store::store::{OnDisk, Paths};
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use wgpu_wrapper::{
     cast_slice, image::ToImage, RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, WGPUDrawer,

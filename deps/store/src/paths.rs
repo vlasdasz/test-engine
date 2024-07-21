@@ -1,6 +1,8 @@
-use std::{path::PathBuf, sync::Mutex};
+use std::{path::PathBuf, process::Command, sync::Mutex};
 
+use dirs::home_dir;
 use gm::Platform;
+use log::warn;
 
 static STORAGE_PATH: Mutex<Option<String>> = Mutex::new(None);
 
@@ -34,6 +36,24 @@ impl Paths {
             .expect("Failed to get executable name")
             .to_string_lossy()
             .into()
+    }
+
+    pub fn home() -> PathBuf {
+        home_dir().unwrap()
+    }
+
+    pub fn git_root() -> anyhow::Result<PathBuf> {
+        let output = Command::new("git").args(["rev-parse", "--show-toplevel"]).output()?;
+
+        if !output.status.success() {
+            warn!("Failed to get Git repository root path");
+            return Ok(PathBuf::from("~/dev/money"));
+        }
+
+        assert!(output.status.success(), "Failed to get Git repository root path");
+        let git_root = String::from_utf8_lossy(&output.stdout).trim_end_matches('\n').to_string();
+
+        Ok(PathBuf::from(git_root))
     }
 
     pub fn set_storage_path(path: String) {

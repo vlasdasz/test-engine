@@ -4,6 +4,7 @@ use test_engine::{
     gm::{Apply, Direction, LossyConvert},
     level::{Control, LevelManager},
     refs::Weak,
+    store::OnDisk,
     ui::{
         view, Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
@@ -11,7 +12,7 @@ use test_engine::{
         Label, MovableView, NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView,
         Switch, TextField, UIManager, ViewData, ViewFrame, ViewSetup,
     },
-    App, DataManager, OnDisk,
+    App, DataManager,
 };
 use ui_benchmark::BenchmarkView;
 

@@ -5,9 +5,10 @@ version = "0.1.0"
 
 
 [dependencies]
-aes-gcm = "0.10.3"
-
+aes-gcm = { workspace = true }
+anyhow = { workspace = true }
 dirs = { workspace = true }
+log = { workspace = true }
 rand = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
