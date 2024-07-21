@@ -4,14 +4,14 @@
 #default-members = ["ui-test"]
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "ui-test",
-    "ui-benchmark",
-    "level-test",
-    "deps/ui/ui-proc-test",
-    "sand",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "ui-test",
+  "ui-benchmark",
+  "level-test",
+  "deps/ui/ui-proc-test",
+  "sand",
 ]
 
 resolver = "2"
@@ -57,12 +57,12 @@ wgpu = "22.0.0"
 wgpu_text = "0.9.0"
 winit = "0.30.1"
 
+jni = "0.21.1"
 manage = "=0.6.0"
 reflected = "=0.10.1"
 refs = { version = "=0.11.0", default-features = true }
 tain = "=0.3.0"
 vents = "=0.6.0"
-jni = "0.21.1"
 
 audio = { path = "deps/audio" }
 call-counter = { path = "deps/call-counter" }

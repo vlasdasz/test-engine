@@ -9,12 +9,11 @@ use jni::{
     JNIEnv,
 };
 
-// Works
 #[no_mangle]
-pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir<'local>(
-    mut env: JNIEnv<'local>,
+pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir(
+    mut env: JNIEnv,
     _: JClass,
-    input: JString<'local>,
+    input: JString,
 ) {
     use test_game::test_engine::Paths;
     let input: String = env.get_string(&input).expect("Couldn't get java string!").into();
@@ -22,8 +21,8 @@ pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir<'l
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setAssetManager<'local>(
-    _env: JNIEnv<'local>,
+pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setAssetManager(
+    _env: JNIEnv,
     _: JClass,
     _input: JClass,
 ) {
