@@ -1,6 +1,8 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::Mutex};
 
 use gm::Platform;
+
+static STORAGE_PATH: Mutex<Option<String>> = Mutex::new(None);
 
 pub struct Paths;
 
@@ -9,7 +11,14 @@ impl Paths {
         let home = if Platform::IOS {
             dirs::document_dir()
         } else if Platform::ANDROID {
-            Some("idk_lol".into())
+            Some(
+                STORAGE_PATH
+                    .lock()
+                    .unwrap()
+                    .clone()
+                    .expect("set storage path on android")
+                    .into(),
+            )
         } else {
             dirs::home_dir()
         }
@@ -25,5 +34,9 @@ impl Paths {
             .expect("Failed to get executable name")
             .to_string_lossy()
             .into()
+    }
+
+    pub fn set_storage_path(path: String) {
+        STORAGE_PATH.lock().unwrap().replace(path);
     }
 }

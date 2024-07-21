@@ -11,21 +11,21 @@ use jni::{
 
 // Works
 #[no_mangle]
-pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_helloFromJNI<'local>(
+pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir<'local>(
     mut env: JNIEnv<'local>,
     _: JClass,
     input: JString<'local>,
 ) {
-    dbg!("Java_com_example_test_1game_MainActivity_helloFromJNI");
-
-    // First, we have to get the string out of Java. Check out the `strings`
-    // module for more info on how this works.
+    use test_game::test_engine::Paths;
     let input: String = env.get_string(&input).expect("Couldn't get java string!").into();
+    Paths::set_storage_path(input);
+}
 
-    dbg!(&input);
-
-    // Then we have to create a new Java string to return. Again, more inf
-
-    // Then we have to create a new Java string to return. Again, more info
-    // in the `strings` module.
+#[no_mangle]
+pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setAssetManager<'local>(
+    _env: JNIEnv<'local>,
+    _: JClass,
+    _input: JClass,
+) {
+    dbg!("Java_com_example_test_1game_MainActivity_setAssetManager");
 }

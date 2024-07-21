@@ -242,7 +242,7 @@ impl ViewSetup for TestGameView {
         self.sprite_view.place().size(280, 120).center_y().r(0);
         self.sprite_view.set_sprite(LevelManager::level_weak().player);
 
-        self.bool_storage_view.set_off_color(Color::WHITE).set_on(true);
+        self.bool_storage_view.set_off_color(Color::WHITE).set_on(BOOL.get());
         self.bool_storage_view
             .place()
             .same([X, Height], self.ui_bench)

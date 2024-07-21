@@ -43,7 +43,7 @@ pub mod gm {
 
 pub mod store {
     pub(crate) use store;
-    pub use store::{EncryptionKey, OnDisk, OnDiskEncrypted};
+    pub use store::{EncryptionKey, OnDisk, OnDiskEncrypted, Paths};
 }
 
 pub mod time {
