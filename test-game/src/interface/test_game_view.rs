@@ -9,9 +9,9 @@ use test_engine::{
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, HasText, HasTitle, ImageView,
         Label, MovableView, NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView,
-        TextField, UIManager, ViewData, ViewFrame, ViewSetup,
+        Switch, TextField, UIManager, ViewData, ViewFrame, ViewSetup,
     },
-    App, DataManager,
+    App, DataManager, OnDisk,
 };
 use ui_benchmark::BenchmarkView;
 
@@ -19,6 +19,8 @@ use crate::{
     interface::{noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView},
     levels::{BenchmarkLevel, TestLevel},
 };
+
+static BOOL: OnDisk<bool> = OnDisk::new("bool");
 
 #[view]
 pub struct TestGameView {
@@ -64,16 +66,13 @@ pub struct TestGameView {
     some_button: Button,
 
     sprite_view: MovableView<SpriteView>,
+
+    bool_storage_view: Switch,
 }
 
 impl ViewSetup for TestGameView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
-        if false {
-            UIManager::set_view(PolygonView::new());
-            return;
-        }
-
         DebugView::enable();
 
         LevelManager::set_level(TestLevel::default());
@@ -242,6 +241,16 @@ impl ViewSetup for TestGameView {
         self.sprite_view.set_title("Sprite:");
         self.sprite_view.place().size(280, 120).center_y().r(0);
         self.sprite_view.set_sprite(LevelManager::level_weak().player);
+
+        self.bool_storage_view.set_off_color(Color::WHITE).set_on(true);
+        self.bool_storage_view
+            .place()
+            .same([X, Height], self.ui_bench)
+            .anchor(Top, self.ui_bench, 10)
+            .w(100);
+        self.bool_storage_view.selected.val(|val| {
+            BOOL.set(val);
+        });
     }
 }
 

@@ -18,6 +18,8 @@ mod test_engine {
 pub struct Switch {
     on: bool,
 
+    off_color: Color,
+
     pub selected: Event<bool>,
 
     #[init]
@@ -42,8 +44,13 @@ impl Switch {
             self.set_color(Color::GREEN);
         } else {
             self.center.place().l(MARGIN);
-            self.set_color(Color::CLEAR);
+            self.set_color(self.off_color);
         }
+    }
+
+    pub fn set_off_color(&mut self, color: Color) -> &mut Self {
+        self.off_color = color;
+        self
     }
 }
 

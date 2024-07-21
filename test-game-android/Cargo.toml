@@ -9,6 +9,8 @@ crate-type = ["cdylib"]
 name = "test_game"
 
 [dependencies]
+jni = { workspace = true }
+
 test-game = { workspace = true }
 
 [package.metadata.android]

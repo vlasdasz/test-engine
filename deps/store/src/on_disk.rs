@@ -2,42 +2,19 @@ use std::{
     fmt::{Debug, Formatter},
     fs,
     marker::PhantomData,
-    path::PathBuf,
 };
 
-use gm::Platform;
-
-use crate::storable::Storable;
-
-pub fn executable_name() -> String {
-    std::env::current_exe()
-        .expect("Failed to get std::env::current_exe()")
-        .file_name()
-        .expect("Failed to get executable name")
-        .to_string_lossy()
-        .into()
-}
-
-pub(crate) fn storage_dir() -> PathBuf {
-    let home = if Platform::MOBILE {
-        dirs::document_dir()
-    } else {
-        dirs::home_dir()
-    }
-    .expect("Failed to get home directory");
-
-    format!("{}/.{}", home.display(), executable_name()).into()
-}
+use crate::{storable::Storable, Paths};
 
 fn set_value<T: serde::ser::Serialize>(value: T, key: &str) {
     let json = serde_json::to_string_pretty(&value).expect("Failed to serialize data");
-    let dir = storage_dir();
+    let dir = Paths::storage();
     _ = fs::create_dir_all(&dir);
     fs::write(dir.join(key), json).expect("Failed to write to file");
 }
 
 fn get_value<T: Storable>(key: &str) -> T {
-    let dir = storage_dir();
+    let dir = Paths::storage();
     let path = dir.join(key);
 
     fs::create_dir_all(&dir).unwrap();
@@ -92,7 +69,7 @@ mod test {
     use serde::{Deserialize, Serialize};
     use tokio::spawn;
 
-    use crate::{on_disk::executable_name, OnDisk};
+    use crate::{OnDisk, Paths};
 
     #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
     struct Data {
@@ -148,6 +125,6 @@ mod test {
 
     #[test]
     fn paths() {
-        assert!(executable_name().starts_with("store"));
+        assert!(Paths::executable_name().starts_with("store"));
     }
 }
