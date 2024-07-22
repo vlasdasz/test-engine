@@ -85,7 +85,7 @@ wgpu-wrapper = { path = "deps/wgpu-wrapper" }
 
 
 [patch.crates-io]
-#wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "b2cc37132280e34cdd906a5939b8c472406704f7" }
+wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }
 #vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }

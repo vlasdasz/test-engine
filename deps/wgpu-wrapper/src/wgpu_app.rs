@@ -138,7 +138,22 @@ impl WGPUApp {
             Limits::default()
         };
 
-        required_limits.max_compute_workgroups_per_dimension = 65535;
+        // TODO:
+        if Platform::ANDROID {
+            required_limits.max_compute_invocations_per_workgroup = 0;
+            required_limits.max_compute_workgroups_per_dimension = 0;
+            required_limits.max_compute_workgroup_storage_size = 0;
+            required_limits.max_compute_workgroup_size_x = 0;
+            required_limits.max_compute_workgroup_size_y = 0;
+            required_limits.max_compute_workgroup_size_z = 0;
+            required_limits.max_storage_buffer_binding_size = 0;
+            required_limits.max_storage_textures_per_shader_stage = 0;
+            required_limits.max_storage_buffers_per_shader_stage = 0;
+            required_limits.max_dynamic_storage_buffers_per_pipeline_layout = 0;
+            required_limits.max_texture_dimension_3d = 1024;
+            required_limits.max_texture_dimension_2d = 4096;
+            required_limits.max_texture_dimension_1d = 4096;
+        }
 
         let (device, queue) = adapter
             .request_device(
