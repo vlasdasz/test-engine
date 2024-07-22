@@ -77,26 +77,26 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
 
     fn rigid_body(&self) -> &RigidBody {
         unsafe {
-            &LevelManager::level_unchecked().physics.sets.rigid_bodies
+            &LevelManager::level_unchecked().physics.as_ref().unwrap().sets.rigid_bodies
                 [self.rigid_handle().expect("This sprite doesn't have rigid body")]
         }
     }
 
     fn rigid_body_mut(&mut self) -> &mut RigidBody {
         let handle = self.rigid_handle().expect("This sprite doesn't have rigid body");
-        unsafe { &mut LevelManager::level_unchecked().physics.sets.rigid_bodies[handle] }
+        unsafe { &mut LevelManager::level_unchecked().physics.as_mut().unwrap().sets.rigid_bodies[handle] }
     }
 
     fn collider(&self) -> &Collider {
         unsafe {
-            &LevelManager::level_unchecked().physics.sets.colliders
+            &LevelManager::level_unchecked().physics.as_ref().unwrap().sets.colliders
                 [self.collider_handle().expect("This sprite doesn't have collider")]
         }
     }
 
     fn collider_mut(&mut self) -> &mut Collider {
         let handle = self.collider_handle().expect("This sprite doesn't have collider");
-        unsafe { &mut LevelManager::level_unchecked().physics.sets.colliders[handle] }
+        unsafe { &mut LevelManager::level_unchecked().physics.as_mut().unwrap().sets.colliders[handle] }
     }
 
     fn enable_collision_detection(&mut self)
@@ -111,6 +111,8 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
         let weak = weak_from_ref(self);
         LevelManager::level_weak()
             .physics
+            .as_mut()
+            .unwrap()
             .colliding_sprites
             .insert(weak.collider_handle().unwrap(), weak);
     }

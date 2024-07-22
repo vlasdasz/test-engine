@@ -34,11 +34,6 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut + LevelInternal {
         None
     }
 
-    fn gravity(&self) -> Point {
-        let gravity = &self.physics.gravity;
-        (gravity[0], gravity[1]).into()
-    }
-
     fn sprites(&self) -> &[Own<dyn Sprite>] {
         &self.sprites
     }

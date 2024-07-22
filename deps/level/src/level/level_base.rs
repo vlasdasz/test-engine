@@ -24,12 +24,15 @@ pub struct LevelBase {
     #[educe(Default = LevelManager::default_z_position())]
     pub(crate) last_z_pos: f32,
 
-    pub(crate) physics: LevelPhysics,
+    #[educe(Default = LevelPhysics::default().into())]
+    pub(crate) physics: Option<LevelPhysics>,
 }
 
 impl LevelBase {
     pub fn update_physics(&mut self, frame_time: f32) {
-        self.physics.update_physics(&self.sprites, frame_time);
+        if let Some(physics) = self.physics.as_mut() {
+            physics.update_physics(&self.sprites, frame_time);
+        }
     }
 
     pub(crate) fn remove(&mut self, sprite: usize) {
@@ -37,13 +40,19 @@ impl LevelBase {
 
         let sprite = self.sprites[index].deref();
 
-        self.physics.remove(sprite);
+        if let Some(physics) = self.physics.as_mut() {
+            physics.remove(sprite);
+        }
         self.sprites.remove(index);
     }
 
     pub fn remove_all_sprites(&mut self) {
-        for sprite in self.sprites.drain(..) {
-            self.physics.remove(sprite.deref());
+        if let Some(physics) = &mut self.physics {
+            for sprite in self.sprites.drain(..) {
+                physics.remove(sprite.deref());
+            }
+        } else {
+            self.sprites.clear();
         }
     }
 }
@@ -55,6 +64,8 @@ pub trait LevelTemplates {
 impl<T: ?Sized + Level> LevelTemplates for T {
     fn set_gravity(&mut self, g: impl Into<Point>) {
         let g = g.into();
-        self.physics.gravity = Vector2::new(g.x, g.y);
+        if let Some(physics) = self.physics.as_mut() {
+            physics.gravity = Vector2::new(g.x, g.y);
+        }
     }
 }

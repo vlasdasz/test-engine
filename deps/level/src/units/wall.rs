@@ -20,7 +20,13 @@ impl Sprite for Wall {
             .build();
 
         let sprite = SpriteData::make(shape, position);
-        let collider_handle = LevelManager::level_weak().physics.sets.colliders.insert(collider);
+        let collider_handle = LevelManager::level_weak()
+            .physics
+            .as_mut()
+            .unwrap()
+            .sets
+            .colliders
+            .insert(collider);
 
         Own::new(Wall {
             collider_handle,
