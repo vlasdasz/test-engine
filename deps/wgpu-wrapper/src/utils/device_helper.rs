@@ -7,7 +7,7 @@ use wgpu::{
 };
 
 use crate::{
-    state::TEXTURE_FORMAT,
+    state::RGBA_TEXTURE_FORMAT,
     utils::{depth_stencil_state, ToBytes},
     BufferUsages, PolygonMode,
 };
@@ -77,7 +77,7 @@ impl DeviceHelper for Device {
                 entry_point:         "f_main",
                 compilation_options: PipelineCompilationOptions::default(),
                 targets:             &[ColorTargetState {
-                    format:     TEXTURE_FORMAT,
+                    format:     RGBA_TEXTURE_FORMAT,
                     blend:      BlendState::ALPHA_BLENDING.into(),
                     write_mask: ColorWrites::ALL,
                 }

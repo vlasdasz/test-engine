@@ -28,12 +28,13 @@ use winit::{
 
 use crate::{
     app::App,
-    state::{State, TEXTURE_FORMAT},
+    state::{State, RGBA_TEXTURE_FORMAT},
     surface::Surface,
     Screenshot, WGPUDrawer,
 };
 
 const ENABLE_VSYNC: bool = true;
+pub(crate) const SUPPORT_SCREENSHOT: bool = false;
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 
@@ -169,8 +170,12 @@ impl WGPUApp {
             .await?;
 
         let config = SurfaceConfiguration {
-            usage:        TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC,
-            format:       TEXTURE_FORMAT,
+            usage:        if SUPPORT_SCREENSHOT {
+                TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC
+            } else {
+                TextureUsages::RENDER_ATTACHMENT
+            },
+            format:       RGBA_TEXTURE_FORMAT,
             width:        1000,
             height:       1000,
             present_mode: if ENABLE_VSYNC || Platform::MOBILE {

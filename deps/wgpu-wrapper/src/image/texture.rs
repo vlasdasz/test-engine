@@ -1,5 +1,5 @@
 use anyhow::Result;
-use gm::flat::Size;
+use gm::{flat::Size, Platform};
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
     AddressMode, Device, Extent3d, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler,
@@ -27,6 +27,12 @@ impl Texture {
     }
 
     pub fn from_raw_data(data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
+        const RGBA_TEXTURE_FORMAT: TextureFormat = if Platform::ANDROID {
+            TextureFormat::Rgba8Unorm
+        } else {
+            TextureFormat::Rgba8UnormSrgb
+        };
+
         let extend_size = Extent3d {
             width:                 size.width,
             height:                size.height,
@@ -35,7 +41,7 @@ impl Texture {
 
         let (channels, format) = match channels {
             1 => (1, TextureFormat::R8Unorm),
-            3 | 4 => (4, TextureFormat::Rgba8UnormSrgb),
+            3 | 4 => (4, RGBA_TEXTURE_FORMAT),
             ch => panic!("Invalid number of channels: {ch}"),
         };
 

@@ -10,14 +10,17 @@ use tokio::{
 use wgpu::{Buffer, BufferDescriptor, CommandEncoder, Extent3d, TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT};
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
-use crate::{app::App, frame_counter::FrameCounter, image::Texture, text::Font, Screenshot, WGPUApp};
+use crate::{
+    app::App, frame_counter::FrameCounter, image::Texture, text::Font, Screenshot, WGPUApp,
+    SUPPORT_SCREENSHOT,
+};
 
 type ReadDisplayRequest = Sender<Screenshot>;
 
 #[cfg(not(target_os = "android"))]
-pub(crate) const TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
+pub(crate) const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
 #[cfg(target_os = "android")]
-pub(crate) const TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8UnormSrgb;
+pub(crate) const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
 pub struct State {
     pub(crate) fonts: HashMap<&'static str, Font>,
@@ -207,6 +210,18 @@ impl State {
     }
 
     fn read_screen(encoder: &mut CommandEncoder, texture: &wgpu::Texture) -> (Buffer, Size<u32>) {
+        if !SUPPORT_SCREENSHOT {
+            return (
+                WGPUApp::device().create_buffer(&BufferDescriptor {
+                    label:              Some("Empty Buffer"),
+                    size:               0,
+                    usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
+                    mapped_at_creation: false,
+                }),
+                Size::default(),
+            );
+        }
+
         let screen_width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
 
         let number_of_align = screen_width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
