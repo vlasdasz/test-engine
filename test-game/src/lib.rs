@@ -5,6 +5,7 @@
 
 mod interface;
 mod levels;
+mod no_physics;
 
 pub use test_engine;
 

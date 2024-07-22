@@ -1,6 +1,7 @@
 mod level;
 mod level_base;
 mod level_creation;
+mod level_physics;
 mod level_setup;
 
 pub use level::*;

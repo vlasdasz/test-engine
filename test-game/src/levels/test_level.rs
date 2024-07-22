@@ -15,6 +15,7 @@ use test_engine::{
 #[level]
 #[derive(Default)]
 pub struct TestLevel {
+    pub player:      Weak<Player>,
     selected_sprite: Option<Weak<dyn Sprite>>,
     collision_sound: Weak<Sound>,
 }

@@ -8,9 +8,9 @@ use test_engine::{
     ui::{
         view, Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
-        Button, Color, ColorMeter, Container, DPadView, DebugView, DrawingView, HasText, HasTitle, ImageView,
-        Label, MovableView, NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView,
-        Switch, TextField, UIManager, ViewData, ViewFrame, ViewSetup,
+        Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
+        MovableView, NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView, Switch,
+        TextField, TransitionButton, UIManager, ViewData, ViewFrame, ViewSetup,
     },
     App, DataManager,
 };
@@ -19,12 +19,15 @@ use ui_benchmark::BenchmarkView;
 use crate::{
     interface::{noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView},
     levels::{BenchmarkLevel, TestLevel},
+    no_physics::NoPhysicsView,
 };
 
 static BOOL: OnDisk<bool> = OnDisk::new("bool");
 
 #[view]
 pub struct TestGameView {
+    level: Weak<TestLevel>,
+
     #[init]
     tl: Container,
     tr: Container,
@@ -69,14 +72,21 @@ pub struct TestGameView {
     sprite_view: MovableView<SpriteView>,
 
     bool_storage_view: Switch,
+
+    no_physics: TransitionButton<Self, NoPhysicsView>,
 }
 
 impl ViewSetup for TestGameView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
-        DebugView::enable();
+        //DebugView::enable();
 
-        LevelManager::set_level(TestLevel::default());
+        if false {
+            UIManager::set_view(NoPhysicsView::new());
+            return;
+        }
+
+        self.level = LevelManager::set_level(TestLevel::default());
 
         self.setup_keymap();
 
@@ -106,7 +116,7 @@ impl ViewSetup for TestGameView {
         self.dpad.place().size(200, 140).b(20).anchor(Anchor::Left, self.bl, 10);
 
         self.dpad.on_press.val(move |direction| {
-            LevelManager::level_weak().player.unit.body.move_by_direction(direction);
+            self.level.player.unit.body.move_by_direction(direction);
 
             self.label_l.set_text(format!("{direction:?}"));
             App::set_window_title(format!("{direction:?}"));
@@ -241,7 +251,8 @@ impl ViewSetup for TestGameView {
 
         self.sprite_view.set_title("Sprite:");
         self.sprite_view.place().size(280, 120).center_y().r(0);
-        self.sprite_view.set_sprite(LevelManager::level_weak().player);
+        let player = self.level.player;
+        self.sprite_view.set_sprite(player);
 
         self.bool_storage_view.set_off_color(Color::WHITE).set_on(BOOL.get());
         self.bool_storage_view
@@ -252,11 +263,18 @@ impl ViewSetup for TestGameView {
         self.bool_storage_view.selected.val(|val| {
             BOOL.set(val);
         });
+
+        self.no_physics.set_text("No physics");
+        self.no_physics
+            .place()
+            .same([Y, Height], self.bool_storage_view)
+            .anchor(Left, self.bool_storage_view, 10)
+            .w(250);
     }
 }
 
 impl TestGameView {
-    fn setup_keymap(self: Weak<Self>) {
+    fn setup_keymap(mut self: Weak<Self>) {
         [
             (' ', Direction::Up),
             ('w', Direction::Up),
@@ -266,7 +284,7 @@ impl TestGameView {
         ]
         .apply(|(key, direction)| {
             UIManager::keymap().add(self, key, move || {
-                LevelManager::level_weak().player.unit.body.move_by_direction(direction);
+                self.level.player.unit.body.move_by_direction(direction);
             });
         });
 

@@ -77,11 +77,11 @@ impl LevelManager {
     }
 
     pub(crate) fn get_rigid_body(handle: RigidBodyHandle) -> &'static RigidBody {
-        unsafe { &LevelManager::level_unchecked().sets.rigid_bodies[handle] }
+        unsafe { &LevelManager::level_unchecked().physics.sets.rigid_bodies[handle] }
     }
 
     pub(crate) fn get_collider(handle: ColliderHandle) -> &'static Collider {
-        unsafe { &LevelManager::level_unchecked().sets.colliders[handle] }
+        unsafe { &LevelManager::level_unchecked().physics.sets.colliders[handle] }
     }
 
     pub fn no_level() -> bool {

@@ -5,6 +5,7 @@
 
 mod interface;
 mod levels;
+mod no_physics;
 
 fn main() {
     #[cfg(desktop)]

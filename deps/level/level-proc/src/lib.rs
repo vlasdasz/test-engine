@@ -64,7 +64,6 @@ pub fn level(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use test_engine::level::Level;
                 use test_engine::level::LevelSetup;
                 let mut level = test_engine::refs::weak_from_ref(self);
-                level.update_camera();
                 level.update_physics(frame_time);
                 level.update();
             }

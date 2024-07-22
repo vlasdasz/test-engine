@@ -10,12 +10,6 @@ use super::LevelInternal;
 use crate::{Body, LevelBase, LevelCreation, LevelManager, Sprite, SpriteTemplates};
 
 pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut + LevelInternal {
-    fn update_camera(&mut self) {
-        if let Some(player) = self.player.get() {
-            *LevelManager::camera_pos() = player.position();
-        }
-    }
-
     fn add_touch(&mut self, pos: Point) -> bool {
         let pos = LevelManager::convert_touch(pos);
 
@@ -41,7 +35,7 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut + LevelInternal {
     }
 
     fn gravity(&self) -> Point {
-        let gravity = &self.gravity;
+        let gravity = &self.physics.gravity;
         (gravity[0], gravity[1]).into()
     }
 

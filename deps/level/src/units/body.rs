@@ -35,7 +35,8 @@ impl Sprite for Body {
 
         let collider = shape.make_collider().build();
 
-        let (rigid_handle, collider_handle) = LevelManager::level_weak().sets.insert(rigid_body, collider);
+        let (rigid_handle, collider_handle) =
+            LevelManager::level_weak().physics.sets.insert(rigid_body, collider);
 
         let sprite = SpriteData::make(shape, position);
 

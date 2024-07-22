@@ -11,6 +11,14 @@ pub struct Player {
 }
 
 impl Sprite for Player {
+    fn make(shape: Shape, position: Point) -> Own<Self>
+    where Self: Sized {
+        Own::new(Player {
+            unit:   Unit::make(shape.clone(), position),
+            weapon: Weapon::make(shape, position),
+        })
+    }
+
     fn update(&mut self) {
         let cursor = LevelManager::level().cursor_position;
         self.weapon.rotation = self.position().angle_to(cursor);
@@ -28,22 +36,14 @@ impl Sprite for Player {
     fn position(&self) -> Point {
         self.unit.position()
     }
-
-    fn rotation(&self) -> f32 {
-        self.unit.rotation()
-    }
     //
     // fn draw(&self) {
     //     self.unit.draw();
     //     self.weapon.draw();
     // }
 
-    fn make(shape: Shape, position: Point) -> Own<Self>
-    where Self: Sized {
-        Own::new(Player {
-            unit:   Unit::make(shape.clone(), position),
-            weapon: Weapon::make(shape, position),
-        })
+    fn rotation(&self) -> f32 {
+        self.unit.rotation()
     }
 }
 

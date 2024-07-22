@@ -34,6 +34,7 @@ use crate::{
 };
 
 const ENABLE_VSYNC: bool = true;
+/// Doesn't work on some Androids
 pub(crate) const SUPPORT_SCREENSHOT: bool = false;
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
@@ -159,7 +160,8 @@ impl WGPUApp {
         let (device, queue) = adapter
             .request_device(
                 &DeviceDescriptor {
-                    required_features: dbg!(Features::empty()),
+                    required_features: Features::empty(),
+                    // Doesn't work on some Androids
                     // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
                     required_limits,
                     label: None,
