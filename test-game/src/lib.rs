@@ -9,18 +9,27 @@ mod no_physics;
 
 pub use test_engine;
 
-use crate::interface::test_game_view::TestGameView;
-
-#[cfg(not(target_os = "android"))]
 #[no_mangle]
 pub extern "C" fn start_test_game() -> std::ffi::c_int {
-    use test_engine::ui::ViewSetup;
-    let runtime = tokio::runtime::Runtime::new().unwrap();
-    runtime.block_on(async {
-        #[cfg(mobile)]
-        test_engine::refs::set_current_thread_as_main();
-        test_engine::App::start(TestGameView::new()).await.unwrap();
-    });
+    use winit::{
+        application::ApplicationHandler,
+        event::WindowEvent,
+        event_loop::{ActiveEventLoop, ControlFlow, EventLoop},
+        window::WindowId,
+    };
+
+    struct App;
+
+    impl ApplicationHandler for App {
+        fn resumed(&mut self, event_loop: &ActiveEventLoop) {}
+        fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {}
+    }
+
+    let event_loop = EventLoop::new().unwrap();
+
+    event_loop.set_control_flow(ControlFlow::Wait);
+
+    event_loop.run_app(&mut App).unwrap();
     0
 }
 
@@ -35,5 +44,6 @@ pub fn start_test_game(app: test_engine::AndroidApp) {
     });
 }
 
+use test_engine::ui::Container;
 #[cfg(target_os = "android")]
 pub use test_engine::AndroidApp;

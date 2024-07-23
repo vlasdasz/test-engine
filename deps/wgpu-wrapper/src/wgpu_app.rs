@@ -1,6 +1,9 @@
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc,
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, Mutex,
+    },
+    time::Instant,
 };
 
 use anyhow::{anyhow, Result};
@@ -180,11 +183,11 @@ impl WGPUApp {
             format:       RGBA_TEXTURE_FORMAT,
             width:        1000,
             height:       1000,
-            present_mode: if ENABLE_VSYNC || Platform::MOBILE {
+            present_mode: dbg!(if ENABLE_VSYNC || Platform::MOBILE {
                 PresentMode::AutoVsync
             } else {
                 PresentMode::AutoNoVsync
-            },
+            }),
             alpha_mode:   CompositeAlphaMode::Auto,
             view_formats: vec![],
 
@@ -269,6 +272,8 @@ impl WGPUApp {
     }
 }
 
+static ELAPSED: Mutex<Option<Instant>> = Mutex::new(None);
+
 impl ApplicationHandler<Events> for WGPUApp {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         if self.create_surface_and_window(event_loop).unwrap() {
@@ -278,63 +283,75 @@ impl ApplicationHandler<Events> for WGPUApp {
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _window_id: WindowId, event: WindowEvent) {
-        match event {
-            WindowEvent::CloseRequested => event_loop.exit(),
-            WindowEvent::CursorMoved { position, .. } => {
-                self.state.app.mouse_moved((position.x, position.y).into());
-            }
-            WindowEvent::MouseInput { state, button, .. } => {
-                self.state.app.mouse_event(state, button);
-            }
-            WindowEvent::Touch(touch) => {
-                self.state.app.touch_event(touch);
-            }
-            WindowEvent::MouseWheel { delta, .. } => match delta {
-                MouseScrollDelta::LineDelta(x, y) => {
-                    let point: Point = (x, y).into();
-                    self.state.app.mouse_scroll(point * 28.0);
-                }
-                MouseScrollDelta::PixelDelta(delta) => {
-                    self.state.app.mouse_scroll((delta.x, delta.y).into());
-                }
-            },
-            WindowEvent::KeyboardInput { event, .. } => {
-                if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
-                    event_loop.exit();
-                }
-                self.state.app.key_event(event);
-            }
-            WindowEvent::DroppedFile(path) => {
-                self.state.app.dropped_file(path);
-            }
-            WindowEvent::Resized(physical_size) => {
-                self.state.resize(physical_size, event_loop);
-            }
-            WindowEvent::ScaleFactorChanged {
-                scale_factor,
-                inner_size_writer: _,
-            } => {
-                dbg!(&scale_factor);
-            }
-            WindowEvent::RedrawRequested => {
-                if self.close.load(Ordering::Relaxed) {
-                    event_loop.exit();
-                }
+        let mut elapsed = ELAPSED.lock().unwrap();
 
-                self.state.update();
+        if elapsed.is_none() {
+            elapsed.replace(Instant::now());
+        }
 
-                match self.state.render() {
-                    Ok(()) => {}
-                    Err(e) => error!("Render error: {e:?}"),
-                };
-            }
-            _ => {}
-        };
+        let elapsed = elapsed.as_mut().unwrap();
+
+        dbg!(elapsed.elapsed());
+
+        *elapsed = Instant::now();
+
+        // match event {
+        //     WindowEvent::CloseRequested => event_loop.exit(),
+        //     WindowEvent::CursorMoved { position, .. } => {
+        //         // self.state.app.mouse_moved((position.x,
+        // position.y).into());     }
+        //     WindowEvent::MouseInput { state, button, .. } => {
+        //         // self.state.app.mouse_event(state, button);
+        //     }
+        //     WindowEvent::Touch(touch) => {
+        //         // self.state.app.touch_event(touch);
+        //     }
+        //     WindowEvent::MouseWheel { delta, .. } => match delta {
+        //         MouseScrollDelta::LineDelta(x, y) => {
+        //             // let point: Point = (x, y).into();
+        //             // self.state.app.mouse_scroll(point * 28.0);
+        //         }
+        //         MouseScrollDelta::PixelDelta(delta) => {
+        //             // self.state.app.mouse_scroll((delta.x,
+        // delta.y).into());         }
+        //     },
+        //     WindowEvent::KeyboardInput { event, .. } => {
+        //         if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
+        //             event_loop.exit();
+        //         }
+        //         // self.state.app.key_event(event);
+        //     }
+        //     WindowEvent::DroppedFile(path) => {
+        //         // self.state.app.dropped_file(path);
+        //     }
+        //     WindowEvent::Resized(physical_size) => {
+        //         // self.state.resize(physical_size, event_loop);
+        //     }
+        //     WindowEvent::ScaleFactorChanged {
+        //         scale_factor,
+        //         inner_size_writer: _,
+        //     } => {
+        //         dbg!(&scale_factor);
+        //     }
+        //     WindowEvent::RedrawRequested => {
+        //         // if self.close.load(Ordering::Relaxed) {
+        //         //     event_loop.exit();
+        //         // }
+        //         //
+        //         // self.state.update();
+        //         //
+        //         // match self.state.render() {
+        //         //     Ok(()) => {}
+        //         //     Err(e) => error!("Render error: {e:?}"),
+        //         // };
+        //     }
+        //     _ => {}
+        // };
     }
 
     fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
-        if self.resumed {
-            Self::window().request_redraw();
-        }
+        // if self.resumed {
+        //     Self::window().request_redraw();
+        // }
     }
 }
