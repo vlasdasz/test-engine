@@ -71,32 +71,28 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
         }
     }
 
-    fn restitution(&mut self) -> f32 {
+    fn restitution(&self) -> f32 {
         self.collider().restitution()
     }
 
     fn rigid_body(&self) -> &RigidBody {
-        unsafe {
-            &LevelManager::level_unchecked().physics.as_ref().unwrap().sets.rigid_bodies
-                [self.rigid_handle().expect("This sprite doesn't have rigid body")]
-        }
+        &LevelManager::physics().sets.rigid_bodies
+            [self.rigid_handle().expect("This sprite doesn't have rigid body")]
     }
 
     fn rigid_body_mut(&mut self) -> &mut RigidBody {
         let handle = self.rigid_handle().expect("This sprite doesn't have rigid body");
-        unsafe { &mut LevelManager::level_unchecked().physics.as_mut().unwrap().sets.rigid_bodies[handle] }
+        &mut LevelManager::physics().sets.rigid_bodies[handle]
     }
 
     fn collider(&self) -> &Collider {
-        unsafe {
-            &LevelManager::level_unchecked().physics.as_ref().unwrap().sets.colliders
-                [self.collider_handle().expect("This sprite doesn't have collider")]
-        }
+        &LevelManager::physics().sets.colliders
+            [self.collider_handle().expect("This sprite doesn't have collider")]
     }
 
     fn collider_mut(&mut self) -> &mut Collider {
         let handle = self.collider_handle().expect("This sprite doesn't have collider");
-        unsafe { &mut LevelManager::level_unchecked().physics.as_mut().unwrap().sets.colliders[handle] }
+        &mut LevelManager::physics().sets.colliders[handle]
     }
 
     fn enable_collision_detection(&mut self)
@@ -109,10 +105,7 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
         self.collision_enabled = true;
         self.collider_mut().set_active_events(ActiveEvents::COLLISION_EVENTS);
         let weak = weak_from_ref(self);
-        LevelManager::level_weak()
-            .physics
-            .as_mut()
-            .unwrap()
+        LevelManager::physics()
             .colliding_sprites
             .insert(weak.collider_handle().unwrap(), weak);
     }

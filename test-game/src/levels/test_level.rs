@@ -84,6 +84,10 @@ impl TestLevel {
 }
 
 impl LevelSetup for TestLevel {
+    fn needs_physics(&self) -> bool {
+        true
+    }
+
     fn setup(&mut self) {
         self.background = Image::get("sky.png");
 

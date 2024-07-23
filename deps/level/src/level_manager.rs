@@ -9,7 +9,7 @@ use rapier2d::{
 use refs::{MainLock, Own, Weak};
 use wgpu_wrapper::WGPUApp;
 
-use crate::Level;
+use crate::{level::LevelPhysics, Level};
 
 static SELF: MainLock<LevelManager> = MainLock::new();
 
@@ -68,20 +68,29 @@ impl LevelManager {
         SELF.level.as_ref().expect("No Level").weak()
     }
 
-    pub fn downcast_level<T: Level + 'static>() -> Weak<T> {
-        Self::level_weak().downcast::<T>().unwrap()
-    }
-
     pub(crate) unsafe fn level_unchecked() -> &'static mut dyn Level {
         SELF.get_unchecked().level.as_mut().expect("No Level").deref_mut()
     }
 
+    pub(crate) fn physics() -> &'static mut LevelPhysics {
+        unsafe {
+            Self::level_unchecked()
+                .physics
+                .as_mut()
+                .expect("This level has no physics enabled")
+        }
+    }
+
+    pub fn downcast_level<T: Level + 'static>() -> Weak<T> {
+        Self::level_weak().downcast::<T>().unwrap()
+    }
+
     pub(crate) fn get_rigid_body(handle: RigidBodyHandle) -> &'static RigidBody {
-        unsafe { &LevelManager::level_unchecked().physics.as_ref().unwrap().sets.rigid_bodies[handle] }
+        &LevelManager::physics().sets.rigid_bodies[handle]
     }
 
     pub(crate) fn get_collider(handle: ColliderHandle) -> &'static Collider {
-        unsafe { &LevelManager::level_unchecked().physics.as_ref().unwrap().sets.colliders[handle] }
+        &LevelManager::physics().sets.colliders[handle]
     }
 
     pub fn no_level() -> bool {

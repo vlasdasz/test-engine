@@ -7,4 +7,5 @@ mod level_setup;
 pub use level::*;
 pub use level_base::*;
 pub use level_creation::*;
+pub use level_physics::*;
 pub use level_setup::*;

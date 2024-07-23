@@ -57,6 +57,9 @@ pub fn level(_args: TokenStream, stream: TokenStream) -> TokenStream {
             fn __internal_setup(&self) {
                 use test_engine::level::LevelSetup;
                 let mut level = test_engine::refs::weak_from_ref(self);
+                if level.needs_physics() {
+                    level.init_physics();
+                }
                 level.setup();
             }
 

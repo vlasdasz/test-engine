@@ -24,11 +24,15 @@ pub struct LevelBase {
     #[educe(Default = LevelManager::default_z_position())]
     pub(crate) last_z_pos: f32,
 
-    #[educe(Default = LevelPhysics::default().into())]
     pub(crate) physics: Option<LevelPhysics>,
 }
 
 impl LevelBase {
+    pub fn init_physics(&mut self) {
+        assert!(self.physics.is_none(), "Double init_physics");
+        self.physics = LevelPhysics::default().into();
+    }
+
     pub fn update_physics(&mut self, frame_time: f32) {
         if let Some(physics) = self.physics.as_mut() {
             physics.update_physics(&self.sprites, frame_time);

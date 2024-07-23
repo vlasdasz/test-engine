@@ -35,7 +35,7 @@ use crate::{
 
 const ENABLE_VSYNC: bool = true;
 /// Doesn't work on some Androids
-pub(crate) const SUPPORT_SCREENSHOT: bool = false;
+pub(crate) const SUPPORT_SCREENSHOT: bool = !Platform::ANDROID;
 
 static APP: MainLock<Option<WGPUApp>> = MainLock::new();
 

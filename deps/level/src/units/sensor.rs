@@ -20,13 +20,7 @@ impl Sprite for Sensor {
             .build();
 
         let sprite = SpriteData::make(shape, position);
-        let collider_handle = LevelManager::level_weak()
-            .physics
-            .as_mut()
-            .unwrap()
-            .sets
-            .colliders
-            .insert(collider);
+        let collider_handle = LevelManager::physics().sets.colliders.insert(collider);
 
         let mut new = Own::new(Self {
             collider_handle,
