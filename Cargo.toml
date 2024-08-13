@@ -11,7 +11,6 @@ members = [
   "ui-benchmark",
   "level-test",
   "deps/ui/ui-proc-test",
-  "sand",
 ]
 
 resolver = "2"
@@ -54,9 +53,9 @@ walkdir = "2.5"
 web-time = "1.0.0"
 
 glyph_brush = "0.7.8"
-wgpu = "22.0.0"
+wgpu = "22.1.0"
 wgpu_text = "0.9.0"
-winit = "0.30.1"
+winit = "0.30.5"
 
 jni = "0.21.1"
 manage = "=0.6.0"
@@ -85,7 +84,7 @@ wgpu-wrapper = { path = "deps/wgpu-wrapper" }
 
 
 [patch.crates-io]
-wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
+#wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }
 #vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
