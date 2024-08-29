@@ -77,11 +77,19 @@ mod test {
         sleep(Duration::from_secs_f32(0.15));
 
         assert_eq!(anim.finished(), true);
-        assert!(anim.value() >= 0.96 && anim.value() <= 1.04);
+        assert!(
+            anim.value() >= 0.96 && anim.value() <= 1.04,
+            "Actual: {}",
+            anim.value()
+        );
 
         sleep(Duration::from_secs_f32(0.25));
 
         assert_eq!(anim.finished(), true);
-        assert!(anim.value() >= 0.40 && anim.value() <= 0.60);
+        assert!(
+            anim.value() >= 0.40 && anim.value() <= 0.60,
+            "Actual: {}",
+            anim.value()
+        );
     }
 }
