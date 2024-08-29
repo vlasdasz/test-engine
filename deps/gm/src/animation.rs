@@ -68,7 +68,11 @@ mod test {
         sleep(Duration::from_secs_f32(0.10));
 
         assert_eq!(anim.finished(), false);
-        assert!(anim.value() >= 0.70 && anim.value() <= 0.725);
+        assert!(
+            anim.value() >= 0.70 && anim.value() <= 0.725,
+            "Actual: {}",
+            anim.value()
+        );
 
         sleep(Duration::from_secs_f32(0.15));
 
