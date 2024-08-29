@@ -1,5 +1,3 @@
-#![feature(const_fn_floating_point_arithmetic)]
-
 mod app;
 pub mod image;
 mod text;

@@ -1,6 +1,6 @@
 use std::any::type_name;
 
-use gm::Color;
+use gm::{Color, ToF32};
 use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 
@@ -21,16 +21,25 @@ use crate::Label;
 pub struct Labeled<T: InputView + Default + 'static> {
     pub input: Weak<T>,
 
+    #[educe(Default = 0.5)]
+    label_input_ratio: f32,
+
     #[init]
     label: Label,
 }
 
-impl<T: InputView + Default> ViewSetup for Labeled<T> {
-    fn setup(mut self: Weak<Self>) {
-        self.__view_base.view_label += &format!(": {}", type_name::<T>());
+impl<T: InputView + Default> Labeled<T> {
+    pub fn set_label_input_ratio(mut self: Weak<Self>, ratio: impl ToF32) {
+        self.label_input_ratio = ratio.to_f32();
+        self.input.remove_from_superview();
+        self.layout_input();
+    }
 
-        self.label.place().tlb(0).relative(Anchor::Width, self, 0.5);
-        self.label.set_alignment(TextAlignment::Left);
+    fn layout_input(mut self: Weak<Self>) {
+        let label_ratio = 1.0 - self.label_input_ratio;
+        let input_ratio = self.label_input_ratio;
+
+        self.label.place().clear().tlb(0).relative(Anchor::Width, self, label_ratio);
 
         if type_name::<T>() == "ui::views::basic::switch::Switch" {
             let mut container = self.add_view::<Container>();
@@ -39,7 +48,7 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
             self.input = container.add_view::<T>();
             self.input.place().size(80, 46).center_y().r(10);
 
-            container.place().trb(0).relative(Anchor::Width, self, 0.5);
+            container.place().trb(0).relative(Anchor::Width, self, input_ratio);
         } else if type_name::<T>().contains("number_view::NumberView<") {
             let mut container = self.add_view::<Container>();
             container.set_color(Color::WHITE);
@@ -47,11 +56,21 @@ impl<T: InputView + Default> ViewSetup for Labeled<T> {
             self.input = container.add_view::<T>();
             self.input.place().size(60, 100).center_y().r(10);
 
-            container.place().trb(0).relative(Anchor::Width, self, 0.5);
+            container.place().trb(0).relative(Anchor::Width, self, input_ratio);
         } else {
             self.input = self.add_view::<T>();
-            self.input.place().trb(0).relative(Anchor::Width, self, 0.5);
+            self.input.place().trb(0).relative(Anchor::Width, self, input_ratio);
         }
+    }
+}
+
+impl<T: InputView + Default> ViewSetup for Labeled<T> {
+    fn setup(mut self: Weak<Self>) {
+        self.__view_base.view_label += &format!(": {}", type_name::<T>());
+
+        self.label.set_alignment(TextAlignment::Left);
+
+        self.layout_input();
     }
 }
 
