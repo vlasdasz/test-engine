@@ -18,8 +18,6 @@ use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
 
 use crate::{ui::ui_test::state::clear_state, App};
 
-const DRAW_DEBUG_FRAMES: bool = false;
-
 pub struct UI;
 
 impl UI {
@@ -33,9 +31,17 @@ impl UI {
     pub(crate) fn draw(pass: &mut RenderPass) {
         let mut sections: Vec<Section> = vec![];
         let drawer = WGPUApp::drawer();
-        Self::draw_view(pass, drawer, UIManager::root_view(), &mut sections, &mut 0.0);
+        let debug_frames = UIManager::draw_debug_frames();
+        Self::draw_view(
+            pass,
+            drawer,
+            UIManager::root_view(),
+            &mut sections,
+            &mut 0.0,
+            debug_frames,
+        );
         if let Some(debug_view) = UIManager::debug_view() {
-            Self::draw_view(pass, drawer, debug_view, &mut sections, &mut 0.0);
+            Self::draw_view(pass, drawer, debug_view, &mut sections, &mut 0.0, debug_frames);
         }
 
         Font::helvetice()
@@ -64,6 +70,7 @@ impl UI {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
         text_offset: &mut f32,
+        debug_frames: bool,
     ) {
         if view.is_hidden() {
             return;
@@ -131,7 +138,7 @@ impl UI {
             }
         }
 
-        if DRAW_DEBUG_FRAMES
+        if debug_frames
             && clamped_frame.size.is_valid()
             && clamped_frame.x() + 2.0 <= root_size.width
             && clamped_frame.y() + 2.0 <= root_size.height
@@ -150,7 +157,14 @@ impl UI {
         for view in view.subviews().iter().rev() {
             let root_frame = UIManager::root_view().frame();
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(pass, drawer, view.deref(), sections, &mut text_offset);
+                Self::draw_view(
+                    pass,
+                    drawer,
+                    view.deref(),
+                    sections,
+                    &mut text_offset,
+                    debug_frames,
+                );
             }
         }
     }

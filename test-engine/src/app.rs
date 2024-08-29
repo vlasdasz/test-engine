@@ -59,6 +59,7 @@ impl App {
         Builder::from_default_env()
             .filter_level(LevelFilter::Debug)
             .filter_module("winit::platform_impl::platform::app_state", LevelFilter::Error)
+            .filter_module("winit::Window::request_redraw", LevelFilter::Error)
             .filter_module("wgpu_core::device", LevelFilter::Warn)
             .filter_module("wgpu_core::present", LevelFilter::Warn)
             .filter_module("wgpu_core::resource", LevelFilter::Warn)
@@ -120,8 +121,6 @@ impl App {
     }
 
     fn new(first_view: Own<dyn View>) -> Box<Self> {
-        Self::setup_log();
-
         #[cfg(desktop)]
         Assets::init(store::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
@@ -174,6 +173,8 @@ impl App {
         first_view: Own<dyn View>,
         actions: impl std::future::Future<Output = Result<()>> + Send + 'static,
     ) -> Result<()> {
+        Self::setup_log();
+
         let app = Self::new(first_view);
 
         tokio::spawn(async move {
@@ -213,7 +214,7 @@ impl wgpu_wrapper::App for App {
         let view = UIManager::root_view_weak().__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();
         self.update();
-        *LevelManager::update_interval() = 1.0 / dbg!(WGPUApp::display_refresh_rate()).lossy_convert();
+        *LevelManager::update_interval() = 1.0 / WGPUApp::display_refresh_rate().lossy_convert();
         self.window_ready.trigger(());
     }
 

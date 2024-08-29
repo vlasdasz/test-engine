@@ -29,6 +29,8 @@ pub struct UIManager {
 
     touch_disabled: AtomicBool,
 
+    draw_debug_frames: AtomicBool,
+
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<PathBuf>,
 
@@ -99,6 +101,7 @@ impl UIManager {
             root_view,
             deleted_views: Mutex::default(),
             touch_disabled: false.into(),
+            draw_debug_frames: false.into(),
             on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
             draw_touches: false.into(),
@@ -138,6 +141,14 @@ impl UIManager {
     pub fn free_deleted_views() {
         Self::get().deleted_views.lock().unwrap().clear();
         TouchStack::get().clear_freed();
+    }
+
+    pub fn enable_debug_frames() {
+        Self::get().draw_debug_frames.store(true, Ordering::Relaxed);
+    }
+
+    pub fn draw_debug_frames() -> bool {
+        Self::get().draw_debug_frames.load(Ordering::Relaxed)
     }
 
     pub fn draw_touches() -> bool {
