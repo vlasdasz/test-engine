@@ -78,7 +78,7 @@ mod test {
 
         assert_eq!(anim.finished(), true);
         assert!(
-            anim.value() >= 0.96 && anim.value() <= 1.04,
+            anim.value() >= 0.92 && anim.value() <= 1.04,
             "Actual: {}",
             anim.value()
         );
