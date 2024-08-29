@@ -6,7 +6,6 @@
 #![feature(adt_const_params)]
 #![feature(generic_const_exprs)]
 #![feature(trait_upcasting)]
-#![feature(const_fn_floating_point_arithmetic)]
 
 mod has_data;
 mod images;

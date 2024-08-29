@@ -2,7 +2,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor::Y, Color, Container, ViewData, ViewSetup, ViewSubviews, UI},
+    ui::{view, Anchor::CenterY, Color, Container, ViewData, ViewSetup, ViewSubviews, UI},
     ui_test::check_colors,
 };
 
@@ -23,8 +23,6 @@ impl ViewSetup for CenterFieldTestView {
 
         self.field.set_color(Color::BLUE);
         self.field.place().lr(20).h(68);
-
-        // .max_width(400).center_x().relative(Y, self.container, 2.0);
     }
 }
 
@@ -175,9 +173,36 @@ pub async fn test_center_field() -> anyhow::Result<()> {
     .await?;
 
     from_main(move || {
-        view.field.place().relative(Y, view.container, 2.0);
+        view.field.place().relative(CenterY, view.container, -50.0);
     })
     .await;
+
+    check_colors(
+        r#"
+              86  259 -  25  51  76
+             124  253 -   0 255   0
+             189  245 -   0 255   0
+             216  245 -   0   0 203
+             325  241 -   0   0 203
+             383  256 -   0   0 203
+             421  250 -   0 255   0
+             382  295 -   0 255   0
+             380  248 -   0   0 203
+             377  189 -   0 255   0
+             299  197 -   0 255   0
+             286  227 -   0   0 203
+             281  274 -   0   0 203
+             276  295 -   0 255   0
+             219  289 -   0 255   0
+             216  270 -   0   0 203
+             220  235 -   0   0 203
+             221  205 -   0 255   0
+             185  207 -   0 255   0
+             179  262 -   0 255   0
+             238  301 -   0 255   0
+        "#,
+    )
+    .await?;
 
     debug!("Center field: OK");
 
