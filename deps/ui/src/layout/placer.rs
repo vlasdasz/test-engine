@@ -431,6 +431,12 @@ impl Placer {
             Anchor::Size => frame.size = a_frame.size * rule.offset,
             Anchor::X => frame.origin.x = a_frame.origin.x * rule.offset,
             Anchor::Y => frame.origin.y = a_frame.origin.y * rule.offset,
+            Anchor::CenterY => {
+                let s_content = self.s_content.deref();
+                let mut center = s_content.center();
+                center.y += rule.offset;
+                frame.set_center(center);
+            }
             _ => unimplemented!(),
         };
         view.set_frame(frame);
