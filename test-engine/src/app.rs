@@ -55,7 +55,7 @@ impl App {
         WGPUApp::close();
     }
 
-    fn _setup_log() {
+    fn setup_log() {
         Builder::from_default_env()
             .filter_level(LevelFilter::Debug)
             .filter_module("winit::platform_impl::platform::app_state", LevelFilter::Error)
@@ -173,6 +173,8 @@ impl App {
         first_view: Own<dyn View>,
         actions: impl std::future::Future<Output = Result<()>> + Send + 'static,
     ) -> Result<()> {
+        Self::setup_log();
+
         let app = Self::new(first_view);
 
         tokio::spawn(async move {
