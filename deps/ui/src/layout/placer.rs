@@ -42,10 +42,6 @@ impl Placer {
         self.rules.borrow().is_empty() && self.all_tiling_rules.borrow().is_empty()
     }
 
-    pub fn is_ok(&self) -> bool {
-        self.view.is_ok()
-    }
-
     pub fn init(&mut self, view: WeakView) {
         let s_content = view.base_view().superview.content_size();
         self.view = unsafe { view.to_rglica() };
@@ -57,10 +53,6 @@ impl Placer {
         self.all_tiling_rules.borrow_mut().clear();
         *self.has.borrow_mut() = Size::default();
         self
-    }
-
-    pub fn rules_count(&self) -> usize {
-        self.rules.borrow().len()
     }
 
     fn rules(&self) -> RefMut<Vec<LayoutRule>> {
