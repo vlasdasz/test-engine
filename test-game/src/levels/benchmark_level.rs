@@ -108,4 +108,8 @@ impl LevelSetup for BenchmarkLevel {
         self.player.weapon.weak().shoot_at((-15, 10));
         self.bullets_count += 5;
     }
+
+    fn needs_physics(&self) -> bool {
+        true
+    }
 }
