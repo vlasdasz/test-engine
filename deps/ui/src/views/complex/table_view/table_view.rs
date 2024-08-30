@@ -89,15 +89,15 @@ impl TableView {
         for i in first_index..last_index {
             let mut cell = self.data.make_cell();
 
-            cell.place()
-                .h(self.data.cell_height())
-                .t(i.lossy_convert() * self.data.cell_height())
-                .lr(0);
-
             let label = format!("TableView cell: {}", cell.label());
             cell.set_label(label);
 
             let mut cell = self.scroll.add_subview(cell);
+
+            cell.place()
+                .h(self.data.cell_height())
+                .t(i.lossy_convert() * self.data.cell_height())
+                .lr(0);
 
             self.data.setup_cell(cell.as_any_mut(), i);
         }

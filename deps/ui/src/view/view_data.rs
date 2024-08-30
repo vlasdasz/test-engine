@@ -96,7 +96,12 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn place(&self) -> &Placer {
-        &self.base_view().placer
+        let placer = &self.base_view().placer;
+        assert!(
+            placer.is_ok(),
+            "Invalid placer. Most likely this view was not initialized properly"
+        );
+        placer
     }
 
     fn navigation_view(&self) -> Weak<NavigationView> {

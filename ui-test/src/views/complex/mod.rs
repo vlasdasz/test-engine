@@ -15,6 +15,7 @@ mod point_view;
 mod table_view;
 
 pub async fn test_complex_views() -> anyhow::Result<()> {
+    test_alert().await?;
     test_number_view().await?;
     test_form_view().await?;
     test_table_view().await?;
@@ -22,7 +23,6 @@ pub async fn test_complex_views() -> anyhow::Result<()> {
     test_drop_down().await?;
     test_buttons_on_table_view().await?;
     test_point_view().await?;
-    test_alert().await?;
 
     Ok(())
 }

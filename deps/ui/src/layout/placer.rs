@@ -42,6 +42,10 @@ impl Placer {
         self.rules.borrow().is_empty() && self.all_tiling_rules.borrow().is_empty()
     }
 
+    pub(crate) fn is_ok(&self) -> bool {
+        self.view.is_ok()
+    }
+
     pub fn init(&mut self, view: WeakView) {
         let s_content = view.base_view().superview.content_size();
         self.view = unsafe { view.to_rglica() };
