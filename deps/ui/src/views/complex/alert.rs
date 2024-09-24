@@ -36,6 +36,7 @@ impl ViewSetup for Alert {
 
         self.label.place().lrt(10).h(140);
         self.label.set_text_size(28);
+        self.label.multiline = true;
 
         self.ok_button.place().h(28).lrb(-1);
         self.ok_button

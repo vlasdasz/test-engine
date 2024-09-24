@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use log::error;
+
 use crate::{Alert, Spinner};
 
 pub trait AlertErr<T> {
@@ -9,6 +11,7 @@ pub trait AlertErr<T> {
 impl<T, E: Display> AlertErr<T> for Result<T, E> {
     fn alert_err(self) -> Option<T> {
         self.inspect_err(|err| {
+            error!("{err}");
             Spinner::instant_stop();
             Alert::show(err);
         })
