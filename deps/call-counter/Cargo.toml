@@ -3,5 +3,4 @@ edition = "2021"
 name = "call-counter"
 version = "0.1.0"
 
-
 [dependencies]

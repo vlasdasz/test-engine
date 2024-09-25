@@ -7,7 +7,6 @@ version = "0.1.0"
 name = "ui-test"
 path = "src/main.rs"
 
-
 [dependencies]
 anyhow = { workspace = true }
 log = { workspace = true }

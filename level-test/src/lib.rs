@@ -10,12 +10,11 @@ use crate::interface::level_test_view::LevelTestView;
 
 #[cfg(not(target_os = "android"))]
 pub fn start_level_test() {
-    use test_engine::ui::ViewSetup;
     let runtime = tokio::runtime::Runtime::new().unwrap();
     runtime.block_on(async {
         #[cfg(mobile)]
         test_engine::refs::set_current_thread_as_main();
-        test_engine::App::start(LevelTestView::new()).await.unwrap();
+        test_engine::App::start::<LevelTestView>().await.unwrap();
     });
 }
 

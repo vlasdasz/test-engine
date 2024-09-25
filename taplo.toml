@@ -1,7 +1,7 @@
 include = ["**/*.toml"]
 
 [formatting]
-allowed_blank_lines = 2
+allowed_blank_lines = 1
 column_width = 80
 
 # align_entries        = true

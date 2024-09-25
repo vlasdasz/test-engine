@@ -81,7 +81,6 @@ utils = { path = "deps/utils" }
 valid = { path = "deps/valid" }
 wgpu-wrapper = { path = "deps/wgpu-wrapper" }
 
-
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }

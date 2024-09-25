@@ -140,8 +140,8 @@ impl App {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start(first_view: Own<dyn View>) -> Result<()> {
-        WGPUApp::start(Self::new(first_view)).await
+    pub async fn start<T: View + Default + Sized + 'static>() -> Result<()> {
+        WGPUApp::start(Self::new(Own::<T>::default())).await
     }
 
     #[cfg(target_os = "android")]
