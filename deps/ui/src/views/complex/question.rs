@@ -10,7 +10,7 @@ use tokio::sync::oneshot::channel;
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate::{has_data::HasText, view::ViewData, ModalView, ViewSetup};
+use crate::{has_data::HasText, view::ViewData, ModalView, Setup};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;
@@ -87,7 +87,7 @@ impl IntoFuture for Question {
     }
 }
 
-impl ViewSetup for Question {
+impl Setup for Question {
     fn setup(mut self: Weak<Self>) {
         self.set_corner_radius(10).set_border_color(Color::BLACK);
 

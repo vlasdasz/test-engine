@@ -5,7 +5,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews},
-    Slider, UIManager, ViewCallbacks, ViewSetup,
+    Setup, Slider, UIManager, ViewCallbacks,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -71,7 +71,7 @@ impl ScrollView {
     }
 }
 
-impl ViewSetup for ScrollView {
+impl Setup for ScrollView {
     fn setup(mut self: Weak<Self>) {
         self.__view_base.dont_hide_off_screen = true;
         self.slider.place().w(40).r(0);

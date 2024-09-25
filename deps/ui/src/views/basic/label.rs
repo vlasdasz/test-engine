@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewSubviews},
-    HasText, ToLabel, View, ViewSetup,
+    HasText, Setup, ToLabel, View,
 };
 
 mod test_engine {
@@ -79,7 +79,7 @@ impl Label {
     }
 }
 
-impl ViewSetup for Label {
+impl Setup for Label {
     fn setup(mut self: Weak<Self>) {
         self.text_size = 32.0;
         self.set_color(Color::WHITE);

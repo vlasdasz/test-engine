@@ -6,8 +6,8 @@ use test_engine::{
     from_main,
     refs::{Own, Weak},
     ui::{
-        view, CollectionData, CollectionLayout, CollectionView, HasText, Label, Size, TouchStack, View,
-        ViewData, ViewFrame, ViewSetup, UI,
+        view, CollectionData, CollectionLayout, CollectionView, HasText, Label, Setup, Size, TouchStack,
+        View, ViewData, ViewFrame, UI,
     },
     ui_test::helpers::{add_action, check_colors},
 };
@@ -40,7 +40,7 @@ impl CollectionData for CollectionTestView {
     }
 }
 
-impl ViewSetup for CollectionTestView {
+impl Setup for CollectionTestView {
     fn setup(self: Weak<Self>) {
         self.table.place().back();
         self.table.set_data_source(self.deref());

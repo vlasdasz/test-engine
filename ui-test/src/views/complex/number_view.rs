@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, NumberView, ViewData, ViewSetup, UI},
+    ui::{view, NumberView, Setup, ViewData, UI},
     ui_test::inject_touches,
     App,
 };
@@ -16,7 +16,7 @@ struct NumberTestView {
     int:   NumberView<i32>,
 }
 
-impl ViewSetup for NumberTestView {
+impl Setup for NumberTestView {
     fn setup(self: Weak<Self>) {
         self.place().all_hor();
     }

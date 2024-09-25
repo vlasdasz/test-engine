@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Point, PositionView, ViewSetup, UI},
+    ui::{view, Point, PositionView, Setup, UI},
     ui_test::inject_touches,
 };
 
@@ -12,7 +12,7 @@ struct PositionViewTest {
     pos: PositionView,
 }
 
-impl ViewSetup for PositionViewTest {
+impl Setup for PositionViewTest {
     fn setup(self: Weak<Self>) {}
 }
 

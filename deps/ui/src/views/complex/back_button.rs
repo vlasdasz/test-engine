@@ -4,7 +4,7 @@ use ui_proc::view;
 use crate::{
     has_data::HasText,
     view::{ViewController, ViewData},
-    Button, ViewSetup,
+    Button, Setup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -19,7 +19,7 @@ pub struct BackButton {
     button: Button,
 }
 
-impl ViewSetup for BackButton {
+impl Setup for BackButton {
     fn setup(mut self: Weak<Self>) {
         self.button.set_text("Back");
         self.button.place().back();

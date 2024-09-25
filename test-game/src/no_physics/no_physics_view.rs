@@ -1,7 +1,7 @@
 use test_engine::{
     level::LevelManager,
     refs::Weak,
-    ui::{view, TransitionButton, ViewData, ViewSetup},
+    ui::{view, Setup, TransitionButton, ViewData},
 };
 
 use crate::{interface::test_game_view::TestGameView, no_physics::NoPhysicsLevel};
@@ -12,7 +12,7 @@ pub struct NoPhysicsView {
     back: TransitionButton<Self, TestGameView>,
 }
 
-impl ViewSetup for NoPhysicsView {
+impl Setup for NoPhysicsView {
     fn setup(mut self: Weak<Self>) {
         LevelManager::set_level(NoPhysicsLevel::default());
 

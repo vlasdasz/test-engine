@@ -2,14 +2,14 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, Color, ViewCallbacks, ViewData, ViewSetup, ViewTouch, UI},
+    ui::{view, Anchor, Color, Setup, ViewCallbacks, ViewData, ViewTouch, UI},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
 #[view]
 struct Selectable {}
 
-impl ViewSetup for Selectable {
+impl Setup for Selectable {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.set_color(Color::BLACK);
@@ -30,7 +30,7 @@ struct SelectionTestView {
     c: Selectable,
 }
 
-impl ViewSetup for SelectionTestView {
+impl Setup for SelectionTestView {
     fn setup(self: Weak<Self>) {
         self.a.place().size(100, 100).center();
         self.b.place().same_size(self.a).center_y().anchor(Anchor::Right, self.a, 40);

@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewFrame},
-    DrawingView, ViewSetup,
+    DrawingView, Setup,
 };
 
 mod test_engine {
@@ -45,7 +45,7 @@ impl CircleView {
     }
 }
 
-impl ViewSetup for CircleView {
+impl Setup for CircleView {
     fn setup(mut self: Weak<Self>) {
         self.set_size((10, 10));
         self.drawing.place().back();

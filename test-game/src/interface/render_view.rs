@@ -1,6 +1,6 @@
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, NumberView, Point, UIManager, ViewCallbacks, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Color, NumberView, Point, Setup, UIManager, ViewCallbacks, ViewData, ViewSubviews},
     RenderPass, SpriteRenderView, WGPUApp,
 };
 
@@ -12,7 +12,7 @@ pub struct RenderView {
     val: NumberView<f32>,
 }
 
-impl ViewSetup for RenderView {
+impl Setup for RenderView {
     fn setup(mut self: Weak<Self>) {
         self.val.set_step(0.1).place().size(50, 100).bl(0);
 

@@ -20,7 +20,7 @@ pub fn start_level_test() {
 
 #[cfg(target_os = "android")]
 pub fn start_test_game(app: test_engine::AndroidApp) {
-    use test_engine::ui::ViewSetup;
+    use test_engine::ui::Setup;
     dbg!("HELLOOOddO");
     let runtime = tokio::runtime::Runtime::new().unwrap();
     runtime.block_on(async {

@@ -10,7 +10,7 @@ use test_engine::{
     from_main,
     refs::{Own, Weak},
     ui::{
-        view, AfterSetup, Color, Container, HasText, Label, TableData, TableView, View, ViewData, ViewSetup,
+        view, AfterSetup, Color, Container, HasText, Label, Setup, TableData, TableView, View, ViewData,
         ViewSubviews, UI,
     },
     ui_test::{helpers::check_colors, inject_touches},
@@ -25,7 +25,7 @@ struct TestTableView {
     table: TableView,
 }
 
-impl ViewSetup for TestTableView {
+impl Setup for TestTableView {
     fn setup(self: Weak<Self>) {
         self.table.place().lr(280).tb(0);
         self.table.set_data_source(self.deref());

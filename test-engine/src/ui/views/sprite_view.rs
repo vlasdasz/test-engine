@@ -1,6 +1,6 @@
 use level::Sprite;
 use refs::Weak;
-use ui::{AlertErr, TextField, ViewCallbacks, ViewData, ViewSetup};
+use ui::{AlertErr, Setup, TextField, ViewCallbacks, ViewData};
 use ui_proc::view;
 
 use crate as test_engine;
@@ -15,7 +15,7 @@ pub struct SpriteView {
     z_pos:    TextField,
 }
 
-impl ViewSetup for SpriteView {
+impl Setup for SpriteView {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
 

@@ -2,7 +2,7 @@ use gm::{flat::Point, Apply, Color};
 use refs::Weak;
 use ui_proc::view;
 
-use crate::{Container, ViewData, ViewFrame, ViewSetup, ViewSubviews};
+use crate::{Container, Setup, ViewData, ViewFrame, ViewSubviews};
 
 mod test_engine {
     pub(crate) use educe;
@@ -22,7 +22,7 @@ pub struct HighlightView {
 
 impl HighlightView {}
 
-impl ViewSetup for HighlightView {
+impl Setup for HighlightView {
     fn setup(mut self: Weak<Self>) {
         const WIDTH: f32 = 40.0;
 

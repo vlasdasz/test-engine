@@ -3,7 +3,7 @@ use refs::Weak;
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate::{has_data::HasText, view::ViewData, Button, Label, ModalView, ViewSetup};
+use crate::{has_data::HasText, view::ViewData, Button, Label, ModalView, Setup};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;
@@ -30,7 +30,7 @@ impl Alert {
     }
 }
 
-impl ViewSetup for Alert {
+impl Setup for Alert {
     fn setup(mut self: Weak<Self>) {
         self.set_corner_radius(10).set_border_color(Color::BLACK);
 

@@ -24,13 +24,13 @@ pub trait ViewInternalSetup {
     fn __internal_setup(&mut self);
 }
 
-pub trait ViewSetup {
+pub trait Setup {
     fn new() -> Own<Self>
     where Self: Default;
     fn setup(self: Weak<Self>);
 }
 
-impl<T: View + 'static> ViewSetup for T {
+impl<T: View + 'static> Setup for T {
     default fn new() -> Own<Self>
     where Self: Default {
         Own::<Self>::default()

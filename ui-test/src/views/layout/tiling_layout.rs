@@ -2,7 +2,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Color, Container, ViewData, ViewSetup, ViewSubviews, UI},
+    ui::{view, Color, Container, Setup, ViewData, ViewSubviews, UI},
     ui_test::check_colors,
 };
 
@@ -12,7 +12,7 @@ struct TilingLayoutTestView {
     menu: Container,
 }
 
-impl ViewSetup for TilingLayoutTestView {
+impl Setup for TilingLayoutTestView {
     fn setup(mut self: Weak<Self>) {
         self.menu.set_color(Color::BLACK).place().all_sides(100).all_ver();
 

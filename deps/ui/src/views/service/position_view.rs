@@ -9,7 +9,7 @@ use gm::{flat::Point, Color};
 use refs::Weak;
 use ui_proc::view;
 
-use crate::{has_data::HasText, Container, Label, UIEvent, ViewData, ViewFrame, ViewSetup, ViewTouch};
+use crate::{has_data::HasText, Container, Label, Setup, UIEvent, ViewData, ViewFrame, ViewTouch};
 
 #[view]
 pub struct PositionView {
@@ -40,7 +40,7 @@ impl PositionView {
     }
 }
 
-impl ViewSetup for PositionView {
+impl Setup for PositionView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.place().size(250, 50);

@@ -5,8 +5,8 @@ use log::debug;
 use test_engine::{
     refs::{Own, Weak},
     ui::{
-        view, Button, CollectionData, CollectionView, Container, HasText, Label, Size, TouchStack, View,
-        ViewData, ViewSetup, ViewSubviews, UI,
+        view, Button, CollectionData, CollectionView, Container, HasText, Label, Setup, Size, TouchStack,
+        View, ViewData, ViewSubviews, UI,
     },
     ui_test::{
         inject_touches,
@@ -20,7 +20,7 @@ struct ButtonsOnTableView {
     table: CollectionView,
 }
 
-impl ViewSetup for ButtonsOnTableView {
+impl Setup for ButtonsOnTableView {
     fn setup(self: Weak<Self>) {
         self.table.place().back();
         self.table.set_data_source(self.deref());

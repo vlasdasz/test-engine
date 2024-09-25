@@ -8,7 +8,7 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    Anchor::Top, HasText, HasTitle, ImageView, Label, UIImages, View, ViewData, ViewFrame, ViewSetup,
+    Anchor::Top, HasText, HasTitle, ImageView, Label, Setup, UIImages, View, ViewData, ViewFrame,
     ViewSubviews, ViewTouch,
 };
 
@@ -31,7 +31,7 @@ pub struct MovableView<T: View + Default + 'static> {
     corner_view: ImageView,
 }
 
-impl<T: View + Default + 'static> ViewSetup for MovableView<T> {
+impl<T: View + Default + 'static> Setup for MovableView<T> {
     fn setup(mut self: Weak<Self>) {
         self.title_label.place().lrt(0).h(40);
         self.title_label.enable_touch();

@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, HasText, Label, Slider, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI},
+    ui::{view, Anchor, Color, HasText, Label, Setup, Slider, ViewData, ViewFrame, ViewSubviews, UI},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -14,7 +14,7 @@ pub struct SliderTestView {
     label:  Label,
 }
 
-impl ViewSetup for SliderTestView {
+impl Setup for SliderTestView {
     fn setup(mut self: Weak<Self>) {
         self.slider.set_color(Color::WHITE).place().size(50, 400).center();
         self.slider.on_change.val(move |a| {

@@ -3,14 +3,14 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Alert, ViewSetup, UI},
+    ui::{view, Alert, Setup, UI},
     ui_test::{check_colors, inject_touches},
 };
 
 #[view]
 struct AlertTestView {}
 
-impl ViewSetup for AlertTestView {
+impl Setup for AlertTestView {
     fn setup(self: Weak<Self>) {}
 }
 

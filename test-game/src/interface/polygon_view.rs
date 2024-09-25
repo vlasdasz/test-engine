@@ -5,8 +5,8 @@ use test_engine::{
     ui::{
         view,
         Anchor::{Size, Top, X},
-        Button, Color, Container, HasText, Point, PositionView, UIManager, ViewCallbacks, ViewData,
-        ViewFrame, ViewSetup, ViewSubviews,
+        Button, Color, Container, HasText, Point, PositionView, Setup, UIManager, ViewCallbacks, ViewData,
+        ViewFrame, ViewSubviews,
     },
     RenderPass, SpriteRenderView, VertexBuffer, WGPUApp,
 };
@@ -23,7 +23,7 @@ pub struct PolygonView {
     center: Container,
 }
 
-impl ViewSetup for PolygonView {
+impl Setup for PolygonView {
     fn setup(mut self: Weak<Self>) {
         LevelManager::stop_level();
 

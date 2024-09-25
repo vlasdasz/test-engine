@@ -2,7 +2,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor::CenterY, Color, Container, ViewData, ViewSetup, ViewSubviews, UI},
+    ui::{view, Anchor::CenterY, Color, Container, Setup, ViewData, ViewSubviews, UI},
     ui_test::check_colors,
 };
 
@@ -14,7 +14,7 @@ struct CenterFieldTestView {
     container: Container,
 }
 
-impl ViewSetup for CenterFieldTestView {
+impl Setup for CenterFieldTestView {
     fn setup(mut self: Weak<Self>) {
         self.container.set_color(Color::GREEN);
         self.container.place().all_sides(100);

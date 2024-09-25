@@ -8,7 +8,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewFrame},
-    ViewCallbacks, ViewSetup, ViewTest,
+    Setup, ViewCallbacks, ViewTest,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -30,7 +30,7 @@ pub struct DPadView {
     right: Button,
 }
 
-impl ViewSetup for DPadView {
+impl Setup for DPadView {
     fn setup(self: Weak<Self>) {
         [
             (self.up, Direction::Up, UIImages::up()),

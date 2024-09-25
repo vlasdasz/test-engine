@@ -7,7 +7,7 @@ mod test_engine {
 use gm::Color;
 use ui_proc::view;
 
-use crate::{has_data::HasText, Button, Container, ViewData, ViewSetup, ViewSubviews};
+use crate::{has_data::HasText, Button, Container, Setup, ViewData, ViewSubviews};
 
 const A: &[char] = &['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 const B: &[char] = &['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
@@ -18,7 +18,7 @@ const LAYOUT: &[&[char]] = &[A, B, C];
 #[view]
 pub struct KeyboardView {}
 
-impl ViewSetup for KeyboardView {
+impl Setup for KeyboardView {
     fn setup(mut self: refs::Weak<Self>) {
         self.place().all_ver();
 

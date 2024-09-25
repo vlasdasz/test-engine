@@ -3,8 +3,8 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{
-        ui_test::helpers::check_colors, view, Color, Container, HasText, Label, ModalView, Size, ViewData,
-        ViewFrame, ViewSetup, ViewSubviews, WeakView, UI,
+        ui_test::helpers::check_colors, view, Color, Container, HasText, Label, ModalView, Setup, Size,
+        ViewData, ViewFrame, ViewSubviews, WeakView, UI,
     },
     wait_for_next_frame, OnceEvent,
 };
@@ -12,7 +12,7 @@ use test_engine::{
 #[view]
 struct ModalTestView {}
 
-impl ViewSetup for ModalTestView {
+impl Setup for ModalTestView {
     fn setup(mut self: Weak<Self>) {
         let mut view = WeakView::default();
 
@@ -39,7 +39,7 @@ struct Modal {
     label: Label,
 }
 
-impl ViewSetup for Modal {
+impl Setup for Modal {
     fn setup(mut self: Weak<Self>) {
         self.label.place().back();
         self.label.set_text_size(100);

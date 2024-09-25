@@ -7,7 +7,7 @@ use test_engine::{
             inject_touches,
             state::{append_state, clear_state, get_state},
         },
-        view, Anchor, Button, Color, HasText, ViewData, ViewSetup, ViewSubviews, UI,
+        view, Anchor, Button, Color, HasText, Setup, ViewData, ViewSubviews, UI,
     },
     App,
 };
@@ -64,7 +64,7 @@ impl LayoutTestView {
     }
 }
 
-impl ViewSetup for LayoutTestView {
+impl Setup for LayoutTestView {
     fn setup(mut self: Weak<Self>) {
         for view in self.subviews_mut() {
             view.place().size(15, 15);

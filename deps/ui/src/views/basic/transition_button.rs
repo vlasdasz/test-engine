@@ -7,7 +7,7 @@ use ui_proc::view;
 use crate::{
     has_data::HasText,
     view::{ViewData, ViewTransition},
-    Button, ToLabel, UIManager, View, ViewSetup, ViewSubviews,
+    Button, Setup, ToLabel, UIManager, View, ViewSubviews,
 };
 
 mod test_engine {
@@ -36,7 +36,7 @@ impl<From: View, To: View> TransitionButton<From, To> {
     }
 }
 
-impl<From: View, To: View + Default> ViewSetup for TransitionButton<From, To> {
+impl<From: View, To: View + Default> Setup for TransitionButton<From, To> {
     fn setup(self: Weak<Self>) {
         self.button.place().back();
         self.button.on_tap(move || {

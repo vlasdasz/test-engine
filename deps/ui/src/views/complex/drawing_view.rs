@@ -9,7 +9,7 @@ use wgpu_wrapper::PathData;
 
 use crate::{
     view::{ViewData, ViewFrame},
-    ViewSetup,
+    Setup,
 };
 
 mod test_engine {
@@ -25,7 +25,7 @@ pub struct DrawingView {
     paths:       Vec<PathData>,
 }
 
-impl ViewSetup for DrawingView {
+impl Setup for DrawingView {
     fn setup(self: Weak<Self>) {
         self.size_changed().sub(move || self.update_buffers());
     }

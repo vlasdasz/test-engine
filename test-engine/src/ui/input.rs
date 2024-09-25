@@ -2,8 +2,7 @@ use gm::Color;
 use level::LevelManager;
 use log::warn;
 use ui::{
-    check_touch, Container, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, ViewSetup,
-    ViewSubviews,
+    check_touch, Container, Setup, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, ViewSubviews,
 };
 pub use winit::{event::KeyEvent, keyboard::NamedKey};
 

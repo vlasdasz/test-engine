@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, KeyboardView, ViewData, ViewSetup, UI},
+    ui::{view, KeyboardView, Setup, ViewData, UI},
     App,
 };
 
@@ -12,7 +12,7 @@ struct KeyboardViewTest {
     keyboard: KeyboardView,
 }
 
-impl ViewSetup for KeyboardViewTest {
+impl Setup for KeyboardViewTest {
     fn setup(self: Weak<Self>) {
         self.keyboard.place().back();
     }

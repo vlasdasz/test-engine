@@ -5,7 +5,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewTouch},
-    Anchor, Container, HasTitle, InputView, ViewSetup,
+    Anchor, Container, HasTitle, InputView, Setup,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -54,7 +54,7 @@ impl Switch {
     }
 }
 
-impl ViewSetup for Switch {
+impl Setup for Switch {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.center.set_color(Color::BLUE);

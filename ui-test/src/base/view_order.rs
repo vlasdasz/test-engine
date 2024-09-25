@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Container, UIManager, ViewData, ViewFrame, ViewSetup, ViewSubviews, UI},
+    ui::{view, Color, Container, Setup, UIManager, ViewData, ViewFrame, ViewSubviews, UI},
     ui_test::helpers::check_colors,
 };
 
@@ -15,7 +15,7 @@ pub struct OrderTestView {
     view_4: Container,
 }
 
-impl ViewSetup for OrderTestView {
+impl Setup for OrderTestView {
     fn setup(mut self: Weak<Self>) {
         self.view_1.set_color(Color::RED).place().size(200, 200);
         self.view_2.set_color(Color::GREEN).place().size(200, 200).tl(100);
