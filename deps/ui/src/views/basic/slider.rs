@@ -5,7 +5,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewFrame, ViewTouch},
-    CircleView, Touch, ViewCallbacks, ViewSetup,
+    CircleView, Setup, Touch, ViewCallbacks,
 };
 
 mod test_engine {
@@ -77,7 +77,7 @@ impl Slider {
     }
 }
 
-impl ViewSetup for Slider {
+impl Setup for Slider {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.touch().all.val(move |touch| {

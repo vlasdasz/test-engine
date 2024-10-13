@@ -9,7 +9,7 @@ use vents::OnceEvent;
 
 use crate::{
     view::{View, ViewAnimation, ViewData, ViewFrame, ViewSubviews},
-    Container, ModalView, TouchStack, UIAnimation, ViewCallbacks, ViewSetup, MICROSECONDS_IN_ONE_SECOND,
+    Container, ModalView, Setup, TouchStack, UIAnimation, ViewCallbacks, MICROSECONDS_IN_ONE_SECOND,
 };
 
 mod test_engine {
@@ -72,7 +72,7 @@ impl Spinner {
     // }
 }
 
-impl ViewSetup for Spinner {
+impl Setup for Spinner {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::GRAY.with_alpha(0.8));
         self.set_corner_radius(20);

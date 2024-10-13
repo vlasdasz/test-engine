@@ -8,7 +8,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewFrame, ViewTouch},
-    Touch, ViewSetup,
+    Setup, Touch,
 };
 
 mod test_engine {
@@ -63,7 +63,7 @@ impl StickView {
     }
 }
 
-impl ViewSetup for StickView {
+impl Setup for StickView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.touch().all.val(move |touch| {

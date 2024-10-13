@@ -7,7 +7,7 @@ use wgpu_wrapper::image::ToImage;
 use crate::{
     has_data::HasText,
     view::{ViewData, ViewTouch},
-    ImageView, Label, ToLabel, ViewSetup,
+    ImageView, Label, Setup, ToLabel,
 };
 
 mod test_engine {
@@ -72,7 +72,7 @@ impl Button {
     }
 }
 
-impl ViewSetup for Button {
+impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
         self.label.place().back();
         self.label.set_hidden(true);

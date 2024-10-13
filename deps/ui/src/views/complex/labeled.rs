@@ -5,7 +5,7 @@ use refs::{weak_from_ref, Weak};
 use ui_proc::view;
 
 use crate::{
-    has_data::HasText, view::ViewData, Anchor, Container, HasTitle, InputView, TextAlignment, ViewSetup,
+    has_data::HasText, view::ViewData, Anchor, Container, HasTitle, InputView, Setup, TextAlignment,
     ViewSubviews,
 };
 mod test_engine {
@@ -64,7 +64,7 @@ impl<T: InputView + Default> Labeled<T> {
     }
 }
 
-impl<T: InputView + Default> ViewSetup for Labeled<T> {
+impl<T: InputView + Default> Setup for Labeled<T> {
     fn setup(mut self: Weak<Self>) {
         self.__view_base.view_label += &format!(": {}", type_name::<T>());
 

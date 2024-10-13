@@ -8,8 +8,8 @@ use crate::{
     has_data::HasText,
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
-    HasTitle, InputView, Label, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
-    ViewCallbacks, ViewSetup,
+    HasTitle, InputView, Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
+    ViewCallbacks,
 };
 
 mod test_engine {
@@ -36,7 +36,7 @@ pub struct TextField {
     label: Label,
 }
 
-impl ViewSetup for TextField {
+impl Setup for TextField {
     fn setup(mut self: Weak<Self>) {
         self.text_color = Color::BLACK;
         self.placeholding = true;

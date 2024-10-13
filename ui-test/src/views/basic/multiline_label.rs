@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, HasText, Label, ViewData, ViewSetup, UI},
+    ui::{view, HasText, Label, Setup, ViewData, UI},
     ui_test::check_colors,
 };
 
@@ -13,7 +13,7 @@ struct MultilineTestView {
     label: Label,
 }
 
-impl ViewSetup for MultilineTestView {
+impl Setup for MultilineTestView {
     fn setup(mut self: Weak<Self>) {
         self.label.place().all_sides(100);
         self.label.set_text_size(64);

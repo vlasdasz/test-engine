@@ -2,13 +2,13 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, ViewSetup, UI},
+    ui::{view, Setup, UI},
 };
 
 #[view]
 struct TemplateTestView {}
 
-impl ViewSetup for TemplateTestView {
+impl Setup for TemplateTestView {
     fn setup(self: Weak<Self>) {}
 }
 

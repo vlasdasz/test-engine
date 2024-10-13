@@ -8,7 +8,7 @@ use vents::Event;
 use crate::{
     has_data::HasText,
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    Button, CollectionData, CollectionView, HasTitle, InputView, Label, ToLabel, View, ViewSetup,
+    Button, CollectionData, CollectionView, HasTitle, InputView, Label, Setup, ToLabel, View,
 };
 
 mod test_engine {
@@ -109,7 +109,7 @@ impl InputView for DropDown {
     }
 }
 
-impl ViewSetup for DropDown {
+impl Setup for DropDown {
     fn setup(mut self: Weak<Self>) {
         self.button.place().back();
         self.button.on_tap(move || self.tapped());

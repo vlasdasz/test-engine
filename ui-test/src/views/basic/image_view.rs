@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Anchor, ImageView, ViewData, ViewSetup, ViewTouch, UI},
+    ui::{view, Anchor, ImageView, Setup, ViewData, ViewTouch, UI},
     ui_test::helpers::check_colors,
     App,
 };
@@ -13,7 +13,7 @@ struct ImageTestView {
     image_view: ImageView,
 }
 
-impl ViewSetup for ImageTestView {
+impl Setup for ImageTestView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
 

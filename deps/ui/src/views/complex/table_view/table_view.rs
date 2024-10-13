@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews},
-    TableData, View, ViewCallbacks, ViewSetup,
+    Setup, TableData, View, ViewCallbacks,
 };
 
 mod test_engine {
@@ -30,7 +30,7 @@ impl ViewCallbacks for TableView {
     }
 }
 
-impl ViewSetup for TableView {
+impl Setup for TableView {
     fn setup(self: Weak<Self>) {
         self.scroll.place().back();
         self.scroll.on_scroll.sub(move || {

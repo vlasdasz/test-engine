@@ -17,7 +17,7 @@ use utils::Every;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewInternalSetup},
-    Button, HasTitle, Label, MovableView, ToLabel, TouchStack, UIManager, View, ViewCallbacks, ViewSetup,
+    Button, HasTitle, Label, MovableView, Setup, ToLabel, TouchStack, UIManager, View, ViewCallbacks,
     ViewSubviews,
 };
 
@@ -82,7 +82,7 @@ impl DebugView {
     }
 }
 
-impl ViewSetup for DebugView {
+impl Setup for DebugView {
     fn setup(mut self: Weak<Self>) {
         *CURRENT.get_mut() = self;
 

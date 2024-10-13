@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    View, ViewSetup, WeakView,
+    Setup, View, WeakView,
 };
 
 mod test_engine {
@@ -44,7 +44,7 @@ pub struct CollectionView {
     pub(crate) scroll: ScrollView,
 }
 
-impl ViewSetup for CollectionView {
+impl Setup for CollectionView {
     fn setup(mut self: Weak<Self>) {
         self.scroll.set_content_size((1000, 1500));
         self.scroll.place().back();

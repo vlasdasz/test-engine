@@ -2,7 +2,7 @@ use anyhow::Result;
 use dispatch::from_main;
 use gm::{flat::Point, Color, U8Color};
 use ui::{
-    Button, Container, HighlightView, UIManager, View, ViewData, ViewFrame, ViewSetup, ViewSubviews, WeakView,
+    Button, Container, HighlightView, Setup, UIManager, View, ViewData, ViewFrame, ViewSubviews, WeakView,
 };
 
 use crate::{gm::Apply, ui::Screenshot, App};

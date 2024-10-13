@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, HighlightView, ViewSetup, UI},
+    ui::{view, Color, HighlightView, Setup, UI},
     ui_test::check_colors,
 };
 
@@ -12,7 +12,7 @@ struct HighLightTestView {
     highlight: HighlightView,
 }
 
-impl ViewSetup for HighLightTestView {
+impl Setup for HighLightTestView {
     fn setup(mut self: Weak<Self>) {
         self.highlight.set((200, 200), Color::GREEN, Color::BLUE);
     }

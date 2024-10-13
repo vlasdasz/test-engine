@@ -8,7 +8,7 @@ use fake::Fake;
 use test_engine::{
     from_main, on_main,
     refs::Weak,
-    ui::{view, Alert, Anchor, Color, HasText, Label, ViewData, ViewSetup, ViewSubviews},
+    ui::{view, Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews},
     App,
 };
 use tokio::spawn;
@@ -94,7 +94,7 @@ impl BenchmarkView {
     }
 }
 
-impl ViewSetup for BenchmarkView {
+impl Setup for BenchmarkView {
     fn setup(mut self: Weak<Self>) {
         self.label.set_text((5..10).fake::<String>());
         self.label.place().back();

@@ -9,8 +9,8 @@ use test_engine::{
         view, Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
-        MovableView, NumberView, Point, PointsPath, PositionView, Spinner, SpriteView, StickView, Switch,
-        TextField, TransitionButton, UIManager, ViewData, ViewFrame, ViewSetup,
+        MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
+        Switch, TextField, TransitionButton, UIManager, ViewData, ViewFrame,
     },
     App, DataManager,
 };
@@ -76,7 +76,7 @@ pub struct TestGameView {
     no_physics: TransitionButton<Self, NoPhysicsView>,
 }
 
-impl ViewSetup for TestGameView {
+impl Setup for TestGameView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();

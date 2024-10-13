@@ -8,7 +8,7 @@ use refs::{weak_from_ref, Weak};
 use vents::Event;
 
 use crate::{
-    has_data::HasText, view::ViewData, Button, HasTitle, InputView, Label, UIImages, ViewSetup, ViewTouch,
+    has_data::HasText, view::ViewData, Button, HasTitle, InputView, Label, Setup, UIImages, ViewTouch,
 };
 
 mod test_engine {
@@ -50,7 +50,7 @@ pub struct NumberView<T: ViewableNumber> {
     down:  Button,
 }
 
-impl<T: ViewableNumber> ViewSetup for NumberView<T> {
+impl<T: ViewableNumber> Setup for NumberView<T> {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
         self.label.text = format!("{:.1}", self.value);

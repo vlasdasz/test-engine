@@ -7,7 +7,7 @@ use test_engine::{
         view, AddLabel, Anchor,
         Anchor::{Top, X},
         Button, Color, DebugView, DrawingView, HasText, Image, ImageView, Label, NumberView, Point,
-        PointsPath, Size, ViewData, ViewSetup, ViewTouch,
+        PointsPath, Setup, Size, ViewData, ViewTouch,
     },
     Event,
 };
@@ -92,7 +92,7 @@ impl NoiseView {
     }
 }
 
-impl ViewSetup for NoiseView {
+impl Setup for NoiseView {
     fn setup(mut self: Weak<Self>) {
         const WIDTH: u32 = 100;
 

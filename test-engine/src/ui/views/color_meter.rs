@@ -1,7 +1,7 @@
 use dispatch::on_main;
 use refs::Weak;
 use tokio::spawn;
-use ui::{UIEvents, ViewCallbacks, ViewData, ViewSetup};
+use ui::{Setup, UIEvents, ViewCallbacks, ViewData};
 use ui_proc::view;
 use wgpu_wrapper::Screenshot;
 
@@ -13,7 +13,7 @@ pub struct ColorMeter {
     screenshot: Screenshot,
 }
 
-impl ViewSetup for ColorMeter {
+impl Setup for ColorMeter {
     fn setup(self: Weak<Self>) {
         self.update_screenshot();
         UIEvents::size_changed().sub(self, move || self.update_screenshot());

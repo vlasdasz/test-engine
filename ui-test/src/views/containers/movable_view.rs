@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Container, HasTitle, MovableView, ViewData, ViewFrame, ViewSetup, UI},
+    ui::{view, Color, Container, HasTitle, MovableView, Setup, ViewData, ViewFrame, UI},
     ui_test::{check_colors, inject_touches},
 };
 
@@ -12,7 +12,7 @@ struct MovableViewTestView {
     movable: MovableView<Container>,
 }
 
-impl ViewSetup for MovableViewTestView {
+impl Setup for MovableViewTestView {
     fn setup(mut self: Weak<Self>) {
         self.movable.set_title("Movable view");
         self.movable.set_frame((10, 10, 400, 400));

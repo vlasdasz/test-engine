@@ -13,7 +13,7 @@ mod test_engine {
 }
 use crate::{
     view::{ViewAnimation, ViewFrame, ViewSubviews},
-    TouchStack, UIAnimation, View, ViewData, ViewSetup,
+    Setup, TouchStack, UIAnimation, View, ViewData,
 };
 
 #[view]
@@ -31,7 +31,7 @@ impl NavigationView {
     }
 }
 
-impl ViewSetup for NavigationView {
+impl Setup for NavigationView {
     fn setup(mut self: Weak<Self>) {
         let mut view = self.first_view.take().unwrap();
         view.set_navigation_view(self);

@@ -89,7 +89,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
 
         impl #generics test_engine::ui::ViewInternalSetup for #name <#type_params>  {
             fn __internal_setup(&mut self) {
-                use test_engine::ui::ViewSetup;
+                use test_engine::ui::Setup;
                 use test_engine::ui::WithHeader;
                 use test_engine::ui::ViewData;
                 self.__view_base.view_label += &#name_str.to_string();

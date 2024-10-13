@@ -4,8 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         ui_test::{helpers::check_colors, inject_touches},
-        view, Anchor, HasText, ImageView, Label, NumberView, ViewData, ViewFrame, ViewSetup, ViewSubviews,
-        UI,
+        view, Anchor, HasText, ImageView, Label, NumberView, Setup, ViewData, ViewFrame, ViewSubviews, UI,
     },
 };
 
@@ -17,7 +16,7 @@ struct OutBoundsView {
     y:    NumberView<f32>,
 }
 
-impl ViewSetup for OutBoundsView {
+impl Setup for OutBoundsView {
     fn setup(mut self: Weak<Self>) {
         self.test.set_text("AA").set_text_size(100).set_frame((200, 200, 200, 200));
 

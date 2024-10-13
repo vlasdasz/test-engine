@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Color, Container, ViewData, ViewSetup, UI},
+    ui::{view, Color, Container, Setup, ViewData, UI},
 };
 
 #[view]
@@ -13,7 +13,7 @@ struct CornerRadiusTestView {
     wide:   Container,
 }
 
-impl ViewSetup for CornerRadiusTestView {
+impl Setup for CornerRadiusTestView {
     fn setup(mut self: Weak<Self>) {
         self.square.set_color(Color::BLUE).place().size(100, 100).center();
     }

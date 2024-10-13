@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Button, HasText, ViewData, ViewSetup, UI},
+    ui::{view, Button, HasText, Setup, ViewData, UI},
     ui_test::{check_colors, state::increment_state, test_combinations},
     App,
 };
@@ -13,7 +13,7 @@ struct ButtonTestView {
     button: Button,
 }
 
-impl ViewSetup for ButtonTestView {
+impl Setup for ButtonTestView {
     fn setup(mut self: Weak<Self>) {
         self.button.place().back().size(100, 50).center();
         self.button.set_text("Button text");

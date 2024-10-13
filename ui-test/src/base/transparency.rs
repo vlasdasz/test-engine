@@ -5,7 +5,7 @@ use test_engine::{
     gm::Apply,
     level::LevelManager,
     refs::Weak,
-    ui::{view, ImageView, ViewData, ViewSetup, UI},
+    ui::{view, ImageView, Setup, ViewData, UI},
 };
 
 use crate::level::SkyboxLevel;
@@ -21,7 +21,7 @@ struct TransparencyTestView {
     view_4: ImageView,
 }
 
-impl ViewSetup for TransparencyTestView {
+impl Setup for TransparencyTestView {
     fn setup(mut self: Weak<Self>) {
         self.background.set_image("gradient.png").place().back();
 

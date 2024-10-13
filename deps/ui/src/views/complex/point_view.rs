@@ -3,7 +3,7 @@ use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
-use crate::{view::ViewData, NumberView, ViewSetup};
+use crate::{view::ViewData, NumberView, Setup};
 
 mod test_engine {
     pub(crate) use educe;
@@ -34,7 +34,7 @@ impl PointView {
     }
 }
 
-impl ViewSetup for PointView {
+impl Setup for PointView {
     fn setup(mut self: Weak<Self>) {
         self.mul = 1.0;
         self.place().all_hor().all(10);

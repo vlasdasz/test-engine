@@ -11,8 +11,7 @@ use vents::Event;
 
 use crate::{
     view::{ViewData, ViewSubviews},
-    DropDown, InputView, Labeled, NumberView, Switch, TextAlignment, TextField, TextFieldConstraint,
-    ViewSetup,
+    DropDown, InputView, Labeled, NumberView, Setup, Switch, TextAlignment, TextField, TextFieldConstraint,
 };
 mod test_engine {
     pub(crate) use educe;
@@ -33,7 +32,7 @@ pub struct FormView<T: Reflected + 'static> {
     _p:       PhantomData<T>,
 }
 
-impl<T: Reflected> ViewSetup for FormView<T> {
+impl<T: Reflected> Setup for FormView<T> {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
         self.editind_enabled = true;

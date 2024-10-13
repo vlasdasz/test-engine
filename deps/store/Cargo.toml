@@ -3,7 +3,6 @@ edition = "2021"
 name = "store"
 version = "0.1.0"
 
-
 [dependencies]
 aes-gcm = { workspace = true }
 anyhow = { workspace = true }

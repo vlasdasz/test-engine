@@ -4,7 +4,7 @@ use test_engine::{
     reflected,
     reflected::Reflected,
     refs::Weak,
-    ui::{view, Button, FormView, HasText, ViewData, ViewSetup, ViewSubviews, UI},
+    ui::{view, Button, FormView, HasText, Setup, ViewData, ViewSubviews, UI},
     App,
 };
 
@@ -25,7 +25,7 @@ struct FormTestView {
     form:   FormView<Data>,
 }
 
-impl ViewSetup for FormTestView {
+impl Setup for FormTestView {
     fn setup(mut self: Weak<Self>) {
         self.button.set_text("Save").place().lrt(0).h(100);
         self.button.on_tap(move || {

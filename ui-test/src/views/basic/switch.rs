@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{view, Switch, ViewData, ViewSetup, UI},
+    ui::{view, Setup, Switch, ViewData, UI},
     ui_test::{state::set_state, test_combinations},
     App,
 };
@@ -13,7 +13,7 @@ struct SwitchTestView {
     switch: Switch,
 }
 
-impl ViewSetup for SwitchTestView {
+impl Setup for SwitchTestView {
     fn setup(self: Weak<Self>) {
         self.switch.place().back().size(100, 50).center();
 

@@ -30,6 +30,5 @@ wgpu-wrapper = { workspace = true }
 gm = { workspace = true }
 ui-proc = { workspace = true }
 
-
 [build-dependencies]
 cfg_aliases = { workspace = true }

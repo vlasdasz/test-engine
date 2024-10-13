@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor, TextField, ViewData, ViewSetup, UI},
+    ui::{view, Anchor, Setup, TextField, ViewData, UI},
     ui_test::{helpers::check_colors, inject_keys, inject_touches},
     App,
 };
@@ -15,7 +15,7 @@ struct TextFieldTestView {
     smol_field: TextField,
 }
 
-impl ViewSetup for TextFieldTestView {
+impl Setup for TextFieldTestView {
     fn setup(self: Weak<Self>) {
         self.field.place().size(600, 200).center();
         self.smol_field

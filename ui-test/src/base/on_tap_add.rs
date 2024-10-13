@@ -6,8 +6,8 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         ui_test::{helpers::check_colors, inject_touches},
-        view, Button, CollectionData, CollectionView, Color, Container, HasText, ImageView, Label, Size,
-        View, ViewData, ViewSetup, ViewSubviews, UI,
+        view, Button, CollectionData, CollectionView, Color, Container, HasText, ImageView, Label, Setup,
+        Size, View, ViewData, ViewSubviews, UI,
     },
 };
 
@@ -20,7 +20,7 @@ struct SomeView {
     square: Container,
 }
 
-impl ViewSetup for SomeView {
+impl Setup for SomeView {
     fn setup(mut self: Weak<Self>) {
         self.table.set_data_source(self.deref()).place().size(400, 400);
         self.label
@@ -58,7 +58,7 @@ struct OnTapAddTestView {
     btn: Button,
 }
 
-impl ViewSetup for OnTapAddTestView {
+impl Setup for OnTapAddTestView {
     fn setup(mut self: Weak<Self>) {
         self.btn.set_text("A").place().size(50, 50);
         self.btn.on_tap(move || {

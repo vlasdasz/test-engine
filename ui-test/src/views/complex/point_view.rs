@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, HasText, Label, Point, PointView, ViewData, ViewSetup, UI},
+    ui::{view, HasText, Label, Point, PointView, Setup, ViewData, UI},
     ui_test::inject_touches,
 };
 
@@ -15,7 +15,7 @@ struct PointTestView {
     label:      Label,
 }
 
-impl ViewSetup for PointTestView {
+impl Setup for PointTestView {
     fn setup(mut self: Weak<Self>) {
         self.point_view.place().size(200, 200).tl(100);
 

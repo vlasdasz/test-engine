@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{view, Color, Container, TouchStack, ViewData, ViewSetup, ViewTouch, UI},
+    ui::{view, Color, Container, Setup, TouchStack, ViewData, ViewTouch, UI},
     ui_test::{
         inject_touches,
         state::{append_state, clear_state, get_state},
@@ -19,7 +19,7 @@ struct TouchOrderView {
     view_4: Container,
 }
 
-impl ViewSetup for TouchOrderView {
+impl Setup for TouchOrderView {
     fn setup(mut self: Weak<Self>) {
         self.view_1.set_color(Color::RED);
         self.view_2.set_color(Color::GREEN).place().tl(50);

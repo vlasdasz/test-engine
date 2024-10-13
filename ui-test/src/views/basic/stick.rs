@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, Color, Container, Point, PointView, StickView, ViewData, ViewFrame, ViewSetup, UI},
+    ui::{view, Color, Container, Point, PointView, Setup, StickView, ViewData, ViewFrame, UI},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -16,7 +16,7 @@ struct StickTestView {
     pos:   PointView,
 }
 
-impl ViewSetup for StickTestView {
+impl Setup for StickTestView {
     fn setup(mut self: Weak<Self>) {
         self.test.set_color(Color::GREEN).set_size((50, 50));
 
