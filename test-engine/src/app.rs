@@ -22,7 +22,7 @@ use winit::{
 
 use crate::{
     assets::Assets,
-    te_level::TELevel,
+    level_drawer::LevelDrawer,
     ui::{Input, UI},
 };
 
@@ -221,7 +221,7 @@ impl wgpu_wrapper::App for App {
     fn update(&mut self) {
         UIManager::free_deleted_views();
         invoke_dispatched();
-        TELevel::update();
+        LevelDrawer::update();
         UI::update();
     }
 
@@ -230,7 +230,7 @@ impl wgpu_wrapper::App for App {
 
         pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
-        TELevel::draw(pass);
+        LevelDrawer::draw(pass);
         UI::draw(pass);
     }
 

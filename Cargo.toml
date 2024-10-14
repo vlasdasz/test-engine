@@ -4,13 +4,13 @@
 #default-members = ["ui-test"]
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "ui-test",
-  "ui-benchmark",
-  "level-test",
-  "deps/ui/ui-proc-test",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "ui-test",
+    "ui-benchmark",
+    "level-test",
+    "deps/ui/ui-proc-test",
 ]
 
 resolver = "2"
@@ -51,6 +51,7 @@ syn = { version = "2.0", features = ["full", "extra-traits"] }
 tokio = { version = "1.40", features = ["full"] }
 walkdir = "2.5"
 web-time = "1.0.0"
+cgmath = "0.18"
 
 glyph_brush = "0.7.8"
 wgpu = "22.1.0"
@@ -70,6 +71,7 @@ gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
 image-proc = { path = "deps/wgpu-wrapper/image-proc" }
 level = { path = "deps/level" }
+scene = { path = "deps/scene" }
 level-proc = { path = "deps/level/level-proc" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }

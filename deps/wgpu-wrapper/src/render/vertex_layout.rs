@@ -1,6 +1,6 @@
 use std::mem::size_of;
 
-use gm::{flat::Point, volume::Vertex};
+use gm::flat::{Point, Vertex2D};
 use wgpu::{BufferAddress, VertexAttribute, VertexBufferLayout, VertexStepMode};
 
 pub trait VertexLayout: Sized {
@@ -17,7 +17,7 @@ impl VertexLayout for Point {
     };
 }
 
-impl VertexLayout for Vertex {
+impl VertexLayout for Vertex2D {
     const ATTRIBS: &'static [VertexAttribute] = &wgpu::vertex_attr_array![0 => Float32x2, 1 => Float32x2];
     const VERTEX_LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {
         array_stride: size_of::<Self>() as BufferAddress,

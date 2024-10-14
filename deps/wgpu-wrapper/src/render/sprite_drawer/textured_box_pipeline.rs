@@ -2,8 +2,7 @@ use std::ops::Range;
 
 use gm::{
     checked_usize_to_u32,
-    flat::{Point, Size},
-    volume::Vertex,
+    flat::{Point, Size, Vertex2D},
     Color,
 };
 use indexmap::IndexMap;
@@ -22,20 +21,20 @@ use crate::{
     WGPUApp,
 };
 
-const VERTICES: [Vertex; 4] = [
-    Vertex {
+const VERTICES: [Vertex2D; 4] = [
+    Vertex2D {
         pos: Point::new(-1.0, 1.0),
         uv:  Point::new(0.0, 0.0),
     },
-    Vertex {
+    Vertex2D {
         pos: Point::new(-1.0, -1.0),
         uv:  Point::new(0.0, 1.0),
     },
-    Vertex {
+    Vertex2D {
         pos: Point::new(1.0, 1.0),
         uv:  Point::new(1.0, 0.0),
     },
-    Vertex {
+    Vertex2D {
         pos: Point::new(1.0, -1.0),
         uv:  Point::new(1.0, 1.0),
     },
@@ -73,7 +72,7 @@ impl Default for TexturedBoxPipeline {
             &shader,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
-            &[Vertex::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
+            &[Vertex2D::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
         );
 
         let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);

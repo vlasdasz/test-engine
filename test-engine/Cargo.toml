@@ -24,6 +24,7 @@ web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 winit = { workspace = true }
+cgmath = { workspace = true }
 
 dispatch = { workspace = true }
 manage = { workspace = true }
@@ -35,6 +36,7 @@ audio = { workspace = true, optional = true }
 gen = { workspace = true }
 gm = { workspace = true }
 level = { workspace = true }
+scene = { workspace = true }
 store = { workspace = true }
 ui = { workspace = true }
 ui-proc = { workspace = true }
