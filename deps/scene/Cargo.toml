@@ -10,3 +10,4 @@ name = "scene"
 
 [dependencies]
 gm = { workspace = true }
+cgmath = { workspace = true }

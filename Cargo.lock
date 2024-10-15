@@ -3314,6 +3314,7 @@ dependencies = [
 name = "scene"
 version = "0.1.0"
 dependencies = [
+ "cgmath",
  "gm",
 ]
 
@@ -3700,6 +3701,7 @@ dependencies = [
  "android_logger",
  "anyhow",
  "audio",
+ "bytemuck",
  "cfg_aliases 0.2.1",
  "cgmath",
  "dispatch 0.1.0",
