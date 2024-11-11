@@ -14,18 +14,18 @@ default = ["audio"]
 
 [dependencies]
 anyhow = { workspace = true }
+bytemuck = { workspace = true }
+cgmath = { workspace = true }
 educe = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }
-bytemuck = { workspace = true }
 serde_json = { workspace = true }
 tokio = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 winit = { workspace = true }
-cgmath = { workspace = true }
 
 dispatch = { workspace = true }
 manage = { workspace = true }

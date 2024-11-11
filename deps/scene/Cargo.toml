@@ -9,5 +9,5 @@ crate-type = ["rlib", "staticlib"]
 name = "scene"
 
 [dependencies]
-gm = { workspace = true }
 cgmath = { workspace = true }
+gm = { workspace = true }

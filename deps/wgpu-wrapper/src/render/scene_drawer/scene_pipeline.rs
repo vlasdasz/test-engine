@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use bytemuck::{cast_slice, Pod, Zeroable};
 use gm::{checked_usize_to_u32, flat::Point, Color};
 use wgpu::{

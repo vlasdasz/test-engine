@@ -4,13 +4,13 @@
 #default-members = ["ui-test"]
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "ui-test",
-    "ui-benchmark",
-    "level-test",
-    "deps/ui/ui-proc-test",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "ui-test",
+  "ui-benchmark",
+  "level-test",
+  "deps/ui/ui-proc-test",
 ]
 
 resolver = "2"
@@ -39,6 +39,7 @@ rapier2d = { version = "0.22.0", features = ["simd-nightly"] }
 #rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
 aes-gcm = "0.10.3"
+cgmath = "0.18"
 indexmap = "2.2"
 lyon = "1.0"
 rodio = "0.19.0"
@@ -51,7 +52,6 @@ syn = { version = "2.0", features = ["full", "extra-traits"] }
 tokio = { version = "1.40", features = ["full"] }
 walkdir = "2.5"
 web-time = "1.0.0"
-cgmath = "0.18"
 
 glyph_brush = "0.7.8"
 wgpu = "22.1.0"
@@ -71,8 +71,8 @@ gen = { path = "deps/gen" }
 gm = { path = "deps/gm" }
 image-proc = { path = "deps/wgpu-wrapper/image-proc" }
 level = { path = "deps/level" }
-scene = { path = "deps/scene" }
 level-proc = { path = "deps/level/level-proc" }
+scene = { path = "deps/scene" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
 test-game = { path = "test-game" }

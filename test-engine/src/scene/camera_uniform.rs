@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 // We need this for Rust to store our data correctly for the shaders
 use scene::Camera;
 

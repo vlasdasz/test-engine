@@ -1,10 +1,10 @@
 use scene::Scene;
 use ui::UIManager;
 
-pub(crate) struct SceneDrawer {}
+pub(crate) struct _SceneDrawer {}
 
-impl SceneDrawer {
-    pub(crate) fn update(scene: &mut Scene) {
+impl _SceneDrawer {
+    pub(crate) fn _update(scene: &mut Scene) {
         scene.set_aspect_ratio(UIManager::resolution());
     }
 }
