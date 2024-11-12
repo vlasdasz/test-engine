@@ -15,6 +15,10 @@ impl<T> VecBuffer<T> {
         self.data.push(val);
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
+    }
+
     pub fn len(&self) -> u32 {
         self.len
     }
