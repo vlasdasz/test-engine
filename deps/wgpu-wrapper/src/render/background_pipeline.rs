@@ -3,8 +3,7 @@ use std::ops::Range;
 use bytemuck::{Pod, Zeroable};
 use gm::{
     checked_usize_to_u32,
-    flat::{Point, Size},
-    volume::Vertex,
+    flat::{Point, Size, Vertex2D},
 };
 use wgpu::{
     BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
@@ -21,28 +20,28 @@ use crate::{
 const VAL: f32 = 100_000.0;
 const UV: f32 = 500.0;
 
-const fn image_vertices() -> [Vertex; 4] {
+const fn image_vertices() -> [Vertex2D; 4] {
     [
-        Vertex {
+        Vertex2D {
             pos: Point::new(-VAL, VAL),
             uv:  Point::new(-UV, -UV),
         },
-        Vertex {
+        Vertex2D {
             pos: Point::new(-VAL, -VAL),
             uv:  Point::new(-UV, UV),
         },
-        Vertex {
+        Vertex2D {
             pos: Point::new(VAL, VAL),
             uv:  Point::new(UV, -UV),
         },
-        Vertex {
+        Vertex2D {
             pos: Point::new(VAL, -VAL),
             uv:  Point::new(UV, UV),
         },
     ]
 }
 
-const VERTICES: [Vertex; 4] = image_vertices();
+const VERTICES: [Vertex2D; 4] = image_vertices();
 
 const RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
@@ -83,7 +82,7 @@ impl Default for BackgroundPipeline {
             &shader,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
-            &[Vertex::VERTEX_LAYOUT],
+            &[Vertex2D::VERTEX_LAYOUT],
         );
 
         let view = BackgroundView {

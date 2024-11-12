@@ -68,13 +68,13 @@ impl DeviceHelper for Device {
             layout:        layout.into(),
             vertex:        VertexState {
                 module:              shader,
-                entry_point:         "v_main",
+                entry_point:         "v_main".into(),
                 compilation_options: PipelineCompilationOptions::default(),
                 buffers:             vertex_layout,
             },
             fragment:      FragmentState {
                 module:              shader,
-                entry_point:         "f_main",
+                entry_point:         "f_main".into(),
                 compilation_options: PipelineCompilationOptions::default(),
                 targets:             &[ColorTargetState {
                     format:     RGBA_TEXTURE_FORMAT,

@@ -1,7 +1,7 @@
 mod gyro_data;
-mod vector3;
-mod vertex;
+mod point3;
+mod vertex3d;
 
 pub use gyro_data::GyroData;
-pub use vector3::Vector3;
-pub use vertex::*;
+pub use point3::Point3;
+pub use vertex3d::Vertex3D;

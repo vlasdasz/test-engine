@@ -7,8 +7,9 @@
 mod app;
 mod assets;
 mod assets_paths;
+mod level_drawer;
+mod scene;
 
-mod te_level;
 pub mod ui;
 
 pub use educe;

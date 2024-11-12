@@ -4,9 +4,9 @@ use ui::UIManager;
 use wgpu::RenderPass;
 use wgpu_wrapper::{SpriteRenderView, WGPUApp};
 
-pub(crate) struct TELevel;
+pub(crate) struct LevelDrawer;
 
-impl TELevel {
+impl LevelDrawer {
     pub(crate) fn update() {
         LevelManager::update();
     }

@@ -2,8 +2,7 @@ use std::ops::Range;
 
 use gm::{
     checked_usize_to_u32,
-    flat::{Point, Rect},
-    volume::Vertex,
+    flat::{Point, Rect, Vertex2D},
 };
 use wgpu::{
     BindGroupLayout, Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPipeline, ShaderStages,
@@ -19,28 +18,28 @@ use crate::{
     WGPUApp,
 };
 
-pub const fn image_vertices_with_shrink(x: f32, y: f32, width: f32, height: f32) -> [Vertex; 4] {
+pub const fn image_vertices_with_shrink(x: f32, y: f32, width: f32, height: f32) -> [Vertex2D; 4] {
     [
-        Vertex {
+        Vertex2D {
             pos: Point::new(-1.0, 1.0),
             uv:  Point::new(0.0 + x, 0.0 + y),
         },
-        Vertex {
+        Vertex2D {
             pos: Point::new(-1.0, -1.0),
             uv:  Point::new(0.0 + x, 1.0 * height + y),
         },
-        Vertex {
+        Vertex2D {
             pos: Point::new(1.0, 1.0),
             uv:  Point::new(1.0 * width + x, 0.0 + y),
         },
-        Vertex {
+        Vertex2D {
             pos: Point::new(1.0, -1.0),
             uv:  Point::new(1.0 * width + x, 1.0 * height + y),
         },
     ]
 }
 
-const VERTICES: [Vertex; 4] = image_vertices_with_shrink(0.0, 0.0, 1.0, 1.0);
+const VERTICES: [Vertex2D; 4] = image_vertices_with_shrink(0.0, 0.0, 1.0, 1.0);
 
 const RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
@@ -70,7 +69,7 @@ impl Default for ImageDrawer {
             &shader,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
-            &[Vertex::VERTEX_LAYOUT],
+            &[Vertex2D::VERTEX_LAYOUT],
         );
 
         Self {

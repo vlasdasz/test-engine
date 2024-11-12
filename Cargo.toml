@@ -28,7 +28,7 @@ convert_case = "0.6"
 dirs = "5.0"
 educe = "0.6.0"
 env_logger = "0.11"
-fake = "2.9.2"
+fake = "3.0.1"
 home = "0.5"
 image = "0.25"
 log = "0.4"
@@ -39,9 +39,10 @@ rapier2d = { version = "0.22.0", features = ["simd-nightly"] }
 #rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
 aes-gcm = "0.10.3"
+cgmath = "0.18"
 indexmap = "2.2"
 lyon = "1.0"
-rodio = "0.19.0"
+rodio = "0.20.1"
 rust_decimal = "1.35"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -53,8 +54,8 @@ walkdir = "2.5"
 web-time = "1.0.0"
 
 glyph_brush = "0.7.8"
-wgpu = "22.1.0"
-wgpu_text = "0.9.0"
+wgpu = "23.0.0"
+wgpu_text = "0.9.1"
 winit = "0.30.5"
 
 jni = "0.21.1"
@@ -71,6 +72,7 @@ gm = { path = "deps/gm" }
 image-proc = { path = "deps/wgpu-wrapper/image-proc" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
+scene = { path = "deps/scene" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
 test-game = { path = "test-game" }
