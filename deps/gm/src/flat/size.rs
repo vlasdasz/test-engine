@@ -41,7 +41,7 @@ impl<T: Copy> Size<T> {
 }
 
 impl<T: IsZero> Size<T> {
-    pub fn no_area(&self) -> bool {
+    pub fn has_no_area(&self) -> bool {
         self.width.is_zero() || self.height.is_zero()
     }
 }

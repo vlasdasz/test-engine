@@ -82,6 +82,10 @@ impl BoxPipeline {
         camera_pos: Point,
         resolution: Size,
     ) {
+        if self.boxes.is_empty() {
+            return;
+        }
+
         render_pass.set_pipeline(&self.pipeline);
 
         self.view.update(SpriteRenderView {

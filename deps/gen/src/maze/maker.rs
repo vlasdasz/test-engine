@@ -15,7 +15,7 @@ pub struct Maker {
 
 impl Maker {
     fn new(size: Size<usize>) -> Self {
-        assert!(!size.no_area());
+        assert!(!size.has_no_area());
         Self {
             size,
             current_pos: Point::default(),

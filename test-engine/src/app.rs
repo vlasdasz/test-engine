@@ -228,6 +228,10 @@ impl wgpu_wrapper::App for App {
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>) {
         let window_size = UIManager::resolution();
 
+        if window_size.has_no_area() {
+            return;
+        }
+
         pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
         LevelDrawer::draw(pass);
