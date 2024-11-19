@@ -1,20 +1,24 @@
 use gm::{flat::Rect, Color};
 use wgpu::RenderPass;
 
-use crate::render::{
-    background_pipeline::BackgroundPipeline,
-    image_drawer::ImageDrawer,
-    path_drawer::PathDrawer,
-    rect_drawer::RectDrawer,
-    sprite_drawer::{BoxPipeline, PolygonPipeline, TexturedBoxPipeline},
+use crate::{
+    render::{
+        background_pipeline::BackgroundPipeline,
+        image_drawer::ImageDrawer,
+        old_rect_drawer::OldRectDrawer,
+        path_drawer::PathDrawer,
+        sprite_drawer::{BoxPipeline, PolygonPipeline, TexturedBoxPipeline},
+    },
+    RectPipeline,
 };
 
 #[derive(Default, Debug)]
 pub struct WGPUDrawer {
     /// UI:
-    pub image: ImageDrawer,
-    pub path:  PathDrawer,
-    pub rect:  RectDrawer,
+    pub image:    ImageDrawer,
+    pub path:     PathDrawer,
+    pub rect:     RectPipeline,
+    pub old_rect: OldRectDrawer,
 
     /// Sprites:
     pub background: BackgroundPipeline,
@@ -36,7 +40,7 @@ impl WGPUDrawer {
         width: f32,
     ) {
         for rect in rect.to_borders(width) {
-            self.rect.draw(render_pass, &rect, color, z_position);
+            self.old_rect.draw(render_pass, &rect, color, z_position);
         }
     }
 }
