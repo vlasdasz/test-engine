@@ -73,6 +73,8 @@ impl Default for PolygonPipeline {
 
 impl PolygonPipeline {
     pub fn add(&mut self, buffer: &VertexBuffer, pos: Point, color: Color, rot: f32) {
+        assert!(!buffer.vertices.is_empty(), "Adding polygon with 0 vertices");
+
         self.polygons.push((
             WGPUApp::device().buffer_from_bytes(cast_slice(&buffer.vertices), BufferUsages::VERTEX),
             buffer.vertices.len(),
@@ -94,6 +96,10 @@ impl PolygonPipeline {
     }
 
     pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: SpriteRenderView) {
+        if self.polygons.is_empty() {
+            return;
+        }
+
         render_pass.set_pipeline(&self.pipeline);
 
         self.view.update(view);

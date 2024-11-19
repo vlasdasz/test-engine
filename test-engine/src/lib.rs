@@ -8,7 +8,6 @@ mod app;
 mod assets;
 mod assets_paths;
 mod level_drawer;
-mod scene;
 
 pub mod ui;
 

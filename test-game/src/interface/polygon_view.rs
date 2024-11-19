@@ -95,6 +95,10 @@ impl ViewCallbacks for PolygonView {
 
         drawer.polygon_test.clear();
 
+        if self.points.is_empty() {
+            return;
+        }
+
         drawer.polygon_test.add(&self.points, (0, 0).into(), Color::GREEN, 0.0);
 
         drawer.polygon_test.draw(

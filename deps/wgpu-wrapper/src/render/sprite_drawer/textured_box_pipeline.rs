@@ -115,6 +115,10 @@ impl TexturedBoxPipeline {
         camera_pos: Point,
         resolution: Size,
     ) {
+        if self.instances.is_empty() {
+            return;
+        }
+
         render_pass.set_pipeline(&self.render_pipeline);
 
         self.view.update(SpriteRenderView {
@@ -125,6 +129,10 @@ impl TexturedBoxPipeline {
         });
 
         for (image, instances) in &mut self.instances {
+            if instances.is_empty() {
+                continue;
+            }
+
             instances.load();
 
             render_pass.set_bind_group(0, self.view.bind(), &[]);

@@ -7,6 +7,10 @@ pub struct VertexBuffer {
 }
 
 impl VertexBuffer {
+    pub fn is_empty(&self) -> bool {
+        self.vertices.is_empty()
+    }
+
     pub fn clear(&mut self) {
         self.vertices.clear();
         self.indices = None;
