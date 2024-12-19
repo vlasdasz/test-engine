@@ -1,9 +1,9 @@
 use dispatch::{from_main, on_main};
-use gm::{flat::Size, Color};
+use gm::{Color, flat::Size};
 use refs::{Own, Weak};
 use vents::OnceEvent;
 
-use crate::{view::ViewSubviews, TouchStack, UIManager, View, ViewData, ViewFrame};
+use crate::{TouchStack, UIManager, View, ViewData, ViewFrame, view::ViewSubviews};
 
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     fn make_modal(view: Self) -> Weak<Self> {

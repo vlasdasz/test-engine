@@ -4,8 +4,8 @@ use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
 use env_logger::Builder;
 use gm::{
-    flat::{Point, Size},
     LossyConvert,
+    flat::{Point, Size},
 };
 use level::{LevelBase, LevelManager};
 use log::{Level, LevelFilter};

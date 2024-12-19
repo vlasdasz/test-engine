@@ -7,8 +7,9 @@ use std::path::PathBuf;
 use proc_macro::{Span, TokenStream, TokenTree};
 use quote::quote;
 use syn::{
+    LitStr, Token, Type,
     parse::{Parse, ParseStream},
-    parse_macro_input, LitStr, Token, Type,
+    parse_macro_input,
 };
 use walkdir::WalkDir;
 

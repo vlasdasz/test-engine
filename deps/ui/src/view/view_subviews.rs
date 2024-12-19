@@ -2,10 +2,10 @@ use std::{any::type_name, ops::DerefMut};
 
 use fake::Fake;
 use gm::{
-    flat::{Point, Size},
     Color,
+    flat::{Point, Size},
 };
-use refs::{weak_from_ref, Own, Weak};
+use refs::{Own, Weak, weak_from_ref};
 
 use crate::{Container, TransitionButton, UIManager, View, ViewData, ViewFrame, WeakView};
 

@@ -1,11 +1,11 @@
 #![allow(clippy::struct_excessive_bools)]
 
 use educe::Educe;
-use gm::{flat::Rect, Color};
+use gm::{Color, flat::Rect};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{layout::Placer, NavigationView, Touch, UIAnimation, View, WeakView};
+use crate::{NavigationView, Touch, UIAnimation, View, WeakView, layout::Placer};
 
 #[derive(Educe)]
 #[educe(Default, Debug)]

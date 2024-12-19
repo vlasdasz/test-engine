@@ -3,8 +3,8 @@ use log::debug;
 use test_engine::{
     from_main,
     ui::{
-        view, Color, Container, NavigationView, Setup, TouchStack, ViewController, ViewData,
-        PRESENT_ANIMATION_DURATION, UI,
+        Color, Container, NavigationView, PRESENT_ANIMATION_DURATION, Setup, TouchStack, UI, ViewController,
+        ViewData, view,
     },
     ui_test::helpers::check_colors,
 };

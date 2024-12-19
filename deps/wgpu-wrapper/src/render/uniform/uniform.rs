@@ -8,13 +8,16 @@ use wgpu::{
     BufferBindingType, ShaderStages,
 };
 
-use crate::{utils::DeviceHelper, BufferUsages, WGPUApp};
+use crate::{BufferUsages, WGPUApp, utils::DeviceHelper};
 
-static Z_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
+static FLOAT_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
 static COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
 
-pub(crate) fn cached_z_bind(z: f32, layout: &BindGroupLayout) -> &'static BindGroup {
-    Z_BINDS.get_mut().entry(z.to_bits()).or_insert_with(|| make_bind(&z, layout))
+pub(crate) fn cached_float_bind(float: f32, layout: &BindGroupLayout) -> &'static BindGroup {
+    FLOAT_BINDS
+        .get_mut()
+        .entry(float.to_bits())
+        .or_insert_with(|| make_bind(&float, layout))
 }
 
 pub(crate) fn cached_color_bind(color: Color, layout: &BindGroupLayout) -> &'static BindGroup {

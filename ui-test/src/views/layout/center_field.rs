@@ -2,7 +2,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Anchor::CenterY, Color, Container, Setup, ViewData, ViewSubviews, UI},
+    ui::{Anchor::CenterY, Color, Container, Setup, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 

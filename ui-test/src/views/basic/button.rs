@@ -1,10 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    refs::Weak,
-    ui::{view, Button, HasText, Setup, ViewData, UI},
-    ui_test::{check_colors, state::increment_state, test_combinations},
     App,
+    refs::Weak,
+    ui::{Button, HasText, Setup, UI, ViewData, view},
+    ui_test::{check_colors, state::increment_state, test_combinations},
 };
 
 #[view]

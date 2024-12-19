@@ -1,10 +1,10 @@
-use gm::{flat::PointsPath, Color, ToF32};
+use gm::{Color, ToF32, flat::PointsPath};
 use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    view::{ViewData, ViewFrame},
     DrawingView, Setup,
+    view::{ViewData, ViewFrame},
 };
 
 mod test_engine {

@@ -3,8 +3,8 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    view::{ViewData, ViewSubviews},
     HasText, Setup, ToLabel, View,
+    view::{ViewData, ViewSubviews},
 };
 
 mod test_engine {

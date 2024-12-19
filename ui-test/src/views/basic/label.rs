@@ -1,11 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    from_main,
+    App, from_main,
     refs::Weak,
-    ui::{view, Anchor, Color, HasText, Label, NumberView, Setup, TextAlignment, ViewData, ViewSubviews, UI},
+    ui::{Anchor, Color, HasText, Label, NumberView, Setup, TextAlignment, UI, ViewData, ViewSubviews, view},
     ui_test::{helpers::check_colors, inject_touches},
-    App,
 };
 
 #[view]

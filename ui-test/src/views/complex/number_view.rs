@@ -1,11 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    from_main,
+    App, from_main,
     refs::Weak,
-    ui::{view, NumberView, Setup, ViewData, UI},
+    ui::{NumberView, Setup, UI, ViewData, view},
     ui_test::inject_touches,
-    App,
 };
 
 #[view]

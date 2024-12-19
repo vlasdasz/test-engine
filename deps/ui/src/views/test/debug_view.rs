@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt::Display};
 
 use gm::{Color, Platform};
-use refs::{dump_ref_stats, MainLock, Own, Weak};
+use refs::{MainLock, Own, Weak, dump_ref_stats};
 
 use crate::has_data::HasText;
 
@@ -16,9 +16,9 @@ use ui_proc::view;
 use utils::Every;
 
 use crate::{
-    view::{ViewData, ViewFrame, ViewInternalSetup},
     Button, HasTitle, Label, MovableView, Setup, ToLabel, TouchStack, UIManager, View, ViewCallbacks,
     ViewSubviews,
+    view::{ViewData, ViewFrame, ViewInternalSetup},
 };
 
 pub(crate) static DEBUG_VIEW: MainLock<Option<Own<dyn View>>> = MainLock::new();

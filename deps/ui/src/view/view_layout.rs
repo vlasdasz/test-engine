@@ -1,6 +1,6 @@
 use crate::{
-    view::{view_frame::ViewFrame, view_internal::ViewInternal},
     View,
+    view::{view_frame::ViewFrame, view_internal::ViewInternal},
 };
 
 pub trait ViewLayout {

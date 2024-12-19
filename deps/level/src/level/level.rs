@@ -1,8 +1,8 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::{
-    flat::{Point, Shape},
     Color,
+    flat::{Point, Shape},
 };
 use refs::{AsAny, Own, Weak};
 

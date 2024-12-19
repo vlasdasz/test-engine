@@ -3,8 +3,8 @@ use gm::ToF32;
 use refs::Weak;
 
 use crate::{
-    layout::{Anchor, Tiling},
     WeakView,
+    layout::{Anchor, Tiling},
 };
 
 #[derive(Educe)]

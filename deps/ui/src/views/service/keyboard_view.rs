@@ -7,7 +7,7 @@ mod test_engine {
 use gm::Color;
 use ui_proc::view;
 
-use crate::{has_data::HasText, Button, Container, Setup, ViewData, ViewSubviews};
+use crate::{Button, Container, Setup, ViewData, ViewSubviews, has_data::HasText};
 
 const A: &[char] = &['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 const B: &[char] = &['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];

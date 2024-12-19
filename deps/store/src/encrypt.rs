@@ -1,6 +1,6 @@
 use aes_gcm::{
-    aead::{Aead, KeyInit, Nonce},
     Aes256Gcm,
+    aead::{Aead, KeyInit, Nonce},
 };
 
 const AES_KEY_SIZE: usize = 32;
@@ -34,11 +34,11 @@ pub fn decrypt(data: &[u8], key: &EncryptionKey) -> Vec<u8> {
 #[cfg(test)]
 mod test {
 
-    use rand::{thread_rng, RngCore};
+    use rand::{RngCore, thread_rng};
 
     use crate::{
-        encrypt::{decrypt, encrypt, KEY_SIZE},
         EncryptionKey,
+        encrypt::{KEY_SIZE, decrypt, encrypt},
     };
 
     #[test]

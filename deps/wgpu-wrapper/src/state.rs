@@ -2,17 +2,17 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
 
 use anyhow::Result;
 use bytemuck::cast_slice;
-use gm::{flat::Size, CheckedConvert, Color, LossyConvert, Platform, U8Color};
+use gm::{CheckedConvert, Color, LossyConvert, Platform, U8Color, flat::Size};
 use tokio::{
     spawn,
-    sync::oneshot::{channel, Receiver, Sender},
+    sync::oneshot::{Receiver, Sender, channel},
 };
-use wgpu::{Buffer, BufferDescriptor, CommandEncoder, Extent3d, TextureFormat, COPY_BYTES_PER_ROW_ALIGNMENT};
+use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
-    app::App, frame_counter::FrameCounter, image::Texture, text::Font, Screenshot, WGPUApp,
-    SUPPORT_SCREENSHOT,
+    SUPPORT_SCREENSHOT, Screenshot, WGPUApp, app::App, frame_counter::FrameCounter, image::Texture,
+    text::Font,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;

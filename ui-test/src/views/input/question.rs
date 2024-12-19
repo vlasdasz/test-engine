@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     from_main,
-    ui::{view, Question, UI},
+    ui::{Question, UI, view},
     ui_test::{check_colors, inject_touches},
     wait_for_next_frame,
 };

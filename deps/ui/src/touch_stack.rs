@@ -3,9 +3,9 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 use nonempty::NonEmpty;
 
 use crate::{
+    UIManager, WeakView,
     touch_layer::TouchLayer,
     view::{ViewData, ViewSubviews},
-    UIManager, WeakView,
 };
 
 static STACK: OnceLock<Mutex<TouchStack>> = OnceLock::new();
@@ -54,7 +54,7 @@ impl TouchStack {
 
 impl TouchStack {
     pub fn touch_views() -> impl Iterator<Item = WeakView> {
-        Self::get().stack.last().views().rev()
+        Self::get().stack.last().views().into_iter().rev()
     }
 
     pub fn enable_for(view: WeakView) {

@@ -4,7 +4,7 @@ use educe::Educe;
 use gm::Animation;
 use vents::OnceEvent;
 
-use crate::{view::view_data::ViewData, View};
+use crate::{View, view::view_data::ViewData};
 
 type Action = Box<dyn FnMut(&mut dyn View, f32) + Send>;
 

@@ -1,8 +1,8 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::{
-    flat::{Point, Size},
     Platform,
+    flat::{Point, Size},
 };
 use refs::Weak;
 use ui_proc::view;

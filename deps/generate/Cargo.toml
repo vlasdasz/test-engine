@@ -1,12 +1,12 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2021"
-name = "gen"
+edition = "2024"
+name = "generate"
 version = "0.1.0"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name = "gen"
+name = "generate"
 
 [dependencies]
 contour = { version = "0.12", features = ["f32"] }

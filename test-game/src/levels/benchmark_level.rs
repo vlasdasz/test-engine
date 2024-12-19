@@ -1,9 +1,9 @@
 use test_engine::{
+    DataManager,
     gm::{Animation, Shape},
-    level::{level, LevelCreation, LevelSetup, Player, Sprite, SpriteTemplates, Wall},
+    level::{LevelCreation, LevelSetup, Player, Sprite, SpriteTemplates, Wall, level},
     refs::Weak,
     ui::{Alert, Color, Image, UIManager},
-    DataManager,
 };
 
 use crate::levels::make_test_terrain;

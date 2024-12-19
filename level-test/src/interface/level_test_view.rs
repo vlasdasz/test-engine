@@ -1,6 +1,6 @@
 use test_engine::{
     level::LevelManager,
-    ui::{view, Setup},
+    ui::{Setup, view},
 };
 
 use crate::levels::FrictionLevel;

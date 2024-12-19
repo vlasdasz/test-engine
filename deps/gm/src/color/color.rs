@@ -2,7 +2,7 @@ use std::hash::{Hash, Hasher};
 
 use fake::Fake;
 
-use crate::{color::helpers::srgb_to_linear, num::lossy_convert::LossyConvert, Color, U8Color};
+use crate::{Color, U8Color, color::helpers::srgb_to_linear, num::lossy_convert::LossyConvert};
 
 impl Color<f32> {
     pub const fn rgb(r: f32, g: f32, b: f32) -> Self {

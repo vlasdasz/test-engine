@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Alert, Setup, UI},
+    ui::{Alert, Setup, UI, view},
     ui_test::{check_colors, inject_touches},
 };
 

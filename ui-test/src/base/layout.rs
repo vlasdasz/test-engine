@@ -1,15 +1,16 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
+    App,
     refs::Weak,
     ui::{
+        Anchor, Button, Color, HasText, Setup, UI, ViewData, ViewSubviews,
         ui_test::{
             inject_touches,
             state::{append_state, clear_state, get_state},
         },
-        view, Anchor, Button, Color, HasText, Setup, ViewData, ViewSubviews, UI,
+        view,
     },
-    App,
 };
 
 #[view]

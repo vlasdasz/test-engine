@@ -1,10 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    refs::Weak,
-    ui::{view, Anchor, ImageView, Setup, ViewData, ViewTouch, UI},
-    ui_test::helpers::check_colors,
     App,
+    refs::Weak,
+    ui::{Anchor, ImageView, Setup, UI, ViewData, ViewTouch, view},
+    ui_test::helpers::check_colors,
 };
 
 #[view]

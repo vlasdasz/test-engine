@@ -5,11 +5,11 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
-use gm::{flat::Point, Color};
+use gm::{Color, flat::Point};
 use refs::Weak;
 use ui_proc::view;
 
-use crate::{has_data::HasText, Container, Label, Setup, UIEvent, ViewData, ViewFrame, ViewTouch};
+use crate::{Container, Label, Setup, UIEvent, ViewData, ViewFrame, ViewTouch, has_data::HasText};
 
 #[view]
 pub struct PositionView {

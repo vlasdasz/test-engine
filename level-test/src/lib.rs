@@ -33,7 +33,7 @@ pub fn start_test_game(app: test_engine::AndroidApp) {
 pub use test_engine::AndroidApp;
 
 #[cfg(target_os = "ios")]
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn test_game() -> std::ffi::c_int {
     start_test_game();
     0

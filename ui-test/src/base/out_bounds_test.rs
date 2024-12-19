@@ -3,8 +3,9 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{
+        Anchor, HasText, ImageView, Label, NumberView, Setup, UI, ViewData, ViewFrame, ViewSubviews,
         ui_test::{helpers::check_colors, inject_touches},
-        view, Anchor, HasText, ImageView, Label, NumberView, Setup, ViewData, ViewFrame, ViewSubviews, UI,
+        view,
     },
 };
 

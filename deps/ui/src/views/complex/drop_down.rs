@@ -1,14 +1,14 @@
 use std::{any::Any, ops::Deref};
 
-use gm::{flat::Size, Color, LossyConvert, Toggle};
-use refs::{weak_from_ref, Own, Weak};
+use gm::{Color, LossyConvert, Toggle, flat::Size};
+use refs::{Own, Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
+    Button, CollectionData, CollectionView, HasTitle, InputView, Label, Setup, ToLabel, View,
     has_data::HasText,
     view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
-    Button, CollectionData, CollectionView, HasTitle, InputView, Label, Setup, ToLabel, View,
 };
 
 mod test_engine {

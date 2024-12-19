@@ -1,15 +1,15 @@
 use gm::{Color, ToF32};
-use refs::{weak_from_ref, Weak};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 use wgpu_wrapper::NamedKey;
 
 use crate::{
+    HasTitle, InputView, Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
+    ViewCallbacks,
     has_data::HasText,
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
-    HasTitle, InputView, Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
-    ViewCallbacks,
 };
 
 mod test_engine {
@@ -133,11 +133,7 @@ impl InputView for TextField {
     }
 
     fn text(&self) -> &str {
-        if self.placeholding {
-            ""
-        } else {
-            self.label.text()
-        }
+        if self.placeholding { "" } else { self.label.text() }
     }
 
     fn enable_editing(&mut self) {

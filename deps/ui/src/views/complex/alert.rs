@@ -1,9 +1,9 @@
-use gm::{flat::Size, Color};
+use gm::{Color, flat::Size};
 use refs::Weak;
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate::{has_data::HasText, view::ViewData, Button, Label, ModalView, Setup};
+use crate::{Button, Label, ModalView, Setup, has_data::HasText, view::ViewData};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;

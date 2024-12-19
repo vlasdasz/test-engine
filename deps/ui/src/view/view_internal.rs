@@ -1,8 +1,8 @@
 use gm::flat::Rect;
 
 use crate::{
-    view::{view_subviews::ViewSubviews, ViewFrame},
     View,
+    view::{ViewFrame, view_subviews::ViewSubviews},
 };
 
 pub(crate) trait ViewInternal {

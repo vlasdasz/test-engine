@@ -1,18 +1,17 @@
 use test_engine::{
-    async_after,
+    App, DataManager, async_after,
     audio::Sound,
     gm::{Apply, Direction, LossyConvert},
     level::{Control, LevelManager},
     refs::Weak,
     store::OnDisk,
     ui::{
-        view, Alert, Anchor,
+        Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
         MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
-        Switch, TextField, TransitionButton, UIManager, ViewData, ViewFrame,
+        Switch, TextField, TransitionButton, UIManager, ViewData, ViewFrame, view,
     },
-    App, DataManager,
 };
 use ui_benchmark::BenchmarkView;
 

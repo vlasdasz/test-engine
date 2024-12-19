@@ -1,15 +1,15 @@
 #[cfg(target_os = "android")]
-#[no_mangle]
+#[unsafe(no_mangle)]
 fn android_main(app: test_game::AndroidApp) {
     test_game::start_test_game(app);
 }
 
 use jni::{
-    objects::{JClass, JString},
     JNIEnv,
+    objects::{JClass, JString},
 };
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir(
     mut env: JNIEnv,
     _: JClass,
@@ -20,7 +20,7 @@ pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir(
     Paths::set_storage_path(input);
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setAssetManager(
     _env: JNIEnv,
     _: JClass,

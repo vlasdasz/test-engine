@@ -1,14 +1,14 @@
 use std::ops::Range;
 
 use gm::{
-    flat::{Point, Size},
     Color,
+    flat::{Point, Size},
 };
 use wgpu::{
     BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, Buffer, BufferBinding, BufferUsages,
 };
 
-use crate::{utils::DeviceHelper, WGPUApp};
+use crate::{WGPUApp, utils::DeviceHelper};
 
 #[derive(Debug)]
 pub struct PathData {

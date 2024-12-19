@@ -1,15 +1,15 @@
 use fake::{Fake, Faker};
 use test_engine::{
+    DataManager,
     audio::Sound,
-    gen::noise::{generate_terrain, TerrainParams},
+    generate::noise::{TerrainParams, generate_terrain},
     gm::{LossyConvert, Shape},
     level::{
-        level, Banner, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates,
-        Wall,
+        Banner, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
+        level,
     },
     refs::Weak,
     ui::{Color, Image, Point, Size},
-    DataManager,
 };
 
 #[level]

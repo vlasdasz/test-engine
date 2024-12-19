@@ -1,11 +1,11 @@
 use contour::ContourBuilder;
 use gm::{
-    flat::{Point, Size},
     LossyConvert,
+    flat::{Point, Size},
 };
 use noise::{
-    utils::{NoiseMapBuilder, PlaneMapBuilder},
     OpenSimplex,
+    utils::{NoiseMapBuilder, PlaneMapBuilder},
 };
 
 #[derive(Debug)]

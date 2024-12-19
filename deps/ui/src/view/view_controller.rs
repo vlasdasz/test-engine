@@ -13,7 +13,7 @@ pub trait ViewController {
 use dispatch::on_main;
 use gm::Color;
 use refs::Weak;
-use tokio::sync::oneshot::{channel, Receiver};
+use tokio::sync::oneshot::{Receiver, channel};
 
 pub const PRESENT_ANIMATION_DURATION: f32 = 0.4;
 

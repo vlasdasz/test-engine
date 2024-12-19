@@ -4,7 +4,7 @@ use std::{
     marker::PhantomData,
 };
 
-use crate::{storable::Storable, Paths};
+use crate::{Paths, storable::Storable};
 
 fn set_value<T: serde::ser::Serialize>(value: T, key: &str) {
     let json = serde_json::to_string_pretty(&value).expect("Failed to serialize data");

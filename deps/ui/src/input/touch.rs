@@ -1,9 +1,9 @@
 use std::{fmt::Display, str::FromStr};
 
-use gm::{flat::Point, LossyConvert};
+use gm::{LossyConvert, flat::Point};
 use wgpu_wrapper::MouseButton;
 
-use crate::{input::TouchEvent, TouchLock};
+use crate::{TouchLock, input::TouchEvent};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Touch {
@@ -85,7 +85,7 @@ impl FromStr for Touch {
 mod test {
     use wgpu_wrapper::MouseButton;
 
-    use crate::{input::TouchEvent, Touch};
+    use crate::{Touch, input::TouchEvent};
 
     #[test]
     fn touch_to_string() {

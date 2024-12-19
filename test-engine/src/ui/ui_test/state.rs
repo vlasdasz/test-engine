@@ -3,7 +3,7 @@ use std::{
     sync::{Mutex, MutexGuard, OnceLock},
 };
 
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 use serde_json::{from_str, to_string};
 
 static STATE: OnceLock<State> = OnceLock::new();

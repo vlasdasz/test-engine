@@ -6,10 +6,9 @@ use std::{
 
 use fake::Fake;
 use test_engine::{
-    from_main, on_main,
+    App, from_main, on_main,
     refs::Weak,
-    ui::{view, Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews},
-    App,
+    ui::{Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
 };
 use tokio::spawn;
 

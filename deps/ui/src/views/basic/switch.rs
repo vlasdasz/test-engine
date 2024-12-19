@@ -1,11 +1,11 @@
 use gm::Color;
-use refs::{weak_from_ref, Weak};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    view::{ViewData, ViewTouch},
     Anchor, Container, HasTitle, InputView, Setup,
+    view::{ViewData, ViewTouch},
 };
 mod test_engine {
     pub(crate) use educe;
@@ -87,11 +87,7 @@ impl InputView for Switch {
     }
 
     fn text(&self) -> &str {
-        if self.on {
-            "1"
-        } else {
-            "0"
-        }
+        if self.on { "1" } else { "0" }
     }
 
     fn enable_editing(&mut self) {

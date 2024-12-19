@@ -1,5 +1,5 @@
 use rapier2d::{
-    crossbeam::channel::{unbounded, Receiver},
+    crossbeam::channel::{Receiver, unbounded},
     geometry::{CollisionEvent, ContactForceEvent},
     prelude::ChannelEventCollector,
 };

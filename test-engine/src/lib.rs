@@ -8,7 +8,6 @@ mod app;
 mod assets;
 mod assets_paths;
 mod level_drawer;
-mod scene;
 
 pub mod ui;
 
@@ -17,15 +16,16 @@ pub use ui::ui_test;
 
 pub mod level {
     pub use ::level::{
-        level, Banner, Body, CoefficientCombineRule, Control, Level, LevelBase, LevelCreation, LevelInternal,
+        Banner, Body, CoefficientCombineRule, Control, Level, LevelBase, LevelCreation, LevelInternal,
         LevelManager, LevelSetup, LevelTemplates, Player, Sensor, Sprite, SpriteData, SpriteTemplates, Wall,
+        level,
     };
 }
 
 pub mod refs {
     pub use refs::{
-        current_thread_id, dump_ref_stats, enable_ref_stats_counter, set_current_thread_as_main, vec::OwnVec,
-        weak_from_ref, AsAny, MainLock, Own, Weak,
+        AsAny, MainLock, Own, Weak, current_thread_id, dump_ref_stats, enable_ref_stats_counter,
+        set_current_thread_as_main, vec::OwnVec, weak_from_ref,
     };
 }
 
@@ -35,10 +35,10 @@ pub mod reflected {
 
 pub mod gm {
     pub use gm::{
+        Animation, Apply, LossyConvert, Platform, ToF32,
         flat::{Direction, Shape},
         sign::Sign,
         volume::GyroData,
-        Animation, Apply, LossyConvert, Platform, ToF32,
     };
 }
 
@@ -54,11 +54,11 @@ pub mod time {
 pub use app::App;
 pub use audio;
 pub use dispatch::{after, async_after, from_main, on_main, wait_for_next_frame};
-pub use gen;
+pub use generate;
 pub use manage::data_manager::DataManager;
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use wgpu_wrapper::{
-    cast_slice, image::ToImage, RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, WGPUDrawer,
+    RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, WGPUDrawer, cast_slice, image::ToImage,
 };
 
 #[cfg(target_os = "android")]

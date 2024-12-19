@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use dispatch::{from_main, wait_for_next_frame};
 use gm::{
-    flat::{Rect, Size},
     Color,
+    flat::{Rect, Size},
 };
 use log::{trace, warn};
 use manage::data_manager::DataManager;
-use refs::{weak_from_ref, Own, Weak};
+use refs::{Own, Weak, weak_from_ref};
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
     ViewFrame, ViewLayout, ViewSubviews, ViewTest,
@@ -16,7 +16,7 @@ use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
 
-use crate::{ui::ui_test::state::clear_state, App};
+use crate::{App, ui::ui_test::state::clear_state};
 
 pub struct UI;
 
@@ -30,19 +30,27 @@ impl UI {
 
     pub(crate) fn draw(pass: &mut RenderPass) {
         let mut sections: Vec<Section> = vec![];
-        let drawer = WGPUApp::drawer();
         let debug_frames = UIManager::draw_debug_frames();
         Self::draw_view(
             pass,
-            drawer,
+            WGPUApp::drawer(),
             UIManager::root_view(),
             &mut sections,
             &mut 0.0,
             debug_frames,
         );
         if let Some(debug_view) = UIManager::debug_view() {
-            Self::draw_view(pass, drawer, debug_view, &mut sections, &mut 0.0, debug_frames);
+            Self::draw_view(
+                pass,
+                WGPUApp::drawer(),
+                debug_view,
+                &mut sections,
+                &mut 0.0,
+                debug_frames,
+            );
         }
+
+        WGPUApp::drawer().rect.draw(pass, UIManager::resolution());
 
         Font::helvetice()
             .brush
@@ -66,7 +74,7 @@ impl UI {
 
     fn draw_view<'a>(
         pass: &mut RenderPass<'a>,
-        drawer: &'a WGPUDrawer,
+        drawer: &'a mut WGPUDrawer,
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
         text_offset: &mut f32,
@@ -94,12 +102,16 @@ impl UI {
         let clamped_frame = frame.clamp_to(root_size);
 
         if view.color().a > 0.0 {
-            drawer.rect.draw(
+            drawer.old_rect.draw(
                 pass,
                 &clamped_frame,
                 view.color(),
                 view.z_position() + *text_offset,
             );
+
+            if false {
+                drawer.rect.add(clamped_frame, *view.color(), view.z_position() + *text_offset);
+            }
         }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
@@ -159,7 +171,7 @@ impl UI {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
                 Self::draw_view(
                     pass,
-                    drawer,
+                    WGPUApp::drawer(),
                     view.deref(),
                     sections,
                     &mut text_offset,

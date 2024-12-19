@@ -1,6 +1,6 @@
 use refs::{AsAny, Weak};
 
-use crate::{view::view_callbacks::ViewInternalSetup, ViewBase, ViewCallbacks};
+use crate::{ViewBase, ViewCallbacks, view::view_callbacks::ViewInternalSetup};
 
 pub trait View: ViewCallbacks + ViewInternalSetup + AsAny {
     fn init_views(&mut self);

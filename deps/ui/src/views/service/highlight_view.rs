@@ -1,4 +1,4 @@
-use gm::{flat::Point, Apply, Color};
+use gm::{Apply, Color, flat::Point};
 use refs::Weak;
 use ui_proc::view;
 

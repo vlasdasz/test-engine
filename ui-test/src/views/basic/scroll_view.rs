@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, Color, ScrollView, Setup, ViewData, UI},
+    ui::{Color, ScrollView, Setup, UI, ViewData, view},
     ui_test::{
         helpers::{add_corners, check_colors},
         inject_scroll, inject_touches,

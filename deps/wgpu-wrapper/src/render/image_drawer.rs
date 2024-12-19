@@ -9,13 +9,13 @@ use wgpu::{
 };
 
 use crate::{
+    WGPUApp,
     image::Image,
     render::{
-        uniform::{cached_z_bind, make_uniform_layout},
+        uniform::{cached_float_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
-    WGPUApp,
 };
 
 pub const fn image_vertices_with_shrink(x: f32, y: f32, width: f32, height: f32) -> [Vertex2D; 4] {
@@ -92,7 +92,7 @@ impl ImageDrawer {
         render_pass.set_viewport(rect.x(), rect.y(), rect.width(), rect.height(), 0., 1.);
         render_pass.set_pipeline(&self.render_pipeline);
 
-        render_pass.set_bind_group(0, cached_z_bind(z_position, &self.vertex_layout), &[]);
+        render_pass.set_bind_group(0, cached_float_bind(z_position, &self.vertex_layout), &[]);
         render_pass.set_bind_group(1, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, cropped_vertices.unwrap_or(&self.vertex_buffer).slice(..));
         render_pass.draw(RANGE, 0..1);

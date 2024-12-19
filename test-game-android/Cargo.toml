@@ -1,6 +1,6 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2021"
+edition = "2024"
 name = "test-game-android"
 version = "0.1.0"
 

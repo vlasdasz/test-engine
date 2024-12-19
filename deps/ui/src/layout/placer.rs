@@ -4,13 +4,13 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{axis::Axis, flat::Size, LossyConvert, ToF32};
+use gm::{LossyConvert, ToF32, axis::Axis, flat::Size};
 use refs::{Rglica, ToRglica, Weak};
 
 use crate::{
-    layout::{layout_rule::LayoutRule, Anchor, Tiling},
-    view::ViewFrame,
     View, ViewSubviews, WeakView,
+    layout::{Anchor, Tiling, layout_rule::LayoutRule},
+    view::ViewFrame,
 };
 
 pub struct Placer {

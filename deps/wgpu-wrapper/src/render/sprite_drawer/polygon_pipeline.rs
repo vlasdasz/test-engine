@@ -1,19 +1,19 @@
-use bytemuck::{cast_slice, Pod, Zeroable};
-use gm::{checked_usize_to_u32, flat::Point, Color};
+use bytemuck::{Pod, Zeroable, cast_slice};
+use gm::{Color, checked_usize_to_u32, flat::Point};
 use wgpu::{
-    include_wgsl, BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor,
-    PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor, PolygonMode,
+    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages, include_wgsl,
 };
 
 use crate::{
+    WGPUApp,
     render::{
         sprite_drawer::shader_data::SpriteRenderView,
-        uniform::{make_bind, make_uniform_layout, UniformBind},
+        uniform::{UniformBind, make_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
     vertex_buffer::VertexBuffer,
-    WGPUApp,
 };
 
 #[repr(C)]
@@ -73,6 +73,8 @@ impl Default for PolygonPipeline {
 
 impl PolygonPipeline {
     pub fn add(&mut self, buffer: &VertexBuffer, pos: Point, color: Color, rot: f32) {
+        assert!(!buffer.vertices.is_empty(), "Adding polygon with 0 vertices");
+
         self.polygons.push((
             WGPUApp::device().buffer_from_bytes(cast_slice(&buffer.vertices), BufferUsages::VERTEX),
             buffer.vertices.len(),
@@ -94,6 +96,10 @@ impl PolygonPipeline {
     }
 
     pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: SpriteRenderView) {
+        if self.polygons.is_empty() {
+            return;
+        }
+
         render_pass.set_pipeline(&self.pipeline);
 
         self.view.update(view);

@@ -1,14 +1,14 @@
 use gm::{
-    flat::{Direction, Size},
     Apply,
+    flat::{Direction, Size},
 };
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    view::{ViewData, ViewFrame},
     Setup, ViewCallbacks, ViewTest,
+    view::{ViewData, ViewFrame},
 };
 mod test_engine {
     pub(crate) use educe;

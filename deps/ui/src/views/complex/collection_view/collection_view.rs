@@ -1,10 +1,10 @@
-use gm::{flat::Size, LossyConvert};
-use refs::{weak_from_ref, Weak};
+use gm::{LossyConvert, flat::Size};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 
 use crate::{
-    view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
     Setup, View, WeakView,
+    view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
 };
 
 mod test_engine {

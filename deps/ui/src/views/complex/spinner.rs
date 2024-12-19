@@ -8,8 +8,8 @@ use ui_proc::view;
 use vents::OnceEvent;
 
 use crate::{
+    Container, MICROSECONDS_IN_ONE_SECOND, ModalView, Setup, TouchStack, UIAnimation, ViewCallbacks,
     view::{View, ViewAnimation, ViewData, ViewFrame, ViewSubviews},
-    Container, ModalView, Setup, TouchStack, UIAnimation, ViewCallbacks, MICROSECONDS_IN_ONE_SECOND,
 };
 
 mod test_engine {
@@ -22,8 +22,8 @@ mod test_engine {
 use chrono::Utc;
 use dispatch::{on_main, on_main_sync};
 use gm::{
-    flat::{point_on_circle, Size},
     Color,
+    flat::{Size, point_on_circle},
 };
 use log::{trace, warn};
 use refs::Weak;

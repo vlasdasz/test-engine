@@ -3,7 +3,7 @@ use std::any::Any;
 use gm::flat::Size;
 use refs::Own;
 
-use crate::{view::Setup, Label, View};
+use crate::{Label, View, view::Setup};
 
 pub trait CollectionData {
     fn number_of_cells(&self) -> usize;

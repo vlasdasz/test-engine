@@ -3,9 +3,8 @@ use std::{mem::size_of, ops::Range};
 use bytemuck::{Pod, Zeroable};
 use educe::Educe;
 use gm::{
-    checked_usize_to_u32,
+    Color, checked_usize_to_u32,
     flat::{Point, Size},
-    Color,
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};
 

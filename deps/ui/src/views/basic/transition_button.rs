@@ -5,9 +5,9 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
+    Button, Setup, ToLabel, UIManager, View, ViewSubviews,
     has_data::HasText,
     view::{ViewData, ViewTransition},
-    Button, Setup, ToLabel, UIManager, View, ViewSubviews,
 };
 
 mod test_engine {

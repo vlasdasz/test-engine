@@ -10,7 +10,7 @@ use log::warn;
 use refs::is_main_thread;
 use tokio::{
     spawn,
-    sync::oneshot::{channel, Sender},
+    sync::oneshot::{Sender, channel},
 };
 
 type Callback = Box<dyn FnOnce() + Send>;

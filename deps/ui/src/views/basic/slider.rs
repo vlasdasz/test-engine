@@ -1,11 +1,11 @@
-use gm::{converter::Converter, Color, ToF32};
+use gm::{Color, ToF32, converter::Converter};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    view::{ViewFrame, ViewTouch},
     CircleView, Setup, Touch, ViewCallbacks,
+    view::{ViewFrame, ViewTouch},
 };
 
 mod test_engine {

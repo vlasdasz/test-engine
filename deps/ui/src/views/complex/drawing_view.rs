@@ -1,15 +1,15 @@
 use gm::{
+    Color,
     axis::Axis,
     flat::{Point, Size},
-    Color,
 };
 use refs::Weak;
 use ui_proc::view;
 use wgpu_wrapper::PathData;
 
 use crate::{
-    view::{ViewData, ViewFrame},
     Setup,
+    view::{ViewData, ViewFrame},
 };
 
 mod test_engine {

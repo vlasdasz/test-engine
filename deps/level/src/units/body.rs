@@ -4,7 +4,7 @@ use gm::flat::{Point, Shape};
 use rapier2d::{dynamics::RigidBodyHandle, geometry::ColliderHandle, na::Vector2, prelude::RigidBodyBuilder};
 use refs::Own;
 
-use crate::{control::Control, LevelManager, Sprite, SpriteData, ToCollider};
+use crate::{LevelManager, Sprite, SpriteData, ToCollider, control::Control};
 
 pub struct Body {
     rigid_handle:    RigidBodyHandle,

@@ -11,10 +11,10 @@ use wgpu::{
 };
 
 use crate::{
+    WGPUApp,
     image::Image,
     render::{uniform::make_uniform_layout, vertex_layout::VertexLayout},
     utils::{BufferHelper, DeviceHelper},
-    WGPUApp,
 };
 
 const VAL: f32 = 100_000.0;

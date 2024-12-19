@@ -5,13 +5,13 @@ use std::{
 
 use convert_case::{Case, Casing};
 use reflected::{Field, Reflected};
-use refs::{weak_from_ref, Own, Weak};
+use refs::{Own, Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    view::{ViewData, ViewSubviews},
     DropDown, InputView, Labeled, NumberView, Setup, Switch, TextAlignment, TextField, TextFieldConstraint,
+    view::{ViewData, ViewSubviews},
 };
 mod test_engine {
     pub(crate) use educe;

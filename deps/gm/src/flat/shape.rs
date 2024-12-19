@@ -1,6 +1,6 @@
 use crate::{
-    flat::{Point, ProcessPoints, Size},
     ToF32,
+    flat::{Point, ProcessPoints, Size},
 };
 
 #[derive(Clone, Debug)]

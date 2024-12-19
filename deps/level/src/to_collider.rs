@@ -2,7 +2,7 @@ use std::panic::catch_unwind;
 
 use gm::{checked_usize_to_u32, flat::Shape};
 use rapier2d::{math::Real, parry::transformation::vhacd::VHACDParameters, prelude::ColliderBuilder};
-use utils::{elapsed, Elapsed};
+use utils::{Elapsed, elapsed};
 
 pub trait ToCollider {
     fn make_collider(&self) -> ColliderBuilder;
@@ -49,14 +49,10 @@ fn _concave_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
     let (points, indices) = make_indices(points);
 
     let result = catch_unwind(|| {
-        ColliderBuilder::convex_decomposition_with_params(
-            &points,
-            &indices,
-            &VHACDParameters {
-                concavity: 0.0,
-                ..Default::default()
-            },
-        )
+        ColliderBuilder::convex_decomposition_with_params(&points, &indices, &VHACDParameters {
+            concavity: 0.0,
+            ..Default::default()
+        })
     });
 
     if result.is_err() {
