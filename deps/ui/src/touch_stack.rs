@@ -53,8 +53,8 @@ impl TouchStack {
 }
 
 impl TouchStack {
-    pub fn touch_views() -> impl Iterator<Item = WeakView> + 'static {
-        Self::get().stack.last().views().rev().collect::<Vec<_>>().into_iter()
+    pub fn touch_views() -> impl Iterator<Item = WeakView> {
+        Self::get().stack.last().views().into_iter().rev()
     }
 
     pub fn enable_for(view: WeakView) {
