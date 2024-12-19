@@ -12,15 +12,11 @@ pub enum TouchEvent {
 
 impl Display for TouchEvent {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                TouchEvent::Began => "b",
-                TouchEvent::Moved => "m",
-                TouchEvent::Ended => "e",
-            }
-        )
+        write!(f, "{}", match self {
+            TouchEvent::Began => "b",
+            TouchEvent::Moved => "m",
+            TouchEvent::Ended => "e",
+        })
     }
 }
 

@@ -1,15 +1,15 @@
 use test_engine::{
-    gen::noise::{generate_terrain, TerrainData, TerrainParams},
+    Event,
+    generate::noise::{TerrainData, TerrainParams, generate_terrain},
     gm::LossyConvert,
     level::LevelManager,
     refs::{Own, Weak},
     ui::{
-        view, AddLabel, Anchor,
+        AddLabel, Anchor,
         Anchor::{Top, X},
         Button, Color, DebugView, DrawingView, HasText, Image, ImageView, Label, NumberView, Point,
-        PointsPath, Setup, Size, ViewData, ViewTouch,
+        PointsPath, Setup, Size, ViewData, ViewTouch, view,
     },
-    Event,
 };
 
 use crate::{interface::polygon_view::PolygonView, levels::NoiseLevel};

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use wgpu_text::{glyph_brush::ab_glyph::FontRef, BrushBuilder, TextBrush};
+use wgpu_text::{BrushBuilder, TextBrush, glyph_brush::ab_glyph::FontRef};
 
 use crate::{utils::depth_stencil_state, wgpu_app::WGPUApp};
 

@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     axis::Axis,
     flat::{Point, Rect},
-    num::{into_f32::ToF32, lossy_convert::LossyConvert, IsZero},
+    num::{IsZero, into_f32::ToF32, lossy_convert::LossyConvert},
 };
 
 #[derive(Copy, Clone, Default, Debug, PartialEq, Eq, Serialize, Deserialize)]

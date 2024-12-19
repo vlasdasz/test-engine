@@ -20,7 +20,7 @@ impl TouchLayer {
         self.touches.retain(|a| a.addr() != view.addr());
     }
 
-    pub(crate) fn views(&self) -> impl DoubleEndedIterator<Item = WeakView> {
+    pub(crate) fn views(&self) -> impl DoubleEndedIterator<Item = WeakView> + '_ {
         self.touches.clone().into_iter()
     }
 

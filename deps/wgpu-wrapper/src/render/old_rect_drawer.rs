@@ -1,22 +1,21 @@
 use std::ops::Range;
 
 use gm::{
-    checked_usize_to_u32,
+    Color, checked_usize_to_u32,
     flat::{Point, Rect},
-    Color,
 };
 use wgpu::{
-    include_wgsl, BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode,
-    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    BindGroupLayout, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology,
+    RenderPass, RenderPipeline, ShaderStages, include_wgsl,
 };
 
 use crate::{
+    WGPUApp,
     render::{
         uniform::{cached_color_bind, cached_float_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
-    WGPUApp,
 };
 
 const VERTICES: &[Point] = &[

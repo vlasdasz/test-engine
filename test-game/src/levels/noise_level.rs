@@ -1,6 +1,6 @@
 use test_engine::{
     gm::Shape,
-    level::{level, Body, LevelCreation, LevelSetup, Wall},
+    level::{Body, LevelCreation, LevelSetup, Wall, level},
     refs::Weak,
     ui::Point,
 };

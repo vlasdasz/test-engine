@@ -2,7 +2,7 @@ use gm::Platform;
 use log::trace;
 use refs::Weak;
 
-use crate::{layout::Anchor, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{UIManager, View, ViewData, ViewFrame, WeakView, layout::Anchor};
 
 pub trait WithHeader: View {
     fn header(&self) -> WeakView;

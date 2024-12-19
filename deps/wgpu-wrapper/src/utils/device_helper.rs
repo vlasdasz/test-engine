@@ -1,15 +1,15 @@
 use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BlendState, Buffer, ColorTargetState,
     ColorWrites, Device, FragmentState, FrontFace, MultisampleState, PipelineCompilationOptions,
     PipelineLayout, PrimitiveState, PrimitiveTopology, RenderPipeline, RenderPipelineDescriptor,
     ShaderModule, VertexBufferLayout, VertexState,
+    util::{BufferInitDescriptor, DeviceExt},
 };
 
 use crate::{
-    state::RGBA_TEXTURE_FORMAT,
-    utils::{depth_stencil_state, ToBytes},
     BufferUsages, PolygonMode,
+    state::RGBA_TEXTURE_FORMAT,
+    utils::{ToBytes, depth_stencil_state},
 };
 
 pub trait DeviceHelper {

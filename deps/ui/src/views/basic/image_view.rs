@@ -2,8 +2,9 @@ use gm::flat::Rect;
 use refs::Weak;
 use ui_proc::view;
 use wgpu_wrapper::{
+    Buffer, BufferUsages, DeviceHelper, WGPUApp,
     image::{Image, ToImage},
-    image_vertices_with_shrink, Buffer, BufferUsages, DeviceHelper, WGPUApp,
+    image_vertices_with_shrink,
 };
 
 use crate::view::ViewFrame;

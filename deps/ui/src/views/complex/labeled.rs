@@ -1,12 +1,12 @@
 use std::any::type_name;
 
 use gm::{Color, ToF32};
-use refs::{weak_from_ref, Weak};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 
 use crate::{
-    has_data::HasText, view::ViewData, Anchor, Container, HasTitle, InputView, Setup, TextAlignment,
-    ViewSubviews,
+    Anchor, Container, HasTitle, InputView, Setup, TextAlignment, ViewSubviews, has_data::HasText,
+    view::ViewData,
 };
 mod test_engine {
     pub(crate) use educe;

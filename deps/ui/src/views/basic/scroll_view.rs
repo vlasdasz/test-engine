@@ -1,11 +1,11 @@
-use gm::{flat::Size, ToF32};
+use gm::{ToF32, flat::Size};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    view::{ViewData, ViewFrame, ViewSubviews},
     Setup, Slider, UIManager, ViewCallbacks,
+    view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
     pub(crate) use educe;

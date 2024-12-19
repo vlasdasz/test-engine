@@ -1,5 +1,5 @@
 use level::LevelManager;
-use manage::{data_manager::DataManager, ExistsManaged};
+use manage::{ExistsManaged, data_manager::DataManager};
 use ui::UIManager;
 use wgpu::RenderPass;
 use wgpu_wrapper::{SpriteRenderView, WGPUApp};
@@ -66,14 +66,11 @@ impl LevelDrawer {
         drawer.sprite_box.draw(pass, scale, 0.0, camera_pos, resolution);
         drawer.textured_box.draw(pass, scale, 0.0, camera_pos, resolution);
 
-        drawer.polygon.draw(
-            pass,
-            SpriteRenderView {
-                camera_pos,
-                resolution,
-                camera_rotation: 0.0,
-                scale,
-            },
-        );
+        drawer.polygon.draw(pass, SpriteRenderView {
+            camera_pos,
+            resolution,
+            camera_rotation: 0.0,
+            scale,
+        });
     }
 }

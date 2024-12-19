@@ -1,12 +1,13 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
+    OnceEvent,
     refs::Weak,
     ui::{
-        ui_test::helpers::check_colors, view, Color, Container, HasText, Label, ModalView, Setup, Size,
-        ViewData, ViewFrame, ViewSubviews, WeakView, UI,
+        Color, Container, HasText, Label, ModalView, Setup, Size, UI, ViewData, ViewFrame, ViewSubviews,
+        WeakView, ui_test::helpers::check_colors, view,
     },
-    wait_for_next_frame, OnceEvent,
+    wait_for_next_frame,
 };
 
 #[view]

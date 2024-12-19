@@ -2,20 +2,20 @@ use std::{
     ops::{Deref, DerefMut},
     path::PathBuf,
     sync::{
-        atomic::{AtomicBool, Ordering},
         Mutex, OnceLock,
+        atomic::{AtomicBool, Ordering},
     },
 };
 
 use gm::{
-    flat::{Point, Rect, Size},
     LossyConvert,
+    flat::{Point, Rect, Size},
 };
 use refs::{Own, Weak};
 use wgpu_wrapper::WGPUApp;
 
 use crate::{
-    Container, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView, DEBUG_VIEW,
+    Container, DEBUG_VIEW, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView,
 };
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();

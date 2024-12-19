@@ -1,5 +1,5 @@
 use anyhow::Result;
-use gm::{flat::Size, Platform};
+use gm::{Platform, flat::Size};
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
     AddressMode, Device, Extent3d, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler,

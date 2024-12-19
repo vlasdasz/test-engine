@@ -5,9 +5,9 @@ use vents::Event;
 use wgpu_wrapper::image::ToImage;
 
 use crate::{
+    ImageView, Label, Setup, ToLabel,
     has_data::HasText,
     view::{ViewData, ViewTouch},
-    ImageView, Label, Setup, ToLabel,
 };
 
 mod test_engine {

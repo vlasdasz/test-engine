@@ -2,7 +2,7 @@ use gm::{Color, ToF32};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{layout::Placer, NavigationView, UIAnimation, View};
+use crate::{NavigationView, UIAnimation, View, layout::Placer};
 
 pub trait ViewData {
     fn tag(&self) -> usize;

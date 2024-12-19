@@ -1,6 +1,6 @@
 use crate::{
-    view::{view_data::ViewData, view_touch_internal::ViewTouchInternal, ViewFrame},
     Touch, TouchStack, UIManager, View, ViewTouchCallbacks, WeakView,
+    view::{ViewFrame, view_data::ViewData, view_touch_internal::ViewTouchInternal},
 };
 
 pub trait ViewTouch {

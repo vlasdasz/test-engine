@@ -9,13 +9,13 @@ use wgpu::{
 };
 
 use crate::{
+    WGPUApp,
     image::Image,
     render::{
         uniform::{cached_float_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
-    WGPUApp,
 };
 
 pub const fn image_vertices_with_shrink(x: f32, y: f32, width: f32, height: f32) -> [Vertex2D; 4] {

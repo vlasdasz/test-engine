@@ -1,6 +1,6 @@
 use gm::{
-    flat::{Point, Size},
     Color, LossyConvert, U8Color,
+    flat::{Point, Size},
 };
 
 #[derive(Debug, Default)]

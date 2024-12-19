@@ -1,11 +1,11 @@
 use educe::Educe;
 use gm::{
-    flat::{Point, PointsPath, Shape, Size},
     Color,
+    flat::{Point, PointsPath, Shape, Size},
 };
 use refs::Weak;
 use vents::Event;
-use wgpu_wrapper::{image::Image, VertexBuffer};
+use wgpu_wrapper::{VertexBuffer, image::Image};
 
 use crate::Sprite;
 

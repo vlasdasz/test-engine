@@ -1,5 +1,5 @@
 [package]
-edition = "2021"
+edition = "2024"
 name = "test-engine"
 version = "0.1.0"
 
@@ -34,7 +34,7 @@ refs = { workspace = true }
 vents = { workspace = true }
 
 audio = { workspace = true, optional = true }
-gen = { workspace = true }
+generate = { workspace = true }
 gm = { workspace = true }
 level = { workspace = true }
 scene = { workspace = true }

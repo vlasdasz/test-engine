@@ -1,10 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    refs::Weak,
-    ui::{view, Setup, Switch, ViewData, UI},
-    ui_test::{state::set_state, test_combinations},
     App,
+    refs::Weak,
+    ui::{Setup, Switch, UI, ViewData, view},
+    ui_test::{state::set_state, test_combinations},
 };
 
 #[view]

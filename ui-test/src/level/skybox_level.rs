@@ -1,7 +1,7 @@
 use test_engine::{
-    level::{level, LevelSetup},
-    ui::Image,
     DataManager,
+    level::{LevelSetup, level},
+    ui::Image,
 };
 
 #[level]

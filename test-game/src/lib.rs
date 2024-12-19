@@ -12,7 +12,7 @@ pub use test_engine;
 use crate::interface::test_game_view::TestGameView;
 
 #[cfg(not(target_os = "android"))]
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn start_test_game() -> std::ffi::c_int {
     let runtime = tokio::runtime::Runtime::new().unwrap();
     runtime.block_on(async {

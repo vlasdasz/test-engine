@@ -3,13 +3,12 @@ use std::str::FromStr;
 use proc_macro::TokenStream;
 use quote::{quote, quote_spanned};
 use syn::{
-    parse::Parser,
-    parse_macro_input, Data, DeriveInput, Field, Fields, FieldsNamed, GenericParam, Ident, Type,
     __private::TokenStream2,
-    parse_quote,
+    Attribute, Data, DeriveInput, Field, Fields, FieldsNamed, GenericParam, Ident, Meta, Type,
+    parse::Parser,
+    parse_macro_input, parse_quote,
     spanned::Spanned,
     token::{Bracket, Pound},
-    Attribute, Meta,
 };
 
 #[proc_macro_attribute]

@@ -7,7 +7,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 pub use helpers::*;
 use log::{error, warn};
 use refs::Own;
@@ -16,11 +16,11 @@ pub use state::*;
 use tokio::sync::mpsc::channel;
 
 use crate::{
-    from_main,
+    App, from_main,
     gm::{LossyConvert, ToF32},
     on_main,
     ui::{Input, Touch, U8Color, UIEvents, UIManager},
-    wait_for_next_frame, App,
+    wait_for_next_frame,
 };
 
 pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>

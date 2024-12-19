@@ -23,8 +23,8 @@ pub use text::*;
 pub use utils::DeviceHelper;
 pub use vertex_buffer::VertexBuffer;
 pub use wgpu::{
-    util::{BufferInitDescriptor, DeviceExt},
     Buffer, BufferUsages, Device, PolygonMode, RenderPass,
+    util::{BufferInitDescriptor, DeviceExt},
 };
 pub use wgpu_app::*;
 pub use winit::{

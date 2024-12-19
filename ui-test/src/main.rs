@@ -11,8 +11,8 @@ use std::env::var;
 use anyhow::Result;
 use log::info;
 use test_engine::{
-    ui::{Container, Setup},
     App,
+    ui::{Container, Setup},
 };
 
 use crate::{

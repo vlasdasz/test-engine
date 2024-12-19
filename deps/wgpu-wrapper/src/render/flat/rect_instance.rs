@@ -1,7 +1,7 @@
 use bytemuck::{Pod, Zeroable};
 use gm::{
-    flat::{Point, Size},
     Color,
+    flat::{Point, Size},
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};
 

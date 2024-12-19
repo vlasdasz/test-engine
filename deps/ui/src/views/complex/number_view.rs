@@ -4,11 +4,11 @@ use std::{
 };
 
 use gm::{CheckedSub, Min, MyAdd, One, Zero};
-use refs::{weak_from_ref, Weak};
+use refs::{Weak, weak_from_ref};
 use vents::Event;
 
 use crate::{
-    has_data::HasText, view::ViewData, Button, HasTitle, InputView, Label, Setup, UIImages, ViewTouch,
+    Button, HasTitle, InputView, Label, Setup, UIImages, ViewTouch, has_data::HasText, view::ViewData,
 };
 
 mod test_engine {

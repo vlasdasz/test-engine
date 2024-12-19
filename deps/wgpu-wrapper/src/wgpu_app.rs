@@ -1,13 +1,13 @@
 use std::sync::{
-    atomic::{AtomicBool, Ordering},
     Arc,
+    atomic::{AtomicBool, Ordering},
 };
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use dispatch::on_main;
 use gm::{
-    flat::{Point, Size},
     LossyConvert, Platform,
+    flat::{Point, Size},
 };
 use log::{error, info};
 use refs::{MainLock, Rglica};
@@ -27,10 +27,10 @@ use winit::{
 };
 
 use crate::{
-    app::App,
-    state::{State, RGBA_TEXTURE_FORMAT},
-    surface::Surface,
     Screenshot, WGPUDrawer,
+    app::App,
+    state::{RGBA_TEXTURE_FORMAT, State},
+    surface::Surface,
 };
 
 const ENABLE_VSYNC: bool = true;

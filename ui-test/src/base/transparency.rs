@@ -5,7 +5,7 @@ use test_engine::{
     gm::Apply,
     level::LevelManager,
     refs::Weak,
-    ui::{view, ImageView, Setup, ViewData, UI},
+    ui::{ImageView, Setup, UI, ViewData, view},
 };
 
 use crate::level::SkyboxLevel;

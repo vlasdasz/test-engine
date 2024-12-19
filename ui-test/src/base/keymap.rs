@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Own,
-    ui::{Container, UIManager, UI},
+    ui::{Container, UI, UIManager},
     ui_test::inject_key,
     wait_for_next_frame,
 };

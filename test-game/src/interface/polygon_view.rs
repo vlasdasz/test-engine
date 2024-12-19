@@ -1,14 +1,12 @@
 use test_engine::{
-    after,
+    RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, after,
     level::LevelManager,
     refs::Weak,
     ui::{
-        view,
         Anchor::{Size, Top, X},
         Button, Color, Container, HasText, Point, PositionView, Setup, UIManager, ViewCallbacks, ViewData,
-        ViewFrame, ViewSubviews,
+        ViewFrame, ViewSubviews, view,
     },
-    RenderPass, SpriteRenderView, VertexBuffer, WGPUApp,
 };
 
 use crate::interface::test_game_view::TestGameView;
@@ -101,14 +99,11 @@ impl ViewCallbacks for PolygonView {
 
         drawer.polygon_test.add(&self.points, (0, 0).into(), Color::GREEN, 0.0);
 
-        drawer.polygon_test.draw(
-            pass,
-            SpriteRenderView {
-                camera_pos:      Point::default(),
-                resolution:      UIManager::resolution(),
-                camera_rotation: 0.0,
-                scale:           1.0,
-            },
-        );
+        drawer.polygon_test.draw(pass, SpriteRenderView {
+            camera_pos:      Point::default(),
+            resolution:      UIManager::resolution(),
+            camera_rotation: 0.0,
+            scale:           1.0,
+        });
     }
 }

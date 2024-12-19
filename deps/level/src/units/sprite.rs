@@ -4,8 +4,8 @@ use std::{
 };
 
 use gm::{
-    flat::{Point, Shape, Size},
     Color, ToF32,
+    flat::{Point, Shape, Size},
 };
 use rapier2d::{
     dynamics::RigidBodyHandle,
@@ -13,7 +13,7 @@ use rapier2d::{
     pipeline::ActiveEvents,
     prelude::{CoefficientCombineRule, RigidBody, Rotation},
 };
-use refs::{weak_from_ref, Address, Own};
+use refs::{Address, Own, weak_from_ref};
 use wgpu_wrapper::image::ToImage;
 
 use crate::{LevelManager, SpriteData};

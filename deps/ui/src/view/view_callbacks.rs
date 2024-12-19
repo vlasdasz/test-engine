@@ -2,7 +2,7 @@ use gm::flat::Size;
 use refs::{Own, Weak};
 use wgpu_wrapper::RenderPass;
 
-use crate::{view::view_frame::ViewFrame, View};
+use crate::{View, view::view_frame::ViewFrame};
 
 pub trait ViewCallbacks {
     fn update(&mut self);

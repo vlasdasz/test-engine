@@ -1,7 +1,8 @@
-use gm::{flat::Rect, Color};
+use gm::{Color, flat::Rect};
 use wgpu::RenderPass;
 
 use crate::{
+    RectPipeline,
     render::{
         background_pipeline::BackgroundPipeline,
         image_drawer::ImageDrawer,
@@ -9,7 +10,6 @@ use crate::{
         path_drawer::PathDrawer,
         sprite_drawer::{BoxPipeline, PolygonPipeline, TexturedBoxPipeline},
     },
-    RectPipeline,
 };
 
 #[derive(Default, Debug)]

@@ -1,6 +1,6 @@
 use wgpu::Buffer;
 
-use crate::{utils::ToBytes, WGPUApp};
+use crate::{WGPUApp, utils::ToBytes};
 
 pub trait BufferHelper {
     fn update<T: ToBytes>(&self, data: T);

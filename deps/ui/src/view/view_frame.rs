@@ -1,8 +1,8 @@
 #![allow(clippy::float_cmp)]
 
 use gm::{
-    flat::{Point, Rect, Size},
     ToF32,
+    flat::{Point, Rect, Size},
 };
 
 use crate::{UIManager, View, ViewSubviews};

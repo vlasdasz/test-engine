@@ -12,8 +12,8 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 use crate::{
-    view::{ViewAnimation, ViewFrame, ViewSubviews},
     Setup, TouchStack, UIAnimation, View, ViewData,
+    view::{ViewAnimation, ViewFrame, ViewSubviews},
 };
 
 #[view]

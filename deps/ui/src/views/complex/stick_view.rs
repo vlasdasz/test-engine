@@ -1,14 +1,14 @@
 use gm::{
-    flat::{Point, PointsPath},
     Color,
+    flat::{Point, PointsPath},
 };
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    view::{ViewFrame, ViewTouch},
     Setup, Touch,
+    view::{ViewFrame, ViewTouch},
 };
 
 mod test_engine {

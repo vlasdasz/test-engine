@@ -1,11 +1,10 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    reflected,
+    App, reflected,
     reflected::Reflected,
     refs::Weak,
-    ui::{view, Button, FormView, HasText, Setup, ViewData, ViewSubviews, UI},
-    App,
+    ui::{Button, FormView, HasText, Setup, UI, ViewData, ViewSubviews, view},
 };
 
 #[derive(Default, Debug, Reflected)]

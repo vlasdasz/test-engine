@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use dispatch::{from_main, wait_for_next_frame};
 use gm::{
-    flat::{Rect, Size},
     Color,
+    flat::{Rect, Size},
 };
 use log::{trace, warn};
 use manage::data_manager::DataManager;
-use refs::{weak_from_ref, Own, Weak};
+use refs::{Own, Weak, weak_from_ref};
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
     ViewFrame, ViewLayout, ViewSubviews, ViewTest,
@@ -16,7 +16,7 @@ use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
 
-use crate::{ui::ui_test::state::clear_state, App};
+use crate::{App, ui::ui_test::state::clear_state};
 
 pub struct UI;
 

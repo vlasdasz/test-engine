@@ -1,24 +1,23 @@
 use std::ops::Range;
 
 use gm::{
-    checked_usize_to_u32,
+    Color, checked_usize_to_u32,
     flat::{Point, Size, Vertex2D},
-    Color,
 };
 use indexmap::IndexMap;
 use refs::Weak;
 use wgpu::{Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages};
 
 use crate::{
+    WGPUApp,
     image::Image,
     render::{
         sprite_drawer::shader_data::{SpriteBox, SpriteRenderView},
-        uniform::{make_uniform_layout, UniformBind},
+        uniform::{UniformBind, make_uniform_layout},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
-    WGPUApp,
 };
 
 const VERTICES: [Vertex2D; 4] = [

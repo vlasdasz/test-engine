@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, HasText, Label, Point, PointView, Setup, ViewData, UI},
+    ui::{HasText, Label, Point, PointView, Setup, UI, ViewData, view},
     ui_test::inject_touches,
 };
 

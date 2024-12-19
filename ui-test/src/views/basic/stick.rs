@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{view, Color, Container, Point, PointView, Setup, StickView, ViewData, ViewFrame, UI},
+    ui::{Color, Container, Point, PointView, Setup, StickView, UI, ViewData, ViewFrame, view},
     ui_test::{helpers::check_colors, inject_touches},
 };
 

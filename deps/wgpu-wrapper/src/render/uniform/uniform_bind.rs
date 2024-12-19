@@ -4,8 +4,8 @@ use bytemuck::Pod;
 use wgpu::{BindGroup, BindGroupLayout, Buffer, Device};
 
 use crate::{
-    utils::{BufferHelper, DeviceHelper},
     BufferUsages, WGPUApp,
+    utils::{BufferHelper, DeviceHelper},
 };
 
 #[derive(Debug)]

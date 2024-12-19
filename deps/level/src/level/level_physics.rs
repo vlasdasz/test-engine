@@ -9,7 +9,7 @@ use rapier2d::{
 };
 use refs::{Own, Weak};
 
-use crate::{event_handler::EventHandler, sets::Sets, Sprite};
+use crate::{Sprite, event_handler::EventHandler, sets::Sets};
 
 #[derive(Educe)]
 #[educe(Default)]

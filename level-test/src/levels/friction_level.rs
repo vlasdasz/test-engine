@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use test_engine::{
     gm::{LossyConvert, Shape},
-    level::{level, Body, CoefficientCombineRule, LevelCreation, LevelSetup, Sensor, SpriteTemplates, Wall},
+    level::{Body, CoefficientCombineRule, LevelCreation, LevelSetup, Sensor, SpriteTemplates, Wall, level},
     ui::Color,
 };
 

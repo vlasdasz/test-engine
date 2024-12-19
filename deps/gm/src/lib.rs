@@ -18,8 +18,8 @@ pub use animation::Animation;
 pub use color::*;
 pub use misc::{Apply, Platform, Toggle};
 pub use num::{
-    checked_convert::{checked_usize_to_u32, CheckedConvert},
+    CheckedSub, IsZero, Min, MyAdd, One, Zero,
+    checked_convert::{CheckedConvert, checked_usize_to_u32},
     into_f32::ToF32,
     lossy_convert::LossyConvert,
-    CheckedSub, IsZero, Min, MyAdd, One, Zero,
 };

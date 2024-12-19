@@ -1,7 +1,7 @@
 use bytemuck::Pod;
 use wgpu::Buffer;
 
-use crate::{utils::DeviceHelper, BufferUsages, WGPUApp};
+use crate::{BufferUsages, WGPUApp, utils::DeviceHelper};
 
 #[derive(Debug)]
 pub(crate) struct VecBuffer<T> {

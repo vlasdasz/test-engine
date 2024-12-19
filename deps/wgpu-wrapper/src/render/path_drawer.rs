@@ -2,17 +2,18 @@ use std::ops::Range;
 
 use gm::flat::{Point, Rect};
 use wgpu::{
-    include_wgsl, BindGroup, BindGroupLayout, BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType,
+    BindGroup, BindGroupLayout, BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType,
     PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    include_wgsl,
 };
 
 use crate::{
+    WGPUApp,
     render::{
         uniform::{cached_float_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
-    WGPUApp,
 };
 
 #[derive(Debug)]

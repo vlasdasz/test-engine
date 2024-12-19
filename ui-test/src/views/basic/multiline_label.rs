@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{view, HasText, Label, Setup, ViewData, UI},
+    ui::{HasText, Label, Setup, UI, ViewData, view},
     ui_test::check_colors,
 };
 

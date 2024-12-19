@@ -8,7 +8,7 @@ use wgpu::{
     BufferBindingType, ShaderStages,
 };
 
-use crate::{utils::DeviceHelper, BufferUsages, WGPUApp};
+use crate::{BufferUsages, WGPUApp, utils::DeviceHelper};
 
 static FLOAT_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
 static COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();

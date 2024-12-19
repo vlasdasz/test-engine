@@ -3,9 +3,9 @@ use std::{marker::PhantomData, str::from_utf8};
 use serde_json::{from_str, to_string};
 
 use crate::{
-    encrypt::{decrypt, encrypt, EncryptionKey},
-    storable::Storable,
     OnDisk,
+    encrypt::{EncryptionKey, decrypt, encrypt},
+    storable::Storable,
 };
 
 pub struct OnDiskEncrypted<T: Storable> {
@@ -49,7 +49,7 @@ mod test {
     use serde::{Deserialize, Serialize};
     use tokio::spawn;
 
-    use crate::{on_disk_encrypted::OnDiskEncrypted, EncryptionKey};
+    use crate::{EncryptionKey, on_disk_encrypted::OnDiskEncrypted};
 
     #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
     struct Data {

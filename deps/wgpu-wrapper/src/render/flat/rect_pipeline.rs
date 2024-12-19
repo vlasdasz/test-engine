@@ -1,24 +1,23 @@
 use std::ops::Range;
 
 use gm::{
-    checked_usize_to_u32,
+    Color, checked_usize_to_u32,
     flat::{Point, Rect, Size},
-    Color,
 };
 use wgpu::{
-    include_wgsl, Buffer, PipelineLayoutDescriptor, PrimitiveTopology, RenderPass, RenderPipeline,
-    ShaderStages,
+    Buffer, PipelineLayoutDescriptor, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    include_wgsl,
 };
 
 use crate::{
+    BufferUsages, PolygonMode, WGPUApp,
     render::{
         flat::{rect_instance::RectInstance, rect_view::RectView},
-        uniform::{make_uniform_layout, UniformBind},
+        uniform::{UniformBind, make_uniform_layout},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
-    BufferUsages, PolygonMode, WGPUApp,
 };
 
 const RECT_VERTICERS: &[Point] = &[

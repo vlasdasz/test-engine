@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use educe::Educe;
-use gm::{flat::Point, LossyConvert, Platform};
+use gm::{LossyConvert, Platform, flat::Point};
 use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
@@ -9,7 +9,7 @@ use rapier2d::{
 use refs::{MainLock, Own, Weak};
 use wgpu_wrapper::WGPUApp;
 
-use crate::{level::LevelPhysics, Level};
+use crate::{Level, level::LevelPhysics};
 
 static SELF: MainLock<LevelManager> = MainLock::new();
 
@@ -69,7 +69,7 @@ impl LevelManager {
     }
 
     pub(crate) unsafe fn level_unchecked() -> &'static mut dyn Level {
-        SELF.get_unchecked().level.as_mut().expect("No Level").deref_mut()
+        unsafe { SELF.get_unchecked().level.as_mut().expect("No Level").deref_mut() }
     }
 
     pub(crate) fn physics() -> &'static mut LevelPhysics {

@@ -1,19 +1,19 @@
-use bytemuck::{cast_slice, Pod, Zeroable};
-use gm::{checked_usize_to_u32, flat::Point, Color};
+use bytemuck::{Pod, Zeroable, cast_slice};
+use gm::{Color, checked_usize_to_u32, flat::Point};
 use wgpu::{
-    include_wgsl, BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor,
-    PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
+    BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor, PolygonMode,
+    PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages, include_wgsl,
 };
 
 use crate::{
+    WGPUApp,
     render::{
         sprite_drawer::shader_data::SpriteRenderView,
-        uniform::{make_bind, make_uniform_layout, UniformBind},
+        uniform::{UniformBind, make_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
     vertex_buffer::VertexBuffer,
-    WGPUApp,
 };
 
 #[repr(C)]

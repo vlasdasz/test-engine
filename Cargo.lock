@@ -1230,7 +1230,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
-name = "gen"
+name = "generate"
 version = "0.1.0"
 dependencies = [
  "contour",
@@ -3585,7 +3585,7 @@ dependencies = [
  "dispatch 0.1.0",
  "educe",
  "env_logger",
- "gen",
+ "generate",
  "gm",
  "level",
  "log",

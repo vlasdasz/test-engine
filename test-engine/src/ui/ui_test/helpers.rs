@@ -1,11 +1,11 @@
 use anyhow::Result;
 use dispatch::from_main;
-use gm::{flat::Point, Color, U8Color};
+use gm::{Color, U8Color, flat::Point};
 use ui::{
     Button, Container, HighlightView, Setup, UIManager, View, ViewData, ViewFrame, ViewSubviews, WeakView,
 };
 
-use crate::{gm::Apply, ui::Screenshot, App};
+use crate::{App, gm::Apply, ui::Screenshot};
 
 pub fn add_corners(mut view: WeakView, color: Color) {
     let v1 = view.add_view::<Container>();

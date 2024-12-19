@@ -1,10 +1,10 @@
 use gm::LossyConvert;
-use refs::{weak_from_ref, Weak};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 
 use crate::{
-    view::{ViewData, ViewFrame, ViewSubviews},
     Setup, TableData, View, ViewCallbacks,
+    view::{ViewData, ViewFrame, ViewSubviews},
 };
 
 mod test_engine {

@@ -1,23 +1,23 @@
 use gm::{
-    flat::{Point, Size},
     Color,
+    flat::{Point, Size},
 };
 use wgpu::{
-    include_wgsl, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
-    RenderPipeline, ShaderStages,
+    Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
+    RenderPipeline, ShaderStages, include_wgsl,
 };
 
 use crate::{
+    WGPUApp,
     render::{
         sprite_drawer::shader_data::{
-            SpriteBox, SpriteRenderView, FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES,
+            FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES, SpriteBox, SpriteRenderView,
         },
-        uniform::{make_uniform_layout, UniformBind},
+        uniform::{UniformBind, make_uniform_layout},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
     },
     utils::DeviceHelper,
-    WGPUApp,
 };
 
 #[derive(Debug)]

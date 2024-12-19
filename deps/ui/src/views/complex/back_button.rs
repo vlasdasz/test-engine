@@ -2,9 +2,9 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
+    Button, Setup,
     has_data::HasText,
     view::{ViewController, ViewData},
-    Button, Setup,
 };
 mod test_engine {
     pub(crate) use educe;
