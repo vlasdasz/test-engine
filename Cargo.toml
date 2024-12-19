@@ -29,10 +29,9 @@ dirs = "5.0"
 educe = "0.6.0"
 env_logger = "0.11"
 fake = "3.0.1"
-home = "0.5"
 image = "0.25"
 log = "0.4"
-nonempty = "0.10.0"
+nonempty = "0.11"
 quote = "1.0"
 rand = "0.8"
 rapier2d = { version = "0.22.0", features = ["simd-nightly"] }
@@ -46,14 +45,11 @@ rodio = "0.20.1"
 rust_decimal = "1.35"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-serial_test = "3.1"
-sqlx = { version = "0.8", features = ["postgres", "runtime-tokio-rustls"] }
 syn = { version = "2.0", features = ["full", "extra-traits"] }
 tokio = { version = "1.40", features = ["full"] }
 walkdir = "2.5"
 web-time = "1.0.0"
 
-glyph_brush = "0.7.8"
 wgpu = "23.0.0"
 wgpu_text = "0.9.1"
 winit = "0.30.5"
