@@ -11,8 +11,7 @@ use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncode
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
-    SUPPORT_SCREENSHOT, Screenshot, WGPUApp, app::App, frame_counter::FrameCounter, image::Texture,
-    text::Font,
+    SUPPORT_SCREENSHOT, Screenshot, Window, app::App, frame_counter::FrameCounter, image::Texture, text::Font,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;
@@ -46,34 +45,34 @@ impl State {
             return;
         }
 
-        let app = WGPUApp::current();
+        let window = Window::current();
 
-        app.window_size = (new_size.width, new_size.height).into();
-        app.config.width = new_size.width;
-        app.config.height = new_size.height;
+        window.size = (new_size.width, new_size.height).into();
+        window.config.width = new_size.width;
+        window.config.height = new_size.height;
 
-        if let Some(surface) = &mut app.surface {
+        if let Some(surface) = &mut window.surface {
             surface.depth_texture = Texture::create_depth_texture(
-                &app.device,
+                &window.device,
                 (new_size.width, new_size.height).into(),
                 "depth_texture",
             );
-            surface.presentable.configure(&app.device, &app.config);
-        } else if app.resumed && app.create_surface_and_window(event_loop).unwrap() {
-            app.state.app.window_ready();
+            surface.presentable.configure(&window.device, &window.config);
+        } else if window.resumed && window.create_surface_and_window(event_loop).unwrap() {
+            window.state.app.window_ready();
         }
 
-        let queue = WGPUApp::queue();
+        let queue = Window::queue();
 
         for font in self.fonts.values() {
             font.brush.resize_view(
-                app.config.width.lossy_convert(),
-                app.config.height.lossy_convert(),
+                window.config.width.lossy_convert(),
+                window.config.height.lossy_convert(),
                 queue,
             );
         }
 
-        let inner_size = WGPUApp::window().inner_size();
+        let inner_size = Window::inner_size();
 
         let position = if Platform::IOS {
             // match self.window.inner_position() {
@@ -102,19 +101,19 @@ impl State {
                 self.frame_counter.frame_time * 1000.0,
                 self.frame_counter.fps
             );
-            let app = WGPUApp::current();
-            WGPUApp::current().set_title(format!("{a} {} x {}", app.config.width, app.config.height));
+            let app = Window::current();
+            Window::current().set_title(format!("{a} {} x {}", app.config.width, app.config.height));
         }
     }
 
     pub fn render(&mut self) -> Result<()> {
-        let app = WGPUApp::current();
+        let app = Window::current();
         let Some(ref surface) = app.surface else {
             return Ok(());
         };
         let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
-        let mut encoder = WGPUApp::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
+        let mut encoder = Window::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
         });
 
@@ -168,7 +167,7 @@ impl State {
             None
         };
 
-        WGPUApp::queue().submit(std::iter::once(encoder.finish()));
+        Window::queue().submit(std::iter::once(encoder.finish()));
         surface_texture.present();
 
         if let Some(buffer_sender) = self.read_display_request.take() {
@@ -212,7 +211,7 @@ impl State {
     fn read_screen(encoder: &mut CommandEncoder, texture: &wgpu::Texture) -> (Buffer, Size<u32>) {
         if !SUPPORT_SCREENSHOT {
             return (
-                WGPUApp::device().create_buffer(&BufferDescriptor {
+                Window::device().create_buffer(&BufferDescriptor {
                     label:              Some("Empty Buffer"),
                     size:               0,
                     usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
@@ -228,7 +227,7 @@ impl State {
 
         let width_bytes = number_of_align * u64::from(COPY_BYTES_PER_ROW_ALIGNMENT);
 
-        let buffer = WGPUApp::device().create_buffer(&BufferDescriptor {
+        let buffer = Window::device().create_buffer(&BufferDescriptor {
             label:              Some("Read Screen Buffer"),
             size:               width_bytes * u64::from(texture.size().height),
             usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,

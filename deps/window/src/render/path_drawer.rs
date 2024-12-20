@@ -8,7 +8,7 @@ use wgpu::{
 };
 
 use crate::{
-    WGPUApp,
+    Window,
     render::{
         uniform::{cached_float_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
@@ -26,7 +26,7 @@ pub struct PathDrawer {
 
 impl Default for PathDrawer {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
 
         let shader = device.create_shader_module(include_wgsl!("shaders/path.wgsl"));
 

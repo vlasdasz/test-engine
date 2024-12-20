@@ -9,7 +9,7 @@ use wgpu::{
 };
 
 use crate::{
-    WGPUApp,
+    Window,
     image::Image,
     render::{
         uniform::{cached_float_bind, make_uniform_layout},
@@ -52,7 +52,7 @@ pub struct ImageDrawer {
 
 impl Default for ImageDrawer {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/ui_image.wgsl"));
 
         let vertex_layout = make_uniform_layout("image_drawer_vertex_layout", ShaderStages::VERTEX);

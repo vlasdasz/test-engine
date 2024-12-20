@@ -65,7 +65,7 @@ call-counter = { path = "deps/call-counter" }
 dispatch = { path = "deps/dispatch" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
-image-proc = { path = "deps/wgpu-wrapper/image-proc" }
+image-proc = { path = "deps/window/image-proc" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
 scene = { path = "deps/scene" }
@@ -77,7 +77,7 @@ ui-benchmark = { path = "ui-benchmark" }
 ui-proc = { path = "deps/ui/ui-proc" }
 utils = { path = "deps/utils" }
 valid = { path = "deps/valid" }
-wgpu-wrapper = { path = "deps/wgpu-wrapper" }
+window = { path = "deps/window" }
 
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }

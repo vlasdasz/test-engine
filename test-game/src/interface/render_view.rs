@@ -1,5 +1,5 @@
 use test_engine::{
-    RenderPass, SpriteRenderView, WGPUApp,
+    RenderPass, SpriteRenderView, Window,
     refs::Weak,
     ui::{Color, NumberView, Point, Setup, UIManager, ViewCallbacks, ViewData, ViewSubviews, view},
 };
@@ -27,7 +27,7 @@ impl Setup for RenderView {
 
 impl ViewCallbacks for RenderView {
     fn render(&self, pass: &mut RenderPass) {
-        let drawer = WGPUApp::drawer();
+        let drawer = Window::drawer();
 
         drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED, 0.5);
         drawer.sprite_box.add((2, 2).into(), (40, 0).into(), 0.0, Color::GREEN, 0.5);

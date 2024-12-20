@@ -10,7 +10,7 @@ use wgpu::{
 };
 
 use crate::{
-    WGPUApp,
+    Window,
     render::{
         uniform::{cached_color_bind, cached_float_bind, make_uniform_layout},
         vertex_layout::VertexLayout,
@@ -37,7 +37,7 @@ pub struct OldRectDrawer {
 
 impl Default for OldRectDrawer {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
 
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 

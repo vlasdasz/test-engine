@@ -8,7 +8,7 @@ use wgpu::{
     BufferBindingType, ShaderStages,
 };
 
-use crate::{BufferUsages, WGPUApp, utils::DeviceHelper};
+use crate::{BufferUsages, Window, utils::DeviceHelper};
 
 static FLOAT_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
 static COLOR_BINDS: MainLock<HashMap<Color, BindGroup>> = MainLock::new();
@@ -25,13 +25,13 @@ pub(crate) fn cached_color_bind(color: Color, layout: &BindGroupLayout) -> &'sta
 }
 
 pub fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> BindGroup {
-    let device = WGPUApp::device();
+    let device = Window::device();
     let buffer = device.buffer(data, BufferUsages::UNIFORM);
     device.bind(&buffer, layout)
 }
 
 pub(crate) fn make_uniform_layout(name: &'static str, shader: ShaderStages) -> BindGroupLayout {
-    WGPUApp::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
+    Window::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
         label:   name.into(),
         entries: &[BindGroupLayoutEntry {
             binding:    0,

@@ -58,7 +58,7 @@ pub use generate;
 pub use manage::data_manager::DataManager;
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use wgpu_wrapper::{
-    RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, WGPUDrawer, cast_slice, image::ToImage,
+    RenderPass, SpriteRenderView, VertexBuffer, WGPUDrawer, Window, cast_slice, image::ToImage,
 };
 
 #[cfg(target_os = "android")]

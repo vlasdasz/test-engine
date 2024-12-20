@@ -6,7 +6,7 @@ use wgpu::{
 };
 
 use crate::{
-    WGPUApp,
+    Window,
     render::{
         sprite_drawer::shader_data::SpriteRenderView,
         uniform::{UniformBind, make_bind, make_uniform_layout},
@@ -40,7 +40,7 @@ pub struct PolygonPipeline {
 
 impl Default for PolygonPipeline {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
 
         let shader = device.create_shader_module(include_wgsl!("../shaders/polygon.wgsl"));
 
@@ -76,12 +76,12 @@ impl PolygonPipeline {
         assert!(!buffer.vertices.is_empty(), "Adding polygon with 0 vertices");
 
         self.polygons.push((
-            WGPUApp::device().buffer_from_bytes(cast_slice(&buffer.vertices), BufferUsages::VERTEX),
+            Window::device().buffer_from_bytes(cast_slice(&buffer.vertices), BufferUsages::VERTEX),
             buffer.vertices.len(),
             buffer
                 .indices
                 .as_ref()
-                .map(|a| WGPUApp::device().buffer_from_bytes(cast_slice(a), BufferUsages::INDEX)),
+                .map(|a| Window::device().buffer_from_bytes(cast_slice(a), BufferUsages::INDEX)),
             buffer.indices.as_ref().map(Vec::len),
             make_bind(
                 &PolygonView {

@@ -2,7 +2,7 @@ mod app;
 pub mod image;
 mod text;
 pub mod utils;
-mod wgpu_app;
+mod window;
 
 mod frame_counter;
 mod render;
@@ -26,7 +26,7 @@ pub use wgpu::{
     Buffer, BufferUsages, Device, PolygonMode, RenderPass,
     util::{BufferInitDescriptor, DeviceExt},
 };
-pub use wgpu_app::*;
+pub use window::*;
 pub use winit::{
     event::{ElementState, MouseButton},
     keyboard::NamedKey,

@@ -23,7 +23,7 @@ use winit::{
     event::{MouseScrollDelta, WindowEvent},
     event_loop::{ActiveEventLoop, EventLoop},
     keyboard::{KeyCode, PhysicalKey},
-    window::{Window, WindowAttributes, WindowId},
+    window::{WindowAttributes, WindowId},
 };
 
 use crate::{
@@ -37,7 +37,7 @@ const ENABLE_VSYNC: bool = true;
 /// Doesn't work on some Androids
 pub(crate) const SUPPORT_SCREENSHOT: bool = !Platform::ANDROID;
 
-static APP: MainLock<Option<WGPUApp>> = MainLock::new();
+static WINDOW: MainLock<Option<Window>> = MainLock::new();
 
 #[cfg(target_os = "android")]
 pub type Events = winit::platform::android::activity::AndroidApp;
@@ -45,10 +45,10 @@ pub type Events = winit::platform::android::activity::AndroidApp;
 #[cfg(not(target_os = "android"))]
 pub type Events = ();
 
-pub struct WGPUApp {
+pub struct Window {
     pub state: State,
 
-    pub window_size: Size,
+    pub size: Size,
 
     pub(crate) config: SurfaceConfiguration,
     pub(crate) device: Device,
@@ -65,9 +65,9 @@ pub struct WGPUApp {
     close: AtomicBool,
 }
 
-impl WGPUApp {
+impl Window {
     pub fn current() -> &'static mut Self {
-        APP.get_mut().as_mut().expect("App has not been initialized yet.")
+        WINDOW.get_mut().as_mut().expect("Window has not been initialized yet.")
     }
 
     pub fn device() -> &'static Device {
@@ -78,8 +78,16 @@ impl WGPUApp {
         &Self::current().queue
     }
 
-    pub fn window() -> &'static Window {
-        &Self::current().surface.as_ref().expect("No surface yet").window
+    fn winit_window() -> &'static winit::window::Window {
+        &Self::current()
+            .surface
+            .as_ref()
+            .expect("Surface has not been initialized yet.")
+            .window
+    }
+
+    pub fn inner_size() -> PhysicalSize<u32> {
+        Self::winit_window().inner_size()
     }
 
     pub fn drawer() -> &'static mut WGPUDrawer {
@@ -87,7 +95,7 @@ impl WGPUApp {
     }
 
     pub fn screen_scale() -> f64 {
-        Self::window().scale_factor()
+        Self::winit_window().scale_factor()
     }
 
     pub fn close() {
@@ -193,11 +201,11 @@ impl WGPUApp {
 
         let state = State::new(app);
 
-        assert!(APP.is_none(), "Another instance of App already exists.");
+        assert!(WINDOW.is_none(), "Another instance of App already exists.");
 
-        *APP.get_mut() = Self {
+        *WINDOW.get_mut() = Self {
             state,
-            window_size: Size::default(),
+            size: Size::default(),
             config,
             device,
             queue,
@@ -210,10 +218,10 @@ impl WGPUApp {
         }
         .into();
 
-        let app = Self::current();
+        let window = Self::current();
 
-        app.state.app.set_wgpu_app(Rglica::from_ref(app));
-        app.start_event_loop(event_loop)
+        window.state.app.set_window(Rglica::from_ref(window));
+        window.start_event_loop(event_loop)
     }
 
     #[cfg(not(target_os = "android"))]
@@ -233,13 +241,13 @@ impl WGPUApp {
 
     pub fn set_title(&self, title: impl Into<String>) {
         if Platform::DESKTOP {
-            Self::window().set_title(&title.into());
+            Self::winit_window().set_title(&title.into());
         }
     }
 
-    pub fn set_window_size(&self, size: impl Into<Size<u32>>) {
+    pub fn set_size(&self, size: impl Into<Size<u32>>) {
         let size = size.into();
-        let _ = Self::window().request_inner_size(PhysicalSize::new(size.width, size.height));
+        let _ = Self::winit_window().request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
     pub fn request_read_display(&self) -> Receiver<Screenshot> {
@@ -263,13 +271,13 @@ impl WGPUApp {
     }
 
     pub fn display_refresh_rate() -> u32 {
-        Self::window().current_monitor().map_or(60, |monitor| {
+        Self::winit_window().current_monitor().map_or(60, |monitor| {
             monitor.refresh_rate_millihertz().unwrap_or(60_000) / 1000
         })
     }
 }
 
-impl ApplicationHandler<Events> for WGPUApp {
+impl ApplicationHandler<Events> for Window {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         if self.create_surface_and_window(event_loop).unwrap() {
             self.state.app.window_ready();
@@ -334,7 +342,7 @@ impl ApplicationHandler<Events> for WGPUApp {
 
     fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
         if self.resumed {
-            Self::window().request_redraw();
+            Self::winit_window().request_redraw();
         }
     }
 }

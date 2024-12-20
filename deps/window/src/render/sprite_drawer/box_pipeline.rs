@@ -8,7 +8,7 @@ use wgpu::{
 };
 
 use crate::{
-    WGPUApp,
+    Window,
     render::{
         sprite_drawer::shader_data::{
             FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES, SpriteBox, SpriteRenderView,
@@ -33,7 +33,7 @@ pub struct BoxPipeline {
 
 impl Default for BoxPipeline {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
 
         let shader = device.create_shader_module(include_wgsl!("../shaders/sprite.wgsl"));
 

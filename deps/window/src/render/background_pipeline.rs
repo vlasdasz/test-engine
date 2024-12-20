@@ -11,7 +11,7 @@ use wgpu::{
 };
 
 use crate::{
-    WGPUApp,
+    Window,
     image::Image,
     render::{uniform::make_uniform_layout, vertex_layout::VertexLayout},
     utils::{BufferHelper, DeviceHelper},
@@ -65,7 +65,7 @@ pub struct BackgroundPipeline {
 
 impl Default for BackgroundPipeline {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("shaders/background.wgsl"));
 
         let vertex_layout = make_uniform_layout("background_drawer_vertex_layout", ShaderStages::VERTEX);

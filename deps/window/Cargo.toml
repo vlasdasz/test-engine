@@ -1,7 +1,7 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2024"
-name = "wgpu-wrapper"
+name = "window"
 version = "0.1.0"
 
 [lib]

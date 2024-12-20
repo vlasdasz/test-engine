@@ -1,7 +1,7 @@
 use bytemuck::Pod;
 use wgpu::Buffer;
 
-use crate::{BufferUsages, WGPUApp, utils::DeviceHelper};
+use crate::{BufferUsages, Window, utils::DeviceHelper};
 
 #[derive(Debug)]
 pub(crate) struct VecBuffer<T> {
@@ -30,7 +30,7 @@ impl<T> VecBuffer<T> {
 
 impl<T: Pod> VecBuffer<T> {
     pub fn load(&mut self) {
-        self.buffer = WGPUApp::device().buffer(self.data.as_slice(), BufferUsages::VERTEX);
+        self.buffer = Window::device().buffer(self.data.as_slice(), BufferUsages::VERTEX);
         self.len = self.data.len().try_into().unwrap();
         self.data.clear();
     }
@@ -41,7 +41,7 @@ impl<T> Default for VecBuffer<T> {
         Self {
             len:    0,
             data:   vec![],
-            buffer: WGPUApp::device().buffer(&(), BufferUsages::VERTEX),
+            buffer: Window::device().buffer(&(), BufferUsages::VERTEX),
         }
     }
 }

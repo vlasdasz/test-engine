@@ -8,7 +8,7 @@ use wgpu::{
     BindGroup, BindGroupEntry, BindGroupLayout, BindingResource, Buffer, BufferBinding, BufferUsages,
 };
 
-use crate::{WGPUApp, utils::DeviceHelper};
+use crate::{Window, utils::DeviceHelper};
 
 #[derive(Debug)]
 pub struct PathData {
@@ -32,8 +32,8 @@ impl PathData {
     }
 
     pub fn new(color: Color, size: Size, points: &[Point]) -> Self {
-        let device = WGPUApp::device();
-        let path_layout = WGPUApp::path_layout();
+        let device = Window::device();
+        let path_layout = Window::path_layout();
 
         let buffer = device.buffer(points, BufferUsages::VERTEX);
 
@@ -48,13 +48,13 @@ impl PathData {
     }
 
     pub fn resize(&mut self, size: Size) {
-        let path_layout = WGPUApp::path_layout();
+        let path_layout = Window::path_layout();
         self.bind = make_bind_group(path_layout, &self.color, size);
     }
 }
 
 fn make_bind_group(bind_group_layout: &BindGroupLayout, color: &Color, size: Size) -> BindGroup {
-    let device = WGPUApp::device();
+    let device = Window::device();
 
     let size_uniform_buffer = device.buffer(&size, BufferUsages::UNIFORM);
     let color_uniform_buffer = device.buffer(color, BufferUsages::UNIFORM);

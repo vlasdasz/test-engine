@@ -2,7 +2,7 @@ use level::LevelManager;
 use manage::{ExistsManaged, data_manager::DataManager};
 use ui::UIManager;
 use wgpu::RenderPass;
-use wgpu_wrapper::{SpriteRenderView, WGPUApp};
+use wgpu_wrapper::{SpriteRenderView, Window};
 
 pub(crate) struct LevelDrawer;
 
@@ -17,7 +17,7 @@ impl LevelDrawer {
         }
         let resolution = UIManager::resolution();
 
-        let drawer = WGPUApp::drawer();
+        let drawer = Window::drawer();
         let level = LevelManager::level();
         let camera_pos = *LevelManager::camera_pos();
         let scale = *LevelManager::scale();

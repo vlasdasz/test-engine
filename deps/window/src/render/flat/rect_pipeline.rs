@@ -10,7 +10,7 @@ use wgpu::{
 };
 
 use crate::{
-    BufferUsages, PolygonMode, WGPUApp,
+    BufferUsages, PolygonMode, Window,
     render::{
         flat::{rect_instance::RectInstance, rect_view::RectView},
         uniform::{UniformBind, make_uniform_layout},
@@ -41,7 +41,7 @@ pub struct RectPipeline {
 
 impl Default for RectPipeline {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
 
         let shader = device.create_shader_module(include_wgsl!("rect.wgsl"));
 

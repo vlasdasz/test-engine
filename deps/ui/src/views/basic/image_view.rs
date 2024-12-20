@@ -2,7 +2,7 @@ use gm::flat::Rect;
 use refs::Weak;
 use ui_proc::view;
 use wgpu_wrapper::{
-    Buffer, BufferUsages, DeviceHelper, WGPUApp,
+    Buffer, BufferUsages, DeviceHelper, Window,
     image::{Image, ToImage},
     image_vertices_with_shrink,
 };
@@ -59,7 +59,7 @@ impl ImageView {
 
         let vertices = image_vertices_with_shrink(x_offset, y_offset, width_shrink, height_shrink);
 
-        let buffer = WGPUApp::device().buffer(&vertices, BufferUsages::VERTEX);
+        let buffer = Window::device().buffer(&vertices, BufferUsages::VERTEX);
 
         self.cropped = buffer.into();
     }

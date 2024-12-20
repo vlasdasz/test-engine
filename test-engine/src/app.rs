@@ -14,7 +14,7 @@ use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 use vents::OnceEvent;
 use wgpu::RenderPass;
-use wgpu_wrapper::{ElementState, MouseButton, Screenshot, WGPUApp};
+use wgpu_wrapper::{ElementState, MouseButton, Screenshot, Window};
 use winit::{
     event::{KeyEvent, TouchPhase},
     keyboard::Key,
@@ -30,7 +30,7 @@ static mut APP: *mut App = null_mut();
 
 pub struct App {
     window_ready: OnceEvent,
-    wgpu_app:     Rglica<WGPUApp>,
+    window:       Rglica<Window>,
 
     pub(crate) first_view: Option<Own<dyn View>>,
     pub cursor_position:   Point,
@@ -52,7 +52,7 @@ impl App {
     }
 
     pub fn stop() {
-        WGPUApp::close();
+        Window::close();
     }
 
     fn setup_log() {
@@ -129,7 +129,7 @@ impl App {
             cursor_position: Point::default(),
             first_view:      first_view.into(),
             window_ready:    OnceEvent::default(),
-            wgpu_app:        Rglica::default(),
+            window:          Rglica::default(),
         });
         unsafe {
             assert!(APP.is_null(), "Another App already exists");
@@ -141,7 +141,7 @@ impl App {
 
     #[cfg(not(target_os = "android"))]
     pub async fn start<T: View + Default + Sized + 'static>() -> Result<()> {
-        WGPUApp::start(Self::new(Own::<T>::default())).await
+        Window::start(Self::new(Own::<T>::default())).await
     }
 
     #[cfg(target_os = "android")]
@@ -165,7 +165,7 @@ impl App {
 
         log::error!("EVANTO");
 
-        WGPUApp::start(Self::new(first_view), event_loop).await
+        Window::start(Self::new(first_view), event_loop).await
     }
 
     #[cfg(not(target_os = "android"))]
@@ -183,29 +183,29 @@ impl App {
             let _ = actions.await;
         });
 
-        WGPUApp::start(app).await
+        Window::start(app).await
     }
 
     pub fn set_window_title(title: impl Into<String>) {
-        Self::current().wgpu_app.set_title(title);
+        Self::current().window.set_title(title);
     }
 
     pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
         from_main(|| {
-            Self::current().wgpu_app.set_window_size(size);
+            Self::current().window.set_size(size);
         })
         .await;
         sleep(Duration::from_secs_f32(0.05)).await;
     }
 
     pub async fn take_screenshot() -> Result<Screenshot> {
-        let recv = from_main(|| Self::current().wgpu_app.request_read_display()).await;
+        let recv = from_main(|| Self::current().window.request_read_display()).await;
         let screenshot = recv.await?;
         Ok(screenshot)
     }
 
     pub fn fps() -> f32 {
-        Self::current().wgpu_app.fps()
+        Self::current().window.fps()
     }
 }
 
@@ -214,7 +214,7 @@ impl wgpu_wrapper::App for App {
         let view = UIManager::root_view_weak().__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();
         self.update();
-        *LevelManager::update_interval() = 1.0 / WGPUApp::display_refresh_rate().lossy_convert();
+        *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
         self.window_ready.trigger(());
     }
 
@@ -294,8 +294,8 @@ impl wgpu_wrapper::App for App {
         }
     }
 
-    fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>) {
-        self.wgpu_app = app;
+    fn set_window(&mut self, app: Rglica<Window>) {
+        self.window = app;
     }
 
     fn dropped_file(&mut self, path: PathBuf) {

@@ -17,4 +17,4 @@ level-proc = { workspace = true }
 refs = { workspace = true }
 utils = { workspace = true }
 vents = { workspace = true }
-wgpu-wrapper = { workspace = true }
+window = { workspace = true }

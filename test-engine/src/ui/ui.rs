@@ -14,7 +14,7 @@ use ui::{
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
+use wgpu_wrapper::{Font, WGPUDrawer, Window};
 
 use crate::{App, ui::ui_test::state::clear_state};
 
@@ -33,7 +33,7 @@ impl UI {
         let debug_frames = UIManager::draw_debug_frames();
         Self::draw_view(
             pass,
-            WGPUApp::drawer(),
+            Window::drawer(),
             UIManager::root_view(),
             &mut sections,
             &mut 0.0,
@@ -42,7 +42,7 @@ impl UI {
         if let Some(debug_view) = UIManager::debug_view() {
             Self::draw_view(
                 pass,
-                WGPUApp::drawer(),
+                Window::drawer(),
                 debug_view,
                 &mut sections,
                 &mut 0.0,
@@ -50,11 +50,11 @@ impl UI {
             );
         }
 
-        WGPUApp::drawer().rect.draw(pass, UIManager::resolution());
+        Window::drawer().rect.draw(pass, UIManager::resolution());
 
         Font::helvetice()
             .brush
-            .queue(WGPUApp::device(), WGPUApp::queue(), sections)
+            .queue(Window::device(), Window::queue(), sections)
             .unwrap();
     }
 
@@ -171,7 +171,7 @@ impl UI {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
                 Self::draw_view(
                     pass,
-                    WGPUApp::drawer(),
+                    Window::drawer(),
                     view.deref(),
                     sections,
                     &mut text_offset,

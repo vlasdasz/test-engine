@@ -41,7 +41,7 @@ scene = { workspace = true }
 store = { workspace = true }
 ui = { workspace = true }
 ui-proc = { workspace = true }
-wgpu-wrapper = { workspace = true }
+window = { workspace = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = { workspace = true }

@@ -5,7 +5,7 @@ use refs::Rglica;
 use wgpu::RenderPass;
 use winit::event::{ElementState, KeyEvent, MouseButton, Touch};
 
-use crate::WGPUApp;
+use crate::Window;
 
 pub trait App {
     fn window_ready(&mut self);
@@ -17,6 +17,6 @@ pub trait App {
     fn mouse_scroll(&mut self, delta: Point);
     fn touch_event(&mut self, touch: Touch) -> bool;
     fn key_event(&mut self, event: KeyEvent);
-    fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>);
+    fn set_window(&mut self, app: Rglica<Window>);
     fn dropped_file(&mut self, path: PathBuf);
 }

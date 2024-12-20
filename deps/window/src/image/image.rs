@@ -10,7 +10,7 @@ use wgpu::{
     BindingResource, BindingType, SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-use crate::{WGPUApp, image::Texture};
+use crate::{Window, image::Texture};
 
 #[derive(Debug)]
 pub struct Image {
@@ -26,7 +26,7 @@ impl Image {
     }
 
     pub fn from_texture(texture: &Texture) -> Result<Self> {
-        let device = WGPUApp::device();
+        let device = Window::device();
 
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label:   "image_bind_group".into(),
@@ -102,7 +102,7 @@ impl ResourceLoader for Image {
 
 impl Image {
     pub(crate) fn uniform_layout() -> BindGroupLayout {
-        WGPUApp::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
+        Window::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
             label:   "image_bind_group_layout".into(),
             entries: &[
                 BindGroupLayoutEntry {

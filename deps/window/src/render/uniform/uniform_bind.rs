@@ -4,7 +4,7 @@ use bytemuck::Pod;
 use wgpu::{BindGroup, BindGroupLayout, Buffer, Device};
 
 use crate::{
-    BufferUsages, WGPUApp,
+    BufferUsages, Window,
     utils::{BufferHelper, DeviceHelper},
 };
 
@@ -46,6 +46,6 @@ impl<T: Pod + PartialEq> UniformBind<T> {
 
 impl<T: Default + Pod> From<BindGroupLayout> for UniformBind<T> {
     fn from(layout: BindGroupLayout) -> Self {
-        Self::new(WGPUApp::device(), &layout)
+        Self::new(Window::device(), &layout)
     }
 }

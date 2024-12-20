@@ -9,7 +9,7 @@ use refs::Weak;
 use wgpu::{Buffer, BufferUsages, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages};
 
 use crate::{
-    WGPUApp,
+    Window,
     image::Image,
     render::{
         sprite_drawer::shader_data::{SpriteBox, SpriteRenderView},
@@ -54,7 +54,7 @@ pub struct TexturedBoxPipeline {
 
 impl Default for TexturedBoxPipeline {
     fn default() -> Self {
-        let device = WGPUApp::device();
+        let device = Window::device();
         let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/sprite_textured.wgsl"));
 
         let sprite_view_layout = make_uniform_layout("sprites_view_layout", ShaderStages::VERTEX_FRAGMENT);
