@@ -52,7 +52,7 @@ web-time = "1.0.0"
 
 wgpu = "24.0"
 wgpu_text = "0.9.1"
-winit = "0.30.5"
+winit = "0.30"
 
 jni = "0.21.1"
 manage = "=0.6.0"
@@ -61,7 +61,6 @@ refs = { version = "=0.11.0", default-features = true }
 vents = "=0.6.0"
 
 audio = { path = "deps/audio" }
-call-counter = { path = "deps/call-counter" }
 dispatch = { path = "deps/dispatch" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
