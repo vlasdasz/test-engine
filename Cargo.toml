@@ -75,7 +75,6 @@ ui = { path = "deps/ui" }
 ui-benchmark = { path = "ui-benchmark" }
 ui-proc = { path = "deps/ui/ui-proc" }
 utils = { path = "deps/utils" }
-valid = { path = "deps/valid" }
 window = { path = "deps/window" }
 
 [patch.crates-io]
