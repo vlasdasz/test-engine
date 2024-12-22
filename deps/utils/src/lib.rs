@@ -1,3 +1,5 @@
+// Test engine should not depend on `rtools`
+
 mod elapsed;
 mod every;
 
