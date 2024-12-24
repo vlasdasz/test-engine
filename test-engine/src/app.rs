@@ -14,7 +14,7 @@ use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 use vents::OnceEvent;
 use wgpu::RenderPass;
-use wgpu_wrapper::{ElementState, MouseButton, Screenshot, Window};
+use window::{ElementState, MouseButton, Screenshot, Window};
 use winit::{
     event::{KeyEvent, TouchPhase},
     keyboard::Key,
@@ -209,7 +209,7 @@ impl App {
     }
 }
 
-impl wgpu_wrapper::App for App {
+impl window::App for App {
     fn window_ready(&mut self) {
         let view = UIManager::root_view_weak().__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();

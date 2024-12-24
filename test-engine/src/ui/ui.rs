@@ -14,7 +14,7 @@ use ui::{
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{Font, WGPUDrawer, Window};
+use window::{Font, WGPUDrawer, Window};
 
 use crate::{App, ui::ui_test::state::clear_state};
 

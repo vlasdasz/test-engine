@@ -67,6 +67,7 @@ gm = { path = "deps/gm" }
 image-proc = { path = "deps/window/image-proc" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
+render = { path = "deps/render" }
 scene = { path = "deps/scene" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }

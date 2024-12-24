@@ -4,7 +4,7 @@ use wgpu::Buffer;
 use crate::{BufferUsages, Window, utils::DeviceHelper};
 
 #[derive(Debug)]
-pub(crate) struct VecBuffer<T> {
+pub struct VecBuffer<T> {
     len:    u32,
     data:   Vec<T>,
     buffer: Buffer,

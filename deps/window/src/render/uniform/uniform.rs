@@ -30,7 +30,7 @@ pub fn make_bind<T: Pod>(data: &T, layout: &BindGroupLayout) -> BindGroup {
     device.bind(&buffer, layout)
 }
 
-pub(crate) fn make_uniform_layout(name: &'static str, shader: ShaderStages) -> BindGroupLayout {
+pub fn make_uniform_layout(name: &str, shader: ShaderStages) -> BindGroupLayout {
     Window::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
         label:   name.into(),
         entries: &[BindGroupLayoutEntry {

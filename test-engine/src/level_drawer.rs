@@ -2,7 +2,7 @@ use level::LevelManager;
 use manage::{ExistsManaged, data_manager::DataManager};
 use ui::UIManager;
 use wgpu::RenderPass;
-use wgpu_wrapper::{SpriteRenderView, Window};
+use window::{SpriteInstance, SpriteView, Window};
 
 pub(crate) struct LevelDrawer;
 
@@ -53,27 +53,24 @@ impl LevelDrawer {
                     sprite.rotation(),
                 );
             } else {
-                drawer.sprite_box.add(
-                    sprite.render_size(),
-                    sprite.position(),
-                    sprite.rotation(),
-                    *sprite.color(),
-                    sprite.z_position,
-                );
+                drawer.sprite_box.add(SpriteInstance {
+                    size:       sprite.render_size(),
+                    position:   sprite.position(),
+                    color:      *sprite.color(),
+                    rotation:   sprite.rotation(),
+                    z_position: sprite.z_position,
+                });
             }
         }
 
         drawer.sprite_box.draw(pass, scale, 0.0, camera_pos, resolution);
         drawer.textured_box.draw(pass, scale, 0.0, camera_pos, resolution);
 
-        drawer.polygon.draw(
-            pass,
-            SpriteRenderView {
-                camera_pos,
-                resolution,
-                camera_rotation: 0.0,
-                scale,
-            },
-        );
+        drawer.polygon.draw(pass, SpriteView {
+            camera_pos,
+            resolution,
+            camera_rotation: 0.0,
+            scale,
+        });
     }
 }

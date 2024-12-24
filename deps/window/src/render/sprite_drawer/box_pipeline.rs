@@ -1,7 +1,4 @@
-use gm::{
-    Color,
-    flat::{Point, Size},
-};
+use gm::flat::{Point, Size};
 use wgpu::{
     Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
     RenderPipeline, ShaderStages, include_wgsl,
@@ -11,7 +8,7 @@ use crate::{
     Window,
     render::{
         sprite_drawer::shader_data::{
-            FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES, SpriteBox, SpriteRenderView,
+            FULL_SCREEN_VERTEX_RANGE, FULL_SCREEN_VERTICES, SpriteInstance, SpriteView,
         },
         uniform::{UniformBind, make_uniform_layout},
         vec_buffer::VecBuffer,
@@ -24,18 +21,17 @@ use crate::{
 pub struct BoxPipeline {
     pipeline: RenderPipeline,
 
-    view: UniformBind<SpriteRenderView>,
-
     vertex_buffer: Buffer,
 
-    boxes: VecBuffer<SpriteBox>,
+    view:  UniformBind<SpriteView>,
+    boxes: VecBuffer<SpriteInstance>,
 }
 
 impl Default for BoxPipeline {
     fn default() -> Self {
         let device = Window::device();
 
-        let shader = device.create_shader_module(include_wgsl!("../shaders/sprite.wgsl"));
+        let shader = device.create_shader_module(include_wgsl!("sprite.wgsl"));
 
         let sprite_view_layout = make_uniform_layout("sprite_view_layout", ShaderStages::VERTEX_FRAGMENT);
 
@@ -51,27 +47,21 @@ impl Default for BoxPipeline {
             &shader,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
-            &[Point::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
+            &[Point::VERTEX_LAYOUT, SpriteInstance::VERTEX_LAYOUT],
         );
 
         Self {
             pipeline,
-            view: sprite_view_layout.into(),
             vertex_buffer: device.buffer(FULL_SCREEN_VERTICES, BufferUsages::VERTEX),
+            view: sprite_view_layout.into(),
             boxes: VecBuffer::default(),
         }
     }
 }
 
 impl BoxPipeline {
-    pub fn add(&mut self, size: Size, position: Point, rotation: f32, color: Color, z_position: f32) {
-        self.boxes.push(SpriteBox {
-            size,
-            position,
-            color,
-            rotation,
-            z_position,
-        });
+    pub fn add(&mut self, instance: SpriteInstance) {
+        self.boxes.push(instance);
     }
 
     pub fn draw<'a>(
@@ -88,7 +78,7 @@ impl BoxPipeline {
 
         render_pass.set_pipeline(&self.pipeline);
 
-        self.view.update(SpriteRenderView {
+        self.view.update(SpriteView {
             camera_pos,
             resolution,
             camera_rotation,

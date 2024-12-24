@@ -6,7 +6,7 @@ use gm::{
 };
 use rapier2d::dynamics::CoefficientCombineRule;
 use refs::{Own, Weak};
-use wgpu_wrapper::image::Image;
+use window::image::Image;
 
 use crate::{Body, LevelManager, Sprite, SpriteData, SpriteTemplates, level::LevelCreation};
 

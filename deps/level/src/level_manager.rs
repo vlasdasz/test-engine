@@ -7,7 +7,7 @@ use rapier2d::{
     prelude::{Collider, ColliderHandle},
 };
 use refs::{MainLock, Own, Weak};
-use wgpu_wrapper::Window;
+use window::Window;
 
 use crate::{Level, level::LevelPhysics};
 

@@ -12,7 +12,7 @@ use gm::{
     flat::{Point, Rect, Size},
 };
 use refs::{Own, Weak};
-use wgpu_wrapper::Window;
+use window::Window;
 
 use crate::{
     Container, DEBUG_VIEW, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView,

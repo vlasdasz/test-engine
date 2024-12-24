@@ -12,7 +12,7 @@ use crate::{
     Window,
     image::Image,
     render::{
-        sprite_drawer::shader_data::{SpriteBox, SpriteRenderView},
+        sprite_drawer::shader_data::{SpriteInstance, SpriteView},
         uniform::{UniformBind, make_uniform_layout},
         vec_buffer::VecBuffer,
         vertex_layout::VertexLayout,
@@ -45,17 +45,17 @@ const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 pub struct TexturedBoxPipeline {
     render_pipeline: RenderPipeline,
 
-    view: UniformBind<SpriteRenderView>,
+    view: UniformBind<SpriteView>,
 
     vertex_buffer: Buffer,
 
-    instances: IndexMap<Weak<Image>, VecBuffer<SpriteBox>>,
+    instances: IndexMap<Weak<Image>, VecBuffer<SpriteInstance>>,
 }
 
 impl Default for TexturedBoxPipeline {
     fn default() -> Self {
         let device = Window::device();
-        let shader = device.create_shader_module(wgpu::include_wgsl!("../shaders/sprite_textured.wgsl"));
+        let shader = device.create_shader_module(wgpu::include_wgsl!("sprite_textured.wgsl"));
 
         let sprite_view_layout = make_uniform_layout("sprites_view_layout", ShaderStages::VERTEX_FRAGMENT);
 
@@ -71,7 +71,7 @@ impl Default for TexturedBoxPipeline {
             &shader,
             PolygonMode::Fill,
             PrimitiveTopology::TriangleStrip,
-            &[Vertex2D::VERTEX_LAYOUT, SpriteBox::VERTEX_LAYOUT],
+            &[Vertex2D::VERTEX_LAYOUT, SpriteInstance::VERTEX_LAYOUT],
         );
 
         let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);
@@ -97,7 +97,7 @@ impl TexturedBoxPipeline {
     ) {
         let image = self.instances.entry(image).or_default();
 
-        image.push(SpriteBox {
+        image.push(SpriteInstance {
             size,
             position,
             color,
@@ -120,7 +120,7 @@ impl TexturedBoxPipeline {
 
         render_pass.set_pipeline(&self.render_pipeline);
 
-        self.view.update(SpriteRenderView {
+        self.view.update(SpriteView {
             camera_pos,
             resolution,
             camera_rotation,

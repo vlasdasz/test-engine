@@ -37,6 +37,7 @@ audio = { workspace = true, optional = true }
 generate = { workspace = true }
 gm = { workspace = true }
 level = { workspace = true }
+render = { workspace = true }
 scene = { workspace = true }
 store = { workspace = true }
 ui = { workspace = true }

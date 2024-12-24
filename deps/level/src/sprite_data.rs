@@ -5,7 +5,7 @@ use gm::{
 };
 use refs::Weak;
 use vents::Event;
-use wgpu_wrapper::{VertexBuffer, image::Image};
+use window::{VertexBuffer, image::Image};
 
 use crate::Sprite;
 

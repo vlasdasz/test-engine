@@ -1,7 +1,7 @@
 use gm::flat::Rect;
 use refs::Weak;
 use ui_proc::view;
-use wgpu_wrapper::{
+use window::{
     Buffer, BufferUsages, DeviceHelper, Window,
     image::{Image, ToImage},
     image_vertices_with_shrink,

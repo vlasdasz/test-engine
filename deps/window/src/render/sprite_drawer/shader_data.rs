@@ -22,7 +22,7 @@ pub(super) const FULL_SCREEN_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod, PartialEq, Educe)]
 #[educe(Default)]
-pub struct SpriteRenderView {
+pub struct SpriteView {
     pub camera_pos:      Point,
     #[educe(Default = (1000, 1000).into())]
     pub resolution:      Size,
@@ -33,7 +33,7 @@ pub struct SpriteRenderView {
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod)]
-pub(super) struct SpriteBox {
+pub struct SpriteInstance {
     pub size:       Size,
     pub position:   Point,
     pub color:      Color,
@@ -41,7 +41,7 @@ pub(super) struct SpriteBox {
     pub z_position: f32,
 }
 
-impl VertexLayout for SpriteBox {
+impl VertexLayout for SpriteInstance {
     const ATTRIBS: &'static [wgpu::VertexAttribute] =
         &wgpu::vertex_attr_array![2 => Float32x2, 3 => Float32x2, 4 => Float32x4, 5 => Float32, 6 => Float32];
     const VERTEX_LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {

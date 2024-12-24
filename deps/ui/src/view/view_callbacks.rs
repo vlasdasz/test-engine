@@ -1,6 +1,6 @@
 use gm::flat::Size;
 use refs::{Own, Weak};
-use wgpu_wrapper::RenderPass;
+use window::RenderPass;
 
 use crate::{View, view::view_frame::ViewFrame};
 
