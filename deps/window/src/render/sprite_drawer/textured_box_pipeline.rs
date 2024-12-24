@@ -1,8 +1,8 @@
 use std::ops::Range;
 
 use gm::{
-    Color, checked_usize_to_u32,
-    flat::{Point, Size, Vertex2D},
+    checked_usize_to_u32,
+    flat::{Point, Vertex2D},
 };
 use indexmap::IndexMap;
 use refs::Weak;
@@ -86,46 +86,20 @@ impl Default for TexturedBoxPipeline {
 }
 
 impl TexturedBoxPipeline {
-    pub fn add(
-        &mut self,
-        image: Weak<Image>,
-        size: Size,
-        position: Point,
-        rotation: f32,
-        color: Color,
-        z_position: f32,
-    ) {
+    pub fn add(&mut self, image: Weak<Image>, instance: SpriteInstance) {
         let image = self.instances.entry(image).or_default();
 
-        image.push(SpriteInstance {
-            size,
-            position,
-            color,
-            rotation,
-            z_position,
-        });
+        image.push(instance);
     }
 
-    pub fn draw<'a>(
-        &'a mut self,
-        render_pass: &mut RenderPass<'a>,
-        scale: f32,
-        camera_rotation: f32,
-        camera_pos: Point,
-        resolution: Size,
-    ) {
+    pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: SpriteView) {
         if self.instances.is_empty() {
             return;
         }
 
         render_pass.set_pipeline(&self.render_pipeline);
 
-        self.view.update(SpriteView {
-            camera_pos,
-            resolution,
-            camera_rotation,
-            scale,
-        });
+        self.view.update(view);
 
         for (image, instances) in &mut self.instances {
             if instances.is_empty() {

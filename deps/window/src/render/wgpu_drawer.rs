@@ -8,7 +8,7 @@ use crate::{
         image_drawer::ImageDrawer,
         old_rect_drawer::OldRectDrawer,
         path_drawer::PathDrawer,
-        sprite_drawer::{BoxPipeline, PolygonPipeline, TexturedBoxPipeline},
+        sprite_drawer::{PolygonPipeline, TexturedBoxPipeline},
     },
 };
 
@@ -26,7 +26,6 @@ pub struct WGPUDrawer {
     pub polygon_test: PolygonPipeline,
 
     pub polygon:      PolygonPipeline,
-    pub sprite_box:   BoxPipeline,
     pub textured_box: TexturedBoxPipeline,
 }
 

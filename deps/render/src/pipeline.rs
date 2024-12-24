@@ -5,7 +5,7 @@ use std::{fs::read_to_string, ops::Range};
 use bytemuck::Pod;
 use gm::{checked_usize_to_u32, flat::Point};
 use wgpu::{
-    Buffer, PipelineLayoutDescriptor, PrimitiveTopology, RenderPipeline, ShaderModuleDescriptor,
+    Buffer, PipelineLayoutDescriptor, PrimitiveTopology, RenderPass, RenderPipeline, ShaderModuleDescriptor,
     ShaderSource, ShaderStages,
 };
 use window::{
@@ -66,5 +66,30 @@ impl<const SHADER: &'static str, View: Default + Pod, Instance: VertexLayout> De
             view: sprite_view_layout.into(),
             instances: VecBuffer::default(),
         }
+    }
+}
+
+impl<const SHADER: &'static str, View: Pod + PartialEq, Instance: Pod> Pipeline<SHADER, View, Instance> {
+    pub fn add(&mut self, instance: Instance) {
+        self.instances.push(instance);
+    }
+
+    pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: View) {
+        if self.instances.is_empty() {
+            return;
+        }
+
+        render_pass.set_pipeline(&self.pipeline);
+
+        self.view.update(view);
+
+        self.instances.load();
+
+        render_pass.set_bind_group(0, self.view.bind(), &[]);
+
+        render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+        render_pass.set_vertex_buffer(1, self.instances.buffer().slice(..));
+
+        render_pass.draw(FULL_SCREEN_VERTEX_RANGE, 0..self.instances.len());
     }
 }

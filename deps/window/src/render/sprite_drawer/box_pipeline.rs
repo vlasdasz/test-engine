@@ -1,4 +1,4 @@
-use gm::flat::{Point, Size};
+use gm::flat::Point;
 use wgpu::{
     Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
     RenderPipeline, ShaderStages, include_wgsl,
@@ -18,7 +18,7 @@ use crate::{
 };
 
 #[derive(Debug)]
-pub struct BoxPipeline {
+pub struct BexPipeline {
     pipeline: RenderPipeline,
 
     vertex_buffer: Buffer,
@@ -27,7 +27,7 @@ pub struct BoxPipeline {
     boxes: VecBuffer<SpriteInstance>,
 }
 
-impl Default for BoxPipeline {
+impl Default for BexPipeline {
     fn default() -> Self {
         let device = Window::device();
 
@@ -59,31 +59,19 @@ impl Default for BoxPipeline {
     }
 }
 
-impl BoxPipeline {
+impl BexPipeline {
     pub fn add(&mut self, instance: SpriteInstance) {
         self.boxes.push(instance);
     }
 
-    pub fn draw<'a>(
-        &'a mut self,
-        render_pass: &mut RenderPass<'a>,
-        scale: f32,
-        camera_rotation: f32,
-        camera_pos: Point,
-        resolution: Size,
-    ) {
+    pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: SpriteView) {
         if self.boxes.is_empty() {
             return;
         }
 
         render_pass.set_pipeline(&self.pipeline);
 
-        self.view.update(SpriteView {
-            camera_pos,
-            resolution,
-            camera_rotation,
-            scale,
-        });
+        self.view.update(view);
 
         self.boxes.load();
 
