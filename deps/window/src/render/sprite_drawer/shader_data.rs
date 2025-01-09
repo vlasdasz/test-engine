@@ -1,23 +1,14 @@
-use std::{mem::size_of, ops::Range};
+use std::mem::size_of;
 
 use bytemuck::{Pod, Zeroable};
 use educe::Educe;
 use gm::{
-    Color, checked_usize_to_u32,
+    Color,
     flat::{Point, Size},
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};
 
 use crate::render::vertex_layout::VertexLayout;
-
-pub(super) const FULL_SCREEN_VERTICES: &[Point] = &[
-    Point::new(-1.0, 1.0),
-    Point::new(-1.0, -1.0),
-    Point::new(1.0, 1.0),
-    Point::new(1.0, -1.0),
-];
-
-pub(super) const FULL_SCREEN_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(FULL_SCREEN_VERTICES.len());
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod, PartialEq, Educe)]

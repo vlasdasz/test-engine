@@ -83,7 +83,8 @@ impl FromStr for Touch {
 
 #[cfg(test)]
 mod test {
-    use wgpu_wrapper::MouseButton;
+
+    use window::MouseButton;
 
     use crate::{Touch, input::TouchEvent};
 

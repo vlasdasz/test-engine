@@ -64,7 +64,7 @@ impl Image {
 
     pub fn from_file_data(data: &[u8], name: &str) -> Weak<Image> {
         Image::add_with_name(name, || {
-            Self::load_to_wgpu(name, data).expect("Failed to load image {name} to wgpu")
+            Self::load_to_wgpu(name, data).unwrap_or_else(|_| panic!("Failed to load image {name} to wgpu"))
         })
     }
 

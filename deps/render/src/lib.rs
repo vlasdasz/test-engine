@@ -5,8 +5,10 @@
 
 use window::{SpriteInstance, SpriteView};
 
-use crate::pipeline::Pipeline;
+use crate::rect_pipeline::RectPipeline;
 
-mod pipeline;
+mod rect_pipeline;
 
-pub type BoxPipeline = Pipeline<"sprite", SpriteView, SpriteInstance>;
+static SPRITE_SHADER: &str = include_str!("sprite.wgsl");
+
+pub type BoxPipeline = RectPipeline<"sprite_box", SPRITE_SHADER, SpriteView, SpriteInstance>;

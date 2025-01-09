@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::{fs::read_to_string, ops::Range};
+use std::ops::Range;
 
 use bytemuck::Pod;
 use gm::{checked_usize_to_u32, flat::Point};
@@ -22,7 +22,7 @@ const FULL_SCREEN_VERTICES: &[Point] = &[
 
 pub(super) const FULL_SCREEN_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(FULL_SCREEN_VERTICES.len());
 
-pub struct Pipeline<const SHADER: &'static str, View, Instance> {
+pub struct RectPipeline<const SHADER: &'static str, const SHADER_CODE: &'static str, View, Instance> {
     pipeline: RenderPipeline,
 
     vertex_buffer: Buffer,
@@ -31,28 +31,28 @@ pub struct Pipeline<const SHADER: &'static str, View, Instance> {
     instances: VecBuffer<Instance>,
 }
 
-impl<const SHADER: &'static str, View: Default + Pod, Instance: VertexLayout> Default
-    for Pipeline<SHADER, View, Instance>
+impl<const NAME: &'static str, const SHADER_CODE: &'static str, View: Default + Pod, Instance: VertexLayout>
+    Default for RectPipeline<NAME, SHADER_CODE, View, Instance>
 {
     fn default() -> Self {
         let device = Window::device();
 
         let shader = device.create_shader_module(ShaderModuleDescriptor {
-            label:  None,
-            source: ShaderSource::Wgsl(read_to_string(format!("{SHADER}.wgsl")).expect("Kkoko").into()),
+            label:  Some(&format!("{NAME}.wgsl")),
+            source: ShaderSource::Wgsl(SHADER_CODE.into()),
         });
 
         let sprite_view_layout =
-            make_uniform_layout(&format!("{SHADER}_uniform_layout"), ShaderStages::VERTEX_FRAGMENT);
+            make_uniform_layout(&format!("{NAME}_uniform_layout"), ShaderStages::VERTEX_FRAGMENT);
 
         let uniform_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label:                Some(&format!("{SHADER}_pipeline_layout")),
+            label:                Some(&format!("{NAME}_pipeline_layout")),
             bind_group_layouts:   &[&sprite_view_layout],
             push_constant_ranges: &[],
         });
 
         let pipeline = device.pipeline(
-            &format!("{SHADER}_pipeline"),
+            &format!("{NAME}_pipeline"),
             &uniform_layout,
             &shader,
             PolygonMode::Fill,
@@ -69,7 +69,9 @@ impl<const SHADER: &'static str, View: Default + Pod, Instance: VertexLayout> De
     }
 }
 
-impl<const SHADER: &'static str, View: Pod + PartialEq, Instance: Pod> Pipeline<SHADER, View, Instance> {
+impl<const SHADER: &'static str, const SHADER_CODE: &'static str, View: Pod + PartialEq, Instance: Pod>
+    RectPipeline<SHADER, SHADER_CODE, View, Instance>
+{
     pub fn add(&mut self, instance: Instance) {
         self.instances.push(instance);
     }
