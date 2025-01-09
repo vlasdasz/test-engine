@@ -1,12 +1,12 @@
 use level::LevelManager;
 use manage::{ExistsManaged, data_manager::DataManager};
 use refs::MainLock;
-use render::BoxPipeline;
+use render::SpriteBoxPipepeline;
 use ui::UIManager;
 use wgpu::RenderPass;
 use window::{SpriteInstance, SpriteView, Window};
 
-static SPRITE_DRAWER: MainLock<BoxPipeline> = MainLock::new();
+static SPRITE_DRAWER: MainLock<SpriteBoxPipepeline> = MainLock::new();
 
 pub(crate) struct LevelDrawer;
 

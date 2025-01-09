@@ -1,20 +1,31 @@
 use bytemuck::{Pod, Zeroable};
 use gm::{
     Color,
-    flat::{Point, Size},
+    flat::{Point, Rect, Size},
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};
-
-use crate::render::vertex_layout::VertexLayout;
+use window::VertexLayout;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod)]
-pub(super) struct RectInstance {
+pub struct RectInstance {
     pub origin:     Point,
     pub size:       Size,
     pub color:      Color,
     pub z_position: f32,
-    pub _padding:   u32,
+    _padding:       u32,
+}
+
+impl RectInstance {
+    pub fn new(rect: Rect, color: Color, z_position: f32) -> Self {
+        Self {
+            origin: rect.origin,
+            size: rect.size,
+            color,
+            z_position,
+            _padding: 0,
+        }
+    }
 }
 
 impl VertexLayout for RectInstance {

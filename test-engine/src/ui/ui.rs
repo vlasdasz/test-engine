@@ -7,7 +7,8 @@ use gm::{
 };
 use log::{trace, warn};
 use manage::data_manager::DataManager;
-use refs::{Own, Weak, weak_from_ref};
+use refs::{MainLock, Own, Weak, weak_from_ref};
+use render::{UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
     ViewFrame, ViewLayout, ViewSubviews, ViewTest,
@@ -17,6 +18,8 @@ use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Sectio
 use window::{Font, WGPUDrawer, Window};
 
 use crate::{App, ui::ui_test::state::clear_state};
+
+static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
 
 pub struct UI;
 
@@ -50,7 +53,11 @@ impl UI {
             );
         }
 
-        Window::drawer().rect.draw(pass, UIManager::resolution());
+        RECT_DRAWER.get_mut().draw(pass, RectView {
+            resolution: UIManager::resolution(),
+        });
+
+        // Window::drawer().rect.draw(pass, UIManager::resolution());
 
         Font::helvetice()
             .brush
@@ -101,17 +108,14 @@ impl UI {
 
         let clamped_frame = frame.clamp_to(root_size);
 
-        if view.color().a > 0.0 {
-            drawer.old_rect.draw(
-                pass,
-                &clamped_frame,
-                view.color(),
-                view.z_position() + *text_offset,
-            );
+        let window_size = UIManager::resolution();
 
-            if false {
-                drawer.rect.add(clamped_frame, *view.color(), view.z_position() + *text_offset);
-            }
+        if view.color().a > 0.0 {
+            pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
+
+            RECT_DRAWER
+                .get_mut()
+                .add(RectInstance::new(clamped_frame, *view.color(), view.z_position()));
         }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
@@ -155,13 +159,13 @@ impl UI {
             && clamped_frame.x() + 2.0 <= root_size.width
             && clamped_frame.y() + 2.0 <= root_size.height
         {
-            drawer.outline_rect(
-                pass,
-                &clamped_frame,
-                &Color::TURQUOISE,
-                view.z_position() - 0.2,
-                2.0,
-            );
+            pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
+
+            for rect in clamped_frame.to_borders(2.0) {
+                RECT_DRAWER
+                    .get_mut()
+                    .add(RectInstance::new(rect, Color::TURQUOISE, view.z_position() - 0.2));
+            }
         }
 
         let mut text_offset = 0.0;

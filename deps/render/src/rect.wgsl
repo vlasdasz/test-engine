@@ -26,15 +26,28 @@ fn v_main(
 ) -> VertexOutput {
     var out_pos: vec4<f32> = vec4<f32>(model, instance.z_position, 1.0);
 
+    out_pos.x /= 2.0;
+    out_pos.y /= 2.0;
+
+    out_pos.x += 0.5;
+    out_pos.y += 0.5;
+
+    out_pos.x /= view.resolution.x;
+    out_pos.y /= view.resolution.y;
+
     out_pos.x *= instance.size.x;
     out_pos.y *= instance.size.y;
 
-    out_pos.x *= view.resolution.y / view.resolution.x;
+    out_pos.x += instance.origin.x / view.resolution.x;
+    out_pos.y += instance.origin.y / view.resolution.y;
 
-    let scale: f32 = view.resolution.y / 20.0;
+    out_pos.y *= -1.0;
 
-    out_pos.x /= scale;
-    out_pos.y /= scale;
+    out_pos.x -= 0.5;
+    out_pos.y += 0.5;
+
+    out_pos.x *= 2.0;
+    out_pos.y *= 2.0;
 
     var out: VertexOutput;
     out.pos   = out_pos;
