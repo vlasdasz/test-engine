@@ -53,6 +53,10 @@ impl UI {
             );
         }
 
+        let window_size = UIManager::resolution();
+
+        pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
+
         RECT_DRAWER.get_mut().draw(pass, RectView {
             resolution: UIManager::resolution(),
         });
@@ -100,7 +104,7 @@ impl UI {
             return;
         }
 
-        view.render(pass);
+        view.before_render(pass);
 
         let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
 
@@ -115,7 +119,7 @@ impl UI {
 
             RECT_DRAWER
                 .get_mut()
-                .add(RectInstance::new(clamped_frame, *view.color(), view.z_position()));
+                .add(RectInstance::new(frame, *view.color(), view.z_position()));
         }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
@@ -154,14 +158,10 @@ impl UI {
             }
         }
 
-        if debug_frames
-            && clamped_frame.size.is_valid()
-            && clamped_frame.x() + 2.0 <= root_size.width
-            && clamped_frame.y() + 2.0 <= root_size.height
-        {
+        if debug_frames {
             pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
-            for rect in clamped_frame.to_borders(2.0) {
+            for rect in frame.to_borders(2.0) {
                 RECT_DRAWER
                     .get_mut()
                     .add(RectInstance::new(rect, Color::TURQUOISE, view.z_position() - 0.2));

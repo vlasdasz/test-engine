@@ -26,7 +26,7 @@ impl Setup for RenderView {
 }
 
 impl ViewCallbacks for RenderView {
-    fn render(&self, pass: &mut RenderPass) {
+    fn before_render(&self, pass: &mut RenderPass) {
         let drawer = Window::drawer();
 
         // drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED, 0.5);

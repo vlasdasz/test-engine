@@ -40,16 +40,16 @@ impl CollectionData for SomeView {
         2
     }
 
-    fn make_cell(&self) -> Own<dyn View> {
-        Label::new()
-    }
-
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
         cell.downcast_mut::<Label>().unwrap().set_text(format!("{index}"));
     }
 
     fn size_for_index(&self, _index: usize) -> Size {
         (50, 50).into()
+    }
+
+    fn make_cell(&self) -> Own<dyn View> {
+        Label::new()
     }
 }
 

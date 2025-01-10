@@ -88,7 +88,7 @@ impl PolygonView {
 }
 
 impl ViewCallbacks for PolygonView {
-    fn render(&self, pass: &mut RenderPass) {
+    fn before_render(&self, pass: &mut RenderPass) {
         let drawer = Window::drawer();
 
         drawer.polygon_test.clear();

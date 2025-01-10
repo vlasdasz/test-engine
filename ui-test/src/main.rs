@@ -48,11 +48,11 @@ async fn main() -> Result<()> {
 
 async fn test() -> Result<()> {
     test_base_ui().await?;
-    test_complex_views().await?;
-    test_base_views().await?;
     test_layout().await?;
+    test_base_views().await?;
     test_input_views().await?;
     test_containers().await?;
+    test_complex_views().await?;
     test_helper_views().await?;
 
     Ok(())
