@@ -70,6 +70,8 @@ impl Setup for OnTapAddTestView {
 }
 
 pub async fn test_add_on_tap() -> Result<()> {
+    debug!("Add on tap:");
+
     let view = UI::init_test_view::<OnTapAddTestView>().await;
 
     assert_eq!(
@@ -135,7 +137,7 @@ pub async fn test_add_on_tap() -> Result<()> {
     )
     .await?;
 
-    debug!("Add on tap: OK");
+    debug!("OK");
 
     Ok(())
 }
