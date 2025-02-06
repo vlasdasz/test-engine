@@ -35,8 +35,8 @@ pub async fn test_base_ui() -> anyhow::Result<()> {
     test_selection().await?;
     test_keymap().await?;
 
-    test_add_on_tap().await?;
     test_text_occlusion().await?;
+    test_add_on_tap().await?;
 
     Ok(())
 }
