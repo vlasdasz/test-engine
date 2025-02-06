@@ -57,11 +57,12 @@ impl UI {
 
         pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
-        RECT_DRAWER.get_mut().draw(pass, RectView {
-            resolution: UIManager::resolution(),
-        });
-
-        // Window::drawer().rect.draw(pass, UIManager::resolution());
+        RECT_DRAWER.get_mut().draw(
+            pass,
+            RectView {
+                resolution: UIManager::resolution(),
+            },
+        );
 
         Font::helvetice()
             .brush
@@ -106,7 +107,7 @@ impl UI {
 
         view.before_render(pass);
 
-        let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
+        let frame = *view.absolute_frame();
 
         let root_size = UI::root_view_size();
 
@@ -117,9 +118,11 @@ impl UI {
         if view.color().a > 0.0 {
             pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
-            RECT_DRAWER
-                .get_mut()
-                .add(RectInstance::new(frame, *view.color(), view.z_position()));
+            RECT_DRAWER.get_mut().add(RectInstance::new(
+                frame,
+                *view.color(),
+                view.z_position() + *text_offset,
+            ));
         }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
@@ -236,10 +239,6 @@ impl UI {
 
     pub fn root_view_size() -> Size {
         UIManager::root_view().size()
-    }
-
-    fn rescale_frame(rect: &Rect, display_scale: f32) -> Rect {
-        rect * display_scale
     }
 }
 

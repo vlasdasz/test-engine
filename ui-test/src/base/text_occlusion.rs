@@ -38,7 +38,7 @@ pub async fn test_text_occlusion() -> Result<()> {
 
     check_colors(
         r"
-              74  285 -  25  51  76`
+              74  285 -  25  51  76
              114  284 - 255 255 255
              127  286 - 255 255 255
              145  287 - 255 255 255

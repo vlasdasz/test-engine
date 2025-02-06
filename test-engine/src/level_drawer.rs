@@ -41,13 +41,16 @@ impl LevelDrawer {
 
         for sprite in level.sprites() {
             if sprite.image.exists_managed() {
-                drawer.textured_box.add(sprite.image, SpriteInstance {
-                    size:       sprite.render_size(),
-                    position:   sprite.position(),
-                    color:      *sprite.color(),
-                    rotation:   sprite.rotation(),
-                    z_position: sprite.z_position,
-                });
+                drawer.textured_box.add(
+                    sprite.image,
+                    SpriteInstance {
+                        size:       sprite.render_size(),
+                        position:   sprite.position(),
+                        color:      *sprite.color(),
+                        rotation:   sprite.rotation(),
+                        z_position: sprite.z_position,
+                    },
+                );
             } else if let Some(vertex_buffer) = &sprite.vertex_buffer {
                 drawer.polygon.add(
                     vertex_buffer,
@@ -66,24 +69,33 @@ impl LevelDrawer {
             }
         }
 
-        SPRITE_DRAWER.get_mut().draw(pass, SpriteView {
-            camera_pos,
-            resolution,
-            camera_rotation: 0.0,
-            scale,
-        });
-        drawer.textured_box.draw(pass, SpriteView {
-            camera_pos,
-            resolution,
-            camera_rotation: 0.0,
-            scale,
-        });
+        SPRITE_DRAWER.get_mut().draw(
+            pass,
+            SpriteView {
+                camera_pos,
+                resolution,
+                camera_rotation: 0.0,
+                scale,
+            },
+        );
+        drawer.textured_box.draw(
+            pass,
+            SpriteView {
+                camera_pos,
+                resolution,
+                camera_rotation: 0.0,
+                scale,
+            },
+        );
 
-        drawer.polygon.draw(pass, SpriteView {
-            camera_pos,
-            resolution,
-            camera_rotation: 0.0,
-            scale,
-        });
+        drawer.polygon.draw(
+            pass,
+            SpriteView {
+                camera_pos,
+                resolution,
+                camera_rotation: 0.0,
+                scale,
+            },
+        );
     }
 }
