@@ -15,7 +15,7 @@ use ui::{
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use window::{Font, WGPUDrawer, Window};
+use window::{Font, Window};
 
 use crate::{App, ui::ui_test::state::clear_state};
 
@@ -36,21 +36,13 @@ impl UI {
         let debug_frames = UIManager::draw_debug_frames();
         Self::draw_view(
             pass,
-            Window::drawer(),
             UIManager::root_view(),
             &mut sections,
             &mut 0.0,
             debug_frames,
         );
         if let Some(debug_view) = UIManager::debug_view() {
-            Self::draw_view(
-                pass,
-                Window::drawer(),
-                debug_view,
-                &mut sections,
-                &mut 0.0,
-                debug_frames,
-            );
+            Self::draw_view(pass, debug_view, &mut sections, &mut 0.0, debug_frames);
         }
 
         let window_size = UIManager::resolution();
@@ -86,7 +78,6 @@ impl UI {
 
     fn draw_view<'a>(
         pass: &mut RenderPass<'a>,
-        drawer: &'a mut WGPUDrawer,
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
         text_offset: &mut f32,
@@ -134,7 +125,7 @@ impl UI {
                 // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
-                drawer.image.draw(
+                Window::drawer().image.draw(
                     pass,
                     image.get_static(),
                     &clamped_frame,
@@ -150,7 +141,7 @@ impl UI {
             Self::draw_label(&frame, label, text_offset, sections);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
-                drawer.path.draw(
+                Window::drawer().path.draw(
                     pass,
                     &clamped_frame,
                     path.buffer(),
@@ -173,17 +164,11 @@ impl UI {
 
         let mut text_offset = 0.0;
 
+        let root_frame = UIManager::root_view().frame();
+
         for view in view.subviews().iter().rev() {
-            let root_frame = UIManager::root_view().frame();
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(
-                    pass,
-                    Window::drawer(),
-                    view.deref(),
-                    sections,
-                    &mut text_offset,
-                    debug_frames,
-                );
+                Self::draw_view(pass, view.deref(), sections, &mut text_offset, debug_frames);
             }
         }
     }
