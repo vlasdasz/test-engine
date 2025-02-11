@@ -40,13 +40,16 @@ impl Setup for TouchOrderView {
 pub async fn test_touch_order() -> Result<()> {
     UI::init_test_view::<TouchOrderView>().await;
 
-    assert_eq!(TouchStack::dump(), vec![vec![
-        "Layer: Root view".to_string(),
-        "TouchOrderView.view_1: Container".to_string(),
-        "TouchOrderView.view_2: Container".to_string(),
-        "TouchOrderView.view_3: Container".to_string(),
-        "TouchOrderView.view_4: Container".to_string(),
-    ]],);
+    assert_eq!(
+        TouchStack::dump(),
+        vec![vec![
+            "Layer: Root view".to_string(),
+            "TouchOrderView.view_1: Container".to_string(),
+            "TouchOrderView.view_2: Container".to_string(),
+            "TouchOrderView.view_3: Container".to_string(),
+            "TouchOrderView.view_4: Container".to_string(),
+        ]],
+    );
 
     clear_state();
 

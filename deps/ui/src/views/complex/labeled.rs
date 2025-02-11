@@ -1,4 +1,4 @@
-use std::any::type_name;
+use std::{any::type_name, fmt::Write};
 
 use gm::{Color, ToF32};
 use refs::{Weak, weak_from_ref};
@@ -66,7 +66,7 @@ impl<T: InputView + Default> Labeled<T> {
 
 impl<T: InputView + Default> Setup for Labeled<T> {
     fn setup(mut self: Weak<Self>) {
-        self.__view_base.view_label += &format!(": {}", type_name::<T>());
+        write!(self.__view_base.view_label, ": {}", type_name::<T>()).unwrap();
 
         self.label.set_alignment(TextAlignment::Left);
 

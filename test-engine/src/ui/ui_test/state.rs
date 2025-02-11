@@ -1,5 +1,5 @@
 use std::{
-    fmt::Display,
+    fmt::{Display, Write},
     sync::{Mutex, MutexGuard, OnceLock},
 };
 
@@ -41,7 +41,7 @@ pub fn increment_state() {
 
 pub fn append_state(val: impl Display) {
     let mut stored: String = get_state();
-    stored += &format!("{val}");
+    write!(stored, "{val}").unwrap();
     set_state(stored);
 }
 

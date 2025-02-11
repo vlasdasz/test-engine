@@ -27,12 +27,15 @@ impl Setup for OrderTestView {
 pub async fn test_view_order() -> Result<()> {
     let view = UI::init_test_view::<OrderTestView>().await;
 
-    assert_eq!(view.dump_subviews(), vec![
-        "OrderTestView.view_1: Container".to_string(),
-        "OrderTestView.view_2: Container".to_string(),
-        "OrderTestView.view_3: Container".to_string(),
-        "OrderTestView.view_4: Container".to_string()
-    ]);
+    assert_eq!(
+        view.dump_subviews(),
+        vec![
+            "OrderTestView.view_1: Container".to_string(),
+            "OrderTestView.view_2: Container".to_string(),
+            "OrderTestView.view_3: Container".to_string(),
+            "OrderTestView.view_4: Container".to_string()
+        ]
+    );
 
     assert_eq!(
         view.z_position(),

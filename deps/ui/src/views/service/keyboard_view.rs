@@ -27,10 +27,10 @@ impl Setup for KeyboardView {
 
             if i == 1 {
                 container.place().lr(20);
-            };
+            }
             if i == 2 {
                 container.place().lr(80);
-            };
+            }
 
             container.place().all_hor();
             for button in *row {

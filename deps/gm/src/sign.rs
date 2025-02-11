@@ -18,9 +18,13 @@ impl Sign {
 
 impl Display for Sign {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::Plus => '+',
-            Self::Minus => '-',
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Plus => '+',
+                Self::Minus => '-',
+            }
+        )
     }
 }
