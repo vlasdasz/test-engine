@@ -58,7 +58,7 @@ impl Texture {
             view_formats: &[],
         });
 
-        WGPUApp::queue().write_texture(
+        Window::queue().write_texture(
             TexelCopyTextureInfo {
                 aspect:    TextureAspect::All,
                 texture:   &texture,
