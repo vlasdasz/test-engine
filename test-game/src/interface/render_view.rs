@@ -37,11 +37,14 @@ impl ViewCallbacks for RenderView {
 
         drawer.polygon.clear();
 
-        drawer.polygon.draw(pass, SpriteRenderView {
-            camera_pos:      Point::default(),
-            resolution:      UIManager::resolution(),
-            camera_rotation: 0.0,
-            scale:           1.0,
-        });
+        drawer.polygon.draw(
+            pass,
+            SpriteRenderView {
+                camera_pos:      Point::default(),
+                resolution:      UIManager::resolution(),
+                camera_rotation: 0.0,
+                scale:           1.0,
+            },
+        );
     }
 }

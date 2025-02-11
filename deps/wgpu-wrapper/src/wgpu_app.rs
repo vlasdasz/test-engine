@@ -120,7 +120,7 @@ impl WGPUApp {
     }
 
     async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
-        let instance = Instance::new(InstanceDescriptor {
+        let instance = Instance::new(&InstanceDescriptor {
             backends: Backends::all(),
             ..Default::default()
         });
@@ -326,10 +326,10 @@ impl ApplicationHandler<Events> for WGPUApp {
                 match self.state.render() {
                     Ok(()) => {}
                     Err(e) => error!("Render error: {e:?}"),
-                };
+                }
             }
             _ => {}
-        };
+        }
     }
 
     fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {

@@ -2,8 +2,8 @@ use anyhow::Result;
 use gm::{Platform, flat::Size};
 use image::{DynamicImage, GenericImageView};
 use wgpu::{
-    AddressMode, Device, Extent3d, FilterMode, ImageCopyTexture, ImageDataLayout, Origin3d, Sampler,
-    SamplerDescriptor, TextureAspect, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
+    AddressMode, Device, Extent3d, FilterMode, Origin3d, Sampler, SamplerDescriptor, TexelCopyBufferLayout,
+    TexelCopyTextureInfo, TextureAspect, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
     TextureView, TextureViewDescriptor,
 };
 
@@ -59,14 +59,14 @@ impl Texture {
         });
 
         WGPUApp::queue().write_texture(
-            ImageCopyTexture {
+            TexelCopyTextureInfo {
                 aspect:    TextureAspect::All,
                 texture:   &texture,
                 mip_level: 0,
                 origin:    Origin3d::ZERO,
             },
             data,
-            ImageDataLayout {
+            TexelCopyBufferLayout {
                 offset:         0,
                 bytes_per_row:  Some(u32::from(channels) * extend_size.width),
                 rows_per_image: Some(extend_size.height),

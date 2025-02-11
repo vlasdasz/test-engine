@@ -41,8 +41,8 @@ impl Default for OldRectDrawer {
 
         let shader = device.create_shader_module(include_wgsl!("shaders/rect.wgsl"));
 
-        let vertex_layout = make_uniform_layout("old_rect_vertext_layout", ShaderStages::VERTEX);
-        let fragment_layout = make_uniform_layout("old_rect_vertext_layout", ShaderStages::FRAGMENT);
+        let vertex_layout = make_uniform_layout("old_rect_vertex_layout", ShaderStages::VERTEX);
+        let fragment_layout = make_uniform_layout("old_rect_vertex_layout", ShaderStages::FRAGMENT);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some("Old Rect Pipeline Layout"),

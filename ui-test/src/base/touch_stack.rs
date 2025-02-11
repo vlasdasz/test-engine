@@ -27,10 +27,10 @@ pub async fn test_touch_stack() -> Result<()> {
 
     button.on_tap(|| {});
 
-    assert_eq!(TouchStack::dump(), vec![vec![
-        "Layer: Root view",
-        button.view_label()
-    ]],);
+    assert_eq!(
+        TouchStack::dump(),
+        vec![vec!["Layer: Root view", button.view_label()]],
+    );
 
     from_main(move || button.remove_from_superview()).await;
 
@@ -40,18 +40,21 @@ pub async fn test_touch_stack() -> Result<()> {
 
     view.button.on_tap(|| {});
 
-    assert_eq!(TouchStack::dump(), vec![vec![
-        "Layer: Root view",
-        view.button.view_label()
-    ]],);
+    assert_eq!(
+        TouchStack::dump(),
+        vec![vec!["Layer: Root view", view.button.view_label()]],
+    );
 
     view.button2.on_tap(|| {});
 
-    assert_eq!(TouchStack::dump(), vec![vec![
-        "Layer: Root view",
-        view.button.view_label(),
-        view.button2.view_label(),
-    ]],);
+    assert_eq!(
+        TouchStack::dump(),
+        vec![vec![
+            "Layer: Root view",
+            view.button.view_label(),
+            view.button2.view_label(),
+        ]],
+    );
 
     view.button.disable_touch();
     view.button2.disable_touch();
@@ -62,10 +65,13 @@ pub async fn test_touch_stack() -> Result<()> {
 
     wait_for_next_frame().await;
 
-    assert_eq!(TouchStack::dump(), vec![
-        vec!["Layer: Root view".to_string()],
-        vec!["Layer: Alert".to_string(), "Alert.ok_button: Button".to_string()],
-    ],);
+    assert_eq!(
+        TouchStack::dump(),
+        vec![
+            vec!["Layer: Root view".to_string()],
+            vec!["Layer: Alert".to_string(), "Alert.ok_button: Button".to_string()],
+        ],
+    );
 
     inject_touches(
         r"

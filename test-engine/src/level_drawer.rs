@@ -66,11 +66,14 @@ impl LevelDrawer {
         drawer.sprite_box.draw(pass, scale, 0.0, camera_pos, resolution);
         drawer.textured_box.draw(pass, scale, 0.0, camera_pos, resolution);
 
-        drawer.polygon.draw(pass, SpriteRenderView {
-            camera_pos,
-            resolution,
-            camera_rotation: 0.0,
-            scale,
-        });
+        drawer.polygon.draw(
+            pass,
+            SpriteRenderView {
+                camera_pos,
+                resolution,
+                camera_rotation: 0.0,
+                scale,
+            },
+        );
     }
 }

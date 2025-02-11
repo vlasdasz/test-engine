@@ -34,7 +34,7 @@ pub fn decrypt(data: &[u8], key: &EncryptionKey) -> Vec<u8> {
 #[cfg(test)]
 mod test {
 
-    use rand::{RngCore, thread_rng};
+    use rand::{RngCore, rng};
 
     use crate::{
         EncryptionKey,
@@ -44,7 +44,7 @@ mod test {
     #[test]
     fn test() {
         let mut key: EncryptionKey = [0; KEY_SIZE];
-        thread_rng().fill_bytes(&mut key);
+        rng().fill_bytes(&mut key);
 
         let encrypted = encrypt(
             b"SOKOLLL!! fjdsa fjasd;k flkdsa hfjklsda lfdkkadshksalkjaskjd jljljsdslkjsksj",

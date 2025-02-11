@@ -99,11 +99,14 @@ impl ViewCallbacks for PolygonView {
 
         drawer.polygon_test.add(&self.points, (0, 0).into(), Color::GREEN, 0.0);
 
-        drawer.polygon_test.draw(pass, SpriteRenderView {
-            camera_pos:      Point::default(),
-            resolution:      UIManager::resolution(),
-            camera_rotation: 0.0,
-            scale:           1.0,
-        });
+        drawer.polygon_test.draw(
+            pass,
+            SpriteRenderView {
+                camera_pos:      Point::default(),
+                resolution:      UIManager::resolution(),
+                camera_rotation: 0.0,
+                scale:           1.0,
+            },
+        );
     }
 }

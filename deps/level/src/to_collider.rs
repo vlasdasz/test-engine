@@ -49,10 +49,14 @@ fn _concave_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
     let (points, indices) = make_indices(points);
 
     let result = catch_unwind(|| {
-        ColliderBuilder::convex_decomposition_with_params(&points, &indices, &VHACDParameters {
-            concavity: 0.0,
-            ..Default::default()
-        })
+        ColliderBuilder::convex_decomposition_with_params(
+            &points,
+            &indices,
+            &VHACDParameters {
+                concavity: 0.0,
+                ..Default::default()
+            },
+        )
     });
 
     if result.is_err() {

@@ -195,7 +195,7 @@ impl ViewCallbacks for TextField {
         } else {
             if let Some(string) = UIManager::close_keyboard() {
                 self.set_text(string);
-            };
+            }
             UIEvents::keyboard_input().unsibscribe(this);
             UIEvents::keyboard_key().unsibscribe(this);
 

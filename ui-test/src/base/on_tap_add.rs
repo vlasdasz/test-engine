@@ -72,9 +72,10 @@ impl Setup for OnTapAddTestView {
 pub async fn test_add_on_tap() -> Result<()> {
     let view = UI::init_test_view::<OnTapAddTestView>().await;
 
-    assert_eq!(view.dump_subviews(), vec![
-        "OnTapAddTestView.btn: Button".to_string()
-    ]);
+    assert_eq!(
+        view.dump_subviews(),
+        vec!["OnTapAddTestView.btn: Button".to_string()]
+    );
 
     inject_touches(
         "
@@ -84,10 +85,10 @@ pub async fn test_add_on_tap() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.dump_subviews(), vec![
-        "OnTapAddTestView.btn: Button".to_string(),
-        "SomeView".to_string()
-    ]);
+    assert_eq!(
+        view.dump_subviews(),
+        vec!["OnTapAddTestView.btn: Button".to_string(), "SomeView".to_string()]
+    );
 
     check_colors(
         r"

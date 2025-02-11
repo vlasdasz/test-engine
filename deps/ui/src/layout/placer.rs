@@ -398,7 +398,7 @@ impl Placer {
                 }
             }
             _ => unimplemented!(),
-        };
+        }
 
         view.set_frame(frame);
     }
@@ -413,7 +413,7 @@ impl Placer {
             Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
             Anchor::Right => frame.origin.x = a_frame.x() - rule.offset - frame.width(),
             _ => unimplemented!(),
-        };
+        }
         view.set_frame(frame);
     }
 
@@ -434,7 +434,7 @@ impl Placer {
                 frame.set_center(center);
             }
             _ => unimplemented!(),
-        };
+        }
         view.set_frame(frame);
     }
 
@@ -455,7 +455,7 @@ impl Placer {
                     .into();
             }
             Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_mut(), ratio),
-        };
+        }
         self.view.set_frame(frame);
     }
 
@@ -493,7 +493,7 @@ impl Placer {
                 cen.y,
             )),
             _ => unimplemented!(),
-        };
+        }
         view.set_frame(frame);
     }
 }
