@@ -3127,6 +3127,10 @@ name = "render-test"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "dispatch 0.1.0",
+ "gm",
+ "refs",
+ "render",
  "tokio",
  "window",
 ]

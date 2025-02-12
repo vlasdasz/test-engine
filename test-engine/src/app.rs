@@ -183,7 +183,7 @@ impl App {
     }
 
     pub async fn take_screenshot() -> Result<Screenshot> {
-        let recv = from_main(|| Window::current().request_read_display()).await;
+        let recv = from_main(|| Window::current().request_screenshot()).await;
         let screenshot = recv.await?;
         Ok(screenshot)
     }

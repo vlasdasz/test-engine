@@ -250,7 +250,7 @@ impl Window {
         let _ = Self::winit_window().request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn request_read_display(&self) -> Receiver<Screenshot> {
+    pub fn request_screenshot(&self) -> Receiver<Screenshot> {
         self.state.request_read_display()
     }
 

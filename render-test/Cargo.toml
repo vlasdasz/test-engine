@@ -11,4 +11,9 @@ path = "src/main.rs"
 anyhow = { workspace = true }
 tokio = { workspace = true }
 
+refs = { workspace = true }
+
+dispatch = { workspace = true }
+gm = { workspace = true }
+render = { workspace = true }
 window = { workspace = true }
