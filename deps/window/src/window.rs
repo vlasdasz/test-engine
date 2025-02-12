@@ -225,8 +225,8 @@ impl Window {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start(app: Box<dyn App>) -> Result<()> {
-        Self::start_internal(app, EventLoop::new()?).await
+    pub async fn start(app: impl App + 'static) -> Result<()> {
+        Self::start_internal(Box::new(app), EventLoop::new()?).await
     }
 
     #[cfg(target_os = "android")]

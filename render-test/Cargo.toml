@@ -1,0 +1,14 @@
+[package]
+edition = "2024"
+name = "render-test"
+version = "0.1.0"
+
+[[bin]]
+name = "render-test"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+tokio = { workspace = true }
+
+window = { workspace = true }

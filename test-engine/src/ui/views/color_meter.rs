@@ -22,7 +22,7 @@ impl Setup for ColorMeter {
 
 impl ViewCallbacks for ColorMeter {
     fn update(&mut self) {
-        let pos = App::current().cursor_position;
+        let pos = App::cursor_position();
 
         if pos.is_negative() {
             return;

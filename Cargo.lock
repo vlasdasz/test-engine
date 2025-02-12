@@ -3123,6 +3123,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "render-test"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "tokio",
+ "window",
+]
+
+[[package]]
 name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4034,9 +4043,9 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
 name = "vents"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cbe57794cf0d67fcd6f664e2acd6ffe0d2df2767b62093c39484a81a00e9a00"
+checksum = "80f3d8b5a520fb43005cea47e5c999692ac373d77c11b6bf0145130f959fa7d3"
 dependencies = [
  "chrono",
  "log",

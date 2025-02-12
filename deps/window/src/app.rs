@@ -8,15 +8,21 @@ use winit::event::{ElementState, KeyEvent, MouseButton, Touch};
 use crate::Window;
 
 pub trait App {
-    fn window_ready(&mut self);
-    fn update(&mut self);
-    fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>);
-    fn resize(&mut self, position: Point, size: Size<u32>);
-    fn mouse_moved(&mut self, position: Point) -> bool;
-    fn mouse_event(&mut self, state: ElementState, button: MouseButton) -> bool;
-    fn mouse_scroll(&mut self, delta: Point);
-    fn touch_event(&mut self, touch: Touch) -> bool;
-    fn key_event(&mut self, event: KeyEvent);
-    fn set_window(&mut self, app: Rglica<Window>);
-    fn dropped_file(&mut self, path: PathBuf);
+    fn window_ready(&mut self) {}
+    fn update(&mut self) {}
+    fn render<'a>(&'a mut self, _pass: &mut RenderPass<'a>) {}
+    fn resize(&mut self, _position: Point, _size: Size<u32>) {}
+    fn mouse_moved(&mut self, _position: Point) -> bool {
+        false
+    }
+    fn mouse_event(&mut self, _state: ElementState, _button: MouseButton) -> bool {
+        false
+    }
+    fn mouse_scroll(&mut self, _delta: Point) {}
+    fn touch_event(&mut self, _touch: Touch) -> bool {
+        false
+    }
+    fn key_event(&mut self, _event: KeyEvent) {}
+    fn set_window(&mut self, _app: Rglica<Window>) {}
+    fn dropped_file(&mut self, _path: PathBuf) {}
 }
