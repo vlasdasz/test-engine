@@ -9,7 +9,7 @@ use gm::{
     LossyConvert, Platform,
     flat::{Point, Size},
 };
-use log::{error, info};
+use log::{error, info, warn};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
@@ -62,6 +62,8 @@ pub struct Window {
     pub(crate) surface: Option<Surface>,
     pub(crate) drawer:  Option<WGPUDrawer>,
 
+    pub(crate) title_set: bool,
+
     close: AtomicBool,
 }
 
@@ -78,7 +80,7 @@ impl Window {
         &Self::current().queue
     }
 
-    fn winit_window() -> &'static winit::window::Window {
+    pub(crate) fn winit_window() -> &'static winit::window::Window {
         &Self::current()
             .surface
             .as_ref()
@@ -214,6 +216,7 @@ impl Window {
             resumed: false,
             surface: None,
             drawer: None,
+            title_set: false,
             close: AtomicBool::default(),
         }
         .into();
@@ -239,10 +242,16 @@ impl Window {
         Ok(())
     }
 
-    pub fn set_title(&self, title: impl Into<String>) {
-        if Platform::DESKTOP {
-            Self::winit_window().set_title(&title.into());
-        }
+    pub fn set_title(title: impl Into<String>) {
+        let title = title.into();
+        on_main(move || {
+            Self::current().title_set = true;
+            if Platform::DESKTOP {
+                Self::winit_window().set_title(&title);
+            } else {
+                warn!("set_title is not supported on this platform");
+            }
+        });
     }
 
     pub fn set_size(&self, size: impl Into<Size<u32>>) {

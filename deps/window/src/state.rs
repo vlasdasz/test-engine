@@ -95,6 +95,10 @@ impl State {
     pub fn update(&mut self) {
         self.app.update();
 
+        if Window::current().title_set {
+            return;
+        }
+
         if self.frame_counter.update() {
             let a = format!(
                 "{:.2}ms frame {:.1} FPS",
@@ -102,7 +106,10 @@ impl State {
                 self.frame_counter.fps
             );
             let app = Window::current();
-            Window::current().set_title(format!("{a} {} x {}", app.config.width, app.config.height));
+            if Platform::DESKTOP {
+                Window::winit_window()
+                    .set_title(&format!("{a} {} x {}", app.config.width, app.config.height));
+            }
         }
     }
 

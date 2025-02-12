@@ -171,7 +171,7 @@ impl App {
     }
 
     pub fn set_window_title(title: impl Into<String>) {
-        Window::current().set_title(title);
+        Window::set_title(title);
     }
 
     pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {

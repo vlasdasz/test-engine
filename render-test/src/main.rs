@@ -1,15 +1,24 @@
-mod app;
+#![allow(incomplete_features)]
+#![feature(specialization)]
+
+use test_engine::ui::Setup;
+mod render;
 
 use anyhow::Result;
-use window::Window;
+use test_engine::{App, ui::Container};
 
-use crate::app::RenderApp;
+use crate::render::test_render;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    dbg!("A");
+    App::start_with_actor(Container::new(), async {
+        test_engine::ui::UIManager::set_display_touches(true);
 
-    Window::start(RenderApp {}).await?;
+        test_render().await?;
 
-    Ok(())
+        App::stop();
+
+        Ok(())
+    })
+    .await
 }

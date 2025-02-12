@@ -1,9 +1,16 @@
 
 include build/common.mk
 
+render:
+	cargo run -p render-test
+
 ui:
 	cargo run -p ui-test
 	cargo run -p ui-test --release
+
+window:
+	make render
+	make ui
 
 ui3:
 	cargo run -p ui-benchmark --profile=r3
