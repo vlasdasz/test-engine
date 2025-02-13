@@ -6,6 +6,7 @@
 pub use crate::shader_data::SpriteView;
 use crate::{pipelines::rect_pipeline::RectPipeline, rect_instance::RectInstance, rect_view::RectView};
 
+mod buffer_helper;
 mod device_helper;
 mod path_data;
 mod pipelines;
