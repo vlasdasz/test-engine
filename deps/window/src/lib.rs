@@ -1,6 +1,5 @@
 mod app;
 mod text;
-pub mod utils;
 mod window;
 
 mod frame_counter;

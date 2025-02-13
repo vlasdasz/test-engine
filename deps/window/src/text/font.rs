@@ -1,7 +1,8 @@
 use anyhow::Result;
+use wgpu::{CompareFunction, DepthBiasState, DepthStencilState, StencilState, TextureFormat};
 use wgpu_text::{BrushBuilder, TextBrush, glyph_brush::ab_glyph::FontRef};
 
-use crate::{utils::depth_stencil_state, window::Window};
+use crate::window::Window;
 
 pub struct Font {
     pub name:  &'static str,
@@ -11,7 +12,13 @@ pub struct Font {
 impl Font {
     fn new(name: &'static str, data: &'static [u8]) -> Result<Self> {
         let app = Window::current();
-        let brush = BrushBuilder::using_font_bytes(data)?.with_depth_stencil(depth_stencil_state().into())
+        let brush = BrushBuilder::using_font_bytes(data)?.with_depth_stencil( DepthStencilState {
+            format:              TextureFormat::Depth32Float,
+            depth_write_enabled: true,
+            depth_compare:       CompareFunction::Less,
+            stencil:             StencilState::default(),
+            bias:                DepthBiasState::default(),
+        }.into())
             /* .initial_cache_size((16_384, 16_384))) */ // use this to avoid resizing cache texture
             .build(&app.device, app.config.width, app.config.height, app.config.format);
         Ok(Self { name, brush })
