@@ -5,8 +5,11 @@ version = "0.1.0"
 
 [dependencies]
 bytemuck = { workspace = true }
-gm = { workspace = true }
+educe = { workspace = true }
 indexmap = { workspace = true }
-refs = { workspace = true }
 wgpu = { workspace = true }
+
+refs = { workspace = true }
+
+gm = { workspace = true }
 window = { workspace = true }

@@ -57,7 +57,7 @@ pub use dispatch::{after, async_after, from_main, on_main, wait_for_next_frame};
 pub use generate;
 pub use manage::data_manager::DataManager;
 pub use vents::{DelayedEvent, Event, OnceEvent};
-pub use window::{RenderPass, SpriteView, VertexBuffer, Window, cast_slice, image::ToImage};
+pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
 #[cfg(target_os = "android")]
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;

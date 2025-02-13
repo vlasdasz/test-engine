@@ -2,12 +2,11 @@ use level::LevelManager;
 use manage::{ExistsManaged, data_manager::DataManager};
 use refs::MainLock;
 use render::{
-    BackgroundPipeline, PolygonPipeline, SpriteBoxPipepeline, TexturedSpriteBoxPipeline,
+    BackgroundPipeline, PolygonPipeline, SpriteBoxPipepeline, SpriteView, TexturedSpriteBoxPipeline,
     rect_instance::RectInstance,
 };
 use ui::UIManager;
 use wgpu::RenderPass;
-use window::SpriteView;
 
 static SPRITE_DRAWER: MainLock<SpriteBoxPipepeline> = MainLock::new();
 static TEXTURED_SPRITE_DRAWER: MainLock<TexturedSpriteBoxPipeline> = MainLock::new();

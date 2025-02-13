@@ -4,7 +4,8 @@ use gm::{
     flat::{Point, Rect, Size},
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};
-use window::VertexLayout;
+
+use crate::vertex_layout::VertexLayout;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod)]

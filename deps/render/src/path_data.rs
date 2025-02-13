@@ -8,8 +8,7 @@ use wgpu::{
     BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutEntry, BindingResource, BindingType, Buffer,
     BufferBinding, BufferBindingType, BufferUsages, ShaderStages,
 };
-
-use crate::{Window, utils::DeviceHelper};
+use window::{DeviceHelper, Window};
 
 #[derive(Debug)]
 pub struct PathData {

@@ -6,9 +6,12 @@ use wgpu::{
     PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
     include_wgsl,
 };
-use window::{DeviceHelper, VertexLayout, Window};
+use window::{DeviceHelper, Window};
 
-use crate::uniform::{cached_float_bind, make_uniform_layout};
+use crate::{
+    uniform::{cached_float_bind, make_uniform_layout},
+    vertex_layout::VertexLayout,
+};
 
 #[derive(Debug)]
 pub struct PathPipeline {
