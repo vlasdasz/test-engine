@@ -5,10 +5,8 @@ use wgpu::{
     ShaderModule, VertexBufferLayout, VertexState,
     util::{BufferInitDescriptor, DeviceExt},
 };
-
-use crate::{
-    BufferUsages, PolygonMode,
-    state::RGBA_TEXTURE_FORMAT,
+use window::{
+    BufferUsages, PolygonMode, RGBA_TEXTURE_FORMAT,
     utils::{ToBytes, depth_stencil_state},
 };
 

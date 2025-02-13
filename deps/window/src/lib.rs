@@ -14,8 +14,8 @@ pub use app::*;
 pub use bytemuck::cast_slice;
 pub use image_proc::include_images;
 pub use screenshot::*;
+pub use state::RGBA_TEXTURE_FORMAT;
 pub use text::*;
-pub use utils::DeviceHelper;
 pub use vertex_buffer::VertexBuffer;
 pub use wgpu::{
     Buffer, BufferUsages, Device, PolygonMode, RenderPass,

@@ -6,7 +6,9 @@ use wgpu::{
     BindGroup, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType,
     BufferBindingType, ShaderStages,
 };
-use window::{BufferUsages, DeviceHelper, Window};
+use window::{BufferUsages, Window};
+
+use crate::device_helper::DeviceHelper;
 
 static FLOAT_BINDS: MainLock<HashMap<u32, BindGroup>> = MainLock::new();
 

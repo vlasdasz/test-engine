@@ -17,9 +17,9 @@ use crate::{
 type ReadDisplayRequest = Sender<Screenshot>;
 
 #[cfg(not(target_os = "android"))]
-pub(crate) const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
+pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
 #[cfg(target_os = "android")]
-pub(crate) const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
+pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
 pub struct State {
     pub(crate) fonts: HashMap<&'static str, Font>,

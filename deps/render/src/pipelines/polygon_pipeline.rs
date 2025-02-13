@@ -4,9 +4,10 @@ use wgpu::{
     BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor, PolygonMode,
     PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages, include_wgsl,
 };
-use window::{DeviceHelper, VertexBuffer, Window};
+use window::{VertexBuffer, Window};
 
 use crate::{
+    device_helper::DeviceHelper,
     shader_data::SpriteView,
     uniform::{UniformBind, make_bind, make_uniform_layout},
     vertex_layout::VertexLayout,

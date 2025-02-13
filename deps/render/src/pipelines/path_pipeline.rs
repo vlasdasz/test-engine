@@ -6,9 +6,10 @@ use wgpu::{
     PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
     include_wgsl,
 };
-use window::{DeviceHelper, Window};
+use window::Window;
 
 use crate::{
+    device_helper::DeviceHelper,
     uniform::{cached_float_bind, make_uniform_layout},
     vertex_layout::VertexLayout,
 };

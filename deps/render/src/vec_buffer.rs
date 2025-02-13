@@ -1,6 +1,8 @@
 use bytemuck::Pod;
 use wgpu::Buffer;
-use window::{BufferUsages, DeviceHelper, Window};
+use window::{BufferUsages, Window};
+
+use crate::device_helper::DeviceHelper;
 
 #[derive(Debug)]
 pub struct VecBuffer<T> {
