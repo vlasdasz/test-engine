@@ -6,5 +6,7 @@ version = "0.1.0"
 [dependencies]
 bytemuck = { workspace = true }
 gm = { workspace = true }
+indexmap = { workspace = true }
+refs = { workspace = true }
 wgpu = { workspace = true }
 window = { workspace = true }

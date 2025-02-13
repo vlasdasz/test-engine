@@ -6,9 +6,9 @@ struct SpriteView {
     scale: f32,
 }
 
-struct SpriteBox {
-    @location(2) size:       vec2<f32>,
-    @location(3) position:   vec2<f32>,
+struct RectInstance {
+    @location(2) position:   vec2<f32>,
+    @location(3) size:       vec2<f32>,
     @location(4) color:      vec4<f32>,
     @location(5) rotation:   f32,
     @location(6) z_position: f32,
@@ -36,7 +36,7 @@ struct VertexOutput {
 @vertex
 fn v_main(
     @location(0) model: vec2<f32>,
-    instance: SpriteBox,
+    instance: RectInstance,
 ) -> VertexOutput {
     var out_pos: vec4<f32> = vec4<f32>(model, instance.z_position, 1.0);
 

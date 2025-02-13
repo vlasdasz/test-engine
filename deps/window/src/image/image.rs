@@ -14,9 +14,9 @@ use crate::{Window, image::Texture};
 
 #[derive(Debug)]
 pub struct Image {
-    pub size:        Size<u32>,
-    pub channels:    u8,
-    pub(crate) bind: BindGroup,
+    pub size:     Size<u32>,
+    pub channels: u8,
+    pub bind:     BindGroup,
 }
 
 impl Image {
@@ -101,7 +101,7 @@ impl ResourceLoader for Image {
 }
 
 impl Image {
-    pub(crate) fn uniform_layout() -> BindGroupLayout {
+    pub fn uniform_layout() -> BindGroupLayout {
         Window::device().create_bind_group_layout(&BindGroupLayoutDescriptor {
             label:   "image_bind_group_layout".into(),
             entries: &[

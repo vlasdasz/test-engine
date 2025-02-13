@@ -1,12 +1,13 @@
 use level::LevelManager;
 use manage::{ExistsManaged, data_manager::DataManager};
 use refs::MainLock;
-use render::SpriteBoxPipepeline;
+use render::{SpriteBoxPipepeline, TexturedSpriteBoxPipeline, rect_instance::RectInstance};
 use ui::UIManager;
 use wgpu::RenderPass;
-use window::{SpriteInstance, SpriteView, Window};
+use window::{SpriteView, Window};
 
 static SPRITE_DRAWER: MainLock<SpriteBoxPipepeline> = MainLock::new();
+static TEXTURED_SPRITE_DRAWER: MainLock<TexturedSpriteBoxPipeline> = MainLock::new();
 
 pub(crate) struct LevelDrawer;
 
@@ -41,15 +42,15 @@ impl LevelDrawer {
 
         for sprite in level.sprites() {
             if sprite.image.exists_managed() {
-                drawer.textured_box.add(
-                    sprite.image,
-                    SpriteInstance {
+                TEXTURED_SPRITE_DRAWER.get_mut().add_with_image(
+                    RectInstance {
                         size:       sprite.render_size(),
                         position:   sprite.position(),
                         color:      *sprite.color(),
                         rotation:   sprite.rotation(),
                         z_position: sprite.z_position,
                     },
+                    sprite.image,
                 );
             } else if let Some(vertex_buffer) = &sprite.vertex_buffer {
                 drawer.polygon.add(
@@ -59,7 +60,7 @@ impl LevelDrawer {
                     sprite.rotation(),
                 );
             } else {
-                SPRITE_DRAWER.get_mut().add(SpriteInstance {
+                SPRITE_DRAWER.get_mut().add(RectInstance {
                     size:       sprite.render_size(),
                     position:   sprite.position(),
                     color:      *sprite.color(),
@@ -78,7 +79,7 @@ impl LevelDrawer {
                 scale,
             },
         );
-        drawer.textured_box.draw(
+        TEXTURED_SPRITE_DRAWER.get_mut().draw(
             pass,
             SpriteView {
                 camera_pos,

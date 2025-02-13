@@ -3,36 +3,74 @@
 use std::ops::Range;
 
 use bytemuck::Pod;
-use gm::{checked_usize_to_u32, flat::Point};
+use gm::{
+    checked_usize_to_u32,
+    flat::{Point, Vertex2D},
+};
+use indexmap::IndexMap;
+use refs::Weak;
 use wgpu::{
     Buffer, PipelineLayoutDescriptor, PrimitiveTopology, RenderPass, RenderPipeline, ShaderModuleDescriptor,
     ShaderSource, ShaderStages,
 };
 use window::{
-    BufferUsages, DeviceHelper, PolygonMode, UniformBind, VecBuffer, VertexLayout, Window,
+    BufferUsages, DeviceHelper, PolygonMode, UniformBind, VecBuffer, VertexLayout, Window, image::Image,
     make_uniform_layout,
 };
 
-const FULL_SCREEN_VERTICES: &[Point] = &[
+const VERTICES: &[Point] = &[
     Point::new(-1.0, 1.0),
     Point::new(-1.0, -1.0),
     Point::new(1.0, 1.0),
     Point::new(1.0, -1.0),
 ];
 
-pub(super) const FULL_SCREEN_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(FULL_SCREEN_VERTICES.len());
+pub(super) const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
-pub struct RectPipeline<const SHADER: &'static str, const SHADER_CODE: &'static str, View, Instance> {
+const TEXTURED_VERTICES: &[Vertex2D; 4] = &[
+    Vertex2D {
+        pos: Point::new(-1.0, 1.0),
+        uv:  Point::new(0.0, 0.0),
+    },
+    Vertex2D {
+        pos: Point::new(-1.0, -1.0),
+        uv:  Point::new(0.0, 1.0),
+    },
+    Vertex2D {
+        pos: Point::new(1.0, 1.0),
+        uv:  Point::new(1.0, 0.0),
+    },
+    Vertex2D {
+        pos: Point::new(1.0, -1.0),
+        uv:  Point::new(1.0, 1.0),
+    },
+];
+
+const TEXTURED_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
+
+pub struct RectPipeline<
+    const WITH_IMAGE: bool,
+    const SHADER: &'static str,
+    const SHADER_CODE: &'static str,
+    View,
+    Instance,
+> {
     pipeline: RenderPipeline,
 
     vertex_buffer: Buffer,
 
-    view:      UniformBind<View>,
-    instances: VecBuffer<Instance>,
+    view: UniformBind<View>,
+
+    instances: IndexMap<Weak<Image>, VecBuffer<Instance>>,
 }
 
-impl<const NAME: &'static str, const SHADER_CODE: &'static str, View: Default + Pod, Instance: VertexLayout>
-    Default for RectPipeline<NAME, SHADER_CODE, View, Instance>
+impl<
+    const WITH_IMAGE: bool,
+    const NAME: &'static str,
+    const SHADER_CODE: &'static str,
+    View: Default + Pod,
+    Instance: VertexLayout,
+> Default for RectPipeline<WITH_IMAGE, NAME, SHADER_CODE, View, Instance>
 {
     fn default() -> Self {
         let device = Window::device();
@@ -45,35 +83,69 @@ impl<const NAME: &'static str, const SHADER_CODE: &'static str, View: Default + 
         let sprite_view_layout =
             make_uniform_layout(&format!("{NAME}_uniform_layout"), ShaderStages::VERTEX_FRAGMENT);
 
+        let mut bind_group_layouts = vec![&sprite_view_layout];
+
+        let image_layout = Image::uniform_layout();
+
+        if WITH_IMAGE {
+            bind_group_layouts.push(&image_layout);
+        }
+
         let uniform_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label:                Some(&format!("{NAME}_pipeline_layout")),
-            bind_group_layouts:   &[&sprite_view_layout],
+            bind_group_layouts:   &bind_group_layouts,
             push_constant_ranges: &[],
         });
 
-        let pipeline = device.pipeline(
-            &format!("{NAME}_pipeline"),
-            &uniform_layout,
-            &shader,
-            PolygonMode::Fill,
-            PrimitiveTopology::TriangleStrip,
-            &[Point::VERTEX_LAYOUT, Instance::VERTEX_LAYOUT],
-        );
+        let pipeline = if WITH_IMAGE {
+            device.pipeline(
+                &format!("{NAME}_pipeline"),
+                &uniform_layout,
+                &shader,
+                PolygonMode::Fill,
+                PrimitiveTopology::TriangleStrip,
+                &[Vertex2D::VERTEX_LAYOUT, Instance::VERTEX_LAYOUT],
+            )
+        } else {
+            device.pipeline(
+                &format!("{NAME}_pipeline"),
+                &uniform_layout,
+                &shader,
+                PolygonMode::Fill,
+                PrimitiveTopology::TriangleStrip,
+                &[Point::VERTEX_LAYOUT, Instance::VERTEX_LAYOUT],
+            )
+        };
+
+        let vertex_buffer = if WITH_IMAGE {
+            device.buffer(TEXTURED_VERTICES, BufferUsages::VERTEX)
+        } else {
+            device.buffer(VERTICES, BufferUsages::VERTEX)
+        };
 
         Self {
             pipeline,
-            vertex_buffer: device.buffer(FULL_SCREEN_VERTICES, BufferUsages::VERTEX),
+            vertex_buffer,
             view: sprite_view_layout.into(),
-            instances: VecBuffer::default(),
+            instances: IndexMap::default(),
         }
     }
 }
 
-impl<const SHADER: &'static str, const SHADER_CODE: &'static str, View: Pod + PartialEq, Instance: Pod>
-    RectPipeline<SHADER, SHADER_CODE, View, Instance>
+impl<
+    const WITH_IMAGE: bool,
+    const SHADER: &'static str,
+    const SHADER_CODE: &'static str,
+    View: Pod + PartialEq,
+    Instance: Pod,
+> RectPipeline<WITH_IMAGE, SHADER, SHADER_CODE, View, Instance>
 {
     pub fn add(&mut self, instance: Instance) {
-        self.instances.push(instance);
+        self.instances.entry(Weak::default()).or_default().push(instance);
+    }
+
+    pub fn add_with_image(&mut self, instance: Instance, image: Weak<Image>) {
+        self.instances.entry(image).or_default().push(instance);
     }
 
     pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: View) {
@@ -85,13 +157,30 @@ impl<const SHADER: &'static str, const SHADER_CODE: &'static str, View: Pod + Pa
 
         self.view.update(view);
 
-        self.instances.load();
+        for (image, instances) in &mut self.instances {
+            if instances.is_empty() {
+                continue;
+            }
 
-        render_pass.set_bind_group(0, self.view.bind(), &[]);
+            instances.load();
 
-        render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-        render_pass.set_vertex_buffer(1, self.instances.buffer().slice(..));
+            render_pass.set_bind_group(0, self.view.bind(), &[]);
 
-        render_pass.draw(FULL_SCREEN_VERTEX_RANGE, 0..self.instances.len());
+            if WITH_IMAGE {
+                render_pass.set_bind_group(1, &image.bind, &[]);
+            }
+
+            render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+            render_pass.set_vertex_buffer(1, instances.buffer().slice(..));
+
+            render_pass.draw(
+                if WITH_IMAGE {
+                    TEXTURED_VERTEX_RANGE
+                } else {
+                    VERTEX_RANGE
+                },
+                0..instances.len(),
+            );
+        }
     }
 }

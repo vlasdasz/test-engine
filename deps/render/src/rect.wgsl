@@ -4,11 +4,11 @@ struct RectView {
 }
 
 struct RectInstance {
-    @location(2) origin:     vec2<f32>,
+    @location(2) position:   vec2<f32>,
     @location(3) size:       vec2<f32>,
     @location(4) color:      vec4<f32>,
-    @location(5) z_position: f32,
-    @location(6) padding:    f32,
+    @location(5) rotation:   f32,
+    @location(6) z_position: f32,
 }
 
 @group(0) @binding(0)
@@ -38,8 +38,8 @@ fn v_main(
     out_pos.x *= instance.size.x;
     out_pos.y *= instance.size.y;
 
-    out_pos.x += instance.origin.x / view.resolution.x;
-    out_pos.y += instance.origin.y / view.resolution.y;
+    out_pos.x += instance.position.x / view.resolution.x;
+    out_pos.y += instance.position.y / view.resolution.y;
 
     out_pos.y *= -1.0;
 

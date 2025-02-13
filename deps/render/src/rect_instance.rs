@@ -9,21 +9,21 @@ use window::VertexLayout;
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod)]
 pub struct RectInstance {
-    pub origin:     Point,
+    pub position:   Point,
     pub size:       Size,
     pub color:      Color,
+    pub rotation:   f32,
     pub z_position: f32,
-    _padding:       u32,
 }
 
 impl RectInstance {
     pub fn new(rect: Rect, color: Color, z_position: f32) -> Self {
         Self {
-            origin: rect.origin,
+            position: rect.origin,
             size: rect.size,
             color,
+            rotation: 0.0,
             z_position,
-            _padding: 0,
         }
     }
 }

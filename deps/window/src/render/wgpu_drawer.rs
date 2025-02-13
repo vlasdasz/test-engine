@@ -1,8 +1,6 @@
 use crate::render::{
-    background_pipeline::BackgroundPipeline,
-    image_drawer::ImageDrawer,
-    path_drawer::PathDrawer,
-    sprite_drawer::{PolygonPipeline, TexturedBoxPipeline},
+    background_pipeline::BackgroundPipeline, image_drawer::ImageDrawer, path_drawer::PathDrawer,
+    sprite_drawer::PolygonPipeline,
 };
 
 #[derive(Default, Debug)]
@@ -16,6 +14,5 @@ pub struct WGPUDrawer {
 
     pub polygon_test: PolygonPipeline,
 
-    pub polygon:      PolygonPipeline,
-    pub textured_box: TexturedBoxPipeline,
+    pub polygon: PolygonPipeline,
 }
