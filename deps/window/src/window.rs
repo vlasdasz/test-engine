@@ -230,8 +230,8 @@ impl Window {
     }
 
     #[cfg(target_os = "android")]
-    pub async fn start(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
-        Self::start_internal(app, event_loop).await
+    pub async fn start(app: impl App + 'static, event_loop: EventLoop<Events>) -> Result<()> {
+        Self::start_internal(Box::new(app), event_loop).await
     }
 
     fn start_event_loop(&mut self, event_loop: EventLoop<Events>) -> Result<()> {

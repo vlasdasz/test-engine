@@ -62,4 +62,4 @@ pub use window::{RenderPass, SpriteView, VertexBuffer, WGPUDrawer, Window, cast_
 #[cfg(target_os = "android")]
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;
 #[cfg(target_os = "android")]
-pub type EventLoop = winit::event_loop::EventLoop<wgpu_wrapper::Events>;
+pub type EventLoop = winit::event_loop::EventLoop<window::Events>;
