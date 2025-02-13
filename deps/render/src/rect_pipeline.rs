@@ -13,10 +13,9 @@ use wgpu::{
     Buffer, PipelineLayoutDescriptor, PrimitiveTopology, RenderPass, RenderPipeline, ShaderModuleDescriptor,
     ShaderSource, ShaderStages,
 };
-use window::{
-    BufferUsages, DeviceHelper, PolygonMode, UniformBind, VecBuffer, VertexLayout, Window, image::Image,
-    make_uniform_layout,
-};
+use window::{BufferUsages, DeviceHelper, PolygonMode, VecBuffer, VertexLayout, Window, image::Image};
+
+use crate::uniform::{UniformBind, make_uniform_layout};
 
 const VERTICES: &[Point] = &[
     Point::new(-1.0, 1.0),

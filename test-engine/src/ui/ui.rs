@@ -7,7 +7,9 @@ use gm::{
 };
 use log::{trace, warn};
 use refs::{MainLock, Own, Weak};
-use render::{UIImageRectPipepeline, UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
+use render::{
+    PathPipeline, UIImageRectPipepeline, UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView,
+};
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
     ViewFrame, ViewLayout, ViewSubviews, ViewTest,
@@ -20,6 +22,7 @@ use crate::{App, ui::ui_test::state::clear_state};
 
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
+static PATH: MainLock<PathPipeline> = MainLock::new();
 
 pub struct UI;
 
@@ -149,7 +152,7 @@ impl UI {
             Self::draw_label(&frame, label, text_offset, sections);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
-                Window::drawer().path.draw(
+                PATH.get_mut().draw(
                     pass,
                     &clamped_frame,
                     path.buffer(),

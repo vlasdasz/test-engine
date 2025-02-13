@@ -9,13 +9,9 @@ use wgpu::{
     BindGroup, Buffer, BufferUsages, PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass,
     RenderPipeline, ShaderStages,
 };
+use window::{DeviceHelper, VertexLayout, Window, image::Image, utils::BufferHelper};
 
-use crate::{
-    Window,
-    image::Image,
-    render::{uniform::make_uniform_layout, vertex_layout::VertexLayout},
-    utils::{BufferHelper, DeviceHelper},
-};
+use crate::uniform::make_uniform_layout;
 
 const VAL: f32 = 100_000.0;
 const UV: f32 = 500.0;

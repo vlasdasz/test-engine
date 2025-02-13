@@ -13,9 +13,8 @@ use log::{error, info, warn};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
-    Adapter, Backends, BindGroupLayout, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance,
-    InstanceDescriptor, Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
-    TextureUsages,
+    Adapter, Backends, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, InstanceDescriptor,
+    Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages,
 };
 use winit::{
     application::ApplicationHandler,
@@ -27,7 +26,7 @@ use winit::{
 };
 
 use crate::{
-    Screenshot, WGPUDrawer,
+    Screenshot,
     app::App,
     state::{RGBA_TEXTURE_FORMAT, State},
     surface::Surface,
@@ -58,7 +57,6 @@ pub struct Window {
     pub(crate) resumed: bool,
 
     pub(crate) surface: Option<Surface>,
-    pub(crate) drawer:  Option<WGPUDrawer>,
 
     pub(crate) title_set: bool,
 
@@ -90,10 +88,6 @@ impl Window {
         Self::winit_window().inner_size()
     }
 
-    pub fn drawer() -> &'static mut WGPUDrawer {
-        Self::current().drawer.as_mut().expect("Drawer has not been initialized yet.")
-    }
-
     pub fn screen_scale() -> f64 {
         Self::winit_window().scale_factor()
     }
@@ -121,8 +115,6 @@ impl Window {
         };
 
         self.surface = surface.into();
-
-        self.drawer = WGPUDrawer::default().into();
 
         Ok(true)
     }
@@ -212,7 +204,6 @@ impl Window {
             instance,
             resumed: false,
             surface: None,
-            drawer: None,
             title_set: false,
             close: AtomicBool::default(),
         }
@@ -258,10 +249,6 @@ impl Window {
 
     pub fn request_screenshot(&self) -> Receiver<Screenshot> {
         self.state.request_read_display()
-    }
-
-    pub fn path_layout() -> &'static BindGroupLayout {
-        &Self::drawer().path.color_size_layout
     }
 
     pub fn fps(&self) -> f32 {

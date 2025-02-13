@@ -6,25 +6,18 @@ use wgpu::{
     PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
     include_wgsl,
 };
+use window::{DeviceHelper, VertexLayout, Window};
 
-use crate::{
-    Window,
-    render::{
-        uniform::{cached_float_bind, make_uniform_layout},
-        vertex_layout::VertexLayout,
-    },
-    utils::DeviceHelper,
-};
+use crate::uniform::{cached_float_bind, make_uniform_layout};
 
 #[derive(Debug)]
-pub struct PathDrawer {
+pub struct PathPipeline {
     pipeline: RenderPipeline,
 
-    z_pos_layout:                 BindGroupLayout,
-    pub(crate) color_size_layout: BindGroupLayout,
+    z_pos_layout: BindGroupLayout,
 }
 
-impl Default for PathDrawer {
+impl Default for PathPipeline {
     fn default() -> Self {
         let device = Window::device();
 
@@ -76,12 +69,11 @@ impl Default for PathDrawer {
         Self {
             pipeline,
             z_pos_layout,
-            color_size_layout,
         }
     }
 }
 
-impl PathDrawer {
+impl PathPipeline {
     pub fn draw<'a>(
         &'a self,
         render_pass: &mut RenderPass<'a>,

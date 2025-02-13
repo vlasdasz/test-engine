@@ -17,10 +17,8 @@ pub use image_proc::include_images;
 pub use render::{
     path_data::PathData,
     sprite_drawer::shader_data::{SpriteInstance, SpriteView},
-    uniform::*,
     vec_buffer::VecBuffer,
     vertex_layout::VertexLayout,
-    wgpu_drawer::WGPUDrawer,
 };
 pub use screenshot::*;
 pub use text::*;

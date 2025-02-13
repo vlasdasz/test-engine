@@ -1,7 +1,7 @@
 use test_engine::{
-    RenderPass, SpriteView, Window,
+    RenderPass,
     refs::Weak,
-    ui::{NumberView, Point, Setup, UIManager, ViewCallbacks, ViewData, ViewSubviews, view},
+    ui::{NumberView, Setup, ViewCallbacks, ViewData, ViewSubviews, view},
 };
 
 use crate::interface::test_game_view::TestGameView;
@@ -26,26 +26,27 @@ impl Setup for RenderView {
 }
 
 impl ViewCallbacks for RenderView {
-    fn before_render(&self, pass: &mut RenderPass) {
-        let drawer = Window::drawer();
+    fn before_render(&self, _pass: &mut RenderPass) {
+        // let drawer = Window::drawer();
 
-        // drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED, 0.5);
-        // drawer.sprite_box.add((2, 2).into(), (40, 0).into(), 0.0, Color::GREEN, 0.5);
-        // drawer.sprite_box.add((2, 2).into(), (40, 40).into(), 0.0, Color::BLUE, 0.5);
-        // drawer.sprite_box.add((2, 2).into(), (0, 40).into(), 0.0, Color::TURQUOISE,
+        // drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED,
+        // 0.5); drawer.sprite_box.add((2, 2).into(), (40, 0).into(),
+        // 0.0, Color::GREEN, 0.5); drawer.sprite_box.add((2, 2).into(),
+        // (40, 40).into(), 0.0, Color::BLUE, 0.5); drawer.sprite_box.
+        // add((2, 2).into(), (0, 40).into(), 0.0, Color::TURQUOISE,
         // 0.5); drawer.sprite_box.draw(pass, 1.0, 0.0, (0, 0).into(),
         // UIManager::resolution());
 
-        drawer.polygon.clear();
-
-        drawer.polygon.draw(
-            pass,
-            SpriteView {
-                camera_pos:      Point::default(),
-                resolution:      UIManager::resolution(),
-                camera_rotation: 0.0,
-                scale:           1.0,
-            },
-        );
+        // drawer.polygon.clear();
+        //
+        // drawer.polygon.draw(
+        //     pass,
+        //     SpriteView {
+        //         camera_pos:      Point::default(),
+        //         resolution:      UIManager::resolution(),
+        //         camera_rotation: 0.0,
+        //         scale:           1.0,
+        //     },
+        // );
     }
 }
