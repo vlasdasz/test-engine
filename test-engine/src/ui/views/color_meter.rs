@@ -3,7 +3,7 @@ use refs::Weak;
 use tokio::spawn;
 use ui::{Setup, UIEvents, ViewCallbacks, ViewData};
 use ui_proc::view;
-use wgpu_wrapper::Screenshot;
+use window::Screenshot;
 
 use crate as test_engine;
 use crate::App;
@@ -22,7 +22,7 @@ impl Setup for ColorMeter {
 
 impl ViewCallbacks for ColorMeter {
     fn update(&mut self) {
-        let pos = App::current().cursor_position;
+        let pos = App::cursor_position();
 
         if pos.is_negative() {
             return;

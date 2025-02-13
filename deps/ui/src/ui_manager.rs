@@ -12,7 +12,7 @@ use gm::{
     flat::{Point, Rect, Size},
 };
 use refs::{Own, Weak};
-use wgpu_wrapper::WGPUApp;
+use window::Window;
 
 use crate::{
     Container, DEBUG_VIEW, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView,
@@ -55,11 +55,11 @@ impl UIManager {
     }
 
     pub fn fps() -> f32 {
-        WGPUApp::current().fps()
+        Window::current().fps()
     }
 
     pub fn frame_drawn() -> u32 {
-        WGPUApp::current().frame_drawn()
+        Window::current().frame_drawn()
     }
 
     pub fn unselect_view() {
@@ -119,7 +119,7 @@ impl UIManager {
     }
 
     pub fn display_scale() -> f64 {
-        WGPUApp::screen_scale()
+        Window::screen_scale()
     }
 
     pub fn debug_view() -> Option<&'static mut dyn View> {

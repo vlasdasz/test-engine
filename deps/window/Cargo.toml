@@ -1,0 +1,36 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2024"
+name = "window"
+version = "0.1.0"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "window"
+
+[dependencies]
+anyhow = { workspace = true }
+bytemuck = { workspace = true }
+dispatch = { workspace = true }
+educe = { workspace = true }
+image = { workspace = true }
+indexmap = { workspace = true }
+log = { workspace = true }
+tokio = { workspace = true }
+web-time = { workspace = true }
+wgpu = { workspace = true }
+
+manage = { workspace = true }
+refs = { workspace = true }
+
+gm = { workspace = true }
+image-proc = { workspace = true }
+
+wgpu_text = { workspace = true }
+
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = { workspace = true }
+winit = { workspace = true, features = ["android-game-activity"] }
+
+[target.'cfg(not(target_os = "android"))'.dependencies]
+winit = { workspace = true }

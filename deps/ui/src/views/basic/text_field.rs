@@ -2,7 +2,7 @@ use gm::{Color, ToF32};
 use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
-use wgpu_wrapper::NamedKey;
+use window::NamedKey;
 
 use crate::{
     HasTitle, InputView, Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,

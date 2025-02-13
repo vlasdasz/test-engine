@@ -5,7 +5,7 @@ use gm::{
 };
 use refs::Weak;
 use ui_proc::view;
-use wgpu_wrapper::PathData;
+use window::PathData;
 
 use crate::{
     Setup,

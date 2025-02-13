@@ -21,6 +21,8 @@ impl Setup for MovableViewTestView {
 }
 
 pub async fn test_movable_view() -> Result<()> {
+    debug!("Test movable view:");
+
     let mut _view = UI::init_test_view::<MovableViewTestView>().await;
 
     inject_touches(
@@ -118,7 +120,7 @@ pub async fn test_movable_view() -> Result<()> {
     )
     .await?;
 
-    debug!("Test movable view: OK");
+    debug!("OK");
 
     Ok(())
 }

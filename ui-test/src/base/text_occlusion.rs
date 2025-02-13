@@ -32,6 +32,8 @@ impl Setup for TextOccclusionTestView {
 }
 
 pub async fn test_text_occlusion() -> Result<()> {
+    debug!("Text occlusion:");
+
     UI::init_test_view::<TextOccclusionTestView>().await;
 
     check_colors(
@@ -96,7 +98,7 @@ pub async fn test_text_occlusion() -> Result<()> {
     )
     .await?;
 
-    debug!("Text occlusion: OK");
+    debug!("OK");
 
     Ok(())
 }

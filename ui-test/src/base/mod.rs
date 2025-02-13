@@ -22,20 +22,21 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_out_bounds().await?;
     test_corner_radius().await?;
     test_transparency().await?;
     test_layout().await?;
-    test_out_bounds().await?;
     test_modal().await?;
     test_view_order().await?;
-    test_add_on_tap().await?;
     test_touch_order().await?;
     test_template().await?;
     test_present().await?;
     test_touch_stack().await?;
-    test_text_occlusion().await?;
     test_selection().await?;
     test_keymap().await?;
+
+    test_text_occlusion().await?;
+    test_add_on_tap().await?;
 
     Ok(())
 }

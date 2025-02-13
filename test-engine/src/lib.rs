@@ -57,11 +57,9 @@ pub use dispatch::{after, async_after, from_main, on_main, wait_for_next_frame};
 pub use generate;
 pub use manage::data_manager::DataManager;
 pub use vents::{DelayedEvent, Event, OnceEvent};
-pub use wgpu_wrapper::{
-    RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, WGPUDrawer, cast_slice, image::ToImage,
-};
+pub use window::{RenderPass, SpriteView, VertexBuffer, WGPUDrawer, Window, cast_slice, image::ToImage};
 
 #[cfg(target_os = "android")]
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;
 #[cfg(target_os = "android")]
-pub type EventLoop = winit::event_loop::EventLoop<wgpu_wrapper::Events>;
+pub type EventLoop = winit::event_loop::EventLoop<window::Events>;

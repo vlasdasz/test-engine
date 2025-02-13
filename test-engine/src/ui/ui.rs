@@ -6,17 +6,20 @@ use gm::{
     flat::{Rect, Size},
 };
 use log::{trace, warn};
-use manage::data_manager::DataManager;
-use refs::{Own, Weak, weak_from_ref};
+use refs::{MainLock, Own, Weak};
+use render::{UIImageRectPipepeline, UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
     ViewFrame, ViewLayout, ViewSubviews, ViewTest,
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
-use wgpu_wrapper::{Font, WGPUApp, WGPUDrawer};
+use window::{Font, Window};
 
 use crate::{App, ui::ui_test::state::clear_state};
+
+static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
+static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 
 pub struct UI;
 
@@ -33,28 +36,36 @@ impl UI {
         let debug_frames = UIManager::draw_debug_frames();
         Self::draw_view(
             pass,
-            WGPUApp::drawer(),
             UIManager::root_view(),
             &mut sections,
             &mut 0.0,
             debug_frames,
         );
         if let Some(debug_view) = UIManager::debug_view() {
-            Self::draw_view(
-                pass,
-                WGPUApp::drawer(),
-                debug_view,
-                &mut sections,
-                &mut 0.0,
-                debug_frames,
-            );
+            Self::draw_view(pass, debug_view, &mut sections, &mut 0.0, debug_frames);
         }
 
-        WGPUApp::drawer().rect.draw(pass, UIManager::resolution());
+        let window_size = UIManager::resolution();
+
+        pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
+
+        RECT_DRAWER.get_mut().draw(
+            pass,
+            RectView {
+                resolution: UIManager::resolution(),
+            },
+        );
+
+        IMAGE_RECT_DRAWER.get_mut().draw(
+            pass,
+            RectView {
+                resolution: UIManager::resolution(),
+            },
+        );
 
         Font::helvetice()
             .brush
-            .queue(WGPUApp::device(), WGPUApp::queue(), sections)
+            .queue(Window::device(), Window::queue(), sections)
             .unwrap();
     }
 
@@ -74,7 +85,6 @@ impl UI {
 
     fn draw_view<'a>(
         pass: &mut RenderPass<'a>,
-        drawer: &'a mut WGPUDrawer,
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
         text_offset: &mut f32,
@@ -93,42 +103,42 @@ impl UI {
             return;
         }
 
-        view.render(pass);
+        view.before_render(pass);
 
-        let frame = Self::rescale_frame(view.absolute_frame(), 1.0);
+        let frame = *view.absolute_frame();
 
         let root_size = UI::root_view_size();
 
         let clamped_frame = frame.clamp_to(root_size);
 
-        if view.color().a > 0.0 {
-            drawer.old_rect.draw(
-                pass,
-                &clamped_frame,
-                view.color(),
-                view.z_position() + *text_offset,
-            );
+        let window_size = UIManager::resolution();
 
-            if false {
-                drawer.rect.add(clamped_frame, *view.color(), view.z_position() + *text_offset);
-            }
+        if view.color().a > 0.0 {
+            pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
+
+            RECT_DRAWER.get_mut().add(RectInstance::new(
+                frame,
+                *view.color(),
+                view.z_position() + *text_offset,
+            ));
         }
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image().is_ok() {
-                weak_from_ref(image_view).check_cropped(&clamped_frame);
-
                 let image = image_view.image();
                 // let size: Size = image.size.into();
                 // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
-                drawer.image.draw(
-                    pass,
-                    image.get_static(),
-                    &clamped_frame,
-                    image_view.cropped(),
-                    view.z_position() - UIManager::additional_z_offset(),
+                IMAGE_RECT_DRAWER.get_mut().add_with_image(
+                    RectInstance {
+                        position:   frame.origin,
+                        size:       frame.size,
+                        color:      Color::default(),
+                        rotation:   0.0,
+                        z_position: view.z_position() - UIManager::additional_z_offset(),
+                    },
+                    image,
                 );
             } else {
                 warn!("Image is not OK");
@@ -139,7 +149,7 @@ impl UI {
             Self::draw_label(&frame, label, text_offset, sections);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
-                drawer.path.draw(
+                Window::drawer().path.draw(
                     pass,
                     &clamped_frame,
                     path.buffer(),
@@ -150,33 +160,23 @@ impl UI {
             }
         }
 
-        if debug_frames
-            && clamped_frame.size.is_valid()
-            && clamped_frame.x() + 2.0 <= root_size.width
-            && clamped_frame.y() + 2.0 <= root_size.height
-        {
-            drawer.outline_rect(
-                pass,
-                &clamped_frame,
-                &Color::TURQUOISE,
-                view.z_position() - 0.2,
-                2.0,
-            );
+        if debug_frames {
+            pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
+
+            for rect in frame.to_borders(2.0) {
+                RECT_DRAWER
+                    .get_mut()
+                    .add(RectInstance::new(rect, Color::TURQUOISE, view.z_position() - 0.2));
+            }
         }
 
         let mut text_offset = 0.0;
 
+        let root_frame = UIManager::root_view().frame();
+
         for view in view.subviews().iter().rev() {
-            let root_frame = UIManager::root_view().frame();
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(
-                    pass,
-                    WGPUApp::drawer(),
-                    view.deref(),
-                    sections,
-                    &mut text_offset,
-                    debug_frames,
-                );
+                Self::draw_view(pass, view.deref(), sections, &mut text_offset, debug_frames);
             }
         }
     }
@@ -232,10 +232,6 @@ impl UI {
 
     pub fn root_view_size() -> Size {
         UIManager::root_view().size()
-    }
-
-    fn rescale_frame(rect: &Rect, display_scale: f32) -> Rect {
-        rect * display_scale
     }
 }
 

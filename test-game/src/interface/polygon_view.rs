@@ -1,5 +1,5 @@
 use test_engine::{
-    RenderPass, SpriteRenderView, VertexBuffer, WGPUApp, after,
+    RenderPass, SpriteView, VertexBuffer, Window, after,
     level::LevelManager,
     refs::Weak,
     ui::{
@@ -88,8 +88,8 @@ impl PolygonView {
 }
 
 impl ViewCallbacks for PolygonView {
-    fn render(&self, pass: &mut RenderPass) {
-        let drawer = WGPUApp::drawer();
+    fn before_render(&self, pass: &mut RenderPass) {
+        let drawer = Window::drawer();
 
         drawer.polygon_test.clear();
 
@@ -101,7 +101,7 @@ impl ViewCallbacks for PolygonView {
 
         drawer.polygon_test.draw(
             pass,
-            SpriteRenderView {
+            SpriteView {
                 camera_pos:      Point::default(),
                 resolution:      UIManager::resolution(),
                 camera_rotation: 0.0,

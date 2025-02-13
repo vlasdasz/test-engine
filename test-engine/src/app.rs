@@ -1,4 +1,4 @@
-use std::{any::type_name, io::Write, path::PathBuf, ptr::null_mut, time::Duration};
+use std::{any::type_name, io::Write, path::PathBuf, sync::Mutex, time::Duration};
 
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
@@ -9,12 +9,12 @@ use gm::{
 };
 use level::{LevelBase, LevelManager};
 use log::{Level, LevelFilter};
-use refs::{Own, Rglica};
+use refs::{MainLock, Own, Rglica};
 use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 use vents::OnceEvent;
 use wgpu::RenderPass;
-use wgpu_wrapper::{ElementState, MouseButton, Screenshot, WGPUApp};
+use window::{ElementState, MouseButton, Screenshot, Window};
 use winit::{
     event::{KeyEvent, TouchPhase},
     keyboard::Key,
@@ -26,33 +26,23 @@ use crate::{
     ui::{Input, UI},
 };
 
-static mut APP: *mut App = null_mut();
+static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
+static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct App {
-    window_ready: OnceEvent,
-    wgpu_app:     Rglica<WGPUApp>,
+    window: Rglica<Window>,
 
     pub(crate) first_view: Option<Own<dyn View>>,
     pub cursor_position:   Point,
 }
 
 impl App {
-    pub fn current() -> &'static Self {
-        unsafe {
-            assert!(!APP.is_null(), "App was not initialized");
-            APP.as_mut().unwrap()
-        }
-    }
-
-    pub fn current_mut() -> &'static mut Self {
-        unsafe {
-            assert!(!APP.is_null(), "App was not initialized");
-            APP.as_mut().unwrap()
-        }
-    }
-
     pub fn stop() {
-        WGPUApp::close();
+        Window::close();
+    }
+
+    pub fn cursor_position() -> Point {
+        *CURSOR_POSITION
     }
 
     fn setup_log() {
@@ -120,28 +110,22 @@ impl App {
             .init();
     }
 
-    fn new(first_view: Own<dyn View>) -> Box<Self> {
+    fn new(first_view: Own<dyn View>) -> Self {
         #[cfg(desktop)]
         Assets::init(store::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
         Assets::init(std::path::PathBuf::default());
-        let mut app = Box::new(Self {
+
+        Self {
             cursor_position: Point::default(),
             first_view:      first_view.into(),
-            window_ready:    OnceEvent::default(),
-            wgpu_app:        Rglica::default(),
-        });
-        unsafe {
-            assert!(APP.is_null(), "Another App already exists");
-            APP = std::ptr::from_mut(app.as_mut());
+            window:          Rglica::default(),
         }
-
-        app
     }
 
     #[cfg(not(target_os = "android"))]
     pub async fn start<T: View + Default + Sized + 'static>() -> Result<()> {
-        WGPUApp::start(Self::new(Own::<T>::default())).await
+        Window::start(Self::new(Own::<T>::default())).await
     }
 
     #[cfg(target_os = "android")]
@@ -165,7 +149,7 @@ impl App {
 
         log::error!("EVANTO");
 
-        WGPUApp::start(Self::new(first_view), event_loop).await
+        Window::start(Self::new(first_view), event_loop).await
     }
 
     #[cfg(not(target_os = "android"))]
@@ -178,44 +162,44 @@ impl App {
         let app = Self::new(first_view);
 
         tokio::spawn(async move {
-            let recv = from_main(|| App::current().window_ready.val_async()).await;
+            let recv = from_main(|| WINDOW_READY.lock().unwrap().val_async()).await;
             recv.await.unwrap();
             let _ = actions.await;
         });
 
-        WGPUApp::start(app).await
+        Window::start(app).await
     }
 
     pub fn set_window_title(title: impl Into<String>) {
-        Self::current().wgpu_app.set_title(title);
+        Window::set_title(title);
     }
 
     pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
         from_main(|| {
-            Self::current().wgpu_app.set_window_size(size);
+            Window::current().set_size(size);
         })
         .await;
         sleep(Duration::from_secs_f32(0.05)).await;
     }
 
     pub async fn take_screenshot() -> Result<Screenshot> {
-        let recv = from_main(|| Self::current().wgpu_app.request_read_display()).await;
+        let recv = from_main(|| Window::current().request_screenshot()).await;
         let screenshot = recv.await?;
         Ok(screenshot)
     }
 
     pub fn fps() -> f32 {
-        Self::current().wgpu_app.fps()
+        Window::current().fps()
     }
 }
 
-impl wgpu_wrapper::App for App {
+impl window::App for App {
     fn window_ready(&mut self) {
         let view = UIManager::root_view_weak().__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();
         self.update();
-        *LevelManager::update_interval() = 1.0 / WGPUApp::display_refresh_rate().lossy_convert();
-        self.window_ready.trigger(());
+        *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
+        WINDOW_READY.lock().unwrap().trigger(());
     }
 
     fn update(&mut self) {
@@ -246,6 +230,7 @@ impl wgpu_wrapper::App for App {
 
     fn mouse_moved(&mut self, position: Point) -> bool {
         self.cursor_position = position;
+        *CURSOR_POSITION.get_mut() = position;
         Input::process_touch_event(Touch {
             id: 1,
             position,
@@ -294,8 +279,8 @@ impl wgpu_wrapper::App for App {
         }
     }
 
-    fn set_wgpu_app(&mut self, app: Rglica<WGPUApp>) {
-        self.wgpu_app = app;
+    fn set_window(&mut self, app: Rglica<Window>) {
+        self.window = app;
     }
 
     fn dropped_file(&mut self, path: PathBuf) {

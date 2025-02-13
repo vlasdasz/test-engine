@@ -40,16 +40,16 @@ impl CollectionData for SomeView {
         2
     }
 
-    fn make_cell(&self) -> Own<dyn View> {
-        Label::new()
-    }
-
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
         cell.downcast_mut::<Label>().unwrap().set_text(format!("{index}"));
     }
 
     fn size_for_index(&self, _index: usize) -> Size {
         (50, 50).into()
+    }
+
+    fn make_cell(&self) -> Own<dyn View> {
+        Label::new()
     }
 }
 
@@ -70,6 +70,8 @@ impl Setup for OnTapAddTestView {
 }
 
 pub async fn test_add_on_tap() -> Result<()> {
+    debug!("Add on tap:");
+
     let view = UI::init_test_view::<OnTapAddTestView>().await;
 
     assert_eq!(
@@ -135,7 +137,7 @@ pub async fn test_add_on_tap() -> Result<()> {
     )
     .await?;
 
-    debug!("Add on tap: OK");
+    debug!("OK");
 
     Ok(())
 }

@@ -14,6 +14,7 @@ use refs::Own;
 use serde::de::DeserializeOwned;
 pub use state::*;
 use tokio::sync::mpsc::channel;
+use window::Window;
 
 use crate::{
     App, from_main,
@@ -162,7 +163,9 @@ async fn record_touches_internal(skip_moved: bool) {
 #[allow(dead_code)]
 pub async fn record_ui_test() {
     loop {
+        Window::set_title("Recording touches");
         record_touches().await;
+        Window::set_title("Recording colors");
         record_touches_with_colors().await.unwrap();
     }
 }
@@ -198,6 +201,7 @@ pub async fn record_touches_with_colors() -> Result<()> {
 
     on_main(|| {
         UIEvents::on_touch().remove_subscribers();
+        UIEvents::on_debug_touch().remove_subscribers();
     });
 
     println!("check_colors( r#\"");

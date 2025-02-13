@@ -1753,7 +1753,7 @@ dependencies = [
  "refs",
  "utils",
  "vents",
- "wgpu-wrapper",
+ "window",
 ]
 
 [[package]]
@@ -3113,6 +3113,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "render"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "gm",
+ "indexmap",
+ "refs",
+ "wgpu",
+ "window",
+]
+
+[[package]]
+name = "render-test"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "gm",
+ "log",
+ "refs",
+ "render",
+ "test-engine",
+ "tokio",
+ "window",
+]
+
+[[package]]
 name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3663,6 +3689,7 @@ dependencies = [
  "manage",
  "reflected",
  "refs",
+ "render",
  "scene",
  "serde",
  "serde_json",
@@ -3673,8 +3700,8 @@ dependencies = [
  "vents",
  "web-time",
  "wgpu",
- "wgpu-wrapper",
  "wgpu_text",
+ "window",
  "winit",
 ]
 
@@ -3910,7 +3937,7 @@ dependencies = [
  "ui-proc",
  "utils",
  "vents",
- "wgpu-wrapper",
+ "window",
 ]
 
 [[package]]
@@ -4023,9 +4050,9 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
 name = "vents"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cbe57794cf0d67fcd6f664e2acd6ffe0d2df2767b62093c39484a81a00e9a00"
+checksum = "80f3d8b5a520fb43005cea47e5c999692ac373d77c11b6bf0145130f959fa7d3"
 dependencies = [
  "chrono",
  "log",
@@ -4391,29 +4418,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "wgpu-wrapper"
-version = "0.1.0"
-dependencies = [
- "android_logger",
- "anyhow",
- "bytemuck",
- "dispatch 0.1.0",
- "educe",
- "gm",
- "image",
- "image-proc",
- "indexmap",
- "log",
- "manage",
- "refs",
- "tokio",
- "web-time",
- "wgpu",
- "wgpu_text",
- "winit",
-]
-
-[[package]]
 name = "wgpu_text"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4442,6 +4446,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "window"
+version = "0.1.0"
+dependencies = [
+ "android_logger",
+ "anyhow",
+ "bytemuck",
+ "dispatch 0.1.0",
+ "educe",
+ "gm",
+ "image",
+ "image-proc",
+ "indexmap",
+ "log",
+ "manage",
+ "refs",
+ "tokio",
+ "web-time",
+ "wgpu",
+ "wgpu_text",
+ "winit",
 ]
 
 [[package]]

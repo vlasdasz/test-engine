@@ -1,13 +1,16 @@
 use std::ops::{Deref, DerefMut};
 
 use educe::Educe;
-use gm::{LossyConvert, Platform, flat::Point};
+use gm::{
+    LossyConvert, Platform,
+    flat::{Point, Size},
+};
 use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
 };
 use refs::{MainLock, Own, Weak};
-use wgpu_wrapper::WGPUApp;
+use window::Window;
 
 use crate::{Level, level::LevelPhysics};
 
@@ -111,7 +114,8 @@ impl LevelManager {
 
     pub fn convert_touch(pos: Point) -> Point {
         let mut pos = pos;
-        let size = WGPUApp::current().window_size;
+        let size = Window::inner_size();
+        let size: Size = (size.width, size.height).into();
 
         pos.x -= size.width / 2.0;
         pos.y -= size.height / 2.0;
@@ -121,9 +125,9 @@ impl LevelManager {
         pos *= 2;
 
         if Platform::WIN {
-            pos /= WGPUApp::screen_scale().ceil().lossy_convert();
+            pos /= Window::screen_scale().ceil().lossy_convert();
         } else {
-            pos /= WGPUApp::screen_scale().lossy_convert();
+            pos /= Window::screen_scale().lossy_convert();
         }
 
         pos /= *Self::scale();

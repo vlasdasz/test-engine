@@ -7,13 +7,14 @@ members = [
   "test-engine",
   "test-game",
   "test-game-android",
+  "render-test",
   "ui-test",
   "ui-benchmark",
   "level-test",
   "deps/ui/ui-proc-test",
 ]
 
-resolver = "2"
+resolver = "3"
 
 [workspace.metadata.cargo-machete]
 ignored = []
@@ -52,22 +53,22 @@ web-time = "1.0.0"
 
 wgpu = "24.0"
 wgpu_text = "0.9.1"
-winit = "0.30.5"
+winit = "0.30"
 
 jni = "0.21.1"
 manage = "=0.6.0"
 reflected = "=0.10.1"
 refs = { version = "=0.11.0", default-features = true }
-vents = "=0.6.0"
+vents = "=0.7.0"
 
 audio = { path = "deps/audio" }
-call-counter = { path = "deps/call-counter" }
 dispatch = { path = "deps/dispatch" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
-image-proc = { path = "deps/wgpu-wrapper/image-proc" }
+image-proc = { path = "deps/window/image-proc" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
+render = { path = "deps/render" }
 scene = { path = "deps/scene" }
 store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
@@ -76,8 +77,7 @@ ui = { path = "deps/ui" }
 ui-benchmark = { path = "ui-benchmark" }
 ui-proc = { path = "deps/ui/ui-proc" }
 utils = { path = "deps/utils" }
-valid = { path = "deps/valid" }
-wgpu-wrapper = { path = "deps/wgpu-wrapper" }
+window = { path = "deps/window" }
 
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }

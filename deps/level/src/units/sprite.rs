@@ -14,7 +14,7 @@ use rapier2d::{
     prelude::{CoefficientCombineRule, RigidBody, Rotation},
 };
 use refs::{Address, Own, weak_from_ref};
-use wgpu_wrapper::image::ToImage;
+use window::image::ToImage;
 
 use crate::{LevelManager, SpriteData};
 

@@ -2,7 +2,7 @@ use gm::{Color, ToF32};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
-use wgpu_wrapper::image::ToImage;
+use window::image::ToImage;
 
 use crate::{
     ImageView, Label, Setup, ToLabel,

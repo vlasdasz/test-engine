@@ -1,19 +1,19 @@
 use gm::flat::Size;
 use refs::{Own, Weak};
-use wgpu_wrapper::RenderPass;
+use window::RenderPass;
 
 use crate::{View, view::view_frame::ViewFrame};
 
 pub trait ViewCallbacks {
     fn update(&mut self);
-    fn render(&self, pass: &mut RenderPass);
+    fn before_render(&self, pass: &mut RenderPass);
     fn on_selection_changed(&mut self, selected: bool);
     fn content_size(&self) -> &Size;
 }
 
 impl<T: ?Sized + View> ViewCallbacks for T {
     default fn update(&mut self) {}
-    default fn render(&self, _pass: &mut RenderPass) {}
+    default fn before_render(&self, _pass: &mut RenderPass) {}
     default fn on_selection_changed(&mut self, _: bool) {}
     default fn content_size(&self) -> &Size {
         &self.frame().size

@@ -1,7 +1,7 @@
 use gm::{flat::Size, volume::GyroData};
 use refs::MainLock;
 use vents::Event;
-use wgpu_wrapper::NamedKey;
+use window::NamedKey;
 
 use crate::{Touch, UIEvent};
 

@@ -5,7 +5,7 @@ use gm::flat::Point;
 use rapier2d::na::Vector2;
 use refs::{Own, Weak};
 use vents::Event;
-use wgpu_wrapper::image::Image;
+use window::image::Image;
 
 use crate::{Level, LevelManager, Sprite, level::level_physics::LevelPhysics};
 

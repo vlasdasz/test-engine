@@ -1,10 +1,12 @@
 use crate::views::basic::{
-    button::test_button, image_view::test_image_view, inject_touch::test_inject_touch, label::test_label,
-    multiline_label::test_multiline, scroll_view::test_scroll_view, slider::test_slider, stick::test_stick,
-    switch::test_switch, text_field::test_text_field,
+    button::test_button, image_on_view::test_image_on_view, image_view::test_image_view,
+    inject_touch::test_inject_touch, label::test_label, multiline_label::test_multiline,
+    scroll_view::test_scroll_view, slider::test_slider, stick::test_stick, switch::test_switch,
+    text_field::test_text_field,
 };
 
 mod button;
+mod image_on_view;
 mod image_view;
 mod inject_touch;
 mod label;
@@ -16,6 +18,7 @@ mod switch;
 mod text_field;
 
 pub async fn test_base_views() -> anyhow::Result<()> {
+    test_image_on_view().await?;
     test_multiline().await?;
     test_button().await?;
     test_inject_touch().await?;

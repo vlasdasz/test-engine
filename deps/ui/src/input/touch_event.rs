@@ -1,7 +1,7 @@
 use std::{fmt::Display, str::FromStr};
 
 use anyhow::bail;
-use wgpu_wrapper::ElementState;
+use window::ElementState;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum TouchEvent {

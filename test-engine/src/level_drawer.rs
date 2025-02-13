@@ -1,8 +1,13 @@
 use level::LevelManager;
 use manage::{ExistsManaged, data_manager::DataManager};
+use refs::MainLock;
+use render::{SpriteBoxPipepeline, TexturedSpriteBoxPipeline, rect_instance::RectInstance};
 use ui::UIManager;
 use wgpu::RenderPass;
-use wgpu_wrapper::{SpriteRenderView, WGPUApp};
+use window::{SpriteView, Window};
+
+static SPRITE_DRAWER: MainLock<SpriteBoxPipepeline> = MainLock::new();
+static TEXTURED_SPRITE_DRAWER: MainLock<TexturedSpriteBoxPipeline> = MainLock::new();
 
 pub(crate) struct LevelDrawer;
 
@@ -17,7 +22,7 @@ impl LevelDrawer {
         }
         let resolution = UIManager::resolution();
 
-        let drawer = WGPUApp::drawer();
+        let drawer = Window::drawer();
         let level = LevelManager::level();
         let camera_pos = *LevelManager::camera_pos();
         let scale = *LevelManager::scale();
@@ -37,13 +42,15 @@ impl LevelDrawer {
 
         for sprite in level.sprites() {
             if sprite.image.exists_managed() {
-                drawer.textured_box.add(
+                TEXTURED_SPRITE_DRAWER.get_mut().add_with_image(
+                    RectInstance {
+                        size:       sprite.render_size(),
+                        position:   sprite.position(),
+                        color:      *sprite.color(),
+                        rotation:   sprite.rotation(),
+                        z_position: sprite.z_position,
+                    },
                     sprite.image,
-                    sprite.render_size(),
-                    sprite.position(),
-                    sprite.rotation(),
-                    *sprite.color(),
-                    sprite.z_position,
                 );
             } else if let Some(vertex_buffer) = &sprite.vertex_buffer {
                 drawer.polygon.add(
@@ -53,22 +60,38 @@ impl LevelDrawer {
                     sprite.rotation(),
                 );
             } else {
-                drawer.sprite_box.add(
-                    sprite.render_size(),
-                    sprite.position(),
-                    sprite.rotation(),
-                    *sprite.color(),
-                    sprite.z_position,
-                );
+                SPRITE_DRAWER.get_mut().add(RectInstance {
+                    size:       sprite.render_size(),
+                    position:   sprite.position(),
+                    color:      *sprite.color(),
+                    rotation:   sprite.rotation(),
+                    z_position: sprite.z_position,
+                });
             }
         }
 
-        drawer.sprite_box.draw(pass, scale, 0.0, camera_pos, resolution);
-        drawer.textured_box.draw(pass, scale, 0.0, camera_pos, resolution);
+        SPRITE_DRAWER.get_mut().draw(
+            pass,
+            SpriteView {
+                camera_pos,
+                resolution,
+                camera_rotation: 0.0,
+                scale,
+            },
+        );
+        TEXTURED_SPRITE_DRAWER.get_mut().draw(
+            pass,
+            SpriteView {
+                camera_pos,
+                resolution,
+                camera_rotation: 0.0,
+                scale,
+            },
+        );
 
         drawer.polygon.draw(
             pass,
-            SpriteRenderView {
+            SpriteView {
                 camera_pos,
                 resolution,
                 camera_rotation: 0.0,

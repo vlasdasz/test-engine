@@ -1,0 +1,354 @@
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
+
+use anyhow::{Result, anyhow};
+use dispatch::on_main;
+use gm::{
+    LossyConvert, Platform,
+    flat::{Point, Size},
+};
+use log::{error, info, warn};
+use refs::{MainLock, Rglica};
+use tokio::sync::oneshot::Receiver;
+use wgpu::{
+    Adapter, Backends, BindGroupLayout, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance,
+    InstanceDescriptor, Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
+    TextureUsages,
+};
+use winit::{
+    application::ApplicationHandler,
+    dpi::PhysicalSize,
+    event::{MouseScrollDelta, WindowEvent},
+    event_loop::{ActiveEventLoop, EventLoop},
+    keyboard::{KeyCode, PhysicalKey},
+    window::{WindowAttributes, WindowId},
+};
+
+use crate::{
+    Screenshot, WGPUDrawer,
+    app::App,
+    state::{RGBA_TEXTURE_FORMAT, State},
+    surface::Surface,
+};
+
+const ENABLE_VSYNC: bool = true;
+/// Doesn't work on some Androids
+pub(crate) const SUPPORT_SCREENSHOT: bool = !Platform::ANDROID;
+
+static WINDOW: MainLock<Option<Window>> = MainLock::new();
+
+#[cfg(target_os = "android")]
+pub type Events = winit::platform::android::activity::AndroidApp;
+
+#[cfg(not(target_os = "android"))]
+pub type Events = ();
+
+pub struct Window {
+    pub state: State,
+
+    pub(crate) config: SurfaceConfiguration,
+    pub(crate) device: Device,
+    pub(crate) queue:  Queue,
+
+    adapter:  Adapter,
+    instance: Instance,
+
+    pub(crate) resumed: bool,
+
+    pub(crate) surface: Option<Surface>,
+    pub(crate) drawer:  Option<WGPUDrawer>,
+
+    pub(crate) title_set: bool,
+
+    close: AtomicBool,
+}
+
+impl Window {
+    pub fn current() -> &'static mut Self {
+        WINDOW.get_mut().as_mut().expect("Window has not been initialized yet.")
+    }
+
+    pub fn device() -> &'static Device {
+        &Self::current().device
+    }
+
+    pub fn queue() -> &'static Queue {
+        &Self::current().queue
+    }
+
+    pub(crate) fn winit_window() -> &'static winit::window::Window {
+        &Self::current()
+            .surface
+            .as_ref()
+            .expect("Surface has not been initialized yet.")
+            .window
+    }
+
+    pub fn inner_size() -> PhysicalSize<u32> {
+        Self::winit_window().inner_size()
+    }
+
+    pub fn drawer() -> &'static mut WGPUDrawer {
+        Self::current().drawer.as_mut().expect("Drawer has not been initialized yet.")
+    }
+
+    pub fn screen_scale() -> f64 {
+        Self::winit_window().scale_factor()
+    }
+
+    pub fn close() {
+        on_main(|| {
+            Self::current().close.store(true, Ordering::Relaxed);
+        });
+    }
+
+    pub(crate) fn create_surface_and_window(&mut self, event_loop: &ActiveEventLoop) -> Result<bool> {
+        let window =
+            Arc::new(event_loop.create_window(WindowAttributes::default().with_title("Test Engine"))?);
+
+        let scale = window.scale_factor();
+
+        _ = window.request_inner_size(PhysicalSize::new(1200.0 * scale, 1000.0 * scale));
+
+        self.config.width = (1200.0 * scale).lossy_convert();
+        self.config.height = (1000.0 * scale).lossy_convert();
+
+        let Some(surface) = Surface::new(&self.instance, &self.adapter, &self.device, &self.config, window)?
+        else {
+            return Ok(false);
+        };
+
+        self.surface = surface.into();
+
+        self.drawer = WGPUDrawer::default().into();
+
+        Ok(true)
+    }
+
+    async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
+        let instance = Instance::new(&InstanceDescriptor {
+            backends: Backends::all(),
+            ..Default::default()
+        });
+
+        let adapter = instance
+            .request_adapter(&RequestAdapterOptions::default())
+            .await
+            .ok_or(anyhow!("Failed to request adapter"))?;
+
+        let info = adapter.get_info();
+
+        info!("Backend: {}", &info.backend);
+
+        let mut required_limits = if cfg!(target_arch = "wasm32") {
+            Limits::downlevel_webgl2_defaults()
+        } else {
+            Limits::default()
+        };
+
+        // TODO:
+        if Platform::ANDROID {
+            required_limits.max_compute_invocations_per_workgroup = 0;
+            required_limits.max_compute_workgroups_per_dimension = 0;
+            required_limits.max_compute_workgroup_storage_size = 0;
+            required_limits.max_compute_workgroup_size_x = 0;
+            required_limits.max_compute_workgroup_size_y = 0;
+            required_limits.max_compute_workgroup_size_z = 0;
+            required_limits.max_storage_buffer_binding_size = 0;
+            required_limits.max_storage_textures_per_shader_stage = 0;
+            required_limits.max_storage_buffers_per_shader_stage = 0;
+            required_limits.max_dynamic_storage_buffers_per_pipeline_layout = 0;
+            required_limits.max_texture_dimension_3d = 1024;
+            required_limits.max_texture_dimension_2d = 4096;
+            required_limits.max_texture_dimension_1d = 4096;
+        }
+
+        let (device, queue) = adapter
+            .request_device(
+                &DeviceDescriptor {
+                    required_features: Features::empty(),
+                    // Doesn't work on some Androids
+                    // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
+                    required_limits,
+                    label: None,
+                    memory_hints: MemoryHints::Performance,
+                },
+                None,
+            )
+            .await?;
+
+        let config = SurfaceConfiguration {
+            usage:        if SUPPORT_SCREENSHOT {
+                TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC
+            } else {
+                TextureUsages::RENDER_ATTACHMENT
+            },
+            format:       RGBA_TEXTURE_FORMAT,
+            width:        1000,
+            height:       1000,
+            present_mode: if ENABLE_VSYNC || Platform::MOBILE {
+                PresentMode::AutoVsync
+            } else {
+                PresentMode::AutoNoVsync
+            },
+            alpha_mode:   CompositeAlphaMode::Auto,
+            view_formats: vec![],
+
+            desired_maximum_frame_latency: 2,
+        };
+
+        let state = State::new(app);
+
+        assert!(WINDOW.is_none(), "Another instance of App already exists.");
+
+        *WINDOW.get_mut() = Self {
+            state,
+            config,
+            device,
+            queue,
+            adapter,
+            instance,
+            resumed: false,
+            surface: None,
+            drawer: None,
+            title_set: false,
+            close: AtomicBool::default(),
+        }
+        .into();
+
+        let window = Self::current();
+
+        window.state.app.set_window(Rglica::from_ref(window));
+        window.start_event_loop(event_loop)
+    }
+
+    #[cfg(not(target_os = "android"))]
+    pub async fn start(app: impl App + 'static) -> Result<()> {
+        Self::start_internal(Box::new(app), EventLoop::new()?).await
+    }
+
+    #[cfg(target_os = "android")]
+    pub async fn start(app: impl App + 'static, event_loop: EventLoop<Events>) -> Result<()> {
+        Self::start_internal(Box::new(app), event_loop).await
+    }
+
+    fn start_event_loop(&mut self, event_loop: EventLoop<Events>) -> Result<()> {
+        event_loop.run_app(self)?;
+        Ok(())
+    }
+
+    pub fn set_title(title: impl Into<String>) {
+        let title = title.into();
+        on_main(move || {
+            Self::current().title_set = true;
+            if Platform::DESKTOP {
+                Self::winit_window().set_title(&title);
+            } else {
+                warn!("set_title is not supported on this platform");
+            }
+        });
+    }
+
+    pub fn set_size(&self, size: impl Into<Size<u32>>) {
+        let size = size.into();
+        let _ = Self::winit_window().request_inner_size(PhysicalSize::new(size.width, size.height));
+    }
+
+    pub fn request_screenshot(&self) -> Receiver<Screenshot> {
+        self.state.request_read_display()
+    }
+
+    pub fn path_layout() -> &'static BindGroupLayout {
+        &Self::drawer().path.color_size_layout
+    }
+
+    pub fn fps(&self) -> f32 {
+        self.state.frame_counter.fps
+    }
+
+    pub fn frame_time(&self) -> f32 {
+        self.state.frame_counter.frame_time
+    }
+
+    pub fn frame_drawn(&self) -> u32 {
+        self.state.frame_counter.frame_count
+    }
+
+    pub fn display_refresh_rate() -> u32 {
+        Self::winit_window().current_monitor().map_or(60, |monitor| {
+            monitor.refresh_rate_millihertz().unwrap_or(60_000) / 1000
+        })
+    }
+}
+
+impl ApplicationHandler<Events> for Window {
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        if self.create_surface_and_window(event_loop).unwrap() {
+            self.state.app.window_ready();
+        }
+        self.resumed = true;
+    }
+
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, _window_id: WindowId, event: WindowEvent) {
+        match event {
+            WindowEvent::CloseRequested => event_loop.exit(),
+            WindowEvent::CursorMoved { position, .. } => {
+                self.state.app.mouse_moved((position.x, position.y).into());
+            }
+            WindowEvent::MouseInput { state, button, .. } => {
+                self.state.app.mouse_event(state, button);
+            }
+            WindowEvent::Touch(touch) => {
+                self.state.app.touch_event(touch);
+            }
+            WindowEvent::MouseWheel { delta, .. } => match delta {
+                MouseScrollDelta::LineDelta(x, y) => {
+                    let point: Point = (x, y).into();
+                    self.state.app.mouse_scroll(point * 28.0);
+                }
+                MouseScrollDelta::PixelDelta(delta) => {
+                    self.state.app.mouse_scroll((delta.x, delta.y).into());
+                }
+            },
+            WindowEvent::KeyboardInput { event, .. } => {
+                if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
+                    event_loop.exit();
+                }
+                self.state.app.key_event(event);
+            }
+            WindowEvent::DroppedFile(path) => {
+                self.state.app.dropped_file(path);
+            }
+            WindowEvent::Resized(physical_size) => {
+                self.state.resize(physical_size, event_loop);
+            }
+            WindowEvent::ScaleFactorChanged {
+                scale_factor,
+                inner_size_writer: _,
+            } => {
+                dbg!(&scale_factor);
+            }
+            WindowEvent::RedrawRequested => {
+                if self.close.load(Ordering::Relaxed) {
+                    event_loop.exit();
+                }
+
+                self.state.update();
+
+                match self.state.render() {
+                    Ok(()) => {}
+                    Err(e) => error!("Render error: {e:?}"),
+                }
+            }
+            _ => {}
+        }
+    }
+
+    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
+        if self.resumed {
+            Self::winit_window().request_redraw();
+        }
+    }
+}
