@@ -1,5 +1,5 @@
 use anyhow::Result;
-use gm::Color;
+use gm::{Color, flat::Size};
 use log::debug;
 use refs::MainLock;
 use render::{UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
@@ -37,12 +37,10 @@ impl RenderTestView {
 
         rect.add(RectInstance::new((400, 100, 200, 200).into(), Color::GREEN, 0.5));
 
-        rect.draw(
-            pass,
-            RectView {
-                resolution: Window::current().size,
-            },
-        );
+        let size = Window::inner_size();
+        let size: Size = (size.width, size.height).into();
+
+        rect.draw(pass, RectView { resolution: size });
 
         image.draw(
             pass,
@@ -57,19 +55,11 @@ impl RenderTestView {
         pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
     }
 
-    fn case_1(&self, pass: &mut RenderPass) {
+    fn case_1(&self, _pass: &mut RenderPass) {
         let pipeline = UI_RECT.get_mut();
 
         pipeline.add(RectInstance::new((200, 200, 100, 100).into(), Color::BLUE, 0.5));
         pipeline.add(RectInstance::new((150, 150, 100, 100).into(), Color::GREEN, 0.5));
-        pipeline.add(RectInstance::new((100, 100, 100, 100).into(), Color::RED, 0.5));
-
-        pipeline.draw(
-            pass,
-            RectView {
-                resolution: Window::current().size,
-            },
-        )
     }
 }
 

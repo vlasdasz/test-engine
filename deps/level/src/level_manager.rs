@@ -1,7 +1,10 @@
 use std::ops::{Deref, DerefMut};
 
 use educe::Educe;
-use gm::{LossyConvert, Platform, flat::Point};
+use gm::{
+    LossyConvert, Platform,
+    flat::{Point, Size},
+};
 use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
@@ -111,7 +114,8 @@ impl LevelManager {
 
     pub fn convert_touch(pos: Point) -> Point {
         let mut pos = pos;
-        let size = Window::current().size;
+        let size = Window::inner_size();
+        let size: Size = (size.width, size.height).into();
 
         pos.x -= size.width / 2.0;
         pos.y -= size.height / 2.0;

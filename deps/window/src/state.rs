@@ -47,7 +47,6 @@ impl State {
 
         let window = Window::current();
 
-        window.size = (new_size.width, new_size.height).into();
         window.config.width = new_size.width;
         window.config.height = new_size.height;
 

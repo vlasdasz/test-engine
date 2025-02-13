@@ -48,8 +48,6 @@ pub type Events = ();
 pub struct Window {
     pub state: State,
 
-    pub size: Size,
-
     pub(crate) config: SurfaceConfiguration,
     pub(crate) device: Device,
     pub(crate) queue:  Queue,
@@ -207,7 +205,6 @@ impl Window {
 
         *WINDOW.get_mut() = Self {
             state,
-            size: Size::default(),
             config,
             device,
             queue,
