@@ -8,9 +8,9 @@ ui:
 	cargo run -p ui-test
 	cargo run -p ui-test --release
 
-window:
-	make render
+all:
 	make ui
+	make render
 
 ui3:
 	cargo run -p ui-benchmark --profile=r3

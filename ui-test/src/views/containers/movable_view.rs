@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{Color, Container, HasTitle, MovableView, Setup, UI, ViewData, ViewFrame, view},
-    ui_test::{check_colors, inject_touches, record_ui_test},
+    ui_test::{check_colors, inject_touches},
 };
 
 #[view]
@@ -24,8 +24,6 @@ pub async fn test_movable_view() -> Result<()> {
     debug!("Test movable view:");
 
     let mut _view = UI::init_test_view::<MovableViewTestView>().await;
-
-    record_ui_test().await;
 
     inject_touches(
         "

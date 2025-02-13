@@ -6,9 +6,8 @@ use gm::{
     flat::{Rect, Size},
 };
 use log::{trace, warn};
-use manage::data_manager::DataManager;
-use refs::{MainLock, Own, Weak, weak_from_ref};
-use render::{UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
+use refs::{MainLock, Own, Weak};
+use render::{UIImageRectPipepeline, UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
     ViewFrame, ViewLayout, ViewSubviews, ViewTest,
@@ -20,6 +19,7 @@ use window::{Font, Window};
 use crate::{App, ui::ui_test::state::clear_state};
 
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
+static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 
 pub struct UI;
 
@@ -50,6 +50,13 @@ impl UI {
         pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
         RECT_DRAWER.get_mut().draw(
+            pass,
+            RectView {
+                resolution: UIManager::resolution(),
+            },
+        );
+
+        IMAGE_RECT_DRAWER.get_mut().draw(
             pass,
             RectView {
                 resolution: UIManager::resolution(),
@@ -118,19 +125,20 @@ impl UI {
 
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image().is_ok() {
-                weak_from_ref(image_view).check_cropped(&clamped_frame);
-
                 let image = image_view.image();
                 // let size: Size = image.size.into();
                 // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
-                Window::drawer().image.draw(
-                    pass,
-                    image.get_static(),
-                    &clamped_frame,
-                    image_view.cropped(),
-                    view.z_position() - UIManager::additional_z_offset(),
+                IMAGE_RECT_DRAWER.get_mut().add_with_image(
+                    RectInstance {
+                        position:   frame.origin,
+                        size:       frame.size,
+                        color:      Color::default(),
+                        rotation:   0.0,
+                        z_position: view.z_position() - UIManager::additional_z_offset(),
+                    },
+                    image,
                 );
             } else {
                 warn!("Image is not OK");

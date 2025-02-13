@@ -15,7 +15,6 @@ pub use app::*;
 pub use bytemuck::cast_slice;
 pub use image_proc::include_images;
 pub use render::{
-    image_drawer::{ImageDrawer, image_vertices_with_shrink},
     path_data::PathData,
     sprite_drawer::shader_data::{SpriteInstance, SpriteView},
     uniform::*,

@@ -2,16 +2,16 @@ use anyhow::Result;
 use gm::{Color, flat::Size};
 use log::debug;
 use refs::MainLock;
-use render::{UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
+use render::{UIImageRectPipepeline, UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView};
 use test_engine::{
-    App, DataManager, RenderPass, from_main,
+    App, RenderPass, from_main,
     ui::{UI, UIImages, UIManager, ViewCallbacks, view},
-    ui_test::{check_colors, record_ui_test},
+    ui_test::check_colors,
 };
-use window::{ImageDrawer, Window};
+use window::Window;
 
 static UI_RECT: MainLock<UIRectPipepeline> = MainLock::new();
-static IMAGE_DRAWER: MainLock<ImageDrawer> = MainLock::new();
+static IMAGE_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 
 #[view]
 struct RenderTestView {
@@ -42,13 +42,18 @@ impl RenderTestView {
 
         rect.draw(pass, RectView { resolution: size });
 
-        image.draw(
-            pass,
-            UIImages::rb().get_static(),
-            &(450, 150, 100, 100).into(),
-            None,
-            0.4,
+        image.add_with_image(
+            RectInstance {
+                position:   (450, 150).into(),
+                size:       (100, 100).into(),
+                color:      Default::default(),
+                rotation:   0.0,
+                z_position: 0.4,
+            },
+            UIImages::rb(),
         );
+
+        image.draw(pass, RectView { resolution: size });
 
         let window_size = UIManager::resolution();
 
@@ -82,29 +87,86 @@ pub async fn test_render() -> Result<()> {
 
     check_colors(
         r#"
-              66  104 -  25  51  76
-              77  109 -  25  51  76
-             112  137 - 255   0   0
-             134  152 - 255   0   0
-             157  165 - 255   0   0
-             195  196 - 255   0   0
-             220  219 -   0 255   0
-             270  266 -   0   0 203
-             304  298 -  25  51  76
-             340  260 -  25  51  76
-             306  211 -  25  51  76
-             225  187 -   0 255   0
-             210   49 -  25  51  76
-             283  105 -  25  51  76
-             240  305 -  25  51  76
-              60  279 -  25  51  76
-             134  172 - 255   0   0
-             143  136 - 255   0   0
-             171   89 -  25  51  76
-             269   78 -  25  51  76
-             203  212 -   0 255   0
-             132  250 -  25  51  76
-             130  339 -  25  51  76
+              55  693 -  25  51  76
+              79  704 -  25  51  76
+              94  726 -  25  51  76
+             106  734 - 255   0   0
+             120  746 - 255   0   0
+             128  753 - 255   0   0
+             151  763 -   0 255   0
+             170  773 -   0 255   0
+             170  775 -   0 255   0
+             188  801 -   0 255   0
+             218  826 -   0   0 203
+             238  843 -   0   0 203
+             283  875 -   0   0 203
+             306  888 -  25  51  76
+             340  906 -  25  51  76
+             363  921 -  25  51  76
+             324  583 -  25  51  76
+             306  572 -  25  51  76
+             273  561 -   0   0 203
+             259  554 -   0   0 203
+             254  549 -   0   0 203
+             235  532 -   0   0 203
+             232  529 -   0   0 203
+             223  521 -   0   0 203
+             214  514 -   0   0 203
+             195  496 -   0 255   0
+             190  489 -   0 255   0
+             173  472 -   0 255   0
+             160  460 -   0 255   0
+             123  423 - 255   0   0
+             124  423 - 255   0   0
+              95  392 -  25  51  76
+              93  389 -  25  51  76
+              74   88 -  25  51  76
+              77   93 -  25  51  76
+              89  107 -  25  51  76
+             111  121 - 255   0   0
+             140  137 - 255   0   0
+             143  140 - 255   0   0
+             168  162 - 255   0   0
+             187  181 - 255   0   0
+             209  203 -   0 255   0
+             223  226 -   0 255   0
+             241  248 -   0 255   0
+             243  249 -   0 255   0
+             263  262 -   0   0 203
+             298  297 -   0   0 203
+             302  302 -  25  51  76
+             348  229 -  25  51  76
+             373  221 -  25  51  76
+             443  213 -   0 255   0
+             467  212 -   0 255   0
+             497  216 -  14  14  14
+             557  217 -   0 255   0
+             629  219 -  25  51  76
+             672  210 -  25  51  76
+             666  150 -  25  51  76
+             615  161 -  25  51  76
+             538  165 -  14  14  14
+             497  177 -   0 255   0
+             375  160 -  25  51  76
+             379  133 -  25  51  76
+             393   83 -  25  51  76
+             473   66 -  25  51  76
+             488   92 -  25  51  76
+             507  182 -   0 255   0
+             523  278 -   0 255   0
+             519  391 -  25  51  76
+             179   66 -  25  51  76
+             188  109 - 255   0   0
+             219  244 -   0 255   0
+             221  329 -  25  51  76
+             205  398 -  25  51  76
+             206  451 -   0 255   0
+             192  582 -  25  51  76
+             193  632 -  25  51  76
+             234  748 -  25  51  76
+             238  852 -   0   0 203
+             226  913 -  25  51  76
+             223  948 -  25  51  76
         "#,
     )
     .await?;
@@ -113,8 +175,6 @@ pub async fn test_render() -> Result<()> {
         view.case = 0;
     })
     .await;
-
-    record_ui_test().await;
 
     debug!("OK");
 
