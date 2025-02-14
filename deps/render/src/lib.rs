@@ -4,8 +4,10 @@
 #![feature(generic_arg_infer)]
 
 pub use crate::shader_data::SpriteView;
-use crate::{pipelines::rect_pipeline::RectPipeline, rect_instance::RectInstance, rect_view::RectView};
-
+use crate::{
+    pipelines::rect_pipeline::RectPipeline, rect_instance::RectInstance, rect_view::RectView,
+    ui_rect_instance::UIRectInstance,
+};
 mod buffer_helper;
 mod device_helper;
 mod path_data;
@@ -14,6 +16,7 @@ pub mod rect_instance;
 pub mod rect_view;
 mod shader_data;
 mod to_bytes;
+pub mod ui_rect_instance;
 mod uniform;
 mod vec_buffer;
 mod vertex_layout;
@@ -27,8 +30,8 @@ pub type SpriteBoxPipepeline = RectPipeline<false, "sprite_box", SPRITE_CODE, Sp
 pub type TexturedSpriteBoxPipeline =
     RectPipeline<true, "textured_sprite_box", TEXTURED_SPRITE_CODE, SpriteView, RectInstance>;
 
-pub type UIRectPipepeline = RectPipeline<false, "ui_rect", UI_CODE, RectView, RectInstance>;
-pub type UIImageRectPipepeline = RectPipeline<true, "ui_image_rect", UI_IMAGE_CODE, RectView, RectInstance>;
+pub type UIRectPipepeline = RectPipeline<false, "ui_rect", UI_CODE, RectView, UIRectInstance>;
+pub type UIImageRectPipepeline = RectPipeline<true, "ui_image_rect", UI_IMAGE_CODE, RectView, UIRectInstance>;
 
 pub use path_data::PathData;
 pub use pipelines::{

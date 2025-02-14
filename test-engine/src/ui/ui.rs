@@ -8,7 +8,8 @@ use gm::{
 use log::{trace, warn};
 use refs::{MainLock, Own, Weak};
 use render::{
-    PathPipeline, UIImageRectPipepeline, UIRectPipepeline, rect_instance::RectInstance, rect_view::RectView,
+    PathPipeline, UIImageRectPipepeline, UIRectPipepeline, rect_view::RectView,
+    ui_rect_instance::UIRectInstance,
 };
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
@@ -119,9 +120,10 @@ impl UI {
         if view.color().a > 0.0 {
             pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
-            RECT_DRAWER.get_mut().add(RectInstance::new(
+            RECT_DRAWER.get_mut().add(UIRectInstance::new(
                 frame,
                 *view.color(),
+                view.corner_radius(),
                 view.z_position() + *text_offset,
             ));
         }
@@ -134,12 +136,12 @@ impl UI {
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
                 IMAGE_RECT_DRAWER.get_mut().add_with_image(
-                    RectInstance {
-                        position:   frame.origin,
-                        size:       frame.size,
-                        color:      Color::default(),
-                        rotation:   0.0,
-                        z_position: view.z_position() - UIManager::additional_z_offset(),
+                    UIRectInstance {
+                        position:      frame.origin,
+                        size:          frame.size,
+                        color:         Color::default(),
+                        corner_radius: view.corner_radius(),
+                        z_position:    view.z_position() - UIManager::additional_z_offset(),
                     },
                     image,
                 );
@@ -167,9 +169,12 @@ impl UI {
             pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
             for rect in frame.to_borders(2.0) {
-                RECT_DRAWER
-                    .get_mut()
-                    .add(RectInstance::new(rect, Color::TURQUOISE, view.z_position() - 0.2));
+                RECT_DRAWER.get_mut().add(UIRectInstance::new(
+                    rect,
+                    Color::TURQUOISE,
+                    0.0,
+                    view.z_position() - 0.2,
+                ));
             }
         }
 
