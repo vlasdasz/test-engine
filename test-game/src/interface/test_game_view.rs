@@ -95,7 +95,7 @@ impl Setup for TestGameView {
         self.br.set_color(Color::ORANGE).place().size(100, 100).br(10);
 
         self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
-        self.image.set_image("cat.png");
+        self.image.set_image("cat.png").set_corner_radius(20);
 
         self.label_l.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
             Anchor::Right,
@@ -103,7 +103,7 @@ impl Setup for TestGameView {
             20,
         );
         self.label_l.text = "Łėŵœ Ы".into();
-        self.label_l.set_text_size(64.);
+        self.label_l.set_text_size(64.).set_corner_radius(20);
 
         self.image_r.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
             Anchor::Left,

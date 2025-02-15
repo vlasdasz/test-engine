@@ -1,13 +1,17 @@
 use level::LevelManager;
 use manage::{ExistsManaged, data_manager::DataManager};
 use refs::MainLock;
-use render::{SpriteBoxPipepeline, TexturedSpriteBoxPipeline, rect_instance::RectInstance};
+use render::{
+    BackgroundPipeline, PolygonPipeline, SpriteBoxPipepeline, SpriteView, TexturedSpriteBoxPipeline,
+    rect_instance::RectInstance,
+};
 use ui::UIManager;
 use wgpu::RenderPass;
-use window::{SpriteView, Window};
 
 static SPRITE_DRAWER: MainLock<SpriteBoxPipepeline> = MainLock::new();
 static TEXTURED_SPRITE_DRAWER: MainLock<TexturedSpriteBoxPipeline> = MainLock::new();
+static BACKGROUND: MainLock<BackgroundPipeline> = MainLock::new();
+static POLYGON: MainLock<PolygonPipeline> = MainLock::new();
 
 pub(crate) struct LevelDrawer;
 
@@ -22,13 +26,12 @@ impl LevelDrawer {
         }
         let resolution = UIManager::resolution();
 
-        let drawer = Window::drawer();
         let level = LevelManager::level();
         let camera_pos = *LevelManager::camera_pos();
         let scale = *LevelManager::scale();
 
         if level.background.is_ok() {
-            drawer.background.draw(
+            BACKGROUND.get_mut().draw(
                 pass,
                 level.background.get_static(),
                 resolution,
@@ -38,7 +41,7 @@ impl LevelDrawer {
             );
         }
 
-        drawer.polygon.clear();
+        POLYGON.get_mut().clear();
 
         for sprite in level.sprites() {
             if sprite.image.exists_managed() {
@@ -53,7 +56,7 @@ impl LevelDrawer {
                     sprite.image,
                 );
             } else if let Some(vertex_buffer) = &sprite.vertex_buffer {
-                drawer.polygon.add(
+                POLYGON.get_mut().add(
                     vertex_buffer,
                     sprite.position(),
                     *sprite.color(),
@@ -89,7 +92,7 @@ impl LevelDrawer {
             },
         );
 
-        drawer.polygon.draw(
+        POLYGON.get_mut().draw(
             pass,
             SpriteView {
                 camera_pos,

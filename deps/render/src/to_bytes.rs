@@ -1,6 +1,6 @@
 use bytemuck::Pod;
 
-pub trait ToBytes {
+pub(crate) trait ToBytes {
     fn to_bytes(&self) -> &[u8];
 }
 

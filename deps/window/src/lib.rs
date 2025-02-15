@@ -1,11 +1,9 @@
 mod app;
-pub mod image;
 mod text;
-pub mod utils;
 mod window;
 
 mod frame_counter;
-mod render;
+pub mod image;
 mod screenshot;
 mod state;
 mod surface;
@@ -14,17 +12,9 @@ mod vertex_buffer;
 pub use app::*;
 pub use bytemuck::cast_slice;
 pub use image_proc::include_images;
-pub use render::{
-    path_data::PathData,
-    sprite_drawer::shader_data::{SpriteInstance, SpriteView},
-    uniform::*,
-    vec_buffer::VecBuffer,
-    vertex_layout::VertexLayout,
-    wgpu_drawer::WGPUDrawer,
-};
 pub use screenshot::*;
+pub use state::RGBA_TEXTURE_FORMAT;
 pub use text::*;
-pub use utils::DeviceHelper;
 pub use vertex_buffer::VertexBuffer;
 pub use wgpu::{
     Buffer, BufferUsages, Device, PolygonMode, RenderPass,

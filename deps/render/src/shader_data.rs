@@ -8,7 +8,7 @@ use gm::{
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};
 
-use crate::render::vertex_layout::VertexLayout;
+use crate::vertex_layout::VertexLayout;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod, PartialEq, Educe)]

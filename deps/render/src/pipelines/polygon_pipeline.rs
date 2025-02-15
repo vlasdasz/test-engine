@@ -4,16 +4,13 @@ use wgpu::{
     BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor, PolygonMode,
     PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages, include_wgsl,
 };
+use window::{VertexBuffer, Window};
 
 use crate::{
-    Window,
-    render::{
-        sprite_drawer::shader_data::SpriteView,
-        uniform::{UniformBind, make_bind, make_uniform_layout},
-        vertex_layout::VertexLayout,
-    },
-    utils::DeviceHelper,
-    vertex_buffer::VertexBuffer,
+    device_helper::DeviceHelper,
+    shader_data::SpriteView,
+    uniform::{UniformBind, make_bind, make_uniform_layout},
+    vertex_layout::VertexLayout,
 };
 
 #[repr(C)]
@@ -42,7 +39,7 @@ impl Default for PolygonPipeline {
     fn default() -> Self {
         let device = Window::device();
 
-        let shader = device.create_shader_module(include_wgsl!("../shaders/polygon.wgsl"));
+        let shader = device.create_shader_module(include_wgsl!("shaders/polygon.wgsl"));
 
         let view_layout = make_uniform_layout("polygon_sprite_view_layout", ShaderStages::VERTEX);
         let polygon_view_layout = make_uniform_layout("polygon_view_layout", ShaderStages::VERTEX_FRAGMENT);

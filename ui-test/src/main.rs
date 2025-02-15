@@ -47,8 +47,8 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
-    test_base_views().await?;
     test_base_ui().await?;
+    test_base_views().await?;
     test_layout().await?;
     test_input_views().await?;
     test_containers().await?;

@@ -3,22 +3,37 @@
 #![feature(adt_const_params)]
 #![feature(generic_arg_infer)]
 
-use window::SpriteView;
-
-use crate::{rect_instance::RectInstance, rect_pipeline::RectPipeline, rect_view::RectView};
-
+pub use crate::shader_data::SpriteView;
+use crate::{
+    pipelines::rect_pipeline::RectPipeline, rect_instance::RectInstance, rect_view::RectView,
+    ui_rect_instance::UIRectInstance,
+};
+mod buffer_helper;
+mod device_helper;
+mod path_data;
+mod pipelines;
 pub mod rect_instance;
-mod rect_pipeline;
 pub mod rect_view;
+mod shader_data;
+mod to_bytes;
+pub mod ui_rect_instance;
+mod uniform;
+mod vec_buffer;
+mod vertex_layout;
 
-const SPRITE_CODE: &str = include_str!("sprite.wgsl");
-const TEXTURED_SPRITE_CODE: &str = include_str!("sprite_textured.wgsl");
-const UI_CODE: &str = include_str!("rect.wgsl");
-const UI_IMAGE_CODE: &str = include_str!("ui_image.wgsl");
+const SPRITE_CODE: &str = include_str!("pipelines/shaders/sprite.wgsl");
+const TEXTURED_SPRITE_CODE: &str = include_str!("pipelines/shaders/sprite_textured.wgsl");
+const UI_CODE: &str = include_str!("pipelines/shaders/rect.wgsl");
+const UI_IMAGE_CODE: &str = include_str!("pipelines/shaders/ui_image.wgsl");
 
 pub type SpriteBoxPipepeline = RectPipeline<false, "sprite_box", SPRITE_CODE, SpriteView, RectInstance>;
 pub type TexturedSpriteBoxPipeline =
     RectPipeline<true, "textured_sprite_box", TEXTURED_SPRITE_CODE, SpriteView, RectInstance>;
 
-pub type UIRectPipepeline = RectPipeline<false, "ui_rect", UI_CODE, RectView, RectInstance>;
-pub type UIImageRectPipepeline = RectPipeline<true, "ui_image_rect", UI_IMAGE_CODE, RectView, RectInstance>;
+pub type UIRectPipepeline = RectPipeline<false, "ui_rect", UI_CODE, RectView, UIRectInstance>;
+pub type UIImageRectPipepeline = RectPipeline<true, "ui_image_rect", UI_IMAGE_CODE, RectView, UIRectInstance>;
+
+pub use path_data::PathData;
+pub use pipelines::{
+    background_pipeline::BackgroundPipeline, path_pipeline::PathPipeline, polygon_pipeline::PolygonPipeline,
+};

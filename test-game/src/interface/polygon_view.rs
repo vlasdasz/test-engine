@@ -1,11 +1,11 @@
 use test_engine::{
-    RenderPass, SpriteView, VertexBuffer, Window, after,
+    RenderPass, VertexBuffer, after,
     level::LevelManager,
     refs::Weak,
     ui::{
         Anchor::{Size, Top, X},
-        Button, Color, Container, HasText, Point, PositionView, Setup, UIManager, ViewCallbacks, ViewData,
-        ViewFrame, ViewSubviews, view,
+        Button, Color, Container, HasText, Point, PositionView, Setup, ViewCallbacks, ViewData, ViewFrame,
+        ViewSubviews, view,
     },
 };
 
@@ -88,25 +88,26 @@ impl PolygonView {
 }
 
 impl ViewCallbacks for PolygonView {
-    fn before_render(&self, pass: &mut RenderPass) {
-        let drawer = Window::drawer();
-
-        drawer.polygon_test.clear();
-
-        if self.points.is_empty() {
-            return;
-        }
-
-        drawer.polygon_test.add(&self.points, (0, 0).into(), Color::GREEN, 0.0);
-
-        drawer.polygon_test.draw(
-            pass,
-            SpriteView {
-                camera_pos:      Point::default(),
-                resolution:      UIManager::resolution(),
-                camera_rotation: 0.0,
-                scale:           1.0,
-            },
-        );
+    fn before_render(&self, _pass: &mut RenderPass) {
+        // let drawer = Window::drawer();
+        //
+        // drawer.polygon_test.clear();
+        //
+        // if self.points.is_empty() {
+        //     return;
+        // }
+        //
+        // drawer.polygon_test.add(&self.points, (0, 0).into(), Color::GREEN,
+        // 0.0);
+        //
+        // drawer.polygon_test.draw(
+        //     pass,
+        //     SpriteView {
+        //         camera_pos:      Point::default(),
+        //         resolution:      UIManager::resolution(),
+        //         camera_rotation: 0.0,
+        //         scale:           1.0,
+        //     },
+        // );
     }
 }

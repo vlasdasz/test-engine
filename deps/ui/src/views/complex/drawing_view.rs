@@ -4,8 +4,8 @@ use gm::{
     flat::{Point, Size},
 };
 use refs::Weak;
+use render::PathData;
 use ui_proc::view;
-use window::PathData;
 
 use crate::{
     Setup,

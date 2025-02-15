@@ -1,16 +1,14 @@
 use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BlendState, Buffer, ColorTargetState,
-    ColorWrites, Device, FragmentState, FrontFace, MultisampleState, PipelineCompilationOptions,
-    PipelineLayout, PrimitiveState, PrimitiveTopology, RenderPipeline, RenderPipelineDescriptor,
-    ShaderModule, VertexBufferLayout, VertexState,
+    ColorWrites, CompareFunction, DepthBiasState, DepthStencilState, Device, FragmentState, FrontFace,
+    MultisampleState, PipelineCompilationOptions, PipelineLayout, PrimitiveState, PrimitiveTopology,
+    RenderPipeline, RenderPipelineDescriptor, ShaderModule, StencilState, TextureFormat, VertexBufferLayout,
+    VertexState,
     util::{BufferInitDescriptor, DeviceExt},
 };
+use window::{BufferUsages, PolygonMode, RGBA_TEXTURE_FORMAT};
 
-use crate::{
-    BufferUsages, PolygonMode,
-    state::RGBA_TEXTURE_FORMAT,
-    utils::{ToBytes, depth_stencil_state},
-};
+use crate::to_bytes::ToBytes;
 
 pub trait DeviceHelper {
     fn buffer<T: ToBytes + ?Sized>(&self, data: &T, usage: BufferUsages) -> Buffer;
@@ -94,7 +92,14 @@ impl DeviceHelper for Device {
                 unclipped_depth: false,
                 conservative: false,
             },
-            depth_stencil: depth_stencil_state().into(),
+            depth_stencil: DepthStencilState {
+                format:              TextureFormat::Depth32Float,
+                depth_write_enabled: true,
+                depth_compare:       CompareFunction::Less,
+                stencil:             StencilState::default(),
+                bias:                DepthBiasState::default(),
+            }
+            .into(),
             multisample:   MultisampleState {
                 count:                     1,
                 mask:                      !0,

@@ -13,22 +13,24 @@ name = "ui"
 anyhow = { workspace = true }
 chrono = { workspace = true }
 convert_case = { workspace = true }
-dispatch = { workspace = true }
 educe = { workspace = true }
 fake = { workspace = true }
 log = { workspace = true }
-manage = { workspace = true }
 nonempty = { workspace = true }
-reflected = { workspace = true }
-refs = { workspace = true }
 rust_decimal = { workspace = true }
 tokio = { workspace = true }
-utils = { workspace = true }
+
+dispatch = { workspace = true }
+manage = { workspace = true }
+reflected = { workspace = true }
+refs = { workspace = true }
 vents = { workspace = true }
-window = { workspace = true }
 
 gm = { workspace = true }
+render = { workspace = true }
 ui-proc = { workspace = true }
+utils = { workspace = true }
+window = { workspace = true }
 
 [build-dependencies]
 cfg_aliases = { workspace = true }

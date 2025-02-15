@@ -22,8 +22,8 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
-    test_out_bounds().await?;
     test_corner_radius().await?;
+    test_out_bounds().await?;
     test_transparency().await?;
     test_layout().await?;
     test_modal().await?;

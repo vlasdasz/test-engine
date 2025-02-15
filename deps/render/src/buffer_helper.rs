@@ -1,18 +1,14 @@
 use wgpu::Buffer;
+use window::Window;
 
-use crate::{Window, utils::ToBytes};
+use crate::to_bytes::ToBytes;
 
-pub trait BufferHelper {
+pub(crate) trait BufferHelper {
     fn update<T: ToBytes>(&self, data: T);
-    fn update_bytes(&self, data: &[u8]);
 }
 
 impl BufferHelper for Buffer {
     fn update<T: ToBytes>(&self, data: T) {
         Window::queue().write_buffer(self, 0, data.to_bytes());
-    }
-
-    fn update_bytes(&self, data: &[u8]) {
-        Window::queue().write_buffer(self, 0, data);
     }
 }

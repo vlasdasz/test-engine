@@ -2,11 +2,9 @@ use std::{cell::RefCell, ops::Deref};
 
 use bytemuck::Pod;
 use wgpu::{BindGroup, BindGroupLayout, Buffer, Device};
+use window::{BufferUsages, Window};
 
-use crate::{
-    BufferUsages, Window,
-    utils::{BufferHelper, DeviceHelper},
-};
+use crate::{buffer_helper::BufferHelper, device_helper::DeviceHelper};
 
 #[derive(Debug)]
 pub struct UniformBind<T> {
