@@ -84,12 +84,31 @@ impl Window {
             .window
     }
 
-    pub fn inner_size() -> PhysicalSize<u32> {
-        Self::winit_window().inner_size()
+    fn outer_size() -> Size {
+        let size = Self::winit_window().outer_size();
+        (size.width, size.height).into()
     }
 
-    pub fn screen_scale() -> f64 {
-        Self::winit_window().scale_factor()
+    pub fn render_size() -> Size {
+        if Platform::IOS {
+            Window::outer_size()
+        } else {
+            Window::inner_size()
+        }
+    }
+
+    pub fn inner_size() -> Size {
+        let size = Self::winit_window().inner_size();
+        (size.width, size.height).into()
+    }
+
+    pub fn inner_position() -> Point {
+        let pos = Self::winit_window().inner_position().unwrap_or_default();
+        (pos.x, pos.y).into()
+    }
+
+    pub fn screen_scale() -> f32 {
+        Self::winit_window().scale_factor().lossy_convert()
     }
 
     pub fn close() {

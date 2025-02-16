@@ -11,7 +11,7 @@ pub trait App {
     fn window_ready(&mut self) {}
     fn update(&mut self) {}
     fn render<'a>(&'a mut self, _pass: &mut RenderPass<'a>) {}
-    fn resize(&mut self, _position: Point, _size: Size<u32>) {}
+    fn resize(&mut self, _inner_position: Point, _size: Size) {}
     fn mouse_moved(&mut self, _position: Point) -> bool {
         false
     }

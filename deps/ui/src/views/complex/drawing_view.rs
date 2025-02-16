@@ -3,14 +3,11 @@ use gm::{
     axis::Axis,
     flat::{Point, Size},
 };
-use refs::Weak;
 use render::PathData;
 use ui_proc::view;
+use window::Window;
 
-use crate::{
-    Setup,
-    view::{ViewData, ViewFrame},
-};
+use crate::{ViewCallbacks, view::ViewFrame};
 
 mod test_engine {
     pub(crate) use educe;
@@ -21,13 +18,22 @@ mod test_engine {
 
 #[view]
 pub struct DrawingView {
-    pub rescale: bool,
-    paths:       Vec<PathData>,
+    pub rescale:  bool,
+    paths:        Vec<PathData>,
+    previous_pos: Point,
 }
 
-impl Setup for DrawingView {
-    fn setup(self: Weak<Self>) {
-        self.size_changed().sub(move || self.update_buffers());
+impl ViewCallbacks for DrawingView {
+    fn update(&mut self) {
+        let current_pos = self.absolute_frame().origin;
+
+        if current_pos == self.previous_pos {
+            return;
+        }
+
+        self.update_buffers();
+
+        self.previous_pos = current_pos;
     }
 }
 
@@ -47,7 +53,12 @@ impl DrawingView {
             return self;
         }
 
-        self.paths.push(PathData::new(color, self.size(), &path));
+        self.paths.push(PathData::new(
+            color,
+            Window::render_size(),
+            self.absolute_frame().origin,
+            &path,
+        ));
         self
     }
 
@@ -68,10 +79,10 @@ impl DrawingView {
         path.into_iter().map(|point| point * ratios).collect()
     }
 
-    fn update_buffers(mut self: Weak<Self>) {
-        let size = self.size();
+    fn update_buffers(&mut self) {
+        let pos = self.absolute_frame().origin;
         for path in &mut self.paths {
-            path.resize(size);
+            path.resize(pos);
         }
     }
 

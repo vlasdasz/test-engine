@@ -49,21 +49,17 @@ impl UI {
             Self::draw_view(pass, debug_view, &mut sections, &mut 0.0, debug_frames);
         }
 
-        let window_size = UIManager::resolution();
-
-        pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
-
         RECT_DRAWER.get_mut().draw(
             pass,
             RectView {
-                resolution: UIManager::resolution(),
+                resolution: UIManager::window_resolution(),
             },
         );
 
         IMAGE_RECT_DRAWER.get_mut().draw(
             pass,
             RectView {
-                resolution: UIManager::resolution(),
+                resolution: UIManager::window_resolution(),
             },
         );
 
@@ -111,15 +107,7 @@ impl UI {
 
         let frame = *view.absolute_frame();
 
-        let root_size = UI::root_view_size();
-
-        let clamped_frame = frame.clamp_to(root_size);
-
-        let window_size = UIManager::resolution();
-
         if view.color().a > 0.0 {
-            pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
-
             RECT_DRAWER.get_mut().add(UIRectInstance::new(
                 frame,
                 *view.color(),
@@ -156,9 +144,8 @@ impl UI {
             for path in drawing_view.paths().iter().rev() {
                 PATH.get_mut().draw(
                     pass,
-                    &clamped_frame,
                     path.buffer(),
-                    path.bind(),
+                    path.uniform_bind(),
                     path.vertex_range(),
                     drawing_view.z_position() - UIManager::additional_z_offset(),
                 );
@@ -166,8 +153,6 @@ impl UI {
         }
 
         if debug_frames {
-            pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
-
             for rect in frame.to_borders(2.0) {
                 RECT_DRAWER.get_mut().add(UIRectInstance::new(
                     rect,

@@ -2,7 +2,10 @@
 #![feature(specialization)]
 
 use test_engine::ui::Setup;
-mod render;
+mod occlusion;
+mod path;
+mod pipelines;
+pub(crate) mod render;
 
 use anyhow::Result;
 use test_engine::{App, ui::Container};
