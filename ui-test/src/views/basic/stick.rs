@@ -1,6 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
+    from_main,
     refs::{Own, Weak},
     ui::{Color, Container, Point, PointView, Setup, StickView, UI, ViewData, ViewFrame, view},
     ui_test::{helpers::check_colors, inject_touches},
@@ -35,7 +36,7 @@ impl Setup for StickTestView {
 }
 
 pub async fn test_stick() -> Result<()> {
-    let view = UI::init_test_view::<StickTestView>().await;
+    let mut view = UI::init_test_view::<StickTestView>().await;
 
     check_colors(
         r"
@@ -177,6 +178,43 @@ pub async fn test_stick() -> Result<()> {
     .await;
 
     assert_eq!(view.vec, Point::new(12.244_078, -26.364_265));
+
+    from_main(move || {
+        view.stick.set_position((400, 50));
+    })
+    .await;
+
+    check_colors(
+        r#"
+             384  106 -  25  51  76
+             422  107 - 255 255 255
+             443  107 - 255 255 255
+             484  120 - 203 203 203
+             534  123 - 203 203 203
+             550  123 - 255 255 255
+             572  115 - 255 255 255
+             586   82 -  25  51  76
+             571  234 -  25  51  76
+             539  213 - 255 255 255
+             527  195 - 255 255 255
+             517  185 - 203 203 203
+             499  168 - 203 203 203
+             474  176 - 203 203 203
+             444  181 - 255 255 255
+             430  188 - 255 255 255
+             418  195 - 255 255 255
+             412  199 -  25  51  76
+             389  222 -  25  51  76
+             503  273 -  25  51  76
+             506  213 - 255 255 255
+             506  169 - 203 203 203
+             505  142 - 203 203 203
+             503  113 - 203 203 203
+             503   84 - 255 255 255
+             503   35 -  25  51  76
+        "#,
+    )
+    .await?;
 
     debug!("Stick test: OK");
 

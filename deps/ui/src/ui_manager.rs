@@ -114,7 +114,7 @@ impl UIManager {
 
     pub fn window_resolution() -> Size {
         let size = if Platform::IOS {
-            Window::outer_size()
+            Window::render_size()
         } else {
             Window::inner_size()
         };

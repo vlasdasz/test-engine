@@ -1,4 +1,4 @@
-use gm::{Color, flat::Size};
+use gm::Color;
 use render::{rect_view::RectView, ui_rect_instance::UIRectInstance};
 use test_engine::{RenderPass, ui::UIImages};
 use window::Window;
@@ -73,10 +73,12 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
         0.5,
     ));
 
-    let size = Window::inner_size();
-    let size: Size = (size.width, size.height).into();
-
-    rect.draw(pass, RectView { resolution: size });
+    rect.draw(
+        pass,
+        RectView {
+            resolution: Window::inner_size(),
+        },
+    );
 
     image.add_with_image(
         UIRectInstance {
@@ -89,5 +91,10 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
         UIImages::rb(),
     );
 
-    image.draw(pass, RectView { resolution: size });
+    image.draw(
+        pass,
+        RectView {
+            resolution: Window::inner_size(),
+        },
+    );
 }

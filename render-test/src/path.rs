@@ -1,33 +1,44 @@
 use gm::Color;
 use refs::MainLock;
-use render::PathData;
-use window::RenderPass;
+use render::{PathData, rect_view::RectView, ui_rect_instance::UIRectInstance};
+use window::{RenderPass, Window};
 
-use crate::pipelines::PATH;
+use crate::pipelines::{PATH, UI_RECT};
 
 static PATH_DATA: MainLock<Option<PathData>> = MainLock::new();
 
 pub(crate) fn render_path(pass: &mut RenderPass) {
-    let path = PATH_DATA.get_mut().get_or_insert_with(|| {
+    let path = PATH_DATA.set(
         PathData::new(
             Color::BLUE,
-            (400, 400).into(),
+            Window::render_size(),
+            (200, 200).into(),
             &[
                 (0, 0).into(),
                 (80, 100).into(),
                 (20, 200).into(),
-                (150, 20).into(),
+                (200, 20).into(),
                 (20, 50).into(),
             ],
         )
-    });
+        .into(),
+    );
 
-    PATH.draw(
-        pass,
-        &(100, 100, 280, 280).into(),
-        path.buffer(),
-        path.bind(),
-        path.vertex_range(),
+    let path = path.as_ref().unwrap();
+
+    PATH.draw(pass, path.buffer(), path.uniform_bind(), path.vertex_range(), 0.5);
+
+    UI_RECT.get_mut().add(UIRectInstance::new(
+        (450, 200, 200, 200).into(),
+        Color::RED,
+        0.0,
         0.5,
+    ));
+
+    UI_RECT.get_mut().draw(
+        pass,
+        RectView {
+            resolution: Window::inner_size(),
+        },
     );
 }

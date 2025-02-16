@@ -84,9 +84,17 @@ impl Window {
             .window
     }
 
-    pub fn outer_size() -> Size {
+    fn outer_size() -> Size {
         let size = Self::winit_window().outer_size();
         (size.width, size.height).into()
+    }
+
+    pub fn render_size() -> Size {
+        if Platform::IOS {
+            Window::outer_size()
+        } else {
+            Window::inner_size()
+        }
     }
 
     pub fn inner_size() -> Size {

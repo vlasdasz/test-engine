@@ -218,14 +218,14 @@ impl window::App for App {
         UI::draw(pass);
     }
 
-    fn resize(&mut self, inner_position: Point, inner_size: Size, _outer_size: Size) {
-        UIManager::root_view_weak().set_size(inner_size);
+    fn resize(&mut self, inner_position: Point, size: Size) {
+        UIManager::root_view_weak().set_size(size);
 
         if Platform::IOS {
             UIManager::root_view_weak().set_position(inner_position);
         }
 
-        UIEvents::size_changed().trigger(inner_size);
+        UIEvents::size_changed().trigger(size);
         self.update();
     }
 

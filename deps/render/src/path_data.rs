@@ -25,7 +25,7 @@ impl PathData {
         &self.buffer
     }
 
-    pub fn bind(&self) -> &BindGroup {
+    pub fn uniform_bind(&self) -> &BindGroup {
         &self.bind
     }
 
@@ -33,37 +33,12 @@ impl PathData {
         self.vertex_range.clone()
     }
 
-    pub fn new(color: Color, size: Size, points: &[Point]) -> Self {
+    pub fn new(color: Color, resolution: Size, position: Point, points: &[Point]) -> Self {
         let device = Window::device();
-        let path_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            label:   Some("path_bind_group_layout"),
-            entries: &[
-                BindGroupLayoutEntry {
-                    binding:    0,
-                    visibility: ShaderStages::VERTEX,
-                    ty:         BindingType::Buffer {
-                        ty:                 BufferBindingType::Uniform,
-                        has_dynamic_offset: false,
-                        min_binding_size:   None,
-                    },
-                    count:      None,
-                },
-                BindGroupLayoutEntry {
-                    binding:    1,
-                    visibility: ShaderStages::FRAGMENT,
-                    ty:         BindingType::Buffer {
-                        ty:                 BufferBindingType::Uniform,
-                        has_dynamic_offset: false,
-                        min_binding_size:   None,
-                    },
-                    count:      None,
-                },
-            ],
-        });
 
         let buffer = device.buffer(points, BufferUsages::VERTEX);
 
-        let bind_group = make_bind_group(&path_layout, &color, size);
+        let bind_group = make_bind_group(&color, position, resolution);
 
         Self {
             color,
@@ -73,10 +48,53 @@ impl PathData {
         }
     }
 
-    pub fn resize(&mut self, size: Size) {
-        let device = Window::device();
+    pub fn resize(&mut self, position: Point) {
+        self.bind = make_bind_group(&self.color, position, Window::render_size());
+    }
+}
 
-        let path_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+fn make_bind_group(color: &Color, position: Point, resolution: Size) -> BindGroup {
+    let device = Window::device();
+
+    let color_uniform_buffer = device.buffer(color, BufferUsages::UNIFORM);
+    let position_uniform_buffer = device.buffer(&position, BufferUsages::UNIFORM);
+    let resolution_uniform_buffer = device.buffer(&resolution, BufferUsages::UNIFORM);
+
+    device.create_bind_group(&wgpu::BindGroupDescriptor {
+        label:   Some("path_bind_group"),
+        layout:  &PathData::uniform_layout(),
+        entries: &[
+            BindGroupEntry {
+                binding:  0,
+                resource: BindingResource::Buffer(BufferBinding {
+                    buffer: &position_uniform_buffer,
+                    offset: 0,
+                    size:   None,
+                }),
+            },
+            BindGroupEntry {
+                binding:  1,
+                resource: BindingResource::Buffer(BufferBinding {
+                    buffer: &resolution_uniform_buffer,
+                    offset: 0,
+                    size:   None,
+                }),
+            },
+            BindGroupEntry {
+                binding:  2,
+                resource: BindingResource::Buffer(BufferBinding {
+                    buffer: &color_uniform_buffer,
+                    offset: 0,
+                    size:   None,
+                }),
+            },
+        ],
+    })
+}
+
+impl PathData {
+    pub fn uniform_layout() -> BindGroupLayout {
+        Window::device().create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             label:   Some("path_bind_group_layout"),
             entries: &[
                 BindGroupLayoutEntry {
@@ -91,6 +109,16 @@ impl PathData {
                 },
                 BindGroupLayoutEntry {
                     binding:    1,
+                    visibility: ShaderStages::VERTEX,
+                    ty:         BindingType::Buffer {
+                        ty:                 BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size:   None,
+                    },
+                    count:      None,
+                },
+                BindGroupLayoutEntry {
+                    binding:    2,
                     visibility: ShaderStages::FRAGMENT,
                     ty:         BindingType::Buffer {
                         ty:                 BufferBindingType::Uniform,
@@ -100,37 +128,6 @@ impl PathData {
                     count:      None,
                 },
             ],
-        });
-        self.bind = make_bind_group(&path_layout, &self.color, size);
+        })
     }
-}
-
-fn make_bind_group(bind_group_layout: &BindGroupLayout, color: &Color, size: Size) -> BindGroup {
-    let device = Window::device();
-
-    let size_uniform_buffer = device.buffer(&size, BufferUsages::UNIFORM);
-    let color_uniform_buffer = device.buffer(color, BufferUsages::UNIFORM);
-
-    device.create_bind_group(&wgpu::BindGroupDescriptor {
-        label:   Some("path_bind_group"),
-        layout:  bind_group_layout,
-        entries: &[
-            BindGroupEntry {
-                binding:  0,
-                resource: BindingResource::Buffer(BufferBinding {
-                    buffer: &size_uniform_buffer,
-                    offset: 0,
-                    size:   None,
-                }),
-            },
-            BindGroupEntry {
-                binding:  1,
-                resource: BindingResource::Buffer(BufferBinding {
-                    buffer: &color_uniform_buffer,
-                    offset: 0,
-                    size:   None,
-                }),
-            },
-        ],
-    })
 }

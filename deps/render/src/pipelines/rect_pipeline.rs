@@ -17,6 +17,7 @@ use window::{BufferUsages, PolygonMode, Window, image::Image};
 
 use crate::{
     device_helper::DeviceHelper,
+    pipelines::pipeline_type::PipelineType,
     uniform::{UniformBind, make_uniform_layout},
     vec_buffer::VecBuffer,
     vertex_layout::VertexLayout,
@@ -53,7 +54,7 @@ const TEXTURED_VERTICES: &[Vertex2D; 4] = &[
 const TEXTURED_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 pub struct RectPipeline<
-    const WITH_IMAGE: bool,
+    const TYPE: PipelineType,
     const SHADER: &'static str,
     const SHADER_CODE: &'static str,
     View,
@@ -69,12 +70,12 @@ pub struct RectPipeline<
 }
 
 impl<
-    const WITH_IMAGE: bool,
+    const TYPE: PipelineType,
     const NAME: &'static str,
     const SHADER_CODE: &'static str,
     View: Default + Pod,
     Instance: VertexLayout,
-> Default for RectPipeline<WITH_IMAGE, NAME, SHADER_CODE, View, Instance>
+> Default for RectPipeline<TYPE, NAME, SHADER_CODE, View, Instance>
 {
     fn default() -> Self {
         let device = Window::device();
@@ -91,7 +92,7 @@ impl<
 
         let image_layout = Image::uniform_layout();
 
-        if WITH_IMAGE {
+        if TYPE.image() {
             bind_group_layouts.push(&image_layout);
         }
 
@@ -101,7 +102,7 @@ impl<
             push_constant_ranges: &[],
         });
 
-        let pipeline = if WITH_IMAGE {
+        let pipeline = if TYPE.image() {
             device.pipeline(
                 &format!("{NAME}_pipeline"),
                 &uniform_layout,
@@ -121,7 +122,7 @@ impl<
             )
         };
 
-        let vertex_buffer = if WITH_IMAGE {
+        let vertex_buffer = if TYPE.image() {
             device.buffer(TEXTURED_VERTICES, BufferUsages::VERTEX)
         } else {
             device.buffer(VERTICES, BufferUsages::VERTEX)
@@ -137,22 +138,26 @@ impl<
 }
 
 impl<
-    const WITH_IMAGE: bool,
+    const TYPE: PipelineType,
     const SHADER: &'static str,
     const SHADER_CODE: &'static str,
     View: Pod + PartialEq,
     Instance: Pod,
-> RectPipeline<WITH_IMAGE, SHADER, SHADER_CODE, View, Instance>
+> RectPipeline<TYPE, SHADER, SHADER_CODE, View, Instance>
 {
     pub fn add(&mut self, instance: Instance) {
+        assert!(TYPE.color());
         self.instances.entry(Weak::default()).or_default().push(instance);
     }
 
     pub fn add_with_image(&mut self, instance: Instance, image: Weak<Image>) {
+        assert!(TYPE.image());
         self.instances.entry(image).or_default().push(instance);
     }
 
     pub fn draw<'a>(&'a mut self, render_pass: &mut RenderPass<'a>, view: View) {
+        assert!(TYPE.color() || TYPE.image());
+
         if self.instances.is_empty() {
             return;
         }
@@ -170,21 +175,14 @@ impl<
 
             render_pass.set_bind_group(0, self.view.bind(), &[]);
 
-            if WITH_IMAGE {
+            if TYPE.image() {
                 render_pass.set_bind_group(1, &image.bind, &[]);
             }
 
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_vertex_buffer(1, instances.buffer().slice(..));
 
-            render_pass.draw(
-                if WITH_IMAGE {
-                    TEXTURED_VERTEX_RANGE
-                } else {
-                    VERTEX_RANGE
-                },
-                0..instances.len(),
-            );
+            render_pass.draw(TYPE.vertex_range(), 0..instances.len());
         }
     }
 }

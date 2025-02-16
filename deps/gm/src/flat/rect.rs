@@ -99,39 +99,6 @@ impl Rect {
         (0, 0, self.size.width, self.size.height).into()
     }
 
-    pub fn clamp_to(mut self, size: Size) -> Rect {
-        self.size.width = if self.origin.x < 0.0 {
-            self.size.width + self.origin.x
-        } else {
-            self.size.width
-        };
-
-        self.size.height = if self.origin.y < 0.0 {
-            self.size.height + self.origin.y
-        } else {
-            self.size.height
-        };
-
-        self.origin.x = if self.origin.x < 0.0 { 0.0 } else { self.origin.x };
-        self.origin.y = if self.origin.y < 0.0 { 0.0 } else { self.origin.y };
-
-        let x_clamped = self.max_x() > size.width;
-        let y_clamped = self.max_y() > size.height;
-
-        let width = if x_clamped {
-            size.width - self.x()
-        } else {
-            self.width()
-        };
-        let height = if y_clamped {
-            size.height - self.y()
-        } else {
-            self.height()
-        };
-
-        (self.x(), self.y(), width, height).into()
-    }
-
     pub fn to_borders(self, width: impl ToF32) -> [Rect; 4] {
         let width = width.to_f32();
 
@@ -250,33 +217,5 @@ impl<T: ToF32> Mul<T> for Rect {
     type Output = Rect;
     fn mul(self, rhs: T) -> Rect {
         (&self).mul(rhs)
-    }
-}
-
-#[cfg(test)]
-mod test {
-    use crate::flat::Rect;
-
-    #[test]
-    fn clamp() {
-        assert_eq!(
-            Rect::new(5.0, 5.0, 100.0, 100.0).clamp_to((1000, 1000).into()),
-            (5, 5, 100, 100).into()
-        );
-
-        assert_eq!(
-            Rect::new(5.0, 5.0, 1050.0, 100.0).clamp_to((1000, 1000).into()),
-            (5, 5, 995, 100).into()
-        );
-
-        assert_eq!(
-            Rect::new(5.0, 5.0, 100.0, 1050.0).clamp_to((1000, 1000).into()),
-            (5, 5, 100, 995).into()
-        );
-
-        assert_eq!(
-            Rect::new(5.0, 5.0, 1050.0, 1050.0).clamp_to((1000, 1000).into()),
-            (5, 5, 995, 995).into()
-        );
     }
 }

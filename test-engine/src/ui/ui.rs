@@ -107,10 +107,6 @@ impl UI {
 
         let frame = *view.absolute_frame();
 
-        let root_size = UI::root_view_size();
-
-        let clamped_frame = frame.clamp_to(root_size);
-
         if view.color().a > 0.0 {
             RECT_DRAWER.get_mut().add(UIRectInstance::new(
                 frame,
@@ -148,9 +144,8 @@ impl UI {
             for path in drawing_view.paths().iter().rev() {
                 PATH.get_mut().draw(
                     pass,
-                    &clamped_frame,
                     path.buffer(),
-                    path.bind(),
+                    path.uniform_bind(),
                     path.vertex_range(),
                     drawing_view.z_position() - UIManager::additional_z_offset(),
                 );
