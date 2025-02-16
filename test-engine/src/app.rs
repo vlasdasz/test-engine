@@ -4,7 +4,7 @@ use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
 use env_logger::Builder;
 use gm::{
-    LossyConvert,
+    LossyConvert, Platform,
     flat::{Point, Size},
 };
 use level::{LevelBase, LevelManager};
@@ -179,7 +179,7 @@ impl App {
             Window::current().set_size(size);
         })
         .await;
-        sleep(Duration::from_secs_f32(0.05)).await;
+        sleep(Duration::from_secs_f32(0.1)).await;
     }
 
     pub async fn take_screenshot() -> Result<Screenshot> {
@@ -210,21 +210,22 @@ impl window::App for App {
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>) {
-        let window_size = UIManager::resolution();
-
-        if window_size.has_no_area() {
+        if UIManager::window_resolution().has_no_area() {
             return;
         }
-
-        pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
 
         LevelDrawer::draw(pass);
         UI::draw(pass);
     }
 
-    fn resize(&mut self, _position: Point, size: Size<u32>) {
-        UIManager::root_view_weak().set_size(size); //.set_origin(position);
-        UIEvents::size_changed().trigger(size);
+    fn resize(&mut self, inner_position: Point, inner_size: Size, _outer_size: Size) {
+        UIManager::root_view_weak().set_size(inner_size);
+
+        if Platform::IOS {
+            UIManager::root_view_weak().set_position(inner_position);
+        }
+
+        UIEvents::size_changed().trigger(inner_size);
         self.update();
     }
 

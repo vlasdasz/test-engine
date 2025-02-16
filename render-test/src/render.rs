@@ -7,7 +7,7 @@ use render::{
 };
 use test_engine::{
     App, RenderPass, from_main,
-    ui::{UI, UIImages, UIManager, ViewCallbacks, view},
+    ui::{UI, UIImages, ViewCallbacks, view},
     ui_test::check_colors,
 };
 use window::Window;
@@ -106,10 +106,6 @@ impl RenderTestView {
         );
 
         image.draw(pass, RectView { resolution: size });
-
-        let window_size = UIManager::resolution();
-
-        pass.set_viewport(0.0, 0.0, window_size.width, window_size.height, 0.0, 1.0);
     }
 
     fn case_1(&self, _pass: &mut RenderPass) {

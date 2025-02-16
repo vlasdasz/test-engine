@@ -2,7 +2,7 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
 
 use anyhow::Result;
 use bytemuck::cast_slice;
-use gm::{CheckedConvert, Color, LossyConvert, Platform, U8Color, flat::Size};
+use gm::{Color, LossyConvert, Platform, U8Color, flat::Size};
 use tokio::{
     spawn,
     sync::oneshot::{Receiver, Sender, channel},
@@ -71,23 +71,10 @@ impl State {
             );
         }
 
-        let inner_size = Window::inner_size();
-
-        let position = if Platform::IOS {
-            // match self.window.inner_position() {
-            //     Ok(pos) => (pos.x, pos.y),
-            //     Err(err) => {
-            //         error!("{err}");
-            (0, 0)
-            //      }
-            //    }
-        } else {
-            (0, 0)
-        };
-
         self.app.resize(
-            position.into(),
-            (inner_size.width, inner_size.height - position.1.checked_convert()).into(),
+            Window::inner_position() / Window::screen_scale(),
+            Window::inner_size(),
+            Window::outer_size(),
         );
     }
 
@@ -152,15 +139,6 @@ impl State {
             });
 
             self.app.render(&mut render_pass);
-
-            render_pass.set_viewport(
-                0.0,
-                0.0,
-                app.config.width.lossy_convert(),
-                app.config.height.lossy_convert(),
-                0.0,
-                1.0,
-            );
 
             for font in self.fonts.values() {
                 font.brush.draw(&mut render_pass);

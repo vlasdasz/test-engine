@@ -24,7 +24,7 @@ impl LevelDrawer {
         if LevelManager::no_level() {
             return;
         }
-        let resolution = UIManager::resolution();
+        let resolution = UIManager::window_resolution();
 
         let level = LevelManager::level();
         let camera_pos = *LevelManager::camera_pos();

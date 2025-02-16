@@ -8,15 +8,13 @@ use std::{
 };
 
 use gm::{
-    LossyConvert,
+    Platform,
     flat::{Point, Rect, Size},
 };
 use refs::{Own, Weak};
 use window::Window;
 
-use crate::{
-    Container, DEBUG_VIEW, Keymap, TouchStack, UIEvent, View, ViewData, ViewFrame, ViewSubviews, WeakView,
-};
+use crate::{Container, DEBUG_VIEW, Keymap, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -114,11 +112,16 @@ impl UIManager {
         UI_MANAGER.get_or_init(Self::init)
     }
 
-    pub fn resolution() -> Size {
-        Self::root_view().size()
+    pub fn window_resolution() -> Size {
+        let size = if Platform::IOS {
+            Window::outer_size()
+        } else {
+            Window::inner_size()
+        };
+        (size.width, size.height).into()
     }
 
-    pub fn display_scale() -> f64 {
+    pub fn display_scale() -> f32 {
         Window::screen_scale()
     }
 
@@ -183,12 +186,13 @@ impl UIManager {
     /// Display scale - constant for display on mac and iPhones, always 1 on
     /// other OS (probably) UI scale - adjustable in runtime
     pub fn rescale_frame(rect: &Rect) -> Rect {
-        let scale: f32 = Self::display_scale().lossy_convert();
+        let scale = Self::display_scale();
         // let rect = rect * UIManager::ui_scale();
 
         let rect: Rect = (
             rect.origin.x * scale,
-            (Self::resolution().height/* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height) * scale,
+            (Self::window_resolution().height/* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height)
+                * scale,
             rect.size.width * scale,
             rect.size.height * scale,
         )

@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use educe::Educe;
 use gm::{
-    LossyConvert, Platform,
+    Platform,
     flat::{Point, Size},
 };
 use rapier2d::{
@@ -125,9 +125,9 @@ impl LevelManager {
         pos *= 2;
 
         if Platform::WIN {
-            pos /= Window::screen_scale().ceil().lossy_convert();
+            pos /= Window::screen_scale().ceil();
         } else {
-            pos /= Window::screen_scale().lossy_convert();
+            pos /= Window::screen_scale();
         }
 
         pos /= *Self::scale();

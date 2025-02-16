@@ -1,6 +1,9 @@
 use std::ops::Range;
 
-use gm::flat::{Point, Rect};
+use gm::{
+    Platform,
+    flat::{Point, Rect},
+};
 use wgpu::{
     BindGroup, BindGroupLayout, BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType,
     PipelineLayoutDescriptor, PolygonMode, PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages,
@@ -94,5 +97,12 @@ impl PathPipeline {
         render_pass.set_bind_group(1, bind_group, &[]);
         render_pass.set_vertex_buffer(0, buffer.slice(..));
         render_pass.draw(vertex_range, 0..1);
+
+        let resolution = if Platform::IOS {
+            Window::outer_size()
+        } else {
+            Window::inner_size()
+        };
+        render_pass.set_viewport(0.0, 0.0, resolution.width, resolution.height, 0., 1.);
     }
 }
