@@ -1,137 +1,34 @@
 use anyhow::Result;
-use gm::{Color, flat::Size};
 use log::debug;
-use refs::MainLock;
-use render::{
-    UIImageRectPipepeline, UIRectPipepeline, rect_view::RectView, ui_rect_instance::UIRectInstance,
-};
 use test_engine::{
     App, RenderPass, from_main,
-    ui::{UI, UIImages, ViewCallbacks, view},
+    ui::{UI, ViewCallbacks, view},
     ui_test::check_colors,
 };
-use window::Window;
 
-static UI_RECT: MainLock<UIRectPipepeline> = MainLock::new();
-static IMAGE_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
+use crate::{occlusion::render_occlusion, path::render_path, render::Case::*};
+
+#[derive(Default)]
+enum Case {
+    #[default]
+    Occlusion,
+    Path,
+}
 
 #[view]
 struct RenderTestView {
-    case: u8,
-}
-
-impl RenderTestView {
-    fn case_0(&self, pass: &mut RenderPass) {
-        let rect = UI_RECT.get_mut();
-        let image = IMAGE_DRAWER.get_mut();
-
-        rect.add(UIRectInstance::new(
-            (100, 100, 100, 100).into(),
-            Color::RED,
-            0.0,
-            0.5,
-        ));
-        rect.add(UIRectInstance::new(
-            (150, 150, 100, 100).into(),
-            Color::GREEN,
-            0.0,
-            0.5,
-        ));
-        rect.add(UIRectInstance::new(
-            (200, 200, 100, 100).into(),
-            Color::BLUE,
-            0.0,
-            0.5,
-        ));
-
-        rect.add(UIRectInstance::new(
-            (200, 500, 100, 100).into(),
-            Color::BLUE,
-            0.0,
-            0.5,
-        ));
-        rect.add(UIRectInstance::new(
-            (150, 450, 100, 100).into(),
-            Color::GREEN,
-            0.0,
-            0.5,
-        ));
-        rect.add(UIRectInstance::new(
-            (100, 400, 100, 100).into(),
-            Color::RED,
-            0.0,
-            0.5,
-        ));
-
-        rect.add(UIRectInstance::new(
-            (100, 700, 100, 100).into(),
-            Color::RED,
-            0.0,
-            0.3,
-        ));
-        rect.add(UIRectInstance::new(
-            (150, 750, 100, 100).into(),
-            Color::GREEN,
-            0.0,
-            0.2,
-        ));
-        rect.add(UIRectInstance::new(
-            (200, 800, 100, 100).into(),
-            Color::BLUE,
-            0.0,
-            0.1,
-        ));
-
-        rect.add(UIRectInstance::new(
-            (400, 100, 200, 200).into(),
-            Color::GREEN,
-            0.0,
-            0.5,
-        ));
-
-        let size = Window::inner_size();
-        let size: Size = (size.width, size.height).into();
-
-        rect.draw(pass, RectView { resolution: size });
-
-        image.add_with_image(
-            UIRectInstance {
-                position:      (450, 150).into(),
-                size:          (100, 100).into(),
-                color:         Default::default(),
-                corner_radius: 0.0,
-                z_position:    0.4,
-            },
-            UIImages::rb(),
-        );
-
-        image.draw(pass, RectView { resolution: size });
-    }
-
-    fn case_1(&self, _pass: &mut RenderPass) {
-        let pipeline = UI_RECT.get_mut();
-
-        pipeline.add(UIRectInstance::new(
-            (200, 200, 100, 100).into(),
-            Color::BLUE,
-            0.0,
-            0.5,
-        ));
-        pipeline.add(UIRectInstance::new(
-            (150, 150, 100, 100).into(),
-            Color::GREEN,
-            0.0,
-            0.5,
-        ));
-    }
+    case: Case,
 }
 
 impl ViewCallbacks for RenderTestView {
     fn before_render(&self, pass: &mut RenderPass) {
         match self.case {
-            0 => self.case_0(pass),
-            1 => self.case_1(pass),
-            _ => panic!(),
+            Occlusion => {
+                render_occlusion(pass);
+            }
+            Path => {
+                render_path(pass);
+            }
         }
     }
 }
@@ -229,12 +126,41 @@ pub async fn test_render() -> Result<()> {
     )
     .await?;
 
+    debug!("Occlusion: OK");
+
     from_main(move || {
-        view.case = 0;
+        view.case = Path;
     })
     .await;
 
-    debug!("OK");
+    check_colors(
+        r#"
+              94  134 -  25  51  76
+             109  129 -   0   0 203
+             111  129 -   0   0 203
+             116  129 -   0   0 203
+             131  127 -  25  51  76
+             196  102 -  25  51  76
+             164  110 -  25  51  76
+             163  138 -   0   0 203
+             164  141 -   0   0 203
+             176  162 -  25  51  76
+             176  184 -  25  51  76
+             169  218 -  25  51  76
+             142  216 -  25  51  76
+             133  216 -  25  51  76
+             115  206 -   0   0 203
+             170  195 -  25  51  76
+             125  177 -   0   0 203
+              61  218 -  25  51  76
+             122  182 -   0   0 203
+             173  174 -  25  51  76
+             225  241 -  25  51  76
+        "#,
+    )
+    .await?;
+
+    debug!("Path: OK");
 
     Ok(())
 }
