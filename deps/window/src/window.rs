@@ -159,8 +159,10 @@ impl Window {
             Limits::default()
         };
 
-        // TODO:
-        if Platform::ANDROID {
+        if Platform::IOS {
+            required_limits.max_color_attachments = 4;
+        } else if Platform::ANDROID {
+            // TODO:
             required_limits.max_compute_invocations_per_workgroup = 0;
             required_limits.max_compute_workgroups_per_dimension = 0;
             required_limits.max_compute_workgroup_storage_size = 0;
