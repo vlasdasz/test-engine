@@ -4,10 +4,10 @@ pub type U8Color = Color<u8>;
 
 impl U8Color {
     pub fn diff_u8(&self, other: Self) -> i16 {
-        (self.r as i16 - other.r as i16).abs()
-            + (self.g as i16 - other.g as i16).abs()
-            + (self.b as i16 - other.b as i16).abs()
-            + (self.a as i16 - other.a as i16).abs()
+        (i16::from(self.r) - i16::from(other.r)).abs()
+            + (i16::from(self.g) - i16::from(other.g)).abs()
+            + (i16::from(self.b) - i16::from(other.b)).abs()
+            + (i16::from(self.a) - i16::from(other.a)).abs()
     }
 }
 

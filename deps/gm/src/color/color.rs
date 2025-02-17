@@ -79,5 +79,5 @@ fn color_diff() {
 #[test]
 fn color_to_u8() {
     let color: U8Color = Color::rgba(0.5, 1.0, 0.1, 0.0).into();
-    assert_eq!(color, U8Color::rgba(127, 255, 25, 0));
+    assert_eq!(color, U8Color::rgba(54, 255, 2, 0));
 }

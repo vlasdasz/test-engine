@@ -25,6 +25,6 @@ impl Screenshot {
             return Color::default();
         };
 
-        (*color).into()
+        *color
     }
 }
