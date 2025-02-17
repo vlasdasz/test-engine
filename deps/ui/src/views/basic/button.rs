@@ -90,7 +90,10 @@ impl Button {
 
 impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
+        self.set_color(Color::WHITE);
+
         self.label.place().back();
+        self.label.set_color(Color::CLEAR);
         self.label.set_hidden(true);
 
         self.image.place().back();

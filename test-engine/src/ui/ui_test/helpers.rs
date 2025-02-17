@@ -70,12 +70,10 @@ pub async fn check_colors(data: &str) -> Result<()> {
 
 pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
     let pixel: U8Color = screenshot.get_pixel(pos);
-    let pixel_f32: Color<f32> = pixel.into();
-    let color_f32: Color<f32> = color.into();
 
-    let diff = pixel_f32.diff(color_f32);
+    let diff = pixel.diff_u8(color);
 
-    let max_diff = 0.1;
+    let max_diff = 0;
 
     if diff > max_diff {
         from_main(move || {
@@ -86,7 +84,7 @@ pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Col
                 .__add_subview_internal(high, true)
                 .downcast_view::<HighlightView>()
                 .unwrap()
-                .set(pos, color_f32, pixel_f32);
+                .set(pos, color.into(), pixel.into());
         })
         .await;
     }
