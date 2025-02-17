@@ -2,7 +2,7 @@ use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Color, Container, Setup, UI, ViewData, ViewSubviews, view},
+    ui::{Button, Color, Container, HasText, Setup, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -91,16 +91,19 @@ pub async fn test_tiling_layout() -> anyhow::Result<()> {
 
     from_main(move || {
         view.menu
+            .add_view::<Button>()
             .add_transition::<TilingLayoutTestView, TilingLayoutTestView>()
             .set_text("Classic")
             .set_text_size(80);
 
         view.menu
+            .add_view::<Button>()
             .add_transition::<TilingLayoutTestView, TilingLayoutTestView>()
             .set_text("Custom Game")
             .set_text_size(80);
 
         view.menu
+            .add_view::<Button>()
             .add_transition::<TilingLayoutTestView, TilingLayoutTestView>()
             .set_text("Settings")
             .set_text_size(80);

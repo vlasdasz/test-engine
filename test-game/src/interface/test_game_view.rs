@@ -10,7 +10,7 @@ use test_engine::{
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
         MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
-        Switch, TextField, TransitionButton, UIManager, ViewData, ViewFrame, view,
+        Switch, TextField, UIManager, ViewData, ViewFrame, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -72,7 +72,7 @@ pub struct TestGameView {
 
     bool_storage_view: Switch,
 
-    no_physics: TransitionButton<Self, NoPhysicsView>,
+    no_physics: Button,
 }
 
 impl Setup for TestGameView {
@@ -269,6 +269,7 @@ impl Setup for TestGameView {
             .same([Y, Height], self.bool_storage_view)
             .anchor(Left, self.bool_storage_view, 10)
             .w(250);
+        self.no_physics.add_transition::<Self, NoPhysicsView>();
     }
 }
 

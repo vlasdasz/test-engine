@@ -1,7 +1,7 @@
 use test_engine::{
     RenderPass,
     refs::Weak,
-    ui::{NumberView, Setup, ViewCallbacks, ViewData, ViewSubviews, view},
+    ui::{Button, HasText, NumberView, Setup, ViewCallbacks, ViewData, ViewSubviews, view},
 };
 
 use crate::interface::test_game_view::TestGameView;
@@ -16,7 +16,8 @@ impl Setup for RenderView {
     fn setup(mut self: Weak<Self>) {
         self.val.set_step(0.1).place().size(50, 100).bl(0);
 
-        self.add_transition::<Self, TestGameView>()
+        self.add_view::<Button>()
+            .add_transition::<Self, TestGameView>()
             .set_text("Back")
             .place()
             .size(100, 50)
