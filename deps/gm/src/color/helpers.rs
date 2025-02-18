@@ -6,7 +6,7 @@ pub(super) fn srgb_to_linear(u: f32) -> f32 {
     }
 }
 
-pub(super) fn linear_to_srgb(u: f32) -> f32 {
+pub(super) fn _linear_to_srgb(u: f32) -> f32 {
     if u <= 0.003_130_8 {
         u * 12.92
     } else {
@@ -18,7 +18,7 @@ pub(super) fn linear_to_srgb(u: f32) -> f32 {
 fn srgb_to_linear_test() {
     for i in 0..255 {
         let val = i as f32 / 255.0;
-        let converted = linear_to_srgb(srgb_to_linear(val));
+        let converted = _linear_to_srgb(srgb_to_linear(val));
 
         let diff = (val - converted).abs();
 

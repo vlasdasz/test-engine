@@ -9,65 +9,61 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     let rect = UI_RECT.get_mut();
     let image = IMAGE_DRAWER.get_mut();
 
+    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), Color::RED, 0.0, 0.5));
+
     rect.add(UIRectInstance::new(
-        (100, 100, 100, 100).into(),
-        Color::RED,
-        0.0,
-        0.5,
-    ));
-    rect.add(UIRectInstance::new(
-        (150, 150, 100, 100).into(),
+        (75, 75, 50, 50).into(),
         Color::GREEN,
         0.0,
         0.5,
     ));
     rect.add(UIRectInstance::new(
-        (200, 200, 100, 100).into(),
+        (100, 100, 50, 50).into(),
         Color::BLUE,
         0.0,
         0.5,
     ));
 
     rect.add(UIRectInstance::new(
-        (200, 500, 100, 100).into(),
+        (100, 250, 50, 50).into(),
         Color::BLUE,
         0.0,
         0.5,
     ));
     rect.add(UIRectInstance::new(
-        (150, 450, 100, 100).into(),
+        (75, 225, 50, 50).into(),
         Color::GREEN,
         0.0,
         0.5,
     ));
     rect.add(UIRectInstance::new(
-        (100, 400, 100, 100).into(),
+        (50, 200, 50, 50).into(),
         Color::RED,
         0.0,
         0.5,
     ));
 
     rect.add(UIRectInstance::new(
-        (100, 700, 100, 100).into(),
+        (50, 350, 50, 50).into(),
         Color::RED,
         0.0,
         0.3,
     ));
     rect.add(UIRectInstance::new(
-        (150, 750, 100, 100).into(),
+        (75, 375, 50, 50).into(),
         Color::GREEN,
         0.0,
         0.2,
     ));
     rect.add(UIRectInstance::new(
-        (200, 800, 100, 100).into(),
+        (100, 400, 50, 50).into(),
         Color::BLUE,
         0.0,
         0.1,
     ));
 
     rect.add(UIRectInstance::new(
-        (400, 100, 200, 200).into(),
+        (200, 50, 100, 100).into(),
         Color::GREEN,
         0.0,
         0.5,
@@ -82,8 +78,8 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
 
     image.add_with_image(
         UIRectInstance {
-            position:      (450, 150).into(),
-            size:          (100, 100).into(),
+            position:      (225, 75).into(),
+            size:          (50, 50).into(),
             color:         Default::default(),
             corner_radius: 0.0,
             z_position:    0.4,
