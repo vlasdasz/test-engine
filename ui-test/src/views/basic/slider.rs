@@ -1,20 +1,19 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Anchor, Color, HasText, Label, Setup, Slider, UI, ViewData, ViewFrame, ViewSubviews, view},
+    ui::{Anchor, Color, HasText, Label, Setup, UI, ViewData, ViewFrame, ViewSubviews, view},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
 #[view]
-pub struct SliderTestView {
+pub struct Slider {
     #[init]
-    slider: Slider,
+    slider: test_engine::ui::Slider,
     label:  Label,
 }
 
-impl Setup for SliderTestView {
+impl Setup for Slider {
     fn setup(mut self: Weak<Self>) {
         self.slider.set_color(Color::WHITE).place().size(50, 400).center();
         self.slider.on_change.val(move |a| {
@@ -30,7 +29,7 @@ impl Setup for SliderTestView {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let mut view = UI::init_test_view::<SliderTestView>().await;
+    let mut view = UI::init_test_view::<Slider>().await;
 
     inject_touches(
         r"
@@ -196,55 +195,40 @@ pub async fn test_slider() -> Result<()> {
     }
 
     check_colors(
-        r"
-             357  503 -  25  51  76
-             357  497 -  25  51  76
-             360  490 -  25  51  76
-             365  471 -   0   0   0
-             362  461 -  25  51  76
-             362  441 -  61  61  61
-             363  410 -  35  35  35
-             364  396 -   1   1   1
-             362  382 -  25  51  76
-             362  374 - 255 255 255
-             362  364 - 255 255 255
-             362  330 - 255 255 255
-             362  321 -  25  51  76
-             364  311 -  25  51  76
-             363  296 - 255 255 255
-             363  275 -  25  51  76
-             365  252 -  25  51  76
-             365  226 - 255 255 255
-             370  181 -  25  51  76
-             370  156 - 255 255 255
-             369  145 -  25  51  76
-             366  131 -  94  94  94
-             360  115 -   0   0   0
-             327   86 -  25  51  76
-             293   90 -  25  51  76
-             281  121 -   0   0 203
-             343  128 - 255 255 255
-             356  128 - 255 255 255
-             380  128 - 255 255 255
-             367  153 -   1   1   1
-             375  203 - 255 255 255
-             373  204 - 255 255 255
-             375  229 - 255 255 255
-             374  258 - 255 255 255
-             372  269 - 255 255 255
-             374  297 - 255 255 255
-             373  323 -  25  51  76
-             368  349 -  25  51  76
-             367  365 - 255 255 255
-             368  411 - 132 132 132
-             369  465 - 255 255 255
-             368  482 -   1   1   1
-             369  501 -  25  51  76
-        ",
+        r#"
+             370  507 -  89 124 149
+             371  504 -  89 124 149
+             369  491 -  89 124 149
+             365  484 - 255 255 255
+             361  466 - 255 255 255
+             361  459 -  89 124 149
+             362  440 - 151 151 151
+             362  418 -  89 124 149
+             362  410 - 252 252 252
+             362  390 -  89 124 149
+             363  373 - 222 222 222
+             363  361 - 153 153 153
+             363  354 -  89 124 149
+             365  342 - 255 255 255
+             365  330 - 255 255 255
+             364  313 -  89 124 149
+             362  286 -  89 124 149
+             364  264 - 176 176 176
+             363  238 - 162 162 162
+             363  218 -  89 124 149
+             363  208 -  89 124 149
+             363  188 - 255 255 255
+             363  170 -  89 124 149
+             366  148 -  89 124 149
+             368  145 -  89 124 149
+             371  136 -  89 124 149
+             372  129 - 254 254 254
+             373  113 -  89 124 149
+             373  107 -  89 124 149
+             373   77 -  89 124 149
+        "#,
     )
     .await?;
-
-    debug!("Slider test: OK");
 
     Ok(())
 }

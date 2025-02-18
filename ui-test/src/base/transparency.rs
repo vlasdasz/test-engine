@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     from_main,
     gm::Apply,
@@ -11,7 +10,7 @@ use test_engine::{
 use crate::level::SkyboxLevel;
 
 #[view]
-struct TransparencyTestView {
+struct Transparency {
     #[init]
     background: ImageView,
 
@@ -21,7 +20,7 @@ struct TransparencyTestView {
     view_4: ImageView,
 }
 
-impl Setup for TransparencyTestView {
+impl Setup for Transparency {
     fn setup(mut self: Weak<Self>) {
         self.background.set_image("gradient.png").place().back();
 
@@ -37,7 +36,7 @@ impl Setup for TransparencyTestView {
 }
 
 pub async fn test_transparency() -> Result<()> {
-    UI::init_test_view::<TransparencyTestView>().await;
+    UI::init_test_view::<Transparency>().await;
 
     from_main(|| {
         LevelManager::set_level(SkyboxLevel::default());
@@ -48,8 +47,6 @@ pub async fn test_transparency() -> Result<()> {
         LevelManager::stop_level();
     })
     .await;
-
-    debug!("Transparency test: OK");
 
     Ok(())
 }

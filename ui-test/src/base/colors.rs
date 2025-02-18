@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
@@ -11,7 +10,7 @@ use test_engine::{
 };
 
 #[view]
-struct ColorsTestView {
+struct Colors {
     #[init]
     image: ImageView,
 
@@ -21,7 +20,7 @@ struct ColorsTestView {
     _4: Container,
 }
 
-impl Setup for ColorsTestView {
+impl Setup for Colors {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::WHITE);
 
@@ -47,7 +46,7 @@ impl Setup for ColorsTestView {
 }
 
 pub async fn test_colors() -> Result<()> {
-    UI::init_test_view::<ColorsTestView>().await;
+    UI::init_test_view::<Colors>().await;
 
     check_colors(
         r#"
@@ -63,6 +62,5 @@ pub async fn test_colors() -> Result<()> {
     )
     .await?;
 
-    debug!("Colors test: OK");
     Ok(())
 }

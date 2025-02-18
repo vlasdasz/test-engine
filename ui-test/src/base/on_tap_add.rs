@@ -1,7 +1,6 @@
 use std::{any::Any, ops::Deref};
 
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     refs::{Own, Weak},
     ui::{
@@ -54,12 +53,12 @@ impl CollectionData for SomeView {
 }
 
 #[view]
-struct OnTapAddTestView {
+struct AddOnTap {
     #[init]
     btn: Button,
 }
 
-impl Setup for OnTapAddTestView {
+impl Setup for AddOnTap {
     fn setup(mut self: Weak<Self>) {
         self.btn.set_text("A").place().size(50, 50);
         self.btn.on_tap(move || {
@@ -70,14 +69,9 @@ impl Setup for OnTapAddTestView {
 }
 
 pub async fn test_add_on_tap() -> Result<()> {
-    debug!("Add on tap:");
+    let view = UI::init_test_view::<AddOnTap>().await;
 
-    let view = UI::init_test_view::<OnTapAddTestView>().await;
-
-    assert_eq!(
-        view.dump_subviews(),
-        vec!["OnTapAddTestView.btn: Button".to_string()]
-    );
+    assert_eq!(view.dump_subviews(), vec!["AddOnTap.btn: Button".to_string()]);
 
     inject_touches(
         "
@@ -89,55 +83,56 @@ pub async fn test_add_on_tap() -> Result<()> {
 
     assert_eq!(
         view.dump_subviews(),
-        vec!["OnTapAddTestView.btn: Button".to_string(), "SomeView".to_string()]
+        vec!["AddOnTap.btn: Button".to_string(), "SomeView".to_string()]
     );
 
     check_colors(
-        r"
-              19  561 -  25  51  76
-              42  551 -   3  77 228
-              89  521 -   3  77 228
-             154  469 -   3  77 228
-             164  455 -   3  77 228
-             132  452 -   3  77 228
-             156  397 -  25  51  76
-             155  254 -  25  51  76
-             191  210 -  25  51  76
-             205  167 - 255 255 255
-             203  151 - 255 255 255
-             198  165 - 255 255 255
-             179  167 - 255 255 255
-             185  127 - 255 255 255
-             193  109 - 232 232 232
-             266   27 -  25  51  76
-             345   64 -  25  51  76
-             362   87 -  25  51  76
-             413  148 -   0 255   0
-             497  179 -   0 255   0
-             514  122 -   0 255   0
-             521   78 -  25  51  76
-             545   97 -  25  51  76
-             529  150 -   0 255   0
-             483  217 -   0 255   0
-             463  302 -   0 255   0
-             486  435 -   0 255 255
-             498  489 -   0 255 255
-             389  539 -   0 255 255
-             281  446 -  25  51  76
-             397  369 -  25  51  76
-             482  310 -  25  51  76
-             446  211 -   0 255   0
-             266  126 - 255 255 255
-             150  109 - 255 255 255
-             115  114 - 255 255 255
-             111   82 -  25  51  76
-             176   41 -  25  51  76
-             237   37 -  25  51  76
-        ",
+        r#"
+              20  569 -  89 124 149
+              36  540 -  33 150 243
+              50  525 -  33 150 243
+              72  500 -  33 150 243
+              98  476 - 250 250 250
+             118  458 -  33 150 243
+             139  441 -  33 150 243
+             164  417 -  33 150 243
+             222  386 -  89 124 149
+             306  388 -  89 124 149
+             335  402 -  89 124 149
+             408  418 -   0 255 255
+             478  411 -   0 255 255
+             483  398 -   0 255 255
+             491  285 -   0 255   0
+             493  217 -   0 255   0
+             522  187 -   0 255   0
+             466  201 -   0   0   0
+             452  204 -   0   0   0
+             536  155 -   0 255   0
+             499  157 -   0 255   0
+             367  149 - 255 255 255
+             255  165 - 255 255 255
+             222  172 - 255 255 255
+             175  166 - 255 255 255
+             199  139 - 255 255 255
+             200  124 -  14  14  14
+             196  103 - 255 255 255
+             154   85 -  89 124 149
+             111   64 -  89 124 149
+              85   46 -  89 124 149
+              64   35 -  89 124 149
+              53   31 -  89 124 149
+              41   25 - 255 255 255
+              31   24 -  73  73  73
+              18   24 - 134 134 134
+              71   28 -  89 124 149
+             165   87 -  89 124 149
+             299  189 - 255 255 255
+             215  354 -  89 124 149
+             449  216 -   0 255   0
+             503  106 -   0 255   0
+        "#,
     )
     .await?;
-
-    debug!("OK");
 
     Ok(())
 }

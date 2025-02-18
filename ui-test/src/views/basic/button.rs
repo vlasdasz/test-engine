@@ -1,21 +1,19 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
-    App,
     refs::Weak,
     ui::{Button, HasText, Setup, UI, ViewData, view},
     ui_test::{check_colors, state::increment_state, test_combinations},
 };
 
 #[view]
-struct ButtonTestView {
+struct ButtonPress {
     #[init]
     button: Button,
 }
 
-impl Setup for ButtonTestView {
+impl Setup for ButtonPress {
     fn setup(mut self: Weak<Self>) {
-        self.button.place().back().size(100, 50).center();
+        self.button.place().back().size(100, 50).t(25).l(50);
         self.button.set_text("Button text");
 
         self.button.on_tap(|| {
@@ -25,39 +23,26 @@ impl Setup for ButtonTestView {
 }
 
 pub async fn test_button() -> Result<()> {
-    UI::init_test_view::<ButtonTestView>().await;
-
-    App::set_window_size((200, 100)).await;
+    UI::init_test_view::<ButtonPress>().await;
 
     check_colors(
         r#"
-              36   46 -  25  51  76
-              58   49 -   1   1   1
-              63   49 - 255 255 255
-              63   49 - 255 255 255
-              76   49 - 255 255 255
-              90   49 - 113 113 113
-             100   49 - 255 255 255
-             142   45 -   0   0   0
-             117   45 - 255 255 255
-             146   46 - 255 255 255
-             156   46 -  25  51  76
-             157   46 -  25  51  76
-             155   46 -  25  51  76
-             106   46 -   0   0   0
-             113   26 - 255 255 255
-             113   42 - 255 255 255
-             113   52 -   0   0   0
-             111   62 - 255 255 255
-             101   87 -  25  51  76
-             101   50 - 255 255 255
-              97   50 -   0   0   0
-              91   50 - 255 255 255
-              90   50 - 113 113 113
-              83   50 - 255 255 255
-              83   46 - 255 255 255
-              83   35 - 255 255 255
-              66   37 -   0   0   0
+              34   46 -  89 124 149
+              46   40 -  89 124 149
+              60   40 - 255 255 255
+              76   42 - 255 255 255
+              89   44 -   0   0   0
+             121   45 - 255 255 255
+             145   45 - 255 255 255
+             164   44 -  89 124 149
+             162   32 -  89 124 149
+             140   13 -  89 124 149
+             120    9 -  89 124 149
+             111   21 -  89 124 149
+             104   38 - 170 170 170
+             101   57 - 253 253 253
+              97   92 -  89 124 149
+              91  114 -  89 124 149
         "#,
     )
     .await?;
@@ -160,8 +145,6 @@ pub async fn test_button() -> Result<()> {
         ),
     ])
     .await?;
-
-    debug!("Button test: OK");
 
     Ok(())
 }

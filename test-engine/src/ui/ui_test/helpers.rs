@@ -5,7 +5,11 @@ use ui::{
     Button, Container, HighlightView, Setup, UIManager, View, ViewData, ViewFrame, ViewSubviews, WeakView,
 };
 
-use crate::{App, gm::Apply, ui::Screenshot};
+use crate::{
+    App,
+    gm::Apply,
+    ui::{Screenshot, ui::TEST_NAME},
+};
 
 pub fn add_corners(mut view: WeakView, color: Color) {
     let v1 = view.add_view::<Container>();
@@ -89,9 +93,13 @@ pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Col
         .await;
     }
 
+    let test_name = TEST_NAME.lock().unwrap().clone();
+
     assert!(
         diff <= max_diff,
-        "Color diff is too big: {diff}. Max: {max_diff}. Position: {pos:?}. \nExpected: {color}, got: \
-         {pixel}"
+        r"
+        Test: {test_name} has failed.
+        Color diff is too big: {diff}. Max: {max_diff}. Position: {pos:?}.
+        Expected: {color}, got: {pixel}."
     );
 }

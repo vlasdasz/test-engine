@@ -166,12 +166,12 @@ pub async fn record_ui_test() {
         Window::set_title("Recording touches");
         record_touches().await;
         Window::set_title("Recording colors");
-        record_touches_with_colors().await.unwrap();
+        record_colors().await.unwrap();
     }
 }
 
 #[allow(dead_code)]
-pub async fn record_touches_with_colors() -> Result<()> {
+pub async fn record_colors() -> Result<()> {
     let touch_lock = Touch::lock();
 
     let screenshot = App::take_screenshot().await?;
