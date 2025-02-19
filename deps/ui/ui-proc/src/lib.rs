@@ -93,7 +93,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 use test_engine::ui::ViewData;
                 self.__view_base.view_label += &#name_str.to_string();
                 self.layout_header();
-                let weak = test_engine::refs::weak_from_ref(self);
+                let mut weak = test_engine::refs::weak_from_ref(self);
                 weak.setup();
                 self.__after_setup_event().trigger(());
             }

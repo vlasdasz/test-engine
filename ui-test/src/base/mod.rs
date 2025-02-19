@@ -1,7 +1,7 @@
 use crate::base::{
     colors::test_colors, corner_radius::test_corner_radius, keymap::test_keymap, layout::test_layout,
     modal_test::test_modal, on_tap_add::test_add_on_tap, out_bounds_test::test_out_bounds,
-    present::test_navigation_view, selection::test_selection, template::test_template,
+    present::test_navigation_view, selection::test_selection, styles::test_styles, template::test_template,
     text_occlusion::test_text_occlusion, touch_order::test_touch_order, touch_stack::test_touch_stack,
     transparency::test_transparency, view_order::test_view_order,
 };
@@ -15,6 +15,7 @@ mod on_tap_add;
 mod out_bounds_test;
 mod present;
 mod selection;
+mod styles;
 mod template;
 mod text_occlusion;
 mod touch_order;
@@ -23,6 +24,7 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_styles().await?;
     test_colors().await?;
     test_corner_radius().await?;
     test_out_bounds().await?;

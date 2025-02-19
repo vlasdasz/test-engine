@@ -15,19 +15,19 @@ where T: Iterator<Item = f32>
     }
 }
 
-pub trait Apply<T> {
-    fn apply(self, action: impl FnMut(T));
-    fn apply2<U, Second: IntoIterator<Item = U>>(self, second: Second, action: impl FnMut(T, U));
+pub trait Apply<T, Ret> {
+    fn apply(self, action: impl FnMut(T) -> Ret);
+    fn apply2<U, Second: IntoIterator<Item = U>>(self, second: Second, action: impl FnMut(T, U) -> Ret);
 }
 
-impl<T, I: IntoIterator<Item = T>> Apply<T> for I {
-    fn apply(self, mut action: impl FnMut(T)) {
+impl<T, I: IntoIterator<Item = T>, Ret> Apply<T, Ret> for I {
+    fn apply(self, mut action: impl FnMut(T) -> Ret) {
         for item in self {
             action(item);
         }
     }
 
-    fn apply2<U, Second: IntoIterator<Item = U>>(self, second: Second, mut action: impl FnMut(T, U)) {
+    fn apply2<U, Second: IntoIterator<Item = U>>(self, second: Second, mut action: impl FnMut(T, U) -> Ret) {
         for (item, second) in self.into_iter().zip(second) {
             action(item, second);
         }

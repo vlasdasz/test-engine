@@ -10,7 +10,7 @@ use test_engine::{
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
         MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
-        Switch, TextField, UIManager, ViewData, ViewFrame, view,
+        Style, Switch, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -22,6 +22,11 @@ use crate::{
 };
 
 static BOOL: OnDisk<bool> = OnDisk::new("bool");
+
+static BUTTON: Style = Style::new(|btn| {
+    btn.set_color((18, 208, 255));
+    btn.set_corner_radius(10);
+});
 
 #[view]
 pub struct TestGameView {
@@ -80,6 +85,12 @@ impl Setup for TestGameView {
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();
 
+        for view in self.subviews_mut() {
+            if let Some(mut view) = view.downcast_view::<Button>() {
+                view.add_style(BUTTON);
+            }
+        }
+
         if false {
             UIManager::set_view(NoPhysicsView::new());
             return;
@@ -125,13 +136,13 @@ impl Setup for TestGameView {
             }
         });
 
-        self.scale.place().size(80, 150).b(20).anchor(Anchor::Left, self.dpad, 10);
+        self.scale.place().size(80, 150).b(20).anchor(Left, self.dpad, 10);
         self.scale.set_min(4.try_into().unwrap());
         self.scale.on_change(|val| {
             *LevelManager::scale() = val.lossy_convert() * 0.1;
         });
 
-        self.spinner.place().size(100, 28).b(20).anchor(Anchor::Left, self.scale, 10);
+        self.spinner.place().size(150, 40).b(20).anchor(Left, self.scale, 10);
         self.spinner.set_text("Spinner");
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
@@ -141,7 +152,7 @@ impl Setup for TestGameView {
             });
         });
 
-        self.alert.place().size(100, 28).anchor(Anchor::Left, self.scale, 10).anchor(
+        self.alert.place().same_size(self.spinner).anchor(Left, self.scale, 10).anchor(
             Anchor::Bot,
             self.spinner,
             10,
@@ -153,11 +164,11 @@ impl Setup for TestGameView {
             App::set_window_size((600, 600))
         });
 
-        self.sound
-            .place()
-            .same_size(self.alert)
-            .anchor(Anchor::Left, self.scale, 10)
-            .anchor(Anchor::Bot, self.alert, 10);
+        self.sound.place().same_size(self.spinner).anchor(Left, self.scale, 10).anchor(
+            Anchor::Bot,
+            self.alert,
+            10,
+        );
         self.sound.set_text("Sound");
         self.sound.set_text_size(20);
         self.sound.on_tap(|| Sound::get("retro.wav").play());
