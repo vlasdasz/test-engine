@@ -1,7 +1,6 @@
 use std::sync::atomic::{AtomicU16, Ordering};
 
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{Button, HasText, Setup, UI, ViewData, view},
@@ -11,14 +10,14 @@ use test_engine::{
 static COUNTER: AtomicU16 = AtomicU16::new(0);
 
 #[view]
-struct InjectTouchTestView {
+struct InjectTouch {
     #[init]
     button: Button,
 }
 
-impl Setup for InjectTouchTestView {
+impl Setup for InjectTouch {
     fn setup(mut self: Weak<Self>) {
-        self.button.place().back();
+        self.button.place().size(200, 100);
         self.button.set_text("bress");
         self.button.on_tap(|| COUNTER.fetch_add(1, Ordering::Relaxed));
     }
@@ -27,7 +26,7 @@ impl Setup for InjectTouchTestView {
 pub async fn test_inject_touch() -> Result<()> {
     COUNTER.store(0, Ordering::Relaxed);
 
-    UI::init_test_view::<InjectTouchTestView>().await;
+    UI::init_test_view::<InjectTouch>().await;
 
     let mut touches = String::new();
 
@@ -53,8 +52,6 @@ pub async fn test_inject_touch() -> Result<()> {
     }
 
     assert_eq!(COUNTER.load(Ordering::Relaxed), 110);
-
-    debug!("Inject touch test: OK");
 
     Ok(())
 }

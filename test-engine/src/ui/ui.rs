@@ -1,11 +1,15 @@
-use std::ops::{Deref, DerefMut};
+use std::{
+    any::type_name,
+    ops::{Deref, DerefMut},
+    sync::Mutex,
+};
 
 use dispatch::{from_main, wait_for_next_frame};
 use gm::{
     Color,
     flat::{Rect, Size},
 };
-use log::{trace, warn};
+use log::{debug, trace, warn};
 use refs::{MainLock, Own, Weak};
 use render::{
     PathPipeline, UIImageRectPipepeline, UIRectPipepeline, rect_view::RectView,
@@ -24,6 +28,7 @@ use crate::{App, ui::ui_test::state::clear_state};
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 static PATH: MainLock<PathPipeline> = MainLock::new();
+pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
 
 pub struct UI;
 
@@ -234,6 +239,16 @@ impl UI {
     }
 
     pub async fn set_test_view<T: View + 'static>(view: Own<T>, width: u32, height: u32) -> Weak<T> {
+        let test_name = TEST_NAME.lock().unwrap().clone();
+
+        if !test_name.is_empty() {
+            debug!("{test_name}: OK");
+        }
+
+        *TEST_NAME.lock().unwrap() = get_test_name::<T>();
+
+        // debug!("{}: Started", get_test_name::<T>());
+
         clear_state();
 
         App::set_window_size((width, height)).await;
@@ -251,4 +266,23 @@ impl UI {
         wait_for_next_frame().await;
         view
     }
+}
+
+fn get_test_name<T>() -> String {
+    let input = type_name::<T>();
+
+    let last_part = input.split("::").last().unwrap();
+
+    let spaced = last_part
+        .chars()
+        .enumerate()
+        .map(|(i, c)| {
+            if i > 0 && c.is_uppercase() {
+                format!(" {}", c.to_ascii_lowercase())
+            } else {
+                c.to_string()
+            }
+        })
+        .collect::<String>();
+    spaced
 }

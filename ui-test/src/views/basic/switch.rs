@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     App,
     refs::Weak,
@@ -75,8 +74,6 @@ pub async fn test_switch() -> Result<()> {
         ),
     ])
     .await?;
-
-    debug!("Switch test: OK");
 
     Ok(())
 }

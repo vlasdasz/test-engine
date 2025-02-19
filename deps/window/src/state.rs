@@ -22,8 +22,9 @@ pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
 pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
 pub struct State {
-    pub(crate) fonts: HashMap<&'static str, Font>,
-    pub(crate) app:   Box<dyn App>,
+    pub(crate) fonts:       HashMap<&'static str, Font>,
+    pub(crate) app:         Box<dyn App>,
+    pub(crate) clear_color: Color,
 
     read_display_request: RefCell<Option<ReadDisplayRequest>>,
 
@@ -35,6 +36,7 @@ impl State {
         Self {
             fonts: HashMap::default(),
             app,
+            clear_color: Color::GRAY_BLUE,
             read_display_request: RefCell::default(),
             frame_counter: FrameCounter::default(),
         }
@@ -117,10 +119,10 @@ impl State {
                     resolve_target: None,
                     ops:            wgpu::Operations {
                         load:  wgpu::LoadOp::Clear(wgpu::Color {
-                            r: f64::from(Color::GRAY_BLUE.r),
-                            g: f64::from(Color::GRAY_BLUE.g),
-                            b: f64::from(Color::GRAY_BLUE.b),
-                            a: f64::from(Color::GRAY_BLUE.a),
+                            r: f64::from(self.clear_color.r),
+                            g: f64::from(self.clear_color.g),
+                            b: f64::from(self.clear_color.b),
+                            a: f64::from(self.clear_color.a),
                         }),
                         store: wgpu::StoreOp::Store,
                     },

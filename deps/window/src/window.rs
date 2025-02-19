@@ -6,7 +6,7 @@ use std::sync::{
 use anyhow::{Result, anyhow};
 use dispatch::on_main;
 use gm::{
-    LossyConvert, Platform,
+    Color, LossyConvert, Platform,
     flat::{Point, Size},
 };
 use log::{error, info, warn};
@@ -109,6 +109,10 @@ impl Window {
 
     pub fn screen_scale() -> f32 {
         Self::winit_window().scale_factor().lossy_convert()
+    }
+
+    pub fn set_clear_color(color: impl Into<Color>) {
+        Self::current().state.clear_color = color.into();
     }
 
     pub fn close() {

@@ -1,21 +1,15 @@
 use anyhow::Result;
-use log::debug;
-use test_engine::{
-    refs::Weak,
-    ui::{Setup, UI, view},
-};
+use test_engine::ui::{UI, view};
 
 #[view]
-struct TemplateTestView {}
-
-impl Setup for TemplateTestView {
-    fn setup(self: Weak<Self>) {}
+struct TemplateView<Value: 'static> {
+    value: Value,
 }
 
 pub async fn test_template() -> Result<()> {
-    UI::init_test_view::<TemplateTestView>().await;
+    let view = UI::init_test_view::<TemplateView<i32>>().await;
 
-    debug!("Template test: OK");
+    assert_eq!(view.value, 0);
 
     Ok(())
 }

@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     refs::Weak,
     ui::{Anchor, Color, Setup, UI, ViewCallbacks, ViewData, ViewTouch, view},
@@ -23,14 +22,14 @@ impl ViewCallbacks for Selectable {
 }
 
 #[view]
-struct SelectionTestView {
+struct Selection {
     #[init]
     a: Selectable,
     b: Selectable,
     c: Selectable,
 }
 
-impl Setup for SelectionTestView {
+impl Setup for Selection {
     fn setup(self: Weak<Self>) {
         self.a.place().size(100, 100).center();
         self.b.place().same_size(self.a).center_y().anchor(Anchor::Right, self.a, 40);
@@ -39,18 +38,18 @@ impl Setup for SelectionTestView {
 }
 
 pub async fn test_selection() -> Result<()> {
-    UI::init_test_view::<SelectionTestView>().await;
+    UI::init_test_view::<Selection>().await;
 
     check_colors(
-        r"
-              84  283 -  25  51  76
-             128  274 -   0   0   0
-             236  275 -  25  51  76
-             280  271 -   0   0   0
-             378  272 -  25  51  76
-             426  269 -   0   0   0
-             535  288 -  25  51  76
-    ",
+        r#"
+              88  300 -  89 124 149
+             174  293 -   0   0   0
+             238  303 -  89 124 149
+             299  299 -   0   0   0
+             375  298 -  89 124 149
+             428  296 -   0   0   0
+             514  297 -  89 124 149
+        "#,
     )
     .await?;
 
@@ -63,11 +62,11 @@ pub async fn test_selection() -> Result<()> {
     .await;
 
     check_colors(
-        r"
-             140  274 - 255 255 255
-             280  271 -   0   0   0
-             426  269 -   0   0   0
-    ",
+        r#"
+             163  301 - 255 255 255
+             295  308 -   0   0   0
+             438  305 -   0   0   0
+        "#,
     )
     .await?;
 
@@ -80,11 +79,11 @@ pub async fn test_selection() -> Result<()> {
     .await;
 
     check_colors(
-        r"
-             140  274 -   0   0   0
-             280  271 - 255 255 255
-             426  269 -   0   0   0
-    ",
+        r#"
+             160  303 -   0   0   0
+             276  308 - 255 255 255
+             421  308 -   0   0   0
+        "#,
     )
     .await?;
 
@@ -97,11 +96,11 @@ pub async fn test_selection() -> Result<()> {
     .await;
 
     check_colors(
-        r"
-             140  274 -   0   0   0
-             280  271 -   0   0   0
-             426  269 - 255 255 255
-    ",
+        r#"
+             180  307 -   0   0   0
+             309  303 -   0   0   0
+             435  301 - 255 255 255
+        "#,
     )
     .await?;
 
@@ -113,15 +112,13 @@ pub async fn test_selection() -> Result<()> {
     .await;
 
     check_colors(
-        r"
-             140  274 -   0   0   0
-             280  271 -   0   0   0
-             426  269 -   0   0   0
-    ",
+        r#"
+             186  320 -   0   0   0
+             284  312 -   0   0   0
+             440  303 -   0   0   0
+        "#,
     )
     .await?;
-
-    debug!("Selection test: OK");
 
     Ok(())
 }

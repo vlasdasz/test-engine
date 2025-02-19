@@ -1,3 +1,5 @@
+use std::ops::DerefMut;
+
 use gm::{Color, ToF32};
 use refs::Weak;
 use ui_proc::view;
@@ -5,7 +7,7 @@ use vents::Event;
 use window::image::ToImage;
 
 use crate::{
-    ImageView, Label, Setup, ToLabel,
+    ImageView, Label, Setup, ToLabel, UIManager, View, ViewSubviews, ViewTransition,
     has_data::HasText,
     view::{ViewData, ViewTouch},
 };
@@ -72,9 +74,26 @@ impl Button {
     }
 }
 
+impl Button {
+    pub fn add_transition<From: View + 'static, To: View + Default + 'static>(
+        self: Weak<Self>,
+    ) -> Weak<Self> {
+        self.on_tap(move || {
+            let from = self.find_superview::<From>();
+            let mut to = To::new();
+            from.transition_to(to.deref_mut());
+            UIManager::set_view(to);
+        });
+        self
+    }
+}
+
 impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
+        self.set_color(Color::WHITE);
+
         self.label.place().back();
+        self.label.set_color(Color::CLEAR);
         self.label.set_hidden(true);
 
         self.image.place().back();

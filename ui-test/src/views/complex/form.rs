@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     App, reflected,
     reflected::Reflected,
@@ -66,8 +65,6 @@ pub async fn test_form_view() -> Result<()> {
     // assert_eq!(string.text(), "hello");
 
     // record_ui_test().await;
-
-    debug!("Form view: OK");
 
     Ok(())
 }

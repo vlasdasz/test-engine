@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     from_main,
     ui::{
@@ -13,7 +12,7 @@ use tokio::time::Instant;
 #[view]
 struct PresentTestView {}
 
-pub async fn test_present() -> Result<()> {
+pub async fn test_navigation_view() -> Result<()> {
     let present = PresentTestView::new();
 
     let view = present.weak();
@@ -21,11 +20,19 @@ pub async fn test_present() -> Result<()> {
     UI::set_test_view(NavigationView::with_view(present), 600, 600).await;
 
     check_colors(
-        r"
-              32   28 -  25  51  76
-             306  347 -  25  51  76
-             547  566 -  25  51  76
-        ",
+        r#"
+              50   69 -  89 124 149
+              42   40 -  89 124 149
+              30   25 -  89 124 149
+              69   34 -  89 124 149
+             118   52 -  89 124 149
+             184   59 -  89 124 149
+             293   88 -  89 124 149
+             333  138 -  89 124 149
+             258  219 -  89 124 149
+             173  294 -  89 124 149
+             333  385 -  89 124 149
+        "#,
     )
     .await?;
 
@@ -41,19 +48,26 @@ pub async fn test_present() -> Result<()> {
     })
     .await;
 
-    check_colors(
-        r"
-              32   28 -  25  51  76
-             306  347 -  25  51  76
-             547  566 -  25  51  76
-        ",
-    )
-    .await?;
-
     presented.await?;
 
     let duration_error = now.elapsed().as_secs_f32() - PRESENT_ANIMATION_DURATION;
     let allowed_error = 0.025;
+
+    check_colors(
+        r#"
+              90  169 - 255 255 255
+             103  137 - 255 255 255
+             331   86 - 255 255 255
+             439  145 - 255 255 255
+             470  253 - 255 255 255
+             254  310 - 255 255 255
+             168  363 - 255 255 255
+             258  461 - 255 255 255
+             409  465 - 255 255 255
+             392  363 - 255 255 255
+        "#,
+    )
+    .await?;
 
     assert!(
         duration_error < allowed_error,
@@ -63,15 +77,17 @@ pub async fn test_present() -> Result<()> {
     assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
     check_colors(
-        r"
-              53   22 - 255 255 255
-             222  255 - 255 255 255
-             490  551 - 255 255 255
-        ",
+        r#"
+             176  243 - 255 255 255
+             175  158 - 255 255 255
+             308   80 - 255 255 255
+             461  147 - 255 255 255
+             388  350 - 255 255 255
+             239  511 - 255 255 255
+             202  532 - 255 255 255
+        "#,
     )
     .await?;
-
-    debug!("Present test: OK");
 
     Ok(())
 }

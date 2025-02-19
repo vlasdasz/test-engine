@@ -25,7 +25,8 @@ impl Setup for PolygonView {
     fn setup(mut self: Weak<Self>) {
         LevelManager::stop_level();
 
-        self.add_transition::<Self, TestGameView>()
+        self.add_view::<Button>()
+            .add_transition::<Self, TestGameView>()
             .set_text("Back")
             .place()
             .t(200)

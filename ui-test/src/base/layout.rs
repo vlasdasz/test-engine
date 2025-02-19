@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     App,
     refs::Weak,
@@ -14,7 +13,7 @@ use test_engine::{
 };
 
 #[view]
-struct LayoutTestView {
+struct LayoutPlace {
     // #[text = center]
     #[init]
     center: Button,
@@ -47,7 +46,7 @@ struct LayoutTestView {
     right_s_center:  Button,
 }
 
-impl LayoutTestView {
+impl LayoutPlace {
     fn setup_labels(&mut self) {
         self.center.set_text("center");
         self.top.set_text("top");
@@ -65,7 +64,7 @@ impl LayoutTestView {
     }
 }
 
-impl Setup for LayoutTestView {
+impl Setup for LayoutPlace {
     fn setup(mut self: Weak<Self>) {
         for view in self.subviews_mut() {
             view.place().size(15, 15);
@@ -101,7 +100,7 @@ impl Setup for LayoutTestView {
 }
 
 pub async fn test_layout() -> Result<()> {
-    UI::init_test_view::<LayoutTestView>().await;
+    UI::init_test_view::<LayoutPlace>().await;
 
     App::set_window_size((240, 240)).await;
 
@@ -277,6 +276,5 @@ pub async fn test_layout() -> Result<()> {
         "|le_s_ct|left|le_ct|center|ri_ct|right|ri_s_ct|bo_s_ct|bottom|bt_ct|center|tp_ct|top|to_s_ct",
     );
 
-    debug!("Layout test: OK");
     Ok(())
 }

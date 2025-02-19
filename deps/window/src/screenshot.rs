@@ -25,8 +25,6 @@ impl Screenshot {
             return Color::default();
         };
 
-        let color: Color<f32> = (*color).into();
-
-        color.from_srgb().into()
+        *color
     }
 }

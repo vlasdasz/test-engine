@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     gm::Apply,
     refs::Weak,
@@ -11,7 +10,7 @@ use test_engine::{
 };
 
 #[view]
-struct TouchOrderView {
+struct TouchOrder {
     #[init]
     view_1: Container,
     view_2: Container,
@@ -19,7 +18,7 @@ struct TouchOrderView {
     view_4: Container,
 }
 
-impl Setup for TouchOrderView {
+impl Setup for TouchOrder {
     fn setup(mut self: Weak<Self>) {
         self.view_1.set_color(Color::RED);
         self.view_2.set_color(Color::GREEN).place().tl(50);
@@ -38,16 +37,16 @@ impl Setup for TouchOrderView {
 }
 
 pub async fn test_touch_order() -> Result<()> {
-    UI::init_test_view::<TouchOrderView>().await;
+    UI::init_test_view::<TouchOrder>().await;
 
     assert_eq!(
         TouchStack::dump(),
         vec![vec![
             "Layer: Root view".to_string(),
-            "TouchOrderView.view_1: Container".to_string(),
-            "TouchOrderView.view_2: Container".to_string(),
-            "TouchOrderView.view_3: Container".to_string(),
-            "TouchOrderView.view_4: Container".to_string(),
+            "TouchOrder.view_1: Container".to_string(),
+            "TouchOrder.view_2: Container".to_string(),
+            "TouchOrder.view_3: Container".to_string(),
+            "TouchOrder.view_4: Container".to_string(),
         ]],
     );
 
@@ -77,17 +76,15 @@ pub async fn test_touch_order() -> Result<()> {
 
     assert_eq!(
         get_state::<String>(),
-        r"TouchOrderView.view_4: Container
-TouchOrderView.view_4: Container
-TouchOrderView.view_4: Container
-TouchOrderView.view_4: Container
-TouchOrderView.view_3: Container
-TouchOrderView.view_2: Container
-TouchOrderView.view_1: Container
+        r"TouchOrder.view_4: Container
+TouchOrder.view_4: Container
+TouchOrder.view_4: Container
+TouchOrder.view_4: Container
+TouchOrder.view_3: Container
+TouchOrder.view_2: Container
+TouchOrder.view_1: Container
 "
     );
-
-    debug!("Touch order test: OK");
 
     Ok(())
 }

@@ -1,7 +1,7 @@
 use test_engine::{
     level::LevelManager,
     refs::Weak,
-    ui::{Setup, TransitionButton, ViewData, view},
+    ui::{Button, HasText, Setup, ViewData, view},
 };
 
 use crate::{interface::test_game_view::TestGameView, no_physics::NoPhysicsLevel};
@@ -9,7 +9,7 @@ use crate::{interface::test_game_view::TestGameView, no_physics::NoPhysicsLevel}
 #[view]
 pub struct NoPhysicsView {
     #[init]
-    back: TransitionButton<Self, TestGameView>,
+    back: Button,
 }
 
 impl Setup for NoPhysicsView {
@@ -18,5 +18,6 @@ impl Setup for NoPhysicsView {
 
         self.back.set_text("Back");
         self.back.place().size(100, 50).t(100).l(20);
+        self.back.add_transition::<Self, TestGameView>();
     }
 }

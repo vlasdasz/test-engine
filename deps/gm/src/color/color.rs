@@ -8,24 +8,15 @@ impl Color<f32> {
     pub const fn rgb(r: f32, g: f32, b: f32) -> Self {
         Self::rgba(r, g, b, 1.0)
     }
-
-    pub fn from_srgb(self) -> Self {
-        Self::rgba(
-            srgb_to_linear(self.r),
-            srgb_to_linear(self.g),
-            srgb_to_linear(self.b),
-            srgb_to_linear(self.a),
-        )
-    }
 }
 
 impl From<Color> for U8Color {
     fn from(value: Color) -> Self {
         U8Color::rgba(
-            (255.0 * value.r).lossy_convert(),
-            (255.0 * value.g).lossy_convert(),
-            (255.0 * value.b).lossy_convert(),
-            (255.0 * value.a).lossy_convert(),
+            (255.0 * srgb_to_linear(value.r)).lossy_convert(),
+            (255.0 * srgb_to_linear(value.g)).lossy_convert(),
+            (255.0 * srgb_to_linear(value.b)).lossy_convert(),
+            (255.0 * srgb_to_linear(value.a)).lossy_convert(),
         )
     }
 }
@@ -88,5 +79,5 @@ fn color_diff() {
 #[test]
 fn color_to_u8() {
     let color: U8Color = Color::rgba(0.5, 1.0, 0.1, 0.0).into();
-    assert_eq!(color, U8Color::rgba(127, 255, 25, 0));
+    assert_eq!(color, U8Color::rgba(54, 255, 2, 0));
 }

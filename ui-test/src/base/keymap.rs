@@ -1,14 +1,16 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
     refs::Own,
-    ui::{Container, UI, UIManager},
+    ui::{UI, UIManager, view},
     ui_test::inject_key,
     wait_for_next_frame,
 };
 
+#[view]
+struct Keymap {}
+
 pub async fn test_keymap() -> Result<()> {
-    let view = UI::init_test_view::<Container>().await;
+    let view = UI::init_test_view::<Keymap>().await;
 
     let presses = Own::new(0);
     let mut presses = presses.weak();
@@ -36,7 +38,7 @@ pub async fn test_keymap() -> Result<()> {
     inject_key('g').await;
     assert_eq!(*presses, 2);
 
-    UI::init_test_view::<Container>().await;
+    UI::init_test_view::<Keymap>().await;
     wait_for_next_frame().await;
 
     inject_key('g').await;
@@ -44,8 +46,6 @@ pub async fn test_keymap() -> Result<()> {
 
     inject_key('g').await;
     assert_eq!(*presses, 2);
-
-    debug!("Keymap test: OK");
 
     Ok(())
 }
