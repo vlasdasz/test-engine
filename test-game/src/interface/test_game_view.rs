@@ -85,11 +85,9 @@ impl Setup for TestGameView {
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();
 
-        for view in self.subviews_mut() {
-            if let Some(mut view) = view.downcast_view::<Button>() {
-                view.add_style(BUTTON);
-            }
-        }
+        self.apply_to::<Button>(|btn| {
+            btn.add_style(BUTTON);
+        });
 
         if false {
             UIManager::set_view(NoPhysicsView::new());

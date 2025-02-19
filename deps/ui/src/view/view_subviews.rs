@@ -24,6 +24,10 @@ pub trait ViewSubviews {
 
     fn add_dummy_view(&mut self) -> WeakView;
 
+    fn apply_if<V: View + 'static>(&mut self, action: impl FnMut(&mut V) + Clone + 'static);
+
+    fn apply_to<V: View + 'static>(&mut self, action: impl FnMut(&mut V) + Clone + 'static);
+
     fn apply_to_all_subviews(&mut self, action: impl FnMut(&mut dyn View) + Clone + 'static);
 
     fn get_subview<V: 'static + View + Default>(&mut self) -> Weak<V>;
@@ -132,6 +136,20 @@ impl<T: ?Sized + View> ViewSubviews for T {
         view.set_color(Color::random());
 
         view
+    }
+
+    fn apply_if<V: View + 'static>(&mut self, mut action: impl FnMut(&mut V) + Clone + 'static) {
+        if let Some(mut view_type) = self.downcast_view::<V>() {
+            action(&mut view_type);
+        }
+    }
+
+    fn apply_to<V: View + 'static>(&mut self, mut action: impl FnMut(&mut V) + Clone + 'static) {
+        for view in &mut self.base_view_mut().subviews {
+            if let Some(mut view_type) = view.downcast_view::<V>() {
+                action(&mut view_type);
+            }
+        }
     }
 
     fn apply_to_all_subviews(&mut self, mut action: impl FnMut(&mut dyn View) + Clone + 'static) {

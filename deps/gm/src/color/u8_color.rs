@@ -3,6 +3,12 @@ use crate::{Color, ToF32, color::helpers::srgb_to_linear};
 pub type U8Color = Color<u8>;
 
 impl U8Color {
+    pub const fn const_rgb(r: u8, g: u8, b: u8) -> Self {
+        Self {
+            r, g, b, a: 255
+        }
+    }
+
     pub fn diff_u8(&self, other: Self) -> i16 {
         (i16::from(self.r) - i16::from(other.r)).abs()
             + (i16::from(self.g) - i16::from(other.g)).abs()
