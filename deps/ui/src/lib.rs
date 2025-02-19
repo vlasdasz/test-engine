@@ -5,6 +5,7 @@
 #![feature(arbitrary_self_types)]
 #![feature(adt_const_params)]
 #![feature(generic_const_exprs)]
+#![feature(unsized_const_params)]
 
 mod has_data;
 mod images;
@@ -13,6 +14,7 @@ mod layout;
 pub mod mobile;
 mod modal_view;
 mod navigation_view;
+mod style;
 mod text_field_constraint;
 mod to_label;
 mod touch_layer;
@@ -29,6 +31,7 @@ pub use input::*;
 pub use layout::*;
 pub use modal_view::*;
 pub use navigation_view::*;
+pub use style::*;
 pub use text_field_constraint::*;
 pub use to_label::*;
 pub use touch_stack::*;

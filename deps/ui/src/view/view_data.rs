@@ -1,8 +1,10 @@
+use std::ops::DerefMut;
+
 use gm::{Color, ToF32};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{NavigationView, UIAnimation, View, layout::Placer};
+use crate::{NavigationView, Style, UIAnimation, View, layout::Placer};
 
 pub trait ViewData {
     fn tag(&self) -> usize;
@@ -38,6 +40,8 @@ pub trait ViewData {
 
     fn position_changed(&self) -> &Event;
     fn size_changed(&self) -> &Event;
+
+    fn add_style(&mut self, style: Style) -> &mut Self;
 
     fn __after_setup_event(&self) -> &OnceEvent;
 }
@@ -136,6 +140,12 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn size_changed(&self) -> &Event {
         &self.base_view().size_changed
+    }
+
+    fn add_style(&mut self, style: Style) -> &mut Self {
+        self.base_view_mut().styles.push(style);
+        style.apply(self.weak_view().deref_mut());
+        self
     }
 
     fn __after_setup_event(&self) -> &OnceEvent {

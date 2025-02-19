@@ -5,7 +5,7 @@ use gm::{Color, flat::Rect};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{NavigationView, Touch, UIAnimation, View, WeakView, layout::Placer};
+use crate::{NavigationView, Style, Touch, UIAnimation, View, WeakView, layout::Placer};
 
 #[derive(Educe)]
 #[educe(Default, Debug)]
@@ -70,6 +70,8 @@ pub struct ViewBase {
 
     #[educe(Debug(ignore))]
     pub(crate) after_setup: OnceEvent,
+
+    pub styles: Vec<Style>,
 
     pub tag: usize,
 }
