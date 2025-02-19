@@ -26,8 +26,9 @@ pub async fn test_question() -> Result<()> {
 
     inject_touches(
         "
-            220  388  b
-            220  388  e
+            236  398  b
+            236  397  e
+
         ",
     )
     .await;
@@ -43,10 +44,14 @@ pub async fn test_question() -> Result<()> {
     })
     .await;
 
+    wait_for_next_frame().await;
+    wait_for_next_frame().await;
+
     inject_touches(
         "
-            417  392  b
-            417  392  e
+            378  396  b
+            378  396  e
+
         ",
     )
     .await;
@@ -70,8 +75,6 @@ pub async fn test_question() -> Result<()> {
     .await;
 
     a.await?;
-
-    dbg!("Samokat?");
 
     wait_for_next_frame().await;
 

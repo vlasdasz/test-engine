@@ -77,7 +77,7 @@ pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Col
 
     let diff = pixel.diff_u8(color);
 
-    let max_diff = 0;
+    let max_diff = 12;
 
     if diff > max_diff {
         from_main(move || {

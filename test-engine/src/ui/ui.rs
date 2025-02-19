@@ -247,7 +247,7 @@ impl UI {
 
         *TEST_NAME.lock().unwrap() = get_test_name::<T>();
 
-        debug!("{}: Started", get_test_name::<T>());
+        // debug!("{}: Started", get_test_name::<T>());
 
         clear_state();
 
