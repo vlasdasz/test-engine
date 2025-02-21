@@ -3,7 +3,7 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    HasText, Setup, ToLabel, View,
+    HasText, Setup, Style, ToLabel, View,
     view::{ViewData, ViewSubviews},
 };
 
@@ -84,6 +84,8 @@ impl Setup for Label {
         self.text_size = 32.0;
         self.set_color(Color::WHITE);
         self.text_color = Color::BLACK;
+
+        Style::apply_global(self);
     }
 }
 

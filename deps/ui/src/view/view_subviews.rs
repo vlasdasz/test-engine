@@ -100,6 +100,8 @@ impl<T: ?Sized + View> ViewSubviews for T {
             "Adding subview to view without superview is not allowed"
         );
 
+        view.__internal_before_setup();
+
         if view.base_view().navigation_view.is_null() {
             view.base_view_mut().navigation_view = self.base_view().navigation_view;
         }

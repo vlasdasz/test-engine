@@ -1,13 +1,13 @@
 use std::ops::DerefMut;
 
 use gm::{Color, ToF32};
-use refs::Weak;
+use refs::{Own, Weak};
 use ui_proc::view;
 use vents::Event;
 use window::image::ToImage;
 
 use crate::{
-    ImageView, Label, Setup, ToLabel, UIManager, View, ViewSubviews, ViewTransition,
+    ImageView, Label, Setup, Style, ToLabel, UIManager, View, ViewSubviews, ViewTransition,
     has_data::HasText,
     view::{ViewData, ViewTouch},
 };
@@ -23,8 +23,9 @@ mod test_engine {
 pub struct Button {
     on_tap: Event,
 
+    label: Weak<Label>,
+
     #[init]
-    label: Label,
     image: ImageView,
 }
 
@@ -92,6 +93,12 @@ impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
         self.set_color(Color::WHITE);
 
+        let mut label = Own::<Label>::default();
+
+        label.base_view_mut().ignore_global_style = true;
+
+        self.label = self.add_subview(label).downcast_view().unwrap();
+
         self.label.place().back();
         self.label.set_color(Color::CLEAR);
         self.label.set_hidden(true);
@@ -100,6 +107,8 @@ impl Setup for Button {
         self.image.set_hidden(true);
 
         self.touch().up_inside.sub(move || self.on_tap.trigger(()));
+
+        Style::apply_global(self);
     }
 }
 

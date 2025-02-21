@@ -46,6 +46,7 @@ impl DebugView {
         let new = MovableView::<Self>::new();
         let mut container = new.weak();
         *DEBUG_VIEW.get_mut() = Some(new);
+        container.__internal_before_setup();
         container.set_z_position(UIManager::DEBUG_Z_OFFSET);
         container.__manually_set_superview(UIManager::root_view_weak());
         container.init_views();
