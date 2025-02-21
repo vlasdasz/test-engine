@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{Anchor::Top, Button, Color, HasText, Setup, Style, UI, View, ViewData, ViewSubviews, view},
+    ui::{Anchor::Top, Button, Color, HasText, Setup, Style, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -30,8 +30,6 @@ impl Setup for Styles {
         [self.button_1, self.button_2, self.button_3].apply(|mut button| {
             button.add_style(MENU_BUTTON);
         });
-
-        dbg!(&self.button_1.base_view().styles);
 
         self.button_1.set_text("Button 1").place().t(50);
 

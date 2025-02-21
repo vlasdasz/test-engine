@@ -55,6 +55,12 @@ impl Style {
         styles.push(*self);
     }
 
+    pub fn reset_global<T: View>(&self) {
+        Self::check_allowed::<T>();
+        let styles = GLOBAL_STYLES.get_mut().entry(type_name::<T>()).or_default();
+        styles.clear();
+    }
+
     fn check_allowed<T: View>() {
         assert!(
             ALLOWED_TYPES.contains(&type_name::<T>()),
