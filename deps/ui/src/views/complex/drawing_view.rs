@@ -18,22 +18,13 @@ mod test_engine {
 
 #[view]
 pub struct DrawingView {
-    pub rescale:  bool,
-    paths:        Vec<PathData>,
-    previous_pos: Point,
+    pub rescale: bool,
+    paths:       Vec<PathData>,
 }
 
 impl ViewCallbacks for DrawingView {
     fn update(&mut self) {
-        let current_pos = self.absolute_frame().origin;
-
-        if current_pos == self.previous_pos {
-            return;
-        }
-
         self.update_buffers();
-
-        self.previous_pos = current_pos;
     }
 }
 
