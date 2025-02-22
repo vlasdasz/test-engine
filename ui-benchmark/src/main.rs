@@ -6,12 +6,9 @@
 
 mod benchmark_view;
 
-use anyhow::Result;
-use test_engine::{AppRunner, ui::Setup};
+use test_engine::test_engine_start_app;
+pub use ui_benchmark::test_engine_create_app;
 
-use crate::benchmark_view::BenchmarkView;
-
-#[tokio::main]
-async fn main() -> Result<()> {
-    AppRunner::start(BenchmarkView::new()).await
+fn main() {
+    test_engine_start_app();
 }

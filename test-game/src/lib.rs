@@ -8,13 +8,8 @@ mod interface;
 mod levels;
 mod no_physics;
 
-use test_engine::App;
-pub use test_engine::{self};
+pub use test_engine::store::Paths;
 
 use crate::app::TestGameApp;
 
-#[unsafe(no_mangle)]
-#[allow(improper_ctypes_definitions)]
-pub extern "C" fn test_engine_create_app() -> Box<dyn App> {
-    Box::new(TestGameApp)
-}
+test_engine::register_app!(TestGameApp);

@@ -4,21 +4,21 @@ use test_engine::{
     ui::{Setup, View},
 };
 
-use crate::interface::test_game_view::TestGameView;
+use crate::benchmark_view::BenchmarkView;
 
-pub struct TestGameApp;
+pub struct BenchmarkApp;
 
-impl App for TestGameApp {
+impl App for BenchmarkApp {
     fn new() -> Self
     where Self: Sized {
         Self
     }
 
     fn setup(&self) {
-        dbg!("setup");
+        dbg!("Setup");
     }
 
     fn make_root_view(&self) -> Own<dyn View> {
-        TestGameView::new()
+        BenchmarkView::new()
     }
 }

@@ -124,12 +124,12 @@ impl AppRunner {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start(root_view: Own<dyn View>) -> Result<()> {
+    pub(crate) async fn start(root_view: Own<dyn View>) -> Result<()> {
         Window::start(Self::new(root_view)).await
     }
 
     #[cfg(target_os = "android")]
-    pub async fn start(first_view: Own<dyn View>, app: crate::AndroidApp) -> Result<()> {
+    pub(crate) async fn start(first_view: Own<dyn View>, app: crate::AndroidApp) -> Result<()> {
         dbg!("PENIJEE");
 
         use winit::platform::android::EventLoopBuilderExtAndroid;
