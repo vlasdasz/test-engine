@@ -11,7 +11,8 @@ use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncode
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
-    SUPPORT_SCREENSHOT, Screenshot, Window, app::App, frame_counter::FrameCounter, image::Texture, text::Font,
+    SUPPORT_SCREENSHOT, Screenshot, Window, frame_counter::FrameCounter, image::Texture, text::Font,
+    window_events::WindowEvents,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;
@@ -23,7 +24,7 @@ pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
 pub struct State {
     pub(crate) fonts:       HashMap<&'static str, Font>,
-    pub(crate) app:         Box<dyn App>,
+    pub(crate) app:         Box<dyn WindowEvents>,
     pub(crate) clear_color: Color,
 
     read_display_request: RefCell<Option<ReadDisplayRequest>>,
@@ -32,7 +33,7 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(app: Box<dyn App>) -> Self {
+    pub fn new(app: Box<dyn WindowEvents>) -> Self {
         Self {
             fonts: HashMap::default(),
             app,

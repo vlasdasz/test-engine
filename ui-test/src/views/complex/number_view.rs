@@ -1,7 +1,7 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    App, from_main,
+    AppRunner, from_main,
     refs::Weak,
     ui::{NumberView, Setup, UI, ViewData, view},
     ui_test::inject_touches,
@@ -24,7 +24,7 @@ impl Setup for NumberTestView {
 pub async fn test_number_view() -> Result<()> {
     let mut view = UI::init_test_view::<NumberTestView>().await;
 
-    App::set_window_size((400, 400)).await;
+    AppRunner::set_window_size((400, 400)).await;
 
     inject_touches(
         "

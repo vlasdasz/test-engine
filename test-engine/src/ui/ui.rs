@@ -23,7 +23,7 @@ use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use window::{Font, Window};
 
-use crate::{App, ui::ui_test::state::clear_state};
+use crate::{AppRunner, ui::ui_test::state::clear_state};
 
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
@@ -261,7 +261,7 @@ impl UI {
 
         clear_state();
 
-        App::set_window_size((width, height)).await;
+        AppRunner::set_window_size((width, height)).await;
         wait_for_next_frame().await;
         let view = from_main(move || {
             let weak = view.weak();

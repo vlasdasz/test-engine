@@ -6,7 +6,7 @@ use std::{
 
 use anyhow::Result;
 use test_engine::{
-    App, from_main,
+    AppRunner, from_main,
     refs::{Own, Weak},
     ui::{
         AfterSetup, Color, Container, HasText, Label, Setup, TableData, TableView, UI, View, ViewData,
@@ -68,7 +68,7 @@ pub async fn test_table_view() -> Result<()> {
 
     let view = UI::init_test_view::<TestTableView>().await;
 
-    App::set_window_size((1000, 1000)).await;
+    AppRunner::set_window_size((1000, 1000)).await;
 
     wait_for_next_frame().await;
     wait_for_next_frame().await;

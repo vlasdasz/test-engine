@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    App, from_main,
+    AppRunner, from_main,
     refs::Weak,
     ui::{Anchor, Setup, UI, ViewData, view},
     ui_test::{helpers::check_colors, inject_keys, inject_touches},
@@ -27,7 +27,7 @@ impl Setup for TextField {
 pub async fn test_text_field() -> Result<()> {
     let mut view = UI::init_test_view::<TextField>().await;
 
-    App::set_window_size((800, 800)).await;
+    AppRunner::set_window_size((800, 800)).await;
 
     inject_touches(
         r"

@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    App,
+    AppRunner,
     refs::Weak,
     ui::{Setup, Switch, UI, ViewData, view},
     ui_test::{state::set_state, test_combinations},
@@ -25,7 +25,7 @@ impl Setup for SwitchTestView {
 pub async fn test_switch() -> Result<()> {
     UI::init_test_view::<SwitchTestView>().await;
 
-    App::set_window_size((200, 100)).await;
+    AppRunner::set_window_size((200, 100)).await;
 
     test_combinations([
         (
