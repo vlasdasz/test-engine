@@ -8,10 +8,20 @@ pub trait App {
     fn make_root_view(&self) -> Own<dyn View>;
 }
 
+#[cfg(not(windows))]
 unsafe extern "C" {
     #[allow(improper_ctypes_definitions)]
     #[allow(improper_ctypes)]
     pub fn test_engine_create_app() -> Box<dyn App>;
+}
+
+#[cfg(windows)]
+#[unsafe(no_mangle)]
+#[linkage = "weak"]
+#[allow(improper_ctypes_definitions)]
+#[allow(improper_ctypes)]
+pub extern "C" fn test_engine_create_app() -> Box<dyn App> {
+    panic!("use test_engine::register_app!(YourApp) macro")
 }
 
 #[macro_export]

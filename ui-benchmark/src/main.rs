@@ -4,15 +4,14 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
-mod app;
 mod benchmark_view;
 
-use test_engine::{register_app, test_engine_start_app};
+use anyhow::Result;
+use test_engine::{AppRunner, ui::Setup};
 
-use crate::app::BenchmarkApp;
+use crate::benchmark_view::BenchmarkView;
 
-register_app!(BenchmarkApp);
-
-fn main() {
-    test_engine_start_app();
+#[tokio::main]
+async fn main() -> Result<()> {
+    AppRunner::start(BenchmarkView::new()).await
 }

@@ -12,6 +12,7 @@ pub extern "C" fn test_engine_start_app() -> c_int {
         #[cfg(mobile)]
         crate::refs::set_current_thread_as_main();
 
+        #[allow(unused_unsafe)]
         let app = unsafe { test_engine_create_app() };
         app.setup();
 

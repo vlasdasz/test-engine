@@ -28,13 +28,6 @@ mod base;
 mod level;
 mod views;
 
-// Needed for windows linker
-#[unsafe(no_mangle)]
-#[allow(improper_ctypes_definitions)]
-pub extern "C" fn test_engine_create_app() -> Box<dyn test_engine::App> {
-    todo!()
-}
-
 #[tokio::main]
 async fn main() -> Result<()> {
     AppRunner::start_with_actor(Container::new(), async {

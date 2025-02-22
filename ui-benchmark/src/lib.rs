@@ -4,7 +4,6 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
-mod app;
 mod benchmark_view;
 
-pub use crate::benchmark_view::BenchmarkView;
+pub use benchmark_view::BenchmarkView;

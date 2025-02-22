@@ -124,7 +124,7 @@ impl AppRunner {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub(crate) async fn start(root_view: Own<dyn View>) -> Result<()> {
+    pub async fn start(root_view: Own<dyn View>) -> Result<()> {
         Window::start(Self::new(root_view)).await
     }
 

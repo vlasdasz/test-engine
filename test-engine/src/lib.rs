@@ -3,6 +3,7 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
+#![feature(linkage)]
 
 mod app_runner;
 mod assets;
