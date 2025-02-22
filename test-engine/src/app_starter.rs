@@ -25,12 +25,12 @@ pub fn test_engine_start_app(android_app: crate::AndroidApp) {
     dbg!("HELLOOOddO");
     let runtime = Runtime::new().unwrap();
     runtime.block_on(async {
-        test_engine::refs::set_current_thread_as_main();
+        crate::refs::set_current_thread_as_main();
 
         let app = unsafe { test_engine_create_app() };
         app.setup();
 
-        dbg!(test_engine::AppRunner::start(app.make_root_view(), android_app).await).unwrap()
+        dbg!(crate::AppRunner::start(app.make_root_view(), android_app).await).unwrap()
     });
 }
 
