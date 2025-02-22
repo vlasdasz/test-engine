@@ -7,9 +7,4 @@
 mod app;
 mod benchmark_view;
 
-use test_engine::register_app;
-
-use crate::app::BenchmarkApp;
 pub use crate::benchmark_view::BenchmarkView;
-
-register_app!(BenchmarkApp);

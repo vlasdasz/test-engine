@@ -8,7 +8,7 @@ mod interface;
 mod levels;
 mod no_physics;
 
-pub use test_engine::store::Paths;
+pub use test_engine;
 
 use crate::app::TestGameApp;
 

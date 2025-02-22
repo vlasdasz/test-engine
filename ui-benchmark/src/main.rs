@@ -4,10 +4,14 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
+mod app;
 mod benchmark_view;
 
-use test_engine::test_engine_start_app;
-pub use ui_benchmark::test_engine_create_app;
+use test_engine::{register_app, test_engine_start_app};
+
+use crate::app::BenchmarkApp;
+
+register_app!(BenchmarkApp);
 
 fn main() {
     test_engine_start_app();
