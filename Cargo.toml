@@ -10,7 +10,6 @@ members = [
   "render-test",
   "ui-test",
   "ui-benchmark",
-  "level-test",
   "deps/ui/ui-proc-test",
 ]
 

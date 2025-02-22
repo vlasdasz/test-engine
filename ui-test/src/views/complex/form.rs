@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    App, reflected,
+    AppRunner, reflected,
     reflected::Reflected,
     refs::Weak,
     ui::{Button, FormView, HasText, Setup, UI, ViewData, ViewSubviews, view},
@@ -48,7 +48,7 @@ impl Setup for FormTestView {
 pub async fn test_form_view() -> Result<()> {
     let view = UI::init_test_view::<FormTestView>().await;
 
-    App::set_window_size((600, 800)).await;
+    AppRunner::set_window_size((600, 800)).await;
 
     let _sub = view.form.subviews();
 

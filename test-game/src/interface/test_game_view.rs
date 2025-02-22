@@ -1,5 +1,5 @@
 use test_engine::{
-    App, DataManager, async_after,
+    AppRunner, DataManager, async_after,
     audio::Sound,
     gm::{Apply, Direction, LossyConvert},
     level::{Control, LevelManager},
@@ -128,10 +128,10 @@ impl Setup for TestGameView {
             self.level.player.unit.body.move_by_direction(direction);
 
             self.label_l.set_text(format!("{direction:?}"));
-            App::set_window_title(format!("{direction:?}"));
+            AppRunner::set_window_title(format!("{direction:?}"));
 
             if direction.is_up() {
-                App::set_window_title(format!("{direction:?} read pixel"));
+                AppRunner::set_window_title(format!("{direction:?} read pixel"));
             }
         });
 
@@ -160,7 +160,7 @@ impl Setup for TestGameView {
         self.alert.set_text_size(20);
         self.alert.on_tap(|| {
             Alert::show("Hello!");
-            App::set_window_size((600, 600))
+            AppRunner::set_window_size((600, 600))
         });
 
         self.sound.place().same_size(self.spinner).anchor(Left, self.scale, 10).anchor(

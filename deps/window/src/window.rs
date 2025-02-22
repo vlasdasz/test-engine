@@ -27,9 +27,9 @@ use winit::{
 
 use crate::{
     Screenshot,
-    app::App,
     state::{RGBA_TEXTURE_FORMAT, State},
     surface::Surface,
+    window_events::WindowEvents,
 };
 
 const ENABLE_VSYNC: bool = true;
@@ -142,7 +142,7 @@ impl Window {
         Ok(true)
     }
 
-    async fn start_internal(app: Box<dyn App>, event_loop: EventLoop<Events>) -> Result<()> {
+    async fn start_internal(app: Box<dyn WindowEvents>, event_loop: EventLoop<Events>) -> Result<()> {
         let instance = Instance::new(&InstanceDescriptor {
             backends: Backends::all(),
             ..Default::default()
@@ -218,7 +218,7 @@ impl Window {
 
         let state = State::new(app);
 
-        assert!(WINDOW.is_none(), "Another instance of App already exists.");
+        assert!(WINDOW.is_none(), "Another instance of Window already exists.");
 
         *WINDOW.get_mut() = Self {
             state,
@@ -241,12 +241,12 @@ impl Window {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start(app: impl App + 'static) -> Result<()> {
+    pub async fn start(app: impl WindowEvents + 'static) -> Result<()> {
         Self::start_internal(Box::new(app), EventLoop::new()?).await
     }
 
     #[cfg(target_os = "android")]
-    pub async fn start(app: impl App + 'static, event_loop: EventLoop<Events>) -> Result<()> {
+    pub async fn start(app: impl WindowEvents + 'static, event_loop: EventLoop<Events>) -> Result<()> {
         Self::start_internal(Box::new(app), event_loop).await
     }
 

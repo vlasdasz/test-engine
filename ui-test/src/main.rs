@@ -11,7 +11,7 @@ use std::env::var;
 use anyhow::Result;
 use log::info;
 use test_engine::{
-    App,
+    AppRunner,
     ui::{Container, Setup},
 };
 
@@ -30,7 +30,7 @@ mod views;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    App::start_with_actor(Container::new(), async {
+    AppRunner::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
@@ -40,7 +40,7 @@ async fn main() -> Result<()> {
             info!("Cycle {i}: OK");
         }
 
-        App::stop();
+        AppRunner::stop();
 
         Ok(())
     })

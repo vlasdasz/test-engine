@@ -6,7 +6,7 @@ use std::{
 
 use fake::Fake;
 use test_engine::{
-    App, from_main, on_main,
+    AppRunner, from_main, on_main,
     refs::Weak,
     ui::{Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
 };
@@ -31,7 +31,7 @@ impl BenchmarkView {
     }
 
     fn add_bench_view(mut self: Weak<Self>) {
-        if App::fps() < TARGET_FPS {
+        if AppRunner::fps() < TARGET_FPS {
             return;
         }
 
@@ -68,7 +68,7 @@ impl BenchmarkView {
 
                 if finish {
                     on_main(move || {
-                        if App::fps() < TARGET_FPS {
+                        if AppRunner::fps() < TARGET_FPS {
                             if FINISHED.load(Ordering::Relaxed) {
                                 return;
                             }

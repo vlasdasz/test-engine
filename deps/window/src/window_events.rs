@@ -7,7 +7,7 @@ use winit::event::{ElementState, KeyEvent, MouseButton, Touch};
 
 use crate::Window;
 
-pub trait App {
+pub trait WindowEvents {
     fn window_ready(&mut self) {}
     fn update(&mut self) {}
     fn render<'a>(&'a mut self, _pass: &mut RenderPass<'a>) {}

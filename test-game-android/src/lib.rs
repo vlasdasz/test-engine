@@ -1,7 +1,7 @@
 #[cfg(target_os = "android")]
 #[unsafe(no_mangle)]
-fn android_main(app: test_game::AndroidApp) {
-    test_game::start_test_game(app);
+fn android_main(app: test_game::test_engine::AndroidApp) {
+    test_game::test_engine::test_engine_start_app(app);
 }
 
 use jni::{

@@ -2,12 +2,14 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
+#![feature(linkage)]
 
 mod interface;
 mod levels;
 mod no_physics;
 
+pub use test_game::test_engine_create_app;
+
 fn main() {
-    #[cfg(desktop)]
-    test_game::start_test_game();
+    test_engine::test_engine_start_app();
 }
