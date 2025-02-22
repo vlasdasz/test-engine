@@ -234,20 +234,30 @@ impl UI {
 }
 
 impl UI {
-    pub async fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set_test_view(T::new(), 600, 600).await
+    pub async fn reload_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set_test_view(T::new(), 600, 600, false, get_test_name::<T>()).await
     }
 
-    pub async fn set_test_view<T: View + 'static>(view: Own<T>, width: u32, height: u32) -> Weak<T> {
+    pub async fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set_test_view(T::new(), 600, 600, true, get_test_name::<T>()).await
+    }
+
+    pub async fn set_test_view<T: View + 'static>(
+        view: Own<T>,
+        width: u32,
+        height: u32,
+        test_start: bool,
+        new_test_name: String,
+    ) -> Weak<T> {
         let test_name = TEST_NAME.lock().unwrap().clone();
 
-        if !test_name.is_empty() {
+        if !test_name.is_empty() && test_start {
             debug!("{test_name}: OK");
         }
 
-        *TEST_NAME.lock().unwrap() = get_test_name::<T>();
+        TEST_NAME.lock().unwrap().clone_from(&new_test_name);
 
-        // debug!("{}: Started", get_test_name::<T>());
+        debug!("{new_test_name}: Started");
 
         clear_state();
 

@@ -10,7 +10,7 @@ use test_engine::{
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
         MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
-        Style, Switch, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, view,
+        Style, Switch, TextField, UIManager, ViewData, ViewFrame, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -81,15 +81,14 @@ pub struct TestGameView {
 }
 
 impl Setup for TestGameView {
+    fn before_setup(self: Weak<Self>) {
+        BUTTON.apply_to_all::<Button>();
+        BUTTON.apply_to_all::<Label>();
+    }
+
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();
-
-        for view in self.subviews_mut() {
-            if let Some(mut view) = view.downcast_view::<Button>() {
-                view.add_style(BUTTON);
-            }
-        }
 
         if false {
             UIManager::set_view(NoPhysicsView::new());

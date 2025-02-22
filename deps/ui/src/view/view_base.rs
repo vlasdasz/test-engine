@@ -71,6 +71,8 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) after_setup: OnceEvent,
 
+    pub(crate) ignore_global_style: bool,
+
     pub styles: Vec<Style>,
 
     pub tag: usize,

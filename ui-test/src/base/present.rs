@@ -17,7 +17,14 @@ pub async fn test_navigation_view() -> Result<()> {
 
     let view = present.weak();
 
-    UI::set_test_view(NavigationView::with_view(present), 600, 600).await;
+    UI::set_test_view(
+        NavigationView::with_view(present),
+        600,
+        600,
+        true,
+        "Present".to_string(),
+    )
+    .await;
 
     check_colors(
         r#"

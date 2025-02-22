@@ -100,6 +100,12 @@ pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Col
         r"
         Test: {test_name} has failed.
         Color diff is too big: {diff}. Max: {max_diff}. Position: {pos:?}.
-        Expected: {color}, got: {pixel}."
+        Expected: {color}, got: {pixel}.
+        {:>4} {:>4} - {:>3} {:>3} {:>3}",
+        pos.x,
+        pos.y,
+        color.r,
+        color.g,
+        color.b
     );
 }

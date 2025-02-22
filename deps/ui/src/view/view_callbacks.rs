@@ -21,12 +21,14 @@ impl<T: ?Sized + View> ViewCallbacks for T {
 }
 
 pub trait ViewInternalSetup {
+    fn __internal_before_setup(&mut self);
     fn __internal_setup(&mut self);
 }
 
 pub trait Setup {
     fn new() -> Own<Self>
     where Self: Default;
+    fn before_setup(self: Weak<Self>);
     fn setup(self: Weak<Self>);
 }
 
@@ -35,5 +37,8 @@ impl<T: View + 'static> Setup for T {
     where Self: Default {
         Own::<Self>::default()
     }
+
+    default fn before_setup(self: Weak<Self>) {}
+
     default fn setup(self: Weak<Self>) {}
 }
