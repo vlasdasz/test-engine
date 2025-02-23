@@ -17,7 +17,7 @@ pub mod ui;
 pub use app::App;
 pub use app_starter::*;
 pub use educe;
-pub use ui::ui_test;
+pub use ui::{ui_proc::launch_app, ui_test};
 
 pub mod level {
     pub use ::level::{
