@@ -16,8 +16,8 @@ use render::{
     data::{RectView, UIGradientInstance, UIRectInstance},
 };
 use ui::{
-    DrawingView, GradientView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View,
-    ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews, ViewTest,
+    DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
+    ViewFrame, ViewLayout, ViewSubviews, ViewTest,
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
@@ -120,13 +120,13 @@ impl UI {
 
         let frame = *view.absolute_frame();
 
-        if let Some(gradient_view) = view.as_any().downcast_ref::<GradientView>() {
+        if view.end_gradient_color().a > 0.0 {
             GRADIENT_DRAWER.get_mut().add(UIGradientInstance {
-                position:      gradient_view.frame().origin,
-                size:          gradient_view.frame().size,
-                start_color:   gradient_view.start_color,
-                end_color:     gradient_view.end_color,
-                corner_radius: gradient_view.corner_radius(),
+                position:      view.frame().origin,
+                size:          view.frame().size,
+                start_color:   *view.color(),
+                end_color:     *view.end_gradient_color(),
+                corner_radius: view.corner_radius(),
                 z_position:    view.z_position() + *text_offset,
             });
         } else if view.color().a > 0.0 {

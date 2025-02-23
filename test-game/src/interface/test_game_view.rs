@@ -8,9 +8,9 @@ use test_engine::{
     ui::{
         Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
-        Button, Color, ColorMeter, Container, DPadView, DrawingView, GradientView, HasText, HasTitle,
-        ImageView, Label, MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner,
-        SpriteView, StickView, Style, Switch, TextField, UIManager, ViewData, ViewFrame, view,
+        Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
+        MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
+        Style, Switch, TextField, UIManager, ViewData, ViewFrame, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -45,7 +45,7 @@ pub struct TestGameView {
 
     label_l:  Label,
     image_r:  ImageView,
-    gradient: GradientView,
+    gradient: Container,
 
     dpad:  DPadView,
     scale: NumberView<u32>,
@@ -128,8 +128,7 @@ impl Setup for TestGameView {
             .same([Height, Y], self.image_r)
             .w(50)
             .anchor(Left, self.image_r, 10);
-        self.gradient.start_color = Color::PURPLE;
-        self.gradient.end_color = Color::TURQUOISE;
+        self.gradient.set_gradient(Color::PURPLE, Color::TURQUOISE);
         self.gradient.set_corner_radius(20);
 
         self.dpad.place().size(200, 140).b(20).anchor(Left, self.bl, 10);

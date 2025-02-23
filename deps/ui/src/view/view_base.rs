@@ -14,6 +14,9 @@ pub struct ViewBase {
     pub(crate) color: Color,
 
     #[educe(Debug(ignore))]
+    pub(crate) end_gradient_color: Color,
+
+    #[educe(Debug(ignore))]
     pub(crate) corner_radius: f32,
     #[educe(Debug(ignore))]
     pub(crate) border_color:  Color,

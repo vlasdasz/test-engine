@@ -1,16 +1,16 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Anchor::Left, Color, GradientView, Setup, UI, ViewData, view},
+    ui::{Anchor::Left, Color, Container, Setup, UI, ViewData, view},
     ui_test::check_colors,
 };
 
 #[view]
 struct Gradient {
     #[init]
-    grad_1: GradientView,
-    grad_2: GradientView,
-    grad_3: GradientView,
+    grad_1: Container,
+    grad_2: Container,
+    grad_3: Container,
 }
 
 impl Setup for Gradient {
