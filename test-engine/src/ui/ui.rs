@@ -12,12 +12,12 @@ use gm::{
 use log::{debug, trace, warn};
 use refs::{MainLock, Own, Weak};
 use render::{
-    PathPipeline, UIImageRectPipepeline, UIRectPipepeline, rect_view::RectView,
-    ui_rect_instance::UIRectInstance,
+    PathPipeline, UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
+    data::{RectView, UIGradientInstance, UIRectInstance},
 };
 use ui::{
-    DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
-    ViewFrame, ViewLayout, ViewSubviews, ViewTest,
+    DrawingView, GradientView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View,
+    ViewAnimation, ViewData, ViewFrame, ViewLayout, ViewSubviews, ViewTest,
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
@@ -26,6 +26,7 @@ use window::{Font, Window};
 use crate::{AppRunner, ui::ui_test::state::clear_state};
 
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
+static GRADIENT_DRAWER: MainLock<UIGradientPipeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 static PATH: MainLock<PathPipeline> = MainLock::new();
 pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
@@ -62,6 +63,13 @@ impl UI {
         );
 
         IMAGE_RECT_DRAWER.get_mut().draw(
+            pass,
+            RectView {
+                resolution: UIManager::window_resolution(),
+            },
+        );
+
+        GRADIENT_DRAWER.get_mut().draw(
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
@@ -112,7 +120,16 @@ impl UI {
 
         let frame = *view.absolute_frame();
 
-        if view.color().a > 0.0 {
+        if let Some(gradient_view) = view.as_any().downcast_ref::<GradientView>() {
+            GRADIENT_DRAWER.get_mut().add(UIGradientInstance {
+                position:      gradient_view.frame().origin,
+                size:          gradient_view.frame().size,
+                start_color:   gradient_view.start_color,
+                end_color:     gradient_view.end_color,
+                corner_radius: gradient_view.corner_radius(),
+                z_position:    view.z_position() + *text_offset,
+            });
+        } else if view.color().a > 0.0 {
             RECT_DRAWER.get_mut().add(UIRectInstance::new(
                 frame,
                 *view.color(),

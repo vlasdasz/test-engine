@@ -1,5 +1,5 @@
 use gm::Color;
-use render::{rect_view::RectView, ui_rect_instance::UIRectInstance};
+use render::data::{RectView, UIRectInstance};
 use test_engine::{RenderPass, ui::UIImages};
 use window::Window;
 

@@ -1,6 +1,6 @@
 use gm::Color;
 use refs::MainLock;
-use render::{PathData, rect_view::RectView, ui_rect_instance::UIRectInstance};
+use render::data::{PathData, RectView, UIRectInstance};
 use window::{RenderPass, Window};
 
 use crate::pipelines::{PATH, UI_RECT};

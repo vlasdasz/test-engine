@@ -8,7 +8,7 @@ use wgpu::{
 use window::Window;
 
 use crate::{
-    PathData,
+    data::PathData,
     device_helper::DeviceHelper,
     uniform::{cached_float_bind, make_uniform_layout},
     vertex_layout::VertexLayout,
