@@ -87,16 +87,6 @@ impl<T: ?Sized + View> ViewData for T {
         self
     }
 
-    fn end_gradient_color(&self) -> &Color {
-        &self.base_view().end_gradient_color
-    }
-
-    fn set_gradient(&mut self, start: impl Into<Color>, end: impl Into<Color>) -> &mut Self {
-        self.base_view_mut().color = start.into();
-        self.base_view_mut().end_gradient_color = end.into();
-        self
-    }
-
     fn border_color(&self) -> &Color {
         &self.base_view().border_color
     }
