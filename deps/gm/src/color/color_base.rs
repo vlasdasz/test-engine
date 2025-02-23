@@ -40,7 +40,34 @@ impl<T: Copy> Color<T> {
         [self.r, self.g, self.b, self.a]
     }
 
-    pub fn with_alpha(&self, alpha: T) -> Self {
+    pub const fn with_r(&self, r: T) -> Self {
+        Self {
+            r,
+            g: self.g,
+            b: self.b,
+            a: self.a,
+        }
+    }
+
+    pub const fn with_g(&self, g: T) -> Self {
+        Self {
+            r: self.r,
+            g,
+            b: self.b,
+            a: self.a,
+        }
+    }
+
+    pub const fn with_b(&self, b: T) -> Self {
+        Self {
+            r: self.r,
+            g: self.g,
+            b,
+            a: self.a,
+        }
+    }
+
+    pub const fn with_alpha(&self, alpha: T) -> Self {
         Self::rgba(self.r, self.g, self.b, alpha)
     }
 }

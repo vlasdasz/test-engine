@@ -3,7 +3,7 @@ use manage::{ExistsManaged, data_manager::DataManager};
 use refs::MainLock;
 use render::{
     BackgroundPipeline, PolygonPipeline, SpriteBoxPipepeline, SpriteView, TexturedSpriteBoxPipeline,
-    rect_instance::RectInstance,
+    data::RectInstance,
 };
 use ui::UIManager;
 use wgpu::RenderPass;

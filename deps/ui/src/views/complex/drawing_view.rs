@@ -3,7 +3,7 @@ use gm::{
     axis::Axis,
     flat::{Point, Size},
 };
-use render::PathData;
+use render::data::PathData;
 use ui_proc::view;
 use window::Window;
 

@@ -3,8 +3,8 @@ use crate::base::{
     keymap::test_keymap, layout::test_layout, modal_test::test_modal, on_tap_add::test_add_on_tap,
     out_bounds_test::test_out_bounds, present::test_navigation_view, selection::test_selection,
     styles::test_styles, template::test_template, text_occlusion::test_text_occlusion,
-    touch_order::test_touch_order, touch_stack::test_touch_stack, transparency::test_transparency,
-    view_order::test_view_order,
+    touch_order::test_touch_order, touch_stack::test_touch_stack, transition::test_transition,
+    transparency::test_transparency, view_order::test_view_order,
 };
 
 mod colors;
@@ -22,10 +22,12 @@ mod template;
 mod text_occlusion;
 mod touch_order;
 mod touch_stack;
+mod transition;
 mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_transition().await?;
     test_global_styles().await?;
     test_styles().await?;
     test_colors().await?;

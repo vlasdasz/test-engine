@@ -1,6 +1,13 @@
 use std::{marker::ConstParamTy, ops::Range};
 
-use gm::{checked_usize_to_u32, flat::Point};
+use gm::{
+    checked_usize_to_u32,
+    flat::{Point, Vertex2D},
+};
+use wgpu::Device;
+use window::BufferUsages;
+
+use crate::device_helper::DeviceHelper;
 
 const VERTICES: &[Point] = &[
     Point::new(-1.0, 1.0),
@@ -9,7 +16,26 @@ const VERTICES: &[Point] = &[
     Point::new(1.0, -1.0),
 ];
 
-pub(super) const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
+const TEXTURED_VERTICES: &[Vertex2D; 4] = &[
+    Vertex2D {
+        pos: Point::new(-1.0, 1.0),
+        uv:  Point::new(0.0, 0.0),
+    },
+    Vertex2D {
+        pos: Point::new(-1.0, -1.0),
+        uv:  Point::new(0.0, 1.0),
+    },
+    Vertex2D {
+        pos: Point::new(1.0, 1.0),
+        uv:  Point::new(1.0, 0.0),
+    },
+    Vertex2D {
+        pos: Point::new(1.0, -1.0),
+        uv:  Point::new(1.0, 1.0),
+    },
+];
+
+const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 const TEXTURED_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
@@ -32,6 +58,14 @@ impl PipelineType {
         match self {
             Self::Color => VERTEX_RANGE,
             Self::Image => TEXTURED_VERTEX_RANGE,
+        }
+    }
+
+    pub(crate) fn vertex_buffer(&self, device: &Device) -> wgpu::Buffer {
+        if self.image() {
+            device.buffer(TEXTURED_VERTICES, BufferUsages::VERTEX)
+        } else {
+            device.buffer(VERTICES, BufferUsages::VERTEX)
         }
     }
 }

@@ -5,17 +5,13 @@
 
 pub use crate::shader_data::SpriteView;
 mod buffer_helper;
+pub mod data;
 mod device_helper;
-mod path_data;
 mod pipelines;
-pub mod rect_instance;
-pub mod rect_view;
 mod shader_data;
 mod to_bytes;
-pub mod ui_rect_instance;
 mod uniform;
 mod vec_buffer;
 mod vertex_layout;
 
-pub use path_data::PathData;
 pub use pipelines::*;

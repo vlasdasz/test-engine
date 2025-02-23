@@ -12,8 +12,8 @@ use gm::{
 use log::{debug, trace, warn};
 use refs::{MainLock, Own, Weak};
 use render::{
-    PathPipeline, UIImageRectPipepeline, UIRectPipepeline, rect_view::RectView,
-    ui_rect_instance::UIRectInstance,
+    PathPipeline, UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
+    data::{RectView, UIGradientInstance, UIRectInstance},
 };
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
@@ -26,6 +26,7 @@ use window::{Font, Window};
 use crate::{AppRunner, ui::ui_test::state::clear_state};
 
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
+static GRADIENT_DRAWER: MainLock<UIGradientPipeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 static PATH: MainLock<PathPipeline> = MainLock::new();
 pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
@@ -68,6 +69,13 @@ impl UI {
             },
         );
 
+        GRADIENT_DRAWER.get_mut().draw(
+            pass,
+            RectView {
+                resolution: UIManager::window_resolution(),
+            },
+        );
+
         Font::helvetice()
             .brush
             .queue(Window::device(), Window::queue(), sections)
@@ -99,7 +107,9 @@ impl UI {
             return;
         }
 
-        if view.absolute_frame().size.is_invalid() {
+        let frame = *view.absolute_frame();
+
+        if frame.size.is_invalid() {
             warn!(
                 "View has invalid frame: {}. Frame: {:?} ",
                 view.label(),
@@ -110,9 +120,16 @@ impl UI {
 
         view.before_render(pass);
 
-        let frame = *view.absolute_frame();
-
-        if view.color().a > 0.0 {
+        if view.end_gradient_color().a > 0.0 {
+            GRADIENT_DRAWER.get_mut().add(UIGradientInstance {
+                position:      frame.origin,
+                size:          frame.size,
+                start_color:   *view.color(),
+                end_color:     *view.end_gradient_color(),
+                corner_radius: view.corner_radius(),
+                z_position:    view.z_position() + *text_offset,
+            });
+        } else if view.color().a > 0.0 {
             RECT_DRAWER.get_mut().add(UIRectInstance::new(
                 frame,
                 *view.color(),

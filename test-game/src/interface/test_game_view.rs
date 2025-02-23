@@ -43,8 +43,9 @@ pub struct TestGameView {
 
     image: ImageView,
 
-    label_l: Label,
-    image_r: ImageView,
+    label_l:  Label,
+    image_r:  ImageView,
+    gradient: Container,
 
     dpad:  DPadView,
     scale: NumberView<u32>,
@@ -122,7 +123,15 @@ impl Setup for TestGameView {
         );
         self.image_r.set_image("palm.png");
 
-        self.dpad.place().size(200, 140).b(20).anchor(Anchor::Left, self.bl, 10);
+        self.gradient
+            .place()
+            .same([Height, Y], self.image_r)
+            .w(50)
+            .anchor(Left, self.image_r, 10);
+        self.gradient.set_gradient(Color::PURPLE, Color::TURQUOISE);
+        self.gradient.set_corner_radius(20);
+
+        self.dpad.place().size(200, 140).b(20).anchor(Left, self.bl, 10);
 
         self.dpad.on_press.val(move |direction| {
             self.level.player.unit.body.move_by_direction(direction);

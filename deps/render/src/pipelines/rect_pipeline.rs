@@ -1,19 +1,12 @@
-#![allow(dead_code)]
-
-use std::ops::Range;
-
 use bytemuck::Pod;
-use gm::{
-    checked_usize_to_u32,
-    flat::{Point, Vertex2D},
-};
+use gm::flat::{Point, Vertex2D};
 use indexmap::IndexMap;
 use refs::Weak;
 use wgpu::{
     Buffer, PipelineLayoutDescriptor, PrimitiveTopology, RenderPass, RenderPipeline, ShaderModuleDescriptor,
     ShaderSource, ShaderStages,
 };
-use window::{BufferUsages, PolygonMode, Window, image::Image};
+use window::{PolygonMode, Window, image::Image};
 
 use crate::{
     device_helper::DeviceHelper,
@@ -22,36 +15,6 @@ use crate::{
     vec_buffer::VecBuffer,
     vertex_layout::VertexLayout,
 };
-
-const VERTICES: &[Point] = &[
-    Point::new(-1.0, 1.0),
-    Point::new(-1.0, -1.0),
-    Point::new(1.0, 1.0),
-    Point::new(1.0, -1.0),
-];
-
-pub(super) const VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
-
-const TEXTURED_VERTICES: &[Vertex2D; 4] = &[
-    Vertex2D {
-        pos: Point::new(-1.0, 1.0),
-        uv:  Point::new(0.0, 0.0),
-    },
-    Vertex2D {
-        pos: Point::new(-1.0, -1.0),
-        uv:  Point::new(0.0, 1.0),
-    },
-    Vertex2D {
-        pos: Point::new(1.0, 1.0),
-        uv:  Point::new(1.0, 0.0),
-    },
-    Vertex2D {
-        pos: Point::new(1.0, -1.0),
-        uv:  Point::new(1.0, 1.0),
-    },
-];
-
-const TEXTURED_VERTEX_RANGE: Range<u32> = 0..checked_usize_to_u32(VERTICES.len());
 
 pub struct RectPipeline<
     const TYPE: PipelineType,
@@ -122,15 +85,9 @@ impl<
             )
         };
 
-        let vertex_buffer = if TYPE.image() {
-            device.buffer(TEXTURED_VERTICES, BufferUsages::VERTEX)
-        } else {
-            device.buffer(VERTICES, BufferUsages::VERTEX)
-        };
-
         Self {
             pipeline,
-            vertex_buffer,
+            vertex_buffer: TYPE.vertex_buffer(device),
             view: sprite_view_layout.into(),
             instances: IndexMap::default(),
         }
