@@ -9,6 +9,7 @@ ui:
 	cargo run -p ui-test --release
 
 all:
+	order
 	make ui
 	make render
 
