@@ -6,7 +6,7 @@ use ui::{
 };
 
 use crate::{
-    App,
+    AppRunner,
     gm::Apply,
     ui::{Screenshot, ui::TEST_NAME},
 };
@@ -41,7 +41,7 @@ pub fn add_action(action: impl FnMut() + Send + 'static) {
 }
 
 pub async fn check_colors(data: &str) -> Result<()> {
-    let screenshot = App::take_screenshot().await?;
+    let screenshot = AppRunner::take_screenshot().await?;
 
     let lines: Vec<_> = data.split('\n').collect();
 

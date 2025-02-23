@@ -1,5 +1,5 @@
 use test_engine::{
-    App,
+    AppRunner,
     refs::Weak,
     ui::{Setup, StickView, UI, ViewData, view},
     ui_test::check_colors,
@@ -66,7 +66,7 @@ pub async fn test_paths_resize() -> anyhow::Result<()> {
     )
     .await?;
 
-    App::set_window_size((280, 600)).await;
+    AppRunner::set_window_size((280, 600)).await;
 
     check_colors(
         r#"
@@ -104,7 +104,7 @@ pub async fn test_paths_resize() -> anyhow::Result<()> {
     )
     .await?;
 
-    App::set_window_size((600, 280)).await;
+    AppRunner::set_window_size((600, 280)).await;
 
     check_colors(
         r#"

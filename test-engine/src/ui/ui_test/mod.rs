@@ -17,7 +17,7 @@ use tokio::sync::mpsc::channel;
 use window::Window;
 
 use crate::{
-    App, from_main,
+    AppRunner, from_main,
     gm::{LossyConvert, ToF32},
     on_main,
     ui::{Input, Touch, U8Color, UIEvents, UIManager},
@@ -174,7 +174,7 @@ pub async fn record_ui_test() {
 pub async fn record_colors() -> Result<()> {
     let touch_lock = Touch::lock();
 
-    let screenshot = App::take_screenshot().await?;
+    let screenshot = AppRunner::take_screenshot().await?;
 
     let touches: Own<_> = Vec::<(Touch, U8Color)>::new().into();
     let mut touches = touches.weak();

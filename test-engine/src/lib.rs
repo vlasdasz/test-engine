@@ -3,14 +3,19 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
+#![feature(linkage)]
 
-mod app;
+mod app_runner;
 mod assets;
 mod assets_paths;
 mod level_drawer;
 
+mod app;
+mod app_starter;
 pub mod ui;
 
+pub use app::App;
+pub use app_starter::*;
 pub use educe;
 pub use ui::ui_test;
 
@@ -51,7 +56,7 @@ pub mod time {
     pub use web_time::*;
 }
 
-pub use app::App;
+pub use app_runner::AppRunner;
 pub use audio;
 pub use dispatch::{after, async_after, from_main, on_main, wait_for_next_frame};
 pub use generate;

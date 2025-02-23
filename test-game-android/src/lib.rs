@@ -1,7 +1,7 @@
 #[cfg(target_os = "android")]
 #[unsafe(no_mangle)]
-fn android_main(app: test_game::AndroidApp) {
-    test_game::start_test_game(app);
+fn android_main(app: test_game::test_engine::AndroidApp) {
+    test_game::test_engine::test_engine_start_app(app);
 }
 
 use jni::{
@@ -15,9 +15,8 @@ pub unsafe extern "C" fn Java_com_example_test_1game_MainActivity_setFilesDir(
     _: JClass,
     input: JString,
 ) {
-    use test_game::test_engine::store::Paths;
     let input: String = env.get_string(&input).expect("Couldn't get java string!").into();
-    Paths::set_storage_path(input);
+    test_game::test_engine::store::Paths::set_storage_path(input);
 }
 
 #[unsafe(no_mangle)]

@@ -8,18 +8,18 @@ mod pipelines;
 pub(crate) mod render;
 
 use anyhow::Result;
-use test_engine::{App, ui::Container};
+use test_engine::{AppRunner, ui::Container};
 
 use crate::render::test_render;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    App::start_with_actor(Container::new(), async {
+    AppRunner::start_with_actor(Container::new(), async {
         test_engine::ui::UIManager::set_display_touches(true);
 
         test_render().await?;
 
-        App::stop();
+        AppRunner::stop();
 
         Ok(())
     })

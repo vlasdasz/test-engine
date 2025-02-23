@@ -6,7 +6,7 @@ use ui_proc::view;
 use window::Screenshot;
 
 use crate as test_engine;
-use crate::App;
+use crate::AppRunner;
 
 #[view]
 pub struct ColorMeter {
@@ -22,7 +22,7 @@ impl Setup for ColorMeter {
 
 impl ViewCallbacks for ColorMeter {
     fn update(&mut self) {
-        let pos = App::cursor_position();
+        let pos = AppRunner::cursor_position();
 
         if pos.is_negative() {
             return;
@@ -35,7 +35,7 @@ impl ViewCallbacks for ColorMeter {
 impl ColorMeter {
     pub fn update_screenshot(mut self: Weak<Self>) {
         spawn(async move {
-            let Some(screenshot) = App::take_screenshot().await.ok() else {
+            let Some(screenshot) = AppRunner::take_screenshot().await.ok() else {
                 return;
             };
 
