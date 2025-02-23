@@ -27,6 +27,8 @@ pub extern "C" fn test_engine_create_app() -> Box<dyn App> {
 #[macro_export]
 macro_rules! register_app {
     ($app:ty) => {
+        pub use test_engine;
+
         #[unsafe(no_mangle)]
         #[allow(improper_ctypes_definitions)]
         pub extern "C" fn test_engine_create_app() -> Box<dyn test_engine::App> {

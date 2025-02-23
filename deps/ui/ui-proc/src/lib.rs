@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use proc_macro::TokenStream;
+use proc_macro::{Span, TokenStream};
 use quote::{quote, quote_spanned};
 use syn::{
     __private::TokenStream2,
@@ -151,4 +151,19 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
     }
 
     res
+}
+
+#[proc_macro]
+pub fn launch_app(_input: TokenStream) -> TokenStream {
+    let crate_name = std::env::var("CARGO_PKG_NAME").unwrap();
+    let use_statement = crate_name.replace('-', "_");
+
+    let crate_ident = Ident::new(&use_statement, Span::call_site().into());
+
+    let output = quote! {
+        pub use #crate_ident::test_engine_create_app;
+        test_engine::test_engine_start_app();
+    };
+
+    output.into()
 }
