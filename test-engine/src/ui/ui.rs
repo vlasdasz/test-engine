@@ -107,7 +107,9 @@ impl UI {
             return;
         }
 
-        if view.absolute_frame().size.is_invalid() {
+        let frame = *view.absolute_frame();
+
+        if frame.size.is_invalid() {
             warn!(
                 "View has invalid frame: {}. Frame: {:?} ",
                 view.label(),
@@ -118,12 +120,10 @@ impl UI {
 
         view.before_render(pass);
 
-        let frame = *view.absolute_frame();
-
         if view.end_gradient_color().a > 0.0 {
             GRADIENT_DRAWER.get_mut().add(UIGradientInstance {
-                position:      view.frame().origin,
-                size:          view.frame().size,
+                position:      frame.origin,
+                size:          frame.size,
                 start_color:   *view.color(),
                 end_color:     *view.end_gradient_color(),
                 corner_radius: view.corner_radius(),

@@ -1,16 +1,23 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Anchor::Left, Color, Container, Setup, UI, ViewData, view},
+    ui::{
+        Anchor::{Left, Top, X},
+        Button, Color, Container, HasText, Setup, UI, ViewData, ViewSubviews, view,
+    },
     ui_test::check_colors,
 };
 
 #[view]
 struct Gradient {
+    button: Weak<Button>,
+
     #[init]
     grad_1: Container,
     grad_2: Container,
     grad_3: Container,
+
+    button_container: Container,
 }
 
 impl Setup for Gradient {
@@ -22,6 +29,20 @@ impl Setup for Gradient {
 
         self.grad_3.set_gradient(Color::WHITE, Color::BLACK).set_corner_radius(20);
         self.grad_3.place().t(20).size(200, 100).anchor(Left, self.grad_2, 20);
+
+        self.button_container
+            .place()
+            .same([X], self.grad_1)
+            .anchor(Top, self.grad_2, 40)
+            .size(280, 100);
+
+        self.button = self.button_container.add_view();
+
+        self.button.place().back();
+        self.button
+            .set_text("Button")
+            .set_gradient(Color::WHITE, Color::RED)
+            .set_corner_radius(40);
     }
 }
 
@@ -124,6 +145,41 @@ pub async fn test_gradient() -> Result<()> {
              256   66 -  89 124 149
              201   75 - 144 221 255
              146   78 - 147 219 255
+        "#,
+    )
+    .await?;
+
+    check_colors(
+        r#"
+              21  365 -  89 124 149
+              41  360 -  89 124 149
+              46  351 - 255  82  82
+              66  340 - 255 122 122
+              93  324 - 255 161 161
+             109  318 - 255 172 172
+             170  293 - 255 213 213
+             176  289 - 255 219 219
+             226  289 - 255 219 219
+             247  289 - 255 219 219
+             269  289 - 255 219 219
+             274  279 - 255 232 232
+             289  276 - 255 236 236
+             302  268 -  89 124 149
+             309  263 -  89 124 149
+             335  252 -  89 124 149
+             317  384 -  89 124 149
+             308  368 -  89 124 149
+             287  346 - 255 103 103
+             237  321 - 255 167 167
+             112  308 - 255 190 190
+              57  289 - 255 219 219
+              39  278 - 255 233 233
+              28  275 - 255 237 237
+              24  267 -  89 124 149
+              20  259 -  89 124 149
+              18  250 -  89 124 149
+              18  237 -  89 124 149
+              42  232 -  89 124 149
         "#,
     )
     .await?;
