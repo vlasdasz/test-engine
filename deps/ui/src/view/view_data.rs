@@ -44,7 +44,7 @@ pub trait ViewData {
     fn position_changed(&self) -> &Event;
     fn size_changed(&self) -> &Event;
 
-    fn add_style(&mut self, style: Style) -> &mut Self;
+    fn apply_style(&mut self, style: Style) -> &mut Self;
 
     fn __after_setup_event(&self) -> &OnceEvent;
 }
@@ -156,8 +156,7 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base_view().size_changed
     }
 
-    fn add_style(&mut self, style: Style) -> &mut Self {
-        self.base_view_mut().styles.push(style);
+    fn apply_style(&mut self, style: Style) -> &mut Self {
         style.apply(self.weak_view().deref_mut());
         self
     }
