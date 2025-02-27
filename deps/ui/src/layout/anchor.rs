@@ -12,6 +12,9 @@ pub enum Anchor {
     MaxWidth,
     MaxHeight,
 
+    MinWidth,
+    MinHeight,
+
     Size,
 
     CenterX,

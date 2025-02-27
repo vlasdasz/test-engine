@@ -196,6 +196,16 @@ impl Placer {
         self.rules().push(LayoutRule::make(Anchor::MaxHeight, h));
         self
     }
+
+    pub fn min_width(&self, w: impl ToF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::MinWidth, w));
+        self
+    }
+
+    pub fn min_height(&self, w: impl ToF32) -> &Self {
+        self.rules().push(LayoutRule::make(Anchor::MinHeight, w));
+        self
+    }
 }
 
 impl Placer {
@@ -397,7 +407,19 @@ impl Placer {
                     frame.size.height = rule.offset;
                 }
             }
-            _ => unimplemented!(),
+            Anchor::MinWidth => {
+                if frame.size.width < rule.offset {
+                    frame.size.width = rule.offset;
+                }
+            }
+            Anchor::MinHeight => {
+                if frame.size.height < rule.offset {
+                    frame.size.height = rule.offset;
+                }
+            }
+            Anchor::Size | Anchor::X | Anchor::Y | Anchor::None => {
+                unimplemented!()
+            }
         }
 
         view.set_frame(frame);

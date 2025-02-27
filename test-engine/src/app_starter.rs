@@ -1,12 +1,10 @@
-use std::ffi::c_int;
-
 use tokio::runtime::Runtime;
 
 use crate::app::test_engine_create_app;
 
 #[cfg(not(target_os = "android"))]
 #[unsafe(no_mangle)]
-pub extern "C" fn test_engine_start_app() -> c_int {
+pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
     let runtime = Runtime::new().unwrap();
     runtime.block_on(async {
         #[cfg(mobile)]
@@ -34,6 +32,3 @@ pub fn test_engine_start_app(android_app: crate::AndroidApp) {
         dbg!(crate::AppRunner::start(app.make_root_view(), android_app).await).unwrap()
     });
 }
-
-#[cfg(target_os = "android")]
-pub use crate::AndroidApp;

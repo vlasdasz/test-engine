@@ -13,7 +13,6 @@ name = "test_game"
 
 [dependencies]
 fake = { workspace = true }
-tokio = { workspace = true }
 
 test-engine = { workspace = true }
 ui-benchmark = { workspace = true }

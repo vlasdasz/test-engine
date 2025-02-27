@@ -28,7 +28,7 @@ struct Styles {
 impl Setup for Styles {
     fn setup(mut self: Weak<Self>) {
         [self.button_1, self.button_2, self.button_3].apply(|mut button| {
-            button.add_style(MENU_BUTTON);
+            button.apply_style(MENU_BUTTON);
         });
 
         self.button_1.set_text("Button 1").place().t(50);

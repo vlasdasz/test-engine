@@ -97,7 +97,7 @@ impl Setup for BenchmarkView {
     fn setup(mut self: Weak<Self>) {
         self.label.set_text((5..10).fake::<String>());
         self.label.place().back();
-        self.label.set_color(Color::random());
+        self.label.set_gradient(Color::random(), Color::random());
         self.label.set_text_color(Color::random());
         self.start_spawning_views();
     }

@@ -14,8 +14,6 @@ default = ["audio"]
 
 [dependencies]
 anyhow = { workspace = true }
-bytemuck = { workspace = true }
-cgmath = { workspace = true }
 educe = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
@@ -38,7 +36,6 @@ generate = { workspace = true }
 gm = { workspace = true }
 level = { workspace = true }
 render = { workspace = true }
-scene = { workspace = true }
 store = { workspace = true }
 ui = { workspace = true }
 ui-proc = { workspace = true }
