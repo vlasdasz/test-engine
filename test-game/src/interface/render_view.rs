@@ -1,10 +1,10 @@
 use test_engine::{
     RenderPass,
     refs::Weak,
-    ui::{Button, HasText, NumberView, Setup, ViewCallbacks, ViewData, ViewSubviews, view},
+    ui::{NumberView, Setup, ViewCallbacks, ViewData, view},
 };
 
-use crate::interface::test_game_view::TestGameView;
+use crate::interface::test_game_view::HAS_BACK_BUTTON;
 
 #[view]
 pub struct RenderView {
@@ -16,13 +16,7 @@ impl Setup for RenderView {
     fn setup(mut self: Weak<Self>) {
         self.val.set_step(0.1).place().size(50, 100).bl(0);
 
-        self.add_view::<Button>()
-            .add_transition::<Self, TestGameView>()
-            .set_text("Back")
-            .place()
-            .size(100, 50)
-            .t(200)
-            .l(10);
+        self.apply_style(HAS_BACK_BUTTON);
     }
 }
 

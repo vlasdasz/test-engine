@@ -9,7 +9,7 @@ use test_engine::{
     },
 };
 
-use crate::interface::test_game_view::TestGameView;
+use crate::interface::test_game_view::HAS_BACK_BUTTON;
 
 #[view]
 pub struct PolygonView {
@@ -25,13 +25,7 @@ impl Setup for PolygonView {
     fn setup(mut self: Weak<Self>) {
         LevelManager::stop_level();
 
-        self.add_view::<Button>()
-            .add_transition::<Self, TestGameView>()
-            .set_text("Back")
-            .place()
-            .t(200)
-            .l(10)
-            .size(100, 50);
+        self.apply_style(HAS_BACK_BUTTON);
 
         self.add.set_text("Add").place().t(200).r(10).size(100, 50);
         self.add.on_tap(move || {

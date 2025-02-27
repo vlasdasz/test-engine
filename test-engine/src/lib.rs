@@ -13,12 +13,19 @@ mod level_drawer;
 
 mod app;
 mod app_starter;
+mod game_drawer;
 pub mod ui;
 
 pub use app::App;
 pub use app_starter::*;
 pub use educe;
 pub use ui::{ui_proc::launch_app, ui_test};
+
+pub mod game {
+    pub use ::game::{Game, Object};
+
+    pub use crate::game_drawer::GameDrawer;
+}
 
 pub mod level {
     pub use ::level::{
