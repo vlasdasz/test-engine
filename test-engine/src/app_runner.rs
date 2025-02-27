@@ -1,14 +1,12 @@
-use std::{any::type_name, io::Write, path::PathBuf, sync::Mutex, time::Duration};
+use std::{any::type_name, path::PathBuf, sync::Mutex, time::Duration};
 
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
-use env_logger::Builder;
 use gm::{
     LossyConvert, Platform,
     flat::{Point, Size},
 };
 use level::{LevelBase, LevelManager};
-use log::{Level, LevelFilter};
 use refs::{MainLock, Own, Rglica};
 use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
@@ -45,7 +43,13 @@ impl AppRunner {
         *CURSOR_POSITION
     }
 
+    #[cfg(not(android))]
     fn setup_log() {
+        use std::io::Write;
+
+        use env_logger::Builder;
+        use log::{Level, LevelFilter};
+
         Builder::from_default_env()
             .filter_level(LevelFilter::Debug)
             .filter_module("winit::platform_impl::platform::app_state", LevelFilter::Error)
@@ -132,6 +136,17 @@ impl AppRunner {
     pub(crate) async fn start(first_view: Own<dyn View>, app: crate::AndroidApp) -> Result<()> {
         dbg!("PENIJEE");
 
+        std::panic::set_hook(Box::new(|pan| {
+            let backtrace = std::backtrace::Backtrace::force_capture();
+            println!("Custom panic hook");
+            dbg!(&pan);
+            dbg!(&pan.payload_as_str());
+            dbg!(&backtrace);
+            eprintln!("Backtrace: {}", backtrace);
+        }));
+
+        dbg!("Panic hook set");
+
         use winit::platform::android::EventLoopBuilderExtAndroid;
 
         // android_logger::try_init(android_logger::Config::default().
@@ -139,8 +154,7 @@ impl AppRunner {
 
         // try_init();
 
-        // android_logger::try_init(android_logger::Config::default().
-        // with_max_level(LevelFilter::Trace));
+        android_logger::init_once(android_logger::Config::default().with_max_level(log::LevelFilter::Warn));
 
         log::error!("AAAASOOOOOO");
 
