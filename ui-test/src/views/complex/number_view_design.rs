@@ -1,9 +1,20 @@
 use anyhow::Result;
 use test_engine::{
+    from_main,
     refs::Weak,
-    ui::{Color, HasText, NumberView, Setup, UI, ViewData, view},
+    ui::{Color, HasText, NumberView, Setup, Style, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
+
+const STYLE: Style = Style::new(|view| {
+    view.apply_if::<NumberView>(|num| {
+        num.set_labels("+", "–")
+            .set_text_color(Color::LIGHT_GRAY)
+            .set_text_size(80)
+            .set_gradient(Color::BLUE, (0, 150, 150))
+            .set_corner_radius(20);
+    })
+});
 
 #[view]
 struct NumberViewDesign {
@@ -12,18 +23,17 @@ struct NumberViewDesign {
 }
 
 impl Setup for NumberViewDesign {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.view.place().tl(200).size(100, 200);
-        self.view
-            .set_labels("+", "–")
-            .set_text_color(Color::LIGHT_GRAY)
-            .set_text_size(80)
-            .set_gradient(Color::BLUE, (0, 150, 150))
-            .set_corner_radius(20);
     }
 }
 
 pub async fn test_number_view_design() -> Result<()> {
+    from_main(|| {
+        STYLE.apply_globally::<NumberView>();
+    })
+    .await;
+
     let _view = UI::init_test_view::<NumberViewDesign>().await;
 
     check_colors(
@@ -106,6 +116,11 @@ pub async fn test_number_view_design() -> Result<()> {
         "#,
     )
     .await?;
+
+    from_main(|| {
+        STYLE.reset_global::<NumberView>();
+    })
+    .await;
 
     Ok(())
 }
