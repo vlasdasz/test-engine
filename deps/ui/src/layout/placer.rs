@@ -178,7 +178,7 @@ impl Placer {
         self
     }
 
-    pub fn distribute_ratio(&self, ratios: &[impl ToF32]) -> &Self {
+    pub fn distribute_ratio<const LEN: usize>(&self, ratios: [impl ToF32; LEN]) -> &Self {
         self.all_tiling_rules()
             .push(Tiling::Distribute(ratios.iter().map(|f| f.to_f32()).collect()).into());
         self
@@ -315,11 +315,11 @@ impl Placer {
 
 impl Placer {
     pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.anchor(Anchor::Bot, view, offset)
+        self.same([Anchor::Size, Anchor::X], view).anchor(Anchor::Bot, view, offset)
     }
 
     pub fn below(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.anchor(Anchor::Top, view, offset)
+        self.same([Anchor::Size, Anchor::X], view).anchor(Anchor::Top, view, offset)
     }
 
     pub fn between(
