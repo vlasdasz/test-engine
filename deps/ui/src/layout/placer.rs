@@ -107,6 +107,10 @@ impl Placer {
         self.relative(Anchor::Width, view, multiplier)
     }
 
+    pub fn relative_height(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
+        self.relative(Anchor::Height, view, multiplier)
+    }
+
     pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
         self.relative(Anchor::Size, view, multiplier)
     }

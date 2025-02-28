@@ -155,8 +155,6 @@ impl UI {
                     },
                     image,
                 );
-            } else {
-                warn!("Image is not OK");
             }
         } else if let Some(label) = view.as_any().downcast_ref::<Label>()
             && !label.text.is_empty()

@@ -10,7 +10,7 @@ use test_engine::{
 struct LabelSettings {
     #[init]
     label:          Label,
-    text_size_view: NumberView<f32>,
+    text_size_view: NumberView,
 }
 
 impl Setup for LabelSettings {

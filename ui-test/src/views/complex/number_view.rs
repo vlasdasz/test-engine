@@ -4,7 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Bot, Left, Right, Size, Width, X, Y},
-        HasText, Label, NumberView, Setup, UI, ViewData, ViewableNumber, view,
+        HasText, Label, NumberView, Setup, UI, ViewData, view,
     },
     ui_test::inject_touches,
 };
@@ -12,9 +12,9 @@ use test_engine::{
 #[view]
 struct NumberTestView {
     #[init]
-    float: NumberView<f32>,
-    uint:  NumberView<u32>,
-    int:   NumberView<i32>,
+    float: NumberView,
+    uint:  NumberView,
+    int:   NumberView,
 
     float_label: Label,
     uint_label:  Label,
@@ -23,7 +23,7 @@ struct NumberTestView {
 
 impl Setup for NumberTestView {
     fn setup(self: Weak<Self>) {
-        fn attach_label<Number: ViewableNumber>(mut label: Weak<Label>, view: Weak<NumberView<Number>>) {
+        fn attach_label(mut label: Weak<Label>, view: Weak<NumberView>) {
             label.place().same([Width, X], view).h(50).anchor(Bot, view, 20);
             view.on_change(move |num| {
                 label.set_text(num);
@@ -161,16 +161,16 @@ pub async fn test_number_view() -> Result<()> {
 
     from_main(move || {
         assert_eq!(view.float.value(), -6.0);
-        assert_eq!(view.uint.value(), 6);
-        assert_eq!(view.int.value(), -6);
+        assert_eq!(view.uint.value(), 3.0);
+        assert_eq!(view.int.value(), -6.0);
 
         view.float.set_min(-10.0);
         view.uint.set_min(2);
         view.int.set_min(-10);
 
         assert_eq!(view.float.value(), -10.0);
-        assert_eq!(view.uint.value(), 2);
-        assert_eq!(view.int.value(), -10);
+        assert_eq!(view.uint.value(), 2.0);
+        assert_eq!(view.int.value(), -10.0);
     })
     .await;
 
@@ -252,8 +252,8 @@ pub async fn test_number_view() -> Result<()> {
     .await;
 
     assert_eq!(view.float.value(), 5.0);
-    assert_eq!(view.uint.value(), 5);
-    assert_eq!(view.int.value(), 5);
+    assert_eq!(view.uint.value(), 5.0);
+    assert_eq!(view.int.value(), 5.0);
 
     inject_touches(
         "
@@ -447,8 +447,8 @@ pub async fn test_number_view() -> Result<()> {
     .await;
 
     assert_eq!(view.float.value(), -10.0);
-    assert_eq!(view.uint.value(), 2);
-    assert_eq!(view.int.value(), -10);
+    assert_eq!(view.uint.value(), 2.0);
+    assert_eq!(view.int.value(), -10.0);
 
     Ok(())
 }

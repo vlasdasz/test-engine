@@ -27,11 +27,11 @@ pub struct NoiseView {
 
     #[init]
     drawing_view:   DrawingView,
-    threshold_view: NumberView<f32>,
-    x_view:         NumberView<f32>,
-    y_view:         NumberView<f32>,
-    size_view:      NumberView<f32>,
-    skip_view:      NumberView<f32>,
+    threshold_view: NumberView,
+    x_view:         NumberView,
+    y_view:         NumberView,
+    size_view:      NumberView,
+    skip_view:      NumberView,
     image_view:     ImageView,
     counter_label:  Label,
     update_level:   Button,

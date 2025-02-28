@@ -16,8 +16,8 @@ impl App for TestGameApp {
 
     fn setup(&self) {
         dbg!("setup");
-        _BUTTON.apply_to_all::<Button>();
-        _BUTTON.apply_to_all::<Label>();
+        _BUTTON.apply_globally::<Button>();
+        _BUTTON.apply_globally::<Label>();
     }
 
     fn make_root_view(&self) -> Own<dyn View> {

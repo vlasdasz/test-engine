@@ -49,7 +49,7 @@ impl Setup for GlobalStyles {
 
 pub async fn test_global_styles() -> Result<()> {
     from_main(|| {
-        GLOBAL_STYLE.apply_to_all::<Button>();
+        GLOBAL_STYLE.apply_globally::<Button>();
     })
     .await;
 

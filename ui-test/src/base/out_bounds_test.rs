@@ -14,8 +14,8 @@ use test_engine::{
 struct OutBounds {
     #[init]
     test: Label,
-    x:    NumberView<f32>,
-    y:    NumberView<f32>,
+    x:    NumberView,
+    y:    NumberView,
 }
 
 impl Setup for OutBounds {

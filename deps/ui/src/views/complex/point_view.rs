@@ -19,8 +19,8 @@ pub struct PointView {
     pub changed: Event<Point>,
 
     #[init]
-    x: NumberView<f32>,
-    y: NumberView<f32>,
+    x: NumberView,
+    y: NumberView,
 }
 
 impl PointView {

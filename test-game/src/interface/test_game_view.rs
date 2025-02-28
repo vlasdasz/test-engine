@@ -1,7 +1,7 @@
 use test_engine::{
     AppRunner, DataManager, async_after,
     audio::Sound,
-    gm::{Apply, Direction, LossyConvert},
+    gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::Weak,
     store::OnDisk,
@@ -60,7 +60,7 @@ pub struct TestGameView {
     gradient: Container,
 
     dpad:  DPadView,
-    scale: NumberView<u32>,
+    scale: NumberView,
 
     spinner: Button,
     alert:   Button,
@@ -154,9 +154,9 @@ impl Setup for TestGameView {
         });
 
         self.scale.place().size(80, 150).b(20).anchor(Left, self.dpad, 10);
-        self.scale.set_min(4.try_into().unwrap());
+        self.scale.set_min(4.0);
         self.scale.on_change(|val| {
-            *LevelManager::scale() = val.lossy_convert() * 0.1;
+            *LevelManager::scale() = val * 0.1;
         });
 
         self.spinner.place().size(150, 40).b(20).anchor(Left, self.scale, 10);

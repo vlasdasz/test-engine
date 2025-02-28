@@ -9,7 +9,7 @@ use crate::interface::test_game_view::HAS_BACK_BUTTON;
 #[view]
 pub struct RenderView {
     #[init]
-    val: NumberView<f32>,
+    val: NumberView,
 }
 
 impl Setup for RenderView {

@@ -131,9 +131,10 @@ impl<T: Reflected> FormView<T> {
 
 fn labeled_for_field<T: Send>(field: Field<T>) -> Own<dyn InputView> {
     match field.type_name {
-        "i8" | "i16" | "i32" | "i64" => Labeled::<NumberView<i64>>::new(),
-        "u8" | "u16" | "u32" | "u64" => Labeled::<NumberView<u64>>::new(),
-        "f32" | "f64" => Labeled::<NumberView<f64>>::new(),
+        "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" => {
+            Labeled::<NumberView>::new()
+        }
+
         _ => unimplemented!(),
     }
 }
