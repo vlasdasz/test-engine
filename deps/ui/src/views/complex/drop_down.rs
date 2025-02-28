@@ -90,8 +90,8 @@ impl InputView for DropDown {
         self.changed.trigger(text.to_string());
     }
 
-    fn text(&self) -> &str {
-        self.label.text()
+    fn text(&self) -> String {
+        self.label.text().to_string()
     }
 
     fn enable_editing(&mut self) {

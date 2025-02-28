@@ -25,7 +25,7 @@ pub use drop_down::*;
 pub use form_view::FormView;
 pub use input_view::*;
 pub use labeled::Labeled;
-pub use number_view::NumberView;
+pub use number_view::*;
 pub use point_view::PointView;
 pub use question::Question;
 pub use spinner::*;

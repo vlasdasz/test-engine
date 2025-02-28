@@ -15,8 +15,8 @@ mod point_view;
 mod table_view;
 
 pub async fn test_complex_views() -> anyhow::Result<()> {
-    test_alert().await?;
     test_number_view().await?;
+    test_alert().await?;
     test_form_view().await?;
     test_table_view().await?;
     test_collection_view().await?;

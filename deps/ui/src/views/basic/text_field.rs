@@ -132,8 +132,8 @@ impl InputView for TextField {
         self.set_text(text);
     }
 
-    fn text(&self) -> &str {
-        if self.placeholding { "" } else { self.label.text() }
+    fn text(&self) -> String {
+        if self.placeholding { "" } else { self.label.text() }.to_string()
     }
 
     fn enable_editing(&mut self) {

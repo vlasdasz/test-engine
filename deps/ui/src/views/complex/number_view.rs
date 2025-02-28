@@ -7,9 +7,7 @@ use gm::{CheckedSub, Min, MyAdd, One, Zero};
 use refs::{Weak, weak_from_ref};
 use vents::Event;
 
-use crate::{
-    Button, HasTitle, InputView, Label, Setup, UIImages, ViewTouch, has_data::HasText, view::ViewData,
-};
+use crate::{Button, HasTitle, InputView, Setup, ToLabel, UIImages, ViewTouch, view::ViewData};
 
 mod test_engine {
     pub(crate) use educe;
@@ -21,7 +19,7 @@ mod test_engine {
 use ui_proc::view;
 
 pub trait ViewableNumber:
-    MyAdd + CheckedSub + Zero + One + Min + Copy + Debug + Display + FromStr + Sized + 'static {
+    MyAdd + CheckedSub + Zero + One + Min + ToLabel + Copy + Debug + Display + FromStr + Sized + 'static {
 }
 
 impl ViewableNumber for f32 {}
@@ -45,15 +43,13 @@ pub struct NumberView<T: ViewableNumber> {
     on_change_event: Event<T>,
 
     #[init]
-    label: Label,
-    up:    Button,
-    down:  Button,
+    up:   Button,
+    down: Button,
 }
 
 impl<T: ViewableNumber> Setup for NumberView<T> {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
-        self.label.text = format!("{:.1}", self.value);
         self.up.set_image(UIImages::up());
         self.up.on_tap(move || self.up_tap());
         self.down.set_image(UIImages::down());
@@ -68,7 +64,6 @@ impl<T: ViewableNumber> NumberView<T> {
 
     pub fn set_value(&mut self, val: T) -> &mut Self {
         self.value = val;
-        self.label.text = format!("{val:.1}");
         self.on_change_event.trigger(val);
         self
     }
@@ -116,8 +111,8 @@ impl<T: ViewableNumber> InputView for NumberView<T> {
         self.set_value(val);
     }
 
-    fn text(&self) -> &str {
-        self.label.text()
+    fn text(&self) -> String {
+        self.value.to_string()
     }
 
     fn enable_editing(&mut self) {

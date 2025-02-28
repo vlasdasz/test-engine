@@ -20,8 +20,8 @@ impl Setup for LabelSettings {
 
         self.text_size_view
             .place()
-            .size(50, 100)
-            .center_y()
+            .size(50, 50)
+            .t(300)
             .anchor(Anchor::Right, self.label, 10);
         self.text_size_view.set_value(32.0).set_step(5.0);
 

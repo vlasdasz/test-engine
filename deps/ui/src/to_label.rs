@@ -36,6 +36,18 @@ impl ToLabel for bool {
     }
 }
 
+impl ToLabel for u8 {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl ToLabel for i16 {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
 impl ToLabel for u32 {
     fn to_label(&self) -> String {
         self.to_string()
@@ -48,7 +60,13 @@ impl ToLabel for i32 {
     }
 }
 
-impl ToLabel for i16 {
+impl ToLabel for i64 {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl ToLabel for u64 {
     fn to_label(&self) -> String {
         self.to_string()
     }
@@ -61,6 +79,12 @@ impl ToLabel for usize {
 }
 
 impl ToLabel for f32 {
+    fn to_label(&self) -> String {
+        format!("{self:.2}")
+    }
+}
+
+impl ToLabel for f64 {
     fn to_label(&self) -> String {
         format!("{self:.2}")
     }
