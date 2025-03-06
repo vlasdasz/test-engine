@@ -44,8 +44,7 @@ where
 
     receiver.await.expect("Failed to receive result in on_main");
 
-    let res = result.lock().unwrap().take().unwrap();
-    res
+    result.lock().unwrap().take().unwrap()
 }
 
 pub async fn wait_for_next_frame() {
