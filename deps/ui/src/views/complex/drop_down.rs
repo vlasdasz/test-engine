@@ -24,6 +24,8 @@ pub struct DropDown<T: 'static> {
     opened:  bool,
     changed: Event<T>,
 
+    custom_format: Option<Box<dyn Fn(T) -> String>>,
+
     #[init]
     button: Button,
     label:  Label,
@@ -43,12 +45,24 @@ impl<T: ToLabel + Clone + 'static> DropDown<T> {
             return;
         }
 
-        self.label.set_text(self.values.first().unwrap().clone());
+        let first = self.values.first().unwrap().clone();
+
+        if let Some(format) = &self.custom_format {
+            self.label.set_text(format(first));
+        } else {
+            self.label.set_text(first);
+        }
+
         let table_size = (
             self.width(),
             self.height() * self.number_of_cells().lossy_convert(),
         );
         self.table.set_size(table_size);
+    }
+
+    pub fn custom_format(&mut self, format: impl Fn(T) -> String + 'static) {
+        self.custom_format = Some(Box::new(format));
+        self.set_values(self.values.clone());
     }
 
     fn tapped(&mut self) {
@@ -134,7 +148,14 @@ impl<T: ToLabel + Clone + 'static> CollectionData for DropDown<T> {
 
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
         let label = cell.downcast_mut::<Label>().unwrap();
-        label.set_text(self.values[index].clone());
+
+        let val = self.values[index].clone();
+
+        if let Some(format) = &self.custom_format {
+            label.set_text(format(val));
+        } else {
+            label.set_text(val);
+        }
     }
 
     fn size_for_index(&self, _index: usize) -> Size {
@@ -149,7 +170,11 @@ impl<T: ToLabel + Clone + 'static> CollectionData for DropDown<T> {
 
     fn cell_selected(&mut self, index: usize) {
         let val = &self.values[index];
-        self.label.set_text(val.clone());
+        if let Some(format) = &self.custom_format {
+            self.label.set_text(format(val.clone()));
+        } else {
+            self.label.set_text(val.clone());
+        }
         self.changed.trigger(val.clone());
         self.tapped();
     }
