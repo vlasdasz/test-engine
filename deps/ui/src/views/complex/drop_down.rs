@@ -41,6 +41,12 @@ impl DropDown {
         Values: IntoIterator<Item = Val>, {
         let values = values.into_iter().map(|a| a.to_label()).collect();
         self.values = values;
+
+        if self.values.is_empty() {
+            self.label.set_text("");
+            return;
+        }
+
         self.label.set_text(self.values.first().unwrap());
         let table_size = (
             self.width(),

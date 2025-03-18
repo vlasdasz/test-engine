@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use chrono::NaiveDateTime;
 use gm::flat::Point;
 use rust_decimal::Decimal;
@@ -27,6 +29,12 @@ impl ToLabel for String {
 impl ToLabel for &String {
     fn to_label(&self) -> String {
         (*self).to_string()
+    }
+}
+
+impl ToLabel for PathBuf {
+    fn to_label(&self) -> String {
+        (*self).to_string_lossy().to_string()
     }
 }
 
