@@ -68,9 +68,9 @@ impl<T: Reflected> FormView<T> {
                 view.as_input_view()
             } else if let Some(variants) = variant {
                 let variants = variants.clone();
-                let mut view = self.add_view::<Labeled<DropDown>>();
-                view.input.set_values(&variants);
-                view.as_input_view()
+                let mut drop_down = self.add_view::<Labeled<DropDown<String>>>();
+                drop_down.input.set_values(variants);
+                drop_down.as_input_view()
             } else if field.is_number() && self.buttons.contains(field) {
                 let view = labeled_for_field(*field);
                 let mut weak = view.as_input_view();

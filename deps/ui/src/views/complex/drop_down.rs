@@ -19,10 +19,10 @@ mod test_engine {
 }
 
 #[view]
-pub struct DropDown {
-    values:  Vec<String>,
+pub struct DropDown<T: 'static> {
+    values:  Vec<T>,
     opened:  bool,
-    changed: Event<String>,
+    changed: Event<T>,
 
     #[init]
     button: Button,
@@ -30,16 +30,12 @@ pub struct DropDown {
     table:  CollectionView,
 }
 
-impl DropDown {
-    pub fn on_changed(&self, action: impl FnMut(String) + Send + 'static) {
+impl<T: ToLabel + Clone + 'static> DropDown<T> {
+    pub fn on_changed(&self, action: impl FnMut(T) + Send + 'static) {
         self.changed.val(action);
     }
 
-    pub fn set_values<Values, Val>(&mut self, values: Values)
-    where
-        Val: ToLabel,
-        Values: IntoIterator<Item = Val>, {
-        let values = values.into_iter().map(|a| a.to_label()).collect();
+    pub fn set_values(&mut self, values: Vec<T>) {
         self.values = values;
 
         if self.values.is_empty() {
@@ -47,7 +43,7 @@ impl DropDown {
             return;
         }
 
-        self.label.set_text(self.values.first().unwrap());
+        self.label.set_text(self.values.first().unwrap().clone());
         let table_size = (
             self.width(),
             self.height() * self.number_of_cells().lossy_convert(),
@@ -79,7 +75,7 @@ impl DropDown {
     }
 }
 
-impl HasTitle for DropDown {
+impl<T> HasTitle for DropDown<T> {
     fn title(&self) -> &str {
         todo!()
     }
@@ -89,11 +85,15 @@ impl HasTitle for DropDown {
     }
 }
 
-impl InputView for DropDown {
+impl<T: ToLabel + Clone + 'static> InputView for DropDown<T> {
     fn set_text(&mut self, text: &str) {
-        assert!(self.values.contains(&text.to_string()));
+        let Some(val) = self.values.iter().find(|val| val.to_label() == *text) else {
+            panic!("This drop down doesn't have {text}");
+        };
+
+        assert!(self.values.iter().any(|val| val.to_label() == *text));
         self.label.set_text(text);
-        self.changed.trigger(text.to_string());
+        self.changed.trigger(val.clone());
     }
 
     fn text(&self) -> String {
@@ -115,7 +115,7 @@ impl InputView for DropDown {
     }
 }
 
-impl Setup for DropDown {
+impl<T: ToLabel + Clone + 'static> Setup for DropDown<T> {
     fn setup(mut self: Weak<Self>) {
         self.button.place().back();
         self.button.on_tap(move || self.tapped());
@@ -127,9 +127,18 @@ impl Setup for DropDown {
     }
 }
 
-impl CollectionData for DropDown {
+impl<T: ToLabel + Clone + 'static> CollectionData for DropDown<T> {
     fn number_of_cells(&self) -> usize {
         self.values.len()
+    }
+
+    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
+        let label = cell.downcast_mut::<Label>().unwrap();
+        label.set_text(self.values[index].clone());
+    }
+
+    fn size_for_index(&self, _index: usize) -> Size {
+        (self.height(), self.height()).into()
     }
 
     fn make_cell(&self) -> Own<dyn View> {
@@ -138,28 +147,10 @@ impl CollectionData for DropDown {
         label
     }
 
-    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
-        label.set_text(&self.values[index]);
-    }
-
-    fn size_for_index(&self, _index: usize) -> Size {
-        (self.height(), self.height()).into()
-    }
-
     fn cell_selected(&mut self, index: usize) {
         let val = &self.values[index];
-        self.label.set_text(val);
+        self.label.set_text(val.clone());
         self.changed.trigger(val.clone());
         self.tapped();
-    }
-}
-
-impl From<Vec<String>> for DropDown {
-    fn from(value: Vec<String>) -> Self {
-        DropDown {
-            values: value,
-            ..Default::default()
-        }
     }
 }

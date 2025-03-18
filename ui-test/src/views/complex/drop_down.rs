@@ -13,8 +13,8 @@ use test_engine::{
 #[view]
 struct DropDownTestView {
     #[init]
-    top: DropDown,
-    bot: DropDown,
+    top: DropDown<&'static str>,
+    bot: DropDown<&'static str>,
 }
 
 impl Setup for DropDownTestView {
@@ -29,8 +29,8 @@ impl Setup for DropDownTestView {
         self.top.place().t(5);
         self.bot.place().b(5);
 
-        self.top.set_values(["Dog", "Cat", "Sheep"]);
-        self.bot.set_values(["Car", "Boat", "Plane"]);
+        self.top.set_values(vec!["Dog", "Cat", "Sheep"]);
+        self.bot.set_values(vec!["Car", "Boat", "Plane"]);
     }
 }
 
