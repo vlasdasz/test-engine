@@ -1,14 +1,14 @@
 use std::{any::Any, ops::Deref};
 
-use gm::{Color, LossyConvert, Toggle, flat::Size};
-use refs::{Own, Weak, weak_from_ref};
+use gm::{LossyConvert, Toggle, flat::Size};
+use refs::{Own, Weak};
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    Button, CollectionData, CollectionView, HasTitle, InputView, Label, Setup, ToLabel, View,
+    Button, CollectionData, CollectionView, Label, Setup, ToLabel, View,
     has_data::HasText,
-    view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
+    view::{ViewData, ViewFrame, ViewSubviews},
 };
 
 mod test_engine {
@@ -26,6 +26,8 @@ pub struct DropDown<T: 'static> {
 
     custom_format: Option<Box<dyn Fn(T) -> String>>,
 
+    selected_index: usize,
+
     #[init]
     button: Button,
     label:  Label,
@@ -37,7 +39,13 @@ impl<T: ToLabel + Clone + 'static> DropDown<T> {
         self.changed.val(action);
     }
 
+    pub fn value(&self) -> &T {
+        assert!(!self.values.is_empty());
+        self.values.get(self.selected_index).unwrap()
+    }
+
     pub fn set_values(&mut self, values: Vec<T>) {
+        self.selected_index = 0;
         self.values = values;
 
         if self.values.is_empty() {
@@ -89,46 +97,6 @@ impl<T: ToLabel + Clone + 'static> DropDown<T> {
     }
 }
 
-impl<T> HasTitle for DropDown<T> {
-    fn title(&self) -> &str {
-        todo!()
-    }
-
-    fn set_title(&mut self, _title: &str) {
-        todo!()
-    }
-}
-
-impl<T: ToLabel + Clone + 'static> InputView for DropDown<T> {
-    fn set_text(&mut self, text: &str) {
-        let Some(val) = self.values.iter().find(|val| val.to_label() == *text) else {
-            panic!("This drop down doesn't have {text}");
-        };
-
-        assert!(self.values.iter().any(|val| val.to_label() == *text));
-        self.label.set_text(text);
-        self.changed.trigger(val.clone());
-    }
-
-    fn text(&self) -> String {
-        self.label.text().to_string()
-    }
-
-    fn enable_editing(&mut self) {
-        self.button.enable_touch();
-        self.set_color(Color::LIGHT_GRAY);
-    }
-
-    fn disable_editing(&mut self) {
-        self.button.disable_touch();
-        self.set_color(Color::CLEAR);
-    }
-
-    fn as_input_view(&self) -> Weak<dyn InputView> {
-        weak_from_ref(self as &dyn InputView)
-    }
-}
-
 impl<T: ToLabel + Clone + 'static> Setup for DropDown<T> {
     fn setup(mut self: Weak<Self>) {
         self.button.place().back();
@@ -169,6 +137,7 @@ impl<T: ToLabel + Clone + 'static> CollectionData for DropDown<T> {
     }
 
     fn cell_selected(&mut self, index: usize) {
+        self.selected_index = index;
         let val = &self.values[index];
         if let Some(format) = &self.custom_format {
             self.label.set_text(format(val.clone()));

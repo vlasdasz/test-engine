@@ -16,8 +16,7 @@ use ui_proc::view;
 use utils::Every;
 
 use crate::{
-    Button, HasTitle, Label, MovableView, Setup, ToLabel, TouchStack, UIManager, View, ViewCallbacks,
-    ViewSubviews,
+    Button, Label, MovableView, Setup, ToLabel, TouchStack, UIManager, View, ViewCallbacks, ViewSubviews,
     view::{ViewData, ViewFrame, ViewInternalSetup},
 };
 

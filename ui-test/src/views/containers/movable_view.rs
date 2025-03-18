@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Color, Container, HasTitle, MovableView, Setup, UI, ViewData, ViewFrame, view},
+    ui::{Color, Container, MovableView, Setup, UI, ViewData, ViewFrame, view},
     ui_test::{check_colors, inject_touches},
 };
 

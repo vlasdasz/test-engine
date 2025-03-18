@@ -3,7 +3,7 @@ use test_engine::{
     from_main,
     gm::Apply,
     refs::Weak,
-    ui::{DropDown, InputView, Setup, UI, ViewData, view},
+    ui::{DropDown, Setup, UI, ViewData, view},
     ui_test::{
         check_colors, inject_touches, inject_touches_delayed,
         state::{append_state, get_state},
@@ -37,8 +37,8 @@ impl Setup for DropDownTestView {
 pub async fn test_drop_down() -> Result<()> {
     let mut view = UI::init_test_view::<DropDownTestView>().await;
 
-    assert_eq!(view.top.text(), "Dog");
-    assert_eq!(view.bot.text(), "Car");
+    assert_eq!(view.top.value(), &"Dog");
+    assert_eq!(view.bot.value(), &"Car");
 
     inject_touches_delayed(
         r"
@@ -54,8 +54,8 @@ pub async fn test_drop_down() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.top.text(), "Cat");
-    assert_eq!(view.bot.text(), "Boat");
+    assert_eq!(view.top.value(), &"Cat");
+    assert_eq!(view.bot.value(), &"Boat");
 
     inject_touches_delayed(
         r"
@@ -71,8 +71,8 @@ pub async fn test_drop_down() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.top.text(), "Sheep");
-    assert_eq!(view.bot.text(), "Plane");
+    assert_eq!(view.top.value(), &"Sheep");
+    assert_eq!(view.bot.value(), &"Plane");
 
     inject_touches(
         r"
@@ -88,8 +88,8 @@ pub async fn test_drop_down() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.top.text(), "Dog");
-    assert_eq!(view.bot.text(), "Car");
+    assert_eq!(view.top.value(), &"Dog");
+    assert_eq!(view.bot.value(), &"Car");
 
     assert_eq!(
         get_state::<String>(),

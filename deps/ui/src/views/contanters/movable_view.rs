@@ -8,8 +8,8 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    Anchor::Top, HasText, HasTitle, ImageView, Label, Setup, UIImages, View, ViewData, ViewFrame,
-    ViewSubviews, ViewTouch,
+    Anchor::Top, HasText, ImageView, Label, Setup, UIImages, View, ViewData, ViewFrame, ViewSubviews,
+    ViewTouch,
 };
 
 mod test_engine {
@@ -72,12 +72,12 @@ impl<T: View + Default + 'static> Setup for MovableView<T> {
     }
 }
 
-impl<T: View + Default + 'static> HasTitle for MovableView<T> {
-    fn title(&self) -> &str {
+impl<T: View + Default> MovableView<T> {
+    pub fn title(&self) -> &str {
         self.title_label.text()
     }
 
-    fn set_title(&mut self, title: &str) {
+    pub fn set_title(&mut self, title: &str) {
         self.title_label.set_text(title);
     }
 }

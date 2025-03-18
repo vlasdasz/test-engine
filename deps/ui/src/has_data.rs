@@ -2,11 +2,6 @@ use gm::{Color, ToF32};
 
 use crate::ToLabel;
 
-pub trait HasTitle {
-    fn title(&self) -> &str;
-    fn set_title(&mut self, title: &str);
-}
-
 pub trait HasText {
     fn text(&self) -> &str;
     fn set_text(&mut self, text: impl ToLabel) -> &mut Self;

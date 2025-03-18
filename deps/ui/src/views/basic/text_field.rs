@@ -5,8 +5,7 @@ use vents::Event;
 use window::NamedKey;
 
 use crate::{
-    HasTitle, InputView, Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
-    ViewCallbacks,
+    Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks,
     has_data::HasText,
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
@@ -80,7 +79,7 @@ impl TextField {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.text().is_empty()
+        self.label.text().is_empty()
     }
 
     fn filter_constraint(&mut self, text: impl ToLabel) -> String {
@@ -114,40 +113,6 @@ impl TextField {
             self.label.set_text_color(Color::GRAY);
         }
         self
-    }
-}
-
-impl HasTitle for TextField {
-    fn title(&self) -> &str {
-        todo!()
-    }
-
-    fn set_title(&mut self, _title: &str) {
-        todo!()
-    }
-}
-
-impl InputView for TextField {
-    fn set_text(&mut self, text: &str) {
-        self.set_text(text);
-    }
-
-    fn text(&self) -> String {
-        if self.placeholding { "" } else { self.label.text() }.to_string()
-    }
-
-    fn enable_editing(&mut self) {
-        self.enable_touch();
-        self.set_color(Color::LIGHT_GRAY);
-    }
-
-    fn disable_editing(&mut self) {
-        self.disable_touch();
-        self.set_color(Color::CLEAR);
-    }
-
-    fn as_input_view(&self) -> Weak<dyn InputView> {
-        weak_from_ref(self as &dyn InputView)
     }
 }
 
@@ -189,7 +154,7 @@ impl ViewCallbacks for TextField {
                 }
 
                 this.set_text(text);
-                this.changed.trigger(this.text().to_string());
+                this.changed.trigger(this.label.text().to_string());
             });
             UIManager::open_keyboard(self.absolute_frame());
         } else {
@@ -199,7 +164,7 @@ impl ViewCallbacks for TextField {
             UIEvents::keyboard_input().unsibscribe(this);
             UIEvents::keyboard_key().unsibscribe(this);
 
-            self.editing_ended.trigger(self.text().to_string());
+            self.editing_ended.trigger(self.label.text().to_string());
         }
 
         self.label.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
