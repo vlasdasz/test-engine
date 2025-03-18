@@ -76,8 +76,8 @@ impl Point<f32> {
 
     pub fn middle(&self, other: &Self) -> Self {
         Point {
-            x: (self.x + other.x) / 2.0,
-            y: (self.y + other.y) / 2.0,
+            x: f32::midpoint(self.x, other.x),
+            y: f32::midpoint(self.y, other.y),
         }
     }
 

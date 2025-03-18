@@ -2,11 +2,15 @@ use std::{any::type_name, collections::HashMap, ops::DerefMut};
 
 use refs::{MainLock, Weak};
 
-use crate::{Button, Label, View};
+use crate::{Button, Label, NumberView, View};
 
 static GLOBAL_STYLES: MainLock<HashMap<&'static str, Vec<Style>>> = MainLock::new();
 
-static ALLOWED_TYPES: &[&str] = &[type_name::<Button>(), type_name::<Label>()];
+static ALLOWED_TYPES: &[&str] = &[
+    type_name::<Button>(),
+    type_name::<Label>(),
+    type_name::<NumberView>(),
+];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Style {
@@ -42,7 +46,7 @@ impl Style {
         }
     }
 
-    pub fn apply_to_all<T: View>(&self) {
+    pub fn apply_globally<T: View>(&self) {
         Self::check_allowed::<T>();
         let styles = GLOBAL_STYLES.get_mut().entry(type_name::<T>()).or_default();
 
@@ -87,9 +91,9 @@ mod test {
     #[test]
     fn valid_global_style_type() {
         set_current_thread_as_main();
-        STYLE.apply_to_all::<Button>();
-        STYLE2.apply_to_all::<Button>();
-        STYLE3.apply_to_all::<Label>();
+        STYLE.apply_globally::<Button>();
+        STYLE2.apply_globally::<Button>();
+        STYLE3.apply_globally::<Label>();
 
         assert_eq!(Style::get_global_for::<Button>(), &[STYLE, STYLE2]);
         assert_eq!(Style::get_global_for::<Label>(), &[STYLE3]);
@@ -98,6 +102,6 @@ mod test {
     #[test]
     #[should_panic]
     fn invalid_global_style_type() {
-        STYLE.apply_to_all::<TableView>();
+        STYLE.apply_globally::<TableView>();
     }
 }

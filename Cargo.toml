@@ -62,6 +62,7 @@ vents = "0.7.0"
 
 audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }
+game = { path = "deps/game" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
 image-proc = { path = "deps/window/image-proc" }

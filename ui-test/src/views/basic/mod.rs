@@ -19,12 +19,12 @@ mod switch;
 mod text_field;
 
 pub async fn test_base_views() -> anyhow::Result<()> {
+    test_label().await?;
     test_gradient().await?;
     test_image_on_view().await?;
     test_multiline().await?;
     test_button().await?;
     test_inject_touch().await?;
-    test_label().await?;
     test_scroll_view().await?;
     test_slider().await?;
     test_stick().await?;

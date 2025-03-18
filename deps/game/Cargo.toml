@@ -1,0 +1,14 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2024"
+name = "game"
+version = "0.1.0"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "game"
+
+[dependencies]
+gm = { workspace = true }
+refs = { workspace = true }
+window = { workspace = true }

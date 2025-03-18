@@ -89,8 +89,8 @@ impl<T: InputView + Default> InputView for Labeled<T> {
         self.input.set_text(text);
     }
 
-    fn text(&self) -> &str {
-        self.input.text()
+    fn text(&self) -> String {
+        self.input.text().to_string()
     }
 
     fn enable_editing(&mut self) {

@@ -1,10 +1,10 @@
 use test_engine::{
     App,
     refs::Own,
-    ui::{Setup, View},
+    ui::{Button, Label, Setup, View},
 };
 
-use crate::interface::test_game_view::TestGameView;
+use crate::interface::test_game_view::{_BUTTON, TestGameView};
 
 pub struct TestGameApp;
 
@@ -16,6 +16,8 @@ impl App for TestGameApp {
 
     fn setup(&self) {
         dbg!("setup");
+        _BUTTON.apply_globally::<Button>();
+        _BUTTON.apply_globally::<Label>();
     }
 
     fn make_root_view(&self) -> Own<dyn View> {

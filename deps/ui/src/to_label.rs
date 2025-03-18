@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use chrono::NaiveDateTime;
 use gm::flat::Point;
 use rust_decimal::Decimal;
@@ -30,7 +32,25 @@ impl ToLabel for &String {
     }
 }
 
+impl ToLabel for PathBuf {
+    fn to_label(&self) -> String {
+        (*self).to_string_lossy().to_string()
+    }
+}
+
 impl ToLabel for bool {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl ToLabel for u8 {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl ToLabel for i16 {
     fn to_label(&self) -> String {
         self.to_string()
     }
@@ -48,7 +68,13 @@ impl ToLabel for i32 {
     }
 }
 
-impl ToLabel for i16 {
+impl ToLabel for i64 {
+    fn to_label(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl ToLabel for u64 {
     fn to_label(&self) -> String {
         self.to_string()
     }
@@ -61,6 +87,12 @@ impl ToLabel for usize {
 }
 
 impl ToLabel for f32 {
+    fn to_label(&self) -> String {
+        format!("{self:.2}")
+    }
+}
+
+impl ToLabel for f64 {
     fn to_label(&self) -> String {
         format!("{self:.2}")
     }

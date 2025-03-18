@@ -12,7 +12,10 @@ use test_engine::{
     },
 };
 
-use crate::{interface::polygon_view::PolygonView, levels::NoiseLevel};
+use crate::{
+    interface::{polygon_view::PolygonView, test_game_view::HAS_BACK_BUTTON},
+    levels::NoiseLevel,
+};
 
 #[view]
 pub struct NoiseView {
@@ -24,13 +27,12 @@ pub struct NoiseView {
 
     #[init]
     drawing_view:   DrawingView,
-    threshold_view: NumberView<f32>,
-    x_view:         NumberView<f32>,
-    y_view:         NumberView<f32>,
-    size_view:      NumberView<f32>,
-    skip_view:      NumberView<f32>,
+    threshold_view: NumberView,
+    x_view:         NumberView,
+    y_view:         NumberView,
+    size_view:      NumberView,
+    skip_view:      NumberView,
     image_view:     ImageView,
-    back:           Button,
     counter_label:  Label,
     update_level:   Button,
     polygon:        PolygonView,
@@ -173,11 +175,7 @@ impl Setup for NoiseView {
 
         self.image_view.place().size(400, 400).br(0);
 
-        self.back.set_text("Back");
-        self.back.place().t(200).l(10).size(100, 50);
-        self.back.on_tap(move || {
-            self.on_back.trigger(());
-        });
+        self.apply_style(HAS_BACK_BUTTON);
 
         self.counter_label.place().t(200).r(5).size(100, 50);
 

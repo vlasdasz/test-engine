@@ -49,6 +49,8 @@ impl Question {
     pub fn ask(question: impl Into<String>) -> Self {
         Question {
             question: question.into(),
+            left: "No".to_string(),
+            right: "Yes".to_string(),
             ..Default::default()
         }
     }
@@ -62,6 +64,14 @@ impl Question {
     ///bool == true -> right choice
     pub fn callback(self, callback: impl FnOnce(bool) + Send + 'static) {
         Self::make_modal(self).event.val(callback);
+    }
+
+    pub fn on_yes(self, callback: impl FnOnce() + Send + 'static) {
+        self.callback(|yes| {
+            if yes {
+                callback();
+            }
+        });
     }
 
     async fn callback_async(self) -> bool {

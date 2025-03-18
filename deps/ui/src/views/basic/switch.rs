@@ -86,8 +86,8 @@ impl InputView for Switch {
         }
     }
 
-    fn text(&self) -> &str {
-        if self.on { "1" } else { "0" }
+    fn text(&self) -> String {
+        if self.on { "1" } else { "0" }.to_string()
     }
 
     fn enable_editing(&mut self) {

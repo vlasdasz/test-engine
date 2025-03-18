@@ -155,8 +155,6 @@ impl UI {
                     },
                     image,
                 );
-            } else {
-                warn!("Image is not OK");
             }
         } else if let Some(label) = view.as_any().downcast_ref::<Label>()
             && !label.text.is_empty()
@@ -300,7 +298,7 @@ fn get_test_name<T>() -> String {
 
     let last_part = input.split("::").last().unwrap();
 
-    let spaced = last_part
+    last_part
         .chars()
         .enumerate()
         .map(|(i, c)| {
@@ -310,6 +308,5 @@ fn get_test_name<T>() -> String {
                 c.to_string()
             }
         })
-        .collect::<String>();
-    spaced
+        .collect::<String>()
 }

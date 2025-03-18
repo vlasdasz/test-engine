@@ -1,7 +1,7 @@
 use test_engine::{
     AppRunner, DataManager, async_after,
     audio::Sound,
-    gm::{Apply, Direction, LossyConvert},
+    gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::Weak,
     store::OnDisk,
@@ -10,22 +10,34 @@ use test_engine::{
         Anchor::{Height, Left, Top, Width, X, Y},
         Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
         MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
-        Style, Switch, TextField, UIManager, ViewData, ViewFrame, view,
+        Style, Switch, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, view,
     },
 };
 use ui_benchmark::BenchmarkView;
 
 use crate::{
-    interface::{noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView},
+    interface::{
+        game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
+    },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
 };
 
 static BOOL: OnDisk<bool> = OnDisk::new("bool");
 
-static BUTTON: Style = Style::new(|btn| {
+pub(crate) static _BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));
     btn.set_corner_radius(10);
+});
+
+pub(crate) static HAS_BACK_BUTTON: Style = Style::new(|view| {
+    view.add_view::<Button>()
+        .add_transition::<Container, TestGameView>()
+        .set_text("Back")
+        .place()
+        .size(100, 50)
+        .t(200)
+        .l(10);
 });
 
 #[view]
@@ -48,7 +60,7 @@ pub struct TestGameView {
     gradient: Container,
 
     dpad:  DPadView,
-    scale: NumberView<u32>,
+    scale: NumberView,
 
     spinner: Button,
     alert:   Button,
@@ -79,14 +91,11 @@ pub struct TestGameView {
     bool_storage_view: Switch,
 
     no_physics: Button,
+
+    game: Button,
 }
 
 impl Setup for TestGameView {
-    fn before_setup(self: Weak<Self>) {
-        BUTTON.apply_to_all::<Button>();
-        BUTTON.apply_to_all::<Label>();
-    }
-
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();
@@ -145,9 +154,9 @@ impl Setup for TestGameView {
         });
 
         self.scale.place().size(80, 150).b(20).anchor(Left, self.dpad, 10);
-        self.scale.set_min(4.try_into().unwrap());
+        self.scale.set_min(4.0);
         self.scale.on_change(|val| {
-            *LevelManager::scale() = val.lossy_convert() * 0.1;
+            *LevelManager::scale() = val * 0.1;
         });
 
         self.spinner.place().size(150, 40).b(20).anchor(Left, self.scale, 10);
@@ -183,11 +192,12 @@ impl Setup for TestGameView {
 
         self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);
 
-        self.drawing.place().w(280).t(10).anchor(Anchor::Right, self.tr, 10).relative(
-            Anchor::Height,
-            self,
-            0.2,
-        );
+        self.drawing
+            .place()
+            .w(280)
+            .t(10)
+            .anchor(Anchor::Right, self.tr, 10)
+            .relative(Height, self, 0.2);
 
         self.drawing
             .add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)], Color::GREEN);
@@ -289,6 +299,17 @@ impl Setup for TestGameView {
             .anchor(Left, self.bool_storage_view, 10)
             .w(250);
         self.no_physics.add_transition::<Self, NoPhysicsView>();
+
+        self.game.set_text("Game");
+        self.game
+            .place()
+            .same([Y, Height], self.no_physics)
+            .anchor(Left, self.no_physics, 10)
+            .w(100);
+        self.game.on_tap(|| {
+            LevelManager::stop_level();
+            UIManager::set_view(GameView::new());
+        });
     }
 }
 

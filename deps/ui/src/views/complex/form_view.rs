@@ -68,9 +68,9 @@ impl<T: Reflected> FormView<T> {
                 view.as_input_view()
             } else if let Some(variants) = variant {
                 let variants = variants.clone();
-                let mut view = self.add_view::<Labeled<DropDown>>();
-                view.input.set_values(&variants);
-                view.as_input_view()
+                let mut drop_down = self.add_view::<Labeled<DropDown<String>>>();
+                drop_down.input.set_values(variants);
+                drop_down.as_input_view()
             } else if field.is_number() && self.buttons.contains(field) {
                 let view = labeled_for_field(*field);
                 let mut weak = view.as_input_view();
@@ -99,7 +99,7 @@ impl<T: Reflected> FormView<T> {
     pub fn get_data(&self) -> T {
         let mut data = T::default();
         for (field, label) in T::simple_fields().iter().zip(self.labels.iter()) {
-            data.set_value(*field, label.text().into());
+            data.set_value(*field, Some(&label.text()));
         }
         data
     }
@@ -131,9 +131,10 @@ impl<T: Reflected> FormView<T> {
 
 fn labeled_for_field<T: Send>(field: Field<T>) -> Own<dyn InputView> {
     match field.type_name {
-        "i8" | "i16" | "i32" | "i64" => Labeled::<NumberView<i64>>::new(),
-        "u8" | "u16" | "u32" | "u64" => Labeled::<NumberView<u64>>::new(),
-        "f32" | "f64" => Labeled::<NumberView<f64>>::new(),
+        "i8" | "i16" | "i32" | "i64" | "u8" | "u16" | "u32" | "u64" | "f32" | "f64" => {
+            Labeled::<NumberView>::new()
+        }
+
         _ => unimplemented!(),
     }
 }

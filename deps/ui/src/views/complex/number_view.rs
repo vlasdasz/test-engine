@@ -1,14 +1,10 @@
-use std::{
-    fmt::{Debug, Display},
-    str::FromStr,
-};
-
-use gm::{CheckedSub, Min, MyAdd, One, Zero};
+use gm::{CheckedSub, Color, MyAdd, ToF32};
 use refs::{Weak, weak_from_ref};
 use vents::Event;
 
 use crate::{
-    Button, HasTitle, InputView, Label, Setup, UIImages, ViewTouch, has_data::HasText, view::ViewData,
+    Button, Container, HasText, HasTitle, InputView, Setup, Style, ToLabel, UIImages, ViewTouch,
+    view::ViewData,
 };
 
 mod test_engine {
@@ -19,68 +15,74 @@ mod test_engine {
 }
 
 use ui_proc::view;
-
-pub trait ViewableNumber:
-    MyAdd + CheckedSub + Zero + One + Min + Copy + Debug + Display + FromStr + Sized + 'static {
-}
-
-impl ViewableNumber for f32 {}
-impl ViewableNumber for f64 {}
-impl ViewableNumber for u8 {}
-impl ViewableNumber for i32 {}
-impl ViewableNumber for u32 {}
-impl ViewableNumber for i64 {}
-impl ViewableNumber for u64 {}
-impl ViewableNumber for usize {}
+use window::image::NoImage;
 
 #[view]
-pub struct NumberView<T: ViewableNumber> {
-    #[educe(Default = T::one())]
-    value:    T,
-    #[educe(Default = T::one())]
-    pub step: T,
-    #[educe(Default = T::min())]
-    min:      T,
+pub struct NumberView {
+    #[educe(Default = 1.0)]
+    value:    f32,
+    #[educe(Default = 1.0)]
+    pub step: f32,
+    #[educe(Default = f32::MIN)]
+    min:      f32,
 
-    on_change_event: Event<T>,
+    on_change_event: Event<f32>,
 
     #[init]
-    label: Label,
-    up:    Button,
-    down:  Button,
+    up:   Button,
+    down: Button,
+
+    separator: Container,
 }
 
-impl<T: ViewableNumber> Setup for NumberView<T> {
+impl Setup for NumberView {
     fn setup(mut self: Weak<Self>) {
-        self.place().all_ver();
-        self.label.text = format!("{:.1}", self.value);
-        self.up.set_image(UIImages::up());
+        self.up.set_image(UIImages::up()).set_color(Color::CLEAR);
         self.up.on_tap(move || self.up_tap());
-        self.down.set_image(UIImages::down());
+        self.up.place().lrt(0).relative_height(self, 0.5);
+
+        self.down.set_image(UIImages::down()).set_color(Color::CLEAR);
         self.down.on_tap(move || self.down_tap());
+        self.down.place().lrb(0).relative_height(self, 0.5);
+
+        self.separator.place().relative_width(self, 0.75).h(2).center();
+        self.separator.set_color(Color::LIGHT_GRAY);
+
+        Style::apply_global(self);
     }
 }
 
-impl<T: ViewableNumber> NumberView<T> {
-    pub fn value(&self) -> T {
+impl NumberView {
+    pub fn set_labels(&mut self, up: impl ToLabel, down: impl ToLabel) -> &mut Self {
+        self.up.set_image(NoImage);
+        self.up.set_text(up);
+
+        self.down.set_image(NoImage);
+        self.down.set_text(down);
+
+        self
+    }
+}
+
+impl NumberView {
+    pub fn value(&self) -> f32 {
         self.value
     }
 
-    pub fn set_value(&mut self, val: T) -> &mut Self {
-        self.value = val;
-        self.label.text = format!("{val:.1}");
-        self.on_change_event.trigger(val);
+    pub fn set_value(&mut self, val: impl ToF32) -> &mut Self {
+        self.value = val.to_f32();
+        self.on_change_event.trigger(self.value);
         self
     }
 
-    pub fn set_min(&mut self, min: T) -> &mut Self {
-        self.min = min;
-        self.set_value(min);
+    pub fn set_min(&mut self, min: impl ToF32) -> &mut Self {
+        self.min = min.to_f32();
+        self.set_value(self.min);
         self
     }
 
-    pub fn set_step(&mut self, step: T) -> &mut Self {
-        self.step = step;
+    pub fn set_step(&mut self, step: impl ToF32) -> &mut Self {
+        self.step = step.to_f32();
         self
     }
 
@@ -91,16 +93,16 @@ impl<T: ViewableNumber> NumberView<T> {
 
     fn down_tap(mut self: Weak<Self>) {
         let val = self.value.sub_and_check(&self.step, &self.min);
-        self.set_value(val.unwrap_or(T::zero()));
+        self.set_value(val.unwrap_or(0.0));
     }
 
-    pub fn on_change(&self, action: impl FnMut(T) + Send + 'static) -> &Self {
+    pub fn on_change(&self, action: impl FnMut(f32) + Send + 'static) -> &Self {
         self.on_change_event.val(action);
         self
     }
 }
 
-impl<T: ViewableNumber> HasTitle for NumberView<T> {
+impl HasTitle for NumberView {
     fn title(&self) -> &str {
         todo!()
     }
@@ -110,14 +112,14 @@ impl<T: ViewableNumber> HasTitle for NumberView<T> {
     }
 }
 
-impl<T: ViewableNumber> InputView for NumberView<T> {
+impl InputView for NumberView {
     fn set_text(&mut self, text: &str) {
-        let Ok(val) = text.parse() else { panic!() };
+        let Ok(val) = text.parse::<f32>() else { panic!() };
         self.set_value(val);
     }
 
-    fn text(&self) -> &str {
-        self.label.text()
+    fn text(&self) -> String {
+        self.value.to_string()
     }
 
     fn enable_editing(&mut self) {
@@ -132,5 +134,36 @@ impl<T: ViewableNumber> InputView for NumberView<T> {
 
     fn as_input_view(&self) -> Weak<dyn InputView> {
         weak_from_ref(self as _)
+    }
+}
+
+impl HasText for NumberView {
+    fn text(&self) -> &str {
+        todo!()
+    }
+
+    fn set_text(&mut self, _text: impl ToLabel) -> &mut Self {
+        todo!()
+    }
+
+    fn text_color(&self) -> &Color {
+        self.up.text_color()
+    }
+
+    fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        let color = color.into();
+        self.up.set_text_color(color);
+        self.down.set_text_color(color);
+        self
+    }
+
+    fn text_size(&self) -> f32 {
+        self.up.text_size()
+    }
+
+    fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
+        self.up.set_text_size(size);
+        self.down.set_text_size(size);
+        self
     }
 }
