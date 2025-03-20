@@ -8,9 +8,9 @@ use test_engine::{
     ui::{
         Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
-        Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, HasTitle, ImageView, Label,
-        MovableView, NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
-        Style, Switch, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, view,
+        Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, ImageView, Label, MovableView,
+        NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView, Style, Switch,
+        TextField, UIManager, ViewData, ViewFrame, ViewSubviews, view,
     },
 };
 use ui_benchmark::BenchmarkView;
