@@ -1,7 +1,7 @@
 mod input;
 mod ui;
 pub mod ui_test;
-mod views;
+pub(crate) mod views;
 
 pub use ::ui::*;
 pub use gm::{

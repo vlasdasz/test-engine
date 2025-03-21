@@ -1,14 +1,15 @@
 use crate::base::{
-    colors::test_colors, corner_radius::test_corner_radius, global_styles::test_global_styles,
-    keymap::test_keymap, layout::test_layout, modal_test::test_modal, on_tap_add::test_add_on_tap,
-    out_bounds_test::test_out_bounds, present::test_navigation_view, selection::test_selection,
-    styles::test_styles, template::test_template, text_occlusion::test_text_occlusion,
-    touch_order::test_touch_order, touch_stack::test_touch_stack, transition::test_transition,
-    transparency::test_transparency, view_order::test_view_order,
+    colors::test_colors, corner_radius::test_corner_radius, dispatch::test_dispatch,
+    global_styles::test_global_styles, keymap::test_keymap, layout::test_layout, modal_test::test_modal,
+    on_tap_add::test_add_on_tap, out_bounds_test::test_out_bounds, present::test_navigation_view,
+    selection::test_selection, styles::test_styles, template::test_template,
+    text_occlusion::test_text_occlusion, touch_order::test_touch_order, touch_stack::test_touch_stack,
+    transition::test_transition, transparency::test_transparency, view_order::test_view_order,
 };
 
 mod colors;
 mod corner_radius;
+mod dispatch;
 mod global_styles;
 mod keymap;
 mod layout;
@@ -27,6 +28,7 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_dispatch().await?;
     test_out_bounds().await?;
     test_transition().await?;
     test_global_styles().await?;

@@ -1,11 +1,8 @@
 use gm::{CheckedSub, Color, MyAdd, ToF32};
-use refs::{Weak, weak_from_ref};
+use refs::Weak;
 use vents::Event;
 
-use crate::{
-    Button, Container, HasText, HasTitle, InputView, Setup, Style, ToLabel, UIImages, ViewTouch,
-    view::ViewData,
-};
+use crate::{Button, Container, HasText, Setup, Style, ToLabel, UIImages, view::ViewData};
 
 mod test_engine {
     pub(crate) use educe;
@@ -99,41 +96,6 @@ impl NumberView {
     pub fn on_change(&self, action: impl FnMut(f32) + Send + 'static) -> &Self {
         self.on_change_event.val(action);
         self
-    }
-}
-
-impl HasTitle for NumberView {
-    fn title(&self) -> &str {
-        todo!()
-    }
-
-    fn set_title(&mut self, _title: &str) {
-        todo!()
-    }
-}
-
-impl InputView for NumberView {
-    fn set_text(&mut self, text: &str) {
-        let Ok(val) = text.parse::<f32>() else { panic!() };
-        self.set_value(val);
-    }
-
-    fn text(&self) -> String {
-        self.value.to_string()
-    }
-
-    fn enable_editing(&mut self) {
-        self.up.enable_touch();
-        self.down.enable_touch();
-    }
-
-    fn disable_editing(&mut self) {
-        self.up.disable_touch();
-        self.down.disable_touch();
-    }
-
-    fn as_input_view(&self) -> Weak<dyn InputView> {
-        weak_from_ref(self as _)
     }
 }
 

@@ -1,7 +1,6 @@
 use std::{
     future::Future,
     sync::{Arc, Mutex},
-    thread::sleep,
     time::Duration,
 };
 
@@ -11,6 +10,7 @@ use refs::is_main_thread;
 use tokio::{
     spawn,
     sync::oneshot::{Sender, channel},
+    time::sleep,
 };
 
 type Callback = Box<dyn FnOnce() + Send>;
@@ -71,14 +71,14 @@ pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
 
 pub fn after(delay: impl ToF32, action: impl FnOnce() + Send + 'static) {
     spawn(async move {
-        sleep(Duration::from_secs_f32(delay.to_f32()));
+        sleep(Duration::from_secs_f32(delay.to_f32())).await;
         CALLBACKS.lock().unwrap().push(Box::new(action));
     });
 }
 
 pub fn async_after(delay: impl ToF32, action: impl Future + Send + 'static) {
     spawn(async move {
-        sleep(Duration::from_secs_f32(delay.to_f32()));
+        sleep(Duration::from_secs_f32(delay.to_f32())).await;
         action.await;
     });
 }

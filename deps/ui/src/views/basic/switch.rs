@@ -4,7 +4,7 @@ use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    Anchor, Container, HasTitle, InputView, Setup,
+    Anchor, Container, Setup,
     view::{ViewData, ViewTouch},
 };
 mod test_engine {
@@ -64,41 +64,5 @@ impl Setup for Switch {
             self.set_on(on);
             self.selected.trigger(on);
         });
-    }
-}
-
-impl HasTitle for Switch {
-    fn title(&self) -> &str {
-        todo!()
-    }
-
-    fn set_title(&mut self, _title: &str) {
-        todo!()
-    }
-}
-
-impl InputView for Switch {
-    fn set_text(&mut self, text: &str) {
-        match text {
-            "0" => self.set_on(false),
-            "1" => self.set_on(true),
-            _ => panic!(),
-        }
-    }
-
-    fn text(&self) -> String {
-        if self.on { "1" } else { "0" }.to_string()
-    }
-
-    fn enable_editing(&mut self) {
-        self.enable_touch();
-    }
-
-    fn disable_editing(&mut self) {
-        self.disable_touch();
-    }
-
-    fn as_input_view(&self) -> Weak<dyn InputView> {
-        weak_from_ref(self)
     }
 }

@@ -103,6 +103,14 @@ impl Placer {
         self.relative(Anchor::Size, view, 1)
     }
 
+    pub fn same_x(&self, view: impl Deref<Target = impl View>) -> &Self {
+        self.anchor(Anchor::X, view, 1)
+    }
+
+    pub fn same_y(&self, view: impl Deref<Target = impl View>) -> &Self {
+        self.anchor(Anchor::Y, view, 1)
+    }
+
     pub fn relative_width(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
         self.relative(Anchor::Width, view, multiplier)
     }

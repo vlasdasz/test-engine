@@ -1,11 +1,11 @@
 use anyhow::Result;
-use log::debug;
 use test_engine::{
+    from_main,
     gm::Apply,
     refs::Weak,
-    ui::{DropDown, InputView, Setup, UI, ViewData, view},
+    ui::{DropDown, Setup, UI, ViewData, view},
     ui_test::{
-        inject_touches, inject_touches_delayed,
+        check_colors, inject_touches, inject_touches_delayed,
         state::{append_state, get_state},
     },
 };
@@ -35,10 +35,10 @@ impl Setup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    let view = UI::init_test_view::<DropDownTestView>().await;
+    let mut view = UI::init_test_view::<DropDownTestView>().await;
 
-    assert_eq!(view.top.text(), "Dog");
-    assert_eq!(view.bot.text(), "Car");
+    assert_eq!(view.top.value(), &"Dog");
+    assert_eq!(view.bot.value(), &"Car");
 
     inject_touches_delayed(
         r"
@@ -54,8 +54,8 @@ pub async fn test_drop_down() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.top.text(), "Cat");
-    assert_eq!(view.bot.text(), "Boat");
+    assert_eq!(view.top.value(), &"Cat");
+    assert_eq!(view.bot.value(), &"Boat");
 
     inject_touches_delayed(
         r"
@@ -71,8 +71,8 @@ pub async fn test_drop_down() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.top.text(), "Sheep");
-    assert_eq!(view.bot.text(), "Plane");
+    assert_eq!(view.top.value(), &"Sheep");
+    assert_eq!(view.bot.value(), &"Plane");
 
     inject_touches(
         r"
@@ -88,8 +88,8 @@ pub async fn test_drop_down() -> Result<()> {
     )
     .await;
 
-    assert_eq!(view.top.text(), "Dog");
-    assert_eq!(view.bot.text(), "Car");
+    assert_eq!(view.top.value(), &"Dog");
+    assert_eq!(view.bot.value(), &"Car");
 
     assert_eq!(
         get_state::<String>(),
@@ -102,7 +102,67 @@ Car
 "
     );
 
-    debug!("Drop down test: OK");
+    from_main(move || {
+        view.top.custom_format(|val| format!("{val} 5"));
+    })
+    .await;
+
+    inject_touches(
+        "
+            228  32   b
+            228  32   e
+
+        ",
+    )
+    .await;
+
+    check_colors(
+        r#"
+             306  140 -  89 124 149
+             306  140 -  89 124 149
+             319  136 -  89 124 149
+             331  131 -  89 124 149
+             338  124 - 255 255 255
+             338  117 - 255 255 255
+             339  106 - 255 255 255
+             343  102 - 235 235 235
+             353   98 - 255 255 255
+             354   97 - 255 255 255
+             358   94 - 255 255 255
+             375   89 - 255 255 255
+             391   78 - 255 255 255
+             403   72 -  89 124 149
+             349   62 - 255 255 255
+             344   61 - 255 255 255
+             337   59 - 255 255 255
+             335   59 - 255 255 255
+             335   58 - 255 255 255
+             332   58 - 255 255 255
+             327   57 - 255 255 255
+             326   57 - 255 255 255
+             324   57 -   0   0   0
+             317   56 - 255 255 255
+             310   57 - 122 122 122
+             306   58 -   0   0   0
+             303   58 -  42  42  42
+             289   57 - 188 188 188
+             287   57 - 255 255 255
+             282   57 - 174 174 174
+             282   56 -  59  59  59
+             259   57 - 255 255 255
+             330   11 - 210 210 210
+             329   12 -   0   0   0
+             326   13 - 255 255 255
+             317   13 - 255 255 255
+             319   16 - 255 255 255
+             329   17 -  13  13  13
+             333   16 - 255 255 255
+             343   16 - 255 255 255
+             352   15 - 255 255 255
+             364   16 - 255 255 255
+        "#,
+    )
+    .await?;
 
     Ok(())
 }
