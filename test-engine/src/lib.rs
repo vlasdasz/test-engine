@@ -66,7 +66,7 @@ pub mod time {
 
 pub use app_runner::AppRunner;
 pub use audio;
-pub use dispatch::{after, async_after, from_main, on_main, wait_for_next_frame};
+pub use dispatch::{Task, after, async_after, from_main, on_main, wait_for_next_frame};
 pub use generate;
 pub use manage::data_manager::DataManager;
 pub use vents::{DelayedEvent, Event, OnceEvent};
