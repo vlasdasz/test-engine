@@ -69,6 +69,7 @@ pub use audio;
 pub use dispatch::{Task, after, async_after, from_main, on_main, wait_for_next_frame};
 pub use generate;
 pub use manage::data_manager::DataManager;
+pub use ui::views::task_spinner::TaskSpinner;
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
