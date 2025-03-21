@@ -53,6 +53,10 @@ impl TextField {
         self
     }
 
+    pub fn text(&mut self) -> &str {
+        self.label.text()
+    }
+
     pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
         let text = self.filter_constraint(text);
 
