@@ -53,7 +53,7 @@ impl TextField {
         self
     }
 
-    pub fn text(&mut self) -> &str {
+    pub fn text(&self) -> &str {
         self.label.text()
     }
 

@@ -23,7 +23,7 @@ impl Setup for DropDownTestView {
             v.on_changed(|val| {
                 append_state(&format!("{val}\n"));
             });
-            v.place().size(200, 40).center_x();
+            v.place().center_x().size(200, 40);
         });
 
         self.top.place().t(5);

@@ -94,7 +94,6 @@ impl Placer {
     }
 
     pub fn size(&self, width: impl ToF32, height: impl ToF32) -> &Self {
-        assert!(!self.has_center(), "Size place must be set before setting center");
         self.view.weak_view().set_size((width, height));
         self.w(width).h(height)
     }
@@ -135,13 +134,13 @@ impl Placer {
     }
 
     pub fn w(&self, w: impl ToF32) -> &Self {
-        self.rules().push(LayoutRule::make(Anchor::Width, w));
+        self.rules().insert(0, LayoutRule::make(Anchor::Width, w));
         self.has().width = true;
         self
     }
 
     pub fn h(&self, h: impl ToF32) -> &Self {
-        self.rules().push(LayoutRule::make(Anchor::Height, h));
+        self.rules().insert(0, LayoutRule::make(Anchor::Height, h));
         self.has().height = true;
         self
     }
@@ -529,12 +528,6 @@ impl Placer {
             _ => unimplemented!(),
         }
         view.set_frame(frame);
-    }
-}
-
-impl Placer {
-    fn has_center(&self) -> bool {
-        self.rules().iter().any(LayoutRule::is_center)
     }
 }
 
