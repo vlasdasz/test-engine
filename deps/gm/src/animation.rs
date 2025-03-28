@@ -57,13 +57,21 @@ mod test {
     fn test() {
         let anim = Animation::new(0.0, 1.0, 0.5);
 
-        assert!(anim.value() >= 0.0 && anim.value() <= 0.002);
+        assert!(
+            anim.value() >= 0.0 && anim.value() <= 0.002,
+            "Actual: {}",
+            anim.value()
+        );
         assert_eq!(anim.finished(), false);
 
         sleep(Duration::from_secs_f32(0.25));
 
         assert_eq!(anim.finished(), false);
-        assert!(anim.value() >= 0.48 && anim.value() <= 0.52);
+        assert!(
+            anim.value() >= 0.48 && anim.value() <= 0.52,
+            "Actual: {}",
+            anim.value()
+        );
 
         sleep(Duration::from_secs_f32(0.10));
 
