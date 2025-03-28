@@ -17,10 +17,10 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { os: macos, runner: mac, },
+          { os: macos, runner: macos-latest, },
           { os: windows , runner: windows-latest },
 
-          { os: ios, runner: mac },
+          { os: ios, runner: macos-latest },
           { os: android, runner: ubuntu-latest },
         ]
     runs-on: ${{ matrix.target.runner }}

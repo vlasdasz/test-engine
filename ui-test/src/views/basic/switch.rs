@@ -14,7 +14,7 @@ struct SwitchTestView {
 
 impl Setup for SwitchTestView {
     fn setup(self: Weak<Self>) {
-        self.switch.place().back().size(100, 50).center();
+        self.switch.place().size(100, 50).center();
 
         self.switch.selected.val(|on| {
             set_state(on);

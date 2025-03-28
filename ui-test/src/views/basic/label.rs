@@ -16,7 +16,7 @@ struct LabelSettings {
 impl Setup for LabelSettings {
     fn setup(mut self: Weak<Self>) {
         self.label.set_text("ßšėčыў");
-        self.label.place().back().size(280, 280).tl(80);
+        self.label.place().size(280, 280).tl(80);
 
         self.text_size_view
             .place()
