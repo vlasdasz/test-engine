@@ -120,7 +120,7 @@ impl Spinner {
         SpinnerLock { stopped: false }
     }
 
-    pub fn start() {
+    fn start() {
         trace!("Start spinner");
 
         if Self::current().is_ok() {

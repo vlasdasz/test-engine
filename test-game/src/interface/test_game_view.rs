@@ -163,9 +163,9 @@ impl Setup for TestGameView {
         self.spinner.set_text("Spinner");
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
-            Spinner::start();
+            let spin = Spinner::lock();
             async_after(4, async {
-                Spinner::stop();
+                spin.stop();
             });
         });
 
