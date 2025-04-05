@@ -15,7 +15,6 @@ impl App for TestGameApp {
     }
 
     fn setup(&self) {
-        dbg!("setup");
         _BUTTON.apply_globally::<Button>();
         _BUTTON.apply_globally::<Label>();
     }

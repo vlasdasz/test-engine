@@ -7,6 +7,7 @@ use gm::{
     flat::{Point, Size},
 };
 use level::{LevelBase, LevelManager};
+use log::debug;
 use refs::{MainLock, Own, Rglica};
 use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
@@ -45,38 +46,14 @@ impl AppRunner {
 
     #[cfg(not(android))]
     fn setup_log() {
-        use std::io::Write;
-
-        use env_logger::Builder;
+        use fern::Dispatch;
         use log::{Level, LevelFilter};
 
-        Builder::from_default_env()
-            .filter_level(LevelFilter::Debug)
-            .filter_module("winit::platform_impl::platform::app_state", LevelFilter::Error)
-            .filter_module("winit::Window::request_redraw", LevelFilter::Error)
-            .filter_module("wgpu_core::device", LevelFilter::Warn)
-            .filter_module("wgpu_core::present", LevelFilter::Warn)
-            .filter_module("wgpu_core::resource", LevelFilter::Warn)
-            .filter_module("wgpu_core::instance", LevelFilter::Warn)
-            .filter_module("wgpu_hal::metal::surface", LevelFilter::Warn)
-            .filter_module("wgpu_hal::metal::device", LevelFilter::Warn)
-            .filter_module("wgpu_hal::metal", LevelFilter::Warn)
-            .filter_module("wgpu_hal::vulkan::adapter", LevelFilter::Warn)
-            .filter_module("wgpu_hal::vulkan::instance", LevelFilter::Warn)
-            .filter_module("wgpu_hal::dx12::instance", LevelFilter::Warn)
-            .filter_module("wgpu_hal::gles::adapter", LevelFilter::Warn)
-            .filter_module("wgpu_hal::gles::wgl", LevelFilter::Warn)
-            .filter_module("wgpu_hal::gles::egl", LevelFilter::Warn)
-            .filter_module("naga::front", LevelFilter::Warn)
-            .filter_module("naga::proc::constant_evaluator", LevelFilter::Warn)
-            .filter_module("naga::valid::interface", LevelFilter::Warn)
-            .filter_module("naga::valid::function", LevelFilter::Warn)
-            .filter_module("sqlx_core::logger", LevelFilter::Warn)
-            .filter_module("hyper_util::client::legacy::pool", LevelFilter::Warn)
-            .filter_module("hyper_util::client::legacy::connect::dns", LevelFilter::Warn)
-            .filter_module("hyper_util::client::legacy::connect::http", LevelFilter::Warn)
-            .format(|f, record| {
-                let level = match record.level() {
+        Dispatch::new()
+            .level(LevelFilter::Warn)
+            .level_for("test_engine", LevelFilter::Debug)
+            .format(|out, message, record| {
+                let level_icon = match record.level() {
                     Level::Error => "🔴",
                     Level::Warn => "🟡",
                     Level::Info => "🟢",
@@ -84,34 +61,31 @@ impl AppRunner {
                     Level::Trace => "⚪",
                 };
 
-                // let level = match record.level() {
-                //     Level::Error => "ERROR",
-                //     Level::Warn => "WARNING",
-                //     Level::Info => "INFO",
-                //     Level::Debug => "DEBUG",
-                //     Level::Trace => "TRACE",
-                // };
-
                 let location = false;
                 let module = false;
 
-                let mut log = format!("{level} {}", record.args());
+                let mut log = format!("{level_icon} {message}");
 
                 if location {
                     log = format!(
-                        "[{}::{}] {log}",
+                        "[{}::{}] {}",
                         record.file().unwrap_or_default(),
-                        record.line().unwrap_or_default()
+                        record.line().unwrap_or_default(),
+                        log
                     );
                 }
 
                 if module {
-                    log = format!("{} {log}", record.module_path().unwrap_or_default());
+                    log = format!("{} {}", record.module_path().unwrap_or_default(), log);
                 }
 
-                writeln!(f, "{log}")
+                out.finish(format_args!("{log}"));
             })
-            .init();
+            .chain(std::io::stdout())
+            .apply()
+            .expect("Failed to initialize logging");
+
+        debug!("Logs setup");
     }
 
     fn new(first_view: Own<dyn View>) -> Self {
@@ -129,6 +103,7 @@ impl AppRunner {
 
     #[cfg(not(target_os = "android"))]
     pub async fn start(root_view: Own<dyn View>) -> Result<()> {
+        Self::setup_log();
         Window::start(Self::new(root_view)).await
     }
 

@@ -9,7 +9,7 @@ use gm::{
     Color, LossyConvert, Platform,
     flat::{Point, Size},
 };
-use log::{error, info, warn};
+use log::{debug, error, info, warn};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
@@ -340,7 +340,7 @@ impl ApplicationHandler<Events> for Window {
                 scale_factor,
                 inner_size_writer: _,
             } => {
-                dbg!(&scale_factor);
+                debug!("Scale factor: {scale_factor}");
             }
             WindowEvent::RedrawRequested => {
                 if self.close.load(Ordering::Relaxed) {
