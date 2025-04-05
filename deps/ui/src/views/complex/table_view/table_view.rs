@@ -78,7 +78,7 @@ impl TableView {
 
         let offset = self.scroll.base_view_mut().content_offset;
 
-        let first_index: usize = (-offset / cell_height).floor().lossy_convert();
+        let first_index: usize = dbg!((-dbg!(offset) / dbg!(cell_height))).floor().lossy_convert();
 
         let mut last_index = first_index + number_of_cells_fits + 1;
 

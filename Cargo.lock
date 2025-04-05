@@ -4833,9 +4833,9 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
 name = "vents"
-version = "0.7.0"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "80f3d8b5a520fb43005cea47e5c999692ac373d77c11b6bf0145130f959fa7d3"
+checksum = "0730c6b2983886960ee996aeae2720ea6af84f88c39016ef2591f8bb4f9b7100"
 dependencies = [
  "chrono",
  "log",
