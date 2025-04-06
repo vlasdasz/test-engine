@@ -40,6 +40,7 @@ rapier2d = { version = "0.23", features = ["simd-nightly"] }
 aes-gcm = "0.10.3"
 cgmath = "0.18"
 indexmap = "2.2"
+jni = "0.21.1"
 lyon = "1.0"
 rodio = "0.20.1"
 rust_decimal = "1.35"
@@ -48,7 +49,6 @@ serde_json = "1.0"
 syn = { version = "2.0", features = ["full", "extra-traits"] }
 tokio = { version = "1.44", features = ["full"] }
 walkdir = "2.5"
-jni = "0.21.1"
 web-time = "1.0.0"
 
 wgpu = "24.0"

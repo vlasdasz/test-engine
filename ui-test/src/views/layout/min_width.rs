@@ -16,7 +16,7 @@ struct MinWidth {
 impl Setup for MinWidth {
     fn setup(mut self: Weak<Self>) {
         self.container.set_color(Color::GREEN);
-        self.container.set_size((400, 400)).set_position((20, 20));
+        self.container.set_size(400, 400).set_position((20, 20));
 
         self.view = self.container.add_view();
         self.view.set_color(Color::BLUE);

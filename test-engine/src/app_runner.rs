@@ -208,7 +208,7 @@ impl window::WindowEvents for AppRunner {
     }
 
     fn resize(&mut self, inner_position: Point, size: Size) {
-        UIManager::root_view_weak().set_size(size);
+        UIManager::root_view_weak().set_size(size.width, size.height);
 
         if Platform::IOS {
             UIManager::root_view_weak().set_position(inner_position);

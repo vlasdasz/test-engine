@@ -80,7 +80,7 @@ impl Setup for Spinner {
         for _ in 0..CIRCLES_N {
             let mut circle = self.add_view::<Container>();
 
-            circle.set_size((16, 16));
+            circle.set_size(16, 16);
             circle.set_color(Color::LIGHT_BLUE);
             circle.set_corner_radius(8);
 

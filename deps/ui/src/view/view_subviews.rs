@@ -1,10 +1,7 @@
 use std::{any::type_name, ops::DerefMut};
 
 use fake::Fake;
-use gm::{
-    Color,
-    flat::{Point, Size},
-};
+use gm::{Color, flat::Point};
 use refs::{Own, Weak, weak_from_ref};
 
 use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};
@@ -124,8 +121,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
         let mut view = self.add_view::<Container>();
 
-        let size: Size = ((10.0..MAX_SIZE).fake::<f32>(), (10.0..MAX_SIZE).fake::<f32>()).into();
-        view.set_size(size);
+        view.set_size((10.0..MAX_SIZE).fake::<f32>(), (10.0..MAX_SIZE).fake::<f32>());
 
         let origin: Point = (
             (10.0..MAX_POSITION).fake::<f32>(),

@@ -37,7 +37,7 @@ impl Setup for HighlightView {
 
 impl HighlightView {
     pub fn set(&mut self, pos: impl Into<Point>, expected: Color, actual: Color) {
-        self.set_size((150, 150));
+        self.set_size(150, 150);
         self.set_center(pos);
         [self.t, self.b, self.l].apply(|mut v| {
             v.set_color(expected);

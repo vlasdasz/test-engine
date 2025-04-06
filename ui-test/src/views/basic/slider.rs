@@ -187,7 +187,7 @@ pub async fn test_slider() -> Result<()> {
             view.slider.set_value(i);
             let mut label = view.add_view::<Label>();
             label.set_text(i);
-            label.set_size((50, 20));
+            label.set_size(50, 20);
             label.set_x(340);
             label.set_y(view.slider.indicator_position() - 10.0 + view.slider.y());
         })

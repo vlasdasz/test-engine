@@ -61,11 +61,13 @@ impl<T: ToLabel + Clone + 'static> DropDown<T> {
             self.label.set_text(first);
         }
 
-        let table_size = (
+        let size: Size = (
             self.width(),
             self.height() * self.number_of_cells().lossy_convert(),
-        );
-        self.table.set_size(table_size);
+        )
+            .into();
+
+        self.table.set_size(size.width, size.height);
     }
 
     pub fn custom_format(&mut self, format: impl Fn(T) -> String + 'static) {
@@ -83,8 +85,8 @@ impl<T: ToLabel + Clone + 'static> DropDown<T> {
             self.button.set_hidden(true);
             self.table.set_hidden(false);
             let table_height = self.height() * self.number_of_cells().lossy_convert();
-            let table_size = (self.width(), table_height);
-            self.table.set_size(table_size);
+            let width = self.width();
+            self.table.set_size(width, table_height);
             self.table.reload_data();
 
             if self.superview().height() - self.max_y() < table_height {

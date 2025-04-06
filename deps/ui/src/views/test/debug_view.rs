@@ -54,7 +54,7 @@ impl DebugView {
         if Platform::MOBILE {
             container.set_y(400);
         }
-        container.set_size((200, 280));
+        container.set_size(200, 280);
     }
 
     pub fn disable() {
