@@ -3,7 +3,7 @@ use std::mem::size_of;
 use bytemuck::{Pod, Zeroable};
 use educe::Educe;
 use gm::{
-    Color,
+    color::Color,
     flat::{Point, Size},
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};

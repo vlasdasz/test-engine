@@ -1,6 +1,9 @@
 use anyhow::Result;
 use dispatch::from_main;
-use gm::{Color, U8Color, flat::Point};
+use gm::{
+    color::{Color, LIGHT_GRAY, U8Color},
+    flat::Point,
+};
 use ui::{
     Button, Container, HighlightView, Setup, UIManager, View, ViewData, ViewFrame, ViewSubviews, WeakView,
 };
@@ -35,7 +38,7 @@ pub fn add_action(action: impl FnMut() + Send + 'static) {
         .downcast::<Button>()
         .unwrap();
     button.place().size(100, 100).bl(0);
-    button.set_color(Color::LIGHT_GRAY);
+    button.set_color(LIGHT_GRAY);
     button.on_tap(action);
     button.base_view_mut().view_label = "Debug Action Button".into();
 }

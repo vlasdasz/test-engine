@@ -4,8 +4,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Size, Top, X},
-        Button, Color, Container, HasText, Point, PositionView, Setup, ViewCallbacks, ViewData, ViewFrame,
-        ViewSubviews, view,
+        Button, Container, HasText, Point, PositionView, Setup, ViewCallbacks, ViewData, ViewFrame,
+        ViewSubviews, WHITE, view,
     },
 };
 
@@ -38,7 +38,7 @@ impl Setup for PolygonView {
             dbg!(&self.points);
         });
 
-        self.center.set_color(Color::WHITE).place().size(5, 5).center();
+        self.center.set_color(WHITE).place().size(5, 5).center();
 
         after(0.1, move || self.add_first_points());
     }
@@ -92,7 +92,7 @@ impl ViewCallbacks for PolygonView {
         //     return;
         // }
         //
-        // drawer.polygon_test.add(&self.points, (0, 0).into(), Color::GREEN,
+        // drawer.polygon_test.add(&self.points, (0, 0).into(), GREEN,
         // 0.0);
         //
         // drawer.polygon_test.draw(

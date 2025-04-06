@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Color, Container, ImageView, Setup, UI, UIImages, ViewData, ViewSubviews, view},
+    ui::{Container, GREEN, ImageView, Setup, UI, UIImages, ViewData, ViewSubviews, view},
     ui_test::helpers::check_colors,
 };
 
@@ -15,7 +15,7 @@ struct ImageOnView {
 
 impl Setup for ImageOnView {
     fn setup(mut self: Weak<Self>) {
-        self.container.set_color(Color::GREEN).place().size(200, 200).tl(100);
+        self.container.set_color(GREEN).place().size(200, 200).tl(100);
 
         self.image = self.container.add_view();
 

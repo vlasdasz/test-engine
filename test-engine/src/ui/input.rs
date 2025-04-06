@@ -1,4 +1,4 @@
-use gm::Color;
+use gm::color::Color;
 use level::LevelManager;
 use log::warn;
 use ui::{

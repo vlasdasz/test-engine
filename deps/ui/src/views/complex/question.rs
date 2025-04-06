@@ -4,7 +4,10 @@ use std::{
 };
 
 use dispatch::from_main;
-use gm::{Color, flat::Size};
+use gm::{
+    color::{BLACK, BLUE, GRAY},
+    flat::Size,
+};
 use refs::Weak;
 use tokio::sync::oneshot::channel;
 use ui_proc::view;
@@ -99,7 +102,7 @@ impl IntoFuture for Question {
 
 impl Setup for Question {
     fn setup(mut self: Weak<Self>) {
-        self.set_corner_radius(10).set_border_color(Color::BLACK);
+        self.set_corner_radius(10).set_border_color(BLACK);
 
         let question = self.question.clone();
         let left = self.left.clone();
@@ -112,21 +115,15 @@ impl Setup for Question {
 
         self.ok_button.place().h(50).br(2).relative(Width, self, 0.5);
 
-        self.ok_button
-            .set_text(right)
-            .set_border_color(Color::GRAY)
-            .set_text_color(Color::BLUE);
+        self.ok_button.set_text(right).set_border_color(GRAY).set_text_color(BLUE);
 
         self.ok_button.on_tap(move || self.hide_modal(true));
 
         self.cancel_button.place().h(50).bl(2).relative(Width, self, 0.5);
-        self.cancel_button
-            .set_text(left)
-            .set_border_color(Color::GRAY)
-            .set_text_color(Color::BLUE);
+        self.cancel_button.set_text(left).set_border_color(GRAY).set_text_color(BLUE);
 
         self.cancel_button.on_tap(move || self.hide_modal(false));
 
-        self.outline(Color::BLACK);
+        self.outline(BLACK);
     }
 }

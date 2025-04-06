@@ -1,6 +1,6 @@
 use educe::Educe;
 use gm::{
-    Color,
+    color::Color,
     flat::{Point, PointsPath, Shape, Size},
 };
 use refs::Weak;

@@ -4,8 +4,8 @@ use anyhow::Result;
 use test_engine::{
     refs::{Own, Weak},
     ui::{
-        Button, CollectionData, CollectionView, Color, Container, HasText, ImageView, Label, Setup, Size, UI,
-        View, ViewData, ViewSubviews,
+        Button, CollectionData, CollectionView, Container, GREEN, HasText, ImageView, Label, Setup, Size,
+        TURQUOISE, UI, View, ViewData, ViewSubviews,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
@@ -23,14 +23,9 @@ struct SomeView {
 impl Setup for SomeView {
     fn setup(mut self: Weak<Self>) {
         self.table.set_data_source(self.deref()).place().size(400, 400);
-        self.label
-            .set_text("Hello")
-            .set_color(Color::GREEN)
-            .place()
-            .size(200, 200)
-            .tr(10);
+        self.label.set_text("Hello").set_color(GREEN).place().size(200, 200).tr(10);
         self.image.set_image("plus.png").place().size(200, 200).bl(10);
-        self.square.set_color(Color::TURQUOISE).place().size(200, 200).br(10);
+        self.square.set_color(TURQUOISE).place().size(200, 200).br(10);
     }
 }
 

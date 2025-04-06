@@ -3,7 +3,7 @@ use test_engine::{
     AppRunner,
     refs::Weak,
     ui::{
-        Anchor, Button, Color, HasText, Setup, UI, ViewData, ViewSubviews,
+        Anchor, Button, GREEN, HasText, ORANGE, Setup, UI, ViewData, ViewSubviews,
         ui_test::{
             inject_touches,
             state::{append_state, clear_state, get_state},
@@ -80,8 +80,8 @@ impl Setup for LayoutPlace {
 
         self.center.place().center();
 
-        self.top.set_color(Color::ORANGE).place().center_x().t(80);
-        self.bottom.set_color(Color::GREEN).place().center_x().b(80);
+        self.top.set_color(ORANGE).place().center_x().t(80);
+        self.bottom.set_color(GREEN).place().center_x().b(80);
         self.left.place().center_y().l(80);
         self.right.place().center_y().r(80);
 

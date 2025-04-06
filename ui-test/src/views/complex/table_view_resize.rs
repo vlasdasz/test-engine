@@ -5,7 +5,7 @@ use test_engine::{
     from_main,
     refs::{Own, Weak},
     ui::{
-        AfterSetup, Color, HasText, Label, Setup, TableData, TableView, UI, View, ViewData, ViewFrame, view,
+        AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, UI, View, ViewData, ViewFrame, view,
     },
     ui_test::{check_colors, inject_scroll},
 };
@@ -34,7 +34,7 @@ impl TableData for TableViewResize {
 
     fn make_cell(&self) -> Own<dyn View> {
         Label::new().after_setup(|mut label| {
-            label.set_color(Color::GREEN);
+            label.set_color(GREEN);
         })
     }
 

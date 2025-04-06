@@ -1,7 +1,7 @@
 use std::{any::type_name, ops::DerefMut};
 
 use fake::Fake;
-use gm::{Color, flat::Point};
+use gm::{color::Color, flat::Point};
 use refs::{Own, Weak, weak_from_ref};
 
 use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};

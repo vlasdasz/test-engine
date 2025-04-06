@@ -4,7 +4,7 @@ mod test_engine {
 
     pub(crate) use crate as ui;
 }
-use gm::Color;
+use gm::color::GRAY;
 use ui_proc::view;
 
 use crate::{Button, Container, Setup, ViewData, ViewSubviews, has_data::HasText};
@@ -34,7 +34,7 @@ impl Setup for KeyboardView {
 
             container.place().all_hor();
             for button in *row {
-                container.add_view::<Button>().set_text(button).outline(Color::GRAY);
+                container.add_view::<Button>().set_text(button).outline(GRAY);
             }
         }
     }

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Anchor::Left, Color, Container, ImageView, Setup, UI, ViewData, view},
+    ui::{Anchor::Left, BLUE, Container, ImageView, Setup, UI, ViewData, YELLOW, view},
     ui_test::check_colors,
 };
 
@@ -15,13 +15,13 @@ struct CornerRadius {
 
 impl Setup for CornerRadius {
     fn setup(mut self: Weak<Self>) {
-        self.square.set_color(Color::BLUE).set_corner_radius(50);
+        self.square.set_color(BLUE).set_corner_radius(50);
         self.square.place().size(100, 100).tl(50);
 
         self.image.set_image("cat.png").set_corner_radius(40);
         self.image.place().size(100, 200).t(50).anchor(Left, self.square, 20);
 
-        self.wide.set_color(Color::YELLOW).set_corner_radius(20);
+        self.wide.set_color(YELLOW).set_corner_radius(20);
         self.wide.place().size(200, 100).t(50).anchor(Left, self.image, 20);
     }
 }

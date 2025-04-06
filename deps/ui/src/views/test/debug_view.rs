@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt::Display};
 
-use gm::{Color, Platform};
+use gm::{Platform, color::WHITE};
 use refs::{MainLock, Own, Weak, dump_ref_stats};
 
 use crate::has_data::HasText;
@@ -87,7 +87,7 @@ impl Setup for DebugView {
         *CURRENT.get_mut() = self;
 
         self.set_hidden(false);
-        self.set_color(Color::WHITE);
+        self.set_color(WHITE);
 
         self.place().all_ver();
 

@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable, cast_slice};
-use gm::{Color, checked_usize_to_u32, flat::Point};
+use gm::{checked_usize_to_u32, color::Color, flat::Point};
 use wgpu::{
     BindGroup, BindGroupLayout, Buffer, BufferUsages, IndexFormat, PipelineLayoutDescriptor, PolygonMode,
     PrimitiveTopology, RenderPass, RenderPipeline, ShaderStages, include_wgsl,

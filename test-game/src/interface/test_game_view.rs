@@ -8,9 +8,10 @@ use test_engine::{
     ui::{
         Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
-        Button, Color, ColorMeter, Container, DPadView, DrawingView, HasText, ImageView, Label, MovableView,
-        NumberView, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView, Style, Switch,
-        TextField, UIManager, ViewData, ViewFrame, ViewSubviews, view,
+        BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
+        MovableView, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner, SpriteView,
+        StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, WHITE,
+        view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -109,10 +110,10 @@ impl Setup for TestGameView {
 
         self.setup_keymap();
 
-        self.tl.set_color(Color::PURPLE).place().size(100, 100).tl(10);
-        self.tr.set_color(Color::GREEN).place().size(100, 100).tr(10);
-        self.bl.set_color(Color::BLUE).place().size(100, 100).bl(10);
-        self.br.set_color(Color::ORANGE).place().size(100, 100).br(10);
+        self.tl.set_color(PURPLE).place().size(100, 100).tl(10);
+        self.tr.set_color(GREEN).place().size(100, 100).tr(10);
+        self.bl.set_color(BLUE).place().size(100, 100).bl(10);
+        self.br.set_color(ORANGE).place().size(100, 100).br(10);
 
         self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);
@@ -137,7 +138,7 @@ impl Setup for TestGameView {
             .same([Height, Y], self.image_r)
             .w(50)
             .anchor(Left, self.image_r, 10);
-        self.gradient.set_gradient(Color::PURPLE, Color::TURQUOISE);
+        self.gradient.set_gradient(PURPLE, TURQUOISE);
         self.gradient.set_corner_radius(20);
 
         self.dpad.place().size(200, 140).b(20).anchor(Left, self.bl, 10);
@@ -199,13 +200,10 @@ impl Setup for TestGameView {
             .anchor(Anchor::Right, self.tr, 10)
             .relative(Height, self, 0.2);
 
-        self.drawing
-            .add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)], Color::GREEN);
+        self.drawing.add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)], GREEN);
 
-        self.drawing.add_path(
-            PointsPath::circle_triangles_with((200, 100), 50, 5),
-            Color::TURQUOISE,
-        );
+        self.drawing
+            .add_path(PointsPath::circle_triangles_with((200, 100), 50, 5), TURQUOISE);
 
         self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
 
@@ -282,7 +280,7 @@ impl Setup for TestGameView {
         let player = self.level.player;
         self.sprite_view.set_sprite(player);
 
-        self.bool_storage_view.set_off_color(Color::WHITE).set_on(BOOL.get());
+        self.bool_storage_view.set_off_color(WHITE).set_on(BOOL.get());
         self.bool_storage_view
             .place()
             .same([X, Height], self.ui_bench)

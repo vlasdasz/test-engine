@@ -6,7 +6,8 @@ use std::sync::{
 use anyhow::{Result, anyhow};
 use dispatch::on_main;
 use gm::{
-    Color, LossyConvert, Platform,
+    LossyConvert, Platform,
+    color::Color,
     flat::{Point, Size},
 };
 use log::{debug, error, info, warn};

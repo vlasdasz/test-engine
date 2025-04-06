@@ -2,16 +2,16 @@ use anyhow::Result;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Color, HasText, NumberView, Setup, Style, UI, ViewData, ViewSubviews, view},
+    ui::{BLUE, HasText, LIGHT_GRAY, NumberView, Setup, Style, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
 const STYLE: Style = Style::new(|view| {
     view.apply_if::<NumberView>(|num| {
         num.set_labels("+", "–")
-            .set_text_color(Color::LIGHT_GRAY)
+            .set_text_color(LIGHT_GRAY)
             .set_text_size(80)
-            .set_gradient(Color::BLUE, (0, 150, 150))
+            .set_gradient(BLUE, (0, 150, 150))
             .set_corner_radius(20);
     })
 });

@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::{
-    Color,
+    color::Color,
     flat::{Point, Shape},
 };
 use rapier2d::dynamics::CoefficientCombineRule;

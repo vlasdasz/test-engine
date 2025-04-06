@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Color, Container, Setup, UI, UIManager, ViewData, ViewFrame, ViewSubviews, view},
+    ui::{BLACK, BLUE, Container, GREEN, RED, Setup, UI, UIManager, ViewData, ViewFrame, ViewSubviews, view},
     ui_test::helpers::check_colors,
 };
 
@@ -16,10 +16,10 @@ pub struct ViewOrder {
 
 impl Setup for ViewOrder {
     fn setup(mut self: Weak<Self>) {
-        self.view_1.set_color(Color::RED).place().size(200, 200);
-        self.view_2.set_color(Color::GREEN).place().size(200, 200).tl(100);
-        self.view_3.set_color(Color::BLUE).place().size(200, 200).tl(200);
-        self.view_4.set_color(Color::BLACK).place().size(200, 200).tl(300);
+        self.view_1.set_color(RED).place().size(200, 200);
+        self.view_2.set_color(GREEN).place().size(200, 200).tl(100);
+        self.view_3.set_color(BLUE).place().size(200, 200).tl(200);
+        self.view_4.set_color(BLACK).place().size(200, 200).tl(300);
     }
 }
 

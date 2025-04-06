@@ -1,6 +1,6 @@
-use gm::Color;
 use refs::MainLock;
 use render::data::{PathData, RectView, UIRectInstance};
+use test_engine::ui::{BLUE, RED};
 use window::{RenderPass, Window};
 
 use crate::pipelines::{PATH, UI_RECT};
@@ -10,7 +10,7 @@ static PATH_DATA: MainLock<Option<PathData>> = MainLock::new();
 pub(crate) fn render_path(pass: &mut RenderPass) {
     let path = PATH_DATA.set(
         PathData::new(
-            Color::BLUE,
+            BLUE,
             Window::render_size(),
             (200, 200).into(),
             &[
@@ -28,12 +28,9 @@ pub(crate) fn render_path(pass: &mut RenderPass) {
 
     PATH.draw(pass, path.buffer(), path.uniform_bind(), path.vertex_range(), 0.5);
 
-    UI_RECT.get_mut().add(UIRectInstance::new(
-        (450, 200, 200, 200).into(),
-        Color::RED,
-        0.0,
-        0.5,
-    ));
+    UI_RECT
+        .get_mut()
+        .add(UIRectInstance::new((450, 200, 200, 200).into(), RED, 0.0, 0.5));
 
     UI_RECT.get_mut().draw(
         pass,

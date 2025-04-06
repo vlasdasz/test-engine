@@ -5,7 +5,7 @@ pub(crate) mod views;
 
 pub use ::ui::*;
 pub use gm::{
-    Color, U8Color,
+    color::*,
     flat::{Point, PointsPath, Rect, Size},
 };
 pub use input::*;

@@ -1,4 +1,4 @@
-use gm::Color;
+use gm::color::{BLUE, Color, GREEN};
 use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
@@ -41,7 +41,7 @@ impl Switch {
             .tb(MARGIN);
         if on {
             self.center.place().r(MARGIN);
-            self.set_color(Color::GREEN);
+            self.set_color(GREEN);
         } else {
             self.center.place().l(MARGIN);
             self.set_color(self.off_color);
@@ -57,7 +57,7 @@ impl Switch {
 impl Setup for Switch {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
-        self.center.set_color(Color::BLUE);
+        self.center.set_color(BLUE);
         self.set_on(false);
         self.touch().began.sub(move || {
             let on = !self.on;

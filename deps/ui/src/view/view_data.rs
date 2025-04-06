@@ -1,6 +1,6 @@
 use std::ops::DerefMut;
 
-use gm::{Color, ToF32};
+use gm::{ToF32, color::Color};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 

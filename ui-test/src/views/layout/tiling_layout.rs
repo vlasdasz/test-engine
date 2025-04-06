@@ -1,7 +1,7 @@
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Button, Color, Container, HasText, Setup, UI, ViewData, ViewSubviews, view},
+    ui::{BLACK, BLUE, Button, Container, GREEN, HasText, RED, Setup, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -13,11 +13,11 @@ struct TilingLayout {
 
 impl Setup for TilingLayout {
     fn setup(mut self: Weak<Self>) {
-        self.menu.set_color(Color::BLACK).place().tl(20).size(280, 280).all_ver();
+        self.menu.set_color(BLACK).place().tl(20).size(280, 280).all_ver();
 
-        self.menu.add_view::<Container>().set_color(Color::RED);
-        self.menu.add_view::<Container>().set_color(Color::GREEN);
-        self.menu.add_view::<Container>().set_color(Color::BLUE);
+        self.menu.add_view::<Container>().set_color(RED);
+        self.menu.add_view::<Container>().set_color(GREEN);
+        self.menu.add_view::<Container>().set_color(BLUE);
     }
 }
 

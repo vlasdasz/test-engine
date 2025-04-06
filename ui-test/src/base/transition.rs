@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Button, Color, HasText, Setup, UI, ViewData, ViewTransition, view},
+    ui::{BLUE, Button, HasText, Setup, UI, ViewData, ViewTransition, view},
     ui_test::{check_colors, inject_touches},
 };
 
@@ -34,7 +34,7 @@ struct BlueView {}
 
 impl Setup for BlueView {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::BLUE);
+        self.set_color(BLUE);
         ACTIONS.lock().unwrap().push("Blue setup");
     }
 }

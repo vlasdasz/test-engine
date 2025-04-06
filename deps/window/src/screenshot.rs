@@ -1,5 +1,6 @@
 use gm::{
-    Color, LossyConvert, U8Color,
+    LossyConvert,
+    color::{Color, U8Color},
     flat::{Point, Size},
 };
 

@@ -1,7 +1,7 @@
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Color, Container, Setup, UI, ViewData, ViewFrame, ViewSubviews, view},
+    ui::{BLUE, Container, GREEN, Setup, UI, ViewData, ViewFrame, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -15,11 +15,11 @@ struct MinWidth {
 
 impl Setup for MinWidth {
     fn setup(mut self: Weak<Self>) {
-        self.container.set_color(Color::GREEN);
+        self.container.set_color(GREEN);
         self.container.set_size(400, 400).set_position((20, 20));
 
         self.view = self.container.add_view();
-        self.view.set_color(Color::BLUE);
+        self.view.set_color(BLUE);
         self.view.place().all_sides(150);
     }
 }

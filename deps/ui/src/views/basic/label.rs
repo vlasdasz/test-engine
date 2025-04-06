@@ -1,4 +1,7 @@
-use gm::{Color, ToF32};
+use gm::{
+    ToF32,
+    color::{BLACK, Color, WHITE},
+};
 use refs::Weak;
 use ui_proc::view;
 
@@ -82,8 +85,8 @@ impl Label {
 impl Setup for Label {
     fn setup(mut self: Weak<Self>) {
         self.text_size = 32.0;
-        self.set_color(Color::WHITE);
-        self.text_color = Color::BLACK;
+        self.set_color(WHITE);
+        self.text_color = BLACK;
 
         Style::apply_global(self);
     }

@@ -1,6 +1,6 @@
 use gm::{
-    Color,
     axis::Axis,
+    color::Color,
     flat::{Point, Size},
 };
 use render::data::PathData;

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Color, Container, MovableView, Setup, UI, ViewData, ViewFrame, view},
+    ui::{Container, GREEN, MovableView, Setup, UI, ViewData, ViewFrame, view},
     ui_test::{check_colors, inject_touches},
 };
 
@@ -15,7 +15,7 @@ impl Setup for MovableViewTestView {
     fn setup(mut self: Weak<Self>) {
         self.movable.set_title("Movable view");
         self.movable.set_frame((10, 10, 400, 400));
-        self.movable.target_view.set_color(Color::GREEN);
+        self.movable.target_view.set_color(GREEN);
     }
 }
 

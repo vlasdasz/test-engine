@@ -1,5 +1,5 @@
 use dispatch::on_main;
-use gm::{Animation, Color};
+use gm::{Animation, color::WHITE};
 use refs::{Own, Weak};
 use ui_proc::view;
 
@@ -51,7 +51,7 @@ impl NavigationView {
 
             let mut prev_view = self.subviews().last().unwrap().weak_view();
 
-            view.set_color(Color::WHITE);
+            view.set_color(WHITE);
             let mut view = self.add_subview(view);
             view.place().back();
             view.set_navigation_view(self);

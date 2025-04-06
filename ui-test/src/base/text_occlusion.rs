@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Color, HasText, Label, Setup, UI, ViewData, view},
+    ui::{HasText, LIGHT_GRAY, Label, Setup, UI, ViewData, view},
     ui_test::helpers::check_colors,
 };
 
@@ -24,7 +24,7 @@ impl Setup for TextOccclusion {
         self.label_above
             .set_text_size(140)
             .set_text("A A A A A")
-            .set_color(Color::LIGHT_GRAY)
+            .set_color(LIGHT_GRAY)
             .place()
             .right_half();
     }

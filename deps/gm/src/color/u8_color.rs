@@ -1,4 +1,7 @@
-use crate::{Color, ToF32, color::helpers::srgb_to_linear};
+use crate::{
+    ToF32,
+    color::{Color, helpers::srgb_to_linear},
+};
 
 pub type U8Color = Color<u8>;
 

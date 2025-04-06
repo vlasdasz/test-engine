@@ -1,4 +1,4 @@
-use gm::{Color, ToF32, flat::PointsPath};
+use gm::{ToF32, color::Color, flat::PointsPath};
 use refs::Weak;
 use ui_proc::view;
 

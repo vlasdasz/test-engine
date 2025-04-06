@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Color, ScrollView, Setup, UI, ViewData, view},
+    ui::{ScrollView, Setup, TURQUOISE, UI, ViewData, view},
     ui_test::{
         helpers::{add_corners, check_colors},
         inject_scroll, inject_touches,
@@ -19,7 +19,7 @@ impl Setup for Scrolling {
     fn setup(mut self: Weak<Self>) {
         self.scroll.set_content_size((600, 600));
         self.scroll.place().back();
-        add_corners(self.scroll, Color::TURQUOISE);
+        add_corners(self.scroll, TURQUOISE);
     }
 }
 

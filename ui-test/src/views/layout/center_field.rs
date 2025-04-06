@@ -1,7 +1,7 @@
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Anchor::CenterY, Color, Container, Setup, UI, ViewData, ViewSubviews, view},
+    ui::{Anchor::CenterY, BLUE, Container, GREEN, Setup, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -15,12 +15,12 @@ struct CenterField {
 
 impl Setup for CenterField {
     fn setup(mut self: Weak<Self>) {
-        self.container.set_color(Color::GREEN);
+        self.container.set_color(GREEN);
         self.container.place().all_sides(100);
 
         self.field = self.container.add_view();
 
-        self.field.set_color(Color::BLUE);
+        self.field.set_color(BLUE);
         self.field.place().lr(20).h(68);
     }
 }
