@@ -2,7 +2,10 @@ use std::hash::{Hash, Hasher};
 
 use fake::Fake;
 
-use crate::{Color, U8Color, color::helpers::srgb_to_linear, num::lossy_convert::LossyConvert};
+use crate::{
+    color::{Color, U8Color, helpers::srgb_to_linear},
+    num::lossy_convert::LossyConvert,
+};
 
 impl Color<f32> {
     pub const fn rgb(r: f32, g: f32, b: f32) -> Self {
@@ -21,38 +24,38 @@ impl From<Color> for U8Color {
     }
 }
 
-impl Color {
-    pub const BLACK: Color = Color::rgb(0.0, 0.0, 0.0);
-    pub const WHITE: Color = Color::rgb(1.0, 1.0, 1.0);
-    pub const RED: Color = Color::rgb(1.0, 0.0, 0.0);
-    pub const GREEN: Color = Color::rgb(0.0, 1.0, 0.0);
-    pub const BLUE: Color = Color::rgb(0.0, 0.0, 0.8);
-    pub const LIGHT_BLUE: Color = Color::rgb(0.0, 0.7, 1.0);
-    pub const GRAY_BLUE: Color = Color::rgb(0.1, 0.2, 0.3);
-    pub const YELLOW: Color = Color::rgb(1.0, 1.0, 0.0);
-    pub const ORANGE: Color = Color::rgb(1.0, 0.6, 0.0);
-    pub const PURPLE: Color = Color::rgb(1.0, 0.0, 1.0);
-    pub const TURQUOISE: Color = Color::rgb(0.0, 1.0, 1.0);
-    pub const GRAY: Color = Color::rgb(0.5, 0.5, 0.5);
-    pub const BROWN: Color = Color::rgb(0.7, 0.4, 0.2);
-    pub const LIGHT_GRAY: Color = Color::rgb(0.8, 0.8, 0.8);
-    pub const LIGHTER_GRAY: Color = Color::rgb(0.9, 0.9, 0.9);
-    pub const CLEAR: Color = Color::rgba(0.0, 0.0, 0.0, 0.0);
+pub const BLACK: Color = Color::rgb(0.0, 0.0, 0.0);
+pub const WHITE: Color = Color::rgb(1.0, 1.0, 1.0);
+pub const RED: Color = Color::rgb(1.0, 0.0, 0.0);
+pub const GREEN: Color = Color::rgb(0.0, 1.0, 0.0);
+pub const BLUE: Color = Color::rgb(0.0, 0.0, 0.8);
+pub const LIGHT_BLUE: Color = Color::rgb(0.0, 0.7, 1.0);
+pub const GRAY_BLUE: Color = Color::rgb(0.1, 0.2, 0.3);
+pub const YELLOW: Color = Color::rgb(1.0, 1.0, 0.0);
+pub const ORANGE: Color = Color::rgb(1.0, 0.6, 0.0);
+pub const PURPLE: Color = Color::rgb(1.0, 0.0, 1.0);
+pub const TURQUOISE: Color = Color::rgb(0.0, 1.0, 1.0);
+pub const GRAY: Color = Color::rgb(0.5, 0.5, 0.5);
+pub const BROWN: Color = Color::rgb(0.7, 0.4, 0.2);
+pub const LIGHT_GRAY: Color = Color::rgb(0.8, 0.8, 0.8);
+pub const LIGHTER_GRAY: Color = Color::rgb(0.9, 0.9, 0.9);
+pub const CLEAR: Color = Color::rgba(0.0, 0.0, 0.0, 0.0);
 
+impl Color {
     const ALL: [Color; 13] = [
-        Color::BLACK,
-        Color::WHITE,
-        Color::RED,
-        Color::GREEN,
-        Color::BLUE,
-        Color::LIGHT_BLUE,
-        Color::YELLOW,
-        Color::ORANGE,
-        Color::PURPLE,
-        Color::TURQUOISE,
-        Color::BROWN,
-        Color::LIGHT_GRAY,
-        Color::LIGHTER_GRAY,
+        BLACK,
+        WHITE,
+        RED,
+        GREEN,
+        BLUE,
+        LIGHT_BLUE,
+        YELLOW,
+        ORANGE,
+        PURPLE,
+        TURQUOISE,
+        BROWN,
+        LIGHT_GRAY,
+        LIGHTER_GRAY,
     ];
 
     pub fn random() -> Self {
@@ -71,9 +74,9 @@ impl Hash for Color<f32> {
 
 #[test]
 fn color_diff() {
-    assert_eq!(Color::WHITE.diff(Color::CLEAR), 4.0);
-    assert_eq!(Color::WHITE.diff(Color::WHITE), 0.0);
-    assert_eq!(Color::WHITE.diff(Color::WHITE.with_alpha(0.9)), 0.100000024);
+    assert_eq!(WHITE.diff(CLEAR), 4.0);
+    assert_eq!(WHITE.diff(WHITE), 0.0);
+    assert_eq!(WHITE.diff(WHITE.with_alpha(0.9)), 0.100000024);
 }
 
 #[test]

@@ -2,7 +2,11 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
 
 use anyhow::Result;
 use bytemuck::cast_slice;
-use gm::{Color, LossyConvert, Platform, U8Color, flat::Size};
+use gm::{
+    LossyConvert, Platform,
+    color::{Color, GRAY_BLUE, U8Color},
+    flat::Size,
+};
 use tokio::{
     spawn,
     sync::oneshot::{Receiver, Sender, channel},
@@ -37,7 +41,7 @@ impl State {
         Self {
             fonts: HashMap::default(),
             app,
-            clear_color: Color::GRAY_BLUE,
+            clear_color: GRAY_BLUE,
             read_display_request: RefCell::default(),
             frame_counter: FrameCounter::default(),
         }

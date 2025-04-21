@@ -2,7 +2,10 @@ use anyhow::Result;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Anchor, Color, HasText, Label, NumberView, Setup, TextAlignment, UI, ViewData, ViewSubviews, view},
+    ui::{
+        Anchor, BLUE, HasText, LIGHTER_GRAY, Label, NumberView, Setup, TextAlignment, UI, ViewData,
+        ViewSubviews, view,
+    },
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -169,7 +172,7 @@ pub async fn test_label() -> Result<()> {
     .await?;
 
     from_main(move || {
-        view.label.set_text_color(Color::BLUE);
+        view.label.set_text_color(BLUE);
     })
     .await;
 
@@ -209,7 +212,7 @@ pub async fn test_label() -> Result<()> {
         view.add_view::<Label>()
             .set_text("Left Left")
             .set_alignment(TextAlignment::Left)
-            .set_color(Color::LIGHTER_GRAY)
+            .set_color(LIGHTER_GRAY)
             .place()
             .tl(60)
             .w(200)
@@ -217,7 +220,7 @@ pub async fn test_label() -> Result<()> {
         view.add_view::<Label>()
             .set_text("Right")
             .set_alignment(TextAlignment::Right)
-            .set_color(Color::LIGHTER_GRAY)
+            .set_color(LIGHTER_GRAY)
             .place()
             .l(60)
             .w(200)

@@ -1,4 +1,4 @@
-use gm::Animation;
+use gm::{Animation, color::WHITE};
 use refs::Own;
 
 use crate::{
@@ -11,7 +11,6 @@ pub trait ViewController {
 }
 
 use dispatch::on_main;
-use gm::Color;
 use refs::Weak;
 use tokio::sync::oneshot::{Receiver, channel};
 
@@ -37,7 +36,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         let (se, rc) = channel();
 
         on_main(move || {
-            view.set_color(Color::WHITE);
+            view.set_color(WHITE);
             let mut view = UIManager::root_view_weak().__add_subview_internal(view, true);
             view.set_frame(self.frame().with_zero_origin());
             let anim = UIAnimation::new(

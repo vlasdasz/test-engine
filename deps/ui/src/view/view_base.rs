@@ -1,7 +1,7 @@
 #![allow(clippy::struct_excessive_bools)]
 
 use educe::Educe;
-use gm::{Color, flat::Rect};
+use gm::{color::Color, flat::Rect};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 

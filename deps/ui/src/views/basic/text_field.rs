@@ -1,4 +1,7 @@
-use gm::{Color, ToF32};
+use gm::{
+    ToF32,
+    color::{BLACK, Color, GRAY, LIGHT_GRAY, LIGHTER_GRAY},
+};
 use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
@@ -37,11 +40,11 @@ pub struct TextField {
 
 impl Setup for TextField {
     fn setup(mut self: Weak<Self>) {
-        self.text_color = Color::BLACK;
+        self.text_color = BLACK;
         self.placeholding = true;
         self.label.place().back();
-        self.label.set_text_color(Color::LIGHTER_GRAY);
-        self.set_color(Color::LIGHT_GRAY);
+        self.label.set_text_color(LIGHTER_GRAY);
+        self.set_color(LIGHT_GRAY);
 
         self.enable_touch();
     }
@@ -63,7 +66,7 @@ impl TextField {
         if text.is_empty() && !self.placeholder.is_empty() {
             self.placeholding = true;
             self.label.set_text(self.placeholder.clone());
-            self.label.set_text_color(Color::LIGHTER_GRAY);
+            self.label.set_text_color(LIGHTER_GRAY);
         } else {
             self.placeholding = false;
             self.label.set_text(&text);
@@ -114,7 +117,7 @@ impl TextField {
         self.placeholder = placeholder.to_label();
         if self.placeholding {
             self.label.set_text(self.placeholder.clone());
-            self.label.set_text_color(Color::GRAY);
+            self.label.set_text_color(GRAY);
         }
         self
     }
@@ -171,6 +174,6 @@ impl ViewCallbacks for TextField {
             self.editing_ended.trigger(self.label.text().to_string());
         }
 
-        self.label.set_color(if selected { Color::GRAY } else { Color::LIGHT_GRAY });
+        self.label.set_color(if selected { GRAY } else { LIGHT_GRAY });
     }
 }

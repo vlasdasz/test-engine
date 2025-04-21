@@ -1,4 +1,4 @@
-use gm::{Color, ToF32, flat::PointsPath};
+use gm::{ToF32, color::Color, flat::PointsPath};
 use refs::Weak;
 use ui_proc::view;
 
@@ -25,7 +25,7 @@ pub struct CircleView {
 impl CircleView {
     pub fn set_radius(&mut self, radius: impl ToF32) -> &mut Self {
         let diameter = radius.to_f32() * 2.0;
-        self.set_size((diameter, diameter));
+        self.set_size(diameter, diameter);
         self.redraw();
         self
     }
@@ -47,7 +47,7 @@ impl CircleView {
 
 impl Setup for CircleView {
     fn setup(mut self: Weak<Self>) {
-        self.set_size((10, 10));
+        self.set_size(10, 10);
         self.drawing.place().back();
     }
 }

@@ -5,13 +5,13 @@ pub(crate) mod views;
 
 pub use ::ui::*;
 pub use gm::{
-    Color, U8Color,
+    color::*,
     flat::{Point, PointsPath, Rect, Size},
 };
 pub use input::*;
 pub use ui::UI;
 pub use ui_proc::view;
 pub use views::color_meter::ColorMeter;
-pub use window::{PolygonMode, Screenshot, image::Image, include_images};
+pub use window::{PolygonMode, Screenshot, image::Image};
 
 pub use crate::ui::views::sprite_view::SpriteView;

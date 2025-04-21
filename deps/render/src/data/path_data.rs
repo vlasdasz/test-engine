@@ -1,7 +1,7 @@
 use std::ops::Range;
 
 use gm::{
-    Color,
+    color::Color,
     flat::{Point, Size},
 };
 use wgpu::{

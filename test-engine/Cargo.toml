@@ -15,7 +15,7 @@ default = ["audio"]
 [dependencies]
 anyhow = { workspace = true }
 educe = { workspace = true }
-env_logger = { workspace = true }
+fern = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

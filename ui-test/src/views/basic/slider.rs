@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     from_main,
     refs::Weak,
-    ui::{Anchor, Color, HasText, Label, Setup, UI, ViewData, ViewFrame, ViewSubviews, view},
+    ui::{Anchor, HasText, Label, Setup, UI, ViewData, ViewFrame, ViewSubviews, WHITE, view},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -15,7 +15,7 @@ pub struct Slider {
 
 impl Setup for Slider {
     fn setup(mut self: Weak<Self>) {
-        self.slider.set_color(Color::WHITE).place().size(50, 400).center();
+        self.slider.set_color(WHITE).place().size(50, 400).center();
         self.slider.on_change.val(move |a| {
             self.label.set_text(a);
         });
@@ -187,7 +187,7 @@ pub async fn test_slider() -> Result<()> {
             view.slider.set_value(i);
             let mut label = view.add_view::<Label>();
             label.set_text(i);
-            label.set_size((50, 20));
+            label.set_size(50, 20);
             label.set_x(340);
             label.set_y(view.slider.indicator_position() - 10.0 + view.slider.y());
         })

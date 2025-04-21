@@ -1,6 +1,9 @@
 use std::ops::DerefMut;
 
-use gm::{Color, ToF32};
+use gm::{
+    ToF32,
+    color::{CLEAR, Color, WHITE},
+};
 use refs::{Own, Weak};
 use ui_proc::view;
 use vents::Event;
@@ -91,7 +94,7 @@ impl Button {
 
 impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::WHITE);
+        self.set_color(WHITE);
 
         let mut label = Own::<Label>::default();
 
@@ -100,7 +103,7 @@ impl Setup for Button {
         self.label = self.add_subview(label).downcast_view().unwrap();
 
         self.label.place().back();
-        self.label.set_color(Color::CLEAR);
+        self.label.set_color(CLEAR);
         self.label.set_hidden(true);
 
         self.image.place().back();

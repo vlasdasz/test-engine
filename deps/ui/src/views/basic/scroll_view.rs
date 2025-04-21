@@ -1,3 +1,5 @@
+use std::ops::Neg;
+
 use gm::{ToF32, flat::Size};
 use refs::Weak;
 use ui_proc::view;
@@ -36,8 +38,9 @@ impl ScrollView {
         }
     }
 
+    // Content offset must be negative
     fn max_offset(&self) -> f32 {
-        -(self.content_size.height - self.height())
+        (self.content_size.height - self.height()).neg().min(0.0)
     }
 
     pub fn set_content_offset(&mut self, offset: impl ToF32) -> &mut Self {

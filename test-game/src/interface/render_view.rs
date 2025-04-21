@@ -24,11 +24,11 @@ impl ViewCallbacks for RenderView {
     fn before_render(&self, _pass: &mut RenderPass) {
         // let drawer = Window::drawer();
 
-        // drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, Color::RED,
+        // drawer.sprite_box.add((2, 2).into(), (0, 0).into(), 0.0, RED,
         // 0.5); drawer.sprite_box.add((2, 2).into(), (40, 0).into(),
-        // 0.0, Color::GREEN, 0.5); drawer.sprite_box.add((2, 2).into(),
-        // (40, 40).into(), 0.0, Color::BLUE, 0.5); drawer.sprite_box.
-        // add((2, 2).into(), (0, 40).into(), 0.0, Color::TURQUOISE,
+        // 0.0, GREEN, 0.5); drawer.sprite_box.add((2, 2).into(),
+        // (40, 40).into(), 0.0, BLUE, 0.5); drawer.sprite_box.
+        // add((2, 2).into(), (0, 40).into(), 0.0, TURQUOISE,
         // 0.5); drawer.sprite_box.draw(pass, 1.0, 0.0, (0, 0).into(),
         // UIManager::resolution());
 

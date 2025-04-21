@@ -1,6 +1,8 @@
-use gm::Color;
 use render::data::{RectView, UIRectInstance};
-use test_engine::{RenderPass, ui::UIImages};
+use test_engine::{
+    RenderPass,
+    ui::{BLUE, GREEN, RED, UIImages},
+};
 use window::Window;
 
 use crate::pipelines::{IMAGE_DRAWER, UI_RECT};
@@ -9,65 +11,20 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     let rect = UI_RECT.get_mut();
     let image = IMAGE_DRAWER.get_mut();
 
-    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), Color::RED, 0.0, 0.5));
+    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), RED, 0.0, 0.5));
 
-    rect.add(UIRectInstance::new(
-        (75, 75, 50, 50).into(),
-        Color::GREEN,
-        0.0,
-        0.5,
-    ));
-    rect.add(UIRectInstance::new(
-        (100, 100, 50, 50).into(),
-        Color::BLUE,
-        0.0,
-        0.5,
-    ));
+    rect.add(UIRectInstance::new((75, 75, 50, 50).into(), GREEN, 0.0, 0.5));
+    rect.add(UIRectInstance::new((100, 100, 50, 50).into(), BLUE, 0.0, 0.5));
 
-    rect.add(UIRectInstance::new(
-        (100, 250, 50, 50).into(),
-        Color::BLUE,
-        0.0,
-        0.5,
-    ));
-    rect.add(UIRectInstance::new(
-        (75, 225, 50, 50).into(),
-        Color::GREEN,
-        0.0,
-        0.5,
-    ));
-    rect.add(UIRectInstance::new(
-        (50, 200, 50, 50).into(),
-        Color::RED,
-        0.0,
-        0.5,
-    ));
+    rect.add(UIRectInstance::new((100, 250, 50, 50).into(), BLUE, 0.0, 0.5));
+    rect.add(UIRectInstance::new((75, 225, 50, 50).into(), GREEN, 0.0, 0.5));
+    rect.add(UIRectInstance::new((50, 200, 50, 50).into(), RED, 0.0, 0.5));
 
-    rect.add(UIRectInstance::new(
-        (50, 350, 50, 50).into(),
-        Color::RED,
-        0.0,
-        0.3,
-    ));
-    rect.add(UIRectInstance::new(
-        (75, 375, 50, 50).into(),
-        Color::GREEN,
-        0.0,
-        0.2,
-    ));
-    rect.add(UIRectInstance::new(
-        (100, 400, 50, 50).into(),
-        Color::BLUE,
-        0.0,
-        0.1,
-    ));
+    rect.add(UIRectInstance::new((50, 350, 50, 50).into(), RED, 0.0, 0.3));
+    rect.add(UIRectInstance::new((75, 375, 50, 50).into(), GREEN, 0.0, 0.2));
+    rect.add(UIRectInstance::new((100, 400, 50, 50).into(), BLUE, 0.0, 0.1));
 
-    rect.add(UIRectInstance::new(
-        (200, 50, 100, 100).into(),
-        Color::GREEN,
-        0.0,
-        0.5,
-    ));
+    rect.add(UIRectInstance::new((200, 50, 100, 100).into(), GREEN, 0.0, 0.5));
 
     rect.draw(
         pass,

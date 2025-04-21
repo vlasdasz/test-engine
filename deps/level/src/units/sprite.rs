@@ -4,7 +4,8 @@ use std::{
 };
 
 use gm::{
-    Color, ToF32,
+    ToF32,
+    color::Color,
     flat::{Point, Shape, Size},
 };
 use rapier2d::{

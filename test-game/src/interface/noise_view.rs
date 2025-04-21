@@ -7,8 +7,8 @@ use test_engine::{
     ui::{
         AddLabel, Anchor,
         Anchor::{Top, X},
-        Button, Color, DebugView, DrawingView, HasText, Image, ImageView, Label, NumberView, Point,
-        PointsPath, Setup, Size, ViewData, ViewTouch, view,
+        BLACK, Button, DebugView, DrawingView, HasText, Image, ImageView, Label, NumberView, Point,
+        PointsPath, Setup, Size, TURQUOISE, ViewData, ViewTouch, WHITE, view,
     },
 };
 
@@ -58,15 +58,13 @@ impl NoiseView {
         self.drawing_view.remove_all_paths();
 
         for island in &islands {
-            self.drawing_view.add_path(island.iter().map(|a| *a * 20.0), Color::BLACK);
+            self.drawing_view.add_path(island.iter().map(|a| *a * 20.0), BLACK);
         }
 
         self.islands = islands;
 
-        self.drawing_view.add_path(
-            PointsPath::circle_triangles_with((200, 100), 50, 5),
-            Color::TURQUOISE,
-        );
+        self.drawing_view
+            .add_path(PointsPath::circle_triangles_with((200, 100), 50, 5), TURQUOISE);
     }
 
     fn update_level(self: Weak<Self>) {
@@ -110,7 +108,7 @@ impl Setup for NoiseView {
         let update_image = move |_| self.update_image();
 
         self.threshold_view
-            .set_color(Color::WHITE)
+            .set_color(WHITE)
             .set_value(124.0)
             .set_step(2.0)
             .add_label("there")
@@ -120,7 +118,7 @@ impl Setup for NoiseView {
             .bl(10);
 
         self.x_view
-            .set_color(Color::WHITE)
+            .set_color(WHITE)
             .set_value(65.0)
             .set_step(0.5)
             .add_label("x")
@@ -132,7 +130,7 @@ impl Setup for NoiseView {
             .anchor(Anchor::Left, self.threshold_view, 10);
 
         self.y_view
-            .set_color(Color::WHITE)
+            .set_color(WHITE)
             .set_value(8.0)
             .set_step(0.5)
             .add_label("y")
@@ -140,7 +138,7 @@ impl Setup for NoiseView {
         self.y_view.place().size(WIDTH, 150).b(10).anchor(Anchor::Left, self.x_view, 10);
 
         self.size_view
-            .set_color(Color::WHITE)
+            .set_color(WHITE)
             .set_value(6.0)
             .set_step(2.0)
             .add_label("size")
@@ -152,7 +150,7 @@ impl Setup for NoiseView {
             .anchor(Anchor::Left, self.y_view, 10);
 
         self.skip_view
-            .set_color(Color::WHITE)
+            .set_color(WHITE)
             .set_min(1.0)
             .set_step(1.0)
             .set_value(6.0)

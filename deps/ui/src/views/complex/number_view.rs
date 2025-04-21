@@ -1,4 +1,7 @@
-use gm::{CheckedSub, Color, MyAdd, ToF32};
+use gm::{
+    CheckedSub, MyAdd, ToF32,
+    color::{CLEAR, Color, LIGHT_GRAY},
+};
 use refs::Weak;
 use vents::Event;
 
@@ -34,16 +37,16 @@ pub struct NumberView {
 
 impl Setup for NumberView {
     fn setup(mut self: Weak<Self>) {
-        self.up.set_image(UIImages::up()).set_color(Color::CLEAR);
+        self.up.set_image(UIImages::up()).set_color(CLEAR);
         self.up.on_tap(move || self.up_tap());
         self.up.place().lrt(0).relative_height(self, 0.5);
 
-        self.down.set_image(UIImages::down()).set_color(Color::CLEAR);
+        self.down.set_image(UIImages::down()).set_color(CLEAR);
         self.down.on_tap(move || self.down_tap());
         self.down.place().lrb(0).relative_height(self, 0.5);
 
         self.separator.place().relative_width(self, 0.75).h(2).center();
-        self.separator.set_color(Color::LIGHT_GRAY);
+        self.separator.set_color(LIGHT_GRAY);
 
         Style::apply_global(self);
     }

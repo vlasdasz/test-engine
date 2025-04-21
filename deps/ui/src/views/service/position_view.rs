@@ -5,7 +5,7 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
-use gm::{Color, flat::Point};
+use gm::{color::BLACK, flat::Point};
 use refs::Weak;
 use ui_proc::view;
 
@@ -44,7 +44,7 @@ impl Setup for PositionView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.place().size(250, 50);
-        self.dot.set_color(Color::BLACK).place().tl(-5).size(10, 10);
+        self.dot.set_color(BLACK).place().tl(-5).size(10, 10);
         self.label.set_text("Move me").place().back();
         self.touch().began.val(move |touch| {
             self.began_pos = touch.position;

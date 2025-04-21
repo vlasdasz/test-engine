@@ -3,7 +3,10 @@ use std::{
     sync::{Mutex, MutexGuard},
 };
 
-use gm::{Animation, LossyConvert};
+use gm::{
+    Animation, LossyConvert,
+    color::{GRAY, LIGHT_BLUE},
+};
 use ui_proc::view;
 use vents::OnceEvent;
 
@@ -21,10 +24,7 @@ mod test_engine {
 
 use chrono::Utc;
 use dispatch::{on_main, on_main_sync};
-use gm::{
-    Color,
-    flat::{Size, point_on_circle},
-};
+use gm::flat::{Size, point_on_circle};
 use log::{trace, warn};
 use refs::Weak;
 
@@ -74,14 +74,14 @@ impl Spinner {
 
 impl Setup for Spinner {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::GRAY.with_alpha(0.8));
+        self.set_color(GRAY.with_alpha(0.8));
         self.set_corner_radius(20);
 
         for _ in 0..CIRCLES_N {
             let mut circle = self.add_view::<Container>();
 
-            circle.set_size((16, 16));
-            circle.set_color(Color::LIGHT_BLUE);
+            circle.set_size(16, 16);
+            circle.set_color(LIGHT_BLUE);
             circle.set_corner_radius(8);
 
             self.circles.push(circle);
@@ -120,7 +120,7 @@ impl Spinner {
         SpinnerLock { stopped: false }
     }
 
-    pub fn start() {
+    fn start() {
         trace!("Start spinner");
 
         if Self::current().is_ok() {

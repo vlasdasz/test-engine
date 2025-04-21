@@ -6,7 +6,7 @@ use std::{
 
 use dispatch::{from_main, wait_for_next_frame};
 use gm::{
-    Color,
+    color::{Color, TURQUOISE},
     flat::{Rect, Size},
 };
 use log::{debug, trace, warn};
@@ -174,12 +174,9 @@ impl UI {
 
         if debug_frames {
             for rect in frame.to_borders(2.0) {
-                RECT_DRAWER.get_mut().add(UIRectInstance::new(
-                    rect,
-                    Color::TURQUOISE,
-                    0.0,
-                    view.z_position() - 0.2,
-                ));
+                RECT_DRAWER
+                    .get_mut()
+                    .add(UIRectInstance::new(rect, TURQUOISE, 0.0, view.z_position() - 0.2));
             }
         }
 

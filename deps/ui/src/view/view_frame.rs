@@ -26,7 +26,7 @@ pub trait ViewFrame {
     fn set_position(&mut self, origin: impl Into<Point>) -> &mut Self;
     fn set_center(&mut self, center: impl Into<Point>) -> &mut Self;
     fn set_frame(&mut self, rect: impl Into<Rect>) -> &mut Self;
-    fn set_size(&mut self, size: impl Into<Size>) -> &mut Self;
+    fn set_size(&mut self, width: impl ToF32, height: impl ToF32) -> &mut Self;
     fn edit_frame(&mut self, edit: impl FnOnce(&mut Rect)) -> &mut Self;
     fn trigger_events(&mut self);
 }
@@ -154,8 +154,8 @@ impl<T: ?Sized + View> ViewFrame for T {
         self
     }
 
-    fn set_size(&mut self, size: impl Into<Size>) -> &mut Self {
-        let size = size.into();
+    fn set_size(&mut self, width: impl ToF32, height: impl ToF32) -> &mut Self {
+        let size = (width, height).into();
         let frame = &mut self.base_view_mut().frame;
 
         let changed = size != frame.size;

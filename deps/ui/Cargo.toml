@@ -20,7 +20,6 @@ rust_decimal = { workspace = true }
 tokio = { workspace = true }
 
 dispatch = { workspace = true }
-manage = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }

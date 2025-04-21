@@ -24,22 +24,22 @@ anyhow = "1.0"
 bytemuck = { version = "1.15", features = ["derive"] }
 cfg_aliases = "0.2"
 chrono = "0.4"
-convert_case = "0.8.0"
 dirs = "6.0"
 educe = "0.6.0"
-env_logger = "0.11"
 fake = "4.0"
+fern = "0.7"
 image = "0.25"
 log = "0.4"
 nonempty = "0.11"
 quote = "1.0"
 rand = "0.9"
-rapier2d = { version = "0.23", features = ["simd-nightly"] }
+rapier2d = { version = "0.24.0", features = ["simd-nightly"] }
 #rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
 aes-gcm = "0.10.3"
 cgmath = "0.18"
 indexmap = "2.2"
+jni = "0.21.1"
 lyon = "1.0"
 rodio = "0.20.1"
 rust_decimal = "1.35"
@@ -47,25 +47,22 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 syn = { version = "2.0", features = ["full", "extra-traits"] }
 tokio = { version = "1.44", features = ["full"] }
-walkdir = "2.5"
 web-time = "1.0.0"
 
-wgpu = "24.0"
+wgpu = "25.0"
 wgpu_text = "0.9.1"
 winit = "0.30"
 
-jni = "0.21.1"
 manage = "0.9.0"
-reflected = "0.10.1"
+reflected = "0.21.0"
 refs = { version = "0.14.0", default-features = true }
-vents = "0.7.0"
+vents = "0.8.0"
 
 audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }
 game = { path = "deps/game" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
-image-proc = { path = "deps/window/image-proc" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
 render = { path = "deps/render" }

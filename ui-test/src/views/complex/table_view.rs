@@ -9,7 +9,7 @@ use test_engine::{
     AppRunner, from_main,
     refs::{Own, Weak},
     ui::{
-        AfterSetup, Color, Container, HasText, Label, Setup, TableData, TableView, UI, View, ViewData,
+        AfterSetup, Container, GRAY, HasText, Label, Setup, TableData, TableView, UI, View, ViewData,
         ViewSubviews, view,
     },
     ui_test::{helpers::check_colors, inject_touches},
@@ -42,18 +42,8 @@ impl TableData for TestTableView {
 
     fn make_cell(&self) -> Own<dyn View> {
         Label::new().after_setup(|mut label| {
-            label
-                .add_view::<Container>()
-                .set_color(Color::GRAY)
-                .place()
-                .w(4)
-                .sides("tlb", 0);
-            label
-                .add_view::<Container>()
-                .set_color(Color::GRAY)
-                .place()
-                .h(4)
-                .sides("ltr", 0);
+            label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
+            label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
         })
     }
 

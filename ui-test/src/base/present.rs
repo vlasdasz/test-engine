@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     from_main,
     ui::{
-        Color, Container, NavigationView, PRESENT_ANIMATION_DURATION, Setup, TouchStack, UI, ViewController,
+        Container, NavigationView, PRESENT_ANIMATION_DURATION, RED, Setup, TouchStack, UI, ViewController,
         ViewData, view,
     },
     ui_test::helpers::check_colors,
@@ -49,7 +49,7 @@ pub async fn test_navigation_view() -> Result<()> {
 
     let presented = from_main(move || {
         let mut presented = Container::new();
-        presented.set_color(Color::RED);
+        presented.set_color(RED);
 
         view.present(presented)
     })

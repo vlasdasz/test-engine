@@ -1,5 +1,5 @@
 use game::Game;
-use gm::{Color, flat::Point};
+use gm::{color::Color, flat::Point};
 use manage::data_manager::DataManager;
 use refs::MainLock;
 use render::{BackgroundPipeline, SpriteView, TexturedSpriteBoxPipeline, data::RectInstance};

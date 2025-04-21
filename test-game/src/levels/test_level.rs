@@ -9,7 +9,7 @@ use test_engine::{
         level,
     },
     refs::Weak,
-    ui::{Color, Image, Point, Size},
+    ui::{BLUE, Color, GREEN, Image, Point, Size, TURQUOISE},
 };
 
 #[level]
@@ -102,7 +102,7 @@ impl LevelSetup for TestLevel {
             .set_image("triangle.png");
 
         self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (-20, 80))
-            .set_color(Color::BLUE);
+            .set_color(BLUE);
 
         let boxes = 100;
 
@@ -120,7 +120,7 @@ impl LevelSetup for TestLevel {
         ];
 
         self.make_sprite::<Body>(Shape::Polygon(convex_points), (-20, 40))
-            .set_color(Color::GREEN);
+            .set_color(GREEN);
 
         let concave_points = vec![
             Point { x: -16.89, y: 4.16 },
@@ -131,7 +131,7 @@ impl LevelSetup for TestLevel {
         ];
 
         self.make_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
-            .set_color(Color::TURQUOISE);
+            .set_color(TURQUOISE);
 
         self.add_player();
         self.add_house();

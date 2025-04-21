@@ -6,7 +6,7 @@ extern crate core;
 
 mod animation;
 pub mod axis;
-mod color;
+pub mod color;
 pub mod converter;
 pub mod flat;
 mod misc;
@@ -15,7 +15,6 @@ pub mod sign;
 pub mod volume;
 
 pub use animation::Animation;
-pub use color::*;
 pub use misc::{Apply, Platform, Toggle};
 pub use num::{
     CheckedSub, IsZero, Min, MyAdd, One, Zero,

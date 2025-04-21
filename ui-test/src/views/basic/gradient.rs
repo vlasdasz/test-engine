@@ -3,7 +3,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Left, Top, X},
-        Button, Color, Container, HasText, Setup, UI, ViewData, ViewSubviews, view,
+        BLACK, Button, Container, GREEN, HasText, PURPLE, RED, Setup, TURQUOISE, UI, ViewData, ViewSubviews,
+        WHITE, view,
     },
     ui_test::check_colors,
 };
@@ -22,12 +23,12 @@ struct Gradient {
 
 impl Setup for Gradient {
     fn setup(mut self: Weak<Self>) {
-        self.grad_1.set_gradient(Color::RED, Color::GREEN).place().tl(20).size(100, 100);
+        self.grad_1.set_gradient(RED, GREEN).place().tl(20).size(100, 100);
 
-        self.grad_2.set_gradient(Color::TURQUOISE, Color::PURPLE).set_corner_radius(28);
+        self.grad_2.set_gradient(TURQUOISE, PURPLE).set_corner_radius(28);
         self.grad_2.place().t(20).size(100, 200).anchor(Left, self.grad_1, 20);
 
-        self.grad_3.set_gradient(Color::WHITE, Color::BLACK).set_corner_radius(20);
+        self.grad_3.set_gradient(WHITE, BLACK).set_corner_radius(20);
         self.grad_3.place().t(20).size(200, 100).anchor(Left, self.grad_2, 20);
 
         self.button_container
@@ -39,10 +40,7 @@ impl Setup for Gradient {
         self.button = self.button_container.add_view();
 
         self.button.place().back();
-        self.button
-            .set_text("Button")
-            .set_gradient(Color::WHITE, Color::RED)
-            .set_corner_radius(40);
+        self.button.set_text("Button").set_gradient(WHITE, RED).set_corner_radius(40);
     }
 }
 

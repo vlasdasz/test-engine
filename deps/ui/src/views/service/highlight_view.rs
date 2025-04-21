@@ -1,4 +1,8 @@
-use gm::{Apply, Color, flat::Point};
+use gm::{
+    Apply,
+    color::{BLACK, Color},
+    flat::Point,
+};
 use refs::Weak;
 use ui_proc::view;
 
@@ -31,13 +35,13 @@ impl Setup for HighlightView {
         self.l.place().t(0).l(0).b(0).w(WIDTH);
         self.r.place().t(0).r(0).b(0).w(WIDTH);
 
-        self.outline(Color::BLACK);
+        self.outline(BLACK);
     }
 }
 
 impl HighlightView {
     pub fn set(&mut self, pos: impl Into<Point>, expected: Color, actual: Color) {
-        self.set_size((150, 150));
+        self.set_size(150, 150);
         self.set_center(pos);
         [self.t, self.b, self.l].apply(|mut v| {
             v.set_color(expected);

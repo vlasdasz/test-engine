@@ -4,7 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Top, X},
-        Button, Color, HasText, Setup, Style, UI, ViewData, ViewSubviews, view,
+        BLUE, Button, HasText, Setup, Style, UI, ViewData, ViewSubviews, view,
     },
     ui_test::check_colors,
 };
@@ -14,7 +14,7 @@ const GLOBAL_STYLE: Style = Style::new(|view| {
     view.set_corner_radius(20);
 
     if let Some(mut view) = view.downcast_view::<Button>() {
-        view.set_text_color(Color::BLUE);
+        view.set_text_color(BLUE);
         view.set_text_size(55);
     }
 });

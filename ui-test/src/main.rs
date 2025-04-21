@@ -48,8 +48,8 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
-    test_base_views().await?;
     test_complex_views().await?;
+    test_base_views().await?;
     test_base_ui().await?;
     test_layout().await?;
     test_window_resize().await?;

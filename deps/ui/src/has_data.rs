@@ -1,4 +1,4 @@
-use gm::{Color, ToF32};
+use gm::{ToF32, color::Color};
 
 use crate::ToLabel;
 

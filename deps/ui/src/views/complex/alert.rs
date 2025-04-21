@@ -1,4 +1,7 @@
-use gm::{Color, flat::Size};
+use gm::{
+    color::{BLACK, BLUE, GRAY},
+    flat::Size,
+};
 use refs::Weak;
 use ui_proc::view;
 use vents::OnceEvent;
@@ -32,17 +35,14 @@ impl Alert {
 
 impl Setup for Alert {
     fn setup(mut self: Weak<Self>) {
-        self.set_corner_radius(10).set_border_color(Color::BLACK);
+        self.set_corner_radius(10).set_border_color(BLACK);
 
         self.label.place().lrt(10).h(140);
         self.label.set_text_size(28);
         self.label.multiline = true;
 
         self.ok_button.place().h(28).lrb(-1);
-        self.ok_button
-            .set_text("OK")
-            .set_border_color(Color::GRAY)
-            .set_text_color(Color::BLUE);
+        self.ok_button.set_text("OK").set_border_color(GRAY).set_text_color(BLUE);
 
         self.ok_button.on_tap(move || self.hide_modal(()));
     }

@@ -4,7 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Left, Size, Top, X},
-        Color, Container, ImageView, Setup, UI, ViewData, view,
+        Container, ImageView, Setup, UI, ViewData, WHITE, view,
     },
     ui_test::check_colors,
 };
@@ -22,7 +22,7 @@ struct Colors {
 
 impl Setup for Colors {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(Color::WHITE);
+        self.set_color(WHITE);
 
         self.image.place().tl(20).size(280, 520);
         self.image.set_image("colors.png");

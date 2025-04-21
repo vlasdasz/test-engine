@@ -1,4 +1,4 @@
-use gm::{Color, ToF32, converter::Converter};
+use gm::{ToF32, color::BLUE, converter::Converter};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
@@ -84,7 +84,7 @@ impl Setup for Slider {
             self.on_touch(&touch);
         });
 
-        self.circle.set_color(Color::BLUE);
+        self.circle.set_color(BLUE);
     }
 }
 

@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{Anchor::Top, Button, Color, HasText, Setup, Style, UI, ViewData, ViewSubviews, view},
+    ui::{Anchor::Top, Button, HasText, ORANGE, Setup, Style, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -12,7 +12,7 @@ const MENU_BUTTON: Style = Style::new(|view| {
     view.place().size(280, 100).l(50);
 
     if let Some(mut view) = view.downcast_view::<Button>() {
-        view.set_text_color(Color::ORANGE);
+        view.set_text_color(ORANGE);
         view.set_text_size(64);
     }
 });

@@ -66,7 +66,8 @@ impl<T: View + Default + 'static> Setup for MovableView<T> {
 
         self.corner_view.touch().moved.val(move |touch| {
             let new_size = self.size().to_point() + touch.position - self.began_pos;
-            self.set_size(new_size.clamp(100.0, 100.0).to_size());
+            let new_size = new_size.clamp(100.0, 100.0).to_size();
+            self.set_size(new_size.width, new_size.height);
         });
         self.corner_view.draw_on_top();
     }

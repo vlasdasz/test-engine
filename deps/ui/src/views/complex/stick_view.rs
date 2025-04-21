@@ -1,5 +1,5 @@
 use gm::{
-    Color,
+    color::{BLACK, LIGHT_GRAY, WHITE},
     flat::{Point, PointsPath},
 };
 use refs::Weak;
@@ -77,7 +77,7 @@ impl Setup for StickView {
         let frame = *self.frame();
         self.background.add_path(
             PointsPath::circle_triangles_with(frame.size.center(), frame.size.width / 2.0, PRECISION),
-            Color::BLACK,
+            BLACK,
         );
 
         self.background.add_path(
@@ -86,7 +86,7 @@ impl Setup for StickView {
                 (frame.size.width - OUTLINE_WIDTH) / 2.0,
                 PRECISION,
             ),
-            Color::WHITE,
+            WHITE,
         );
 
         let center = self.frame().size.center();
@@ -100,7 +100,7 @@ impl Setup for StickView {
         self.direction_stick
             .add_path(
                 PointsPath::circle_triangles_with(stick_center, STICK_VIEW_SIZE / 2.0, PRECISION),
-                Color::BLACK,
+                BLACK,
             )
             .add_path(
                 PointsPath::circle_triangles_with(
@@ -108,7 +108,7 @@ impl Setup for StickView {
                     (STICK_VIEW_SIZE - OUTLINE_WIDTH) / 2.0,
                     PRECISION,
                 ),
-                Color::LIGHT_GRAY,
+                LIGHT_GRAY,
             );
     }
 }

@@ -3,18 +3,20 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
 };
 
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use dispatch::on_main;
 use gm::{
-    Color, LossyConvert, Platform,
+    LossyConvert, Platform,
+    color::Color,
     flat::{Point, Size},
 };
-use log::{error, info, warn};
+use log::{debug, error, info, warn};
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
     Adapter, Backends, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, InstanceDescriptor,
     Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages,
+    Trace,
 };
 use winit::{
     application::ApplicationHandler,
@@ -148,10 +150,7 @@ impl Window {
             ..Default::default()
         });
 
-        let adapter = instance
-            .request_adapter(&RequestAdapterOptions::default())
-            .await
-            .ok_or(anyhow!("Failed to request adapter"))?;
+        let adapter = instance.request_adapter(&RequestAdapterOptions::default()).await?;
 
         let info = adapter.get_info();
 
@@ -183,17 +182,15 @@ impl Window {
         }
 
         let (device, queue) = adapter
-            .request_device(
-                &DeviceDescriptor {
-                    required_features: Features::empty(),
-                    // Doesn't work on some Androids
-                    // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
-                    required_limits,
-                    label: None,
-                    memory_hints: MemoryHints::Performance,
-                },
-                None,
-            )
+            .request_device(&DeviceDescriptor {
+                required_features: Features::empty(),
+                // Doesn't work on some Androids
+                // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
+                required_limits,
+                label: None,
+                memory_hints: MemoryHints::Performance,
+                trace: Trace::default(),
+            })
             .await?;
 
         let config = SurfaceConfiguration {
@@ -340,7 +337,7 @@ impl ApplicationHandler<Events> for Window {
                 scale_factor,
                 inner_size_writer: _,
             } => {
-                dbg!(&scale_factor);
+                debug!("Scale factor: {scale_factor}");
             }
             WindowEvent::RedrawRequested => {
                 if self.close.load(Ordering::Relaxed) {

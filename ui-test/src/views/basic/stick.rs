@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     from_main,
     refs::{Own, Weak},
-    ui::{Color, Container, Point, PointView, Setup, UI, ViewData, ViewFrame, view},
+    ui::{Container, GREEN, Point, PointView, Setup, UI, ViewData, ViewFrame, view},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -18,9 +18,9 @@ struct StickView {
 
 impl Setup for StickView {
     fn setup(mut self: Weak<Self>) {
-        self.test.set_color(Color::GREEN).set_size((50, 50));
+        self.test.set_color(GREEN).set_size(50, 50);
 
-        self.stick.set_position((200, 200)).set_size((200, 200));
+        self.stick.set_position((200, 200)).set_size(200, 200);
 
         self.stick.on_change.val(move |vec| {
             self.test.set_position(vec + 50);

@@ -1,6 +1,6 @@
 use bytemuck::{Pod, Zeroable};
 use gm::{
-    Color,
+    color::Color,
     flat::{Point, Size},
 };
 use wgpu::{BufferAddress, VertexBufferLayout, VertexStepMode};

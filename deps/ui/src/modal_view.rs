@@ -1,5 +1,5 @@
 use dispatch::{from_main, on_main};
-use gm::{Color, flat::Size};
+use gm::{color::WHITE, flat::Size};
 use refs::{Own, Weak};
 use vents::OnceEvent;
 
@@ -9,7 +9,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     fn make_modal(view: Self) -> Weak<Self> {
         let mut view = Own::new(view);
         view.set_z_position(UIManager::MODAL_Z_OFFSET);
-        view.set_color(Color::WHITE);
+        view.set_color(WHITE);
         let size = Self::modal_size();
         let weak = view.weak();
         TouchStack::push_layer(weak.weak_view());
