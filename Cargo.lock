@@ -1886,15 +1886,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "image-proc"
-version = "0.1.0"
-dependencies = [
- "quote",
- "syn 2.0.100",
- "walkdir",
-]
-
-[[package]]
 name = "image-webp"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4665,7 +4656,6 @@ dependencies = [
  "fake",
  "gm",
  "log",
- "manage",
  "nonempty",
  "reflected",
  "refs",
@@ -5256,7 +5246,6 @@ dependencies = [
  "dispatch 0.1.0",
  "gm",
  "image",
- "image-proc",
  "log",
  "manage",
  "refs",

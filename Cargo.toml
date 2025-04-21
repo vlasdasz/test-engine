@@ -65,7 +65,6 @@ dispatch = { path = "deps/dispatch" }
 game = { path = "deps/game" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
-image-proc = { path = "deps/window/image-proc" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
 render = { path = "deps/render" }

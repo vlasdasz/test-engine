@@ -39,7 +39,9 @@ pub fn include_images(input: TokenStream) -> TokenStream {
     };
 
     // Get the file name from the span
-    let mut file_path = span.source_file().path();
+    let mut file_path = format!("{:?}", span.source());
+
+    dbg!(&file_path);
 
     file_path.pop();
 
