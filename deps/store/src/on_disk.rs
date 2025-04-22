@@ -1,6 +1,7 @@
 use std::{
     fmt::{Debug, Formatter},
     fs,
+    fs::remove_file,
     marker::PhantomData,
 };
 
@@ -13,7 +14,19 @@ fn set_value<T: serde::ser::Serialize>(value: T, key: &str) {
     fs::write(dir.join(key), json).expect("Failed to write to file");
 }
 
-fn get_value<T: Storable>(key: &str) -> T {
+fn get_value<T: Storable>(key: &str) -> Option<T> {
+    let dir = Paths::storage();
+    let path = dir.join(key);
+
+    if !path.exists() {
+        return None;
+    }
+
+    let json = fs::read_to_string(path).expect("Failed to read file");
+    serde_json::from_str(&json).expect("Failet to parse json")
+}
+
+fn get_or_init_value<T: Storable + Default>(key: &str) -> T {
     let dir = Paths::storage();
     let path = dir.join(key);
 
@@ -46,12 +59,21 @@ impl<T: Storable> OnDisk<T> {
         set_value(val, self.name);
     }
 
-    pub fn get(&self) -> T {
+    pub fn get(&self) -> Option<T> {
         get_value(self.name)
     }
 
     pub fn reset(&self) {
-        self.set(T::default());
+        let dir = Paths::storage();
+        let path = dir.join(self.name);
+
+        remove_file(path).expect("Failed to remove file");
+    }
+}
+
+impl<T: Storable + Default> OnDisk<T> {
+    pub fn get_or_init(&self) -> T {
+        get_or_init_value(self.name)
     }
 }
 

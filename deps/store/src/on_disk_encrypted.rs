@@ -13,7 +13,7 @@ pub struct OnDiskEncrypted<T: Storable> {
     _p:    PhantomData<T>,
 }
 
-impl<T: Storable> OnDiskEncrypted<T> {
+impl<T: Storable + Default> OnDiskEncrypted<T> {
     pub const fn new(name: &'static str) -> Self {
         Self {
             inner: OnDisk::new(name),
@@ -29,7 +29,7 @@ impl<T: Storable> OnDiskEncrypted<T> {
     }
 
     pub fn get(&self, key: &EncryptionKey) -> T {
-        let encrypted = self.inner.get();
+        let encrypted = self.inner.get_or_init();
         if encrypted.is_empty() {
             return T::default();
         }
