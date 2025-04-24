@@ -17,6 +17,9 @@ log = { workspace = true }
 tokio = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
+resvg = { workspace = true }
+tiny-skia = { workspace = true }
+usvg = "0.45"
 
 manage = { workspace = true }
 refs = { workspace = true }

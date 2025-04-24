@@ -1,6 +1,8 @@
 use anyhow::Result;
 use gm::{Platform, flat::Size};
 use image::{DynamicImage, GenericImageView};
+use log::trace;
+use tiny_skia::Transform;
 use wgpu::{
     AddressMode, Device, Extent3d, FilterMode, Origin3d, Sampler, SamplerDescriptor, TexelCopyBufferLayout,
     TexelCopyTextureInfo, TextureAspect, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
@@ -22,8 +24,14 @@ impl Texture {
     pub const DEPTH_FORMAT: TextureFormat = TextureFormat::Depth32Float;
 
     pub fn from_file_bytes(bytes: &[u8], label: &str) -> Result<Self> {
-        let img = image::load_from_memory(bytes)?;
-        Ok(Self::from_dynamic_image(&img, label))
+        let result = image::load_from_memory(bytes);
+
+        if result.is_err() && bytes.starts_with(b"<svg") {
+            trace!("Loading SVG image: {label}");
+            return Self::from_svg_image(bytes, label);
+        }
+
+        Ok(Self::from_dynamic_image(&result?, label))
     }
 
     pub fn from_raw_data(data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
@@ -105,6 +113,37 @@ impl Texture {
             img.color().channel_count(),
             label,
         )
+    }
+
+    fn from_svg_image(bytes: &[u8], label: &str) -> Result<Self> {
+        use resvg::{
+            render,
+            tiny_skia::Pixmap,
+            usvg::{Options, Tree},
+        };
+
+        let opt = Options::default();
+        let tree = Tree::from_data(&bytes, &opt)?;
+
+        let original_size = tree.size().to_int_size();
+
+        let scale = 100.0;
+
+        let width = (original_size.width() as f32 * scale).round() as u32;
+        let height = (original_size.height() as f32 * scale).round() as u32;
+
+        let mut pixmap = Pixmap::new(width, height).unwrap();
+
+        let transform = Transform::from_scale(scale, scale);
+
+        render(&tree, transform, &mut pixmap.as_mut());
+
+        Ok(Self::from_raw_data(
+            &pixmap.data(),
+            dbg!((width, height).into()),
+            4,
+            label,
+        ))
     }
 
     pub fn create_depth_texture(device: &Device, size: Size<u32>, label: &str) -> Self {

@@ -9,6 +9,7 @@ use std::{
 
 use gm::{
     Platform,
+    color::Color,
     flat::{Point, Rect, Size},
 };
 use refs::{Own, Weak};
@@ -275,6 +276,10 @@ impl UIManager {
 
     pub fn on_drop_file<T: ?Sized>(subscriber: Weak<T>, action: impl FnMut(PathBuf) + Send + 'static) {
         Self::get().on_drop_file.val(subscriber, action);
+    }
+
+    pub fn set_clear_color(color: impl Into<Color>) {
+        Window::set_clear_color(color);
     }
 }
 
