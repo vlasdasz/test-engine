@@ -1,6 +1,8 @@
-use anyhow::Result;
+use std::path::Path;
+
+use anyhow::{Result, anyhow};
 use gm::{Platform, flat::Size};
-use image::{DynamicImage, GenericImageView};
+use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
 use log::trace;
 use tiny_skia::Transform;
 use wgpu::{
@@ -125,7 +127,7 @@ impl Texture {
 
         let original_size = tree.size().to_int_size();
 
-        let scale = 100.0;
+        let scale = 16.0;
 
         let width = (original_size.width() as f32 * scale).round() as u32;
         let height = (original_size.height() as f32 * scale).round() as u32;
@@ -135,6 +137,8 @@ impl Texture {
         let transform = Transform::from_scale(scale, scale);
 
         render(&tree, transform, &mut pixmap.as_mut());
+
+        // _save_rgba_image(&pixmap.data(), width, height, "/home/vladas/svg.png")?;
 
         Ok(Self::from_raw_data(
             &pixmap.data(),
@@ -169,8 +173,8 @@ impl Texture {
             address_mode_u: AddressMode::ClampToEdge,
             address_mode_v: AddressMode::ClampToEdge,
             address_mode_w: AddressMode::ClampToEdge,
-            mag_filter: FilterMode::Linear,
-            min_filter: FilterMode::Linear,
+            mag_filter: FilterMode::Nearest,
+            min_filter: FilterMode::Nearest,
             mipmap_filter: FilterMode::Nearest,
             compare: None, // doesn't work on iOS 12 Some(wgpu::CompareFunction::LessEqual), // 5.
             // compare: Some(wgpu::CompareFunction::LessEqual),
@@ -187,4 +191,12 @@ impl Texture {
             channels: 1,
         }
     }
+}
+
+fn _save_rgba_image(buffer: &[u8], width: u32, height: u32, path: &str) -> Result<()> {
+    let img: ImageBuffer<Rgba<u8>, _> = ImageBuffer::from_raw(width, height, buffer.to_vec())
+        .ok_or(anyhow!("Failed to create image buffer"))?;
+
+    img.save(Path::new(path))?;
+    Ok(())
 }
