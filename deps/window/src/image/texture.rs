@@ -24,14 +24,12 @@ impl Texture {
     pub const DEPTH_FORMAT: TextureFormat = TextureFormat::Depth32Float;
 
     pub fn from_file_bytes(bytes: &[u8], label: &str) -> Result<Self> {
-        let result = image::load_from_memory(bytes);
-
-        if result.is_err() && bytes.starts_with(b"<svg") {
+        if bytes.starts_with(b"<svg") {
             trace!("Loading SVG image: {label}");
             return Self::from_svg_image(bytes, label);
         }
 
-        Ok(Self::from_dynamic_image(&result?, label))
+        Ok(Self::from_dynamic_image(&image::load_from_memory(bytes)?, label))
     }
 
     pub fn from_raw_data(data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
