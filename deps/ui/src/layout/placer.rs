@@ -353,6 +353,8 @@ impl Placer {
     pub fn layout(&mut self) {
         let this = self.to_rglica();
 
+        let has_left = self.has_left();
+
         for rule in this.rules().iter_mut() {
             if rule.between {
                 self.between_layout(rule);
@@ -360,7 +362,7 @@ impl Placer {
                 if rule.relative {
                     self.relative_layout(rule);
                 } else {
-                    self.anchor_layout(rule);
+                    self.anchor_layout(rule, has_left);
                 }
             } else if let Some(tiling) = &rule.tiling {
                 self.tiling_layout(tiling);
@@ -436,7 +438,7 @@ impl Placer {
         view.set_frame(frame);
     }
 
-    fn anchor_layout(&mut self, rule: &LayoutRule) {
+    fn anchor_layout(&mut self, rule: &LayoutRule, has_left: bool) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
         let a_frame = rule.anchor_view.frame();
@@ -444,7 +446,16 @@ impl Placer {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
             Anchor::Bot => frame.origin.y = a_frame.y() - rule.offset - frame.height(),
             Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
-            Anchor::Right => frame.origin.x = a_frame.x() - rule.offset - frame.width(),
+            Anchor::Right => {
+                if has_left {
+                    let max_x = frame.max_x();
+                    let desired_max_x = a_frame.x() - rule.offset;
+                    let diff = desired_max_x - max_x;
+                    frame.size.width += diff;
+                } else {
+                    frame.origin.x = a_frame.x() - rule.offset - frame.width();
+                }
+            }
             _ => unimplemented!(),
         }
         view.set_frame(frame);
@@ -528,6 +539,12 @@ impl Placer {
             _ => unimplemented!(),
         }
         view.set_frame(frame);
+    }
+}
+
+impl Placer {
+    fn has_left(&self) -> bool {
+        self.rules.borrow().iter().any(|rule| rule.side.is_left())
     }
 }
 

@@ -114,7 +114,7 @@ mod test {
 
         STORED.set(10);
         STORED.reset();
-        assert_eq!(STORED.get(), i32::default());
+        assert_eq!(STORED.get(), None);
 
         for _ in 0..10 {
             let rand: i32 = Faker.fake();
@@ -125,8 +125,8 @@ mod test {
             .await?;
 
             spawn(async move {
-                assert_eq!(STORED.get(), rand);
-                assert_eq!(format!("{rand}"), format!("{STORED:?}"));
+                assert_eq!(STORED.get(), Some(rand));
+                assert_eq!(format!("Some({rand})"), format!("{STORED:?}"));
             })
             .await?;
         }
@@ -140,7 +140,7 @@ mod test {
 
         let loaded_data = STORED_STRUCT.get();
 
-        assert_eq!(data, loaded_data);
+        assert_eq!(data, loaded_data.unwrap());
 
         Ok(())
     }

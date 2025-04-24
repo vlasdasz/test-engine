@@ -37,6 +37,10 @@ impl Anchor {
         matches!(self, Self::Height | Self::Size)
     }
 
+    pub(crate) fn is_left(&self) -> bool {
+        matches!(self, Self::Left)
+    }
+
     pub(crate) fn is_none(&self) -> bool {
         matches!(self, Self::None)
     }
