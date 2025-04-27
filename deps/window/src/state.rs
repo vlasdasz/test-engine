@@ -111,7 +111,8 @@ impl State {
             return Ok(());
         };
         let surface_texture = surface.presentable.get_current_texture()?;
-        let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
+        let surface_texture_view =
+            surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = Window::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
             label: Some("Render Encoder"),
         });
@@ -120,7 +121,7 @@ impl State {
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label:                    Some("Render Pass"),
                 color_attachments:        &[Some(wgpu::RenderPassColorAttachment {
-                    view:           &view,
+                    view:           &surface_texture_view,
                     resolve_target: None,
                     ops:            wgpu::Operations {
                         load:  wgpu::LoadOp::Clear(wgpu::Color {

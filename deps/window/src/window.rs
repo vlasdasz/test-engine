@@ -15,8 +15,8 @@ use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
     Adapter, Backends, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, InstanceDescriptor,
-    Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages,
-    Trace,
+    Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureFormat,
+    TextureUsages, Trace,
 };
 use winit::{
     application::ApplicationHandler,
@@ -212,6 +212,24 @@ impl Window {
 
             desired_maximum_frame_latency: 2,
         };
+
+        let sample_flags = adapter.get_texture_format_features(TextureFormat::Rgba8UnormSrgb).flags;
+
+        let max_sample_count = {
+            if sample_flags.contains(wgpu::TextureFormatFeatureFlags::MULTISAMPLE_X16) {
+                16
+            } else if sample_flags.contains(wgpu::TextureFormatFeatureFlags::MULTISAMPLE_X8) {
+                8
+            } else if sample_flags.contains(wgpu::TextureFormatFeatureFlags::MULTISAMPLE_X4) {
+                4
+            } else if sample_flags.contains(wgpu::TextureFormatFeatureFlags::MULTISAMPLE_X2) {
+                2
+            } else {
+                1
+            }
+        };
+
+        dbg!(&max_sample_count);
 
         let state = State::new(app);
 

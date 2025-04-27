@@ -59,10 +59,12 @@ impl Texture {
             label: label.into(),
             size: extend_size,
             mip_level_count: 1,
-            sample_count: 1,
+            sample_count: 4,
             dimension: TextureDimension::D2,
             format,
-            usage: TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_DST,
+            usage: TextureUsages::TEXTURE_BINDING
+                | TextureUsages::COPY_DST
+                | TextureUsages::RENDER_ATTACHMENT,
             view_formats: &[],
         });
 
@@ -159,7 +161,7 @@ impl Texture {
             label:           label.into(),
             size:            extend,
             mip_level_count: 1,
-            sample_count:    1,
+            sample_count:    4,
             dimension:       TextureDimension::D2,
             format:          Self::DEPTH_FORMAT,
             usage:           TextureUsages::RENDER_ATTACHMENT | TextureUsages::TEXTURE_BINDING,
