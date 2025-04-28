@@ -21,7 +21,8 @@ impl Setup for ImageViewSVG {
 
         self.image_view.place().back(); //.tl(5).size(400, 400);
         // self.image_view.set_image("bin.svg");
-        self.image_view.set_image("diagonal.bmp");
+        self.image_view.set_image("plus.svg");
+        // self.image_view.set_image("diagonal.bmp");
     }
 }
 

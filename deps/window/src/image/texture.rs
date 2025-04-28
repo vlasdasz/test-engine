@@ -5,6 +5,7 @@ use gm::{Platform, flat::Size};
 use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
 use log::trace;
 use tiny_skia::Transform;
+use usvg::{ImageRendering, ShapeRendering, TextRendering};
 use wgpu::{
     AddressMode, Device, Extent3d, FilterMode, Origin3d, Sampler, SamplerDescriptor, TexelCopyBufferLayout,
     TexelCopyTextureInfo, TextureAspect, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
@@ -26,7 +27,7 @@ impl Texture {
     pub const DEPTH_FORMAT: TextureFormat = TextureFormat::Depth32Float;
 
     pub fn from_file_bytes(bytes: &[u8], label: &str) -> Result<Self> {
-        if bytes.starts_with(b"<svg") {
+        if bytes.starts_with(b"<svg") || bytes.starts_with(b"<?xml") {
             trace!("Loading SVG image: {label}");
             return Self::from_svg_image(bytes, label);
         }
@@ -122,12 +123,20 @@ impl Texture {
             usvg::{Options, Tree},
         };
 
-        let opt = Options::default();
+        let opt = Options {
+            shape_rendering: ShapeRendering::CrispEdges,
+            text_rendering: TextRendering::OptimizeLegibility,
+            image_rendering: ImageRendering::Smooth,
+            ..Default::default()
+        };
+
+        dbg!(&opt);
+
         let tree = Tree::from_data(&bytes, &opt)?;
 
         let original_size = tree.size().to_int_size();
 
-        let scale = 16.0;
+        let scale = 8.0;
 
         let width = (original_size.width() as f32 * scale).round() as u32;
         let height = (original_size.height() as f32 * scale).round() as u32;
