@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use anyhow::{Result, anyhow};
-use gm::{Platform, flat::Size};
+use gm::{LossyConvert, Platform, flat::Size};
 use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
 use log::trace;
 use tiny_skia::Transform;
@@ -132,25 +132,24 @@ impl Texture {
 
         dbg!(&opt);
 
-        let tree = Tree::from_data(&bytes, &opt)?;
+        let tree = Tree::from_data(bytes, &opt)?;
 
         let original_size = tree.size().to_int_size();
 
         let scale = 8.0;
 
-        let width = (original_size.width() as f32 * scale).round() as u32;
-        let height = (original_size.height() as f32 * scale).round() as u32;
+        let width = (original_size.width().lossy_convert() * scale).round().lossy_convert();
+        let height = (original_size.height().lossy_convert() * scale).round().lossy_convert();
 
         let mut pixmap = Pixmap::new(width, height).unwrap();
 
         let transform = Transform::from_scale(scale, scale);
-
         render(&tree, transform, &mut pixmap.as_mut());
 
         // _save_rgba_image(&pixmap.data(), width, height, "/home/vladas/svg.png")?;
 
         Ok(Self::from_raw_data(
-            &pixmap.data(),
+            pixmap.data(),
             dbg!((width, height).into()),
             4,
             label,
