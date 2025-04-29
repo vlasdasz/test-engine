@@ -52,6 +52,7 @@ impl AppRunner {
         Dispatch::new()
             .level(LevelFilter::Warn)
             .level_for("test_engine", LevelFilter::Debug)
+            .level_for("shopping", LevelFilter::Debug)
             .format(|out, message, record| {
                 let level_icon = match record.level() {
                     Level::Error => "🔴",
