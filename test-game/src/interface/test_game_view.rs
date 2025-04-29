@@ -280,7 +280,9 @@ impl Setup for TestGameView {
         let player = self.level.player;
         self.sprite_view.set_sprite(player);
 
-        self.bool_storage_view.set_off_color(WHITE).set_on(BOOL.get());
+        self.bool_storage_view
+            .set_off_color(WHITE)
+            .set_on(BOOL.get().unwrap_or_default());
         self.bool_storage_view
             .place()
             .same([X, Height], self.ui_bench)

@@ -1,6 +1,11 @@
-use anyhow::Result;
-use gm::{Platform, flat::Size};
-use image::{DynamicImage, GenericImageView};
+use std::path::Path;
+
+use anyhow::{Result, anyhow};
+use gm::{LossyConvert, Platform, flat::Size};
+use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
+use log::trace;
+use tiny_skia::Transform;
+use usvg::{ImageRendering, ShapeRendering, TextRendering};
 use wgpu::{
     AddressMode, Device, Extent3d, FilterMode, Origin3d, Sampler, SamplerDescriptor, TexelCopyBufferLayout,
     TexelCopyTextureInfo, TextureAspect, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages,
@@ -22,8 +27,12 @@ impl Texture {
     pub const DEPTH_FORMAT: TextureFormat = TextureFormat::Depth32Float;
 
     pub fn from_file_bytes(bytes: &[u8], label: &str) -> Result<Self> {
-        let img = image::load_from_memory(bytes)?;
-        Ok(Self::from_dynamic_image(&img, label))
+        if bytes.starts_with(b"<svg") || bytes.starts_with(b"<?xml") {
+            trace!("Loading SVG image: {label}");
+            return Self::from_svg_image(bytes, label);
+        }
+
+        Ok(Self::from_dynamic_image(&image::load_from_memory(bytes)?, label))
     }
 
     pub fn from_raw_data(data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
@@ -107,6 +116,46 @@ impl Texture {
         )
     }
 
+    fn from_svg_image(bytes: &[u8], label: &str) -> Result<Self> {
+        use resvg::{
+            render,
+            tiny_skia::Pixmap,
+            usvg::{Options, Tree},
+        };
+
+        let opt = Options {
+            shape_rendering: ShapeRendering::CrispEdges,
+            text_rendering: TextRendering::OptimizeLegibility,
+            image_rendering: ImageRendering::Smooth,
+            ..Default::default()
+        };
+
+        dbg!(&opt);
+
+        let tree = Tree::from_data(bytes, &opt)?;
+
+        let original_size = tree.size().to_int_size();
+
+        let scale = 8.0;
+
+        let width = (original_size.width().lossy_convert() * scale).round().lossy_convert();
+        let height = (original_size.height().lossy_convert() * scale).round().lossy_convert();
+
+        let mut pixmap = Pixmap::new(width, height).unwrap();
+
+        let transform = Transform::from_scale(scale, scale);
+        render(&tree, transform, &mut pixmap.as_mut());
+
+        // _save_rgba_image(&pixmap.data(), width, height, "/home/vladas/svg.png")?;
+
+        Ok(Self::from_raw_data(
+            pixmap.data(),
+            dbg!((width, height).into()),
+            4,
+            label,
+        ))
+    }
+
     pub fn create_depth_texture(device: &Device, size: Size<u32>, label: &str) -> Self {
         let extend = Extent3d {
             width:                 size.width,
@@ -132,8 +181,8 @@ impl Texture {
             address_mode_u: AddressMode::ClampToEdge,
             address_mode_v: AddressMode::ClampToEdge,
             address_mode_w: AddressMode::ClampToEdge,
-            mag_filter: FilterMode::Linear,
-            min_filter: FilterMode::Linear,
+            mag_filter: FilterMode::Nearest,
+            min_filter: FilterMode::Nearest,
             mipmap_filter: FilterMode::Nearest,
             compare: None, // doesn't work on iOS 12 Some(wgpu::CompareFunction::LessEqual), // 5.
             // compare: Some(wgpu::CompareFunction::LessEqual),
@@ -150,4 +199,12 @@ impl Texture {
             channels: 1,
         }
     }
+}
+
+fn _save_rgba_image(buffer: &[u8], width: u32, height: u32, path: &str) -> Result<()> {
+    let img: ImageBuffer<Rgba<u8>, _> = ImageBuffer::from_raw(width, height, buffer.to_vec())
+        .ok_or(anyhow!("Failed to create image buffer"))?;
+
+    img.save(Path::new(path))?;
+    Ok(())
 }

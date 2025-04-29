@@ -14,7 +14,10 @@ bytemuck = { workspace = true }
 dispatch = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
+resvg = { workspace = true }
+tiny-skia = { workspace = true }
 tokio = { workspace = true }
+usvg = "0.45"
 web-time = { workspace = true }
 wgpu = { workspace = true }
 

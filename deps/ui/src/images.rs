@@ -27,4 +27,8 @@ impl UIImages {
     pub fn rb() -> Weak<Image> {
         Image::from_file_data(include_bytes!("images/rb.png"), "rb.png")
     }
+
+    pub fn plus() -> Weak<Image> {
+        Image::from_file_data(include_bytes!("images/plus.png"), "plus.png")
+    }
 }

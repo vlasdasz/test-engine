@@ -1,5 +1,5 @@
 use serde::{Serialize, de::DeserializeOwned};
 
-pub trait Storable: Serialize + DeserializeOwned + Default {}
+pub trait Storable: Serialize + DeserializeOwned {}
 
-impl<T: Serialize + DeserializeOwned + Send + Default> Storable for T {}
+impl<T: Serialize + DeserializeOwned + Send> Storable for T {}
