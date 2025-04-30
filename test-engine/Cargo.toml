@@ -24,6 +24,7 @@ web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 winit = { workspace = true }
+console-subscriber = { workspace = true }
 
 dispatch = { workspace = true }
 manage = { workspace = true }
