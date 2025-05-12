@@ -14,6 +14,7 @@ default = ["audio"]
 
 [dependencies]
 anyhow = { workspace = true }
+console-subscriber = { workspace = true }
 educe = { workspace = true }
 fern = { workspace = true }
 log = { workspace = true }
@@ -24,7 +25,6 @@ web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 winit = { workspace = true }
-console-subscriber = { workspace = true }
 
 dispatch = { workspace = true }
 manage = { workspace = true }
