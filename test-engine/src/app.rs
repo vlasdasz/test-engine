@@ -4,7 +4,7 @@ use ui::View;
 pub trait App {
     fn new() -> Self
     where Self: Sized;
-    fn setup(&self);
+    fn setup(&self) {}
     fn make_root_view(&self) -> Own<dyn View>;
 }
 
