@@ -32,7 +32,7 @@ log = "0.4"
 nonempty = "0.11"
 quote = "1.0"
 rand = "0.9"
-rapier2d = { version = "0.25", features = ["simd-nightly"] }
+rapier2d = { version = "0.26", features = ["simd-nightly"] }
 #rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
 aes-gcm = "0.10.3"
