@@ -4,6 +4,7 @@ use std::{
     time::Duration,
 };
 
+use anyhow::Result;
 use gm::ToF32;
 use log::warn;
 use refs::is_main_thread;
@@ -57,6 +58,11 @@ pub fn on_main(action: impl FnOnce() + Send + 'static) {
     } else {
         CALLBACKS.lock().unwrap().push(Box::new(action));
     }
+}
+
+pub fn ok_main(action: impl FnOnce() + Send + 'static) -> Result<()> {
+    on_main(action);
+    Ok(())
 }
 
 pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
