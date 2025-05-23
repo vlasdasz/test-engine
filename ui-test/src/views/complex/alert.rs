@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     ui::{Alert, UI, view},
     ui_test::{check_colors, inject_touches},
 };

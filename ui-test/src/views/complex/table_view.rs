@@ -6,14 +6,14 @@ use std::{
 
 use anyhow::Result;
 use test_engine::{
-    AppRunner, from_main,
+    AppRunner,
+    dispatch::{from_main, wait_for_next_frame},
     refs::{Own, Weak},
     ui::{
         AfterSetup, Container, GRAY, HasText, Label, Setup, TableData, TableView, UI, View, ViewData,
         ViewSubviews, view,
     },
     ui_test::{helpers::check_colors, inject_touches},
-    wait_for_next_frame,
 };
 
 static N_CELLS: AtomicUsize = AtomicUsize::new(2_000_000);

@@ -1,10 +1,9 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    from_main,
+    dispatch::{from_main, wait_for_next_frame},
     ui::{Alert, Button, TouchStack, UI, ViewData, ViewSubviews, ViewTouch, view},
     ui_test::inject_touches,
-    wait_for_next_frame,
 };
 
 #[view]

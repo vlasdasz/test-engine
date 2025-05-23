@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     gm::Apply,
     refs::Weak,
     ui::{DropDown, Setup, UI, ViewData, view},

@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     refs::Weak,
     ui::{Anchor, HasText, Label, Setup, UI, ViewData, ViewFrame, ViewSubviews, WHITE, view},
     ui_test::{helpers::check_colors, inject_touches},

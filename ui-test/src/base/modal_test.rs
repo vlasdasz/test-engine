@@ -1,12 +1,12 @@
 use anyhow::Result;
 use test_engine::{
     OnceEvent,
+    dispatch::wait_for_next_frame,
     refs::Weak,
     ui::{
         Color, Container, HasText, Label, ModalView, Setup, Size, UI, ViewData, ViewFrame, ViewSubviews,
         WeakView, ui_test::helpers::check_colors, view,
     },
-    wait_for_next_frame,
 };
 
 #[view]

@@ -1,7 +1,8 @@
 use anyhow::Result;
 use log::debug;
 use test_engine::{
-    RenderPass, from_main,
+    RenderPass,
+    dispatch::from_main,
     ui::{UI, ViewCallbacks, view},
     ui_test::check_colors,
 };

@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     gm::Apply,
     level::LevelManager,
     refs::Weak,

@@ -7,6 +7,7 @@ use crate::base::{
     transition::test_transition, transparency::test_transparency, view_order::test_view_order,
 };
 
+mod async_calls;
 mod colors;
 mod corner_radius;
 mod dispatch;

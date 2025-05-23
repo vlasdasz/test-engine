@@ -2,10 +2,9 @@ use std::time::Duration;
 
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::{from_main, wait_for_next_frame},
     ui::{Question, UI, view},
     ui_test::inject_touches,
-    wait_for_next_frame,
 };
 use tokio::{spawn, sync::oneshot::channel, time::sleep};
 

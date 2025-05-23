@@ -2,7 +2,7 @@ use std::{any::Any, ops::Deref};
 
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     refs::{Own, Weak},
     ui::{
         AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, UI, View, ViewData, ViewFrame, view,

@@ -8,6 +8,7 @@ use std::{
 };
 
 use anyhow::{Result, bail};
+use dispatch::{from_main, on_main, wait_for_next_frame};
 pub use helpers::*;
 use log::{error, warn};
 use refs::Own;
@@ -17,11 +18,9 @@ use tokio::sync::mpsc::channel;
 use window::Window;
 
 use crate::{
-    AppRunner, from_main,
+    AppRunner,
     gm::{LossyConvert, ToF32},
-    on_main,
     ui::{Input, Touch, U8Color, UIEvents, UIManager},
-    wait_for_next_frame,
 };
 
 pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>

@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     ui::{
         Container, NavigationView, PRESENT_ANIMATION_DURATION, RED, Setup, TouchStack, UI, ViewController,
         ViewData, view,
