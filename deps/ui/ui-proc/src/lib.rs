@@ -86,7 +86,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             }
         }
 
-        impl #generics test_engine::ui::ViewInternalSetup for #name <#type_params>  {
+        impl #generics test_engine::ui::__ViewInternalSetup for #name <#type_params>  {
             fn __internal_before_setup(&mut self) {
                 use test_engine::ui::Setup;
                 let mut weak = test_engine::refs::weak_from_ref(self);
@@ -104,6 +104,35 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 self.__after_setup_event().trigger(());
             }
         }
+
+        impl #generics test_engine::ui::__ViewInternalTableData for #name <#type_params>  {
+            fn __cell_height(&self) -> f32 {
+                use test_engine::ui::TableData;
+                let weak = test_engine::refs::weak_from_ref(self);
+                weak.cell_height()
+            }
+            fn __number_of_cells(&self) -> usize {
+                use test_engine::ui::TableData;
+                let weak = test_engine::refs::weak_from_ref(self);
+                weak.number_of_cells()
+            }
+            fn __make_cell(&self) -> test_engine::refs::Own<dyn test_engine::ui::View> {
+                use test_engine::ui::TableData;
+                let weak = test_engine::refs::weak_from_ref(self);
+                weak.make_cell()
+            }
+            fn __setup_cell(&self, cell: &mut dyn std::any::Any, index: usize) {
+                use test_engine::ui::TableData;
+                let weak = test_engine::refs::weak_from_ref(self);
+                weak.setup_cell(cell, index)
+            }
+            fn __cell_selected(&mut self, index: usize) {
+                use test_engine::ui::TableData;
+                let weak = test_engine::refs::weak_from_ref(self);
+                weak.cell_selected(index)
+            }
+        }
+
     }
     .into()
 }

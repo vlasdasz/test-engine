@@ -33,27 +33,27 @@ impl Setup for TestTableView {
 }
 
 impl TableData for TestTableView {
-    fn cell_height(&self) -> f32 {
+    fn cell_height(self: Weak<Self>) -> f32 {
         40.0
     }
 
-    fn number_of_cells(&self) -> usize {
+    fn number_of_cells(self: Weak<Self>) -> usize {
         N_CELLS.load(Ordering::Relaxed)
     }
 
-    fn make_cell(&self) -> Own<dyn View> {
+    fn make_cell(self: Weak<Self>) -> Own<dyn View> {
         Label::new().after_setup(|mut label| {
             label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
             label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
         })
     }
 
-    fn setup_cell(&self, cell: &mut dyn Any, index: usize) {
+    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
         let label = cell.downcast_mut::<Label>().unwrap();
         label.set_text(format!("Cell number: {}", index + 1));
     }
 
-    fn cell_selected(&mut self, index: usize) {
+    fn cell_selected(self: Weak<Self>, index: usize) {
         INDEX.store(index, Ordering::Relaxed);
     }
 }

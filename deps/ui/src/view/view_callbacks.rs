@@ -20,7 +20,7 @@ impl<T: ?Sized + View> ViewCallbacks for T {
     }
 }
 
-pub trait ViewInternalSetup {
+pub trait __ViewInternalSetup {
     fn __internal_before_setup(&mut self);
     fn __internal_setup(&mut self);
 }

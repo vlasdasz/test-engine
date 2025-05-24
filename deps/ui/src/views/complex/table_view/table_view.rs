@@ -3,7 +3,7 @@ use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 
 use crate::{
-    Setup, TableData, View, ViewCallbacks, ViewTouch,
+    __ViewInternalTableData, Setup, View, ViewCallbacks, ViewTouch,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 
@@ -17,7 +17,7 @@ use crate::ScrollView;
 
 #[view]
 pub struct TableView {
-    data: Weak<dyn TableData>,
+    data: Weak<dyn __ViewInternalTableData>,
 
     #[init]
     pub scroll: ScrollView,
@@ -44,7 +44,10 @@ impl Setup for TableView {
 }
 
 impl TableView {
-    pub fn set_data_source(mut self: Weak<Self>, data: &(impl TableData + 'static)) -> Weak<Self> {
+    pub fn set_data_source(
+        mut self: Weak<Self>,
+        data: &(impl __ViewInternalTableData + 'static),
+    ) -> Weak<Self> {
         self.data = weak_from_ref(data);
         self
     }
@@ -62,13 +65,13 @@ impl TableView {
             return;
         }
 
-        let number_of_cells = self.data.number_of_cells();
+        let number_of_cells = self.data.__number_of_cells();
 
         if number_of_cells == 0 {
             return;
         }
 
-        let cell_height = self.data.cell_height();
+        let cell_height = self.data.__cell_height();
 
         let total_height = number_of_cells.lossy_convert() * cell_height;
 
@@ -87,23 +90,23 @@ impl TableView {
         }
 
         for i in first_index..last_index {
-            let mut cell = self.data.make_cell();
+            let mut cell = self.data.__make_cell();
 
             let label = format!("TableView cell: {}", cell.label());
             cell.set_label(label);
 
             let mut cell = self.scroll.add_subview(cell);
 
-            self.data.setup_cell(cell.as_any_mut(), i);
+            self.data.__setup_cell(cell.as_any_mut(), i);
 
             cell.place()
-                .h(self.data.cell_height())
-                .t(i.lossy_convert() * self.data.cell_height())
+                .h(self.data.__cell_height())
+                .t(i.lossy_convert() * self.data.__cell_height())
                 .lr(0);
 
             cell.enable_touch_low_priority();
             cell.touch().up_inside.sub(move || {
-                self.data.cell_selected(i);
+                self.data.__cell_selected(i);
             });
         }
     }
