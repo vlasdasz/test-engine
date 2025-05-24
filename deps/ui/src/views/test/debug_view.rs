@@ -17,7 +17,7 @@ use utils::Every;
 
 use crate::{
     Button, Label, MovableView, Setup, ToLabel, TouchStack, UIManager, View, ViewCallbacks, ViewSubviews,
-    view::{ViewData, ViewFrame, ViewInternalSetup},
+    view::{__ViewInternalSetup, ViewData, ViewFrame},
 };
 
 pub(crate) static DEBUG_VIEW: MainLock<Option<Own<dyn View>>> = MainLock::new();

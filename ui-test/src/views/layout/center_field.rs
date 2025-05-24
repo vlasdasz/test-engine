@@ -1,5 +1,5 @@
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     refs::Weak,
     ui::{Anchor::CenterY, BLUE, Container, GREEN, Setup, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,

@@ -1,9 +1,9 @@
 use anyhow::Result;
 use test_engine::{
+    dispatch::wait_for_next_frame,
     refs::Own,
     ui::{UI, UIManager, view},
     ui_test::inject_key,
-    wait_for_next_frame,
 };
 
 #[view]

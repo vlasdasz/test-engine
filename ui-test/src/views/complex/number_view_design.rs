@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     refs::Weak,
     ui::{BLUE, HasText, LIGHT_GRAY, NumberView, Setup, Style, UI, ViewData, ViewSubviews, view},
     ui_test::check_colors,

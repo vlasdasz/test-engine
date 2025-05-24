@@ -51,4 +51,4 @@ winit = { workspace = true, features = ["android-game-activity"] }
 winit = { workspace = true }
 
 [build-dependencies]
-cfg_aliases = { workspace = true }
+plat = { workspace = true }

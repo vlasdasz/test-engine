@@ -1,5 +1,6 @@
 use test_engine::{
-    RenderPass, VertexBuffer, after,
+    RenderPass, VertexBuffer,
+    dispatch::after,
     level::LevelManager,
     refs::Weak,
     ui::{

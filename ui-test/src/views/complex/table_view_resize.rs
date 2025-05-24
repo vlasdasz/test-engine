@@ -2,7 +2,7 @@ use std::{any::Any, ops::Deref};
 
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     refs::{Own, Weak},
     ui::{
         AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, UI, View, ViewData, ViewFrame, view,
@@ -24,21 +24,21 @@ impl Setup for TableViewResize {
 }
 
 impl TableData for TableViewResize {
-    fn cell_height(&self) -> f32 {
+    fn cell_height(self: Weak<Self>) -> f32 {
         50.0
     }
 
-    fn number_of_cells(&self) -> usize {
+    fn number_of_cells(self: Weak<Self>) -> usize {
         1
     }
 
-    fn make_cell(&self) -> Own<dyn View> {
+    fn make_cell(self: Weak<Self>) -> Own<dyn View> {
         Label::new().after_setup(|mut label| {
             label.set_color(GREEN);
         })
     }
 
-    fn setup_cell(&self, cell: &mut dyn Any, _index: usize) {
+    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, _index: usize) {
         let label = cell.downcast_mut::<Label>().unwrap();
         label.set_text("alalalalal");
     }

@@ -2,7 +2,7 @@ use std::sync::Mutex;
 
 use anyhow::Result;
 use test_engine::{
-    Task, from_main,
+    dispatch::{Task, from_main},
     refs::Weak,
     ui::{Button, HasText, Setup, Spinner, UI, ViewData, link_button, view},
     ui_test::inject_touches,

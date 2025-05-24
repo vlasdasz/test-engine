@@ -16,12 +16,12 @@ mod table_view;
 mod table_view_resize;
 
 pub async fn test_complex_views() -> anyhow::Result<()> {
+    test_table_view().await?;
     test_table_view_resize().await?;
     test_drop_down().await?;
     test_number_view_design().await?;
     test_number_view().await?;
     test_alert().await?;
-    test_table_view().await?;
     test_collection_view().await?;
     test_buttons_on_table_view().await?;
     test_point_view().await?;

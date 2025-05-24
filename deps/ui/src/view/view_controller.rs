@@ -20,7 +20,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     fn navigation(&self) -> Weak<NavigationView> {
         assert!(
             self.superview().is_ok(),
-            "Current view is not a part of navigation stack"
+            "Current view is not a part of a navigation stack"
         );
 
         if self.navigation_view().is_ok() {
@@ -30,6 +30,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
         }
     }
 
+    /// Present new view replacing and deallocating current one
     fn present(mut self: Weak<Self>, mut view: Own<dyn View>) -> Receiver<()> {
         let touch_lock = Touch::lock();
 

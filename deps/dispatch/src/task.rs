@@ -19,9 +19,11 @@ impl<T: Send + 'static> Task<T> {
     pub fn callback(self, callback: impl FnOnce(T) + Send + 'static) {
         spawn(async {
             match spawn_blocking(self.task).await {
-                Ok(result) => on_main(|| {
-                    callback(result);
-                }),
+                Ok(result) => {
+                    on_main(|| {
+                        callback(result);
+                    });
+                }
                 Err(error) => {
                     error!("Failed to finish blocking task. Error: {error}");
                 }

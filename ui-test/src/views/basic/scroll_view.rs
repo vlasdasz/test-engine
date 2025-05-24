@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    from_main,
+    dispatch::from_main,
     refs::Weak,
     ui::{ScrollView, Setup, TURQUOISE, UI, ViewData, view},
     ui_test::{

@@ -1,5 +1,5 @@
 use test_engine::{
-    from_main,
+    dispatch::{from_main, wait_for_next_frame},
     refs::Weak,
     ui::{
         Anchor::{Right, Top},
@@ -7,7 +7,6 @@ use test_engine::{
         view,
     },
     ui_test::check_colors,
-    wait_for_next_frame,
 };
 
 #[view]

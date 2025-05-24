@@ -6,7 +6,8 @@ use std::{
 
 use fake::Fake;
 use test_engine::{
-    AppRunner, from_main, on_main,
+    AppRunner,
+    dispatch::{from_main, on_main},
     refs::Weak,
     ui::{Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
 };

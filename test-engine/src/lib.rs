@@ -66,12 +66,17 @@ pub mod time {
 
 pub use app_runner::AppRunner;
 pub use audio;
-pub use dispatch::{Task, after, async_after, from_main, on_main, wait_for_next_frame};
 pub use generate;
 pub use manage::data_manager::DataManager;
 pub use ui::views::task_spinner::TaskSpinner;
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
+
+pub mod dispatch {
+    pub use ::dispatch::{Task, after, async_after, from_main, ok_main, on_main, wait_for_next_frame};
+
+    pub use crate::ui::ui_dispatch::on_back;
+}
 
 #[cfg(target_os = "android")]
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;

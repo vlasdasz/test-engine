@@ -15,4 +15,4 @@ manage = { workspace = true }
 rodio = { workspace = true }
 
 [build-dependencies]
-cfg_aliases = { workspace = true }
+plat = { workspace = true }

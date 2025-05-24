@@ -1,6 +1,7 @@
 use test_engine::{
-    AppRunner, DataManager, async_after,
+    AppRunner, DataManager,
     audio::Sound,
+    dispatch::async_after,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::Weak,

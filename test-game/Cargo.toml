@@ -18,4 +18,4 @@ test-engine = { workspace = true }
 ui-benchmark = { workspace = true }
 
 [build-dependencies]
-cfg_aliases = { workspace = true }
+plat = { workspace = true }
