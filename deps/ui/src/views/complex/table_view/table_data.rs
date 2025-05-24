@@ -9,5 +9,5 @@ pub trait TableData {
     fn number_of_cells(&self) -> usize;
     fn make_cell(&self) -> Own<dyn View>;
     fn setup_cell(&self, cell: &mut dyn Any, index: usize);
-    fn cell_selected(&mut self, _index: usize) {}
+    fn cell_selected(&mut self, #[allow(unused_variables)] index: usize) {}
 }

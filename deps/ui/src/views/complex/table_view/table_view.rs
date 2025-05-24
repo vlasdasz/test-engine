@@ -3,7 +3,7 @@ use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 
 use crate::{
-    Setup, TableData, View, ViewCallbacks,
+    Setup, TableData, View, ViewCallbacks, ViewTouch,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 
@@ -94,12 +94,17 @@ impl TableView {
 
             let mut cell = self.scroll.add_subview(cell);
 
+            self.data.setup_cell(cell.as_any_mut(), i);
+
             cell.place()
                 .h(self.data.cell_height())
                 .t(i.lossy_convert() * self.data.cell_height())
                 .lr(0);
 
-            self.data.setup_cell(cell.as_any_mut(), i);
+            cell.enable_touch_low_priority();
+            cell.touch().up_inside.sub(move || {
+                self.data.cell_selected(i);
+            });
         }
     }
 }
