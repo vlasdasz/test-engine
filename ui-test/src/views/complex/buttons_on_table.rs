@@ -32,10 +32,6 @@ impl CollectionData for ButtonsOnTableView {
         1
     }
 
-    fn make_cell(&self) -> Own<dyn View> {
-        Container::new()
-    }
-
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
         let cell = cell.downcast_mut::<Container>().unwrap();
 
@@ -56,6 +52,10 @@ impl CollectionData for ButtonsOnTableView {
 
     fn size_for_index(&self, _index: usize) -> Size {
         (50, 50).into()
+    }
+
+    fn make_cell(&self) -> Own<dyn View> {
+        Container::new()
     }
 
     fn cell_selected(&mut self, index: usize) {
