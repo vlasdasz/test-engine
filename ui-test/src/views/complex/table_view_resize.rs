@@ -1,4 +1,4 @@
-use std::{any::Any, ops::Deref};
+use std::any::Any;
 
 use anyhow::Result;
 use test_engine::{
@@ -19,7 +19,7 @@ struct TableViewResize {
 impl Setup for TableViewResize {
     fn setup(mut self: Weak<Self>) {
         self.table.set_frame((20, 20, 200, 200));
-        self.table.set_data_source(self.deref());
+        self.table.set_data_source(self);
     }
 }
 

@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{any::Any, time::Duration};
 
 use anyhow::Result;
 use test_engine::{
@@ -6,7 +6,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Size, Top, X},
-        BLUE, Button, HasText, Label, Setup, Spinner, UI, ViewData, link_button, view,
+        BLUE, Button, HasText, Label, Setup, Spinner, TableData, TableView, UI, ViewData, link_button, view,
     },
     ui_test::inject_touches,
 };
@@ -17,6 +17,7 @@ struct AsyncCalls {
     #[init]
     label:  Label,
     button: Button,
+    table:  TableView,
 }
 
 impl AsyncCalls {
@@ -41,6 +42,16 @@ impl Setup for AsyncCalls {
 
         self.label.place().same([Size, X], self.button).anchor(Top, self.button, 10);
         self.label.set_text("Sopog");
+
+        self.table.place().below(self.label, 10);
+        self.table.set_data_source(self);
+    }
+}
+
+impl TableData for AsyncCalls {
+    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+        let cell = cell.downcast_mut::<Label>().unwrap();
+        cell.set_text(index);
     }
 }
 

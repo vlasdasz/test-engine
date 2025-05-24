@@ -20,6 +20,7 @@ mod text_field_constraint;
 mod to_label;
 mod touch_layer;
 mod touch_stack;
+pub mod ui_dispatch;
 mod ui_event;
 mod ui_manager;
 mod view;
