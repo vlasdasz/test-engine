@@ -65,6 +65,11 @@ impl TableView {
             return;
         }
 
+        assert!(
+            self.data.is_ok(),
+            "TableView data source is not set. Use set_data_source method."
+        );
+
         let number_of_cells = self.data.__number_of_cells();
 
         if number_of_cells == 0 {

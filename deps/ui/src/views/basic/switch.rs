@@ -31,6 +31,16 @@ impl Switch {
         self.on
     }
 
+    pub fn on_change<Ret>(
+        self: Weak<Self>,
+        mut callback: impl FnMut(bool) -> Ret + Send + 'static,
+    ) -> Weak<Self> {
+        self.selected.val(move |val| {
+            callback(val);
+        });
+        self
+    }
+
     pub fn set_on(&mut self, on: bool) {
         const MARGIN: f32 = 5.0;
         self.on = on;
