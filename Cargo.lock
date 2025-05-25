@@ -3422,6 +3422,8 @@ dependencies = [
 [[package]]
 name = "reflected"
 version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c897adfdfc57e2c4e1de243ffa0dd84d3949d74478465c0c198f2dbe1146a3e2"
 dependencies = [
  "chrono",
  "fake",

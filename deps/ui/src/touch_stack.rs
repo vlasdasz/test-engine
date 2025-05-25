@@ -3,7 +3,7 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 use nonempty::NonEmpty;
 
 use crate::{
-    UIManager, WeakView,
+    UIManager, View, WeakView,
     touch_layer::TouchLayer,
     view::{ViewData, ViewSubviews},
 };

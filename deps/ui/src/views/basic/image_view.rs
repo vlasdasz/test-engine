@@ -23,4 +23,9 @@ impl ImageView {
         self.image = image.to_image();
         self
     }
+
+    pub fn remove_image(&mut self) -> &mut Self {
+        self.image = Weak::default();
+        self
+    }
 }
