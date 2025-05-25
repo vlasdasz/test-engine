@@ -57,7 +57,7 @@ winit = "0.30"
 
 manage = "0.9.0"
 plat = "0.1.0"
-reflected = "0.21.0"
+reflected = "0.22.0"
 refs = { version = "0.14.0", default-features = true }
 vents = "0.8.0"
 
@@ -83,6 +83,6 @@ window = { path = "deps/window" }
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }
 #vents = { path = "../deps/vents/vents" }
-#reflected = { path = "../deps/reflected/reflected" }
+reflected = { path = "../deps/reflected/reflected" }
 #tain = { path = "../deps/tain/tain" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "55c4d955baae1c44c3336ff9ad5e671f561cf65e" }
