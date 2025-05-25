@@ -284,7 +284,15 @@ impl Placer {
         self.l(offset).r(offset).t(offset)
     }
 
+    pub fn ltr(&self, offset: impl ToF32) -> &Self {
+        self.l(offset).r(offset).t(offset)
+    }
+
     pub fn lrb(&self, offset: impl ToF32) -> &Self {
+        self.l(offset).r(offset).b(offset)
+    }
+
+    pub fn rbl(&self, offset: impl ToF32) -> &Self {
         self.l(offset).r(offset).b(offset)
     }
 
