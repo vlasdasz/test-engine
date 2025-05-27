@@ -1,8 +1,9 @@
 use crate::views::basic::{
     button::test_button, gradient::test_gradient, image_on_view::test_image_on_view,
     image_view::test_image_view, image_view_svg::test_image_view_svg, inject_touch::test_inject_touch,
-    label::test_label, multiline_label::test_multiline, scroll_view::test_scroll_view, slider::test_slider,
-    stick::test_stick, switch::test_switch, text_field::test_text_field,
+    label::test_label, multiline_label::test_multiline, nine_segment::test_nine_segment,
+    scroll_view::test_scroll_view, slider::test_slider, stick::test_stick, switch::test_switch,
+    text_field::test_text_field,
 };
 
 mod button;
@@ -13,6 +14,7 @@ mod image_view_svg;
 mod inject_touch;
 mod label;
 mod multiline_label;
+mod nine_segment;
 mod scroll_view;
 mod slider;
 mod stick;
@@ -20,6 +22,7 @@ mod switch;
 mod text_field;
 
 pub async fn test_base_views() -> anyhow::Result<()> {
+    test_nine_segment().await?;
     test_image_view_svg().await?;
     test_label().await?;
     test_gradient().await?;
