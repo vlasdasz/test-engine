@@ -1,6 +1,5 @@
-use dispatch::on_main;
 use gm::{Animation, color::WHITE};
-use refs::{Own, Weak};
+use refs::{Own, Weak, assert_main_thread};
 use ui_proc::view;
 
 use crate::{Touch, WeakView};
@@ -42,35 +41,35 @@ impl Setup for NavigationView {
 
 impl NavigationView {
     pub fn push(mut self: Weak<Self>, mut view: Own<dyn View>) {
+        assert_main_thread();
         assert!(!self.subviews().is_empty(), "BUG: push from empty navigation");
 
         let touch_lock = Touch::lock();
 
-        on_main(move || {
-            TouchStack::push_layer(view.weak_view());
+        TouchStack::push_layer(view.weak_view());
 
-            let mut prev_view = self.subviews().last().unwrap().weak_view();
+        let mut prev_view = self.subviews().last().unwrap().weak_view();
 
-            view.set_color(WHITE);
-            let mut view = self.add_subview(view);
-            view.place().back();
-            view.set_navigation_view(self);
-            view.set_frame(self.frame().with_zero_origin());
+        view.set_color(WHITE);
+        let mut view = self.add_subview(view);
+        view.place().back();
+        view.set_navigation_view(self);
+        view.set_frame(self.frame().with_zero_origin());
 
-            let anim = UIAnimation::new(Animation::new(self.width(), 0.0, 0.5), |view, x| {
-                view.set_x(x);
-            });
-
-            anim.on_finish.sub(move || {
-                drop(touch_lock);
-                prev_view.set_hidden(true);
-            });
-
-            view.add_animation(anim);
+        let anim = UIAnimation::new(Animation::new(self.width(), 0.0, 0.5), |view, x| {
+            view.set_x(x);
         });
+
+        anim.on_finish.sub(move || {
+            drop(touch_lock);
+            prev_view.set_hidden(true);
+        });
+
+        view.add_animation(anim);
     }
 
     pub fn pop(self: Weak<Self>) {
+        assert_main_thread();
         assert!(self.subviews().len() > 1, "BUG: Nowhere to pop");
 
         let touch_lock = Touch::lock();

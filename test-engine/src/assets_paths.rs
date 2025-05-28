@@ -13,8 +13,8 @@ impl AssetsPaths {
         let root = Self::root(&root);
         let assets = Self::assets(&root);
         Rc::new(Self {
-            images: assets.join("Images"),
-            sounds: assets.join("Sounds"),
+            images: assets.join("images"),
+            sounds: assets.join("sounds"),
         })
     }
 }

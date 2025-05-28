@@ -1,6 +1,5 @@
 use std::{
     any::Any,
-    ops::Deref,
     sync::atomic::{AtomicUsize, Ordering},
 };
 
@@ -28,7 +27,7 @@ struct TestTableView {
 impl Setup for TestTableView {
     fn setup(self: Weak<Self>) {
         self.table.place().lr(280).tb(0);
-        self.table.set_data_source(self.deref());
+        self.table.set_data_source(self);
     }
 }
 

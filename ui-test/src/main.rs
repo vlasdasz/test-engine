@@ -19,7 +19,7 @@ use crate::{
     base::test_base_ui,
     views::{
         basic::test_base_views, complex::test_complex_views, containers::test_containers,
-        helpers::test_helper_views, input::test_input_views, layout::test_layout,
+        helpers::test_helper_views, images::test_image_views, input::test_input_views, layout::test_layout,
         window_resize::test_window_resize,
     },
 };
@@ -48,9 +48,10 @@ async fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_image_views().await?;
+    test_base_views().await?;
     test_complex_views().await?;
     test_base_ui().await?;
-    test_base_views().await?;
     test_layout().await?;
     test_window_resize().await?;
     test_containers().await?;

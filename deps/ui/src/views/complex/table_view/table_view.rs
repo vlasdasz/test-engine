@@ -1,5 +1,5 @@
 use gm::LossyConvert;
-use refs::{Weak, weak_from_ref};
+use refs::Weak;
 use ui_proc::view;
 
 use crate::{
@@ -44,11 +44,11 @@ impl Setup for TableView {
 }
 
 impl TableView {
-    pub fn set_data_source(
+    pub fn set_data_source<T: __ViewInternalTableData + 'static>(
         mut self: Weak<Self>,
-        data: &(impl __ViewInternalTableData + 'static),
+        data: Weak<T>,
     ) -> Weak<Self> {
-        self.data = weak_from_ref(data);
+        self.data = data;
         self
     }
 
@@ -64,6 +64,11 @@ impl TableView {
         if self.height() <= 0.0 {
             return;
         }
+
+        assert!(
+            self.data.is_ok(),
+            "TableView data source is not set. Use set_data_source method."
+        );
 
         let number_of_cells = self.data.__number_of_cells();
 

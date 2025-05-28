@@ -1,6 +1,10 @@
+use std::fmt::Display;
+
 use refs::Weak;
 use ui_proc::view;
 use window::image::{Image, ToImage};
+
+use crate::{NineSegmentImageView, ViewData, ViewSubviews};
 
 mod test_engine {
     pub(crate) use educe;
@@ -12,6 +16,11 @@ mod test_engine {
 #[view]
 pub struct ImageView {
     image: Weak<Image>,
+
+    nine_segment: Weak<NineSegmentImageView>,
+
+    pub flip_x: bool,
+    pub flip_y: bool,
 }
 
 impl ImageView {
@@ -21,6 +30,17 @@ impl ImageView {
 
     pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image = image.to_image();
+        self
+    }
+
+    pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
+        if !self.nine_segment.was_initialized() {
+            self.nine_segment = self.add_view();
+            self.nine_segment.place().back();
+        }
+
+        self.nine_segment.set_image(name);
+
         self
     }
 }

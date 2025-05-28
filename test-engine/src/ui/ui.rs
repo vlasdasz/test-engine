@@ -6,14 +6,14 @@ use std::{
 
 use dispatch::{from_main, wait_for_next_frame};
 use gm::{
-    color::{Color, TURQUOISE},
+    color::TURQUOISE,
     flat::{Rect, Size},
 };
 use log::{debug, trace, warn};
 use refs::{MainLock, Own, Weak};
 use render::{
     PathPipeline, UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
-    data::{RectView, UIGradientInstance, UIRectInstance},
+    data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
 };
 use ui::{
     DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
@@ -146,13 +146,13 @@ impl UI {
                 // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
                 IMAGE_RECT_DRAWER.get_mut().add_with_image(
-                    UIRectInstance {
-                        position:      frame.origin,
-                        size:          frame.size,
-                        color:         Color::default(),
-                        corner_radius: view.corner_radius(),
-                        z_position:    view.z_position() - UIManager::additional_z_offset(),
-                    },
+                    UIImageInstance::new(
+                        frame,
+                        view.corner_radius(),
+                        view.z_position() - UIManager::additional_z_offset(),
+                        image_view.flip_x,
+                        image_view.flip_y,
+                    ),
                     image,
                 );
             }

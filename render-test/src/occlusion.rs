@@ -1,4 +1,4 @@
-use render::data::{RectView, UIRectInstance};
+use render::data::{RectView, UIImageInstance, UIRectInstance};
 use test_engine::{
     RenderPass,
     ui::{BLUE, GREEN, RED, UIImages},
@@ -34,12 +34,12 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     );
 
     image.add_with_image(
-        UIRectInstance {
+        UIImageInstance {
             position:      (225, 75).into(),
             size:          (50, 50).into(),
-            color:         Default::default(),
             corner_radius: 0.0,
             z_position:    0.4,
+            flags:         0,
         },
         UIImages::rb(),
     );

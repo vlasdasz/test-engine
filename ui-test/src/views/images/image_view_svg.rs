@@ -1,14 +1,14 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Setup, UI, ViewData, ViewTouch, view},
+    ui::{ImageView, Setup, UI, ViewData, ViewTouch, view},
     ui_test::helpers::check_colors,
 };
 
 #[view]
 struct ImageViewSVG {
     #[init]
-    image_view: test_engine::ui::ImageView,
+    image_view: ImageView,
 }
 
 impl Setup for ImageViewSVG {

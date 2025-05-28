@@ -1,6 +1,5 @@
 mod input;
 mod ui;
-pub(crate) mod ui_dispatch;
 pub mod ui_test;
 pub(crate) mod views;
 

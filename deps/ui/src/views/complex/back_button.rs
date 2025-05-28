@@ -2,7 +2,7 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    Button, Setup,
+    Button, Setup, ViewFrame,
     has_data::HasText,
     view::{ViewController, ViewData},
 };
@@ -23,6 +23,8 @@ impl Setup for BackButton {
     fn setup(mut self: Weak<Self>) {
         self.button.set_text("Back");
         self.button.place().back();
+
+        self.set_frame((50, 50, 200, 50));
 
         self.button.on_tap(move || {
             self.navigation().pop();
