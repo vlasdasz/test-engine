@@ -1,7 +1,10 @@
+use std::fmt::Display;
+
 use anyhow::Result;
 use test_engine::{
+    gm::Apply,
     refs::Weak,
-    ui::{Color, Image, ImageView, Setup, UI, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, view},
+    ui::{Image, ImageView, Setup, UI, ViewCallbacks, ViewData, ViewFrame, view},
     ui_test::record_ui_test,
 };
 
@@ -11,7 +14,7 @@ struct NineSegmentImageView {
     _side:   Weak<Image>,
     _center: Weak<Image>,
 
-    #[educe(Default = 100.0)]
+    #[educe(Default = 64.0)]
     pub corner_size: f32,
 
     #[init]
@@ -28,8 +31,34 @@ struct NineSegmentImageView {
     c: ImageView,
 }
 
+impl NineSegmentImageView {
+    pub fn set_image(mut self: Weak<Self>, name: impl Display) {
+        [self.tl, self.tr, self.bl, self.br].apply(|mut v| {
+            v.set_image(format!("{name}/corner.png"));
+        });
+
+        [self.t, self.b].apply(|mut v| {
+            v.set_image(format!("{name}/side_v.png"));
+        });
+
+        [self.r, self.l].apply(|mut v| {
+            v.set_image(format!("{name}/side_h.png"));
+        });
+
+        self.c.set_image(format!("{name}/center.png"));
+    }
+}
+
 impl Setup for NineSegmentImageView {
-    fn setup(self: Weak<Self>) {}
+    fn setup(mut self: Weak<Self>) {
+        self.tr.flip_x = true;
+        self.bl.flip_y = true;
+        self.br.flip_x = true;
+        self.br.flip_y = true;
+
+        self.b.flip_y = true;
+        self.r.flip_x = true;
+    }
 }
 
 impl ViewCallbacks for NineSegmentImageView {
@@ -69,12 +98,10 @@ struct NineSegment {
 }
 
 impl Setup for NineSegment {
-    fn setup(mut self: Weak<Self>) {
-        self.segment.place().back();
+    fn setup(self: Weak<Self>) {
+        self.segment.place().all_sides(100);
 
-        self.segment.subviews_mut().iter_mut().for_each(|v| {
-            v.set_color(Color::random());
-        });
+        self.segment.set_image("button");
     }
 }
 
