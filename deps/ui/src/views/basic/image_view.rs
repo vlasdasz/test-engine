@@ -1,8 +1,10 @@
+use std::fmt::Display;
+
 use refs::Weak;
 use ui_proc::view;
 use window::image::{Image, ToImage};
 
-use crate::NineSegmentImageView;
+use crate::{NineSegmentImageView, ViewData, ViewSubviews};
 
 mod test_engine {
     pub(crate) use educe;
@@ -31,8 +33,14 @@ impl ImageView {
         self
     }
 
-    pub fn remove_image(&mut self) -> &mut Self {
-        self.image = Weak::default();
+    pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
+        if !self.nine_segment.was_initialized() {
+            self.nine_segment = self.add_view();
+            self.nine_segment.place().back();
+        }
+
+        self.nine_segment.set_image(name);
+
         self
     }
 }

@@ -78,7 +78,7 @@ impl ViewCallbacks for NineSegmentImageView {
 
         if cs > smaller_side / 2.0 {
             cs = smaller_side / 2.0;
-        };
+        }
 
         self.tl.set_frame((0, 0, cs, cs));
         self.tr.set_frame((w - cs, 0, cs, cs));

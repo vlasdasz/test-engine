@@ -1,26 +1,27 @@
 use anyhow::Result;
 use test_engine::{
+    dispatch::from_main,
     refs::Weak,
-    ui::{NineSegmentImageView, Setup, UI, ViewFrame, view},
-    ui_test::{check_colors, record_ui_test},
+    ui::{ImageView, Setup, UI, ViewFrame, view},
+    ui_test::check_colors,
 };
 
 #[view]
 struct NineSegment {
     #[init]
-    segment: NineSegmentImageView,
+    segment: ImageView,
 }
 
 impl Setup for NineSegment {
     fn setup(mut self: Weak<Self>) {
         self.segment.set_frame((50, 50, 200, 200));
 
-        self.segment.set_image("button");
+        self.segment.set_resizing_image("button");
     }
 }
 
 pub async fn test_nine_segment() -> Result<()> {
-    let _view = UI::init_test_view::<NineSegment>().await;
+    let mut view = UI::init_test_view::<NineSegment>().await;
 
     check_colors(
         r#"
@@ -71,7 +72,98 @@ pub async fn test_nine_segment() -> Result<()> {
     )
     .await?;
 
-    record_ui_test().await;
+    from_main(move || {
+        view.segment.set_frame((100, 100, 250, 160));
+    })
+    .await;
+
+    check_colors(
+        r#"
+              97  272 -  89 124 149
+              99  257 -  89 124 149
+              99  256 -  89 124 149
+              99  254 -  89 124 149
+             105  250 -  89 124 149
+             160  195 -   4  18  63
+             160  195 -   4  18  63
+             177  187 -   5  18  64
+             218  157 -   4  18  66
+             243  147 -   4  18  66
+             252  147 -   4  18  65
+             259  147 -   5  19  67
+             298  137 -   4  18  64
+             304  137 -   3  15  61
+             343  123 -  89 124 149
+             345  122 -  89 124 149
+             376  254 -  89 124 149
+             376  254 -  89 124 149
+             358  249 -  89 124 149
+             340  249 -  89 124 149
+             256  194 -   4  19  65
+             256  193 -   5  19  65
+             254  193 -   4  18  64
+             185  177 -   4  18  64
+             147  153 -   3  18  63
+             125  126 -   4  18  64
+             125  126 -   4  18  64
+              93   92 -  89 124 149
+             245   92 -  89 124 149
+             252  127 -   4  18  66
+             222  187 -   6  18  65
+             222  329 -  89 124 149
+             222  234 -   4  19  66
+        "#,
+    )
+    .await?;
+
+    from_main(move || {
+        view.segment.set_frame((100, 100, 140, 280));
+    })
+    .await;
+
+    check_colors(
+        r#"
+             108  377 -  89 124 149
+             111  373 -  89 124 149
+             113  366 -  89 124 149
+             117  361 -   0  55 163
+             122  358 -   4  18  62
+             148  343 -   4  17  63
+             198  245 -   4  18  63
+             239  377 -  89 124 149
+             230  366 -  89 124 149
+             229  364 -  89 124 149
+             216  351 -   4  17  64
+             215  347 -   4  18  63
+             286  219 -  89 124 149
+             217  219 -   5  18  63
+             199  219 -   5  20  64
+              74  211 -  89 124 149
+             177  202 -   4  18  63
+              85   95 -  89 124 149
+             106  102 -  89 124 149
+             110  107 -  89 124 149
+             116  118 -   0  53 158
+             123  133 -   4  18  64
+             177  128 -   4  17  63
+             183  124 -   4  19  64
+             183   86 -  89 124 149
+             184   82 -  89 124 149
+             255   90 -  89 124 149
+             242   96 -  89 124 149
+             240   99 -  89 124 149
+             240  103 -  89 124 149
+             231  113 -  89 124 149
+             223  119 -   0  55 161
+             222  119 -   0  57 160
+             214  124 -   4  18  64
+             214  128 -   4  17  63
+             196  160 -   4  17  63
+             196  160 -   4  17  63
+             151  278 -   3  17  62
+        "#,
+    )
+    .await?;
 
     Ok(())
 }

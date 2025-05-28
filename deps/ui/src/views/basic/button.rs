@@ -1,4 +1,4 @@
-use std::ops::DerefMut;
+use std::{fmt::Display, ops::DerefMut};
 
 use gm::{
     ToF32,
@@ -74,6 +74,12 @@ impl Button {
     pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
         self.image.set_hidden(false);
         self.image.set_image(image);
+        self
+    }
+
+    pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
+        self.image.set_hidden(false);
+        self.image.set_resizing_image(name);
         self
     }
 }
