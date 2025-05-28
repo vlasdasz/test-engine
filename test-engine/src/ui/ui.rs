@@ -9,7 +9,7 @@ use gm::{
     color::TURQUOISE,
     flat::{Rect, Size},
 };
-use log::{debug, trace, warn};
+use log::{debug, trace};
 use refs::{MainLock, Own, Weak};
 use render::{
     PathPipeline, UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
@@ -110,11 +110,11 @@ impl UI {
         let frame = *view.absolute_frame();
 
         if frame.size.is_invalid() {
-            warn!(
-                "View has invalid frame: {}. Frame: {:?} ",
-                view.label(),
-                view.frame()
-            );
+            // warn!(
+            //     "View has invalid frame: {}. Frame: {:?} ",
+            //     view.label(),
+            //     view.frame()
+            // );
             return;
         }
 
@@ -149,7 +149,7 @@ impl UI {
                     UIImageInstance::new(
                         frame,
                         view.corner_radius(),
-                        view.z_position() - UIManager::additional_z_offset(),
+                        view.z_position(),
                         image_view.flip_x,
                         image_view.flip_y,
                     ),
