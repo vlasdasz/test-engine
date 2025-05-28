@@ -56,10 +56,10 @@ wgpu = "25.0"
 wgpu_text = "0.9.1"
 winit = "0.30"
 
-manage = "0.9.0"
+manage = "0.10.0"
 plat = "0.1.0"
 reflected = "0.22.0"
-refs = { version = "0.14.0", default-features = true }
+refs = { version = "0.15.0", default-features = true }
 vents = "0.8.0"
 
 audio = { path = "deps/audio" }

@@ -2,6 +2,8 @@ use refs::Weak;
 use ui_proc::view;
 use window::image::{Image, ToImage};
 
+use crate::NineSegmentImageView;
+
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;
@@ -12,6 +14,8 @@ mod test_engine {
 #[view]
 pub struct ImageView {
     image: Weak<Image>,
+
+    nine_segment: Weak<NineSegmentImageView>,
 
     pub flip_x: bool,
     pub flip_y: bool,
