@@ -12,6 +12,9 @@ mod test_engine {
 #[view]
 pub struct ImageView {
     image: Weak<Image>,
+
+    pub flip_x: bool,
+    pub flip_y: bool,
 }
 
 impl ImageView {

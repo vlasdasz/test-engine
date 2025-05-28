@@ -30,7 +30,7 @@ pub type UIRectPipepeline =
     RectPipeline<{ PipelineType::Color }, "ui_rect", UI_CODE, RectView, UIRectInstance>;
 
 pub type UIImageRectPipepeline =
-    RectPipeline<{ PipelineType::Image }, "ui_image_rect", UI_IMAGE_CODE, RectView, UIRectInstance>;
+    RectPipeline<{ PipelineType::Image }, "ui_image_rect", UI_IMAGE_CODE, RectView, UIImageInstance>;
 
 pub type UIGradientPipeline =
     RectPipeline<{ PipelineType::Color }, "ui_gradient", UI_GRADIENT_CODE, RectView, UIGradientInstance>;
@@ -39,4 +39,4 @@ pub use background_pipeline::BackgroundPipeline;
 pub use path_pipeline::PathPipeline;
 pub use polygon_pipeline::PolygonPipeline;
 
-use crate::data::UIGradientInstance;
+use crate::data::{UIGradientInstance, UIImageInstance};

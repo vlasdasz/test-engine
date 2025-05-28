@@ -4,6 +4,7 @@ name = "render"
 version = "0.1.0"
 
 [dependencies]
+bit_ops = { workspace = true }
 bytemuck = { workspace = true }
 educe = { workspace = true }
 indexmap = { workspace = true }

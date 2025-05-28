@@ -445,6 +445,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc827186963e592360843fb5ba4b973e145841266c1357f7180c43526f2e5b61"
 
 [[package]]
+name = "bit_ops"
+version = "0.1.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cdb6aeaaeb2c8d35cdcfde27638df9f27de07a17a157fccd0c247d5a3b54d51d"
+dependencies = [
+ "paste",
+]
+
+[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3508,6 +3517,7 @@ dependencies = [
 name = "render"
 version = "0.1.0"
 dependencies = [
+ "bit_ops",
  "bytemuck",
  "educe",
  "gm",

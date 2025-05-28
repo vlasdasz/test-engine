@@ -8,12 +8,12 @@ struct Vertex {
     @location(1) uv: vec2<f32>,
 }
 
-struct UIRectInstance {
+struct UIImageInstance {
     @location(2) position:      vec2<f32>,
     @location(3) size:          vec2<f32>,
-    @location(4) color:         vec4<f32>,
-    @location(5) corner_radius: f32,
-    @location(6) z_position:    f32,
+    @location(4) corner_radius: f32,
+    @location(5) z_position:    f32,
+    @location(6) flags:         u32,
 }
 
 @group(0) @binding(0)
@@ -30,9 +30,22 @@ struct VertexOutput {
 @vertex
 fn v_main(
     model: Vertex,
-    instance: UIRectInstance,
+    instance: UIImageInstance,
 ) -> VertexOutput {
-    var out_pos: vec4<f32> = vec4<f32>(model.pos, instance.z_position, 1.0);
+    let flip_x: bool = ((instance.flags >> 0u) & 1u) != 0u;
+    let flip_y: bool = ((instance.flags >> 1u) & 1u) != 0u;
+
+    var pos = model.pos;
+
+    if flip_x {
+        pos.x *= -1.0;
+    }
+
+    if flip_y {
+        pos.y *= -1.0;
+    }
+
+    var out_pos: vec4<f32> = vec4<f32>(pos, instance.z_position, 1.0);
 
     out_pos.y = -out_pos.y;
 
