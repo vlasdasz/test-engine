@@ -94,6 +94,8 @@ impl TableView {
             last_index = number_of_cells;
         }
 
+        let h = self.data.__cell_height();
+
         for i in first_index..last_index {
             let mut cell = self.data.__make_cell();
 
@@ -104,10 +106,7 @@ impl TableView {
 
             self.data.__setup_cell(cell.as_any_mut(), i);
 
-            cell.place()
-                .h(self.data.__cell_height())
-                .t(i.lossy_convert() * self.data.__cell_height())
-                .lr(0);
+            cell.place().h(h).t(i.lossy_convert() * h).lr(0);
 
             cell.enable_touch_low_priority();
             cell.touch().up_inside.sub(move || {

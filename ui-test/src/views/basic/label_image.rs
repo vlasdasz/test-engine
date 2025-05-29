@@ -1,21 +1,47 @@
+use std::any::Any;
+
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{HasText, Label, Setup, UI, ViewData, WHITE, view},
-    ui_test::helpers::check_colors,
+    ui::{HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, UI, ViewData, WHITE, view},
+    ui_test::{helpers::check_colors, record_ui_test},
 };
 
 #[view]
 struct LabelImage {
     #[init]
-    label: Label,
+    label:      Label,
+    table_view: TableView,
 }
 
 impl Setup for LabelImage {
     fn setup(mut self: Weak<Self>) {
         self.label.set_text("ßšėčыў").set_text_size(110).set_image("cat.png");
         self.label.place().tl(50).w(400).h(200);
+
+        self.table_view.set_data_source(self);
+        self.table_view.place().below(self.label, 20);
+        self.table_view.set_color(LIGHT_BLUE);
+    }
+}
+
+impl TableData for LabelImage {
+    fn cell_height(self: Weak<Self>) -> f32 {
+        50.0
+    }
+
+    fn number_of_cells(self: Weak<Self>) -> usize {
+        4
+    }
+
+    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+        let label = cell.downcast_mut::<Label>().unwrap();
+
+        label.set_text(index);
+        label.set_text_size(50);
+        label.set_text_color(WHITE);
+        label.set_image("cat.png");
     }
 }
 
@@ -99,6 +125,8 @@ pub async fn test_label_image() -> Result<()> {
         "#,
     )
     .await?;
+
+    record_ui_test().await;
 
     Ok(())
 }
