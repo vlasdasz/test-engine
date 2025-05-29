@@ -1,12 +1,15 @@
+use std::fmt::Display;
+
 use gm::{
     ToF32,
-    color::{BLACK, Color, WHITE},
+    color::{BLACK, CLEAR, Color, WHITE},
 };
 use refs::Weak;
 use ui_proc::view;
+use window::image::ToImage;
 
 use crate::{
-    HasText, Setup, Style, ToLabel, View,
+    HasText, ImageView, Setup, Style, ToLabel, View, ViewFrame,
     view::{ViewData, ViewSubviews},
 };
 
@@ -78,6 +81,33 @@ impl HasText for Label {
 impl Label {
     pub fn set_alignment(&mut self, alignment: TextAlignment) -> &mut Self {
         self.alignment = alignment;
+        self
+    }
+
+    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+        self.set_color(CLEAR);
+        self.remove_all_subviews();
+        let mut image_view = self.add_view::<ImageView>();
+        image_view.place().back();
+        image_view.set_image(image);
+        image_view.base_view_mut().z_position = self.z_position();
+
+        self
+    }
+
+    pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
+        self.remove_all_subviews();
+        let mut image_view = self.add_view::<ImageView>();
+        image_view.place().back();
+        image_view.set_resizing_image(name);
+        image_view.base_view_mut().z_position = self.z_position();
+        image_view.subviews_mut().iter_mut().for_each(|v| {
+            v.base_view_mut().z_position = self.z_position();
+            v.subviews_mut().iter_mut().for_each(|v| {
+                v.base_view_mut().z_position = self.z_position();
+            });
+        });
+
         self
     }
 }
