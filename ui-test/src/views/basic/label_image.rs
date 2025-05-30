@@ -4,8 +4,11 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, UI, ViewData, WHITE, view},
-    ui_test::helpers::check_colors,
+    ui::{
+        Anchor::{Left, Top, X, Y},
+        Container, HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, UI, ViewData, WHITE, view,
+    },
+    ui_test::{helpers::check_colors, record_ui_test},
 };
 
 #[view]
@@ -13,6 +16,7 @@ struct LabelImage {
     #[init]
     label:      Label,
     table_view: TableView,
+    container:  Container,
 }
 
 impl Setup for LabelImage {
@@ -21,8 +25,20 @@ impl Setup for LabelImage {
         self.label.place().tl(50).w(400).h(200);
 
         self.table_view.set_data_source(self);
-        self.table_view.place().below(self.label, 20);
+        self.table_view
+            .place()
+            .same([X], self.label)
+            .anchor(Top, self.label, 40)
+            .w(50)
+            .h(200);
         self.table_view.set_color(LIGHT_BLUE);
+
+        self.container
+            .place()
+            .anchor(Left, self.table_view, 20)
+            .same([Y], self.table_view)
+            .size(100, 100);
+        self.container.set_color(LIGHT_BLUE);
     }
 }
 
@@ -126,7 +142,7 @@ pub async fn test_label_image() -> Result<()> {
     )
     .await?;
 
-    // record_ui_test().await;
+    record_ui_test().await;
 
     Ok(())
 }
