@@ -5,7 +5,7 @@ use test_engine::{
     dispatch::from_main,
     refs::Weak,
     ui::{HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, UI, ViewData, WHITE, view},
-    ui_test::{helpers::check_colors, record_ui_test},
+    ui_test::helpers::check_colors,
 };
 
 #[view]
@@ -126,7 +126,7 @@ pub async fn test_label_image() -> Result<()> {
     )
     .await?;
 
-    record_ui_test().await;
+    // record_ui_test().await;
 
     Ok(())
 }

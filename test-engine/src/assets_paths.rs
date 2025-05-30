@@ -32,6 +32,6 @@ impl AssetsPaths {
         #[cfg(android)]
         return Default::default();
         #[cfg(not(android))]
-        return _root.join("Assets");
+        return _root.join("assets");
     }
 }
