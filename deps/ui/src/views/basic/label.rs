@@ -96,6 +96,7 @@ impl Label {
     }
 
     pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
+        self.set_color(CLEAR);
         self.remove_all_subviews();
         let mut image_view = self.add_view::<ImageView>();
         image_view.place().back();
