@@ -46,11 +46,11 @@ impl UIManager {
     pub const DEBUG_Z_OFFSET: f32 = 0.3;
 
     pub const fn subview_z_offset() -> f32 {
-        0.000_001
+        0.000_01
     }
 
     pub const fn additional_z_offset() -> f32 {
-        Self::subview_z_offset() / 10.0
+        Self::subview_z_offset() / 100.0
     }
 
     pub fn fps() -> f32 {

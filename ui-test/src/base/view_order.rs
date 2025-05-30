@@ -46,9 +46,10 @@ pub async fn test_view_order() -> Result<()> {
         view.z_position() - UIManager::subview_z_offset()
     );
 
-    assert_eq!(view.view_1.z_position(), view.view_2.z_position());
-    assert_eq!(view.view_2.z_position(), view.view_3.z_position());
-    assert_eq!(view.view_3.z_position(), view.view_4.z_position());
+    assert_eq!(
+        view.view_1.z_position(),
+        view.view_2.z_position() + UIManager::additional_z_offset()
+    );
 
     assert_eq!(view.view_1.view_label(), "ViewOrder.view_1: Container");
     assert_eq!(view.view_2.view_label(), "ViewOrder.view_2: Container");

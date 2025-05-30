@@ -5,10 +5,11 @@ use test_engine::{
     dispatch::from_main,
     refs::Weak,
     ui::{
-        Anchor::{Left, Top, X, Y},
-        Container, HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, UI, ViewData, WHITE, view,
+        Anchor::{Top, X},
+        Container, HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, UI, ViewData, ViewSubviews,
+        WHITE, view,
     },
-    ui_test::{helpers::check_colors, record_ui_test},
+    ui_test::helpers::check_colors,
 };
 
 #[view]
@@ -33,12 +34,11 @@ impl Setup for LabelImage {
             .h(200);
         self.table_view.set_color(LIGHT_BLUE);
 
-        self.container
-            .place()
-            .anchor(Left, self.table_view, 20)
-            .same([Y], self.table_view)
-            .size(100, 100);
+        self.container.place().t(280).l(280).size(200, 200).all_ver();
         self.container.set_color(LIGHT_BLUE);
+
+        self.container.add_view::<Label>().set_text("test 1").set_image("cat.png");
+        self.container.add_view::<Label>().set_text("test 2").set_image("cat.png");
     }
 }
 
@@ -142,7 +142,11 @@ pub async fn test_label_image() -> Result<()> {
     )
     .await?;
 
-    record_ui_test().await;
+    from_main(move || {
+        view.table_view.remove_from_superview();
+        view.label.remove_from_superview();
+    })
+    .await;
 
     Ok(())
 }

@@ -1,7 +1,7 @@
 use std::{any::type_name, ops::DerefMut};
 
 use fake::Fake;
-use gm::{color::Color, flat::Point};
+use gm::{LossyConvert, color::Color, flat::Point};
 use refs::{Own, Weak, weak_from_ref};
 
 use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};
@@ -105,7 +105,9 @@ impl<T: ?Sized + View> ViewSubviews for T {
         let mut weak = view.weak_view();
 
         if weak.z_position() == UIManager::ROOT_VIEW_Z_OFFSET {
-            weak.base_view_mut().z_position = self.z_position() - UIManager::subview_z_offset();
+            weak.base_view_mut().z_position = self.z_position()
+                - UIManager::subview_z_offset()
+                - UIManager::additional_z_offset() * self.base_view().subviews.len().lossy_convert();
         }
 
         self.base_view_mut().subviews.push(view);
