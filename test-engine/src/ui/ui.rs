@@ -9,7 +9,7 @@ use gm::{
     color::TURQUOISE,
     flat::{Rect, Size},
 };
-use log::{debug, trace, warn};
+use log::{debug, trace};
 use refs::{MainLock, Own, Weak};
 use render::{
     PathPipeline, UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
@@ -44,15 +44,9 @@ impl UI {
     pub(crate) fn draw(pass: &mut RenderPass) {
         let mut sections: Vec<Section> = vec![];
         let debug_frames = UIManager::draw_debug_frames();
-        Self::draw_view(
-            pass,
-            UIManager::root_view(),
-            &mut sections,
-            &mut 0.0,
-            debug_frames,
-        );
+        Self::draw_view(pass, UIManager::root_view(), &mut sections, debug_frames);
         if let Some(debug_view) = UIManager::debug_view() {
-            Self::draw_view(pass, debug_view, &mut sections, &mut 0.0, debug_frames);
+            Self::draw_view(pass, debug_view, &mut sections, debug_frames);
         }
 
         RECT_DRAWER.get_mut().draw(
@@ -100,7 +94,6 @@ impl UI {
         pass: &mut RenderPass<'a>,
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
-        text_offset: &mut f32,
         debug_frames: bool,
     ) {
         if view.is_hidden() {
@@ -110,11 +103,11 @@ impl UI {
         let frame = *view.absolute_frame();
 
         if frame.size.is_invalid() {
-            warn!(
-                "View has invalid frame: {}. Frame: {:?} ",
-                view.label(),
-                view.frame()
-            );
+            // warn!(
+            //     "View has invalid frame: {}. Frame: {:?} ",
+            //     view.label(),
+            //     view.frame()
+            // );
             return;
         }
 
@@ -127,14 +120,14 @@ impl UI {
                 start_color:   *view.color(),
                 end_color:     *view.end_gradient_color(),
                 corner_radius: view.corner_radius(),
-                z_position:    view.z_position() + *text_offset,
+                z_position:    view.z_position(),
             });
         } else if view.color().a > 0.0 {
             RECT_DRAWER.get_mut().add(UIRectInstance::new(
                 frame,
                 *view.color(),
                 view.corner_radius(),
-                view.z_position() + *text_offset,
+                view.z_position(),
             ));
         }
 
@@ -149,7 +142,7 @@ impl UI {
                     UIImageInstance::new(
                         frame,
                         view.corner_radius(),
-                        view.z_position() - UIManager::additional_z_offset(),
+                        view.z_position(),
                         image_view.flip_x,
                         image_view.flip_y,
                     ),
@@ -159,7 +152,7 @@ impl UI {
         } else if let Some(label) = view.as_any().downcast_ref::<Label>()
             && !label.text.is_empty()
         {
-            Self::draw_label(&frame, label, text_offset, sections);
+            Self::draw_label(&frame, label, sections);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
                 PATH.get_mut().draw(
@@ -180,23 +173,16 @@ impl UI {
             }
         }
 
-        let mut text_offset = 0.0;
-
         let root_frame = UIManager::root_view().frame();
 
         for view in view.subviews().iter().rev() {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(pass, view.deref(), sections, &mut text_offset, debug_frames);
+                Self::draw_view(pass, view.deref(), sections, debug_frames);
             }
         }
     }
 
-    fn draw_label<'a>(
-        frame: &Rect,
-        label: &'a Label,
-        text_offset: &mut f32,
-        sections: &mut Vec<Section<'a>>,
-    ) {
+    fn draw_label<'a>(frame: &Rect, label: &'a Label, sections: &mut Vec<Section<'a>>) {
         let center = frame.center();
 
         let margin = 16.0;
@@ -206,7 +192,7 @@ impl UI {
                 Text::new(&label.text)
                     .with_scale(label.text_size())
                     .with_color(label.text_color().as_slice())
-                    .with_z(label.z_position() - UIManager::additional_z_offset() + *text_offset),
+                    .with_z(label.z_position() - UIManager::additional_z_offset()),
             )
             .with_bounds((
                 frame.width() - if label.alignment.center() { 0.0 } else { margin },
@@ -234,8 +220,6 @@ impl UI {
                 },
                 center.y,
             ));
-
-        *text_offset += UIManager::additional_z_offset();
 
         sections.push(section);
     }

@@ -4,7 +4,7 @@ use refs::Weak;
 use ui_proc::view;
 use window::image::{Image, ToImage};
 
-use crate::{NineSegmentImageView, ViewData, ViewSubviews};
+use crate::{NineSegmentImageView, ViewData, ViewFrame, ViewSubviews};
 
 mod test_engine {
     pub(crate) use educe;
@@ -37,6 +37,10 @@ impl ImageView {
         if !self.nine_segment.was_initialized() {
             self.nine_segment = self.add_view();
             self.nine_segment.place().back();
+            self.nine_segment
+                .subviews_mut()
+                .iter_mut()
+                .for_each(|v| v.base_view_mut().z_position = self.z_position());
         }
 
         self.nine_segment.set_image(name);

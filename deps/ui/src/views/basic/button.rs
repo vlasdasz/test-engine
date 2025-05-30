@@ -78,6 +78,7 @@ impl Button {
     }
 
     pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
+        self.set_color(CLEAR);
         self.image.set_hidden(false);
         self.image.set_resizing_image(name);
         self
