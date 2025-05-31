@@ -116,10 +116,10 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 let weak = test_engine::refs::weak_from_ref(self);
                 weak.number_of_cells()
             }
-            fn __make_cell(&self) -> test_engine::refs::Own<dyn test_engine::ui::View> {
+            fn __make_cell(&self, index: usize) -> test_engine::refs::Own<dyn test_engine::ui::View> {
                 use test_engine::ui::TableData;
                 let weak = test_engine::refs::weak_from_ref(self);
-                weak.make_cell()
+                weak.make_cell(index)
             }
             fn __setup_cell(&self, cell: &mut dyn std::any::Any, index: usize) {
                 use test_engine::ui::TableData;
