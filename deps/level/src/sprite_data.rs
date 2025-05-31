@@ -29,6 +29,8 @@ pub struct SpriteData {
     #[educe(Default = 0.85)]
     pub z_position: f32,
 
+    #[educe(Default = 1.0)]
+    pub image_scale:  f32,
     pub image:        Weak<Image>,
     pub on_collision: Event<Weak<dyn Sprite>>,
 

@@ -1,8 +1,8 @@
 use game::Game;
-use gm::{color::Color, flat::Point};
+use gm::flat::Point;
 use manage::data_manager::DataManager;
 use refs::MainLock;
-use render::{BackgroundPipeline, SpriteView, TexturedSpriteBoxPipeline, data::RectInstance};
+use render::{BackgroundPipeline, SpriteView, TexturedSpriteBoxPipeline, data::TexturedSpriteInstance};
 use ui::UIManager;
 use window::RenderPass;
 
@@ -26,10 +26,10 @@ impl GameDrawer {
 
         for object in &game.objects {
             OBJECT_DRAWER.get_mut().add_with_image(
-                RectInstance {
+                TexturedSpriteInstance {
                     position:   object.position,
                     size:       object.size,
-                    color:      Color::default(),
+                    scale:      1.0,
                     rotation:   object.rotation,
                     z_position: 0.85,
                 },

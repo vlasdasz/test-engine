@@ -1,6 +1,6 @@
 use crate::{
     SpriteView,
-    data::{RectInstance, RectView, UIRectInstance},
+    data::{RectView, SpriteInstance, TexturedSpriteInstance, UIRectInstance},
     pipelines::{pipeline_type::PipelineType, rect_pipeline::RectPipeline},
 };
 
@@ -17,13 +17,13 @@ const UI_IMAGE_CODE: &str = include_str!("shaders/ui_image.wgsl");
 const UI_GRADIENT_CODE: &str = include_str!("shaders/ui_gradient.wgsl");
 
 pub type SpriteBoxPipepeline =
-    RectPipeline<{ PipelineType::Color }, "sprite_box", SPRITE_CODE, SpriteView, RectInstance>;
+    RectPipeline<{ PipelineType::Color }, "sprite_box", SPRITE_CODE, SpriteView, SpriteInstance>;
 pub type TexturedSpriteBoxPipeline = RectPipeline<
     { PipelineType::Image },
     "textured_sprite_box",
     TEXTURED_SPRITE_CODE,
     SpriteView,
-    RectInstance,
+    TexturedSpriteInstance,
 >;
 
 pub type UIRectPipepeline =
