@@ -3,7 +3,7 @@ use test_engine::{
     dispatch::from_main,
     refs::Weak,
     ui::{Setup, UI, ViewData, ViewTouch, view},
-    ui_test::helpers::check_colors,
+    ui_test::{helpers::check_colors, record_ui_test},
 };
 
 #[view]
@@ -22,7 +22,7 @@ impl Setup for ImageView {
 }
 
 pub async fn test_image_view() -> Result<()> {
-    let view = UI::init_test_view::<ImageView>().await;
+    let mut view = UI::init_test_view::<ImageView>().await;
 
     check_colors(
         r#"
@@ -126,6 +126,13 @@ pub async fn test_image_view() -> Result<()> {
         "#,
     )
     .await?;
+
+    from_main(move || {
+        view.image_view.set_image("cat");
+    })
+    .await;
+
+    record_ui_test().await;
 
     Ok(())
 }
