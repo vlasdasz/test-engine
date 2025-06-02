@@ -29,10 +29,10 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_dispatch().await?;
     test_view_order().await?;
     test_text_occlusion().await?;
     test_async_calls().await?;
-    test_dispatch().await?;
     test_out_bounds().await?;
     test_transition().await?;
     test_global_styles().await?;

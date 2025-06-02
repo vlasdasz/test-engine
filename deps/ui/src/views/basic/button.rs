@@ -131,18 +131,6 @@ macro_rules! link_button {
 }
 
 #[macro_export]
-macro_rules! async_link_button {
-    ($self:ident, $($button:ident).+, $method:ident) => {
-        $self.$($button).+.on_tap(move || {
-            tokio::spawn(async move {
-                use test_engine::ui::AlertErr;
-                $self.$method().await.alert_err();
-            });
-        });
-    };
-}
-
-#[macro_export]
 macro_rules! async_call {
     ($self:ident, $method:ident) => {
         tokio::spawn(async move {
