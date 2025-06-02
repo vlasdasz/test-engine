@@ -9,7 +9,7 @@ pub trait __ViewInternalTableData {
     fn __number_of_cells(&self) -> usize;
     fn __make_cell(&self, index: usize) -> Own<dyn View>;
     fn __setup_cell(&self, cell: &mut dyn Any, index: usize);
-    fn __cell_selected(&mut self, #[allow(unused_variables)] index: usize);
+    fn __cell_selected(&mut self, index: usize);
 }
 
 pub trait TableData {
