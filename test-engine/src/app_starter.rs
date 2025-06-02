@@ -7,8 +7,6 @@ use crate::app::test_engine_create_app;
 pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
     let runtime = Runtime::new().unwrap();
     runtime.block_on(async {
-        console_subscriber::init();
-
         #[cfg(mobile)]
         crate::refs::set_current_thread_as_main();
 

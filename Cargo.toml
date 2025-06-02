@@ -4,13 +4,13 @@
 #default-members = ["ui-test"]
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
 ]
 
 resolver = "3"
@@ -38,7 +38,6 @@ rapier2d = { version = "0.26", features = ["simd-nightly"] }
 # rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
 aes-gcm = "0.10.3"
 cgmath = "0.18"
-console-subscriber = "0.4"
 indexmap = "2.2"
 jni = "0.21.1"
 lyon = "1.0"
