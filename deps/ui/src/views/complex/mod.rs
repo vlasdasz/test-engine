@@ -1,6 +1,5 @@
 mod alert;
 mod alert_err;
-mod back_button;
 mod collection_view;
 mod dpad_view;
 mod drawing_view;
@@ -14,7 +13,6 @@ mod table_view;
 
 pub use alert::*;
 pub use alert_err::*;
-pub use back_button::*;
 pub use collection_view::*;
 pub use dpad_view::DPadView;
 pub use drawing_view::DrawingView;

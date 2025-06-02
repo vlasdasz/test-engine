@@ -4,13 +4,13 @@
 #default-members = ["ui-test"]
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
 ]
 
 resolver = "3"

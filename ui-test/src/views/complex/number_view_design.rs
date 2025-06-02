@@ -7,7 +7,7 @@ use test_engine::{
 };
 
 const STYLE: Style = Style::new(|view| {
-    view.apply_if::<NumberView>(|num| {
+    view.apply_if::<NumberView>(|mut num| {
         num.set_labels("+", "–")
             .set_text_color(LIGHT_GRAY)
             .set_text_size(80)
