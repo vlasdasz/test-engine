@@ -251,3 +251,14 @@ impl Parse for ButtonArgs {
         Ok(ButtonArgs { button, method, arg })
     }
 }
+
+#[proc_macro]
+pub fn cast_cell(input: TokenStream) -> TokenStream {
+    let ty = parse_macro_input!(input as Ident);
+
+    let expanded = quote! {
+        cell.downcast_mut::<#ty>().unwrap()
+    };
+
+    TokenStream::from(expanded)
+}
