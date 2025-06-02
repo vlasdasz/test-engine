@@ -13,6 +13,8 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
+pub enum ImageMode {}
+
 #[view]
 pub struct ImageView {
     image: Weak<Image>,

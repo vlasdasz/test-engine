@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Setup, UI, ViewData, ViewTouch, view},
+    ui::{Setup, UI, UIManager, ViewData, ViewTouch, view},
     ui_test::{helpers::check_colors, record_ui_test},
 };
 
@@ -128,7 +128,9 @@ pub async fn test_image_view() -> Result<()> {
     .await?;
 
     from_main(move || {
-        view.image_view.set_image("cat");
+        UIManager::enable_debug_frames();
+        view.image_view.place().clear().tl(140).size(280, 200);
+        view.image_view.set_image("cat.png");
     })
     .await;
 
