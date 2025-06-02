@@ -29,8 +29,8 @@ pub async fn test_base_views() -> anyhow::Result<()> {
     test_scroll_view().await?;
     test_slider().await?;
     test_stick().await?;
-    test_text_field().await?;
     test_switch().await?;
+    test_text_field().await?;
 
     Ok(())
 }
