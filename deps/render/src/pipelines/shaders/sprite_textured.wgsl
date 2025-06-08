@@ -11,10 +11,10 @@ struct Vertex {
     @location(1) uv: vec2<f32>,
 }
 
-struct RectInstance {
+struct TexturedSpriteInstance {
     @location(2) position:   vec2<f32>,
     @location(3) size:       vec2<f32>,
-    @location(4) color:      vec4<f32>,
+    @location(4) scale:      f32,
     @location(5) rotation:   f32,
     @location(6) z_position: f32,
 }
@@ -41,7 +41,7 @@ struct VertexOutput {
 @vertex
 fn v_main(
     model: Vertex,
-    instance: RectInstance,
+    instance: TexturedSpriteInstance,
 ) -> VertexOutput {
     var out_pos: vec4<f32> = vec4<f32>(model.pos, instance.z_position, 1.0);
 
@@ -56,6 +56,9 @@ fn v_main(
     out_pos *=  rotation_z_matrix(view.camera_rotation);
 
     out_pos.x *= view.resolution.y / view.resolution.x;
+
+    out_pos.x *= instance.scale;
+    out_pos.y *= instance.scale;
 
     out_pos.x *= view.scale;
     out_pos.y *= view.scale;

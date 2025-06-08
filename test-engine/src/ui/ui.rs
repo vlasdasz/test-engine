@@ -43,7 +43,7 @@ impl UI {
 
     pub(crate) fn draw(pass: &mut RenderPass) {
         let mut sections: Vec<Section> = vec![];
-        let debug_frames = UIManager::draw_debug_frames();
+        let debug_frames = UIManager::should_draw_debug_frames();
         Self::draw_view(pass, UIManager::root_view(), &mut sections, debug_frames);
         if let Some(debug_view) = UIManager::debug_view() {
             Self::draw_view(pass, debug_view, &mut sections, debug_frames);
@@ -140,7 +140,7 @@ impl UI {
 
                 IMAGE_RECT_DRAWER.get_mut().add_with_image(
                     UIImageInstance::new(
-                        frame,
+                        image_view.image_frame(),
                         view.corner_radius(),
                         view.z_position(),
                         image_view.flip_x,

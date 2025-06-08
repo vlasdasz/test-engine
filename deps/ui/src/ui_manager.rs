@@ -147,7 +147,11 @@ impl UIManager {
         Self::get().draw_debug_frames.store(true, Ordering::Relaxed);
     }
 
-    pub fn draw_debug_frames() -> bool {
+    pub fn disable_debug_frames() {
+        Self::get().draw_debug_frames.store(false, Ordering::Relaxed);
+    }
+
+    pub fn should_draw_debug_frames() -> bool {
         Self::get().draw_debug_frames.load(Ordering::Relaxed)
     }
 

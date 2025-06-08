@@ -9,10 +9,10 @@ mod image_view;
 mod image_view_svg;
 
 pub async fn test_image_views() -> anyhow::Result<()> {
+    test_image_view().await?;
     test_image_flip().await?;
     test_image_view_svg().await?;
     test_image_on_view().await?;
-    test_image_view().await?;
 
     Ok(())
 }

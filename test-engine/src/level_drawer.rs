@@ -3,7 +3,7 @@ use manage::{ExistsManaged, data_manager::DataManager};
 use refs::MainLock;
 use render::{
     BackgroundPipeline, PolygonPipeline, SpriteBoxPipepeline, SpriteView, TexturedSpriteBoxPipeline,
-    data::RectInstance,
+    data::{SpriteInstance, TexturedSpriteInstance},
 };
 use ui::UIManager;
 use wgpu::RenderPass;
@@ -46,10 +46,10 @@ impl LevelDrawer {
         for sprite in level.sprites() {
             if sprite.image.exists_managed() {
                 TEXTURED_SPRITE_DRAWER.get_mut().add_with_image(
-                    RectInstance {
+                    TexturedSpriteInstance {
                         size:       sprite.render_size(),
+                        scale:      sprite.image_scale,
                         position:   sprite.position(),
-                        color:      *sprite.color(),
                         rotation:   sprite.rotation(),
                         z_position: sprite.z_position,
                     },
@@ -63,7 +63,7 @@ impl LevelDrawer {
                     sprite.rotation(),
                 );
             } else {
-                SPRITE_DRAWER.get_mut().add(RectInstance {
+                SPRITE_DRAWER.get_mut().add(SpriteInstance {
                     size:       sprite.render_size(),
                     position:   sprite.position(),
                     color:      *sprite.color(),

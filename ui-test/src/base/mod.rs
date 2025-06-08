@@ -29,10 +29,10 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_dispatch().await?;
     test_view_order().await?;
     test_text_occlusion().await?;
     test_async_calls().await?;
-    test_dispatch().await?;
     test_out_bounds().await?;
     test_transition().await?;
     test_global_styles().await?;
@@ -40,7 +40,6 @@ pub async fn test_base_ui() -> anyhow::Result<()> {
     test_colors().await?;
     test_corner_radius().await?;
     test_transparency().await?;
-    test_layout().await?;
     test_modal().await?;
     test_touch_order().await?;
     test_template().await?;
@@ -49,6 +48,7 @@ pub async fn test_base_ui() -> anyhow::Result<()> {
     test_selection().await?;
     test_keymap().await?;
     test_add_on_tap().await?;
+    test_layout().await?;
 
     Ok(())
 }

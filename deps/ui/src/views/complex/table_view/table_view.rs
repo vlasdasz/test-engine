@@ -97,7 +97,7 @@ impl TableView {
         let h = self.data.__cell_height();
 
         for i in first_index..last_index {
-            let mut cell = self.data.__make_cell();
+            let mut cell = self.data.__make_cell(i);
 
             let label = format!("TableView cell: {}", cell.label());
             cell.set_label(label);

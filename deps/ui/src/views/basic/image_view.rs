@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use gm::flat::Rect;
 use refs::Weak;
 use ui_proc::view;
 use window::image::{Image, ToImage};
@@ -13,11 +14,21 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
+#[derive(Default)]
+pub enum ImageMode {
+    #[default]
+    Fill,
+    AspectFit,
+    AspectFill,
+}
+
 #[view]
 pub struct ImageView {
     image: Weak<Image>,
 
     nine_segment: Weak<NineSegmentImageView>,
+
+    pub mode: ImageMode,
 
     pub flip_x: bool,
     pub flip_y: bool,
@@ -46,5 +57,13 @@ impl ImageView {
         self.nine_segment.set_image(name);
 
         self
+    }
+
+    pub fn image_frame(&self) -> Rect {
+        match self.mode {
+            ImageMode::Fill => *self.absolute_frame(),
+            ImageMode::AspectFit => self.absolute_frame().fit_aspect_ratio(self.image.size.into()),
+            ImageMode::AspectFill => self.absolute_frame().fill_aspect_ratio(self.image.size.into()),
+        }
     }
 }

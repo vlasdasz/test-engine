@@ -32,7 +32,7 @@ impl TableData for TableViewResize {
         1
     }
 
-    fn make_cell(self: Weak<Self>) -> Own<dyn View> {
+    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
         Label::new().after_setup(|mut label| {
             label.set_color(GREEN);
         })

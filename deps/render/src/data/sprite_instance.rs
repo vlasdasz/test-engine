@@ -9,7 +9,7 @@ use crate::vertex_layout::VertexLayout;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Zeroable, Pod)]
-pub struct RectInstance {
+pub struct SpriteInstance {
     pub position:   Point,
     pub size:       Size,
     pub color:      Color,
@@ -17,7 +17,7 @@ pub struct RectInstance {
     pub z_position: f32,
 }
 
-impl RectInstance {
+impl SpriteInstance {
     pub fn new(rect: Rect, color: Color, z_position: f32) -> Self {
         Self {
             position: rect.origin,
@@ -29,7 +29,7 @@ impl RectInstance {
     }
 }
 
-impl VertexLayout for RectInstance {
+impl VertexLayout for SpriteInstance {
     const ATTRIBS: &'static [wgpu::VertexAttribute] =
         &wgpu::vertex_attr_array![2 => Float32x2, 3 => Float32x2, 4 => Float32x4, 5 => Float32, 6 => Float32];
     const VERTEX_LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {
