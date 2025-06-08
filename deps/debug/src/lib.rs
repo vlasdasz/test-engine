@@ -2,19 +2,23 @@ use anyhow::Result;
 use log::info;
 use serde::{Deserialize, Serialize};
 use tokio::{
-    io::AsyncReadExt,
-    net::TcpListener,
+    io::{AsyncReadExt, AsyncWriteExt},
+    net::{TcpListener, TcpStream},
     spawn,
-    sync::{Mutex, mpsc::channel},
+    sync::{Mutex, MutexGuard, mpsc::channel},
 };
 use vents::Event;
 
 static EVENT: Mutex<Event<MyMessage>> = Mutex::const_new(Event::const_default());
 
 #[derive(Serialize, Deserialize, Debug)]
-struct MyMessage {
+pub struct MyMessage {
     id:      u32,
     content: String,
+}
+
+pub async fn new_message_event() -> MutexGuard<'static, Event<MyMessage>> {
+    EVENT.lock().await
 }
 
 pub fn start_listening() {
@@ -33,6 +37,8 @@ async fn start_listening_internal() -> Result<()> {
                 dbg!("nothing");
                 continue;
             };
+            dbg!("Mossaggee!!");
+            dbg!(&message);
             EVENT.lock().await.trigger(message);
         }
     });
@@ -50,5 +56,52 @@ async fn start_listening_internal() -> Result<()> {
         let msg: MyMessage = serde_json::from_str(json_str)?;
         info!("Received: {:?}", msg);
         se.send(msg).await?;
+    }
+}
+
+pub async fn send_message(my_message: MyMessage) -> Result<()> {
+    let mut stream = TcpStream::connect("127.0.0.1:4000").await?;
+
+    let json = serde_json::to_string(&my_message)?;
+
+    stream.write_all(json.as_bytes()).await?;
+    Ok(())
+}
+
+#[cfg(test)]
+mod test {
+    use std::time::Duration;
+
+    use anyhow::Result;
+    use tokio::time::sleep;
+
+    use crate::{MyMessage, new_message_event, send_message, start_listening};
+
+    #[tokio::test]
+    async fn test_debug_channel() -> Result<()> {
+        start_listening();
+
+        sleep(Duration::from_millis(100)).await;
+
+        new_message_event().await.val(|event| {
+            dbg!("OO ivabntockooo!!");
+            dbg!(&event);
+        });
+
+        send_message(MyMessage {
+            id:      0,
+            content: "oskolok".to_string(),
+        })
+        .await?;
+
+        send_message(MyMessage {
+            id:      0,
+            content: "oskolok2".to_string(),
+        })
+        .await?;
+
+        sleep(Duration::from_millis(100)).await;
+
+        Ok(())
     }
 }
