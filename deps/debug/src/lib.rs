@@ -1,3 +1,5 @@
+mod client;
+mod connection;
 mod server;
 
 use anyhow::Result;
