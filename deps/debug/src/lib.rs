@@ -1,3 +1,5 @@
+mod server;
+
 use anyhow::Result;
 use log::info;
 use serde::{Deserialize, Serialize};
@@ -47,6 +49,8 @@ async fn start_listening_internal() -> Result<()> {
         let (mut socket, _) = listener.accept().await?;
         let mut buf = vec![0u8; 4096];
         let n = socket.read(&mut buf).await?;
+
+        // socket.split()
 
         if n == 0 {
             continue;
