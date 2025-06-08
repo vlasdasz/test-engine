@@ -1,0 +1,16 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2024"
+name = "debug"
+version = "0.1.0"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "debug"
+
+[dependencies]
+log = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

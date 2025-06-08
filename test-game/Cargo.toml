@@ -14,7 +14,7 @@ name = "test_game"
 [dependencies]
 fake = { workspace = true }
 
-test-engine = { workspace = true }
+test-engine = { workspace = true, features = ["default", "debug"] }
 ui-benchmark = { workspace = true }
 
 [build-dependencies]

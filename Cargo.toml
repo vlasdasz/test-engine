@@ -4,13 +4,13 @@
 #default-members = ["ui-test"]
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
 ]
 
 resolver = "3"
@@ -78,6 +78,7 @@ ui-benchmark = { path = "ui-benchmark" }
 ui-proc = { path = "deps/ui/ui-proc" }
 utils = { path = "deps/utils" }
 window = { path = "deps/window" }
+debug = { path = "deps/debug" }
 
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
