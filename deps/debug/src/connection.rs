@@ -10,10 +10,10 @@ use tokio::{
     sync::Mutex,
 };
 
-use crate::MyMessage;
+use crate::message::DebugMessage;
 
 pub struct Connection {
-    callback: Mutex<Option<Box<dyn FnMut(MyMessage) + Send>>>,
+    callback: Mutex<Option<Box<dyn FnMut(DebugMessage) + Send>>>,
     stream:   Mutex<Option<TcpStream>>,
     write:    Mutex<Option<OwnedWriteHalf>>,
 }
@@ -57,13 +57,16 @@ impl Connection {
             }
 
             let json_str = std::str::from_utf8(&buf[..n])?;
-            let msg: MyMessage = serde_json::from_str(json_str)?;
+            let msg: DebugMessage = serde_json::from_str(json_str)?;
             info!("Received: {:?}", msg);
             self.callback.lock().await.as_mut().unwrap()(msg)
         }
     }
 
-    pub async fn on_receive(&'static self, action: impl FnMut(MyMessage) + Send + 'static) -> &'static Self {
+    pub async fn on_receive(
+        &'static self,
+        action: impl FnMut(DebugMessage) + Send + 'static,
+    ) -> &'static Self {
         let mut callback = self.callback.lock().await;
 
         if callback.is_some() {
@@ -75,7 +78,9 @@ impl Connection {
         self
     }
 
-    pub async fn send(&'static self, msg: MyMessage) -> Result<()> {
+    pub async fn send(&'static self, msg: impl Into<DebugMessage>) -> Result<()> {
+        let msg = msg.into();
+
         let json = serde_json::to_string(&msg)?;
 
         let mut writer = self.write.lock().await;

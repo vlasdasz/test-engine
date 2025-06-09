@@ -7,13 +7,13 @@ use tokio::{
     sync::{Mutex, OnceCell},
 };
 
-use crate::{MyMessage, connection::Connection};
+use crate::{connection::Connection, message::DebugMessage};
 
 pub struct DebugServer {
     listener:   TcpListener,
     connection: OnceCell<Connection>,
     started:    Mutex<bool>,
-    callback:   Mutex<Option<Box<dyn FnMut(MyMessage) + Send>>>,
+    callback:   Mutex<Option<Box<dyn FnMut(DebugMessage) + Send>>>,
 }
 
 impl DebugServer {
@@ -58,7 +58,7 @@ impl DebugServer {
         *started = true;
     }
 
-    pub async fn on_receive(&'static self, action: impl FnMut(MyMessage) + Send + 'static) {
+    pub async fn on_receive(&'static self, action: impl FnMut(DebugMessage) + Send + 'static) {
         let mut callback = self.callback.lock().await;
 
         if callback.is_some() {
@@ -68,7 +68,7 @@ impl DebugServer {
         callback.replace(Box::new(action));
     }
 
-    pub async fn send(&'static self, msg: MyMessage) -> Result<()> {
+    pub async fn send(&'static self, msg: DebugMessage) -> Result<()> {
         let Some(connection) = self.connection.get() else {
             dbg!("No connection");
             return Ok(());
@@ -82,13 +82,22 @@ impl DebugServer {
 mod test {
     use std::{
         net::{IpAddr, Ipv4Addr, SocketAddr},
+        ops::Deref,
         time::Duration,
     };
 
     use anyhow::Result;
-    use tokio::{sync::OnceCell, time::sleep};
+    use tokio::{
+        spawn,
+        sync::{Mutex, OnceCell},
+        time::sleep,
+    };
 
-    use crate::{MyMessage, client::Client, server::DebugServer};
+    use crate::{
+        client::Client,
+        command::Command,
+        server::{DebugMessage, DebugServer},
+    };
 
     const PORT: u16 = 57056;
 
@@ -99,6 +108,8 @@ mod test {
     }
 
     static CLIENT: OnceCell<Client> = OnceCell::const_new();
+
+    static DATA: Mutex<Vec<DebugMessage>> = Mutex::const_new(Vec::new());
 
     async fn client() -> &'static Client {
         CLIENT
@@ -112,52 +123,75 @@ mod test {
 
     #[tokio::test]
     async fn test_debug_server() -> Result<()> {
-        let server = server().await;
+        let sv = server().await;
 
-        server
-            .on_receive(|msg| {
-                dbg!("Server received:");
-                dbg!(&msg);
-            })
-            .await;
+        sv.on_receive(|msg| {
+            spawn(async { DATA.lock().await.push(msg) });
+        })
+        .await;
 
-        server.start().await;
+        sv.start().await;
 
-        server
-            .send(MyMessage {
+        server()
+            .await
+            .send(DebugMessage {
                 id:      0,
-                content: "bydyn".to_string(),
+                msg:     "bydyn".to_string(),
+                command: Command::Nothing,
             })
             .await?;
 
-        let client = client().await;
+        let cl = client().await;
 
-        client.start().await;
+        cl.start().await;
 
-        client
-            .on_receive(|msg| {
-                dbg!("Client received:");
-                dbg!(&msg);
-            })
-            .await;
+        cl.on_receive(|msg| {
+            spawn(async { DATA.lock().await.push(msg) });
+        })
+        .await;
 
         sleep(Duration::from_millis(100)).await;
 
-        server
-            .send(MyMessage {
-                id:      0,
-                content: "to_client".to_string(),
+        server()
+            .await
+            .send(DebugMessage {
+                id:      35,
+                msg:     "to_client".to_string(),
+                command: Command::Nothing,
             })
             .await?;
 
-        client
-            .send(MyMessage {
-                id:      0,
-                content: "to_server".to_string(),
+        client()
+            .await
+            .send(DebugMessage {
+                id:      89,
+                msg:     "to_server".to_string(),
+                command: Command::Nothing,
             })
             .await?;
 
-        sleep(Duration::from_millis(500)).await;
+        sleep(Duration::from_millis(10)).await;
+
+        client().await.send(Command::Nothing).await?;
+
+        sleep(Duration::from_millis(200)).await;
+
+        assert_eq!(
+            DATA.lock().await.deref(),
+            &vec![
+                DebugMessage {
+                    id:      35,
+                    msg:     "to_client".to_string(),
+                    command: Command::Nothing,
+                },
+                DebugMessage {
+                    id:      89,
+                    msg:     "to_server".to_string(),
+                    command: Command::Nothing,
+                },
+                Command::Nothing.into()
+            ]
+        );
 
         Ok(())
     }
