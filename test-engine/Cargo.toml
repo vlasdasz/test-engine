@@ -9,9 +9,9 @@ crate-type = ["rlib", "staticlib"]
 name = "test_engine"
 
 [features]
-default = ["audio"]
 audio = ["dep:audio"]
 debug = ["dep:debug"]
+default = ["audio"]
 
 [dependencies]
 anyhow = { workspace = true }
@@ -33,6 +33,7 @@ refs = { workspace = true }
 vents = { workspace = true }
 
 audio = { workspace = true, optional = true }
+debug = { workspace = true, optional = true }
 game = { workspace = true }
 generate = { workspace = true }
 gm = { workspace = true }
@@ -42,7 +43,6 @@ store = { workspace = true }
 ui = { workspace = true }
 ui-proc = { workspace = true }
 window = { workspace = true }
-debug = { workspace = true, optional = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = { workspace = true }

@@ -3,7 +3,7 @@ use log::info;
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{
-        TcpListener, TcpStream,
+        TcpStream,
         tcp::{OwnedReadHalf, OwnedWriteHalf},
     },
     spawn,
@@ -63,7 +63,7 @@ impl Connection {
         }
     }
 
-    pub async fn on_receive(&'static self, action: impl FnMut(MyMessage) + Send + 'static) {
+    pub async fn on_receive(&'static self, action: impl FnMut(MyMessage) + Send + 'static) -> &'static Self {
         let mut callback = self.callback.lock().await;
 
         if callback.is_some() {
@@ -71,13 +71,15 @@ impl Connection {
         }
 
         callback.replace(Box::new(action));
+
+        self
     }
 
     pub async fn send(&'static self, msg: MyMessage) -> Result<()> {
         let json = serde_json::to_string(&msg)?;
 
         let mut writer = self.write.lock().await;
-        let writer = writer.as_mut().unwrap();
+        let writer = writer.as_mut().expect("No writer. Did you start the connection?");
 
         writer.write_all(json.as_bytes()).await?;
 

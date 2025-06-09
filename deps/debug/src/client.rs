@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use anyhow::Result;
 use tokio::net::{TcpStream, ToSocketAddrs};
 
@@ -13,8 +15,12 @@ impl Client {
             connection: Connection::new(TcpStream::connect(address).await?),
         })
     }
+}
 
-    pub async fn start(&'static self) {
-        self.connection.start().await
+impl Deref for Client {
+    type Target = Connection;
+
+    fn deref(&self) -> &Self::Target {
+        &self.connection
     }
 }

@@ -9,9 +9,9 @@ crate-type = ["rlib", "staticlib"]
 name = "debug"
 
 [dependencies]
-log = { workspace = true }
 anyhow = { workspace = true }
-tokio = { workspace = true }
+log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+tokio = { workspace = true }
 vents = { workspace = true }
