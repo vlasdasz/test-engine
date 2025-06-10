@@ -5,7 +5,7 @@ pub enum LevelCommand {
     SetScale(f32),
     GetScale,
     SendScale(f32),
-    DoSomethingThatIsNotThis,
+    Panic,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Default, Debug)]

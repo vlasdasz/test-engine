@@ -5,6 +5,7 @@ mod message;
 mod server;
 
 pub use client::Client;
+pub use command::*;
 pub use message::DebugMessage;
 pub use server::DebugServer;
 
