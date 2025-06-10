@@ -124,7 +124,7 @@ impl AppRunner {
 
             msg.id += 555;
 
-            tokio::spawn(async { send_to_debug_client(msg).await.unwrap() });
+            send_to_debug_client(msg);
         })
         .await;
 

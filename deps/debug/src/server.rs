@@ -137,7 +137,7 @@ mod test {
             .send(DebugMessage {
                 id:      0,
                 msg:     "bydyn".to_string(),
-                command: Command::Nothing,
+                command: Command::Ping,
             })
             .await?;
 
@@ -157,7 +157,7 @@ mod test {
             .send(DebugMessage {
                 id:      35,
                 msg:     "to_client".to_string(),
-                command: Command::Nothing,
+                command: Command::Ping,
             })
             .await?;
 
@@ -166,13 +166,13 @@ mod test {
             .send(DebugMessage {
                 id:      89,
                 msg:     "to_server".to_string(),
-                command: Command::Nothing,
+                command: Command::Ping,
             })
             .await?;
 
         sleep(Duration::from_millis(10)).await;
 
-        client().await.send(Command::Nothing).await?;
+        client().await.send(Command::Ping).await?;
 
         sleep(Duration::from_millis(200)).await;
 
@@ -182,14 +182,14 @@ mod test {
                 DebugMessage {
                     id:      35,
                     msg:     "to_client".to_string(),
-                    command: Command::Nothing,
+                    command: Command::Ping,
                 },
                 DebugMessage {
                     id:      89,
                     msg:     "to_server".to_string(),
-                    command: Command::Nothing,
+                    command: Command::Ping,
                 },
-                Command::Nothing.into()
+                Command::Ping.into()
             ]
         );
 

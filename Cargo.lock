@@ -261,7 +261,7 @@ checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 
 [[package]]
 name = "audio"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "log",
  "manage",
@@ -885,7 +885,7 @@ checksum = "5c297a1c74b71ae29df00c3e22dd9534821d60eb9af5a0192823fa2acea70c2a"
 
 [[package]]
 name = "debug"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "log",
@@ -896,7 +896,7 @@ dependencies = [
 
 [[package]]
 name = "debug-client"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "debug",
@@ -954,7 +954,7 @@ dependencies = [
 
 [[package]]
 name = "dispatch"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "gm",
@@ -1225,7 +1225,7 @@ checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
 name = "game"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "gm",
  "refs",
@@ -1234,7 +1234,7 @@ dependencies = [
 
 [[package]]
 name = "generate"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "contour",
  "fake",
@@ -1411,7 +1411,7 @@ dependencies = [
 
 [[package]]
 name = "gm"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "bytemuck",
  "chrono",
@@ -1739,7 +1739,7 @@ checksum = "03087c2bad5e1034e8cace5926dec053fb3790248370865f5117a7d0213354c8"
 
 [[package]]
 name = "level"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "educe",
  "gm",
@@ -1753,7 +1753,7 @@ dependencies = [
 
 [[package]]
 name = "level-proc"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "quote",
  "syn 2.0.101",
@@ -3142,7 +3142,7 @@ dependencies = [
 
 [[package]]
 name = "render"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "bit_ops",
  "bytemuck",
@@ -3156,7 +3156,7 @@ dependencies = [
 
 [[package]]
 name = "render-test"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "log",
@@ -3594,7 +3594,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "store"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "aes-gcm",
  "anyhow",
@@ -3762,13 +3762,13 @@ dependencies = [
 
 [[package]]
 name = "test-engine"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "android_logger",
  "anyhow",
  "audio",
  "debug",
- "dispatch 0.1.0",
+ "dispatch 0.0.0",
  "educe",
  "fern",
  "game",
@@ -3797,7 +3797,7 @@ dependencies = [
 
 [[package]]
 name = "test-game"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "fake",
  "plat",
@@ -3807,7 +3807,7 @@ dependencies = [
 
 [[package]]
 name = "test-game-android"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "jni",
  "test-game",
@@ -4014,11 +4014,11 @@ checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
 
 [[package]]
 name = "ui"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "chrono",
- "dispatch 0.1.0",
+ "dispatch 0.0.0",
  "educe",
  "fake",
  "gm",
@@ -4038,7 +4038,7 @@ dependencies = [
 
 [[package]]
 name = "ui-benchmark"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "fake",
@@ -4048,7 +4048,7 @@ dependencies = [
 
 [[package]]
 name = "ui-proc"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "quote",
  "syn 2.0.101",
@@ -4056,7 +4056,7 @@ dependencies = [
 
 [[package]]
 name = "ui-proc-test"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "educe",
  "refs",
@@ -4066,7 +4066,7 @@ dependencies = [
 
 [[package]]
 name = "ui-test"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "log",
@@ -4167,7 +4167,7 @@ dependencies = [
 
 [[package]]
 name = "utils"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "web-time",
 ]
@@ -4639,12 +4639,12 @@ dependencies = [
 
 [[package]]
 name = "window"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "android_logger",
  "anyhow",
  "bytemuck",
- "dispatch 0.1.0",
+ "dispatch 0.0.0",
  "gm",
  "image",
  "log",

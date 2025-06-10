@@ -1,4 +1,3 @@
-use anyhow::Result;
 use debug::{DebugMessage, DebugServer};
 use tokio::sync::OnceCell;
 
@@ -18,6 +17,6 @@ pub async fn on_debug_client_message(action: impl FnMut(DebugMessage) + Send + '
     server().await.on_receive(action).await;
 }
 
-pub async fn send_to_debug_client(msg: impl Into<DebugMessage>) -> Result<()> {
-    server().await.send(msg).await
+pub fn send_to_debug_client(msg: impl Into<DebugMessage> + Send + 'static) {
+    tokio::spawn(async { server().await.send(msg).await.unwrap() });
 }

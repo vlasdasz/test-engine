@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::command::Command;
+use crate::command::{Command, LevelCommand};
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 pub struct DebugMessage {
@@ -16,5 +16,11 @@ impl From<Command> for DebugMessage {
             msg: "command".to_string(),
             command,
         }
+    }
+}
+
+impl From<LevelCommand> for DebugMessage {
+    fn from(value: LevelCommand) -> Self {
+        Command::from(value).into()
     }
 }
