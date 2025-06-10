@@ -892,7 +892,17 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
- "vents",
+]
+
+[[package]]
+name = "debug-client"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "debug",
+ "plat",
+ "test-engine",
+ "tokio",
 ]
 
 [[package]]

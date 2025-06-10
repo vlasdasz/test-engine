@@ -10,10 +10,10 @@ use tokio::{
     sync::Mutex,
 };
 
-use crate::message::DebugMessage;
+use crate::{Callback, message::DebugMessage};
 
 pub struct Connection {
-    callback: Mutex<Option<Box<dyn FnMut(DebugMessage) + Send>>>,
+    callback: Mutex<Option<Callback>>,
     stream:   Mutex<Option<TcpStream>>,
     write:    Mutex<Option<OwnedWriteHalf>>,
 }
@@ -38,9 +38,7 @@ impl Connection {
 
         let mut wr = self.write.lock().await;
 
-        if wr.is_some() {
-            panic!("Writer already exits");
-        }
+        assert!(wr.is_none(), "Writer already exits");
 
         wr.replace(write);
 
@@ -58,8 +56,8 @@ impl Connection {
 
             let json_str = std::str::from_utf8(&buf[..n])?;
             let msg: DebugMessage = serde_json::from_str(json_str)?;
-            info!("Received: {:?}", msg);
-            self.callback.lock().await.as_mut().unwrap()(msg)
+            info!("Received: {msg:?}");
+            self.callback.lock().await.as_mut().unwrap()(msg);
         }
     }
 
@@ -69,9 +67,7 @@ impl Connection {
     ) -> &'static Self {
         let mut callback = self.callback.lock().await;
 
-        if callback.is_some() {
-            panic!("Already has callback");
-        }
+        assert!(callback.is_none(), "Already has callback");
 
         callback.replace(Box::new(action));
 

@@ -7,13 +7,13 @@ use tokio::{
     sync::{Mutex, OnceCell},
 };
 
-use crate::{connection::Connection, message::DebugMessage};
+use crate::{Callback, connection::Connection, message::DebugMessage};
 
 pub struct DebugServer {
     listener:   TcpListener,
     connection: OnceCell<Connection>,
     started:    Mutex<bool>,
-    callback:   Mutex<Option<Box<dyn FnMut(DebugMessage) + Send>>>,
+    callback:   Mutex<Option<Callback>>,
 }
 
 impl DebugServer {
@@ -41,9 +41,7 @@ impl DebugServer {
                 let (stream, addr) = self.listener.accept().await.unwrap();
                 println!("Client connected: {addr}");
 
-                if self.connection.get().is_some() {
-                    panic!("Connection already exists");
-                }
+                assert!(self.connection.get().is_none(), "Connection already exists");
 
                 self.connection
                     .get_or_init(|| async { Connection::new(stream) })
@@ -61,14 +59,12 @@ impl DebugServer {
     pub async fn on_receive(&'static self, action: impl FnMut(DebugMessage) + Send + 'static) {
         let mut callback = self.callback.lock().await;
 
-        if callback.is_some() {
-            panic!("Already has callback");
-        }
+        assert!(callback.is_none(), "Already has callback");
 
         callback.replace(Box::new(action));
     }
 
-    pub async fn send(&'static self, msg: DebugMessage) -> Result<()> {
+    pub async fn send(&'static self, msg: impl Into<DebugMessage>) -> Result<()> {
         let Some(connection) = self.connection.get() else {
             dbg!("No connection");
             return Ok(());
@@ -94,17 +90,18 @@ mod test {
     };
 
     use crate::{
+        DEFAULT_PORT,
         client::Client,
         command::Command,
         server::{DebugMessage, DebugServer},
     };
 
-    const PORT: u16 = 57056;
-
     static SERVER: OnceCell<DebugServer> = OnceCell::const_new();
 
     async fn server() -> &'static DebugServer {
-        SERVER.get_or_init(|| async { DebugServer::new(PORT).await.unwrap() }).await
+        SERVER
+            .get_or_init(|| async { DebugServer::new(DEFAULT_PORT).await.unwrap() })
+            .await
     }
 
     static CLIENT: OnceCell<Client> = OnceCell::const_new();
@@ -114,9 +111,12 @@ mod test {
     async fn client() -> &'static Client {
         CLIENT
             .get_or_init(|| async {
-                Client::new(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), PORT))
-                    .await
-                    .unwrap()
+                Client::new(SocketAddr::new(
+                    IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)),
+                    DEFAULT_PORT,
+                ))
+                .await
+                .unwrap()
             })
             .await
     }

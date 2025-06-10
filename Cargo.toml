@@ -11,6 +11,7 @@ members = [
   "ui-test",
   "ui-benchmark",
   "deps/ui/ui-proc-test",
+  "debug-client",
 ]
 
 resolver = "3"

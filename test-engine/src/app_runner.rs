@@ -105,7 +105,30 @@ impl AppRunner {
     #[cfg(not(target_os = "android"))]
     pub async fn start(root_view: Own<dyn View>) -> Result<()> {
         Self::setup_log();
+        #[cfg(feature = "debug")]
+        Self::setup_debug_server().await?;
         Window::start(Self::new(root_view)).await
+    }
+
+    #[cfg(feature = "debug")]
+    async fn setup_debug_server() -> Result<()> {
+        use crate::debug_server::{
+            on_debug_client_message, send_to_debug_client, start_listtening_for_debug_client,
+        };
+
+        start_listtening_for_debug_client().await;
+
+        on_debug_client_message(|mut msg| {
+            dbg!("recovka:");
+            dbg!(&msg);
+
+            msg.id += 555;
+
+            tokio::spawn(async { send_to_debug_client(msg).await.unwrap() });
+        })
+        .await;
+
+        Ok(())
     }
 
     #[cfg(target_os = "android")]
