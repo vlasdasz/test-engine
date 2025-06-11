@@ -1,5 +1,5 @@
-use anyhow::Result;
-use log::info;
+use anyhow::{Context, Result};
+use serde_json::Deserializer;
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{
@@ -42,22 +42,28 @@ impl Connection {
 
         wr.replace(write);
 
-        spawn(async move { self.handle_read(read).await.unwrap() });
+        spawn(async move { self.handle_read(read).await.expect("Failed handle_read") });
     }
 
     pub async fn handle_read(&self, mut reader: OwnedReadHalf) -> Result<()> {
         loop {
             let mut buf = vec![0u8; 4096];
-            let n = reader.read(&mut buf).await?;
+            let n = reader.read(&mut buf).await.context("Failed to read")?;
 
             if n == 0 {
                 continue;
             }
 
-            let json_str = std::str::from_utf8(&buf[..n])?;
-            let msg: DebugMessage = serde_json::from_str(json_str)?;
-            info!("Received: {msg:?}");
-            self.callback.lock().await.as_mut().unwrap()(msg);
+            let json_str = std::str::from_utf8(&buf[..n]).context("Failed to convert buffer to string")?;
+
+            let stream = Deserializer::from_str(json_str).into_iter::<DebugMessage>().collect::<Vec<_>>();
+
+            let mut callback = self.callback.lock().await;
+            let callback = callback.as_mut().expect("Failed to get mut callback");
+
+            for msg in stream {
+                callback(msg.context("Failed to parse msg")?);
+            }
         }
     }
 

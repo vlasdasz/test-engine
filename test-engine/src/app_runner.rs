@@ -124,9 +124,6 @@ impl AppRunner {
         LevelManager::on_scale_changed(|scale| send_to_debug_client(LevelCommand::SendScale(scale)));
 
         on_debug_client_message(|mut msg| {
-            dbg!("recovka:");
-            dbg!(&msg);
-
             msg.id += 55;
 
             on_main(move || match msg.command {

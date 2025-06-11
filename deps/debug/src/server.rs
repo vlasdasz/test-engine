@@ -1,6 +1,7 @@
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use anyhow::Result;
+use log::info;
 use tokio::{
     net::TcpListener,
     spawn,
@@ -39,7 +40,7 @@ impl DebugServer {
         spawn(async {
             loop {
                 let (stream, addr) = self.listener.accept().await.unwrap();
-                println!("Client connected: {addr}");
+                info!("Client connected: {addr}");
 
                 assert!(self.connection.get().is_none(), "Connection already exists");
 
