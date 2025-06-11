@@ -158,7 +158,7 @@ impl Setup for TestGameView {
         self.scale.place().size(80, 150).b(20).anchor(Left, self.dpad, 10);
         self.scale.set_min(4.0);
         self.scale.on_change(|val| {
-            *LevelManager::scale() = val * 0.1;
+            LevelManager::set_scale(val * 0.1);
         });
 
         self.spinner.place().size(150, 40).b(20).anchor(Left, self.scale, 10);
@@ -330,11 +330,11 @@ impl TestGameView {
         });
 
         UIManager::keymap().add(self, '=', || {
-            *LevelManager::scale() *= 2.0;
+            LevelManager::set_scale(LevelManager::scale() * 2.0);
         });
 
         UIManager::keymap().add(self, '-', || {
-            *LevelManager::scale() /= 2.0;
+            LevelManager::set_scale(LevelManager::scale() / 2.0);
         });
 
         UIManager::keymap().add(self, 'b', || {

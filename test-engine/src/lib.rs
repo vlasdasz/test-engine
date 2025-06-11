@@ -9,6 +9,7 @@
 mod app_runner;
 mod assets;
 mod assets_paths;
+pub(crate) mod debug_server;
 mod level_drawer;
 
 mod app;

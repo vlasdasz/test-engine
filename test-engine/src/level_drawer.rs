@@ -28,7 +28,7 @@ impl LevelDrawer {
 
         let level = LevelManager::level();
         let camera_pos = *LevelManager::camera_pos();
-        let scale = *LevelManager::scale();
+        let scale = LevelManager::scale();
 
         if level.background.is_ok() {
             BACKGROUND.get_mut().draw(

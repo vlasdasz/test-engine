@@ -1,7 +1,6 @@
 [package]
 edition = "2024"
 name = "test-engine"
-version = "0.1.0"
 
 [lib]
 #crate-type = ["rlib", "staticlib", "dylib"]
@@ -10,6 +9,7 @@ name = "test_engine"
 
 [features]
 audio = ["dep:audio"]
+debug = ["dep:debug"]
 default = ["audio"]
 
 [dependencies]
@@ -32,6 +32,7 @@ refs = { workspace = true }
 vents = { workspace = true }
 
 audio = { workspace = true, optional = true }
+debug = { workspace = true, optional = true }
 game = { workspace = true }
 generate = { workspace = true }
 gm = { workspace = true }

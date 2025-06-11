@@ -59,15 +59,15 @@ impl Placer {
         self
     }
 
-    fn rules(&self) -> RefMut<Vec<LayoutRule>> {
+    fn rules(&self) -> RefMut<'_, Vec<LayoutRule>> {
         self.rules.borrow_mut()
     }
 
-    fn all_tiling_rules(&self) -> RefMut<Vec<LayoutRule>> {
+    fn all_tiling_rules(&self) -> RefMut<'_, Vec<LayoutRule>> {
         self.all_tiling_rules.borrow_mut()
     }
 
-    fn has(&self) -> RefMut<Size<bool>> {
+    fn has(&self) -> RefMut<'_, Size<bool>> {
         self.has.borrow_mut()
     }
 }

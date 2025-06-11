@@ -1,0 +1,21 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition = "2024"
+name = "debug-client"
+
+[[bin]]
+name = "debug-client"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "debug_client"
+
+[dependencies]
+anyhow = { workspace = true }
+tokio = { workspace = true }
+
+debug = { workspace = true }
+test-engine = { workspace = true, features = ["default"] }
+
+[build-dependencies]
+plat = { workspace = true }

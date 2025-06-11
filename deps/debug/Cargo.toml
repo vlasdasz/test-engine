@@ -1,17 +1,15 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
 edition = "2024"
-name = "audio"
+name = "debug"
 
 [lib]
 crate-type = ["rlib", "staticlib"]
-name = "audio"
+name = "debug"
 
 [dependencies]
+anyhow = { workspace = true }
 log = { workspace = true }
-manage = { workspace = true }
-
-rodio = { workspace = true }
-
-[build-dependencies]
-plat = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }

@@ -27,6 +27,8 @@ pub struct LevelManager {
     update_interval: f32,
 
     level: Option<Own<dyn Level>>,
+
+    scale_changed: Option<Box<dyn FnMut(f32)>>,
 }
 
 impl LevelManager {
@@ -59,7 +61,7 @@ impl LevelManager {
 
     pub fn stop_level() {
         SELF.get_mut().level = None;
-        *Self::scale() = 1.0;
+        Self::set_scale(1.0);
         *Self::camera_pos() = (0, 0).into();
     }
 
@@ -100,8 +102,22 @@ impl LevelManager {
         SELF.level.is_none()
     }
 
-    pub fn scale() -> &'static mut f32 {
-        &mut SELF.get_mut().scale
+    pub fn scale() -> f32 {
+        SELF.get_mut().scale
+    }
+
+    pub fn set_scale(scale: f32) {
+        let sf = SELF.get_mut();
+        sf.scale = scale;
+        if let Some(cb) = &mut sf.scale_changed {
+            cb(scale);
+        }
+    }
+
+    pub fn on_scale_changed(callb: impl FnMut(f32) + 'static) {
+        let cb = &mut SELF.get_mut().scale_changed;
+        assert!(cb.is_none());
+        cb.replace(Box::new(callb));
     }
 
     pub fn update_interval() -> &'static mut f32 {
@@ -130,7 +146,7 @@ impl LevelManager {
             pos /= Window::screen_scale();
         }
 
-        pos /= *Self::scale();
+        pos /= Self::scale();
 
         pos += *Self::camera_pos();
 

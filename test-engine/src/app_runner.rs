@@ -105,7 +105,47 @@ impl AppRunner {
     #[cfg(not(target_os = "android"))]
     pub async fn start(root_view: Own<dyn View>) -> Result<()> {
         Self::setup_log();
+        #[cfg(feature = "debug")]
+        Self::setup_debug_server().await?;
         Window::start(Self::new(root_view)).await
+    }
+
+    #[cfg(feature = "debug")]
+    async fn setup_debug_server() -> Result<()> {
+        use debug::{Command, LevelCommand};
+        use dispatch::on_main;
+
+        use crate::debug_server::{
+            on_debug_client_message, send_to_debug_client, start_listtening_for_debug_client,
+        };
+
+        start_listtening_for_debug_client().await;
+
+        LevelManager::on_scale_changed(|scale| send_to_debug_client(LevelCommand::SendScale(scale)));
+
+        on_debug_client_message(|mut msg| {
+            dbg!("recovka:");
+            dbg!(&msg);
+
+            msg.id += 55;
+
+            on_main(move || match msg.command {
+                Command::Ping => send_to_debug_client(msg),
+                Command::Level(level) => match level {
+                    LevelCommand::GetScale => {
+                        send_to_debug_client(LevelCommand::SendScale(LevelManager::scale()));
+                    }
+                    LevelCommand::SetScale(scale) => {
+                        LevelManager::set_scale(scale);
+                    }
+                    LevelCommand::SendScale(_) => unimplemented!(),
+                    LevelCommand::Panic => todo!(),
+                },
+            });
+        })
+        .await;
+
+        Ok(())
     }
 
     #[cfg(target_os = "android")]
