@@ -3,7 +3,7 @@ use std::{
     path::PathBuf,
     sync::{
         Mutex, OnceLock,
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicU32, Ordering},
     },
 };
 
@@ -29,6 +29,8 @@ pub struct UIManager {
     touch_disabled: AtomicBool,
 
     draw_debug_frames: AtomicBool,
+
+    scale: AtomicU32,
 
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<PathBuf>,
@@ -59,6 +61,16 @@ impl UIManager {
 
     pub fn frame_drawn() -> u32 {
         Window::current().frame_drawn()
+    }
+
+    pub fn scale() -> f32 {
+        f32::from_le_bytes(Self::get().scale.load(Ordering::Relaxed).to_le_bytes())
+    }
+
+    pub fn set_scale(scale: f32) {
+        Self::get()
+            .scale
+            .store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed)
     }
 
     pub fn unselect_view() {
@@ -101,6 +113,7 @@ impl UIManager {
             deleted_views: Mutex::default(),
             touch_disabled: false.into(),
             draw_debug_frames: false.into(),
+            scale: AtomicU32::new(u32::from_le_bytes(0.6f32.to_le_bytes())),
             on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
             draw_touches: false.into(),

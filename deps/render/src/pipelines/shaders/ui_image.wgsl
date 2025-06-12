@@ -14,6 +14,7 @@ struct UIImageInstance {
     @location(4) corner_radius: f32,
     @location(5) z_position:    f32,
     @location(6) flags:         u32,
+    @location(7) scale:         f32,
 }
 
 @group(0) @binding(0)
@@ -58,11 +59,11 @@ fn v_main(
     out_pos.x /= view.resolution.x;
     out_pos.y /= view.resolution.y;
 
-    out_pos.x *= instance.size.x;
-    out_pos.y *= instance.size.y;
+    out_pos.x *= instance.size.x * instance.scale;
+    out_pos.y *= instance.size.y * instance.scale;
 
-    out_pos.x += instance.position.x / view.resolution.x;
-    out_pos.y += instance.position.y / view.resolution.y;
+    out_pos.x += instance.position.x * instance.scale / view.resolution.x;
+    out_pos.y += instance.position.y * instance.scale / view.resolution.y;
 
     out_pos.y *= -1.0;
 

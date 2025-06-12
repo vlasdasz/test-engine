@@ -44,9 +44,10 @@ impl UI {
     pub(crate) fn draw(pass: &mut RenderPass) {
         let mut sections: Vec<Section> = vec![];
         let debug_frames = UIManager::should_draw_debug_frames();
-        Self::draw_view(pass, UIManager::root_view(), &mut sections, debug_frames);
+        let scale = UIManager::scale();
+        Self::draw_view(pass, UIManager::root_view(), &mut sections, debug_frames, scale);
         if let Some(debug_view) = UIManager::debug_view() {
-            Self::draw_view(pass, debug_view, &mut sections, debug_frames);
+            Self::draw_view(pass, debug_view, &mut sections, debug_frames, scale);
         }
 
         RECT_DRAWER.get_mut().draw(
@@ -95,6 +96,7 @@ impl UI {
         view: &'a dyn View,
         sections: &mut Vec<Section<'a>>,
         debug_frames: bool,
+        scale: f32,
     ) {
         if view.is_hidden() {
             return;
@@ -115,12 +117,13 @@ impl UI {
 
         if view.end_gradient_color().a > 0.0 {
             GRADIENT_DRAWER.get_mut().add(UIGradientInstance {
-                position:      frame.origin,
-                size:          frame.size,
-                start_color:   *view.color(),
-                end_color:     *view.end_gradient_color(),
+                position: frame.origin,
+                size: frame.size,
+                start_color: *view.color(),
+                end_color: *view.end_gradient_color(),
                 corner_radius: view.corner_radius(),
-                z_position:    view.z_position(),
+                z_position: view.z_position(),
+                scale,
             });
         } else if view.color().a > 0.0 {
             RECT_DRAWER.get_mut().add(UIRectInstance::new(
@@ -128,6 +131,7 @@ impl UI {
                 *view.color(),
                 view.corner_radius(),
                 view.z_position(),
+                scale,
             ));
         }
 
@@ -145,6 +149,7 @@ impl UI {
                         view.z_position(),
                         image_view.flip_x,
                         image_view.flip_y,
+                        scale,
                     ),
                     image,
                 );
@@ -152,7 +157,7 @@ impl UI {
         } else if let Some(label) = view.as_any().downcast_ref::<Label>()
             && !label.text.is_empty()
         {
-            Self::draw_label(&frame, label, sections);
+            Self::draw_label(&frame, label, sections, scale);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
                 PATH.get_mut().draw(
@@ -167,9 +172,13 @@ impl UI {
 
         if debug_frames {
             for rect in frame.to_borders(2.0) {
-                RECT_DRAWER
-                    .get_mut()
-                    .add(UIRectInstance::new(rect, TURQUOISE, 0.0, view.z_position() - 0.2));
+                RECT_DRAWER.get_mut().add(UIRectInstance::new(
+                    rect,
+                    TURQUOISE,
+                    0.0,
+                    view.z_position() - 0.2,
+                    scale,
+                ));
             }
         }
 
@@ -177,12 +186,14 @@ impl UI {
 
         for view in view.subviews().iter().rev() {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(pass, view.deref(), sections, debug_frames);
+                Self::draw_view(pass, view.deref(), sections, debug_frames, scale);
             }
         }
     }
 
-    fn draw_label<'a>(frame: &Rect, label: &'a Label, sections: &mut Vec<Section<'a>>) {
+    fn draw_label<'a>(frame: &Rect, label: &'a Label, sections: &mut Vec<Section<'a>>, scale: f32) {
+        let frame = frame * scale;
+
         let center = frame.center();
 
         let margin = 16.0;
@@ -190,7 +201,7 @@ impl UI {
         let section = Section::default()
             .add_text(
                 Text::new(&label.text)
-                    .with_scale(label.text_size())
+                    .with_scale(label.text_size() * scale)
                     .with_color(label.text_color().as_slice())
                     .with_z(label.z_position() - UIManager::additional_z_offset()),
             )
