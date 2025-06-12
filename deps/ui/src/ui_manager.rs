@@ -70,7 +70,7 @@ impl UIManager {
     pub fn set_scale(scale: f32) {
         Self::get()
             .scale
-            .store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed)
+            .store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
     }
 
     pub fn unselect_view() {
@@ -113,7 +113,7 @@ impl UIManager {
             deleted_views: Mutex::default(),
             touch_disabled: false.into(),
             draw_debug_frames: false.into(),
-            scale: AtomicU32::new(u32::from_le_bytes(0.6f32.to_le_bytes())),
+            scale: AtomicU32::new(u32::from_le_bytes(1.0f32.to_le_bytes())),
             on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
             draw_touches: false.into(),

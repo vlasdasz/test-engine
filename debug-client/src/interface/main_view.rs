@@ -9,7 +9,7 @@ use test_engine::{
 };
 use tokio::{spawn, sync::OnceCell};
 
-use crate::interface::level_view::LevelView;
+use crate::interface::{level_view::LevelView, ui_view::UIView};
 
 static CLIENT: OnceCell<Client> = OnceCell::const_new();
 
@@ -31,6 +31,7 @@ pub struct MainView {
     #[init]
     ping:  Button,
     level: LevelView,
+    ui:    UIView,
 }
 
 impl MainView {

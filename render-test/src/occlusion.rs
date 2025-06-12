@@ -11,20 +11,56 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     let rect = UI_RECT.get_mut();
     let image = IMAGE_DRAWER.get_mut();
 
-    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), RED, 0.0, 0.5));
+    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), RED, 0.0, 0.5, 1.0));
 
-    rect.add(UIRectInstance::new((75, 75, 50, 50).into(), GREEN, 0.0, 0.5));
-    rect.add(UIRectInstance::new((100, 100, 50, 50).into(), BLUE, 0.0, 0.5));
+    rect.add(UIRectInstance::new((75, 75, 50, 50).into(), GREEN, 0.0, 0.5, 1.0));
+    rect.add(UIRectInstance::new(
+        (100, 100, 50, 50).into(),
+        BLUE,
+        0.0,
+        0.5,
+        1.0,
+    ));
 
-    rect.add(UIRectInstance::new((100, 250, 50, 50).into(), BLUE, 0.0, 0.5));
-    rect.add(UIRectInstance::new((75, 225, 50, 50).into(), GREEN, 0.0, 0.5));
-    rect.add(UIRectInstance::new((50, 200, 50, 50).into(), RED, 0.0, 0.5));
+    rect.add(UIRectInstance::new(
+        (100, 250, 50, 50).into(),
+        BLUE,
+        0.0,
+        0.5,
+        1.0,
+    ));
+    rect.add(UIRectInstance::new(
+        (75, 225, 50, 50).into(),
+        GREEN,
+        0.0,
+        0.5,
+        1.0,
+    ));
+    rect.add(UIRectInstance::new((50, 200, 50, 50).into(), RED, 0.0, 0.5, 1.0));
 
-    rect.add(UIRectInstance::new((50, 350, 50, 50).into(), RED, 0.0, 0.3));
-    rect.add(UIRectInstance::new((75, 375, 50, 50).into(), GREEN, 0.0, 0.2));
-    rect.add(UIRectInstance::new((100, 400, 50, 50).into(), BLUE, 0.0, 0.1));
+    rect.add(UIRectInstance::new((50, 350, 50, 50).into(), RED, 0.0, 0.3, 1.0));
+    rect.add(UIRectInstance::new(
+        (75, 375, 50, 50).into(),
+        GREEN,
+        0.0,
+        0.2,
+        1.0,
+    ));
+    rect.add(UIRectInstance::new(
+        (100, 400, 50, 50).into(),
+        BLUE,
+        0.0,
+        0.1,
+        1.0,
+    ));
 
-    rect.add(UIRectInstance::new((200, 50, 100, 100).into(), GREEN, 0.0, 0.5));
+    rect.add(UIRectInstance::new(
+        (200, 50, 100, 100).into(),
+        GREEN,
+        0.0,
+        0.5,
+        1.0,
+    ));
 
     rect.draw(
         pass,
@@ -40,6 +76,7 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
             corner_radius: 0.0,
             z_position:    0.4,
             flags:         0,
+            scale:         1.0,
         },
         UIImages::rb(),
     );

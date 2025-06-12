@@ -112,7 +112,7 @@ impl AppRunner {
 
     #[cfg(feature = "debug")]
     async fn setup_debug_server() -> Result<()> {
-        use debug::{Command, LevelCommand};
+        use debug::{Command, LevelCommand, UICommand};
         use dispatch::on_main;
 
         use crate::debug_server::{
@@ -137,6 +137,9 @@ impl AppRunner {
                     }
                     LevelCommand::SendScale(_) => unimplemented!(),
                     LevelCommand::Panic => todo!(),
+                },
+                Command::UI(ui) => match ui {
+                    UICommand::SetScale(scale) => UIManager::set_scale(scale),
                 },
             });
         })
