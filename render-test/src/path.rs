@@ -28,9 +28,13 @@ pub(crate) fn render_path(pass: &mut RenderPass) {
 
     PATH.draw(pass, path.buffer(), path.uniform_bind(), path.vertex_range(), 0.5);
 
-    UI_RECT
-        .get_mut()
-        .add(UIRectInstance::new((450, 200, 200, 200).into(), RED, 0.0, 0.5));
+    UI_RECT.get_mut().add(UIRectInstance::new(
+        (450, 200, 200, 200).into(),
+        RED,
+        0.0,
+        0.5,
+        1.0,
+    ));
 
     UI_RECT.get_mut().draw(
         pass,

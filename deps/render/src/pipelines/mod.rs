@@ -5,10 +5,10 @@ use crate::{
 };
 
 mod background_pipeline;
-mod path_pipeline;
 mod pipeline_type;
 mod polygon_pipeline;
 mod rect_pipeline;
+mod ui_path_pipeline;
 
 const SPRITE_CODE: &str = include_str!("shaders/sprite.wgsl");
 const TEXTURED_SPRITE_CODE: &str = include_str!("shaders/sprite_textured.wgsl");
@@ -36,7 +36,7 @@ pub type UIGradientPipeline =
     RectPipeline<{ PipelineType::Color }, "ui_gradient", UI_GRADIENT_CODE, RectView, UIGradientInstance>;
 
 pub use background_pipeline::BackgroundPipeline;
-pub use path_pipeline::PathPipeline;
 pub use polygon_pipeline::PolygonPipeline;
+pub use ui_path_pipeline::UIPathPipeline;
 
 use crate::data::{UIGradientInstance, UIImageInstance};

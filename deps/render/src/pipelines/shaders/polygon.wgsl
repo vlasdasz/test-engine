@@ -10,7 +10,6 @@ struct PolygonView {
     color:    vec4<f32>,
     pos:      vec2<f32>,
     rot:      f32,
-    _padding: u32,
 }
 
 @group(0) @binding(0)

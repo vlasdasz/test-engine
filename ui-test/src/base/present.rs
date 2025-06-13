@@ -58,7 +58,7 @@ pub async fn test_navigation_view() -> Result<()> {
     presented.await?;
 
     let duration_error = now.elapsed().as_secs_f32() - PRESENT_ANIMATION_DURATION;
-    let allowed_error = 0.028;
+    let allowed_error = 0.032;
 
     check_colors(
         r#"

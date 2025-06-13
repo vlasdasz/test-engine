@@ -15,17 +15,17 @@ use crate::{
 };
 
 #[derive(Debug)]
-pub struct PathPipeline {
+pub struct UIPathPipeline {
     pipeline: RenderPipeline,
 
     z_pos_layout: BindGroupLayout,
 }
 
-impl Default for PathPipeline {
+impl Default for UIPathPipeline {
     fn default() -> Self {
         let device = Window::device();
 
-        let shader = device.create_shader_module(include_wgsl!("shaders/path.wgsl"));
+        let shader = device.create_shader_module(include_wgsl!("shaders/ui_path.wgsl"));
 
         let z_pos_layout = make_uniform_layout("path_z_pos_layput", ShaderStages::VERTEX);
 
@@ -51,7 +51,7 @@ impl Default for PathPipeline {
     }
 }
 
-impl PathPipeline {
+impl UIPathPipeline {
     pub fn draw<'a>(
         &'a self,
         render_pass: &mut RenderPass<'a>,

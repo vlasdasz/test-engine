@@ -7,13 +7,13 @@ use test_engine::{
     refs::Weak,
     ui::{Button, HasText, Setup, ViewData, async_link_button, view},
 };
-use tokio::sync::OnceCell;
+use tokio::{spawn, sync::OnceCell};
 
-use crate::interface::level_view::LevelView;
+use crate::interface::{level_view::LevelView, ui_view::UIView};
 
 static CLIENT: OnceCell<Client> = OnceCell::const_new();
 
-async fn client() -> &'static Client {
+pub(crate) async fn client() -> &'static Client {
     CLIENT
         .get_or_init(|| async {
             Client::new(SocketAddr::new(
@@ -29,23 +29,12 @@ async fn client() -> &'static Client {
 #[view]
 pub struct MainView {
     #[init]
-    connect:         Button,
-    ping:            Button,
-    get_level_scale: Button,
-    level:           LevelView,
+    ping:  Button,
+    level: LevelView,
+    ui:    UIView,
 }
 
 impl MainView {
-    async fn connect_pressed(self: Weak<Self>) -> Result<()> {
-        client()
-            .await
-            .on_receive(move |msg| on_main(move || self.on_receive(msg)))
-            .await
-            .start()
-            .await;
-        Ok(())
-    }
-
     async fn send_pressed(self: Weak<Self>) -> Result<()> {
         client()
             .await
@@ -57,14 +46,7 @@ impl MainView {
             .await
     }
 
-    async fn get_level_scale_pressed(self: Weak<Self>) -> Result<()> {
-        client().await.send(LevelCommand::GetScale).await
-    }
-
     fn on_receive(mut self: Weak<Self>, msg: DebugMessage) {
-        dbg!("Racovko");
-        dbg!(&msg);
-
         let Command::Level(level) = msg.command else {
             return;
         };
@@ -82,13 +64,16 @@ impl Setup for MainView {
     fn setup(mut self: Weak<Self>) {
         self.place().all_ver();
 
-        self.connect.set_text("Connect");
-        async_link_button!(self.connect, connect_pressed);
-
         self.ping.set_text("Ping");
         async_link_button!(self.ping, send_pressed);
 
-        self.get_level_scale.set_text("Get Level Scale");
-        async_link_button!(self.get_level_scale, get_level_scale_pressed);
+        spawn(async move {
+            client()
+                .await
+                .on_receive(move |msg| on_main(move || self.on_receive(msg)))
+                .await
+                .start()
+                .await;
+        });
     }
 }

@@ -3,19 +3,19 @@ use std::{
     path::PathBuf,
     sync::{
         Mutex, OnceLock,
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicU32, Ordering},
     },
 };
 
 use gm::{
-    Platform,
+    Platform, ToF32,
     color::Color,
     flat::{Point, Rect, Size},
 };
-use refs::{Own, Weak};
+use refs::{Own, Weak, assert_main_thread};
 use window::Window;
 
-use crate::{DEBUG_VIEW, ImageView, Keymap, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
+use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -23,12 +23,15 @@ static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 static IOS_KEYBOARD_INIT: std::sync::Once = std::sync::Once::new();
 
 pub struct UIManager {
-    pub(crate) root_view:     Own<ImageView>,
+    pub(crate) root_view:     Own<RootView>,
     pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
 
     touch_disabled: AtomicBool,
 
     draw_debug_frames: AtomicBool,
+
+    scale:         AtomicU32,
+    scale_changed: UIEvent<f32>,
 
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<PathBuf>,
@@ -59,6 +62,25 @@ impl UIManager {
 
     pub fn frame_drawn() -> u32 {
         Window::current().frame_drawn()
+    }
+
+    pub fn scale() -> f32 {
+        f32::from_le_bytes(Self::get().scale.load(Ordering::Relaxed).to_le_bytes())
+    }
+
+    pub fn set_scale(scale: impl ToF32) {
+        assert_main_thread();
+        let sf = Self::get();
+        let scale = scale.to_f32();
+
+        sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
+        sf.scale_changed.trigger(scale);
+    }
+
+    pub fn on_scale_changed<U>(subscriber: Weak<U>, mut cb: impl FnMut(f32) + Send + 'static) {
+        Self::get().scale_changed.val(subscriber, move |scale| {
+            cb(scale);
+        });
     }
 
     pub fn unselect_view() {
@@ -93,14 +115,17 @@ impl UIManager {
 
 impl UIManager {
     fn init() -> Self {
-        let mut root_view = Own::<ImageView>::default();
+        let mut root_view = Own::<RootView>::default();
         root_view.base_view_mut().view_label = "Root view".to_string();
+        root_view.setup_root();
 
         Self {
             root_view,
             deleted_views: Mutex::default(),
             touch_disabled: false.into(),
             draw_debug_frames: false.into(),
+            scale: AtomicU32::new(u32::from_le_bytes(1.0f32.to_le_bytes())),
+            scale_changed: UIEvent::default(),
             on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
             draw_touches: false.into(),
@@ -130,11 +155,11 @@ impl UIManager {
         DEBUG_VIEW.get_mut().as_mut().map(DerefMut::deref_mut)
     }
 
-    pub fn root_view() -> &'static ImageView {
+    pub fn root_view() -> &'static RootView {
         Self::get().root_view.deref()
     }
 
-    pub fn root_view_weak() -> Weak<ImageView> {
+    pub fn root_view_weak() -> Weak<RootView> {
         Self::get().root_view.weak()
     }
 
@@ -252,7 +277,7 @@ impl UIManager {
     pub fn set_view<T: View + 'static>(view: Own<T>) -> Weak<T> {
         let weak = view.weak();
         let mut root = UIManager::root_view_weak();
-        root.remove_all_subviews();
+        root.clear_root();
         let view = root.__add_subview_internal(view, true);
         if view.place().is_empty() {
             view.place().back();

@@ -3,14 +3,14 @@ use std::{any::type_name, path::PathBuf, sync::Mutex, time::Duration};
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
 use gm::{
-    LossyConvert, Platform,
+    LossyConvert,
     flat::{Point, Size},
 };
 use level::{LevelBase, LevelManager};
 use log::debug;
 use refs::{MainLock, Own, Rglica};
 use tokio::time::sleep;
-use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewFrame, ViewSubviews};
+use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewSubviews};
 use vents::OnceEvent;
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
@@ -112,7 +112,7 @@ impl AppRunner {
 
     #[cfg(feature = "debug")]
     async fn setup_debug_server() -> Result<()> {
-        use debug::{Command, LevelCommand};
+        use debug::{Command, LevelCommand, UICommand};
         use dispatch::on_main;
 
         use crate::debug_server::{
@@ -124,9 +124,6 @@ impl AppRunner {
         LevelManager::on_scale_changed(|scale| send_to_debug_client(LevelCommand::SendScale(scale)));
 
         on_debug_client_message(|mut msg| {
-            dbg!("recovka:");
-            dbg!(&msg);
-
             msg.id += 55;
 
             on_main(move || match msg.command {
@@ -140,6 +137,9 @@ impl AppRunner {
                     }
                     LevelCommand::SendScale(_) => unimplemented!(),
                     LevelCommand::Panic => todo!(),
+                },
+                Command::UI(ui) => match ui {
+                    UICommand::SetScale(scale) => UIManager::set_scale(scale),
                 },
             });
         })
@@ -225,8 +225,14 @@ impl AppRunner {
 
 impl window::WindowEvents for AppRunner {
     fn window_ready(&mut self) {
-        let view = UIManager::root_view_weak().__add_subview_internal(self.first_view.take().unwrap(), true);
+        let mut root = UIManager::root_view_weak();
+        let view = root.__add_subview_internal(self.first_view.take().unwrap(), true);
         view.place().back();
+
+        UIManager::on_scale_changed(root, move |scale| {
+            root.rescale_root(scale);
+        });
+
         self.update();
         *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
         WINDOW_READY.lock().unwrap().trigger(());
@@ -249,12 +255,7 @@ impl window::WindowEvents for AppRunner {
     }
 
     fn resize(&mut self, inner_position: Point, size: Size) {
-        UIManager::root_view_weak().set_size(size.width, size.height);
-
-        if Platform::IOS {
-            UIManager::root_view_weak().set_position(inner_position);
-        }
-
+        UIManager::root_view_weak().resize_root(inner_position, size, UIManager::scale());
         UIEvents::size_changed().trigger(size);
         self.update();
     }

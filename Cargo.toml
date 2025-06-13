@@ -1,7 +1,5 @@
 [workspace]
 
-# default-members = ["level-test"]
-#default-members = ["ui-test"]
 default-members = ["test-game"]
 members = [
   "test-engine",
@@ -23,28 +21,26 @@ version = "0.1.0"
 ignored = []
 
 [workspace.dependencies]
+aes-gcm = "0.10.3"
 android_logger = "0.14"
 anyhow = "1.0"
 bit_ops = "0.1"
 bytemuck = { version = "1.15", features = ["derive"] }
+cgmath = "0.18"
 chrono = "0.4"
 dirs = "6.0"
 educe = "0.6.0"
 fake = "4.0"
 fern = "0.7"
 image = "0.25"
+indexmap = "2.2"
+jni = "0.21.1"
 log = "0.4"
+lyon = "1.0"
 nonempty = "0.11"
 quote = "1.0"
 rand = "0.9"
 rapier2d = { version = "0.26", features = ["simd-nightly"] }
-#rapier2d = { version = "0.20.0", features = ["enhanced-determinism"] }
-# rapier2d = { version = "0.20.0", features = ["parallel", "simd-stable"] }
-aes-gcm = "0.10.3"
-cgmath = "0.18"
-indexmap = "2.2"
-jni = "0.21.1"
-lyon = "1.0"
 resvg = "0.45"
 rodio = "0.20.1"
 rust_decimal = "1.35"

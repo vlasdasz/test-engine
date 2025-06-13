@@ -13,19 +13,28 @@ pub struct UIImageInstance {
     pub corner_radius: f32,
     pub z_position:    f32,
     pub flags:         u32,
+    pub scale:         f32,
 }
 
 impl UIImageInstance {
     const FLIP_X_FLAG: u32 = 0;
     const FLIP_Y_FLAG: u32 = 1;
 
-    pub fn new(rect: Rect, corner_radius: f32, z_position: f32, flip_x: bool, flip_y: bool) -> Self {
+    pub fn new(
+        rect: Rect,
+        corner_radius: f32,
+        z_position: f32,
+        flip_x: bool,
+        flip_y: bool,
+        scale: f32,
+    ) -> Self {
         let mut result = Self {
             position: rect.origin,
             size: rect.size,
             corner_radius,
             z_position,
             flags: 0,
+            scale,
         };
 
         result.set_flip_x(flip_x);
@@ -52,8 +61,7 @@ impl UIImageInstance {
 }
 
 impl VertexLayout for UIImageInstance {
-    const ATTRIBS: &'static [wgpu::VertexAttribute] =
-        &wgpu::vertex_attr_array![2 => Float32x2, 3 => Float32x2, 4 => Float32, 5 => Float32, 6 => Uint32];
+    const ATTRIBS: &'static [wgpu::VertexAttribute] = &wgpu::vertex_attr_array![2 => Float32x2, 3 => Float32x2, 4 => Float32, 5 => Float32, 6 => Uint32, 7 => Float32];
     const VERTEX_LAYOUT: VertexBufferLayout<'static> = VertexBufferLayout {
         array_stride: size_of::<Self>() as BufferAddress,
         step_mode:    VertexStepMode::Instance,
