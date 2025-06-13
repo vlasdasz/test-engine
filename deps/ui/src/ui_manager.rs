@@ -30,7 +30,8 @@ pub struct UIManager {
 
     draw_debug_frames: AtomicBool,
 
-    scale: AtomicU32,
+    scale:         AtomicU32,
+    scale_changed: UIEvent<f32>,
 
     on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<PathBuf>,
@@ -68,9 +69,16 @@ impl UIManager {
     }
 
     pub fn set_scale(scale: f32) {
-        Self::get()
-            .scale
-            .store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
+        let sf = Self::get();
+
+        sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
+        sf.scale_changed.trigger(scale);
+    }
+
+    pub fn on_scale_changed<U>(subscriber: Weak<U>, mut cb: impl FnMut(f32) + Send + 'static) {
+        Self::get().scale_changed.val(subscriber, move |scale| {
+            cb(scale);
+        });
     }
 
     pub fn unselect_view() {
@@ -115,6 +123,7 @@ impl UIManager {
             touch_disabled: false.into(),
             draw_debug_frames: false.into(),
             scale: AtomicU32::new(u32::from_le_bytes(1.0f32.to_le_bytes())),
+            scale_changed: UIEvent::default(),
             on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
             draw_touches: false.into(),

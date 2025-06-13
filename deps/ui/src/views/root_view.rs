@@ -1,9 +1,13 @@
-use gm::color::Color;
+use gm::{
+    Platform,
+    color::Color,
+    flat::{Point, Size},
+};
 use refs::Weak;
 use ui_proc::view;
 use window::image::ToImage;
 
-use crate::{ImageView, UIManager, View, ViewData, ViewSubviews, view::Setup};
+use crate::{ImageView, UIManager, View, ViewData, ViewFrame, ViewSubviews, view::Setup};
 
 mod test_engine {
     pub(crate) use educe;
@@ -14,6 +18,9 @@ mod test_engine {
 
 #[view]
 pub struct RootView {
+    inner_position: Point,
+    size:           Size,
+
     background: Weak<ImageView>,
 }
 
@@ -40,5 +47,20 @@ impl RootView {
     pub fn set_image(mut self: Weak<Self>, image: impl ToImage) -> Weak<Self> {
         self.background.set_image(image);
         self
+    }
+
+    pub fn resize_root(mut self: Weak<Self>, inner_position: Point, size: Size, scale: f32) {
+        self.inner_position = inner_position;
+        self.size = size;
+
+        self.set_size(size.width * (1.0 / scale), size.height * (1.0 / scale));
+
+        if Platform::IOS {
+            self.set_position(inner_position);
+        }
+    }
+
+    pub fn rescale_root(self: Weak<Self>, scale: f32) {
+        self.resize_root(self.inner_position, self.size, scale);
     }
 }
