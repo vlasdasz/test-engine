@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    ui::{CLEAR, GREEN, NoImage, UI, UIManager, ViewData, view},
+    ui::{CLEAR, GREEN, NoImage, UI, UIManager, view},
     ui_test::check_colors,
 };
 

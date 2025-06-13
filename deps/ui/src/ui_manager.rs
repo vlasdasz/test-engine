@@ -15,7 +15,7 @@ use gm::{
 use refs::{Own, Weak};
 use window::Window;
 
-use crate::{DEBUG_VIEW, ImageView, Keymap, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
+use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -23,7 +23,7 @@ static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 static IOS_KEYBOARD_INIT: std::sync::Once = std::sync::Once::new();
 
 pub struct UIManager {
-    pub(crate) root_view:     Own<ImageView>,
+    pub(crate) root_view:     Own<RootView>,
     pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
 
     touch_disabled: AtomicBool,
@@ -105,8 +105,9 @@ impl UIManager {
 
 impl UIManager {
     fn init() -> Self {
-        let mut root_view = Own::<ImageView>::default();
+        let mut root_view = Own::<RootView>::default();
         root_view.base_view_mut().view_label = "Root view".to_string();
+        root_view.setup_root();
 
         Self {
             root_view,
@@ -143,11 +144,11 @@ impl UIManager {
         DEBUG_VIEW.get_mut().as_mut().map(DerefMut::deref_mut)
     }
 
-    pub fn root_view() -> &'static ImageView {
+    pub fn root_view() -> &'static RootView {
         Self::get().root_view.deref()
     }
 
-    pub fn root_view_weak() -> Weak<ImageView> {
+    pub fn root_view_weak() -> Weak<RootView> {
         Self::get().root_view.weak()
     }
 
@@ -265,7 +266,7 @@ impl UIManager {
     pub fn set_view<T: View + 'static>(view: Own<T>) -> Weak<T> {
         let weak = view.weak();
         let mut root = UIManager::root_view_weak();
-        root.remove_all_subviews();
+        root.clear_root();
         let view = root.__add_subview_internal(view, true);
         if view.place().is_empty() {
             view.place().back();

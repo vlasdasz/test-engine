@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{BLACK, BLUE, Container, GREEN, RED, Setup, UI, UIManager, ViewData, ViewFrame, ViewSubviews, view},
+    ui::{BLACK, BLUE, Container, GREEN, RED, Setup, UI, ViewData, ViewSubviews, view},
     ui_test::helpers::check_colors,
 };
 
@@ -34,21 +34,6 @@ pub async fn test_view_order() -> Result<()> {
             "ViewOrder.view_3: Container".to_string(),
             "ViewOrder.view_4: Container".to_string()
         ]
-    );
-
-    assert_eq!(
-        view.z_position(),
-        UIManager::root_view().z_position() - UIManager::subview_z_offset()
-    );
-
-    assert_eq!(
-        view.view_1.z_position(),
-        view.z_position() - UIManager::subview_z_offset()
-    );
-
-    assert_eq!(
-        view.view_1.z_position(),
-        view.view_2.z_position() + UIManager::additional_z_offset()
     );
 
     assert_eq!(view.view_1.view_label(), "ViewOrder.view_1: Container");

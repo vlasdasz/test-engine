@@ -273,7 +273,7 @@ impl UI {
         let view = from_main(move || {
             let weak = view.weak();
             let mut root = UIManager::root_view_weak();
-            root.remove_all_subviews();
+            root.clear_root();
             let view = root.__add_subview_internal(view, true);
             view.place().back();
             trace!("{width} - {height}");

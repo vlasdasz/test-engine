@@ -10,7 +10,6 @@ use crate::{NavigationView, Touch, UIAnimation, View, WeakView, layout::Placer};
 #[derive(Educe)]
 #[educe(Default, Debug)]
 pub struct ViewBase {
-    #[educe(Debug(ignore))]
     pub(crate) color: Color,
 
     #[educe(Debug(ignore))]
