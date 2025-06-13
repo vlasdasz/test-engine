@@ -67,7 +67,6 @@ impl DebugServer {
 
     pub async fn send(&'static self, msg: impl Into<DebugMessage>) -> Result<()> {
         let Some(connection) = self.connection.get() else {
-            dbg!("No connection");
             return Ok(());
         };
 

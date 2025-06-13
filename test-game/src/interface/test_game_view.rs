@@ -61,8 +61,9 @@ pub struct TestGameView {
     image_r:  ImageView,
     gradient: Container,
 
-    dpad:  DPadView,
-    scale: NumberView,
+    dpad:        DPadView,
+    level_scale: NumberView,
+    ui_scale:    NumberView,
 
     spinner: Button,
     alert:   Button,
@@ -155,13 +156,20 @@ impl Setup for TestGameView {
             }
         });
 
-        self.scale.place().size(80, 150).b(20).anchor(Left, self.dpad, 10);
-        self.scale.set_min(4.0);
-        self.scale.on_change(|val| {
+        self.level_scale.place().size(50, 150).b(20).anchor(Left, self.dpad, 10);
+        self.level_scale.set_min(4);
+        self.level_scale.on_change(|val| {
             LevelManager::set_scale(val * 0.1);
         });
 
-        self.spinner.place().size(150, 40).b(20).anchor(Left, self.scale, 10);
+        self.ui_scale.place().size(50, 150).b(20).anchor(Left, self.level_scale, 10);
+        self.ui_scale.set_min(4);
+        self.ui_scale.on_change(|val| {
+            UIManager::set_scale(val * 0.1);
+        });
+        self.ui_scale.set_value(10);
+
+        self.spinner.place().size(150, 40).b(20).anchor(Left, self.ui_scale, 10);
         self.spinner.set_text("Spinner");
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
@@ -171,11 +179,11 @@ impl Setup for TestGameView {
             });
         });
 
-        self.alert.place().same_size(self.spinner).anchor(Left, self.scale, 10).anchor(
-            Anchor::Bot,
-            self.spinner,
-            10,
-        );
+        self.alert
+            .place()
+            .same_size(self.spinner)
+            .anchor(Left, self.ui_scale, 10)
+            .anchor(Anchor::Bot, self.spinner, 10);
         self.alert.set_text("Alert");
         self.alert.set_text_size(20);
         self.alert.on_tap(|| {
@@ -183,11 +191,11 @@ impl Setup for TestGameView {
             AppRunner::set_window_size((600, 600))
         });
 
-        self.sound.place().same_size(self.spinner).anchor(Left, self.scale, 10).anchor(
-            Anchor::Bot,
-            self.alert,
-            10,
-        );
+        self.sound
+            .place()
+            .same_size(self.spinner)
+            .anchor(Left, self.ui_scale, 10)
+            .anchor(Anchor::Bot, self.alert, 10);
         self.sound.set_text("Sound");
         self.sound.set_text_size(20);
         self.sound.on_tap(|| Sound::get("retro.wav").play());
