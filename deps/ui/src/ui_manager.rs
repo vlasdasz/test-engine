@@ -8,11 +8,11 @@ use std::{
 };
 
 use gm::{
-    Platform,
+    Platform, ToF32,
     color::Color,
     flat::{Point, Rect, Size},
 };
-use refs::{Own, Weak};
+use refs::{Own, Weak, assert_main_thread};
 use window::Window;
 
 use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
@@ -68,8 +68,10 @@ impl UIManager {
         f32::from_le_bytes(Self::get().scale.load(Ordering::Relaxed).to_le_bytes())
     }
 
-    pub fn set_scale(scale: f32) {
+    pub fn set_scale(scale: impl ToF32) {
+        assert_main_thread();
         let sf = Self::get();
+        let scale = scale.to_f32();
 
         sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
         sf.scale_changed.trigger(scale);

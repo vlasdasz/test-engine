@@ -28,6 +28,10 @@ impl Input {
             return false;
         }
 
+        let original_pos = touch.position;
+
+        touch.position *= 1.0 / UIManager::scale();
+
         UIEvents::on_touch().trigger(touch);
 
         if LOG_TOUCHES && !touch.is_moved() {
@@ -64,7 +68,7 @@ impl Input {
         // }
 
         if touch.is_began() && !LevelManager::no_level() {
-            return LevelManager::level_weak().add_touch(touch.position);
+            return LevelManager::level_weak().add_touch(original_pos);
         }
 
         false

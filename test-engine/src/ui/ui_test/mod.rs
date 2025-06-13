@@ -63,8 +63,10 @@ pub async fn inject_scroll(scroll: impl ToF32) {
 }
 
 pub async fn inject_touches(data: impl ToString + Send + 'static) {
+    let scale = UIManager::scale();
     from_main(move || {
-        for touch in Touch::vec_from_str(&data.to_string()) {
+        for mut touch in Touch::vec_from_str(&data.to_string()) {
+            touch.position *= scale;
             inject_touch(touch);
         }
     })
