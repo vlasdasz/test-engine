@@ -10,6 +10,7 @@ ui:
 
 all:
 	order
+	make ios
 	make ui
 	make render
 
