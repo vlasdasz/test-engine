@@ -38,7 +38,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
         on_main(move || {
             view.set_color(WHITE);
-            let mut view = UIManager::root_view_weak().__add_subview_internal(view, true);
+            let mut view = UIManager::root_view().add_subview_to_root(view);
             view.set_frame(self.frame().with_zero_origin());
             let anim = UIAnimation::new(
                 Animation::new(self.height(), 0.0, PRESENT_ANIMATION_DURATION),

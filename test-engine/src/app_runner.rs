@@ -10,7 +10,7 @@ use level::{LevelBase, LevelManager};
 use log::debug;
 use refs::{MainLock, Own, Rglica};
 use tokio::time::sleep;
-use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewSubviews};
+use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
@@ -225,8 +225,8 @@ impl AppRunner {
 
 impl window::WindowEvents for AppRunner {
     fn window_ready(&mut self) {
-        let mut root = UIManager::root_view_weak();
-        let view = root.__add_subview_internal(self.first_view.take().unwrap(), true);
+        let mut root = UIManager::root_view();
+        let view = root.add_subview_to_root(self.first_view.take().unwrap());
         view.place().back();
 
         UIManager::on_scale_changed(root, move |scale| {
@@ -254,9 +254,9 @@ impl window::WindowEvents for AppRunner {
         UI::draw(pass);
     }
 
-    fn resize(&mut self, inner_position: Point, size: Size) {
-        UIManager::root_view_weak().resize_root(inner_position, size, UIManager::scale());
-        UIEvents::size_changed().trigger(size);
+    fn resize(&mut self, inner_pos: Point, outer_pos: Point, inner_size: Size, outer_size: Size) {
+        UIManager::root_view().resize_root(inner_pos, outer_pos, inner_size, outer_size, UIManager::scale());
+        UIEvents::size_changed().trigger(());
         self.update();
     }
 

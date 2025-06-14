@@ -5,10 +5,7 @@ use std::{
 };
 
 use dispatch::{from_main, wait_for_next_frame};
-use gm::{
-    color::TURQUOISE,
-    flat::{Rect, Size},
-};
+use gm::{color::TURQUOISE, flat::Rect};
 use log::{debug, trace};
 use refs::{MainLock, Own, Weak};
 use render::{
@@ -35,7 +32,7 @@ pub struct UI;
 
 impl UI {
     pub(crate) fn update() {
-        Self::update_view(UIManager::root_view_weak().deref_mut());
+        Self::update_view(UIManager::root_view().deref_mut());
         if let Some(debug_view) = UIManager::debug_view() {
             Self::update_view(debug_view);
         }
@@ -45,7 +42,13 @@ impl UI {
         let mut sections: Vec<Section> = vec![];
         let debug_frames = UIManager::should_draw_debug_frames();
         let scale = UIManager::scale();
-        Self::draw_view(pass, UIManager::root_view(), &mut sections, debug_frames, scale);
+        Self::draw_view(
+            pass,
+            UIManager::root_view_static(),
+            &mut sections,
+            debug_frames,
+            scale,
+        );
         if let Some(debug_view) = UIManager::debug_view() {
             Self::draw_view(pass, debug_view, &mut sections, debug_frames, scale);
         }
@@ -182,7 +185,7 @@ impl UI {
             }
         }
 
-        let root_frame = UIManager::root_view().frame();
+        let root_frame = UIManager::root_view_static().frame();
 
         for view in view.subviews().iter().rev() {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
@@ -234,10 +237,6 @@ impl UI {
 
         sections.push(section);
     }
-
-    pub fn root_view_size() -> Size {
-        UIManager::root_view().size()
-    }
 }
 
 impl UI {
@@ -272,9 +271,9 @@ impl UI {
         wait_for_next_frame().await;
         let view = from_main(move || {
             let weak = view.weak();
-            let mut root = UIManager::root_view_weak();
+            let mut root = UIManager::root_view();
             root.clear_root();
-            let view = root.__add_subview_internal(view, true);
+            let view = root.add_subview_to_root(view);
             view.place().back();
             trace!("{width} - {height}");
             weak

@@ -15,7 +15,7 @@ use gm::{
 use refs::{Own, Weak, assert_main_thread};
 use window::Window;
 
-use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
+use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -155,12 +155,12 @@ impl UIManager {
         DEBUG_VIEW.get_mut().as_mut().map(DerefMut::deref_mut)
     }
 
-    pub fn root_view() -> &'static RootView {
-        Self::get().root_view.deref()
+    pub fn root_view() -> Weak<RootView> {
+        Self::get().root_view.weak()
     }
 
-    pub fn root_view_weak() -> Weak<RootView> {
-        Self::get().root_view.weak()
+    pub fn root_view_static() -> &'static RootView {
+        Self::get().root_view.deref()
     }
 
     pub fn free_deleted_views() {
@@ -276,9 +276,9 @@ impl UIManager {
 
     pub fn set_view<T: View + 'static>(view: Own<T>) -> Weak<T> {
         let weak = view.weak();
-        let mut root = UIManager::root_view_weak();
+        let mut root = UIManager::root_view();
         root.clear_root();
-        let view = root.__add_subview_internal(view, true);
+        let view = root.add_subview_to_root(view);
         if view.place().is_empty() {
             view.place().back();
         }
