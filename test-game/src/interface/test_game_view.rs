@@ -20,6 +20,7 @@ use ui_benchmark::BenchmarkView;
 use crate::{
     interface::{
         game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
+        root_test_view::RootTestView,
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -95,7 +96,8 @@ pub struct TestGameView {
 
     no_physics: Button,
 
-    game: Button,
+    game:      Button,
+    root_view: Button,
 }
 
 impl Setup for TestGameView {
@@ -301,7 +303,7 @@ impl Setup for TestGameView {
             BOOL.set(val);
         });
 
-        self.no_physics.set_text("No physics");
+        self.no_physics.set_text("no physics");
         self.no_physics
             .place()
             .same([Y, Height], self.bool_storage_view)
@@ -309,7 +311,7 @@ impl Setup for TestGameView {
             .w(250);
         self.no_physics.add_transition::<Self, NoPhysicsView>();
 
-        self.game.set_text("Game");
+        self.game.set_text("game");
         self.game
             .place()
             .same([Y, Height], self.no_physics)
@@ -318,6 +320,17 @@ impl Setup for TestGameView {
         self.game.on_tap(|| {
             LevelManager::stop_level();
             UIManager::set_view(GameView::new());
+        });
+
+        self.root_view.set_text("root view");
+        self.root_view
+            .place()
+            .same([Y, Height], self.no_physics)
+            .anchor(Left, self.game, 10)
+            .w(150);
+        self.root_view.on_tap(|| {
+            LevelManager::stop_level();
+            UIManager::set_view(RootTestView::new());
         });
     }
 }
