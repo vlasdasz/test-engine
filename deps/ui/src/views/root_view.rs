@@ -7,7 +7,9 @@ use refs::{Own, Weak};
 use ui_proc::view;
 use window::image::ToImage;
 
-use crate::{Container, ImageView, View, ViewData, ViewFrame, ViewSubviews, WeakView, view::Setup};
+use crate::{
+    Container, ImageMode, ImageView, View, ViewData, ViewFrame, ViewSubviews, WeakView, view::Setup,
+};
 
 mod test_engine {
     pub(crate) use educe;
@@ -52,6 +54,7 @@ impl RootView {
     }
 
     pub fn set_image(mut self: Weak<Self>, image: impl ToImage) -> Weak<Self> {
+        self.background.mode = ImageMode::AspectFill;
         self.background.set_image(image);
         self
     }
@@ -86,7 +89,7 @@ impl RootView {
         );
 
         if Platform::IOS {
-            self.screen.set_position(inner_pos);
+            self.screen.set_position(inner_pos * (1.0 / scale));
         } else {
             self.screen.set_position((0, 0));
         }

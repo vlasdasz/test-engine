@@ -10,9 +10,9 @@ use test_engine::{
         Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
-        MovableView, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner, SpriteView,
-        StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, WHITE,
-        view,
+        MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
+        SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
+        ViewSubviews, WHITE, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -104,6 +104,7 @@ impl Setup for TestGameView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();
+        UIManager::root_view().set_image(NoImage);
 
         if false {
             UIManager::set_view(NoPhysicsView::new());

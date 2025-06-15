@@ -114,12 +114,13 @@ impl AppRunner {
     async fn setup_debug_server() -> Result<()> {
         use debug::{Command, LevelCommand, UICommand};
         use dispatch::on_main;
+        use ui::AlertErr;
 
         use crate::debug_server::{
             on_debug_client_message, send_to_debug_client, start_listtening_for_debug_client,
         };
 
-        start_listtening_for_debug_client().await;
+        start_listtening_for_debug_client().await.alert_err();
 
         LevelManager::on_scale_changed(|scale| send_to_debug_client(LevelCommand::SendScale(scale)));
 
@@ -143,7 +144,8 @@ impl AppRunner {
                 },
             });
         })
-        .await;
+        .await
+        .alert_err();
 
         Ok(())
     }

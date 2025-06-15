@@ -17,6 +17,9 @@ pub struct RootTestView {
 
 impl Setup for RootTestView {
     fn setup(mut self: Weak<Self>) {
+        UIManager::enable_debug_frames();
+        UIManager::root_view().set_image("square.png");
+
         self.apply_style(HAS_BACK_BUTTON);
 
         self.add_view::<Container>().apply_style(CORNER_STYLE).place().tl(0);
