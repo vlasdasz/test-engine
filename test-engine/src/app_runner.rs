@@ -1,4 +1,9 @@
-use std::{any::type_name, path::PathBuf, sync::Mutex, time::Duration};
+use std::{
+    any::type_name,
+    path::PathBuf,
+    sync::{Mutex, Once},
+    time::Duration,
+};
 
 use anyhow::Result;
 use dispatch::{from_main, invoke_dispatched};
@@ -227,17 +232,22 @@ impl AppRunner {
 
 impl window::WindowEvents for AppRunner {
     fn window_ready(&mut self) {
-        let mut root = UIManager::root_view();
-        let view = root.add_subview_to_root(self.first_view.take().unwrap());
-        view.place().back();
+        static INIT: Once = Once::new();
 
-        UIManager::on_scale_changed(root, move |scale| {
-            root.rescale_root(scale);
+        INIT.call_once(|| {
+            debug!("window ready");
+            let mut root = UIManager::root_view();
+            let view = root.add_subview_to_root(self.first_view.take().unwrap());
+            view.place().back();
+
+            UIManager::on_scale_changed(root, move |scale| {
+                root.rescale_root(scale);
+            });
+
+            self.update();
+            *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
+            WINDOW_READY.lock().unwrap().trigger(());
         });
-
-        self.update();
-        *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
-        WINDOW_READY.lock().unwrap().trigger(());
     }
 
     fn update(&mut self) {
