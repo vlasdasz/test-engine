@@ -213,36 +213,17 @@ impl UIManager {
     /// other OS (probably) UI scale - adjustable in runtime
     pub fn rescale_frame(rect: &Rect) -> Rect {
         let scale = Self::display_scale();
-        // let rect = rect * UIManager::ui_scale();
 
         let rect: Rect = (
             rect.origin.x * scale,
-            (Self::window_resolution().height/* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height)
-                * scale,
+            (Self::window_resolution().height - rect.origin.y - rect.size.height) * scale,
             rect.size.width * scale,
             rect.size.height * scale,
         )
             .into();
 
         rect
-        // (
-        //     rect.origin.x,
-        //     (UIManager::window_size().height - rect.origin.y -
-        // rect.size.height),     rect.size.width,
-        //     rect.size.height,
-        // )
-        //     .into()
     }
-
-    // pub fn ui_scale() -> f32 {
-    //     Self::get().ui_scale
-    // }
-    //
-    // pub fn set_ui_scale(scale: f32) {
-    //     Self::get().ui_scale = scale;
-    //     UIManager::root_view().set_frame(Self::scaled_ui_window_size());
-    // }
-    //
 
     pub fn open_keyboard(#[allow(unused_variables)] frame: &Rect) {
         #[cfg(ios)]
