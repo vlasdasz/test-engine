@@ -31,6 +31,7 @@ pub struct UIManager {
     draw_debug_frames: AtomicBool,
 
     scale:         AtomicU32,
+    manual_scale:  AtomicU32,
     scale_changed: UIEvent<f32>,
 
     on_scroll:    UIEvent<Point>,
@@ -73,8 +74,24 @@ impl UIManager {
         let sf = Self::get();
         let scale = scale.to_f32();
 
+        let manual_scale = f32::from_le_bytes(sf.manual_scale.load(Ordering::Relaxed).to_le_bytes());
+
+        let scale = if manual_scale == 0.0 { scale } else { manual_scale };
+
         sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
         sf.scale_changed.trigger(scale);
+    }
+
+    pub fn override_scale(scale: impl ToF32) {
+        assert_main_thread();
+        let sf = Self::get();
+
+        let scale = scale.to_f32();
+
+        sf.manual_scale
+            .store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
+
+        Self::set_scale(scale);
     }
 
     pub fn on_scale_changed<U>(subscriber: Weak<U>, mut cb: impl FnMut(f32) + Send + 'static) {
@@ -125,6 +142,7 @@ impl UIManager {
             touch_disabled: false.into(),
             draw_debug_frames: false.into(),
             scale: AtomicU32::new(u32::from_le_bytes(1.0f32.to_le_bytes())),
+            manual_scale: AtomicU32::new(u32::from_le_bytes(0.0f32.to_le_bytes())),
             scale_changed: UIEvent::default(),
             on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
@@ -208,23 +226,6 @@ impl UIManager {
 }
 
 impl UIManager {
-    /// There are 2 types of scale
-    /// Display scale - constant for display on mac and iPhones, always 1 on
-    /// other OS (probably) UI scale - adjustable in runtime
-    pub fn rescale_frame(rect: &Rect) -> Rect {
-        let scale = Self::display_scale();
-
-        let rect: Rect = (
-            rect.origin.x * scale,
-            (Self::window_resolution().height - rect.origin.y - rect.size.height) * scale,
-            rect.size.width * scale,
-            rect.size.height * scale,
-        )
-            .into();
-
-        rect
-    }
-
     pub fn open_keyboard(#[allow(unused_variables)] frame: &Rect) {
         #[cfg(ios)]
         {

@@ -12,6 +12,7 @@ static ALLOWED_TYPES: &[&str] = &[
     type_name::<NumberView>(),
 ];
 
+#[allow(unpredictable_function_pointer_comparisons)] // TODO:
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Style {
     action: fn(&mut dyn View),

@@ -12,7 +12,8 @@ use anyhow::Result;
 use log::info;
 use test_engine::{
     AppRunner,
-    ui::{Container, Setup},
+    dispatch::from_main,
+    ui::{Container, Setup, UIManager},
 };
 
 use crate::{
@@ -31,7 +32,12 @@ mod views;
 #[tokio::main]
 async fn main() -> Result<()> {
     AppRunner::start_with_actor(Container::new(), async {
-        test_engine::ui::UIManager::set_display_touches(true);
+        UIManager::set_display_touches(true);
+
+        from_main(|| {
+            UIManager::override_scale(1.0);
+        })
+        .await;
 
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 

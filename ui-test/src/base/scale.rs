@@ -173,7 +173,7 @@ pub async fn test_scale() -> Result<()> {
     .await?;
 
     from_main(move || {
-        UIManager::set_scale(0.6);
+        UIManager::override_scale(0.6);
         view.data.clear();
     })
     .await;
@@ -270,7 +270,7 @@ pub async fn test_scale() -> Result<()> {
     .await?;
 
     from_main(move || {
-        UIManager::set_scale(1.5);
+        UIManager::override_scale(1.5);
         view.data.clear();
     })
     .await;
@@ -371,7 +371,7 @@ pub async fn test_scale() -> Result<()> {
     .await?;
 
     from_main(move || {
-        UIManager::set_scale(1);
+        UIManager::override_scale(1);
     })
     .await;
 

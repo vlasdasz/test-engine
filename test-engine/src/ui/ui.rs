@@ -141,9 +141,6 @@ impl UI {
         if let Some(image_view) = view.as_any().downcast_ref::<ImageView>() {
             if image_view.image().is_ok() {
                 let image = image_view.image();
-                // let size: Size = image.size.into();
-                // let frame = &size.fit_in_rect::<{ Axis::X }>(view.absolute_frame());
-                // let frame = Self::rescale_frame(frame, 1.0, drawer.window_size);
 
                 IMAGE_RECT_DRAWER.get_mut().add_with_image(
                     UIImageInstance::new(
