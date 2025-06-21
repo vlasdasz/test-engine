@@ -115,10 +115,12 @@ impl Setup for TestGameView {
 
         self.setup_keymap();
 
-        self.tl.set_color(PURPLE).place().size(100, 100).tl(10);
-        self.tr.set_color(GREEN).place().size(100, 100).tr(10);
-        self.bl.set_color(BLUE).place().size(100, 100).bl(10);
-        self.br.set_color(ORANGE).place().size(100, 100).br(10);
+        let corner_size = 50.0;
+
+        self.tl.set_color(PURPLE).place().size(corner_size, corner_size).tl(10);
+        self.tr.set_color(GREEN).place().size(corner_size, corner_size).tr(10);
+        self.bl.set_color(BLUE).place().size(corner_size, corner_size).bl(10);
+        self.br.set_color(ORANGE).place().size(corner_size, corner_size).br(10);
 
         self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);
