@@ -10,6 +10,7 @@ name = "ui"
 
 [dependencies]
 anyhow = { workspace = true }
+atomic_float = { workspace = true }
 chrono = { workspace = true }
 educe = { workspace = true }
 fake = { workspace = true }

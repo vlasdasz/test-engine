@@ -13,7 +13,7 @@ use log::info;
 use test_engine::{
     AppRunner,
     dispatch::from_main,
-    ui::{Container, Setup, UIManager},
+    ui::{Container, Label, Setup, UIManager},
 };
 
 use crate::{
@@ -32,6 +32,7 @@ mod views;
 #[tokio::main]
 async fn main() -> Result<()> {
     AppRunner::start_with_actor(Container::new(), async {
+        Label::set_default_text_size(32);
         UIManager::set_display_touches(true);
 
         from_main(|| {

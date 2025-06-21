@@ -30,7 +30,7 @@ static BOOL: OnDisk<bool> = OnDisk::new("bool");
 
 pub(crate) static _BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));
-    btn.set_corner_radius(10);
+    btn.set_corner_radius(5);
 });
 
 pub(crate) static HAS_BACK_BUTTON: Style = Style::new(|view| {
@@ -222,24 +222,36 @@ impl Setup for TestGameView {
         self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
 
         self.text_field.set_placeholder("type");
-        self.text_field.place().size(150, 50).t(200).anchor(Left, self.tl, 10);
+        self.text_field.place().size(80, 28).t(100).anchor(Left, self.tl, 10);
 
         self.render.set_text("render");
-        self.render.place().size(100, 50).t(200).anchor(Left, self.text_field, 10);
+        self.render
+            .place()
+            .same([Y, Height], self.text_field)
+            .w(100)
+            .anchor(Left, self.text_field, 10);
         self.render.on_tap(|| {
             LevelManager::stop_level();
             UIManager::set_view(RenderView::new());
         });
 
         self.benchmark.set_text("bench");
-        self.benchmark.place().size(100, 50).t(200).anchor(Left, self.render, 10);
+        self.benchmark
+            .place()
+            .same([Y, Height], self.text_field)
+            .w(100)
+            .anchor(Left, self.render, 10);
         self.benchmark.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());
         });
 
         self.test_level.set_text("test");
-        self.test_level.place().size(100, 50).t(200).anchor(Left, self.benchmark, 10);
+        self.test_level
+            .place()
+            .same([Y, Height], self.text_field)
+            .w(100)
+            .anchor(Left, self.benchmark, 10);
         self.test_level.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());

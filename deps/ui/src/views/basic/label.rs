@@ -1,5 +1,6 @@
-use std::fmt::Display;
+use std::{fmt::Display, sync::atomic::Ordering};
 
+use atomic_float::AtomicF32;
 use gm::{
     ToF32,
     color::{BLACK, CLEAR, Color, WHITE},
@@ -19,6 +20,8 @@ mod test_engine {
 
     pub(crate) use crate as ui;
 }
+
+static DEFAULT_TEXT_SIZE: AtomicF32 = AtomicF32::new(16.0);
 
 #[derive(Debug, Default)]
 pub enum TextAlignment {
@@ -45,8 +48,10 @@ pub struct Label {
 
     pub multiline: bool,
 
+    #[educe(Default = BLACK)]
     text_color: Color,
-    text_size:  f32,
+
+    text_size: f32,
 }
 
 impl HasText for Label {
@@ -113,11 +118,16 @@ impl Label {
     }
 }
 
+impl Label {
+    pub fn set_default_text_size(size: impl ToF32) {
+        DEFAULT_TEXT_SIZE.store(size.to_f32(), Ordering::Relaxed);
+    }
+}
+
 impl Setup for Label {
     fn setup(mut self: Weak<Self>) {
-        self.text_size = 32.0;
+        self.text_size = DEFAULT_TEXT_SIZE.load(Ordering::Relaxed);
         self.set_color(WHITE);
-        self.text_color = BLACK;
 
         Style::apply_global(self);
     }
