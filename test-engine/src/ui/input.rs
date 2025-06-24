@@ -1,9 +1,7 @@
 use gm::color::Color;
 use level::LevelManager;
 use log::warn;
-use ui::{
-    Container, Setup, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, ViewSubviews, check_touch,
-};
+use ui::{Container, Setup, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, check_touch};
 pub use winit::{event::KeyEvent, keyboard::NamedKey};
 
 const LOG_TOUCHES: bool = false;
@@ -43,7 +41,7 @@ impl Input {
             view.set_z_position(0.1);
             view.set_size(5, 5).set_color(Color::random());
             view.set_center(touch.position);
-            UIManager::root_view_weak().__add_subview_internal(view, true);
+            UIManager::root_view().add_subview_to_root(view);
         }
 
         // let _level_touch = touch;

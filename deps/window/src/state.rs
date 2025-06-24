@@ -79,8 +79,10 @@ impl State {
         }
 
         self.app.resize(
-            Window::inner_position() / Window::screen_scale(),
+            Window::inner_position(),
+            Window::outer_position(),
             Window::inner_size(),
+            Window::outer_size(),
         );
     }
 

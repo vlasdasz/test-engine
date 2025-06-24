@@ -1,13 +1,10 @@
-use gm::{
-    color::{BLACK, LIGHT_GRAY, WHITE},
-    flat::{Point, PointsPath},
-};
+use gm::flat::Point;
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    Setup, Touch,
+    ImageView, Setup, Touch, UIImages,
     view::{ViewFrame, ViewTouch},
 };
 
@@ -18,12 +15,8 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
-use crate::DrawingView;
-
 const SIZE: f32 = 200.0;
-const OUTLINE_WIDTH: f32 = 10.0;
 const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
-const PRECISION: u16 = 50;
 
 #[view]
 pub struct StickView {
@@ -31,8 +24,8 @@ pub struct StickView {
     pub flaccid:   bool,
 
     #[init]
-    background:      DrawingView,
-    direction_stick: DrawingView,
+    background:      ImageView,
+    direction_stick: ImageView,
 }
 
 impl StickView {
@@ -70,45 +63,17 @@ impl Setup for StickView {
             self.on_touch(&touch);
         });
 
+        self.background.set_image(UIImages::joystick());
+        self.direction_stick.set_image(UIImages::handle());
+
         self.set_frame((0, 0, SIZE, SIZE));
 
         self.background.set_frame((0, 0, SIZE, SIZE));
-
-        let frame = *self.frame();
-        self.background.add_path(
-            PointsPath::circle_triangles_with(frame.size.center(), frame.size.width / 2.0, PRECISION),
-            BLACK,
-        );
-
-        self.background.add_path(
-            PointsPath::circle_triangles_with(
-                frame.size.center(),
-                (frame.size.width - OUTLINE_WIDTH) / 2.0,
-                PRECISION,
-            ),
-            WHITE,
-        );
 
         let center = self.frame().size.center();
 
         self.direction_stick
             .set_frame((0, 0, STICK_VIEW_SIZE, STICK_VIEW_SIZE))
             .set_center(center);
-
-        let stick_center = self.direction_stick.frame().size.center();
-
-        self.direction_stick
-            .add_path(
-                PointsPath::circle_triangles_with(stick_center, STICK_VIEW_SIZE / 2.0, PRECISION),
-                BLACK,
-            )
-            .add_path(
-                PointsPath::circle_triangles_with(
-                    stick_center,
-                    (STICK_VIEW_SIZE - OUTLINE_WIDTH) / 2.0,
-                    PRECISION,
-                ),
-                LIGHT_GRAY,
-            );
     }
 }

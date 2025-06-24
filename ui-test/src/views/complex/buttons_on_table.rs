@@ -8,10 +8,7 @@ use test_engine::{
         Button, CollectionData, CollectionView, Container, HasText, Label, Setup, Size, TouchStack, UI, View,
         ViewData, ViewSubviews, view,
     },
-    ui_test::{
-        inject_touches,
-        state::{append_state, get_str_state},
-    },
+    ui_test::{get_str_state, inject_touches, state::append_state},
 };
 
 #[view]

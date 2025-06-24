@@ -8,7 +8,7 @@ use test_engine::{
         CollectionData, CollectionLayout, CollectionView, HasText, Label, Setup, Size, TouchStack, UI, View,
         ViewData, ViewFrame, view,
     },
-    ui_test::helpers::{add_action, check_colors},
+    ui_test::{add_action, helpers::check_colors},
 };
 
 #[view]

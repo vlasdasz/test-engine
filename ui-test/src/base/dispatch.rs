@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    dispatch::{Task, from_main},
+    dispatch::{Task, from_main, wait_for_next_frame},
     refs::Weak,
     ui::{Button, HasText, Setup, Spinner, UI, ViewData, async_link_button, link_button, view},
     ui_test::inject_touches,
@@ -112,6 +112,8 @@ pub async fn test_dispatch() -> Result<()> {
         ",
     )
     .await;
+
+    wait_for_next_frame().await;
 
     assert_eq!("tapped arg: 555", DATA.lock().await.as_str());
 

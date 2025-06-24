@@ -86,7 +86,12 @@ impl Window {
             .window
     }
 
-    fn outer_size() -> Size {
+    pub fn inner_size() -> Size {
+        let size = Self::winit_window().inner_size();
+        (size.width, size.height).into()
+    }
+
+    pub fn outer_size() -> Size {
         let size = Self::winit_window().outer_size();
         (size.width, size.height).into()
     }
@@ -99,13 +104,13 @@ impl Window {
         }
     }
 
-    pub fn inner_size() -> Size {
-        let size = Self::winit_window().inner_size();
-        (size.width, size.height).into()
-    }
-
     pub fn inner_position() -> Point {
         let pos = Self::winit_window().inner_position().unwrap_or_default();
+        (pos.x, pos.y).into()
+    }
+
+    pub fn outer_position() -> Point {
+        let pos = Self::winit_window().outer_position().unwrap_or_default();
         (pos.x, pos.y).into()
     }
 

@@ -13,7 +13,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
         let size = Self::modal_size();
         let weak = view.weak();
         TouchStack::push_layer(weak.weak_view());
-        UIManager::root_view_weak().__add_subview_internal(view, true);
+        UIManager::root_view().add_subview_to_root(view);
         weak.place().size(size.width, size.height).center();
         weak
     }

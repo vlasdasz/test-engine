@@ -15,7 +15,7 @@ use gm::{
 use refs::{Own, Weak, assert_main_thread};
 use window::Window;
 
-use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewSubviews, WeakView};
+use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -31,6 +31,7 @@ pub struct UIManager {
     draw_debug_frames: AtomicBool,
 
     scale:         AtomicU32,
+    manual_scale:  AtomicU32,
     scale_changed: UIEvent<f32>,
 
     on_scroll:    UIEvent<Point>,
@@ -73,8 +74,24 @@ impl UIManager {
         let sf = Self::get();
         let scale = scale.to_f32();
 
+        let manual_scale = f32::from_le_bytes(sf.manual_scale.load(Ordering::Relaxed).to_le_bytes());
+
+        let scale = if manual_scale == 0.0 { scale } else { manual_scale };
+
         sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
         sf.scale_changed.trigger(scale);
+    }
+
+    pub fn override_scale(scale: impl ToF32) {
+        assert_main_thread();
+        let sf = Self::get();
+
+        let scale = scale.to_f32();
+
+        sf.manual_scale
+            .store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
+
+        Self::set_scale(scale);
     }
 
     pub fn on_scale_changed<U>(subscriber: Weak<U>, mut cb: impl FnMut(f32) + Send + 'static) {
@@ -125,6 +142,7 @@ impl UIManager {
             touch_disabled: false.into(),
             draw_debug_frames: false.into(),
             scale: AtomicU32::new(u32::from_le_bytes(1.0f32.to_le_bytes())),
+            manual_scale: AtomicU32::new(u32::from_le_bytes(0.0f32.to_le_bytes())),
             scale_changed: UIEvent::default(),
             on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
@@ -155,12 +173,12 @@ impl UIManager {
         DEBUG_VIEW.get_mut().as_mut().map(DerefMut::deref_mut)
     }
 
-    pub fn root_view() -> &'static RootView {
-        Self::get().root_view.deref()
+    pub fn root_view() -> Weak<RootView> {
+        Self::get().root_view.weak()
     }
 
-    pub fn root_view_weak() -> Weak<RootView> {
-        Self::get().root_view.weak()
+    pub fn root_view_static() -> &'static RootView {
+        Self::get().root_view.deref()
     }
 
     pub fn free_deleted_views() {
@@ -208,42 +226,6 @@ impl UIManager {
 }
 
 impl UIManager {
-    /// There are 2 types of scale
-    /// Display scale - constant for display on mac and iPhones, always 1 on
-    /// other OS (probably) UI scale - adjustable in runtime
-    pub fn rescale_frame(rect: &Rect) -> Rect {
-        let scale = Self::display_scale();
-        // let rect = rect * UIManager::ui_scale();
-
-        let rect: Rect = (
-            rect.origin.x * scale,
-            (Self::window_resolution().height/* UIManager::ui_scale()*/ - rect.origin.y - rect.size.height)
-                * scale,
-            rect.size.width * scale,
-            rect.size.height * scale,
-        )
-            .into();
-
-        rect
-        // (
-        //     rect.origin.x,
-        //     (UIManager::window_size().height - rect.origin.y -
-        // rect.size.height),     rect.size.width,
-        //     rect.size.height,
-        // )
-        //     .into()
-    }
-
-    // pub fn ui_scale() -> f32 {
-    //     Self::get().ui_scale
-    // }
-    //
-    // pub fn set_ui_scale(scale: f32) {
-    //     Self::get().ui_scale = scale;
-    //     UIManager::root_view().set_frame(Self::scaled_ui_window_size());
-    // }
-    //
-
     pub fn open_keyboard(#[allow(unused_variables)] frame: &Rect) {
         #[cfg(ios)]
         {
@@ -276,9 +258,9 @@ impl UIManager {
 
     pub fn set_view<T: View + 'static>(view: Own<T>) -> Weak<T> {
         let weak = view.weak();
-        let mut root = UIManager::root_view_weak();
+        let mut root = UIManager::root_view();
         root.clear_root();
-        let view = root.__add_subview_internal(view, true);
+        let view = root.add_subview_to_root(view);
         if view.place().is_empty() {
             view.place().back();
         }

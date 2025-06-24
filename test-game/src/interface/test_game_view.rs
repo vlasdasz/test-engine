@@ -10,9 +10,9 @@ use test_engine::{
         Alert, Anchor,
         Anchor::{Height, Left, Top, Width, X, Y},
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
-        MovableView, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner, SpriteView,
-        StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, WHITE,
-        view,
+        MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
+        SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
+        ViewSubviews, WHITE, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -20,6 +20,7 @@ use ui_benchmark::BenchmarkView;
 use crate::{
     interface::{
         game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
+        root_test_view::RootTestView,
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -29,7 +30,7 @@ static BOOL: OnDisk<bool> = OnDisk::new("bool");
 
 pub(crate) static _BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));
-    btn.set_corner_radius(10);
+    btn.set_corner_radius(5);
 });
 
 pub(crate) static HAS_BACK_BUTTON: Style = Style::new(|view| {
@@ -95,13 +96,15 @@ pub struct TestGameView {
 
     no_physics: Button,
 
-    game: Button,
+    game:      Button,
+    root_view: Button,
 }
 
 impl Setup for TestGameView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();
+        UIManager::root_view().set_image(NoImage);
 
         if false {
             UIManager::set_view(NoPhysicsView::new());
@@ -112,10 +115,12 @@ impl Setup for TestGameView {
 
         self.setup_keymap();
 
-        self.tl.set_color(PURPLE).place().size(100, 100).tl(10);
-        self.tr.set_color(GREEN).place().size(100, 100).tr(10);
-        self.bl.set_color(BLUE).place().size(100, 100).bl(10);
-        self.br.set_color(ORANGE).place().size(100, 100).br(10);
+        let corner_size = 50.0;
+
+        self.tl.set_color(PURPLE).place().size(corner_size, corner_size).tl(10);
+        self.tr.set_color(GREEN).place().size(corner_size, corner_size).tr(10);
+        self.bl.set_color(BLUE).place().size(corner_size, corner_size).bl(10);
+        self.br.set_color(ORANGE).place().size(corner_size, corner_size).br(10);
 
         self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);
@@ -217,24 +222,36 @@ impl Setup for TestGameView {
         self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
 
         self.text_field.set_placeholder("type");
-        self.text_field.place().size(150, 50).t(200).anchor(Left, self.tl, 10);
+        self.text_field.place().size(80, 28).t(100).anchor(Left, self.tl, 10);
 
         self.render.set_text("render");
-        self.render.place().size(100, 50).t(200).anchor(Left, self.text_field, 10);
+        self.render
+            .place()
+            .same([Y, Height], self.text_field)
+            .w(100)
+            .anchor(Left, self.text_field, 10);
         self.render.on_tap(|| {
             LevelManager::stop_level();
             UIManager::set_view(RenderView::new());
         });
 
         self.benchmark.set_text("bench");
-        self.benchmark.place().size(100, 50).t(200).anchor(Left, self.render, 10);
+        self.benchmark
+            .place()
+            .same([Y, Height], self.text_field)
+            .w(100)
+            .anchor(Left, self.render, 10);
         self.benchmark.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(BenchmarkLevel::default());
         });
 
         self.test_level.set_text("test");
-        self.test_level.place().size(100, 50).t(200).anchor(Left, self.benchmark, 10);
+        self.test_level
+            .place()
+            .same([Y, Height], self.text_field)
+            .w(100)
+            .anchor(Left, self.benchmark, 10);
         self.test_level.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
@@ -301,7 +318,7 @@ impl Setup for TestGameView {
             BOOL.set(val);
         });
 
-        self.no_physics.set_text("No physics");
+        self.no_physics.set_text("no physics");
         self.no_physics
             .place()
             .same([Y, Height], self.bool_storage_view)
@@ -309,7 +326,7 @@ impl Setup for TestGameView {
             .w(250);
         self.no_physics.add_transition::<Self, NoPhysicsView>();
 
-        self.game.set_text("Game");
+        self.game.set_text("game");
         self.game
             .place()
             .same([Y, Height], self.no_physics)
@@ -318,6 +335,17 @@ impl Setup for TestGameView {
         self.game.on_tap(|| {
             LevelManager::stop_level();
             UIManager::set_view(GameView::new());
+        });
+
+        self.root_view.set_text("root view");
+        self.root_view
+            .place()
+            .same([Y, Height], self.no_physics)
+            .anchor(Left, self.game, 10)
+            .w(150);
+        self.root_view.on_tap(|| {
+            LevelManager::stop_level();
+            UIManager::set_view(RootTestView::new());
         });
     }
 }

@@ -4,7 +4,7 @@ use test_engine::{
     DataManager, RenderPass,
     game::{Game, GameDrawer, Object},
     refs::{Own, Weak},
-    ui::{Button, Image, Point, Setup, ViewCallbacks, ViewData, view},
+    ui::{Image, Point, Setup, ViewCallbacks, ViewData, view},
 };
 
 use crate::interface::test_game_view::HAS_BACK_BUTTON;
@@ -12,9 +12,6 @@ use crate::interface::test_game_view::HAS_BACK_BUTTON;
 #[view]
 pub struct GameView {
     game: Own<Game>,
-
-    #[init]
-    back: Button,
 }
 
 impl Setup for GameView {

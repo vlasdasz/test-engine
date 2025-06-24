@@ -1,4 +1,4 @@
-use gm::{flat::Size, volume::GyroData};
+use gm::volume::GyroData;
 use refs::MainLock;
 use vents::Event;
 use window::NamedKey;
@@ -11,7 +11,7 @@ static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 pub struct UIEvents {
     on_touch:       Event<Touch>,
     on_debug_touch: Event<Touch>,
-    size_changed:   UIEvent<Size>,
+    size_changed:   UIEvent<()>,
     gyro:           UIEvent<GyroData>,
     keyboard_input: UIEvent<char>,
     keyboard_key:   UIEvent<NamedKey>,
@@ -22,12 +22,12 @@ impl UIEvents {
         &UI_EVENTS.on_touch
     }
 
-    /// Is never disabled
+    /// Always triggered
     pub fn on_debug_touch() -> &'static Event<Touch> {
         &UI_EVENTS.on_debug_touch
     }
 
-    pub fn size_changed() -> &'static UIEvent<Size> {
+    pub fn size_changed() -> &'static UIEvent<()> {
         &UI_EVENTS.size_changed
     }
 

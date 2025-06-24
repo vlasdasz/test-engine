@@ -28,7 +28,7 @@ pub async fn test_root_view() -> Result<()> {
     .await?;
 
     from_main(|| {
-        UIManager::root_view_weak().set_color(GREEN);
+        UIManager::root_view().set_color(GREEN);
     })
     .await;
 
@@ -45,7 +45,7 @@ pub async fn test_root_view() -> Result<()> {
     .await?;
 
     from_main(|| {
-        UIManager::root_view_weak().set_color(CLEAR);
+        UIManager::root_view().set_color(CLEAR);
     })
     .await;
 
@@ -60,7 +60,7 @@ pub async fn test_root_view() -> Result<()> {
     .await?;
 
     from_main(|| {
-        UIManager::root_view_weak().set_image("cat.png");
+        UIManager::root_view().set_image("cat.png");
     })
     .await;
 
@@ -78,7 +78,7 @@ pub async fn test_root_view() -> Result<()> {
     .await?;
 
     from_main(|| {
-        UIManager::root_view_weak().set_image(NoImage);
+        UIManager::root_view().set_image(NoImage);
     })
     .await;
 
