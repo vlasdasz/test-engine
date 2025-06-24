@@ -184,7 +184,7 @@ impl UI {
 
         let root_frame = UIManager::root_view_static().frame();
 
-        for view in view.subviews().iter().rev() {
+        for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
                 Self::draw_view(pass, view.deref(), sections, debug_frames, scale);
             }

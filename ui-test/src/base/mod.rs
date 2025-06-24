@@ -32,6 +32,7 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_transparency().await?;
     test_scale().await?;
     test_root_view().await?;
     test_dispatch().await?;
@@ -44,7 +45,6 @@ pub async fn test_base_ui() -> anyhow::Result<()> {
     test_styles().await?;
     test_colors().await?;
     test_corner_radius().await?;
-    test_transparency().await?;
     test_modal().await?;
     test_touch_order().await?;
     test_template().await?;
