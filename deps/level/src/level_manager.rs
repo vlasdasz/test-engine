@@ -82,7 +82,7 @@ impl LevelManager {
             Self::level_unchecked()
                 .physics
                 .as_mut()
-                .expect("This level has no physics enabled")
+                .expect("This level has no physics enabled. Override LevelSetup::needs_physics to enable.")
         }
     }
 
