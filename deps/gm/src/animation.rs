@@ -34,7 +34,7 @@ impl Animation {
         let now = Utc::now().timestamp_millis();
         let delta: f32 = (now - self.stamp).lossy_convert();
         let passed: u64 = (delta / self.duration).lossy_convert();
-        let even = passed % 2 == 0;
+        let even = passed.is_multiple_of(2);
         let passed: f32 = passed.lossy_convert();
         let delta = delta - (passed * self.duration);
         let ratio = delta / (self.duration);

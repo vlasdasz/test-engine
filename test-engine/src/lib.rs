@@ -1,5 +1,4 @@
 #![allow(incomplete_features)]
-#![feature(let_chains)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
