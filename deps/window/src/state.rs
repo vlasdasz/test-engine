@@ -64,7 +64,11 @@ impl State {
                 "depth_texture",
             );
             surface.presentable.configure(&window.device, &window.config);
-        } else if window.resumed && window.create_surface_and_window(event_loop).unwrap() {
+        } else if window.resumed
+            && window
+                .create_surface_and_window((new_size.width, new_size.height).into(), event_loop)
+                .unwrap()
+        {
             window.state.app.window_ready();
         }
 

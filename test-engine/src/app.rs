@@ -1,3 +1,4 @@
+use gm::flat::Size;
 use refs::Own;
 use ui::View;
 
@@ -6,6 +7,9 @@ pub trait App {
     where Self: Sized;
     fn setup(&self) {}
     fn make_root_view(&self) -> Own<dyn View>;
+    fn initial_size(&self) -> Size {
+        (1200, 1000).into()
+    }
 }
 
 #[cfg(ios)]
