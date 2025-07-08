@@ -4,7 +4,7 @@ use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    ImageView, Setup, Touch, UIImages,
+    ImageView, Setup, Touch, UIImages, ViewData,
     view::{ViewFrame, ViewTouch},
 };
 
@@ -14,9 +14,6 @@ mod test_engine {
 
     pub(crate) use crate as ui;
 }
-
-const SIZE: f32 = 200.0;
-const STICK_VIEW_SIZE: f32 = SIZE / 2.0;
 
 #[view]
 pub struct StickView {
@@ -66,14 +63,14 @@ impl Setup for StickView {
         self.background.set_image(UIImages::joystick());
         self.direction_stick.set_image(UIImages::handle());
 
-        self.set_frame((0, 0, SIZE, SIZE));
-
-        self.background.set_frame((0, 0, SIZE, SIZE));
+        self.background.place().back();
 
         let center = self.frame().size.center();
 
-        self.direction_stick
-            .set_frame((0, 0, STICK_VIEW_SIZE, STICK_VIEW_SIZE))
-            .set_center(center);
+        // self.direction_stick
+        //     .set_frame((0, 0, STICK_VIEW_SIZE, STICK_VIEW_SIZE))
+        //     .set_center(center);
+        //
+        // self.chan
     }
 }

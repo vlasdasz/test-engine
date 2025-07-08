@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
-    ui::{Container, GREEN, Point, PointView, Setup, UI, ViewData, ViewFrame, view},
-    ui_test::inject_touches,
+    ui::{Container, GREEN, Point, PointView, Setup, UI, UIManager, ViewData, ViewFrame, view},
+    ui_test::{check_colors, inject_touches, record_ui_test},
 };
 
 #[view]
@@ -135,6 +135,55 @@ pub async fn test_stick() -> Result<()> {
         view.stick.set_position((400, 50));
     })
     .await;
+
+    check_colors(
+        r#"
+             403  108 -  89 124 149
+             405  108 -  89 124 149
+             410  110 -  89 124 149
+             419  115 -  89 124 149
+             429  120 - 112 112 112
+             431  122 -  89 124 149
+             445  131 -  89 124 149
+             465  143 - 195 195 195
+             468  146 - 195 195 195
+             473  147 - 195 195 195
+             477  152 - 195 195 195
+             480  152 - 195 195 195
+             497  157 - 195 195 195
+             535  169 - 112 112 112
+             511  173 - 195 195 195
+             513  173 - 195 195 195
+             520  183 - 194 194 194
+             524  191 - 112 112 112
+             548  215 - 112 112 112
+             556  222 -  89 124 149
+             554  234 -  89 124 149
+             559   79 -  89 124 149
+             551   87 - 112 112 112
+             549   90 - 112 112 112
+             537  109 -  89 124 149
+             525  120 - 195 195 195
+             517  131 - 195 195 195
+             496  165 - 195 195 195
+             470  179 - 112 112 112
+             461  188 -  89 124 149
+             448  203 -  89 124 149
+             443  209 - 112 112 112
+             431  231 -  89 124 149
+             426  237 -  89 124 149
+        "#,
+    )
+    .await?;
+
+    from_main(move || {
+        view.stick.set_position((200, 200)).set_size(400, 400);
+    })
+    .await;
+
+    UIManager::enable_debug_frames();
+
+    record_ui_test().await;
 
     Ok(())
 }
