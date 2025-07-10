@@ -65,7 +65,7 @@ impl Setup for StickView {
 
         self.background.place().back();
 
-        let center = self.frame().size.center();
+        let _center = self.frame().size.center();
 
         // self.direction_stick
         //     .set_frame((0, 0, STICK_VIEW_SIZE, STICK_VIEW_SIZE))

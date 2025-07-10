@@ -13,6 +13,7 @@ rapier2d = { workspace = true }
 
 gm = { workspace = true }
 level-proc = { workspace = true }
+plat = { workspace = true }
 refs = { workspace = true }
 utils = { workspace = true }
 vents = { workspace = true }

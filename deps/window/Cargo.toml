@@ -24,6 +24,7 @@ manage = { workspace = true }
 refs = { workspace = true }
 
 gm = { workspace = true }
+plat = { workspace = true }
 
 wgpu_text = { workspace = true }
 

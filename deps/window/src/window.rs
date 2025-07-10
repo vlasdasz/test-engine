@@ -6,11 +6,12 @@ use std::sync::{
 use anyhow::Result;
 use dispatch::on_main;
 use gm::{
-    LossyConvert, Platform,
+    LossyConvert,
     color::Color,
     flat::{Point, Size},
 };
 use log::{debug, error, info, warn};
+use plat::Platform;
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{

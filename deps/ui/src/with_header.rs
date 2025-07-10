@@ -1,5 +1,5 @@
-use gm::Platform;
 use log::trace;
+use plat::Platform;
 use refs::Weak;
 
 use crate::{UIManager, View, ViewData, ViewFrame, WeakView, layout::Anchor};

@@ -1,8 +1,8 @@
 use std::{path::PathBuf, process::Command, sync::Mutex};
 
 use dirs::home_dir;
-use gm::Platform;
 use log::warn;
+use plat::Platform;
 
 static STORAGE_PATH: Mutex<Option<String>> = Mutex::new(None);
 

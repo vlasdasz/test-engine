@@ -8,10 +8,11 @@ use std::{
 };
 
 use gm::{
-    Platform, ToF32,
+    ToF32,
     color::Color,
     flat::{Point, Rect, Size},
 };
+use plat::Platform;
 use refs::{Own, Weak, assert_main_thread};
 use window::Window;
 

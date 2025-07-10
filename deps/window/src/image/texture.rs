@@ -1,9 +1,10 @@
 use std::path::Path;
 
 use anyhow::{Result, anyhow};
-use gm::{LossyConvert, Platform, flat::Size};
+use gm::{LossyConvert, flat::Size};
 use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
 use log::trace;
+use plat::Platform;
 use tiny_skia::Transform;
 use usvg::{ImageRendering, ShapeRendering, TextRendering};
 use wgpu::{

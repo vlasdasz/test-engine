@@ -48,7 +48,7 @@ pub mod reflected {
 
 pub mod gm {
     pub use gm::{
-        Animation, Apply, LossyConvert, Platform, ToF32,
+        Animation, Apply, LossyConvert, ToF32,
         flat::{Direction, Shape},
         sign::Sign,
         volume::GyroData,

@@ -1784,6 +1784,7 @@ dependencies = [
  "educe",
  "gm",
  "level-proc",
+ "plat",
  "rapier2d",
  "refs",
  "utils",
@@ -2690,9 +2691,9 @@ checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
 
 [[package]]
 name = "plat"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ed7b9b6dc5813c3e14ced8a015e7f923e8c46aa99e7c04b499519f624051c0a6"
+checksum = "d49e01dbb1601f9f17eae86136ddcaaebbd95e0687e82a75a933536b8e5ddba4"
 dependencies = [
  "cfg_aliases",
 ]
@@ -3638,8 +3639,8 @@ dependencies = [
  "anyhow",
  "dirs",
  "fake",
- "gm",
  "log",
+ "plat",
  "rand 0.9.1",
  "serde",
  "serde_json",
@@ -4690,6 +4691,7 @@ dependencies = [
  "image",
  "log",
  "manage",
+ "plat",
  "refs",
  "resvg",
  "tiny-skia",

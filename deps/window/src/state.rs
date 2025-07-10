@@ -3,10 +3,11 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
 use anyhow::Result;
 use bytemuck::cast_slice;
 use gm::{
-    LossyConvert, Platform,
+    LossyConvert,
     color::{Color, GRAY_BLUE, U8Color},
     flat::Size,
 };
+use plat::Platform;
 use tokio::{
     spawn,
     sync::oneshot::{Receiver, Sender, channel},

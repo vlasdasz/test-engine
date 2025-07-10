@@ -1,10 +1,8 @@
 use std::ops::{Deref, DerefMut};
 
 use educe::Educe;
-use gm::{
-    Platform,
-    flat::{Point, Size},
-};
+use gm::flat::{Point, Size};
+use plat::Platform;
 use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
