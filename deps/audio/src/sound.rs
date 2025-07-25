@@ -9,13 +9,12 @@ use std::{
 
 use log::error;
 use manage::resource_loader::ResourceLoader;
-use rodio::{Decoder, OutputStream, OutputStreamHandle, Sink};
+use rodio::{Decoder, OutputStream, OutputStreamBuilder, Sink};
 
 pub struct Sound {
-    path:          PathBuf,
-    _stream:       OutputStream,
-    stream_handle: OutputStreamHandle,
-    data:          Vec<u8>,
+    path:   PathBuf,
+    stream: OutputStream,
+    data:   Vec<u8>,
 }
 
 impl Sound {
@@ -23,7 +22,11 @@ impl Sound {
         let cursor = Cursor::new(self.data.clone());
         let input = Decoder::new(cursor).unwrap();
 
-        let sink = Sink::try_new(&self.stream_handle).unwrap();
+        let stream = OutputStreamBuilder::open_default_stream()
+            .expect("rodio::OutputStreamBuilder::open_default_stream()");
+        let sink = Sink::connect_new(stream.mixer());
+
+        self.stream = stream;
 
         sink.set_volume(0.1);
         sink.append(input);
@@ -50,12 +53,12 @@ impl ResourceLoader for Sound {
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {
-        let (stream, stream_handle) = OutputStream::try_default().unwrap();
+        let stream =
+            OutputStreamBuilder::open_default_stream().expect("OutputStreamBuilder::open_default_stream");
 
         Self {
             path: name.to_string().into(),
-            _stream: stream,
-            stream_handle,
+            stream,
             data: data.into(),
         }
     }

@@ -43,25 +43,25 @@ fn get_or_init_value<T: Storable + Default>(key: &str) -> T {
 }
 
 pub struct OnDisk<T: Storable> {
-    name: &'static str,
-    path: Option<&'static str>,
-    _p:   PhantomData<T>,
+    name:  &'static str,
+    _path: Option<&'static str>,
+    _p:    PhantomData<T>,
 }
 
 impl<T: Storable> OnDisk<T> {
     pub const fn new(name: &'static str) -> Self {
         Self {
             name,
-            path: None,
+            _path: None,
             _p: PhantomData,
         }
     }
 
     pub const fn path(path: &'static str) -> Self {
         Self {
-            name: "",
-            path: Some(path),
-            _p:   PhantomData,
+            name:  "",
+            _path: Some(path),
+            _p:    PhantomData,
         }
     }
 
@@ -81,10 +81,10 @@ impl<T: Storable> OnDisk<T> {
         remove_file(path).expect("Failed to remove file");
     }
 
-    fn get_path(&self) -> PathBuf {
-        if let Some(path) = self.path {
-            todo!()
-        };
+    fn _get_path(&self) -> PathBuf {
+        // if let Some(_path) = self._path {
+        //     todo!()
+        // }
         todo!()
     }
 }

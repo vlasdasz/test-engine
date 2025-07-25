@@ -1,5 +1,6 @@
+use std::sync::mpsc::{Receiver, channel};
+
 use rapier2d::{
-    crossbeam::channel::{Receiver, unbounded},
     geometry::{CollisionEvent, ContactForceEvent},
     prelude::ChannelEventCollector,
 };
@@ -13,8 +14,8 @@ pub(crate) struct EventHandler {
 impl Default for EventHandler {
     #[allow(clippy::used_underscore_binding)]
     fn default() -> Self {
-        let (contact_send, _contact) = unbounded();
-        let (intersection_send, intersection) = unbounded();
+        let (contact_send, _contact) = channel();
+        let (intersection_send, intersection) = channel();
         let handler = ChannelEventCollector::new(intersection_send, contact_send);
         Self {
             _contact,
