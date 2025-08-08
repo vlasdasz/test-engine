@@ -3,7 +3,6 @@
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
 #![feature(linkage)]
-#![feature(panic_payload_as_str)]
 
 mod app_runner;
 mod assets;
