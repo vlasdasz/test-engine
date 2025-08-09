@@ -95,7 +95,7 @@ impl ResourceLoader for Image {
     fn load_data(data: &[u8], name: impl ToString) -> Self {
         let name = name.to_string();
 
-        Image::load_to_wgpu(&name.to_string(), data)
+        Image::load_to_wgpu(&name, data)
             .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
     }
 }

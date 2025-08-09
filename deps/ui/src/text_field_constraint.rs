@@ -24,7 +24,7 @@ impl TextFieldConstraint {
     pub fn filter(&self, string: impl ToLabel) -> String {
         let string = string.to_label();
         let symbols = self.accepted_symbols(&string);
-        string.to_string().chars().filter(|c| symbols.contains(*c)).collect()
+        string.clone().chars().filter(|c| symbols.contains(*c)).collect()
     }
 
     pub fn accept_char(&self, char: char, string: &str) -> bool {

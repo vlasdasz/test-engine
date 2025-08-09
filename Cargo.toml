@@ -2,14 +2,14 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
-  "debug-client",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
+    "debug-client",
 ]
 
 resolver = "3"
@@ -41,7 +41,7 @@ lyon = "1.0"
 nonempty = "0.12.0"
 quote = "1.0"
 rand = "0.9"
-rapier2d = { version = "0.27", features = ["simd-nightly"] }
+rapier2d = { version = "0.28", features = ["simd-nightly"] }
 resvg = "0.45"
 rodio = "0.21"
 rust_decimal = "1.35"
