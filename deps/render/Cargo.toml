@@ -1,6 +1,7 @@
 [package]
-edition = "2024"
+edition.workspace = true
 name = "render"
+version.workspace = true
 
 [dependencies]
 bit_ops = { workspace = true }

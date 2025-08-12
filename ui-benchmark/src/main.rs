@@ -13,5 +13,5 @@ use crate::benchmark_view::BenchmarkView;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    AppRunner::start(BenchmarkView::new()).await
+    AppRunner::start((800, 800), BenchmarkView::new()).await
 }

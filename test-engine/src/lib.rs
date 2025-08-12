@@ -1,10 +1,8 @@
 #![allow(incomplete_features)]
-#![feature(let_chains)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 #![feature(const_trait_impl)]
 #![feature(linkage)]
-#![feature(panic_payload_as_str)]
 
 mod app_runner;
 mod assets;
@@ -49,7 +47,7 @@ pub mod reflected {
 
 pub mod gm {
     pub use gm::{
-        Animation, Apply, LossyConvert, Platform, ToF32,
+        Animation, Apply, LossyConvert, ToF32,
         flat::{Direction, Shape},
         sign::Sign,
         volume::GyroData,

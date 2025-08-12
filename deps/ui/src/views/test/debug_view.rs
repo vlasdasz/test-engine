@@ -1,6 +1,7 @@
 use std::{collections::HashMap, fmt::Display};
 
-use gm::{Platform, color::WHITE};
+use gm::color::WHITE;
+use plat::Platform;
 use refs::{MainLock, Own, Weak, dump_ref_stats};
 
 use crate::has_data::HasText;

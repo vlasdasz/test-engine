@@ -3,10 +3,11 @@ use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
 use anyhow::Result;
 use bytemuck::cast_slice;
 use gm::{
-    LossyConvert, Platform,
+    LossyConvert,
     color::{Color, GRAY_BLUE, U8Color},
     flat::Size,
 };
+use plat::Platform;
 use tokio::{
     spawn,
     sync::oneshot::{Receiver, Sender, channel},
@@ -64,7 +65,11 @@ impl State {
                 "depth_texture",
             );
             surface.presentable.configure(&window.device, &window.config);
-        } else if window.resumed && window.create_surface_and_window(event_loop).unwrap() {
+        } else if window.resumed
+            && window
+                .create_surface_and_window((new_size.width, new_size.height).into(), event_loop)
+                .unwrap()
+        {
             window.state.app.window_ready();
         }
 
@@ -123,6 +128,7 @@ impl State {
                 label:                    Some("Render Pass"),
                 color_attachments:        &[Some(wgpu::RenderPassColorAttachment {
                     view:           &view,
+                    depth_slice:    None,
                     resolve_target: None,
                     ops:            wgpu::Operations {
                         load:  wgpu::LoadOp::Clear(wgpu::Color {

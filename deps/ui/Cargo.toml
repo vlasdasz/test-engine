@@ -1,7 +1,8 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2024"
+edition.workspace = true
 name = "ui"
+version.workspace = true
 
 [lib]
 crate-type = ["rlib", "staticlib"]
@@ -20,6 +21,7 @@ rust_decimal = { workspace = true }
 tokio = { workspace = true }
 
 dispatch = { workspace = true }
+plat = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }

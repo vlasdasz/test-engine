@@ -1,6 +1,7 @@
 [package]
-edition = "2024"
+edition.workspace = true
 name = "test-engine"
+version.workspace = true
 
 [lib]
 #crate-type = ["rlib", "staticlib", "dylib"]

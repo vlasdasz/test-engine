@@ -15,7 +15,7 @@ pub mod sign;
 pub mod volume;
 
 pub use animation::Animation;
-pub use misc::{Apply, Platform, Toggle};
+pub use misc::{Apply, Toggle};
 pub use num::{
     CheckedSub, IsZero, Min, MyAdd, One, Zero,
     checked_convert::{CheckedConvert, checked_usize_to_u32},

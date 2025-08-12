@@ -1,10 +1,8 @@
 use std::ops::{Deref, DerefMut};
 
 use educe::Educe;
-use gm::{
-    Platform,
-    flat::{Point, Size},
-};
+use gm::flat::{Point, Size};
+use plat::Platform;
 use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
@@ -82,7 +80,7 @@ impl LevelManager {
             Self::level_unchecked()
                 .physics
                 .as_mut()
-                .expect("This level has no physics enabled")
+                .expect("This level has no physics enabled. Override LevelSetup::needs_physics to enable.")
         }
     }
 

@@ -108,11 +108,11 @@ impl AppRunner {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start(root_view: Own<dyn View>) -> Result<()> {
+    pub async fn start(size: impl Into<Size>, root_view: Own<dyn View>) -> Result<()> {
         Self::setup_log();
         #[cfg(feature = "debug")]
         Self::setup_debug_server().await?;
-        Window::start(Self::new(root_view)).await
+        Window::start(size.into(), Self::new(root_view)).await
     }
 
     #[cfg(feature = "debug")]
@@ -204,7 +204,7 @@ impl AppRunner {
             let _ = actions.await;
         });
 
-        Window::start(app).await
+        Window::start((1200, 1000).into(), app).await
     }
 
     pub fn set_window_title(title: impl Into<String>) {

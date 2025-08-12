@@ -1,6 +1,7 @@
 [package]
-edition = "2024"
+edition.workspace = true
 name = "store"
+version.workspace = true
 
 [dependencies]
 aes-gcm = { workspace = true }
@@ -11,7 +12,7 @@ rand = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 
-gm = { workspace = true }
+plat = { workspace = true }
 
 [dev-dependencies]
 anyhow = { workspace = true }

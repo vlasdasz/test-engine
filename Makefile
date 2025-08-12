@@ -53,6 +53,7 @@ lint:
       -A clippy::unnecessary_box_returns \
       -A clippy::return_self_not_must_use \
       -A clippy::struct_field_names \
+      -A dead_code \
       \
       -D warnings
 

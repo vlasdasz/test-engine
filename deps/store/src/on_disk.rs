@@ -3,6 +3,7 @@ use std::{
     fs,
     fs::remove_file,
     marker::PhantomData,
+    path::PathBuf,
 };
 
 use crate::{Paths, storable::Storable};
@@ -10,7 +11,7 @@ use crate::{Paths, storable::Storable};
 fn set_value<T: serde::ser::Serialize>(value: T, key: &str) {
     let json = serde_json::to_string_pretty(&value).expect("Failed to serialize data");
     let dir = Paths::storage();
-    _ = fs::create_dir_all(&dir);
+    fs::create_dir_all(&dir).unwrap();
     fs::write(dir.join(key), json).expect("Failed to write to file");
 }
 
@@ -42,15 +43,25 @@ fn get_or_init_value<T: Storable + Default>(key: &str) -> T {
 }
 
 pub struct OnDisk<T: Storable> {
-    name: &'static str,
-    _p:   PhantomData<T>,
+    name:  &'static str,
+    _path: Option<&'static str>,
+    _p:    PhantomData<T>,
 }
 
 impl<T: Storable> OnDisk<T> {
     pub const fn new(name: &'static str) -> Self {
         Self {
             name,
+            _path: None,
             _p: PhantomData,
+        }
+    }
+
+    pub const fn path(path: &'static str) -> Self {
+        Self {
+            name:  "",
+            _path: Some(path),
+            _p:    PhantomData,
         }
     }
 
@@ -68,6 +79,13 @@ impl<T: Storable> OnDisk<T> {
         let path = dir.join(self.name);
 
         remove_file(path).expect("Failed to remove file");
+    }
+
+    fn _get_path(&self) -> PathBuf {
+        // if let Some(_path) = self._path {
+        //     todo!()
+        // }
+        todo!()
     }
 }
 

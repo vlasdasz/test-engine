@@ -22,13 +22,13 @@ impl ToLabel for &char {
 
 impl ToLabel for String {
     fn to_label(&self) -> String {
-        self.to_string()
+        self.clone()
     }
 }
 
 impl ToLabel for &String {
     fn to_label(&self) -> String {
-        (*self).to_string()
+        (*self).clone()
     }
 }
 

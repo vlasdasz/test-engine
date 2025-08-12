@@ -1,7 +1,7 @@
 use test_engine::{
     App,
     refs::Own,
-    ui::{Button, Label, Setup, View},
+    ui::{Button, Label, Setup, Size, View},
 };
 
 use crate::interface::test_game_view::{_BUTTON, TestGameView};
@@ -21,5 +21,9 @@ impl App for TestGameApp {
 
     fn make_root_view(&self) -> Own<dyn View> {
         TestGameView::new()
+    }
+
+    fn initial_size(&self) -> Size {
+        (800, 800).into()
     }
 }

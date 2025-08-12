@@ -1,8 +1,8 @@
 use gm::{
-    Platform,
     color::Color,
     flat::{Point, Size},
 };
+use plat::Platform;
 use refs::{Own, Weak};
 use ui_proc::view;
 use window::image::ToImage;

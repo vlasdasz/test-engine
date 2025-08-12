@@ -1,5 +1,7 @@
 [package]
-edition = "2024"
+edition.workspace = true
+version.workspace = true
+
 name = "ui-test"
 
 [[bin]]

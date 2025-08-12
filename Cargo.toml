@@ -15,6 +15,7 @@ members = [
 resolver = "3"
 
 [workspace.package]
+edition = "2024"
 version = "0.1.0"
 
 [workspace.metadata.cargo-machete]
@@ -38,12 +39,12 @@ indexmap = "2.2"
 jni = "0.21.1"
 log = "0.4"
 lyon = "1.0"
-nonempty = "0.11"
+nonempty = "0.12.0"
 quote = "1.0"
 rand = "0.9"
-rapier2d = { version = "0.26", features = ["simd-nightly"] }
+rapier2d = { version = "0.28", features = ["simd-nightly"] }
 resvg = "0.45"
-rodio = "0.20.1"
+rodio = "0.21"
 rust_decimal = "1.35"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -52,13 +53,13 @@ tiny-skia = "0.11"
 tokio = { version = "1.44", features = ["full", "tracing"] }
 web-time = "1.0.0"
 
-wgpu = "25.0"
-wgpu_text = "0.9.1"
+wgpu = "26.0"
+wgpu_text = "26.0"
 winit = "0.30"
 
 manage = "0.10.0"
-plat = "0.1.0"
-reflected = "0.22.0"
+plat = "0.2.0"
+reflected = "0.25"
 refs = { version = "0.15.0", default-features = true }
 vents = "0.8.0"
 
@@ -86,5 +87,4 @@ window = { path = "deps/window" }
 #wgpu = { path = "../3/wgpu/wgpu" }
 #vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
-#tain = { path = "../deps/tain/tain" }
-#wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "55c4d955baae1c44c3336ff9ad5e671f561cf65e" }
+#wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "10cd78a848cf8e911a6780c011dbd5be33f37a1c" }

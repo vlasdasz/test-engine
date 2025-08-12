@@ -1,7 +1,8 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2024"
+edition.workspace = true
 name = "game"
+version.workspace = true
 
 [lib]
 crate-type = ["rlib", "staticlib"]

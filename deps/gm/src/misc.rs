@@ -46,28 +46,6 @@ impl Toggle for bool {
     }
 }
 
-pub struct Platform;
-
-impl Platform {
-    pub const MAC: bool = cfg!(target_os = "macos");
-    pub const WIN: bool = cfg!(target_os = "windows");
-    pub const IOS: bool = cfg!(target_os = "ios");
-    pub const ANDROID: bool = cfg!(target_os = "android");
-    pub const MOBILE: bool = Self::IOS || Self::ANDROID;
-    pub const DESKTOP: bool = !Self::MOBILE;
-}
-
-impl Platform {
-    pub fn dump() {
-        dbg!(Self::MAC);
-        dbg!(Self::WIN);
-        dbg!(Self::IOS);
-        dbg!(Self::ANDROID);
-        dbg!(Self::MOBILE);
-        dbg!(Self::DESKTOP);
-    }
-}
-
 #[cfg(test)]
 mod test {
     use fake::{Fake, Faker};

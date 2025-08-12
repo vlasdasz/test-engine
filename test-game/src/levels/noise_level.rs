@@ -27,4 +27,8 @@ impl LevelSetup for NoiseLevel {
     fn setup(&mut self) {
         self.make_sprite::<Wall>(Shape::rect(200, 2), (0, -80));
     }
+
+    fn needs_physics(&self) -> bool {
+        true
+    }
 }

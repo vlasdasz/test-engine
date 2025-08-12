@@ -1,7 +1,8 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2024"
+edition.workspace = true
 name = "window"
+version.workspace = true
 
 [lib]
 crate-type = ["rlib", "staticlib"]
@@ -24,6 +25,7 @@ manage = { workspace = true }
 refs = { workspace = true }
 
 gm = { workspace = true }
+plat = { workspace = true }
 
 wgpu_text = { workspace = true }
 

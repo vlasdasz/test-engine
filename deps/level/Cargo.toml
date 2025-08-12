@@ -1,7 +1,8 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2024"
+edition.workspace = true
 name = "level"
+version.workspace = true
 
 [lib]
 crate-type = ["rlib", "staticlib"]
@@ -13,6 +14,7 @@ rapier2d = { workspace = true }
 
 gm = { workspace = true }
 level-proc = { workspace = true }
+plat = { workspace = true }
 refs = { workspace = true }
 utils = { workspace = true }
 vents = { workspace = true }

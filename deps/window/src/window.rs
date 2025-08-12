@@ -6,11 +6,12 @@ use std::sync::{
 use anyhow::Result;
 use dispatch::on_main;
 use gm::{
-    LossyConvert, Platform,
+    LossyConvert,
     color::Color,
     flat::{Point, Size},
 };
 use log::{debug, error, info, warn};
+use plat::Platform;
 use refs::{MainLock, Rglica};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
@@ -63,6 +64,8 @@ pub struct Window {
     pub(crate) title_set: bool,
 
     close: AtomicBool,
+
+    initial_size: Size,
 }
 
 impl Window {
@@ -128,16 +131,20 @@ impl Window {
         });
     }
 
-    pub(crate) fn create_surface_and_window(&mut self, event_loop: &ActiveEventLoop) -> Result<bool> {
+    pub(crate) fn create_surface_and_window(
+        &mut self,
+        size: Size,
+        event_loop: &ActiveEventLoop,
+    ) -> Result<bool> {
         let window =
             Arc::new(event_loop.create_window(WindowAttributes::default().with_title("Test Engine"))?);
 
-        let scale = window.scale_factor();
+        let scale: f32 = window.scale_factor().lossy_convert();
 
-        _ = window.request_inner_size(PhysicalSize::new(1200.0 * scale, 1000.0 * scale));
+        _ = window.request_inner_size(PhysicalSize::new(size.width * scale, size.height * scale));
 
-        self.config.width = (1200.0 * scale).lossy_convert();
-        self.config.height = (1000.0 * scale).lossy_convert();
+        self.config.width = (size.width * scale).lossy_convert();
+        self.config.height = (size.height * scale).lossy_convert();
 
         let Some(surface) = Surface::new(&self.instance, &self.adapter, &self.device, &self.config, window)?
         else {
@@ -149,7 +156,11 @@ impl Window {
         Ok(true)
     }
 
-    async fn start_internal(app: Box<dyn WindowEvents>, event_loop: EventLoop<Events>) -> Result<()> {
+    async fn start_internal(
+        size: Size,
+        app: Box<dyn WindowEvents>,
+        event_loop: EventLoop<Events>,
+    ) -> Result<()> {
         let instance = Instance::new(&InstanceDescriptor {
             backends: Backends::all(),
             ..Default::default()
@@ -233,6 +244,7 @@ impl Window {
             surface: None,
             title_set: false,
             close: AtomicBool::default(),
+            initial_size: size,
         }
         .into();
 
@@ -243,13 +255,13 @@ impl Window {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start(app: impl WindowEvents + 'static) -> Result<()> {
-        Self::start_internal(Box::new(app), EventLoop::new()?).await
+    pub async fn start(size: Size, app: impl WindowEvents + 'static) -> Result<()> {
+        Self::start_internal(size, Box::new(app), EventLoop::new()?).await
     }
 
     #[cfg(target_os = "android")]
     pub async fn start(app: impl WindowEvents + 'static, event_loop: EventLoop<Events>) -> Result<()> {
-        Self::start_internal(Box::new(app), event_loop).await
+        Self::start_internal((1200, 1000).into(), Box::new(app), event_loop).await
     }
 
     fn start_event_loop(&mut self, event_loop: EventLoop<Events>) -> Result<()> {
@@ -299,7 +311,7 @@ impl Window {
 
 impl ApplicationHandler<Events> for Window {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        if self.create_surface_and_window(event_loop).unwrap() {
+        if self.create_surface_and_window(self.initial_size, event_loop).unwrap() {
             self.state.app.window_ready();
         }
         self.resumed = true;
