@@ -1,7 +1,8 @@
 [package]
 authors = ["Vladas Zakrevskis <146100@gmail.com>"]
-edition = "2024"
+edition.workspace = true
 name = "debug-client"
+version.workspace = true
 
 [[bin]]
 name = "debug-client"

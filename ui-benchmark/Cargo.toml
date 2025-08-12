@@ -1,6 +1,7 @@
 [package]
-edition = "2024"
+edition.workspace = true
 name = "ui-benchmark"
+version.workspace = true
 
 [[bin]]
 name = "ui-benchmark"

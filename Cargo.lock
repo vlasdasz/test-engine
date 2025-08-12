@@ -199,9 +199,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.98"
+version = "1.0.99"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e16d2d3311acee920a9eb8d33b8cbc1787ce4a264e85f964c2404b969bdcd487"
+checksum = "b0674a1ddeecb70197781e945de4b3b8ffb61fa939a5597bcf48503737663100"
 
 [[package]]
 name = "approx"
@@ -270,7 +270,7 @@ checksum = "628d228f918ac3b82fe590352cc719d30664a0c13ca3a60266fe02c7132d480a"
 
 [[package]]
 name = "audio"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "log",
  "manage",
@@ -840,7 +840,7 @@ checksum = "5c297a1c74b71ae29df00c3e22dd9534821d60eb9af5a0192823fa2acea70c2a"
 
 [[package]]
 name = "debug"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "log",
@@ -851,7 +851,7 @@ dependencies = [
 
 [[package]]
 name = "debug-client"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "debug",
@@ -909,7 +909,7 @@ dependencies = [
 
 [[package]]
 name = "dispatch"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "gm",
@@ -1217,7 +1217,7 @@ checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
 name = "game"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "gm",
  "refs",
@@ -1226,7 +1226,7 @@ dependencies = [
 
 [[package]]
 name = "generate"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "contour",
  "fake",
@@ -1493,7 +1493,7 @@ dependencies = [
 
 [[package]]
 name = "gm"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "bytemuck",
  "chrono",
@@ -1818,7 +1818,7 @@ checksum = "03087c2bad5e1034e8cace5926dec053fb3790248370865f5117a7d0213354c8"
 
 [[package]]
 name = "level"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "educe",
  "gm",
@@ -1833,7 +1833,7 @@ dependencies = [
 
 [[package]]
 name = "level-proc"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "quote",
  "syn 2.0.104",
@@ -1841,9 +1841,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.174"
+version = "0.2.175"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1171693293099992e19cddea4e8b849964e9846f4acee11b3948bcc337be8776"
+checksum = "6a82ae493e598baaea5209805c49bbf2ea7de956d50d7da0da1164f9c6d28543"
 
 [[package]]
 name = "libfuzzer-sys"
@@ -2109,7 +2109,7 @@ dependencies = [
  "once_cell",
  "rustc-hash 1.1.0",
  "spirv",
- "thiserror 2.0.12",
+ "thiserror 2.0.14",
  "unicode-ident",
 ]
 
@@ -2684,7 +2684,7 @@ dependencies = [
  "slab",
  "smallvec",
  "spade",
- "thiserror 2.0.12",
+ "thiserror 2.0.14",
 ]
 
 [[package]]
@@ -2826,9 +2826,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.95"
+version = "1.0.97"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02b3e5e68a3a1a02aad3ec490a98007cbc13c37cbe84a3cd7b8e406d76e7f778"
+checksum = "d61789d7719defeb74ea5fe81f2fdfdbd28a803847077cecce2ff14e1472f6f1"
 dependencies = [
  "unicode-ident",
 ]
@@ -3052,7 +3052,7 @@ dependencies = [
  "profiling",
  "rustc-hash 2.1.1",
  "simba",
- "thiserror 2.0.12",
+ "thiserror 2.0.14",
  "vec_map",
 ]
 
@@ -3164,7 +3164,7 @@ checksum = "a4e608c6638b9c18977b00b475ac1f28d14e84b27d8d42f70e0bf1e3dec127ac"
 dependencies = [
  "getrandom 0.2.16",
  "libredox",
- "thiserror 2.0.12",
+ "thiserror 2.0.14",
 ]
 
 [[package]]
@@ -3239,7 +3239,7 @@ dependencies = [
 
 [[package]]
 name = "render"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "bit_ops",
  "bytemuck",
@@ -3253,7 +3253,7 @@ dependencies = [
 
 [[package]]
 name = "render-test"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "log",
@@ -3687,7 +3687,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "store"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "aes-gcm",
  "anyhow",
@@ -3931,13 +3931,13 @@ dependencies = [
 
 [[package]]
 name = "test-engine"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "android_logger",
  "anyhow",
  "audio",
  "debug",
- "dispatch 0.0.0",
+ "dispatch 0.1.0",
  "educe",
  "fern",
  "game",
@@ -3966,7 +3966,7 @@ dependencies = [
 
 [[package]]
 name = "test-game"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "fake",
  "plat",
@@ -3976,7 +3976,7 @@ dependencies = [
 
 [[package]]
 name = "test-game-android"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "jni",
  "test-game",
@@ -3993,11 +3993,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.12"
+version = "2.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "567b8a2dae586314f7be2a752ec7474332959c6460e02bde30d702a66d488708"
+checksum = "0b0949c3a6c842cbde3f1686d6eea5a010516deb7085f79db747562d4102f41e"
 dependencies = [
- "thiserror-impl 2.0.12",
+ "thiserror-impl 2.0.14",
 ]
 
 [[package]]
@@ -4013,9 +4013,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.12"
+version = "2.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f7cf42b4507d8ea322120659672cf1b9dbb93f8f2d4ecfd6e51350ff5b17a1d"
+checksum = "cc5b44b4ab9c2fdd0e0512e6bece8388e214c0749f5862b114cc5b7a25daf227"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4185,12 +4185,12 @@ checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
 
 [[package]]
 name = "ui"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "atomic_float",
  "chrono",
- "dispatch 0.0.0",
+ "dispatch 0.1.0",
  "educe",
  "fake",
  "gm",
@@ -4210,7 +4210,7 @@ dependencies = [
 
 [[package]]
 name = "ui-benchmark"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "fake",
@@ -4220,7 +4220,7 @@ dependencies = [
 
 [[package]]
 name = "ui-proc"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "quote",
  "syn 2.0.104",
@@ -4228,7 +4228,7 @@ dependencies = [
 
 [[package]]
 name = "ui-proc-test"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "educe",
  "refs",
@@ -4238,7 +4238,7 @@ dependencies = [
 
 [[package]]
 name = "ui-test"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "log",
@@ -4339,16 +4339,16 @@ dependencies = [
 
 [[package]]
 name = "utils"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "web-time",
 ]
 
 [[package]]
 name = "uuid"
-version = "1.17.0"
+version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cf4199d1e5d15ddd86a694e4d0dffa9c323ce759fea589f00fef9d81cc1931d"
+checksum = "f33196643e165781c20a5ead5582283a7dacbb87855d867fbc2df3f81eddc1be"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
@@ -4683,7 +4683,7 @@ dependencies = [
  "raw-window-handle",
  "rustc-hash 1.1.0",
  "smallvec",
- "thiserror 2.0.12",
+ "thiserror 2.0.14",
  "wgpu-core-deps-apple",
  "wgpu-core-deps-emscripten",
  "wgpu-core-deps-windows-linux-android",
@@ -4758,7 +4758,7 @@ dependencies = [
  "raw-window-handle",
  "renderdoc-sys",
  "smallvec",
- "thiserror 2.0.12",
+ "thiserror 2.0.14",
  "wasm-bindgen",
  "web-sys",
  "wgpu-types",
@@ -4776,7 +4776,7 @@ dependencies = [
  "bytemuck",
  "js-sys",
  "log",
- "thiserror 2.0.12",
+ "thiserror 2.0.14",
  "web-sys",
 ]
 
@@ -4812,12 +4812,12 @@ dependencies = [
 
 [[package]]
 name = "window"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "android_logger",
  "anyhow",
  "bytemuck",
- "dispatch 0.0.0",
+ "dispatch 0.1.0",
  "gm",
  "image",
  "log",

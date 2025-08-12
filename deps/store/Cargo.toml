@@ -1,6 +1,7 @@
 [package]
-edition = "2024"
+edition.workspace = true
 name = "store"
+version.workspace = true
 
 [dependencies]
 aes-gcm = { workspace = true }
