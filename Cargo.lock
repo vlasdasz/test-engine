@@ -4783,7 +4783,8 @@ dependencies = [
 [[package]]
 name = "wgpu_text"
 version = "26.0.0"
-source = "git+https://github.com/VladasZ/wgpu-text?rev=10cd78a848cf8e911a6780c011dbd5be33f37a1c#10cd78a848cf8e911a6780c011dbd5be33f37a1c"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2e96ee75a54f737e5f232706230c1446b7e37ae7b7becbfb5e9f996e8739e19"
 dependencies = [
  "bytemuck",
  "glyph_brush",
