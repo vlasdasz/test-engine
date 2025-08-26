@@ -464,7 +464,9 @@ impl Placer {
                     frame.origin.x = a_frame.x() - rule.offset - frame.width();
                 }
             }
-            _ => unimplemented!(),
+            Anchor::X => frame.origin.x = a_frame.x(),
+            Anchor::Y => frame.origin.y = a_frame.y(),
+            _ => unimplemented!("anchor layout for: {:?}", rule.side),
         }
         view.set_frame(frame);
     }

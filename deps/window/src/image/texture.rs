@@ -125,13 +125,13 @@ impl Texture {
         };
 
         let opt = Options {
-            shape_rendering: ShapeRendering::CrispEdges,
-            text_rendering: TextRendering::OptimizeLegibility,
-            image_rendering: ImageRendering::Smooth,
+            shape_rendering: ShapeRendering::OptimizeSpeed,
+            text_rendering: TextRendering::OptimizeSpeed,
+            image_rendering: ImageRendering::OptimizeSpeed,
             ..Default::default()
         };
 
-        dbg!(&opt);
+        // dbg!(&opt);
 
         let tree = Tree::from_data(bytes, &opt)?;
 

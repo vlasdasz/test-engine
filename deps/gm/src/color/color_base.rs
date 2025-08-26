@@ -93,4 +93,4 @@ impl<T: Zero> Default for Color<T> {
     }
 }
 
-impl<T: PartialEq> Eq for Color<T> {}
+impl<T: Eq> Eq for Color<T> {}

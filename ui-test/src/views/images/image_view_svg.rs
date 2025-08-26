@@ -1,22 +1,26 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{ImageView, Setup, UI, ViewData, ViewTouch, view},
-    ui_test::helpers::check_colors,
+    ui::{Anchor::Top, ImageView, Setup, UI, ViewData, ViewTouch, view},
+    ui_test::{helpers::check_colors, record_ui_test},
 };
 
 #[view]
 struct ImageViewSVG {
     #[init]
-    image_view: ImageView,
+    bin:      ImageView,
+    settings: ImageView,
 }
 
 impl Setup for ImageViewSVG {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
 
-        self.image_view.place().tl(5).size(400, 400);
-        self.image_view.set_image("bin.svg");
+        self.bin.place().tl(5).size(400, 400);
+        self.bin.set_image("bin.svg");
+
+        self.settings.place().same_x(self.bin).anchor(Top, self.bin, 20).size(150, 150);
+        self.settings.set_image("settings.svg");
     }
 }
 
@@ -56,6 +60,8 @@ pub async fn test_image_view_svg() -> Result<()> {
         "#,
     )
     .await?;
+
+    record_ui_test().await;
 
     Ok(())
 }
