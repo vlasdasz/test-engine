@@ -22,10 +22,10 @@ pub struct Image {
 impl Image {
     fn load_to_wgpu(name: &str, data: &[u8]) -> Result<Self> {
         let texture = Texture::from_file_bytes(data, name)?;
-        Self::from_texture(&texture)
+        Ok(Self::from_texture(&texture))
     }
 
-    pub fn from_texture(texture: &Texture) -> Result<Self> {
+    fn from_texture(texture: &Texture) -> Self {
         let device = Window::device();
 
         let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
@@ -43,23 +43,18 @@ impl Image {
             ],
         });
 
-        Ok(Self {
+        Self {
             size: texture.size,
             channels: texture.channels,
             bind,
-        })
+        }
     }
 
-    pub fn from_raw_data(
-        data: &[u8],
-        name: impl Into<String>,
-        size: Size<u32>,
-        channels: u8,
-    ) -> Result<Weak<Image>> {
+    pub fn from_raw_data(data: &[u8], name: impl Into<String>, size: Size<u32>, channels: u8) -> Weak<Image> {
         let name = name.into();
         let texture = Texture::from_raw_data(data, size, channels, &name);
-        let image = Self::from_texture(&texture)?;
-        Ok(Image::add_with_name(&name, || image))
+        let image = Self::from_texture(&texture);
+        Image::add_with_name(&name, || image)
     }
 
     pub fn from_file_data(data: &[u8], name: &str) -> Weak<Image> {
@@ -75,21 +70,24 @@ impl Image {
 
 managed!(Image);
 
-static DEFAULT_IMAGE_DATA: &[u8] = include_bytes!("delete.png");
+pub(crate) static DEFAULT_IMAGE_DATA: &[u8] = include_bytes!("delete.png");
 
 impl ResourceLoader for Image {
     fn load_path(path: &Path) -> Self {
-        let data = match read(path) {
-            Ok(data) => data,
-            Err(err) => {
+        let data = read(path);
+
+        let data = data
+            .as_ref()
+            .map(Vec::as_slice)
+            .inspect_err(|err| {
                 error!(
                     "Failed to read image file: {}. Error: {err} Returning default image",
                     path.display()
                 );
-                DEFAULT_IMAGE_DATA.into()
-            }
-        };
-        Self::load_data(&data, path.display())
+            })
+            .unwrap_or(DEFAULT_IMAGE_DATA);
+
+        Self::load_data(data, path.display())
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {

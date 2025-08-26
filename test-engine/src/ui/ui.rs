@@ -107,7 +107,7 @@ impl UI {
 
         let frame = *view.absolute_frame();
 
-        if frame.size.is_invalid() {
+        if frame.size.has_no_area() {
             // warn!(
             //     "View has invalid frame: {}. Frame: {:?} ",
             //     view.label(),

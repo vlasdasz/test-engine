@@ -210,8 +210,7 @@ fn generate_image(
             image_name,
             (resolution.width, resolution.height).into(),
             1,
-        )
-        .unwrap(),
+        ),
         islands,
     )
 }
