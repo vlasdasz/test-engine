@@ -2,14 +2,14 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
-  "debug-client",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
+    "debug-client",
 ]
 
 resolver = "3"
@@ -59,7 +59,7 @@ winit = "0.30"
 
 plat = "0.2.0"
 reflected = "0.25"
-refs = { version = "0.16.0", default-features = true }
+refs = { version = "0.17.0", default-features = true }
 vents = "0.8.0"
 
 audio = { path = "deps/audio" }
