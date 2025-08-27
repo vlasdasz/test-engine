@@ -1,8 +1,7 @@
 use std::path::PathBuf;
 
 use audio::Sound;
-use manage::data_manager::DataManager;
-use refs::assert_main_thread;
+use refs::{assert_main_thread, manage::DataManager};
 use window::image::Image;
 
 use crate::assets_paths::AssetsPaths;

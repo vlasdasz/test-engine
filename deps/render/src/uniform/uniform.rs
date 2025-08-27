@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use bytemuck::Pod;
-use refs::MainLock;
+use refs::main_lock::MainLock;
 use wgpu::{
     BindGroup, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType,
     BufferBindingType, ShaderStages,

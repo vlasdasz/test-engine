@@ -2,7 +2,7 @@ use std::{collections::HashMap, fmt::Display};
 
 use gm::color::WHITE;
 use plat::Platform;
-use refs::{MainLock, Own, Weak, dump_ref_stats};
+use refs::{Own, Weak, dump_ref_stats, main_lock::MainLock};
 
 use crate::has_data::HasText;
 

@@ -13,7 +13,7 @@ use gm::{
 };
 use level::{LevelBase, LevelManager};
 use log::debug;
-use refs::{MainLock, Own, Rglica};
+use refs::{Own, Rglica, main_lock::MainLock};
 use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;

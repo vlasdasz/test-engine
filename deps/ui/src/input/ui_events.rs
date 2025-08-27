@@ -1,5 +1,5 @@
 use gm::volume::GyroData;
-use refs::MainLock;
+use refs::main_lock::MainLock;
 use vents::Event;
 use window::NamedKey;
 

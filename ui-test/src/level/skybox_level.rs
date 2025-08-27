@@ -1,6 +1,6 @@
 use test_engine::{
-    DataManager,
     level::{LevelSetup, level},
+    refs::DataManager,
     ui::Image,
 };
 

@@ -7,7 +7,7 @@ use std::{
 use dispatch::{from_main, wait_for_next_frame};
 use gm::{color::TURQUOISE, flat::Rect};
 use log::{debug, trace};
-use refs::{MainLock, Own, Weak};
+use refs::{Own, Weak, main_lock::MainLock};
 use render::{
     UIGradientPipeline, UIImageRectPipepeline, UIPathPipeline, UIRectPipepeline,
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},

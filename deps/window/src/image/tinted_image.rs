@@ -1,7 +1,6 @@
 use gm::color::Color;
 use log::error;
-use manage::data_manager::DataManager;
-use refs::Weak;
+use refs::{Weak, manage::DataManager};
 
 use crate::image::{DEFAULT_IMAGE_DATA, Image, ToImage};
 

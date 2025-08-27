@@ -1,4 +1,4 @@
-use refs::MainLock;
+use refs::main_lock::MainLock;
 use render::data::{PathData, RectView, UIRectInstance};
 use test_engine::ui::{BLUE, RED};
 use window::{RenderPass, Window};

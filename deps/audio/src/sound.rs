@@ -8,7 +8,7 @@ use std::{
 };
 
 use log::error;
-use manage::resource_loader::ResourceLoader;
+use refs::manage::ResourceLoader;
 use rodio::{Decoder, OutputStream, OutputStreamBuilder, Sink};
 
 pub struct Sound {

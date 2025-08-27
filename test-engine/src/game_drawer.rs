@@ -1,7 +1,6 @@
 use game::Game;
 use gm::flat::Point;
-use manage::data_manager::DataManager;
-use refs::MainLock;
+use refs::{main_lock::MainLock, manage::DataManager};
 use render::{BackgroundPipeline, SpriteView, TexturedSpriteBoxPipeline, data::TexturedSpriteInstance};
 use ui::UIManager;
 use window::RenderPass;

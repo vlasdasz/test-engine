@@ -10,9 +10,10 @@ name = "audio"
 
 [dependencies]
 log = { workspace = true }
-manage = { workspace = true }
 
 rodio = { workspace = true }
+
+refs = { workspace = true }
 
 [build-dependencies]
 plat = { workspace = true }

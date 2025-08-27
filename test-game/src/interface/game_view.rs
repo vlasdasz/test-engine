@@ -1,9 +1,9 @@
 use std::ops::DerefMut;
 
 use test_engine::{
-    DataManager, RenderPass,
+    RenderPass,
     game::{Game, GameDrawer, Object},
-    refs::{Own, Weak},
+    refs::{DataManager, Own, Weak},
     ui::{Image, Point, Setup, ViewCallbacks, ViewData, view},
 };
 

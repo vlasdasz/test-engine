@@ -7,7 +7,7 @@ use rapier2d::{
     dynamics::{RigidBody, RigidBodyHandle},
     prelude::{Collider, ColliderHandle},
 };
-use refs::{MainLock, Own, Weak};
+use refs::{Own, Weak, main_lock::MainLock};
 use window::Window;
 
 use crate::{Level, level::LevelPhysics};

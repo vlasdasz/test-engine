@@ -21,7 +21,6 @@ usvg = "0.45"
 web-time = { workspace = true }
 wgpu = { workspace = true }
 
-manage = { workspace = true }
 refs = { workspace = true }
 
 gm = { workspace = true }
