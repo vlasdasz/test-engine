@@ -10,7 +10,7 @@ name = "test_engine"
 
 [features]
 audio = ["dep:audio"]
-debug = ["dep:debug"]
+debug = ["dep:debug", "ui/debug"]
 default = ["audio"]
 
 [dependencies]

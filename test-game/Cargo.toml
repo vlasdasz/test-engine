@@ -11,10 +11,13 @@ name = "test-game"
 crate-type = ["rlib", "staticlib"]
 name = "test_game"
 
+[features]
+debug = ["test-engine/debug"]
+
 [dependencies]
 fake = { workspace = true }
 
-test-engine = { workspace = true, features = ["default", "debug"] }
+test-engine = { workspace = true }
 ui-benchmark = { workspace = true }
 
 [build-dependencies]

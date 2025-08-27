@@ -4191,6 +4191,7 @@ dependencies = [
  "refs",
  "render",
  "rust_decimal",
+ "serde",
  "tokio",
  "ui-proc",
  "utils",
