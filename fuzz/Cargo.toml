@@ -1,0 +1,24 @@
+[package]
+name = "test-engine-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+colors-transform = "0.2"
+palette = "0.7"
+
+
+gm = { workspace = true }
+test-engine = { workspace = true }
+
+[[bin]]
+name = "u8_color_to_hex"
+path = "fuzz_targets/u8_color_to_hex.rs"
+test = false
+doc = false
+bench = false

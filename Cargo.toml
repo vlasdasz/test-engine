@@ -10,6 +10,7 @@ members = [
     "ui-benchmark",
     "deps/ui/ui-proc-test",
     "debug-client",
+    "fuzz"
 ]
 
 resolver = "3"
@@ -52,6 +53,7 @@ syn = { version = "2.0", features = ["full", "extra-traits"] }
 tiny-skia = "0.11"
 tokio = { version = "1.44", features = ["full", "tracing"] }
 web-time = "1.0.0"
+arbitrary = { version = "1.4", features = ["derive"] }
 
 wgpu = "26.0"
 wgpu_text = "26.0"
