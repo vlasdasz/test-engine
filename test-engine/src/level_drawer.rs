@@ -1,6 +1,8 @@
 use level::LevelManager;
-use manage::{ExistsManaged, data_manager::DataManager};
-use refs::MainLock;
+use refs::{
+    main_lock::MainLock,
+    manage::{DataManager, ExistsManaged},
+};
 use render::{
     BackgroundPipeline, PolygonPipeline, SpriteBoxPipepeline, SpriteView, TexturedSpriteBoxPipeline,
     data::{SpriteInstance, TexturedSpriteInstance},

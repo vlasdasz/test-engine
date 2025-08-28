@@ -2,14 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
-  "debug-client",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
+    "debug-client",
+    "fuzz"
 ]
 
 resolver = "3"
@@ -52,15 +53,15 @@ syn = { version = "2.0", features = ["full", "extra-traits"] }
 tiny-skia = "0.11"
 tokio = { version = "1.44", features = ["full", "tracing"] }
 web-time = "1.0.0"
+arbitrary = { version = "1.4", features = ["derive"] }
 
 wgpu = "26.0"
 wgpu_text = "26.0"
 winit = "0.30"
 
-manage = "0.10.0"
 plat = "0.2.0"
 reflected = "0.25"
-refs = { version = "0.15.0", default-features = true }
+refs = { version = "0.17.0", default-features = true }
 vents = "0.8.0"
 
 audio = { path = "deps/audio" }

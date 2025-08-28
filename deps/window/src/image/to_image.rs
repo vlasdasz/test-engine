@@ -1,5 +1,4 @@
-use manage::data_manager::DataManager;
-use refs::Weak;
+use refs::{Weak, manage::DataManager};
 
 use crate::image::Image;
 

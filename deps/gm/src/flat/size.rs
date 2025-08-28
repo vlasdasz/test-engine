@@ -63,14 +63,6 @@ impl Size<f32> {
         (self.width * self.width + self.height * self.height).sqrt()
     }
 
-    pub fn is_valid(&self) -> bool {
-        self.width > 0.0 && self.height > 0.0
-    }
-
-    pub fn is_invalid(&self) -> bool {
-        !self.is_valid()
-    }
-
     pub fn is_negative(&self) -> bool {
         self.width < 0.0 || self.height < 0.0
     }

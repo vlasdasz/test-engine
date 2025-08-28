@@ -7,6 +7,7 @@ use crate::{
     num::lossy_convert::LossyConvert,
 };
 
+/// sRGB color representation
 impl Color<f32> {
     pub const fn rgb(r: f32, g: f32, b: f32) -> Self {
         Self::rgba(r, g, b, 1.0)
@@ -61,6 +62,10 @@ impl Color {
     pub fn random() -> Self {
         Self::ALL[(0..Self::ALL.len()).fake::<usize>()]
     }
+
+    pub fn hex(&self) -> String {
+        U8Color::from(*self).hex()
+    }
 }
 
 impl Hash for Color<f32> {
@@ -72,15 +77,20 @@ impl Hash for Color<f32> {
     }
 }
 
-#[test]
-fn color_diff() {
-    assert_eq!(WHITE.diff(CLEAR), 4.0);
-    assert_eq!(WHITE.diff(WHITE), 0.0);
-    assert_eq!(WHITE.diff(WHITE.with_alpha(0.9)), 0.100000024);
-}
+#[cfg(test)]
+mod tests {
+    use crate::color::{CLEAR, Color, U8Color, WHITE};
 
-#[test]
-fn color_to_u8() {
-    let color: U8Color = Color::rgba(0.5, 1.0, 0.1, 0.0).into();
-    assert_eq!(color, U8Color::rgba(54, 255, 2, 0));
+    #[test]
+    fn color_diff() {
+        assert_eq!(WHITE.diff(CLEAR), 4.0);
+        assert_eq!(WHITE.diff(WHITE), 0.0);
+        assert_eq!(WHITE.diff(WHITE.with_alpha(0.9)), 0.100000024);
+    }
+
+    #[test]
+    fn color_to_u8() {
+        let color: U8Color = Color::rgba(0.5, 1.0, 0.1, 0.0).into();
+        assert_eq!(color, U8Color::rgba(54, 255, 2, 0));
+    }
 }

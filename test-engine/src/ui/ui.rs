@@ -7,7 +7,7 @@ use std::{
 use dispatch::{from_main, wait_for_next_frame};
 use gm::{color::TURQUOISE, flat::Rect};
 use log::{debug, trace};
-use refs::{MainLock, Own, Weak};
+use refs::{Own, Weak, main_lock::MainLock};
 use render::{
     UIGradientPipeline, UIImageRectPipepeline, UIPathPipeline, UIRectPipepeline,
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
@@ -107,7 +107,7 @@ impl UI {
 
         let frame = *view.absolute_frame();
 
-        if frame.size.is_invalid() {
+        if frame.size.has_no_area() {
             // warn!(
             //     "View has invalid frame: {}. Frame: {:?} ",
             //     view.label(),

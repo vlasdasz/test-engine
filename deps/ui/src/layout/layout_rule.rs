@@ -9,18 +9,18 @@ use crate::{
 
 #[derive(Educe)]
 #[educe(Debug)]
-pub(crate) struct LayoutRule {
-    pub(crate) side:   Anchor,
-    pub(crate) tiling: Option<Tiling>,
-    pub(crate) offset: f32,
+pub struct LayoutRule {
+    pub side:   Anchor,
+    pub tiling: Option<Tiling>,
+    pub offset: f32,
 
     #[educe(Debug(ignore))]
-    pub(crate) anchor_view:  WeakView,
+    pub anchor_view:  WeakView,
     #[educe(Debug(ignore))]
-    pub(crate) anchor_view2: WeakView,
+    pub anchor_view2: WeakView,
 
-    pub(crate) relative: bool,
-    pub(crate) between:  bool,
+    pub relative: bool,
+    pub between:  bool,
 }
 
 impl LayoutRule {

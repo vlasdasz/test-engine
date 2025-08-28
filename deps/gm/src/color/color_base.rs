@@ -3,13 +3,14 @@ use std::{
     ops::{Add, Sub},
 };
 
+use arbitrary::Arbitrary;
 use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 
 use crate::num::{Abs, Zero};
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize, Arbitrary)]
 pub struct Color<T = f32> {
     pub r: T,
     pub g: T,
@@ -93,4 +94,4 @@ impl<T: Zero> Default for Color<T> {
     }
 }
 
-impl<T: PartialEq> Eq for Color<T> {}
+impl<T: Eq> Eq for Color<T> {}

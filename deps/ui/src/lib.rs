@@ -12,7 +12,6 @@ mod has_data;
 mod images;
 mod input;
 mod layout;
-pub mod mobile;
 mod modal_view;
 mod navigation_view;
 mod style;
@@ -20,12 +19,15 @@ mod text_field_constraint;
 mod to_label;
 mod touch_layer;
 mod touch_stack;
-pub mod ui_dispatch;
 mod ui_event;
 mod ui_manager;
 mod view;
 mod views;
 mod with_header;
+
+pub mod debug;
+pub mod mobile;
+pub mod ui_dispatch;
 
 pub use has_data::*;
 pub use images::*;

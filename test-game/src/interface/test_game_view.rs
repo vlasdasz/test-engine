@@ -1,10 +1,10 @@
 use test_engine::{
-    AppRunner, DataManager,
+    AppRunner,
     audio::Sound,
     dispatch::async_after,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
-    refs::Weak,
+    refs::{DataManager, Weak},
     store::OnDisk,
     ui::{
         Alert, Anchor,

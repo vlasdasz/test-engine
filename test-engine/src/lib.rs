@@ -36,7 +36,7 @@ pub mod level {
 
 pub mod refs {
     pub use refs::{
-        AsAny, MainLock, Own, Weak, current_thread_id, dump_ref_stats, enable_ref_stats_counter,
+        AsAny, Own, Weak, current_thread_id, dump_ref_stats, enable_ref_stats_counter, manage::DataManager,
         set_current_thread_as_main, vec::OwnVec, weak_from_ref,
     };
 }
@@ -66,7 +66,6 @@ pub mod time {
 pub use app_runner::AppRunner;
 pub use audio;
 pub use generate;
-pub use manage::data_manager::DataManager;
 pub use ui::views::task_spinner::TaskSpinner;
 pub use vents::{DelayedEvent, Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};

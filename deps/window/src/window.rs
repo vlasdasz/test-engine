@@ -12,7 +12,7 @@ use gm::{
 };
 use log::{debug, error, info, warn};
 use plat::Platform;
-use refs::{MainLock, Rglica};
+use refs::{Rglica, main_lock::MainLock};
 use tokio::sync::oneshot::Receiver;
 use wgpu::{
     Adapter, Backends, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, InstanceDescriptor,

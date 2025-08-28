@@ -16,6 +16,10 @@ impl U8Color {
             + (i16::from(self.b) - i16::from(other.b)).abs()
             + (i16::from(self.a) - i16::from(other.a)).abs()
     }
+
+    pub fn hex(&self) -> String {
+        format!("#{:02x}{:02x}{:02x}", self.r, self.g, self.b)
+    }
 }
 
 impl From<U8Color> for Color {
@@ -37,5 +41,22 @@ impl<R: ToF32, G: ToF32, B: ToF32> From<(R, G, B)> for Color {
             srgb_to_linear(value.2.to_f32() / 255.0),
             1.0,
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::color::{BLACK, GRAY, GREEN, RED, WHITE};
+
+    #[test]
+    fn test_color_from_u8() {
+        assert_eq!(U8Color::const_rgb(0, 0, 0).hex(), "#000000");
+        assert_eq!(U8Color::const_rgb(255, 255, 255).hex(), "#ffffff");
+        assert_eq!(BLACK.hex(), "#000000");
+        assert_eq!(WHITE.hex(), "#ffffff");
+        assert_eq!(RED.hex(), "#ff0000");
+        assert_eq!(GREEN.hex(), "#00ff00");
+        assert_eq!(GRAY.hex(), "#363636");
     }
 }

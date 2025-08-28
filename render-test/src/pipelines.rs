@@ -1,4 +1,4 @@
-use refs::MainLock;
+use refs::main_lock::MainLock;
 use render::{UIImageRectPipepeline, UIPathPipeline, UIRectPipepeline};
 
 pub(crate) static UI_RECT: MainLock<UIRectPipepeline> = MainLock::new();

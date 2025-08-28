@@ -1,6 +1,6 @@
 use std::{any::type_name, collections::HashMap, ops::DerefMut};
 
-use refs::{MainLock, Weak};
+use refs::{Weak, main_lock::MainLock};
 
 use crate::{Button, Label, NumberView, View};
 

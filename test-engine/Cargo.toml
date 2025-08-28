@@ -10,7 +10,7 @@ name = "test_engine"
 
 [features]
 audio = ["dep:audio"]
-debug = ["dep:debug"]
+debug = ["dep:debug", "ui/debug"]
 default = ["audio"]
 
 [dependencies]
@@ -27,7 +27,6 @@ wgpu_text = { workspace = true }
 winit = { workspace = true }
 
 dispatch = { workspace = true }
-manage = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }

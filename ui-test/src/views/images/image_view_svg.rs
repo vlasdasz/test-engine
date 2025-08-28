@@ -1,27 +1,32 @@
 use anyhow::Result;
 use test_engine::{
+    dispatch::from_main,
     refs::Weak,
-    ui::{ImageView, Setup, UI, ViewData, ViewTouch, view},
+    ui::{Anchor::Top, BLUE, ImageView, Setup, Tinted, UI, ViewData, ViewTouch, view},
     ui_test::helpers::check_colors,
 };
 
 #[view]
 struct ImageViewSVG {
     #[init]
-    image_view: ImageView,
+    bin:      ImageView,
+    settings: ImageView,
 }
 
 impl Setup for ImageViewSVG {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
 
-        self.image_view.place().tl(5).size(400, 400);
-        self.image_view.set_image("bin.svg");
+        self.bin.place().tl(5).size(400, 400);
+        self.bin.set_image("bin.svg");
+
+        self.settings.place().same_x(self.bin).anchor(Top, self.bin, 20).size(150, 150);
+        self.settings.set_image("settings.svg");
     }
 }
 
 pub async fn test_image_view_svg() -> Result<()> {
-    let _view = UI::init_test_view::<ImageViewSVG>().await;
+    let mut view = UI::init_test_view::<ImageViewSVG>().await;
 
     check_colors(
         r#"
@@ -53,6 +58,36 @@ pub async fn test_image_view_svg() -> Result<()> {
              311  378 -  89 124 149
               97  397 -  89 124 149
               77  195 -  89 124 149
+        "#,
+    )
+    .await?;
+
+    check_colors(
+        r#"
+              16  527 -  89 124 149
+              43  520 -   0   0   0
+              76  505 -  89 124 149
+             117  479 -   0   0   0
+             141  477 -  89 124 149
+        "#,
+    )
+    .await?;
+
+    from_main(move || {
+        view.settings.set_image(Tinted {
+            tint: BLUE,
+            name: "settings.svg".to_string(),
+        });
+    })
+    .await;
+
+    check_colors(
+        r#"
+              20  526 -  89 124 149
+              44  523 -   0   0 153
+              80  510 -  89 124 149
+             128  484 -   0   0 153
+             152  479 -  89 124 149
         "#,
     )
     .await?;
