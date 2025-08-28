@@ -11,7 +11,6 @@ name = "dispatch"
 [dependencies]
 anyhow = { workspace = true }
 log = { workspace = true }
-tokio = { workspace = true }
 
 gm = { workspace = true }
 refs = { workspace = true }

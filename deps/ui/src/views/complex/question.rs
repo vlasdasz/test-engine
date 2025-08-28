@@ -3,13 +3,11 @@ use std::{
     pin::Pin,
 };
 
-use dispatch::from_main;
 use gm::{
     color::{BLACK, BLUE, GRAY},
     flat::Size,
 };
 use refs::Weak;
-use tokio::sync::oneshot::channel;
 use ui_proc::view;
 use vents::OnceEvent;
 
@@ -78,16 +76,18 @@ impl Question {
     }
 
     async fn callback_async(self) -> bool {
-        let (se, rc) = channel::<bool>();
+        // let (se, rc) = channel::<bool>();
+        //
+        // from_main(move || {
+        //     Self::make_modal(self).event.val(|answer| {
+        //         se.send(answer).unwrap();
+        //     });
+        // })
+        // .await;
+        //
+        // rc.await.unwrap()
 
-        from_main(move || {
-            Self::make_modal(self).event.val(|answer| {
-                se.send(answer).unwrap();
-            });
-        })
-        .await;
-
-        rc.await.unwrap()
+        false
     }
 }
 

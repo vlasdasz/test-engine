@@ -1,4 +1,3 @@
-use fake::{Fake, Faker};
 use test_engine::{
     audio::Sound,
     generate::noise::{TerrainParams, generate_terrain},
@@ -22,15 +21,16 @@ pub struct TestLevel {
 impl TestLevel {
     pub fn add_random_box(&mut self, pos: impl Into<Point>) {
         let mut bx = self.make_sprite::<Body>(
-            Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake())),
+            // Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake())),
+            Shape::Rect((5, 5).into()),
             pos,
         );
 
-        if Faker.fake() {
-            bx.set_image("crate_box.png");
-        } else {
-            bx.set_color(Color::random());
-        }
+        // if Faker.fake() {
+        bx.set_image("crate_box.png");
+        // } else {
+        bx.set_color(Color::random());
+        // }
     }
 
     fn on_touch(&mut self, pos: Point) {

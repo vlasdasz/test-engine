@@ -12,6 +12,7 @@ name = "test_engine"
 audio = ["dep:audio"]
 debug = ["dep:debug", "ui/debug"]
 default = ["audio"]
+webgl = ["wgpu/webgl"]
 
 [dependencies]
 anyhow = { workspace = true }
@@ -20,16 +21,15 @@ fern = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-tokio = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 winit = { workspace = true }
 
+vents = { workspace = true }
 dispatch = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
-vents = { workspace = true }
 
 audio = { workspace = true, optional = true }
 debug = { workspace = true, optional = true }

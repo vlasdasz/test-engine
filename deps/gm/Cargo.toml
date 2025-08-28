@@ -12,7 +12,6 @@ name = "gm"
 bytemuck = { workspace = true }
 chrono = { workspace = true }
 educe = { workspace = true }
-fake = { workspace = true }
 lyon = { workspace = true }
 arbitrary = { workspace = true }
 serde = { workspace = true }

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use dispatch::from_main;
+// use dispatch::from_main;
 use gm::{
     color::{Color, LIGHT_GRAY, U8Color},
     flat::Point,
@@ -83,17 +83,17 @@ pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Col
     let max_diff = 45;
 
     if diff > max_diff {
-        from_main(move || {
-            let mut high = HighlightView::new();
-            high.set_z_position(0.1);
-
-            UIManager::root_view()
-                .add_subview_to_root(high)
-                .downcast_view::<HighlightView>()
-                .unwrap()
-                .set(pos, color.into(), pixel.into());
-        })
-        .await;
+        // from_main(move || {
+        //     let mut high = HighlightView::new();
+        //     high.set_z_position(0.1);
+        //
+        //     UIManager::root_view()
+        //         .add_subview_to_root(high)
+        //         .downcast_view::<HighlightView>()
+        //         .unwrap()
+        //         .set(pos, color.into(), pixel.into());
+        // })
+        // .await;
     }
 
     let test_name = TEST_NAME.lock().unwrap().clone();

@@ -60,3 +60,6 @@ strip = false
 
 #[profile.release]
 #debug = true
+
+[build]
+rustflags = ["--cfg", "tokio_unstable"]

@@ -4,11 +4,10 @@ name = "store"
 version.workspace = true
 
 [dependencies]
-aes-gcm = { workspace = true }
+#aes-gcm = { workspace = true }
 anyhow = { workspace = true }
 dirs = { workspace = true }
 log = { workspace = true }
-rand = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 
@@ -16,5 +15,3 @@ plat = { workspace = true }
 
 [dev-dependencies]
 anyhow = { workspace = true }
-fake = { workspace = true }
-tokio = { workspace = true }

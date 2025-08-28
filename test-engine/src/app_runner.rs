@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched};
+// use dispatch::{from_main, invoke_dispatched};
 use gm::{
     LossyConvert,
     flat::{Point, Size},
@@ -14,7 +14,7 @@ use gm::{
 use level::{LevelBase, LevelManager};
 use log::debug;
 use refs::{Own, Rglica, main_lock::MainLock};
-use tokio::time::sleep;
+// use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
 use wgpu::RenderPass;
@@ -198,11 +198,11 @@ impl AppRunner {
 
         let app = Self::new(first_view);
 
-        tokio::spawn(async move {
-            let recv = from_main(|| WINDOW_READY.lock().unwrap().val_async()).await;
-            recv.await.unwrap();
-            let _ = actions.await;
-        });
+        // tokio::spawn(async move {
+        //     let recv = from_main(|| WINDOW_READY.lock().unwrap().val_async()).await;
+        //     recv.await.unwrap();
+        //     let _ = actions.await;
+        // });
 
         Window::start((1200, 1000).into(), app).await
     }
@@ -212,17 +212,19 @@ impl AppRunner {
     }
 
     pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
-        from_main(|| {
-            Window::current().set_size(size);
-        })
-        .await;
-        sleep(Duration::from_secs_f32(0.1)).await;
+        // from_main(|| {
+        //     Window::current().set_size(size);
+        // })
+        // .await;
+        // sleep(Duration::from_secs_f32(0.1)).await;
     }
 
     pub async fn take_screenshot() -> Result<Screenshot> {
-        let recv = from_main(|| Window::current().request_screenshot()).await;
-        let screenshot = recv.await?;
-        Ok(screenshot)
+        // let recv = from_main(|| Window::current().request_screenshot()).await;
+        // let screenshot = recv.await?;
+        // Ok(screenshot)
+
+        todo!()
     }
 
     pub fn fps() -> f32 {
@@ -252,7 +254,7 @@ impl window::WindowEvents for AppRunner {
 
     fn update(&mut self) {
         UIManager::free_deleted_views();
-        invoke_dispatched();
+        // invoke_dispatched();
         LevelDrawer::update();
         UI::update();
     }

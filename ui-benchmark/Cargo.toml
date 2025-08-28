@@ -13,7 +13,5 @@ name = "ui_benchmark"
 
 [dependencies]
 anyhow = { workspace = true }
-fake = { workspace = true }
-tokio = { workspace = true }
 
 test-engine = { workspace = true }

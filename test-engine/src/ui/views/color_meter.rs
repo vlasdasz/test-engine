@@ -1,6 +1,6 @@
-use dispatch::on_main;
+// use dispatch::on_main;
 use refs::Weak;
-use tokio::spawn;
+// use tokio::spawn;
 use ui::{Setup, UIEvents, ViewCallbacks, ViewData};
 use ui_proc::view;
 use window::Screenshot;
@@ -34,32 +34,32 @@ impl ViewCallbacks for ColorMeter {
 
 impl ColorMeter {
     pub fn update_screenshot(mut self: Weak<Self>) {
-        spawn(async move {
-            let Some(screenshot) = AppRunner::take_screenshot().await.ok() else {
-                return;
-            };
-
-            on_main(move || {
-                if self.is_null() {
-                    return;
-                }
-
-                self.screenshot = screenshot;
-
-                // Image::free_with_name("Screenshot");
-
-                // let Some(image) = Image::from_raw_data(
-                //     App::state(),
-                //     &cast_slice(&self.screenshot),
-                //     "Screenshot",
-                //     size.into(),
-                //     4,
-                // )
-                // .alert_err() else {
-                //     return;
-                // };
-                // self.image_view.image = image;
-            });
-        });
+        // spawn(async move {
+        //     let Some(screenshot) = AppRunner::take_screenshot().await.ok()
+        // else {         return;
+        //     };
+        //
+        //     on_main(move || {
+        //         if self.is_null() {
+        //             return;
+        //         }
+        //
+        //         self.screenshot = screenshot;
+        //
+        //         // Image::free_with_name("Screenshot");
+        //
+        //         // let Some(image) = Image::from_raw_data(
+        //         //     App::state(),
+        //         //     &cast_slice(&self.screenshot),
+        //         //     "Screenshot",
+        //         //     size.into(),
+        //         //     4,
+        //         // )
+        //         // .alert_err() else {
+        //         //     return;
+        //         // };
+        //         // self.image_view.image = image;
+        //     });
+        // });
     }
 }

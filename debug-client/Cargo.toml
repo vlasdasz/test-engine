@@ -13,7 +13,6 @@ name = "debug_client"
 
 [dependencies]
 anyhow = { workspace = true }
-tokio = { workspace = true }
 
 debug = { workspace = true }
 test-engine = { workspace = true, features = ["default"] }

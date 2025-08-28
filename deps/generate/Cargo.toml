@@ -12,6 +12,4 @@ name = "generate"
 contour = { version = "0.12", features = ["f32"] }
 noise = "0.8"
 
-fake = { workspace = true }
-
 gm = { workspace = true }

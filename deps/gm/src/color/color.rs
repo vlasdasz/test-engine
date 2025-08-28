@@ -1,7 +1,5 @@
 use std::hash::{Hash, Hasher};
 
-use fake::Fake;
-
 use crate::{
     color::{Color, U8Color, helpers::srgb_to_linear},
     num::lossy_convert::LossyConvert,
@@ -60,7 +58,8 @@ impl Color {
     ];
 
     pub fn random() -> Self {
-        Self::ALL[(0..Self::ALL.len()).fake::<usize>()]
+        // Self::ALL[(0..Self::ALL.len()).fake::<usize>()]
+        GREEN
     }
 
     pub fn hex(&self) -> String {

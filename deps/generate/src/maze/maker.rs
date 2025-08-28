@@ -1,4 +1,3 @@
-use fake::Fake;
 use gm::flat::Size;
 
 use crate::maze::{Cell, Grid};
@@ -40,7 +39,7 @@ impl Maker {
                 continue;
             }
 
-            let next = unvisited[(0..unvisited.len()).fake::<usize>()];
+            let next = todo!(); // unvisited[(0..unvisited.len()).fake::<usize>()];
 
             maker.stack.push(maker.current_pos);
 

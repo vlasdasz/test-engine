@@ -1,6 +1,7 @@
 use test_engine::{
-    RenderPass, VertexBuffer,
-    dispatch::after,
+    RenderPass,
+    VertexBuffer,
+    // dispatch::after,
     level::LevelManager,
     refs::Weak,
     ui::{
@@ -41,7 +42,7 @@ impl Setup for PolygonView {
 
         self.center.set_color(WHITE).place().size(5, 5).center();
 
-        after(0.1, move || self.add_first_points());
+        // after(0.1, move || self.add_first_points());
     }
 }
 

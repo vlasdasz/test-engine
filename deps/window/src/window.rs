@@ -4,7 +4,6 @@ use std::sync::{
 };
 
 use anyhow::Result;
-use dispatch::on_main;
 use gm::{
     LossyConvert,
     color::Color,
@@ -13,7 +12,6 @@ use gm::{
 use log::{debug, error, info, warn};
 use plat::Platform;
 use refs::{Rglica, main_lock::MainLock};
-use tokio::sync::oneshot::Receiver;
 use wgpu::{
     Adapter, Backends, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, InstanceDescriptor,
     Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages,
@@ -126,9 +124,9 @@ impl Window {
     }
 
     pub fn close() {
-        on_main(|| {
-            Self::current().close.store(true, Ordering::Relaxed);
-        });
+        // on_main(|| {
+        //     Self::current().close.store(true, Ordering::Relaxed);
+        // });
     }
 
     pub(crate) fn create_surface_and_window(
@@ -270,15 +268,15 @@ impl Window {
     }
 
     pub fn set_title(title: impl Into<String>) {
-        let title = title.into();
-        on_main(move || {
-            Self::current().title_set = true;
-            if Platform::DESKTOP {
-                Self::winit_window().set_title(&title);
-            } else {
-                warn!("set_title is not supported on this platform");
-            }
-        });
+        // let title = title.into();
+        // on_main(move || {
+        //     Self::current().title_set = true;
+        //     if Platform::DESKTOP {
+        //         Self::winit_window().set_title(&title);
+        //     } else {
+        //         warn!("set_title is not supported on this platform");
+        //     }
+        // });
     }
 
     pub fn set_size(&self, size: impl Into<Size<u32>>) {
@@ -286,9 +284,9 @@ impl Window {
         let _ = Self::winit_window().request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
-    pub fn request_screenshot(&self) -> Receiver<Screenshot> {
-        self.state.request_read_display()
-    }
+    // pub fn request_screenshot(&self) -> Receiver<Screenshot> {
+    //     self.state.request_read_display()
+    // }
 
     pub fn fps(&self) -> f32 {
         self.state.frame_counter.fps

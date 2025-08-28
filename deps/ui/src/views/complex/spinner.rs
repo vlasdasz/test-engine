@@ -23,7 +23,6 @@ mod test_engine {
 }
 
 use chrono::Utc;
-use dispatch::{on_main, on_main_sync};
 use gm::flat::{Size, point_on_circle};
 use log::{trace, warn};
 use refs::Weak;
@@ -128,9 +127,9 @@ impl Spinner {
             return;
         }
 
-        on_main_sync(|| {
-            *Self::current() = Self::prepare_modally();
-        });
+        // on_main_sync(|| {
+        //     *Self::current() = Self::prepare_modally();
+        // });
     }
 
     pub fn stop() {
@@ -141,27 +140,27 @@ impl Spinner {
             return;
         }
 
-        on_main(|| {
-            let mut spinner = Self::current();
-            TouchStack::pop_layer(spinner.weak_view());
-
-            let animation = UIAnimation::new(Animation::new(0.8, 0.0, 0.4), |sp, val| {
-                let color = sp.color();
-                sp.set_color(color.with_alpha(val));
-                for mut dot in sp.subviews_mut() {
-                    let color = *dot.color();
-                    dot.set_color(color.with_alpha(val));
-                }
-            });
-
-            animation.on_finish.sub(|| {
-                let mut spinner = Self::current();
-                spinner.remove_from_superview();
-                *spinner = Weak::default();
-            });
-
-            spinner.add_animation(animation);
-        });
+        // on_main(|| {
+        //     let mut spinner = Self::current();
+        //     TouchStack::pop_layer(spinner.weak_view());
+        //
+        //     let animation = UIAnimation::new(Animation::new(0.8, 0.0, 0.4),
+        // |sp, val| {         let color = sp.color();
+        //         sp.set_color(color.with_alpha(val));
+        //         for mut dot in sp.subviews_mut() {
+        //             let color = *dot.color();
+        //             dot.set_color(color.with_alpha(val));
+        //         }
+        //     });
+        //
+        //     animation.on_finish.sub(|| {
+        //         let mut spinner = Self::current();
+        //         spinner.remove_from_superview();
+        //         *spinner = Weak::default();
+        //     });
+        //
+        //     spinner.add_animation(animation);
+        // });
     }
 
     pub fn instant_stop() {

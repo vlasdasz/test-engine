@@ -8,13 +8,13 @@ use std::{
 };
 
 use anyhow::{Result, bail};
-use dispatch::{from_main, on_main, wait_for_next_frame};
+// use dispatch::{from_main, on_main, wait_for_next_frame};
 pub use helpers::*;
 use log::{error, warn};
 use refs::Own;
 use serde::de::DeserializeOwned;
 pub use state::*;
-use tokio::sync::mpsc::channel;
+// use tokio::sync::mpsc::channel;
 use window::Window;
 
 use crate::{
@@ -31,10 +31,10 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
         let touches = Touch::vec_from_str(comb.0);
 
         for touch in touches {
-            from_main(move || {
-                inject_touch(touch);
-            })
-            .await;
+            // from_main(move || {
+            //     inject_touch(touch);
+            // })
+            // .await;
         }
 
         if get_state::<Val>() != comb.1 {
@@ -56,31 +56,31 @@ fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
 
 #[allow(dead_code)]
 pub async fn inject_scroll(scroll: impl ToF32) {
-    from_main(move || {
-        UIManager::trigger_scroll((0, scroll).into());
-    })
-    .await;
+    // from_main(move || {
+    //     UIManager::trigger_scroll((0, scroll).into());
+    // })
+    // .await;
 }
 
 pub async fn inject_touches(data: impl ToString + Send + 'static) {
     let scale = UIManager::scale();
-    from_main(move || {
-        for mut touch in Touch::vec_from_str(&data.to_string()) {
-            touch.position *= scale;
-            inject_touch(touch);
-        }
-    })
-    .await;
+    // from_main(move || {
+    //     for mut touch in Touch::vec_from_str(&data.to_string()) {
+    //         touch.position *= scale;
+    //         inject_touch(touch);
+    //     }
+    // })
+    // .await;
 }
 
 pub async fn inject_touches_delayed(data: &str) {
     for touch in Touch::vec_from_str(data) {
-        wait_for_next_frame().await;
-        from_main(move || {
-            inject_touch(touch);
-        })
-        .await;
-        wait_for_next_frame().await;
+        // wait_for_next_frame().await;
+        // from_main(move || {
+        //     inject_touch(touch);
+        // })
+        // .await;
+        // wait_for_next_frame().await;
     }
 }
 
@@ -92,7 +92,7 @@ pub async fn inject_keys(s: impl ToString) {
 }
 
 pub async fn inject_key(key: char) {
-    from_main(move || Input::on_char(key)).await;
+    // from_main(move || Input::on_char(key)).await;
 }
 
 #[allow(dead_code)]
@@ -108,45 +108,45 @@ pub async fn record_moved_touches() {
 async fn record_touches_internal(skip_moved: bool) {
     let touches: Own<_> = Vec::<Touch>::new().into();
     let mut touches = touches.weak();
-
-    let (s, mut r) = channel::<()>(1);
-
-    let moved_record_skip = 10;
-
-    let moved_counter = Arc::new(Mutex::new(0));
-
-    on_main(move || {
-        UIEvents::on_touch().val(move |touch| {
-            if touch.is_moved() {
-                let mut counter = moved_counter.lock().unwrap();
-                *counter += 1;
-                if *counter == moved_record_skip {
-                    *counter = 0;
-                } else {
-                    return;
-                }
-            }
-
-            if skip_moved && touch.is_moved() {
-                return;
-            }
-
-            touches.push(touch);
-        });
-
-        UIManager::keymap().add(UIManager::root_view(), 'a', move || {
-            _ = s.try_send(());
-        });
-    });
-
-    if r.recv().await.is_none() {
-        warn!("Failed to receive record_touches result");
-    }
-
-    from_main(|| {
-        UIEvents::on_touch().remove_subscribers();
-    })
-    .await;
+    //
+    // let (s, mut r) = channel::<()>(1);
+    //
+    // let moved_record_skip = 10;
+    //
+    // let moved_counter = Arc::new(Mutex::new(0));
+    //
+    // on_main(move || {
+    //     UIEvents::on_touch().val(move |touch| {
+    //         if touch.is_moved() {
+    //             let mut counter = moved_counter.lock().unwrap();
+    //             *counter += 1;
+    //             if *counter == moved_record_skip {
+    //                 *counter = 0;
+    //             } else {
+    //                 return;
+    //             }
+    //         }
+    //
+    //         if skip_moved && touch.is_moved() {
+    //             return;
+    //         }
+    //
+    //         touches.push(touch);
+    //     });
+    //
+    //     UIManager::keymap().add(UIManager::root_view(), 'a', move || {
+    //         _ = s.try_send(());
+    //     });
+    // });
+    //
+    // if r.recv().await.is_none() {
+    //     warn!("Failed to receive record_touches result");
+    // }
+    //
+    // from_main(|| {
+    //     UIEvents::on_touch().remove_subscribers();
+    // })
+    // .await;
 
     println!(
         r#"
@@ -180,30 +180,30 @@ pub async fn record_colors() -> Result<()> {
     let touches: Own<_> = Vec::<(Touch, U8Color)>::new().into();
     let mut touches = touches.weak();
 
-    let (s, mut r) = channel::<()>(1);
-
-    on_main(move || {
-        UIEvents::on_debug_touch().val(move |touch| {
-            if !touch.is_began() {
-                return;
-            }
-
-            touches.push((touch, screenshot.get_pixel(touch.position)));
-        });
-
-        UIManager::keymap().add(UIManager::root_view(), 'a', move || {
-            _ = s.try_send(());
-        });
-    });
-
-    if r.recv().await.is_none() {
-        warn!("Failed to receive record_touches_with_colors result");
-    }
-
-    on_main(|| {
-        UIEvents::on_touch().remove_subscribers();
-        UIEvents::on_debug_touch().remove_subscribers();
-    });
+    // let (s, mut r) = channel::<()>(1);
+    //
+    // on_main(move || {
+    //     UIEvents::on_debug_touch().val(move |touch| {
+    //         if !touch.is_began() {
+    //             return;
+    //         }
+    //
+    //         touches.push((touch, screenshot.get_pixel(touch.position)));
+    //     });
+    //
+    //     UIManager::keymap().add(UIManager::root_view(), 'a', move || {
+    //         _ = s.try_send(());
+    //     });
+    // });
+    //
+    // if r.recv().await.is_none() {
+    //     warn!("Failed to receive record_touches_with_colors result");
+    // }
+    //
+    // on_main(|| {
+    //     UIEvents::on_touch().remove_subscribers();
+    //     UIEvents::on_debug_touch().remove_subscribers();
+    // });
 
     println!("check_colors( r#\"");
 
