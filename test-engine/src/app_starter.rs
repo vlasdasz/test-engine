@@ -16,7 +16,7 @@ pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
     let app = unsafe { test_engine_create_app() };
     app.setup();
 
-    crate::AppRunner::start(app.initial_size(), app.make_root_view()); //.await.unwrap();
+    crate::AppRunner::start(app.initial_size(), app.make_root_view()).unwrap();
     // });
     0
 }

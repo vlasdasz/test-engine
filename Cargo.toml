@@ -51,6 +51,8 @@ syn = { version = "2.0", features = ["full", "extra-traits"] }
 tiny-skia = "0.11"
 web-time = "1.0.0"
 arbitrary = { version = "1.4", features = ["derive"] }
+wasm-bindgen-futures = "0.4"
+pollster = "0.4"
 
 wgpu = "26.0"
 wgpu_text = "26.0"

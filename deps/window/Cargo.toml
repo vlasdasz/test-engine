@@ -19,6 +19,7 @@ tiny-skia = { workspace = true }
 usvg = "0.45"
 web-time = { workspace = true }
 wgpu = { workspace = true }
+pollster = { workspace = true }
 
 refs = { workspace = true }
 

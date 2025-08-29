@@ -154,17 +154,17 @@ impl Window {
         Ok(true)
     }
 
-    async fn start_internal(
-        size: Size,
-        app: Box<dyn WindowEvents>,
-        event_loop: EventLoop<Events>,
-    ) -> Result<()> {
+    fn start_internal(size: Size, app: Box<dyn WindowEvents>, event_loop: EventLoop<Events>) -> Result<()> {
         let instance = Instance::new(&InstanceDescriptor {
             backends: Backends::all(),
             ..Default::default()
         });
 
-        let adapter = instance.request_adapter(&RequestAdapterOptions::default()).await?;
+        #[cfg(target_arch = "wasm32")]
+        wasm_bindgen_futures::spawn_local(create_graphics(window, proxy));
+
+        #[cfg(not(target_arch = "wasm32"))]
+        let adapter = pollster::block_on(instance.request_adapter(&RequestAdapterOptions::default()))?;
 
         let info = adapter.get_info();
 
@@ -195,17 +195,15 @@ impl Window {
             required_limits.max_texture_dimension_1d = 4096;
         }
 
-        let (device, queue) = adapter
-            .request_device(&DeviceDescriptor {
-                required_features: Features::empty(),
-                // Doesn't work on some Androids
-                // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
-                required_limits,
-                label: None,
-                memory_hints: MemoryHints::Performance,
-                trace: Trace::default(),
-            })
-            .await?;
+        let (device, queue) = pollster::block_on(adapter.request_device(&DeviceDescriptor {
+            required_features: Features::empty(),
+            // Doesn't work on some Androids
+            // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
+            required_limits,
+            label: None,
+            memory_hints: MemoryHints::Performance,
+            trace: Trace::default(),
+        }))?;
 
         let config = SurfaceConfiguration {
             usage:        if SUPPORT_SCREENSHOT {
@@ -253,8 +251,8 @@ impl Window {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start(size: Size, app: impl WindowEvents + 'static) -> Result<()> {
-        Self::start_internal(size, Box::new(app), EventLoop::new()?).await
+    pub fn start(size: Size, app: impl WindowEvents + 'static) -> Result<()> {
+        Self::start_internal(size, Box::new(app), EventLoop::new()?)
     }
 
     #[cfg(target_os = "android")]
