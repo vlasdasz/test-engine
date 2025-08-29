@@ -1,6 +1,9 @@
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
+use std::{
+    mem::uninitialized,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, Ordering},
+    },
 };
 
 use anyhow::Result;
@@ -160,11 +163,27 @@ impl Window {
             ..Default::default()
         });
 
+        let adapter: Arc<Mutex<Option<Adapter>>> = Arc::new(Mutex::new(None));
+
+        let adapter_write = adapter.clone();
+        let int = instance.clone();
+
         #[cfg(target_arch = "wasm32")]
-        wasm_bindgen_futures::spawn_local(create_graphics(window, proxy));
+        wasm_bindgen_futures::spawn_local(async move {
+            let mut ad = adapter_write.lock().unwrap();
+
+            *ad = Some(int.request_adapter(&RequestAdapterOptions::default()).await.unwrap());
+        });
 
         #[cfg(not(target_arch = "wasm32"))]
-        let adapter = pollster::block_on(instance.request_adapter(&RequestAdapterOptions::default()))?;
+        pollster::block_on(async move {
+            let mut ad = adapter_write.lock().unwrap();
+
+            *ad = Some(int.request_adapter(&RequestAdapterOptions::default()).await.unwrap());
+        });
+
+        let adapter = adapter.lock().unwrap().take().unwrap();
+        let ad2 = adapter.clone();
 
         let info = adapter.get_info();
 
@@ -195,15 +214,48 @@ impl Window {
             required_limits.max_texture_dimension_1d = 4096;
         }
 
-        let (device, queue) = pollster::block_on(adapter.request_device(&DeviceDescriptor {
-            required_features: Features::empty(),
-            // Doesn't work on some Androids
-            // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
-            required_limits,
-            label: None,
-            memory_hints: MemoryHints::Performance,
-            trace: Trace::default(),
-        }))?;
+        let dq: Arc<Mutex<Option<_>>> = Arc::new(Mutex::new(None));
+        let dq2 = dq.clone();
+
+        #[cfg(target_arch = "wasm32")]
+        wasm_bindgen_futures::spawn_local(async move {
+            let mut dq = dq2.lock().unwrap();
+
+            *dq = ad2
+                .request_device(&DeviceDescriptor {
+                    required_features: Features::empty(),
+                    // Doesn't work on some Androids
+                    // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
+                    required_limits,
+                    label: None,
+                    memory_hints: MemoryHints::Performance,
+                    trace: Trace::default(),
+                })
+                .await
+                .unwrap()
+                .into();
+        });
+
+        #[cfg(not(target_arch = "wasm32"))]
+        pollster::block_on(async move {
+            let mut dq = dq2.lock().unwrap();
+
+            *dq = ad2
+                .request_device(&DeviceDescriptor {
+                    required_features: Features::empty(),
+                    // Doesn't work on some Androids
+                    // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
+                    required_limits,
+                    label: None,
+                    memory_hints: MemoryHints::Performance,
+                    trace: Trace::default(),
+                })
+                .await
+                .unwrap()
+                .into();
+        });
+
+        let (device, queue) = dq.lock().unwrap().take().unwrap();
 
         let config = SurfaceConfiguration {
             usage:        if SUPPORT_SCREENSHOT {
