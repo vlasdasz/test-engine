@@ -5,6 +5,8 @@ use crate::app::test_engine_create_app;
 #[cfg(not(target_os = "android"))]
 #[unsafe(no_mangle)]
 pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
+    dbg!("aa");
+
     // let runtime = Runtime::new().unwrap();
     // runtime.block_on(async {
     #[cfg(mobile)]

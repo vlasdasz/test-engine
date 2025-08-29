@@ -8,8 +8,8 @@ use gm::{
     color::{GRAY, LIGHT_BLUE},
 };
 use ui_proc::view;
-use vents::OnceEvent;
 
+// use vents::OnceEvent;
 use crate::{
     Container, MICROSECONDS_IN_ONE_SECOND, ModalView, Setup, TouchStack, UIAnimation, ViewCallbacks,
     view::{View, ViewAnimation, ViewData, ViewFrame, ViewSubviews},
@@ -54,7 +54,7 @@ impl Drop for SpinnerLock {
 #[view]
 pub struct Spinner {
     circles: Vec<Weak<Container>>,
-    event:   OnceEvent,
+    // event:   OnceEvent,
 }
 
 impl Spinner {
@@ -178,9 +178,9 @@ impl Spinner {
 }
 
 impl ModalView for Spinner {
-    fn modal_event(&self) -> &OnceEvent<()> {
-        &self.event
-    }
+    // fn modal_event(&self) -> &OnceEvent<()> {
+    //     &self.event
+    // }
 
     fn modal_size() -> Size {
         (140, 140).into()

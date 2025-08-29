@@ -9,8 +9,8 @@ use gm::{
 };
 use refs::Weak;
 use ui_proc::view;
-use vents::OnceEvent;
 
+// use vents::OnceEvent;
 use crate::{ModalView, Setup, has_data::HasText, view::ViewData};
 mod test_engine {
     pub(crate) use educe;
@@ -28,8 +28,7 @@ pub struct Question {
     left:  String,
     right: String,
 
-    event: OnceEvent<bool>,
-
+    // event: OnceEvent<bool>,
     #[init]
     label:         Label,
     ok_button:     Button,
@@ -37,9 +36,9 @@ pub struct Question {
 }
 
 impl ModalView<(), bool> for Question {
-    fn modal_event(&self) -> &OnceEvent<bool> {
-        &self.event
-    }
+    // fn modal_event(&self) -> &OnceEvent<bool> {
+    //     &self.event
+    // }
 
     fn modal_size() -> Size {
         (380, 240).into()
@@ -64,7 +63,7 @@ impl Question {
 
     ///bool == true -> right choice
     pub fn callback(self, callback: impl FnOnce(bool) + Send + 'static) {
-        Self::make_modal(self).event.val(callback);
+        // Self::make_modal(self).event.val(callback);
     }
 
     pub fn on_yes(self, callback: impl FnOnce() + Send + 'static) {

@@ -101,7 +101,7 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 self.layout_header();
                 let mut weak = test_engine::refs::weak_from_ref(self);
                 weak.setup();
-                self.__after_setup_event().trigger(());
+                // self.__after_setup_event().trigger(());
             }
         }
 

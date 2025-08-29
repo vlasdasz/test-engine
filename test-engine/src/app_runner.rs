@@ -16,7 +16,7 @@ use log::debug;
 use refs::{Own, Rglica, main_lock::MainLock};
 // use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
-use vents::OnceEvent;
+// use vents::OnceEvent;
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
 use winit::{
@@ -30,7 +30,8 @@ use crate::{
     ui::{Input, UI},
 };
 
-static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
+// static WINDOW_READY: Mutex<OnceEvent> =
+// Mutex::new(OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct AppRunner {
@@ -248,7 +249,7 @@ impl window::WindowEvents for AppRunner {
 
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
-            WINDOW_READY.lock().unwrap().trigger(());
+            // WINDOW_READY.lock().unwrap().trigger(());
         });
     }
 

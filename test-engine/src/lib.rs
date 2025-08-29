@@ -68,7 +68,7 @@ pub use app_runner::AppRunner;
 pub use audio;
 pub use generate;
 pub use ui::views::task_spinner::TaskSpinner;
-pub use vents::{DelayedEvent, Event, OnceEvent};
+pub use vents::Event;
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
 // pub mod dispatch {

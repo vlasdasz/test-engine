@@ -4,8 +4,8 @@ use gm::{
 };
 use refs::Weak;
 use ui_proc::view;
-use vents::OnceEvent;
 
+// use vents::OnceEvent;
 use crate::{Button, Label, ModalView, Setup, has_data::HasText, view::ViewData};
 mod test_engine {
     pub(crate) use educe;
@@ -16,8 +16,7 @@ mod test_engine {
 
 #[view]
 pub struct Alert {
-    event: OnceEvent,
-
+    // event: OnceEvent,
     #[init]
     label:     Label,
     ok_button: Button,
@@ -49,9 +48,9 @@ impl Setup for Alert {
 }
 
 impl ModalView<String> for Alert {
-    fn modal_event(&self) -> &OnceEvent<()> {
-        &self.event
-    }
+    // fn modal_event(&self) -> &OnceEvent<()> {
+    //     &self.event
+    // }
 
     fn modal_size() -> Size {
         (280, 200).into()
