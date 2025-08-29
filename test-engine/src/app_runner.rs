@@ -12,7 +12,7 @@ use gm::{
     flat::{Point, Size},
 };
 use level::{LevelBase, LevelManager};
-use log::debug;
+use log::{debug, error};
 use refs::{Own, Rglica, main_lock::MainLock};
 // use tokio::time::sleep;
 use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
@@ -110,7 +110,12 @@ impl AppRunner {
 
     #[cfg(not(target_os = "android"))]
     pub fn start(size: impl Into<Size>, root_view: Own<dyn View>) -> Result<()> {
+        error!("AAA PRED SOBAKAA!!!");
+
         Self::setup_log();
+
+        error!("AAA SOBAKAA!!!");
+
         // #[cfg(feature = "debug")]
         // Self::setup_debug_server().await?;
         Window::start(size.into(), Self::new(root_view))
