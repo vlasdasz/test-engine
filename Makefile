@@ -57,5 +57,9 @@ lint:
       \
       -D warnings
 
+serve:
+	rustup target add wasm32-unknown-unknown
+	cargo install --locked trunk
+	cd ./test-game && trunk serve --features webgl
 
 .PHONY: mobile
