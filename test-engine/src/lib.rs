@@ -36,8 +36,8 @@ pub mod level {
 
 pub mod refs {
     pub use refs::{
-        AsAny, Own, Weak, current_thread_id, dump_ref_stats, enable_ref_stats_counter, manage::DataManager,
-        set_current_thread_as_main, vec::OwnVec, weak_from_ref,
+        AsAny, Own, Weak, current_thread_id, manage::DataManager, set_current_thread_as_main, vec::OwnVec,
+        weak_from_ref,
     };
 }
 
