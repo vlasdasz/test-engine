@@ -1150,6 +1150,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
+name = "fuzz"
+version = "0.0.0"
+dependencies = [
+ "colors-transform",
+ "gm",
+ "libfuzzer-sys",
+ "palette",
+ "test-engine",
+]
+
+[[package]]
 name = "game"
 version = "0.1.0"
 dependencies = [
@@ -1587,6 +1598,18 @@ checksum = "f2481980430f9f78649238835720ddccc57e52df14ffce1c6f37391d61b563e9"
 dependencies = [
  "equivalent",
  "hashbrown 0.15.5",
+]
+
+[[package]]
+name = "instant"
+version = "0.1.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e0242819d153cba4b4b05a5a8f2a7e9bbf97b6055b2a002b395c96b5ff3c0222"
+dependencies = [
+ "cfg-if",
+ "js-sys",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
@@ -3102,11 +3125,12 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.17.0"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "333f78556392954edef1f95a5ec2c600312336fc85d365249ea87b6bc15294e2"
+checksum = "a13bed789203047647e329e31e3eaeb7aa908623e9bc34224b491638f85245c7"
 dependencies = [
  "derive_more",
+ "instant",
  "log",
 ]
 
@@ -3839,17 +3863,6 @@ dependencies = [
  "wgpu_text",
  "window",
  "winit",
-]
-
-[[package]]
-name = "test-engine-fuzz"
-version = "0.0.0"
-dependencies = [
- "colors-transform",
- "gm",
- "libfuzzer-sys",
- "palette",
- "test-engine",
 ]
 
 [[package]]

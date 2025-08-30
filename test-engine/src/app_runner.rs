@@ -55,42 +55,42 @@ impl AppRunner {
         use fern::Dispatch;
         use log::{Level, LevelFilter};
 
-        Dispatch::new()
-            .level(LevelFilter::Warn)
-            .level_for("test_engine", LevelFilter::Debug)
-            .level_for("shopping", LevelFilter::Debug)
-            .format(|out, message, record| {
-                let level_icon = match record.level() {
-                    Level::Error => "🔴",
-                    Level::Warn => "🟡",
-                    Level::Info => "🟢",
-                    Level::Debug => "🔵",
-                    Level::Trace => "⚪",
-                };
-
-                let location = false;
-                let module = false;
-
-                let mut log = format!("{level_icon} {message}");
-
-                if location {
-                    log = format!(
-                        "[{}::{}] {}",
-                        record.file().unwrap_or_default(),
-                        record.line().unwrap_or_default(),
-                        log
-                    );
-                }
-
-                if module {
-                    log = format!("{} {}", record.module_path().unwrap_or_default(), log);
-                }
-
-                out.finish(format_args!("{log}"));
-            })
-            .chain(std::io::stdout())
-            .apply()
-            .expect("Failed to initialize logging");
+        // Dispatch::new()
+        //     .level(LevelFilter::Warn)
+        //     .level_for("test_engine", LevelFilter::Debug)
+        //     .level_for("shopping", LevelFilter::Debug)
+        //     .format(|out, message, record| {
+        //         let level_icon = match record.level() {
+        //             Level::Error => "🔴",
+        //             Level::Warn => "🟡",
+        //             Level::Info => "🟢",
+        //             Level::Debug => "🔵",
+        //             Level::Trace => "⚪",
+        //         };
+        //
+        //         let location = false;
+        //         let module = false;
+        //
+        //         let mut log = format!("{level_icon} {message}");
+        //
+        //         if location {
+        //             log = format!(
+        //                 "[{}::{}] {}",
+        //                 record.file().unwrap_or_default(),
+        //                 record.line().unwrap_or_default(),
+        //                 log
+        //             );
+        //         }
+        //
+        //         if module {
+        //             log = format!("{} {}", record.module_path().unwrap_or_default(),
+        // log);         }
+        //
+        //         out.finish(format_args!("{log}"));
+        //     })
+        //     .chain(std::io::stdout())
+        //     .apply()
+        //     .expect("Failed to initialize logging");
 
         debug!("Logs setup");
     }

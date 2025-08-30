@@ -173,6 +173,8 @@ impl Window {
             let mut ad = adapter_write.lock().unwrap();
 
             *ad = Some(int.request_adapter(&RequestAdapterOptions::default()).await.unwrap());
+
+            drop(ad);
         });
 
         #[cfg(not(target_arch = "wasm32"))]
@@ -180,6 +182,7 @@ impl Window {
             let mut ad = adapter_write.lock().unwrap();
 
             *ad = Some(int.request_adapter(&RequestAdapterOptions::default()).await.unwrap());
+            drop(ad);
         });
 
         let adapter = adapter.lock().unwrap().take().unwrap();
