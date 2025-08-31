@@ -19,9 +19,9 @@ impl Surface {
         device: &Device,
         config: &SurfaceConfiguration,
         window: Arc<Window>,
-    ) -> Result<Option<Self>> {
+    ) -> Result<Self> {
         if config.width == 0 || config.height == 0 {
-            return Ok(None);
+            panic!("Invalid surface size")
         }
 
         let surface = instance.create_surface(window.clone())?;
@@ -33,10 +33,10 @@ impl Surface {
         let depth_texture =
             Texture::create_depth_texture(device, (config.width, config.height).into(), "depth_texture");
 
-        Ok(Some(Self {
+        Ok(Self {
             presentable: surface,
             depth_texture,
             window,
-        }))
+        })
     }
 }

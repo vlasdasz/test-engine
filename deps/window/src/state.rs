@@ -12,10 +12,9 @@ use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncode
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
-    SUPPORT_SCREENSHOT, Screenshot, Window, frame_counter::FrameCounter, image::Texture, text::Font,
-    window_events::WindowEvents,
+    SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
+    image::Texture, text::Font, window_events::WindowEvents,
 };
-
 // type ReadDisplayRequest = Sender<Screenshot>;
 
 #[cfg(not(target_os = "android"))]
@@ -25,7 +24,6 @@ pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
 pub struct State {
     pub(crate) fonts:       HashMap<&'static str, Font>,
-    pub(crate) app:         Box<dyn WindowEvents>,
     pub(crate) clear_color: Color,
 
     // read_display_request: RefCell<Option<ReadDisplayRequest>>,
@@ -33,11 +31,10 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(app: Box<dyn WindowEvents>) -> Self {
+    pub fn new() -> Self {
         Self {
-            fonts: HashMap::default(),
-            app,
-            clear_color: GRAY_BLUE,
+            fonts:         HashMap::default(),
+            clear_color:   GRAY_BLUE,
             // read_display_request: RefCell::default(),
             frame_counter: FrameCounter::default(),
         }
@@ -53,20 +50,12 @@ impl State {
         window.config.width = new_size.width;
         window.config.height = new_size.height;
 
-        if let Some(surface) = &mut window.surface {
-            surface.depth_texture = Texture::create_depth_texture(
-                &window.device,
-                (new_size.width, new_size.height).into(),
-                "depth_texture",
-            );
-            surface.presentable.configure(&window.device, &window.config);
-        } else if window.resumed
-            && window
-                .create_surface_and_window((new_size.width, new_size.height).into(), event_loop)
-                .unwrap()
-        {
-            window.state.app.window_ready();
-        }
+        window.surface.depth_texture = Texture::create_depth_texture(
+            &window.device,
+            (new_size.width, new_size.height).into(),
+            "depth_texture",
+        );
+        window.surface.presentable.configure(&window.device, &window.config);
 
         let queue = Window::queue();
 
@@ -78,7 +67,7 @@ impl State {
             );
         }
 
-        self.app.resize(
+        AppHandler::current().te_window_events.resize(
             Window::inner_position(),
             Window::outer_position(),
             Window::inner_size(),
@@ -87,7 +76,7 @@ impl State {
     }
 
     pub fn update(&mut self) {
-        self.app.update();
+        AppHandler::current().te_window_events.update();
 
         if Window::current().title_set {
             return;
@@ -109,9 +98,9 @@ impl State {
 
     pub fn render(&mut self) -> Result<()> {
         let app = Window::current();
-        let Some(ref surface) = app.surface else {
-            return Ok(());
-        };
+
+        let surface = &app.surface;
+
         let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = Window::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
@@ -147,7 +136,7 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            self.app.render(&mut render_pass);
+            AppHandler::current().te_window_events.render(&mut render_pass);
 
             for font in self.fonts.values() {
                 font.brush.draw(&mut render_pass);

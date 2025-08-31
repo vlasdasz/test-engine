@@ -1,5 +1,6 @@
 use std::{
     mem::uninitialized,
+    rc::Rc,
     sync::{
         Arc, Mutex,
         atomic::{AtomicBool, Ordering},
@@ -12,25 +13,25 @@ use gm::{
     color::Color,
     flat::{Point, Size},
 };
-use log::{debug, error, info, warn};
+use log::{debug, error, info};
 use plat::Platform;
 use refs::{Rglica, main_lock::MainLock};
 use wgpu::{
     Adapter, Backends, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, InstanceDescriptor,
-    Limits, MemoryHints, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages,
-    Trace,
+    Limits, MemoryHints, PowerPreference, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
+    TextureUsages, Trace,
 };
 use winit::{
     application::ApplicationHandler,
     dpi::PhysicalSize,
     event::{MouseScrollDelta, WindowEvent},
-    event_loop::{ActiveEventLoop, EventLoop},
+    event_loop::{ActiveEventLoop, EventLoop, EventLoopProxy},
     keyboard::{KeyCode, PhysicalKey},
     window::{WindowAttributes, WindowId},
 };
 
 use crate::{
-    Screenshot,
+    app_handler::AppHandler,
     state::{RGBA_TEXTURE_FORMAT, State},
     surface::Surface,
     window_events::WindowEvents,
@@ -39,8 +40,6 @@ use crate::{
 const ENABLE_VSYNC: bool = true;
 /// Doesn't work on some Androids
 pub(crate) const SUPPORT_SCREENSHOT: bool = !Platform::ANDROID;
-
-static WINDOW: MainLock<Option<Window>> = MainLock::new();
 
 #[cfg(target_os = "android")]
 pub type Events = winit::platform::android::activity::AndroidApp;
@@ -60,18 +59,16 @@ pub struct Window {
 
     pub(crate) resumed: bool,
 
-    pub(crate) surface: Option<Surface>,
+    pub(crate) surface: Surface,
 
     pub(crate) title_set: bool,
-
-    close: AtomicBool,
 
     initial_size: Size,
 }
 
 impl Window {
     pub fn current() -> &'static mut Self {
-        WINDOW.get_mut().as_mut().expect("Window has not been initialized yet.")
+        AppHandler::window()
     }
 
     pub fn device() -> &'static Device {
@@ -83,11 +80,7 @@ impl Window {
     }
 
     pub(crate) fn winit_window() -> &'static winit::window::Window {
-        &Self::current()
-            .surface
-            .as_ref()
-            .expect("Surface has not been initialized yet.")
-            .window
+        &mut Self::current().surface.window
     }
 
     pub fn inner_size() -> Size {
@@ -132,61 +125,25 @@ impl Window {
         // });
     }
 
-    pub(crate) fn create_surface_and_window(
-        &mut self,
+    pub(crate) async fn start_internal(
         size: Size,
-        event_loop: &ActiveEventLoop,
-    ) -> Result<bool> {
-        let window =
-            Arc::new(event_loop.create_window(WindowAttributes::default().with_title("Test Engine"))?);
+        window: winit::window::Window,
+        proxy: EventLoopProxy<Window>,
+    ) {
+        let window = Arc::new(window);
 
-        let scale: f32 = window.scale_factor().lossy_convert();
-
-        _ = window.request_inner_size(PhysicalSize::new(size.width * scale, size.height * scale));
-
-        self.config.width = (size.width * scale).lossy_convert();
-        self.config.height = (size.height * scale).lossy_convert();
-
-        let Some(surface) = Surface::new(&self.instance, &self.adapter, &self.device, &self.config, window)?
-        else {
-            return Ok(false);
-        };
-
-        self.surface = surface.into();
-
-        Ok(true)
-    }
-
-    fn start_internal(size: Size, app: Box<dyn WindowEvents>, event_loop: EventLoop<Events>) -> Result<()> {
-        let instance = Instance::new(&InstanceDescriptor {
-            backends: Backends::all(),
-            ..Default::default()
-        });
-
-        let adapter: Arc<Mutex<Option<Adapter>>> = Arc::new(Mutex::new(None));
-
-        let adapter_write = adapter.clone();
-        let int = instance.clone();
-
-        #[cfg(target_arch = "wasm32")]
-        wasm_bindgen_futures::spawn_local(async move {
-            let mut ad = adapter_write.lock().unwrap();
-
-            *ad = Some(int.request_adapter(&RequestAdapterOptions::default()).await.unwrap());
-
-            drop(ad);
-        });
-
-        #[cfg(not(target_arch = "wasm32"))]
-        pollster::block_on(async move {
-            let mut ad = adapter_write.lock().unwrap();
-
-            *ad = Some(int.request_adapter(&RequestAdapterOptions::default()).await.unwrap());
-            drop(ad);
-        });
-
-        let adapter = adapter.lock().unwrap().take().unwrap();
-        let ad2 = adapter.clone();
+        let instance = Instance::default();
+        let surface = instance.create_surface(window.clone()).unwrap();
+        let adapter = instance
+            .request_adapter(&RequestAdapterOptions {
+                power_preference:       PowerPreference::default(), // Power preference for the device
+                force_fallback_adapter: false,                      /* Indicates that only a fallback
+                                                                     * ("software") adapter can be used */
+                compatible_surface:     Some(&surface), /* Guarantee that the adapter can render to this
+                                                         * surface */
+            })
+            .await
+            .expect("Could not get an adapter (GPU).");
 
         let info = adapter.get_info();
 
@@ -217,48 +174,18 @@ impl Window {
             required_limits.max_texture_dimension_1d = 4096;
         }
 
-        let dq: Arc<Mutex<Option<_>>> = Arc::new(Mutex::new(None));
-        let dq2 = dq.clone();
-
-        #[cfg(target_arch = "wasm32")]
-        wasm_bindgen_futures::spawn_local(async move {
-            let mut dq = dq2.lock().unwrap();
-
-            *dq = ad2
-                .request_device(&DeviceDescriptor {
-                    required_features: Features::empty(),
-                    // Doesn't work on some Androids
-                    // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
-                    required_limits,
-                    label: None,
-                    memory_hints: MemoryHints::Performance,
-                    trace: Trace::default(),
-                })
-                .await
-                .unwrap()
-                .into();
-        });
-
-        #[cfg(not(target_arch = "wasm32"))]
-        pollster::block_on(async move {
-            let mut dq = dq2.lock().unwrap();
-
-            *dq = ad2
-                .request_device(&DeviceDescriptor {
-                    required_features: Features::empty(),
-                    // Doesn't work on some Androids
-                    // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
-                    required_limits,
-                    label: None,
-                    memory_hints: MemoryHints::Performance,
-                    trace: Trace::default(),
-                })
-                .await
-                .unwrap()
-                .into();
-        });
-
-        let (device, queue) = dq.lock().unwrap().take().unwrap();
+        let (device, queue) = adapter
+            .request_device(&DeviceDescriptor {
+                required_features: Features::empty(),
+                // Doesn't work on some Androids
+                // required_features: Features::POLYGON_MODE_LINE, // | Features::POLYGON_MODE_POINT,
+                required_limits,
+                label: None,
+                memory_hints: MemoryHints::Performance,
+                trace: Trace::default(),
+            })
+            .await
+            .expect("AAAAAA");
 
         let config = SurfaceConfiguration {
             usage:        if SUPPORT_SCREENSHOT {
@@ -280,11 +207,19 @@ impl Window {
             desired_maximum_frame_latency: 2,
         };
 
-        let state = State::new(app);
+        let state = State::new();
 
-        assert!(WINDOW.is_none(), "Another instance of Window already exists.");
+        let scale: f32 = window.scale_factor().lossy_convert();
 
-        *WINDOW.get_mut() = Self {
+        _ = window.request_inner_size(PhysicalSize::new(size.width * scale, size.height * scale));
+
+        // self.config.width = (size.width * scale).lossy_convert();
+        // self.config.height = (size.height * scale).lossy_convert();
+
+        let surface =
+            Surface::new(&instance, &adapter, &device, &config, window).expect("Failed to create surface");
+
+        let window = Self {
             state,
             config,
             device,
@@ -292,32 +227,14 @@ impl Window {
             adapter,
             instance,
             resumed: false,
-            surface: None,
+            surface,
             title_set: false,
-            close: AtomicBool::default(),
             initial_size: size,
+        };
+
+        if proxy.send_event(window).is_err() {
+            panic!("Failed to send window event")
         }
-        .into();
-
-        let window = Self::current();
-
-        window.state.app.set_window(Rglica::from_ref(window));
-        window.start_event_loop(event_loop)
-    }
-
-    #[cfg(not(target_os = "android"))]
-    pub fn start(size: Size, app: impl WindowEvents + 'static) -> Result<()> {
-        Self::start_internal(size, Box::new(app), EventLoop::new()?)
-    }
-
-    #[cfg(target_os = "android")]
-    pub async fn start(app: impl WindowEvents + 'static, event_loop: EventLoop<Events>) -> Result<()> {
-        Self::start_internal((1200, 1000).into(), Box::new(app), event_loop).await
-    }
-
-    fn start_event_loop(&mut self, event_loop: EventLoop<Events>) -> Result<()> {
-        event_loop.run_app(self)?;
-        Ok(())
     }
 
     pub fn set_title(title: impl Into<String>) {
@@ -357,75 +274,5 @@ impl Window {
         Self::winit_window().current_monitor().map_or(60, |monitor| {
             monitor.refresh_rate_millihertz().unwrap_or(60_000) / 1000
         })
-    }
-}
-
-impl ApplicationHandler<Events> for Window {
-    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        if self.create_surface_and_window(self.initial_size, event_loop).unwrap() {
-            self.state.app.window_ready();
-        }
-        self.resumed = true;
-    }
-
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, _window_id: WindowId, event: WindowEvent) {
-        match event {
-            WindowEvent::CloseRequested => event_loop.exit(),
-            WindowEvent::CursorMoved { position, .. } => {
-                self.state.app.mouse_moved((position.x, position.y).into());
-            }
-            WindowEvent::MouseInput { state, button, .. } => {
-                self.state.app.mouse_event(state, button);
-            }
-            WindowEvent::Touch(touch) => {
-                self.state.app.touch_event(touch);
-            }
-            WindowEvent::MouseWheel { delta, .. } => match delta {
-                MouseScrollDelta::LineDelta(x, y) => {
-                    let point: Point = (x, y).into();
-                    self.state.app.mouse_scroll(point * 28.0);
-                }
-                MouseScrollDelta::PixelDelta(delta) => {
-                    self.state.app.mouse_scroll((delta.x, delta.y).into());
-                }
-            },
-            WindowEvent::KeyboardInput { event, .. } => {
-                if event.physical_key == PhysicalKey::Code(KeyCode::Escape) {
-                    event_loop.exit();
-                }
-                self.state.app.key_event(event);
-            }
-            WindowEvent::DroppedFile(path) => {
-                self.state.app.dropped_file(path);
-            }
-            WindowEvent::Resized(physical_size) => {
-                self.state.resize(physical_size, event_loop);
-            }
-            WindowEvent::ScaleFactorChanged {
-                scale_factor,
-                inner_size_writer: _,
-            } => {
-                debug!("Scale factor: {scale_factor}");
-            }
-            WindowEvent::RedrawRequested => {
-                if self.close.load(Ordering::Relaxed) {
-                    event_loop.exit();
-                }
-
-                self.state.update();
-
-                match self.state.render() {
-                    Ok(()) => {}
-                    Err(e) => error!("Render error: {e:?}"),
-                }
-            }
-            _ => {}
-        }
-    }
-
-    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
-        if self.resumed {
-            Self::winit_window().request_redraw();
-        }
     }
 }

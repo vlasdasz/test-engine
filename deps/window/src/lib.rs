@@ -2,6 +2,7 @@ mod text;
 mod window;
 mod window_events;
 
+mod app_handler;
 mod frame_counter;
 pub mod image;
 mod screenshot;
@@ -9,6 +10,7 @@ mod state;
 mod surface;
 mod vertex_buffer;
 
+pub use app_handler::AppHandler;
 pub use bytemuck::cast_slice;
 pub use screenshot::*;
 pub use state::RGBA_TEXTURE_FORMAT;

@@ -95,7 +95,7 @@ impl AppRunner {
         debug!("Logs setup");
     }
 
-    fn new(first_view: Own<dyn View>) -> Self {
+    pub fn new(first_view: Own<dyn View>) -> Self {
         #[cfg(desktop)]
         Assets::init(store::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
@@ -106,19 +106,6 @@ impl AppRunner {
             first_view:      first_view.into(),
             window:          Rglica::default(),
         }
-    }
-
-    #[cfg(not(target_os = "android"))]
-    pub fn start(size: impl Into<Size>, root_view: Own<dyn View>) -> Result<()> {
-        error!("AAA PRED SOBAKAA!!!");
-
-        Self::setup_log();
-
-        error!("AAA SOBAKAA!!!");
-
-        // #[cfg(feature = "debug")]
-        // Self::setup_debug_server().await?;
-        Window::start(size.into(), Self::new(root_view))
     }
 
     #[cfg(feature = "debug")]
@@ -210,7 +197,9 @@ impl AppRunner {
         //     let _ = actions.await;
         // });
 
-        Window::start((1200, 1000).into(), app)
+        // Window::start((1200, 1000).into(), app);
+
+        Ok(())
     }
 
     pub fn set_window_title(title: impl Into<String>) {
