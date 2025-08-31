@@ -4,6 +4,7 @@ struct SpriteView {
     resolution: vec2<f32>,
     camera_rotation: f32,
     scale: f32,
+    _padding: vec2<u32>,
 }
 
 struct Vertex {

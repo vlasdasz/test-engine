@@ -82,6 +82,7 @@ impl LevelDrawer {
                 resolution,
                 camera_rotation: 0.0,
                 scale,
+                _padding: 0,
             },
         );
         TEXTURED_SPRITE_DRAWER.get_mut().draw(
@@ -91,6 +92,7 @@ impl LevelDrawer {
                 resolution,
                 camera_rotation: 0.0,
                 scale,
+                _padding: 0,
             },
         );
 
@@ -101,6 +103,7 @@ impl LevelDrawer {
                 resolution,
                 camera_rotation: 0.0,
                 scale,
+                _padding: 0,
             },
         );
     }

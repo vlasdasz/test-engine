@@ -9,28 +9,28 @@ use std::{
 
 use log::error;
 use refs::manage::ResourceLoader;
-use rodio::{Decoder, OutputStream, OutputStreamBuilder, Sink};
+// use rodio::{Decoder, OutputStream, OutputStreamBuilder, Sink};
 
 pub struct Sound {
-    path:   PathBuf,
-    stream: OutputStream,
-    data:   Vec<u8>,
+    path: PathBuf,
+    // stream: OutputStream,
+    data: Vec<u8>,
 }
 
 impl Sound {
     pub fn play(&mut self) {
-        let cursor = Cursor::new(self.data.clone());
-        let input = Decoder::new(cursor).unwrap();
-
-        let stream = OutputStreamBuilder::open_default_stream()
-            .expect("rodio::OutputStreamBuilder::open_default_stream()");
-        let sink = Sink::connect_new(stream.mixer());
-
-        self.stream = stream;
-
-        sink.set_volume(0.1);
-        sink.append(input);
-        sink.detach();
+        // let cursor = Cursor::new(self.data.clone());
+        // let input = Decoder::new(cursor).unwrap();
+        //
+        // let stream = OutputStreamBuilder::open_default_stream()
+        //     .expect("rodio::OutputStreamBuilder::open_default_stream()");
+        // let sink = Sink::connect_new(stream.mixer());
+        //
+        // self.stream = stream;
+        //
+        // sink.set_volume(0.1);
+        // sink.append(input);
+        // sink.detach();
     }
 }
 
@@ -53,12 +53,13 @@ impl ResourceLoader for Sound {
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {
-        let stream =
-            OutputStreamBuilder::open_default_stream().expect("OutputStreamBuilder::open_default_stream");
+        // let stream =
+        //     OutputStreamBuilder::open_default_stream().expect("
+        // OutputStreamBuilder::open_default_stream");
 
         Self {
             path: name.to_string().into(),
-            stream,
+            // stream,
             data: data.into(),
         }
     }

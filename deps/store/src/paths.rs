@@ -10,6 +10,11 @@ pub struct Paths;
 
 impl Paths {
     pub fn storage() -> PathBuf {
+        #[cfg(target_arch = "wasm32")]
+        {
+            return PathBuf::default();
+        }
+
         let home = if Platform::IOS {
             dirs::document_dir()
         } else if Platform::ANDROID {

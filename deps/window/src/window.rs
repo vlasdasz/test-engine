@@ -38,8 +38,8 @@ use crate::{
 };
 
 const ENABLE_VSYNC: bool = true;
-/// Doesn't work on some Androids
-pub(crate) const SUPPORT_SCREENSHOT: bool = !Platform::ANDROID;
+/// Doesn't work on some Androids and on Web
+pub(crate) const SUPPORT_SCREENSHOT: bool = !Platform::ANDROID && !Platform::WASM;
 
 #[cfg(target_os = "android")]
 pub type Events = winit::platform::android::activity::AndroidApp;

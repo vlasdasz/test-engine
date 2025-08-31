@@ -62,4 +62,9 @@ serve:
 	cargo install --locked trunk
 	cd ./test-game && trunk serve --features webgl
 
+serve-r:
+	rustup target add wasm32-unknown-unknown
+	cargo install --locked trunk
+	cd ./test-game && trunk serve --features webgl --release
+
 .PHONY: mobile

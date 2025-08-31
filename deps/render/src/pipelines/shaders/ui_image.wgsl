@@ -1,6 +1,7 @@
 
 struct RectView {
     resolution: vec2<f32>,
+    _padding: vec2<u32>,
 }
 
 struct Vertex {

@@ -10,4 +10,4 @@ mod no_physics;
 
 use crate::app::TestGameApp;
 
-test_engine::register_app!(TestGameApp);
+// test_engine::register_app!(TestGameApp);

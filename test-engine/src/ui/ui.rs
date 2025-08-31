@@ -25,7 +25,7 @@ use crate::{AppRunner, ui::ui_test::state::clear_state};
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
 static GRADIENT_DRAWER: MainLock<UIGradientPipeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
-static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
+// static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
 pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
 
 pub struct UI;
@@ -57,6 +57,7 @@ impl UI {
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
+                _padding:   0,
             },
         );
 
@@ -64,6 +65,7 @@ impl UI {
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
+                _padding:   0,
             },
         );
 
@@ -71,6 +73,7 @@ impl UI {
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
+                _padding:   0,
             },
         );
 
@@ -160,13 +163,13 @@ impl UI {
             Self::draw_label(&frame, label, sections, scale);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for path in drawing_view.paths().iter().rev() {
-                UI_PATH_DRAWER.get_mut().draw(
-                    pass,
-                    path.buffer(),
-                    path.uniform_bind(),
-                    path.vertex_range(),
-                    drawing_view.z_position() - UIManager::additional_z_offset(),
-                );
+                // UI_PATH_DRAWER.get_mut().draw(
+                //     pass,
+                //     path.buffer(),
+                //     path.uniform_bind(),
+                //     path.vertex_range(),
+                //     drawing_view.z_position() -
+                // UIManager::additional_z_offset(), );
             }
         }
 

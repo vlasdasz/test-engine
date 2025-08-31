@@ -20,6 +20,7 @@ pub struct SpriteView {
     pub camera_rotation: f32,
     #[educe(Default = 1.0)]
     pub scale:           f32,
+    pub _padding:        u64,
 }
 
 #[repr(C)]
@@ -40,4 +41,15 @@ impl VertexLayout for SpriteInstance {
         step_mode:    VertexStepMode::Instance,
         attributes:   Self::ATTRIBS,
     };
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test() {
+        // Web requirements
+        assert_eq!(size_of::<SpriteView>() % 16, 0);
+    }
 }

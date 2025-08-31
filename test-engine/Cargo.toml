@@ -9,9 +9,8 @@ crate-type = ["rlib", "staticlib"]
 name = "test_engine"
 
 [features]
-audio = ["dep:audio"]
 debug = ["dep:debug", "ui/debug"]
-default = ["audio"]
+default = []
 webgl = ["wgpu/webgl"]
 
 [dependencies]
@@ -31,7 +30,7 @@ dispatch = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 
-audio = { workspace = true, optional = true }
+audio = { workspace = true }
 debug = { workspace = true, optional = true }
 game = { workspace = true }
 generate = { workspace = true }

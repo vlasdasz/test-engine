@@ -8,10 +8,14 @@ version.workspace = true
 crate-type = ["rlib", "staticlib"]
 name = "audio"
 
+[features]
+defaut = []
+disabled = []
+
 [dependencies]
 log = { workspace = true }
 
-rodio = { workspace = true }
+#rodio = { workspace = true, optional = true }
 
 refs = { workspace = true }
 
