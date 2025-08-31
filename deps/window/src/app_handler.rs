@@ -177,7 +177,7 @@ impl ApplicationHandler<Window> for AppHandler {
     }
 
     fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
-        if self.state.not_ready() {
+        if self.state.ready() {
             Window::winit_window().request_redraw();
         }
     }

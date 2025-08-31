@@ -21,38 +21,20 @@ fn run_app(event_loop: EventLoop<Window>, app: &'static mut AppHandler) {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn run_app(event_loop: EventLoop<Window>, mut app: &mut AppHandler) {
-    // Allows the setting of the log level through RUST_LOG env var.
-    // It also allows wgpu logs to be seen.
-    // env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("
-    // error")).init();
-
-    // Runs the app on the current thread.
     let _ = event_loop.run_app(app);
 }
 
 #[cfg(not(target_os = "android"))]
 #[unsafe(no_mangle)]
 pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
-    dbg!("aa");
+    dbg!("test_engine_start_app");
 
-    // <T> (T -> AppEvent) extends regular platform specific events (resize, mouse,
-    // etc.). This allows our app to inject custom events and handle them
-    // alongside regular ones. let event_loop = EventLoop::<()>::new().unwrap();
-    let event_loop = EventLoop::<Window>::with_user_event().build().unwrap();
-
-    // ControlFlow::Poll continuously runs the event loop, even if the OS hasn't
-    // dispatched any events. This is ideal for games and similar applications.
-    event_loop.set_control_flow(ControlFlow::Poll);
-
-    // ControlFlow::Wait pauses the event loop if no events are available to
-    // process. This is ideal for non-game applications that only update in
-    // response to user input, and uses significantly less power/CPU time than
-    // ControlFlow::Poll. event_loop.set_control_flow(ControlFlow::Wait);
-
-    // let runtime = Runtime::new().unwrap();
-    // runtime.block_on(async {
     #[cfg(mobile)]
     crate::refs::set_current_thread_as_main();
+
+    let event_loop = EventLoop::<Window>::with_user_event().build().unwrap();
+
+    event_loop.set_control_flow(ControlFlow::Poll);
 
     #[allow(unused_unsafe)]
     let app = unsafe { test_engine_create_app() };
