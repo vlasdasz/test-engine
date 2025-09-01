@@ -1,7 +1,8 @@
+use dispatch::{from_main, on_main};
 use gm::{color::WHITE, flat::Size};
 use refs::{Own, Weak};
+use vents::OnceEvent;
 
-// use vents::OnceEvent;
 use crate::{TouchStack, UIManager, View, ViewData, ViewFrame, view::ViewSubviews};
 
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
@@ -31,10 +32,10 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where
         In: 'static + Send,
         Out: Send, {
-        // on_main(move || {
-        //     let weak = Self::prepare_modally_with_input(input);
-        //     weak.modal_event().val(callback);
-        // });
+        on_main(move || {
+            let weak = Self::prepare_modally_with_input(input);
+            weak.modal_event().val(callback);
+        });
     }
 
     #[allow(async_fn_in_trait)]
@@ -42,25 +43,19 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where
         In: 'static + Send,
         Out: Send, {
-        // from_main(||
-        // Self::prepare_modally_with_input(input).modal_event().val_async())
-        //     .await
-        //     .await
-        //     .unwrap()
-
-        todo!()
+        from_main(|| Self::prepare_modally_with_input(input).modal_event().receiver().recv().unwrap()).await
     }
 
     fn hide_modal(mut self: Weak<Self>, result: Out)
     where Out: Send {
-        // on_main(move || {
-        //     self.remove_from_superview();
-        //     TouchStack::pop_layer(self.weak_view());
-        //     self.modal_event().trigger(result);
-        // });
+        on_main(move || {
+            self.remove_from_superview();
+            TouchStack::pop_layer(self.weak_view());
+            self.modal_event().trigger(result);
+        });
     }
 
-    // fn modal_event(&self) -> &OnceEvent<Out>;
+    fn modal_event(&self) -> &OnceEvent<Out>;
 
     fn modal_size() -> Size;
 

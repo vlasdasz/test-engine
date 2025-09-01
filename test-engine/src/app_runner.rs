@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
-// use dispatch::{from_main, invoke_dispatched};
+use dispatch::{from_main, invoke_dispatched};
 use gm::{
     LossyConvert,
     flat::{Point, Size},
@@ -249,7 +249,7 @@ impl window::WindowEvents for AppRunner {
 
     fn update(&mut self) {
         UIManager::free_deleted_views();
-        // invoke_dispatched();
+        invoke_dispatched();
         LevelDrawer::update();
         UI::update();
     }

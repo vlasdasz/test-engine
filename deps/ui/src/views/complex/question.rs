@@ -9,6 +9,7 @@ use gm::{
 };
 use refs::Weak;
 use ui_proc::view;
+use vents::OnceEvent;
 
 // use vents::OnceEvent;
 use crate::{ModalView, Setup, has_data::HasText, view::ViewData};
@@ -28,7 +29,7 @@ pub struct Question {
     left:  String,
     right: String,
 
-    // event: OnceEvent<bool>,
+    event:         OnceEvent<bool>,
     #[init]
     label:         Label,
     ok_button:     Button,
@@ -36,9 +37,9 @@ pub struct Question {
 }
 
 impl ModalView<(), bool> for Question {
-    // fn modal_event(&self) -> &OnceEvent<bool> {
-    //     &self.event
-    // }
+    fn modal_event(&self) -> &OnceEvent<bool> {
+        &self.event
+    }
 
     fn modal_size() -> Size {
         (380, 240).into()

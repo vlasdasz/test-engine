@@ -1,7 +1,7 @@
 use test_engine::{
     AppRunner,
     audio::Sound,
-    // dispatch::async_after,
+    dispatch::after,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::{DataManager, Weak},
@@ -179,9 +179,10 @@ impl Setup for TestGameView {
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
             let spin = Spinner::lock();
-            // async_after(4, async {
-            //     spin.stop();
-            // });
+            after(4, || {
+                dbg!("After");
+                spin.instant_stop();
+            });
         });
 
         self.alert

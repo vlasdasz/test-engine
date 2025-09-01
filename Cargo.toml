@@ -59,10 +59,10 @@ wgpu = "26.0"
 wgpu_text = "26.0"
 winit = "0.30"
 
-plat = "0.3.0"
+plat = "0.4.0"
 reflected = "0.26"
 refs = { version = "0.19.0", default-features = true }
-vents = "0.9.0"
+vents = "0.10.0"
 
 audio = { path = "deps/audio" }
 debug = { path = "deps/debug" }
@@ -86,6 +86,6 @@ window = { path = "deps/window" }
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }
-#vents = { path = "../deps/vents/vents" }
+vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "10cd78a848cf8e911a6780c011dbd5be33f37a1c" }

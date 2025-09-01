@@ -14,3 +14,10 @@ log = { workspace = true }
 
 gm = { workspace = true }
 refs = { workspace = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+gloo-timers = { version = "0.3", features = ["futures"] }
+
+[build-dependencies]
+plat = { workspace = true }
