@@ -1,5 +1,3 @@
-// #![cfg(not_android)]
-
 use std::{
     fmt::{Debug, Formatter},
     fs::read,
@@ -7,30 +5,20 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use kira::sound::static_sound::StaticSoundData;
 use log::error;
 use refs::manage::ResourceLoader;
-// use rodio::{Decoder, OutputStream, OutputStreamBuilder, Sink};
+
+use crate::manager::audio_manager;
 
 pub struct Sound {
     path: PathBuf,
-    // stream: OutputStream,
-    data: Vec<u8>,
+    data: StaticSoundData,
 }
 
 impl Sound {
     pub fn play(&mut self) {
-        // let cursor = Cursor::new(self.data.clone());
-        // let input = Decoder::new(cursor).unwrap();
-        //
-        // let stream = OutputStreamBuilder::open_default_stream()
-        //     .expect("rodio::OutputStreamBuilder::open_default_stream()");
-        // let sink = Sink::connect_new(stream.mixer());
-        //
-        // self.stream = stream;
-        //
-        // sink.set_volume(0.1);
-        // sink.append(input);
-        // sink.detach();
+        audio_manager().play(self.data.clone()).expect("Failed to play sound");
     }
 }
 
@@ -53,14 +41,14 @@ impl ResourceLoader for Sound {
     }
 
     fn load_data(data: &[u8], name: impl ToString) -> Self {
-        // let stream =
-        //     OutputStreamBuilder::open_default_stream().expect("
-        // OutputStreamBuilder::open_default_stream");
+        let buffer = data.to_vec();
+
+        let data = StaticSoundData::from_media_source(Cursor::new(buffer))
+            .expect("StaticSoundData::from_media_source(Cursor::new(buffer))");
 
         Self {
             path: name.to_string().into(),
-            // stream,
-            data: data.into(),
+            data,
         }
     }
 }

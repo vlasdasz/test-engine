@@ -10,12 +10,11 @@ name = "audio"
 
 [features]
 defaut = []
-disabled = []
 
 [dependencies]
 log = { workspace = true }
 
-#rodio = { workspace = true, optional = true }
+kira = { workspace = true }
 
 refs = { workspace = true }
 

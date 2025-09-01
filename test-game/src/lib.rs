@@ -8,6 +8,5 @@ mod interface;
 mod levels;
 mod no_physics;
 
-use crate::app::TestGameApp;
-
-// test_engine::register_app!(TestGameApp);
+#[cfg(ios)]
+test_engine::register_app!(crate::app::TestGameApp);
