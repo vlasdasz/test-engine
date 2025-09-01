@@ -42,3 +42,6 @@ winit = { workspace = true, features = ["android-game-activity"] }
 
 [target.'cfg(not(target_os = "android"))'.dependencies]
 winit = { workspace = true }
+
+[build-dependencies]
+plat = "0.4.0"

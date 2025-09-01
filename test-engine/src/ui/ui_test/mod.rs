@@ -1,6 +1,5 @@
 pub mod helpers;
 pub mod state;
-
 use std::{
     fmt::Display,
     ops::Deref,
@@ -8,7 +7,7 @@ use std::{
 };
 
 use anyhow::{Result, bail};
-use dispatch::on_main;
+use dispatch::{from_main, on_main};
 // use dispatch::{from_main, on_main, wait_for_next_frame};
 pub use helpers::*;
 use log::{error, warn};
@@ -57,30 +56,27 @@ fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
 
 #[allow(dead_code)]
 pub async fn inject_scroll(scroll: impl ToF32) {
-    // from_main(move || {
-    //     UIManager::trigger_scroll((0, scroll).into());
-    // })
-    // .await;
+    from_main(move || {
+        UIManager::trigger_scroll((0, scroll).into());
+    });
 }
 
 pub async fn inject_touches(data: impl ToString + Send + 'static) {
     let scale = UIManager::scale();
-    // from_main(move || {
-    //     for mut touch in Touch::vec_from_str(&data.to_string()) {
-    //         touch.position *= scale;
-    //         inject_touch(touch);
-    //     }
-    // })
-    // .await;
+    from_main(move || {
+        for mut touch in Touch::vec_from_str(&data.to_string()) {
+            touch.position *= scale;
+            inject_touch(touch);
+        }
+    });
 }
 
 pub async fn inject_touches_delayed(data: &str) {
     for touch in Touch::vec_from_str(data) {
         // wait_for_next_frame().await;
-        // from_main(move || {
-        //     inject_touch(touch);
-        // })
-        // .await;
+        from_main(move || {
+            inject_touch(touch);
+        });
         // wait_for_next_frame().await;
     }
 }

@@ -35,6 +35,7 @@ impl ViewCallbacks for ColorMeter {
 
 impl ColorMeter {
     pub fn update_screenshot(mut self: Weak<Self>) {
+        #[cfg(not_wasm)]
         std::thread::spawn(move || {
             let Some(screenshot) = AppRunner::take_screenshot().ok() else {
                 return;
@@ -46,20 +47,6 @@ impl ColorMeter {
                 }
 
                 self.screenshot = screenshot;
-
-                // Image::free_with_name("Screenshot");
-
-                // let Some(image) = Image::from_raw_data(
-                //     App::state(),
-                //     &cast_slice(&self.screenshot),
-                //     "Screenshot",
-                //     size.into(),
-                //     4,
-                // )
-                // .alert_err() else {
-                //     return;
-                // };
-                // self.image_view.image = image;
             });
         });
     }

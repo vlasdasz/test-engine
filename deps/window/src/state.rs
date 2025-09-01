@@ -160,6 +160,7 @@ impl State {
         Window::queue().submit(std::iter::once(encoder.finish()));
         surface_texture.present();
 
+        #[cfg(not_wasm)]
         if let Some(buffer_sender) = self.read_display_request.take() {
             let (sender, receiver) = channel();
 
