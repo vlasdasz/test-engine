@@ -94,7 +94,7 @@ pub async fn test_scale() -> Result<()> {
     )
     .await;
 
-    let data = from_main(move || view.data.clone()).await;
+    let data = from_main(move || view.data.clone());
 
     assert_eq!(
         data,
@@ -175,8 +175,7 @@ pub async fn test_scale() -> Result<()> {
     from_main(move || {
         UIManager::override_scale(0.6);
         view.data.clear();
-    })
-    .await;
+    });
 
     inject_touches(
         "
@@ -201,7 +200,7 @@ pub async fn test_scale() -> Result<()> {
     )
     .await;
 
-    let data = from_main(move || view.data.clone()).await;
+    let data = from_main(move || view.data.clone());
 
     assert_eq!(
         data,
@@ -272,8 +271,7 @@ pub async fn test_scale() -> Result<()> {
     from_main(move || {
         UIManager::override_scale(1.5);
         view.data.clear();
-    })
-    .await;
+    });
 
     inject_touches(
         "
@@ -308,7 +306,7 @@ pub async fn test_scale() -> Result<()> {
     )
     .await;
 
-    let data = from_main(move || view.data.clone()).await;
+    let data = from_main(move || view.data.clone());
 
     assert_eq!(
         data,
@@ -372,8 +370,7 @@ pub async fn test_scale() -> Result<()> {
 
     from_main(move || {
         UIManager::override_scale(1);
-    })
-    .await;
+    });
 
     Ok(())
 }

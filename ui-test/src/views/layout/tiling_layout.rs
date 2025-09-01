@@ -71,8 +71,7 @@ pub async fn test_tiling_layout() -> anyhow::Result<()> {
 
     from_main(move || {
         view.menu.remove_all_subviews();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -123,8 +122,7 @@ pub async fn test_tiling_layout() -> anyhow::Result<()> {
             .add_transition::<TilingLayout, TilingLayout>()
             .set_text("Settings")
             .set_text_size(80);
-    })
-    .await;
+    });
 
     check_colors(
         r#"

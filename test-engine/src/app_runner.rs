@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched};
+use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
 use gm::{
     LossyConvert,
     flat::{Point, Size},
@@ -15,7 +15,8 @@ use level::{LevelBase, LevelManager};
 use log::{debug, error};
 use refs::{Own, Rglica, main_lock::MainLock};
 // use tokio::time::sleep;
-use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
+use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
+use vents::OnceEvent;
 // use vents::OnceEvent;
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
@@ -25,13 +26,14 @@ use winit::{
 };
 
 use crate::{
+    App,
+    app_starter::test_engine_start_with_app,
     assets::Assets,
     level_drawer::LevelDrawer,
     ui::{Input, UI},
 };
 
-// static WINDOW_READY: Mutex<OnceEvent> =
-// Mutex::new(OnceEvent::const_default());
+static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct AppRunner {
@@ -52,45 +54,48 @@ impl AppRunner {
 
     #[cfg(not(android))]
     fn setup_log() {
-        use fern::Dispatch;
-        use log::{Level, LevelFilter};
+        #[cfg(not_wasm)]
+        {
+            use fern::Dispatch;
+            use log::{Level, LevelFilter};
 
-        // Dispatch::new()
-        //     .level(LevelFilter::Warn)
-        //     .level_for("test_engine", LevelFilter::Debug)
-        //     .level_for("shopping", LevelFilter::Debug)
-        //     .format(|out, message, record| {
-        //         let level_icon = match record.level() {
-        //             Level::Error => "🔴",
-        //             Level::Warn => "🟡",
-        //             Level::Info => "🟢",
-        //             Level::Debug => "🔵",
-        //             Level::Trace => "⚪",
-        //         };
-        //
-        //         let location = false;
-        //         let module = false;
-        //
-        //         let mut log = format!("{level_icon} {message}");
-        //
-        //         if location {
-        //             log = format!(
-        //                 "[{}::{}] {}",
-        //                 record.file().unwrap_or_default(),
-        //                 record.line().unwrap_or_default(),
-        //                 log
-        //             );
-        //         }
-        //
-        //         if module {
-        //             log = format!("{} {}", record.module_path().unwrap_or_default(),
-        // log);         }
-        //
-        //         out.finish(format_args!("{log}"));
-        //     })
-        //     .chain(std::io::stdout())
-        //     .apply()
-        //     .expect("Failed to initialize logging");
+            Dispatch::new()
+                .level(LevelFilter::Warn)
+                .level_for("test_engine", LevelFilter::Debug)
+                .level_for("shopping", LevelFilter::Debug)
+                .format(|out, message, record| {
+                    let level_icon = match record.level() {
+                        Level::Error => "🔴",
+                        Level::Warn => "🟡",
+                        Level::Info => "🟢",
+                        Level::Debug => "🔵",
+                        Level::Trace => "⚪",
+                    };
+
+                    let location = false;
+                    let module = false;
+
+                    let mut log = format!("{level_icon} {message}");
+
+                    if location {
+                        log = format!(
+                            "[{}::{}] {}",
+                            record.file().unwrap_or_default(),
+                            record.line().unwrap_or_default(),
+                            log
+                        );
+                    }
+
+                    if module {
+                        log = format!("{} {}", record.module_path().unwrap_or_default(), log);
+                    }
+
+                    out.finish(format_args!("{log}"));
+                })
+                .chain(std::io::stdout())
+                .apply()
+                .expect("Failed to initialize logging");
+        }
 
         debug!("Logs setup");
     }
@@ -183,21 +188,33 @@ impl AppRunner {
     }
 
     #[cfg(not(target_os = "android"))]
-    pub async fn start_with_actor(
-        first_view: Own<dyn View>,
+    pub fn start_with_actor(
         actions: impl std::future::Future<Output = Result<()>> + Send + 'static,
     ) -> Result<()> {
+        use ui::Setup;
+
         Self::setup_log();
 
-        let app = Self::new(first_view);
+        struct ActorApp;
 
-        // tokio::spawn(async move {
-        //     let recv = from_main(|| WINDOW_READY.lock().unwrap().val_async()).await;
-        //     recv.await.unwrap();
-        //     let _ = actions.await;
-        // });
+        impl App for ActorApp {
+            fn new() -> Self
+            where Self: Sized {
+                ActorApp {}
+            }
 
-        // Window::start((1200, 1000).into(), app);
+            fn make_root_view(&self) -> Own<dyn View> {
+                Container::new()
+            }
+        }
+
+        std::thread::spawn(move || {
+            let _recv = WINDOW_READY.lock().unwrap().sub(|| {
+                async_std::task::block_on(actions).unwrap();
+            });
+        });
+
+        test_engine_start_with_app(Box::new(ActorApp::new()));
 
         Ok(())
     }
@@ -210,6 +227,7 @@ impl AppRunner {
         from_main(|| {
             Window::current().set_size(size);
         });
+        wait_for_next_frame().await;
     }
 
     pub fn take_screenshot() -> Result<Screenshot> {
@@ -239,7 +257,10 @@ impl window::WindowEvents for AppRunner {
 
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
-            // WINDOW_READY.lock().unwrap().trigger(());
+
+            std::thread::spawn(|| {
+                WINDOW_READY.lock().unwrap().trigger(());
+            });
         });
     }
 

@@ -160,8 +160,7 @@ pub async fn test_slider() -> Result<()> {
 
     from_main(move || {
         view.slider.set_range(-5, 5);
-    })
-    .await;
+    });
 
     assert_eq!(view.slider.value(), 5.0);
     assert_eq!(view.label.text(), "5.00");
@@ -190,8 +189,7 @@ pub async fn test_slider() -> Result<()> {
             label.set_size(50, 20);
             label.set_x(340);
             label.set_y(view.slider.indicator_position() - 10.0 + view.slider.y());
-        })
-        .await;
+        });
     }
 
     check_colors(

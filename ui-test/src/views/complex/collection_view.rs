@@ -80,8 +80,7 @@ pub async fn test_collection_view() -> Result<()> {
     from_main(move || {
         view.records.push("Hello".to_string());
         view.table.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -116,8 +115,7 @@ pub async fn test_collection_view() -> Result<()> {
         }
 
         view.table.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -161,8 +159,7 @@ pub async fn test_collection_view() -> Result<()> {
         view.collection.place().right_half();
         view.collection.layout = CollectionLayout::Cards;
         view.collection.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"

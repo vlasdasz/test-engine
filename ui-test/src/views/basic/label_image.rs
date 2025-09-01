@@ -120,8 +120,7 @@ pub async fn test_label_image() -> Result<()> {
     from_main(move || {
         view.label.set_resizing_image("button");
         view.label.set_text_color(WHITE);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -251,8 +250,7 @@ pub async fn test_label_image() -> Result<()> {
     from_main(move || {
         view.resizing_image = true;
         view.table_view.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"

@@ -31,8 +31,7 @@ impl Setup for NumberViewDesign {
 pub async fn test_number_view_design() -> Result<()> {
     from_main(|| {
         STYLE.apply_globally::<NumberView>();
-    })
-    .await;
+    });
 
     let _view = UI::init_test_view::<NumberViewDesign>().await;
 
@@ -119,8 +118,7 @@ pub async fn test_number_view_design() -> Result<()> {
 
     from_main(|| {
         STYLE.reset_global::<NumberView>();
-    })
-    .await;
+    });
 
     Ok(())
 }

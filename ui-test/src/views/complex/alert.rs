@@ -13,8 +13,7 @@ pub async fn test_alert() -> Result<()> {
 
     from_main(|| {
         Alert::show("Forogorn\nSopokok\nFergel");
-    })
-    .await;
+    });
 
     check_colors(
         r#"

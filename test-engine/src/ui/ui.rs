@@ -4,6 +4,7 @@ use std::{
     sync::Mutex,
 };
 
+use dispatch::{from_main, wait_for_next_frame};
 // use dispatch::{from_main, wait_for_next_frame};
 use gm::{color::TURQUOISE, flat::Rect};
 use log::{debug, trace};
@@ -268,19 +269,19 @@ impl UI {
         clear_state();
 
         AppRunner::set_window_size((width, height)).await;
-        // wait_for_next_frame().await;
-        // let view = from_main(move || {
-        //     let weak = view.weak();
-        //     let mut root = UIManager::root_view();
-        //     root.clear_root();
-        //     let view = root.add_subview_to_root(view);
-        //     view.place().back();
-        //     trace!("{width} - {height}");
-        //     weak
-        // })
-        // .await;
-        // wait_for_next_frame().await;
-        todo!()
+        wait_for_next_frame().await;
+        let view = from_main(move || {
+            let weak = view.weak();
+            let mut root = UIManager::root_view();
+            root.clear_root();
+            let view = root.add_subview_to_root(view);
+            view.place().back();
+            trace!("{width} - {height}");
+            weak
+        });
+        wait_for_next_frame().await;
+
+        view
     }
 }
 

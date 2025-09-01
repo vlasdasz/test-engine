@@ -59,8 +59,7 @@ pub async fn test_center_field() -> anyhow::Result<()> {
 
     from_main(move || {
         view.container.place().clear().all_sides(200);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -93,8 +92,7 @@ pub async fn test_center_field() -> anyhow::Result<()> {
     from_main(move || {
         view.container.place().clear().all_sides(250);
         view.field.place().max_width(200);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -127,8 +125,7 @@ pub async fn test_center_field() -> anyhow::Result<()> {
 
     from_main(move || {
         view.container.place().clear().all_sides(100);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -164,8 +161,7 @@ pub async fn test_center_field() -> anyhow::Result<()> {
 
     from_main(move || {
         view.field.place().center_x();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -193,8 +189,7 @@ pub async fn test_center_field() -> anyhow::Result<()> {
 
     from_main(move || {
         view.field.place().relative(CenterY, view.container, -50.0);
-    })
-    .await;
+    });
 
     check_colors(
         r#"

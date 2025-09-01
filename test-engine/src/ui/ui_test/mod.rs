@@ -7,7 +7,7 @@ use std::{
 };
 
 use anyhow::{Result, bail};
-use dispatch::{from_main, on_main};
+use dispatch::{from_main, on_main, wait_for_next_frame};
 // use dispatch::{from_main, on_main, wait_for_next_frame};
 pub use helpers::*;
 use log::{error, warn};
@@ -31,10 +31,9 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
         let touches = Touch::vec_from_str(comb.0);
 
         for touch in touches {
-            // from_main(move || {
-            //     inject_touch(touch);
-            // })
-            // .await;
+            from_main(move || {
+                inject_touch(touch);
+            });
         }
 
         if get_state::<Val>() != comb.1 {
@@ -73,11 +72,11 @@ pub async fn inject_touches(data: impl ToString + Send + 'static) {
 
 pub async fn inject_touches_delayed(data: &str) {
     for touch in Touch::vec_from_str(data) {
-        // wait_for_next_frame().await;
+        wait_for_next_frame().await;
         from_main(move || {
             inject_touch(touch);
         });
-        // wait_for_next_frame().await;
+        wait_for_next_frame().await;
     }
 }
 
@@ -89,7 +88,7 @@ pub async fn inject_keys(s: impl ToString) {
 }
 
 pub async fn inject_key(key: char) {
-    // from_main(move || Input::on_char(key)).await;
+    from_main(move || Input::on_char(key));
 }
 
 #[allow(dead_code)]
@@ -177,7 +176,7 @@ pub async fn record_colors() -> Result<()> {
     let touches: Own<_> = Vec::<(Touch, U8Color)>::new().into();
     let mut touches = touches.weak();
 
-    let (s, mut r) = channel::<()>();
+    let (s, r) = channel::<()>();
 
     on_main(move || {
         UIEvents::on_debug_touch().val(move |touch| {

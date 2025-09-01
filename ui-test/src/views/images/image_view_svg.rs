@@ -78,8 +78,7 @@ pub async fn test_image_view_svg() -> Result<()> {
             tint: BLUE,
             name: "settings.svg".to_string(),
         });
-    })
-    .await;
+    });
 
     check_colors(
         r#"

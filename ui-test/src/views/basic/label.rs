@@ -173,8 +173,7 @@ pub async fn test_label() -> Result<()> {
 
     from_main(move || {
         view.label.set_text_color(BLUE);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -226,8 +225,7 @@ pub async fn test_label() -> Result<()> {
             .w(200)
             .t(280)
             .h(60);
-    })
-    .await;
+    });
 
     check_colors(
         r#"

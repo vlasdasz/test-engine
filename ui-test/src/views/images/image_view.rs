@@ -80,8 +80,7 @@ pub async fn test_image_view() -> Result<()> {
 
     from_main(move || {
         view.image_view.place().clear().tl(100).size(400, 400);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -131,8 +130,7 @@ pub async fn test_image_view() -> Result<()> {
         UIManager::enable_debug_frames();
         view.image_view.place().clear().tl(140).size(280, 200);
         view.image_view.set_image("cat.png");
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -194,8 +192,7 @@ pub async fn test_image_view() -> Result<()> {
     from_main(move || {
         view.image_view.mode = ImageMode::AspectFit;
         view.image_view.place().clear().tl(140).size(280, 200);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -244,8 +241,7 @@ pub async fn test_image_view() -> Result<()> {
 
     from_main(move || {
         view.image_view.place().clear().tl(140).size(100, 400);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -292,8 +288,7 @@ pub async fn test_image_view() -> Result<()> {
     from_main(move || {
         view.image_view.mode = ImageMode::AspectFill;
         view.image_view.place().clear().tl(140).size(280, 200);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -332,8 +327,7 @@ pub async fn test_image_view() -> Result<()> {
 
     from_main(move || {
         view.image_view.place().clear().tl(140).size(100, 400);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -374,7 +368,7 @@ pub async fn test_image_view() -> Result<()> {
     )
     .await?;
 
-    from_main(|| UIManager::disable_debug_frames()).await;
+    from_main(|| UIManager::disable_debug_frames());
 
     Ok(())
 }

@@ -133,8 +133,7 @@ pub async fn test_stick() -> Result<()> {
 
     from_main(move || {
         view.stick.set_position((400, 50));
-    })
-    .await;
+    });
     //
     // check_colors(
     //     r#"
@@ -178,8 +177,7 @@ pub async fn test_stick() -> Result<()> {
 
     from_main(move || {
         view.stick.set_position((200, 200)).set_size(400, 400);
-    })
-    .await;
+    });
 
     // UIManager::enable_debug_frames();
 

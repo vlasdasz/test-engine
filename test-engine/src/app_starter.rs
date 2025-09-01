@@ -4,7 +4,7 @@ use log::{error, info};
 use window::{AppHandler, Window};
 use winit::event_loop::{ControlFlow, EventLoop};
 
-use crate::{AppRunner, app::test_engine_create_app};
+use crate::{App, AppRunner, app::test_engine_create_app};
 
 #[cfg(target_arch = "wasm32")]
 fn run_app(event_loop: EventLoop<Window>, app: &'static mut AppHandler) {
@@ -16,13 +16,18 @@ fn run_app(event_loop: EventLoop<Window>, app: &'static mut AppHandler) {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-fn run_app(event_loop: EventLoop<Window>, mut app: &mut AppHandler) {
+fn run_app(event_loop: EventLoop<Window>, app: &mut AppHandler) {
     let _ = event_loop.run_app(app);
 }
 
 #[cfg(not(target_os = "android"))]
 #[unsafe(no_mangle)]
 pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
+    #[allow(unused_unsafe)]
+    test_engine_start_with_app(unsafe { test_engine_create_app() })
+}
+
+pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
     dbg!("test_engine_start_app");
 
     #[cfg(target_arch = "wasm32")]
@@ -41,8 +46,6 @@ pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
 
     event_loop.set_control_flow(ControlFlow::Poll);
 
-    #[allow(unused_unsafe)]
-    let app = unsafe { test_engine_create_app() };
     app.setup();
 
     let app = AppHandler::new(AppRunner::new(app.make_root_view()), &event_loop);

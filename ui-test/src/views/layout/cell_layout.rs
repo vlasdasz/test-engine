@@ -137,8 +137,7 @@ pub async fn test_cell_layout() -> anyhow::Result<()> {
         view.title.place().clear().h(50).lrt(10);
 
         view.table.place().clear().lrb(10).anchor(Top, view.title, 10);
-    })
-    .await;
+    });
 
     wait_for_next_frame().await;
 

@@ -13,7 +13,7 @@ use log::info;
 use test_engine::{
     AppRunner,
     dispatch::from_main,
-    ui::{Container, Label, Setup, UIManager},
+    ui::{Label, UIManager},
 };
 
 use crate::{
@@ -34,14 +34,13 @@ mod level;
 mod views;
 
 fn main() -> Result<()> {
-    AppRunner::start_with_actor(Container::new(), async {
+    AppRunner::start_with_actor(async {
         Label::set_default_text_size(32);
         UIManager::set_display_touches(true);
 
         from_main(|| {
             UIManager::override_scale(1.0);
-        })
-        .await;
+        });
 
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 
@@ -53,7 +52,7 @@ fn main() -> Result<()> {
         AppRunner::stop();
 
         Ok(())
-    });
+    })?;
 
     Ok(())
 }

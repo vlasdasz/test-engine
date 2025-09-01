@@ -109,8 +109,7 @@ pub async fn test_scroll_view() -> Result<()> {
 
     from_main(move || {
         view.scroll.set_content_size((400, 400));
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -157,8 +156,7 @@ pub async fn test_scroll_view() -> Result<()> {
 
     from_main(move || {
         view.scroll.set_content_size((600, 800));
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -390,8 +388,7 @@ pub async fn test_scroll_view() -> Result<()> {
 
     from_main(move || {
         view.scroll.set_content_offset(-400.0);
-    })
-    .await;
+    });
 
     check_colors(
         r#"

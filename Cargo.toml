@@ -25,6 +25,7 @@ ignored = []
 [workspace.dependencies]
 aes-gcm = "0.10.3"
 android_logger = "0.15"
+async-std = "1.13"
 anyhow = "1.0"
 atomic_float = "1.1"
 bit_ops = "0.1"

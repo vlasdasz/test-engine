@@ -41,13 +41,11 @@ pub async fn test_transparency() -> Result<()> {
 
     from_main(|| {
         LevelManager::set_level(SkyboxLevel::default());
-    })
-    .await;
+    });
 
     from_main(|| {
         LevelManager::stop_level();
-    })
-    .await;
+    });
 
     check_colors(
         r#"

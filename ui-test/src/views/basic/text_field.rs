@@ -100,8 +100,7 @@ pub async fn test_text_field() -> Result<()> {
     from_main(move || {
         view.field.set_text_size(140);
         view.field.clear();
-    })
-    .await;
+    });
 
     inject_touches(
         r"

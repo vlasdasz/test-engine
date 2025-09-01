@@ -119,8 +119,7 @@ pub async fn test_table_view() -> Result<()> {
     from_main(move || {
         N_CELLS.store(2_000_000 - 5, Ordering::Relaxed);
         view.table.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"

@@ -29,8 +29,7 @@ pub async fn test_root_view() -> Result<()> {
 
     from_main(|| {
         UIManager::root_view().set_color(GREEN);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -46,8 +45,7 @@ pub async fn test_root_view() -> Result<()> {
 
     from_main(|| {
         UIManager::root_view().set_color(CLEAR);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -61,8 +59,7 @@ pub async fn test_root_view() -> Result<()> {
 
     from_main(|| {
         UIManager::root_view().set_image("cat.png");
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -79,8 +76,7 @@ pub async fn test_root_view() -> Result<()> {
 
     from_main(|| {
         UIManager::root_view().set_image(NoImage);
-    })
-    .await;
+    });
 
     check_colors(
         r#"

@@ -52,8 +52,7 @@ pub async fn test_navigation_view() -> Result<()> {
         presented.set_color(RED);
 
         view.present(presented)
-    })
-    .await;
+    });
 
     presented.recv()?;
 

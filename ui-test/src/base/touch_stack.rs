@@ -20,7 +20,7 @@ pub async fn test_touch_stack() -> Result<()> {
 
     assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
-    let mut button = from_main(move || view.add_view::<Button>()).await;
+    let mut button = from_main(move || view.add_view::<Button>());
 
     assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
@@ -31,7 +31,7 @@ pub async fn test_touch_stack() -> Result<()> {
         vec![vec!["Layer: Root view", button.view_label()]],
     );
 
-    from_main(move || button.remove_from_superview()).await;
+    from_main(move || button.remove_from_superview());
 
     wait_for_next_frame().await;
 

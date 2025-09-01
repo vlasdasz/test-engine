@@ -53,8 +53,7 @@ pub async fn test_min_width() -> anyhow::Result<()> {
 
     from_main(move || {
         view.view.place().min_width(250).center_x();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -92,8 +91,7 @@ pub async fn test_min_width() -> anyhow::Result<()> {
 
     from_main(move || {
         view.view.place().min_height(250).center_y();
-    })
-    .await;
+    });
 
     check_colors(
         r#"

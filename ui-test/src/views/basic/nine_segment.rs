@@ -80,8 +80,7 @@ pub async fn test_nine_segment() -> Result<()> {
 
     from_main(move || {
         view.segment.set_frame((100, 100, 250, 160));
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -124,8 +123,7 @@ pub async fn test_nine_segment() -> Result<()> {
 
     from_main(move || {
         view.segment.set_frame((100, 100, 140, 280));
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -231,8 +229,7 @@ pub async fn test_nine_segment() -> Result<()> {
         view.button.set_image(NoImage);
         view.button.set_resizing_image("button");
         view.button.set_text_color(WHITE);
-    })
-    .await;
+    });
 
     check_colors(
         r#"

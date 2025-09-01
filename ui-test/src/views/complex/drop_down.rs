@@ -104,8 +104,7 @@ Car
 
     from_main(move || {
         view.top.custom_format(|val| format!("{val} 5"));
-    })
-    .await;
+    });
 
     inject_touches(
         "

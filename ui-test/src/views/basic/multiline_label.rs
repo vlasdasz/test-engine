@@ -73,8 +73,7 @@ pub async fn test_multiline() -> Result<()> {
 
     from_main(move || {
         view.label.multiline = true;
-    })
-    .await;
+    });
 
     check_colors(
         r#"

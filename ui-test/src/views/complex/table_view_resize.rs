@@ -83,8 +83,7 @@ pub async fn test_table_view_resize() -> Result<()> {
 
     from_main(move || {
         view.table.set_size(400, 100);
-    })
-    .await;
+    });
 
     check_colors(
         r#"

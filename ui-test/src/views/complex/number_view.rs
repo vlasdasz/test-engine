@@ -171,8 +171,7 @@ pub async fn test_number_view() -> Result<()> {
         assert_eq!(view.float.value(), -10.0);
         assert_eq!(view.uint.value(), 2.0);
         assert_eq!(view.int.value(), -10.0);
-    })
-    .await;
+    });
 
     inject_touches(
         "
