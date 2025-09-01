@@ -15,3 +15,4 @@ educe = { workspace = true }
 lyon = { workspace = true }
 arbitrary = { workspace = true }
 serde = { workspace = true }
+fastrand = { workspace = true }

@@ -20,6 +20,7 @@ debug = ["test-engine/debug"]
 [dependencies]
 test-engine = { workspace = true }
 ui-benchmark = { workspace = true }
+fastrand = { workspace = true }
 
 [build-dependencies]
 plat = { workspace = true }

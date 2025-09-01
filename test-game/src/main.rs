@@ -4,7 +4,7 @@
 #![feature(const_trait_impl)]
 #![feature(linkage)]
 
-use crate::{app::TestGameApp, test_engine::launch_app};
+use crate::app::TestGameApp;
 
 mod app;
 mod interface;

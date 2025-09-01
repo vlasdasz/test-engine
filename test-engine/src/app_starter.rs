@@ -45,11 +45,7 @@ pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
     let app = unsafe { test_engine_create_app() };
     app.setup();
 
-    let app = AppHandler::new(
-        app.initial_size(),
-        AppRunner::new(app.make_root_view()),
-        &event_loop,
-    );
+    let app = AppHandler::new(AppRunner::new(app.make_root_view()), &event_loop);
 
     run_app(event_loop, app);
 

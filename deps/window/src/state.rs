@@ -7,6 +7,7 @@ use gm::{
     color::{Color, GRAY_BLUE, U8Color},
     flat::Size,
 };
+use log::warn;
 use plat::Platform;
 use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
@@ -42,6 +43,7 @@ impl State {
 
     pub fn resize(&mut self, new_size: PhysicalSize<u32>, event_loop: &ActiveEventLoop) {
         if new_size.width == 0 || new_size.height == 0 {
+            warn!("Zero size");
             return;
         }
 

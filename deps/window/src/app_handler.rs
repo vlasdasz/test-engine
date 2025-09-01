@@ -47,11 +47,7 @@ pub struct AppHandler {
 }
 
 impl AppHandler {
-    pub fn new(
-        _size: Size,
-        app: impl WindowEvents + 'static,
-        event_loop: &EventLoop<Window>,
-    ) -> &'static mut Self {
+    pub fn new(app: impl WindowEvents + 'static, event_loop: &EventLoop<Window>) -> &'static mut Self {
         let handler = APP_HANDLER.get_mut();
 
         *handler = Some(Self {
@@ -100,10 +96,10 @@ impl ApplicationHandler<Window> for AppHandler {
                 let window = event_loop.create_window(win_attr).expect("create window err.");
 
                 #[cfg(target_arch = "wasm32")]
-                wasm_bindgen_futures::spawn_local(Window::start_internal((1000, 1000).into(), window, proxy));
+                wasm_bindgen_futures::spawn_local(Window::start_internal(window, proxy));
 
                 #[cfg(not(target_arch = "wasm32"))]
-                pollster::block_on(Window::start_internal((1000, 1000).into(), window, proxy));
+                pollster::block_on(Window::start_internal(window, proxy));
             }
         }
     }
@@ -112,6 +108,13 @@ impl ApplicationHandler<Window> for AppHandler {
         self.state = AppHandlerState::Ready(window);
         self.te_window_events.set_window(Rglica::from_ref(self.state.window()));
         self.te_window_events.window_ready();
+
+        AppHandler::current().te_window_events.resize(
+            Window::inner_position(),
+            Window::outer_position(),
+            Window::inner_size(),
+            Window::outer_size(),
+        );
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _window_id: WindowId, event: WindowEvent) {

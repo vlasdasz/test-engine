@@ -62,8 +62,6 @@ pub struct Window {
     pub(crate) surface: Surface,
 
     pub(crate) title_set: bool,
-
-    initial_size: Size,
 }
 
 impl Window {
@@ -125,11 +123,7 @@ impl Window {
         // });
     }
 
-    pub(crate) async fn start_internal(
-        size: Size,
-        window: winit::window::Window,
-        proxy: EventLoopProxy<Window>,
-    ) {
+    pub(crate) async fn start_internal(window: winit::window::Window, proxy: EventLoopProxy<Window>) {
         let window = Arc::new(window);
 
         let instance = Instance::default();
@@ -211,8 +205,6 @@ impl Window {
 
         let scale: f32 = window.scale_factor().lossy_convert();
 
-        _ = window.request_inner_size(PhysicalSize::new(size.width * scale, size.height * scale));
-
         // self.config.width = (size.width * scale).lossy_convert();
         // self.config.height = (size.height * scale).lossy_convert();
 
@@ -229,7 +221,6 @@ impl Window {
             resumed: false,
             surface,
             title_set: false,
-            initial_size: size,
         };
 
         if proxy.send_event(window).is_err() {

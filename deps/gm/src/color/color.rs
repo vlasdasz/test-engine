@@ -58,8 +58,7 @@ impl Color {
     ];
 
     pub fn random() -> Self {
-        // Self::ALL[(0..Self::ALL.len()).fake::<usize>()]
-        GREEN
+        *Self::ALL.get(fastrand::usize(..Self::ALL.len())).unwrap()
     }
 
     pub fn hex(&self) -> String {
