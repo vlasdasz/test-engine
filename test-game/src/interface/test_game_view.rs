@@ -180,8 +180,7 @@ impl Setup for TestGameView {
         self.spinner.on_tap(|| {
             let spin = Spinner::lock();
             after(4, || {
-                dbg!("After");
-                spin.instant_stop();
+                spin.stop();
             });
         });
 

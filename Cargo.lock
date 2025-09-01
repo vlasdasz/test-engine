@@ -4173,6 +4173,7 @@ name = "ui-test"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "instant",
  "log",
  "test-engine",
 ]

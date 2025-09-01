@@ -19,7 +19,7 @@ type SignalledCallbacks = Mutex<Vec<(Sender<()>, Callback)>>;
 static CALLBACKS: Callbacks = Callbacks::new(vec![]);
 static SIGNALLED: SignalledCallbacks = SignalledCallbacks::new(vec![]);
 
-pub async fn from_main<T, A>(action: A) -> T
+pub fn from_main<T, A>(action: A) -> T
 where
     A: FnOnce() -> T + Send + 'static,
     T: Send + 'static, {
@@ -46,8 +46,8 @@ where
     result.lock().unwrap().take().unwrap()
 }
 
-pub async fn wait_for_next_frame() {
-    from_main(|| {}).await;
+pub fn wait_for_next_frame() {
+    from_main(|| {});
 }
 
 pub fn on_main(action: impl FnOnce() + Send + 'static) {
@@ -67,7 +67,7 @@ pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
     if is_main_thread() {
         action();
     } else {
-        let (sender, mut receiver) = channel::<()>();
+        let (sender, receiver) = channel::<()>();
         SIGNALLED.lock().unwrap().push((sender, Box::new(action)));
         while receiver.try_recv().is_err() {}
     }

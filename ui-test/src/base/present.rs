@@ -1,4 +1,5 @@
 use anyhow::Result;
+use instant::Instant;
 use test_engine::{
     dispatch::from_main,
     ui::{
@@ -7,7 +8,6 @@ use test_engine::{
     },
     ui_test::helpers::check_colors,
 };
-use tokio::time::Instant;
 
 #[view]
 struct PresentTestView {}
@@ -55,7 +55,7 @@ pub async fn test_navigation_view() -> Result<()> {
     })
     .await;
 
-    presented.await?;
+    presented.recv()?;
 
     let duration_error = now.elapsed().as_secs_f32() - PRESENT_ANIMATION_DURATION;
     let allowed_error = 0.032;

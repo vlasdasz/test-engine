@@ -2,6 +2,7 @@ use std::ops::DerefMut;
 
 use educe::Educe;
 use gm::Animation;
+use vents::OnceEvent;
 
 // use vents::OnceEvent;
 use crate::{View, view::view_data::ViewData};
@@ -11,11 +12,11 @@ type Action = Box<dyn FnMut(&mut dyn View, f32) + Send>;
 #[derive(Educe)]
 #[educe(Debug)]
 pub struct UIAnimation {
-    animation: Animation,
+    animation:     Animation,
     #[educe(Debug(ignore))]
-    action:    Action,
-    // #[educe(Debug(ignore))]
-    // // pub on_finish: OnceEvent,
+    action:        Action,
+    #[educe(Debug(ignore))]
+    pub on_finish: OnceEvent,
 }
 
 impl UIAnimation {
@@ -23,7 +24,7 @@ impl UIAnimation {
         Self {
             animation,
             action: Box::new(action),
-            // on_finish: OnceEvent::default(),
+            on_finish: OnceEvent::default(),
         }
     }
 
@@ -56,7 +57,7 @@ impl<T: ?Sized + View> ViewAnimation for T {
         for animation in this.animations() {
             animation.commit(self.weak_view().deref_mut());
             if animation.finished() {
-                // animation.on_finish.trigger(());
+                animation.on_finish.trigger(());
             }
         }
         self.animations().retain(|a| !a.finished());

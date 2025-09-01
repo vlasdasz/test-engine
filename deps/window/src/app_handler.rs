@@ -61,6 +61,10 @@ impl AppHandler {
 }
 
 impl AppHandler {
+    pub(crate) fn close() {
+        Self::current().close.store(true, Ordering::Relaxed)
+    }
+
     pub(crate) fn current() -> &'static mut Self {
         APP_HANDLER
             .get_mut()

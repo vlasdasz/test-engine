@@ -1,10 +1,10 @@
 // use anyhow::Result;
-// use tokio::spawn;
 //
 // use crate::views::AlertErr;
 //
+// #[cfg(not_wasm)]
 // pub fn on_back(task: impl Future<Output = Result<()>> + Send + 'static) {
-//     spawn(async move {
+//     std::thread::spawn(move || {
 //         task.await.alert_err();
 //     });
 // }

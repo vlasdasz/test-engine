@@ -21,7 +21,7 @@ impl Setup for ShowModally {
                 view = view.add_view::<Container>();
                 view.set_color(Color::random()).place().all_sides(1);
             } else {
-                view = self.add_dummy_view();
+                view = self.add_view::<Container>();
                 view.set_color(Color::random()).place().tl(1).size(400, 400);
                 assert_eq!(view.z_position(), 0.49_996_987);
             }

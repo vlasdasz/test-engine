@@ -1,4 +1,10 @@
-use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    f64,
+    mem::size_of,
+    sync::mpsc::{Receiver, Sender, channel},
+};
 
 use anyhow::Result;
 use bytemuck::cast_slice;
@@ -16,7 +22,7 @@ use crate::{
     SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
     image::Texture, text::Font, window_events::WindowEvents,
 };
-// type ReadDisplayRequest = Sender<Screenshot>;
+type ReadDisplayRequest = Sender<Screenshot>;
 
 #[cfg(not(any(target_os = "android", target_arch = "wasm32")))]
 pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
@@ -27,17 +33,17 @@ pub struct State {
     pub(crate) fonts:       HashMap<&'static str, Font>,
     pub(crate) clear_color: Color,
 
-    // read_display_request: RefCell<Option<ReadDisplayRequest>>,
+    read_display_request:     RefCell<Option<ReadDisplayRequest>>,
     pub(crate) frame_counter: FrameCounter,
 }
 
 impl State {
     pub fn new() -> Self {
         Self {
-            fonts:         HashMap::default(),
-            clear_color:   GRAY_BLUE,
-            // read_display_request: RefCell::default(),
-            frame_counter: FrameCounter::default(),
+            fonts:                HashMap::default(),
+            clear_color:          GRAY_BLUE,
+            read_display_request: RefCell::default(),
+            frame_counter:        FrameCounter::default(),
         }
     }
 
@@ -145,51 +151,50 @@ impl State {
             }
         }
 
-        // let buffer = if self.read_display_request.borrow().is_some() {
-        //     Some(Self::read_screen(&mut encoder, &surface_texture.texture))
-        // } else {
-        //     None
-        // };
+        let buffer = if self.read_display_request.borrow().is_some() {
+            Some(Self::read_screen(&mut encoder, &surface_texture.texture))
+        } else {
+            None
+        };
 
         Window::queue().submit(std::iter::once(encoder.finish()));
         surface_texture.present();
-        //
-        // if let Some(buffer_sender) = self.read_display_request.take() {
-        //     let (sender, receiver) = channel();
-        //
-        //     let Some(buffer) = buffer else {
-        //         return Ok(());
-        //     };
-        //
-        //     let buffer_slice = buffer.0.slice(..);
-        //
-        //     buffer_slice.map_async(wgpu::MapMode::Read, |result| {
-        //         sender.send(result).unwrap();
-        //     });
-        //
-        //     spawn(async move {
-        //         let _ = receiver.await.unwrap();
-        //         let (buff, size) = buffer;
-        //
-        //         let bytes: &[u8] = &buff.slice(..).get_mapped_range();
-        //         let data: Vec<U8Color> =
-        //             cast_slice(bytes).iter().map(|color: &U8Color|
-        // color.bgra_to_rgba()).collect();
-        //
-        //         buffer_sender.send(Screenshot::new(data, size)).unwrap();
-        //     });
-        // }
+
+        if let Some(buffer_sender) = self.read_display_request.take() {
+            let (sender, receiver) = channel();
+
+            let Some(buffer) = buffer else {
+                return Ok(());
+            };
+
+            let buffer_slice = buffer.0.slice(..);
+
+            buffer_slice.map_async(wgpu::MapMode::Read, move |result| {
+                sender.send(result).unwrap();
+            });
+
+            std::thread::spawn(move || {
+                let _ = receiver.recv().unwrap();
+                let (buff, size) = buffer;
+
+                let bytes: &[u8] = &buff.slice(..).get_mapped_range();
+                let data: Vec<U8Color> =
+                    cast_slice(bytes).iter().map(|color: &U8Color| color.bgra_to_rgba()).collect();
+
+                buffer_sender.send(Screenshot::new(data, size)).unwrap();
+            });
+        }
 
         Ok(())
     }
 
-    // pub fn request_read_display(&self) -> Receiver<Screenshot> {
-    //     let mut request = self.read_display_request.borrow_mut();
-    //
-    //     let (s, r) = channel();
-    //     request.replace(s);
-    //     r
-    // }
+    pub fn request_read_display(&self) -> Receiver<Screenshot> {
+        let mut request = self.read_display_request.borrow_mut();
+
+        let (s, r) = channel();
+        request.replace(s);
+        r
+    }
 
     fn read_screen(encoder: &mut CommandEncoder, texture: &wgpu::Texture) -> (Buffer, Size<u32>) {
         if !SUPPORT_SCREENSHOT {

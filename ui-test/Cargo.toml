@@ -11,5 +11,6 @@ path = "src/main.rs"
 [dependencies]
 anyhow = { workspace = true }
 log = { workspace = true }
+instant = { workspace = true }
 
 test-engine = { workspace = true }

@@ -4,10 +4,11 @@ pub mod state;
 use std::{
     fmt::Display,
     ops::Deref,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc::channel},
 };
 
 use anyhow::{Result, bail};
+use dispatch::on_main;
 // use dispatch::{from_main, on_main, wait_for_next_frame};
 pub use helpers::*;
 use log::{error, warn};
@@ -175,35 +176,35 @@ pub async fn record_ui_test() {
 pub async fn record_colors() -> Result<()> {
     let touch_lock = Touch::lock();
 
-    let screenshot = AppRunner::take_screenshot().await?;
+    let screenshot = AppRunner::take_screenshot()?;
 
     let touches: Own<_> = Vec::<(Touch, U8Color)>::new().into();
     let mut touches = touches.weak();
 
-    // let (s, mut r) = channel::<()>(1);
-    //
-    // on_main(move || {
-    //     UIEvents::on_debug_touch().val(move |touch| {
-    //         if !touch.is_began() {
-    //             return;
-    //         }
-    //
-    //         touches.push((touch, screenshot.get_pixel(touch.position)));
-    //     });
-    //
-    //     UIManager::keymap().add(UIManager::root_view(), 'a', move || {
-    //         _ = s.try_send(());
-    //     });
-    // });
-    //
-    // if r.recv().await.is_none() {
-    //     warn!("Failed to receive record_touches_with_colors result");
-    // }
-    //
-    // on_main(|| {
-    //     UIEvents::on_touch().remove_subscribers();
-    //     UIEvents::on_debug_touch().remove_subscribers();
-    // });
+    let (s, mut r) = channel::<()>();
+
+    on_main(move || {
+        UIEvents::on_debug_touch().val(move |touch| {
+            if !touch.is_began() {
+                return;
+            }
+
+            touches.push((touch, screenshot.get_pixel(touch.position)));
+        });
+
+        UIManager::keymap().add(UIManager::root_view(), 'a', move || {
+            _ = s.send(());
+        });
+    });
+
+    if r.recv().is_err() {
+        warn!("Failed to receive record_touches_with_colors result");
+    }
+
+    on_main(|| {
+        UIEvents::on_touch().remove_subscribers();
+        UIEvents::on_debug_touch().remove_subscribers();
+    });
 
     println!("check_colors( r#\"");
 

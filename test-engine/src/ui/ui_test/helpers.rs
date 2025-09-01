@@ -44,7 +44,7 @@ pub fn add_action(action: impl FnMut() + Send + 'static) {
 }
 
 pub async fn check_colors(data: &str) -> Result<()> {
-    let screenshot = AppRunner::take_screenshot().await?;
+    let screenshot = AppRunner::take_screenshot()?;
 
     let lines: Vec<_> = data.split('\n').collect();
 

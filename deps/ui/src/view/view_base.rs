@@ -3,7 +3,7 @@
 use educe::Educe;
 use gm::{color::Color, flat::Rect};
 use refs::{Own, Weak};
-use vents::Event;
+use vents::{Event, OnceEvent};
 
 use crate::{NavigationView, Touch, UIAnimation, View, WeakView, layout::Placer};
 
@@ -70,8 +70,8 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) size_changed:     Event,
 
-    // #[educe(Debug(ignore))]
-    // pub(crate) after_setup: OnceEvent,
+    #[educe(Debug(ignore))]
+    pub(crate) after_setup:         OnceEvent,
     pub(crate) ignore_global_style: bool,
 
     pub tag: usize,

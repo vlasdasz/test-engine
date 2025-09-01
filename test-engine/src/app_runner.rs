@@ -207,19 +207,15 @@ impl AppRunner {
     }
 
     pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
-        // from_main(|| {
-        //     Window::current().set_size(size);
-        // })
-        // .await;
-        // sleep(Duration::from_secs_f32(0.1)).await;
+        from_main(|| {
+            Window::current().set_size(size);
+        });
     }
 
-    pub async fn take_screenshot() -> Result<Screenshot> {
-        // let recv = from_main(|| Window::current().request_screenshot()).await;
-        // let screenshot = recv.await?;
-        // Ok(screenshot)
-
-        todo!()
+    pub fn take_screenshot() -> Result<Screenshot> {
+        let recv = from_main(|| Window::current().request_screenshot());
+        let screenshot = recv.recv()?;
+        Ok(screenshot)
     }
 
     pub fn fps() -> f32 {

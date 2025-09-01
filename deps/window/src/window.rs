@@ -4,10 +4,12 @@ use std::{
     sync::{
         Arc, Mutex,
         atomic::{AtomicBool, Ordering},
+        mpsc::Receiver,
     },
 };
 
 use anyhow::Result;
+use dispatch::on_main;
 use gm::{
     LossyConvert,
     color::Color,
@@ -31,6 +33,7 @@ use winit::{
 };
 
 use crate::{
+    Screenshot,
     app_handler::AppHandler,
     state::{RGBA_TEXTURE_FORMAT, State},
     surface::Surface,
@@ -118,9 +121,7 @@ impl Window {
     }
 
     pub fn close() {
-        // on_main(|| {
-        //     Self::current().close.store(true, Ordering::Relaxed);
-        // });
+        on_main(|| AppHandler::close());
     }
 
     pub(crate) async fn start_internal(window: winit::window::Window, proxy: EventLoopProxy<Window>) {
@@ -245,9 +246,9 @@ impl Window {
         let _ = Self::winit_window().request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
-    // pub fn request_screenshot(&self) -> Receiver<Screenshot> {
-    //     self.state.request_read_display()
-    // }
+    pub fn request_screenshot(&self) -> Receiver<Screenshot> {
+        self.state.request_read_display()
+    }
 
     pub fn fps(&self) -> f32 {
         self.state.frame_counter.fps

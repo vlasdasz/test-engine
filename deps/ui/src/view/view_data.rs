@@ -2,7 +2,7 @@ use std::ops::DerefMut;
 
 use gm::{ToF32, color::Color};
 use refs::{Own, Weak};
-use vents::Event;
+use vents::{Event, OnceEvent};
 
 use crate::{NavigationView, Style, UIAnimation, View, layout::Placer};
 
@@ -46,7 +46,7 @@ pub trait ViewData {
 
     fn apply_style(&mut self, style: Style) -> &mut Self;
 
-    // fn __after_setup_event(&self) -> &OnceEvent;
+    fn __after_setup_event(&self) -> &OnceEvent;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -161,9 +161,9 @@ impl<T: ?Sized + View> ViewData for T {
         self
     }
 
-    // fn __after_setup_event(&self) -> &OnceEvent {
-    //     &self.base_view().after_setup
-    // }
+    fn __after_setup_event(&self) -> &OnceEvent {
+        &self.base_view().after_setup
+    }
 }
 
 pub trait AfterSetup {
@@ -173,9 +173,9 @@ pub trait AfterSetup {
 impl<T: ?Sized + View + 'static> AfterSetup for T {
     fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + Send + 'static) -> Own<Self> {
         let weak = self.weak();
-        // self.base_view().after_setup.sub(move || {
-        //     action(weak);
-        // });
+        self.base_view().after_setup.sub(move || {
+            action(weak);
+        });
         self
     }
 }
