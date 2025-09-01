@@ -60,11 +60,11 @@ lint:
 serve:
 	rustup target add wasm32-unknown-unknown
 	cargo install --locked trunk
-	cd ./test-game && trunk serve --features webgl
+	cd ./test-game && trunk serve --features webgl --address 0.0.0.0 --port 44800
 
 serve-r:
 	rustup target add wasm32-unknown-unknown
 	cargo install --locked trunk
-	cd ./test-game && trunk serve --features webgl --release
+	cd ./test-game && trunk serve --features webgl --release --address 0.0.0.0 --port 44800
 
 .PHONY: mobile

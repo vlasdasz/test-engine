@@ -74,8 +74,10 @@ fn v_main(
 fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let radius: f32 = in.corner_radius;
 
+    let mix = mix(in.start_color, in.end_color, in.gradient_pos);
+
     if radius == 0.0 {
-        return mix(in.start_color, in.end_color, in.gradient_pos);
+        return mix;
     }
 
     let local_pos: vec2<f32> = in.uv * in.size;
@@ -88,5 +90,5 @@ fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
         discard;
     }
 
-    return mix(in.start_color, in.end_color, in.gradient_pos);
+    return mix;
 }
