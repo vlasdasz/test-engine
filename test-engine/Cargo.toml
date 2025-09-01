@@ -9,7 +9,6 @@ crate-type = ["rlib", "staticlib"]
 name = "test_engine"
 
 [features]
-debug = ["dep:debug", "ui/debug"]
 default = []
 webgl = ["wgpu/webgl"]
 
@@ -31,7 +30,6 @@ reflected = { workspace = true }
 refs = { workspace = true }
 
 audio = { workspace = true }
-debug = { workspace = true, optional = true }
 game = { workspace = true }
 generate = { workspace = true }
 gm = { workspace = true }

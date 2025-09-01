@@ -15,7 +15,6 @@ name = "test_game"
 default = []
 
 webgl = ["test-engine/webgl"]
-debug = ["test-engine/debug"]
 
 [dependencies]
 test-engine = { workspace = true }

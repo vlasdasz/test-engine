@@ -9,7 +9,6 @@ members = [
     "ui-test",
     "ui-benchmark",
     "deps/ui/ui-proc-test",
-    "debug-client",
     "fuzz"
 ]
 
@@ -67,7 +66,6 @@ refs = { version = "0.19.0", default-features = true }
 vents = "0.10.0"
 
 audio = { path = "deps/audio" }
-debug = { path = "deps/debug" }
 dispatch = { path = "deps/dispatch" }
 game = { path = "deps/game" }
 generate = { path = "deps/generate" }

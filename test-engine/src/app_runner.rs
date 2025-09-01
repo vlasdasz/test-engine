@@ -187,7 +187,7 @@ impl AppRunner {
         Window::start(Self::new(first_view), event_loop).await
     }
 
-    #[cfg(not(target_os = "android"))]
+    #[cfg(not_wasm)]
     pub fn start_with_actor(
         actions: impl std::future::Future<Output = Result<()>> + Send + 'static,
     ) -> Result<()> {
@@ -258,6 +258,7 @@ impl window::WindowEvents for AppRunner {
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
 
+            #[cfg(not_wasm)]
             std::thread::spawn(|| {
                 WINDOW_READY.lock().unwrap().trigger(());
             });
