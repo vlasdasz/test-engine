@@ -1,6 +1,3 @@
-// use tokio::runtime::Runtime;
-
-use log::{error, info};
 use window::{AppHandler, Window};
 use winit::event_loop::{ControlFlow, EventLoop};
 

@@ -5,12 +5,11 @@ use std::{
 };
 
 use dispatch::{from_main, wait_for_next_frame};
-// use dispatch::{from_main, wait_for_next_frame};
 use gm::{color::TURQUOISE, flat::Rect};
 use log::{debug, trace};
 use refs::{Own, Weak, main_lock::MainLock};
 use render::{
-    UIGradientPipeline, UIImageRectPipepeline, UIPathPipeline, UIRectPipepeline,
+    UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
 };
 use ui::{
@@ -163,7 +162,7 @@ impl UI {
         {
             Self::draw_label(&frame, label, sections, scale);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
-            for path in drawing_view.paths().iter().rev() {
+            for _path in drawing_view.paths().iter().rev() {
                 // UI_PATH_DRAWER.get_mut().draw(
                 //     pass,
                 //     path.buffer(),
@@ -241,15 +240,15 @@ impl UI {
 }
 
 impl UI {
-    pub async fn reload_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set_test_view(T::new(), 600, 600, false, get_test_name::<T>()).await
+    pub fn reload_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set_test_view(T::new(), 600, 600, false, get_test_name::<T>())
     }
 
-    pub async fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set_test_view(T::new(), 600, 600, true, get_test_name::<T>()).await
+    pub fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set_test_view(T::new(), 600, 600, true, get_test_name::<T>())
     }
 
-    pub async fn set_test_view<T: View + 'static>(
+    pub fn set_test_view<T: View + 'static>(
         view: Own<T>,
         width: u32,
         height: u32,
@@ -268,8 +267,8 @@ impl UI {
 
         clear_state();
 
-        AppRunner::set_window_size((width, height)).await;
-        wait_for_next_frame().await;
+        AppRunner::set_window_size((width, height));
+        wait_for_next_frame();
         let view = from_main(move || {
             let weak = view.weak();
             let mut root = UIManager::root_view();
@@ -279,7 +278,7 @@ impl UI {
             trace!("{width} - {height}");
             weak
         });
-        wait_for_next_frame().await;
+        wait_for_next_frame();
 
         view
     }

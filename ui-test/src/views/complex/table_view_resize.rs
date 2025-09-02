@@ -45,7 +45,7 @@ impl TableData for TableViewResize {
 }
 
 pub async fn test_table_view_resize() -> Result<()> {
-    let mut view = UI::init_test_view::<TableViewResize>().await;
+    let mut view = UI::init_test_view::<TableViewResize>();
 
     check_colors(
         r#"
@@ -59,11 +59,10 @@ pub async fn test_table_view_resize() -> Result<()> {
               42   49 -   0 255   0
               42   91 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     for i in 0..5 {
-        inject_scroll(i).await;
+        inject_scroll(i);
     }
 
     check_colors(
@@ -78,8 +77,7 @@ pub async fn test_table_view_resize() -> Result<()> {
               42   49 -   0 255   0
               42   91 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.table.set_size(400, 100);
@@ -98,11 +96,10 @@ pub async fn test_table_view_resize() -> Result<()> {
              362   97 -  89 124 149
              355   10 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     for i in 0..5 {
-        inject_scroll(-i).await;
+        inject_scroll(-i);
     }
 
     Ok(())

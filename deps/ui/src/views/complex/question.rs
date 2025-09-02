@@ -1,8 +1,10 @@
 use std::{
     future::{Future, IntoFuture},
     pin::Pin,
+    sync::mpsc::channel,
 };
 
+use dispatch::from_main;
 use gm::{
     color::{BLACK, BLUE, GRAY},
     flat::Size,
@@ -64,7 +66,7 @@ impl Question {
 
     ///bool == true -> right choice
     pub fn callback(self, callback: impl FnOnce(bool) + Send + 'static) {
-        // Self::make_modal(self).event.val(callback);
+        Self::make_modal(self).event.val(callback);
     }
 
     pub fn on_yes(self, callback: impl FnOnce() + Send + 'static) {
@@ -75,19 +77,16 @@ impl Question {
         });
     }
 
-    async fn callback_async(self) -> bool {
-        // let (se, rc) = channel::<bool>();
-        //
-        // from_main(move || {
-        //     Self::make_modal(self).event.val(|answer| {
-        //         se.send(answer).unwrap();
-        //     });
-        // })
-        // .await;
-        //
-        // rc.await.unwrap()
+    fn recv_callback(self) -> bool {
+        let (se, rc) = channel::<bool>();
 
-        false
+        from_main(move || {
+            Self::make_modal(self).event.val(move |answer| {
+                se.send(answer).unwrap();
+            });
+        });
+
+        rc.recv().unwrap()
     }
 }
 
@@ -96,7 +95,7 @@ impl IntoFuture for Question {
     type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send>>;
 
     fn into_future(self) -> Self::IntoFuture {
-        Box::pin(async move { self.callback_async().await })
+        Box::pin(async move { self.recv_callback() })
     }
 }
 

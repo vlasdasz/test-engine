@@ -31,7 +31,7 @@ impl Setup for TextOccclusion {
 }
 
 pub async fn test_text_occlusion() -> Result<()> {
-    let _view = UI::init_test_view::<TextOccclusion>().await;
+    let _view = UI::init_test_view::<TextOccclusion>();
 
     check_colors(
         r#"
@@ -91,8 +91,7 @@ pub async fn test_text_occlusion() -> Result<()> {
              381  405 - 231 231 231
              421  325 -   0   0   0
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

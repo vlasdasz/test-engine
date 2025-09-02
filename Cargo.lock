@@ -1387,6 +1387,7 @@ name = "generate"
 version = "0.1.0"
 dependencies = [
  "contour",
+ "fastrand",
  "gm",
  "noise",
 ]
@@ -4488,13 +4489,13 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 
 [[package]]
 name = "vents"
-version = "0.10.0"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a774a23e5f74c59727b480f07fbdf53952f8f3e3d5780a9f328c1282dbf7d22"
 dependencies = [
- "chrono",
  "console_error_panic_hook",
  "console_log",
  "gloo-timers",
- "instant",
  "log",
  "plat",
  "wasm-bindgen-futures",

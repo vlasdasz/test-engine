@@ -29,7 +29,7 @@ impl Setup for PointTestView {
 }
 
 pub async fn test_point_view() -> Result<()> {
-    let view = UI::init_test_view::<PointTestView>().await;
+    let view = UI::init_test_view::<PointTestView>();
 
     inject_touches(
         r"
@@ -80,8 +80,7 @@ pub async fn test_point_view() -> Result<()> {
             141  187  b
             141  187  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.point_view.point(), Point::new(16.0, -7.0));
     assert_eq!(view.point, Point::new(143.0, -133.0));

@@ -70,7 +70,7 @@
 // }
 //
 // pub async fn test_dispatch() -> Result<()> {
-//     let mut view = UI::init_test_view::<AsyncDispatch>().await;
+//     let mut view = UI::init_test_view::<AsyncDispatch>();
 //
 //     assert_eq!(view.value, 5);
 //
@@ -115,7 +115,7 @@
 //     )
 //     .await;
 //
-//     wait_for_next_frame().await;
+//     wait_for_next_frame();
 //
 //     assert_eq!("tapped arg: 555", DATA.lock().await.as_str());
 //

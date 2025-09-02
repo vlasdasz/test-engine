@@ -26,7 +26,7 @@ impl Setup for InjectTouch {
 pub async fn test_inject_touch() -> Result<()> {
     COUNTER.store(0, Ordering::Relaxed);
 
-    UI::init_test_view::<InjectTouch>().await;
+    UI::init_test_view::<InjectTouch>();
 
     let mut touches = String::new();
 
@@ -37,7 +37,7 @@ pub async fn test_inject_touch() -> Result<()> {
     ";
     }
 
-    inject_touches(touches).await;
+    inject_touches(touches);
 
     assert_eq!(COUNTER.load(Ordering::Relaxed), 100);
 
@@ -47,8 +47,7 @@ pub async fn test_inject_touch() -> Result<()> {
             5  5  b
             5  5  e
     ",
-        )
-        .await;
+        );
     }
 
     assert_eq!(COUNTER.load(Ordering::Relaxed), 110);

@@ -20,6 +20,7 @@ pub struct SpriteView {
     pub camera_rotation: f32,
     #[educe(Default = 1.0)]
     pub scale:           f32,
+    #[allow(clippy::pub_underscore_fields)]
     pub _padding:        u64,
 }
 

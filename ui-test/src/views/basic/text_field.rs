@@ -26,9 +26,9 @@ impl Setup for TextField {
 }
 
 pub async fn test_text_field() -> Result<()> {
-    let mut view = UI::init_test_view::<TextField>().await;
+    let mut view = UI::init_test_view::<TextField>();
 
-    AppRunner::set_window_size((800, 800)).await;
+    AppRunner::set_window_size((800, 800));
 
     inject_touches(
         r"
@@ -41,26 +41,23 @@ pub async fn test_text_field() -> Result<()> {
             391  237  b
             391  235  e
     ",
-    )
-    .await;
+    );
 
-    inject_keys("HELLOY").await;
+    inject_keys("HELLOY");
 
     inject_touches(
         r"
             452  442  b
     ",
-    )
-    .await;
+    );
 
-    inject_keys("text").await;
+    inject_keys("text");
 
     inject_touches(
         r"
             10  10  b
     ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -94,8 +91,7 @@ pub async fn test_text_field() -> Result<()> {
              272  502 -  89 124 149
              284  560 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.field.set_text_size(140);
@@ -106,10 +102,9 @@ pub async fn test_text_field() -> Result<()> {
         r"
             452  442  b
     ",
-    )
-    .await;
+    );
 
-    inject_keys("ŽĖЎФЪ").await;
+    inject_keys("ŽĖЎФЪ");
 
     check_colors(
         r#"
@@ -137,8 +132,7 @@ pub async fn test_text_field() -> Result<()> {
              325  234 - 231 231 231
              295  234 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

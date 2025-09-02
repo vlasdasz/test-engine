@@ -46,7 +46,7 @@ impl Setup for Colors {
 }
 
 pub async fn test_colors() -> Result<()> {
-    UI::init_test_view::<Colors>().await;
+    UI::init_test_view::<Colors>();
 
     check_colors(
         r#"
@@ -59,8 +59,7 @@ pub async fn test_colors() -> Result<()> {
              222  477 - 172  71 212
              374  477 - 172  71 212
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

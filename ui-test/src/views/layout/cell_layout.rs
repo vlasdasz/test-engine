@@ -43,7 +43,7 @@ impl Setup for CellLayout {
 }
 
 pub async fn test_cell_layout() -> anyhow::Result<()> {
-    let view = UI::init_test_view::<CellLayout>().await;
+    let view = UI::init_test_view::<CellLayout>();
 
     check_colors(
         r#"
@@ -78,8 +78,7 @@ pub async fn test_cell_layout() -> anyhow::Result<()> {
              175  359 -  89 124 149
              481  126 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     check_colors(
         r#"
@@ -130,8 +129,7 @@ pub async fn test_cell_layout() -> anyhow::Result<()> {
               78  512 - 255 255   0
               81  561 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.title.place().clear().h(50).lrt(10);
@@ -139,7 +137,7 @@ pub async fn test_cell_layout() -> anyhow::Result<()> {
         view.table.place().clear().lrb(10).anchor(Top, view.title, 10);
     });
 
-    wait_for_next_frame().await;
+    wait_for_next_frame();
 
     check_colors(
         r#"
@@ -190,8 +188,7 @@ pub async fn test_cell_layout() -> anyhow::Result<()> {
               78  512 - 255 255   0
               81  561 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

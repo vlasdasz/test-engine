@@ -35,7 +35,7 @@ impl Setup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    let mut view = UI::init_test_view::<DropDownTestView>().await;
+    let mut view = UI::init_test_view::<DropDownTestView>();
 
     assert_eq!(view.top.value(), &"Dog");
     assert_eq!(view.bot.value(), &"Car");
@@ -51,8 +51,7 @@ pub async fn test_drop_down() -> Result<()> {
             326  536  b
             326  536  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.top.value(), &"Cat");
     assert_eq!(view.bot.value(), &"Boat");
@@ -68,8 +67,7 @@ pub async fn test_drop_down() -> Result<()> {
             343  580  b
             343  579  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.top.value(), &"Sheep");
     assert_eq!(view.bot.value(), &"Plane");
@@ -85,8 +83,7 @@ pub async fn test_drop_down() -> Result<()> {
             345  497  b
             345  497  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.top.value(), &"Dog");
     assert_eq!(view.bot.value(), &"Car");
@@ -112,8 +109,7 @@ Car
             228  32   e
 
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -157,8 +153,7 @@ Car
              352   15 - 255 255 255
              364   16 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

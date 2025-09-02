@@ -23,8 +23,7 @@ pub async fn test_navigation_view() -> Result<()> {
         600,
         true,
         "Present".to_string(),
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -40,8 +39,7 @@ pub async fn test_navigation_view() -> Result<()> {
              173  294 -  89 124 149
              333  385 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     assert_eq!(TouchStack::dump(), vec![vec!["Layer: Root view".to_string()]]);
 
@@ -72,8 +70,7 @@ pub async fn test_navigation_view() -> Result<()> {
              409  465 - 255 255 255
              392  363 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     assert!(
         duration_error < allowed_error,
@@ -92,8 +89,7 @@ pub async fn test_navigation_view() -> Result<()> {
              239  511 - 255 255 255
              202  532 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

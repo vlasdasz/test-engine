@@ -5,6 +5,7 @@ use gm::flat::Size;
 #[derive(Debug, Default, PartialEq, Copy, Clone, Zeroable, Pod)]
 pub struct RectView {
     pub resolution: Size,
+    #[allow(clippy::pub_underscore_fields)]
     pub _padding:   u64,
 }
 

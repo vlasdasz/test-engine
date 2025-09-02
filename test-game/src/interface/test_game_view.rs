@@ -193,7 +193,7 @@ impl Setup for TestGameView {
         self.alert.set_text_size(20);
         self.alert.on_tap(|| {
             Alert::show("Hello!");
-            AppRunner::set_window_size((600, 600))
+            AppRunner::set_window_size((600, 600));
         });
 
         self.sound

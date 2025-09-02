@@ -78,7 +78,7 @@ impl TableData for LabelImage {
 }
 
 pub async fn test_label_image() -> Result<()> {
-    let mut view = UI::init_test_view::<LabelImage>().await;
+    let mut view = UI::init_test_view::<LabelImage>();
 
     check_colors(
         r#"
@@ -114,8 +114,7 @@ pub async fn test_label_image() -> Result<()> {
              565  149 -  89 124 149
              322  174 -   7   5   3
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.label.set_resizing_image("button");
@@ -154,8 +153,7 @@ pub async fn test_label_image() -> Result<()> {
               66   85 -   3  17  63
              110   90 -   4  17  64
         "#,
-    )
-    .await?;
+    )?;
 
     check_colors(
         r#"
@@ -244,8 +242,7 @@ pub async fn test_label_image() -> Result<()> {
              432  430 - 183 151 126
              433  430 - 181 149 124
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.resizing_image = true;
@@ -287,8 +284,7 @@ pub async fn test_label_image() -> Result<()> {
              118  449 -  89 124 149
              116  420 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

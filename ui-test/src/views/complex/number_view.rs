@@ -42,7 +42,7 @@ impl Setup for NumberTestView {
 }
 
 pub async fn test_number_view() -> Result<()> {
-    let mut view = UI::init_test_view::<NumberTestView>().await;
+    let mut view = UI::init_test_view::<NumberTestView>();
 
     inject_touches(
         "
@@ -156,8 +156,7 @@ pub async fn test_number_view() -> Result<()> {
             361  325  e
 
         ",
-    )
-    .await;
+    );
 
     from_main(move || {
         assert_eq!(view.float.value(), -6.0);
@@ -247,8 +246,7 @@ pub async fn test_number_view() -> Result<()> {
             363  234  e
 
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.float.value(), 5.0);
     assert_eq!(view.uint.value(), 5.0);
@@ -442,8 +440,7 @@ pub async fn test_number_view() -> Result<()> {
             386  353  e
 
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.float.value(), -10.0);
     assert_eq!(view.uint.value(), 2.0);

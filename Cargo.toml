@@ -2,14 +2,14 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz"
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
 ]
 
 resolver = "3"
@@ -24,8 +24,9 @@ ignored = []
 [workspace.dependencies]
 aes-gcm = "0.10.3"
 android_logger = "0.15"
-async-std = "1.13"
 anyhow = "1.0"
+arbitrary = { version = "1.4", features = ["derive"] }
+async-std = "1.13"
 atomic_float = "1.1"
 bit_ops = "0.1"
 bytemuck = { version = "1.15", features = ["derive"] }
@@ -33,14 +34,17 @@ cgmath = "0.18"
 chrono = "0.4"
 dirs = "6.0"
 educe = "0.6.0"
-fern = "0.7"
 fastrand = "2.3"
+fern = "0.7"
 image = "0.25"
 indexmap = "2.2"
+instant = { version = "0.1", features = ["wasm-bindgen"] }
 jni = "0.21.1"
+kira = "0.10"
 log = "0.4"
 lyon = "1.0"
 nonempty = "0.12.0"
+pollster = "0.4"
 quote = "1.0"
 rapier2d = { version = "0.28", features = ["simd-nightly"] }
 resvg = "0.45"
@@ -49,12 +53,8 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 syn = { version = "2.0", features = ["full", "extra-traits"] }
 tiny-skia = "0.11"
-web-time = "1.0.0"
-instant = { version = "0.1", features = ["wasm-bindgen"] }
-arbitrary = { version = "1.4", features = ["derive"] }
 wasm-bindgen-futures = "0.4"
-pollster = "0.4"
-kira = "0.10"
+web-time = "1.0.0"
 
 wgpu = "26.0"
 wgpu_text = "26.0"
@@ -63,7 +63,7 @@ winit = "0.30"
 plat = "0.4.0"
 reflected = "0.26"
 refs = { version = "0.19.0", default-features = true }
-vents = "0.10.0"
+vents = "0.11.0"
 
 audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }
@@ -86,6 +86,6 @@ window = { path = "deps/window" }
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }
-vents = { path = "../deps/vents/vents" }
+#vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "10cd78a848cf8e911a6780c011dbd5be33f37a1c" }

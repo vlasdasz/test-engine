@@ -2,7 +2,6 @@ use std::{
     any::type_name,
     path::PathBuf,
     sync::{Mutex, Once},
-    time::Duration,
 };
 
 use anyhow::Result;
@@ -12,12 +11,10 @@ use gm::{
     flat::{Point, Size},
 };
 use level::{LevelBase, LevelManager};
-use log::{debug, error};
+use log::debug;
 use refs::{Own, Rglica, main_lock::MainLock};
-// use tokio::time::sleep;
 use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
-// use vents::OnceEvent;
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
 use winit::{
@@ -113,46 +110,6 @@ impl AppRunner {
         }
     }
 
-    #[cfg(feature = "debug")]
-    async fn setup_debug_server() -> Result<()> {
-        use debug::{Command, LevelCommand, UICommand};
-        use dispatch::on_main;
-        use ui::AlertErr;
-
-        use crate::debug_server::{
-            on_debug_client_message, send_to_debug_client, start_listtening_for_debug_client,
-        };
-
-        start_listtening_for_debug_client().await.alert_err();
-
-        LevelManager::on_scale_changed(|scale| send_to_debug_client(LevelCommand::SendScale(scale)));
-
-        on_debug_client_message(|mut msg| {
-            msg.id += 55;
-
-            on_main(move || match msg.command {
-                Command::Ping => send_to_debug_client(msg),
-                Command::Level(level) => match level {
-                    LevelCommand::GetScale => {
-                        send_to_debug_client(LevelCommand::SendScale(LevelManager::scale()));
-                    }
-                    LevelCommand::SetScale(scale) => {
-                        LevelManager::set_scale(scale);
-                    }
-                    LevelCommand::SendScale(_) => unimplemented!(),
-                    LevelCommand::Panic => todo!(),
-                },
-                Command::UI(ui) => match ui {
-                    UICommand::SetScale(scale) => UIManager::set_scale(scale),
-                },
-            });
-        })
-        .await
-        .alert_err();
-
-        Ok(())
-    }
-
     #[cfg(target_os = "android")]
     pub(crate) async fn start(first_view: Own<dyn View>, app: crate::AndroidApp) -> Result<()> {
         dbg!("PENIJEE");
@@ -193,8 +150,6 @@ impl AppRunner {
     ) -> Result<()> {
         use ui::Setup;
 
-        Self::setup_log();
-
         struct ActorApp;
 
         impl App for ActorApp {
@@ -208,8 +163,10 @@ impl AppRunner {
             }
         }
 
+        Self::setup_log();
+
         std::thread::spawn(move || {
-            let _recv = WINDOW_READY.lock().unwrap().sub(|| {
+            WINDOW_READY.lock().unwrap().sub(|| {
                 async_std::task::block_on(actions).unwrap();
             });
         });
@@ -223,11 +180,11 @@ impl AppRunner {
         Window::set_title(title);
     }
 
-    pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
+    pub fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
         from_main(|| {
             Window::current().set_size(size);
         });
-        wait_for_next_frame().await;
+        wait_for_next_frame();
     }
 
     pub fn take_screenshot() -> Result<Screenshot> {

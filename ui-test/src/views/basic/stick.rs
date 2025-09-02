@@ -35,7 +35,7 @@ impl Setup for StickView {
 }
 
 pub async fn test_stick() -> Result<()> {
-    let mut view = UI::init_test_view::<StickView>().await;
+    let mut view = UI::init_test_view::<StickView>();
 
     inject_touches(
         r"
@@ -126,8 +126,7 @@ pub async fn test_stick() -> Result<()> {
             123  308  e
             549  342  m
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.vec, Point::new(12.244_078, -26.364_265));
 

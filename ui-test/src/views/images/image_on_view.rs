@@ -24,7 +24,7 @@ impl Setup for ImageOnView {
 }
 
 pub async fn test_image_on_view() -> Result<()> {
-    UI::init_test_view::<ImageOnView>().await;
+    UI::init_test_view::<ImageOnView>();
 
     check_colors(
         r#"
@@ -57,8 +57,7 @@ pub async fn test_image_on_view() -> Result<()> {
              269  232 -   0 255   0
              348  204 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

@@ -1,43 +1,24 @@
-use std::{
-    mem::uninitialized,
-    rc::Rc,
-    sync::{
-        Arc, Mutex,
-        atomic::{AtomicBool, Ordering},
-        mpsc::Receiver,
-    },
-};
+use std::sync::{Arc, mpsc::Receiver};
 
-use anyhow::Result;
 use dispatch::on_main;
 use gm::{
     LossyConvert,
     color::Color,
     flat::{Point, Size},
 };
-use log::{debug, error, info};
+use log::{info, warn};
 use plat::Platform;
-use refs::{Rglica, main_lock::MainLock};
 use wgpu::{
-    Adapter, Backends, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, InstanceDescriptor,
-    Limits, MemoryHints, PowerPreference, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
-    TextureUsages, Trace,
+    CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, Limits, MemoryHints, PowerPreference,
+    PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages, Trace,
 };
-use winit::{
-    application::ApplicationHandler,
-    dpi::PhysicalSize,
-    event::{MouseScrollDelta, WindowEvent},
-    event_loop::{ActiveEventLoop, EventLoop, EventLoopProxy},
-    keyboard::{KeyCode, PhysicalKey},
-    window::{WindowAttributes, WindowId},
-};
+use winit::{dpi::PhysicalSize, event_loop::EventLoopProxy};
 
 use crate::{
     Screenshot,
     app_handler::AppHandler,
     state::{RGBA_TEXTURE_FORMAT, State},
     surface::Surface,
-    window_events::WindowEvents,
 };
 
 const ENABLE_VSYNC: bool = true;
@@ -56,11 +37,6 @@ pub struct Window {
     pub(crate) config: SurfaceConfiguration,
     pub(crate) device: Device,
     pub(crate) queue:  Queue,
-
-    adapter:  Adapter,
-    instance: Instance,
-
-    pub(crate) resumed: bool,
 
     pub(crate) surface: Surface,
 
@@ -121,7 +97,7 @@ impl Window {
     }
 
     pub fn close() {
-        on_main(|| AppHandler::close());
+        on_main(AppHandler::close);
     }
 
     pub(crate) async fn start_internal(window: winit::window::Window, proxy: EventLoopProxy<Window>) {
@@ -202,12 +178,7 @@ impl Window {
             desired_maximum_frame_latency: 2,
         };
 
-        let state = State::new();
-
-        let scale: f32 = window.scale_factor().lossy_convert();
-
-        // self.config.width = (size.width * scale).lossy_convert();
-        // self.config.height = (size.height * scale).lossy_convert();
+        let state = State::default();
 
         let surface =
             Surface::new(&instance, &adapter, &device, &config, window).expect("Failed to create surface");
@@ -217,9 +188,6 @@ impl Window {
             config,
             device,
             queue,
-            adapter,
-            instance,
-            resumed: false,
             surface,
             title_set: false,
         };
@@ -230,15 +198,15 @@ impl Window {
     }
 
     pub fn set_title(title: impl Into<String>) {
-        // let title = title.into();
-        // on_main(move || {
-        //     Self::current().title_set = true;
-        //     if Platform::DESKTOP {
-        //         Self::winit_window().set_title(&title);
-        //     } else {
-        //         warn!("set_title is not supported on this platform");
-        //     }
-        // });
+        let title = title.into();
+        on_main(move || {
+            Self::current().title_set = true;
+            if Platform::DESKTOP {
+                Self::winit_window().set_title(&title);
+            } else {
+                warn!("set_title is not supported on this platform");
+            }
+        });
     }
 
     pub fn set_size(&self, size: impl Into<Size<u32>>) {

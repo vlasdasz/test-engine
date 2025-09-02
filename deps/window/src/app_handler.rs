@@ -1,9 +1,6 @@
-use std::{
-    ops::Deref,
-    sync::atomic::{AtomicBool, Ordering},
-};
+use std::sync::atomic::{AtomicBool, Ordering};
 
-use gm::flat::{Point, Size};
+use gm::flat::Point;
 use log::{debug, error};
 use refs::{Rglica, main_lock::MainLock};
 use winit::{
@@ -14,10 +11,11 @@ use winit::{
     window::WindowId,
 };
 
-use crate::{Events, Window, WindowEvents};
+use crate::{Window, WindowEvents};
 
 static APP_HANDLER: MainLock<Option<AppHandler>> = MainLock::new();
 
+#[allow(clippy::large_enum_variant)]
 enum AppHandlerState {
     Ready(Window),
     Init(Option<EventLoopProxy<Window>>),
@@ -62,7 +60,7 @@ impl AppHandler {
 
 impl AppHandler {
     pub(crate) fn close() {
-        Self::current().close.store(true, Ordering::Relaxed)
+        Self::current().close.store(true, Ordering::Relaxed);
     }
 
     pub(crate) fn current() -> &'static mut Self {
@@ -82,29 +80,29 @@ impl AppHandler {
 
 impl ApplicationHandler<Window> for AppHandler {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        if let AppHandlerState::Init(proxy) = &mut self.state {
-            if let Some(proxy) = proxy.take() {
-                let mut win_attr = winit::window::Window::default_attributes();
+        if let AppHandlerState::Init(proxy) = &mut self.state
+            && let Some(proxy) = proxy.take()
+        {
+            let mut win_attr = winit::window::Window::default_attributes();
 
-                #[cfg(not(target_arch = "wasm32"))]
-                {
-                    win_attr = win_attr.with_title("WebGPU example");
-                }
-
-                #[cfg(target_arch = "wasm32")]
-                {
-                    use winit::platform::web::WindowAttributesExtWebSys;
-                    win_attr = win_attr.with_append(true);
-                }
-
-                let window = event_loop.create_window(win_attr).expect("create window err.");
-
-                #[cfg(target_arch = "wasm32")]
-                wasm_bindgen_futures::spawn_local(Window::start_internal(window, proxy));
-
-                #[cfg(not(target_arch = "wasm32"))]
-                pollster::block_on(Window::start_internal(window, proxy));
+            #[cfg(not(target_arch = "wasm32"))]
+            {
+                win_attr = win_attr.with_title("WebGPU example");
             }
+
+            #[cfg(target_arch = "wasm32")]
+            {
+                use winit::platform::web::WindowAttributesExtWebSys;
+                win_attr = win_attr.with_append(true);
+            }
+
+            let window = event_loop.create_window(win_attr).expect("create window err.");
+
+            #[cfg(target_arch = "wasm32")]
+            wasm_bindgen_futures::spawn_local(Window::start_internal(window, proxy));
+
+            #[cfg(not(target_arch = "wasm32"))]
+            pollster::block_on(Window::start_internal(window, proxy));
         }
     }
 

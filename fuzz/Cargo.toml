@@ -1,24 +1,26 @@
 [package]
-name = "fuzz"
-version = "0.0.0"
-publish = false
 edition = "2024"
+name = "fuzz"
+publish = false
+version = "0.0.0"
 
 [package.metadata]
 cargo-fuzz = true
 
-[dependencies]
-libfuzzer-sys = "0.4"
-colors-transform = "0.2"
-palette = "0.7"
+[package.metadata.cargo-machete]
+ignored = ["test-engine"]
 
+[dependencies]
+colors-transform = "0.2"
+libfuzzer-sys = "0.4"
+palette = "0.7"
 
 gm = { workspace = true }
 test-engine = { workspace = true }
 
 [[bin]]
+bench = false
+doc = false
 name = "u8_color_to_hex"
 path = "fuzz_targets/u8_color_to_hex.rs"
 test = false
-doc = false
-bench = false

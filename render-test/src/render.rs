@@ -37,7 +37,7 @@ impl ViewCallbacks for RenderTestView {
 pub async fn test_render() -> Result<()> {
     debug!("Test render");
 
-    let mut view = UI::init_test_view::<RenderTestView>().await;
+    let mut view = UI::init_test_view::<RenderTestView>();
 
     check_colors(
         r#"
@@ -121,15 +121,13 @@ pub async fn test_render() -> Result<()> {
              251   64 -   0 255   0
              254   31 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     debug!("Occlusion: OK");
 
     from_main(move || {
         view.case = Path;
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -172,8 +170,7 @@ pub async fn test_render() -> Result<()> {
               69  331 -  89 124 149
              194  116 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     debug!("Path: OK");
 

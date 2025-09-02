@@ -60,10 +60,10 @@ impl NavigationView {
             view.set_x(x);
         });
 
-        // anim.on_finish.sub(move || {
-        //     drop(touch_lock);
-        //     prev_view.set_hidden(true);
-        // });
+        anim.on_finish.sub(move || {
+            drop(touch_lock);
+            prev_view.set_hidden(true);
+        });
 
         view.add_animation(anim);
     }
@@ -82,11 +82,11 @@ impl NavigationView {
             view.set_x(x);
         });
 
-        // anim.on_finish.sub(move || {
-        //     to_pop.remove_from_superview();
-        //     TouchStack::pop_layer(to_pop);
-        //     drop(touch_lock);
-        // });
+        anim.on_finish.sub(move || {
+            to_pop.remove_from_superview();
+            TouchStack::pop_layer(to_pop);
+            drop(touch_lock);
+        });
 
         to_pop.add_animation(anim);
     }

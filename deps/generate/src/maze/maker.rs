@@ -39,7 +39,7 @@ impl Maker {
                 continue;
             }
 
-            let next = todo!(); // unvisited[(0..unvisited.len()).fake::<usize>()];
+            let next = unvisited[fastrand::usize(0..unvisited.len())];
 
             maker.stack.push(maker.current_pos);
 

@@ -64,7 +64,7 @@ impl Setup for AddOnTap {
 }
 
 pub async fn test_add_on_tap() -> Result<()> {
-    let view = UI::init_test_view::<AddOnTap>().await;
+    let view = UI::init_test_view::<AddOnTap>();
 
     assert_eq!(view.dump_subviews(), vec!["AddOnTap.btn: Button".to_string()]);
 
@@ -73,8 +73,7 @@ pub async fn test_add_on_tap() -> Result<()> {
             25   25   b
             25   25   e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(
         view.dump_subviews(),
@@ -125,8 +124,7 @@ pub async fn test_add_on_tap() -> Result<()> {
              449  216 -   0 255   0
              503  106 -   0 255   0
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

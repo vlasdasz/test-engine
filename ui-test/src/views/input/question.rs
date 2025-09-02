@@ -12,7 +12,7 @@
 // struct QuestionTestView {}
 //
 // pub async fn test_question() -> Result<()> {
-//     let _view = UI::init_test_view::<QuestionTestView>().await;
+//     let _view = UI::init_test_view::<QuestionTestView>();
 //
 //     let (se, rc) = channel::<bool>();
 //
@@ -43,8 +43,8 @@
 //     })
 //     .await;
 //
-//     wait_for_next_frame().await;
-//     wait_for_next_frame().await;
+//     wait_for_next_frame();
+//     wait_for_next_frame();
 //
 //     inject_touches(
 //         "
@@ -62,8 +62,8 @@
 //         assert_eq!(val, false);
 //     });
 //
-//     wait_for_next_frame().await;
-//     wait_for_next_frame().await;
+//     wait_for_next_frame();
+//     wait_for_next_frame();
 //
 //     inject_touches(
 //         "
@@ -75,7 +75,7 @@
 //
 //     a.await?;
 //
-//     wait_for_next_frame().await;
+//     wait_for_next_frame();
 //
 //     let a = spawn(async {
 //         let val = Question::ask("Hello?").options("left", "right").await;

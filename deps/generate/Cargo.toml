@@ -10,6 +10,7 @@ name = "generate"
 
 [dependencies]
 contour = { version = "0.12", features = ["f32"] }
+fastrand = { workspace = true }
 noise = "0.8"
 
 gm = { workspace = true }

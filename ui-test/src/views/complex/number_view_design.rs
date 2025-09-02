@@ -33,7 +33,7 @@ pub async fn test_number_view_design() -> Result<()> {
         STYLE.apply_globally::<NumberView>();
     });
 
-    let _view = UI::init_test_view::<NumberViewDesign>().await;
+    let _view = UI::init_test_view::<NumberViewDesign>();
 
     check_colors(
         r#"
@@ -113,8 +113,7 @@ pub async fn test_number_view_design() -> Result<()> {
              158  279 -  89 124 149
              254  288 -   0 103 201
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(|| {
         STYLE.reset_global::<NumberView>();

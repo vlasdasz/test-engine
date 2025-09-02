@@ -35,7 +35,7 @@ impl Setup for LabelSettings {
 }
 
 pub async fn test_label() -> Result<()> {
-    let mut view = UI::init_test_view::<LabelSettings>().await;
+    let mut view = UI::init_test_view::<LabelSettings>();
 
     check_colors(
         r#"
@@ -73,8 +73,7 @@ pub async fn test_label() -> Result<()> {
              241  222 - 255 255 255
              263  221 -   0   0   0
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         "
@@ -124,8 +123,7 @@ pub async fn test_label() -> Result<()> {
             43   308  e
 
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -168,8 +166,7 @@ pub async fn test_label() -> Result<()> {
              219  218 - 255 255 255
              221  233 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.label.set_text_color(BLUE);
@@ -203,8 +200,7 @@ pub async fn test_label() -> Result<()> {
              275  214 - 255 255 255
              135  222 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.label.set_text_size(28);
@@ -280,8 +276,7 @@ pub async fn test_label() -> Result<()> {
              271  217 - 255 255 255
              277  218 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

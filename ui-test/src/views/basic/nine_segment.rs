@@ -27,7 +27,7 @@ impl Setup for NineSegment {
 }
 
 pub async fn test_nine_segment() -> Result<()> {
-    let mut view = UI::init_test_view::<NineSegment>().await;
+    let mut view = UI::init_test_view::<NineSegment>();
 
     check_colors(
         r#"
@@ -75,8 +75,7 @@ pub async fn test_nine_segment() -> Result<()> {
               45   48 -  89 124 149
              122  111 -   4  18  65
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.segment.set_frame((100, 100, 250, 160));
@@ -118,8 +117,7 @@ pub async fn test_nine_segment() -> Result<()> {
              222  329 -  89 124 149
              222  234 -   4  19  66
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.segment.set_frame((100, 100, 140, 280));
@@ -166,8 +164,7 @@ pub async fn test_nine_segment() -> Result<()> {
              196  160 -   4  17  63
              151  278 -   3  17  62
         "#,
-    )
-    .await?;
+    )?;
 
     check_colors(
         r#"
@@ -222,8 +219,7 @@ pub async fn test_nine_segment() -> Result<()> {
              245  441 - 201 153 153
              288  441 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.button.set_image(NoImage);
@@ -265,8 +261,7 @@ pub async fn test_nine_segment() -> Result<()> {
              244  448 -   5  23  71
              289  448 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

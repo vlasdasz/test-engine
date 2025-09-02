@@ -45,7 +45,7 @@ impl Setup for Gradient {
 }
 
 pub async fn test_gradient() -> Result<()> {
-    UI::init_test_view::<Gradient>().await;
+    UI::init_test_view::<Gradient>();
 
     check_colors(
         r#"
@@ -144,8 +144,7 @@ pub async fn test_gradient() -> Result<()> {
              201   75 - 144 221 255
              146   78 - 147 219 255
         "#,
-    )
-    .await?;
+    )?;
 
     check_colors(
         r#"
@@ -179,8 +178,7 @@ pub async fn test_gradient() -> Result<()> {
               18  237 -  89 124 149
               42  232 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

@@ -1,5 +1,5 @@
 // use dispatch::Task;
-use ui::{AlertErr, Spinner};
+// use ui::{AlertErr, Spinner};
 
 pub trait TaskSpinner<T> {
     fn spin(task: impl FnOnce() -> T + Send + 'static);

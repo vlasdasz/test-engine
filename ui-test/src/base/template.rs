@@ -7,7 +7,7 @@ struct TemplateView<Value: 'static> {
 }
 
 pub async fn test_template() -> Result<()> {
-    let view = UI::init_test_view::<TemplateView<i32>>().await;
+    let view = UI::init_test_view::<TemplateView<i32>>();
 
     assert_eq!(view.value, 0);
 

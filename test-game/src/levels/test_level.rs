@@ -24,7 +24,10 @@ impl TestLevel {
         let h: u32 = fastrand::u32(2..28);
 
         let mut bx = self.make_sprite::<Body>(
-            Shape::Rect(Size::<f32>::new(w as f32 / 10.0, h as f32 / 10.0)),
+            Shape::Rect(Size::<f32>::new(
+                w.lossy_convert() / 10.0,
+                h.lossy_convert() / 10.0,
+            )),
             pos,
         );
 

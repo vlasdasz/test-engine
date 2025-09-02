@@ -56,7 +56,7 @@
 // }
 //
 // pub async fn test_async_calls() -> Result<()> {
-//     let view = UI::init_test_view::<AsyncCalls>().await;
+//     let view = UI::init_test_view::<AsyncCalls>();
 //
 //     inject_touches(
 //         "

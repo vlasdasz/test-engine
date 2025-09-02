@@ -37,7 +37,7 @@ impl Setup for Transparency {
 }
 
 pub async fn test_transparency() -> Result<()> {
-    UI::init_test_view::<Transparency>().await;
+    UI::init_test_view::<Transparency>();
 
     from_main(|| {
         LevelManager::set_level(SkyboxLevel::default());
@@ -131,8 +131,7 @@ pub async fn test_transparency() -> Result<()> {
              270  331 -  89 124 149
              272  331 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

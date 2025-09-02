@@ -46,7 +46,7 @@ where
     result.lock().unwrap().take().unwrap()
 }
 
-pub async fn wait_for_next_frame() {
+pub fn wait_for_next_frame() {
     from_main(|| {});
 }
 

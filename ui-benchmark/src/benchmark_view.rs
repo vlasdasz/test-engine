@@ -1,18 +1,12 @@
-use std::{
-    sync::atomic::{AtomicBool, AtomicU64, Ordering},
-    thread::sleep,
-    time::Duration,
-};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 
 use test_engine::{
     AppRunner,
-    // dispatch::{from_main, on_main},
     refs::Weak,
-    ui::{Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
+    ui::{Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
 };
-// use tokio::spawn;
 
-static FINISHED: AtomicBool = AtomicBool::new(false);
+static _FINISHED: AtomicBool = AtomicBool::new(false);
 static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
 const TARGET_FPS: f32 = 40.0;
@@ -51,6 +45,7 @@ impl BenchmarkView {
         self.index += 1;
     }
 
+    #[allow(clippy::unused_self)]
     fn start_spawning_views(self: Weak<Self>) {
         // spawn(async move {
         //     loop {

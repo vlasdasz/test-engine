@@ -20,7 +20,7 @@ use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
     SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
-    image::Texture, text::Font, window_events::WindowEvents,
+    image::Texture, text::Font,
 };
 type ReadDisplayRequest = Sender<Screenshot>;
 
@@ -37,8 +37,8 @@ pub struct State {
     pub(crate) frame_counter: FrameCounter,
 }
 
-impl State {
-    pub fn new() -> Self {
+impl Default for State {
+    fn default() -> Self {
         Self {
             fonts:                HashMap::default(),
             clear_color:          GRAY_BLUE,
@@ -46,8 +46,10 @@ impl State {
             frame_counter:        FrameCounter::default(),
         }
     }
+}
 
-    pub fn resize(&mut self, new_size: PhysicalSize<u32>, event_loop: &ActiveEventLoop) {
+impl State {
+    pub fn resize(&mut self, new_size: PhysicalSize<u32>, _event_loop: &ActiveEventLoop) {
         if new_size.width == 0 || new_size.height == 0 {
             warn!("Zero size");
             return;
