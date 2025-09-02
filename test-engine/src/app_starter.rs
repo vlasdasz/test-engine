@@ -33,7 +33,7 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
         std::panic::set_hook(Box::new(console_error_panic_hook::hook));
         console_log::init_with_level(log::Level::Warn).expect("Couldn't initialize logger");
 
-        info!("Hello from wasm");
+        log::info!("Hello from wasm");
     }
 
     #[cfg(mobile)]

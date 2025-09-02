@@ -10,6 +10,7 @@ ui:
 
 all:
 	order
+	make wasm
 	make ios
 	make ui
 	make render
