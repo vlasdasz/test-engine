@@ -7,11 +7,14 @@
 mod benchmark_view;
 
 use anyhow::Result;
-use test_engine::{AppRunner, ui::Setup};
+use test_engine::{AppRunner, ui::UI};
 
 use crate::benchmark_view::BenchmarkView;
 
-#[tokio::main]
-async fn main() -> Result<()> {
-    AppRunner::start((800, 800), BenchmarkView::new()).await
+fn main() -> Result<()> {
+    AppRunner::start_with_actor(async {
+        UI::init_test_view::<BenchmarkView>();
+
+        Ok(())
+    })
 }

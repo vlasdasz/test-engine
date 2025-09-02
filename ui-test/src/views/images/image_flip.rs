@@ -29,7 +29,7 @@ impl Setup for ImageFlip {
 }
 
 pub async fn test_image_flip() -> Result<()> {
-    let _view = UI::init_test_view::<ImageFlip>().await;
+    let _view = UI::init_test_view::<ImageFlip>();
 
     check_colors(
         r#"
@@ -149,8 +149,7 @@ pub async fn test_image_flip() -> Result<()> {
              170  103 - 146 101  82
               95  161 - 218 186 165
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

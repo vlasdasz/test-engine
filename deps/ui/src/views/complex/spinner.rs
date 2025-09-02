@@ -3,6 +3,7 @@ use std::{
     sync::{Mutex, MutexGuard},
 };
 
+use dispatch::{on_main, on_main_sync};
 use gm::{
     Animation, LossyConvert,
     color::{GRAY, LIGHT_BLUE},
@@ -23,7 +24,6 @@ mod test_engine {
 }
 
 use chrono::Utc;
-use dispatch::{on_main, on_main_sync};
 use gm::flat::{Size, point_on_circle};
 use log::{trace, warn};
 use refs::Weak;

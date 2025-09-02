@@ -1,6 +1,7 @@
 
 struct RectView {
     resolution: vec2<f32>,
+    _padding: vec2<u32>,
 }
 
 struct Vertex {
@@ -87,14 +88,14 @@ fn v_main(
 
 @fragment
 fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
+    let tex = textureSample(t_diffuse, s_diffuse, in.uv);
     let radius: f32 = in.corner_radius;
 
     if radius == 0.0 {
-        return textureSample(t_diffuse, s_diffuse, in.uv);
+        return tex;
     }
 
     let local_pos: vec2<f32> = in.corner_uv * in.size;
-
     let corner: vec2<f32> = in.size * 0.5 - vec2<f32>(radius, radius);
     let d: vec2<f32> = abs(local_pos) - corner;
     let dist: f32 = length(max(d, vec2<f32>(0.0, 0.0)));
@@ -103,6 +104,6 @@ fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
         discard;
     }
 
-    return textureSample(t_diffuse, s_diffuse, in.uv);
+    return tex;
 }
 

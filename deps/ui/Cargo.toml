@@ -17,11 +17,9 @@ anyhow = { workspace = true }
 atomic_float = { workspace = true }
 chrono = { workspace = true }
 educe = { workspace = true }
-fake = { workspace = true }
 log = { workspace = true }
 nonempty = { workspace = true }
 rust_decimal = { workspace = true }
-tokio = { workspace = true }
 serde = { workspace = true }
 
 dispatch = { workspace = true }

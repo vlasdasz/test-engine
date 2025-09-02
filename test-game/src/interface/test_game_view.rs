@@ -1,7 +1,7 @@
 use test_engine::{
     AppRunner,
     audio::Sound,
-    dispatch::async_after,
+    dispatch::after,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::{DataManager, Weak},
@@ -179,7 +179,7 @@ impl Setup for TestGameView {
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
             let spin = Spinner::lock();
-            async_after(4, async {
+            after(4, || {
                 spin.stop();
             });
         });
@@ -193,7 +193,7 @@ impl Setup for TestGameView {
         self.alert.set_text_size(20);
         self.alert.on_tap(|| {
             Alert::show("Hello!");
-            AppRunner::set_window_size((600, 600))
+            AppRunner::set_window_size((600, 600));
         });
 
         self.sound

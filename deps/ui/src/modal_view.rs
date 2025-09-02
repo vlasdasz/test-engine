@@ -43,10 +43,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     where
         In: 'static + Send,
         Out: Send, {
-        from_main(|| Self::prepare_modally_with_input(input).modal_event().val_async())
-            .await
-            .await
-            .unwrap()
+        from_main(|| Self::prepare_modally_with_input(input).modal_event().receiver().recv().unwrap())
     }
 
     fn hide_modal(mut self: Weak<Self>, result: Out)

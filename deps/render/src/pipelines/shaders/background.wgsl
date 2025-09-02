@@ -13,6 +13,7 @@ struct BackgroundView {
     resolution: vec2<f32>,
     camera_rotation: f32,
     scale: f32,
+    _padding:   vec2<u32>,
 }
 
 @group(0) @binding(0) var<uniform> view: BackgroundView;

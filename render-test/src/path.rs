@@ -40,6 +40,7 @@ pub(crate) fn render_path(pass: &mut RenderPass) {
         pass,
         RectView {
             resolution: Window::inner_size(),
+            _padding:   0,
         },
     );
 }

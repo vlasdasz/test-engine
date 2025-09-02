@@ -42,7 +42,7 @@ impl Setup for Styles {
 }
 
 pub async fn test_styles() -> Result<()> {
-    UI::init_test_view::<Styles>().await;
+    UI::init_test_view::<Styles>();
 
     check_colors(
         r#"
@@ -135,8 +135,7 @@ pub async fn test_styles() -> Result<()> {
              152  400 -  75 129 244
              149  513 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

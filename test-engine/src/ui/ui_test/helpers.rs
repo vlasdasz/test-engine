@@ -43,8 +43,8 @@ pub fn add_action(action: impl FnMut() + Send + 'static) {
     button.base_view_mut().view_label = "Debug Action Button".into();
 }
 
-pub async fn check_colors(data: &str) -> Result<()> {
-    let screenshot = AppRunner::take_screenshot().await?;
+pub fn check_colors(data: &str) -> Result<()> {
+    let screenshot = AppRunner::take_screenshot()?;
 
     let lines: Vec<_> = data.split('\n').collect();
 
@@ -69,13 +69,13 @@ pub async fn check_colors(data: &str) -> Result<()> {
             255,
         );
 
-        check_pixel_color(&screenshot, pos, color).await;
+        check_pixel_color(&screenshot, pos, color);
     }
 
     Ok(())
 }
 
-pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
+pub fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
     let pixel: U8Color = screenshot.get_pixel(pos);
 
     let diff = pixel.diff_u8(color);
@@ -92,8 +92,7 @@ pub async fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Col
                 .downcast_view::<HighlightView>()
                 .unwrap()
                 .set(pos, color.into(), pixel.into());
-        })
-        .await;
+        });
     }
 
     let test_name = TEST_NAME.lock().unwrap().clone();

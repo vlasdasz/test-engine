@@ -60,13 +60,13 @@ impl TableData for TestTableView {
 pub async fn test_table_view() -> Result<()> {
     N_CELLS.store(2_000_000, Ordering::Relaxed);
 
-    let view = UI::init_test_view::<TestTableView>().await;
+    let view = UI::init_test_view::<TestTableView>();
 
-    AppRunner::set_window_size((1000, 1000)).await;
+    AppRunner::set_window_size((1000, 1000));
 
-    wait_for_next_frame().await;
-    wait_for_next_frame().await;
-    wait_for_next_frame().await;
+    wait_for_next_frame();
+    wait_for_next_frame();
+    wait_for_next_frame();
 
     assert_eq!(
         view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
@@ -108,8 +108,7 @@ pub async fn test_table_view() -> Result<()> {
             669  983  m
             678  896  m
         ",
-    )
-    .await;
+    );
 
     assert_eq!(
         view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
@@ -119,8 +118,7 @@ pub async fn test_table_view() -> Result<()> {
     from_main(move || {
         N_CELLS.store(2_000_000 - 5, Ordering::Relaxed);
         view.table.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -156,8 +154,7 @@ pub async fn test_table_view() -> Result<()> {
              731  179 -  89 124 149
              871  134 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     assert_eq!(
         view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
@@ -353,16 +350,14 @@ pub async fn test_table_view() -> Result<()> {
             334  237  b
             334  237  e
         ",
-    )
-    .await;
+    );
 
     inject_touches(
         "
             337  351  b
             337  351  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(INDEX.load(Ordering::Relaxed), 666665);
 

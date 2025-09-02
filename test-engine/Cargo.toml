@@ -9,9 +9,8 @@ crate-type = ["rlib", "staticlib"]
 name = "test_engine"
 
 [features]
-audio = ["dep:audio"]
-debug = ["dep:debug", "ui/debug"]
-default = ["audio"]
+default = []
+webgl = ["wgpu/webgl"]
 
 [dependencies]
 anyhow = { workspace = true }
@@ -20,7 +19,6 @@ fern = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-tokio = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
@@ -31,8 +29,7 @@ reflected = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }
 
-audio = { workspace = true, optional = true }
-debug = { workspace = true, optional = true }
+audio = { workspace = true }
 game = { workspace = true }
 generate = { workspace = true }
 gm = { workspace = true }
@@ -42,6 +39,15 @@ store = { workspace = true }
 ui = { workspace = true }
 ui-proc = { workspace = true }
 window = { workspace = true }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+async-std = { workspace = true }
+pollster = { workspace = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1.7"
+console_log = "1.0"
+wasm-bindgen-futures = { workspace = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = { workspace = true }

@@ -1,6 +1,9 @@
 use std::{
-    future::Future,
-    sync::{Arc, Mutex},
+    sync::{
+        Arc, Mutex,
+        mpsc::{Sender, channel},
+    },
+    thread::{sleep, spawn},
     time::Duration,
 };
 
@@ -8,11 +11,6 @@ use anyhow::Result;
 use gm::ToF32;
 use log::warn;
 use refs::is_main_thread;
-use tokio::{
-    spawn,
-    sync::oneshot::{Sender, channel},
-    time::sleep,
-};
 
 type Callback = Box<dyn FnOnce() + Send>;
 type Callbacks = Mutex<Vec<Callback>>;
@@ -21,7 +19,7 @@ type SignalledCallbacks = Mutex<Vec<(Sender<()>, Callback)>>;
 static CALLBACKS: Callbacks = Callbacks::new(vec![]);
 static SIGNALLED: SignalledCallbacks = SignalledCallbacks::new(vec![]);
 
-pub async fn from_main<T, A>(action: A) -> T
+pub fn from_main<T, A>(action: A) -> T
 where
     A: FnOnce() -> T + Send + 'static,
     T: Send + 'static, {
@@ -43,13 +41,13 @@ where
         }),
     ));
 
-    receiver.await.expect("Failed to receive result in on_main");
+    receiver.recv().expect("Failed to receive result in on_main");
 
     result.lock().unwrap().take().unwrap()
 }
 
-pub async fn wait_for_next_frame() {
-    from_main(|| {}).await;
+pub fn wait_for_next_frame() {
+    from_main(|| {});
 }
 
 pub fn on_main(action: impl FnOnce() + Send + 'static) {
@@ -69,23 +67,25 @@ pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
     if is_main_thread() {
         action();
     } else {
-        let (sender, mut receiver) = channel::<()>();
+        let (sender, receiver) = channel::<()>();
         SIGNALLED.lock().unwrap().push((sender, Box::new(action)));
         while receiver.try_recv().is_err() {}
     }
 }
 
+#[cfg(not_wasm)]
 pub fn after(delay: impl ToF32, action: impl FnOnce() + Send + 'static) {
-    spawn(async move {
-        sleep(Duration::from_secs_f32(delay.to_f32())).await;
+    spawn(move || {
+        sleep(Duration::from_secs_f32(delay.to_f32()));
         CALLBACKS.lock().unwrap().push(Box::new(action));
     });
 }
 
-pub fn async_after(delay: impl ToF32, action: impl Future + Send + 'static) {
-    spawn(async move {
-        sleep(Duration::from_secs_f32(delay.to_f32())).await;
-        action.await;
+#[cfg(wasm)]
+pub fn after(delay: impl ToF32, action: impl FnOnce() + Send + 'static) {
+    wasm_bindgen_futures::spawn_local(async move {
+        gloo_timers::future::TimeoutFuture::new((delay.to_f32() * 1000.0) as _).await;
+        CALLBACKS.lock().unwrap().push(Box::new(action));
     });
 }
 

@@ -26,7 +26,7 @@ impl Setup for CenterField {
 }
 
 pub async fn test_center_field() -> anyhow::Result<()> {
-    let view = UI::init_test_view::<CenterField>().await;
+    let view = UI::init_test_view::<CenterField>();
 
     check_colors(
         r#"
@@ -54,13 +54,11 @@ pub async fn test_center_field() -> anyhow::Result<()> {
              218   90 -  89 124 149
              220  167 -   0   0 231
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.container.place().clear().all_sides(200);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -87,14 +85,12 @@ pub async fn test_center_field() -> anyhow::Result<()> {
              290  163 -  89 124 149
              291  162 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.container.place().clear().all_sides(250);
         view.field.place().max_width(200);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -122,13 +118,11 @@ pub async fn test_center_field() -> anyhow::Result<()> {
              265  292 -   0 255   0
              241  292 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.container.place().clear().all_sides(100);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -159,13 +153,11 @@ pub async fn test_center_field() -> anyhow::Result<()> {
               88  414 -  89 124 149
               68  416 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.field.place().center_x();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -188,13 +180,11 @@ pub async fn test_center_field() -> anyhow::Result<()> {
              307  193 -   0 255   0
              303  209 -   0 255   0
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.field.place().relative(CenterY, view.container, -50.0);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -221,8 +211,7 @@ pub async fn test_center_field() -> anyhow::Result<()> {
              239  343 -   0 255   0
              324  285 -   0 255   0
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

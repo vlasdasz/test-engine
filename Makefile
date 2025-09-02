@@ -10,6 +10,7 @@ ui:
 
 all:
 	order
+	make wasm
 	make ios
 	make ui
 	make render
@@ -53,9 +54,24 @@ lint:
       -A clippy::unnecessary_box_returns \
       -A clippy::return_self_not_must_use \
       -A clippy::struct_field_names \
+      -A clippy::manual_assert \
       -A dead_code \
       \
       -D warnings
 
+serve:
+	rustup target add wasm32-unknown-unknown
+	cargo install --locked trunk
+	cd ./test-game && trunk serve --features webgl --address 0.0.0.0 --port 44800
+
+serve-r:
+	rustup target add wasm32-unknown-unknown
+	cargo install --locked trunk
+	cd ./test-game && trunk serve --features webgl --release --address 0.0.0.0 --port 44800
+
+wasm:
+	rustup target add wasm32-unknown-unknown
+	cargo install --locked trunk
+	cd ./test-game && trunk build
 
 .PHONY: mobile

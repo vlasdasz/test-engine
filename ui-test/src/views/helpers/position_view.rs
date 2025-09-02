@@ -17,7 +17,7 @@ impl Setup for PositionViewTest {
 }
 
 pub async fn test_position_view() -> Result<()> {
-    let view = UI::init_test_view::<PositionViewTest>().await;
+    let view = UI::init_test_view::<PositionViewTest>();
 
     inject_touches(
         "
@@ -25,8 +25,7 @@ pub async fn test_position_view() -> Result<()> {
             402  369  m
             402  369  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.pos.position, Point::new(228.0, 334.0));
 
@@ -37,8 +36,7 @@ pub async fn test_position_view() -> Result<()> {
             460  162  e
 
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.pos.position, Point::new(338.0, 122.0));
 
@@ -48,8 +46,7 @@ pub async fn test_position_view() -> Result<()> {
             144  540  m
             144  540  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.pos.position, Point::new(-30.0, 516.0));
 

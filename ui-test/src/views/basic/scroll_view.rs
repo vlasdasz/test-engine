@@ -24,7 +24,7 @@ impl Setup for Scrolling {
 }
 
 pub async fn test_scroll_view() -> Result<()> {
-    let mut view = UI::init_test_view::<Scrolling>().await;
+    let mut view = UI::init_test_view::<Scrolling>();
 
     check_colors(
         r#"
@@ -58,18 +58,17 @@ pub async fn test_scroll_view() -> Result<()> {
              542  518 -   0 255 255
              552  476 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     assert_eq!(view.scroll.content_offset(), 0.0);
 
-    inject_scroll(-5).await;
+    inject_scroll(-5);
     assert_eq!(view.scroll.content_offset(), -0.0);
 
-    inject_scroll(-20).await;
+    inject_scroll(-20);
     assert_eq!(view.scroll.content_offset(), -0.0);
 
-    inject_scroll(-30).await;
+    inject_scroll(-30);
     assert_eq!(view.scroll.content_offset(), -0.0);
 
     check_colors(
@@ -104,13 +103,11 @@ pub async fn test_scroll_view() -> Result<()> {
              542  518 -   0 255 255
              552  476 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.scroll.set_content_size((400, 400));
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -152,13 +149,11 @@ pub async fn test_scroll_view() -> Result<()> {
               48  392 -   0 255 255
               53  434 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.scroll.set_content_size((600, 800));
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -201,10 +196,9 @@ pub async fn test_scroll_view() -> Result<()> {
              337  116 -  89 124 149
              193   50 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
-    inject_scroll(-150).await;
+    inject_scroll(-150);
     assert_eq!(view.scroll.content_offset(), -150.0);
 
     check_colors(
@@ -248,10 +242,9 @@ pub async fn test_scroll_view() -> Result<()> {
              399  282 -  89 124 149
              214  178 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
-    inject_scroll(-1500).await;
+    inject_scroll(-1500);
     assert_eq!(view.scroll.content_offset(), -200.0);
 
     check_colors(
@@ -288,8 +281,7 @@ pub async fn test_scroll_view() -> Result<()> {
              323  271 -  89 124 149
              376  264 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         "
@@ -343,8 +335,7 @@ pub async fn test_scroll_view() -> Result<()> {
             519  100  m
             516  111  m
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -385,13 +376,11 @@ pub async fn test_scroll_view() -> Result<()> {
              326  117 -  89 124 149
              366  145 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.scroll.set_content_offset(-400.0);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -427,8 +416,7 @@ pub async fn test_scroll_view() -> Result<()> {
              182  499 -  89 124 149
               29  526 -   0 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

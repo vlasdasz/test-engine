@@ -20,7 +20,7 @@ impl Setup for MovableViewTestView {
 }
 
 pub async fn test_movable_view() -> Result<()> {
-    let mut _view = UI::init_test_view::<MovableViewTestView>().await;
+    let mut _view = UI::init_test_view::<MovableViewTestView>();
 
     inject_touches(
         "
@@ -28,8 +28,7 @@ pub async fn test_movable_view() -> Result<()> {
             438  90   m
             438  90   e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -52,8 +51,7 @@ pub async fn test_movable_view() -> Result<()> {
              510  132 -  89 124 149
              493   83 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         "
@@ -61,8 +59,7 @@ pub async fn test_movable_view() -> Result<()> {
             323  192  m
             323  192  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -77,8 +74,7 @@ pub async fn test_movable_view() -> Result<()> {
              324  217 -  89 124 149
              255  157 -   0 255   0
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         "
@@ -86,8 +82,7 @@ pub async fn test_movable_view() -> Result<()> {
             78   78   m
             78   78   e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -104,8 +99,7 @@ pub async fn test_movable_view() -> Result<()> {
               97  148 -  89 124 149
              134  160 -   0 255   0
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

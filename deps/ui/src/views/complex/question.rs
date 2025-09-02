@@ -1,6 +1,7 @@
 use std::{
     future::{Future, IntoFuture},
     pin::Pin,
+    sync::mpsc::channel,
 };
 
 use dispatch::from_main;
@@ -9,10 +10,10 @@ use gm::{
     flat::Size,
 };
 use refs::Weak;
-use tokio::sync::oneshot::channel;
 use ui_proc::view;
 use vents::OnceEvent;
 
+// use vents::OnceEvent;
 use crate::{ModalView, Setup, has_data::HasText, view::ViewData};
 mod test_engine {
     pub(crate) use educe;
@@ -30,8 +31,7 @@ pub struct Question {
     left:  String,
     right: String,
 
-    event: OnceEvent<bool>,
-
+    event:         OnceEvent<bool>,
     #[init]
     label:         Label,
     ok_button:     Button,
@@ -77,17 +77,16 @@ impl Question {
         });
     }
 
-    async fn callback_async(self) -> bool {
+    fn recv_callback(self) -> bool {
         let (se, rc) = channel::<bool>();
 
         from_main(move || {
-            Self::make_modal(self).event.val(|answer| {
+            Self::make_modal(self).event.val(move |answer| {
                 se.send(answer).unwrap();
             });
-        })
-        .await;
+        });
 
-        rc.await.unwrap()
+        rc.recv().unwrap()
     }
 }
 
@@ -96,7 +95,7 @@ impl IntoFuture for Question {
     type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send>>;
 
     fn into_future(self) -> Self::IntoFuture {
-        Box::pin(async move { self.callback_async().await })
+        Box::pin(async move { self.recv_callback() })
     }
 }
 

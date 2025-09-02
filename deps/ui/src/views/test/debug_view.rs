@@ -2,7 +2,7 @@ use std::{collections::HashMap, fmt::Display};
 
 use gm::color::WHITE;
 use plat::Platform;
-use refs::{Own, Weak, dump_ref_stats, main_lock::MainLock};
+use refs::{Own, Weak, main_lock::MainLock};
 
 use crate::has_data::HasText;
 
@@ -35,7 +35,6 @@ pub struct DebugView {
     screen_scale_label: Label,
     touch_enabled:      Label,
     exit:               Button,
-    dump_mem:           Button,
     touch_root:         Label,
 
     hide: Button,
@@ -106,17 +105,6 @@ impl Setup for DebugView {
         self.hide.set_text("hide");
         self.hide.on_tap(move || {
             DEBUG_VIEW.get_mut().take();
-        });
-
-        self.dump_mem.set_text("dump mem");
-        self.dump_mem.on_tap(|| {
-            // dbg!(Image::storage().len());
-            //
-            // for (_key, val) in Image::storage() {
-            //     dbg!(val.name());
-            // }
-
-            dump_ref_stats();
         });
     }
 }

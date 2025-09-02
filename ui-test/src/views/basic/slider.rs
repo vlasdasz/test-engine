@@ -29,15 +29,14 @@ impl Setup for Slider {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let mut view = UI::init_test_view::<Slider>().await;
+    let mut view = UI::init_test_view::<Slider>();
 
     inject_touches(
         r"
             306  202  b
             306  202  e
     ",
-    )
-    .await;
+    );
 
     assert_eq!(view.slider.value(), 0.78);
     assert_eq!(view.label.text(), "0.78");
@@ -65,8 +64,7 @@ pub async fn test_slider() -> Result<()> {
             173  455  e
             172  449  m
     ",
-    )
-    .await;
+    );
 
     assert_eq!(view.slider.value(), 0.78);
     assert_eq!(view.label.text(), "0.78");
@@ -105,8 +103,7 @@ pub async fn test_slider() -> Result<()> {
             416  449  m
             482  405  m
     ",
-    )
-    .await;
+    );
 
     assert_eq!(view.slider.value(), 0.122_857_15);
     assert_eq!(view.label.text(), "0.12");
@@ -127,8 +124,7 @@ pub async fn test_slider() -> Result<()> {
             248  535  m
             323  538  m
     ",
-    )
-    .await;
+    );
 
     assert_eq!(view.slider.value(), 0.0);
     assert_eq!(view.label.text(), "0.00");
@@ -152,16 +148,14 @@ pub async fn test_slider() -> Result<()> {
             469  194  m
             477  177  m
     ",
-    )
-    .await;
+    );
 
     assert_eq!(view.slider.value(), 1.0);
     assert_eq!(view.label.text(), "1.00");
 
     from_main(move || {
         view.slider.set_range(-5, 5);
-    })
-    .await;
+    });
 
     assert_eq!(view.slider.value(), 5.0);
     assert_eq!(view.label.text(), "5.00");
@@ -176,8 +170,7 @@ pub async fn test_slider() -> Result<()> {
             303  543  m
             303  542  e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(view.slider.value(), -5.0);
     assert_eq!(view.label.text(), "-5.00");
@@ -190,8 +183,7 @@ pub async fn test_slider() -> Result<()> {
             label.set_size(50, 20);
             label.set_x(340);
             label.set_y(view.slider.indicator_position() - 10.0 + view.slider.y());
-        })
-        .await;
+        });
     }
 
     check_colors(
@@ -227,8 +219,7 @@ pub async fn test_slider() -> Result<()> {
              373  107 -  89 124 149
              373   77 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

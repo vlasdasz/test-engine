@@ -44,26 +44,11 @@ impl Input {
             UIManager::root_view().add_subview_to_root(view);
         }
 
-        // let _level_touch = touch;
-        // TODO: Revisit scale
-        // if Platform::DESKTOP {
-        //     touch.position = self.cursor_position / UIManager::ui_scale();
-        // } else {
-        //     touch.position /= UIManager::ui_scale();
-        // }
-
         for view in TouchStack::touch_views() {
             if check_touch(view, &mut touch) {
                 return true;
             }
         }
-
-        // if let Some(level) = &mut self.level {
-        //     level.set_cursor_position(level_touch.position);
-        //     if touch.is_began() {
-        //         level.add_touch(level_touch.position)
-        //     }
-        // }
 
         if touch.is_began() && !LevelManager::no_level() {
             return LevelManager::level_weak().add_touch(original_pos);

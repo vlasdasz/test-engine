@@ -18,7 +18,7 @@ impl Setup for HighLightTestView {
 }
 
 pub async fn test_highlight() -> Result<()> {
-    UI::init_test_view::<HighLightTestView>().await;
+    UI::init_test_view::<HighLightTestView>();
 
     check_colors(
         r#"
@@ -59,8 +59,7 @@ pub async fn test_highlight() -> Result<()> {
              207   86 -  89 124 149
              196   86 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

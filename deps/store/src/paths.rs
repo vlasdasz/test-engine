@@ -10,6 +10,11 @@ pub struct Paths;
 
 impl Paths {
     pub fn storage() -> PathBuf {
+        #[cfg(target_arch = "wasm32")]
+        {
+            return PathBuf::default();
+        }
+
         let home = if Platform::IOS {
             dirs::document_dir()
         } else if Platform::ANDROID {
@@ -43,6 +48,9 @@ impl Paths {
     }
 
     pub fn git_root() -> anyhow::Result<PathBuf> {
+        #[cfg(wasm)]
+        return Ok(PathBuf::new());
+
         let output = Command::new("git").args(["rev-parse", "--show-toplevel"]).output()?;
 
         if !output.status.success() {

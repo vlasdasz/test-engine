@@ -22,7 +22,7 @@ impl Setup for TilingLayout {
 }
 
 pub async fn test_tiling_layout() -> anyhow::Result<()> {
-    let mut view = UI::init_test_view::<TilingLayout>().await;
+    let mut view = UI::init_test_view::<TilingLayout>();
 
     check_colors(
         r#"
@@ -66,13 +66,11 @@ pub async fn test_tiling_layout() -> anyhow::Result<()> {
              136   16 -  89 124 149
              136    7 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.menu.remove_all_subviews();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -102,8 +100,7 @@ pub async fn test_tiling_layout() -> anyhow::Result<()> {
              240   92 -   0   0   0
              213  193 -   0   0   0
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.menu
@@ -123,8 +120,7 @@ pub async fn test_tiling_layout() -> anyhow::Result<()> {
             .add_transition::<TilingLayout, TilingLayout>()
             .set_text("Settings")
             .set_text_size(80);
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -169,8 +165,7 @@ pub async fn test_tiling_layout() -> anyhow::Result<()> {
               63   85 -  14  14  14
               63   81 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

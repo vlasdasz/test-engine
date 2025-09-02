@@ -4,12 +4,14 @@ struct SpriteView {
     resolution: vec2<f32>,
     camera_rotation: f32,
     scale: f32,
+    _padding: vec2<u32>,
 }
 
 struct PolygonView {
     color:    vec4<f32>,
     pos:      vec2<f32>,
     rot:      f32,
+    _padding: u32,
 }
 
 @group(0) @binding(0)

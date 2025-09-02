@@ -37,7 +37,7 @@ impl Setup for TouchOrder {
 }
 
 pub async fn test_touch_order() -> Result<()> {
-    UI::init_test_view::<TouchOrder>().await;
+    UI::init_test_view::<TouchOrder>();
 
     assert_eq!(
         TouchStack::dump(),
@@ -71,8 +71,7 @@ pub async fn test_touch_order() -> Result<()> {
             29   48   b
             29   48   e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(
         get_state::<String>(),

@@ -27,7 +27,7 @@ impl Setup for CornerRadius {
 }
 
 pub async fn test_corner_radius() -> Result<()> {
-    UI::init_test_view::<CornerRadius>().await;
+    UI::init_test_view::<CornerRadius>();
 
     check_colors(
         r#"
@@ -63,8 +63,7 @@ pub async fn test_corner_radius() -> Result<()> {
               78   60 -   0   0 231
               95  103 -   0   0 231
         "#,
-    )
-    .await?;
+    )?;
 
     check_colors(
         r#"
@@ -109,8 +108,7 @@ pub async fn test_corner_radius() -> Result<()> {
              172  247 -  89 124 149
              190  228 - 234 197 189
         "#,
-    )
-    .await?;
+    )?;
 
     check_colors(
         r#"
@@ -152,8 +150,7 @@ pub async fn test_corner_radius() -> Result<()> {
              463  143 - 255 255   0
              415  181 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

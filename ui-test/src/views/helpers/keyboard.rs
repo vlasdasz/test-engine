@@ -19,9 +19,9 @@ impl Setup for KeyboardViewTest {
 }
 
 pub async fn test_keyboard_view() -> Result<()> {
-    let _view = UI::init_test_view::<KeyboardViewTest>().await;
+    let _view = UI::init_test_view::<KeyboardViewTest>();
 
-    AppRunner::set_window_size((800, 400)).await;
+    AppRunner::set_window_size((800, 400));
 
     //  record_ui_test().await;
 

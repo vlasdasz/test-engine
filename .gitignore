@@ -115,3 +115,5 @@ mobile/
 *.aab
 profile.json
 profile.json.gz
+
+test-game/dist/*

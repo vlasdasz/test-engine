@@ -1,4 +1,3 @@
-use fake::{Fake, Faker};
 use test_engine::{
     audio::Sound,
     generate::noise::{TerrainParams, generate_terrain},
@@ -21,12 +20,18 @@ pub struct TestLevel {
 
 impl TestLevel {
     pub fn add_random_box(&mut self, pos: impl Into<Point>) {
+        let w: u32 = fastrand::u32(2..28);
+        let h: u32 = fastrand::u32(2..28);
+
         let mut bx = self.make_sprite::<Body>(
-            Shape::Rect(Size::<f32>::new((0.2..2.8).fake(), (0.2..2.8).fake())),
+            Shape::Rect(Size::<f32>::new(
+                w.lossy_convert() / 10.0,
+                h.lossy_convert() / 10.0,
+            )),
             pos,
         );
 
-        if Faker.fake() {
+        if fastrand::bool() {
             bx.set_image("crate_box.png");
         } else {
             bx.set_color(Color::random());

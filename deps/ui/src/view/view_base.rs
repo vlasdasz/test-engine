@@ -71,8 +71,7 @@ pub struct ViewBase {
     pub(crate) size_changed:     Event,
 
     #[educe(Debug(ignore))]
-    pub(crate) after_setup: OnceEvent,
-
+    pub(crate) after_setup:         OnceEvent,
     pub(crate) ignore_global_style: bool,
 
     pub tag: usize,

@@ -9,7 +9,7 @@ use gm::{color::TURQUOISE, flat::Rect};
 use log::{debug, trace};
 use refs::{Own, Weak, main_lock::MainLock};
 use render::{
-    UIGradientPipeline, UIImageRectPipepeline, UIPathPipeline, UIRectPipepeline,
+    UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
 };
 use ui::{
@@ -25,7 +25,7 @@ use crate::{AppRunner, ui::ui_test::state::clear_state};
 static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
 static GRADIENT_DRAWER: MainLock<UIGradientPipeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
-static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
+// static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
 pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
 
 pub struct UI;
@@ -57,6 +57,7 @@ impl UI {
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
+                _padding:   0,
             },
         );
 
@@ -64,6 +65,7 @@ impl UI {
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
+                _padding:   0,
             },
         );
 
@@ -71,6 +73,7 @@ impl UI {
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
+                _padding:   0,
             },
         );
 
@@ -159,14 +162,14 @@ impl UI {
         {
             Self::draw_label(&frame, label, sections, scale);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
-            for path in drawing_view.paths().iter().rev() {
-                UI_PATH_DRAWER.get_mut().draw(
-                    pass,
-                    path.buffer(),
-                    path.uniform_bind(),
-                    path.vertex_range(),
-                    drawing_view.z_position() - UIManager::additional_z_offset(),
-                );
+            for _path in drawing_view.paths().iter().rev() {
+                // UI_PATH_DRAWER.get_mut().draw(
+                //     pass,
+                //     path.buffer(),
+                //     path.uniform_bind(),
+                //     path.vertex_range(),
+                //     drawing_view.z_position() -
+                // UIManager::additional_z_offset(), );
             }
         }
 
@@ -237,15 +240,15 @@ impl UI {
 }
 
 impl UI {
-    pub async fn reload_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set_test_view(T::new(), 600, 600, false, get_test_name::<T>()).await
+    pub fn reload_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set_test_view(T::new(), 600, 600, false, get_test_name::<T>())
     }
 
-    pub async fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set_test_view(T::new(), 600, 600, true, get_test_name::<T>()).await
+    pub fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set_test_view(T::new(), 600, 600, true, get_test_name::<T>())
     }
 
-    pub async fn set_test_view<T: View + 'static>(
+    pub fn set_test_view<T: View + 'static>(
         view: Own<T>,
         width: u32,
         height: u32,
@@ -264,8 +267,8 @@ impl UI {
 
         clear_state();
 
-        AppRunner::set_window_size((width, height)).await;
-        wait_for_next_frame().await;
+        AppRunner::set_window_size((width, height));
+        wait_for_next_frame();
         let view = from_main(move || {
             let weak = view.weak();
             let mut root = UIManager::root_view();
@@ -274,9 +277,9 @@ impl UI {
             view.place().back();
             trace!("{width} - {height}");
             weak
-        })
-        .await;
-        wait_for_next_frame().await;
+        });
+        wait_for_next_frame();
+
         view
     }
 }

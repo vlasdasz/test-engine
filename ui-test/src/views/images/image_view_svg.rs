@@ -26,7 +26,7 @@ impl Setup for ImageViewSVG {
 }
 
 pub async fn test_image_view_svg() -> Result<()> {
-    let mut view = UI::init_test_view::<ImageViewSVG>().await;
+    let mut view = UI::init_test_view::<ImageViewSVG>();
 
     check_colors(
         r#"
@@ -59,8 +59,7 @@ pub async fn test_image_view_svg() -> Result<()> {
               97  397 -  89 124 149
               77  195 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     check_colors(
         r#"
@@ -70,16 +69,14 @@ pub async fn test_image_view_svg() -> Result<()> {
              117  479 -   0   0   0
              141  477 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.settings.set_image(Tinted {
             tint: BLUE,
             name: "settings.svg".to_string(),
         });
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -89,8 +86,7 @@ pub async fn test_image_view_svg() -> Result<()> {
              128  484 -   0   0 153
              152  479 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

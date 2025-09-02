@@ -2,11 +2,10 @@ use std::{
     any::type_name,
     path::PathBuf,
     sync::{Mutex, Once},
-    time::Duration,
 };
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched};
+use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
 use gm::{
     LossyConvert,
     flat::{Point, Size},
@@ -14,8 +13,7 @@ use gm::{
 use level::{LevelBase, LevelManager};
 use log::debug;
 use refs::{Own, Rglica, main_lock::MainLock};
-use tokio::time::sleep;
-use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
+use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
@@ -25,6 +23,8 @@ use winit::{
 };
 
 use crate::{
+    App,
+    app_starter::test_engine_start_with_app,
     assets::Assets,
     level_drawer::LevelDrawer,
     ui::{Input, UI},
@@ -51,50 +51,53 @@ impl AppRunner {
 
     #[cfg(not(android))]
     fn setup_log() {
-        use fern::Dispatch;
-        use log::{Level, LevelFilter};
+        #[cfg(not_wasm)]
+        {
+            use fern::Dispatch;
+            use log::{Level, LevelFilter};
 
-        Dispatch::new()
-            .level(LevelFilter::Warn)
-            .level_for("test_engine", LevelFilter::Debug)
-            .level_for("shopping", LevelFilter::Debug)
-            .format(|out, message, record| {
-                let level_icon = match record.level() {
-                    Level::Error => "🔴",
-                    Level::Warn => "🟡",
-                    Level::Info => "🟢",
-                    Level::Debug => "🔵",
-                    Level::Trace => "⚪",
-                };
+            Dispatch::new()
+                .level(LevelFilter::Warn)
+                .level_for("test_engine", LevelFilter::Debug)
+                .level_for("shopping", LevelFilter::Debug)
+                .format(|out, message, record| {
+                    let level_icon = match record.level() {
+                        Level::Error => "🔴",
+                        Level::Warn => "🟡",
+                        Level::Info => "🟢",
+                        Level::Debug => "🔵",
+                        Level::Trace => "⚪",
+                    };
 
-                let location = false;
-                let module = false;
+                    let location = false;
+                    let module = false;
 
-                let mut log = format!("{level_icon} {message}");
+                    let mut log = format!("{level_icon} {message}");
 
-                if location {
-                    log = format!(
-                        "[{}::{}] {}",
-                        record.file().unwrap_or_default(),
-                        record.line().unwrap_or_default(),
-                        log
-                    );
-                }
+                    if location {
+                        log = format!(
+                            "[{}::{}] {}",
+                            record.file().unwrap_or_default(),
+                            record.line().unwrap_or_default(),
+                            log
+                        );
+                    }
 
-                if module {
-                    log = format!("{} {}", record.module_path().unwrap_or_default(), log);
-                }
+                    if module {
+                        log = format!("{} {}", record.module_path().unwrap_or_default(), log);
+                    }
 
-                out.finish(format_args!("{log}"));
-            })
-            .chain(std::io::stdout())
-            .apply()
-            .expect("Failed to initialize logging");
+                    out.finish(format_args!("{log}"));
+                })
+                .chain(std::io::stdout())
+                .apply()
+                .expect("Failed to initialize logging");
+        }
 
         debug!("Logs setup");
     }
 
-    fn new(first_view: Own<dyn View>) -> Self {
+    pub fn new(first_view: Own<dyn View>) -> Self {
         #[cfg(desktop)]
         Assets::init(store::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
@@ -105,54 +108,6 @@ impl AppRunner {
             first_view:      first_view.into(),
             window:          Rglica::default(),
         }
-    }
-
-    #[cfg(not(target_os = "android"))]
-    pub async fn start(size: impl Into<Size>, root_view: Own<dyn View>) -> Result<()> {
-        Self::setup_log();
-        #[cfg(feature = "debug")]
-        Self::setup_debug_server().await?;
-        Window::start(size.into(), Self::new(root_view)).await
-    }
-
-    #[cfg(feature = "debug")]
-    async fn setup_debug_server() -> Result<()> {
-        use debug::{Command, LevelCommand, UICommand};
-        use dispatch::on_main;
-        use ui::AlertErr;
-
-        use crate::debug_server::{
-            on_debug_client_message, send_to_debug_client, start_listtening_for_debug_client,
-        };
-
-        start_listtening_for_debug_client().await.alert_err();
-
-        LevelManager::on_scale_changed(|scale| send_to_debug_client(LevelCommand::SendScale(scale)));
-
-        on_debug_client_message(|mut msg| {
-            msg.id += 55;
-
-            on_main(move || match msg.command {
-                Command::Ping => send_to_debug_client(msg),
-                Command::Level(level) => match level {
-                    LevelCommand::GetScale => {
-                        send_to_debug_client(LevelCommand::SendScale(LevelManager::scale()));
-                    }
-                    LevelCommand::SetScale(scale) => {
-                        LevelManager::set_scale(scale);
-                    }
-                    LevelCommand::SendScale(_) => unimplemented!(),
-                    LevelCommand::Panic => todo!(),
-                },
-                Command::UI(ui) => match ui {
-                    UICommand::SetScale(scale) => UIManager::set_scale(scale),
-                },
-            });
-        })
-        .await
-        .alert_err();
-
-        Ok(())
     }
 
     #[cfg(target_os = "android")]
@@ -189,39 +144,52 @@ impl AppRunner {
         Window::start(Self::new(first_view), event_loop).await
     }
 
-    #[cfg(not(target_os = "android"))]
-    pub async fn start_with_actor(
-        first_view: Own<dyn View>,
+    #[cfg(not_wasm)]
+    pub fn start_with_actor(
         actions: impl std::future::Future<Output = Result<()>> + Send + 'static,
     ) -> Result<()> {
+        use ui::Setup;
+
+        struct ActorApp;
+
+        impl App for ActorApp {
+            fn new() -> Self
+            where Self: Sized {
+                ActorApp {}
+            }
+
+            fn make_root_view(&self) -> Own<dyn View> {
+                Container::new()
+            }
+        }
+
         Self::setup_log();
 
-        let app = Self::new(first_view);
-
-        tokio::spawn(async move {
-            let recv = from_main(|| WINDOW_READY.lock().unwrap().val_async()).await;
-            recv.await.unwrap();
-            let _ = actions.await;
+        std::thread::spawn(move || {
+            WINDOW_READY.lock().unwrap().sub(|| {
+                async_std::task::block_on(actions).unwrap();
+            });
         });
 
-        Window::start((1200, 1000).into(), app).await
+        test_engine_start_with_app(Box::new(ActorApp::new()));
+
+        Ok(())
     }
 
     pub fn set_window_title(title: impl Into<String>) {
         Window::set_title(title);
     }
 
-    pub async fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
+    pub fn set_window_size(size: impl Into<Size<u32>> + Send + 'static) {
         from_main(|| {
             Window::current().set_size(size);
-        })
-        .await;
-        sleep(Duration::from_secs_f32(0.1)).await;
+        });
+        wait_for_next_frame();
     }
 
-    pub async fn take_screenshot() -> Result<Screenshot> {
-        let recv = from_main(|| Window::current().request_screenshot()).await;
-        let screenshot = recv.await?;
+    pub fn take_screenshot() -> Result<Screenshot> {
+        let recv = from_main(|| Window::current().request_screenshot());
+        let screenshot = recv.recv()?;
         Ok(screenshot)
     }
 
@@ -246,7 +214,11 @@ impl window::WindowEvents for AppRunner {
 
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
-            WINDOW_READY.lock().unwrap().trigger(());
+
+            #[cfg(not_wasm)]
+            std::thread::spawn(|| {
+                WINDOW_READY.lock().unwrap().trigger(());
+            });
         });
     }
 

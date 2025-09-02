@@ -48,7 +48,7 @@ impl Setup for OutBounds {
 }
 
 pub async fn test_out_bounds() -> Result<()> {
-    UI::init_test_view::<OutBounds>().await;
+    UI::init_test_view::<OutBounds>();
 
     inject_touches(
         r"
@@ -65,8 +65,7 @@ pub async fn test_out_bounds() -> Result<()> {
             373  304  b
             373  304  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -97,8 +96,7 @@ pub async fn test_out_bounds() -> Result<()> {
              201  548 - 234 195 200
              224  524 - 230 190 191
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
@@ -117,8 +115,7 @@ pub async fn test_out_bounds() -> Result<()> {
             307  304  b
             307  304  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -137,8 +134,7 @@ pub async fn test_out_bounds() -> Result<()> {
              550  525 -  89 124 149
              572  525 - 230 190 191
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
@@ -171,8 +167,7 @@ pub async fn test_out_bounds() -> Result<()> {
             299  375  b
             300  375  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -200,8 +195,7 @@ pub async fn test_out_bounds() -> Result<()> {
              382   24 -  89 124 149
              343   25 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
@@ -226,8 +220,7 @@ pub async fn test_out_bounds() -> Result<()> {
             298  380  b
             298  380  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -250,8 +243,7 @@ pub async fn test_out_bounds() -> Result<()> {
              124   94 - 255 255 255
              160   80 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
@@ -272,8 +264,7 @@ pub async fn test_out_bounds() -> Result<()> {
             373  293  b
             373  293  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -303,8 +294,7 @@ pub async fn test_out_bounds() -> Result<()> {
              145  218 - 255 255 255
               78  144 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
@@ -325,8 +315,7 @@ pub async fn test_out_bounds() -> Result<()> {
             378  292  b
             378  292  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -352,8 +341,7 @@ pub async fn test_out_bounds() -> Result<()> {
               35  501 - 218 176 177
               24  556 - 216 165 164
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

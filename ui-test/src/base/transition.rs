@@ -40,7 +40,7 @@ impl Setup for BlueView {
 }
 
 pub async fn test_transition() -> Result<()> {
-    UI::init_test_view::<Transition>().await;
+    UI::init_test_view::<Transition>();
 
     check_colors(
         r#"
@@ -49,8 +49,7 @@ pub async fn test_transition() -> Result<()> {
              361  222 -  89 124 149
              487   78 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         "
@@ -58,8 +57,7 @@ pub async fn test_transition() -> Result<()> {
             142  87   e
 
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -68,8 +66,7 @@ pub async fn test_transition() -> Result<()> {
              430  120 -   0   0 231
              559   52 -   0   0 231
         "#,
-    )
-    .await?;
+    )?;
 
     assert_eq!(
         ACTIONS.lock().unwrap().as_slice(),

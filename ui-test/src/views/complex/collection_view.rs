@@ -53,7 +53,7 @@ impl Setup for CollectionTestView {
 }
 
 pub async fn test_collection_view() -> Result<()> {
-    let mut view = UI::init_test_view::<CollectionTestView>().await;
+    let mut view = UI::init_test_view::<CollectionTestView>();
 
     check_colors(
         r#"
@@ -74,14 +74,12 @@ pub async fn test_collection_view() -> Result<()> {
              295  266 -  89 124 149
              282  263 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.records.push("Hello".to_string());
         view.table.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -107,8 +105,7 @@ pub async fn test_collection_view() -> Result<()> {
              436   19 - 255 255 255
              436  186 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         for i in 0..8 {
@@ -116,8 +113,7 @@ pub async fn test_collection_view() -> Result<()> {
         }
 
         view.table.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -153,16 +149,14 @@ pub async fn test_collection_view() -> Result<()> {
              533  280 - 255 255 255
              531  255 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.table.place().clear().left_half();
         view.collection.place().right_half();
         view.collection.layout = CollectionLayout::Cards;
         view.collection.reload_data();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -219,8 +213,7 @@ pub async fn test_collection_view() -> Result<()> {
              471  148 - 255 255 255
              552  152 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

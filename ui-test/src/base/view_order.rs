@@ -24,7 +24,7 @@ impl Setup for ViewOrder {
 }
 
 pub async fn test_view_order() -> Result<()> {
-    let view = UI::init_test_view::<ViewOrder>().await;
+    let view = UI::init_test_view::<ViewOrder>();
 
     assert_eq!(
         view.dump_subviews(),
@@ -78,8 +78,7 @@ pub async fn test_view_order() -> Result<()> {
               45   32 - 255   0   0
               44   32 - 255   0   0
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

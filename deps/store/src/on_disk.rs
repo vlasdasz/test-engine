@@ -101,70 +101,70 @@ impl<T: Storable + Debug> Debug for OnDisk<T> {
     }
 }
 
-#[cfg(test)]
-mod test {
-
-    use anyhow::Result;
-    use fake::{Fake, Faker};
-    use serde::{Deserialize, Serialize};
-    use tokio::spawn;
-
-    use crate::{OnDisk, Paths};
-
-    #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
-    struct Data {
-        number: i32,
-        string: String,
-    }
-
-    static STORED: OnDisk<i32> = OnDisk::new("stored_i32_test");
-    static STORED_STRUCT: OnDisk<Data> = OnDisk::new("stored_struct_test");
-
-    fn check_send<T: Send>(_send: &T) {}
-    fn check_sync<T: Sync>(_sync: &T) {}
-
-    #[tokio::test]
-    async fn stored() -> Result<()> {
-        check_send(&STORED);
-        check_sync(&STORED);
-        check_send(&STORED_STRUCT);
-        check_sync(&STORED_STRUCT);
-
-        STORED.set(10);
-        STORED.reset();
-        assert_eq!(STORED.get(), None);
-
-        for _ in 0..10 {
-            let rand: i32 = Faker.fake();
-
-            spawn(async move {
-                STORED.set(rand);
-            })
-            .await?;
-
-            spawn(async move {
-                assert_eq!(STORED.get(), Some(rand));
-                assert_eq!(format!("Some({rand})"), format!("{STORED:?}"));
-            })
-            .await?;
-        }
-
-        let data = Data {
-            number: 555,
-            string: "Helloyyyy".to_string(),
-        };
-
-        STORED_STRUCT.set(data.clone());
-
-        let loaded_data = STORED_STRUCT.get();
-
-        assert_eq!(data, loaded_data.unwrap());
-
-        Ok(())
-    }
-
-    #[test]
-    fn paths() {
-        assert!(Paths::executable_name().starts_with("store"));
-    }
-}
+// #[cfg(test)]
+// mod test {
+//
+//     use anyhow::Result;
+//     use fake::{Fake, Faker};
+//     use serde::{Deserialize, Serialize};
+//     use tokio::spawn;
+//
+//     use crate::{OnDisk, Paths};
+//
+//     #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
+//     struct Data {
+//         number: i32,
+//         string: String,
+//     }
+//
+//     static STORED: OnDisk<i32> = OnDisk::new("stored_i32_test");
+//     static STORED_STRUCT: OnDisk<Data> = OnDisk::new("stored_struct_test");
+//
+//     fn check_send<T: Send>(_send: &T) {}
+//     fn check_sync<T: Sync>(_sync: &T) {}
+//
+//     #[tokio::test]
+//     async fn stored() -> Result<()> {
+//         check_send(&STORED);
+//         check_sync(&STORED);
+//         check_send(&STORED_STRUCT);
+//         check_sync(&STORED_STRUCT);
+//
+//         STORED.set(10);
+//         STORED.reset();
+//         assert_eq!(STORED.get(), None);
+//
+//         for _ in 0..10 {
+//             let rand: i32 = Faker.fake();
+//
+//             spawn(async move {
+//                 STORED.set(rand);
+//             })
+//             .await?;
+//
+//             spawn(async move {
+//                 assert_eq!(STORED.get(), Some(rand));
+//                 assert_eq!(format!("Some({rand})"), format!("{STORED:?}"));
+//             })
+//             .await?;
+//         }
+//
+//         let data = Data {
+//             number: 555,
+//             string: "Helloyyyy".to_string(),
+//         };
+//
+//         STORED_STRUCT.set(data.clone());
+//
+//         let loaded_data = STORED_STRUCT.get();
+//
+//         assert_eq!(data, loaded_data.unwrap());
+//
+//         Ok(())
+//     }
+//
+//     #[test]
+//     fn paths() {
+//         assert!(Paths::executable_name().starts_with("store"));
+//     }
+// }

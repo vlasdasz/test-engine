@@ -1,7 +1,6 @@
 use std::{any::type_name, ops::DerefMut};
 
-use fake::Fake;
-use gm::{LossyConvert, color::Color, flat::Point};
+use gm::{LossyConvert, color::Color};
 use refs::{Own, Weak, weak_from_ref};
 
 use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};
@@ -18,8 +17,6 @@ pub trait ViewSubviews {
     fn add_view<V: 'static + View + Default>(&mut self) -> Weak<V>;
     fn add_subview(&mut self, view: Own<dyn View>) -> WeakView;
     fn __add_subview_internal(&mut self, view: Own<dyn View>, is_root: bool) -> WeakView;
-
-    fn add_dummy_view(&mut self) -> WeakView;
 
     fn apply_if<V: View + 'static>(&mut self, action: impl FnMut(Weak<V>) + Clone + 'static);
 
@@ -115,27 +112,6 @@ impl<T: ?Sized + View> ViewSubviews for T {
         weak.init_views();
         weak.__internal_setup();
         weak
-    }
-
-    fn add_dummy_view(&mut self) -> WeakView {
-        const MAX_SIZE: f32 = 200.0;
-        const MAX_POSITION: f32 = 400.0;
-
-        let mut view = self.add_view::<Container>();
-
-        view.set_size((10.0..MAX_SIZE).fake::<f32>(), (10.0..MAX_SIZE).fake::<f32>());
-
-        let origin: Point = (
-            (10.0..MAX_POSITION).fake::<f32>(),
-            (10.0..MAX_POSITION).fake::<f32>(),
-        )
-            .into();
-
-        view.set_position(origin);
-
-        view.set_color(Color::random());
-
-        view
     }
 
     fn apply_if<V: View + 'static>(&mut self, mut action: impl FnMut(Weak<V>) + Clone + 'static) {

@@ -101,11 +101,11 @@ impl Setup for LayoutPlace {
 }
 
 pub async fn test_layout() -> Result<()> {
-    UI::init_test_view::<LayoutPlace>().await;
+    UI::init_test_view::<LayoutPlace>();
 
-    AppRunner::set_window_size((240, 240)).await;
+    AppRunner::set_window_size((240, 240));
 
-    wait_for_next_frame().await;
+    wait_for_next_frame();
 
     inject_touches(
         r"
@@ -166,17 +166,16 @@ pub async fn test_layout() -> Result<()> {
             118  18   b
             118  18   e
             ",
-    )
-    .await;
+    );
 
-    wait_for_next_frame().await;
+    wait_for_next_frame();
 
     assert_eq!(
         get_state::<String>(),
         "|le_s_ct|left|le_ct|center|ri_ct|right|ri_s_ct|bo_s_ct|bottom|bt_ct|center|tp_ct|top|to_s_ct",
     );
 
-    AppRunner::set_window_size((400, 400)).await;
+    AppRunner::set_window_size((400, 400));
 
     clear_state();
 
@@ -273,8 +272,7 @@ pub async fn test_layout() -> Result<()> {
             200  11   b
             200  11   e
             ",
-    )
-    .await;
+    );
 
     assert_eq!(
         get_state::<String>(),

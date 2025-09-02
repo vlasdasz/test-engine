@@ -38,7 +38,7 @@ impl Setup for Selection {
 }
 
 pub async fn test_selection() -> Result<()> {
-    UI::init_test_view::<Selection>().await;
+    UI::init_test_view::<Selection>();
 
     check_colors(
         r#"
@@ -50,16 +50,14 @@ pub async fn test_selection() -> Result<()> {
              428  296 -   0   0   0
              514  297 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
             128  274  b
             128  274  e
     ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -67,16 +65,14 @@ pub async fn test_selection() -> Result<()> {
              295  308 -   0   0   0
              438  305 -   0   0   0
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
             260  260  b
             260  260  e
     ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -84,16 +80,14 @@ pub async fn test_selection() -> Result<()> {
              276  308 - 255 255 255
              421  308 -   0   0   0
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
             420  260  b
             420  260  e
     ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -101,15 +95,13 @@ pub async fn test_selection() -> Result<()> {
              309  303 -   0   0   0
              435  301 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         r"
               5    5  b
     ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -117,8 +109,7 @@ pub async fn test_selection() -> Result<()> {
              284  312 -   0   0   0
              440  303 -   0   0   0
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

@@ -23,9 +23,9 @@ impl Setup for SwitchTestView {
 }
 
 pub async fn test_switch() -> Result<()> {
-    UI::init_test_view::<SwitchTestView>().await;
+    UI::init_test_view::<SwitchTestView>();
 
-    AppRunner::set_window_size((200, 100)).await;
+    AppRunner::set_window_size((200, 100));
 
     test_combinations([
         (
@@ -72,8 +72,7 @@ pub async fn test_switch() -> Result<()> {
                 ",
             false,
         ),
-    ])
-    .await?;
+    ])?;
 
     Ok(())
 }

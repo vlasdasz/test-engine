@@ -23,7 +23,7 @@ impl Setup for ButtonPress {
 }
 
 pub async fn test_button() -> Result<()> {
-    UI::init_test_view::<ButtonPress>().await;
+    UI::init_test_view::<ButtonPress>();
 
     check_colors(
         r#"
@@ -43,8 +43,7 @@ pub async fn test_button() -> Result<()> {
               97   92 -  89 124 149
               91  114 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     test_combinations([
         ("0 0 b", 0),
@@ -142,8 +141,7 @@ pub async fn test_button() -> Result<()> {
                 ",
             5,
         ),
-    ])
-    .await?;
+    ])?;
 
     Ok(())
 }

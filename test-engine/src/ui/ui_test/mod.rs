@@ -1,10 +1,9 @@
 pub mod helpers;
 pub mod state;
-
 use std::{
     fmt::Display,
     ops::Deref,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc::channel},
 };
 
 use anyhow::{Result, bail};
@@ -14,7 +13,6 @@ use log::{error, warn};
 use refs::Own;
 use serde::de::DeserializeOwned;
 pub use state::*;
-use tokio::sync::mpsc::channel;
 use window::Window;
 
 use crate::{
@@ -23,7 +21,7 @@ use crate::{
     ui::{Input, Touch, U8Color, UIEvents, UIManager},
 };
 
-pub async fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>
+pub fn test_combinations<const A: usize, Val>(comb: [(&'static str, Val); A]) -> Result<()>
 where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
     for comb in comb {
         clear_state();
@@ -33,8 +31,7 @@ where Val: Display + PartialEq + DeserializeOwned + Default + Send + 'static {
         for touch in touches {
             from_main(move || {
                 inject_touch(touch);
-            })
-            .await;
+            });
         }
 
         if get_state::<Val>() != comb.1 {
@@ -55,61 +52,58 @@ fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
 }
 
 #[allow(dead_code)]
-pub async fn inject_scroll(scroll: impl ToF32) {
+pub fn inject_scroll(scroll: impl ToF32) {
     from_main(move || {
         UIManager::trigger_scroll((0, scroll).into());
-    })
-    .await;
+    });
 }
 
-pub async fn inject_touches(data: impl ToString + Send + 'static) {
+pub fn inject_touches(data: impl ToString + Send + 'static) {
     let scale = UIManager::scale();
     from_main(move || {
         for mut touch in Touch::vec_from_str(&data.to_string()) {
             touch.position *= scale;
             inject_touch(touch);
         }
-    })
-    .await;
+    });
 }
 
-pub async fn inject_touches_delayed(data: &str) {
+pub fn inject_touches_delayed(data: &str) {
     for touch in Touch::vec_from_str(data) {
-        wait_for_next_frame().await;
+        wait_for_next_frame();
         from_main(move || {
             inject_touch(touch);
-        })
-        .await;
-        wait_for_next_frame().await;
+        });
+        wait_for_next_frame();
     }
 }
 
-pub async fn inject_keys(s: impl ToString) {
+pub fn inject_keys(s: impl ToString) {
     let s = s.to_string();
     for ch in s.chars() {
-        inject_key(ch).await;
+        inject_key(ch);
     }
 }
 
-pub async fn inject_key(key: char) {
-    from_main(move || Input::on_char(key)).await;
+pub fn inject_key(key: char) {
+    from_main(move || Input::on_char(key));
 }
 
 #[allow(dead_code)]
-pub async fn record_touches() {
-    record_touches_internal(true).await;
+pub fn record_touches() {
+    record_touches_internal(true);
 }
 
 #[allow(dead_code)]
-pub async fn record_moved_touches() {
-    record_touches_internal(false).await;
+pub fn record_moved_touches() {
+    record_touches_internal(false);
 }
 
-async fn record_touches_internal(skip_moved: bool) {
+fn record_touches_internal(skip_moved: bool) {
     let touches: Own<_> = Vec::<Touch>::new().into();
     let mut touches = touches.weak();
 
-    let (s, mut r) = channel::<()>(1);
+    let (s, r) = channel::<()>();
 
     let moved_record_skip = 10;
 
@@ -135,18 +129,17 @@ async fn record_touches_internal(skip_moved: bool) {
         });
 
         UIManager::keymap().add(UIManager::root_view(), 'a', move || {
-            _ = s.try_send(());
+            _ = s.send(());
         });
     });
 
-    if r.recv().await.is_none() {
+    if r.recv().is_err() {
         warn!("Failed to receive record_touches result");
     }
 
     from_main(|| {
         UIEvents::on_touch().remove_subscribers();
-    })
-    .await;
+    });
 
     println!(
         r#"
@@ -162,25 +155,25 @@ async fn record_touches_internal(skip_moved: bool) {
 }
 
 #[allow(dead_code)]
-pub async fn record_ui_test() {
+pub fn record_ui_test() {
     loop {
         Window::set_title("Recording touches");
-        record_touches().await;
+        record_touches();
         Window::set_title("Recording colors");
-        record_colors().await.unwrap();
+        record_colors().unwrap();
     }
 }
 
 #[allow(dead_code)]
-pub async fn record_colors() -> Result<()> {
+pub fn record_colors() -> Result<()> {
     let touch_lock = Touch::lock();
 
-    let screenshot = AppRunner::take_screenshot().await?;
+    let screenshot = AppRunner::take_screenshot()?;
 
     let touches: Own<_> = Vec::<(Touch, U8Color)>::new().into();
     let mut touches = touches.weak();
 
-    let (s, mut r) = channel::<()>(1);
+    let (s, r) = channel::<()>();
 
     on_main(move || {
         UIEvents::on_debug_touch().val(move |touch| {
@@ -192,11 +185,11 @@ pub async fn record_colors() -> Result<()> {
         });
 
         UIManager::keymap().add(UIManager::root_view(), 'a', move || {
-            _ = s.try_send(());
+            _ = s.send(());
         });
     });
 
-    if r.recv().await.is_none() {
+    if r.recv().is_err() {
         warn!("Failed to receive record_touches_with_colors result");
     }
 

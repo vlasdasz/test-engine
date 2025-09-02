@@ -14,9 +14,9 @@ bytemuck = { workspace = true }
 dispatch = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
+pollster = { workspace = true }
 resvg = { workspace = true }
 tiny-skia = { workspace = true }
-tokio = { workspace = true }
 usvg = "0.45"
 web-time = { workspace = true }
 wgpu = { workspace = true }
@@ -28,9 +28,20 @@ plat = { workspace = true }
 
 wgpu_text = { workspace = true }
 
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+pollster = { workspace = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1.7"
+console_log = "1.0"
+wasm-bindgen-futures = { workspace = true }
+
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = { workspace = true }
 winit = { workspace = true, features = ["android-game-activity"] }
 
 [target.'cfg(not(target_os = "android"))'.dependencies]
 winit = { workspace = true }
+
+[build-dependencies]
+plat = "0.4.0"

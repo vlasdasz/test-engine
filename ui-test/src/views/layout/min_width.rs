@@ -25,7 +25,7 @@ impl Setup for MinWidth {
 }
 
 pub async fn test_min_width() -> anyhow::Result<()> {
-    let view = UI::init_test_view::<MinWidth>().await;
+    let view = UI::init_test_view::<MinWidth>();
 
     check_colors(
         r#"
@@ -48,13 +48,11 @@ pub async fn test_min_width() -> anyhow::Result<()> {
                5  224 -  89 124 149
                5  224 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.view.place().min_width(250).center_x();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -87,13 +85,11 @@ pub async fn test_min_width() -> anyhow::Result<()> {
              225   11 -  89 124 149
              223    5 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.view.place().min_height(250).center_y();
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -126,8 +122,7 @@ pub async fn test_min_width() -> anyhow::Result<()> {
                8  223 -  89 124 149
                5  223 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

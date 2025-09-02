@@ -13,8 +13,6 @@ pub trait Level: AsAny + Deref<Target = LevelBase> + DerefMut + LevelInternal {
     fn add_touch(&mut self, pos: Point) -> bool {
         let pos = LevelManager::convert_touch(pos);
 
-        dbg!(pos);
-
         self.add_box(pos);
 
         true

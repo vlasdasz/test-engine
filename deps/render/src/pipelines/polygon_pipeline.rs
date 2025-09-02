@@ -124,3 +124,14 @@ impl PolygonPipeline {
         self.polygons.clear();
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test() {
+        // Web requirements
+        assert_eq!(size_of::<PolygonView>() % 16, 0);
+    }
+}

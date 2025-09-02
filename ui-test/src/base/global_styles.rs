@@ -50,10 +50,9 @@ impl Setup for GlobalStyles {
 pub async fn test_global_styles() -> Result<()> {
     from_main(|| {
         GLOBAL_STYLE.apply_globally::<Button>();
-    })
-    .await;
+    });
 
-    UI::init_test_view::<GlobalStyles>().await;
+    UI::init_test_view::<GlobalStyles>();
 
     check_colors(
         r#"
@@ -129,15 +128,13 @@ pub async fn test_global_styles() -> Result<()> {
              203  276 - 175 129 115
              129  276 - 175 129 115
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(|| {
         GLOBAL_STYLE.reset_global::<Button>();
-    })
-    .await;
+    });
 
-    UI::reload_test_view::<GlobalStyles>().await;
+    UI::reload_test_view::<GlobalStyles>();
 
     check_colors(
         r#"
@@ -209,8 +206,7 @@ pub async fn test_global_styles() -> Result<()> {
              242  283 -  89 124 149
              257  269 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

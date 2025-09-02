@@ -1,4 +1,10 @@
-use std::{cell::RefCell, collections::HashMap, f64, mem::size_of};
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    f64,
+    mem::size_of,
+    sync::mpsc::{Receiver, Sender, channel},
+};
 
 use anyhow::Result;
 use bytemuck::cast_slice;
@@ -7,49 +13,45 @@ use gm::{
     color::{Color, GRAY_BLUE, U8Color},
     flat::Size,
 };
+use log::warn;
 use plat::Platform;
-use tokio::{
-    spawn,
-    sync::oneshot::{Receiver, Sender, channel},
-};
 use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
-    SUPPORT_SCREENSHOT, Screenshot, Window, frame_counter::FrameCounter, image::Texture, text::Font,
-    window_events::WindowEvents,
+    SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
+    image::Texture, text::Font,
 };
-
 type ReadDisplayRequest = Sender<Screenshot>;
 
-#[cfg(not(target_os = "android"))]
+#[cfg(not(any(target_os = "android", target_arch = "wasm32")))]
 pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
-#[cfg(target_os = "android")]
+#[cfg(any(target_os = "android", target_arch = "wasm32"))]
 pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
 pub struct State {
     pub(crate) fonts:       HashMap<&'static str, Font>,
-    pub(crate) app:         Box<dyn WindowEvents>,
     pub(crate) clear_color: Color,
 
-    read_display_request: RefCell<Option<ReadDisplayRequest>>,
-
+    read_display_request:     RefCell<Option<ReadDisplayRequest>>,
     pub(crate) frame_counter: FrameCounter,
 }
 
-impl State {
-    pub fn new(app: Box<dyn WindowEvents>) -> Self {
+impl Default for State {
+    fn default() -> Self {
         Self {
-            fonts: HashMap::default(),
-            app,
-            clear_color: GRAY_BLUE,
+            fonts:                HashMap::default(),
+            clear_color:          GRAY_BLUE,
             read_display_request: RefCell::default(),
-            frame_counter: FrameCounter::default(),
+            frame_counter:        FrameCounter::default(),
         }
     }
+}
 
-    pub fn resize(&mut self, new_size: PhysicalSize<u32>, event_loop: &ActiveEventLoop) {
+impl State {
+    pub fn resize(&mut self, new_size: PhysicalSize<u32>, _event_loop: &ActiveEventLoop) {
         if new_size.width == 0 || new_size.height == 0 {
+            warn!("Zero size");
             return;
         }
 
@@ -58,20 +60,12 @@ impl State {
         window.config.width = new_size.width;
         window.config.height = new_size.height;
 
-        if let Some(surface) = &mut window.surface {
-            surface.depth_texture = Texture::create_depth_texture(
-                &window.device,
-                (new_size.width, new_size.height).into(),
-                "depth_texture",
-            );
-            surface.presentable.configure(&window.device, &window.config);
-        } else if window.resumed
-            && window
-                .create_surface_and_window((new_size.width, new_size.height).into(), event_loop)
-                .unwrap()
-        {
-            window.state.app.window_ready();
-        }
+        window.surface.depth_texture = Texture::create_depth_texture(
+            &window.device,
+            (new_size.width, new_size.height).into(),
+            "depth_texture",
+        );
+        window.surface.presentable.configure(&window.device, &window.config);
 
         let queue = Window::queue();
 
@@ -83,7 +77,7 @@ impl State {
             );
         }
 
-        self.app.resize(
+        AppHandler::current().te_window_events.resize(
             Window::inner_position(),
             Window::outer_position(),
             Window::inner_size(),
@@ -92,7 +86,7 @@ impl State {
     }
 
     pub fn update(&mut self) {
-        self.app.update();
+        AppHandler::current().te_window_events.update();
 
         if Window::current().title_set {
             return;
@@ -114,9 +108,9 @@ impl State {
 
     pub fn render(&mut self) -> Result<()> {
         let app = Window::current();
-        let Some(ref surface) = app.surface else {
-            return Ok(());
-        };
+
+        let surface = &app.surface;
+
         let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = Window::device().create_command_encoder(&wgpu::CommandEncoderDescriptor {
@@ -152,7 +146,7 @@ impl State {
                 timestamp_writes:         None,
             });
 
-            self.app.render(&mut render_pass);
+            AppHandler::current().te_window_events.render(&mut render_pass);
 
             for font in self.fonts.values() {
                 font.brush.draw(&mut render_pass);
@@ -168,6 +162,7 @@ impl State {
         Window::queue().submit(std::iter::once(encoder.finish()));
         surface_texture.present();
 
+        #[cfg(not_wasm)]
         if let Some(buffer_sender) = self.read_display_request.take() {
             let (sender, receiver) = channel();
 
@@ -177,12 +172,12 @@ impl State {
 
             let buffer_slice = buffer.0.slice(..);
 
-            buffer_slice.map_async(wgpu::MapMode::Read, |result| {
+            buffer_slice.map_async(wgpu::MapMode::Read, move |result| {
                 sender.send(result).unwrap();
             });
 
-            spawn(async move {
-                let _ = receiver.await.unwrap();
+            std::thread::spawn(move || {
+                let _ = receiver.recv().unwrap();
                 let (buff, size) = buffer;
 
                 let bytes: &[u8] = &buff.slice(..).get_mapped_range();

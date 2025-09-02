@@ -22,7 +22,7 @@ impl Setup for MultilineLabel {
 }
 
 pub async fn test_multiline() -> Result<()> {
-    let mut view = UI::init_test_view::<MultilineLabel>().await;
+    let mut view = UI::init_test_view::<MultilineLabel>();
 
     check_colors(
         r#"
@@ -68,13 +68,11 @@ pub async fn test_multiline() -> Result<()> {
              194  154 -   0   0   0
              208   85 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         view.label.multiline = true;
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -145,8 +143,7 @@ pub async fn test_multiline() -> Result<()> {
              148  261 - 255 255 255
              158  335 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

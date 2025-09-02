@@ -66,6 +66,7 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
         pass,
         RectView {
             resolution: Window::inner_size(),
+            _padding:   0,
         },
     );
 
@@ -85,6 +86,7 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
         pass,
         RectView {
             resolution: Window::inner_size(),
+            _padding:   0,
         },
     );
 }

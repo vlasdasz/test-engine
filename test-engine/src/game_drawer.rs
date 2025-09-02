@@ -43,6 +43,7 @@ impl GameDrawer {
                 resolution:      UIManager::window_resolution(),
                 camera_rotation: 0.0,
                 scale:           1.0,
+                _padding:        0,
             },
         );
     }

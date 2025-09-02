@@ -10,7 +10,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = { workspace = true }
+instant = { workspace = true }
 log = { workspace = true }
-tokio = { workspace = true }
 
 test-engine = { workspace = true }

@@ -51,6 +51,7 @@ struct BackgroundView {
     resolution:      Size<f32>,
     camera_rotation: f32,
     scale:           f32,
+    _padding:        u64,
 }
 
 #[derive(Debug)]
@@ -89,6 +90,7 @@ impl Default for BackgroundPipeline {
             resolution:      (1000, 1000).into(),
             camera_rotation: 0.0,
             scale:           1.0,
+            _padding:        0,
         };
 
         let vertex_buffer = device.buffer(&VERTICES, BufferUsages::VERTEX);
@@ -123,6 +125,7 @@ impl BackgroundPipeline {
             resolution,
             camera_rotation,
             scale,
+            _padding: 0,
         };
 
         if view != self.view {
@@ -134,5 +137,16 @@ impl BackgroundPipeline {
         render_pass.set_bind_group(1, &image.bind, &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.draw(RANGE, 0..1);
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test() {
+        // Web requirements
+        assert_eq!(size_of::<BackgroundView>() % 16, 0);
     }
 }

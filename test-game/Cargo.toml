@@ -12,11 +12,12 @@ crate-type = ["rlib", "staticlib"]
 name = "test_game"
 
 [features]
-debug = ["test-engine/debug"]
+default = []
+
+webgl = ["test-engine/webgl"]
 
 [dependencies]
-fake = { workspace = true }
-
+fastrand = { workspace = true }
 test-engine = { workspace = true }
 ui-benchmark = { workspace = true }
 

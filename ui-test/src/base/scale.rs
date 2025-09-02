@@ -61,7 +61,7 @@ impl TableData for ScaleView {
 }
 
 pub async fn test_scale() -> Result<()> {
-    let mut view = UI::init_test_view::<ScaleView>().await;
+    let mut view = UI::init_test_view::<ScaleView>();
 
     inject_touches(
         "
@@ -91,10 +91,9 @@ pub async fn test_scale() -> Result<()> {
             516  557  e
 
         ",
-    )
-    .await;
+    );
 
-    let data = from_main(move || view.data.clone()).await;
+    let data = from_main(move || view.data.clone());
 
     assert_eq!(
         data,
@@ -169,14 +168,12 @@ pub async fn test_scale() -> Result<()> {
               18  193 -  89 124 149
               12  207 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         UIManager::override_scale(0.6);
         view.data.clear();
-    })
-    .await;
+    });
 
     inject_touches(
         "
@@ -198,10 +195,9 @@ pub async fn test_scale() -> Result<()> {
             128  185  e
 
         ",
-    )
-    .await;
+    );
 
-    let data = from_main(move || view.data.clone()).await;
+    let data = from_main(move || view.data.clone());
 
     assert_eq!(
         data,
@@ -266,14 +262,12 @@ pub async fn test_scale() -> Result<()> {
               14   39 - 255 255 255
               31   45 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         UIManager::override_scale(1.5);
         view.data.clear();
-    })
-    .await;
+    });
 
     inject_touches(
         "
@@ -305,10 +299,9 @@ pub async fn test_scale() -> Result<()> {
             59   215  e
 
         ",
-    )
-    .await;
+    );
 
-    let data = from_main(move || view.data.clone()).await;
+    let data = from_main(move || view.data.clone());
 
     assert_eq!(
         data,
@@ -367,13 +360,11 @@ pub async fn test_scale() -> Result<()> {
              181  278 - 255 255 255
              220  183 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     from_main(move || {
         UIManager::override_scale(1);
-    })
-    .await;
+    });
 
     Ok(())
 }

@@ -21,7 +21,7 @@ impl Setup for ShowModally {
                 view = view.add_view::<Container>();
                 view.set_color(Color::random()).place().all_sides(1);
             } else {
-                view = self.add_dummy_view();
+                view = self.add_view::<Container>();
                 view.set_color(Color::random()).place().tl(1).size(400, 400);
                 assert_eq!(view.z_position(), 0.49_996_987);
             }
@@ -58,11 +58,11 @@ impl ModalView for Modal {
 }
 
 pub async fn test_modal() -> Result<()> {
-    UI::init_test_view::<ShowModally>().await;
+    UI::init_test_view::<ShowModally>();
 
     Modal::show_modally_with_input((), |()| {});
 
-    wait_for_next_frame().await;
+    wait_for_next_frame();
 
     check_colors(
         r#"
@@ -86,8 +86,7 @@ pub async fn test_modal() -> Result<()> {
              432  286 - 255 255 255
              444  287 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }

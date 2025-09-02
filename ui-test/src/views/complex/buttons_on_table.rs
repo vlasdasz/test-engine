@@ -61,7 +61,7 @@ impl CollectionData for ButtonsOnTableView {
 }
 
 pub async fn test_buttons_on_table_view() -> Result<()> {
-    UI::init_test_view::<ButtonsOnTableView>().await;
+    UI::init_test_view::<ButtonsOnTableView>();
 
     assert_eq!(
         TouchStack::dump(),
@@ -100,8 +100,7 @@ pub async fn test_buttons_on_table_view() -> Result<()> {
             554  34   b
             554  34   e
         ",
-    )
-    .await;
+    );
 
     assert_eq!(
         get_str_state(),

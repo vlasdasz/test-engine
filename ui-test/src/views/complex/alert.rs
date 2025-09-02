@@ -9,12 +9,11 @@ use test_engine::{
 struct AlertTestView {}
 
 pub async fn test_alert() -> Result<()> {
-    UI::init_test_view::<AlertTestView>().await;
+    UI::init_test_view::<AlertTestView>();
 
     from_main(|| {
         Alert::show("Forogorn\nSopokok\nFergel");
-    })
-    .await;
+    });
 
     check_colors(
         r#"
@@ -53,16 +52,14 @@ pub async fn test_alert() -> Result<()> {
              308  256 - 255 255 255
              190  288 - 255 255 255
         "#,
-    )
-    .await?;
+    )?;
 
     inject_touches(
         "
             338  373  b
             338  373  e
         ",
-    )
-    .await;
+    );
 
     check_colors(
         r#"
@@ -78,8 +75,7 @@ pub async fn test_alert() -> Result<()> {
              450  131 -  89 124 149
              524   72 -  89 124 149
         "#,
-    )
-    .await?;
+    )?;
 
     Ok(())
 }
