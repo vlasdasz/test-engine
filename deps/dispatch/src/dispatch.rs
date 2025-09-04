@@ -1,9 +1,6 @@
-use std::{
-    sync::{
-        Arc, Mutex,
-        mpsc::{Sender, channel},
-    },
-    time::Duration,
+use std::sync::{
+    Arc, Mutex,
+    mpsc::{Sender, channel},
 };
 
 use anyhow::Result;
@@ -75,18 +72,9 @@ pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
     }
 }
 
-#[cfg(not_wasm)]
 pub fn after(delay: impl ToF32, action: impl FnOnce() + Send + 'static) {
-    std::thread::spawn(move || {
-        std::thread::sleep(Duration::from_secs_f32(delay.to_f32()));
-        CALLBACKS.lock().unwrap().push(Box::new(action));
-    });
-}
-
-#[cfg(wasm)]
-pub fn after(delay: impl ToF32, action: impl FnOnce() + Send + 'static) {
-    wasm_bindgen_futures::spawn_local(async move {
-        gloo_timers::future::TimeoutFuture::new((delay.to_f32() * 1000.0) as _).await;
+    crate::spawn(async move {
+        crate::sleep(delay).await;
         CALLBACKS.lock().unwrap().push(Box::new(action));
     });
 }

@@ -72,7 +72,7 @@ pub use vents::{Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
 pub mod dispatch {
-    pub use ::dispatch::{after, from_main, ok_main, on_main, wait_for_next_frame};
+    pub use ::dispatch::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
 
     // pub use crate::ui::ui_dispatch::on_back;
 }

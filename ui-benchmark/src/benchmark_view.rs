@@ -2,11 +2,12 @@ use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 
 use test_engine::{
     AppRunner,
+    dispatch::{from_main, on_main},
     refs::Weak,
-    ui::{Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
+    ui::{Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
 };
 
-static _FINISHED: AtomicBool = AtomicBool::new(false);
+static FINISHED: AtomicBool = AtomicBool::new(false);
 static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
 const TARGET_FPS: f32 = 40.0;
@@ -29,7 +30,7 @@ impl BenchmarkView {
             return;
         }
 
-        VIEWS_COUNT.fetch_add(1, Ordering::Relaxed);
+        VIEWS_COUNT.fetch_add(1, Ordering::AcqRel);
 
         let view = self.add_view::<BenchmarkView>();
         view.place().relative(Anchor::Width, self, 0.5);
@@ -47,45 +48,48 @@ impl BenchmarkView {
 
     #[allow(clippy::unused_self)]
     fn start_spawning_views(self: Weak<Self>) {
-        // spawn(async move {
-        //     loop {
-        //         sleep(Duration::from_secs_f32(0.05));
-        //         let finish = from_main(move || {
-        //             let filled = self.filled();
-        //
-        //             if !filled {
-        //                 self.add_bench_view();
-        //             }
-        //
-        //             filled
-        //         })
-        //         .await;
-        //
-        //         if finish {
-        //             on_main(move || {
-        //                 if AppRunner::fps() < TARGET_FPS {
-        //                     if FINISHED.load(Ordering::Relaxed) {
-        //                         return;
-        //                     }
-        //
-        //                     Alert::show(format!("Views: {}",
-        // VIEWS_COUNT.load(Ordering::Relaxed)));
-        //
-        //                     FINISHED.store(true, Ordering::Relaxed);
-        //                     return;
-        //                 }
-        //
-        //                 for view in self.subviews() {
-        //                     let Some(be) = view.downcast::<Self>() else {
-        //                         continue;
-        //                     };
-        //                     be.start_spawning_views();
-        //                 }
-        //             });
-        //             return;
-        //         }
-        //     }
-        // });
+        test_engine::dispatch::spawn(async move {
+            for _ in 0..5 {
+                test_engine::dispatch::sleep(0.5).await;
+
+                if FINISHED.load(Ordering::Relaxed) {
+                    return;
+                }
+
+                let finish = from_main(move || {
+                    let filled = self.filled();
+
+                    if !filled {
+                        self.add_bench_view();
+                    }
+
+                    filled
+                });
+
+                if finish {
+                    on_main(move || {
+                        if AppRunner::fps() < TARGET_FPS {
+                            if FINISHED.load(Ordering::Relaxed) {
+                                return;
+                            }
+
+                            Alert::show(format!("Views: {}", VIEWS_COUNT.load(Ordering::Acquire)));
+
+                            FINISHED.store(true, Ordering::Relaxed);
+                            return;
+                        }
+
+                        for view in self.subviews() {
+                            let Some(be) = view.downcast::<Self>() else {
+                                continue;
+                            };
+                            be.start_spawning_views();
+                        }
+                    });
+                    return;
+                }
+            }
+        });
     }
 }
 
