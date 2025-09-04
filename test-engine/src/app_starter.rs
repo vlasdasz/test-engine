@@ -7,7 +7,7 @@ use crate::{App, AppRunner, app::test_engine_create_app};
 fn run_app(event_loop: EventLoop<Window>, app: &'static mut AppHandler) {
     // Runs the app async via the browsers event loop
     use winit::platform::web::EventLoopExtWebSys;
-    wasm_bindgen_futures::spawn_local(async move {
+    dispatch::spawn(async move {
         event_loop.spawn_app(app);
     });
 }

@@ -158,9 +158,9 @@ impl AppRunner {
             }
         }
 
-        std::thread::spawn(move || {
+        dispatch::spawn(async {
             WINDOW_READY.lock().unwrap().sub(|| {
-                async_std::task::block_on(actions).unwrap();
+                dispatch::unasync(actions).unwrap();
             });
         });
 
@@ -221,7 +221,7 @@ impl window::WindowEvents for AppRunner {
             );
 
             #[cfg(not_wasm)]
-            std::thread::spawn(|| {
+            dispatch::spawn(async {
                 WINDOW_READY.lock().unwrap().trigger(());
             });
         });

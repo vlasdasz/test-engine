@@ -173,7 +173,7 @@ impl State {
                 sender.send(result).unwrap();
             });
 
-            std::thread::spawn(move || {
+            dispatch::spawn(async move {
                 let _ = receiver.recv().unwrap();
                 let (buff, size) = buffer;
 

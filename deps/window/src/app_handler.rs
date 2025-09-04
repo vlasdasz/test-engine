@@ -79,12 +79,12 @@ impl ApplicationHandler<Window> for AppHandler {
         {
             let mut win_attr = winit::window::Window::default_attributes();
 
-            #[cfg(not(target_arch = "wasm32"))]
+            #[cfg(not_wasm)]
             {
                 win_attr = win_attr.with_title("WebGPU example");
             }
 
-            #[cfg(target_arch = "wasm32")]
+            #[cfg(wasm)]
             {
                 use winit::platform::web::WindowAttributesExtWebSys;
                 win_attr = win_attr.with_append(true);
@@ -98,11 +98,7 @@ impl ApplicationHandler<Window> for AppHandler {
                 window.inner_size()
             };
 
-            #[cfg(target_arch = "wasm32")]
-            wasm_bindgen_futures::spawn_local(Window::start_internal(render_size, window, proxy));
-
-            #[cfg(not(target_arch = "wasm32"))]
-            pollster::block_on(Window::start_internal(render_size, window, proxy));
+            dispatch::block_on(Window::start_internal(render_size, window, proxy));
         }
     }
 

@@ -3,7 +3,6 @@ use std::{
         Arc, Mutex,
         mpsc::{Sender, channel},
     },
-    thread::{sleep, spawn},
     time::Duration,
 };
 
@@ -23,10 +22,9 @@ pub fn from_main<T, A>(action: A) -> T
 where
     A: FnOnce() -> T + Send + 'static,
     T: Send + 'static, {
-    assert!(
-        !is_main_thread(),
-        "This is already main thread. Just call it without `from_main`"
-    );
+    if is_main_thread() {
+        return action();
+    }
 
     let result = Arc::<Mutex<Option<T>>>::default();
 
@@ -75,8 +73,8 @@ pub fn on_main_sync(action: impl FnOnce() + Send + 'static) {
 
 #[cfg(not_wasm)]
 pub fn after(delay: impl ToF32, action: impl FnOnce() + Send + 'static) {
-    spawn(move || {
-        sleep(Duration::from_secs_f32(delay.to_f32()));
+    std::thread::spawn(move || {
+        std::thread::sleep(Duration::from_secs_f32(delay.to_f32()));
         CALLBACKS.lock().unwrap().push(Box::new(action));
     });
 }
