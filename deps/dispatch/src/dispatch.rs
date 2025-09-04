@@ -45,6 +45,10 @@ where
 }
 
 pub fn wait_for_next_frame() {
+    assert!(
+        !is_main_thread(),
+        "Waiting for next frame on main thread does nothing"
+    );
     from_main(|| {});
 }
 
