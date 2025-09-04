@@ -352,7 +352,7 @@ version = "0.1.0"
 dependencies = [
  "kira",
  "log",
- "plat",
+ "plat 0.5.0",
  "refs",
 ]
 
@@ -1009,7 +1009,7 @@ dependencies = [
  "gloo-timers",
  "gm",
  "log",
- "plat",
+ "plat 0.5.0",
  "refs",
  "wasm-bindgen-futures",
 ]
@@ -2026,7 +2026,7 @@ dependencies = [
  "educe",
  "gm",
  "level-proc",
- "plat",
+ "plat 0.5.0",
  "rapier2d",
  "refs",
  "utils",
@@ -3003,6 +3003,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "plat"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d8583d1b7e3e4d738a525c89ec05846f02cb068dea4f865aca8c1799b03a57ac"
+dependencies = [
+ "cfg_aliases",
+]
+
+[[package]]
 name = "png"
 version = "0.17.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3462,9 +3471,9 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.19.0"
+version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bcd62672c5aacf3a7b2c4125345378a2b58b870461b5985f5076622d5fd54865"
+checksum = "e22301063a97d126f44fc7c5f9808036fce02ac3bfd50f079f6a1f6ba662a50d"
 dependencies = [
  "derive_more",
  "instant",
@@ -3938,7 +3947,7 @@ dependencies = [
  "anyhow",
  "dirs",
  "log",
- "plat",
+ "plat 0.5.0",
  "serde",
  "serde_json",
 ]
@@ -4157,7 +4166,7 @@ dependencies = [
  "gm",
  "level",
  "log",
- "plat",
+ "plat 0.5.0",
  "pollster",
  "reflected",
  "refs",
@@ -4181,7 +4190,7 @@ name = "test-game"
 version = "0.1.0"
 dependencies = [
  "fastrand",
- "plat",
+ "plat 0.5.0",
  "test-engine",
  "ui-benchmark",
 ]
@@ -4384,7 +4393,7 @@ dependencies = [
  "gm",
  "log",
  "nonempty",
- "plat",
+ "plat 0.5.0",
  "reflected",
  "refs",
  "render",
@@ -4563,7 +4572,7 @@ dependencies = [
  "console_log",
  "gloo-timers",
  "log",
- "plat",
+ "plat 0.4.0",
  "wasm-bindgen-futures",
 ]
 
@@ -5019,7 +5028,8 @@ dependencies = [
  "gm",
  "image",
  "log",
- "plat",
+ "plat 0.4.0",
+ "plat 0.5.0",
  "pollster",
  "refs",
  "resvg",

@@ -24,14 +24,14 @@ impl AssetsPaths {
     fn root(_base: &Path) -> PathBuf {
         #[cfg(ios)]
         return std::env::current_exe().unwrap_or_default().parent().unwrap().to_path_buf();
-        #[cfg(not(ios))]
+        #[cfg(not_ios)]
         return _base.into();
     }
 
     pub fn assets(_root: &Path) -> PathBuf {
         #[cfg(android)]
         return Default::default();
-        #[cfg(not(android))]
+        #[cfg(not_android)]
         return _root.join("assets");
     }
 }

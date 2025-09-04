@@ -34,7 +34,6 @@ pub type Events = ();
 pub struct Window {
     pub state: State,
 
-    pub(crate) config: SurfaceConfiguration,
     pub(crate) device: Device,
     pub(crate) queue:  Queue,
 
@@ -158,34 +157,19 @@ impl Window {
             .await
             .expect("AAAAAA");
 
-        let config = SurfaceConfiguration {
-            usage:        if SUPPORT_SCREENSHOT {
-                TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC
-            } else {
-                TextureUsages::RENDER_ATTACHMENT
-            },
-            format:       RGBA_TEXTURE_FORMAT,
-            width:        1000,
-            height:       1000,
-            present_mode: if ENABLE_VSYNC || Platform::MOBILE {
-                PresentMode::AutoVsync
-            } else {
-                PresentMode::AutoNoVsync
-            },
-            alpha_mode:   CompositeAlphaMode::Auto,
-            view_formats: vec![],
-
-            desired_maximum_frame_latency: 2,
-        };
-
         let state = State::default();
 
-        let surface =
-            Surface::new(&instance, &adapter, &device, &config, window).expect("Failed to create surface");
+        let surface = Surface::new(
+            &instance,
+            &adapter,
+            &device,
+            surface_config_with_size((1000, 1000)),
+            window,
+        )
+        .expect("Failed to create surface");
 
         let window = Self {
             state,
-            config,
             device,
             queue,
             surface,
@@ -234,5 +218,29 @@ impl Window {
         Self::winit_window().current_monitor().map_or(60, |monitor| {
             monitor.refresh_rate_millihertz().unwrap_or(60_000) / 1000
         })
+    }
+}
+
+pub(crate) fn surface_config_with_size(size: impl Into<Size<u32>>) -> SurfaceConfiguration {
+    let size: Size<u32> = size.into();
+
+    SurfaceConfiguration {
+        usage:        if SUPPORT_SCREENSHOT {
+            TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC
+        } else {
+            TextureUsages::RENDER_ATTACHMENT
+        },
+        format:       RGBA_TEXTURE_FORMAT,
+        width:        size.width,
+        height:       size.height,
+        present_mode: if ENABLE_VSYNC || Platform::MOBILE {
+            PresentMode::AutoVsync
+        } else {
+            PresentMode::AutoNoVsync
+        },
+        alpha_mode:   CompositeAlphaMode::Auto,
+        view_formats: vec![],
+
+        desired_maximum_frame_latency: 2,
     }
 }

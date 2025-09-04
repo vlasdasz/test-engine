@@ -12,6 +12,7 @@ mod level_drawer;
 mod app;
 mod app_starter;
 mod game_drawer;
+mod pipelines;
 pub mod ui;
 
 pub use app::App;

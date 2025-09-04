@@ -17,7 +17,7 @@ impl Surface {
         instance: &Instance,
         adapter: &Adapter,
         device: &Device,
-        config: &SurfaceConfiguration,
+        config: SurfaceConfiguration,
         window: Arc<Window>,
     ) -> Result<Self> {
         if config.width == 0 || config.height == 0 {
@@ -28,7 +28,7 @@ impl Surface {
 
         let _surface_caps = surface.get_capabilities(adapter);
 
-        surface.configure(device, config);
+        surface.configure(device, &config);
 
         let depth_texture =
             Texture::create_depth_texture(device, (config.width, config.height).into(), "depth_texture");

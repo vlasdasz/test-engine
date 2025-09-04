@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use audio::Sound;
 use refs::{assert_main_thread, manage::DataManager};
 use window::image::Image;
 
@@ -14,6 +15,6 @@ impl Assets {
         let paths = AssetsPaths::new(root_path.into());
 
         Image::set_root_path(&paths.images);
-        audio::Sound::set_root_path(&paths.sounds);
+        Sound::set_root_path(&paths.sounds);
     }
 }

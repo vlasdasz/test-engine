@@ -9,7 +9,7 @@ use gm::{color::TURQUOISE, flat::Rect};
 use log::{debug, trace};
 use refs::{Own, Weak, main_lock::MainLock};
 use render::{
-    UIGradientPipeline, UIImageRectPipepeline, UIRectPipepeline,
+    UIGradientPipeline, UIImageRectPipepeline,
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
 };
 use ui::{
@@ -20,9 +20,8 @@ use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use window::{Font, Window};
 
-use crate::{AppRunner, ui::ui_test::state::clear_state};
+use crate::{AppRunner, pipelines::Pipelines, ui::ui_test::state::clear_state};
 
-static RECT_DRAWER: MainLock<UIRectPipepeline> = MainLock::new();
 static GRADIENT_DRAWER: MainLock<UIGradientPipeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 // static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
@@ -53,7 +52,7 @@ impl UI {
             Self::draw_view(pass, debug_view, &mut sections, debug_frames, scale);
         }
 
-        RECT_DRAWER.get_mut().draw(
+        Pipelines::rect().draw(
             pass,
             RectView {
                 resolution: UIManager::window_resolution(),
@@ -132,7 +131,7 @@ impl UI {
                 scale,
             });
         } else if view.color().a > 0.0 {
-            RECT_DRAWER.get_mut().add(UIRectInstance::new(
+            Pipelines::rect().add(UIRectInstance::new(
                 frame,
                 *view.color(),
                 view.corner_radius(),
@@ -175,7 +174,7 @@ impl UI {
 
         if debug_frames {
             for rect in frame.to_borders(2.0) {
-                RECT_DRAWER.get_mut().add(UIRectInstance::new(
+                Pipelines::rect().add(UIRectInstance::new(
                     rect,
                     TURQUOISE,
                     0.0,

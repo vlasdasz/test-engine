@@ -27,6 +27,7 @@ use crate::{
     app_starter::test_engine_start_with_app,
     assets::Assets,
     level_drawer::LevelDrawer,
+    pipelines::Pipelines,
     ui::{Input, UI},
 };
 
@@ -47,52 +48,49 @@ impl AppRunner {
         *CURSOR_POSITION
     }
 
-    #[cfg(not(android))]
-    fn setup_log() {
-        #[cfg(not_wasm)]
-        {
-            use fern::Dispatch;
-            use log::{Level, LevelFilter};
+    #[cfg(not_wasm)]
+    pub(crate) fn setup_log() {
+        use fern::Dispatch;
+        use log::{Level, LevelFilter};
 
-            Dispatch::new()
-                .level(LevelFilter::Warn)
-                .level_for("test_engine", LevelFilter::Debug)
-                .level_for("shopping", LevelFilter::Debug)
-                .format(|out, message, record| {
-                    let level_icon = match record.level() {
-                        Level::Error => "🔴",
-                        Level::Warn => "🟡",
-                        Level::Info => "🟢",
-                        Level::Debug => "🔵",
-                        Level::Trace => "⚪",
-                    };
+        Dispatch::new()
+            .level(LevelFilter::Warn)
+            .level_for("test_engine", LevelFilter::Debug)
+            .level_for("shopping", LevelFilter::Debug)
+            .format(|out, message, record| {
+                let level_icon = match record.level() {
+                    Level::Error => "🔴",
+                    Level::Warn => "🟡",
+                    Level::Info => "🟢",
+                    Level::Debug => "🔵",
+                    Level::Trace => "⚪",
+                };
 
-                    let location = false;
-                    let module = false;
+                let location = false;
+                let module = false;
 
-                    let mut log = format!("{level_icon} {message}");
+                let mut log = format!("{level_icon} {message}");
 
-                    if location {
-                        log = format!(
-                            "[{}::{}] {}",
-                            record.file().unwrap_or_default(),
-                            record.line().unwrap_or_default(),
-                            log
-                        );
-                    }
+                if location {
+                    log = format!(
+                        "[{}::{}] {}",
+                        record.file().unwrap_or_default(),
+                        record.line().unwrap_or_default(),
+                        log
+                    );
+                }
 
-                    if module {
-                        log = format!("{} {}", record.module_path().unwrap_or_default(), log);
-                    }
+                if module {
+                    log = format!("{} {}", record.module_path().unwrap_or_default(), log);
+                }
 
-                    out.finish(format_args!("{log}"));
-                })
-                .chain(std::io::stdout())
-                .apply()
-                .expect("Failed to initialize logging");
-        }
+                out.finish(format_args!("{log}"));
+            })
+            .chain(std::io::stdout())
+            .apply()
+            .expect("Failed to initialize logging");
 
-        debug!("Logs setup");
+        debug!("logs setup");
     }
 
     pub fn new(first_view: Own<dyn View>) -> Self {
@@ -160,8 +158,6 @@ impl AppRunner {
             }
         }
 
-        Self::setup_log();
-
         std::thread::spawn(move || {
             WINDOW_READY.lock().unwrap().sub(|| {
                 async_std::task::block_on(actions).unwrap();
@@ -201,6 +197,9 @@ impl window::WindowEvents for AppRunner {
 
         INIT.call_once(|| {
             debug!("window ready");
+
+            Pipelines::initialize();
+
             let mut root = UIManager::root_view();
             let view = root.add_subview_to_root(self.first_view.take().unwrap());
             view.place().back();

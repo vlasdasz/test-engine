@@ -20,8 +20,9 @@ use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
     SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
-    image::Texture, text::Font,
+    image::Texture, text::Font, window::surface_config_with_size,
 };
+
 type ReadDisplayRequest = Sender<Screenshot>;
 
 #[cfg(not(any(target_os = "android", target_arch = "wasm32")))]
@@ -57,22 +58,22 @@ impl State {
 
         let window = Window::current();
 
-        window.config.width = new_size.width;
-        window.config.height = new_size.height;
-
         window.surface.depth_texture = Texture::create_depth_texture(
             &window.device,
             (new_size.width, new_size.height).into(),
             "depth_texture",
         );
-        window.surface.presentable.configure(&window.device, &window.config);
+        window.surface.presentable.configure(
+            &window.device,
+            &surface_config_with_size((new_size.width, new_size.height)),
+        );
 
         let queue = Window::queue();
 
         for font in self.fonts.values() {
             font.brush.resize_view(
-                window.config.width.lossy_convert(),
-                window.config.height.lossy_convert(),
+                new_size.width.lossy_convert(),
+                new_size.height.lossy_convert(),
                 queue,
             );
         }
@@ -98,10 +99,9 @@ impl State {
                 self.frame_counter.frame_time * 1000.0,
                 self.frame_counter.fps
             );
-            let app = Window::current();
             if Platform::DESKTOP {
-                Window::winit_window()
-                    .set_title(&format!("{a} {} x {}", app.config.width, app.config.height));
+                let size = Window::render_size();
+                Window::winit_window().set_title(&format!("{a} {} x {}", size.width, size.height));
             }
         }
     }
