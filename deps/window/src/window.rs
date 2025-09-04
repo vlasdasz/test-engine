@@ -99,7 +99,11 @@ impl Window {
         on_main(AppHandler::close);
     }
 
-    pub(crate) async fn start_internal(window: winit::window::Window, proxy: EventLoopProxy<Window>) {
+    pub(crate) async fn start_internal(
+        size: PhysicalSize<u32>,
+        window: winit::window::Window,
+        proxy: EventLoopProxy<Window>,
+    ) {
         let window = Arc::new(window);
 
         let instance = Instance::default();
@@ -155,7 +159,7 @@ impl Window {
                 trace: Trace::default(),
             })
             .await
-            .expect("AAAAAA");
+            .expect("Failed to request device");
 
         let state = State::default();
 
@@ -163,7 +167,7 @@ impl Window {
             &instance,
             &adapter,
             &device,
-            surface_config_with_size((1000, 1000)),
+            surface_config_with_size((size.width, size.height)),
             window,
         )
         .expect("Failed to create surface");

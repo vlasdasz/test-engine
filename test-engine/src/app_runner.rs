@@ -211,6 +211,15 @@ impl window::WindowEvents for AppRunner {
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
 
+            Window::current().state.resize();
+
+            self.resize(
+                Window::inner_position(),
+                Window::outer_position(),
+                Window::inner_size(),
+                Window::outer_size(),
+            );
+
             #[cfg(not_wasm)]
             std::thread::spawn(|| {
                 WINDOW_READY.lock().unwrap().trigger(());
@@ -237,6 +246,7 @@ impl window::WindowEvents for AppRunner {
     fn resize(&mut self, inner_pos: Point, outer_pos: Point, inner_size: Size, outer_size: Size) {
         UIManager::set_scale(UIManager::display_scale());
         LevelManager::set_scale(UIManager::display_scale());
+
         UIManager::root_view().resize_root(inner_pos, outer_pos, inner_size, outer_size, UIManager::scale());
         UIEvents::size_changed().trigger(());
         self.update();

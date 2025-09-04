@@ -20,6 +20,7 @@ impl Surface {
         config: SurfaceConfiguration,
         window: Arc<Window>,
     ) -> Result<Self> {
+        #[cfg(not_wasm)]
         if config.width == 0 || config.height == 0 {
             panic!("Invalid surface size")
         }

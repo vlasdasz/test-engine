@@ -2,6 +2,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use gm::flat::Point;
 use log::{debug, error};
+use plat::Platform;
 use refs::main_lock::MainLock;
 use winit::{
     application::ApplicationHandler,
@@ -91,24 +92,23 @@ impl ApplicationHandler<Window> for AppHandler {
 
             let window = event_loop.create_window(win_attr).expect("create window err.");
 
+            let render_size = if Platform::IOS {
+                window.outer_size()
+            } else {
+                window.inner_size()
+            };
+
             #[cfg(target_arch = "wasm32")]
-            wasm_bindgen_futures::spawn_local(Window::start_internal(window, proxy));
+            wasm_bindgen_futures::spawn_local(Window::start_internal(render_size, window, proxy));
 
             #[cfg(not(target_arch = "wasm32"))]
-            pollster::block_on(Window::start_internal(window, proxy));
+            pollster::block_on(Window::start_internal(render_size, window, proxy));
         }
     }
 
     fn user_event(&mut self, _event_loop: &ActiveEventLoop, window: Window) {
         self.state = AppHandlerState::Ready(window);
         self.te_window_events.window_ready();
-
-        AppHandler::current().te_window_events.resize(
-            Window::inner_position(),
-            Window::outer_position(),
-            Window::inner_size(),
-            Window::outer_size(),
-        );
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _window_id: WindowId, event: WindowEvent) {
@@ -141,11 +141,11 @@ impl ApplicationHandler<Window> for AppHandler {
             WindowEvent::DroppedFile(path) => {
                 self.te_window_events.dropped_file(path);
             }
-            WindowEvent::Resized(physical_size) => {
+            WindowEvent::Resized(_physical_size) => {
                 if self.state.not_ready() {
                     return;
                 }
-                Self::window().state.resize(physical_size, event_loop);
+                Self::window().state.resize();
             }
             WindowEvent::ScaleFactorChanged {
                 scale_factor,

@@ -16,7 +16,6 @@ use gm::{
 use log::warn;
 use plat::Platform;
 use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
-use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
     SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
@@ -50,8 +49,10 @@ impl Default for State {
 }
 
 impl State {
-    pub fn resize(&mut self, new_size: PhysicalSize<u32>, _event_loop: &ActiveEventLoop) {
-        if new_size.width == 0 || new_size.height == 0 {
+    pub fn resize(&mut self) {
+        let new_size = Window::render_size();
+
+        if new_size.width == 0.0 || new_size.height == 0.0 {
             warn!("Zero size");
             return;
         }
@@ -60,22 +61,18 @@ impl State {
 
         window.surface.depth_texture = Texture::create_depth_texture(
             &window.device,
-            (new_size.width, new_size.height).into(),
+            (new_size.width.lossy_convert(), new_size.height.lossy_convert()).into(),
             "depth_texture",
         );
         window.surface.presentable.configure(
             &window.device,
-            &surface_config_with_size((new_size.width, new_size.height)),
+            &surface_config_with_size((new_size.width.lossy_convert(), new_size.height.lossy_convert())),
         );
 
         let queue = Window::queue();
 
         for font in self.fonts.values() {
-            font.brush.resize_view(
-                new_size.width.lossy_convert(),
-                new_size.height.lossy_convert(),
-                queue,
-            );
+            font.brush.resize_view(new_size.width, new_size.height, queue);
         }
 
         AppHandler::current().te_window_events.resize(
