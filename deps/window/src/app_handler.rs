@@ -2,7 +2,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use gm::flat::Point;
 use log::{debug, error};
-use refs::{Rglica, main_lock::MainLock};
+use refs::main_lock::MainLock;
 use winit::{
     application::ApplicationHandler,
     event::{MouseScrollDelta, WindowEvent},
@@ -22,13 +22,6 @@ enum AppHandlerState {
 }
 
 impl AppHandlerState {
-    fn window(&self) -> &Window {
-        let Self::Ready(window) = self else {
-            panic!("Window not init")
-        };
-        window
-    }
-
     fn ready(&self) -> bool {
         !self.not_ready()
     }
@@ -108,7 +101,6 @@ impl ApplicationHandler<Window> for AppHandler {
 
     fn user_event(&mut self, _event_loop: &ActiveEventLoop, window: Window) {
         self.state = AppHandlerState::Ready(window);
-        self.te_window_events.set_window(Rglica::from_ref(self.state.window()));
         self.te_window_events.window_ready();
 
         AppHandler::current().te_window_events.resize(

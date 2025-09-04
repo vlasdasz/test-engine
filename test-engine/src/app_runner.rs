@@ -12,7 +12,7 @@ use gm::{
 };
 use level::{LevelBase, LevelManager};
 use log::debug;
-use refs::{Own, Rglica, main_lock::MainLock};
+use refs::{Own, main_lock::MainLock};
 use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
 use wgpu::RenderPass;
@@ -34,8 +34,6 @@ static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct AppRunner {
-    window: Rglica<Window>,
-
     pub(crate) first_view: Option<Own<dyn View>>,
     pub cursor_position:   Point,
 }
@@ -106,7 +104,6 @@ impl AppRunner {
         Self {
             cursor_position: Point::default(),
             first_view:      first_view.into(),
-            window:          Rglica::default(),
         }
     }
 
@@ -295,10 +292,6 @@ impl window::WindowEvents for AppRunner {
         if let Some(ch) = event.logical_key.to_text() {
             Input::on_char(ch.chars().last().unwrap());
         }
-    }
-
-    fn set_window(&mut self, app: Rglica<Window>) {
-        self.window = app;
     }
 
     fn dropped_file(&mut self, path: PathBuf) {
