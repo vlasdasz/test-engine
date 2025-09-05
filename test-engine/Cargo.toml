@@ -30,6 +30,7 @@ refs = { workspace = true }
 vents = { workspace = true }
 
 audio = { workspace = true }
+filesystem = { workspace = true }
 game = { workspace = true }
 generate = { workspace = true }
 gm = { workspace = true }
@@ -40,14 +41,9 @@ ui = { workspace = true }
 ui-proc = { workspace = true }
 window = { workspace = true }
 
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-async-std = { workspace = true }
-pollster = { workspace = true }
-
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 console_error_panic_hook = "0.1.7"
 console_log = "1.0"
-wasm-bindgen-futures = { workspace = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = { workspace = true }

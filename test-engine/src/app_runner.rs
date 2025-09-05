@@ -12,7 +12,7 @@ use gm::{
 };
 use level::{LevelBase, LevelManager};
 use log::debug;
-use refs::{Own, Rglica, main_lock::MainLock};
+use refs::{Own, main_lock::MainLock};
 use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
 use wgpu::RenderPass;
@@ -27,6 +27,7 @@ use crate::{
     app_starter::test_engine_start_with_app,
     assets::Assets,
     level_drawer::LevelDrawer,
+    pipelines::Pipelines,
     ui::{Input, UI},
 };
 
@@ -34,8 +35,6 @@ static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct AppRunner {
-    window: Rglica<Window>,
-
     pub(crate) first_view: Option<Own<dyn View>>,
     pub cursor_position:   Point,
 }
@@ -49,64 +48,60 @@ impl AppRunner {
         *CURSOR_POSITION
     }
 
-    #[cfg(not(android))]
-    fn setup_log() {
-        #[cfg(not_wasm)]
-        {
-            use fern::Dispatch;
-            use log::{Level, LevelFilter};
+    #[cfg(not_wasm)]
+    pub(crate) fn setup_log() {
+        use fern::Dispatch;
+        use log::{Level, LevelFilter};
 
-            Dispatch::new()
-                .level(LevelFilter::Warn)
-                .level_for("test_engine", LevelFilter::Debug)
-                .level_for("shopping", LevelFilter::Debug)
-                .format(|out, message, record| {
-                    let level_icon = match record.level() {
-                        Level::Error => "🔴",
-                        Level::Warn => "🟡",
-                        Level::Info => "🟢",
-                        Level::Debug => "🔵",
-                        Level::Trace => "⚪",
-                    };
+        Dispatch::new()
+            .level(LevelFilter::Warn)
+            .level_for("test_engine", LevelFilter::Debug)
+            .level_for("shopping", LevelFilter::Debug)
+            .format(|out, message, record| {
+                let level_icon = match record.level() {
+                    Level::Error => "🔴",
+                    Level::Warn => "🟡",
+                    Level::Info => "🟢",
+                    Level::Debug => "🔵",
+                    Level::Trace => "⚪",
+                };
 
-                    let location = false;
-                    let module = false;
+                let location = false;
+                let module = false;
 
-                    let mut log = format!("{level_icon} {message}");
+                let mut log = format!("{level_icon} {message}");
 
-                    if location {
-                        log = format!(
-                            "[{}::{}] {}",
-                            record.file().unwrap_or_default(),
-                            record.line().unwrap_or_default(),
-                            log
-                        );
-                    }
+                if location {
+                    log = format!(
+                        "[{}::{}] {}",
+                        record.file().unwrap_or_default(),
+                        record.line().unwrap_or_default(),
+                        log
+                    );
+                }
 
-                    if module {
-                        log = format!("{} {}", record.module_path().unwrap_or_default(), log);
-                    }
+                if module {
+                    log = format!("{} {}", record.module_path().unwrap_or_default(), log);
+                }
 
-                    out.finish(format_args!("{log}"));
-                })
-                .chain(std::io::stdout())
-                .apply()
-                .expect("Failed to initialize logging");
-        }
+                out.finish(format_args!("{log}"));
+            })
+            .chain(std::io::stdout())
+            .apply()
+            .expect("Failed to initialize logging");
 
-        debug!("Logs setup");
+        debug!("logs setup");
     }
 
     pub fn new(first_view: Own<dyn View>) -> Self {
         #[cfg(desktop)]
-        Assets::init(store::Paths::git_root().expect("git_root()"));
+        Assets::init(filesystem::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
         Assets::init(std::path::PathBuf::default());
 
         Self {
             cursor_position: Point::default(),
             first_view:      first_view.into(),
-            window:          Rglica::default(),
         }
     }
 
@@ -163,11 +158,9 @@ impl AppRunner {
             }
         }
 
-        Self::setup_log();
-
-        std::thread::spawn(move || {
+        dispatch::spawn(async {
             WINDOW_READY.lock().unwrap().sub(|| {
-                async_std::task::block_on(actions).unwrap();
+                dispatch::unasync(actions).unwrap();
             });
         });
 
@@ -204,6 +197,9 @@ impl window::WindowEvents for AppRunner {
 
         INIT.call_once(|| {
             debug!("window ready");
+
+            Pipelines::initialize();
+
             let mut root = UIManager::root_view();
             let view = root.add_subview_to_root(self.first_view.take().unwrap());
             view.place().back();
@@ -215,8 +211,17 @@ impl window::WindowEvents for AppRunner {
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
 
+            Window::current().state.resize();
+
+            self.resize(
+                Window::inner_position(),
+                Window::outer_position(),
+                Window::inner_size(),
+                Window::outer_size(),
+            );
+
             #[cfg(not_wasm)]
-            std::thread::spawn(|| {
+            dispatch::spawn(async {
                 WINDOW_READY.lock().unwrap().trigger(());
             });
         });
@@ -241,6 +246,7 @@ impl window::WindowEvents for AppRunner {
     fn resize(&mut self, inner_pos: Point, outer_pos: Point, inner_size: Size, outer_size: Size) {
         UIManager::set_scale(UIManager::display_scale());
         LevelManager::set_scale(UIManager::display_scale());
+
         UIManager::root_view().resize_root(inner_pos, outer_pos, inner_size, outer_size, UIManager::scale());
         UIEvents::size_changed().trigger(());
         self.update();
@@ -295,10 +301,6 @@ impl window::WindowEvents for AppRunner {
         if let Some(ch) = event.logical_key.to_text() {
             Input::on_char(ch.chars().last().unwrap());
         }
-    }
-
-    fn set_window(&mut self, app: Rglica<Window>) {
-        self.window = app;
     }
 
     fn dropped_file(&mut self, path: PathBuf) {

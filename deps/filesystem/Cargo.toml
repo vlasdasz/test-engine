@@ -1,15 +1,13 @@
 [package]
 edition.workspace = true
-name = "store"
+name = "filesystem"
 version.workspace = true
 
 [dependencies]
-filesystem = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
-
-[dev-dependencies]
 anyhow = { workspace = true }
+dirs = { workspace = true }
+log = { workspace = true }
+plat = { workspace = true }
 
 [build-dependencies]
 plat = { workspace = true }

@@ -36,6 +36,8 @@ dirs = "6.0"
 educe = "0.6.0"
 fastrand = "2.3"
 fern = "0.7"
+gloo-net = "0.6"
+gloo-timers = { version = "0.3", features = ["futures"] }
 image = "0.25"
 indexmap = "2.2"
 instant = { version = "0.1", features = ["wasm-bindgen"] }
@@ -60,13 +62,14 @@ wgpu = "26.0"
 wgpu_text = "26.0"
 winit = "0.30"
 
-plat = "0.4.0"
+plat = "0.5.0"
 reflected = "0.26"
-refs = { version = "0.19.0", default-features = true }
+refs = { version = "0.21.0", default-features = true }
 vents = "0.11.0"
 
 audio = { path = "deps/audio" }
 dispatch = { path = "deps/dispatch" }
+filesystem = { path = "deps/filesystem" }
 game = { path = "deps/game" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }

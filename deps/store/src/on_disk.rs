@@ -6,7 +6,9 @@ use std::{
     path::PathBuf,
 };
 
-use crate::{Paths, storable::Storable};
+use filesystem::Paths;
+
+use crate::storable::Storable;
 
 fn set_value<T: serde::ser::Serialize>(value: T, key: &str) {
     let json = serde_json::to_string_pretty(&value).expect("Failed to serialize data");

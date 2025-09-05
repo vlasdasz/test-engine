@@ -13,15 +13,15 @@ use gm::{
     color::{Color, GRAY_BLUE, U8Color},
     flat::Size,
 };
-use log::warn;
+use log::{info, warn};
 use plat::Platform;
 use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
-use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
     SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
-    image::Texture, text::Font,
+    image::Texture, surface::Surface, text::Font, window::surface_config_with_size,
 };
+
 type ReadDisplayRequest = Sender<Screenshot>;
 
 #[cfg(not(any(target_os = "android", target_arch = "wasm32")))]
@@ -49,32 +49,46 @@ impl Default for State {
 }
 
 impl State {
-    pub fn resize(&mut self, new_size: PhysicalSize<u32>, _event_loop: &ActiveEventLoop) {
-        if new_size.width == 0 || new_size.height == 0 {
+    pub fn resize(&mut self) {
+        let new_size = Window::render_size();
+
+        if new_size.width == 0.0 || new_size.height == 0.0 {
             warn!("Zero size");
             return;
         }
 
         let window = Window::current();
 
-        window.config.width = new_size.width;
-        window.config.height = new_size.height;
+        if window.surface.is_none() {
+            window.surface = Surface::new(
+                &window.instance,
+                &window.adapter,
+                &window.device,
+                surface_config_with_size((new_size.width.lossy_convert(), new_size.height.lossy_convert())),
+                window.winit_window.clone(),
+            )
+            .expect("Failed to create surface")
+            .into();
 
-        window.surface.depth_texture = Texture::create_depth_texture(
+            info!("surface created");
+        }
+
+        let surface = window.surface.as_mut().unwrap();
+
+        surface.depth_texture = Texture::create_depth_texture(
             &window.device,
-            (new_size.width, new_size.height).into(),
+            (new_size.width.lossy_convert(), new_size.height.lossy_convert()).into(),
             "depth_texture",
         );
-        window.surface.presentable.configure(&window.device, &window.config);
+        surface.presentable.configure(
+            &window.device,
+            &surface_config_with_size((new_size.width.lossy_convert(), new_size.height.lossy_convert())),
+        );
 
         let queue = Window::queue();
 
         for font in self.fonts.values() {
-            font.brush.resize_view(
-                window.config.width.lossy_convert(),
-                window.config.height.lossy_convert(),
-                queue,
-            );
+            font.brush.resize_view(new_size.width, new_size.height, queue);
         }
 
         AppHandler::current().te_window_events.resize(
@@ -98,18 +112,17 @@ impl State {
                 self.frame_counter.frame_time * 1000.0,
                 self.frame_counter.fps
             );
-            let app = Window::current();
             if Platform::DESKTOP {
-                Window::winit_window()
-                    .set_title(&format!("{a} {} x {}", app.config.width, app.config.height));
+                let size = Window::render_size();
+                Window::winit_window().set_title(&format!("{a} {} x {}", size.width, size.height));
             }
         }
     }
 
     pub fn render(&mut self) -> Result<()> {
-        let app = Window::current();
-
-        let surface = &app.surface;
+        let Some(ref surface) = Window::current().surface else {
+            return Ok(());
+        };
 
         let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());
@@ -176,7 +189,7 @@ impl State {
                 sender.send(result).unwrap();
             });
 
-            std::thread::spawn(move || {
+            dispatch::spawn(async move {
                 let _ = receiver.recv().unwrap();
                 let (buff, size) = buffer;
 

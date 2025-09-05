@@ -9,8 +9,8 @@ use gm::{
 use log::{info, warn};
 use plat::Platform;
 use wgpu::{
-    CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, Limits, MemoryHints, PowerPreference,
-    PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages, Trace,
+    Adapter, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, Limits, MemoryHints,
+    PowerPreference, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages, Trace,
 };
 use winit::{dpi::PhysicalSize, event_loop::EventLoopProxy};
 
@@ -34,13 +34,16 @@ pub type Events = ();
 pub struct Window {
     pub state: State,
 
-    pub(crate) config: SurfaceConfiguration,
-    pub(crate) device: Device,
-    pub(crate) queue:  Queue,
+    pub(crate) instance: Instance,
+    pub(crate) adapter:  Adapter,
+    pub(crate) device:   Device,
+    pub(crate) queue:    Queue,
 
-    pub(crate) surface: Surface,
+    pub(crate) surface: Option<Surface>,
 
     pub(crate) title_set: bool,
+
+    pub(crate) winit_window: Arc<winit::window::Window>,
 }
 
 impl Window {
@@ -57,7 +60,7 @@ impl Window {
     }
 
     pub(crate) fn winit_window() -> &'static winit::window::Window {
-        &mut Self::current().surface.window
+        &mut Self::current().winit_window
     }
 
     pub fn inner_size() -> Size {
@@ -100,18 +103,21 @@ impl Window {
         on_main(AppHandler::close);
     }
 
-    pub(crate) async fn start_internal(window: winit::window::Window, proxy: EventLoopProxy<Window>) {
-        let window = Arc::new(window);
+    pub(crate) async fn start_internal(
+        size: PhysicalSize<u32>,
+        window: winit::window::Window,
+        proxy: EventLoopProxy<Window>,
+    ) {
+        let winit_window = Arc::new(window);
 
         let instance = Instance::default();
-        let surface = instance.create_surface(window.clone()).unwrap();
+        let surface = instance.create_surface(winit_window.clone()).unwrap();
         let adapter = instance
             .request_adapter(&RequestAdapterOptions {
-                power_preference:       PowerPreference::default(), // Power preference for the device
-                force_fallback_adapter: false,                      /* Indicates that only a fallback
-                                                                     * ("software") adapter can be used */
-                compatible_surface:     Some(&surface), /* Guarantee that the adapter can render to this
-                                                         * surface */
+                power_preference:       PowerPreference::HighPerformance,
+                force_fallback_adapter: false,
+
+                compatible_surface: Some(&surface),
             })
             .await
             .expect("Could not get an adapter (GPU).");
@@ -120,11 +126,7 @@ impl Window {
 
         info!("Backend: {}", &info.backend);
 
-        let mut required_limits = if cfg!(target_arch = "wasm32") {
-            Limits::downlevel_webgl2_defaults()
-        } else {
-            Limits::default()
-        };
+        let mut required_limits = Limits::default();
 
         if Platform::IOS {
             required_limits.max_color_attachments = 4;
@@ -143,6 +145,10 @@ impl Window {
             required_limits.max_texture_dimension_3d = 1024;
             required_limits.max_texture_dimension_2d = 4096;
             required_limits.max_texture_dimension_1d = 4096;
+        } else if Platform::WASM {
+            required_limits = Limits::downlevel_webgl2_defaults();
+            required_limits.max_texture_dimension_1d = 8192;
+            required_limits.max_texture_dimension_2d = 8192;
         }
 
         let (device, queue) = adapter
@@ -156,40 +162,33 @@ impl Window {
                 trace: Trace::default(),
             })
             .await
-            .expect("AAAAAA");
-
-        let config = SurfaceConfiguration {
-            usage:        if SUPPORT_SCREENSHOT {
-                TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC
-            } else {
-                TextureUsages::RENDER_ATTACHMENT
-            },
-            format:       RGBA_TEXTURE_FORMAT,
-            width:        1000,
-            height:       1000,
-            present_mode: if ENABLE_VSYNC || Platform::MOBILE {
-                PresentMode::AutoVsync
-            } else {
-                PresentMode::AutoNoVsync
-            },
-            alpha_mode:   CompositeAlphaMode::Auto,
-            view_formats: vec![],
-
-            desired_maximum_frame_latency: 2,
-        };
+            .expect("Failed to request device");
 
         let state = State::default();
 
-        let surface =
-            Surface::new(&instance, &adapter, &device, &config, window).expect("Failed to create surface");
+        let surface = if size.width != 0 && size.height != 0 {
+            Surface::new(
+                &instance,
+                &adapter,
+                &device,
+                surface_config_with_size((size.width, size.height)),
+                winit_window.clone(),
+            )
+            .expect("Failed to create surface")
+            .into()
+        } else {
+            None
+        };
 
         let window = Self {
             state,
-            config,
+            instance,
+            adapter,
             device,
             queue,
             surface,
             title_set: false,
+            winit_window,
         };
 
         if proxy.send_event(window).is_err() {
@@ -234,5 +233,29 @@ impl Window {
         Self::winit_window().current_monitor().map_or(60, |monitor| {
             monitor.refresh_rate_millihertz().unwrap_or(60_000) / 1000
         })
+    }
+}
+
+pub(crate) fn surface_config_with_size(size: impl Into<Size<u32>>) -> SurfaceConfiguration {
+    let size: Size<u32> = size.into();
+
+    SurfaceConfiguration {
+        usage:        if SUPPORT_SCREENSHOT {
+            TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC
+        } else {
+            TextureUsages::RENDER_ATTACHMENT
+        },
+        format:       RGBA_TEXTURE_FORMAT,
+        width:        size.width,
+        height:       size.height,
+        present_mode: if ENABLE_VSYNC || Platform::MOBILE {
+            PresentMode::AutoVsync
+        } else {
+            PresentMode::AutoNoVsync
+        },
+        alpha_mode:   CompositeAlphaMode::Auto,
+        view_formats: vec![],
+
+        desired_maximum_frame_latency: 2,
     }
 }

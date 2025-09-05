@@ -12,6 +12,7 @@ mod level_drawer;
 mod app;
 mod app_starter;
 mod game_drawer;
+mod pipelines;
 pub mod ui;
 
 pub use app::App;
@@ -56,7 +57,11 @@ pub mod gm {
 pub mod store {
     pub(crate) use store;
     // pub use store::{EncryptionKey, OnDisk, OnDiskEncrypted, Paths};
-    pub use store::{OnDisk, Paths};
+    pub use store::OnDisk;
+}
+
+pub mod filesystem {
+    pub use filesystem::Paths;
 }
 
 pub mod time {
@@ -71,7 +76,7 @@ pub use vents::{Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
 pub mod dispatch {
-    pub use ::dispatch::{after, from_main, ok_main, on_main, wait_for_next_frame};
+    pub use ::dispatch::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
 
     // pub use crate::ui::ui_dispatch::on_back;
 }

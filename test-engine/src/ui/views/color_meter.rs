@@ -1,7 +1,5 @@
-// use dispatch::on_main;
 use dispatch::on_main;
 use refs::Weak;
-// use tokio::spawn;
 use ui::{Setup, UIEvents, ViewCallbacks, ViewData};
 use ui_proc::view;
 use window::Screenshot;
@@ -36,7 +34,7 @@ impl ViewCallbacks for ColorMeter {
 impl ColorMeter {
     pub fn update_screenshot(mut self: Weak<Self>) {
         #[cfg(not_wasm)]
-        std::thread::spawn(move || {
+        dispatch::spawn(async move {
             let Some(screenshot) = AppRunner::take_screenshot().ok() else {
                 return;
             };

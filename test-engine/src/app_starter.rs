@@ -7,7 +7,7 @@ use crate::{App, AppRunner, app::test_engine_create_app};
 fn run_app(event_loop: EventLoop<Window>, app: &'static mut AppHandler) {
     // Runs the app async via the browsers event loop
     use winit::platform::web::EventLoopExtWebSys;
-    wasm_bindgen_futures::spawn_local(async move {
+    dispatch::spawn(async move {
         event_loop.spawn_app(app);
     });
 }
@@ -27,11 +27,14 @@ pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
 pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
     dbg!("test_engine_start_app");
 
-    #[cfg(target_arch = "wasm32")]
+    #[cfg(not_wasm)]
+    AppRunner::setup_log();
+
+    #[cfg(wasm)]
     {
         // Sets up panics to go to the console.error in browser environments
         std::panic::set_hook(Box::new(console_error_panic_hook::hook));
-        console_log::init_with_level(log::Level::Warn).expect("Couldn't initialize logger");
+        console_log::init_with_level(log::Level::Debug).expect("Couldn't initialize logger");
 
         log::info!("Hello from wasm");
     }

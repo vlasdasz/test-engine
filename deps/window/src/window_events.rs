@@ -1,11 +1,8 @@
 use std::path::PathBuf;
 
 use gm::flat::{Point, Size};
-use refs::Rglica;
 use wgpu::RenderPass;
 use winit::event::{ElementState, KeyEvent, MouseButton, Touch};
-
-use crate::Window;
 
 pub trait WindowEvents {
     fn window_ready(&mut self) {}
@@ -23,6 +20,5 @@ pub trait WindowEvents {
         false
     }
     fn key_event(&mut self, _event: KeyEvent) {}
-    fn set_window(&mut self, _app: Rglica<Window>) {}
     fn dropped_file(&mut self, _path: PathBuf) {}
 }
