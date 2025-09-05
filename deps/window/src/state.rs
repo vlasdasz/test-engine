@@ -13,13 +13,13 @@ use gm::{
     color::{Color, GRAY_BLUE, U8Color},
     flat::Size,
 };
-use log::warn;
+use log::{info, warn};
 use plat::Platform;
 use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
 
 use crate::{
     SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
-    image::Texture, text::Font, window::surface_config_with_size,
+    image::Texture, surface::Surface, text::Font, window::surface_config_with_size,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;
@@ -59,12 +59,28 @@ impl State {
 
         let window = Window::current();
 
-        window.surface.depth_texture = Texture::create_depth_texture(
+        if window.surface.is_none() {
+            window.surface = Surface::new(
+                &window.instance,
+                &window.adapter,
+                &window.device,
+                surface_config_with_size((new_size.width.lossy_convert(), new_size.height.lossy_convert())),
+                window.winit_window.clone(),
+            )
+            .expect("Failed to create surface")
+            .into();
+
+            info!("surface created");
+        }
+
+        let surface = window.surface.as_mut().unwrap();
+
+        surface.depth_texture = Texture::create_depth_texture(
             &window.device,
             (new_size.width.lossy_convert(), new_size.height.lossy_convert()).into(),
             "depth_texture",
         );
-        window.surface.presentable.configure(
+        surface.presentable.configure(
             &window.device,
             &surface_config_with_size((new_size.width.lossy_convert(), new_size.height.lossy_convert())),
         );
@@ -104,9 +120,9 @@ impl State {
     }
 
     pub fn render(&mut self) -> Result<()> {
-        let app = Window::current();
-
-        let surface = &app.surface;
+        let Some(ref surface) = Window::current().surface else {
+            return Ok(());
+        };
 
         let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());

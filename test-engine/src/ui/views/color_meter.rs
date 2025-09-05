@@ -1,7 +1,5 @@
-// use dispatch::on_main;
 use dispatch::on_main;
 use refs::Weak;
-// use tokio::spawn;
 use ui::{Setup, UIEvents, ViewCallbacks, ViewData};
 use ui_proc::view;
 use window::Screenshot;

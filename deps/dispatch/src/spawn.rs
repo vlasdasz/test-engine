@@ -1,5 +1,3 @@
-use std::time::Duration;
-
 use gm::ToF32;
 
 #[cfg(wasm)]
@@ -16,15 +14,11 @@ where
     std::thread::spawn(|| async_std::task::block_on(future));
 }
 
-#[cfg(wasm)]
 pub fn block_on<F>(future: F)
 where F: Future<Output = ()> + 'static {
+    #[cfg(wasm)]
     wasm_bindgen_futures::spawn_local(future);
-}
-
-#[cfg(not_wasm)]
-pub fn block_on<F, O>(future: F)
-where F: Future<Output = O> {
+    #[cfg(not_wasm)]
     async_std::task::block_on(future);
 }
 
@@ -36,7 +30,7 @@ where F: Future<Output = Out> {
 
 pub async fn sleep(duration: impl ToF32) {
     #[cfg(not_wasm)]
-    async_std::task::sleep(Duration::from_secs_f32(duration.to_f32())).await;
+    async_std::task::sleep(std::time::Duration::from_secs_f32(duration.to_f32())).await;
     #[cfg(wasm)]
     gloo_timers::future::TimeoutFuture::new((duration.to_f32() * 1000.0) as _).await;
 }
