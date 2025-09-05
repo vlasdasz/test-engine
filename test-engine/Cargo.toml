@@ -30,6 +30,7 @@ refs = { workspace = true }
 vents = { workspace = true }
 
 audio = { workspace = true }
+filesystem = { workspace = true }
 game = { workspace = true }
 generate = { workspace = true }
 gm = { workspace = true }

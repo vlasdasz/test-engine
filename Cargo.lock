@@ -1268,6 +1268,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "filesystem"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dirs",
+ "log",
+ "plat 0.5.0",
+]
+
+[[package]]
 name = "find-msvc-tools"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3947,8 +3957,7 @@ name = "store"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "dirs",
- "log",
+ "filesystem",
  "plat 0.5.0",
  "serde",
  "serde_json",
@@ -4162,6 +4171,7 @@ dependencies = [
  "dispatch 0.1.0",
  "educe",
  "fern",
+ "filesystem",
  "game",
  "generate",
  "gm",

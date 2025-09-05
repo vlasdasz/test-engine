@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use test_engine::{
     App,
     refs::Own,

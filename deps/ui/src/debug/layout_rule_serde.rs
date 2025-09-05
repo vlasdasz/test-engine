@@ -2,7 +2,7 @@ use std::fmt;
 
 use serde::{
     Deserialize, Deserializer, de,
-    de::{DeserializeOwned, MapAccess, Visitor},
+    de::{MapAccess, Visitor},
     ser::{Serialize, SerializeStruct, Serializer},
 };
 

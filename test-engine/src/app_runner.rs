@@ -95,7 +95,7 @@ impl AppRunner {
 
     pub fn new(first_view: Own<dyn View>) -> Self {
         #[cfg(desktop)]
-        Assets::init(store::Paths::git_root().expect("git_root()"));
+        Assets::init(filesystem::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
         Assets::init(std::path::PathBuf::default());
 
