@@ -40,10 +40,9 @@ strip = true
 codegen-units = 1
 inherits = "release"
 strip = true
-#opt-level = "z"
 debug = false
 lto = "fat"
-#panic = "abort"
+panic = "abort"
 opt-level = 3
 overflow-checks = false
 
