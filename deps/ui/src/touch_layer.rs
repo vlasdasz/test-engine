@@ -17,15 +17,11 @@ impl TouchLayer {
     }
 
     pub(crate) fn remove(&mut self, view: WeakView) {
-        self.touches.retain(|a| a.addr() != view.addr());
+        self.touches.retain(|a| a.raw() != view.raw());
     }
 
     pub(crate) fn views(&self) -> Vec<WeakView> {
         self.touches.clone()
-    }
-
-    pub(crate) fn root_addr(&self) -> usize {
-        self.root.addr()
     }
 
     pub(crate) fn root_name(&self) -> &str {

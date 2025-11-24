@@ -80,8 +80,8 @@ impl TouchStack {
     pub fn pop_layer(view: WeakView) {
         let pop = Self::get().stack.pop().unwrap();
         assert_eq!(
-            pop.root_addr(),
-            view.addr(),
+            pop.root.raw(),
+            view.raw(),
             "Inconsistent pop_touch_view call. Expected: {} got: {}",
             pop.root_name(),
             view.label()

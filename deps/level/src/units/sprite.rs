@@ -14,7 +14,7 @@ use rapier2d::{
     pipeline::ActiveEvents,
     prelude::{CoefficientCombineRule, RigidBody, Rotation},
 };
-use refs::{Address, Own, weak_from_ref};
+use refs::{Own, weak_from_ref};
 use window::image::ToImage;
 
 use crate::{LevelManager, SpriteData};
@@ -129,8 +129,9 @@ pub trait Sprite: Deref<Target = SpriteData> + DerefMut {
     }
 
     fn remove(&mut self) {
-        let address = self.address();
-        LevelManager::level_weak().remove(address);
+        unimplemented!()
+        // let this: Weak<dyn Sprite> = weak_from_ref(self);
+        // LevelManager::level_weak().remove(this);
     }
 
     fn lock_rotations(&mut self) {

@@ -62,7 +62,7 @@ winit = "~0.30"
 
 plat = "~0.5"
 reflected = "~0.26"
-refs = { version = "~0.21", default-features = true }
+refs = { version = "~0.22", default-features = true }
 vents = "~0.11"
 
 audio = { path = "deps/audio" }
@@ -90,3 +90,4 @@ window = { path = "deps/window" }
 #vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "10cd78a848cf8e911a6780c011dbd5be33f37a1c" }
+#refs = { path = "../deps/refs/refs" }

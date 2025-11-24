@@ -1,6 +1,6 @@
 use std::sync::{Mutex, MutexGuard};
 
-use refs::Weak;
+use refs::{RawPointer, Weak};
 
 struct Subscriber<T: Send> {
     subscriber: Weak,
@@ -10,7 +10,7 @@ struct Subscriber<T: Send> {
 pub struct UIEvent<T: Send = ()> {
     subscribers: Mutex<Vec<Subscriber<T>>>,
     /// This allows unsibscribing from the event during its execution
-    unsubscribe: Mutex<Vec<usize>>,
+    unsubscribe: Mutex<Vec<RawPointer>>,
 }
 
 impl<T: Send> Default for UIEvent<T> {
@@ -25,7 +25,7 @@ impl<T: Send> Default for UIEvent<T> {
 impl<T: Send> UIEvent<T> {
     fn clear_subscribers(&self, subs: &mut MutexGuard<Vec<Subscriber<T>>>) {
         let mut unsubscribe = self.unsubscribe.lock().unwrap();
-        subs.retain(|a| !unsubscribe.contains(&a.subscriber.addr()) && a.subscriber.is_ok());
+        subs.retain(|a| !unsubscribe.contains(&a.subscriber.raw()) && a.subscriber.is_ok());
         unsubscribe.clear();
     }
 
@@ -34,7 +34,7 @@ impl<T: Send> UIEvent<T> {
         self.clear_subscribers(&mut subs);
 
         assert!(
-            !subs.iter().any(|s| s.subscriber.addr() == subscriber.addr()),
+            !subs.iter().any(|s| s.subscriber.raw() == subscriber.raw()),
             "This object is already subscribed to this event"
         );
 
@@ -49,7 +49,7 @@ impl<T: Send> UIEvent<T> {
         self.clear_subscribers(&mut subs);
 
         assert!(
-            !subs.iter().any(|s| s.subscriber.addr() == subscriber.addr()),
+            !subs.iter().any(|s| s.subscriber.raw() == subscriber.raw()),
             "This object is already subscribed to this event"
         );
 
@@ -60,7 +60,7 @@ impl<T: Send> UIEvent<T> {
     }
 
     pub fn unsibscribe<U: ?Sized>(&self, view: Weak<U>) {
-        self.unsubscribe.lock().unwrap().push(view.addr());
+        self.unsubscribe.lock().unwrap().push(view.raw());
     }
 
     pub fn trigger(&self, val: T)

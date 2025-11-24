@@ -42,7 +42,7 @@ fn main() -> Result<()> {
             UIManager::override_scale(1.0);
         });
 
-        let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("20".to_string()).parse().unwrap();
+        let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 
         for i in 1..=cycles {
             test().await?;

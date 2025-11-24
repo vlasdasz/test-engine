@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Anchor, BLACK, Setup, UI, ViewCallbacks, ViewData, ViewTouch, WHITE, view},
+    ui::{Anchor, BLACK, Setup, UI, ViewData, ViewTouch, WHITE, view},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -13,10 +13,8 @@ impl Setup for Selectable {
         self.enable_touch();
         self.set_color(BLACK);
     }
-}
 
-impl ViewCallbacks for Selectable {
-    fn on_selection_changed(&mut self, selected: bool) {
+    fn on_selection_changed(mut self: Weak<Self>, selected: bool) {
         self.set_color(if selected { WHITE } else { BLACK });
     }
 }
