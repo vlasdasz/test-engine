@@ -46,7 +46,7 @@ lyon = "~1.0"
 nonempty = "~0.12"
 pollster = "~0.4"
 quote = "~1.0"
-rapier2d = { version = "~0.30", features = ["simd-nightly"] }
+rapier2d = { version = "~0.31", features = ["simd-nightly"] }
 resvg = "~0.45"
 rust_decimal = "~1.39"
 serde = { version = "~1.0", features = ["derive"] }
