@@ -7,14 +7,12 @@ use crate::{View, view::view_frame::ViewFrame};
 pub trait ViewCallbacks {
     fn update(&mut self);
     fn before_render(&self, pass: &mut RenderPass);
-    fn on_selection_changed(&mut self, selected: bool);
     fn content_size(&self) -> &Size;
 }
 
 impl<T: ?Sized + View> ViewCallbacks for T {
     default fn update(&mut self) {}
     default fn before_render(&self, _pass: &mut RenderPass) {}
-    default fn on_selection_changed(&mut self, _: bool) {}
     default fn content_size(&self) -> &Size {
         &self.frame().size
     }
@@ -23,6 +21,7 @@ impl<T: ?Sized + View> ViewCallbacks for T {
 pub trait __ViewInternalSetup {
     fn __internal_before_setup(&mut self);
     fn __internal_setup(&mut self);
+    fn __internal_on_selection_changed(&mut self, selected: bool);
 }
 
 pub trait Setup {
@@ -30,6 +29,7 @@ pub trait Setup {
     where Self: Default;
     fn before_setup(self: Weak<Self>);
     fn setup(self: Weak<Self>);
+    fn on_selection_changed(self: Weak<Self>, selected: bool);
 }
 
 impl<T: View + 'static> Setup for T {
@@ -41,4 +41,6 @@ impl<T: View + 'static> Setup for T {
     default fn before_setup(self: Weak<Self>) {}
 
     default fn setup(self: Weak<Self>) {}
+
+    default fn on_selection_changed(self: Weak<Self>, _selected: bool) {}
 }

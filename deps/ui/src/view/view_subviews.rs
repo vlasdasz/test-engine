@@ -61,10 +61,10 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn take_from_superview(&mut self) -> Own<dyn View> {
-        let this_addr = self.weak_view().addr();
+        let this_addr = self.weak_view().raw();
         let super_subs = &mut self.base_view_mut().superview.base_view_mut().subviews;
 
-        let index = super_subs.iter().position(|a| a.addr() == this_addr).unwrap();
+        let index = super_subs.iter().position(|a| a.raw() == this_addr).unwrap();
 
         super_subs.remove(index)
     }

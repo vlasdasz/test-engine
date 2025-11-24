@@ -39,8 +39,8 @@ impl LevelBase {
         }
     }
 
-    pub(crate) fn remove(&mut self, sprite: usize) {
-        let index = self.sprites.iter().position(|a| a.addr() == sprite).unwrap();
+    pub(crate) fn _remove(&mut self, sprite: Weak<dyn Sprite>) {
+        let index = self.sprites.iter().position(|a| a.raw() == sprite.raw()).unwrap();
 
         let sprite = self.sprites[index].deref();
 

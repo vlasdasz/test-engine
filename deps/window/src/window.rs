@@ -9,8 +9,9 @@ use gm::{
 use log::{info, warn};
 use plat::Platform;
 use wgpu::{
-    Adapter, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance, Limits, MemoryHints,
-    PowerPreference, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration, TextureUsages, Trace,
+    Adapter, CompositeAlphaMode, Device, DeviceDescriptor, ExperimentalFeatures, Features, Instance, Limits,
+    MemoryHints, PowerPreference, PresentMode, Queue, RequestAdapterOptions, SurfaceConfiguration,
+    TextureUsages, Trace,
 };
 use winit::{dpi::PhysicalSize, event_loop::EventLoopProxy};
 
@@ -160,6 +161,7 @@ impl Window {
                 label: None,
                 memory_hints: MemoryHints::Performance,
                 trace: Trace::default(),
+                experimental_features: ExperimentalFeatures::default(),
             })
             .await
             .expect("Failed to request device");

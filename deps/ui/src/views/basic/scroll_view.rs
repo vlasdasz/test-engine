@@ -27,10 +27,10 @@ pub struct ScrollView {
 
 impl ScrollView {
     pub fn remove_all_subviews(&mut self) {
-        let slider_addr = self.slider.addr();
+        let slider_addr = self.slider.raw();
 
         for mut view in self.subviews_mut() {
-            if view.addr() == slider_addr {
+            if view.raw() == slider_addr {
                 continue;
             }
 

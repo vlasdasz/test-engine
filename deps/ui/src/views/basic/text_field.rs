@@ -2,13 +2,13 @@ use gm::{
     ToF32,
     color::{BLACK, Color, GRAY, LIGHT_GRAY, LIGHTER_GRAY},
 };
-use refs::{Weak, weak_from_ref};
+use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 use window::NamedKey;
 
 use crate::{
-    Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager, ViewCallbacks,
+    Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
     has_data::HasText,
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
@@ -47,6 +47,57 @@ impl Setup for TextField {
         self.set_color(LIGHT_GRAY);
 
         self.enable_touch();
+    }
+
+    fn on_selection_changed(mut self: Weak<Self>, selected: bool) {
+        self.is_editing = selected;
+
+        if selected {
+            UIEvents::keyboard_key().val(self, |key| {
+                if matches!(key, NamedKey::Enter) {
+                    UIManager::unselect_view();
+                }
+            });
+
+            UIEvents::keyboard_input().val(self, move |key| {
+                if self.is_null() {
+                    return;
+                }
+
+                let mut text = self.label.text().to_string();
+
+                let backspace = key as u32 == 8;
+
+                if self.is_selected() {
+                    if backspace {
+                        if self.placeholding {
+                            return;
+                        }
+                        text.pop();
+                    } else if self.constraint.accept_char(key, &text) {
+                        if self.placeholding {
+                            text = String::default();
+                            self.placeholding = false;
+                        }
+                        text.push(key);
+                    }
+                }
+
+                self.set_text(text);
+                self.changed.trigger(self.label.text().to_string());
+            });
+            UIManager::open_keyboard(self.absolute_frame());
+        } else {
+            if let Some(string) = UIManager::close_keyboard() {
+                self.set_text(string);
+            }
+            UIEvents::keyboard_input().unsibscribe(self);
+            UIEvents::keyboard_key().unsibscribe(self);
+
+            self.editing_ended.trigger(self.label.text().to_string());
+        }
+
+        self.label.set_color(if selected { GRAY } else { LIGHT_GRAY });
     }
 }
 
@@ -120,60 +171,5 @@ impl TextField {
             self.label.set_text_color(GRAY);
         }
         self
-    }
-}
-
-impl ViewCallbacks for TextField {
-    fn on_selection_changed(&mut self, selected: bool) {
-        let mut this = weak_from_ref(self);
-
-        self.is_editing = selected;
-
-        if selected {
-            UIEvents::keyboard_key().val(this, |key| {
-                if matches!(key, NamedKey::Enter) {
-                    UIManager::unselect_view();
-                }
-            });
-
-            UIEvents::keyboard_input().val(this, move |key| {
-                if this.is_null() {
-                    return;
-                }
-
-                let mut text = this.label.text().to_string();
-
-                let backspace = key as u32 == 8;
-
-                if this.is_selected() {
-                    if backspace {
-                        if this.placeholding {
-                            return;
-                        }
-                        text.pop();
-                    } else if this.constraint.accept_char(key, &text) {
-                        if this.placeholding {
-                            text = String::default();
-                            this.placeholding = false;
-                        }
-                        text.push(key);
-                    }
-                }
-
-                this.set_text(text);
-                this.changed.trigger(this.label.text().to_string());
-            });
-            UIManager::open_keyboard(self.absolute_frame());
-        } else {
-            if let Some(string) = UIManager::close_keyboard() {
-                self.set_text(string);
-            }
-            UIEvents::keyboard_input().unsibscribe(this);
-            UIEvents::keyboard_key().unsibscribe(this);
-
-            self.editing_ended.trigger(self.label.text().to_string());
-        }
-
-        self.label.set_color(if selected { GRAY } else { LIGHT_GRAY });
     }
 }

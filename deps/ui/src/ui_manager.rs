@@ -108,7 +108,7 @@ impl UIManager {
             return;
         }
         selected_view.base_view_mut().is_selected = false;
-        selected_view.on_selection_changed(false);
+        selected_view.__internal_on_selection_changed(false);
         *selected_view = Weak::default();
     }
 
@@ -118,7 +118,7 @@ impl UIManager {
         let mut selected_view = this.selected_view.lock().unwrap();
 
         if let Some(selected) = selected_view.get_mut() {
-            selected.on_selection_changed(false);
+            selected.__internal_on_selection_changed(false);
             *selected_view = Weak::default();
         }
 
@@ -127,7 +127,7 @@ impl UIManager {
         }
 
         view.base_view_mut().is_selected = selected;
-        view.on_selection_changed(selected);
+        view.__internal_on_selection_changed(selected);
     }
 }
 

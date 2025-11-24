@@ -103,6 +103,12 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 weak.setup();
                 self.__after_setup_event().trigger(());
             }
+
+            fn __internal_on_selection_changed(&mut self, selected: bool) {
+                use test_engine::ui::Setup;
+                let mut weak = test_engine::refs::weak_from_ref(self);
+                weak.on_selection_changed(selected);
+            }
         }
 
         impl #generics test_engine::ui::__ViewInternalTableData for #name <#type_params>  {
