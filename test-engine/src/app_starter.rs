@@ -25,8 +25,6 @@ pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
 }
 
 pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
-    dbg!("test_engine_start_app");
-
     #[cfg(not_wasm)]
     AppRunner::setup_log();
 
