@@ -6,7 +6,7 @@ use libfuzzer_sys::fuzz_target;
 use palette::{LinSrgb, Srgb};
 
 fuzz_target!(|color: U8Color| {
-    let my_hex = color.hex();
+    let my_hex = color.as_hex();
 
     let rgb = Rgb::from(color.r as f32, color.g as f32, color.b as f32);
 
