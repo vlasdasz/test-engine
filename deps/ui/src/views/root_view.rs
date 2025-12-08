@@ -49,11 +49,12 @@ impl RootView {
     }
 
     pub fn set_color(mut self: Weak<Self>, color: impl Into<Color>) -> Weak<Self> {
-        self.background.set_color(color);
+        self.background.set_color(dbg!(color.into()));
         self
     }
 
     pub fn set_image(mut self: Weak<Self>, image: impl ToImage) -> Weak<Self> {
+        dbg!("set_image");
         self.background.mode = ImageMode::AspectFill;
         self.background.set_image(image);
         self

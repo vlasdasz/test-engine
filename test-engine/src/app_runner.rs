@@ -35,6 +35,7 @@ static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct AppRunner {
+    pub(crate) app:        Box<dyn App>,
     pub(crate) first_view: Option<Own<dyn View>>,
     pub cursor_position:   Point,
 }
@@ -93,15 +94,18 @@ impl AppRunner {
         debug!("logs setup");
     }
 
-    pub fn new(first_view: Own<dyn View>) -> Self {
+    pub fn new(app: Box<dyn App>) -> Self {
         #[cfg(desktop)]
         Assets::init(filesystem::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
         Assets::init(std::path::PathBuf::default());
 
+        let first_view = Some(app.make_root_view());
+
         Self {
+            app,
             cursor_position: Point::default(),
-            first_view:      first_view.into(),
+            first_view,
         }
     }
 
@@ -219,6 +223,8 @@ impl window::WindowEvents for AppRunner {
                 Window::inner_size(),
                 Window::outer_size(),
             );
+
+            self.app.setup();
 
             #[cfg(not_wasm)]
             dispatch::spawn(async {
