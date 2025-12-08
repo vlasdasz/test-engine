@@ -16,7 +16,7 @@ use plat::Platform;
 use refs::{Own, Weak, assert_main_thread};
 use window::Window;
 
-use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, WeakView};
+use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewFrame, WeakView};
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -28,6 +28,8 @@ pub struct UIManager {
     pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
 
     touch_disabled: AtomicBool,
+
+    cursor_position: Mutex<Point>,
 
     draw_debug_frames: AtomicBool,
 
@@ -68,6 +70,14 @@ impl UIManager {
 
     pub fn scale() -> f32 {
         f32::from_le_bytes(Self::get().scale.load(Ordering::Relaxed).to_le_bytes())
+    }
+
+    pub fn cursor_position() -> Point {
+        *Self::get().cursor_position.lock().unwrap()
+    }
+
+    pub fn set_cursor_position(pos: Point) {
+        *Self::get().cursor_position.lock().unwrap() = pos;
     }
 
     pub fn set_scale(scale: impl ToF32) {
@@ -141,6 +151,7 @@ impl UIManager {
             root_view,
             deleted_views: Mutex::default(),
             touch_disabled: false.into(),
+            cursor_position: Mutex::new(Point::default()),
             draw_debug_frames: false.into(),
             scale: AtomicU32::new(u32::from_le_bytes(1.0f32.to_le_bytes())),
             manual_scale: AtomicU32::new(u32::from_le_bytes(0.0f32.to_le_bytes())),
@@ -274,8 +285,15 @@ impl UIManager {
         Self::get().on_scroll.trigger(scroll);
     }
 
-    pub fn on_scroll<T: ?Sized>(subscriber: Weak<T>, action: impl FnMut(Point) + Send + 'static) {
-        Self::get().on_scroll.val(subscriber, action);
+    pub fn on_scroll<T: View + ?Sized + 'static>(
+        subscriber: Weak<T>,
+        mut action: impl FnMut(Point) + Send + 'static,
+    ) {
+        Self::get().on_scroll.val(subscriber, move |delta| {
+            if subscriber.absolute_frame().contains(UIManager::cursor_position()) {
+                action(delta);
+            }
+        });
     }
 
     pub fn trigger_drop_file(file: PathBuf) {

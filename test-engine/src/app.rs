@@ -2,13 +2,20 @@ use gm::flat::Size;
 use refs::Own;
 use ui::View;
 
+use crate::app_starter::test_engine_start_with_app;
+
 pub trait App {
-    fn new() -> Self
+    fn new() -> Box<Self>
     where Self: Sized;
     fn setup(&self) {}
     fn make_root_view(&self) -> Own<dyn View>;
     fn initial_size(&self) -> Size {
         (1200, 1000).into()
+    }
+
+    fn start(self: Box<Self>)
+    where Self: Sized + 'static {
+        test_engine_start_with_app(self);
     }
 }
 
@@ -41,7 +48,7 @@ macro_rules! register_app {
             fn check_trait<T: test_engine::App>() {}
             check_trait::<$app>();
 
-            Box::new(<$app>::new())
+            <$app>::new()
         }
     };
 }

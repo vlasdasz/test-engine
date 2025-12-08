@@ -11,9 +11,9 @@ use crate::interface::test_game_view::{_BUTTON, TestGameView};
 pub struct TestGameApp;
 
 impl App for TestGameApp {
-    fn new() -> Self
+    fn new() -> Box<Self>
     where Self: Sized {
-        Self
+        Box::new(Self)
     }
 
     fn setup(&self) {

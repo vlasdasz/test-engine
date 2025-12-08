@@ -152,9 +152,9 @@ impl AppRunner {
         struct ActorApp;
 
         impl App for ActorApp {
-            fn new() -> Self
+            fn new() -> Box<Self>
             where Self: Sized {
-                ActorApp {}
+                Box::new(ActorApp {})
             }
 
             fn make_root_view(&self) -> Own<dyn View> {
@@ -168,7 +168,7 @@ impl AppRunner {
             });
         });
 
-        test_engine_start_with_app(Box::new(ActorApp::new()));
+        test_engine_start_with_app(ActorApp::new());
 
         Ok(())
     }

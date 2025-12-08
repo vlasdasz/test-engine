@@ -30,6 +30,7 @@ impl Input {
 
         touch.position *= 1.0 / UIManager::scale();
 
+        UIManager::set_cursor_position(touch.position);
         UIEvents::on_touch().trigger(touch);
 
         if LOG_TOUCHES && !touch.is_moved() {
