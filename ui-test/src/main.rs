@@ -58,8 +58,8 @@ fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
-    test_image_views().await?;
     test_base_views().await?;
+    test_image_views().await?;
     test_base_ui().await?;
     test_complex_views().await?;
     test_layout().await?;
