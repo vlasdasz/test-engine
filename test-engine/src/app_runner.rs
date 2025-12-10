@@ -224,7 +224,7 @@ impl window::WindowEvents for AppRunner {
                 Window::outer_size(),
             );
 
-            self.app.setup();
+            self.app.after_launch();
 
             #[cfg(not_wasm)]
             dispatch::spawn(async {

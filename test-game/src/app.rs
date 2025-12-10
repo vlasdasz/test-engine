@@ -16,8 +16,7 @@ impl App for TestGameApp {
         Box::new(Self)
     }
 
-    fn setup(&self) {
-        dbg!("Setup");
+    fn before_launch(&self) {
         _BUTTON.apply_globally::<Button>();
         _BUTTON.apply_globally::<Label>();
     }

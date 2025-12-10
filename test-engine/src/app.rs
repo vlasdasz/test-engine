@@ -7,7 +7,8 @@ use crate::app_starter::test_engine_start_with_app;
 pub trait App {
     fn new() -> Box<Self>
     where Self: Sized;
-    fn setup(&self) {}
+    fn before_launch(&self) {}
+    fn after_launch(&self) {}
     fn make_root_view(&self) -> Own<dyn View>;
     fn initial_size(&self) -> Size {
         (1200, 1000).into()

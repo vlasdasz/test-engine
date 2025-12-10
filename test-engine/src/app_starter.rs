@@ -44,6 +44,8 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
 
     event_loop.set_control_flow(ControlFlow::Poll);
 
+    app.before_launch();
+
     let app = AppHandler::new(AppRunner::new(app), &event_loop);
 
     run_app(event_loop, app);
