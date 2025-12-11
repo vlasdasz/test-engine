@@ -224,6 +224,8 @@ impl window::WindowEvents for AppRunner {
                 Window::outer_size(),
             );
 
+            Window::current().set_size(self.app.initial_size().lossy_convert());
+
             self.app.after_launch();
 
             #[cfg(not_wasm)]
