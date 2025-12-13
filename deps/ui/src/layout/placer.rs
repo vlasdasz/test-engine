@@ -122,13 +122,32 @@ impl Placer {
         self.relative(Anchor::Size, view, multiplier)
     }
 
+    pub fn relative_x(&self, multiplier: impl ToF32) -> &Self {
+        self.relative(Anchor::X, self.view.superview().deref(), multiplier)
+    }
+
+    pub fn relative_y(&self, multiplier: impl ToF32) -> &Self {
+        self.relative(Anchor::Y, self.view.superview().deref(), multiplier)
+    }
+
     pub fn same<const S: usize>(
         &self,
         anchors: [Anchor; S],
         view: impl Deref<Target = impl View> + Copy,
     ) -> &Self {
         for anchor in anchors {
-            self.relative(anchor, view, 1);
+            self.has().width = if anchor.has_width() {
+                true
+            } else {
+                self.has().width
+            };
+            self.has().height = if anchor.has_height() {
+                true
+            } else {
+                self.has().height
+            };
+
+            self.rules().push(LayoutRule::same(anchor, view.weak_view()));
         }
         self
     }
@@ -230,7 +249,12 @@ impl Placer {
         self
     }
 
-    pub fn relative(&self, side: Anchor, view: impl Deref<Target = impl View>, ratio: impl ToF32) -> &Self {
+    pub fn relative(
+        &self,
+        side: Anchor,
+        view: impl Deref<Target = impl View + ?Sized>,
+        ratio: impl ToF32,
+    ) -> &Self {
         self.has().width = if side.has_width() { true } else { self.has().width };
         self.has().height = if side.has_height() {
             true
@@ -369,6 +393,8 @@ impl Placer {
             } else if rule.anchor_view.is_ok() {
                 if rule.relative {
                     self.relative_layout(rule);
+                } else if rule.same {
+                    self.same_layout(rule);
                 } else {
                     self.anchor_layout(rule, has_left);
                 }
@@ -479,14 +505,29 @@ impl Placer {
             Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
             Anchor::Height => frame.size.height = a_frame.size.height * rule.offset,
             Anchor::Size => frame.size = a_frame.size * rule.offset,
-            Anchor::X => frame.origin.x = a_frame.origin.x * rule.offset,
-            Anchor::Y => frame.origin.y = a_frame.origin.y * rule.offset,
+            Anchor::X => frame.origin.x = a_frame.width() * rule.offset,
+            Anchor::Y => frame.origin.y = a_frame.height() * rule.offset,
             Anchor::CenterY => {
                 let s_content = self.s_content.deref();
                 let mut center = s_content.center();
                 center.y += rule.offset;
                 frame.set_center(center);
             }
+            _ => unimplemented!(),
+        }
+        view.set_frame(frame);
+    }
+
+    fn same_layout(&mut self, rule: &LayoutRule) {
+        let view = self.view.deref_mut();
+        let mut frame = *view.frame();
+        let a_frame = rule.anchor_view.frame();
+        match rule.side {
+            Anchor::Width => frame.size.width = a_frame.size.width,
+            Anchor::Height => frame.size.height = a_frame.size.height,
+            Anchor::Size => frame.size = a_frame.size,
+            Anchor::X => frame.origin.x = a_frame.x(),
+            Anchor::Y => frame.origin.y = a_frame.y(),
             _ => unimplemented!(),
         }
         view.set_frame(frame);

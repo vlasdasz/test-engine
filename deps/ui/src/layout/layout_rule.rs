@@ -21,6 +21,7 @@ pub struct LayoutRule {
 
     pub relative: bool,
     pub between:  bool,
+    pub same:     bool,
 }
 
 impl LayoutRule {
@@ -33,6 +34,7 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative:     false,
             between:      false,
+            same:         false,
         }
     }
 
@@ -45,6 +47,7 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative: false,
             between: false,
+            same: false,
         }
     }
 
@@ -57,6 +60,7 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative: false,
             between: false,
+            same: false,
         }
     }
 
@@ -69,6 +73,20 @@ impl LayoutRule {
             anchor_view2: Weak::default(),
             relative: true,
             between: false,
+            same: false,
+        }
+    }
+
+    pub fn same(side: Anchor, anchor_view: WeakView) -> Self {
+        Self {
+            side,
+            tiling: None,
+            offset: 0.0,
+            anchor_view,
+            anchor_view2: Weak::default(),
+            relative: false,
+            between: false,
+            same: true,
         }
     }
 
@@ -81,6 +99,7 @@ impl LayoutRule {
             anchor_view2: view_b,
             relative: false,
             between: true,
+            same: false,
         }
     }
 }
