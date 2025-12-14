@@ -11,6 +11,7 @@ mod level_drawer;
 
 mod app;
 mod app_starter;
+mod config;
 mod game_drawer;
 mod pipelines;
 pub mod ui;

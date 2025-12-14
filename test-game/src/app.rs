@@ -1,7 +1,10 @@
 #![allow(dead_code)]
 
+use std::fs::read_to_string;
+
 use test_engine::{
     App,
+    filesystem::Paths,
     refs::Own,
     ui::{Button, Label, Setup, Size, View},
 };
@@ -11,12 +14,12 @@ use crate::interface::test_game_view::{_BUTTON, TestGameView};
 pub struct TestGameApp;
 
 impl App for TestGameApp {
-    fn new() -> Self
+    fn new() -> Box<Self>
     where Self: Sized {
-        Self
+        Box::new(Self)
     }
 
-    fn setup(&self) {
+    fn before_launch(&self) {
         _BUTTON.apply_globally::<Button>();
         _BUTTON.apply_globally::<Label>();
     }
@@ -26,6 +29,12 @@ impl App for TestGameApp {
     }
 
     fn initial_size(&self) -> Size {
-        (800, 800).into()
+        (2400, 2000).into()
+    }
+
+    fn config_yaml(&self) -> Option<String> {
+        Paths::git_root()
+            .ok()
+            .and_then(|root| read_to_string(root.join("secrets/decrypted/test-game.yml")).ok())
     }
 }

@@ -26,6 +26,7 @@ use crate::{
     App,
     app_starter::test_engine_start_with_app,
     assets::Assets,
+    config::Config,
     level_drawer::LevelDrawer,
     pipelines::Pipelines,
     ui::{Input, UI},
@@ -35,6 +36,7 @@ static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct AppRunner {
+    pub(crate) app:        Box<dyn App>,
     pub(crate) first_view: Option<Own<dyn View>>,
     pub cursor_position:   Point,
 }
@@ -93,15 +95,43 @@ impl AppRunner {
         debug!("logs setup");
     }
 
-    pub fn new(first_view: Own<dyn View>) -> Self {
+    #[cfg(not_wasm)]
+    pub fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
+        let sentry_url = Config::sentry_url(app)?;
+
+        let client = sentry::init((
+            sentry_url,
+            sentry::ClientOptions {
+                release: sentry::release_name!(),
+                // Capture user IPs and potentially sensitive headers when using HTTP server integrations
+                // see https://docs.sentry.io/platforms/rust/data-management/data-collected for more info
+                send_default_pii: true,
+                ..Default::default()
+            },
+        ));
+
+        debug!("sentry ready");
+
+        Some(client)
+    }
+
+    #[cfg(wasm)]
+    pub fn setup_sentry(app: &dyn App) -> Option<()> {
+        None
+    }
+
+    pub fn new(app: Box<dyn App>) -> Self {
         #[cfg(desktop)]
         Assets::init(filesystem::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
         Assets::init(std::path::PathBuf::default());
 
+        let first_view = Some(app.make_root_view());
+
         Self {
+            app,
             cursor_position: Point::default(),
-            first_view:      first_view.into(),
+            first_view,
         }
     }
 
@@ -148,9 +178,9 @@ impl AppRunner {
         struct ActorApp;
 
         impl App for ActorApp {
-            fn new() -> Self
+            fn new() -> Box<Self>
             where Self: Sized {
-                ActorApp {}
+                Box::new(ActorApp {})
             }
 
             fn make_root_view(&self) -> Own<dyn View> {
@@ -164,7 +194,7 @@ impl AppRunner {
             });
         });
 
-        test_engine_start_with_app(Box::new(ActorApp::new()));
+        test_engine_start_with_app(ActorApp::new());
 
         Ok(())
     }
@@ -219,6 +249,11 @@ impl window::WindowEvents for AppRunner {
                 Window::inner_size(),
                 Window::outer_size(),
             );
+
+            #[cfg(not_wasm)]
+            Window::current().set_size(self.app.initial_size().lossy_convert());
+
+            self.app.after_launch();
 
             #[cfg(not_wasm)]
             dispatch::spawn(async {

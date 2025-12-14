@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use window::{AppHandler, Window};
 use winit::event_loop::{ControlFlow, EventLoop};
 
@@ -25,10 +27,10 @@ pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
 }
 
 pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
-    dbg!("test_engine_start_app");
-
     #[cfg(not_wasm)]
     AppRunner::setup_log();
+
+    let _sentry_guard = AppRunner::setup_sentry(app.deref());
 
     #[cfg(wasm)]
     {
@@ -46,9 +48,9 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
 
     event_loop.set_control_flow(ControlFlow::Poll);
 
-    app.setup();
+    app.before_launch();
 
-    let app = AppHandler::new(AppRunner::new(app.make_root_view()), &event_loop);
+    let app = AppHandler::new(AppRunner::new(app), &event_loop);
 
     run_app(event_loop, app);
 

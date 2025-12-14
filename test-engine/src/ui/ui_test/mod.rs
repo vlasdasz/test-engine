@@ -210,7 +210,7 @@ pub fn record_colors() -> Result<()> {
     }
 
     println!("        \"#");
-    println!(").await?;");
+    println!(")?;");
 
     drop(touch_lock);
 

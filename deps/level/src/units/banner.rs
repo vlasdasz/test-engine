@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use refs::Own;
+use refs::{Own, Weak, weak_from_ref};
 
 use crate::{Sprite, SpriteData};
 
@@ -29,5 +29,9 @@ impl Sprite for Banner {
         Own::new(Self {
             sprite: SpriteData::make(shape, position),
         })
+    }
+
+    fn weak_sprite(&self) -> Weak<dyn Sprite> {
+        weak_from_ref(self)
     }
 }

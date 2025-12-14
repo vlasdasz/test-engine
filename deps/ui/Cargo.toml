@@ -11,6 +11,7 @@ name = "ui"
 
 [features]
 debug = []
+default = ["debug"]
 
 [dependencies]
 anyhow = { workspace = true }

@@ -263,7 +263,7 @@ pub fn cast_cell(input: TokenStream) -> TokenStream {
     let ty = parse_macro_input!(input as Ident);
 
     let expanded = quote! {
-        cell.downcast_mut::<#ty>().unwrap()
+        test_engine::refs::weak_from_ref(cell.downcast_mut::<#ty>().unwrap())
     };
 
     TokenStream::from(expanded)

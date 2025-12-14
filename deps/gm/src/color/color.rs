@@ -62,7 +62,7 @@ impl Color {
     }
 
     pub fn hex(&self) -> String {
-        U8Color::from(*self).hex()
+        U8Color::from(*self).as_hex()
     }
 }
 

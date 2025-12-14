@@ -21,7 +21,7 @@ impl Surface {
         window: Arc<Window>,
     ) -> Result<Self> {
         if config.width == 0 || config.height == 0 {
-            panic!("Invalid surface size")
+            panic!("Invalid surface size: {config:?}")
         }
 
         let surface = instance.create_surface(window.clone())?;

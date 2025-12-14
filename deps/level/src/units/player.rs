@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use refs::Own;
+use refs::{Own, Weak, weak_from_ref};
 
 use crate::{LevelManager, Sprite, SpriteData, Unit, Weapon};
 
@@ -44,6 +44,10 @@ impl Sprite for Player {
 
     fn rotation(&self) -> f32 {
         self.unit.rotation()
+    }
+
+    fn weak_sprite(&self) -> Weak<dyn Sprite> {
+        weak_from_ref(self)
     }
 }
 

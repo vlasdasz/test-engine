@@ -5,7 +5,7 @@ use rapier2d::{
     dynamics::{CoefficientCombineRule, RigidBodyHandle},
     geometry::ColliderHandle,
 };
-use refs::Own;
+use refs::{Own, Weak, weak_from_ref};
 
 use crate::{Body, Sprite, SpriteData};
 
@@ -35,6 +35,10 @@ impl Sprite for Unit {
 
     fn collider_handle(&self) -> Option<ColliderHandle> {
         self.body.collider_handle()
+    }
+
+    fn weak_sprite(&self) -> Weak<dyn Sprite> {
+        weak_from_ref(self)
     }
 }
 
