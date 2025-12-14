@@ -87,6 +87,7 @@ pub struct TestGameView {
 
     polygon: Button,
     noise:   Button,
+    panic:   Button,
 
     some_button: Button,
 
@@ -298,6 +299,15 @@ impl Setup for TestGameView {
             UIManager::set_view(NoiseView::new().on_back(|| {
                 UIManager::set_view(Self::new());
             }));
+        });
+
+        self.panic.set_text("panic");
+        self.panic
+            .place()
+            .anchor(Left, self.noise, 10)
+            .same([Y, Width, Height], self.noise);
+        self.panic.on_tap(|| {
+            panic!("test panic");
         });
 
         self.sprite_view.set_title("Sprite:");

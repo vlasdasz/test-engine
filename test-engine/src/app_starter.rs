@@ -28,6 +28,8 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
     #[cfg(not_wasm)]
     AppRunner::setup_log();
 
+    let _sentry_guard = AppRunner::setup_sentry();
+
     #[cfg(wasm)]
     {
         // Sets up panics to go to the console.error in browser environments

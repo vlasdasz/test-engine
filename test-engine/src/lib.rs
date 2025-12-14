@@ -14,6 +14,7 @@ mod app_starter;
 mod game_drawer;
 mod pipelines;
 pub mod ui;
+mod config;
 
 pub use app::App;
 pub use app_starter::*;

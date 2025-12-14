@@ -26,6 +26,6 @@ impl App for TestGameApp {
     }
 
     fn initial_size(&self) -> Size {
-        (800, 800).into()
+        (2400, 2000).into()
     }
 }

@@ -26,6 +26,7 @@ use crate::{
     App,
     app_starter::test_engine_start_with_app,
     assets::Assets,
+    config::Config,
     level_drawer::LevelDrawer,
     pipelines::Pipelines,
     ui::{Input, UI},
@@ -92,6 +93,30 @@ impl AppRunner {
             .expect("Failed to initialize logging");
 
         debug!("logs setup");
+    }
+
+    #[cfg(not_wasm)]
+    pub fn setup_sentry() -> Option<sentry::ClientInitGuard> {
+        let Some(sentry_url) = Config::sentry_url() else {
+            return None;
+        };
+
+        sentry::init((
+            sentry_url,
+            sentry::ClientOptions {
+                release: sentry::release_name!(),
+                // Capture user IPs and potentially sensitive headers when using HTTP server integrations
+                // see https://docs.sentry.io/platforms/rust/data-management/data-collected for more info
+                send_default_pii: true,
+                ..Default::default()
+            },
+        ))
+        .into()
+    }
+
+    #[cfg(wasm)]
+    pub fn setup_sentry() -> Option<()> {
+        None
     }
 
     pub fn new(app: Box<dyn App>) -> Self {
@@ -224,6 +249,7 @@ impl window::WindowEvents for AppRunner {
                 Window::outer_size(),
             );
 
+            #[cfg(not_wasm)]
             Window::current().set_size(self.app.initial_size().lossy_convert());
 
             self.app.after_launch();
