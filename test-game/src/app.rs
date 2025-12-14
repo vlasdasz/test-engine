@@ -1,7 +1,10 @@
 #![allow(dead_code)]
 
+use std::fs::read_to_string;
+
 use test_engine::{
     App,
+    filesystem::Paths,
     refs::Own,
     ui::{Button, Label, Setup, Size, View},
 };
@@ -30,6 +33,8 @@ impl App for TestGameApp {
     }
 
     fn config_yaml(&self) -> Option<String> {
-        Some(include_str!("../../secrets/decrypted/test-game.yml").to_string())
+        Paths::git_root()
+            .ok()
+            .and_then(|root| read_to_string(root.join("secrets/decrypted/test-game.yml")).ok())
     }
 }

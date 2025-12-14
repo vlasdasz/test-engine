@@ -99,7 +99,7 @@ impl AppRunner {
     pub fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
         let sentry_url = Config::sentry_url(app)?;
 
-        sentry::init((
+        let client = sentry::init((
             sentry_url,
             sentry::ClientOptions {
                 release: sentry::release_name!(),
@@ -108,8 +108,11 @@ impl AppRunner {
                 send_default_pii: true,
                 ..Default::default()
             },
-        ))
-        .into()
+        ));
+
+        debug!("sentry ready");
+
+        Some(client)
     }
 
     #[cfg(wasm)]
