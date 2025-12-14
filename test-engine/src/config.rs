@@ -1,10 +1,10 @@
-use std::{ path::PathBuf};
+use std::path::PathBuf;
 
 use filesystem::Paths;
 use log::error;
 use serde::Deserialize;
 
-const CONFIG_YML: &str = include_str!("../../secrets/decrypted/test-game.yml");
+use crate::App;
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct Config {
@@ -12,9 +12,14 @@ pub(crate) struct Config {
 }
 
 impl Config {
-    pub fn sentry_url() -> Option<String> {
-        let Ok(config) = serde_yaml::from_str::<Config>(&CONFIG_YML) else {
-            error!("Failed to parse config toml from: {CONFIG_YML}");
+    pub fn sentry_url(app: &dyn App) -> Option<String> {
+        let Some(config) = app.config_yaml() else {
+            error!("No config yaml");
+            return None;
+        };
+
+        let Ok(config) = serde_yaml::from_str::<Config>(&config) else {
+            error!("Failed to parse config from: {config}");
             return None;
         };
 

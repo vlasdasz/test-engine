@@ -96,10 +96,8 @@ impl AppRunner {
     }
 
     #[cfg(not_wasm)]
-    pub fn setup_sentry() -> Option<sentry::ClientInitGuard> {
-        let Some(sentry_url) = Config::sentry_url() else {
-            return None;
-        };
+    pub fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
+        let sentry_url = Config::sentry_url(app)?;
 
         sentry::init((
             sentry_url,
@@ -115,7 +113,7 @@ impl AppRunner {
     }
 
     #[cfg(wasm)]
-    pub fn setup_sentry() -> Option<()> {
+    pub fn setup_sentry(app: &dyn App) -> Option<()> {
         None
     }
 

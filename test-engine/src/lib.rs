@@ -11,10 +11,10 @@ mod level_drawer;
 
 mod app;
 mod app_starter;
+mod config;
 mod game_drawer;
 mod pipelines;
 pub mod ui;
-mod config;
 
 pub use app::App;
 pub use app_starter::*;

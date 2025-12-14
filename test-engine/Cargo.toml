@@ -19,11 +19,11 @@ fern = { workspace = true }
 log = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+serde_yaml = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 winit = { workspace = true }
-serde_yaml = { workspace = true }
 
 dispatch = { workspace = true }
 reflected = { workspace = true }

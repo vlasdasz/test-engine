@@ -2,14 +2,14 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
 ]
 
 resolver = "3"
@@ -31,6 +31,8 @@ bit_ops = "~0.2"
 bytemuck = { version = "~1.24", features = ["derive"] }
 cgmath = "~0.18"
 chrono = "~0.4"
+console_error_panic_hook = "~0.1"
+console_log = "~1.0"
 dirs = "~6.0"
 educe = "~0.6"
 fastrand = "~2.3"
@@ -49,6 +51,7 @@ quote = "~1.0"
 rapier2d = { version = "~0.31", features = ["simd-nightly"] }
 resvg = "~0.45"
 rust_decimal = "~1.39"
+sentry = "~0.46"
 serde = { version = "~1.0", features = ["derive"] }
 serde_json = "~1.0"
 serde_yaml = "~0.9"
@@ -56,9 +59,6 @@ syn = { version = "~2.0", features = ["full", "extra-traits"] }
 tiny-skia = "~0.11"
 wasm-bindgen-futures = "~0.4"
 web-time = "~1.1"
-sentry = "~0.46"
-console_error_panic_hook = "~0.1"
-console_log = "~1.0"
 
 wgpu = "~27.0"
 wgpu_text = "~27.0"

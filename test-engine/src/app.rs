@@ -18,6 +18,10 @@ pub trait App {
     where Self: Sized + 'static {
         test_engine_start_with_app(self);
     }
+
+    fn config_yaml(&self) -> Option<String> {
+        None
+    }
 }
 
 #[cfg(ios)]

@@ -28,4 +28,8 @@ impl App for TestGameApp {
     fn initial_size(&self) -> Size {
         (2400, 2000).into()
     }
+
+    fn config_yaml(&self) -> Option<String> {
+        Some(include_str!("../../secrets/decrypted/test-game.yml").to_string())
+    }
 }
