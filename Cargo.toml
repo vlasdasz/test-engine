@@ -66,7 +66,7 @@ winit = "~0.30"
 
 plat = "~0.5"
 reflected = "~0.26"
-refs = { version = "~0.22", default-features = true }
+refs = { version = "~0.23", default-features = true }
 vents = "~0.11"
 
 audio = { path = "deps/audio" }

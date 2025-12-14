@@ -21,9 +21,9 @@ pub struct Placer {
     view:      Rglica<dyn View>,
     s_content: Rglica<Size>,
 
-    all_margin: RefCell<f32>,
+    pub(crate) all_margin: RefCell<f32>,
 
-    has: RefCell<Size<bool>>,
+    pub(crate) has: RefCell<Size<bool>>,
 }
 
 impl Placer {

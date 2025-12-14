@@ -6,7 +6,10 @@ use serde::{
     ser::{Serialize, SerializeStruct, Serializer},
 };
 
-use crate::{Anchor, LayoutRule, WeakView, debug::weak_serde::serialize_weak};
+use crate::{
+    LayoutRule,
+    debug::weak_serde::{deserialize_weak, serialize_weak},
+};
 
 impl Serialize for LayoutRule {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -28,6 +31,7 @@ impl Serialize for LayoutRule {
 }
 
 impl<'de> Deserialize<'de> for LayoutRule {
+    #[allow(clippy::too_many_lines)]
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where D: Deserializer<'de> {
         enum Field {
@@ -38,6 +42,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
             AnchorView2,
             Relative,
             Between,
+            Same,
         }
 
         impl<'de> Deserialize<'de> for Field {
@@ -45,7 +50,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
             where D: Deserializer<'de> {
                 struct FieldVisitor;
 
-                impl<'de> Visitor<'de> for FieldVisitor {
+                impl Visitor<'_> for FieldVisitor {
                     type Value = Field;
                     fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
                         f.write_str("field identifier")
@@ -60,6 +65,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
                             "anchor_view2" => Ok(Field::AnchorView2),
                             "relative" => Ok(Field::Relative),
                             "between" => Ok(Field::Between),
+                            "same" => Ok(Field::Same),
                             _ => Err(de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -87,6 +93,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
                 let mut anchor_view2 = None;
                 let mut relative = None;
                 let mut between = None;
+                let mut same = None;
 
                 while let Some(key) = map.next_key()? {
                     match key {
@@ -100,18 +107,19 @@ impl<'de> Deserialize<'de> for LayoutRule {
                             offset = Some(map.next_value()?);
                         }
                         Field::AnchorView => {
-                            //anchor_view =
-                            // Some(deserialize_weak(map.next_value()?)?);
+                            anchor_view = Some(deserialize_weak(map.next_value()?));
                         }
                         Field::AnchorView2 => {
-                            // anchor_view2 =
-                            // Some(deserialize_weak(map.next_value()?)?);
+                            anchor_view2 = Some(deserialize_weak(map.next_value()?));
                         }
                         Field::Relative => {
                             relative = Some(map.next_value()?);
                         }
                         Field::Between => {
                             between = Some(map.next_value()?);
+                        }
+                        Field::Same => {
+                            same = Some(map.next_value()?);
                         }
                     }
                 }
@@ -124,6 +132,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
                     anchor_view2: anchor_view2.ok_or_else(|| de::Error::missing_field("anchor_view2"))?,
                     relative:     relative.ok_or_else(|| de::Error::missing_field("relative"))?,
                     between:      between.ok_or_else(|| de::Error::missing_field("between"))?,
+                    same:         same.ok_or_else(|| de::Error::missing_field("same"))?,
                 })
             }
         }
@@ -136,15 +145,8 @@ impl<'de> Deserialize<'de> for LayoutRule {
             "anchor_view2",
             "relative",
             "between",
+            "same",
         ];
         deserializer.deserialize_struct("LayoutRule", FIELDS, LayoutRuleVisitor)
     }
-}
-
-/// Helper: convert deserialized representation into WeakView
-fn deserialize_weak<'de, T, E>(value: Option<T>) -> Result<WeakView, E>
-where
-    WeakView: From<Option<T>>,
-    E: de::Error, {
-    Ok(WeakView::from(value))
 }
