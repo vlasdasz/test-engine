@@ -54,7 +54,6 @@ impl RootView {
     }
 
     pub fn set_image(mut self: Weak<Self>, image: impl ToImage) -> Weak<Self> {
-        dbg!("set_image");
         self.background.mode = ImageMode::AspectFill;
         self.background.set_image(image);
         self

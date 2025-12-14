@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::{dynamics::RigidBodyHandle, geometry::ColliderHandle, na::Vector2, prelude::RigidBodyBuilder};
-use refs::Own;
+use refs::{Own, Weak, weak_from_ref};
 
 use crate::{LevelManager, Sprite, SpriteData, ToCollider, control::Control};
 
@@ -45,6 +45,10 @@ impl Sprite for Body {
             sprite,
             jump_force: 0.1,
         })
+    }
+
+    fn weak_sprite(&self) -> Weak<dyn Sprite> {
+        weak_from_ref(self)
     }
 
     fn rigid_handle(&self) -> Option<RigidBodyHandle> {

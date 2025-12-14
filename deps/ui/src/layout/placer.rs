@@ -465,7 +465,7 @@ impl Placer {
                 }
             }
             Anchor::Size | Anchor::X | Anchor::Y | Anchor::None => {
-                unimplemented!()
+                unimplemented!("Simple layout for {:?} is not supported", rule.side)
             }
         }
 
@@ -492,7 +492,7 @@ impl Placer {
             }
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
-            _ => unimplemented!("anchor layout for: {:?}", rule.side),
+            _ => unimplemented!("Anchor layout for: {:?} is not supported", rule.side),
         }
         view.set_frame(frame);
     }
@@ -513,7 +513,7 @@ impl Placer {
                 center.y += rule.offset;
                 frame.set_center(center);
             }
-            _ => unimplemented!(),
+            _ => unimplemented!("Relative layout for {:?} is not supported", rule.side),
         }
         view.set_frame(frame);
     }
@@ -528,7 +528,7 @@ impl Placer {
             Anchor::Size => frame.size = a_frame.size,
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
-            _ => unimplemented!(),
+            _ => unimplemented!("Same layout for {:?} is not supported", rule.side),
         }
         view.set_frame(frame);
     }
@@ -587,7 +587,7 @@ impl Placer {
                 self.s_content.width - (self.s_content.width - f.max_x()) / 2.0,
                 cen.y,
             )),
-            _ => unimplemented!(),
+            _ => unimplemented!("Between s layout for {:?} is not supported", rule.side),
         }
         view.set_frame(frame);
     }

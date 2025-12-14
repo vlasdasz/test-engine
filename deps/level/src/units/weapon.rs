@@ -5,7 +5,7 @@ use gm::{
     flat::{Point, Shape},
 };
 use rapier2d::dynamics::CoefficientCombineRule;
-use refs::{Own, Weak};
+use refs::{Own, Weak, weak_from_ref};
 use window::image::Image;
 
 use crate::{Body, LevelManager, Sprite, SpriteData, SpriteTemplates, level::LevelCreation};
@@ -46,6 +46,10 @@ impl Sprite for Weapon {
             bullet_image: Weak::default(),
             bullet_shape: Shape::Rect((1, 1).into()),
         })
+    }
+
+    fn weak_sprite(&self) -> Weak<dyn Sprite> {
+        weak_from_ref(self)
     }
 }
 

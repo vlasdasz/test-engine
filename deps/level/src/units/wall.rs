@@ -2,7 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
 use rapier2d::{geometry::ColliderHandle, na::Vector2};
-use refs::Own;
+use refs::{Own, Weak, weak_from_ref};
 
 use crate::{LevelManager, Sprite, SpriteData, ToCollider};
 
@@ -30,6 +30,10 @@ impl Sprite for Wall {
 
     fn collider_handle(&self) -> Option<ColliderHandle> {
         self.collider_handle.into()
+    }
+
+    fn weak_sprite(&self) -> Weak<dyn Sprite> {
+        weak_from_ref(self)
     }
 }
 
