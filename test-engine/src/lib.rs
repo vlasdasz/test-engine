@@ -36,10 +36,7 @@ pub mod level {
 }
 
 pub mod refs {
-    pub use refs::{
-        AsAny, Own, Weak, current_thread_id, manage::DataManager, set_current_thread_as_main, vec::OwnVec,
-        weak_from_ref,
-    };
+    pub use refs::{AsAny, Own, Weak, manage::DataManager, vec::OwnVec, weak_from_ref};
 }
 
 pub mod reflected {
@@ -77,7 +74,7 @@ pub use vents::{Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
 pub mod dispatch {
-    pub use ::dispatch::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
+    pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
 
     // pub use crate::ui::ui_dispatch::on_back;
 }

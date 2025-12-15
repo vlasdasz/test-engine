@@ -1012,21 +1012,6 @@ dependencies = [
 
 [[package]]
 name = "dispatch"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-std",
- "gloo-timers",
- "gm",
- "log",
- "plat 0.5.0",
- "pollster",
- "refs",
- "wasm-bindgen-futures",
-]
-
-[[package]]
-name = "dispatch"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bd0c93bb4b0c6d9b77f4435b0ae98c24d17f1c45b2ff844c6151a07256ca923b"
@@ -1889,6 +1874,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dfa686283ad6dd069f105e5ab091b04c62850d3e4cf5d67debad1933f55023df"
 
 [[package]]
+name = "hreads"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "06bbe68b8dec9b0e6497dc29e4432bbc1d1415cc5319fe43c84a6c12acaa54aa"
+dependencies = [
+ "anyhow",
+ "async-std",
+ "gloo-timers",
+ "log",
+ "plat 0.5.0",
+ "pollster",
+ "wasm-bindgen-futures",
+]
+
+[[package]]
 name = "http"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1989,7 +1989,7 @@ dependencies = [
  "libc",
  "percent-encoding",
  "pin-project-lite",
- "socket2 0.6.1",
+ "socket2",
  "tokio",
  "tower-service",
  "tracing",
@@ -2175,6 +2175,22 @@ checksum = "0ad4bb2b565bca0645f4d68c5c9af97fba094e9791da685bf83cb5f3ce74acf2"
 dependencies = [
  "equivalent",
  "hashbrown 0.16.1",
+]
+
+[[package]]
+name = "inspect"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "plat 0.5.0",
+]
+
+[[package]]
+name = "inspector"
+version = "0.1.0"
+dependencies = [
+ "inspect",
+ "test-engine",
 ]
 
 [[package]]
@@ -3022,7 +3038,7 @@ checksum = "0ee638a5da3799329310ad4cfa62fbf045d5f56e3ef5ba4149e7452dcf89d5a8"
 dependencies = [
  "bitflags 2.10.0",
  "block2",
- "dispatch 0.2.0",
+ "dispatch",
  "libc",
  "objc2 0.5.2",
 ]
@@ -3573,7 +3589,7 @@ dependencies = [
  "quinn-udp",
  "rustc-hash 2.1.1",
  "rustls",
- "socket2 0.5.10",
+ "socket2",
  "thiserror 2.0.17",
  "tokio",
  "tracing",
@@ -3610,9 +3626,9 @@ dependencies = [
  "cfg_aliases",
  "libc",
  "once_cell",
- "socket2 0.5.10",
+ "socket2",
  "tracing",
- "windows-sys 0.52.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -3911,11 +3927,12 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.23.0"
+version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02e5852c0cab54b7accf432c3db70351be81af52ddb9c0aa6e1db9995e7737ad"
+checksum = "eac50aade678756044cbce50bb7e0b47e172210b374e51ffe8ca5f449899e339"
 dependencies = [
  "derive_more",
+ "hreads",
  "instant",
  "log",
 ]
@@ -4531,16 +4548,6 @@ dependencies = [
 
 [[package]]
 name = "socket2"
-version = "0.5.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e22376abed350d73dd1cd119b57ffccad95b4e585a7cda43e286245ce23c0678"
-dependencies = [
- "libc",
- "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "socket2"
 version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17129e116933cf371d018bb80ae557e889637989d8638274fb25622827b03881"
@@ -4805,13 +4812,13 @@ dependencies = [
  "audio",
  "console_error_panic_hook",
  "console_log",
- "dispatch 0.1.0",
  "educe",
  "fern",
  "filesystem",
  "game",
  "generate",
  "gm",
+ "hreads",
  "level",
  "log",
  "plat 0.5.0",
@@ -4997,7 +5004,7 @@ dependencies = [
  "libc",
  "mio",
  "pin-project-lite",
- "socket2 0.6.1",
+ "socket2",
  "windows-sys 0.61.2",
 ]
 
@@ -5151,9 +5158,9 @@ dependencies = [
  "anyhow",
  "atomic_float",
  "chrono",
- "dispatch 0.1.0",
  "educe",
  "gm",
+ "hreads",
  "log",
  "nonempty",
  "plat 0.5.0",
@@ -5851,8 +5858,8 @@ dependencies = [
  "android_logger",
  "anyhow",
  "bytemuck",
- "dispatch 0.1.0",
  "gm",
+ "hreads",
  "image",
  "log",
  "plat 0.4.0",

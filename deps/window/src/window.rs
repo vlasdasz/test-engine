@@ -1,11 +1,11 @@
 use std::sync::{Arc, mpsc::Receiver};
 
-use dispatch::on_main;
 use gm::{
     LossyConvert,
     color::Color,
     flat::{Point, Size},
 };
+use hreads::on_main;
 use log::{info, warn};
 use plat::Platform;
 use wgpu::{

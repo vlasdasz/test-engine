@@ -1,0 +1,12 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition.workspace = true
+name = "inspector"
+version.workspace = true
+
+[[bin]]
+name = "inspector"
+
+[dependencies]
+inspect = { workspace = true }
+test-engine = { workspace = true }

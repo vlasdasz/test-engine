@@ -189,7 +189,7 @@ impl State {
                 sender.send(result).unwrap();
             });
 
-            dispatch::spawn(async move {
+            hreads::spawn(async move {
                 let _ = receiver.recv().unwrap();
                 let (buff, size) = buffer;
 

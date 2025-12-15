@@ -5,11 +5,11 @@ use std::{
 };
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
 use gm::{
     LossyConvert,
     flat::{Point, Size},
 };
+use hreads::{from_main, invoke_dispatched, wait_for_next_frame};
 use level::{LevelBase, LevelManager};
 use log::debug;
 use refs::{Own, main_lock::MainLock};
@@ -188,9 +188,9 @@ impl AppRunner {
             }
         }
 
-        dispatch::spawn(async {
+        hreads::spawn(async {
             WINDOW_READY.lock().unwrap().sub(|| {
-                dispatch::unasync(actions).unwrap();
+                hreads::unasync(actions).unwrap();
             });
         });
 
@@ -256,7 +256,7 @@ impl window::WindowEvents for AppRunner {
             self.app.after_launch();
 
             #[cfg(not_wasm)]
-            dispatch::spawn(async {
+            hreads::spawn(async {
                 WINDOW_READY.lock().unwrap().trigger(());
             });
         });

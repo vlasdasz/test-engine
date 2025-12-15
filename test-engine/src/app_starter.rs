@@ -9,7 +9,7 @@ use crate::{App, AppRunner, app::test_engine_create_app};
 fn run_app(event_loop: EventLoop<Window>, app: &'static mut AppHandler) {
     // Runs the app async via the browsers event loop
     use winit::platform::web::EventLoopExtWebSys;
-    dispatch::spawn(async move {
+    hreads::spawn(async move {
         event_loop.spawn_app(app);
     });
 }
@@ -42,7 +42,7 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
     }
 
     #[cfg(mobile)]
-    crate::refs::set_current_thread_as_main();
+    hreads::set_current_thread_as_main();
 
     let event_loop = EventLoop::<Window>::with_user_event().build().unwrap();
 

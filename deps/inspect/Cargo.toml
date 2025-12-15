@@ -1,0 +1,12 @@
+[package]
+edition.workspace = true
+name = "inspect"
+version.workspace = true
+
+[dependencies]
+
+[dev-dependencies]
+anyhow = { workspace = true }
+
+[build-dependencies]
+plat = { workspace = true }

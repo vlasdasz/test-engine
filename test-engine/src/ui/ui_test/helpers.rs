@@ -1,9 +1,9 @@
 use anyhow::Result;
-use dispatch::from_main;
 use gm::{
     color::{Color, LIGHT_GRAY, U8Color},
     flat::Point,
 };
+use hreads::from_main;
 use ui::{
     Button, Container, HighlightView, Setup, UIManager, View, ViewData, ViewFrame, ViewSubviews, WeakView,
 };

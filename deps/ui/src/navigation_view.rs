@@ -1,5 +1,6 @@
 use gm::{Animation, color::WHITE};
-use refs::{Own, Weak, assert_main_thread};
+use hreads::assert_main_thread;
+use refs::{Own, Weak};
 use ui_proc::view;
 
 use crate::{Touch, WeakView};

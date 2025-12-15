@@ -11,7 +11,7 @@ name = "window"
 [dependencies]
 anyhow = { workspace = true }
 bytemuck = { workspace = true }
-dispatch = { workspace = true }
+hreads = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
 resvg = { workspace = true }

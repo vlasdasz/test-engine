@@ -7,8 +7,8 @@ use std::{
 };
 
 use anyhow::{Result, bail};
-use dispatch::{from_main, on_main, wait_for_next_frame};
 pub use helpers::*;
+use hreads::{from_main, on_main, wait_for_next_frame};
 use log::{error, warn};
 use refs::Own;
 use serde::de::DeserializeOwned;

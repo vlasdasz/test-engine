@@ -3,11 +3,11 @@ use std::{
     sync::{Mutex, MutexGuard},
 };
 
-use dispatch::{on_main, on_main_sync};
 use gm::{
     Animation, LossyConvert,
     color::{GRAY, LIGHT_BLUE},
 };
+use hreads::{on_main, on_main_sync};
 use ui_proc::view;
 use vents::OnceEvent;
 

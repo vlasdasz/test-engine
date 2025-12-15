@@ -1,7 +1,7 @@
 use std::sync::mpsc::{Receiver, channel};
 
-use dispatch::on_main;
 use gm::{Animation, color::WHITE};
+use hreads::on_main;
 use refs::Own;
 
 use crate::{

@@ -77,7 +77,7 @@ impl Style {
 
 #[cfg(test)]
 mod test {
-    use refs::set_current_thread_as_main;
+    use hreads::set_current_thread_as_main;
 
     use crate::{Button, Label, Style, TableView};
 

@@ -2,14 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
 ]
 
 resolver = "3"
@@ -64,17 +65,18 @@ wgpu = "~27.0"
 wgpu_text = "~27.0"
 winit = "~0.30"
 
+hreads = "~0.3"
 plat = "~0.5"
 reflected = "~0.26"
-refs = { version = "~0.23", default-features = true }
+refs = { version = "~0.24", default-features = true }
 vents = "~0.11"
 
 audio = { path = "deps/audio" }
-dispatch = { path = "deps/dispatch" }
 filesystem = { path = "deps/filesystem" }
 game = { path = "deps/game" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
+inspect = { path = "deps/inspect" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
 render = { path = "deps/render" }

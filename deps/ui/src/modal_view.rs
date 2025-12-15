@@ -1,5 +1,5 @@
-use dispatch::{from_main, on_main};
 use gm::{color::WHITE, flat::Size};
+use hreads::{from_main, on_main};
 use refs::{Own, Weak};
 use vents::OnceEvent;
 

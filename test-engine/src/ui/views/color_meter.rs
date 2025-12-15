@@ -1,4 +1,4 @@
-use dispatch::on_main;
+use hreads::on_main;
 use refs::Weak;
 use ui::{Setup, UIEvents, ViewCallbacks, ViewData};
 use ui_proc::view;
@@ -34,7 +34,7 @@ impl ViewCallbacks for ColorMeter {
 impl ColorMeter {
     pub fn update_screenshot(mut self: Weak<Self>) {
         #[cfg(not_wasm)]
-        dispatch::spawn(async move {
+        hreads::spawn(async move {
             let Some(screenshot) = AppRunner::take_screenshot().ok() else {
                 return;
             };

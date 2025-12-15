@@ -12,8 +12,9 @@ use gm::{
     color::Color,
     flat::{Point, Rect, Size},
 };
+use hreads::assert_main_thread;
 use plat::Platform;
-use refs::{Own, Weak, assert_main_thread};
+use refs::{Own, Weak};
 use window::Window;
 
 use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewFrame, WeakView};
