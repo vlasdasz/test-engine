@@ -25,8 +25,8 @@ mod view;
 mod views;
 mod with_header;
 
-pub mod debug;
 pub mod mobile;
+pub mod serde;
 pub mod ui_dispatch;
 
 pub use has_data::*;

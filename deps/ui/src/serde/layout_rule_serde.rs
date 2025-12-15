@@ -8,7 +8,7 @@ use serde::{
 
 use crate::{
     LayoutRule,
-    debug::weak_serde::{deserialize_weak, serialize_weak},
+    serde::weak_serde::{deserialize_weak, serialize_weak},
 };
 
 impl Serialize for LayoutRule {
