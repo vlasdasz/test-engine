@@ -1,7 +1,6 @@
 #![allow(incomplete_features)]
 #![allow(clippy::single_component_path_imports)]
 #![feature(specialization)]
-#![feature(const_trait_impl)]
 #![feature(arbitrary_self_types)]
 #![feature(adt_const_params)]
 #![feature(generic_const_exprs)]

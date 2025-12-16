@@ -1,7 +1,6 @@
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
-#![feature(const_trait_impl)]
 
 mod app;
 mod interface;

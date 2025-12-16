@@ -1,8 +1,6 @@
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
-#![feature(const_trait_impl)]
-#![feature(linkage)]
 
 use test_engine::App;
 
