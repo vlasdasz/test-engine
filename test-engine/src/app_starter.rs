@@ -41,18 +41,30 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
         log::info!("Hello from wasm");
     }
 
-    #[cfg(mobile)]
-    hreads::set_current_thread_as_main();
+    let start = || {
+        #[cfg(mobile)]
+        hreads::set_current_thread_as_main();
 
-    let event_loop = EventLoop::<Window>::with_user_event().build().unwrap();
+        let event_loop = EventLoop::<Window>::with_user_event().build().unwrap();
+        event_loop.set_control_flow(ControlFlow::Poll);
+        app.before_launch();
+        let app = AppHandler::new(AppRunner::new(app), &event_loop);
+        run_app(event_loop, app);
+    };
 
-    event_loop.set_control_flow(ControlFlow::Poll);
+    #[cfg(wasm)]
+    {
+        start();
+    }
 
-    app.before_launch();
+    #[cfg(not_wasm)]
+    {
+        let rt = tokio::runtime::Runtime::new().unwrap();
 
-    let app = AppHandler::new(AppRunner::new(app), &event_loop);
-
-    run_app(event_loop, app);
+        rt.block_on(async {
+            start();
+        });
+    }
 
     0
 }

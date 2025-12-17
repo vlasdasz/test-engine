@@ -8,5 +8,8 @@ version.workspace = true
 name = "inspector"
 
 [dependencies]
+anyhow = { workspace = true }
 inspect = { workspace = true }
+netrun = { workspace = true }
 test-engine = { workspace = true }
+tokio = { workspace = true }

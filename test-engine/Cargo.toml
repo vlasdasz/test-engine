@@ -43,7 +43,10 @@ ui-proc = { workspace = true }
 window = { workspace = true }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+inspect = { workspace = true }
+netrun = { workspace = true }
 sentry = { workspace = true }
+tokio = { workspace = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 console_error_panic_hook = { workspace = true }
