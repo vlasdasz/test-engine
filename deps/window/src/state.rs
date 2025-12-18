@@ -157,6 +157,7 @@ impl State {
                 }),
                 occlusion_query_set:      None,
                 timestamp_writes:         None,
+                multiview_mask:           None,
             });
 
             AppHandler::current().te_window_events.render(&mut render_pass);
