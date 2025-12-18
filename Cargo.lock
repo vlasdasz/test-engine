@@ -2218,6 +2218,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "inspect",
+ "log",
  "netrun",
  "test-engine",
  "tokio",

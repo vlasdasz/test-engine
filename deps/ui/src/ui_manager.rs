@@ -12,7 +12,7 @@ use gm::{
     color::Color,
     flat::{Point, Rect, Size},
 };
-use hreads::assert_main_thread;
+use hreads::{assert_main_thread, on_main};
 use plat::Platform;
 use refs::{Own, Weak};
 use window::Window;
@@ -82,16 +82,17 @@ impl UIManager {
     }
 
     pub fn set_scale(scale: impl ToF32) {
-        assert_main_thread();
-        let sf = Self::get();
-        let scale = scale.to_f32();
+        on_main(move || {
+            let sf = Self::get();
+            let scale = scale.to_f32();
 
-        let manual_scale = f32::from_le_bytes(sf.manual_scale.load(Ordering::Relaxed).to_le_bytes());
+            let manual_scale = f32::from_le_bytes(sf.manual_scale.load(Ordering::Relaxed).to_le_bytes());
 
-        let scale = if manual_scale == 0.0 { scale } else { manual_scale };
+            let scale = if manual_scale == 0.0 { scale } else { manual_scale };
 
-        sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
-        sf.scale_changed.trigger(scale);
+            sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
+            sf.scale_changed.trigger(scale);
+        });
     }
 
     pub fn override_scale(scale: impl ToF32) {

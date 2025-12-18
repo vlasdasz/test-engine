@@ -4,7 +4,7 @@ use anyhow::Result;
 use audio::Sound;
 use hreads::on_main;
 use inspect::{AppCommand, InspectorCommand, PORT_RANGE, UIRequest, UIResponse};
-use log::{debug, error};
+use log::{debug, error, info};
 use refs::manage::DataManager;
 use tokio::{spawn, sync::OnceCell};
 use ui::UIManager;
@@ -57,6 +57,9 @@ impl InspectServer {
         match command {
             InspectorCommand::Ping => {
                 server().await.send(AppCommand::Pong).await?;
+            }
+            InspectorCommand::Pong => {
+                info!("Received pong from inspector");
             }
             InspectorCommand::PlaySound => {
                 on_main(|| {

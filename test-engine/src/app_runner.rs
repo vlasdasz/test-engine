@@ -253,7 +253,9 @@ impl window::WindowEvents for AppRunner {
             #[cfg(not_wasm)]
             {
                 Window::current().set_size(self.app.initial_size().lossy_convert());
-                crate::inspect::InspectServer::start_listening();
+                if self.app.enable_inspection() {
+                    crate::inspect::InspectServer::start_listening();
+                }
             }
 
             self.app.after_launch();

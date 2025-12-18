@@ -28,4 +28,8 @@ impl App for InspectorApp {
     fn initial_size(&self) -> Size {
         (800, 800).into()
     }
+
+    fn enable_inspection(&self) -> bool {
+        false
+    }
 }
