@@ -1,10 +1,13 @@
 #![cfg(not_wasm)]
 
-use inspect::{AppCommand, InspectorCommand, PORT_RANGE};
+use anyhow::Result;
+use audio::Sound;
+use hreads::on_main;
+use inspect::{AppCommand, InspectorCommand, PORT_RANGE, UIRequest, UIResponse};
 use log::{debug, error};
+use refs::manage::DataManager;
 use tokio::{spawn, sync::OnceCell};
-
-// static SERVER: OnceCell<Server> = OnceCell::const_new();
+use ui::UIManager;
 
 type Server = netrun::Server<InspectorCommand, AppCommand>;
 
@@ -25,10 +28,10 @@ async fn server() -> &'static Server {
 pub struct InspectServer {}
 
 impl InspectServer {
-    pub fn start_listening(action: impl FnMut(InspectorCommand) + Send + 'static) {
+    pub fn start_listening() {
         spawn(async {
             server().await.start().await;
-            server().await.on_receive(action).await;
+            server().await.on_receive(Self::on_receive).await;
         });
     }
 
@@ -38,5 +41,44 @@ impl InspectServer {
                 error!("Failed to send app command: {err}");
             }
         });
+    }
+
+    fn on_receive(command: InspectorCommand) {
+        spawn(async move {
+            let command_description = format!("{command:?}");
+
+            if let Err(err) = Self::process_command(command).await {
+                error!("Failed to process inspector command: {command_description}. Error: {err}");
+            }
+        });
+    }
+
+    async fn process_command(command: InspectorCommand) -> Result<()> {
+        match command {
+            InspectorCommand::Ping => {
+                server().await.send(AppCommand::Pong).await?;
+            }
+            InspectorCommand::PlaySound => {
+                on_main(|| {
+                    Sound::get("retro.wav").play();
+                });
+            }
+            InspectorCommand::UI(ui) => Self::process_ui_command(ui).await?,
+        }
+
+        Ok(())
+    }
+
+    async fn process_ui_command(command: UIRequest) -> Result<()> {
+        match command {
+            UIRequest::GetScale => {
+                server().await.send(UIResponse::Scale(UIManager::scale())).await?;
+            }
+            UIRequest::SetScale(scale) => {
+                UIManager::set_scale(scale);
+            }
+        }
+
+        Ok(())
     }
 }

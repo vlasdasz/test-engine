@@ -4,4 +4,16 @@ use serde::{Deserialize, Serialize};
 pub enum AppCommand {
     Ping,
     Pong,
+    UI(UIResponse),
+}
+
+impl From<UIResponse> for AppCommand {
+    fn from(value: UIResponse) -> Self {
+        Self::UI(value)
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum UIResponse {
+    Scale(f32),
 }
