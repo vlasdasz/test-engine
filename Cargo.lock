@@ -1899,15 +1899,16 @@ checksum = "dfa686283ad6dd069f105e5ab091b04c62850d3e4cf5d67debad1933f55023df"
 
 [[package]]
 name = "hreads"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e088b836f24619389ae6eefc95ed5895665a6ff6c7b2c7e4c472b937d52b7d8c"
+checksum = "9b331bfe71790fb7a38cd7cfd14ad45a5819c26deec21ffae0b50310a269bef2"
 dependencies = [
  "anyhow",
  "async-std",
  "futures",
  "gloo-timers",
  "log",
+ "parking_lot",
  "plat 0.5.0",
  "pollster",
  "tokio",
@@ -3980,14 +3981,15 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.25.0"
+version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e4c3163836178520aa6848341829d857dcd24e822ef5fadf84f720a28aaca280"
+checksum = "cd293d3cc68142c7bd0721cfb80c30cc2ecaccab90f8c741f526a01243ac9b95"
 dependencies = [
  "derive_more",
  "hreads",
  "instant",
  "log",
+ "parking_lot",
 ]
 
 [[package]]
