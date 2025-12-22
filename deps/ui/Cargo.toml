@@ -9,10 +9,6 @@ crate-type = ["rlib", "staticlib"]
 doctest = false
 name = "ui"
 
-[features]
-debug = []
-default = ["debug"]
-
 [dependencies]
 anyhow = { workspace = true }
 atomic_float = { workspace = true }

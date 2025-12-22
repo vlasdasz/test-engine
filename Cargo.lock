@@ -5941,7 +5941,6 @@ dependencies = [
  "hreads",
  "image",
  "log",
- "plat 0.4.0",
  "plat 0.5.0",
  "refs",
  "resvg",

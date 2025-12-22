@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
-  "fuzz",
-  "inspector",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
+    "fuzz",
+    "inspector",
 ]
 
 resolver = "3"
@@ -50,6 +50,7 @@ netrun = "~0.3"
 nonempty = "~0.12"
 pollster = "~0.4"
 quote = "~1.0"
+usvg = "~0.45"
 rapier2d = { version = "~0.31", features = ["simd-nightly"] }
 resvg = "~0.45"
 rust_decimal = "~1.39"
