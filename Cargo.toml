@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
-    "inspector",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
 ]
 
 resolver = "3"
@@ -50,7 +50,6 @@ netrun = "~0.3"
 nonempty = "~0.12"
 pollster = "~0.4"
 quote = "~1.0"
-usvg = "~0.45"
 rapier2d = { version = "~0.31", features = ["simd-nightly"] }
 resvg = "~0.45"
 rust_decimal = "~1.39"
@@ -60,7 +59,8 @@ serde_json = "~1.0"
 serde_yaml = "~0.9"
 syn = { version = "~2.0", features = ["full", "extra-traits"] }
 tiny-skia = "~0.11"
-tokio = { version = "~1.48", features = ["full"] }
+tokio = { version = "~1.49", features = ["full"] }
+usvg = "~0.45"
 wasm-bindgen-futures = "~0.4"
 web-time = "~1.1"
 
@@ -68,7 +68,7 @@ wgpu = "~28.0"
 wgpu_text = "~28.0"
 winit = "~0.30"
 
-hreads = "~0.6"
+hreads = "~0.7"
 plat = "~0.5"
 reflected = "~0.26"
 refs = { version = "~0.26", default-features = true }
