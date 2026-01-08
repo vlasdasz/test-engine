@@ -21,11 +21,8 @@ anyhow = { workspace = true }
 fastrand = { workspace = true }
 serde = { workspace = true }
 
-netrun = { workspace = true }
-
-ui-benchmark = { workspace = true }
 test-engine = { workspace = true }
-
+ui-benchmark = { workspace = true }
 
 [build-dependencies]
 plat = { workspace = true }

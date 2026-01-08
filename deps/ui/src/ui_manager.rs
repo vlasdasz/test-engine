@@ -2,7 +2,7 @@ use std::{
     ops::{Deref, DerefMut},
     path::PathBuf,
     sync::{
-        Mutex, OnceLock,
+        OnceLock,
         atomic::{AtomicBool, AtomicU32, Ordering},
     },
 };
@@ -13,6 +13,7 @@ use gm::{
     flat::{Point, Rect, Size},
 };
 use hreads::{assert_main_thread, on_main};
+use parking_lot::Mutex;
 use plat::Platform;
 use refs::{Own, Weak};
 use window::Window;
@@ -74,11 +75,11 @@ impl UIManager {
     }
 
     pub fn cursor_position() -> Point {
-        *Self::get().cursor_position.lock().unwrap()
+        *Self::get().cursor_position.lock()
     }
 
     pub fn set_cursor_position(pos: Point) {
-        *Self::get().cursor_position.lock().unwrap() = pos;
+        *Self::get().cursor_position.lock() = pos;
     }
 
     pub fn set_scale(scale: impl ToF32) {
@@ -115,7 +116,7 @@ impl UIManager {
 
     pub fn unselect_view() {
         let this = Self::get();
-        let mut selected_view = this.selected_view.lock().unwrap();
+        let mut selected_view = this.selected_view.lock();
         if selected_view.is_null() {
             return;
         }
@@ -127,7 +128,7 @@ impl UIManager {
     pub fn set_selected(mut view: WeakView, selected: bool) {
         let this = Self::get();
 
-        let mut selected_view = this.selected_view.lock().unwrap();
+        let mut selected_view = this.selected_view.lock();
 
         if let Some(selected) = selected_view.get_mut() {
             selected.__internal_on_selection_changed(false);
@@ -196,7 +197,7 @@ impl UIManager {
     }
 
     pub fn free_deleted_views() {
-        Self::get().deleted_views.lock().unwrap().clear();
+        Self::get().deleted_views.lock().clear();
         TouchStack::get().clear_freed();
     }
 

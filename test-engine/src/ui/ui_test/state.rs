@@ -1,8 +1,9 @@
 use std::{
     fmt::{Display, Write},
-    sync::{Mutex, MutexGuard, OnceLock},
+    sync::OnceLock,
 };
 
+use parking_lot::{Mutex, MutexGuard};
 use serde::{Serialize, de::DeserializeOwned};
 use serde_json::{from_str, to_string};
 
@@ -14,7 +15,7 @@ struct State {
 }
 
 fn get() -> MutexGuard<'static, String> {
-    STATE.get_or_init(Default::default).val.lock().unwrap()
+    STATE.get_or_init(Default::default).val.lock()
 }
 
 pub fn clear_state() {

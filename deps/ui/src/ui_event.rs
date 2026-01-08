@@ -1,5 +1,4 @@
-use std::sync::{Mutex, MutexGuard};
-
+use parking_lot::{Mutex, MutexGuard};
 use refs::{RawPointer, Weak};
 
 struct Subscriber<T: Send> {
@@ -24,13 +23,13 @@ impl<T: Send> Default for UIEvent<T> {
 
 impl<T: Send> UIEvent<T> {
     fn clear_subscribers(&self, subs: &mut MutexGuard<Vec<Subscriber<T>>>) {
-        let mut unsubscribe = self.unsubscribe.lock().unwrap();
+        let mut unsubscribe = self.unsubscribe.lock();
         subs.retain(|a| !unsubscribe.contains(&a.subscriber.raw()) && a.subscriber.is_ok());
         unsubscribe.clear();
     }
 
     pub fn sub<U: ?Sized>(&self, subscriber: Weak<U>, mut action: impl FnMut() + Send + 'static) {
-        let mut subs = self.subscribers.lock().unwrap();
+        let mut subs = self.subscribers.lock();
         self.clear_subscribers(&mut subs);
 
         assert!(
@@ -45,7 +44,7 @@ impl<T: Send> UIEvent<T> {
     }
 
     pub fn val<U: ?Sized>(&self, subscriber: Weak<U>, action: impl FnMut(T) + Send + 'static) {
-        let mut subs = self.subscribers.lock().unwrap();
+        let mut subs = self.subscribers.lock();
         self.clear_subscribers(&mut subs);
 
         assert!(
@@ -60,12 +59,12 @@ impl<T: Send> UIEvent<T> {
     }
 
     pub fn unsibscribe<U: ?Sized>(&self, view: Weak<U>) {
-        self.unsubscribe.lock().unwrap().push(view.raw());
+        self.unsubscribe.lock().push(view.raw());
     }
 
     pub fn trigger(&self, val: T)
     where T: Clone {
-        let mut subs = self.subscribers.lock().unwrap();
+        let mut subs = self.subscribers.lock();
         self.clear_subscribers(&mut subs);
         for sub in subs.iter_mut() {
             (sub.action)(val.clone());

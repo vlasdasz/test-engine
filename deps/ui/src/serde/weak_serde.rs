@@ -1,9 +1,6 @@
-use std::{
-    collections::HashSet,
-    mem::transmute,
-    sync::{Mutex, OnceLock},
-};
+use std::{collections::HashSet, mem::transmute, sync::OnceLock};
 
+use parking_lot::Mutex;
 use refs::RawPointer;
 use serde::{Deserialize, Serialize, Serializer, ser::SerializeStruct};
 
@@ -46,7 +43,7 @@ pub(super) fn deserialize_weak(value: WeakRepr) -> WeakView {
 fn string_to_static(string: String) -> &'static str {
     static STR_STORAGE: OnceLock<Mutex<HashSet<String>>> = OnceLock::new();
 
-    let mut storage = STR_STORAGE.get_or_init(|| Mutex::new(HashSet::new())).lock().unwrap();
+    let mut storage = STR_STORAGE.get_or_init(|| Mutex::new(HashSet::new())).lock();
 
     storage.insert(string.clone());
 

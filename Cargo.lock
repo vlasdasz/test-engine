@@ -364,6 +364,7 @@ version = "0.1.0"
 dependencies = [
  "kira",
  "log",
+ "parking_lot",
  "plat",
  "refs",
 ]
@@ -1326,6 +1327,7 @@ dependencies = [
  "anyhow",
  "dirs",
  "log",
+ "parking_lot",
  "plat",
 ]
 
@@ -2818,9 +2820,7 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f60a655303a4c66df6142021d5d46bbf573d83e8d1a010930e007e9f6b23995c"
+version = "0.9.0"
 dependencies = [
  "anyhow",
  "log",
@@ -5042,6 +5042,7 @@ dependencies = [
  "level",
  "log",
  "netrun",
+ "parking_lot",
  "plat",
  "reflected",
  "refs",
@@ -5068,7 +5069,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "fastrand",
- "netrun",
  "plat",
  "serde",
  "test-engine",
@@ -5402,6 +5402,7 @@ dependencies = [
  "hreads",
  "log",
  "nonempty",
+ "parking_lot",
  "plat",
  "reflected",
  "refs",
@@ -5447,6 +5448,8 @@ dependencies = [
  "anyhow",
  "instant",
  "log",
+ "parking_lot",
+ "serde",
  "test-engine",
 ]
 
@@ -5600,6 +5603,7 @@ checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
 name = "utils"
 version = "0.1.0"
 dependencies = [
+ "parking_lot",
  "web-time",
 ]
 

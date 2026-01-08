@@ -386,7 +386,7 @@ impl TestGameView {
     async fn rest_pressed(self: Weak<Self>) -> anyhow::Result<()> {
         let spin = Spinner::lock();
 
-        let users = TEST_REST_REQUEST.send(()).await?;
+        let users = TEST_REST_REQUEST.await?;
 
         spin.stop();
 

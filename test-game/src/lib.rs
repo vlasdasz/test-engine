@@ -2,11 +2,11 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
+mod api;
 mod app;
 mod interface;
 mod levels;
 mod no_physics;
-mod api;
 
 #[cfg(not(ios))]
 pub use test_engine;

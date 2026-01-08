@@ -1,6 +1,7 @@
-use std::sync::{Mutex, MutexGuard, OnceLock};
+use std::sync::OnceLock;
 
 use nonempty::NonEmpty;
+use parking_lot::{Mutex, MutexGuard};
 
 use crate::{
     UIManager, View, WeakView,
@@ -23,7 +24,7 @@ impl TouchStack {
     }
 
     pub fn get() -> MutexGuard<'static, Self> {
-        STACK.get_or_init(Self::init).lock().unwrap()
+        STACK.get_or_init(Self::init).lock()
     }
 }
 

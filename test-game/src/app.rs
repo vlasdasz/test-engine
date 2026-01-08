@@ -2,10 +2,10 @@
 
 use std::fs::read_to_string;
 
-use netrun::rest::RestAPI;
 use test_engine::{
     App,
     filesystem::Paths,
+    net::RestAPI,
     refs::Own,
     ui::{Button, Label, Setup, Size, View},
 };

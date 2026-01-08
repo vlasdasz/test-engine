@@ -73,6 +73,10 @@ pub use ui::views::task_spinner::TaskSpinner;
 pub use vents::{Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
+pub mod net {
+    pub use netrun::rest::*;
+}
+
 pub mod dispatch {
     #[cfg(not_wasm)]
     pub use ::hreads::first_ok;

@@ -9,4 +9,5 @@ crate-type = ["rlib", "staticlib"]
 name = "utils"
 
 [dependencies]
+parking_lot = { workspace = true }
 web-time = { workspace = true }

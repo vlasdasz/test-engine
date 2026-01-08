@@ -12,5 +12,7 @@ path = "src/main.rs"
 anyhow = { workspace = true }
 instant = { workspace = true }
 log = { workspace = true }
+parking_lot = { workspace = true }
 
+serde = { version = "1.0.228", features = ["derive"] }
 test-engine = { workspace = true }

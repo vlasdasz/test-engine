@@ -1,3 +1,4 @@
+use crate::base::rest_request::test_rest_request;
 use crate::base::{
     // async_calls::test_async_calls,
     colors::test_colors,
@@ -34,6 +35,7 @@ mod modal_test;
 mod on_tap_add;
 mod out_bounds_test;
 mod present;
+mod rest_request;
 mod root_view;
 mod scale;
 mod selection;
@@ -47,6 +49,7 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
+    test_rest_request().await?;
     test_transparency().await?;
     test_scale().await?;
     test_root_view().await?;

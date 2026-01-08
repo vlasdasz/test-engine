@@ -16,6 +16,7 @@ chrono = { workspace = true }
 educe = { workspace = true }
 log = { workspace = true }
 nonempty = { workspace = true }
+parking_lot = { workspace = true }
 rust_decimal = { workspace = true }
 serde = { workspace = true }
 

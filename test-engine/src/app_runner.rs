@@ -1,8 +1,4 @@
-use std::{
-    any::type_name,
-    path::PathBuf,
-    sync::{Mutex, Once},
-};
+use std::{any::type_name, path::PathBuf, sync::Once};
 
 use anyhow::Result;
 use gm::{
@@ -12,6 +8,7 @@ use gm::{
 use hreads::{from_main, invoke_dispatched, wait_for_next_frame};
 use level::{LevelBase, LevelManager};
 use log::debug;
+use parking_lot::Mutex;
 use refs::{Own, main_lock::MainLock};
 use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
@@ -189,10 +186,8 @@ impl AppRunner {
             }
         }
 
-        hreads::spawn(async {
-            WINDOW_READY.lock().unwrap().sub(|| {
-                hreads::unasync(actions).unwrap();
-            });
+        WINDOW_READY.lock().sub(|| {
+            hreads::unasync(actions).unwrap();
         });
 
         test_engine_start_with_app(ActorApp::new());
@@ -263,7 +258,7 @@ impl window::WindowEvents for AppRunner {
 
             #[cfg(not_wasm)]
             hreads::spawn(async {
-                WINDOW_READY.lock().unwrap().trigger(());
+                WINDOW_READY.lock().trigger(());
             });
         });
     }

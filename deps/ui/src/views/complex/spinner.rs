@@ -1,13 +1,11 @@
-use std::{
-    f32::consts::PI,
-    sync::{Mutex, MutexGuard},
-};
+use std::f32::consts::PI;
 
 use gm::{
     Animation, LossyConvert,
     color::{GRAY, LIGHT_BLUE},
 };
 use hreads::{on_main, on_main_sync};
+use parking_lot::{Mutex, MutexGuard};
 use ui_proc::view;
 use vents::OnceEvent;
 
@@ -60,7 +58,7 @@ pub struct Spinner {
 
 impl Spinner {
     fn current() -> MutexGuard<'static, Weak<Spinner>> {
-        SPINNER.lock().unwrap()
+        SPINNER.lock()
     }
 
     // fn set_alpha(&mut self, alpha: impl IntoF32) {

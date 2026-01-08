@@ -95,7 +95,7 @@ pub fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
         });
     }
 
-    let test_name = TEST_NAME.lock().unwrap().clone();
+    let test_name = TEST_NAME.lock().clone();
 
     assert!(
         diff <= max_diff,

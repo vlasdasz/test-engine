@@ -1,5 +1,5 @@
-use netrun::rest::Request;
 use serde::Deserialize;
+use test_engine::net::Request;
 
 #[allow(dead_code)]
 #[derive(Debug, Deserialize)]

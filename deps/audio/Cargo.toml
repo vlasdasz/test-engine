@@ -13,6 +13,7 @@ defaut = []
 
 [dependencies]
 log = { workspace = true }
+parking_lot = { workspace = true }
 
 kira = { workspace = true }
 
