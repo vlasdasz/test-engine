@@ -5,6 +5,7 @@
 
 use crate::app::TestGameApp;
 
+mod api;
 mod app;
 mod interface;
 mod levels;

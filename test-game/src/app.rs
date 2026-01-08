@@ -2,6 +2,7 @@
 
 use std::fs::read_to_string;
 
+use netrun::rest::RestAPI;
 use test_engine::{
     App,
     filesystem::Paths,
@@ -9,7 +10,7 @@ use test_engine::{
     ui::{Button, Label, Setup, Size, View},
 };
 
-use crate::interface::test_game_view::{_BUTTON, TestGameView};
+use crate::interface::test_game_view::{BUTTON, TestGameView};
 
 pub struct TestGameApp;
 
@@ -20,8 +21,10 @@ impl App for TestGameApp {
     }
 
     fn before_launch(&self) {
-        _BUTTON.apply_globally::<Button>();
-        _BUTTON.apply_globally::<Label>();
+        RestAPI::init("https://jsonplaceholder.typicode.com/");
+
+        BUTTON.apply_globally::<Button>();
+        BUTTON.apply_globally::<Label>();
     }
 
     fn make_root_view(&self) -> Own<dyn View> {

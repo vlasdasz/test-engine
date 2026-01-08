@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
-  "fuzz",
-  "inspector",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
+    "fuzz",
+    "inspector",
 ]
 
 resolver = "3"
@@ -67,12 +67,12 @@ wgpu = "28.0"
 wgpu_text = "28.0"
 winit = "0.30"
 
-hreads = "0.7"
-netrun = "0.4"
+hreads = "0.10"
+netrun = "0.6"
 plat = "0.5"
-reflected = "0.26"
-refs = { version = "0.27", default-features = true }
-vents = "0.11"
+reflected = "0.29"
+refs = { version = "0.30", default-features = true }
+vents = "0.13"
 
 audio = { path = "deps/audio" }
 filesystem = { path = "deps/filesystem" }
@@ -96,7 +96,8 @@ window = { path = "deps/window" }
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }
-#vents = { path = "../deps/vents/vents" }
+vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
-wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "0f25a5fa912cafd6161158fce16f0ae5236047ca" }
-#refs = { path = "../deps/refs/refs" }
+#wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "0f25a5fa912cafd6161158fce16f0ae5236047ca" }
+#hreads = { path = "../deps/hreads" }
+#netrun = { path = "../deps/netrun/netrun" }

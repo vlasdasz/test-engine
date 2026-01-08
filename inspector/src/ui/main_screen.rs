@@ -2,24 +2,20 @@ use anyhow::Result;
 use inspect::{AppCommand, InspectorCommand, UIRequest, UIResponse};
 use log::info;
 use test_engine::{
+    Event,
     dispatch::{after, on_main},
     refs::Weak,
-    ui::{
-        AlertErr,
-        Anchor::{Right, Top},
-        Button, HasText, Label, NumberView, Setup, ViewData, async_link_button, view,
-    },
+    ui::{AlertErr, Anchor::Top, Button, HasText, Setup, ViewData, async_link_button, view},
 };
 use tokio::spawn;
 
-use crate::app_search::client;
+use crate::{app_search::client, ui::common::ValueView};
 
 #[view]
 pub struct MainScreen {
     #[init]
-    play_sound:   Button,
-    scale_picker: NumberView,
-    scale_label:  Label,
+    play_sound:     Button,
+    ui_scale_value: ValueView,
 }
 
 impl Setup for MainScreen {
@@ -27,20 +23,18 @@ impl Setup for MainScreen {
         self.play_sound.set_text("Play Sound").place().size(100, 50).tr(10);
         async_link_button!(self.play_sound, play_sound_tapped);
 
-        self.scale_picker.place().r(10).anchor(Top, self.play_sound, 10).size(50, 100);
-        self.scale_picker.set_min(0.2);
-        self.scale_picker.set_step(0.2);
-        self.scale_picker.on_change(move |val| {
-            spawn(async move {
-                self.scale_tapped(val).await.alert_err();
-            });
-        });
-
-        self.scale_label
+        self.ui_scale_value
+            .set_title("UI scale")
             .place()
+            .r(10)
             .anchor(Top, self.play_sound, 10)
-            .anchor(Right, self.scale_picker, 10)
-            .same_size(self.scale_picker);
+            .size(100, 100);
+
+        self.ui_scale_value.on_change.val_async(move |val| async move {
+            {
+                self.scale_changed(val).await.alert_err();
+            }
+        });
 
         spawn(async move {
             client()
@@ -66,10 +60,7 @@ impl MainScreen {
         client().await.send(InspectorCommand::PlaySound).await
     }
 
-    async fn scale_tapped(mut self: Weak<Self>, scale: f32) -> Result<()> {
-        on_main(move || {
-            self.scale_label.set_text(scale);
-        });
+    async fn scale_changed(self: Weak<Self>, scale: f32) -> Result<()> {
         client().await.send(UIRequest::SetScale(scale)).await
     }
 
@@ -89,16 +80,37 @@ impl MainScreen {
         Ok(())
     }
 
-    async fn process_ui_command(mut self: Weak<Self>, command: UIResponse) -> Result<()> {
+    async fn process_ui_command(self: Weak<Self>, command: UIResponse) -> Result<()> {
         match command {
             UIResponse::Scale(scale) => {
                 on_main(move || {
-                    self.scale_label.set_text(scale);
-                    self.scale_picker.set_value(scale);
+                    self.ui_scale_value.set_value(scale);
                 });
             }
         };
 
         Ok(())
+    }
+}
+
+pub trait AsyncEvent<T> {
+    fn val_async<Fut, Function>(&self, action: Function)
+    where
+        T: Send + 'static,
+        Fut: Future + Send + 'static,
+        Function: (FnMut(T) -> Fut) + Send + Copy + 'static;
+}
+
+impl<T: Send + 'static> AsyncEvent<T> for Event<T> {
+    fn val_async<Fut, Function>(&self, mut action: Function)
+    where
+        T: Send + 'static,
+        Fut: Future + Send + 'static,
+        Function: (FnMut(T) -> Fut) + Send + Copy + 'static, {
+        self.val(move |val| {
+            spawn(async move {
+                action(val).await;
+            });
+        });
     }
 }

@@ -17,9 +17,15 @@ default = []
 webgl = ["test-engine/webgl"]
 
 [dependencies]
+anyhow = { workspace = true }
 fastrand = { workspace = true }
-test-engine = { workspace = true }
+serde = { workspace = true }
+
+netrun = { workspace = true }
+
 ui-benchmark = { workspace = true }
+test-engine = { workspace = true }
+
 
 [build-dependencies]
 plat = { workspace = true }

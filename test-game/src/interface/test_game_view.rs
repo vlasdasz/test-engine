@@ -12,12 +12,13 @@ use test_engine::{
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
         MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
         SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
-        ViewSubviews, WHITE, view,
+        ViewSubviews, WHITE, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;
 
 use crate::{
+    api::TEST_REST_REQUEST,
     interface::{
         game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
         root_test_view::RootTestView,
@@ -28,7 +29,7 @@ use crate::{
 
 static BOOL: OnDisk<bool> = OnDisk::new("bool");
 
-pub(crate) static _BUTTON: Style = Style::new(|btn| {
+pub(crate) static BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));
     btn.set_corner_radius(5);
 });
@@ -89,6 +90,7 @@ pub struct TestGameView {
     polygon: Button,
     noise:   Button,
     panic:   Button,
+    rest:    Button,
 
     some_button: Button,
 
@@ -182,7 +184,7 @@ impl Setup for TestGameView {
         self.spinner.on_tap(|| {
             let spin = Spinner::lock();
             after(4.0, || {
-                spin.stop();
+                spin.animated_stop();
             });
         });
 
@@ -324,6 +326,13 @@ impl Setup for TestGameView {
             panic!("test panic");
         });
 
+        self.rest.set_text("request");
+        self.rest
+            .place()
+            .anchor(Left, self.panic, 10)
+            .same([Y, Width, Height], self.panic);
+        async_link_button!(self.rest, rest_pressed);
+
         self.sprite_view.set_title("Sprite:");
         self.sprite_view.place().size(280, 120).center_y().r(0);
         let player = self.level.player;
@@ -374,6 +383,22 @@ impl Setup for TestGameView {
 }
 
 impl TestGameView {
+    async fn rest_pressed(self: Weak<Self>) -> anyhow::Result<()> {
+        let spin = Spinner::lock();
+
+        let users = TEST_REST_REQUEST.send(()).await?;
+
+        spin.stop();
+
+        Alert::show(format!(
+            "Got {} users. First name: {}",
+            users.len(),
+            users.first().unwrap().name
+        ));
+
+        Ok(())
+    }
+
     fn setup_keymap(mut self: Weak<Self>) {
         [
             (' ', Direction::Up),

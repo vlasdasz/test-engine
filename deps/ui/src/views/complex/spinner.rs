@@ -36,11 +36,11 @@ pub struct SpinnerLock {
 }
 
 impl SpinnerLock {
-    pub fn stop(mut self) {
+    pub fn animated_stop(mut self) {
         self.stopped = true;
         Spinner::stop();
     }
-    pub fn instant_stop(self) {}
+    pub fn stop(self) {}
 }
 
 impl Drop for SpinnerLock {
