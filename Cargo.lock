@@ -2458,9 +2458,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.179"
+version = "0.2.180"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5a2d376baa530d1238d133232d15e239abad80d05838b4b59354e5268af431f"
+checksum = "bcc35a38544a891a5f7c865aca548a982ccb3b8650a5b06d0fd33a10283c56fc"
 
 [[package]]
 name = "libfuzzer-sys"
@@ -2820,7 +2820,9 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.9.0"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8597c0575b6d8afae8eb587b53bc843cb04eb5b92e1c826701cb57d19d408bfd"
 dependencies = [
  "anyhow",
  "log",
@@ -5644,6 +5646,8 @@ checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
 [[package]]
 name = "vents"
 version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a8775f5317fffdd7aa9a0bb1c407cfdad3ef47d395f2600ef76b58caec9d181"
 dependencies = [
  "console_error_panic_hook",
  "console_log",

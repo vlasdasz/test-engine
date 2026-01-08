@@ -1,7 +1,7 @@
 use test_engine::{
-    AppRunner,
+    AppRunner, Event,
     audio::Sound,
-    dispatch::after,
+    dispatch::{after, on_main},
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::{DataManager, Weak},
@@ -46,7 +46,8 @@ pub(crate) static HAS_BACK_BUTTON: Style = Style::new(|view| {
 
 #[view]
 pub struct TestGameView {
-    level: Weak<TestLevel>,
+    level:       Weak<TestLevel>,
+    rest_tapped: Event<usize>,
 
     #[init]
     tl: Container,
@@ -272,6 +273,12 @@ impl Setup for TestGameView {
                 test_engine::inspect::InspectServer::send(test_engine::inspect::AppCommand::Ping);
             });
         }
+        #[cfg(wasm)]
+        {
+            self.ping_inspector.on_tap(|| {
+                Alert::show("Not implemented on WASM");
+            });
+        }
 
         self.ui_bench.set_text("ui bench");
         self.ui_bench
@@ -332,6 +339,12 @@ impl Setup for TestGameView {
             .anchor(Left, self.panic, 10)
             .same([Y, Width, Height], self.panic);
         async_link_button!(self.rest, rest_pressed);
+
+        self.rest_tapped.val_async(move |val| async move {
+            on_main(move || {
+                self.rest.set_text(format!("rest: {val}"));
+            });
+        });
 
         self.sprite_view.set_title("Sprite:");
         self.sprite_view.place().size(280, 120).center_y().r(0);
@@ -395,6 +408,8 @@ impl TestGameView {
             users.len(),
             users.first().unwrap().name
         ));
+
+        self.rest_tapped.trigger(users.len());
 
         Ok(())
     }

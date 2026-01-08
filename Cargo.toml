@@ -69,7 +69,7 @@ wgpu_text = "28.0"
 winit = "0.30"
 
 hreads = "0.10"
-netrun = "0.9"
+netrun = "0.10"
 plat = "0.5"
 reflected = "0.29"
 refs = { version = "0.30", default-features = true }
@@ -97,8 +97,8 @@ window = { path = "deps/window" }
 [patch.crates-io]
 #wgpu = { git = "https://github.com/VladasZ/wgpu", rev = "31ef1f08d238c2a092be1186f7133f1928b34a8a" }
 #wgpu = { path = "../3/wgpu/wgpu" }
-vents = { path = "../deps/vents/vents" }
+#vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "0f25a5fa912cafd6161158fce16f0ae5236047ca" }
 #hreads = { path = "../deps/hreads" }
-netrun = { path = "../deps/netrun/netrun" }
+#netrun = { path = "../deps/netrun/netrun" }
