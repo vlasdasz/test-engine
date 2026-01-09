@@ -184,7 +184,7 @@ impl Setup for TestGameView {
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
             let spin = Spinner::lock();
-            after(4.0, || {
+            after(2.0, || {
                 spin.animated_stop();
             });
         });
