@@ -1,9 +1,9 @@
 use anyhow::Result;
-use dispatch::from_main;
 use gm::{
     color::{Color, LIGHT_GRAY, U8Color},
     flat::Point,
 };
+use hreads::from_main;
 use ui::{
     Button, Container, HighlightView, Setup, UIManager, View, ViewData, ViewFrame, ViewSubviews, WeakView,
 };
@@ -95,7 +95,7 @@ pub fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) {
         });
     }
 
-    let test_name = TEST_NAME.lock().unwrap().clone();
+    let test_name = TEST_NAME.lock().clone();
 
     assert!(
         diff <= max_diff,

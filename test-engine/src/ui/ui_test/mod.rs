@@ -3,13 +3,14 @@ pub mod state;
 use std::{
     fmt::Display,
     ops::Deref,
-    sync::{Arc, Mutex, mpsc::channel},
+    sync::{Arc, mpsc::channel},
 };
 
 use anyhow::{Result, bail};
-use dispatch::{from_main, on_main, wait_for_next_frame};
 pub use helpers::*;
+use hreads::{from_main, on_main, wait_for_next_frame};
 use log::{error, warn};
+use parking_lot::Mutex;
 use refs::Own;
 use serde::de::DeserializeOwned;
 pub use state::*;
@@ -112,7 +113,7 @@ fn record_touches_internal(skip_moved: bool) {
     on_main(move || {
         UIEvents::on_touch().val(move |touch| {
             if touch.is_moved() {
-                let mut counter = moved_counter.lock().unwrap();
+                let mut counter = moved_counter.lock();
                 *counter += 1;
                 if *counter == moved_record_skip {
                     *counter = 0;
@@ -147,8 +148,7 @@ fn record_touches_internal(skip_moved: bool) {
         "
 {}
         ",
-    )
-        .await;
+    );
     "#,
         Touch::str_from_vec(touches.to_vec()),
     );

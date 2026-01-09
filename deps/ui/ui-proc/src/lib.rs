@@ -213,7 +213,7 @@ pub fn async_link_button(input: TokenStream) -> TokenStream {
     let expanded = if let Some(arg) = args.arg {
         quote! {
             #button_path.on_tap(move || {
-                tokio::spawn(async move {
+                test_engine::dispatch::spawn(async move {
                     use test_engine::ui::AlertErr;
                     self.#method(#arg).await.alert_err();
                 });
@@ -222,7 +222,7 @@ pub fn async_link_button(input: TokenStream) -> TokenStream {
     } else {
         quote! {
             #button_path.on_tap(move || {
-                tokio::spawn(async move {
+                test_engine::dispatch::spawn(async move {
                     use test_engine::ui::AlertErr;
                     self.#method().await.alert_err();
                 });

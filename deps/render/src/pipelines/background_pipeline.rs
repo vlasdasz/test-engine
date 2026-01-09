@@ -71,9 +71,9 @@ impl Default for BackgroundPipeline {
         let vertex_layout = make_uniform_layout("background_drawer_vertex_layout", ShaderStages::VERTEX);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label:                "background_pipeline_layout".into(),
-            bind_group_layouts:   &[&vertex_layout, &Image::uniform_layout()],
-            push_constant_ranges: &[],
+            label:              "background_pipeline_layout".into(),
+            bind_group_layouts: &[&vertex_layout, &Image::uniform_layout()],
+            immediate_size:     0,
         });
 
         let render_pipeline = device.pipeline(

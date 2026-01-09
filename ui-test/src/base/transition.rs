@@ -1,6 +1,5 @@
-use std::sync::Mutex;
-
 use anyhow::Result;
+use parking_lot::Mutex;
 use test_engine::{
     refs::Weak,
     ui::{BLUE, Button, HasText, Setup, UI, ViewData, ViewTransition, view},
@@ -25,7 +24,7 @@ impl Setup for Transition {
 
 impl ViewTransition<BlueView> for Transition {
     fn transition_to(self: Weak<Self>, _target: &mut BlueView) {
-        ACTIONS.lock().unwrap().push("Transition callback");
+        ACTIONS.lock().push("Transition callback");
     }
 }
 
@@ -35,7 +34,7 @@ struct BlueView {}
 impl Setup for BlueView {
     fn setup(mut self: Weak<Self>) {
         self.set_color(BLUE);
-        ACTIONS.lock().unwrap().push("Blue setup");
+        ACTIONS.lock().push("Blue setup");
     }
 }
 
@@ -68,12 +67,9 @@ pub async fn test_transition() -> Result<()> {
         "#,
     )?;
 
-    assert_eq!(
-        ACTIONS.lock().unwrap().as_slice(),
-        &["Transition callback", "Blue setup"]
-    );
+    assert_eq!(ACTIONS.lock().as_slice(), &["Transition callback", "Blue setup"]);
 
-    ACTIONS.lock().unwrap().clear();
+    ACTIONS.lock().clear();
 
     Ok(())
 }

@@ -2,7 +2,7 @@ use std::{
     ops::{Deref, DerefMut},
     path::PathBuf,
     sync::{
-        Mutex, OnceLock,
+        OnceLock,
         atomic::{AtomicBool, AtomicU32, Ordering},
     },
 };
@@ -12,8 +12,10 @@ use gm::{
     color::Color,
     flat::{Point, Rect, Size},
 };
+use hreads::{assert_main_thread, on_main};
+use parking_lot::Mutex;
 use plat::Platform;
-use refs::{Own, Weak, assert_main_thread};
+use refs::{Own, Weak};
 use window::Window;
 
 use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewFrame, WeakView};
@@ -73,24 +75,25 @@ impl UIManager {
     }
 
     pub fn cursor_position() -> Point {
-        *Self::get().cursor_position.lock().unwrap()
+        *Self::get().cursor_position.lock()
     }
 
     pub fn set_cursor_position(pos: Point) {
-        *Self::get().cursor_position.lock().unwrap() = pos;
+        *Self::get().cursor_position.lock() = pos;
     }
 
     pub fn set_scale(scale: impl ToF32) {
-        assert_main_thread();
-        let sf = Self::get();
-        let scale = scale.to_f32();
+        on_main(move || {
+            let sf = Self::get();
+            let scale = scale.to_f32();
 
-        let manual_scale = f32::from_le_bytes(sf.manual_scale.load(Ordering::Relaxed).to_le_bytes());
+            let manual_scale = f32::from_le_bytes(sf.manual_scale.load(Ordering::Relaxed).to_le_bytes());
 
-        let scale = if manual_scale == 0.0 { scale } else { manual_scale };
+            let scale = if manual_scale == 0.0 { scale } else { manual_scale };
 
-        sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
-        sf.scale_changed.trigger(scale);
+            sf.scale.store(u32::from_le_bytes(scale.to_le_bytes()), Ordering::Relaxed);
+            sf.scale_changed.trigger(scale);
+        });
     }
 
     pub fn override_scale(scale: impl ToF32) {
@@ -113,7 +116,7 @@ impl UIManager {
 
     pub fn unselect_view() {
         let this = Self::get();
-        let mut selected_view = this.selected_view.lock().unwrap();
+        let mut selected_view = this.selected_view.lock();
         if selected_view.is_null() {
             return;
         }
@@ -125,7 +128,7 @@ impl UIManager {
     pub fn set_selected(mut view: WeakView, selected: bool) {
         let this = Self::get();
 
-        let mut selected_view = this.selected_view.lock().unwrap();
+        let mut selected_view = this.selected_view.lock();
 
         if let Some(selected) = selected_view.get_mut() {
             selected.__internal_on_selection_changed(false);
@@ -194,7 +197,7 @@ impl UIManager {
     }
 
     pub fn free_deleted_views() {
-        Self::get().deleted_views.lock().unwrap().clear();
+        Self::get().deleted_views.lock().clear();
         TouchStack::get().clear_freed();
     }
 

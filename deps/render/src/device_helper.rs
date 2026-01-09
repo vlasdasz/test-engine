@@ -62,15 +62,15 @@ impl DeviceHelper for Device {
         vertex_layout: &'static [VertexBufferLayout],
     ) -> RenderPipeline {
         self.create_render_pipeline(&RenderPipelineDescriptor {
-            label:         label.into(),
-            layout:        layout.into(),
-            vertex:        VertexState {
+            label:          label.into(),
+            layout:         layout.into(),
+            vertex:         VertexState {
                 module:              shader,
                 entry_point:         "v_main".into(),
                 compilation_options: PipelineCompilationOptions::default(),
                 buffers:             vertex_layout,
             },
-            fragment:      FragmentState {
+            fragment:       FragmentState {
                 module:              shader,
                 entry_point:         "f_main".into(),
                 compilation_options: PipelineCompilationOptions::default(),
@@ -82,7 +82,7 @@ impl DeviceHelper for Device {
                 .into()],
             }
             .into(),
-            primitive:     PrimitiveState {
+            primitive:      PrimitiveState {
                 topology,
                 strip_index_format: None,
                 front_face: FrontFace::Ccw,
@@ -92,7 +92,7 @@ impl DeviceHelper for Device {
                 unclipped_depth: false,
                 conservative: false,
             },
-            depth_stencil: DepthStencilState {
+            depth_stencil:  DepthStencilState {
                 format:              TextureFormat::Depth32Float,
                 depth_write_enabled: true,
                 depth_compare:       CompareFunction::Less,
@@ -100,13 +100,13 @@ impl DeviceHelper for Device {
                 bias:                DepthBiasState::default(),
             }
             .into(),
-            multisample:   MultisampleState {
+            multisample:    MultisampleState {
                 count:                     1,
                 mask:                      !0,
                 alpha_to_coverage_enabled: false,
             },
-            multiview:     None,
-            cache:         None,
+            cache:          None,
+            multiview_mask: None,
         })
     }
 }

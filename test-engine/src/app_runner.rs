@@ -1,17 +1,14 @@
-use std::{
-    any::type_name,
-    path::PathBuf,
-    sync::{Mutex, Once},
-};
+use std::{any::type_name, path::PathBuf, sync::Once};
 
 use anyhow::Result;
-use dispatch::{from_main, invoke_dispatched, wait_for_next_frame};
 use gm::{
     LossyConvert,
     flat::{Point, Size},
 };
+use hreads::{from_main, invoke_dispatched, wait_for_next_frame};
 use level::{LevelBase, LevelManager};
 use log::debug;
+use parking_lot::Mutex;
 use refs::{Own, main_lock::MainLock};
 use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
 use vents::OnceEvent;
@@ -59,6 +56,7 @@ impl AppRunner {
             .level(LevelFilter::Warn)
             .level_for("test_engine", LevelFilter::Debug)
             .level_for("shopping", LevelFilter::Debug)
+            .level_for("netrun", LevelFilter::Debug)
             .format(|out, message, record| {
                 let level_icon = match record.level() {
                     Level::Error => "🔴",
@@ -188,10 +186,8 @@ impl AppRunner {
             }
         }
 
-        dispatch::spawn(async {
-            WINDOW_READY.lock().unwrap().sub(|| {
-                dispatch::unasync(actions).unwrap();
-            });
+        WINDOW_READY.lock().sub(|| {
+            hreads::unasync(actions).unwrap();
         });
 
         test_engine_start_with_app(ActorApp::new());
@@ -251,13 +247,18 @@ impl window::WindowEvents for AppRunner {
             );
 
             #[cfg(not_wasm)]
-            Window::current().set_size(self.app.initial_size().lossy_convert());
+            {
+                Window::current().set_size(self.app.initial_size().lossy_convert());
+                if self.app.enable_inspection() {
+                    crate::inspect::InspectServer::start_listening();
+                }
+            }
 
             self.app.after_launch();
 
             #[cfg(not_wasm)]
-            dispatch::spawn(async {
-                WINDOW_READY.lock().unwrap().trigger(());
+            hreads::spawn(async {
+                WINDOW_READY.lock().trigger(());
             });
         });
     }

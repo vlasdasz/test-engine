@@ -2,7 +2,6 @@
 #![allow(clippy::float_cmp)]
 #![allow(clippy::too_many_lines)]
 #![feature(stmt_expr_attributes)]
-#![feature(const_trait_impl)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
@@ -58,10 +57,10 @@ fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_base_ui().await?;
     test_layout().await?;
     test_base_views().await?;
     test_image_views().await?;
-    test_base_ui().await?;
     test_complex_views().await?;
     test_containers().await?;
     // test_input_views().await?;

@@ -157,6 +157,7 @@ impl State {
                 }),
                 occlusion_query_set:      None,
                 timestamp_writes:         None,
+                multiview_mask:           None,
             });
 
             AppHandler::current().te_window_events.render(&mut render_pass);
@@ -189,7 +190,7 @@ impl State {
                 sender.send(result).unwrap();
             });
 
-            dispatch::spawn(async move {
+            hreads::spawn(async move {
                 let _ = receiver.recv().unwrap();
                 let (buff, size) = buffer;
 

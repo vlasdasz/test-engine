@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 use crate::LossyConvert;
 
-pub trait ToF32: Copy + Sized + Sync + Send + Debug + Display + 'static {
+pub trait ToF32: Copy + Sized + Send + Debug + Display + 'static {
     fn to_f32(self) -> f32;
 }
 

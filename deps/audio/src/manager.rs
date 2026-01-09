@@ -1,6 +1,7 @@
-use std::sync::{Mutex, MutexGuard, OnceLock};
+use std::sync::OnceLock;
 
 use kira::{AudioManager, AudioManagerSettings};
+use parking_lot::{Mutex, MutexGuard};
 
 static AUDIO_MANAGER: OnceLock<Mutex<AudioManager>> = OnceLock::new();
 
@@ -12,5 +13,4 @@ pub(crate) fn audio_manager() -> MutexGuard<'static, AudioManager> {
             )
         })
         .lock()
-        .expect("audio_manager()")
 }

@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use filesystem::Paths;
-use log::error;
+use log::{error, warn};
 use serde::Deserialize;
 
 use crate::App;
@@ -14,7 +14,7 @@ pub(crate) struct Config {
 impl Config {
     pub fn sentry_url(app: &dyn App) -> Option<String> {
         let Some(config) = app.config_yaml() else {
-            error!("No config yaml");
+            warn!("No config yaml");
             return None;
         };
 

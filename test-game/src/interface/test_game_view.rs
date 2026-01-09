@@ -1,7 +1,7 @@
 use test_engine::{
-    AppRunner,
+    AppRunner, Event,
     audio::Sound,
-    dispatch::after,
+    dispatch::{after, on_main},
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::{DataManager, Weak},
@@ -12,12 +12,13 @@ use test_engine::{
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
         MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
         SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
-        ViewSubviews, WHITE, view,
+        ViewSubviews, WHITE, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;
 
 use crate::{
+    api::TEST_REST_REQUEST,
     interface::{
         game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
         root_test_view::RootTestView,
@@ -28,7 +29,7 @@ use crate::{
 
 static BOOL: OnDisk<bool> = OnDisk::new("bool");
 
-pub(crate) static _BUTTON: Style = Style::new(|btn| {
+pub(crate) static BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));
     btn.set_corner_radius(5);
 });
@@ -45,7 +46,8 @@ pub(crate) static HAS_BACK_BUTTON: Style = Style::new(|view| {
 
 #[view]
 pub struct TestGameView {
-    level: Weak<TestLevel>,
+    level:       Weak<TestLevel>,
+    rest_tapped: Event<usize>,
 
     #[init]
     tl: Container,
@@ -78,8 +80,9 @@ pub struct TestGameView {
 
     render: Button,
 
-    benchmark:  Button,
-    test_level: Button,
+    benchmark:      Button,
+    test_level:     Button,
+    ping_inspector: Button,
 
     add_box: Button,
 
@@ -88,6 +91,7 @@ pub struct TestGameView {
     polygon: Button,
     noise:   Button,
     panic:   Button,
+    rest:    Button,
 
     some_button: Button,
 
@@ -180,8 +184,8 @@ impl Setup for TestGameView {
         self.spinner.set_text_size(20);
         self.spinner.on_tap(|| {
             let spin = Spinner::lock();
-            after(4, || {
-                spin.stop();
+            after(2.0, || {
+                spin.animated_stop();
             });
         });
 
@@ -246,7 +250,7 @@ impl Setup for TestGameView {
             LevelManager::set_level(BenchmarkLevel::default());
         });
 
-        self.test_level.set_text("test");
+        self.test_level.set_text("test level");
         self.test_level
             .place()
             .same([Y, Height], self.text_field)
@@ -256,6 +260,25 @@ impl Setup for TestGameView {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
         });
+
+        self.ping_inspector.set_text("ping inspector");
+        self.ping_inspector.place().same([Y, Height], self.test_level).w(110).anchor(
+            Left,
+            self.test_level,
+            10,
+        );
+        #[cfg(not_wasm)]
+        {
+            self.ping_inspector.on_tap(|| {
+                test_engine::inspect::InspectServer::send(test_engine::inspect::AppCommand::Ping);
+            });
+        }
+        #[cfg(wasm)]
+        {
+            self.ping_inspector.on_tap(|| {
+                Alert::show("Not implemented on WASM");
+            });
+        }
 
         self.ui_bench.set_text("ui bench");
         self.ui_bench
@@ -310,6 +333,19 @@ impl Setup for TestGameView {
             panic!("test panic");
         });
 
+        self.rest.set_text("request");
+        self.rest
+            .place()
+            .anchor(Left, self.panic, 10)
+            .same([Y, Width, Height], self.panic);
+        async_link_button!(self.rest, rest_pressed);
+
+        self.rest_tapped.val_async(move |val| async move {
+            on_main(move || {
+                self.rest.set_text(format!("rest: {val}"));
+            });
+        });
+
         self.sprite_view.set_title("Sprite:");
         self.sprite_view.place().size(280, 120).center_y().r(0);
         let player = self.level.player;
@@ -360,6 +396,24 @@ impl Setup for TestGameView {
 }
 
 impl TestGameView {
+    async fn rest_pressed(self: Weak<Self>) -> anyhow::Result<()> {
+        let spin = Spinner::lock();
+
+        let users = TEST_REST_REQUEST.await?;
+
+        spin.stop();
+
+        Alert::show(format!(
+            "Got {} users. First name: {}",
+            users.len(),
+            users.first().unwrap().name
+        ));
+
+        self.rest_tapped.trigger(users.len());
+
+        Ok(())
+    }
+
     fn setup_keymap(mut self: Weak<Self>) {
         [
             (' ', Direction::Up),

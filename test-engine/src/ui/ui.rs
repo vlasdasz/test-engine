@@ -1,12 +1,12 @@
 use std::{
     any::type_name,
     ops::{Deref, DerefMut},
-    sync::Mutex,
 };
 
-use dispatch::{from_main, wait_for_next_frame};
 use gm::{color::TURQUOISE, flat::Rect};
+use hreads::{from_main, wait_for_next_frame};
 use log::{debug, trace};
+use parking_lot::Mutex;
 use refs::{Own, Weak, main_lock::MainLock};
 use render::{
     UIGradientPipeline, UIImageRectPipepeline,
@@ -254,13 +254,13 @@ impl UI {
         test_start: bool,
         new_test_name: String,
     ) -> Weak<T> {
-        let test_name = TEST_NAME.lock().unwrap().clone();
+        let test_name = TEST_NAME.lock().clone();
 
         if !test_name.is_empty() && test_start {
             debug!("{test_name}: OK");
         }
 
-        TEST_NAME.lock().unwrap().clone_from(&new_test_name);
+        TEST_NAME.lock().clone_from(&new_test_name);
 
         debug!("{new_test_name}: Started");
 

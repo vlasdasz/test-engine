@@ -9,10 +9,6 @@ crate-type = ["rlib", "staticlib"]
 doctest = false
 name = "ui"
 
-[features]
-debug = []
-default = ["debug"]
-
 [dependencies]
 anyhow = { workspace = true }
 atomic_float = { workspace = true }
@@ -20,10 +16,11 @@ chrono = { workspace = true }
 educe = { workspace = true }
 log = { workspace = true }
 nonempty = { workspace = true }
+parking_lot = { workspace = true }
 rust_decimal = { workspace = true }
 serde = { workspace = true }
 
-dispatch = { workspace = true }
+hreads = { workspace = true }
 plat = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }

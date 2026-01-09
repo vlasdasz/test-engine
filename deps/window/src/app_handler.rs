@@ -98,7 +98,7 @@ impl ApplicationHandler<Window> for AppHandler {
                 window.inner_size()
             };
 
-            dispatch::block_on(Window::start_internal(render_size, window, proxy));
+            hreads::block_on(Window::start_internal(render_size, window, proxy));
         }
     }
 

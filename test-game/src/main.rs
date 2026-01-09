@@ -1,11 +1,11 @@
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
-#![feature(const_trait_impl)]
 #![feature(linkage)]
 
 use crate::app::TestGameApp;
 
+mod api;
 mod app;
 mod interface;
 mod levels;

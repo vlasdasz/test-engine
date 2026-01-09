@@ -45,9 +45,9 @@ impl Default for PolygonPipeline {
         let polygon_view_layout = make_uniform_layout("polygon_view_layout", ShaderStages::VERTEX_FRAGMENT);
 
         let uniform_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label:                "polygon_pipeline_layout".into(),
-            bind_group_layouts:   &[&view_layout, &polygon_view_layout],
-            push_constant_ranges: &[],
+            label:              "polygon_pipeline_layout".into(),
+            bind_group_layouts: &[&view_layout, &polygon_view_layout],
+            immediate_size:     0,
         });
 
         let pipeline = device.pipeline(

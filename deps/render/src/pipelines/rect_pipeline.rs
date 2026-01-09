@@ -60,9 +60,9 @@ impl<
         }
 
         let uniform_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label:                Some(&format!("{NAME}_pipeline_layout")),
-            bind_group_layouts:   &bind_group_layouts,
-            push_constant_ranges: &[],
+            label:              Some(&format!("{NAME}_pipeline_layout")),
+            bind_group_layouts: &bind_group_layouts,
+            immediate_size:     0,
         });
 
         let pipeline = if TYPE.image() {

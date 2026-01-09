@@ -1,7 +1,6 @@
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
-#![feature(const_trait_impl)]
 #![feature(linkage)]
 
 mod app_runner;
@@ -13,6 +12,7 @@ mod app;
 mod app_starter;
 mod config;
 mod game_drawer;
+mod inspect_server;
 mod pipelines;
 pub mod ui;
 
@@ -36,10 +36,7 @@ pub mod level {
 }
 
 pub mod refs {
-    pub use refs::{
-        AsAny, Own, Weak, current_thread_id, manage::DataManager, set_current_thread_as_main, vec::OwnVec,
-        weak_from_ref,
-    };
+    pub use refs::{AsAny, Own, Weak, manage::DataManager, vec::OwnVec, weak_from_ref};
 }
 
 pub mod reflected {
@@ -76,10 +73,23 @@ pub use ui::views::task_spinner::TaskSpinner;
 pub use vents::{Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
+pub mod net {
+    pub use netrun::rest::*;
+}
+
 pub mod dispatch {
-    pub use ::dispatch::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
+    #[cfg(not_wasm)]
+    pub use ::hreads::first_ok;
+    pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
 
     // pub use crate::ui::ui_dispatch::on_back;
+}
+
+#[cfg(not_wasm)]
+pub mod inspect {
+    pub use ::inspect::{AppCommand, InspectorCommand};
+
+    pub use crate::inspect_server::InspectServer;
 }
 
 #[cfg(target_os = "android")]

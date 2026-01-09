@@ -11,12 +11,12 @@ name = "window"
 [dependencies]
 anyhow = { workspace = true }
 bytemuck = { workspace = true }
-dispatch = { workspace = true }
+hreads = { workspace = true }
 image = { workspace = true }
 log = { workspace = true }
 resvg = { workspace = true }
 tiny-skia = { workspace = true }
-usvg = "0.45"
+usvg = { workspace = true }
 web-time = { workspace = true }
 wgpu = { workspace = true }
 
@@ -35,4 +35,4 @@ winit = { workspace = true, features = ["android-game-activity"] }
 winit = { workspace = true }
 
 [build-dependencies]
-plat = "0.4.0"
+plat = { workspace = true }

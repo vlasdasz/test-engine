@@ -22,6 +22,10 @@ pub trait App {
     fn config_yaml(&self) -> Option<String> {
         None
     }
+
+    fn enable_inspection(&self) -> bool {
+        true
+    }
 }
 
 #[cfg(ios)]

@@ -2,14 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
 ]
 
 resolver = "3"
@@ -22,59 +23,64 @@ version = "0.1.0"
 ignored = []
 
 [workspace.dependencies]
-android_logger = "~0.15"
-anyhow = "~1.0"
-arbitrary = { version = "~1.4", features = ["derive"] }
-async-std = "~1.13"
-atomic_float = "~1.1"
-bit_ops = "~0.2"
-bytemuck = { version = "~1.24", features = ["derive"] }
-cgmath = "~0.18"
-chrono = "~0.4"
-console_error_panic_hook = "~0.1"
-console_log = "~1.0"
-dirs = "~6.0"
-educe = "~0.6"
-fastrand = "~2.3"
-fern = "~0.7"
-gloo-timers = { version = "~0.3", features = ["futures"] }
-image = "~0.25"
-indexmap = "~2.12"
-instant = { version = "~0.1", features = ["wasm-bindgen"] }
-jni = "~0.21"
-kira = "~0.11"
-log = "~0.4"
-lyon = "~1.0"
-nonempty = "~0.12"
-pollster = "~0.4"
-quote = "~1.0"
-rapier2d = { version = "~0.31", features = ["simd-nightly"] }
-resvg = "~0.45"
-rust_decimal = "~1.39"
-sentry = { version = "~0.46", default-features = false, features = ["reqwest", "rustls"] }
-serde = { version = "~1.0", features = ["derive"] }
-serde_json = "~1.0"
-serde_yaml = "~0.9"
-syn = { version = "~2.0", features = ["full", "extra-traits"] }
-tiny-skia = "~0.11"
-wasm-bindgen-futures = "~0.4"
-web-time = "~1.1"
+android_logger = "0.15"
+anyhow = "1.0"
+arbitrary = { version = "1.4", features = ["derive"] }
+async-std = "1.13"
+atomic_float = "1.1"
+bit_ops = "0.2"
+bytemuck = { version = "1.24", features = ["derive"] }
+cgmath = "0.18"
+chrono = "0.4"
+console_error_panic_hook = "0.1"
+console_log = "1.0"
+dirs = "6.0"
+educe = "0.6"
+fastrand = "2.3"
+fern = "0.7"
+gloo-timers = { version = "0.3", features = ["futures"] }
+image = "0.25"
+indexmap = "2.12"
+instant = { version = "0.1", features = ["wasm-bindgen"] }
+jni = "0.21"
+kira = "0.11"
+log = "0.4"
+lyon = "1.0"
+nonempty = "0.12"
+parking_lot = "0.12"
+pollster = "0.4"
+quote = "1.0"
+rapier2d = { version = "0.31", features = ["simd-nightly"] }
+resvg = "0.45"
+rust_decimal = "1.39"
+sentry = { version = "0.46", default-features = false, features = ["reqwest", "rustls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+syn = { version = "2.0", features = ["full", "extra-traits"] }
+tiny-skia = "0.11"
+tokio = { version = "1.49", features = ["full"] }
+usvg = "0.45"
+wasm-bindgen-futures = "0.4"
+web-time = "1.1"
 
-wgpu = "~27.0"
-wgpu_text = "~27.0"
-winit = "~0.30"
+wgpu = "28.0"
+wgpu_text = "28.0"
+winit = "0.30"
 
-plat = "~0.5"
-reflected = "~0.26"
-refs = { version = "~0.23", default-features = true }
-vents = "~0.11"
+hreads = "0.10"
+netrun = "0.10"
+plat = "0.5"
+reflected = "0.29"
+refs = { version = "0.30", default-features = true }
+vents = "0.13"
 
 audio = { path = "deps/audio" }
-dispatch = { path = "deps/dispatch" }
 filesystem = { path = "deps/filesystem" }
 game = { path = "deps/game" }
 generate = { path = "deps/generate" }
 gm = { path = "deps/gm" }
+inspect = { path = "deps/inspect" }
 level = { path = "deps/level" }
 level-proc = { path = "deps/level/level-proc" }
 render = { path = "deps/render" }
@@ -93,5 +99,6 @@ window = { path = "deps/window" }
 #wgpu = { path = "../3/wgpu/wgpu" }
 #vents = { path = "../deps/vents/vents" }
 #reflected = { path = "../deps/reflected/reflected" }
-#wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "10cd78a848cf8e911a6780c011dbd5be33f37a1c" }
-#refs = { path = "../deps/refs/refs" }
+#wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "0f25a5fa912cafd6161158fce16f0ae5236047ca" }
+#hreads = { path = "../deps/hreads" }
+#netrun = { path = "../deps/netrun/netrun" }

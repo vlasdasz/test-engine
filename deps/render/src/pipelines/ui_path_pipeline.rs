@@ -30,9 +30,9 @@ impl Default for UIPathPipeline {
         let z_pos_layout = make_uniform_layout("path_z_pos_layput", ShaderStages::VERTEX);
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label:                Some("Path Pipeline Layout"),
-            bind_group_layouts:   &[&z_pos_layout, &PathData::uniform_layout()],
-            push_constant_ranges: &[],
+            label:              Some("Path Pipeline Layout"),
+            bind_group_layouts: &[&z_pos_layout, &PathData::uniform_layout()],
+            immediate_size:     0,
         });
 
         let pipeline = device.pipeline(

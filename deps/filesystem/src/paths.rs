@@ -1,7 +1,8 @@
-use std::{path::PathBuf, process::Command, sync::Mutex};
+use std::{path::PathBuf, process::Command};
 
 use dirs::home_dir;
 use log::warn;
+use parking_lot::Mutex;
 use plat::Platform;
 
 static STORAGE_PATH: Mutex<Option<String>> = Mutex::new(None);
@@ -18,14 +19,7 @@ impl Paths {
         let home = if Platform::IOS {
             dirs::document_dir()
         } else if Platform::ANDROID {
-            Some(
-                STORAGE_PATH
-                    .lock()
-                    .unwrap()
-                    .clone()
-                    .expect("set storage path on android")
-                    .into(),
-            )
+            STORAGE_PATH.lock().clone().map(PathBuf::from)
         } else {
             dirs::home_dir()
         }
@@ -65,6 +59,6 @@ impl Paths {
     }
 
     pub fn set_storage_path(path: String) {
-        STORAGE_PATH.lock().unwrap().replace(path);
+        STORAGE_PATH.lock().replace(path);
     }
 }
