@@ -18,4 +18,5 @@ impl From<UIRequest> for InspectorCommand {
 pub enum UIRequest {
     GetScale,
     SetScale(f32),
+    GetUI,
 }

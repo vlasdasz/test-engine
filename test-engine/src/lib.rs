@@ -12,7 +12,7 @@ mod app;
 mod app_starter;
 mod config;
 mod game_drawer;
-mod inspect_server;
+pub mod inspect;
 mod pipelines;
 pub mod ui;
 
@@ -83,13 +83,6 @@ pub mod dispatch {
     pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
 
     // pub use crate::ui::ui_dispatch::on_back;
-}
-
-#[cfg(not_wasm)]
-pub mod inspect {
-    pub use ::inspect::{AppCommand, InspectorCommand};
-
-    pub use crate::inspect_server::InspectServer;
 }
 
 #[cfg(target_os = "android")]

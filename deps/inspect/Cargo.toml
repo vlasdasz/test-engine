@@ -4,7 +4,9 @@ name = "inspect"
 version.workspace = true
 
 [dependencies]
-serde = { version = "1.0.228", features = ["derive"] }
+serde = { workspace = true }
+
+gm = { workspace = true }
 
 [dev-dependencies]
 anyhow = { workspace = true }

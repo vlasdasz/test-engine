@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::ui::ViewRepr;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum AppCommand {
     Ping,
@@ -16,4 +18,5 @@ impl From<UIResponse> for AppCommand {
 #[derive(Debug, Serialize, Deserialize)]
 pub enum UIResponse {
     Scale(f32),
+    SendUI(ViewRepr),
 }

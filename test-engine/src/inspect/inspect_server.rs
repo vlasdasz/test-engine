@@ -9,6 +9,8 @@ use refs::manage::DataManager;
 use tokio::{spawn, sync::OnceCell};
 use ui::UIManager;
 
+use crate::inspect::view_conversion::ViewToInspect;
+
 type Server = netrun::Server<InspectorCommand, AppCommand>;
 
 static SERVER: OnceCell<Server> = OnceCell::const_new();
@@ -79,6 +81,10 @@ impl InspectServer {
             }
             UIRequest::SetScale(scale) => {
                 UIManager::set_scale(scale);
+            }
+            UIRequest::GetUI => {
+                let root = UIManager::root_view().view_to_inspect();
+                server().await.send(UIResponse::SendUI(root)).await?;
             }
         }
 

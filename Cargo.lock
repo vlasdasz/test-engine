@@ -477,6 +477,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "bitcode"
+version = "0.6.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a6ed1b54d8dc333e7be604d00fa9262f4635485ffea923647b6521a5fff045d"
+dependencies = [
+ "arrayvec",
+ "bitcode_derive",
+ "bytemuck",
+ "glam 0.30.10",
+ "serde",
+]
+
+[[package]]
+name = "bitcode_derive"
+version = "0.6.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "238b90427dfad9da4a9abd60f3ec1cdee6b80454bde49ed37f1781dd8e9dc7f9"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.114",
+]
+
+[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2255,6 +2279,7 @@ name = "inspect"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "gm",
  "plat",
  "serde",
 ]
@@ -2820,11 +2845,12 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.10.0"
+version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8597c0575b6d8afae8eb587b53bc843cb04eb5b92e1c826701cb57d19d408bfd"
+checksum = "2edeb8b75552d6737660569e04d635f14a5cef607a104b921b758ab029005ff5"
 dependencies = [
  "anyhow",
+ "bitcode",
  "log",
  "parking_lot",
  "plat",
