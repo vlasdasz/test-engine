@@ -391,7 +391,7 @@ impl Placer {
         for rule in this.rules().iter_mut() {
             if rule.between {
                 self.between_layout(rule);
-            } else if rule.anchor_view.is_ok() {
+            } else if rule.anchor_view.is_some() {
                 if rule.relative {
                     self.relative_layout(rule);
                 } else if rule.same {
@@ -478,7 +478,7 @@ impl Placer {
     fn anchor_layout(&mut self, rule: &LayoutRule, has_left: bool) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.frame();
+        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in anchor layout").frame();
 
         let side = rule.side.as_ref().expect("Anchor layout without side");
 
@@ -506,7 +506,7 @@ impl Placer {
     fn relative_layout(&mut self, rule: &LayoutRule) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.frame();
+        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in relative layout").frame();
 
         let side = rule.side.as_ref().expect("Relative layout without side");
 
@@ -530,7 +530,7 @@ impl Placer {
     fn same_layout(&mut self, rule: &LayoutRule) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.frame();
+        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in same layout").frame();
 
         let side = rule.side.as_ref().expect("Same layout without side");
 
@@ -575,14 +575,22 @@ impl Placer {
     }
 
     fn between_2_layout(&mut self, rule: &LayoutRule) {
-        let center_a = rule.anchor_view.frame().center();
-        let center_b = rule.anchor_view2.frame().center();
+        let center_a = rule.anchor_view.expect("No anchor view in between 2 layout").frame().center();
+        let center_b = rule
+            .anchor_view2
+            .expect("No anchor 2 view in between 2 layout")
+            .frame()
+            .center();
         let center = center_a.middle(&center_b);
         self.view.edit_frame(|frame| frame.set_center(center));
     }
 
     fn between_super_layout(&mut self, rule: &LayoutRule) {
-        let f = rule.anchor_view.frame();
+        let f = rule
+            .anchor_view
+            .as_ref()
+            .expect("No anchor view in between super layout")
+            .frame();
         let cen = f.center();
 
         let view = self.view.deref_mut();

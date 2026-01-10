@@ -6,6 +6,6 @@ use ui::Placer;
 pub struct ViewRepr {
     pub label:    String,
     pub frame:    Rect,
-    pub placer:   Option<Placer>,
+    pub placer:   Placer,
     pub subviews: Vec<ViewRepr>,
 }

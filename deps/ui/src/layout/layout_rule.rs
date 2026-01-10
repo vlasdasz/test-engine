@@ -1,6 +1,5 @@
 use educe::Educe;
 use gm::ToF32;
-use refs::Weak;
 
 use crate::{
     WeakView,
@@ -15,9 +14,9 @@ pub struct LayoutRule {
     pub offset: f32,
 
     #[educe(Debug(ignore))]
-    pub anchor_view:  WeakView,
+    pub anchor_view:  Option<WeakView>,
     #[educe(Debug(ignore))]
-    pub anchor_view2: WeakView,
+    pub anchor_view2: Option<WeakView>,
 
     pub relative: bool,
     pub between:  bool,
@@ -30,8 +29,8 @@ impl LayoutRule {
             side:         None,
             tiling:       tiling.into(),
             offset:       offset.to_f32(),
-            anchor_view:  Weak::default(),
-            anchor_view2: Weak::default(),
+            anchor_view:  None,
+            anchor_view2: None,
             relative:     false,
             between:      false,
             same:         false,
@@ -43,8 +42,8 @@ impl LayoutRule {
             side:         Some(side),
             tiling:       None,
             offset:       offset.to_f32(),
-            anchor_view:  Weak::default(),
-            anchor_view2: Weak::default(),
+            anchor_view:  None,
+            anchor_view2: None,
             relative:     false,
             between:      false,
             same:         false,
@@ -53,40 +52,40 @@ impl LayoutRule {
 
     pub fn anchor(side: Anchor, offset: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
-            side: Some(side),
-            tiling: None,
-            offset: offset.to_f32(),
-            anchor_view,
-            anchor_view2: Weak::default(),
-            relative: false,
-            between: false,
-            same: false,
+            side:         Some(side),
+            tiling:       None,
+            offset:       offset.to_f32(),
+            anchor_view:  Some(anchor_view),
+            anchor_view2: None,
+            relative:     false,
+            between:      false,
+            same:         false,
         }
     }
 
     pub fn relative(side: Anchor, ratio: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
-            side: Some(side),
-            tiling: None,
-            offset: ratio.to_f32(),
-            anchor_view,
-            anchor_view2: Weak::default(),
-            relative: true,
-            between: false,
-            same: false,
+            side:         Some(side),
+            tiling:       None,
+            offset:       ratio.to_f32(),
+            anchor_view:  Some(anchor_view),
+            anchor_view2: None,
+            relative:     true,
+            between:      false,
+            same:         false,
         }
     }
 
     pub fn same(side: Anchor, anchor_view: WeakView) -> Self {
         Self {
-            side: Some(side),
-            tiling: None,
-            offset: 0.0,
-            anchor_view,
-            anchor_view2: Weak::default(),
-            relative: false,
-            between: false,
-            same: true,
+            side:         Some(side),
+            tiling:       None,
+            offset:       0.0,
+            anchor_view:  Some(anchor_view),
+            anchor_view2: None,
+            relative:     false,
+            between:      false,
+            same:         true,
         }
     }
 
@@ -95,8 +94,8 @@ impl LayoutRule {
             side,
             tiling: None,
             offset: 0.0,
-            anchor_view: view_a,
-            anchor_view2: view_b,
+            anchor_view: Some(view_a),
+            anchor_view2: Some(view_b),
             relative: false,
             between: true,
             same: false,
