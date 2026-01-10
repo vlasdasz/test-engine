@@ -25,6 +25,7 @@ impl Serialize for LayoutRule {
 
         state.serialize_field("relative", &self.relative)?;
         state.serialize_field("between", &self.between)?;
+        state.serialize_field("same", &self.same)?;
 
         state.end()
     }
