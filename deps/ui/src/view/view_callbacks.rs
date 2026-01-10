@@ -27,9 +27,9 @@ pub trait __ViewInternalSetup {
 pub trait Setup {
     fn new() -> Own<Self>
     where Self: Default;
-    fn before_setup(self: Weak<Self>);
     fn setup(self: Weak<Self>);
     fn on_selection_changed(self: Weak<Self>, selected: bool);
+    fn before_setup(self: Weak<Self>);
 }
 
 impl<T: View + 'static> Setup for T {
@@ -38,9 +38,9 @@ impl<T: View + 'static> Setup for T {
         Own::<Self>::default()
     }
 
-    default fn before_setup(self: Weak<Self>) {}
-
     default fn setup(self: Weak<Self>) {}
 
     default fn on_selection_changed(self: Weak<Self>, _selected: bool) {}
+
+    default fn before_setup(self: Weak<Self>) {}
 }

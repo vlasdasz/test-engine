@@ -1,0 +1,35 @@
+use anyhow::Result;
+use inspect::ui::ViewRepr;
+use test_engine::{
+    dispatch::from_main,
+    inspect::ViewToInspect,
+    refs::Weak,
+    ui::{BLUE, Button, Setup, UI, ViewData, view},
+};
+
+#[view]
+struct InspectParsing {
+    #[init]
+    button: Button,
+}
+
+impl Setup for InspectParsing {
+    fn setup(mut self: Weak<Self>) {
+        self.button.place().t(20).l(20).size(100, 100);
+        self.button.set_color(BLUE);
+    }
+}
+
+pub(crate) async fn test_inspect_parsing() -> Result<()> {
+    let view = UI::init_test_view::<InspectParsing>();
+
+    let repr = from_main(move || view.view_to_inspect());
+
+    let json = serde_json::to_string(&repr)?;
+
+    let parsed_repr: ViewRepr = serde_json::from_str(&json)?;
+
+    assert_eq!(repr, parsed_repr);
+
+    Ok(())
+}

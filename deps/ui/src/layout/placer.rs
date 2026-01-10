@@ -683,3 +683,12 @@ impl Debug for Placer {
         self.rules.borrow().fmt(f)
     }
 }
+
+impl PartialEq for Placer {
+    fn eq(&self, other: &Self) -> bool {
+        self.rules == other.rules
+            && self.all_tiling_rules == other.all_tiling_rules
+            && self.all_margin == other.all_margin
+            && self.has == other.has
+    }
+}

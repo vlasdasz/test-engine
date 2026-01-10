@@ -114,3 +114,23 @@ impl From<Tiling> for LayoutRule {
         Self::tiling(tiling, 0)
     }
 }
+
+impl PartialEq for LayoutRule {
+    fn eq(&self, other: &Self) -> bool {
+        fn compare_anchors(a: Option<&WeakView>, b: Option<&WeakView>) -> bool {
+            match (a, b) {
+                (None, None) => true,
+                (Some(_), None) | (None, Some(_)) => false,
+                (Some(a), Some(b)) => a.raw() == b.raw(),
+            }
+        }
+
+        self.side == other.side
+            && self.tiling == other.tiling
+            && self.offset == other.offset
+            && compare_anchors(self.anchor_view.as_ref(), other.anchor_view.as_ref())
+            && compare_anchors(self.anchor_view.as_ref(), other.anchor_view2.as_ref())
+            && self.relative == other.relative
+            && self.same == other.same
+    }
+}

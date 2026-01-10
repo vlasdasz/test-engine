@@ -5473,10 +5473,12 @@ name = "ui-test"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "inspect",
  "instant",
  "log",
  "parking_lot",
  "serde",
+ "serde_json",
  "test-engine",
 ]
 
