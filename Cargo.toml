@@ -69,7 +69,7 @@ wgpu_text = "28.0"
 winit = "0.30"
 
 hreads = "0.10"
-netrun = "0.12"
+netrun = "0.13"
 plat = "0.5"
 reflected = "0.29"
 refs = { version = "0.31", default-features = true }
@@ -101,4 +101,4 @@ window = { path = "deps/window" }
 #reflected = { path = "../deps/reflected/reflected" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "0f25a5fa912cafd6161158fce16f0ae5236047ca" }
 #hreads = { path = "../deps/hreads" }
-netrun = { path = "../deps/netrun/netrun" }
+#netrun = { path = "../deps/netrun/netrun" }
