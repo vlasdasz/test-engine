@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Anchor {
     Top,
     Bot,
@@ -41,9 +41,5 @@ impl Anchor {
 
     pub(crate) fn is_left(&self) -> bool {
         matches!(self, Self::Left)
-    }
-
-    pub(crate) fn is_none(&self) -> bool {
-        matches!(self, Self::None)
     }
 }

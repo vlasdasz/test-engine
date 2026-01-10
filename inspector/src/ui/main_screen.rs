@@ -2,7 +2,6 @@ use anyhow::Result;
 use inspect::{AppCommand, InspectorCommand, UIRequest, UIResponse};
 use log::info;
 use test_engine::{
-    Event,
     dispatch::{after, on_main},
     refs::Weak,
     ui::{AlertErr, Anchor::Top, Button, HasText, Setup, ViewData, async_link_button, view},
@@ -102,27 +101,5 @@ impl MainScreen {
         };
 
         Ok(())
-    }
-}
-
-pub trait AsyncEvent<T> {
-    fn val_async<Fut, Function>(&self, action: Function)
-    where
-        T: Send + 'static,
-        Fut: Future + Send + 'static,
-        Function: (FnMut(T) -> Fut) + Send + Copy + 'static;
-}
-
-impl<T: Send + 'static> AsyncEvent<T> for Event<T> {
-    fn val_async<Fut, Function>(&self, mut action: Function)
-    where
-        T: Send + 'static,
-        Fut: Future + Send + 'static,
-        Function: (FnMut(T) -> Fut) + Send + Copy + 'static, {
-        self.val(move |val| {
-            spawn(async move {
-                action(val).await;
-            });
-        });
     }
 }

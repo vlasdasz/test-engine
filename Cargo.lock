@@ -2282,6 +2282,7 @@ dependencies = [
  "gm",
  "plat",
  "serde",
+ "ui",
 ]
 
 [[package]]
@@ -2846,8 +2847,6 @@ dependencies = [
 [[package]]
 name = "netrun"
 version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2edeb8b75552d6737660569e04d635f14a5cef607a104b921b758ab029005ff5"
 dependencies = [
  "anyhow",
  "bitcode",
@@ -4055,9 +4054,9 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.30.0"
+version = "0.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c19afa0517b10492c70c2f6fe376c9ea3faea51caecdcbd2d28adfe61a1aad91"
+checksum = "cb7c48b9a6ded2c1ea86db3163d6b92abb533c38613e70323f013270e024ce9e"
 dependencies = [
  "derive_more",
  "hreads",

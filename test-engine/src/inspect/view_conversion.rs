@@ -10,6 +10,7 @@ impl<T: View + ?Sized> ViewToInspect for T {
         ViewRepr {
             label:    self.label().to_string(),
             frame:    *self.frame(),
+            placer:   self.placer_copy(),
             subviews: self.subviews().iter().map(|v| v.view_to_inspect()).collect(),
         }
     }

@@ -30,6 +30,7 @@ pub trait ViewData {
     fn set_hidden(&mut self, is_hidden: bool) -> &mut Self;
 
     fn place(&self) -> &Placer;
+    fn placer_copy(&self) -> Option<Placer>;
 
     fn navigation_view(&self) -> Weak<NavigationView>;
     fn set_navigation_view(&mut self, nav: Weak<NavigationView>) -> &mut Self;
@@ -120,6 +121,16 @@ impl<T: ?Sized + View> ViewData for T {
             "Invalid placer. Most likely this view was not initialized properly"
         );
         placer
+    }
+
+    fn placer_copy(&self) -> Option<Placer> {
+        let placer = &self.base_view().placer;
+
+        if placer.is_ok() {
+            Some(placer.clone())
+        } else {
+            None
+        }
     }
 
     fn navigation_view(&self) -> Weak<NavigationView> {

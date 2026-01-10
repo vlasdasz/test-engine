@@ -7,10 +7,10 @@ use crate::{
     layout::{Anchor, Tiling},
 };
 
-#[derive(Educe)]
+#[derive(Clone, Educe)]
 #[educe(Debug)]
 pub struct LayoutRule {
-    pub side:   Anchor,
+    pub side:   Option<Anchor>,
     pub tiling: Option<Tiling>,
     pub offset: f32,
 
@@ -27,7 +27,7 @@ pub struct LayoutRule {
 impl LayoutRule {
     pub fn tiling(tiling: Tiling, offset: impl ToF32) -> Self {
         Self {
-            side:         Anchor::Top,
+            side:         None,
             tiling:       tiling.into(),
             offset:       offset.to_f32(),
             anchor_view:  Weak::default(),
@@ -40,20 +40,20 @@ impl LayoutRule {
 
     pub fn make(side: Anchor, offset: impl ToF32) -> Self {
         Self {
-            side,
-            tiling: None,
-            offset: offset.to_f32(),
-            anchor_view: Weak::default(),
+            side:         Some(side),
+            tiling:       None,
+            offset:       offset.to_f32(),
+            anchor_view:  Weak::default(),
             anchor_view2: Weak::default(),
-            relative: false,
-            between: false,
-            same: false,
+            relative:     false,
+            between:      false,
+            same:         false,
         }
     }
 
     pub fn anchor(side: Anchor, offset: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
-            side,
+            side: Some(side),
             tiling: None,
             offset: offset.to_f32(),
             anchor_view,
@@ -66,7 +66,7 @@ impl LayoutRule {
 
     pub fn relative(side: Anchor, ratio: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
-            side,
+            side: Some(side),
             tiling: None,
             offset: ratio.to_f32(),
             anchor_view,
@@ -79,7 +79,7 @@ impl LayoutRule {
 
     pub fn same(side: Anchor, anchor_view: WeakView) -> Self {
         Self {
-            side,
+            side: Some(side),
             tiling: None,
             offset: 0.0,
             anchor_view,
@@ -90,7 +90,7 @@ impl LayoutRule {
         }
     }
 
-    pub fn between(view_a: WeakView, view_b: WeakView, side: Anchor) -> Self {
+    pub fn between(view_a: WeakView, view_b: WeakView, side: Option<Anchor>) -> Self {
         Self {
             side,
             tiling: None,

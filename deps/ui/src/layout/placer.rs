@@ -13,13 +13,14 @@ use crate::{
     view::ViewFrame,
 };
 
+#[derive(Clone)]
 pub struct Placer {
     pub(crate) rules:            RefCell<Vec<LayoutRule>>,
     pub(crate) all_tiling_rules: RefCell<Vec<LayoutRule>>,
 
     // Since `Placer` is owned by `View` this should be OK. I hope.
-    view:      Rglica<dyn View>,
-    s_content: Rglica<Size>,
+    pub(crate) view:      Rglica<dyn View>,
+    pub(crate) s_content: Rglica<Size>,
 
     pub(crate) all_margin: RefCell<f32>,
 
@@ -366,17 +367,17 @@ impl Placer {
         view_a: impl Deref<Target = impl View> + Copy,
         view_b: impl Deref<Target = impl View> + Copy,
     ) -> &Self {
-        self.rules().push(LayoutRule::between(
-            view_a.weak_view(),
-            view_b.weak_view(),
-            Anchor::None,
-        ));
+        self.rules()
+            .push(LayoutRule::between(view_a.weak_view(), view_b.weak_view(), None));
         self
     }
 
     pub fn between_super(&self, view: impl Deref<Target = impl View> + Copy, anchor: Anchor) -> &Self {
-        self.rules()
-            .push(LayoutRule::between(view.weak_view(), Weak::default(), anchor));
+        self.rules().push(LayoutRule::between(
+            view.weak_view(),
+            Weak::default(),
+            Some(anchor),
+        ));
         self
     }
 }
@@ -419,7 +420,9 @@ impl Placer {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
 
-        match rule.side {
+        let side = rule.side.as_ref().expect("Reached side layout with no side rule");
+
+        match side {
             Anchor::Top => frame.origin.y = rule.offset,
             Anchor::Bot => {
                 if has.height {
@@ -465,7 +468,7 @@ impl Placer {
                 }
             }
             Anchor::Size | Anchor::X | Anchor::Y | Anchor::None => {
-                unimplemented!("Simple layout for {:?} is not supported", rule.side)
+                unimplemented!("Simple layout for {:?} is not supported", side)
             }
         }
 
@@ -476,7 +479,10 @@ impl Placer {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
         let a_frame = rule.anchor_view.frame();
-        match rule.side {
+
+        let side = rule.side.as_ref().expect("Anchor layout without side");
+
+        match side {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
             Anchor::Bot => frame.origin.y = a_frame.y() - rule.offset - frame.height(),
             Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
@@ -492,7 +498,7 @@ impl Placer {
             }
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
-            _ => unimplemented!("Anchor layout for: {:?} is not supported", rule.side),
+            _ => unimplemented!("Anchor layout for: {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -501,7 +507,10 @@ impl Placer {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
         let a_frame = rule.anchor_view.frame();
-        match rule.side {
+
+        let side = rule.side.as_ref().expect("Relative layout without side");
+
+        match side {
             Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
             Anchor::Height => frame.size.height = a_frame.size.height * rule.offset,
             Anchor::Size => frame.size = a_frame.size * rule.offset,
@@ -513,7 +522,7 @@ impl Placer {
                 center.y += rule.offset;
                 frame.set_center(center);
             }
-            _ => unimplemented!("Relative layout for {:?} is not supported", rule.side),
+            _ => unimplemented!("Relative layout for {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -522,13 +531,16 @@ impl Placer {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
         let a_frame = rule.anchor_view.frame();
-        match rule.side {
+
+        let side = rule.side.as_ref().expect("Same layout without side");
+
+        match side {
             Anchor::Width => frame.size.width = a_frame.size.width,
             Anchor::Height => frame.size.height = a_frame.size.height,
             Anchor::Size => frame.size = a_frame.size,
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
-            _ => unimplemented!("Same layout for {:?} is not supported", rule.side),
+            _ => unimplemented!("Same layout for {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -558,7 +570,7 @@ impl Placer {
         if rule.side.is_none() {
             self.between_2_layout(rule);
         } else {
-            self.between_s_layout(rule);
+            self.between_super_layout(rule);
         }
     }
 
@@ -569,14 +581,16 @@ impl Placer {
         self.view.edit_frame(|frame| frame.set_center(center));
     }
 
-    fn between_s_layout(&mut self, rule: &LayoutRule) {
+    fn between_super_layout(&mut self, rule: &LayoutRule) {
         let f = rule.anchor_view.frame();
         let cen = f.center();
 
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
 
-        match rule.side {
+        let side = rule.side.as_ref().expect("Between layout without side");
+
+        match side {
             Anchor::Top => frame.set_center((cen.x, f.y() / 2.0)),
             Anchor::Bot => frame.set_center((
                 cen.x,
@@ -587,7 +601,7 @@ impl Placer {
                 self.s_content.width - (self.s_content.width - f.max_x()) / 2.0,
                 cen.y,
             )),
-            _ => unimplemented!("Between s layout for {:?} is not supported", rule.side),
+            _ => unimplemented!("Between super layout for {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -595,7 +609,10 @@ impl Placer {
 
 impl Placer {
     fn has_left(&self) -> bool {
-        self.rules.borrow().iter().any(|rule| rule.side.is_left())
+        self.rules
+            .borrow()
+            .iter()
+            .any(|rule| rule.side.as_ref().is_some_and(Anchor::is_left))
     }
 }
 

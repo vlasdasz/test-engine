@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
-    "inspector",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
 ]
 
 resolver = "3"
@@ -72,7 +72,7 @@ hreads = "0.10"
 netrun = "0.12"
 plat = "0.5"
 reflected = "0.29"
-refs = { version = "0.30", default-features = true }
+refs = { version = "0.31", default-features = true }
 vents = "0.13"
 
 audio = { path = "deps/audio" }
@@ -101,4 +101,4 @@ window = { path = "deps/window" }
 #reflected = { path = "../deps/reflected/reflected" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "0f25a5fa912cafd6161158fce16f0ae5236047ca" }
 #hreads = { path = "../deps/hreads" }
-#netrun = { path = "../deps/netrun/netrun" }
+netrun = { path = "../deps/netrun/netrun" }
