@@ -1,16 +1,41 @@
 #![allow(dead_code)]
 
-use std::fs::read_to_string;
-
 use test_engine::{
     App,
-    filesystem::Paths,
     net::RestAPI,
     refs::Own,
     ui::{Button, Label, Setup, Size, View},
 };
 
 use crate::interface::test_game_view::{BUTTON, TestGameView};
+
+#[cfg(not_wasm)]
+async fn secrets() -> anyhow::Result<&'static test_engine::net::SecretsManager> {
+    use std::env::var;
+
+    use anyhow::Context;
+    use test_engine::net::SecretsManager;
+    use tokio::sync::OnceCell;
+
+    static SECRETS: OnceCell<SecretsManager> = OnceCell::const_new();
+
+    SECRETS
+        .get_or_try_init(|| async {
+            let client_secret = var("INFISICAL_TE").context("INFISICAL_TE")?;
+
+            let manager = SecretsManager::new(
+                "49d67108-3678-45de-b28c-912519d5d3a0",
+                client_secret,
+                "d8a0c826-859b-406f-b876-ddf98cb5a6f6",
+                "dev",
+            )
+            .await
+            .context("Secrets Manager init")?;
+
+            Ok(manager)
+        })
+        .await
+}
 
 pub struct TestGameApp;
 
@@ -35,9 +60,12 @@ impl App for TestGameApp {
         (2400, 2000).into()
     }
 
-    fn config_yaml(&self) -> Option<String> {
-        Paths::git_root()
-            .ok()
-            .and_then(|root| read_to_string(root.join("secrets/decrypted/test-game.yml")).ok())
+    #[cfg(not_wasm)]
+    fn sentry_url(&self) -> test_engine::PinnedFuture<String> {
+        Box::pin(async {
+            dotenvy::dotenv()?;
+            let url = secrets().await?.get("SENTRY_URL").await?;
+            Ok(url)
+        })
     }
 }

@@ -16,7 +16,7 @@ pub mod inspect;
 mod pipelines;
 pub mod ui;
 
-pub use app::App;
+pub use app::*;
 pub use app_starter::*;
 pub use educe;
 pub use ui::{ui_proc::launch_app, ui_test};
@@ -75,6 +75,8 @@ pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
 pub mod net {
     pub use netrun::rest::*;
+    #[cfg(not_wasm)]
+    pub use netrun::secret::*;
 }
 
 pub mod dispatch {

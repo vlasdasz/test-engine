@@ -1,5 +1,0 @@
-creation_rules:
-  - pgp: "A8903143AB0B3E810C7C0F42930736090B206195"
-    encrypted_regex: '^.*$'  # Encrypt everything
-    #    encrypted_regex: '(?i)(password|webhook|username)'
-    #    path_regex: 'secrets/.*\.yaml$'

@@ -24,5 +24,9 @@ serde = { workspace = true }
 test-engine = { workspace = true }
 ui-benchmark = { workspace = true }
 
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+dotenvy = { workspace = true }
+tokio = { workspace = true }
+
 [build-dependencies]
 plat = { workspace = true }

@@ -94,11 +94,11 @@ impl AppRunner {
     }
 
     #[cfg(not_wasm)]
-    pub fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
-        let sentry_url = Config::sentry_url(app)?;
+    pub async fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
+        let sentry_url = Config::sentry_url(app).await?;
 
         let client = sentry::init((
-            sentry_url,
+            dbg!(sentry_url),
             sentry::ClientOptions {
                 release: sentry::release_name!(),
                 // Capture user IPs and potentially sensitive headers when using HTTP server integrations

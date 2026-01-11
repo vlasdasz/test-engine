@@ -119,3 +119,5 @@ profile.json.gz
 test-game/dist/*
 
 *decrypted*
+
+.env
