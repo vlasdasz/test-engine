@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
-    "inspector",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
 ]
 
 resolver = "3"
@@ -50,6 +50,7 @@ lyon = "1.0"
 nonempty = "0.12"
 parking_lot = "0.12"
 pollster = "0.4"
+pretty_assertions = "1.4"
 quote = "1.0"
 rapier2d = { version = "0.31", features = ["simd-nightly"] }
 resvg = "0.46"
@@ -63,7 +64,6 @@ tokio = { version = "1.49", features = ["full"] }
 usvg = "0.46"
 wasm-bindgen-futures = "0.4"
 web-time = "1.1"
-pretty_assertions = "1.4"
 
 wgpu = "28.0"
 wgpu_text = "28.0"

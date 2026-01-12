@@ -617,10 +617,7 @@ impl Placer {
 
 impl Placer {
     fn has_left(&self) -> bool {
-        self.rules
-            .borrow()
-            .iter()
-            .any(|rule| rule.side.as_ref().is_some_and(Anchor::is_left))
+        self.rules.borrow().iter().any(|rule| rule.side.is_some_and(Anchor::is_left))
     }
 }
 

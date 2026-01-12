@@ -1,5 +1,4 @@
 mod checks;
-mod compressed_checks;
 pub mod helpers;
 pub mod state;
 
