@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum Anchor {
     Top,
     Bot,
@@ -27,6 +27,7 @@ pub enum Anchor {
     X,
     Y,
 
+    #[default]
     None,
 }
 
