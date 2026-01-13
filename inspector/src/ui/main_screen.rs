@@ -1,6 +1,6 @@
 use anyhow::Result;
 use inspect::{AppCommand, InspectorCommand, UIRequest, UIResponse};
-use log::info;
+use log::{error, info};
 use test_engine::{
     dispatch::{after, on_main},
     refs::Weak,
@@ -41,19 +41,20 @@ impl Setup for MainScreen {
         });
 
         spawn(async move {
-            client()
-                .await
-                .on_receive(move |command| {
+            loop {
+                if let Some(msg) = client().await.unwrap().receive().await {
                     spawn(async move {
-                        self.process_command(command).await.alert_err();
+                        self.process_command(msg).await.alert_err();
                     });
-                })
-                .await;
+                } else {
+                    error!("Client received None")
+                }
+            }
         });
 
         after(0.5, || {
             spawn(async {
-                client().await.send(UIRequest::GetScale).await.alert_err();
+                client().await.unwrap().send(UIRequest::GetScale).await.alert_err();
             });
         });
     }
@@ -61,21 +62,21 @@ impl Setup for MainScreen {
 
 impl MainScreen {
     async fn play_sound_tapped(self: Weak<Self>) -> Result<()> {
-        client().await.send(InspectorCommand::PlaySound).await
+        client().await?.send(InspectorCommand::PlaySound).await
     }
 
     async fn get_ui_tapped(self: Weak<Self>) -> Result<()> {
-        client().await.send(UIRequest::GetUI).await
+        client().await?.send(UIRequest::GetUI).await
     }
 
     async fn scale_changed(self: Weak<Self>, scale: f32) -> Result<()> {
-        client().await.send(UIRequest::SetScale(scale)).await
+        client().await?.send(UIRequest::SetScale(scale)).await
     }
 
     async fn process_command(self: Weak<Self>, command: AppCommand) -> Result<()> {
         match command {
             AppCommand::Ping => {
-                client().await.send(InspectorCommand::Pong).await?;
+                client().await?.send(InspectorCommand::Pong).await?;
             }
             AppCommand::Pong => {
                 info!("Received pong from the app");

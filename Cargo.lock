@@ -2859,9 +2859,9 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.14.0"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30cfc764eec62277d73f138b54805accafef015ffdf5ffa8bd21e0286d131ed5"
+checksum = "0fb1c278546c08565a00fc8238972696dd7df50c634181457d170eef7979014a"
 dependencies = [
  "anyhow",
  "infisical",
@@ -2872,6 +2872,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
+ "tokio-util",
 ]
 
 [[package]]

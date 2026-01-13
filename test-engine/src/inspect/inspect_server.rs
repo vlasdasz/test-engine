@@ -15,14 +15,14 @@ type Server = netrun::Server<InspectorCommand, AppCommand>;
 
 static SERVER: OnceCell<Server> = OnceCell::const_new();
 
-async fn server() -> &'static Server {
+async fn server() -> Result<&'static Server> {
     SERVER
-        .get_or_init(|| async {
-            let server = Server::new(PORT_RANGE.start).await.unwrap();
+        .get_or_try_init(|| async {
+            let server = Server::new(PORT_RANGE.start).await?;
 
             debug!("Inspect server listening on port: {}", PORT_RANGE.start);
 
-            server
+            Ok(server)
         })
         .await
 }
@@ -32,14 +32,19 @@ pub struct InspectServer {}
 impl InspectServer {
     pub fn start_listening() {
         spawn(async {
-            server().await.start().await;
-            server().await.on_receive(Self::on_receive).await;
+            loop {
+                if let Some(command) = server().await.unwrap().receive().await {
+                    Self::on_receive(command);
+                } else {
+                    error!("Inspect server received None")
+                }
+            }
         });
     }
 
     pub fn send(command: AppCommand) {
         spawn(async {
-            if let Err(err) = server().await.send(command).await {
+            if let Err(err) = server().await.unwrap().send(command).await {
                 error!("Failed to send app command: {err}");
             }
         });
@@ -58,7 +63,7 @@ impl InspectServer {
     async fn process_command(command: InspectorCommand) -> Result<()> {
         match command {
             InspectorCommand::Ping => {
-                server().await.send(AppCommand::Pong).await?;
+                server().await?.send(AppCommand::Pong).await?;
             }
             InspectorCommand::Pong => {
                 info!("Received pong from inspector");
@@ -77,14 +82,14 @@ impl InspectServer {
     async fn process_ui_command(command: UIRequest) -> Result<()> {
         match command {
             UIRequest::GetScale => {
-                server().await.send(UIResponse::Scale(UIManager::scale())).await?;
+                server().await?.send(UIResponse::Scale(UIManager::scale())).await?;
             }
             UIRequest::SetScale(scale) => {
                 UIManager::set_scale(scale);
             }
             UIRequest::GetUI => {
                 let root = UIManager::root_view().view_to_inspect();
-                server().await.send(UIResponse::SendUI(root)).await?;
+                server().await?.send(UIResponse::SendUI(root)).await?;
             }
         }
 
