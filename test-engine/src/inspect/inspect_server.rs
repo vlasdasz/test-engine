@@ -36,7 +36,7 @@ impl InspectServer {
                 if let Some(command) = server().await.unwrap().receive().await {
                     Self::on_receive(command);
                 } else {
-                    error!("Inspect server received None")
+                    error!("Inspect server received None");
                 }
             }
         });

@@ -1,3 +1,5 @@
+use log::error;
+use netrun::local_ip;
 use test_engine::{
     AppRunner, Event,
     audio::Sound,
@@ -54,6 +56,8 @@ pub struct TestGameView {
     tr: Container,
     bl: Container,
     br: Container,
+
+    ip: Label,
 
     drawing: DrawingView,
     stick:   StickView,
@@ -126,6 +130,14 @@ impl Setup for TestGameView {
         self.tr.set_color(GREEN).place().size(corner_size, corner_size).tr(10);
         self.bl.set_color(BLUE).place().size(corner_size, corner_size).bl(10);
         self.br.set_color(ORANGE).place().size(corner_size, corner_size).br(10);
+
+        self.ip
+            .set_text(local_ip().map(|ip| ip.to_string()).unwrap_or_else(|err| {
+                error!("{err}");
+                "Not supported".to_string()
+            }))
+            .set_text_size(10);
+        self.ip.place().anchor(Left, self.tl, 10).same_y(self.tl).size(80, 20);
 
         self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);

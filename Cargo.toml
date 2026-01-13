@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
-    "inspector",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
 ]
 
 resolver = "3"
@@ -70,7 +70,7 @@ wgpu_text = "28.0"
 winit = "0.30"
 
 hreads = "0.10"
-netrun = "0.16"
+netrun = "0.17"
 plat = "0.5"
 reflected = "0.29"
 refs = { version = "0.31", default-features = true }
