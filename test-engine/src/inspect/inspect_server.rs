@@ -33,11 +33,7 @@ impl InspectServer {
     pub fn start_listening() {
         spawn(async {
             loop {
-                if let Some(command) = server().await.unwrap().receive().await {
-                    Self::on_receive(command);
-                } else {
-                    error!("Inspect server received None");
-                }
+                Self::on_receive(server().await.unwrap().receive().await);
             }
         });
     }

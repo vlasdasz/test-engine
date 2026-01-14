@@ -132,10 +132,13 @@ impl Setup for TestGameView {
         self.br.set_color(ORANGE).place().size(corner_size, corner_size).br(10);
 
         self.ip
-            .set_text(local_ip().map(|ip| ip.to_string()).unwrap_or_else(|err| {
-                error!("{err}");
-                "Not supported".to_string()
-            }))
+            .set_text(local_ip().map_or_else(
+                |err| {
+                    error!("{err}");
+                    "Not supported".to_string()
+                },
+                |ip| ip.to_string(),
+            ))
             .set_text_size(10);
         self.ip.place().anchor(Left, self.tl, 10).same_y(self.tl).size(80, 20);
 
