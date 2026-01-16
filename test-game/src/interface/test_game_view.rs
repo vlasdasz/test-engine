@@ -146,7 +146,10 @@ impl Setup for TestGameView {
         self.sys_info.set_text("system");
         self.sys_info.place().below(self.ip, 10);
         self.sys_info.on_tap(|| {
-            Alert::show(netrun::System::get_info().dump());
+            Alert::with_label(|mut l| {
+                l.set_text_size(15);
+            })
+            .show(netrun::System::get_info().dump());
         });
 
         self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);

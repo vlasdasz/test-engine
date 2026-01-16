@@ -16,6 +16,7 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 
+#[allow(clippy::type_complexity)]
 static LABEL_SETUP: Mutex<Option<Box<dyn FnOnce(Weak<Label>) + Send>>> = Mutex::new(None);
 
 #[view]
@@ -55,7 +56,7 @@ impl Setup for Alert {
         self.ok_button.on_tap(move || self.hide_modal(()));
 
         if let Some(setup) = LABEL_SETUP.lock().take() {
-            setup(self.label)
+            setup(self.label);
         }
     }
 }
