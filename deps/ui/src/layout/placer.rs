@@ -362,6 +362,10 @@ impl Placer {
         self.same([Anchor::Size, Anchor::X], view).anchor(Anchor::Top, view, offset)
     }
 
+    pub fn at_right(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
+        self.same([Anchor::Size, Anchor::Y], view).anchor(Anchor::Left, view, offset)
+    }
+
     pub fn between(
         &self,
         view_a: impl Deref<Target = impl View> + Copy,

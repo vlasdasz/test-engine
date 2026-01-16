@@ -47,6 +47,8 @@ pub struct UIManager {
     keymap: Own<Keymap>,
 
     selected_view: Mutex<WeakView>,
+
+    app_instance_id: String,
 }
 
 impl UIManager {
@@ -164,11 +166,16 @@ impl UIManager {
             draw_touches: false.into(),
             keymap: Own::default(),
             selected_view: Mutex::new(Weak::default()),
+            app_instance_id: netrun::System::generate_app_instance_id(),
         }
     }
 
     pub(crate) fn get() -> &'static Self {
         UI_MANAGER.get_or_init(Self::init)
+    }
+
+    pub fn app_instance_id() -> &'static str {
+        &Self::get().app_instance_id
     }
 
     pub fn window_resolution() -> Size {

@@ -4,7 +4,10 @@ use log::{error, info};
 use test_engine::{
     dispatch::{after, on_main},
     refs::Weak,
-    ui::{AlertErr, Anchor::Top, Button, HasText, Setup, ViewData, async_link_button, view},
+    ui::{
+        Alert, AlertErr, Anchor::Top, Button, DropDown, HasText, Setup, Spinner, ViewData, async_link_button,
+        view,
+    },
 };
 use tokio::spawn;
 
@@ -13,6 +16,9 @@ use crate::{app_search::client, ui::common::ValueView};
 #[view]
 pub struct MainScreen {
     #[init]
+    scan:    Button,
+    clients: DropDown<String>,
+
     play_sound:     Button,
     get_ui:         Button,
     ui_scale_value: ValueView,
@@ -20,6 +26,9 @@ pub struct MainScreen {
 
 impl Setup for MainScreen {
     fn setup(mut self: Weak<Self>) {
+        self.scan.set_text("Scan").place().tl(10).size(100, 50);
+        async_link_button!(self.scan, scan_tapped);
+
         self.play_sound.set_text("Play Sound").place().size(100, 50).tr(10);
         async_link_button!(self.play_sound, play_sound_tapped);
 
@@ -39,28 +48,26 @@ impl Setup for MainScreen {
                 self.scale_changed(val).await.alert_err();
             }
         });
-
-        spawn(async move {
-            loop {
-                if let Some(msg) = client().await.unwrap().receive().await {
-                    spawn(async move {
-                        self.process_command(msg).await.alert_err();
-                    });
-                } else {
-                    error!("Client received None")
-                }
-            }
-        });
-
-        after(0.5, || {
-            spawn(async {
-                client().await.unwrap().send(UIRequest::GetScale).await.alert_err();
-            });
-        });
     }
 }
 
 impl MainScreen {
+    async fn scan_tapped(self: Weak<Self>) -> Result<()> {
+        let spin = Spinner::lock();
+
+        let clients = netrun::scan_for_port(inspect::PORT_RANGE.start).await?;
+
+        if clients.is_empty() {
+            spin.stop();
+            Alert::show("No clients found");
+            return Ok(());
+        }
+
+        dbg!(&clients);
+
+        Ok(())
+    }
+
     async fn play_sound_tapped(self: Weak<Self>) -> Result<()> {
         client().await?.send(InspectorCommand::PlaySound).await
     }

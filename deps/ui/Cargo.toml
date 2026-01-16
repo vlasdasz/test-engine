@@ -25,6 +25,7 @@ plat = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }
+netrun = { workspace = true }
 
 gm = { workspace = true }
 render = { workspace = true }

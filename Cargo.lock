@@ -3122,12 +3122,13 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.21.0"
+version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e5a0a13c16e0595d69d79465f5c2b2d8b65ca5e0ef4f4295abc160286a54147"
+checksum = "66da9eebe73c023f96540291aad37c9f84db67363f88b822f5b91b9ec27e862a"
 dependencies = [
  "anyhow",
  "byte-unit",
+ "hreads",
  "infisical",
  "local-ip-address",
  "log",
@@ -5920,6 +5921,7 @@ dependencies = [
  "gm",
  "hreads",
  "log",
+ "netrun",
  "nonempty",
  "parking_lot",
  "plat",

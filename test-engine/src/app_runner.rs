@@ -56,7 +56,7 @@ impl AppRunner {
             .level(LevelFilter::Warn)
             .level_for("test_engine", LevelFilter::Debug)
             .level_for("shopping", LevelFilter::Debug)
-            .level_for("netrun", LevelFilter::Trace)
+            // .level_for("netrun", LevelFilter::Trace)
             .format(|out, message, record| {
                 let level_icon = match record.level() {
                     Level::Error => "🔴",

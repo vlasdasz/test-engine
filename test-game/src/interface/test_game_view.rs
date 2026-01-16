@@ -58,6 +58,7 @@ pub struct TestGameView {
     br: Container,
 
     ip:       Label,
+    app_id:   Label,
     sys_info: Button,
 
     drawing: DrawingView,
@@ -142,6 +143,9 @@ impl Setup for TestGameView {
             ))
             .set_text_size(10);
         self.ip.place().anchor(Left, self.tl, 10).same_y(self.tl).size(80, 20);
+
+        self.app_id.set_text(UIManager::app_instance_id());
+        self.app_id.place().at_right(self.ip, 10);
 
         self.sys_info.set_text("system");
         self.sys_info.place().below(self.ip, 10);
