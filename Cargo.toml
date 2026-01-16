@@ -70,7 +70,8 @@ wgpu_text = "28.0"
 winit = "0.30"
 
 hreads = "0.10"
-netrun = "0.22"                                      #netrun = { path = "../deps/netrun/netrun" }
+#netrun = "0.23"
+netrun = { path = "../deps/netrun/netrun" }
 plat = "0.5"
 reflected = "0.29"
 refs = { version = "0.31", default-features = true }

@@ -2495,6 +2495,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "gm",
+ "netrun",
  "plat",
  "serde",
  "ui",
@@ -3122,9 +3123,7 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "66da9eebe73c023f96540291aad37c9f84db67363f88b822f5b91b9ec27e862a"
+version = "0.23.0"
 dependencies = [
  "anyhow",
  "byte-unit",

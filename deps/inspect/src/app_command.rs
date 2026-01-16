@@ -7,6 +7,13 @@ pub enum AppCommand {
     Ping,
     Pong,
     UI(UIResponse),
+    System(SystemResponse),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum UIResponse {
+    Scale(f32),
+    SendUI(ViewRepr),
 }
 
 impl From<UIResponse> for AppCommand {
@@ -16,7 +23,18 @@ impl From<UIResponse> for AppCommand {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum UIResponse {
-    Scale(f32),
-    SendUI(ViewRepr),
+pub struct SystemInfo {
+    pub app_id: String,
+    pub info:   netrun::System,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SystemResponse {
+    Info(SystemInfo),
+}
+
+impl From<SystemResponse> for AppCommand {
+    fn from(value: SystemResponse) -> Self {
+        Self::System(value)
+    }
 }

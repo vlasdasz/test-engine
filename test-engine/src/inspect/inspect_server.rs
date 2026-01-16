@@ -3,7 +3,7 @@
 use anyhow::Result;
 use audio::Sound;
 use hreads::on_main;
-use inspect::{AppCommand, InspectorCommand, PORT_RANGE, UIRequest, UIResponse};
+use inspect::{AppCommand, InspectorCommand, PORT_RANGE, SystemInfo, SystemResponse, UIRequest, UIResponse};
 use log::{debug, error, info};
 use refs::manage::DataManager;
 use tokio::{spawn, sync::OnceCell};
@@ -70,6 +70,15 @@ impl InspectServer {
                 });
             }
             InspectorCommand::UI(ui) => Self::process_ui_command(ui).await?,
+            InspectorCommand::GetSystemInfo => {
+                server()
+                    .await?
+                    .send(SystemResponse::Info(SystemInfo {
+                        app_id: UIManager::app_instance_id().to_string(),
+                        info:   netrun::System::get_info(),
+                    }))
+                    .await?;
+            }
         }
 
         Ok(())

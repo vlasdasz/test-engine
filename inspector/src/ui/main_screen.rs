@@ -1,6 +1,6 @@
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use inspect::{AppCommand, InspectorCommand, UIRequest, UIResponse};
-use log::{error, info};
+use log::{debug, error, info};
 use test_engine::{
     dispatch::{after, on_main},
     refs::Weak,
@@ -11,7 +11,10 @@ use test_engine::{
 };
 use tokio::spawn;
 
-use crate::{app_search::client, ui::common::ValueView};
+use crate::{
+    app_search::{Client, client},
+    ui::common::ValueView,
+};
 
 #[view]
 pub struct MainScreen {
@@ -63,7 +66,20 @@ impl MainScreen {
             return Ok(());
         }
 
-        dbg!(&clients);
+        info!("Found: {} clients", clients.len());
+
+        for (client_ip, _) in clients {
+            debug!("Checking: {client_ip}");
+            let client = Client::connect(dbg!((client_ip, inspect::PORT_RANGE.start))).await?;
+
+            client.send(InspectorCommand::GetSystemInfo).await?;
+
+            debug!("Command sent");
+
+            let info = client.receive().await.ok_or(anyhow!("No app info"))?;
+
+            dbg!(&info);
+        }
 
         Ok(())
     }
@@ -90,6 +106,9 @@ impl MainScreen {
             }
             AppCommand::UI(ui) => {
                 self.process_ui_command(ui).await?;
+            }
+            AppCommand::System(info) => {
+                dbg!(&info);
             }
         };
 

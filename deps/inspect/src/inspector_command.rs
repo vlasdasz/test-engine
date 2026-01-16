@@ -6,6 +6,7 @@ pub enum InspectorCommand {
     Pong,
     PlaySound,
     UI(UIRequest),
+    GetSystemInfo,
 }
 
 impl From<UIRequest> for InspectorCommand {
