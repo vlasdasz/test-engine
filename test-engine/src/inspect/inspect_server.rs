@@ -1,5 +1,7 @@
 #![cfg(not_wasm)]
 
+use std::sync::Mutex;
+
 use anyhow::Result;
 use audio::Sound;
 use hreads::on_main;
@@ -12,8 +14,10 @@ use ui::UIManager;
 use crate::inspect::view_conversion::ViewToInspect;
 
 type Server = netrun::Server<InspectorCommand, AppCommand>;
+type Client = netrun::Client<AppCommand, InspectorCommand>;
 
 static SERVER: OnceCell<Server> = OnceCell::const_new();
+static CONNECTION: OnceCell<Mutex<Option<Client>>> = OnceCell::const_new();
 
 async fn server() -> Result<&'static Server> {
     SERVER
@@ -30,19 +34,23 @@ async fn server() -> Result<&'static Server> {
 pub struct InspectServer {}
 
 impl InspectServer {
+    fn current_connection() -> &'static Client {
+        todo!()
+    }
+
     pub fn start_listening() {
         spawn(async {
             loop {
-                Self::on_receive(server().await.unwrap().receive().await);
+                // Self::on_receive(server().await.unwrap().receive().await);
             }
         });
     }
 
     pub fn send(command: AppCommand) {
         spawn(async {
-            if let Err(err) = server().await.unwrap().send(command).await {
-                error!("Failed to send app command: {err}");
-            }
+            // if let Err(err) = server().await.unwrap().send(command).await {
+            //     error!("Failed to send app command: {err}");
+            // }
         });
     }
 
@@ -57,46 +65,46 @@ impl InspectServer {
     }
 
     async fn process_command(command: InspectorCommand) -> Result<()> {
-        match command {
-            InspectorCommand::Ping => {
-                server().await?.send(AppCommand::Pong).await?;
-            }
-            InspectorCommand::Pong => {
-                info!("Received pong from inspector");
-            }
-            InspectorCommand::PlaySound => {
-                on_main(|| {
-                    Sound::get("retro.wav").play();
-                });
-            }
-            InspectorCommand::UI(ui) => Self::process_ui_command(ui).await?,
-            InspectorCommand::GetSystemInfo => {
-                server()
-                    .await?
-                    .send(SystemResponse::Info(SystemInfo {
-                        app_id: UIManager::app_instance_id().to_string(),
-                        info:   netrun::System::get_info(),
-                    }))
-                    .await?;
-            }
-        }
+        // match command {
+        //     InspectorCommand::Ping => {
+        //         server().await?.send(AppCommand::Pong).await?;
+        //     }
+        //     InspectorCommand::Pong => {
+        //         info!("Received pong from inspector");
+        //     }
+        //     InspectorCommand::PlaySound => {
+        //         on_main(|| {
+        //             Sound::get("retro.wav").play();
+        //         });
+        //     }
+        //     InspectorCommand::UI(ui) => Self::process_ui_command(ui).await?,
+        //     InspectorCommand::GetSystemInfo => {
+        //         server()
+        //             .await?
+        //             .send(SystemResponse::Info(SystemInfo {
+        //                 app_id: UIManager::app_instance_id().to_string(),
+        //                 info:   netrun::System::get_info(),
+        //             }))
+        //             .await?;
+        //     }
+        // }
 
         Ok(())
     }
 
     async fn process_ui_command(command: UIRequest) -> Result<()> {
-        match command {
-            UIRequest::GetScale => {
-                server().await?.send(UIResponse::Scale(UIManager::scale())).await?;
-            }
-            UIRequest::SetScale(scale) => {
-                UIManager::set_scale(scale);
-            }
-            UIRequest::GetUI => {
-                let root = UIManager::root_view().view_to_inspect();
-                server().await?.send(UIResponse::SendUI(root)).await?;
-            }
-        }
+        // match command {
+        //     UIRequest::GetScale => {
+        //         server().await?.send(UIResponse::Scale(UIManager::scale())).await?;
+        //     }
+        //     UIRequest::SetScale(scale) => {
+        //         UIManager::set_scale(scale);
+        //     }
+        //     UIRequest::GetUI => {
+        //         let root = UIManager::root_view().view_to_inspect();
+        //         server().await?.send(UIResponse::SendUI(root)).await?;
+        //     }
+        // }
 
         Ok(())
     }

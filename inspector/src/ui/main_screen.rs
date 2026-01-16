@@ -76,7 +76,7 @@ impl MainScreen {
 
             debug!("Command sent");
 
-            let info = client.receive().await.ok_or(anyhow!("No app info"))?;
+            let info = client.receive().await?;
 
             dbg!(&info);
         }
