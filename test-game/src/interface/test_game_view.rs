@@ -57,7 +57,8 @@ pub struct TestGameView {
     bl: Container,
     br: Container,
 
-    ip: Label,
+    ip:       Label,
+    sys_info: Button,
 
     drawing: DrawingView,
     stick:   StickView,
@@ -141,6 +142,12 @@ impl Setup for TestGameView {
             ))
             .set_text_size(10);
         self.ip.place().anchor(Left, self.tl, 10).same_y(self.tl).size(80, 20);
+
+        self.sys_info.set_text("system");
+        self.sys_info.place().below(self.ip, 10);
+        self.sys_info.on_tap(|| {
+            Alert::show(netrun::System::get_info().dump());
+        });
 
         self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);
