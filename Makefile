@@ -28,8 +28,14 @@ mobile:
 	cargo install test-mobile
 	test-mobile --path=../test-mobile/mobile-template
 
+OS := $(shell uname)
+
 build-ios:
+ifeq ($(OS), Darwin)
 	cargo lipo -p test-game
+else
+	@echo " build-ios can only be run on macOS."
+endif
 
 ios-lib:
 	cargo lipo -p test-game --release
