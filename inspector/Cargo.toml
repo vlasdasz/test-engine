@@ -9,8 +9,8 @@ name = "inspector"
 
 [dependencies]
 anyhow = { workspace = true }
+hreads = { workspace = true }
 log = { workspace = true }
-tokio = { workspace = true }
 
 inspect = { workspace = true }
 netrun = { workspace = true }

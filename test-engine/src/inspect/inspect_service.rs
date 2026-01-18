@@ -17,8 +17,8 @@ type Server = netrun::Server<InspectorCommand, AppCommand>;
 pub struct InspectService;
 
 impl Service<InspectorCommand, AppCommand> for InspectService {
-    fn respond(&self, i: InspectorCommand) -> impl Future<Output = Result<AppCommand>> + Send {
-        async { self.process_command(i).await }
+    async fn respond(&self, i: InspectorCommand) -> Result<AppCommand> {
+        Ok(Self::process_command(i))
     }
 }
 
@@ -33,8 +33,8 @@ impl InspectService {
         });
     }
 
-    async fn process_command(&self, command: InspectorCommand) -> Result<AppCommand> {
-        Ok(match command {
+    fn process_command(command: InspectorCommand) -> AppCommand {
+        match command {
             InspectorCommand::PlaySound => {
                 on_main(|| {
                     Sound::get("retro.wav").play();
@@ -42,17 +42,17 @@ impl InspectService {
 
                 AppCommand::Ok
             }
-            InspectorCommand::UI(ui) => self.process_ui_command(ui).await?,
+            InspectorCommand::UI(ui) => Self::process_ui_command(ui),
             InspectorCommand::GetSystemInfo => SystemResponse::Info(SystemInfo {
                 app_id: UIManager::app_instance_id().to_string(),
                 info:   netrun::System::get_info(),
             })
             .into(),
-        })
+        }
     }
 
-    async fn process_ui_command(&self, command: UIRequest) -> Result<AppCommand> {
-        Ok(match command {
+    fn process_ui_command(command: UIRequest) -> AppCommand {
+        match command {
             UIRequest::GetScale => UIResponse::Scale(UIManager::scale()).into(),
             UIRequest::SetScale(scale) => {
                 UIManager::set_scale(scale);
@@ -62,6 +62,6 @@ impl InspectService {
                 let root = UIManager::root_view().view_to_inspect();
                 UIResponse::SendUI(root).into()
             }
-        })
+        }
     }
 }

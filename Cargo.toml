@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "render-test",
-    "ui-test",
-    "ui-benchmark",
-    "deps/ui/ui-proc-test",
-    "fuzz",
-    "inspector",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "render-test",
+  "ui-test",
+  "ui-benchmark",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
 ]
 
 resolver = "3"
@@ -69,15 +69,15 @@ wgpu = "28.0"
 wgpu_text = "28.0"
 winit = "0.30"
 
-hreads = { path = "../deps/hreads" }
-#hreads = "0.10"
+#hreads = { path = "../deps/hreads" }
+hreads = "0.12"
 
-#netrun = "0.23"
-netrun = { path = "../deps/netrun/netrun" }
+netrun = "0.24"
+#netrun = { path = "../deps/netrun/netrun" }
 plat = "0.6"
 reflected = "0.29"
-refs = { version = "0.31", default-features = true }
-vents = "0.13"
+refs = { version = "0.32", default-features = true }
+vents = "0.14"
 
 audio = { path = "deps/audio" }
 filesystem = { path = "deps/filesystem" }

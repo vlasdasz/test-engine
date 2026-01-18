@@ -1,4 +1,7 @@
-use anyhow::{Result, bail};
+use std::net::IpAddr;
+
+use anyhow::{Result, anyhow, bail};
+use hreads::log_spawn;
 use inspect::{AppCommand, InspectorCommand, SystemResponse, UIRequest, UIResponse};
 use log::{debug, info};
 use test_engine::{
@@ -10,16 +13,17 @@ use test_engine::{
     },
 };
 
-use crate::{
-    app_search::{Client, client},
-    ui::common::ValueView,
-};
+use crate::ui::common::ValueView;
+
+type Client = netrun::Client<AppCommand, InspectorCommand>;
 
 #[view]
 pub struct MainScreen {
+    current_client: Option<Client>,
+
     #[init]
     scan:    Button,
-    clients: DropDown<String>,
+    clients: DropDown<IpAddr>,
 
     play_sound:     Button,
     get_ui:         Button,
@@ -30,6 +34,8 @@ impl Setup for MainScreen {
     fn setup(mut self: Weak<Self>) {
         self.scan.set_text("Scan").place().tl(10).size(100, 50);
         async_link_button!(self.scan, scan_tapped);
+
+        self.clients.place().at_right(self.scan, 10);
 
         self.play_sound.set_text("Play Sound").place().size(100, 50).tr(10);
         async_link_button!(self.play_sound, play_sound_tapped);
@@ -54,7 +60,7 @@ impl Setup for MainScreen {
 }
 
 impl MainScreen {
-    async fn scan_tapped(self: Weak<Self>) -> Result<()> {
+    async fn scan_tapped(mut self: Weak<Self>) -> Result<()> {
         let spin = Spinner::lock();
 
         let clients = netrun::scan_for_port(inspect::PORT_RANGE.start).await?;
@@ -71,7 +77,7 @@ impl MainScreen {
 
         for (client_ip, _) in clients {
             debug!("Checking: {client_ip}");
-            let client = Client::connect(dbg!((client_ip, inspect::PORT_RANGE.start))).await?;
+            let client = Client::connect((client_ip, inspect::PORT_RANGE.start)).await?;
 
             client.send(InspectorCommand::GetSystemInfo).await?;
 
@@ -86,19 +92,49 @@ impl MainScreen {
 
         dbg!(&available_clients);
 
+        let (_, ip) = available_clients[0];
+
+        let client = Client::connect((ip, inspect::PORT_RANGE.start)).await?;
+
+        on_main(move || {
+            self.clients
+                .set_values(available_clients.iter().map(|(_app, ip)| *ip).collect());
+            self.current_client = Some(client);
+
+            log_spawn::<anyhow::Error>(async move {
+                loop {
+                    let client = self.current_client.as_ref().ok_or(anyhow!("No client"))?;
+                    let command = client.receive().await?;
+                    self.process_command(command).await?;
+                }
+            });
+        });
+
         Ok(())
     }
 
     async fn play_sound_tapped(self: Weak<Self>) -> Result<()> {
-        client().await?.send(InspectorCommand::PlaySound).await
+        self.current_client
+            .as_ref()
+            .ok_or(anyhow!("No client"))?
+            .send(InspectorCommand::PlaySound)
+            .await
     }
 
     async fn get_ui_tapped(self: Weak<Self>) -> Result<()> {
-        client().await?.send(UIRequest::GetUI).await
+        self.current_client
+            .as_ref()
+            .ok_or(anyhow!("No client"))?
+            .send(UIRequest::GetUI)
+            .await
     }
 
     async fn scale_changed(self: Weak<Self>, scale: f32) -> Result<()> {
-        client().await?.send(UIRequest::SetScale(scale)).await
+        self.current_client
+            .as_ref()
+            .ok_or(anyhow!("No client"))?
+            .send(UIRequest::SetScale(scale))
+            .await
     }
 
     async fn process_command(self: Weak<Self>, command: AppCommand) -> Result<()> {

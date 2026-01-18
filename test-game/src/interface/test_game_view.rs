@@ -86,9 +86,8 @@ pub struct TestGameView {
 
     render: Button,
 
-    benchmark:      Button,
-    test_level:     Button,
-    ping_inspector: Button,
+    benchmark:  Button,
+    test_level: Button,
 
     add_box: Button,
 
@@ -289,25 +288,6 @@ impl Setup for TestGameView {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
         });
-
-        self.ping_inspector.set_text("ping inspector");
-        self.ping_inspector.place().same([Y, Height], self.test_level).w(110).anchor(
-            Left,
-            self.test_level,
-            10,
-        );
-        #[cfg(not_wasm)]
-        {
-            self.ping_inspector.on_tap(|| {
-                test_engine::inspect::InspectService::send(test_engine::inspect::AppCommand::Ping);
-            });
-        }
-        #[cfg(wasm)]
-        {
-            self.ping_inspector.on_tap(|| {
-                Alert::show("Not implemented on WASM");
-            });
-        }
 
         self.ui_bench.set_text("ui bench");
         self.ui_bench
