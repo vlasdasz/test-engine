@@ -203,9 +203,7 @@ impl MainScreen {
             AppCommand::System(info) => {
                 dbg!(&info);
             }
-            AppCommand::Ok => {
-                info!("Ok received");
-            }
+            AppCommand::Ok => {}
         };
 
         Ok(())
