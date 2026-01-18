@@ -6,7 +6,7 @@ use crate::{
     layout::{Anchor, Tiling},
 };
 
-#[derive(Clone, Educe)]
+#[derive(Clone, Default, Educe)]
 #[educe(Debug)]
 pub struct LayoutRule {
     pub side:   Option<Anchor>,

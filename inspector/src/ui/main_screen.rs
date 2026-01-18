@@ -2,7 +2,7 @@ use std::net::IpAddr;
 
 use anyhow::{Result, anyhow, bail};
 use hreads::{log_spawn, sleep};
-use inspect::{AppCommand, InspectorCommand, SystemResponse, UIRequest, UIResponse};
+use inspect::{AppCommand, InspectorCommand, SystemResponse, UIRequest, UIResponse, ui::ViewRepr};
 use log::{debug, info};
 use test_engine::{
     dispatch::on_main,
@@ -10,16 +10,18 @@ use test_engine::{
     ui::{
         Alert, AlertErr,
         Anchor::{Right, Top},
-        Button, DropDown, HasText, Setup, Spinner, ViewData, async_link_button, view,
+        Button, DropDown, HasText, Setup, Spinner, UIEvent, ViewData, async_link_button, view,
     },
 };
 
 use crate::ui::{
     common::ValueView,
-    inspect::{SHRINK_SCALE, UIRepresentView},
+    inspect::{SHRINK_SCALE, UIRepresentView, ViewInspectorView},
 };
 
 type Client = netrun::Client<AppCommand, InspectorCommand>;
+
+pub static VIEW_SELECTED: UIEvent<ViewRepr> = UIEvent::const_new();
 
 #[view]
 pub struct MainScreen {
@@ -35,6 +37,8 @@ pub struct MainScreen {
     schrink_scale: ValueView,
 
     ui_represent: UIRepresentView,
+
+    inspect: ViewInspectorView,
 }
 
 impl Setup for MainScreen {
@@ -57,7 +61,7 @@ impl Setup for MainScreen {
             .anchor(Top, self.get_ui, 10)
             .same_width(self.get_ui)
             .same_x(self.get_ui)
-            .h(100);
+            .h(60);
 
         self.ui_scale.on_change.val_async(move |val| async move {
             {
@@ -79,6 +83,17 @@ impl Setup for MainScreen {
             .b(20);
 
         log_spawn(self.initial_scan());
+
+        VIEW_SELECTED.val(self, move |view| {
+            self.inspect.set_view(view);
+        });
+
+        self.inspect
+            .place()
+            .same_x(self.play_sound)
+            .same_width(self.play_sound)
+            .anchor(Top, self.schrink_scale, 10)
+            .b(10);
     }
 }
 

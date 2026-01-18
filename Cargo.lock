@@ -5505,6 +5505,7 @@ dependencies = [
  "game",
  "generate",
  "gm",
+ "hex",
  "hreads",
  "inspect",
  "level",

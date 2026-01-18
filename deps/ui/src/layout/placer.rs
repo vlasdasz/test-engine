@@ -1,5 +1,5 @@
 use std::{
-    cell::{RefCell, RefMut},
+    cell::{Ref, RefCell, RefMut},
     fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
 };
@@ -58,6 +58,10 @@ impl Placer {
         self.all_tiling_rules.borrow_mut().clear();
         *self.has.borrow_mut() = Size::default();
         self
+    }
+
+    pub fn get_rules(&self) -> Ref<'_, Vec<LayoutRule>> {
+        self.rules.borrow()
     }
 
     fn rules(&self) -> RefMut<'_, Vec<LayoutRule>> {

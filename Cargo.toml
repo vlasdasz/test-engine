@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
-  "fuzz",
-  "inspector",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
+    "fuzz",
+    "inspector",
 ]
 
 resolver = "3"
@@ -64,6 +64,7 @@ tokio = { version = "1.49", features = ["full"] }
 usvg = "0.46"
 wasm-bindgen-futures = "0.4"
 web-time = "1.1"
+hex = "0.4"
 
 wgpu = "28.0"
 wgpu_text = "28.0"

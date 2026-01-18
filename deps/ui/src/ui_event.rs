@@ -22,6 +22,13 @@ impl<T: Send> Default for UIEvent<T> {
 }
 
 impl<T: Send> UIEvent<T> {
+    pub const fn const_new() -> Self {
+        Self {
+            subscribers: Mutex::new(Vec::new()),
+            unsubscribe: Mutex::new(Vec::new()),
+        }
+    }
+
     fn clear_subscribers(&self, subs: &mut MutexGuard<Vec<Subscriber<T>>>) {
         let mut unsubscribe = self.unsubscribe.lock();
         subs.retain(|a| !unsubscribe.contains(&a.subscriber.raw()) && a.subscriber.is_ok());
@@ -70,12 +77,4 @@ impl<T: Send> UIEvent<T> {
             (sub.action)(val.clone());
         }
     }
-
-    // pub fn dump_subscribers(&self) -> Vec<String> {
-    //     let mut subs = self.subscribers.lock().unwrap();
-    //     subs.retain(|a| a.subscriber.is_ok());
-    //     subs.iter()
-    //         .map(|s| format!("{} - {}", s.subscriber.label(),
-    // s.subscriber.addr()))         .collect()
-    // }
 }

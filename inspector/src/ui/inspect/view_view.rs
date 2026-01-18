@@ -8,10 +8,14 @@ use test_engine::{
     },
 };
 
+use crate::ui::VIEW_SELECTED;
+
 pub(crate) static SHRINK_SCALE: Mutex<f32> = Mutex::new(0.2);
 
 #[view]
 pub struct ViewView {
+    repr: ViewRepr,
+
     #[init]
     label: Label,
 }
@@ -27,6 +31,7 @@ impl Setup for ViewView {
 
     fn on_selection_changed(mut self: Weak<Self>, selected: bool) {
         self.set_color(if selected { GRAY } else { WHITE });
+        VIEW_SELECTED.trigger(self.repr.clone());
     }
 }
 
@@ -36,7 +41,7 @@ impl ViewView {
 
         self.cleanup();
 
-        self.label.set_text(&repr.label);
+        self.label.set_text(format!("{} {}", repr.label, &repr.id[..5]));
 
         let frame = (
             repr.frame.x() * scale * shrink_scale / UIManager::scale(),
@@ -47,10 +52,12 @@ impl ViewView {
 
         self.set_frame(frame);
 
-        for sub in repr.subviews {
+        for sub in &repr.subviews {
             let view = self.add_view::<ViewView>();
-            view.set_repr(scale, sub);
+            view.set_repr(scale, sub.clone());
         }
+
+        self.repr = repr;
     }
 
     pub fn cleanup(self: Weak<Self>) {
