@@ -69,7 +69,9 @@ wgpu = "28.0"
 wgpu_text = "28.0"
 winit = "0.30"
 
-hreads = "0.10"
+hreads = { path = "../deps/hreads" }
+#hreads = "0.10"
+
 #netrun = "0.23"
 netrun = { path = "../deps/netrun/netrun" }
 plat = "0.5"

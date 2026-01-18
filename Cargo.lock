@@ -2169,6 +2169,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "hreads"
+version = "0.11.0"
+dependencies = [
+ "anyhow",
+ "async-std",
+ "futures",
+ "gloo-timers",
+ "log",
+ "parking_lot",
+ "plat",
+ "pollster",
+ "tokio",
+ "wasm-bindgen-futures",
+ "web-sys",
+]
+
+[[package]]
 name = "http"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3127,7 +3144,7 @@ version = "0.23.0"
 dependencies = [
  "anyhow",
  "byte-unit",
- "hreads",
+ "hreads 0.11.0",
  "infisical",
  "local-ip-address",
  "log",
@@ -4404,7 +4421,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cb7c48b9a6ded2c1ea86db3163d6b92abb533c38613e70323f013270e024ce9e"
 dependencies = [
  "derive_more",
- "hreads",
+ "hreads 0.10.0",
  "instant",
  "log",
  "parking_lot",
@@ -5483,7 +5500,7 @@ dependencies = [
  "game",
  "generate",
  "gm",
- "hreads",
+ "hreads 0.11.0",
  "inspect",
  "level",
  "log",
@@ -5930,7 +5947,7 @@ dependencies = [
  "chrono",
  "educe",
  "gm",
- "hreads",
+ "hreads 0.11.0",
  "log",
  "netrun",
  "nonempty",
@@ -6194,7 +6211,7 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "gloo-timers",
- "hreads",
+ "hreads 0.10.0",
  "log",
  "plat",
  "wasm-bindgen-futures",
@@ -6684,7 +6701,7 @@ dependencies = [
  "anyhow",
  "bytemuck",
  "gm",
- "hreads",
+ "hreads 0.11.0",
  "image",
  "log",
  "plat",
