@@ -2,23 +2,28 @@ use inspect::ui::ViewRepr;
 use test_engine::{
     refs::Weak,
     ui::{
-        Button, HasText, Label, Setup, TURQUOISE, TextAlignment::Left, UIManager, ViewData, ViewFrame,
-        ViewSubviews, view,
+        GRAY, HasText, Label, Setup, TURQUOISE, TextAlignment::Left, UIManager, ViewData, ViewFrame,
+        ViewSubviews, ViewTouch, WHITE, view,
     },
 };
 
 #[view]
 pub struct ViewView {
     #[init]
-    button: Button,
-    label:  Label,
+    label: Label,
 }
 
 impl Setup for ViewView {
     fn setup(mut self: Weak<Self>) {
+        self.set_color(WHITE);
         self.label.set_text_size(10).set_alignment(Left).place().lrt(0).h(10);
-        self.button.place().back();
+        self.enable_touch();
+
         self.outline(TURQUOISE);
+    }
+
+    fn on_selection_changed(mut self: Weak<Self>, selected: bool) {
+        self.set_color(if selected { GRAY } else { WHITE });
     }
 }
 

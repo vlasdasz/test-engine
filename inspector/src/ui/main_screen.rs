@@ -10,7 +10,7 @@ use test_engine::{
     ui::{
         Alert, AlertErr,
         Anchor::{Right, Top},
-        Button, DropDown, HasText, LIGHT_GRAY, Setup, Spinner, ViewData, async_link_button, view,
+        Button, DropDown, HasText, Setup, Spinner, ViewData, async_link_button, view,
     },
 };
 
@@ -40,7 +40,7 @@ impl Setup for MainScreen {
 
         self.clients.place().at_right(self.scan, 10);
 
-        self.play_sound.set_text("Play Sound").place().size(100, 50).tr(10);
+        self.play_sound.set_text("Play Sound").place().size(200, 50).tr(10);
         async_link_button!(self.play_sound, play_sound_tapped);
 
         self.get_ui.set_text("Get UI");
@@ -60,17 +60,49 @@ impl Setup for MainScreen {
             }
         });
 
-        self.ui_represent.set_color(LIGHT_GRAY);
         self.ui_represent
             .place()
             .l(20)
             .anchor(Top, self.scan, 20)
             .anchor(Right, self.play_sound, 20)
             .b(20);
+
+        log_spawn(self.initial_scan());
     }
 }
 
 impl MainScreen {
+    async fn initial_scan(mut self: Weak<Self>) -> Result<()> {
+        let spin = Spinner::lock();
+
+        let clients = netrun::scan_for_port(inspect::PORT_RANGE.start).await?;
+
+        let Some((ip, _)) = clients.into_iter().next() else {
+            return Ok(());
+        };
+
+        let client = Client::connect((ip, inspect::PORT_RANGE.start)).await?;
+
+        client.send(UIRequest::GetUI).await?;
+
+        on_main(move || {
+            self.clients.set_values(vec![ip]);
+            self.current_client = Some(client);
+
+            drop(spin);
+
+            log_spawn::<anyhow::Error>(async move {
+                loop {
+                    let client = self.current_client.as_ref().ok_or(anyhow!("No client"))?;
+                    let command = client.receive().await?;
+                    self.process_command(command).await?;
+                }
+            });
+        });
+
+        Ok(())
+    }
+
     async fn scan_tapped(mut self: Weak<Self>) -> Result<()> {
         let spin = Spinner::lock();
 
