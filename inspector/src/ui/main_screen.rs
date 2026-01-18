@@ -8,12 +8,13 @@ use test_engine::{
     dispatch::on_main,
     refs::Weak,
     ui::{
-        Alert, AlertErr, Anchor::Top, Button, DropDown, HasText, Setup, Spinner, ViewData, async_link_button,
-        view,
+        Alert, AlertErr,
+        Anchor::{Right, Top},
+        Button, DropDown, HasText, LIGHT_GRAY, Setup, Spinner, ViewData, async_link_button, view,
     },
 };
 
-use crate::ui::common::ValueView;
+use crate::ui::{common::ValueView, inspect::UIRepresentView};
 
 type Client = netrun::Client<AppCommand, InspectorCommand>;
 
@@ -28,6 +29,8 @@ pub struct MainScreen {
     play_sound:     Button,
     get_ui:         Button,
     ui_scale_value: ValueView,
+
+    ui_represent: UIRepresentView,
 }
 
 impl Setup for MainScreen {
@@ -56,6 +59,14 @@ impl Setup for MainScreen {
                 self.scale_changed(val).await.alert_err();
             }
         });
+
+        self.ui_represent.set_color(LIGHT_GRAY);
+        self.ui_represent
+            .place()
+            .l(20)
+            .anchor(Top, self.scan, 20)
+            .anchor(Right, self.play_sound, 20)
+            .b(20);
     }
 }
 
@@ -160,9 +171,9 @@ impl MainScreen {
                     self.ui_scale_value.set_value(scale);
                 });
             }
-            UIResponse::SendUI(root) => {
-                dbg!(&root);
-            }
+            UIResponse::SendUI { scale, root } => on_main(move || {
+                self.ui_represent.set_root(scale, root);
+            }),
         };
 
         Ok(())

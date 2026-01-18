@@ -59,8 +59,9 @@ impl InspectService {
                 AppCommand::Ok
             }
             UIRequest::GetUI => {
+                let scale = UIManager::scale();
                 let root = UIManager::root_view().view_to_inspect();
-                UIResponse::SendUI(root).into()
+                UIResponse::SendUI { scale, root }.into()
             }
         }
     }

@@ -2889,6 +2889,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "lz4_flex"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ab6473172471198271ff72e9379150e9dfd70d8e533e0752a27e515b48dd375e"
+dependencies = [
+ "twox-hash",
+]
+
+[[package]]
 name = "mach2"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3123,9 +3132,9 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.24.0"
+version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e0ef5ae67789202e24c5390797493c17dfed89e9ba67142a79ca0ab7aba523f"
+checksum = "c02d7214f04da1b7e7cb788f35e1e3616da56f650a5fde0987c9b45a9fa897d7"
 dependencies = [
  "anyhow",
  "byte-unit",
@@ -3133,6 +3142,7 @@ dependencies = [
  "infisical",
  "local-ip-address",
  "log",
+ "lz4_flex",
  "parking_lot",
  "plat 0.6.0",
  "reqwest 0.13.1",

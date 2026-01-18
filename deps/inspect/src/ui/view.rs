@@ -9,3 +9,14 @@ pub struct ViewRepr {
     pub placer:   Placer,
     pub subviews: Vec<ViewRepr>,
 }
+
+impl Default for ViewRepr {
+    fn default() -> Self {
+        Self {
+            label:    String::default(),
+            frame:    Rect::default(),
+            placer:   Placer::empty(),
+            subviews: vec![],
+        }
+    }
+}

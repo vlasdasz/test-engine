@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "render-test",
-  "ui-test",
-  "ui-benchmark",
-  "deps/ui/ui-proc-test",
-  "fuzz",
-  "inspector",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "render-test",
+    "ui-test",
+    "ui-benchmark",
+    "deps/ui/ui-proc-test",
+    "fuzz",
+    "inspector",
 ]
 
 resolver = "3"
@@ -72,7 +72,7 @@ winit = "0.30"
 #hreads = { path = "../deps/hreads" }
 hreads = "0.12"
 
-netrun = "0.24"
+netrun = "0.25"
 #netrun = { path = "../deps/netrun/netrun" }
 plat = "0.6"
 reflected = "0.29"

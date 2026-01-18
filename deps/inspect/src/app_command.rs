@@ -12,7 +12,7 @@ pub enum AppCommand {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum UIResponse {
     Scale(f32),
-    SendUI(ViewRepr),
+    SendUI { scale: f32, root: ViewRepr },
 }
 
 impl From<UIResponse> for AppCommand {
