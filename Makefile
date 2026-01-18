@@ -28,6 +28,9 @@ mobile:
 	cargo install test-mobile
 	test-mobile --path=../test-mobile/mobile-template
 
+build-ios:
+	cargo lipo -p test-game
+
 ios-lib:
 	cargo lipo -p test-game --release
 
