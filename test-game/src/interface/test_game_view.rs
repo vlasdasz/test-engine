@@ -299,7 +299,7 @@ impl Setup for TestGameView {
         #[cfg(not_wasm)]
         {
             self.ping_inspector.on_tap(|| {
-                test_engine::inspect::InspectServer::send(test_engine::inspect::AppCommand::Ping);
+                test_engine::inspect::InspectService::send(test_engine::inspect::AppCommand::Ping);
             });
         }
         #[cfg(wasm)]

@@ -2,8 +2,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum InspectorCommand {
-    Ping,
-    Pong,
     PlaySound,
     UI(UIRequest),
     GetSystemInfo,

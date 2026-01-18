@@ -74,7 +74,7 @@ hreads = { path = "../deps/hreads" }
 
 #netrun = "0.23"
 netrun = { path = "../deps/netrun/netrun" }
-plat = "0.5"
+plat = "0.6"
 reflected = "0.29"
 refs = { version = "0.31", default-features = true }
 vents = "0.13"

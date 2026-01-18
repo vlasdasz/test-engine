@@ -1,15 +1,14 @@
-use anyhow::{Result, anyhow};
-use inspect::{AppCommand, InspectorCommand, UIRequest, UIResponse};
-use log::{debug, error, info};
+use anyhow::{Result, bail};
+use inspect::{AppCommand, InspectorCommand, SystemResponse, UIRequest, UIResponse};
+use log::{debug, info};
 use test_engine::{
-    dispatch::{after, on_main},
+    dispatch::on_main,
     refs::Weak,
     ui::{
         Alert, AlertErr, Anchor::Top, Button, DropDown, HasText, Setup, Spinner, ViewData, async_link_button,
         view,
     },
 };
-use tokio::spawn;
 
 use crate::{
     app_search::{Client, client},
@@ -68,18 +67,24 @@ impl MainScreen {
 
         info!("Found: {} clients", clients.len());
 
+        let mut available_clients = vec![];
+
         for (client_ip, _) in clients {
             debug!("Checking: {client_ip}");
             let client = Client::connect(dbg!((client_ip, inspect::PORT_RANGE.start))).await?;
 
             client.send(InspectorCommand::GetSystemInfo).await?;
 
-            debug!("Command sent");
+            let AppCommand::System(SystemResponse::Info(system)) = client.receive().await? else {
+                bail!("Invalid response from the client");
+            };
 
-            let info = client.receive().await?;
-
-            dbg!(&info);
+            if available_clients.iter().find(|(id, _)| id == &system.app_id).is_none() {
+                available_clients.push((system.app_id, client_ip));
+            }
         }
+
+        dbg!(&available_clients);
 
         Ok(())
     }
@@ -98,17 +103,14 @@ impl MainScreen {
 
     async fn process_command(self: Weak<Self>, command: AppCommand) -> Result<()> {
         match command {
-            AppCommand::Ping => {
-                client().await?.send(InspectorCommand::Pong).await?;
-            }
-            AppCommand::Pong => {
-                info!("Received pong from the app");
-            }
             AppCommand::UI(ui) => {
                 self.process_ui_command(ui).await?;
             }
             AppCommand::System(info) => {
                 dbg!(&info);
+            }
+            AppCommand::Ok => {
+                info!("Ok received");
             }
         };
 

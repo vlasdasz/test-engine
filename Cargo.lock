@@ -376,7 +376,7 @@ dependencies = [
  "kira",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.6.0",
  "refs",
 ]
 
@@ -1492,7 +1492,7 @@ dependencies = [
  "dirs",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.6.0",
 ]
 
 [[package]]
@@ -2161,7 +2161,7 @@ dependencies = [
  "gloo-timers",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.5.0",
  "pollster",
  "tokio",
  "wasm-bindgen-futures",
@@ -2170,7 +2170,7 @@ dependencies = [
 
 [[package]]
 name = "hreads"
-version = "0.11.0"
+version = "0.12.0"
 dependencies = [
  "anyhow",
  "async-std",
@@ -2178,7 +2178,26 @@ dependencies = [
  "gloo-timers",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.5.0",
+ "pollster",
+ "tokio",
+ "wasm-bindgen-futures",
+ "web-sys",
+]
+
+[[package]]
+name = "hreads"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a74a10f1070e98271a766fa9609e07d95b1be6040d93005d288909a2736b01e"
+dependencies = [
+ "anyhow",
+ "async-std",
+ "futures",
+ "gloo-timers",
+ "log",
+ "parking_lot",
+ "plat 0.5.0",
  "pollster",
  "tokio",
  "wasm-bindgen-futures",
@@ -2513,7 +2532,7 @@ dependencies = [
  "anyhow",
  "gm",
  "netrun",
- "plat",
+ "plat 0.6.0",
  "serde",
  "ui",
 ]
@@ -2711,7 +2730,7 @@ dependencies = [
  "educe",
  "gm",
  "level-proc",
- "plat",
+ "plat 0.6.0",
  "rapier2d",
  "refs",
  "utils",
@@ -3144,12 +3163,12 @@ version = "0.23.0"
 dependencies = [
  "anyhow",
  "byte-unit",
- "hreads 0.11.0",
+ "hreads 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "infisical",
  "local-ip-address",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.6.0",
  "reqwest 0.13.1",
  "rust-network-scanner",
  "serde",
@@ -3828,6 +3847,15 @@ name = "plat"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d8583d1b7e3e4d738a525c89ec05846f02cb068dea4f865aca8c1799b03a57ac"
+dependencies = [
+ "cfg_aliases",
+]
+
+[[package]]
+name = "plat"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d7d18144cb53f7bc4ff6f32ce3d5e0f7741303dc5483103abe4287989ea642ec"
 dependencies = [
  "cfg_aliases",
 ]
@@ -5257,7 +5285,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "filesystem",
- "plat",
+ "plat 0.6.0",
  "serde",
  "serde_json",
 ]
@@ -5500,13 +5528,13 @@ dependencies = [
  "game",
  "generate",
  "gm",
- "hreads 0.11.0",
+ "hreads 0.12.0",
  "inspect",
  "level",
  "log",
  "netrun",
  "parking_lot",
- "plat",
+ "plat 0.6.0",
  "reflected",
  "refs",
  "render",
@@ -5534,7 +5562,7 @@ dependencies = [
  "fastrand",
  "log",
  "netrun",
- "plat",
+ "plat 0.6.0",
  "serde",
  "test-engine",
  "tokio",
@@ -5947,12 +5975,12 @@ dependencies = [
  "chrono",
  "educe",
  "gm",
- "hreads 0.11.0",
+ "hreads 0.12.0",
  "log",
  "netrun",
  "nonempty",
  "parking_lot",
- "plat",
+ "plat 0.6.0",
  "reflected",
  "refs",
  "render",
@@ -6213,7 +6241,7 @@ dependencies = [
  "gloo-timers",
  "hreads 0.10.0",
  "log",
- "plat",
+ "plat 0.5.0",
  "wasm-bindgen-futures",
 ]
 
@@ -6701,10 +6729,10 @@ dependencies = [
  "anyhow",
  "bytemuck",
  "gm",
- "hreads 0.11.0",
+ "hreads 0.12.0",
  "image",
  "log",
- "plat",
+ "plat 0.6.0",
  "refs",
  "resvg",
  "tiny-skia",

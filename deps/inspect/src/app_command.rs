@@ -4,8 +4,7 @@ use crate::ui::ViewRepr;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AppCommand {
-    Ping,
-    Pong,
+    Ok,
     UI(UIResponse),
     System(SystemResponse),
 }
