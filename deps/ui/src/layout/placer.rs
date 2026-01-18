@@ -111,6 +111,14 @@ impl Placer {
         self.anchor(Anchor::Y, view, 1)
     }
 
+    pub fn same_width(&self, view: impl Deref<Target = impl View>) -> &Self {
+        self.anchor(Anchor::Width, view, 1)
+    }
+
+    pub fn same_height(&self, view: impl Deref<Target = impl View>) -> &Self {
+        self.anchor(Anchor::Height, view, 1)
+    }
+
     pub fn relative_width(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
         self.relative(Anchor::Width, view, multiplier)
     }
@@ -502,6 +510,8 @@ impl Placer {
             }
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
+            Anchor::Width => frame.size.width = a_frame.width(),
+            Anchor::Height => frame.size.height = a_frame.height(),
             _ => unimplemented!("Anchor layout for: {:?} is not supported", side),
         }
         view.set_frame(frame);

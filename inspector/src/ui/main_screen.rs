@@ -1,7 +1,7 @@
 use std::net::IpAddr;
 
 use anyhow::{Result, anyhow, bail};
-use hreads::log_spawn;
+use hreads::{log_spawn, sleep};
 use inspect::{AppCommand, InspectorCommand, SystemResponse, UIRequest, UIResponse};
 use log::{debug, info};
 use test_engine::{
@@ -50,9 +50,10 @@ impl Setup for MainScreen {
         self.ui_scale_value
             .set_title("UI scale")
             .place()
-            .r(10)
             .anchor(Top, self.get_ui, 10)
-            .size(100, 100);
+            .same_width(self.get_ui)
+            .same_x(self.get_ui)
+            .h(100);
 
         self.ui_scale_value.on_change.val_async(move |val| async move {
             {
@@ -177,7 +178,11 @@ impl MainScreen {
             .as_ref()
             .ok_or(anyhow!("No client"))?
             .send(UIRequest::SetScale(scale))
-            .await
+            .await?;
+
+        sleep(0.1).await;
+
+        self.get_ui_tapped().await
     }
 
     async fn process_command(self: Weak<Self>, command: AppCommand) -> Result<()> {
