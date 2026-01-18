@@ -14,7 +14,10 @@ use test_engine::{
     },
 };
 
-use crate::ui::{common::ValueView, inspect::UIRepresentView};
+use crate::ui::{
+    common::ValueView,
+    inspect::{SHRINK_SCALE, UIRepresentView},
+};
 
 type Client = netrun::Client<AppCommand, InspectorCommand>;
 
@@ -26,9 +29,10 @@ pub struct MainScreen {
     scan:    Button,
     clients: DropDown<IpAddr>,
 
-    play_sound:     Button,
-    get_ui:         Button,
-    ui_scale_value: ValueView,
+    play_sound:    Button,
+    get_ui:        Button,
+    ui_scale:      ValueView,
+    schrink_scale: ValueView,
 
     ui_represent: UIRepresentView,
 }
@@ -47,7 +51,7 @@ impl Setup for MainScreen {
         self.get_ui.place().below(self.play_sound, 10);
         async_link_button!(self.get_ui, get_ui_tapped);
 
-        self.ui_scale_value
+        self.ui_scale
             .set_title("UI scale")
             .place()
             .anchor(Top, self.get_ui, 10)
@@ -55,10 +59,16 @@ impl Setup for MainScreen {
             .same_x(self.get_ui)
             .h(100);
 
-        self.ui_scale_value.on_change.val_async(move |val| async move {
+        self.ui_scale.on_change.val_async(move |val| async move {
             {
                 self.scale_changed(val).await.alert_err();
             }
+        });
+
+        self.schrink_scale.set_title("Schrink scale").place().below(self.ui_scale, 10);
+        self.schrink_scale.on_change.val(move |val| {
+            *SHRINK_SCALE.lock() = val;
+            self.ui_represent.reload();
         });
 
         self.ui_represent
@@ -205,7 +215,7 @@ impl MainScreen {
         match command {
             UIResponse::Scale(scale) => {
                 on_main(move || {
-                    self.ui_scale_value.set_value(scale);
+                    self.ui_scale.set_value(scale);
                 });
             }
             UIResponse::SendUI { scale, root } => on_main(move || {

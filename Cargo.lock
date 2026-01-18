@@ -2510,6 +2510,7 @@ dependencies = [
  "inspect",
  "log",
  "netrun",
+ "parking_lot",
  "test-engine",
 ]
 

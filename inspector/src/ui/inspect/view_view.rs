@@ -1,4 +1,5 @@
 use inspect::ui::ViewRepr;
+use parking_lot::Mutex;
 use test_engine::{
     refs::Weak,
     ui::{
@@ -6,6 +7,8 @@ use test_engine::{
         ViewSubviews, ViewTouch, WHITE, view,
     },
 };
+
+pub(crate) static SHRINK_SCALE: Mutex<f32> = Mutex::new(0.2);
 
 #[view]
 pub struct ViewView {
@@ -29,17 +32,17 @@ impl Setup for ViewView {
 
 impl ViewView {
     pub fn set_repr(mut self: Weak<Self>, scale: f32, repr: ViewRepr) {
-        const SHRINK_SCALE: f32 = 0.8;
+        let shrink_scale = *SHRINK_SCALE.lock();
 
         self.cleanup();
 
         self.label.set_text(&repr.label);
 
         let frame = (
-            repr.frame.x() * scale * SHRINK_SCALE / UIManager::scale(),
-            repr.frame.y() * scale * SHRINK_SCALE / UIManager::scale(),
-            repr.frame.width() * scale * SHRINK_SCALE / UIManager::scale(),
-            repr.frame.height() * scale * SHRINK_SCALE / UIManager::scale(),
+            repr.frame.x() * scale * shrink_scale / UIManager::scale(),
+            repr.frame.y() * scale * shrink_scale / UIManager::scale(),
+            repr.frame.width() * scale * shrink_scale / UIManager::scale(),
+            repr.frame.height() * scale * shrink_scale / UIManager::scale(),
         );
 
         self.set_frame(frame);

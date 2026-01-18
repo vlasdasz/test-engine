@@ -22,7 +22,7 @@ impl ValueView {
 
     pub fn set_value(mut self: Weak<Self>, val: f32) {
         self.buttons.set_value(val);
-        self.title.set_text(val);
+        self.value_label.set_text(val);
     }
 }
 
@@ -32,10 +32,10 @@ impl Setup for ValueView {
 
         self.buttons.on_change(move |val| {
             self.on_change.trigger(val);
-            self.title.set_text(val);
+            self.value_label.set_text(val);
         });
 
-        self.buttons.set_min(0.2);
-        self.buttons.set_step(0.2);
+        self.buttons.set_min(0.1);
+        self.buttons.set_step(0.1);
     }
 }

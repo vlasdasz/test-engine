@@ -11,6 +11,7 @@ name = "inspector"
 anyhow = { workspace = true }
 hreads = { workspace = true }
 log = { workspace = true }
+parking_lot = { workspace = true }
 
 inspect = { workspace = true }
 netrun = { workspace = true }
