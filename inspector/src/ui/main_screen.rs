@@ -48,7 +48,7 @@ impl Setup for MainScreen {
 
         self.clients.place().at_right(self.scan, 10);
 
-        self.play_sound.set_text("Play Sound").place().size(200, 50).tr(10);
+        self.play_sound.set_text("Play Sound").place().size(280, 50).tr(10);
         async_link_button!(self.play_sound, play_sound_tapped);
 
         self.get_ui.set_text("Get UI");

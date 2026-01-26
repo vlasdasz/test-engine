@@ -25,4 +25,8 @@ impl App for InspectorApp {
     fn enable_inspection(&self) -> bool {
         false
     }
+    
+    fn after_launch(&self) {
+        // test_engine::ui::UIManager::enable_debug_frames();
+    }
 }

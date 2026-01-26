@@ -2,8 +2,10 @@ use std::any::Any;
 
 use test_engine::{
     refs::{Own, Weak},
-    ui::{LayoutRule, Placer, Setup, TableData, TableView, View, ViewData, view},
+    ui::{LayoutRule, Placer, Setup, TableData, TableView, View, ViewData, cast_cell, view},
 };
+
+use crate::ui::inspect::placer_view::layout_rule_cell::LayoutRuleCell;
 
 #[view]
 pub struct PlacerView {
@@ -26,6 +28,7 @@ impl PlacerView {
     pub fn set_placer(mut self: Weak<Self>, id: &str, placer: &Placer) {
         self.view_id = id.to_string();
         self.rules = placer.get_rules().clone();
+        self.table.reload_data();
     }
 }
 
@@ -38,11 +41,12 @@ impl TableData for PlacerView {
         self.rules.len()
     }
 
-    fn make_cell(self: Weak<Self>, index: usize) -> Own<dyn View> {
-        todo!()
+    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
+        LayoutRuleCell::new()
     }
 
     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        todo!()
+        let cell = cast_cell!(LayoutRuleCell);
+        cell.set_rule(self.rules[index].clone());
     }
 }

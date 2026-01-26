@@ -1,7 +1,7 @@
 use inspect::ui::ViewRepr;
 use test_engine::{
     refs::Weak,
-    ui::{HasText, Label, Setup, ViewData, view},
+    ui::{Anchor::Top, HasText, Label, Setup, ViewData, view},
 };
 
 use crate::ui::inspect::placer_view::PlacerView;
@@ -18,15 +18,19 @@ pub struct ViewInspectorView {
 
 impl Setup for ViewInspectorView {
     fn setup(self: Weak<Self>) {
-        self.place().all_ver();
+        self.label.place().ltr(0).relative_height(self, 0.05);
+        self.id.place().below(self.label, 0);
+
+        self.placer_view.place().lrb(0).anchor(Top, self.id, 0);
     }
 }
 
 impl ViewInspectorView {
     pub fn set_view(mut self: Weak<Self>, view: ViewRepr) {
-        dbg!(&view);
+
         self.label.set_text(format!("Label: {}", view.label));
         self.id.set_text_size(10).set_text(format!("{}", view.id));
+        self.placer_view.set_placer(&view.id, &view.placer);
 
         self.view = view;
     }

@@ -108,6 +108,7 @@ impl<'de> Deserialize<'de> for Placer {
                         all_margin.ok_or_else(|| de::Error::missing_field("all_margin"))?,
                     ),
                     has:              RefCell::new(has.ok_or_else(|| de::Error::missing_field("has"))?),
+                    custom:           None.into(),
                 })
             }
         }

@@ -10,5 +10,9 @@
   {
     "label": "Run Level Test",
     "command": "cargo run -p level-test"
+  },
+  {
+    "label": "Run Inspector",
+    "command": "cargo run -p inspector"
   }
 ]

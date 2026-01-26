@@ -41,6 +41,9 @@ pub struct ViewBase {
 
     #[educe(Debug(ignore))]
     pub(crate) is_selected: bool,
+    
+    #[educe(Debug(ignore))]
+    pub(crate) is_system: bool,
 
     #[educe(Debug(ignore))]
     pub(crate) navigation_view: Weak<NavigationView>,

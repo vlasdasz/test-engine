@@ -12,6 +12,8 @@ pub trait ViewData {
 
     fn view_label(&self) -> &str;
 
+    fn is_system(&self) -> bool;
+
     fn content_offset(&self) -> f32;
 
     fn color(&self) -> &Color;
@@ -62,6 +64,10 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn view_label(&self) -> &str {
         &self.base_view().view_label
+    }
+
+    fn is_system(&self) -> bool {
+        self.base_view().is_system
     }
 
     fn content_offset(&self) -> f32 {

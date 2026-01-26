@@ -12,7 +12,12 @@ impl<T: View + ?Sized> ViewToInspect for T {
             id:       weak_to_id(self.weak_view()),
             frame:    *self.frame(),
             placer:   self.placer_copy(),
-            subviews: self.subviews().iter().map(|v| v.view_to_inspect()).collect(),
+            subviews: self
+                .subviews()
+                .iter()
+                .filter(|v| !v.is_system())
+                .map(|v| v.view_to_inspect())
+                .collect(),
         }
     }
 }

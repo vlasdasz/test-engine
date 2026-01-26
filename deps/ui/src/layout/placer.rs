@@ -2,9 +2,11 @@ use std::{
     cell::{Ref, RefCell, RefMut},
     fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
+    sync::Arc,
 };
 
 use gm::{LossyConvert, ToF32, axis::Axis, flat::Size};
+use parking_lot::Mutex;
 use refs::{Rglica, ToRglica, Weak};
 
 use crate::{
@@ -25,6 +27,8 @@ pub struct Placer {
     pub(crate) all_margin: RefCell<f32>,
 
     pub(crate) has: RefCell<Size<bool>>,
+
+    pub(crate) custom: RefCell<Option<Arc<Mutex<dyn FnMut(WeakView) + Send>>>>,
 }
 
 impl Placer {
@@ -36,6 +40,7 @@ impl Placer {
             s_content:        Rglica::default(),
             all_margin:       RefCell::new(0.0),
             has:              RefCell::new(Size::default()),
+            custom:           None.into(),
         }
     }
 
@@ -396,6 +401,10 @@ impl Placer {
         ));
         self
     }
+
+    pub fn custom(&self, custom: impl FnMut(WeakView) + Send + 'static) {
+        *self.custom.borrow_mut() = Some(Arc::new(Mutex::new(custom)));
+    }
 }
 
 impl Placer {
@@ -424,6 +433,10 @@ impl Placer {
 
         for rule in this.all_tiling_rules().iter() {
             self.tiling_layout(rule.tiling.as_ref().expect("BUG"));
+        }
+
+        if let Some(custom) = self.custom.borrow().as_ref() {
+            custom.lock()(self.view.weak_view());
         }
     }
 }
