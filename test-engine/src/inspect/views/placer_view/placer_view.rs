@@ -40,7 +40,7 @@ impl PlacerView {
 
 impl TableData for PlacerView {
     fn cell_height(self: Weak<Self>) -> f32 {
-        40.0
+        50.0
     }
 
     fn number_of_cells(self: Weak<Self>) -> usize {

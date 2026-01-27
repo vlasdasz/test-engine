@@ -151,6 +151,11 @@ impl TextField {
         self.constraint = TextFieldConstraint::Float.into();
         self
     }
+    
+    pub fn integer_only(&mut self) -> &mut Self {
+        self.constraint = TextFieldConstraint::Integer.into();
+        self
+    }
 
     pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
         let color = color.into();
