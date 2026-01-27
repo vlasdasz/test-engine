@@ -151,7 +151,7 @@ impl TextField {
         self.constraint = TextFieldConstraint::Float.into();
         self
     }
-    
+
     pub fn integer_only(&mut self) -> &mut Self {
         self.constraint = TextFieldConstraint::Integer.into();
         self

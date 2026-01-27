@@ -28,6 +28,7 @@ pub struct Placer {
 
     pub(crate) has: RefCell<Size<bool>>,
 
+    #[allow(clippy::type_complexity)]
     pub(crate) custom: RefCell<Option<Arc<Mutex<dyn FnMut(WeakView) + Send>>>>,
 }
 

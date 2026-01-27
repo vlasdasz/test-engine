@@ -1,6 +1,6 @@
 use gm::LossyConvert;
 use refs::Weak;
-use ui::{HasText, Label, LayoutRule, Setup, TextField, UIEvent, ViewData, ViewFrame};
+use ui::{LayoutRule, Setup, TextField, UIEvent, ViewData, ViewFrame};
 use ui_proc::view;
 
 use crate::{inspect::views::AnchorView, ui::Anchor::Left};

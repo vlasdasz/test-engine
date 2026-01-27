@@ -9,6 +9,7 @@ pub enum AppCommand {
     System(SystemResponse),
 }
 
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum UIResponse {
     Scale(f32),

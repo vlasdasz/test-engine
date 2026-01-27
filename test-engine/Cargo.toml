@@ -16,6 +16,7 @@ webgl = ["wgpu/webgl"]
 anyhow = { workspace = true }
 educe = { workspace = true }
 fern = { workspace = true }
+hex = { workspace = true }
 log = { workspace = true }
 parking_lot = { workspace = true }
 serde = { workspace = true }
@@ -24,7 +25,6 @@ web-time = { workspace = true }
 wgpu = { workspace = true }
 wgpu_text = { workspace = true }
 winit = { workspace = true }
-hex = { workspace = true }
 
 hreads = { workspace = true }
 netrun = { workspace = true }

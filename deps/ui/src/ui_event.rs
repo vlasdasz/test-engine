@@ -29,35 +29,25 @@ impl<T: Send> UIEvent<T> {
         }
     }
 
-    fn clear_subscribers(&self, subs: &mut MutexGuard<Vec<Subscriber<T>>>) {
+    fn clear_subscribers(&self, subs: &mut MutexGuard<Vec<Subscriber<T>>>) -> &Self {
         let mut unsubscribe = self.unsubscribe.lock();
         subs.retain(|a| !unsubscribe.contains(&a.subscriber.raw()) && a.subscriber.is_ok());
         unsubscribe.clear();
+        self
     }
 
     pub fn sub<U: ?Sized>(&self, subscriber: Weak<U>, mut action: impl FnMut() + Send + 'static) {
-        let mut subs = self.subscribers.lock();
-        self.clear_subscribers(&mut subs);
-
-        assert!(
-            !subs.iter().any(|s| s.subscriber.raw() == subscriber.raw()),
-            "This object is already subscribed to this event"
-        );
-
-        subs.push(Subscriber {
-            subscriber: subscriber.erase(),
-            action:     Box::new(move |_| action()),
-        });
+        self.val(subscriber, move |_| action());
     }
 
     pub fn val<U: ?Sized>(&self, subscriber: Weak<U>, action: impl FnMut(T) + Send + 'static) {
         let mut subs = self.subscribers.lock();
         self.clear_subscribers(&mut subs);
 
-        assert!(
-            !subs.iter().any(|s| s.subscriber.raw() == subscriber.raw()),
-            "This object is already subscribed to this event"
-        );
+        // This view is already subscribed
+        if subs.iter().any(|s| s.subscriber.raw() == subscriber.raw()) {
+            return;
+        }
 
         subs.push(Subscriber {
             subscriber: subscriber.erase(),
