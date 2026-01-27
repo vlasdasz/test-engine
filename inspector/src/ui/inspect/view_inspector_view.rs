@@ -1,10 +1,9 @@
 use inspect::ui::ViewRepr;
 use test_engine::{
+    inspect::views::PlacerView,
     refs::Weak,
     ui::{Anchor::Top, HasText, Label, Setup, ViewData, view},
 };
-
-use crate::ui::inspect::placer_view::PlacerView;
 
 #[view]
 pub struct ViewInspectorView {
@@ -27,7 +26,6 @@ impl Setup for ViewInspectorView {
 
 impl ViewInspectorView {
     pub fn set_view(mut self: Weak<Self>, view: ViewRepr) {
-
         self.label.set_text(format!("Label: {}", view.label));
         self.id.set_text_size(10).set_text(format!("{}", view.id));
         self.placer_view.set_placer(&view.id, &view.placer);

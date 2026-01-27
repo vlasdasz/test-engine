@@ -1,11 +1,17 @@
 use std::any::Any;
 
-use test_engine::{
-    refs::{Own, Weak},
-    ui::{LayoutRule, Placer, Setup, TableData, TableView, View, ViewData, cast_cell, view},
-};
+use refs::{Own, Weak};
+use ui::{LayoutRule, Placer, Setup, TableData, TableView, View, ViewData};
+use ui_proc::{cast_cell, view};
 
-use crate::ui::inspect::placer_view::layout_rule_cell::LayoutRuleCell;
+use crate::inspect::views::LayoutRuleCell;
+
+mod test_engine {
+    pub(crate) use educe;
+    pub(crate) use refs;
+
+    pub(crate) use crate::ui;
+}
 
 #[view]
 pub struct PlacerView {

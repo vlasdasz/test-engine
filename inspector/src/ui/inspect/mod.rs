@@ -1,4 +1,3 @@
-mod placer_view;
 mod ui_represent_view;
 mod view_inspector_view;
 mod view_view;
