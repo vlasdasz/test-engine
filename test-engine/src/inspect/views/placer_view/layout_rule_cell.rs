@@ -1,6 +1,6 @@
 use gm::LossyConvert;
 use refs::{Rglica, ToRglica, Weak};
-use ui::{LayoutRule, Setup, TextField, UIEvent, ViewData, ViewFrame};
+use ui::{LayoutRule, NumberView, Setup, TextField, UIEvent, ViewData, ViewFrame};
 use ui_proc::view;
 
 use crate::{inspect::views::AnchorView, ui::Anchor::Left};
@@ -19,8 +19,9 @@ pub struct LayoutRuleCell {
     rule: Rglica<LayoutRule>,
 
     #[init]
-    anchor: AnchorView,
-    value:  TextField,
+    anchor:   AnchorView,
+    value:    TextField,
+    position: NumberView,
 }
 
 impl Setup for LayoutRuleCell {
@@ -42,6 +43,8 @@ impl Setup for LayoutRuleCell {
             self.rule.offset = new_val;
             self.editing_ended.trigger(());
         });
+        
+        self.position.place().at_right(self.value, 10).w(5);
     }
 }
 
