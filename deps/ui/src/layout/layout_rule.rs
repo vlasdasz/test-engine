@@ -103,6 +103,16 @@ impl LayoutRule {
     }
 }
 
+impl LayoutRule {
+    pub fn width(&self) -> bool {
+        self.side.map(|s| s.is_width()).unwrap_or(false)
+    }
+    
+    pub fn height(&self) -> bool {
+        self.side.map(|s| s.is_height()).unwrap_or(false)
+    }
+}
+
 impl From<Anchor> for LayoutRule {
     fn from(anchor: Anchor) -> Self {
         Self::make(anchor, 0)

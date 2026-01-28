@@ -114,10 +114,6 @@ impl AnchorView {
             }
             Anchor::MinWidth => {}
             Anchor::MinHeight => {}
-            Anchor::Size => {
-                width();
-                height();
-            }
             Anchor::CenterX => {}
             Anchor::CenterY => {}
             Anchor::Center => {}

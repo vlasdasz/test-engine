@@ -17,8 +17,6 @@ pub enum Anchor {
     MinWidth,
     MinHeight,
 
-    Size,
-
     CenterX,
     CenterY,
 
@@ -32,12 +30,12 @@ pub enum Anchor {
 }
 
 impl Anchor {
-    pub(crate) fn has_width(self) -> bool {
-        matches!(self, Self::Width | Self::Size)
+    pub(crate) fn is_width(self) -> bool {
+        matches!(self, Self::Width)
     }
 
-    pub(crate) fn has_height(self) -> bool {
-        matches!(self, Self::Height | Self::Size)
+    pub(crate) fn is_height(self) -> bool {
+        matches!(self, Self::Height)
     }
 
     pub(crate) fn is_left(self) -> bool {

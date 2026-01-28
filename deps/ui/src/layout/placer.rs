@@ -109,8 +109,8 @@ impl Placer {
         self.w(width).h(height)
     }
 
-    pub fn same_size(&self, view: impl Deref<Target = impl View>) -> &Self {
-        self.relative(Anchor::Size, view, 1)
+    pub fn same_size(&self, view: impl Deref<Target = impl View> + Copy) -> &Self {
+        self.relative(Anchor::Width, view, 1).relative(Anchor::Height, view, 1)
     }
 
     pub fn same_x(&self, view: impl Deref<Target = impl View>) -> &Self {
@@ -137,8 +137,13 @@ impl Placer {
         self.relative(Anchor::Height, view, multiplier)
     }
 
-    pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
-        self.relative(Anchor::Size, view, multiplier)
+    pub fn relative_size(
+        &self,
+        view: impl Deref<Target = impl View> + Copy,
+        multiplier: impl ToF32,
+    ) -> &Self {
+        self.relative(Anchor::Width, view, multiplier)
+            .relative(Anchor::Height, view, multiplier)
     }
 
     pub fn relative_x(&self, multiplier: impl ToF32) -> &Self {
@@ -155,12 +160,8 @@ impl Placer {
         view: impl Deref<Target = impl View> + Copy,
     ) -> &Self {
         for anchor in anchors {
-            self.has().width = if anchor.has_width() {
-                true
-            } else {
-                self.has().width
-            };
-            self.has().height = if anchor.has_height() {
+            self.has().width = if anchor.is_width() { true } else { self.has().width };
+            self.has().height = if anchor.is_height() {
                 true
             } else {
                 self.has().height
@@ -172,14 +173,26 @@ impl Placer {
     }
 
     pub fn w(&self, w: impl ToF32) -> &Self {
+        if !self.has().width {
+            self.rules().insert(0, LayoutRule::make(Anchor::Width, w));
+            self.has().width = true;
+            return self;
+        }
+
+        self.rules().retain(|r| !r.width());
         self.rules().insert(0, LayoutRule::make(Anchor::Width, w));
-        self.has().width = true;
         self
     }
 
     pub fn h(&self, h: impl ToF32) -> &Self {
+        if !self.has().height {
+            self.rules().insert(0, LayoutRule::make(Anchor::Height, h));
+            self.has().height = true;
+            return self;
+        }
+
+        self.rules().retain(|r| !r.height());
         self.rules().insert(0, LayoutRule::make(Anchor::Height, h));
-        self.has().height = true;
         self
     }
 
@@ -274,12 +287,8 @@ impl Placer {
         view: impl Deref<Target = impl View + ?Sized>,
         ratio: impl ToF32,
     ) -> &Self {
-        self.has().width = if side.has_width() { true } else { self.has().width };
-        self.has().height = if side.has_height() {
-            true
-        } else {
-            self.has().height
-        };
+        self.has().width = if side.is_width() { true } else { self.has().width };
+        self.has().height = if side.is_height() { true } else { self.has().height };
 
         self.rules().push(LayoutRule::relative(side, ratio, view.weak_view()));
         self
@@ -373,15 +382,18 @@ impl Placer {
 
 impl Placer {
     pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.same([Anchor::Size, Anchor::X], view).anchor(Anchor::Bot, view, offset)
+        self.same([Anchor::Width, Anchor::Height, Anchor::X], view)
+            .anchor(Anchor::Bot, view, offset)
     }
 
     pub fn below(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.same([Anchor::Size, Anchor::X], view).anchor(Anchor::Top, view, offset)
+        self.same([Anchor::Width, Anchor::Height, Anchor::X], view)
+            .anchor(Anchor::Top, view, offset)
     }
 
     pub fn at_right(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.same([Anchor::Size, Anchor::Y], view).anchor(Anchor::Left, view, offset)
+        self.same([Anchor::Width, Anchor::Height, Anchor::Y], view)
+            .anchor(Anchor::Left, view, offset)
     }
 
     pub fn between(
@@ -497,7 +509,7 @@ impl Placer {
                     frame.size.height = rule.offset;
                 }
             }
-            Anchor::Size | Anchor::X | Anchor::Y | Anchor::None => {
+            Anchor::X | Anchor::Y | Anchor::None => {
                 unimplemented!("Simple layout for {:?} is not supported", side)
             }
         }
@@ -545,7 +557,6 @@ impl Placer {
         match side {
             Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
             Anchor::Height => frame.size.height = a_frame.size.height * rule.offset,
-            Anchor::Size => frame.size = a_frame.size * rule.offset,
             Anchor::X => frame.origin.x = a_frame.width() * rule.offset,
             Anchor::Y => frame.origin.y = a_frame.height() * rule.offset,
             Anchor::CenterY => {
@@ -569,7 +580,6 @@ impl Placer {
         match side {
             Anchor::Width => frame.size.width = a_frame.size.width,
             Anchor::Height => frame.size.height = a_frame.size.height,
-            Anchor::Size => frame.size = a_frame.size,
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
             _ => unimplemented!("Same layout for {:?} is not supported", side),

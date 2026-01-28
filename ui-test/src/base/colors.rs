@@ -3,7 +3,7 @@ use test_engine::{
     gm::Apply,
     refs::Weak,
     ui::{
-        Anchor::{Left, Size, Top, X},
+        Anchor::{Height, Left, Top, Width, X},
         Container, ImageView, Setup, UI, ViewData, WHITE, view,
     },
     ui_test::check_colors,
@@ -31,7 +31,7 @@ impl Setup for Colors {
         self._1.place().size(100, 100).t(45).anchor(Left, self.image, 20);
 
         [self._2, self._3, self._4].apply(|view| {
-            view.place().same([Size, X], self._1);
+            view.place().same([Width, Height, X], self._1);
         });
 
         self._2.set_color((48, 48, 48));

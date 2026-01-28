@@ -155,22 +155,22 @@ impl Setup for TestGameView {
             .show(netrun::System::get_info().dump());
         });
 
-        self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
+        self.image.place().center_x().b(5).relative_size(self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);
 
-        self.label_l.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
-            Anchor::Right,
-            self.image,
-            20,
-        );
+        self.label_l
+            .place()
+            .b(5)
+            .relative_size(self.image, 1.0)
+            .anchor(Anchor::Right, self.image, 20);
         self.label_l.text = "Łėŵœ Ы".into();
         self.label_l.set_text_size(64.).set_corner_radius(20);
 
-        self.image_r.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
-            Anchor::Left,
-            self.image,
-            20,
-        );
+        self.image_r
+            .place()
+            .b(5)
+            .relative_size(self.image, 1.0)
+            .anchor(Anchor::Left, self.image, 20);
         self.image_r.set_image("palm.png");
 
         self.gradient
