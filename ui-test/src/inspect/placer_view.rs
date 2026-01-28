@@ -33,7 +33,7 @@ pub(crate) async fn test_placer_view() -> Result<()> {
         view.placer_view.set_placer("sokol", &view.view.place());
     });
 
-    // record_ui_test();
+    record_ui_test();
 
     Ok(())
 }

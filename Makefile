@@ -32,7 +32,7 @@ OS := $(shell uname)
 
 build-ios:
 ifeq ($(OS), Darwin)
-	cargo lipo -p test-game
+	env CFLAGS="" SDKROOT="" cargo lipo -p test-game
 else
 	@echo " build-ios can only be run on macOS."
 endif

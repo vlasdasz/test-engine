@@ -1,9 +1,9 @@
 use gm::LossyConvert;
 use refs::{Rglica, ToRglica, Weak};
-use ui::{LayoutRule, NumberView, Setup, TextField, UIEvent, ViewData, ViewFrame};
+use ui::{LayoutRule, Setup, TextField, UIEvent, ViewData, ViewFrame};
 use ui_proc::view;
 
-use crate::{inspect::views::AnchorView, ui::Anchor::Left};
+use crate::inspect::views::AnchorView;
 
 mod test_engine {
     pub(crate) use educe;
@@ -19,9 +19,8 @@ pub struct LayoutRuleCell {
     rule: Rglica<LayoutRule>,
 
     #[init]
-    anchor:   AnchorView,
-    value:    TextField,
-    position: NumberView,
+    anchor: AnchorView,
+    value:  TextField,
 }
 
 impl Setup for LayoutRuleCell {
@@ -32,19 +31,13 @@ impl Setup for LayoutRuleCell {
         });
 
         self.value.set_text_size(20).integer_only();
-        self.value
-            .place()
-            .center_y()
-            .anchor(Left, self.anchor, 10)
-            .same_height(self.anchor)
-            .w(100);
+        self.value.place().at_right(self.anchor, 8).w(88);
+
         self.value.editing_ended.val(move |val| {
             let new_val: f32 = val.parse().unwrap();
             self.rule.offset = new_val;
             self.editing_ended.trigger(());
         });
-        
-        self.position.place().at_right(self.value, 10).w(5);
     }
 }
 

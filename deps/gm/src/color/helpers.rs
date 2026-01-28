@@ -22,6 +22,6 @@ fn srgb_to_linear_test() {
 
         let diff = (val - converted).abs();
 
-        assert!(diff <= 0.00000006, "{val} - {converted} = {diff}");
+        assert!(diff <= 0.000_000_06, "{val} - {converted} = {diff}");
     }
 }

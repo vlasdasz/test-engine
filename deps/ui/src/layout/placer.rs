@@ -392,7 +392,7 @@ impl Placer {
     }
 
     pub fn at_right(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.same([Anchor::Width, Anchor::Height, Anchor::Y], view)
+        self.same([Anchor::Width, Anchor::Height, Anchor::CenterY], view)
             .anchor(Anchor::Left, view, offset)
     }
 

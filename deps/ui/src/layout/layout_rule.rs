@@ -105,11 +105,11 @@ impl LayoutRule {
 
 impl LayoutRule {
     pub fn width(&self) -> bool {
-        self.side.map(|s| s.is_width()).unwrap_or(false)
+        self.side.is_some_and(Anchor::is_width)
     }
-    
+
     pub fn height(&self) -> bool {
-        self.side.map(|s| s.is_height()).unwrap_or(false)
+        self.side.is_some_and(Anchor::is_height)
     }
 }
 

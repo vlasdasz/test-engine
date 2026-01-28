@@ -2,7 +2,7 @@ use test_engine::{
     dispatch::from_main,
     refs::Weak,
     ui::{BLUE, Container, GREEN, Setup, UI, ViewData, view},
-    ui_test::{check_colors, record_ui_test},
+    ui_test::check_colors,
 };
 
 #[view]
