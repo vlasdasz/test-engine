@@ -1,5 +1,5 @@
 use gm::LossyConvert;
-use refs::Weak;
+use refs::{Rglica, ToRglica, Weak};
 use ui::{LayoutRule, Setup, TextField, UIEvent, ViewData, ViewFrame};
 use ui_proc::view;
 
@@ -14,9 +14,9 @@ mod test_engine {
 
 #[view]
 pub struct LayoutRuleCell {
-    pub editing_ended: UIEvent<f32>,
+    pub editing_ended: UIEvent,
 
-    rule: LayoutRule,
+    rule: Rglica<LayoutRule>,
 
     #[init]
     anchor: AnchorView,
@@ -38,13 +38,15 @@ impl Setup for LayoutRuleCell {
             .same_height(self.anchor)
             .w(100);
         self.value.editing_ended.val(move |val| {
-            self.editing_ended.trigger(val.parse().unwrap());
+            let new_val: f32 = val.parse().unwrap();
+            self.rule.offset = new_val;
+            self.editing_ended.trigger(());
         });
     }
 }
 
 impl LayoutRuleCell {
-    pub fn set_rule(mut self: Weak<Self>, rule: LayoutRule) {
+    pub fn set_rule(mut self: Weak<Self>, rule: &LayoutRule) {
         if let Some(anchor) = rule.side {
             self.anchor.set_anchor(anchor);
             self.value.set_text(LossyConvert::<i64>::lossy_convert(rule.offset));
@@ -52,6 +54,6 @@ impl LayoutRuleCell {
             dbg!(&rule);
         }
 
-        self.rule = rule;
+        self.rule = rule.to_rglica();
     }
 }
