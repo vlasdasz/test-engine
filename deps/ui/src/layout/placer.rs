@@ -134,7 +134,21 @@ impl Placer {
     }
 
     pub fn relative_height(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
-        self.relative(Anchor::Height, view, multiplier)
+        if !self.has().height {
+            self.has().height = true;
+            self.rules().insert(
+                0,
+                LayoutRule::relative(Anchor::Height, multiplier, view.weak_view()),
+            );
+            return self;
+        }
+
+        self.rules().retain(|r| !r.height());
+        self.rules().insert(
+            0,
+            LayoutRule::relative(Anchor::Height, multiplier, view.weak_view()),
+        );
+        self
     }
 
     pub fn relative_size(
@@ -582,6 +596,18 @@ impl Placer {
             Anchor::Height => frame.size.height = a_frame.size.height,
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
+            Anchor::CenterX => {
+                let mut frame_center = frame.center();
+                let a_center = a_frame.center();
+                frame_center.x = a_center.x;
+                frame.set_center(frame_center);
+            }
+            Anchor::CenterY => {
+                let mut frame_center = frame.center();
+                let a_center = a_frame.center();
+                frame_center.y = a_center.y;
+                frame.set_center(frame_center);
+            }
             _ => unimplemented!("Same layout for {:?} is not supported", side),
         }
         view.set_frame(frame);

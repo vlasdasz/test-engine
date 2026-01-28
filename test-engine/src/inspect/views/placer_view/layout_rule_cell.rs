@@ -31,7 +31,7 @@ impl Setup for LayoutRuleCell {
         });
 
         self.value.set_text_size(20).integer_only();
-        self.value.place().at_right(self.anchor, 8).w(88);
+        self.value.place().at_right(self.anchor, 8).w(88).relative_height(self, 0.6);
 
         self.value.editing_ended.val(move |val| {
             let new_val: f32 = val.parse().unwrap();
