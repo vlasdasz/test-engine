@@ -21,84 +21,61 @@ pub struct LayoutRule {
     pub relative: bool,
     pub between:  bool,
     pub same:     bool,
+    pub disabled: bool,
 }
 
 impl LayoutRule {
     pub fn tiling(tiling: Tiling, offset: impl ToF32) -> Self {
         Self {
-            side:         None,
-            tiling:       tiling.into(),
-            offset:       offset.to_f32(),
-            anchor_view:  None,
-            anchor_view2: None,
-            relative:     false,
-            between:      false,
-            same:         false,
+            tiling: tiling.into(),
+            offset: offset.to_f32(),
+            ..Default::default()
         }
     }
 
     pub fn make(side: Anchor, offset: impl ToF32) -> Self {
         Self {
-            side:         Some(side),
-            tiling:       None,
-            offset:       offset.to_f32(),
-            anchor_view:  None,
-            anchor_view2: None,
-            relative:     false,
-            between:      false,
-            same:         false,
+            side: Some(side),
+            offset: offset.to_f32(),
+            ..Default::default()
         }
     }
 
     pub fn anchor(side: Anchor, offset: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
-            side:         Some(side),
-            tiling:       None,
-            offset:       offset.to_f32(),
-            anchor_view:  Some(anchor_view),
-            anchor_view2: None,
-            relative:     false,
-            between:      false,
-            same:         false,
+            side: Some(side),
+            offset: offset.to_f32(),
+            anchor_view: Some(anchor_view),
+            ..Default::default()
         }
     }
 
     pub fn relative(side: Anchor, ratio: impl ToF32, anchor_view: WeakView) -> Self {
         Self {
-            side:         Some(side),
-            tiling:       None,
-            offset:       ratio.to_f32(),
-            anchor_view:  Some(anchor_view),
-            anchor_view2: None,
-            relative:     true,
-            between:      false,
-            same:         false,
+            side: Some(side),
+            offset: ratio.to_f32(),
+            anchor_view: Some(anchor_view),
+            relative: true,
+            ..Default::default()
         }
     }
 
     pub fn same(side: Anchor, anchor_view: WeakView) -> Self {
         Self {
-            side:         Some(side),
-            tiling:       None,
-            offset:       0.0,
-            anchor_view:  Some(anchor_view),
-            anchor_view2: None,
-            relative:     false,
-            between:      false,
-            same:         true,
+            side: Some(side),
+            anchor_view: Some(anchor_view),
+            same: true,
+            ..Default::default()
         }
     }
 
     pub fn between(view_a: WeakView, view_b: WeakView, side: Option<Anchor>) -> Self {
         Self {
             side,
-            tiling: None,
-            offset: 0.0,
             anchor_view: Some(view_a),
             anchor_view2: Some(view_b),
-            relative: false,
             between: true,
-            same: false,
+            ..Default::default()
         }
     }
 }
