@@ -23,7 +23,7 @@ pub trait ViewData {
     fn set_gradient(&mut self, start: impl Into<Color>, end: impl Into<Color>) -> &mut Self;
 
     fn border_color(&self) -> &Color;
-    fn set_border_color(&mut self, color: Color) -> &mut Self;
+    fn set_border_color(&mut self, color: impl Into<Color>) -> &mut Self;
 
     fn border_width(&self) -> f32;
     fn set_border_width(&mut self, width: impl ToF32) -> &mut Self;
@@ -101,8 +101,8 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base_view().border_color
     }
 
-    fn set_border_color(&mut self, color: Color) -> &mut Self {
-        self.base_view_mut().border_color = color;
+    fn set_border_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.base_view_mut().border_color = color.into();
         self
     }
 

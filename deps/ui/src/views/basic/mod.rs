@@ -1,4 +1,5 @@
 mod button;
+mod checkbox;
 mod circle_view;
 mod image_view;
 mod label;
@@ -9,6 +10,7 @@ mod switch;
 mod text_field;
 
 pub use button::Button;
+pub use checkbox::*;
 pub use circle_view::CircleView;
 pub use image_view::*;
 pub use label::*;
