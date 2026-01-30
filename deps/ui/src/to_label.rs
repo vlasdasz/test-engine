@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{net::IpAddr, path::PathBuf};
 
 use chrono::NaiveDateTime;
 use gm::flat::Point;
@@ -107,6 +107,12 @@ impl ToLabel for Decimal {
 impl ToLabel for Point {
     fn to_label(&self) -> String {
         format!("x: {} y: {}", self.x.to_label(), self.y.to_label())
+    }
+}
+
+impl ToLabel for IpAddr {
+    fn to_label(&self) -> String {
+        format!("{self}")
     }
 }
 

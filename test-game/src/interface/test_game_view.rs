@@ -1,3 +1,5 @@
+use log::error;
+use netrun::local_ip;
 use test_engine::{
     AppRunner, Event,
     audio::Sound,
@@ -55,6 +57,10 @@ pub struct TestGameView {
     bl: Container,
     br: Container,
 
+    ip:       Label,
+    app_id:   Label,
+    sys_info: Button,
+
     drawing: DrawingView,
     stick:   StickView,
 
@@ -80,9 +86,8 @@ pub struct TestGameView {
 
     render: Button,
 
-    benchmark:      Button,
-    test_level:     Button,
-    ping_inspector: Button,
+    benchmark:  Button,
+    test_level: Button,
 
     add_box: Button,
 
@@ -127,22 +132,45 @@ impl Setup for TestGameView {
         self.bl.set_color(BLUE).place().size(corner_size, corner_size).bl(10);
         self.br.set_color(ORANGE).place().size(corner_size, corner_size).br(10);
 
-        self.image.place().center_x().b(5).relative(Anchor::Size, self, 0.14);
+        self.ip
+            .set_text(local_ip().map_or_else(
+                |err| {
+                    error!("{err}");
+                    "Not supported".to_string()
+                },
+                |ip| ip.to_string(),
+            ))
+            .set_text_size(10);
+        self.ip.place().anchor(Left, self.tl, 10).same_y(self.tl).size(80, 20);
+
+        self.app_id.set_text(UIManager::app_instance_id());
+        self.app_id.place().at_right(self.ip, 10);
+
+        self.sys_info.set_text("system");
+        self.sys_info.place().below(self.ip, 10);
+        self.sys_info.on_tap(|| {
+            Alert::with_label(|mut l| {
+                l.set_text_size(15);
+            })
+            .show(netrun::System::get_info().dump());
+        });
+
+        self.image.place().center_x().b(5).relative_size(self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);
 
-        self.label_l.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
-            Anchor::Right,
-            self.image,
-            20,
-        );
+        self.label_l
+            .place()
+            .b(5)
+            .relative_size(self.image, 1.0)
+            .anchor(Anchor::Right, self.image, 20);
         self.label_l.text = "Łėŵœ Ы".into();
         self.label_l.set_text_size(64.).set_corner_radius(20);
 
-        self.image_r.place().b(5).relative(Anchor::Size, self.image, 1.0).anchor(
-            Anchor::Left,
-            self.image,
-            20,
-        );
+        self.image_r
+            .place()
+            .b(5)
+            .relative_size(self.image, 1.0)
+            .anchor(Anchor::Left, self.image, 20);
         self.image_r.set_image("palm.png");
 
         self.gradient
@@ -260,25 +288,6 @@ impl Setup for TestGameView {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
         });
-
-        self.ping_inspector.set_text("ping inspector");
-        self.ping_inspector.place().same([Y, Height], self.test_level).w(110).anchor(
-            Left,
-            self.test_level,
-            10,
-        );
-        #[cfg(not_wasm)]
-        {
-            self.ping_inspector.on_tap(|| {
-                test_engine::inspect::InspectServer::send(test_engine::inspect::AppCommand::Ping);
-            });
-        }
-        #[cfg(wasm)]
-        {
-            self.ping_inspector.on_tap(|| {
-                Alert::show("Not implemented on WASM");
-            });
-        }
 
         self.ui_bench.set_text("ui bench");
         self.ui_bench

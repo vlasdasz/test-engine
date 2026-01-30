@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor::Top, BLUE, ImageView, Setup, Tinted, UI, ViewData, ViewTouch, view},
+    ui::{Anchor::Top, BLUE, ImageView, Setup, Tinted, UIDrawer, ViewData, ViewTouch, view},
     ui_test::helpers::check_colors,
 };
 
@@ -26,7 +26,7 @@ impl Setup for ImageViewSVG {
 }
 
 pub async fn test_image_view_svg() -> Result<()> {
-    let mut view = UI::init_test_view::<ImageViewSVG>();
+    let mut view = UIDrawer::init_test_view::<ImageViewSVG>();
 
     check_colors(
         r#"

@@ -26,7 +26,7 @@ use crate::{
     config::Config,
     level_drawer::LevelDrawer,
     pipelines::Pipelines,
-    ui::{Input, UI},
+    ui::{Input, UIDrawer},
 };
 
 static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
@@ -55,6 +55,7 @@ impl AppRunner {
         Dispatch::new()
             .level(LevelFilter::Warn)
             .level_for("test_engine", LevelFilter::Debug)
+            .level_for("inspector", LevelFilter::Debug)
             .level_for("shopping", LevelFilter::Debug)
             .level_for("netrun", LevelFilter::Debug)
             .format(|out, message, record| {
@@ -94,11 +95,11 @@ impl AppRunner {
     }
 
     #[cfg(not_wasm)]
-    pub fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
-        let sentry_url = Config::sentry_url(app)?;
+    pub async fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
+        let sentry_url = Config::sentry_url(app).await?;
 
         let client = sentry::init((
-            sentry_url,
+            dbg!(sentry_url),
             sentry::ClientOptions {
                 release: sentry::release_name!(),
                 // Capture user IPs and potentially sensitive headers when using HTTP server integrations
@@ -237,7 +238,7 @@ impl window::WindowEvents for AppRunner {
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
 
-            Window::current().state.resize();
+            window::state::State::resize();
 
             self.resize(
                 Window::inner_position(),
@@ -250,7 +251,7 @@ impl window::WindowEvents for AppRunner {
             {
                 Window::current().set_size(self.app.initial_size().lossy_convert());
                 if self.app.enable_inspection() {
-                    crate::inspect::InspectServer::start_listening();
+                    crate::inspect::InspectService::start_listening();
                 }
             }
 
@@ -267,7 +268,7 @@ impl window::WindowEvents for AppRunner {
         UIManager::free_deleted_views();
         invoke_dispatched();
         LevelDrawer::update();
-        UI::update();
+        UIDrawer::update();
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>) {
@@ -276,7 +277,7 @@ impl window::WindowEvents for AppRunner {
         }
 
         LevelDrawer::draw(pass);
-        UI::draw(pass);
+        UIDrawer::draw(pass);
     }
 
     fn resize(&mut self, inner_pos: Point, outer_pos: Point, inner_size: Size, outer_size: Size) {

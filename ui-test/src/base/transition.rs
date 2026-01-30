@@ -2,7 +2,7 @@ use anyhow::Result;
 use parking_lot::Mutex;
 use test_engine::{
     refs::Weak,
-    ui::{BLUE, Button, HasText, Setup, UI, ViewData, ViewTransition, view},
+    ui::{BLUE, Button, HasText, Setup, UIDrawer, ViewData, ViewTransition, view},
     ui_test::{check_colors, inject_touches},
 };
 
@@ -39,7 +39,7 @@ impl Setup for BlueView {
 }
 
 pub async fn test_transition() -> Result<()> {
-    UI::init_test_view::<Transition>();
+    UIDrawer::init_test_view::<Transition>();
 
     check_colors(
         r#"

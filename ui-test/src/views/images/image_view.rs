@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{ImageMode, Setup, UI, UIManager, ViewData, ViewTouch, view},
+    ui::{ImageMode, Setup, UIDrawer, UIManager, ViewData, ViewTouch, view},
     ui_test::helpers::check_colors,
 };
 
@@ -22,7 +22,7 @@ impl Setup for ImageView {
 }
 
 pub async fn test_image_view() -> Result<()> {
-    let mut view = UI::init_test_view::<ImageView>();
+    let mut view = UIDrawer::init_test_view::<ImageView>();
 
     check_colors(
         r#"

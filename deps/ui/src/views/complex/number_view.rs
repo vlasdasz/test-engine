@@ -28,6 +28,9 @@ pub struct NumberView {
 
     on_change_event: Event<f32>,
 
+    up_event:   Event,
+    down_event: Event,
+
     #[init]
     up:   Button,
     down: Button,
@@ -89,15 +92,27 @@ impl NumberView {
     fn up_tap(mut self: Weak<Self>) {
         let val = self.value.my_add(&self.step);
         self.set_value(val);
+        self.up_event.trigger(());
     }
 
     fn down_tap(mut self: Weak<Self>) {
         let val = self.value.sub_and_check(&self.step, &self.min);
         self.set_value(val.unwrap_or(0.0));
+        self.down_event.trigger(());
     }
 
     pub fn on_change(&self, action: impl FnMut(f32) + Send + 'static) -> &Self {
         self.on_change_event.val(action);
+        self
+    }
+
+    pub fn on_up(&self, action: impl FnMut() + Send + 'static) -> &Self {
+        self.up_event.sub(action);
+        self
+    }
+
+    pub fn on_down(&self, action: impl FnMut() + Send + 'static) -> &Self {
+        self.down_event.sub(action);
         self
     }
 }

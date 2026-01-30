@@ -5,7 +5,7 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         Button, CollectionData, CollectionView, Container, GREEN, HasText, ImageView, Label, Setup, Size,
-        TURQUOISE, UI, View, ViewData, ViewSubviews,
+        TURQUOISE, UIDrawer, View, ViewData, ViewSubviews,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
@@ -64,7 +64,7 @@ impl Setup for AddOnTap {
 }
 
 pub async fn test_add_on_tap() -> Result<()> {
-    let view = UI::init_test_view::<AddOnTap>();
+    let view = UIDrawer::init_test_view::<AddOnTap>();
 
     assert_eq!(view.dump_subviews(), vec!["AddOnTap.btn: Button".to_string()]);
 

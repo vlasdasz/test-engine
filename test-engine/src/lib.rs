@@ -12,11 +12,11 @@ mod app;
 mod app_starter;
 mod config;
 mod game_drawer;
-mod inspect_server;
+pub mod inspect;
 mod pipelines;
 pub mod ui;
 
-pub use app::App;
+pub use app::*;
 pub use app_starter::*;
 pub use educe;
 pub use ui::{ui_proc::launch_app, ui_test};
@@ -75,6 +75,8 @@ pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
 pub mod net {
     pub use netrun::rest::*;
+    #[cfg(not_wasm)]
+    pub use netrun::secret::*;
 }
 
 pub mod dispatch {
@@ -83,13 +85,6 @@ pub mod dispatch {
     pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
 
     // pub use crate::ui::ui_dispatch::on_back;
-}
-
-#[cfg(not_wasm)]
-pub mod inspect {
-    pub use ::inspect::{AppCommand, InspectorCommand};
-
-    pub use crate::inspect_server::InspectServer;
 }
 
 #[cfg(target_os = "android")]

@@ -12,7 +12,7 @@ use winit::{
     window::WindowId,
 };
 
-use crate::{Window, WindowEvents};
+use crate::{Window, WindowEvents, state::State};
 
 static APP_HANDLER: MainLock<Option<AppHandler>> = MainLock::new();
 
@@ -141,7 +141,7 @@ impl ApplicationHandler<Window> for AppHandler {
                 if self.state.not_ready() {
                     return;
                 }
-                Self::window().state.resize();
+                State::resize();
             }
             WindowEvent::ScaleFactorChanged {
                 scale_factor,

@@ -19,14 +19,10 @@ linker = "rust-lld.exe"
 rustflags = ["-Zshare-generics=off"]
 
 [target.aarch64-apple-ios]
-rustflags = [
-    "-C", "link-arg=-Wl,-platform_version,ios,13.0,13.0"
-]
+rustflags = ["-C", "link-arg=-Wl,-platform_version,ios,13.0,13.0"]
 
 [target.x86_64-apple-ios]
-rustflags = [
-    "-C", "link-arg=-Wl,-platform_version,ios-simulator,13.0,13.0"
-]
+rustflags = ["-C", "link-arg=-Wl,-platform_version,ios-simulator,13.0,13.0"]
 
 [profile.size]
 codegen-units = 1

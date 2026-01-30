@@ -4,7 +4,7 @@ use test_engine::{
     dispatch::wait_for_next_frame,
     refs::Weak,
     ui::{
-        Anchor, Button, GREEN, HasText, ORANGE, Setup, UI, ViewData, ViewSubviews,
+        Anchor, Button, GREEN, HasText, ORANGE, Setup, UIDrawer, ViewData, ViewSubviews,
         ui_test::{
             inject_touches,
             state::{append_state, clear_state, get_state},
@@ -101,7 +101,7 @@ impl Setup for LayoutPlace {
 }
 
 pub async fn test_layout() -> Result<()> {
-    UI::init_test_view::<LayoutPlace>();
+    UIDrawer::init_test_view::<LayoutPlace>();
 
     AppRunner::set_window_size((240, 240));
 

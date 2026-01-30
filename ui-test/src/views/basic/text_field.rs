@@ -3,7 +3,7 @@ use test_engine::{
     AppRunner,
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor, Setup, UI, ViewData, view},
+    ui::{Anchor, Setup, UIDrawer, ViewData, view},
     ui_test::{helpers::check_colors, inject_keys, inject_touches},
 };
 
@@ -26,7 +26,7 @@ impl Setup for TextField {
 }
 
 pub async fn test_text_field() -> Result<()> {
-    let mut view = UI::init_test_view::<TextField>();
+    let mut view = UIDrawer::init_test_view::<TextField>();
 
     AppRunner::set_window_size((800, 800));
 

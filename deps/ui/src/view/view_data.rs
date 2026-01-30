@@ -4,13 +4,15 @@ use gm::{ToF32, color::Color};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{NavigationView, Style, UIAnimation, View, layout::Placer};
+use crate::{NavigationView, Style, UIAnimation, View, WeakView, layout::Placer};
 
 pub trait ViewData {
     fn tag(&self) -> usize;
     fn set_tag(&mut self, tag: usize) -> &mut Self;
 
     fn view_label(&self) -> &str;
+
+    fn is_system(&self) -> bool;
 
     fn content_offset(&self) -> f32;
 
@@ -21,7 +23,10 @@ pub trait ViewData {
     fn set_gradient(&mut self, start: impl Into<Color>, end: impl Into<Color>) -> &mut Self;
 
     fn border_color(&self) -> &Color;
-    fn set_border_color(&mut self, color: Color) -> &mut Self;
+    fn set_border_color(&mut self, color: impl Into<Color>) -> &mut Self;
+
+    fn border_width(&self) -> f32;
+    fn set_border_width(&mut self, width: impl ToF32) -> &mut Self;
 
     fn corner_radius(&self) -> f32;
     fn set_corner_radius(&mut self, radius: impl ToF32) -> &mut Self;
@@ -30,6 +35,7 @@ pub trait ViewData {
     fn set_hidden(&mut self, is_hidden: bool) -> &mut Self;
 
     fn place(&self) -> &Placer;
+    fn placer_copy(&self) -> Placer;
 
     fn navigation_view(&self) -> Weak<NavigationView>;
     fn set_navigation_view(&mut self, nav: Weak<NavigationView>) -> &mut Self;
@@ -46,6 +52,8 @@ pub trait ViewData {
 
     fn apply_style(&mut self, style: Style) -> &mut Self;
 
+    fn steal_appearance(&self, other: WeakView) -> &Self;
+
     fn __after_setup_event(&self) -> &OnceEvent;
 }
 
@@ -61,6 +69,10 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn view_label(&self) -> &str {
         &self.base_view().view_label
+    }
+
+    fn is_system(&self) -> bool {
+        self.base_view().is_system
     }
 
     fn content_offset(&self) -> f32 {
@@ -91,8 +103,8 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base_view().border_color
     }
 
-    fn set_border_color(&mut self, color: Color) -> &mut Self {
-        self.base_view_mut().border_color = color;
+    fn set_border_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        self.base_view_mut().border_color = color.into();
         self
     }
 
@@ -120,6 +132,16 @@ impl<T: ?Sized + View> ViewData for T {
             "Invalid placer. Most likely this view was not initialized properly"
         );
         placer
+    }
+
+    fn placer_copy(&self) -> Placer {
+        let placer = &self.base_view().placer;
+
+        if placer.is_ok() {
+            placer.clone()
+        } else {
+            Placer::empty()
+        }
     }
 
     fn navigation_view(&self) -> Weak<NavigationView> {
@@ -163,6 +185,24 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn __after_setup_event(&self) -> &OnceEvent {
         &self.base_view().after_setup
+    }
+
+    fn border_width(&self) -> f32 {
+        self.base_view().border_width
+    }
+
+    fn set_border_width(&mut self, width: impl ToF32) -> &mut Self {
+        self.base_view_mut().border_width = width.to_f32();
+        self
+    }
+
+    fn steal_appearance(&self, other: WeakView) -> &Self {
+        let mut this = self.weak_view();
+        this.set_color(*other.color());
+        this.set_border_color(*other.border_color());
+        this.set_border_width(other.border_width());
+        this.set_corner_radius(other.corner_radius());
+        self
     }
 }
 

@@ -4,8 +4,8 @@ use test_engine::{
     dispatch::wait_for_next_frame,
     refs::Weak,
     ui::{
-        Color, Container, HasText, Label, ModalView, Setup, Size, UI, ViewData, ViewFrame, ViewSubviews,
-        WeakView, ui_test::helpers::check_colors, view,
+        Color, Container, HasText, Label, ModalView, Setup, Size, UIDrawer, ViewData, ViewFrame,
+        ViewSubviews, WeakView, ui_test::helpers::check_colors, view,
     },
 };
 
@@ -58,7 +58,7 @@ impl ModalView for Modal {
 }
 
 pub async fn test_modal() -> Result<()> {
-    UI::init_test_view::<ShowModally>();
+    UIDrawer::init_test_view::<ShowModally>();
 
     Modal::show_modally_with_input((), |()| {});
 

@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{BLACK, BLUE, Container, GREEN, RED, Setup, TouchStack, UI, ViewData, ViewTouch, view},
+    ui::{BLACK, BLUE, Container, GREEN, RED, Setup, TouchStack, UIDrawer, ViewData, ViewTouch, view},
     ui_test::{
         inject_touches,
         state::{append_state, clear_state, get_state},
@@ -37,7 +37,7 @@ impl Setup for TouchOrder {
 }
 
 pub async fn test_touch_order() -> Result<()> {
-    UI::init_test_view::<TouchOrder>();
+    UIDrawer::init_test_view::<TouchOrder>();
 
     assert_eq!(
         TouchStack::dump(),

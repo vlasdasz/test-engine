@@ -9,7 +9,7 @@ pub use gm::{
     flat::{Point, PointsPath, Rect, Size},
 };
 pub use input::*;
-pub use ui::UI;
+pub use ui::UIDrawer;
 pub use ui_proc::view;
 pub use views::color_meter::ColorMeter;
 pub use window::{

@@ -4,7 +4,7 @@ use test_engine::{
     gm::Apply,
     level::LevelManager,
     refs::Weak,
-    ui::{ImageView, Setup, UI, ViewData, view},
+    ui::{ImageView, Setup, UIDrawer, ViewData, view},
     ui_test::check_colors,
 };
 
@@ -37,7 +37,7 @@ impl Setup for Transparency {
 }
 
 pub async fn test_transparency() -> Result<()> {
-    UI::init_test_view::<Transparency>();
+    UIDrawer::init_test_view::<Transparency>();
 
     from_main(|| {
         LevelManager::set_level(SkyboxLevel::default());

@@ -25,6 +25,8 @@ impl Serialize for LayoutRule {
 
         state.serialize_field("relative", &self.relative)?;
         state.serialize_field("between", &self.between)?;
+        state.serialize_field("same", &self.same)?;
+        state.serialize_field("enabled", &self.enabled)?;
 
         state.end()
     }
@@ -43,6 +45,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
             Relative,
             Between,
             Same,
+            Enabled,
         }
 
         impl<'de> Deserialize<'de> for Field {
@@ -66,6 +69,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
                             "relative" => Ok(Field::Relative),
                             "between" => Ok(Field::Between),
                             "same" => Ok(Field::Same),
+                            "enabled" => Ok(Field::Enabled),
                             _ => Err(de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -94,6 +98,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
                 let mut relative = None;
                 let mut between = None;
                 let mut same = None;
+                let mut enabled = None;
 
                 while let Some(key) = map.next_key()? {
                     match key {
@@ -121,6 +126,9 @@ impl<'de> Deserialize<'de> for LayoutRule {
                         Field::Same => {
                             same = Some(map.next_value()?);
                         }
+                        Field::Enabled => {
+                            enabled = Some(map.next_value()?);
+                        }
                     }
                 }
 
@@ -133,6 +141,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
                     relative:     relative.ok_or_else(|| de::Error::missing_field("relative"))?,
                     between:      between.ok_or_else(|| de::Error::missing_field("between"))?,
                     same:         same.ok_or_else(|| de::Error::missing_field("same"))?,
+                    enabled:      enabled.ok_or_else(|| de::Error::missing_field("enabled"))?,
                 })
             }
         }
@@ -146,6 +155,7 @@ impl<'de> Deserialize<'de> for LayoutRule {
             "relative",
             "between",
             "same",
+            "enabled",
         ];
         deserializer.deserialize_struct("LayoutRule", FIELDS, LayoutRuleVisitor)
     }

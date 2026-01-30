@@ -3,7 +3,7 @@ use test_engine::{
     dispatch::from_main,
     gm::Apply,
     refs::Weak,
-    ui::{DropDown, Setup, UI, ViewData, view},
+    ui::{DropDown, Setup, UIDrawer, ViewData, view},
     ui_test::{
         check_colors, inject_touches, inject_touches_delayed,
         state::{append_state, get_state},
@@ -35,7 +35,7 @@ impl Setup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    let mut view = UI::init_test_view::<DropDownTestView>();
+    let mut view = UIDrawer::init_test_view::<DropDownTestView>();
 
     assert_eq!(view.top.value(), &"Dog");
     assert_eq!(view.bot.value(), &"Car");

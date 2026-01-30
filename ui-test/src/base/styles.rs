@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{Anchor::Top, Button, HasText, ORANGE, Setup, Style, UI, ViewData, ViewSubviews, view},
+    ui::{Anchor::Top, Button, HasText, ORANGE, Setup, Style, UIDrawer, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -42,7 +42,7 @@ impl Setup for Styles {
 }
 
 pub async fn test_styles() -> Result<()> {
-    UI::init_test_view::<Styles>();
+    UIDrawer::init_test_view::<Styles>();
 
     check_colors(
         r#"

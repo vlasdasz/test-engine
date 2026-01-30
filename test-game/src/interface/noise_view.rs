@@ -166,7 +166,7 @@ impl Setup for NoiseView {
         self.update_level
             .place()
             .anchor(Top, self.counter_label, 10)
-            .same([Anchor::Size, X], self.counter_label);
+            .same([Anchor::Width, Anchor::Height, X], self.counter_label);
         self.update_level.on_tap(move || {
             self.update_level();
         });

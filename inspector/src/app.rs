@@ -3,9 +3,8 @@ use test_engine::{
     refs::Own,
     ui::{Setup, Size, View},
 };
-use tokio::spawn;
 
-use crate::{app_search::client, ui::MainScreen};
+use crate::ui::MainScreen;
 
 pub struct InspectorApp;
 
@@ -15,21 +14,19 @@ impl App for InspectorApp {
         Box::new(Self)
     }
 
-    fn after_launch(&self) {
-        spawn(async {
-            client().await.start().await;
-        });
-    }
-
     fn make_root_view(&self) -> Own<dyn View> {
         MainScreen::new()
     }
 
     fn initial_size(&self) -> Size {
-        (800, 800).into()
+        (1200, 1200).into()
     }
 
     fn enable_inspection(&self) -> bool {
         false
+    }
+
+    fn after_launch(&self) {
+        // test_engine::ui::UIManager::enable_debug_frames();
     }
 }

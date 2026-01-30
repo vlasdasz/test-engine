@@ -1,29 +1,21 @@
 use std::path::PathBuf;
 
 use filesystem::Paths;
-use log::{error, warn};
-use serde::Deserialize;
+use log::warn;
 
 use crate::App;
 
-#[derive(Debug, Deserialize)]
-pub(crate) struct Config {
-    pub sentry: String,
-}
+pub(crate) struct Config;
 
 impl Config {
-    pub fn sentry_url(app: &dyn App) -> Option<String> {
-        let Some(config) = app.config_yaml() else {
-            warn!("No config yaml");
-            return None;
-        };
-
-        let Ok(config) = serde_yaml::from_str::<Config>(&config) else {
-            error!("Failed to parse config from: {config}");
-            return None;
-        };
-
-        config.sentry.into()
+    pub async fn sentry_url(app: &dyn App) -> Option<String> {
+        match app.sentry_url().await {
+            Ok(url) => Some(url),
+            Err(err) => {
+                warn!("Failed to get sentry URL: {err}");
+                None
+            }
+        }
     }
 }
 

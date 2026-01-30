@@ -3,8 +3,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor,
-        Anchor::{Size, Y},
-        HasText, ImageView, Label, NumberView, Setup, UI, ViewData, ViewFrame, ViewSubviews,
+        Anchor::{Height, Width, Y},
+        HasText, ImageView, Label, NumberView, Setup, UIDrawer, ViewData, ViewFrame, ViewSubviews,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
@@ -42,13 +42,13 @@ impl Setup for OutBounds {
                 self.test.set_y(200.0 + val);
             })
             .place()
-            .same([Y, Size], self.x)
+            .same([Y, Width, Height], self.x)
             .anchor(Anchor::Left, self.x, 10);
     }
 }
 
 pub async fn test_out_bounds() -> Result<()> {
-    UI::init_test_view::<OutBounds>();
+    UIDrawer::init_test_view::<OutBounds>();
 
     inject_touches(
         r"

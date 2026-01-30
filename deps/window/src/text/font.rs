@@ -1,22 +1,31 @@
+use std::fs::read;
+
 use anyhow::Result;
 use gm::LossyConvert;
+use log::error;
+use refs::{
+    Weak,
+    manage::{DataManager, ResourceLoader},
+};
 use wgpu::{CompareFunction, DepthBiasState, DepthStencilState, StencilState, TextureFormat};
-use wgpu_text::{BrushBuilder, TextBrush, glyph_brush::ab_glyph::FontRef};
+use wgpu_text::{BrushBuilder, TextBrush, glyph_brush::ab_glyph::FontArc};
 
 use crate::{RGBA_TEXTURE_FORMAT, window::Window};
 
 pub struct Font {
-    pub name:  &'static str,
-    pub brush: TextBrush<FontRef<'static>>,
+    pub name:  String,
+    pub brush: TextBrush,
 }
 
 impl Font {
-    fn new(name: &'static str, data: &'static [u8]) -> Result<Self> {
+    fn new(name: impl ToString, data: &[u8]) -> Result<Self> {
         let window = Window::current();
 
         let render_size = Window::render_size();
 
-        let brush = BrushBuilder::using_font_bytes(data)?.with_depth_stencil( DepthStencilState {
+        let font = FontArc::try_from_vec(data.to_vec())?;
+
+        let brush = BrushBuilder::using_font(font).with_depth_stencil( DepthStencilState {
             format:              TextureFormat::Depth32Float,
             depth_write_enabled: true,
             depth_compare:       CompareFunction::Less,
@@ -25,20 +34,45 @@ impl Font {
         }.into())
             /* .initial_cache_size((16_384, 16_384))) */ // use this to avoid resizing cache texture
             .build(&window.device, render_size.width.lossy_convert(), render_size.height.lossy_convert(), RGBA_TEXTURE_FORMAT);
-        Ok(Self { name, brush })
+        Ok(Self {
+            name: name.to_string(),
+            brush,
+        })
     }
 }
 
 impl Font {
-    pub fn helvetice() -> &'static mut Self {
-        let state = &mut Window::current().state;
-        state
-            .fonts
-            .entry("Helvetica.ttf")
-            .or_insert_with(|| Self::new("Helvetica.ttf", include_bytes!("fonts/Helvetica.ttf")).unwrap())
+    #[allow(clippy::should_implement_trait)]
+    pub fn default() -> Weak<Font> {
+        Self::add_with_name("default", || {
+            Self::new("Helvetica.ttf", include_bytes!("fonts/Helvetica.ttf")).unwrap()
+        })
+    }
+}
+
+refs::managed!(Font);
+
+static DEFAULT_FONT_DATA: &[u8] = include_bytes!("fonts/Helvetica.ttf");
+
+impl ResourceLoader for Font {
+    fn load_path(path: &std::path::Path) -> Self {
+        let data = read(path);
+
+        let data = data
+            .as_ref()
+            .map(Vec::as_slice)
+            .inspect_err(|err| {
+                error!(
+                    "Failed to read font file: {}. Error: {err} Returning default font",
+                    path.display()
+                );
+            })
+            .unwrap_or(DEFAULT_FONT_DATA);
+
+        Self::load_data(data, path.display())
     }
 
-    pub fn with_name(name: &'static str) -> &'static mut Self {
-        Window::current().state.fonts.get_mut(name).unwrap()
+    fn load_data(data: &[u8], name: impl ToString) -> Self {
+        Font::new(name, data).expect("Failed to load font")
     }
 }

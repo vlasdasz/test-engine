@@ -3,8 +3,8 @@ use test_engine::{
     dispatch::from_main,
     refs::Weak,
     ui::{
-        Anchor::{Bot, Left, Right, Size, Width, X, Y},
-        HasText, Label, NumberView, Setup, UI, ViewData, view,
+        Anchor::{Bot, Height, Left, Right, Width, X, Y},
+        HasText, Label, NumberView, Setup, UIDrawer, ViewData, view,
     },
     ui_test::inject_touches,
 };
@@ -33,16 +33,22 @@ impl Setup for NumberTestView {
         self.float.place().tl(200).size(100, 200);
         attach_label(self.float_label, self.float);
 
-        self.uint.place().same([Size, Y], self.float).anchor(Left, self.float, 20);
+        self.uint
+            .place()
+            .same([Width, Height, Y], self.float)
+            .anchor(Left, self.float, 20);
         attach_label(self.uint_label, self.uint);
 
-        self.int.place().same([Size, Y], self.float).anchor(Right, self.float, 20);
+        self.int
+            .place()
+            .same([Width, Height, Y], self.float)
+            .anchor(Right, self.float, 20);
         attach_label(self.int_label, self.int);
     }
 }
 
 pub async fn test_number_view() -> Result<()> {
-    let mut view = UI::init_test_view::<NumberTestView>();
+    let mut view = UIDrawer::init_test_view::<NumberTestView>();
 
     inject_touches(
         "

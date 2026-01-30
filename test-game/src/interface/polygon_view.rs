@@ -1,11 +1,9 @@
 use test_engine::{
-    RenderPass,
-    VertexBuffer,
-    // dispatch::after,
+    RenderPass, VertexBuffer,
     level::LevelManager,
     refs::Weak,
     ui::{
-        Anchor::{Size, Top, X},
+        Anchor::{Height, Top, Width, X},
         Button, Container, HasText, Point, PositionView, Setup, ViewCallbacks, ViewData, ViewFrame,
         ViewSubviews, WHITE, view,
     },
@@ -35,7 +33,7 @@ impl Setup for PolygonView {
         });
 
         self.print.set_text("Print");
-        self.print.place().anchor(Top, self.add, 10).same([Size, X], self.add);
+        self.print.place().anchor(Top, self.add, 10).same([Width, Height, X], self.add);
         self.print.on_tap(move || {
             dbg!(&self.points);
         });

@@ -3,8 +3,8 @@ use instant::Instant;
 use test_engine::{
     dispatch::from_main,
     ui::{
-        Container, NavigationView, PRESENT_ANIMATION_DURATION, RED, Setup, TouchStack, UI, ViewController,
-        ViewData, view,
+        Container, NavigationView, PRESENT_ANIMATION_DURATION, RED, Setup, TouchStack, UIDrawer,
+        ViewController, ViewData, view,
     },
     ui_test::helpers::check_colors,
 };
@@ -17,7 +17,7 @@ pub async fn test_navigation_view() -> Result<()> {
 
     let view = present.weak();
 
-    UI::set_test_view(
+    UIDrawer::set_test_view(
         NavigationView::with_view(present),
         600,
         600,

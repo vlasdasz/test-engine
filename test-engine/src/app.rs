@@ -1,8 +1,14 @@
+use std::pin::Pin;
+
+use anyhow::bail;
 use gm::flat::Size;
 use refs::Own;
 use ui::View;
+use window::Font;
 
 use crate::app_starter::test_engine_start_with_app;
+
+pub type PinnedFuture<T> = Pin<Box<dyn Future<Output = anyhow::Result<T>>>>;
 
 pub trait App {
     fn new() -> Box<Self>
@@ -19,12 +25,18 @@ pub trait App {
         test_engine_start_with_app(self);
     }
 
-    fn config_yaml(&self) -> Option<String> {
-        None
+    fn sentry_url(&self) -> PinnedFuture<String> {
+        Box::pin(async { bail!("Not implemented") })
     }
 
     fn enable_inspection(&self) -> bool {
         true
+    }
+
+    fn default_font(&self) -> Font {
+        //Font::helvetica()
+        //
+        todo!()
     }
 }
 

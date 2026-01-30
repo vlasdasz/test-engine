@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use audio::Sound;
 use hreads::assert_main_thread;
 use refs::manage::DataManager;
-use window::image::Image;
+use window::{Font, image::Image};
 
 use crate::assets_paths::AssetsPaths;
 
@@ -17,5 +17,6 @@ impl Assets {
 
         Image::set_root_path(&paths.images);
         Sound::set_root_path(&paths.sounds);
+        Font::set_root_path(&paths.fonts);
     }
 }

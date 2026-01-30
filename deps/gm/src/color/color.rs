@@ -83,7 +83,7 @@ mod tests {
     fn color_diff() {
         assert_eq!(WHITE.diff(CLEAR), 4.0);
         assert_eq!(WHITE.diff(WHITE), 0.0);
-        assert_eq!(WHITE.diff(WHITE.with_alpha(0.9)), 0.100000024);
+        assert_eq!(WHITE.diff(WHITE.with_alpha(0.9)), 0.100_000_024);
     }
 
     #[test]

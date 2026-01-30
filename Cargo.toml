@@ -35,12 +35,14 @@ chrono = "0.4"
 console_error_panic_hook = "0.1"
 console_log = "1.0"
 dirs = "6.0"
+dotenvy = "0.15"
 educe = "0.6"
 fastrand = "2.3"
 fern = "0.7"
 gloo-timers = { version = "0.3", features = ["futures"] }
+hex = "0.4"
 image = "0.25"
-indexmap = "2.12"
+indexmap = "2.13"
 instant = { version = "0.1", features = ["wasm-bindgen"] }
 jni = "0.21"
 kira = "0.11"
@@ -49,18 +51,18 @@ lyon = "1.0"
 nonempty = "0.12"
 parking_lot = "0.12"
 pollster = "0.4"
+pretty_assertions = "1.4"
 quote = "1.0"
 rapier2d = { version = "0.31", features = ["simd-nightly"] }
-resvg = "0.45"
-rust_decimal = "1.39"
+resvg = "0.46"
+rust_decimal = "1.40"
 sentry = { version = "0.46", default-features = false, features = ["reqwest", "rustls"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-serde_yaml = "0.9"
 syn = { version = "2.0", features = ["full", "extra-traits"] }
 tiny-skia = "0.11"
 tokio = { version = "1.49", features = ["full"] }
-usvg = "0.45"
+usvg = "0.46"
 wasm-bindgen-futures = "0.4"
 web-time = "1.1"
 
@@ -68,12 +70,15 @@ wgpu = "28.0"
 wgpu_text = "28.0"
 winit = "0.30"
 
-hreads = "0.10"
-netrun = "0.10"
-plat = "0.5"
+#hreads = { path = "../deps/hreads" }
+hreads = "0.12"
+
+netrun = "0.25"
+#netrun = { path = "../deps/netrun/netrun" }
+plat = "0.6"
 reflected = "0.29"
-refs = { version = "0.30", default-features = true }
-vents = "0.13"
+refs = { version = "0.32", default-features = true }
+vents = "0.14"
 
 audio = { path = "deps/audio" }
 filesystem = { path = "deps/filesystem" }
@@ -101,4 +106,3 @@ window = { path = "deps/window" }
 #reflected = { path = "../deps/reflected/reflected" }
 #wgpu_text = { git = "https://github.com/VladasZ/wgpu-text", rev = "0f25a5fa912cafd6161158fce16f0ae5236047ca" }
 #hreads = { path = "../deps/hreads" }
-#netrun = { path = "../deps/netrun/netrun" }

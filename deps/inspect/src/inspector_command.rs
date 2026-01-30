@@ -2,10 +2,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum InspectorCommand {
-    Ping,
-    Pong,
     PlaySound,
     UI(UIRequest),
+    GetSystemInfo,
 }
 
 impl From<UIRequest> for InspectorCommand {
@@ -18,4 +17,5 @@ impl From<UIRequest> for InspectorCommand {
 pub enum UIRequest {
     GetScale,
     SetScale(f32),
+    GetUI,
 }

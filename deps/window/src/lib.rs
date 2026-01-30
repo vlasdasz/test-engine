@@ -6,7 +6,7 @@ mod app_handler;
 mod frame_counter;
 pub mod image;
 mod screenshot;
-mod state;
+pub mod state;
 mod surface;
 mod vertex_buffer;
 

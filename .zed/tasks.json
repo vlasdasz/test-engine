@@ -1,14 +1,22 @@
 [
   {
     "label": "Run Test Game",
-    "command": "cargo run -p test-game"
+    "command": "cargo run -p test-game",
   },
   {
     "label": "Run UI Test",
-    "command": "cargo run -p ui-test"
+    "command": "cargo run -p ui-test",
   },
   {
     "label": "Run Level Test",
-    "command": "cargo run -p level-test"
-  }
+    "command": "cargo run -p level-test",
+  },
+  {
+    "label": "Run Inspector",
+    "command": "cargo run -p inspector",
+  },
+  {
+    "label": "Serve",
+    "command": "make serve",
+  },
 ]

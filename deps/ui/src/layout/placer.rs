@@ -1,10 +1,12 @@
 use std::{
-    cell::{RefCell, RefMut},
+    cell::{Ref, RefCell, RefMut},
     fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
+    sync::Arc,
 };
 
 use gm::{LossyConvert, ToF32, axis::Axis, flat::Size};
+use parking_lot::Mutex;
 use refs::{Rglica, ToRglica, Weak};
 
 use crate::{
@@ -13,17 +15,21 @@ use crate::{
     view::ViewFrame,
 };
 
+#[derive(Clone)]
 pub struct Placer {
     pub(crate) rules:            RefCell<Vec<LayoutRule>>,
     pub(crate) all_tiling_rules: RefCell<Vec<LayoutRule>>,
 
     // Since `Placer` is owned by `View` this should be OK. I hope.
-    view:      Rglica<dyn View>,
-    s_content: Rglica<Size>,
+    pub(crate) view:      Rglica<dyn View>,
+    pub(crate) s_content: Rglica<Size>,
 
     pub(crate) all_margin: RefCell<f32>,
 
     pub(crate) has: RefCell<Size<bool>>,
+
+    #[allow(clippy::type_complexity)]
+    pub(crate) custom: RefCell<Option<Arc<Mutex<dyn FnMut(WeakView) + Send>>>>,
 }
 
 impl Placer {
@@ -35,6 +41,7 @@ impl Placer {
             s_content:        Rglica::default(),
             all_margin:       RefCell::new(0.0),
             has:              RefCell::new(Size::default()),
+            custom:           None.into(),
         }
     }
 
@@ -57,6 +64,10 @@ impl Placer {
         self.all_tiling_rules.borrow_mut().clear();
         *self.has.borrow_mut() = Size::default();
         self
+    }
+
+    pub fn get_rules(&self) -> Ref<'_, Vec<LayoutRule>> {
+        self.rules.borrow()
     }
 
     fn rules(&self) -> RefMut<'_, Vec<LayoutRule>> {
@@ -98,8 +109,8 @@ impl Placer {
         self.w(width).h(height)
     }
 
-    pub fn same_size(&self, view: impl Deref<Target = impl View>) -> &Self {
-        self.relative(Anchor::Size, view, 1)
+    pub fn same_size(&self, view: impl Deref<Target = impl View> + Copy) -> &Self {
+        self.relative(Anchor::Width, view, 1).relative(Anchor::Height, view, 1)
     }
 
     pub fn same_x(&self, view: impl Deref<Target = impl View>) -> &Self {
@@ -110,16 +121,43 @@ impl Placer {
         self.anchor(Anchor::Y, view, 1)
     }
 
+    pub fn same_width(&self, view: impl Deref<Target = impl View>) -> &Self {
+        self.anchor(Anchor::Width, view, 1)
+    }
+
+    pub fn same_height(&self, view: impl Deref<Target = impl View>) -> &Self {
+        self.anchor(Anchor::Height, view, 1)
+    }
+
     pub fn relative_width(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
         self.relative(Anchor::Width, view, multiplier)
     }
 
     pub fn relative_height(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
-        self.relative(Anchor::Height, view, multiplier)
+        if !self.has().height {
+            self.has().height = true;
+            self.rules().insert(
+                0,
+                LayoutRule::relative(Anchor::Height, multiplier, view.weak_view()),
+            );
+            return self;
+        }
+
+        self.rules().retain(|r| !r.height());
+        self.rules().insert(
+            0,
+            LayoutRule::relative(Anchor::Height, multiplier, view.weak_view()),
+        );
+        self
     }
 
-    pub fn relative_size(&self, view: impl Deref<Target = impl View>, multiplier: impl ToF32) -> &Self {
-        self.relative(Anchor::Size, view, multiplier)
+    pub fn relative_size(
+        &self,
+        view: impl Deref<Target = impl View> + Copy,
+        multiplier: impl ToF32,
+    ) -> &Self {
+        self.relative(Anchor::Width, view, multiplier)
+            .relative(Anchor::Height, view, multiplier)
     }
 
     pub fn relative_x(&self, multiplier: impl ToF32) -> &Self {
@@ -136,12 +174,8 @@ impl Placer {
         view: impl Deref<Target = impl View> + Copy,
     ) -> &Self {
         for anchor in anchors {
-            self.has().width = if anchor.has_width() {
-                true
-            } else {
-                self.has().width
-            };
-            self.has().height = if anchor.has_height() {
+            self.has().width = if anchor.is_width() { true } else { self.has().width };
+            self.has().height = if anchor.is_height() {
                 true
             } else {
                 self.has().height
@@ -153,14 +187,26 @@ impl Placer {
     }
 
     pub fn w(&self, w: impl ToF32) -> &Self {
+        if !self.has().width {
+            self.rules().insert(0, LayoutRule::make(Anchor::Width, w));
+            self.has().width = true;
+            return self;
+        }
+
+        self.rules().retain(|r| !r.width());
         self.rules().insert(0, LayoutRule::make(Anchor::Width, w));
-        self.has().width = true;
         self
     }
 
     pub fn h(&self, h: impl ToF32) -> &Self {
+        if !self.has().height {
+            self.rules().insert(0, LayoutRule::make(Anchor::Height, h));
+            self.has().height = true;
+            return self;
+        }
+
+        self.rules().retain(|r| !r.height());
         self.rules().insert(0, LayoutRule::make(Anchor::Height, h));
-        self.has().height = true;
         self
     }
 
@@ -255,12 +301,8 @@ impl Placer {
         view: impl Deref<Target = impl View + ?Sized>,
         ratio: impl ToF32,
     ) -> &Self {
-        self.has().width = if side.has_width() { true } else { self.has().width };
-        self.has().height = if side.has_height() {
-            true
-        } else {
-            self.has().height
-        };
+        self.has().width = if side.is_width() { true } else { self.has().width };
+        self.has().height = if side.is_height() { true } else { self.has().height };
 
         self.rules().push(LayoutRule::relative(side, ratio, view.weak_view()));
         self
@@ -354,11 +396,18 @@ impl Placer {
 
 impl Placer {
     pub fn above(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.same([Anchor::Size, Anchor::X], view).anchor(Anchor::Bot, view, offset)
+        self.same([Anchor::Width, Anchor::Height, Anchor::X], view)
+            .anchor(Anchor::Bot, view, offset)
     }
 
     pub fn below(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
-        self.same([Anchor::Size, Anchor::X], view).anchor(Anchor::Top, view, offset)
+        self.same([Anchor::Width, Anchor::Height, Anchor::X], view)
+            .anchor(Anchor::Top, view, offset)
+    }
+
+    pub fn at_right(&self, view: impl Deref<Target = impl View> + Copy, offset: impl ToF32) -> &Self {
+        self.same([Anchor::Width, Anchor::Height, Anchor::CenterY], view)
+            .anchor(Anchor::Left, view, offset)
     }
 
     pub fn between(
@@ -366,17 +415,22 @@ impl Placer {
         view_a: impl Deref<Target = impl View> + Copy,
         view_b: impl Deref<Target = impl View> + Copy,
     ) -> &Self {
-        self.rules().push(LayoutRule::between(
-            view_a.weak_view(),
-            view_b.weak_view(),
-            Anchor::None,
-        ));
+        self.rules()
+            .push(LayoutRule::between(view_a.weak_view(), view_b.weak_view(), None));
         self
     }
 
     pub fn between_super(&self, view: impl Deref<Target = impl View> + Copy, anchor: Anchor) -> &Self {
-        self.rules()
-            .push(LayoutRule::between(view.weak_view(), Weak::default(), anchor));
+        self.rules().push(LayoutRule::between(
+            view.weak_view(),
+            Weak::default(),
+            Some(anchor),
+        ));
+        self
+    }
+
+    pub fn custom(&self, custom: impl FnMut(WeakView) + Send + 'static) -> &Self {
+        *self.custom.borrow_mut() = Some(Arc::new(Mutex::new(custom)));
         self
     }
 }
@@ -387,10 +441,10 @@ impl Placer {
 
         let has_left = self.has_left();
 
-        for rule in this.rules().iter_mut() {
+        for rule in this.rules().iter_mut().filter(|r| r.enabled) {
             if rule.between {
                 self.between_layout(rule);
-            } else if rule.anchor_view.is_ok() {
+            } else if rule.anchor_view.is_some() {
                 if rule.relative {
                     self.relative_layout(rule);
                 } else if rule.same {
@@ -405,8 +459,12 @@ impl Placer {
             }
         }
 
-        for rule in this.all_tiling_rules().iter() {
+        for rule in this.all_tiling_rules().iter().filter(|r| r.enabled) {
             self.tiling_layout(rule.tiling.as_ref().expect("BUG"));
+        }
+
+        if let Some(custom) = self.custom.borrow().as_ref() {
+            custom.lock()(self.view.weak_view());
         }
     }
 }
@@ -419,7 +477,9 @@ impl Placer {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
 
-        match rule.side {
+        let side = rule.side.as_ref().expect("Reached side layout with no side rule");
+
+        match side {
             Anchor::Top => frame.origin.y = rule.offset,
             Anchor::Bot => {
                 if has.height {
@@ -464,8 +524,8 @@ impl Placer {
                     frame.size.height = rule.offset;
                 }
             }
-            Anchor::Size | Anchor::X | Anchor::Y | Anchor::None => {
-                unimplemented!("Simple layout for {:?} is not supported", rule.side)
+            Anchor::X | Anchor::Y | Anchor::None => {
+                unimplemented!("Simple layout for {:?} is not supported", side)
             }
         }
 
@@ -475,8 +535,11 @@ impl Placer {
     fn anchor_layout(&mut self, rule: &LayoutRule, has_left: bool) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.frame();
-        match rule.side {
+        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in anchor layout").frame();
+
+        let side = rule.side.as_ref().expect("Anchor layout without side");
+
+        match side {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
             Anchor::Bot => frame.origin.y = a_frame.y() - rule.offset - frame.height(),
             Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
@@ -492,7 +555,9 @@ impl Placer {
             }
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
-            _ => unimplemented!("Anchor layout for: {:?} is not supported", rule.side),
+            Anchor::Width => frame.size.width = a_frame.width(),
+            Anchor::Height => frame.size.height = a_frame.height(),
+            _ => unimplemented!("Anchor layout for: {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -500,11 +565,13 @@ impl Placer {
     fn relative_layout(&mut self, rule: &LayoutRule) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.frame();
-        match rule.side {
+        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in relative layout").frame();
+
+        let side = rule.side.as_ref().expect("Relative layout without side");
+
+        match side {
             Anchor::Width => frame.size.width = a_frame.size.width * rule.offset,
             Anchor::Height => frame.size.height = a_frame.size.height * rule.offset,
-            Anchor::Size => frame.size = a_frame.size * rule.offset,
             Anchor::X => frame.origin.x = a_frame.width() * rule.offset,
             Anchor::Y => frame.origin.y = a_frame.height() * rule.offset,
             Anchor::CenterY => {
@@ -513,7 +580,7 @@ impl Placer {
                 center.y += rule.offset;
                 frame.set_center(center);
             }
-            _ => unimplemented!("Relative layout for {:?} is not supported", rule.side),
+            _ => unimplemented!("Relative layout for {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -521,14 +588,28 @@ impl Placer {
     fn same_layout(&mut self, rule: &LayoutRule) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.frame();
-        match rule.side {
+        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in same layout").frame();
+
+        let side = rule.side.as_ref().expect("Same layout without side");
+
+        match side {
             Anchor::Width => frame.size.width = a_frame.size.width,
             Anchor::Height => frame.size.height = a_frame.size.height,
-            Anchor::Size => frame.size = a_frame.size,
             Anchor::X => frame.origin.x = a_frame.x(),
             Anchor::Y => frame.origin.y = a_frame.y(),
-            _ => unimplemented!("Same layout for {:?} is not supported", rule.side),
+            Anchor::CenterX => {
+                let mut frame_center = frame.center();
+                let a_center = a_frame.center();
+                frame_center.x = a_center.x;
+                frame.set_center(frame_center);
+            }
+            Anchor::CenterY => {
+                let mut frame_center = frame.center();
+                let a_center = a_frame.center();
+                frame_center.y = a_center.y;
+                frame.set_center(frame_center);
+            }
+            _ => unimplemented!("Same layout for {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -558,25 +639,35 @@ impl Placer {
         if rule.side.is_none() {
             self.between_2_layout(rule);
         } else {
-            self.between_s_layout(rule);
+            self.between_super_layout(rule);
         }
     }
 
     fn between_2_layout(&mut self, rule: &LayoutRule) {
-        let center_a = rule.anchor_view.frame().center();
-        let center_b = rule.anchor_view2.frame().center();
+        let center_a = rule.anchor_view.expect("No anchor view in between 2 layout").frame().center();
+        let center_b = rule
+            .anchor_view2
+            .expect("No anchor 2 view in between 2 layout")
+            .frame()
+            .center();
         let center = center_a.middle(&center_b);
         self.view.edit_frame(|frame| frame.set_center(center));
     }
 
-    fn between_s_layout(&mut self, rule: &LayoutRule) {
-        let f = rule.anchor_view.frame();
+    fn between_super_layout(&mut self, rule: &LayoutRule) {
+        let f = rule
+            .anchor_view
+            .as_ref()
+            .expect("No anchor view in between super layout")
+            .frame();
         let cen = f.center();
 
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
 
-        match rule.side {
+        let side = rule.side.as_ref().expect("Between layout without side");
+
+        match side {
             Anchor::Top => frame.set_center((cen.x, f.y() / 2.0)),
             Anchor::Bot => frame.set_center((
                 cen.x,
@@ -587,7 +678,7 @@ impl Placer {
                 self.s_content.width - (self.s_content.width - f.max_x()) / 2.0,
                 cen.y,
             )),
-            _ => unimplemented!("Between s layout for {:?} is not supported", rule.side),
+            _ => unimplemented!("Between super layout for {:?} is not supported", side),
         }
         view.set_frame(frame);
     }
@@ -595,7 +686,7 @@ impl Placer {
 
 impl Placer {
     fn has_left(&self) -> bool {
-        self.rules.borrow().iter().any(|rule| rule.side.is_left())
+        self.rules.borrow().iter().any(|rule| rule.side.is_some_and(Anchor::is_left))
     }
 }
 
@@ -656,5 +747,14 @@ fn distribute_with_ratio(size: Size, mut views: Vec<WeakView>, ratios: &[f32]) {
 impl Debug for Placer {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         self.rules.borrow().fmt(f)
+    }
+}
+
+impl PartialEq for Placer {
+    fn eq(&self, other: &Self) -> bool {
+        self.rules == other.rules
+            && self.all_tiling_rules == other.all_tiling_rules
+            && self.all_margin == other.all_margin
+            && self.has == other.has
     }
 }

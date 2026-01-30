@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Button, HasText, Setup, UI, ViewData, view},
+    ui::{Button, HasText, Setup, UIDrawer, ViewData, view},
     ui_test::{check_colors, state::increment_state, test_combinations},
 };
 
@@ -23,7 +23,7 @@ impl Setup for ButtonPress {
 }
 
 pub async fn test_button() -> Result<()> {
-    UI::init_test_view::<ButtonPress>();
+    UIDrawer::init_test_view::<ButtonPress>();
 
     check_colors(
         r#"

@@ -19,6 +19,8 @@ pub struct ViewBase {
     pub(crate) corner_radius: f32,
     #[educe(Debug(ignore))]
     pub(crate) border_color:  Color,
+    #[educe(Debug(ignore))]
+    pub(crate) border_width:  f32,
 
     pub(crate) content_offset: f32,
 
@@ -41,6 +43,9 @@ pub struct ViewBase {
 
     #[educe(Debug(ignore))]
     pub(crate) is_selected: bool,
+
+    #[educe(Debug(ignore))]
+    pub(crate) is_system: bool,
 
     #[educe(Debug(ignore))]
     pub(crate) navigation_view: Weak<NavigationView>,

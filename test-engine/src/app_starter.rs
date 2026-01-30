@@ -27,10 +27,19 @@ pub extern "C" fn test_engine_start_app() -> std::ffi::c_int {
 }
 
 pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
+    fn start(app: Box<dyn App>) {
+        #[cfg(mobile)]
+        hreads::set_current_thread_as_main();
+
+        let event_loop = EventLoop::<Window>::with_user_event().build().unwrap();
+        event_loop.set_control_flow(ControlFlow::Poll);
+        app.before_launch();
+        let app = AppHandler::new(AppRunner::new(app), &event_loop);
+        run_app(event_loop, app);
+    }
+
     #[cfg(not_wasm)]
     AppRunner::setup_log();
-
-    let _sentry_guard = AppRunner::setup_sentry(app.deref());
 
     #[cfg(wasm)]
     {
@@ -41,20 +50,9 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
         log::info!("Hello from wasm");
     }
 
-    let start = || {
-        #[cfg(mobile)]
-        hreads::set_current_thread_as_main();
-
-        let event_loop = EventLoop::<Window>::with_user_event().build().unwrap();
-        event_loop.set_control_flow(ControlFlow::Poll);
-        app.before_launch();
-        let app = AppHandler::new(AppRunner::new(app), &event_loop);
-        run_app(event_loop, app);
-    };
-
     #[cfg(wasm)]
     {
-        start();
+        start(app);
     }
 
     #[cfg(not_wasm)]
@@ -62,7 +60,11 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
         let rt = tokio::runtime::Runtime::new().unwrap();
 
         rt.block_on(async {
-            start();
+            let sentry_guard = AppRunner::setup_sentry(app.deref()).await;
+
+            start(app);
+
+            drop(sentry_guard);
         });
     }
 

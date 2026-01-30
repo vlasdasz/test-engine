@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     AppRunner,
     refs::Weak,
-    ui::{KeyboardView, Setup, UI, ViewData, view},
+    ui::{KeyboardView, Setup, UIDrawer, ViewData, view},
 };
 
 #[view]
@@ -19,7 +19,7 @@ impl Setup for KeyboardViewTest {
 }
 
 pub async fn test_keyboard_view() -> Result<()> {
-    let _view = UI::init_test_view::<KeyboardViewTest>();
+    let _view = UIDrawer::init_test_view::<KeyboardViewTest>();
 
     AppRunner::set_window_size((800, 400));
 

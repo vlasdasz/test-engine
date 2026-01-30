@@ -15,29 +15,31 @@ pub(super) struct WeakRepr {
 
 pub(super) fn serialize_weak<S: Serializer>(
     name: &'static str,
-    weak: WeakView,
+    weak: Option<WeakView>,
     s: &mut S::SerializeStruct,
 ) -> Result<(), S::Error> {
-    let raw = weak.raw();
-
     s.serialize_field(
         name,
-        &WeakRepr {
-            addr:      raw.addr(),
-            stamp:     raw.stamp(),
-            type_name: raw.type_name().to_string(),
-        },
+        &weak.map(|weak| {
+            let raw = weak.raw();
+
+            WeakRepr {
+                addr:      raw.addr(),
+                stamp:     raw.stamp(),
+                type_name: raw.type_name().to_string(),
+            }
+        }),
     )
 }
 
-pub(super) fn deserialize_weak(value: WeakRepr) -> WeakView {
-    unsafe {
+pub(super) fn deserialize_weak(value: Option<WeakRepr>) -> Option<WeakView> {
+    value.map(|value| unsafe {
         WeakView::from_raw(RawPointer::new(
             value.addr,
             value.stamp,
             string_to_static(value.type_name),
         ))
-    }
+    })
 }
 
 fn string_to_static(string: String) -> &'static str {

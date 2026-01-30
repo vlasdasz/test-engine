@@ -15,6 +15,7 @@ use test_engine::{
     ui::{Label, UIManager},
 };
 
+use crate::inspect::test_inspect;
 use crate::{
     base::test_base_ui,
     views::{
@@ -29,6 +30,7 @@ use crate::{
 };
 
 mod base;
+mod inspect;
 mod level;
 mod views;
 
@@ -57,11 +59,12 @@ fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
-    test_base_ui().await?;
-    test_layout().await?;
     test_base_views().await?;
-    test_image_views().await?;
+    test_base_ui().await?;
+    test_inspect().await?;
+    test_layout().await?;
     test_complex_views().await?;
+    test_image_views().await?;
     test_containers().await?;
     // test_input_views().await?;
     test_helper_views().await?;

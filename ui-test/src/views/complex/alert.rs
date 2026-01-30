@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    ui::{Alert, UI, view},
+    ui::{Alert, HasText, RED, TextAlignment, UIDrawer, view},
     ui_test::{check_colors, inject_touches},
 };
 
@@ -9,7 +9,7 @@ use test_engine::{
 struct AlertTestView {}
 
 pub async fn test_alert() -> Result<()> {
-    UI::init_test_view::<AlertTestView>();
+    UIDrawer::init_test_view::<AlertTestView>();
 
     from_main(|| {
         Alert::show("Forogorn\nSopokok\nFergel");
@@ -74,6 +74,80 @@ pub async fn test_alert() -> Result<()> {
              429  153 -  89 124 149
              450  131 -  89 124 149
              524   72 -  89 124 149
+        "#,
+    )?;
+
+    from_main(|| {
+        Alert::with_label(|mut l| {
+            l.set_text_color(RED).set_text_size(50).set_alignment(TextAlignment::Left);
+        })
+        .show("Forogorn");
+    });
+
+    check_colors(
+        r#"
+             183  282 - 255 255 255
+             194  279 - 255   0   0
+             203  289 - 255 255 255
+             229  283 - 255 255 255
+             240  281 - 255   0   0
+             285  287 - 255 214 214
+             278  280 - 255 255 255
+             397  287 - 255 255 255
+             364  307 - 255 255 255
+             368  279 - 255 148 148
+             324  226 - 255 255 255
+             312  310 - 255 255 255
+        "#,
+    )?;
+
+    inject_touches(
+        "
+            338  373  b
+            338  373  e
+        ",
+    );
+
+    from_main(|| {
+        Alert::show("Forogorn\nSopokok\nFergel");
+    });
+
+    check_colors(
+        r#"
+             220  406 -  89 124 149
+             220  394 - 255 255 255
+             218  343 - 255 255 255
+             166  296 - 255 255 255
+             153  276 -  89 124 149
+             205  210 - 255 255 255
+             205  189 -  89 124 149
+             221  235 - 255 255 255
+             243  235 - 255 255 255
+             265  270 - 255 255 255
+             267  270 - 255 255 255
+             267  270 - 255 255 255
+             288  274 - 106 106 106
+             310  274 - 255 255 255
+             310  274 - 255 255 255
+             320  274 -  49  49  49
+             337  274 - 196 196 196
+             337  274 - 196 196 196
+             310  303 - 253 253 253
+             282  291 -  13  13  13
+             317  292 - 255 255 255
+             328  292 - 255 255 255
+             330  290 - 255 255 255
+             330  238 - 255 255 255
+             330  235 - 255 255 255
+             330  235 - 255 255 255
+             444  279 -  89 124 149
+             414  279 - 255 255 255
+             470  279 -  89 124 149
+             475  279 -  89 124 149
+             369  256 - 255 255 255
+             332  256 - 255 255 255
+             308  256 - 255 255 255
+             190  288 - 255 255 255
         "#,
     )?;
 

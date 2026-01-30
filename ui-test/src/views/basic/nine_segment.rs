@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Button, HasText, ImageView, NoImage, Setup, UI, ViewFrame, WHITE, view},
+    ui::{Button, HasText, ImageView, NoImage, Setup, UIDrawer, ViewFrame, WHITE, view},
     ui_test::check_colors,
 };
 
@@ -27,7 +27,7 @@ impl Setup for NineSegment {
 }
 
 pub async fn test_nine_segment() -> Result<()> {
-    let mut view = UI::init_test_view::<NineSegment>();
+    let mut view = UIDrawer::init_test_view::<NineSegment>();
 
     check_colors(
         r#"
