@@ -11,11 +11,25 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     let rect = UI_RECT.get_mut();
     let image = IMAGE_DRAWER.get_mut();
 
-    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), RED,  CLEAR,
-    0.0,0.0, 0.5, 1.0));
+    rect.add(UIRectInstance::new(
+        (50, 50, 50, 50).into(),
+        RED,
+        CLEAR,
+        0.0,
+        0.0,
+        0.5,
+        1.0,
+    ));
 
-    rect.add(UIRectInstance::new((75, 75, 50, 50).into(), GREEN, CLEAR,
-    0.0, 0.0, 0.5, 1.0));
+    rect.add(UIRectInstance::new(
+        (75, 75, 50, 50).into(),
+        GREEN,
+        CLEAR,
+        0.0,
+        0.0,
+        0.5,
+        1.0,
+    ));
     rect.add(UIRectInstance::new(
         (100, 100, 50, 50).into(),
         BLUE,
@@ -44,11 +58,25 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
         0.5,
         1.0,
     ));
-    rect.add(UIRectInstance::new((50, 200, 50, 50).into(), RED, CLEAR,
-    0.0, 0.0, 0.5, 1.0));
+    rect.add(UIRectInstance::new(
+        (50, 200, 50, 50).into(),
+        RED,
+        CLEAR,
+        0.0,
+        0.0,
+        0.5,
+        1.0,
+    ));
 
-    rect.add(UIRectInstance::new((50, 350, 50, 50).into(), RED, CLEAR,
-    0.0, 0.0, 0.3, 1.0));
+    rect.add(UIRectInstance::new(
+        (50, 350, 50, 50).into(),
+        RED,
+        CLEAR,
+        0.0,
+        0.0,
+        0.3,
+        1.0,
+    ));
     rect.add(UIRectInstance::new(
         (75, 375, 50, 50).into(),
         GREEN,
@@ -90,6 +118,8 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
         UIImageInstance {
             position:      (225, 75).into(),
             size:          (50, 50).into(),
+            border_color:  CLEAR,
+            border_width:  0.0,
             corner_radius: 0.0,
             z_position:    0.4,
             flags:         0,

@@ -3,8 +3,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Left, Top, X},
-        BLACK, Button, Container, GREEN, HasText, PURPLE, RED, Setup, TURQUOISE, UIDrawer, ViewData, ViewSubviews,
-        WHITE, view,
+        BLACK, Button, Container, GREEN, HasText, PURPLE, RED, Setup, TURQUOISE, UIDrawer, ViewData,
+        ViewSubviews, WHITE, view,
     },
     ui_test::check_colors,
 };

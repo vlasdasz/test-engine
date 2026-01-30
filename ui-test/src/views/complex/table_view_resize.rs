@@ -5,7 +5,8 @@ use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
     ui::{
-        AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, UIDrawer, View, ViewData, ViewFrame, view,
+        AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, UIDrawer, View, ViewData, ViewFrame,
+        view,
     },
     ui_test::{check_colors, inject_scroll},
 };

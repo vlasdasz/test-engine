@@ -21,7 +21,7 @@ pub struct ViewBase {
     pub(crate) border_color:  Color,
     #[educe(Debug(ignore))]
     pub(crate) border_width:  f32,
-    
+
     pub(crate) content_offset: f32,
 
     pub(crate) is_hidden: bool,

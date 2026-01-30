@@ -3,7 +3,10 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{color::{CLEAR, TURQUOISE}, flat::Rect};
+use gm::{
+    color::{CLEAR, TURQUOISE},
+    flat::Rect,
+};
 use hreads::{from_main, wait_for_next_frame};
 use log::{debug, trace};
 use parking_lot::Mutex;
@@ -140,6 +143,8 @@ impl UIDrawer {
                 IMAGE_RECT_DRAWER.get_mut().add_with_image(
                     UIImageInstance::new(
                         image_view.image_frame(),
+                        *view.border_color(),
+                        view.border_width(),
                         view.corner_radius(),
                         view.z_position(),
                         image_view.flip_x,

@@ -5,7 +5,6 @@ use test_engine::{
     inspect::views::PlacerView,
     refs::Weak,
     ui::{Container, Setup, TURQUOISE, UIDrawer, ViewData, ViewFrame, view},
-    ui_test::record_ui_test,
 };
 
 #[view]
@@ -35,7 +34,7 @@ pub(crate) async fn test_placer_view() -> Result<()> {
         view.placer_view.set_placer("sokol", &view.view.place());
     });
 
-    record_ui_test();
+    // test_engine::ui_test::record_ui_test();
 
     Ok(())
 }

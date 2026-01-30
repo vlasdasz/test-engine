@@ -8,6 +8,7 @@ use crate::{
 
 #[derive(Clone, Educe)]
 #[educe(Debug, Default)]
+#[allow(clippy::struct_excessive_bools)]
 pub struct LayoutRule {
     pub side:   Option<Anchor>,
     pub tiling: Option<Tiling>,

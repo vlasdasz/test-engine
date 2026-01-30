@@ -27,7 +27,7 @@ pub trait ViewData {
 
     fn border_width(&self) -> f32;
     fn set_border_width(&mut self, width: impl ToF32) -> &mut Self;
-    
+
     fn corner_radius(&self) -> f32;
     fn set_corner_radius(&mut self, radius: impl ToF32) -> &mut Self;
 

@@ -3,8 +3,8 @@ use instant::Instant;
 use test_engine::{
     dispatch::from_main,
     ui::{
-        Container, NavigationView, PRESENT_ANIMATION_DURATION, RED, Setup, TouchStack, UIDrawer, ViewController,
-        ViewData, view,
+        Container, NavigationView, PRESENT_ANIMATION_DURATION, RED, Setup, TouchStack, UIDrawer,
+        ViewController, ViewData, view,
     },
     ui_test::helpers::check_colors,
 };

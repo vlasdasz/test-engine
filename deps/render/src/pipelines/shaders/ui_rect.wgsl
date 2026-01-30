@@ -73,20 +73,40 @@ fn v_main(
 @fragment
 fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let radius: f32 = in.corner_radius;
-
+    let border: f32 = in.border_width;
+    let local_pos: vec2<f32> = in.uv * in.size;
+    
     if radius == 0.0 {
+        if border > 0.0 {
+            let half_size: vec2<f32> = in.size * 0.5;
+            let dist_to_edge: vec2<f32> = half_size - abs(local_pos);
+            let min_dist: f32 = min(dist_to_edge.x, dist_to_edge.y);
+            
+            if min_dist < border {
+                return in.border_color;
+            }
+        }
         return in.color;
     } else {
-        let local_pos: vec2<f32> = in.uv * in.size;
-
         let corner: vec2<f32> = in.size * 0.5 - vec2<f32>(radius, radius);
         let d: vec2<f32> = abs(local_pos) - corner;
-        let dist: f32 = length(max(d, vec2<f32>(0.0, 0.0)));
-
-        if (dist > radius) {
+        let dist_outer: f32 = length(max(d, vec2<f32>(0.0, 0.0)));
+        
+        if (dist_outer > radius) {
             discard;
         }
-
+        
+        if border > 0.0 {
+            let inner_radius: f32 = max(radius - border, 0.0);
+            let inner_corner: vec2<f32> = in.size * 0.5 - vec2<f32>(radius, radius);
+            let inner_d: vec2<f32> = abs(local_pos) - inner_corner;
+            let dist_inner: f32 = length(max(inner_d, vec2<f32>(0.0, 0.0)));
+            
+            if dist_inner > inner_radius {
+                return in.border_color;
+            }
+        }
+        
         return in.color;
     }
 }
