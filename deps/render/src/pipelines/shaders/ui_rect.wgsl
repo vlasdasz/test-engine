@@ -1,4 +1,3 @@
-
 struct RectView {
     resolution: vec2<f32>,
     _padding: vec2<u32>,
@@ -8,9 +7,11 @@ struct UIRectInstance {
     @location(2) position:      vec2<f32>,
     @location(3) size:          vec2<f32>,
     @location(4) color:         vec4<f32>,
-    @location(5) corner_radius: f32,
-    @location(6) z_position:    f32,
-    @location(7) scale:         f32,
+    @location(5) border_color:  vec4<f32>,
+    @location(6) border_width:  f32,
+    @location(7) corner_radius: f32,
+    @location(8) z_position:    f32,
+    @location(9) scale:         f32,
 }
 
 @group(0) @binding(0)
@@ -18,10 +19,12 @@ var<uniform> view: RectView;
 
 struct VertexOutput {
     @builtin(position) pos: vec4<f32>,
-          @location(0) color: vec4<f32>,
-          @location(1) uv: vec2<f32>,
-          @location(2) size: vec2<f32>,
-          @location(4) corner_radius: f32,
+    @location(0) color: vec4<f32>,
+    @location(1) uv: vec2<f32>,
+    @location(2) size: vec2<f32>,
+    @location(3) border_color: vec4<f32>,
+    @location(4) corner_radius: f32,
+    @location(5) border_width: f32,
 }
 
 @vertex
@@ -61,6 +64,8 @@ fn v_main(
     out.uv = model * 0.5;
     out.size = instance.size;
     out.corner_radius = instance.corner_radius;
+    out.border_color = instance.border_color;
+    out.border_width = instance.border_width;
 
     return out;
 }

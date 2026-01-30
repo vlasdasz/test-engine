@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Anchor::Left, BLUE, Container, ImageView, Setup, UIDrawer, ViewData, YELLOW, view},
+    ui::{Anchor::Left, BLUE, Container, ImageView, RED, Setup, UIDrawer, ViewData, YELLOW, view},
     ui_test::{check_colors, record_ui_test},
 };
 
@@ -15,7 +15,7 @@ struct Outline {
 
 impl Setup for Outline {
     fn setup(mut self: Weak<Self>) {
-        self.square.set_color(BLUE);
+        self.square.set_color(BLUE).set_border_width(1).set_border_color(RED);
         self.square.place().size(100, 100).tl(50);
 
         self.image.set_image("cat.png");
