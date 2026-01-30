@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    ui::{Alert, HasText, RED, TextAlignment, UI, view},
+    ui::{Alert, HasText, RED, TextAlignment, UIDrawer, view},
     ui_test::{check_colors, inject_touches},
 };
 
@@ -9,7 +9,7 @@ use test_engine::{
 struct AlertTestView {}
 
 pub async fn test_alert() -> Result<()> {
-    UI::init_test_view::<AlertTestView>();
+    UIDrawer::init_test_view::<AlertTestView>();
 
     from_main(|| {
         Alert::show("Forogorn\nSopokok\nFergel");

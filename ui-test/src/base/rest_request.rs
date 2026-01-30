@@ -6,7 +6,7 @@ use test_engine::{
     dispatch::{from_main, on_main},
     net::{Request, RestAPI},
     refs::Weak,
-    ui::{Button, HasText, Label, Setup, Spinner, UI, ViewFrame, async_link_button, view},
+    ui::{Button, HasText, Label, Setup, Spinner, UIDrawer, ViewFrame, async_link_button, view},
     ui_test::inject_touches,
 };
 
@@ -60,7 +60,7 @@ impl Setup for RestRequest {
 }
 
 pub async fn test_rest_request() -> Result<()> {
-    let view = UI::init_test_view::<RestRequest>();
+    let view = UIDrawer::init_test_view::<RestRequest>();
 
     inject_touches(
         "

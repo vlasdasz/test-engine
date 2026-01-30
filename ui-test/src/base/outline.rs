@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Anchor::Left, BLUE, Container, ImageView, Setup, UI, ViewData, YELLOW, view},
+    ui::{Anchor::Left, BLUE, Container, ImageView, Setup, UIDrawer, ViewData, YELLOW, view},
     ui_test::{check_colors, record_ui_test},
 };
 
@@ -27,7 +27,7 @@ impl Setup for Outline {
 }
 
 pub async fn test_outline() -> Result<()> {
-    UI::init_test_view::<Outline>();
+    UIDrawer::init_test_view::<Outline>();
 
     record_ui_test();
 

@@ -3,7 +3,7 @@ use test_engine::{
     dispatch::from_main,
     inspect::views::AnchorView,
     refs::Weak,
-    ui::{Anchor, Setup, UI, ViewFrame, view},
+    ui::{Anchor, Setup, UIDrawer, ViewFrame, view},
     ui_test::check_colors,
 };
 
@@ -21,7 +21,7 @@ impl Setup for AnchorViewTest {
 }
 
 pub(crate) async fn test_anchor_view() -> Result<()> {
-    let view = UI::init_test_view::<AnchorViewTest>();
+    let view = UIDrawer::init_test_view::<AnchorViewTest>();
 
     check_colors(
         r#"

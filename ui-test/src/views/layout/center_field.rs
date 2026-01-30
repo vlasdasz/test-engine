@@ -1,7 +1,7 @@
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor::CenterY, BLUE, Container, GREEN, Setup, UI, ViewData, ViewSubviews, view},
+    ui::{Anchor::CenterY, BLUE, Container, GREEN, Setup, UIDrawer, ViewData, ViewSubviews, view},
     ui_test::check_colors,
 };
 
@@ -26,7 +26,7 @@ impl Setup for CenterField {
 }
 
 pub async fn test_center_field() -> anyhow::Result<()> {
-    let view = UI::init_test_view::<CenterField>();
+    let view = UIDrawer::init_test_view::<CenterField>();
 
     check_colors(
         r#"

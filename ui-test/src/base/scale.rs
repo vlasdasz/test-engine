@@ -5,7 +5,7 @@ use test_engine::{
     dispatch::from_main,
     refs::{Weak, weak_from_ref},
     ui::{
-        Button, HasText, Label, Setup, TableData, TableView, UI, UIManager, ViewData, ViewSubviews,
+        Button, HasText, Label, Setup, TableData, TableView, UIDrawer, UIManager, ViewData, ViewSubviews,
         cast_cell, view,
     },
     ui_test::{check_colors, inject_touches},
@@ -61,7 +61,7 @@ impl TableData for ScaleView {
 }
 
 pub async fn test_scale() -> Result<()> {
-    let mut view = UI::init_test_view::<ScaleView>();
+    let mut view = UIDrawer::init_test_view::<ScaleView>();
 
     inject_touches(
         "

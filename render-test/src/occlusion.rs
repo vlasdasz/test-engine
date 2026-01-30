@@ -1,7 +1,7 @@
 use render::data::{RectView, UIImageInstance, UIRectInstance};
 use test_engine::{
     RenderPass,
-    ui::{BLUE, GREEN, RED, UIImages},
+    ui::{BLUE, CLEAR, GREEN, RED, UIImages},
 };
 use window::Window;
 
@@ -11,12 +11,16 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     let rect = UI_RECT.get_mut();
     let image = IMAGE_DRAWER.get_mut();
 
-    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), RED, 0.0, 0.5, 1.0));
+    rect.add(UIRectInstance::new((50, 50, 50, 50).into(), RED,  CLEAR,
+    0.0,0.0, 0.5, 1.0));
 
-    rect.add(UIRectInstance::new((75, 75, 50, 50).into(), GREEN, 0.0, 0.5, 1.0));
+    rect.add(UIRectInstance::new((75, 75, 50, 50).into(), GREEN, CLEAR,
+    0.0, 0.0, 0.5, 1.0));
     rect.add(UIRectInstance::new(
         (100, 100, 50, 50).into(),
         BLUE,
+        CLEAR,
+        0.0,
         0.0,
         0.5,
         1.0,
@@ -25,6 +29,8 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     rect.add(UIRectInstance::new(
         (100, 250, 50, 50).into(),
         BLUE,
+        CLEAR,
+        0.0,
         0.0,
         0.5,
         1.0,
@@ -32,16 +38,22 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     rect.add(UIRectInstance::new(
         (75, 225, 50, 50).into(),
         GREEN,
+        CLEAR,
+        0.0,
         0.0,
         0.5,
         1.0,
     ));
-    rect.add(UIRectInstance::new((50, 200, 50, 50).into(), RED, 0.0, 0.5, 1.0));
+    rect.add(UIRectInstance::new((50, 200, 50, 50).into(), RED, CLEAR,
+    0.0, 0.0, 0.5, 1.0));
 
-    rect.add(UIRectInstance::new((50, 350, 50, 50).into(), RED, 0.0, 0.3, 1.0));
+    rect.add(UIRectInstance::new((50, 350, 50, 50).into(), RED, CLEAR,
+    0.0, 0.0, 0.3, 1.0));
     rect.add(UIRectInstance::new(
         (75, 375, 50, 50).into(),
         GREEN,
+        CLEAR,
+        0.0,
         0.0,
         0.2,
         1.0,
@@ -49,6 +61,8 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     rect.add(UIRectInstance::new(
         (100, 400, 50, 50).into(),
         BLUE,
+        CLEAR,
+        0.0,
         0.0,
         0.1,
         1.0,
@@ -57,6 +71,8 @@ pub(crate) fn render_occlusion(pass: &mut RenderPass) {
     rect.add(UIRectInstance::new(
         (200, 50, 100, 100).into(),
         GREEN,
+        CLEAR,
+        0.0,
         0.0,
         0.5,
         1.0,

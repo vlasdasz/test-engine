@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{HasText, Label, Setup, UI, ViewData, view},
+    ui::{HasText, Label, Setup, UIDrawer, ViewData, view},
     ui_test::check_colors,
 };
 
@@ -22,7 +22,7 @@ impl Setup for MultilineLabel {
 }
 
 pub async fn test_multiline() -> Result<()> {
-    let mut view = UI::init_test_view::<MultilineLabel>();
+    let mut view = UIDrawer::init_test_view::<MultilineLabel>();
 
     check_colors(
         r#"

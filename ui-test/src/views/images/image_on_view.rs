@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Container, GREEN, ImageView, Setup, UI, UIImages, ViewData, ViewSubviews, view},
+    ui::{Container, GREEN, ImageView, Setup, UIDrawer, UIImages, ViewData, ViewSubviews, view},
     ui_test::helpers::check_colors,
 };
 
@@ -24,7 +24,7 @@ impl Setup for ImageOnView {
 }
 
 pub async fn test_image_on_view() -> Result<()> {
-    UI::init_test_view::<ImageOnView>();
+    UIDrawer::init_test_view::<ImageOnView>();
 
     check_colors(
         r#"

@@ -3,7 +3,7 @@ use log::debug;
 use test_engine::{
     RenderPass,
     dispatch::from_main,
-    ui::{UI, ViewCallbacks, view},
+    ui::{UIDrawer, ViewCallbacks, view},
     ui_test::check_colors,
 };
 
@@ -37,7 +37,7 @@ impl ViewCallbacks for RenderTestView {
 pub async fn test_render() -> Result<()> {
     debug!("Test render");
 
-    let mut view = UI::init_test_view::<RenderTestView>();
+    let mut view = UIDrawer::init_test_view::<RenderTestView>();
 
     check_colors(
         r#"

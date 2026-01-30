@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor, HasText, Label, Setup, UI, ViewData, ViewFrame, ViewSubviews, WHITE, view},
+    ui::{Anchor, HasText, Label, Setup, UIDrawer, ViewData, ViewFrame, ViewSubviews, WHITE, view},
     ui_test::{helpers::check_colors, inject_touches},
 };
 
@@ -29,7 +29,7 @@ impl Setup for Slider {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let mut view = UI::init_test_view::<Slider>();
+    let mut view = UIDrawer::init_test_view::<Slider>();
 
     inject_touches(
         r"

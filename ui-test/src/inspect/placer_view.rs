@@ -4,7 +4,7 @@ use test_engine::{
     dispatch::from_main,
     inspect::views::PlacerView,
     refs::Weak,
-    ui::{Container, Setup, TURQUOISE, UI, ViewData, ViewFrame, view},
+    ui::{Container, Setup, TURQUOISE, UIDrawer, ViewData, ViewFrame, view},
     ui_test::record_ui_test,
 };
 
@@ -27,7 +27,7 @@ impl Setup for PlacerViewTest {
 }
 
 pub(crate) async fn test_placer_view() -> Result<()> {
-    let view = UI::init_test_view::<PlacerViewTest>();
+    let view = UIDrawer::init_test_view::<PlacerViewTest>();
     // UIManager::enable_debug_frames();
     AppRunner::set_window_size((1000, 1000));
 

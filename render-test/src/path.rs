@@ -1,6 +1,6 @@
 use refs::main_lock::MainLock;
 use render::data::{PathData, RectView, UIRectInstance};
-use test_engine::ui::{BLUE, RED};
+use test_engine::ui::{BLUE, CLEAR, RED};
 use window::{RenderPass, Window};
 
 use crate::pipelines::{PATH, UI_RECT};
@@ -31,6 +31,8 @@ pub(crate) fn render_path(pass: &mut RenderPass) {
     UI_RECT.get_mut().add(UIRectInstance::new(
         (450, 200, 200, 200).into(),
         RED,
+        CLEAR,
+        0.0,
         0.0,
         0.5,
         1.0,

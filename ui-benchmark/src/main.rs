@@ -6,13 +6,13 @@
 mod benchmark_view;
 
 use anyhow::Result;
-use test_engine::{AppRunner, ui::UI};
+use test_engine::{AppRunner, ui::UIDrawer};
 
 use crate::benchmark_view::BenchmarkView;
 
 fn main() -> Result<()> {
     AppRunner::start_with_actor(async {
-        UI::init_test_view::<BenchmarkView>();
+        UIDrawer::init_test_view::<BenchmarkView>();
 
         Ok(())
     })

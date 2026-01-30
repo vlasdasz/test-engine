@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicU16, Ordering};
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Button, HasText, Setup, UI, ViewData, view},
+    ui::{Button, HasText, Setup, UIDrawer, ViewData, view},
     ui_test::inject_touches,
 };
 
@@ -26,7 +26,7 @@ impl Setup for InjectTouch {
 pub async fn test_inject_touch() -> Result<()> {
     COUNTER.store(0, Ordering::Relaxed);
 
-    UI::init_test_view::<InjectTouch>();
+    UIDrawer::init_test_view::<InjectTouch>();
 
     let mut touches = String::new();
 

@@ -3,7 +3,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use gm::{color::TURQUOISE, flat::Rect};
+use gm::{color::{CLEAR, TURQUOISE}, flat::Rect};
 use hreads::{from_main, wait_for_next_frame};
 use log::{debug, trace};
 use parking_lot::Mutex;
@@ -27,9 +27,9 @@ static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 // static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
 pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
 
-pub struct UI;
+pub struct UIDrawer;
 
-impl UI {
+impl UIDrawer {
     pub(crate) fn update() {
         Self::update_view(UIManager::root_view().deref_mut());
         if let Some(debug_view) = UIManager::debug_view() {
@@ -103,18 +103,9 @@ impl UI {
         debug_frames: bool,
         scale: f32,
     ) {
-        if view.is_hidden() {
-            return;
-        }
-
         let frame = *view.absolute_frame();
 
-        if frame.size.has_no_area() {
-            // warn!(
-            //     "View has invalid frame: {}. Frame: {:?} ",
-            //     view.label(),
-            //     view.frame()
-            // );
+        if view.is_hidden() || frame.size.has_no_area() {
             return;
         }
 
@@ -134,6 +125,8 @@ impl UI {
             Pipelines::rect().add(UIRectInstance::new(
                 frame,
                 *view.color(),
+                *view.border_color(),
+                view.border_width(),
                 view.corner_radius(),
                 view.z_position(),
                 scale,
@@ -177,6 +170,8 @@ impl UI {
                 Pipelines::rect().add(UIRectInstance::new(
                     rect,
                     TURQUOISE,
+                    CLEAR,
+                    0.0,
                     0.0,
                     view.z_position() - 0.2,
                     scale,
@@ -238,7 +233,7 @@ impl UI {
     }
 }
 
-impl UI {
+impl UIDrawer {
     pub fn reload_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
         Self::set_test_view(T::new(), 600, 600, false, get_test_name::<T>())
     }

@@ -3,7 +3,7 @@ use test_engine::{
     dispatch::from_main,
     refs::Weak,
     ui::{
-        Anchor, BLUE, HasText, LIGHTER_GRAY, Label, NumberView, Setup, TextAlignment, UI, ViewData,
+        Anchor, BLUE, HasText, LIGHTER_GRAY, Label, NumberView, Setup, TextAlignment, UIDrawer, ViewData,
         ViewSubviews, view,
     },
     ui_test::{helpers::check_colors, inject_touches},
@@ -35,7 +35,7 @@ impl Setup for LabelSettings {
 }
 
 pub async fn test_label() -> Result<()> {
-    let mut view = UI::init_test_view::<LabelSettings>();
+    let mut view = UIDrawer::init_test_view::<LabelSettings>();
 
     check_colors(
         r#"

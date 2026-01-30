@@ -4,7 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Top, X},
-        BLUE, Button, HasText, Setup, Style, UI, ViewData, ViewSubviews, view,
+        BLUE, Button, HasText, Setup, Style, UIDrawer, ViewData, ViewSubviews, view,
     },
     ui_test::check_colors,
 };
@@ -52,7 +52,7 @@ pub async fn test_global_styles() -> Result<()> {
         GLOBAL_STYLE.apply_globally::<Button>();
     });
 
-    UI::init_test_view::<GlobalStyles>();
+    UIDrawer::init_test_view::<GlobalStyles>();
 
     check_colors(
         r#"
@@ -134,7 +134,7 @@ pub async fn test_global_styles() -> Result<()> {
         GLOBAL_STYLE.reset_global::<Button>();
     });
 
-    UI::reload_test_view::<GlobalStyles>();
+    UIDrawer::reload_test_view::<GlobalStyles>();
 
     check_colors(
         r#"

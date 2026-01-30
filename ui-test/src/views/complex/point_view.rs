@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::{Own, Weak},
-    ui::{HasText, Label, Point, PointView, Setup, UI, ViewData, view},
+    ui::{HasText, Label, Point, PointView, Setup, UIDrawer, ViewData, view},
     ui_test::inject_touches,
 };
 
@@ -29,7 +29,7 @@ impl Setup for PointTestView {
 }
 
 pub async fn test_point_view() -> Result<()> {
-    let view = UI::init_test_view::<PointTestView>();
+    let view = UIDrawer::init_test_view::<PointTestView>();
 
     inject_touches(
         r"

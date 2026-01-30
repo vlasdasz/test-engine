@@ -25,6 +25,9 @@ pub trait ViewData {
     fn border_color(&self) -> &Color;
     fn set_border_color(&mut self, color: Color) -> &mut Self;
 
+    fn border_width(&self) -> f32;
+    fn set_border_width(&mut self, width: impl ToF32) -> &mut Self;
+    
     fn corner_radius(&self) -> f32;
     fn set_corner_radius(&mut self, radius: impl ToF32) -> &mut Self;
 
@@ -180,6 +183,15 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn __after_setup_event(&self) -> &OnceEvent {
         &self.base_view().after_setup
+    }
+
+    fn border_width(&self) -> f32 {
+        self.base_view().border_width
+    }
+
+    fn set_border_width(&mut self, width: impl ToF32) -> &mut Self {
+        self.base_view_mut().border_width = width.to_f32();
+        self
     }
 }
 

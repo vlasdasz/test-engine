@@ -1,5 +1,5 @@
 use anyhow::Result;
-use test_engine::ui::{UI, view};
+use test_engine::ui::{UIDrawer, view};
 
 #[view]
 struct TemplateView<Value: 'static> {
@@ -7,7 +7,7 @@ struct TemplateView<Value: 'static> {
 }
 
 pub async fn test_template() -> Result<()> {
-    let view = UI::init_test_view::<TemplateView<i32>>();
+    let view = UIDrawer::init_test_view::<TemplateView<i32>>();
 
     assert_eq!(view.value, 0);
 

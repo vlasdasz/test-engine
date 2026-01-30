@@ -2,7 +2,7 @@ use anyhow::Result;
 use log::debug;
 use test_engine::{
     refs::Weak,
-    ui::{Point, PositionView, Setup, UI, view},
+    ui::{Point, PositionView, Setup, UIDrawer, view},
     ui_test::inject_touches,
 };
 
@@ -17,7 +17,7 @@ impl Setup for PositionViewTest {
 }
 
 pub async fn test_position_view() -> Result<()> {
-    let view = UI::init_test_view::<PositionViewTest>();
+    let view = UIDrawer::init_test_view::<PositionViewTest>();
 
     inject_touches(
         "

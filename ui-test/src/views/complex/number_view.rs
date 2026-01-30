@@ -4,7 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Bot, Height, Left, Right, Width, X, Y},
-        HasText, Label, NumberView, Setup, UI, ViewData, view,
+        HasText, Label, NumberView, Setup, UIDrawer, ViewData, view,
     },
     ui_test::inject_touches,
 };
@@ -48,7 +48,7 @@ impl Setup for NumberTestView {
 }
 
 pub async fn test_number_view() -> Result<()> {
-    let mut view = UI::init_test_view::<NumberTestView>();
+    let mut view = UIDrawer::init_test_view::<NumberTestView>();
 
     inject_touches(
         "

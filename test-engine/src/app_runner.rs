@@ -26,7 +26,7 @@ use crate::{
     config::Config,
     level_drawer::LevelDrawer,
     pipelines::Pipelines,
-    ui::{Input, UI},
+    ui::{Input, UIDrawer},
 };
 
 static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
@@ -268,7 +268,7 @@ impl window::WindowEvents for AppRunner {
         UIManager::free_deleted_views();
         invoke_dispatched();
         LevelDrawer::update();
-        UI::update();
+        UIDrawer::update();
     }
 
     fn render<'a>(&'a mut self, pass: &mut RenderPass<'a>) {
@@ -277,7 +277,7 @@ impl window::WindowEvents for AppRunner {
         }
 
         LevelDrawer::draw(pass);
-        UI::draw(pass);
+        UIDrawer::draw(pass);
     }
 
     fn resize(&mut self, inner_pos: Point, outer_pos: Point, inner_size: Size, outer_size: Size) {

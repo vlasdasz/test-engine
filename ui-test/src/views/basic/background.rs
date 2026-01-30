@@ -3,7 +3,7 @@ use test_engine::{
     Window,
     dispatch::from_main,
     refs::Weak,
-    ui::{GRAY_BLUE, GREEN, NoImage, Setup, UI, UIImages, UIManager, view},
+    ui::{GRAY_BLUE, GREEN, NoImage, Setup, UIDrawer, UIImages, UIManager, view},
     ui_test::check_colors,
 };
 
@@ -17,7 +17,7 @@ impl Setup for Background {
 }
 
 pub async fn test_background() -> Result<()> {
-    let _view = UI::init_test_view::<Background>();
+    let _view = UIDrawer::init_test_view::<Background>();
 
     check_colors(
         r#"
