@@ -79,7 +79,7 @@ impl UIDrawer {
             },
         );
 
-        Font::helvetice()
+        Font::default()
             .brush
             .queue(Window::device(), Window::queue(), sections)
             .unwrap();

@@ -4,6 +4,7 @@ use anyhow::bail;
 use gm::flat::Size;
 use refs::Own;
 use ui::View;
+use window::Font;
 
 use crate::app_starter::test_engine_start_with_app;
 
@@ -30,6 +31,12 @@ pub trait App {
 
     fn enable_inspection(&self) -> bool {
         true
+    }
+
+    fn default_font(&self) -> Font {
+        //Font::helvetica()
+        //
+        todo!()
     }
 }
 

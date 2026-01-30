@@ -1,6 +1,5 @@
 use std::{
     cell::RefCell,
-    collections::HashMap,
     f64,
     mem::size_of,
     sync::mpsc::{Receiver, Sender, channel},
@@ -15,11 +14,12 @@ use gm::{
 };
 use log::{info, warn};
 use plat::Platform;
+use refs::manage::DataManager;
 use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
 
 use crate::{
-    SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
-    image::Texture, surface::Surface, text::Font, window::surface_config_with_size,
+    Font, SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
+    image::Texture, surface::Surface, window::surface_config_with_size,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;
@@ -30,7 +30,6 @@ pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Bgra8UnormSrgb;
 pub const RGBA_TEXTURE_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
 pub struct State {
-    pub(crate) fonts:       HashMap<&'static str, Font>,
     pub(crate) clear_color: Color,
 
     read_display_request:     RefCell<Option<ReadDisplayRequest>>,
@@ -40,7 +39,6 @@ pub struct State {
 impl Default for State {
     fn default() -> Self {
         Self {
-            fonts:                HashMap::default(),
             clear_color:          GRAY_BLUE,
             read_display_request: RefCell::default(),
             frame_counter:        FrameCounter::default(),
@@ -49,7 +47,7 @@ impl Default for State {
 }
 
 impl State {
-    pub fn resize(&mut self) {
+    pub fn resize() {
         let new_size = Window::render_size();
 
         if new_size.width == 0.0 || new_size.height == 0.0 {
@@ -87,7 +85,7 @@ impl State {
 
         let queue = Window::queue();
 
-        for font in self.fonts.values() {
+        for font in Font::storage().values_mut() {
             font.brush.resize_view(new_size.width, new_size.height, queue);
         }
 
@@ -162,7 +160,7 @@ impl State {
 
             AppHandler::current().te_window_events.render(&mut render_pass);
 
-            for font in self.fonts.values() {
+            for font in Font::storage().values() {
                 font.brush.draw(&mut render_pass);
             }
         }

@@ -238,7 +238,7 @@ impl window::WindowEvents for AppRunner {
             self.update();
             *LevelManager::update_interval() = 1.0 / Window::display_refresh_rate().lossy_convert();
 
-            Window::current().state.resize();
+            window::state::State::resize();
 
             self.resize(
                 Window::inner_position(),
