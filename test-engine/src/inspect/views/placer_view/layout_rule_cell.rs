@@ -1,6 +1,6 @@
 use gm::LossyConvert;
 use refs::{Rglica, ToRglica, Weak};
-use ui::{LayoutRule, Setup, TextField, UIEvent, ViewData, ViewFrame};
+use ui::{LayoutRule, Setup, Switch, TextField, UIEvent, ViewData, ViewFrame};
 use ui_proc::view;
 
 use crate::inspect::views::AnchorView;
@@ -19,8 +19,9 @@ pub struct LayoutRuleCell {
     rule: Rglica<LayoutRule>,
 
     #[init]
-    anchor: AnchorView,
-    value:  TextField,
+    anchor:  AnchorView,
+    value:   TextField,
+    enabled: Switch,
 }
 
 impl Setup for LayoutRuleCell {
@@ -32,11 +33,15 @@ impl Setup for LayoutRuleCell {
 
         self.value.set_text_size(20).integer_only();
         self.value.place().at_right(self.anchor, 8).w(88).relative_height(self, 0.6);
-
         self.value.editing_ended.val(move |val| {
             let new_val: f32 = val.parse().unwrap();
             self.rule.offset = new_val;
             self.editing_ended.trigger(());
+        });
+
+        self.enabled.place().at_right(self.value, 8).w(40);
+        self.enabled.on_change(move |on| {
+            self.rule.enabled = on;
         });
     }
 }
@@ -46,6 +51,7 @@ impl LayoutRuleCell {
         if let Some(anchor) = rule.side {
             self.anchor.set_anchor(anchor);
             self.value.set_text(LossyConvert::<i64>::lossy_convert(rule.offset));
+            self.enabled.set_on(rule.enabled);
         } else {
             dbg!(&rule);
         }

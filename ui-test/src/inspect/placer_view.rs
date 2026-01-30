@@ -17,6 +17,8 @@ struct PlacerViewTest {
 
 impl Setup for PlacerViewTest {
     fn setup(mut self: Weak<Self>) {
+        // test_engine::ui::UIManager::override_scale(2.0);
+
         self.placer_view.set_size(200, 800);
 
         self.view.set_color(TURQUOISE);

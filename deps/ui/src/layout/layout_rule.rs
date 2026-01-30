@@ -6,8 +6,8 @@ use crate::{
     layout::{Anchor, Tiling},
 };
 
-#[derive(Clone, Default, Educe)]
-#[educe(Debug)]
+#[derive(Clone, Educe)]
+#[educe(Debug, Default)]
 pub struct LayoutRule {
     pub side:   Option<Anchor>,
     pub tiling: Option<Tiling>,
@@ -21,10 +21,16 @@ pub struct LayoutRule {
     pub relative: bool,
     pub between:  bool,
     pub same:     bool,
-    pub disabled: bool,
+
+    #[educe(Default = true)]
+    pub enabled: bool,
 }
 
 impl LayoutRule {
+    pub fn enabled(&self) -> bool {
+        self.enabled
+    }
+
     pub fn tiling(tiling: Tiling, offset: impl ToF32) -> Self {
         Self {
             tiling: tiling.into(),

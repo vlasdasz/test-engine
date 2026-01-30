@@ -440,7 +440,7 @@ impl Placer {
 
         let has_left = self.has_left();
 
-        for rule in this.rules().iter_mut() {
+        for rule in this.rules().iter_mut().filter(|r| r.enabled) {
             if rule.between {
                 self.between_layout(rule);
             } else if rule.anchor_view.is_some() {
@@ -458,7 +458,7 @@ impl Placer {
             }
         }
 
-        for rule in this.all_tiling_rules().iter() {
+        for rule in this.all_tiling_rules().iter().filter(|r| r.enabled) {
             self.tiling_layout(rule.tiling.as_ref().expect("BUG"));
         }
 
