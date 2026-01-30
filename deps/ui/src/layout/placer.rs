@@ -429,8 +429,9 @@ impl Placer {
         self
     }
 
-    pub fn custom(&self, custom: impl FnMut(WeakView) + Send + 'static) {
+    pub fn custom(&self, custom: impl FnMut(WeakView) + Send + 'static) -> &Self {
         *self.custom.borrow_mut() = Some(Arc::new(Mutex::new(custom)));
+        self
     }
 }
 

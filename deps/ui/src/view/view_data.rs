@@ -4,7 +4,7 @@ use gm::{ToF32, color::Color};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{NavigationView, Style, UIAnimation, View, layout::Placer};
+use crate::{NavigationView, Style, UIAnimation, View, WeakView, layout::Placer};
 
 pub trait ViewData {
     fn tag(&self) -> usize;
@@ -51,6 +51,8 @@ pub trait ViewData {
     fn size_changed(&self) -> &Event;
 
     fn apply_style(&mut self, style: Style) -> &mut Self;
+
+    fn steal_appearance(&self, other: WeakView) -> &Self;
 
     fn __after_setup_event(&self) -> &OnceEvent;
 }
@@ -191,6 +193,15 @@ impl<T: ?Sized + View> ViewData for T {
 
     fn set_border_width(&mut self, width: impl ToF32) -> &mut Self {
         self.base_view_mut().border_width = width.to_f32();
+        self
+    }
+
+    fn steal_appearance(&self, other: WeakView) -> &Self {
+        let mut this = self.weak_view();
+        this.set_color(*other.color());
+        this.set_border_color(*other.border_color());
+        this.set_border_width(other.border_width());
+        this.set_corner_radius(other.corner_radius());
         self
     }
 }

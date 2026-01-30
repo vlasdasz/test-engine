@@ -55,7 +55,7 @@ impl<T: Send> UIEvent<T> {
         });
     }
 
-    pub fn unsibscribe<U: ?Sized>(&self, view: Weak<U>) {
+    pub fn unsubscribe<U: ?Sized>(&self, view: Weak<U>) {
         self.unsubscribe.lock().push(view.raw());
     }
 

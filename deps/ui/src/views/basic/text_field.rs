@@ -1,6 +1,6 @@
 use gm::{
     ToF32,
-    color::{BLACK, Color, GRAY, LIGHT_GRAY, LIGHTER_GRAY},
+    color::{BLACK, CLEAR, Color, GRAY, LIGHT_GRAY, LIGHTER_GRAY, WHITE},
 };
 use refs::Weak;
 use ui_proc::view;
@@ -44,7 +44,8 @@ impl Setup for TextField {
         self.placeholding = true;
         self.label.place().back();
         self.label.set_text_color(LIGHTER_GRAY);
-        self.set_color(LIGHT_GRAY);
+        self.label.set_color(CLEAR);
+        self.set_color(WHITE);
 
         self.enable_touch();
     }
@@ -91,8 +92,8 @@ impl Setup for TextField {
             if let Some(string) = UIManager::close_keyboard() {
                 self.set_text(string);
             }
-            UIEvents::keyboard_input().unsibscribe(self);
-            UIEvents::keyboard_key().unsibscribe(self);
+            UIEvents::keyboard_input().unsubscribe(self);
+            UIEvents::keyboard_key().unsubscribe(self);
 
             self.editing_ended.trigger(self.label.text().to_string());
         }

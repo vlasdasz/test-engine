@@ -34,6 +34,16 @@ impl<T> Size<T> {
     }
 }
 
+impl<T: Copy + PartialOrd> Size<T> {
+    pub fn smallest_side(&self) -> T {
+        if self.width < self.height {
+            self.width
+        } else {
+            self.height
+        }
+    }
+}
+
 impl<T: Copy> Size<T> {
     pub const fn as_slice(&self) -> [T; 2] {
         [self.width, self.height]

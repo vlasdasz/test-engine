@@ -1,9 +1,10 @@
+use gm::color::LIGHT_GRAY;
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    Container, Setup,
+    Container, Setup, ViewFrame,
     view::{ViewData, ViewTouch},
 };
 mod test_engine {
@@ -51,11 +52,21 @@ impl Setup for CheckBox {
         self.set_on(false);
 
         self.set_color((39, 53, 73));
-        self.set_border_width(5).set_corner_radius(10);
+        self.set_border_width(2).set_corner_radius(10);
         self.set_border_color((70, 78, 97));
 
-        self.dot.set_color((88, 148, 242)).set_corner_radius(8);
-        self.dot.place().center().relative_size(self, 0.45);
+        self.dot
+            .set_color((88, 148, 242))
+            .set_corner_radius(4)
+            .set_border_width(1.3)
+            .set_border_color(LIGHT_GRAY);
+        self.dot
+            .place()
+            .custom(move |mut c| {
+                let side = self.size().smallest_side() * 0.42;
+                c.set_size(side, side);
+            })
+            .center();
 
         self.touch().up_inside.sub(move || {
             let on = !self.on;

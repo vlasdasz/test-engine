@@ -44,7 +44,7 @@ pub async fn test_color_checker() -> Result<()> {
         Test: Test color checker has failed.
         Color diff is too big: 510. Max: 45. Position: Point { x: 90.0, y: 214.0 }.
         Expected: r: 0, g: 0, b: 255, a: 255, got: r: 0, g: 255, b: 0, a: 255.
-          90  214 -   0   0 255",
+          90  214 -   0   0 255 ->   0 255   0",
         error
     );
 

@@ -34,12 +34,15 @@ pub(super) fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Co
         Test: {test_name} has failed.
         Color diff is too big: {diff}. Max: {max_diff}. Position: {pos:?}.
         Expected: {color}, got: {pixel}.
-        {:>4} {:>4} - {:>3} {:>3} {:>3}",
+        {:>4} {:>4} - {:>3} {:>3} {:>3} -> {:>3} {:>3} {:>3}",
             pos.x,
             pos.y,
             color.r,
             color.g,
-            color.b
+            color.b,
+            pixel.r,
+            pixel.g,
+            pixel.b,
         )
     }
 
