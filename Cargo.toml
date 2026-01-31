@@ -29,7 +29,7 @@ arbitrary = { version = "1.4", features = ["derive"] }
 async-std = "1.13"
 atomic_float = "1.1"
 bit_ops = "0.2"
-bytemuck = { version = "1.24", features = ["derive"] }
+bytemuck = { version = "1.25", features = ["derive"] }
 cgmath = "0.18"
 chrono = "0.4"
 console_error_panic_hook = "0.1"

@@ -1,6 +1,6 @@
 use gm::{
     ToF32,
-    color::{BLACK, CLEAR, Color, GRAY, LIGHT_GRAY, LIGHTER_GRAY, WHITE},
+    color::{BLACK, CLEAR, Color, GRAY, LIGHTER_GRAY, WHITE},
 };
 use refs::Weak;
 use ui_proc::view;
@@ -25,10 +25,11 @@ mod test_engine {
 pub struct TextField {
     pub(crate) constraint: Option<TextFieldConstraint>,
 
-    placeholder:  String,
-    text_color:   Color,
-    placeholding: bool,
-    is_editing:   bool,
+    placeholder:      String,
+    text_color:       Color,
+    background_color: Color,
+    placeholding:     bool,
+    is_editing:       bool,
 
     pub changed: Event<String>,
 
@@ -98,7 +99,14 @@ impl Setup for TextField {
             self.editing_ended.trigger(self.label.text().to_string());
         }
 
-        self.label.set_color(if selected { GRAY } else { LIGHT_GRAY });
+        let color = if selected {
+            self.background_color = *self.color();
+            GRAY
+        } else {
+            self.background_color
+        };
+
+        self.set_color(color);
     }
 }
 
