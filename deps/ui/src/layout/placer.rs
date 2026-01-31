@@ -45,6 +45,10 @@ impl Placer {
         }
     }
 
+    pub fn view(&self) -> WeakView {
+        self.view.weak_view()
+    }
+
     pub fn is_empty(&self) -> bool {
         self.rules.borrow().is_empty() && self.all_tiling_rules.borrow().is_empty()
     }
@@ -480,7 +484,13 @@ impl Placer {
         let side = rule.side.as_ref().expect("Reached side layout with no side rule");
 
         match side {
-            Anchor::Top => frame.origin.y = rule.offset,
+            Anchor::Top => {
+                if !has.height {
+                    frame.size.height = frame.max_y() - rule.offset;
+                }
+
+                frame.origin.y = rule.offset;
+            }
             Anchor::Bot => {
                 if has.height {
                     frame.origin.y = s_content.height - frame.height() - rule.offset;
