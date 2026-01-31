@@ -498,7 +498,13 @@ impl Placer {
                     frame.size.height = frame.height() + s_content.height - frame.max_y() - rule.offset;
                 }
             }
-            Anchor::Left => frame.origin.x = rule.offset,
+            Anchor::Left => {
+                if !has.width {
+                    frame.size.width = frame.max_x() - rule.offset;
+                }
+
+                frame.origin.x = rule.offset;
+            }
             Anchor::Right => {
                 if has.width {
                     frame.origin.x = s_content.width - frame.width() - rule.offset;

@@ -1,4 +1,4 @@
-use gm::color::{GRAY, RED, WHITE};
+use gm::color::{Color, GRAY, RED, U8Color, WHITE};
 use refs::Weak;
 use ui::{Anchor, Container, HasText, Label, Setup, ViewData, ViewSubviews};
 use ui_proc::view;
@@ -36,12 +36,13 @@ impl AnchorView {
     #[allow(clippy::match_same_arms)]
     fn update_anchor(mut self: Weak<Self>) {
         const RATIO: f32 = 0.1;
+        const LINE_COLOR: U8Color = U8Color::const_rgb(250, 68, 68);
 
         self.remove_all_subviews();
 
         let mut hor_line = move || {
             self.add_view::<Container>()
-                .set_color(RED)
+                .set_color(LINE_COLOR)
                 .place()
                 .lr(BORDER_WIDTH)
                 .relative_height(self, RATIO)
@@ -51,7 +52,7 @@ impl AnchorView {
 
         let mut ver_line = move || {
             self.add_view::<Container>()
-                .set_color(RED)
+                .set_color(LINE_COLOR)
                 .place()
                 .tb(BORDER_WIDTH)
                 .relative_width(self, RATIO)
@@ -59,9 +60,20 @@ impl AnchorView {
                 .view()
         };
 
+        let mut smol_top = move || {
+            self.add_view::<Container>()
+                .set_color(LINE_COLOR)
+                .set_corner_radius(1)
+                .place()
+                .t(BORDER_WIDTH)
+                .relative_width(self, RATIO * 3.0)
+                .relative_height(self, RATIO)
+                .center_x();
+        };
+
         let mut smol_bot = move || {
             self.add_view::<Container>()
-                .set_color(RED)
+                .set_color(LINE_COLOR)
                 .set_corner_radius(1)
                 .place()
                 .b(BORDER_WIDTH)
@@ -70,19 +82,20 @@ impl AnchorView {
                 .center_x();
         };
 
-        let mut width = move || {
-            hor_line();
+        let mut smol_l = move || {
             self.add_view::<Container>()
-                .set_color(RED)
+                .set_color(LINE_COLOR)
                 .set_corner_radius(1)
                 .place()
                 .l(BORDER_WIDTH)
                 .relative_height(self, RATIO * 3.0)
                 .relative_width(self, RATIO)
                 .center_y();
+        };
 
+        let mut smol_r = move || {
             self.add_view::<Container>()
-                .set_color(RED)
+                .set_color(LINE_COLOR)
                 .set_corner_radius(1)
                 .place()
                 .r(BORDER_WIDTH)
@@ -91,18 +104,15 @@ impl AnchorView {
                 .center_y();
         };
 
+        let mut width = move || {
+            hor_line();
+            smol_l();
+            smol_r();
+        };
+
         let mut height = move || {
             ver_line();
-
-            self.add_view::<Container>()
-                .set_color(RED)
-                .set_corner_radius(1)
-                .place()
-                .t(BORDER_WIDTH)
-                .relative_width(self, RATIO * 3.0)
-                .relative_height(self, RATIO)
-                .center_x();
-
+            smol_top();
             smol_bot();
         };
 
@@ -126,7 +136,6 @@ impl AnchorView {
                 hor_line();
                 smol_bot();
                 ver_line().place().t(20);
-                // view.place().rbl(0).relative_height(self, RATIO);
             }
             Anchor::Left => {
                 ver_line();
@@ -134,7 +143,8 @@ impl AnchorView {
             }
             Anchor::Right => {
                 ver_line();
-                // view.place().trb(0).relative_width(self, RATIO);
+                hor_line().place().l(20);
+                smol_r();
             }
             Anchor::Width => width(),
             Anchor::Height => height(),
