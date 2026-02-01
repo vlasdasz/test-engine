@@ -1,4 +1,4 @@
-use gm::color::{Color, GRAY, RED, U8Color, WHITE};
+use gm::color::{GRAY, U8Color, WHITE};
 use refs::Weak;
 use ui::{Anchor, Container, HasText, Label, Setup, ViewData, ViewSubviews};
 use ui_proc::view;
@@ -34,6 +34,7 @@ impl AnchorView {
 
 impl AnchorView {
     #[allow(clippy::match_same_arms)]
+    #[allow(clippy::too_many_lines)] 
     fn update_anchor(mut self: Weak<Self>) {
         const RATIO: f32 = 0.1;
         const LINE_COLOR: U8Color = U8Color::const_rgb(250, 68, 68);
@@ -130,7 +131,8 @@ impl AnchorView {
         match self.anchor {
             Anchor::Top => {
                 hor_line();
-                // view.place().ltr(0).relative_height(self, RATIO);
+                smol_top();
+                ver_line().place().b(20);
             }
             Anchor::Bot => {
                 hor_line();
@@ -139,7 +141,8 @@ impl AnchorView {
             }
             Anchor::Left => {
                 ver_line();
-                // view.place().tlb(0).relative_width(self, RATIO);
+                smol_l();
+                hor_line().place().r(20);
             }
             Anchor::Right => {
                 ver_line();
@@ -160,7 +163,14 @@ impl AnchorView {
             Anchor::MinHeight => {}
             Anchor::CenterX => {}
             Anchor::CenterY => {}
-            Anchor::Center => {}
+            Anchor::Center => {
+                self.add_view::<Container>()
+                    .set_color(LINE_COLOR)
+                    .set_corner_radius(2)
+                    .place()
+                    .center()
+                    .relative_size(self, RATIO * 1.5);
+            }
             Anchor::X => {}
             Anchor::Y => {}
             Anchor::None => {}

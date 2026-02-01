@@ -27,6 +27,7 @@ pub struct TextField {
 
     placeholder:      String,
     text_color:       Color,
+    selected_color:   Color,
     background_color: Color,
     placeholding:     bool,
     is_editing:       bool,
@@ -42,6 +43,7 @@ pub struct TextField {
 impl Setup for TextField {
     fn setup(mut self: Weak<Self>) {
         self.text_color = BLACK;
+        self.selected_color = GRAY;
         self.placeholding = true;
         self.label.place().back();
         self.label.set_text_color(LIGHTER_GRAY);
@@ -101,7 +103,7 @@ impl Setup for TextField {
 
         let color = if selected {
             self.background_color = *self.color();
-            GRAY
+            self.selected_color
         } else {
             self.background_color
         };
@@ -163,6 +165,12 @@ impl TextField {
 
     pub fn integer_only(&mut self) -> &mut Self {
         self.constraint = TextFieldConstraint::Integer.into();
+        self
+    }
+
+    pub fn set_selected_color(&mut self, color: impl Into<Color>) -> &mut Self {
+        let color = color.into();
+        self.selected_color = color;
         self
     }
 

@@ -21,7 +21,7 @@ impl Setup for PlacerViewTest {
         self.placer_view.set_size(200, 800);
 
         self.view.set_color(TURQUOISE);
-        self.view.place().r(100).b(100).size(80, 200);
+        self.view.place().center().size(80, 200);
     }
 }
 
