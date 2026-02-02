@@ -1,11 +1,11 @@
 use std::{
-    cell::{Ref, RefCell, RefMut},
+    cell::{Ref, RefMut},
     fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
     sync::Arc,
 };
 
-use gm::{LossyConvert, ToF32, axis::Axis, flat::Size};
+use gm::{LossyConvert, RefCell, ToF32, axis::Axis, flat::Size};
 use parking_lot::Mutex;
 use refs::{Rglica, ToRglica, Weak};
 
@@ -41,7 +41,7 @@ impl Placer {
             s_content:        Rglica::default(),
             all_margin:       RefCell::new(0.0),
             has:              RefCell::new(Size::default()),
-            custom:           None.into(),
+            custom:           RefCell::new(None),
         }
     }
 
