@@ -34,7 +34,7 @@ impl AnchorView {
 
 impl AnchorView {
     #[allow(clippy::match_same_arms)]
-    #[allow(clippy::too_many_lines)] 
+    #[allow(clippy::too_many_lines)]
     fn update_anchor(mut self: Weak<Self>) {
         const RATIO: f32 = 0.1;
         const LINE_COLOR: U8Color = U8Color::const_rgb(250, 68, 68);
