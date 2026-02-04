@@ -1,4 +1,4 @@
-use std::{fs::read, path::Path};
+use std::{convert::Infallible, fs::read, path::Path};
 
 use anyhow::Result;
 use gm::flat::Size;
@@ -57,13 +57,12 @@ impl Image {
         let name = name.into();
         let texture = Texture::from_raw_data(data, size, channels, &name);
         let image = Self::from_texture(&texture);
-        Image::add_with_name(&name, || image)
+        Image::store_with_name::<Infallible>(&name, || Ok(image)).unwrap()
     }
 
     pub fn from_file_data(data: &[u8], name: &str) -> Weak<Image> {
-        Image::add_with_name(name, || {
-            Self::load_to_wgpu(name, data).unwrap_or_else(|_| panic!("Failed to load image {name} to wgpu"))
-        })
+        Image::store_with_name(name, || Self::load_to_wgpu(name, data))
+            .expect("Failed to load image from data")
     }
 
     pub fn is_monochrome(&self) -> bool {

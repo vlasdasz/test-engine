@@ -60,7 +60,7 @@ sentry = { version = "0.46", default-features = false, features = ["reqwest", "r
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 syn = { version = "2.0", features = ["full", "extra-traits"] }
-tiny-skia = "0.11"
+tiny-skia = "0.12"
 tokio = { version = "1.49", features = ["full"] }
 usvg = "0.46"
 wasm-bindgen-futures = "0.4"
@@ -77,7 +77,8 @@ netrun = "0.25"
 #netrun = { path = "../deps/netrun/netrun" }
 plat = "0.6"
 reflected = "0.29"
-refs = { version = "0.32", default-features = true }
+refs = { version = "0.33", default-features = true }
+#refs = { path = "../deps/refs/refs" }
 vents = "0.14"
 
 audio = { path = "deps/audio" }

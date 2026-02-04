@@ -111,6 +111,10 @@ pub struct TestGameView {
 }
 
 impl Setup for TestGameView {
+    fn inspect(self: Weak<Self>) {
+        dbg!("Test game view is: OK");
+    }
+
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();

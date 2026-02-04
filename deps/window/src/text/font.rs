@@ -44,9 +44,10 @@ impl Font {
 impl Font {
     #[allow(clippy::should_implement_trait)]
     pub fn default() -> Weak<Font> {
-        Self::add_with_name("default", || {
-            Self::new("Helvetica.ttf", include_bytes!("fonts/Helvetica.ttf")).unwrap()
+        Self::store_with_name("default", || {
+            Self::new("Helvetica.ttf", include_bytes!("fonts/Helvetica.ttf"))
         })
+        .expect("Failed to load default font")
     }
 }
 

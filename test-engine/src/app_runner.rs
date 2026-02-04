@@ -10,7 +10,7 @@ use level::{LevelBase, LevelManager};
 use log::debug;
 use parking_lot::Mutex;
 use refs::{Own, main_lock::MainLock};
-use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData};
+use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewSubviews, WeakView};
 use vents::OnceEvent;
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
@@ -254,6 +254,17 @@ impl window::WindowEvents for AppRunner {
                     crate::inspect::InspectService::start_listening();
                 }
             }
+
+            UIManager::keymap().add(UIManager::root_view(), 'i', || {
+                fn call_inspect(mut view: WeakView) {
+                    view.__internal_inspect();
+                    for sub in view.subviews() {
+                        call_inspect(sub.weak());
+                    }
+                }
+
+                call_inspect(UIManager::root_view());
+            });
 
             self.app.after_launch();
 

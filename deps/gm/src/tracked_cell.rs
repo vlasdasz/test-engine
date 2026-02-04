@@ -19,33 +19,27 @@ impl<T> TrackedCell<T> {
 
     #[track_caller]
     pub fn borrow(&self) -> Ref<'_, T> {
-        match self.inner.try_borrow() {
-            Ok(b) => {
-                *self.borrowed_at.borrow_mut() = Some(Location::caller());
-                b
-            }
-            Err(_) => {
-                let loc = self.borrowed_at.borrow().unwrap();
-                panic!("Already borrowed at: {}:{}", loc.file(), loc.line());
-            }
+        if let Ok(b) = self.inner.try_borrow() {
+            *self.borrowed_at.borrow_mut() = Some(Location::caller());
+            b
+        } else {
+            let loc = self.borrowed_at.borrow().unwrap();
+            panic!("Already borrowed at: {}:{}", loc.file(), loc.line());
         }
     }
 
     #[track_caller]
     pub fn borrow_mut(&self) -> RefMut<'_, T> {
-        match self.inner.try_borrow_mut() {
-            Ok(b) => {
-                *self.borrowed_at.borrow_mut() = Some(Location::caller());
-                b
-            }
-            Err(_) => {
-                let loc = self.borrowed_at.borrow().expect("Unknown location");
-                panic!(
-                    "Conflicting borrow! Already borrowed at: {}:{}",
-                    loc.file(),
-                    loc.line()
-                );
-            }
+        if let Ok(b) = self.inner.try_borrow_mut() {
+            *self.borrowed_at.borrow_mut() = Some(Location::caller());
+            b
+        } else {
+            let loc = self.borrowed_at.borrow().expect("Unknown location");
+            panic!(
+                "Conflicting borrow! Already borrowed at: {}:{}",
+                loc.file(),
+                loc.line()
+            );
         }
     }
 }
@@ -56,7 +50,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[should_panic(expected = "Conflicting borrow! Already borrowed at: deps/gm/src/tracked_cell.rs:63")]
+    #[should_panic(expected = "Conflicting borrow! Already borrowed at: deps/gm/src/tracked_cell.rs:57")]
     fn test_tracked_cell() {
         let cell = TrackedCell::new(5);
 

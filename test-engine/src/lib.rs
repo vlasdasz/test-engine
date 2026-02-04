@@ -60,6 +60,8 @@ pub mod store {
 
 pub mod filesystem {
     pub use filesystem::Paths;
+
+    pub use crate::assets::Assets;
 }
 
 pub mod time {

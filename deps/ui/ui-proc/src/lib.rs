@@ -104,6 +104,12 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 self.__after_setup_event().trigger(());
             }
 
+            fn __internal_inspect(&mut self) {
+                use test_engine::ui::Setup;
+                let mut weak = test_engine::refs::weak_from_ref(self);
+                weak.inspect();
+            }
+
             fn __internal_on_selection_changed(&mut self, selected: bool) {
                 use test_engine::ui::Setup;
                 let mut weak = test_engine::refs::weak_from_ref(self);
