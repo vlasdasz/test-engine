@@ -35,7 +35,7 @@ impl LevelDrawer {
         if level.background.is_ok() {
             BACKGROUND.get_mut().draw(
                 pass,
-                level.background.get_static(),
+                unsafe { level.background.get_static() },
                 resolution,
                 camera_pos.neg() / 10.0,
                 0.0,

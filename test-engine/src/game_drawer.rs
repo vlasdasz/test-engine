@@ -16,7 +16,7 @@ impl GameDrawer {
 
         BACKGROUND.get_mut().draw(
             pass,
-            game.background.get_static(),
+            unsafe { game.background.get_static() },
             UIManager::window_resolution(),
             Point::default(),
             0.0,

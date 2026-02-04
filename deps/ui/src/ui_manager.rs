@@ -283,9 +283,8 @@ impl UIManager {
         let mut root = UIManager::root_view();
         root.clear_root();
         let view = root.add_subview_to_root(view);
-        if view.place().is_empty() {
-            view.place().back();
-        }
+        view.place().back();
+
         weak
     }
 }
