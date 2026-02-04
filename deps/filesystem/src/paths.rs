@@ -62,4 +62,19 @@ impl Paths {
     pub fn set_storage_path(path: String) {
         STORAGE_PATH.lock().replace(path);
     }
+
+    pub async fn pick_folder() -> Option<PathBuf> {
+        #[cfg(any(not_wasm, not_ios, not_android))]
+        {
+            use rfd::AsyncFileDialog;
+
+            let handle = AsyncFileDialog::new()
+                .set_title("Select Directory")
+                .set_directory("~")
+                .pick_folder()
+                .await?;
+
+            Some(handle.path().to_owned())
+        }
+    }
 }

@@ -9,6 +9,7 @@ dirs = { workspace = true }
 log = { workspace = true }
 parking_lot = { workspace = true }
 plat = { workspace = true }
+rfd = { workspace = true }
 
 [build-dependencies]
 plat = { workspace = true }

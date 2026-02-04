@@ -4,13 +4,14 @@ use test_engine::{
     AppRunner, Event,
     audio::Sound,
     dispatch::{after, on_main},
+    filesystem::Paths,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::{DataManager, Weak},
     store::OnDisk,
     ui::{
-        Alert, Anchor,
-        Anchor::{Height, Left, Top, Width, X, Y},
+        Alert,
+        Anchor::{self, Height, Left, Top, Width, X, Y},
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
         MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
         SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
@@ -86,8 +87,9 @@ pub struct TestGameView {
 
     render: Button,
 
-    benchmark:  Button,
-    test_level: Button,
+    benchmark:   Button,
+    test_level:  Button,
+    pick_folder: Button,
 
     add_box: Button,
 
@@ -291,6 +293,14 @@ impl Setup for TestGameView {
         self.test_level.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
+        });
+
+        self.pick_folder.set_text("pick folder");
+        self.pick_folder.place().at_right(self.test_level, 10);
+        self.pick_folder.on_tap(|| {
+            test_engine::dispatch::spawn(async {
+                Alert::show(format!("{:?}", Paths::pick_folder().await));
+            });
         });
 
         self.ui_bench.set_text("ui bench");
