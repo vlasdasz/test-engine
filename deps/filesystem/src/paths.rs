@@ -1,6 +1,5 @@
 use std::{path::PathBuf, process::Command};
 
-use dirs::home_dir;
 use log::warn;
 use parking_lot::Mutex;
 use plat::Platform;
@@ -10,22 +9,28 @@ static STORAGE_PATH: Mutex<Option<String>> = Mutex::new(None);
 pub struct Paths;
 
 impl Paths {
-    pub fn storage() -> PathBuf {
-        #[cfg(target_arch = "wasm32")]
-        {
-            return PathBuf::default();
-        }
-
-        let home = if Platform::IOS {
+    pub fn home() -> PathBuf {
+        if Platform::IOS {
             dirs::document_dir()
         } else if Platform::ANDROID {
             STORAGE_PATH.lock().clone().map(PathBuf::from)
         } else {
             dirs::home_dir()
         }
-        .expect("Failed to get home directory");
+        .expect("Failed to get home directory")
+    }
 
-        format!("{}/.{}", home.display(), Self::executable_name()).into()
+    pub fn config() -> PathBuf {
+        Self::home().join(".config")
+    }
+
+    pub fn storage() -> PathBuf {
+        #[cfg(target_arch = "wasm32")]
+        {
+            return PathBuf::default();
+        }
+
+        format!("{}/.{}", Self::home().display(), Self::executable_name()).into()
     }
 
     pub fn executable_name() -> String {
@@ -35,10 +40,6 @@ impl Paths {
             .expect("Failed to get executable name")
             .to_string_lossy()
             .into()
-    }
-
-    pub fn home() -> PathBuf {
-        home_dir().unwrap()
     }
 
     pub fn git_root() -> anyhow::Result<PathBuf> {
