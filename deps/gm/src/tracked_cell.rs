@@ -3,7 +3,7 @@ use std::{
     panic::Location,
 };
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone)]
 pub struct TrackedCell<T> {
     inner:       RefCell<T>,
     borrowed_at: RefCell<Option<&'static Location<'static>>>,
@@ -41,6 +41,12 @@ impl<T> TrackedCell<T> {
                 loc.line()
             );
         }
+    }
+}
+
+impl<T: PartialEq> PartialEq for TrackedCell<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.borrow().eq(&other.borrow())
     }
 }
 

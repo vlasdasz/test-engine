@@ -1,5 +1,6 @@
 use anyhow::Result;
 use inspect::ui::ViewRepr;
+use pretty_assertions::assert_eq;
 use test_engine::{
     dispatch::from_main,
     inspect::ViewToInspect,

@@ -34,7 +34,7 @@ pub(crate) async fn test_placer_view() -> Result<()> {
         view.placer_view.set_placer("sokol", &view.view.place());
     });
 
-    test_engine::ui_test::record_ui_test();
+    // test_engine::ui_test::record_ui_test();
 
     from_main(|| {
         test_engine::ui::UIManager::override_scale(1.0);
