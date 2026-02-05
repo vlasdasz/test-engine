@@ -10,5 +10,5 @@ mod app;
 mod ui;
 
 fn main() {
-    InspectorApp::new().start();
+    InspectorApp::start();
 }
