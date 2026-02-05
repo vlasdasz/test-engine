@@ -4471,9 +4471,9 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.35.0"
+version = "0.37.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "375f131a85efd3cc8aba54bd83a889f41db7aa73127986afb3b8fab89c652b18"
+checksum = "b0dc768b2f20fefd9e97ba9dafe9aff4ca6a9e5639b2ed42d096fe2af93433a9"
 dependencies = [
  "derive_more",
  "hreads",

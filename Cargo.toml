@@ -2,15 +2,15 @@
 
 default-members = ["test-game"]
 members = [
-  "deps/ui/ui-proc-test",
-  "fuzz",
-  "inspector",
-  "render-test",
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "ui-benchmark",
-  "ui-test",
+    "deps/ui/ui-proc-test",
+    "fuzz",
+    "inspector",
+    "render-test",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "ui-benchmark",
+    "ui-test",
 ]
 
 resolver = "3"
@@ -58,7 +58,10 @@ rapier2d = { version = "0.31", features = ["simd-nightly"] }
 resvg = "0.46"
 rfd = "0.17"
 rust_decimal = "1.40"
-sentry = { version = "0.46", default-features = false, features = ["reqwest", "rustls"] }
+sentry = { version = "0.46", default-features = false, features = [
+    "reqwest",
+    "rustls",
+] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 syn = { version = "2.0", features = ["extra-traits", "full"] }
@@ -79,7 +82,9 @@ netrun = "0.25"
 #netrun = { path = "../deps/netrun/netrun" }
 plat = "0.7"
 reflected = "0.29"
-refs = { version = "0.35", default-features = true }
+refs = { version = "0.37", default-features = true, features = [
+    "pointers_info",
+] }
 # refs = { path = "../deps/refs/refs" }
 vents = "0.14"
 
