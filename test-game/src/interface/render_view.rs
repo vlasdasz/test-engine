@@ -13,7 +13,7 @@ pub struct RenderView {
 }
 
 impl Setup for RenderView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.val.set_step(0.1).place().size(50, 100).bl(0);
 
         self.apply_style(HAS_BACK_BUTTON);

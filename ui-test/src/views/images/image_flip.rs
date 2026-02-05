@@ -21,9 +21,12 @@ impl Setup for ImageFlip {
         });
 
         self.tl.set_frame((50, 50, 150, 150));
-        self.tr.set_frame((250, 50, 150, 150)).flip_x = true;
-        self.bl.set_frame((50, 250, 150, 150)).flip_y = true;
-        self.br.set_frame((250, 250, 150, 150)).flip_x = true;
+        self.tr.set_frame((250, 50, 150, 150));
+        self.tr.flip_x = true;
+        self.bl.set_frame((50, 250, 150, 150));
+        self.bl.flip_y = true;
+        self.br.set_frame((250, 250, 150, 150));
+        self.br.flip_x = true;
         self.br.flip_y = true;
     }
 }

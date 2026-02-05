@@ -13,7 +13,7 @@ use test_engine::{
 struct ShowModally {}
 
 impl Setup for ShowModally {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         let mut view = WeakView::default();
 
         for _ in 0..200 {
@@ -40,7 +40,7 @@ struct Modal {
 }
 
 impl Setup for Modal {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.label.place().back();
         self.label.set_text_size(100);
         self.label.set_text("Hello");

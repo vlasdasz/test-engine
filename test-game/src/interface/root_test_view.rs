@@ -16,7 +16,7 @@ pub struct RootTestView {
 }
 
 impl Setup for RootTestView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         UIManager::enable_debug_frames();
         UIManager::root_view().set_image("square.png");
 

@@ -26,7 +26,7 @@ impl Setup for TextField {
 }
 
 pub async fn test_text_field() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<TextField>();
+    let view = UIDrawer::init_test_view::<TextField>();
 
     AppRunner::set_window_size((800, 800));
 

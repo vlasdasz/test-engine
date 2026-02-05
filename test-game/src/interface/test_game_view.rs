@@ -155,7 +155,7 @@ impl Setup for TestGameView {
         self.sys_info.set_text("system");
         self.sys_info.place().below(self.ip, 10);
         self.sys_info.on_tap(|| {
-            Alert::with_label(|mut l| {
+            Alert::with_label(|l| {
                 l.set_text_size(15);
             })
             .show(netrun::System::get_info().dump());

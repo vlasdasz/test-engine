@@ -12,7 +12,7 @@ struct ButtonPress {
 }
 
 impl Setup for ButtonPress {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.button.place().size(100, 50).t(25).l(50);
         self.button.set_text("Button text");
 

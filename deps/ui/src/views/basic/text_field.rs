@@ -2,7 +2,7 @@ use gm::{
     ToF32,
     color::{BLACK, CLEAR, Color, GRAY, LIGHTER_GRAY, WHITE},
 };
-use refs::Weak;
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 use window::NamedKey;
@@ -122,15 +122,15 @@ impl TextField {
         self.label.text()
     }
 
-    pub fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
+    pub fn set_text(&self, text: impl ToLabel) -> &Self {
         let text = self.filter_constraint(text);
 
         if text.is_empty() && !self.placeholder.is_empty() {
-            self.placeholding = true;
+            weak_from_ref(self).placeholding = true;
             self.label.set_text(self.placeholder.clone());
             self.label.set_text_color(LIGHTER_GRAY);
         } else {
-            self.placeholding = false;
+            weak_from_ref(self).placeholding = false;
             self.label.set_text(&text);
             self.label.set_text_color(self.text_color);
         }
@@ -143,7 +143,7 @@ impl TextField {
         self.is_editing
     }
 
-    pub fn clear(&mut self) -> &mut Self {
+    pub fn clear(&self) -> &Self {
         self.set_text("")
     }
 
@@ -151,7 +151,7 @@ impl TextField {
         self.label.text().is_empty()
     }
 
-    fn filter_constraint(&mut self, text: impl ToLabel) -> String {
+    fn filter_constraint(&self, text: impl ToLabel) -> String {
         match &self.constraint {
             Some(constraint) => constraint.filter(text),
             None => text.to_label(),
@@ -163,25 +163,25 @@ impl TextField {
         self
     }
 
-    pub fn integer_only(&mut self) -> &mut Self {
-        self.constraint = TextFieldConstraint::Integer.into();
+    pub fn integer_only(&self) -> &Self {
+        weak_from_ref(self).constraint = TextFieldConstraint::Integer.into();
         self
     }
 
-    pub fn set_selected_color(&mut self, color: impl Into<Color>) -> &mut Self {
+    pub fn set_selected_color(&self, color: impl Into<Color>) -> &Self {
         let color = color.into();
-        self.selected_color = color;
+        weak_from_ref(self).selected_color = color;
         self
     }
 
-    pub fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+    pub fn set_text_color(&self, color: impl Into<Color>) -> &Self {
         let color = color.into();
-        self.text_color = color;
+        weak_from_ref(self).text_color = color;
         self.label.set_text_color(color);
         self
     }
 
-    pub fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
+    pub fn set_text_size(&self, size: impl ToF32) -> &Self {
         self.label.set_text_size(size);
         self
     }

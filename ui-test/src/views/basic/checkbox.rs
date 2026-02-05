@@ -12,7 +12,7 @@ struct CheckBoxTestView {
 }
 
 impl Setup for CheckBoxTestView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.checkbox.set_frame((50, 50, 50, 50));
     }
 }

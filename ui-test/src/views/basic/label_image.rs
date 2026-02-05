@@ -23,7 +23,7 @@ struct LabelImage {
 }
 
 impl Setup for LabelImage {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.label.set_text("ßšėčыў").set_text_size(110).set_image("cat.png");
         self.label.place().tl(50).w(400).h(200);
 

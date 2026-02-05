@@ -15,7 +15,7 @@ pub struct ViewOrder {
 }
 
 impl Setup for ViewOrder {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.view_1.set_color(RED).place().size(200, 200);
         self.view_2.set_color(GREEN).place().size(200, 200).tl(100);
         self.view_3.set_color(BLUE).place().size(200, 200).tl(200);

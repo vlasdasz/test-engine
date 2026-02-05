@@ -31,7 +31,7 @@ impl Setup for RelativeLayout {
 }
 
 pub async fn test_relative_layout() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<RelativeLayout>();
+    let view = UIDrawer::init_test_view::<RelativeLayout>();
 
     check_colors(
         r#"

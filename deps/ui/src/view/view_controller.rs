@@ -34,7 +34,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
     }
 
     /// Present new view replacing and deallocating current one
-    fn present(mut self: Weak<Self>, mut view: Own<dyn View>) -> Receiver<()> {
+    fn present(mut self: Weak<Self>, view: Own<dyn View>) -> Receiver<()> {
         let touch_lock = Touch::lock();
 
         let (se, rc) = channel();

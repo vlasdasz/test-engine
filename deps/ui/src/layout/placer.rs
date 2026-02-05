@@ -358,6 +358,10 @@ impl Placer {
         self.l(offset).r(offset).t(offset)
     }
 
+    pub fn tlr(&self, offset: impl ToF32) -> &Self {
+        self.t(offset).l(offset).r(offset)
+    }
+
     pub fn ltr(&self, offset: impl ToF32) -> &Self {
         self.l(offset).r(offset).t(offset)
     }
@@ -719,7 +723,7 @@ fn place_horizontally(views: Vec<WeakView>, margin: f32) {
 }
 
 fn distribute<const AXIS: Axis>(mut views: Vec<WeakView>, margin: f32) {
-    let Some(mut last) = views.last_mut().map(|v| v.weak_view()) else {
+    let Some(last) = views.last_mut().map(|v| v.weak_view()) else {
         return;
     };
 
@@ -754,7 +758,7 @@ fn distribute<const AXIS: Axis>(mut views: Vec<WeakView>, margin: f32) {
     }
 }
 
-fn distribute_with_ratio(size: Size, mut views: Vec<WeakView>, ratios: &[f32]) {
+fn distribute_with_ratio(size: Size, views: Vec<WeakView>, ratios: &[f32]) {
     let total_ratio = 1.0 / ratios.iter().sum::<f32>();
 
     for i in 0..ratios.len() {

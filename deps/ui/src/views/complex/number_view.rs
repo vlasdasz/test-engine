@@ -2,7 +2,7 @@ use gm::{
     CheckedSub, MyAdd, ToF32,
     color::{CLEAR, Color, LIGHT_GRAY},
 };
-use refs::Weak;
+use refs::{Weak, weak_from_ref};
 use vents::Event;
 
 use crate::{Button, Container, HasText, Setup, Style, ToLabel, UIImages, view::ViewData};
@@ -72,30 +72,30 @@ impl NumberView {
         self.value
     }
 
-    pub fn set_value(&mut self, val: impl ToF32) -> &mut Self {
-        self.value = val.to_f32();
+    pub fn set_value(&self, val: impl ToF32) -> &Self {
+        weak_from_ref(self).value = val.to_f32();
         self.on_change_event.trigger(self.value);
         self
     }
 
-    pub fn set_min(&mut self, min: impl ToF32) -> &mut Self {
-        self.min = min.to_f32();
+    pub fn set_min(&self, min: impl ToF32) -> &Self {
+        weak_from_ref(self).min = min.to_f32();
         self.set_value(self.min);
         self
     }
 
-    pub fn set_step(&mut self, step: impl ToF32) -> &mut Self {
-        self.step = step.to_f32();
+    pub fn set_step(&self, step: impl ToF32) -> &Self {
+        weak_from_ref(self).step = step.to_f32();
         self
     }
 
-    fn up_tap(mut self: Weak<Self>) {
+    fn up_tap(self: Weak<Self>) {
         let val = self.value.my_add(&self.step);
         self.set_value(val);
         self.up_event.trigger(());
     }
 
-    fn down_tap(mut self: Weak<Self>) {
+    fn down_tap(self: Weak<Self>) {
         let val = self.value.sub_and_check(&self.step, &self.min);
         self.set_value(val.unwrap_or(0.0));
         self.down_event.trigger(());
@@ -122,7 +122,7 @@ impl HasText for NumberView {
         todo!()
     }
 
-    fn set_text(&mut self, _text: impl ToLabel) -> &mut Self {
+    fn set_text(&self, _text: impl ToLabel) -> &Self {
         todo!()
     }
 
@@ -130,7 +130,7 @@ impl HasText for NumberView {
         self.up.text_color()
     }
 
-    fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+    fn set_text_color(&self, color: impl Into<Color>) -> &Self {
         let color = color.into();
         self.up.set_text_color(color);
         self.down.set_text_color(color);
@@ -141,7 +141,7 @@ impl HasText for NumberView {
         self.up.text_size()
     }
 
-    fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
+    fn set_text_size(&self, size: impl ToF32) -> &Self {
         self.up.set_text_size(size);
         self.down.set_text_size(size);
         self

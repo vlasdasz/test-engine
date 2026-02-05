@@ -15,7 +15,7 @@ struct Transition {
 }
 
 impl Setup for Transition {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.to_blue.set_text("To Blue");
         self.to_blue.place().tl(20).size(200, 100);
         self.to_blue.add_transition::<Self, BlueView>();
@@ -32,7 +32,7 @@ impl ViewTransition<BlueView> for Transition {
 struct BlueView {}
 
 impl Setup for BlueView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.set_color(BLUE);
         ACTIONS.lock().push("Blue setup");
     }

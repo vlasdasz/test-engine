@@ -15,19 +15,19 @@ pub struct ValueView {
 }
 
 impl ValueView {
-    pub fn set_title(mut self: Weak<Self>, title: impl ToLabel) -> Weak<Self> {
+    pub fn set_title(self: Weak<Self>, title: impl ToLabel) -> Weak<Self> {
         self.title.set_text(title);
         self
     }
 
-    pub fn set_value(mut self: Weak<Self>, val: f32) {
+    pub fn set_value(self: Weak<Self>, val: f32) {
         self.buttons.set_value(val);
         self.value_label.set_text(val);
     }
 }
 
 impl Setup for ValueView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.place().distribute_ratio([1, 1, 1]);
 
         self.buttons.on_change(move |val| {

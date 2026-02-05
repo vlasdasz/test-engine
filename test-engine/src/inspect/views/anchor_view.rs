@@ -35,13 +35,13 @@ impl AnchorView {
 impl AnchorView {
     #[allow(clippy::match_same_arms)]
     #[allow(clippy::too_many_lines)]
-    fn update_anchor(mut self: Weak<Self>) {
+    fn update_anchor(self: Weak<Self>) {
         const RATIO: f32 = 0.1;
         const LINE_COLOR: U8Color = U8Color::const_rgb(250, 68, 68);
 
         self.remove_all_subviews();
 
-        let mut hor_line = move || {
+        let hor_line = move || {
             self.add_view::<Container>()
                 .set_color(LINE_COLOR)
                 .place()
@@ -51,7 +51,7 @@ impl AnchorView {
                 .view()
         };
 
-        let mut ver_line = move || {
+        let ver_line = move || {
             self.add_view::<Container>()
                 .set_color(LINE_COLOR)
                 .place()
@@ -61,7 +61,7 @@ impl AnchorView {
                 .view()
         };
 
-        let mut smol_top = move || {
+        let smol_top = move || {
             self.add_view::<Container>()
                 .set_color(LINE_COLOR)
                 .set_corner_radius(1)
@@ -72,7 +72,7 @@ impl AnchorView {
                 .center_x();
         };
 
-        let mut smol_bot = move || {
+        let smol_bot = move || {
             self.add_view::<Container>()
                 .set_color(LINE_COLOR)
                 .set_corner_radius(1)
@@ -83,7 +83,7 @@ impl AnchorView {
                 .center_x();
         };
 
-        let mut smol_l = move || {
+        let smol_l = move || {
             self.add_view::<Container>()
                 .set_color(LINE_COLOR)
                 .set_corner_radius(1)
@@ -94,7 +94,7 @@ impl AnchorView {
                 .center_y();
         };
 
-        let mut smol_r = move || {
+        let smol_r = move || {
             self.add_view::<Container>()
                 .set_color(LINE_COLOR)
                 .set_corner_radius(1)
@@ -105,19 +105,19 @@ impl AnchorView {
                 .center_y();
         };
 
-        let mut width = move || {
+        let width = move || {
             hor_line();
             smol_l();
             smol_r();
         };
 
-        let mut height = move || {
+        let height = move || {
             ver_line();
             smol_top();
             smol_bot();
         };
 
-        let mut max = move || {
+        let max = move || {
             self.add_view::<Label>()
                 .set_text("M")
                 .set_text_size(59)
@@ -179,7 +179,7 @@ impl AnchorView {
 }
 
 impl Setup for AnchorView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.set_color(WHITE)
             .set_corner_radius(5)
             .set_border_color(GRAY)

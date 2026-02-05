@@ -42,7 +42,7 @@ pub struct MainScreen {
 }
 
 impl Setup for MainScreen {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.scan.set_text("Scan").place().tl(10).size(100, 50);
         async_link_button!(self.scan, scan_tapped);
 

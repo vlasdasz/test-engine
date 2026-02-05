@@ -22,7 +22,7 @@ impl Setup for OutBounds {
     fn setup(mut self: Weak<Self>) {
         self.test.set_text("AA").set_text_size(100).set_frame((200, 200, 200, 200));
 
-        let mut image = self.test.add_view::<ImageView>();
+        let image = self.test.add_view::<ImageView>();
         image.set_image("cat.png");
         image.place().left_half();
 

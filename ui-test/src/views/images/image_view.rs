@@ -13,7 +13,7 @@ struct ImageView {
 }
 
 impl Setup for ImageView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.enable_touch();
 
         self.image_view.place().tl(100).size(280, 280);

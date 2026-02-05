@@ -20,7 +20,7 @@ struct RestRequest {
 }
 
 impl RestRequest {
-    async fn tapped(mut self: Weak<Self>) -> Result<()> {
+    async fn tapped(self: Weak<Self>) -> Result<()> {
         #[derive(Debug, Deserialize)]
         struct User {}
 
@@ -44,7 +44,7 @@ impl RestRequest {
 }
 
 impl Setup for RestRequest {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         NOT_REQUESTED.store(true, Ordering::Relaxed);
 
         RestAPI::init("https://jsonplaceholder.typicode.com/");

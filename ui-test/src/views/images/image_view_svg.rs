@@ -14,7 +14,7 @@ struct ImageViewSVG {
 }
 
 impl Setup for ImageViewSVG {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.enable_touch();
 
         self.bin.place().tl(5).size(400, 400);
@@ -26,7 +26,7 @@ impl Setup for ImageViewSVG {
 }
 
 pub async fn test_image_view_svg() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<ImageViewSVG>();
+    let view = UIDrawer::init_test_view::<ImageViewSVG>();
 
     check_colors(
         r#"

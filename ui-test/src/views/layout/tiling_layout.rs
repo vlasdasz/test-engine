@@ -14,7 +14,7 @@ struct TilingLayout {
 }
 
 impl Setup for TilingLayout {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.menu.set_color(BLACK).place().tl(20).size(280, 280).all_ver();
 
         self.menu.add_view::<Container>().set_color(RED);
@@ -24,7 +24,7 @@ impl Setup for TilingLayout {
 }
 
 pub async fn test_tiling_layout() -> anyhow::Result<()> {
-    let mut view = UIDrawer::init_test_view::<TilingLayout>();
+    let view = UIDrawer::init_test_view::<TilingLayout>();
 
     check_colors(
         r#"

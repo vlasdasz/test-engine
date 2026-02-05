@@ -13,7 +13,7 @@ const GLOBAL_STYLE: Style = Style::new(|view| {
     view.set_color((175, 129, 115));
     view.set_corner_radius(20);
 
-    if let Some(mut view) = view.downcast_view::<Button>() {
+    if let Some(view) = view.downcast_view::<Button>() {
         view.set_text_color(BLUE);
         view.set_text_size(55);
     }
@@ -28,7 +28,7 @@ struct GlobalStyles {
 }
 
 impl Setup for GlobalStyles {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.button_1.set_text("Button 1").place().t(50).l(50).size(200, 50);
 
         self.button_2.set_text("Button 2");

@@ -11,7 +11,7 @@ const MENU_BUTTON: Style = Style::new(|view| {
     view.set_corner_radius(20);
     view.place().size(280, 100).l(50);
 
-    if let Some(mut view) = view.downcast_view::<Button>() {
+    if let Some(view) = view.downcast_view::<Button>() {
         view.set_text_color(ORANGE);
         view.set_text_size(64);
     }
@@ -26,8 +26,8 @@ struct Styles {
 }
 
 impl Setup for Styles {
-    fn setup(mut self: Weak<Self>) {
-        [self.button_1, self.button_2, self.button_3].apply(|mut button| {
+    fn setup(self: Weak<Self>) {
+        [self.button_1, self.button_2, self.button_3].apply(|button| {
             button.apply_style(MENU_BUTTON);
         });
 

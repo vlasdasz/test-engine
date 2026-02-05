@@ -27,7 +27,7 @@ pub struct HighlightView {
 impl HighlightView {}
 
 impl Setup for HighlightView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         const WIDTH: f32 = 40.0;
 
         self.t.place().lrt(0).h(WIDTH);
@@ -43,7 +43,7 @@ impl HighlightView {
     pub fn set(&mut self, pos: impl Into<Point>, expected: Color, actual: Color) {
         self.set_size(150, 150);
         self.set_center(pos);
-        [self.t, self.b, self.l].apply(|mut v| {
+        [self.t, self.b, self.l].apply(|v| {
             v.set_color(expected);
         });
         self.r.set_color(actual);

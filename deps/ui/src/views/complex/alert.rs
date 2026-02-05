@@ -70,7 +70,7 @@ impl ModalView<String> for Alert {
         (280, 200).into()
     }
 
-    fn setup_input(mut self: Weak<Self>, message: String) {
+    fn setup_input(self: Weak<Self>, message: String) {
         self.label.set_text(message);
     }
 }

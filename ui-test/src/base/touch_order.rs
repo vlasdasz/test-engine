@@ -19,13 +19,13 @@ struct TouchOrder {
 }
 
 impl Setup for TouchOrder {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.view_1.set_color(RED);
         self.view_2.set_color(GREEN).place().tl(50);
         self.view_3.set_color(BLUE).place().tl(100);
         self.view_4.set_color(BLACK).place().tl(150);
 
-        [self.view_1, self.view_2, self.view_3, self.view_4].apply(|mut v| {
+        [self.view_1, self.view_2, self.view_3, self.view_4].apply(|v| {
             v.enable_touch().place().size(200, 200);
             let color = v.color().with_alpha(0.5);
             v.set_color(color);

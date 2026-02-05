@@ -41,7 +41,7 @@ impl TableData for TestTableView {
     }
 
     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        Label::new().after_setup(|mut label| {
+        Label::new().after_setup(|label| {
             label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
             label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
         })

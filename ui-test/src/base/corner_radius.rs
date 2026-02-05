@@ -14,7 +14,7 @@ struct CornerRadius {
 }
 
 impl Setup for CornerRadius {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.square.set_color(BLUE).set_corner_radius(50);
         self.square.place().size(100, 100).tl(50);
 

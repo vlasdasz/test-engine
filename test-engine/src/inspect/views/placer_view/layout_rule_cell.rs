@@ -26,7 +26,7 @@ pub struct LayoutRuleCell {
 
 impl Setup for LayoutRuleCell {
     fn setup(mut self: Weak<Self>) {
-        self.anchor.place().l(5).center_y().custom(move |mut view| {
+        self.anchor.place().l(5).center_y().custom(move |view| {
             let height = self.height() * 0.8;
             view.set_size(height, height);
         });

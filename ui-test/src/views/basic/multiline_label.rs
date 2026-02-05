@@ -13,7 +13,7 @@ struct MultilineLabel {
 }
 
 impl Setup for MultilineLabel {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.label.place().tl(20).size(280, 280);
         self.label.set_text_size(40);
         self.label

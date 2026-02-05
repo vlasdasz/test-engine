@@ -13,7 +13,7 @@ pub struct NoPhysicsView {
 }
 
 impl Setup for NoPhysicsView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         LevelManager::set_level(NoPhysicsLevel::default());
 
         self.back.set_text("Back");

@@ -13,7 +13,7 @@ struct AnchorViewTest {
 }
 
 impl Setup for AnchorViewTest {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.anchor_view.set_frame((50, 50, 200, 200));
         self.anchor_view.set_anchor(Anchor::Top);
     }

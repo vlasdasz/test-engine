@@ -35,7 +35,7 @@ impl Setup for StickView {
 }
 
 pub async fn test_stick() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<StickView>();
+    let view = UIDrawer::init_test_view::<StickView>();
 
     inject_touches(
         r"

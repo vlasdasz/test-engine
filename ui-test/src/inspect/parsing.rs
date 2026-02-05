@@ -14,7 +14,7 @@ struct InspectParsing {
 }
 
 impl Setup for InspectParsing {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.button.place().t(20).l(20).size(100, 100);
         self.button.set_color(BLUE);
     }

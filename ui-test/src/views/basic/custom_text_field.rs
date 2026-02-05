@@ -12,7 +12,7 @@ struct CustomTextField {
 }
 
 impl Setup for CustomTextField {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.field
             .set_text("1.eĘEŠ")
             .set_color(YELLOW)
