@@ -7,7 +7,7 @@ use test_engine::{
     filesystem::Paths,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
-    refs::{DataManager, Weak},
+    refs::{Weak, manage::DataManager},
     store::OnDisk,
     ui::{
         Alert,

@@ -36,7 +36,12 @@ pub mod level {
 }
 
 pub mod refs {
-    pub use refs::{AsAny, Own, Weak, manage::DataManager, vec::OwnVec, weak_from_ref};
+
+    pub mod manage {
+        pub use refs::manage::*;
+    }
+
+    pub use refs::{AsAny, Mutex, MutexGuard, Own, Weak, managed, vec::OwnVec, weak_from_ref};
 }
 
 pub mod reflected {

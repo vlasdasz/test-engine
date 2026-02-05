@@ -376,7 +376,7 @@ dependencies = [
  "kira",
  "log",
  "parking_lot",
- "plat 0.6.0",
+ "plat 0.7.0",
  "refs",
 ]
 
@@ -1503,7 +1503,7 @@ dependencies = [
  "dirs",
  "log",
  "parking_lot",
- "plat 0.6.0",
+ "plat 0.7.0",
  "rfd",
 ]
 
@@ -2507,7 +2507,7 @@ dependencies = [
  "anyhow",
  "gm",
  "netrun",
- "plat 0.6.0",
+ "plat 0.7.0",
  "serde",
  "ui",
 ]
@@ -2706,7 +2706,7 @@ dependencies = [
  "educe",
  "gm",
  "level-proc",
- "plat 0.6.0",
+ "plat 0.7.0",
  "rapier2d",
  "refs",
  "utils",
@@ -3863,6 +3863,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "plat"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dbdf45f6d197d2f33b87da4cb5fa058f0b81e68a99a26c150ba23d5560cadde6"
+dependencies = [
+ "cfg_aliases",
+]
+
+[[package]]
 name = "png"
 version = "0.17.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4446,9 +4455,9 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.34.0"
+version = "0.35.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b6b96c8dd990b11bf4b1996ae4a196b482bfe9186a8536c1cc797321642e5c9"
+checksum = "375f131a85efd3cc8aba54bd83a889f41db7aa73127986afb3b8fab89c652b18"
 dependencies = [
  "derive_more",
  "hreads",
@@ -5314,7 +5323,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "filesystem",
- "plat 0.6.0",
+ "plat 0.7.0",
  "serde",
  "serde_json",
 ]
@@ -5564,7 +5573,7 @@ dependencies = [
  "log",
  "netrun",
  "parking_lot",
- "plat 0.6.0",
+ "plat 0.7.0",
  "reflected",
  "refs",
  "render",
@@ -5592,7 +5601,7 @@ dependencies = [
  "fastrand",
  "log",
  "netrun",
- "plat 0.6.0",
+ "plat 0.7.0",
  "serde",
  "test-engine",
  "tokio",
@@ -6036,7 +6045,7 @@ dependencies = [
  "netrun",
  "nonempty",
  "parking_lot",
- "plat 0.6.0",
+ "plat 0.7.0",
  "reflected",
  "refs",
  "render",
@@ -6789,7 +6798,7 @@ dependencies = [
  "hreads",
  "image",
  "log",
- "plat 0.6.0",
+ "plat 0.7.0",
  "refs",
  "resvg",
  "tiny-skia 0.12.0",

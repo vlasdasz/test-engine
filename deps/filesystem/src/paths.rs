@@ -64,7 +64,7 @@ impl Paths {
     }
 
     pub async fn pick_folder() -> Option<PathBuf> {
-        #[cfg(any(not_wasm, not_ios, not_android))]
+        #[cfg(desktop)]
         {
             use rfd::AsyncFileDialog;
 
@@ -75,6 +75,10 @@ impl Paths {
                 .await?;
 
             Some(handle.path().to_owned())
+        }
+        #[cfg(any(mobile, wasm))]
+        {
+            None
         }
     }
 }

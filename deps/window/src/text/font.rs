@@ -6,6 +6,7 @@ use log::error;
 use refs::{
     Weak,
     manage::{DataManager, ResourceLoader},
+    managed,
 };
 use wgpu::{CompareFunction, DepthBiasState, DepthStencilState, StencilState, TextureFormat};
 use wgpu_text::{BrushBuilder, TextBrush, glyph_brush::ab_glyph::FontArc};
@@ -51,7 +52,7 @@ impl Font {
     }
 }
 
-refs::managed!(Font);
+managed!(Font);
 
 static DEFAULT_FONT_DATA: &[u8] = include_bytes!("fonts/Helvetica.ttf");
 

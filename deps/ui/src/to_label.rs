@@ -38,6 +38,12 @@ impl ToLabel for PathBuf {
     }
 }
 
+impl ToLabel for &PathBuf {
+    fn to_label(&self) -> String {
+        (*self).to_string_lossy().to_string()
+    }
+}
+
 impl ToLabel for bool {
     fn to_label(&self) -> String {
         self.to_string()

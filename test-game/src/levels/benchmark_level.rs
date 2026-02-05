@@ -1,7 +1,7 @@
 use test_engine::{
     gm::{Animation, Shape},
     level::{LevelCreation, LevelSetup, Player, Sprite, SpriteTemplates, Wall, level},
-    refs::{DataManager, Weak},
+    refs::{Weak, manage::DataManager},
     ui::{Alert, Color, Image, UIManager},
 };
 

@@ -14,7 +14,7 @@ fn set_value<T: serde::ser::Serialize>(value: T, path: &Path) {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).unwrap();
     }
-    fs::write(dbg!(path), json).expect("Failed to write to file");
+    fs::write(path, json).expect("Failed to write to file");
 }
 
 fn get_value<T: Storable>(path: &Path) -> Option<T> {
@@ -68,6 +68,12 @@ impl<T: Storable> OnDisk<T> {
 }
 
 impl<T: Storable + Default> OnDisk<T> {
+    pub fn edit(&self, edit: impl FnOnce(&mut T)) {
+        let mut val = self.get_or_init();
+        edit(&mut val);
+        self.set(val);
+    }
+
     pub fn get_or_init(&self) -> T {
         get_or_init_value(&expand_tilde(self.path))
     }
