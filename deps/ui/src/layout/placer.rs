@@ -299,6 +299,11 @@ impl Placer {
         view: impl Deref<Target = impl View + ?Sized>,
         offset: impl ToF32,
     ) -> &Self {
+        assert_ne!(
+            view.weak_view().raw(),
+            self.view.weak_view().raw(),
+            "Trying to anchor View to itself"
+        );
         self.rules().push(LayoutRule::anchor(side, offset, view.weak_view()));
         self
     }
@@ -309,6 +314,12 @@ impl Placer {
         view: impl Deref<Target = impl View + ?Sized>,
         ratio: impl ToF32,
     ) -> &Self {
+        assert_ne!(
+            view.weak_view().raw(),
+            self.view.weak_view().raw(),
+            "Trying to assign relative View to itself"
+        );
+
         self.has().width = if side.is_width() { true } else { self.has().width };
         self.has().height = if side.is_height() { true } else { self.has().height };
 

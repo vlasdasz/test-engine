@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use log::error;
 use netrun::local_ip;
 use test_engine::{
@@ -30,7 +32,7 @@ use crate::{
     no_physics::NoPhysicsView,
 };
 
-static BOOL: OnDisk<bool> = OnDisk::new("bool");
+static BOOL: LazyLock<OnDisk<bool>> = LazyLock::new(|| OnDisk::new("bool"));
 
 pub(crate) static BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));

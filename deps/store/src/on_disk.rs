@@ -40,30 +40,31 @@ fn get_or_init_value<T: Storable + Default>(path: &Path) -> T {
     serde_json::from_str(&json).expect("Failet to parse json")
 }
 
+#[derive(Clone, Default)]
 pub struct OnDisk<T: Storable> {
-    path: &'static str,
+    path: PathBuf,
     _p:   PhantomData<T>,
 }
 
 impl<T: Storable> OnDisk<T> {
-    pub const fn new(path: &'static str) -> Self {
+    pub fn new(path: impl AsRef<Path>) -> Self {
         Self {
-            path,
-            _p: PhantomData,
+            path: path.as_ref().to_owned(),
+            _p:   PhantomData,
         }
     }
 
     pub fn set(&self, val: impl Into<T>) {
         let val = val.into();
-        set_value(val, &expand_tilde(self.path));
+        set_value(val, &expand_tilde(&self.path));
     }
 
     pub fn get(&self) -> Option<T> {
-        get_value(&expand_tilde(self.path))
+        get_value(&expand_tilde(&self.path))
     }
 
     pub fn reset(&self) {
-        remove_file(expand_tilde(self.path)).expect("Failed to remove file");
+        remove_file(expand_tilde(&self.path)).expect("Failed to remove file");
     }
 }
 
@@ -75,7 +76,7 @@ impl<T: Storable + Default> OnDisk<T> {
     }
 
     pub fn get_or_init(&self) -> T {
-        get_or_init_value(&expand_tilde(self.path))
+        get_or_init_value(&expand_tilde(&self.path))
     }
 }
 
@@ -101,6 +102,8 @@ fn expand_tilde<P: AsRef<Path>>(path: P) -> PathBuf {
 #[cfg(test)]
 mod test {
 
+    use std::sync::LazyLock;
+
     use anyhow::Result;
     use filesystem::Paths;
     use serde::{Deserialize, Serialize};
@@ -113,8 +116,9 @@ mod test {
         string: String,
     }
 
-    static STORED: OnDisk<i32> = OnDisk::new("~/.test/stored_i32_test.json");
-    static STORED_STRUCT: OnDisk<Data> = OnDisk::new("~/.test/stored_struct_test.json");
+    static STORED: LazyLock<OnDisk<i32>> = LazyLock::new(|| OnDisk::new("~/.test/stored_i32_test.json"));
+    static STORED_STRUCT: LazyLock<OnDisk<Data>> =
+        LazyLock::new(|| OnDisk::new("~/.test/stored_struct_test.json"));
 
     fn check_send<T: Send>(_send: &T) {}
     fn check_sync<T: Sync>(_sync: &T) {}
