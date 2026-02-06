@@ -69,7 +69,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         super_subs.remove(index)
     }
 
-    fn remove_all_subviews(&self) {
+    default fn remove_all_subviews(&self) {
         UIManager::get().deleted_views.lock().append(&mut self.base_view().subviews);
     }
 
