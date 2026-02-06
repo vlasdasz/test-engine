@@ -22,7 +22,7 @@ impl Setup for MultilineLabel {
 }
 
 pub async fn test_multiline() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<MultilineLabel>();
+    let view = UIDrawer::init_test_view::<MultilineLabel>();
 
     check_colors(
         r#"
@@ -71,7 +71,7 @@ pub async fn test_multiline() -> Result<()> {
     )?;
 
     from_main(move || {
-        view.label.multiline = true;
+        view.label.set_multiline(true);
     });
 
     check_colors(

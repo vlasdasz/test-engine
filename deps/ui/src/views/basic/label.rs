@@ -46,7 +46,7 @@ pub struct Label {
 
     pub text: String,
 
-    pub multiline: bool,
+    multiline: bool,
 
     #[educe(Default = BLACK)]
     text_color: Color,
@@ -86,6 +86,15 @@ impl HasText for Label {
 impl Label {
     pub fn set_alignment(&self, alignment: TextAlignment) -> &Self {
         weak_from_ref(self).alignment = alignment;
+        self
+    }
+
+    pub fn is_multiline(&self) -> bool {
+        self.multiline
+    }
+
+    pub fn set_multiline(&self, multiline: bool) -> &Self {
+        weak_from_ref(self).multiline = multiline;
         self
     }
 

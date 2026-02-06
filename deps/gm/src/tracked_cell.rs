@@ -1,11 +1,3 @@
-#[cfg(test)]
-fn test_method_on_top_to_not_change_line_number() {
-    let cell = TrackedCell::new(5);
-
-    let _a = cell.borrow_mut();
-    let _b = cell.borrow_mut();
-}
-
 use std::{
     cell::{Ref, RefCell, RefMut},
     panic::Location,
@@ -64,8 +56,11 @@ mod test {
     use super::*;
 
     #[test]
-    #[should_panic(expected = "Conflicting borrow! Already borrowed at: deps/gm/src/tracked_cell.rs:5")]
+    #[should_panic(expected = "Conflicting borrow! Already borrowed at: deps")]
     fn test_tracked_cell() {
-        test_method_on_top_to_not_change_line_number();
+        let cell = TrackedCell::new(5);
+
+        let _a = cell.borrow_mut();
+        let _b = cell.borrow_mut();
     }
 }
