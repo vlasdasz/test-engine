@@ -17,22 +17,22 @@ pub trait ViewData {
     fn content_offset(&self) -> f32;
 
     fn color(&self) -> &Color;
-    fn set_color(&mut self, color: impl Into<Color>) -> &mut Self;
+    fn set_color(&self, color: impl Into<Color>) -> &Self;
 
     fn end_gradient_color(&self) -> &Color;
-    fn set_gradient(&mut self, start: impl Into<Color>, end: impl Into<Color>) -> &mut Self;
+    fn set_gradient(&self, start: impl Into<Color>, end: impl Into<Color>) -> &Self;
 
     fn border_color(&self) -> &Color;
-    fn set_border_color(&mut self, color: impl Into<Color>) -> &mut Self;
+    fn set_border_color(&self, color: impl Into<Color>) -> &Self;
 
     fn border_width(&self) -> f32;
-    fn set_border_width(&mut self, width: impl ToF32) -> &mut Self;
+    fn set_border_width(&self, width: impl ToF32) -> &Self;
 
     fn corner_radius(&self) -> f32;
-    fn set_corner_radius(&mut self, radius: impl ToF32) -> &mut Self;
+    fn set_corner_radius(&self, radius: impl ToF32) -> &Self;
 
     fn is_hidden(&self) -> bool;
-    fn set_hidden(&mut self, is_hidden: bool) -> &mut Self;
+    fn set_hidden(&self, is_hidden: bool) -> &Self;
 
     fn place(&self) -> &Placer;
     fn placer_copy(&self) -> Placer;
@@ -50,7 +50,7 @@ pub trait ViewData {
     fn position_changed(&self) -> &Event;
     fn size_changed(&self) -> &Event;
 
-    fn apply_style(&mut self, style: Style) -> &mut Self;
+    fn apply_style(&self, style: Style) -> &Self;
 
     fn steal_appearance(&self, other: WeakView) -> &Self;
 
@@ -63,7 +63,7 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn set_tag(&mut self, tag: usize) -> &mut Self {
-        self.base_view_mut().tag = tag;
+        self.base_view().tag = tag;
         self
     }
 
@@ -83,9 +83,9 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base_view().color
     }
 
-    fn set_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.base_view_mut().color = color.into();
-        self.base_view_mut().end_gradient_color = Color::default();
+    fn set_color(&self, color: impl Into<Color>) -> &Self {
+        self.base_view().color = color.into();
+        self.base_view().end_gradient_color = Color::default();
         self
     }
 
@@ -93,9 +93,9 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base_view().end_gradient_color
     }
 
-    fn set_gradient(&mut self, start: impl Into<Color>, end: impl Into<Color>) -> &mut Self {
-        self.base_view_mut().color = start.into();
-        self.base_view_mut().end_gradient_color = end.into();
+    fn set_gradient(&self, start: impl Into<Color>, end: impl Into<Color>) -> &Self {
+        self.base_view().color = start.into();
+        self.base_view().end_gradient_color = end.into();
         self
     }
 
@@ -103,8 +103,8 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base_view().border_color
     }
 
-    fn set_border_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.base_view_mut().border_color = color.into();
+    fn set_border_color(&self, color: impl Into<Color>) -> &Self {
+        self.base_view().border_color = color.into();
         self
     }
 
@@ -112,16 +112,16 @@ impl<T: ?Sized + View> ViewData for T {
         self.base_view().corner_radius
     }
 
-    fn set_corner_radius(&mut self, radius: impl ToF32) -> &mut Self {
-        self.base_view_mut().corner_radius = radius.to_f32();
+    fn set_corner_radius(&self, radius: impl ToF32) -> &Self {
+        self.base_view().corner_radius = radius.to_f32();
         self
     }
     fn is_hidden(&self) -> bool {
         self.base_view().is_hidden
     }
 
-    fn set_hidden(&mut self, is_hidden: bool) -> &mut Self {
-        self.base_view_mut().is_hidden = is_hidden;
+    fn set_hidden(&self, is_hidden: bool) -> &Self {
+        self.weak_view().base_view().is_hidden = is_hidden;
         self
     }
 
@@ -149,7 +149,7 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn set_navigation_view(&mut self, nav: Weak<NavigationView>) -> &mut Self {
-        self.base_view_mut().navigation_view = nav;
+        self.base_view().navigation_view = nav;
         self
     }
 
@@ -158,12 +158,12 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn set_label(&mut self, label: impl ToString) -> &mut Self {
-        self.base_view_mut().view_label = label.to_string();
+        self.base_view().view_label = label.to_string();
         self
     }
 
     fn animations(&mut self) -> &mut Vec<UIAnimation> {
-        &mut self.base_view_mut().animations
+        &mut self.base_view().animations
     }
 
     fn dont_hide(&self) -> bool {
@@ -178,7 +178,7 @@ impl<T: ?Sized + View> ViewData for T {
         &self.base_view().size_changed
     }
 
-    fn apply_style(&mut self, style: Style) -> &mut Self {
+    fn apply_style(&self, style: Style) -> &Self {
         style.apply(self.weak_view().deref_mut());
         self
     }
@@ -191,13 +191,13 @@ impl<T: ?Sized + View> ViewData for T {
         self.base_view().border_width
     }
 
-    fn set_border_width(&mut self, width: impl ToF32) -> &mut Self {
-        self.base_view_mut().border_width = width.to_f32();
+    fn set_border_width(&self, width: impl ToF32) -> &Self {
+        self.base_view().border_width = width.to_f32();
         self
     }
 
     fn steal_appearance(&self, other: WeakView) -> &Self {
-        let mut this = self.weak_view();
+        let this = self.weak_view();
         this.set_color(*other.color());
         this.set_border_color(*other.border_color());
         this.set_border_width(other.border_width());

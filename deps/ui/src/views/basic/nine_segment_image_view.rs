@@ -38,16 +38,16 @@ pub struct NineSegmentImageView {
 }
 
 impl NineSegmentImageView {
-    pub fn set_image(mut self: Weak<Self>, name: impl Display) {
-        [self.tl, self.tr, self.bl, self.br].apply(|mut v| {
+    pub fn set_image(self: Weak<Self>, name: impl Display) {
+        [self.tl, self.tr, self.bl, self.br].apply(|v| {
             v.set_image(format!("{name}/corner.png"));
         });
 
-        [self.t, self.b].apply(|mut v| {
+        [self.t, self.b].apply(|v| {
             v.set_image(format!("{name}/side_v.png"));
         });
 
-        [self.r, self.l].apply(|mut v| {
+        [self.r, self.l].apply(|v| {
             v.set_image(format!("{name}/side_h.png"));
         });
 

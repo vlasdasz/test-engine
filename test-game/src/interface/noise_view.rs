@@ -93,7 +93,7 @@ impl NoiseView {
 }
 
 impl Setup for NoiseView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         const WIDTH: u32 = 100;
 
         DebugView::disable();

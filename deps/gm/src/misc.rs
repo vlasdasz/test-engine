@@ -38,61 +38,58 @@ pub trait Toggle {
     fn toggle(&mut self) -> bool;
 }
 
-/// Returns old value
 impl Toggle for bool {
+    /// Returns old value
     fn toggle(&mut self) -> bool {
         *self = !*self;
         !*self
     }
 }
 
-// #[cfg(test)]
-// mod test {
-//     use fake::{Fake, Faker};
-//
-//     use crate::misc::{Apply, Toggle};
-//
-//     #[test]
-//     fn apply_arr() {
-//         let mut ve = vec![];
-//         [1, 2, 3, 4, 5].apply(|a| {
-//             ve.push(a);
-//         });
-//         assert_eq!(&ve, &[1, 2, 3, 4, 5]);
-//     }
-//
-//     #[test]
-//     fn apply_tuple() {
-//         let mut num = vec![];
-//         let mut ch = vec![];
-//         [(1, '5'), (2, '4'), (3, '3'), (4, '2'), (5, '1')].apply(|(n, c)| {
-//             num.push(n);
-//             ch.push(c.clone());
-//         });
-//         assert_eq!(&num, &[1, 2, 3, 4, 5]);
-//         assert_eq!(&ch, &['5', '4', '3', '2', '1']);
-//     }
-//
-//     #[test]
-//     fn apply2_arr() {
-//         let mut num = vec![];
-//         let mut ch = vec![];
-//         [1, 2, 3, 4, 5].apply2(['5', '4', '3', '2', '1'], |n, c| {
-//             num.push(n);
-//             ch.push(c);
-//         });
-//         assert_eq!(&num, &[1, 2, 3, 4, 5]);
-//         assert_eq!(&ch, &['5', '4', '3', '2', '1']);
-//     }
-//
-//     #[test]
-//     fn toggle() {
-//         let mut val = Faker.fake::<bool>();
-//
-//         for _ in 0..10 {
-//             let prev = val;
-//             assert_eq!(val.toggle(), prev);
-//             assert_eq!(val, !prev);
-//         }
-//     }
-// }
+#[cfg(test)]
+mod test {
+
+    use crate::misc::{Apply, Toggle};
+
+    #[test]
+    fn apply_arr() {
+        let mut ve = vec![];
+        [1, 2, 3, 4, 5].apply(|a| {
+            ve.push(a);
+        });
+        assert_eq!(&ve, &[1, 2, 3, 4, 5]);
+    }
+
+    #[test]
+    fn apply_tuple() {
+        let mut num = vec![];
+        let mut ch = vec![];
+        [(1, '5'), (2, '4'), (3, '3'), (4, '2'), (5, '1')].apply(|(n, c)| {
+            num.push(n);
+            ch.push(c.clone());
+        });
+        assert_eq!(&num, &[1, 2, 3, 4, 5]);
+        assert_eq!(&ch, &['5', '4', '3', '2', '1']);
+    }
+
+    #[test]
+    fn apply2_arr() {
+        let mut num = vec![];
+        let mut ch = vec![];
+        [1, 2, 3, 4, 5].apply2(['5', '4', '3', '2', '1'], |n, c| {
+            num.push(n);
+            ch.push(c);
+        });
+        assert_eq!(&num, &[1, 2, 3, 4, 5]);
+        assert_eq!(&ch, &['5', '4', '3', '2', '1']);
+    }
+
+    #[test]
+    fn toggle() {
+        for mut val in [false, true] {
+            let prev = val;
+            assert_eq!(val.toggle(), prev);
+            assert_eq!(val, !prev);
+        }
+    }
+}

@@ -22,7 +22,7 @@ struct Transparency {
 }
 
 impl Setup for Transparency {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.background.set_image("gradient.png").place().back();
 
         self.view_1.set_image("wood-window.png");

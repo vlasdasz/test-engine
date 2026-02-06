@@ -15,7 +15,7 @@ struct Outline {
 }
 
 impl Setup for Outline {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.square.set_color(BLUE).set_border_width(10).set_border_color(RED);
         self.square.place().size(100, 100).tl(50);
 
@@ -28,7 +28,7 @@ impl Setup for Outline {
 }
 
 pub async fn test_outline() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<Outline>();
+    let view = UIDrawer::init_test_view::<Outline>();
 
     check_colors(
         r#"

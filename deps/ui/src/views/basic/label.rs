@@ -5,7 +5,7 @@ use gm::{
     ToF32,
     color::{BLACK, CLEAR, Color, WHITE},
 };
-use refs::Weak;
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use window::image::ToImage;
 
@@ -46,7 +46,7 @@ pub struct Label {
 
     pub text: String,
 
-    pub multiline: bool,
+    multiline: bool,
 
     #[educe(Default = BLACK)]
     text_color: Color,
@@ -59,8 +59,8 @@ impl HasText for Label {
         &self.text
     }
 
-    fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
-        self.text = text.to_label();
+    fn set_text(&self, text: impl ToLabel) -> &Self {
+        weak_from_ref(self).text = text.to_label();
         self
     }
 
@@ -68,8 +68,8 @@ impl HasText for Label {
         &self.text_color
     }
 
-    fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
-        self.text_color = color.into();
+    fn set_text_color(&self, color: impl Into<Color>) -> &Self {
+        weak_from_ref(self).text_color = color.into();
         self
     }
 
@@ -77,25 +77,34 @@ impl HasText for Label {
         self.text_size
     }
 
-    fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
-        self.text_size = size.to_f32();
+    fn set_text_size(&self, size: impl ToF32) -> &Self {
+        weak_from_ref(self).text_size = size.to_f32();
         self
     }
 }
 
 impl Label {
-    pub fn set_alignment(&mut self, alignment: TextAlignment) -> &mut Self {
-        self.alignment = alignment;
+    pub fn set_alignment(&self, alignment: TextAlignment) -> &Self {
+        weak_from_ref(self).alignment = alignment;
         self
     }
 
-    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+    pub fn is_multiline(&self) -> bool {
+        self.multiline
+    }
+
+    pub fn set_multiline(&self, multiline: bool) -> &Self {
+        weak_from_ref(self).multiline = multiline;
+        self
+    }
+
+    pub fn set_image(&self, image: impl ToImage) -> &Self {
         self.set_color(CLEAR);
         self.remove_all_subviews();
-        let mut image_view = self.add_view::<ImageView>();
+        let image_view = self.add_view::<ImageView>();
         image_view.place().back();
         image_view.set_image(image);
-        image_view.base_view_mut().z_position = self.z_position();
+        image_view.base_view().z_position = self.z_position();
 
         self
     }
@@ -106,11 +115,11 @@ impl Label {
         let mut image_view = self.add_view::<ImageView>();
         image_view.place().back();
         image_view.set_resizing_image(name);
-        image_view.base_view_mut().z_position = self.z_position();
+        image_view.base_view().z_position = self.z_position();
         image_view.subviews_mut().iter_mut().for_each(|v| {
-            v.base_view_mut().z_position = self.z_position();
+            v.base_view().z_position = self.z_position();
             v.subviews_mut().iter_mut().for_each(|v| {
-                v.base_view_mut().z_position = self.z_position();
+                v.base_view().z_position = self.z_position();
             });
         });
 
@@ -134,11 +143,11 @@ impl Setup for Label {
 }
 
 pub trait AddLabel {
-    fn add_label(&mut self, text: impl ToLabel) -> &mut Self;
+    fn add_label(&self, text: impl ToLabel) -> &Self;
 }
 
 impl<T: ?Sized + View> AddLabel for T {
-    fn add_label(&mut self, text: impl ToLabel) -> &mut Self {
+    fn add_label(&self, text: impl ToLabel) -> &Self {
         let mut label = self.add_view::<Label>();
         label.place().center().h(20).lr(0);
         label.text = text.to_label();

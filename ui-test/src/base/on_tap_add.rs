@@ -21,7 +21,7 @@ struct SomeView {
 }
 
 impl Setup for SomeView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.table.set_data_source(self.deref()).place().size(400, 400);
         self.label.set_text("Hello").set_color(GREEN).place().size(200, 200).tr(10);
         self.image.set_image("plus.png").place().size(200, 200).bl(10);
@@ -54,7 +54,7 @@ struct AddOnTap {
 }
 
 impl Setup for AddOnTap {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.btn.set_text("A").place().size(50, 50);
         self.btn.on_tap(move || {
             let view = self.add_view::<SomeView>();

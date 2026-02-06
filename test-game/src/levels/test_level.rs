@@ -6,7 +6,7 @@ use test_engine::{
         Banner, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
         level,
     },
-    refs::{DataManager, Weak},
+    refs::{Weak, manage::DataManager},
     ui::{BLUE, Color, GREEN, Image, Point, Size, TURQUOISE},
 };
 

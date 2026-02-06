@@ -212,7 +212,7 @@ impl UIDrawer {
                 frame.height(),
             ))
             .with_layout(
-                if label.multiline {
+                if label.is_multiline() {
                     Layout::default_wrap()
                 } else {
                     Layout::default_single_line()

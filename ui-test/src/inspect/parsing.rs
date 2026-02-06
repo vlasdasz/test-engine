@@ -1,5 +1,6 @@
 use anyhow::Result;
 use inspect::ui::ViewRepr;
+use pretty_assertions::assert_eq;
 use test_engine::{
     dispatch::from_main,
     inspect::ViewToInspect,
@@ -14,7 +15,7 @@ struct InspectParsing {
 }
 
 impl Setup for InspectParsing {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.button.place().t(20).l(20).size(100, 100);
         self.button.set_color(BLUE);
     }

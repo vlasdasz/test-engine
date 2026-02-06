@@ -62,7 +62,7 @@ impl Setup for CheckBox {
             .set_border_color(LIGHT_GRAY);
         self.dot
             .place()
-            .custom(move |mut c| {
+            .custom(move |c| {
                 let side = self.size().smallest_side() * 0.42;
                 c.set_size(side, side);
             })

@@ -11,7 +11,7 @@ impl<T: ?Sized + View> ViewTouchInternal for T {
     }
 
     fn set_touch_id(&mut self, id: u64) -> &mut Self {
-        self.base_view_mut().touch_id = id;
+        self.base_view().touch_id = id;
         self
     }
 }

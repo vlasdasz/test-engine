@@ -9,12 +9,12 @@ use test_engine::{
 struct Selectable {}
 
 impl Setup for Selectable {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.enable_touch();
         self.set_color(BLACK);
     }
 
-    fn on_selection_changed(mut self: Weak<Self>, selected: bool) {
+    fn on_selection_changed(self: Weak<Self>, selected: bool) {
         self.set_color(if selected { WHITE } else { BLACK });
     }
 }

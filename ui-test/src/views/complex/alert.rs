@@ -78,7 +78,7 @@ pub async fn test_alert() -> Result<()> {
     )?;
 
     from_main(|| {
-        Alert::with_label(|mut l| {
+        Alert::with_label(|l| {
             l.set_text_color(RED).set_text_size(50).set_alignment(TextAlignment::Left);
         })
         .show("Forogorn");

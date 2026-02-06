@@ -1,26 +1,23 @@
 use std::{
     fmt::{Debug, Formatter},
-    fs,
-    fs::remove_file,
+    fs::{self, remove_file},
     marker::PhantomData,
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use filesystem::Paths;
 
 use crate::storable::Storable;
 
-fn set_value<T: serde::ser::Serialize>(value: T, key: &str) {
+fn set_value<T: serde::ser::Serialize>(value: T, path: &Path) {
     let json = serde_json::to_string_pretty(&value).expect("Failed to serialize data");
-    let dir = Paths::storage();
-    fs::create_dir_all(&dir).unwrap();
-    fs::write(dir.join(key), json).expect("Failed to write to file");
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).unwrap();
+    }
+    fs::write(path, json).expect("Failed to write to file");
 }
 
-fn get_value<T: Storable>(key: &str) -> Option<T> {
-    let dir = Paths::storage();
-    let path = dir.join(key);
-
+fn get_value<T: Storable>(path: &Path) -> Option<T> {
     if !path.exists() {
         return None;
     }
@@ -29,15 +26,14 @@ fn get_value<T: Storable>(key: &str) -> Option<T> {
     serde_json::from_str(&json).expect("Failet to parse json")
 }
 
-fn get_or_init_value<T: Storable + Default>(key: &str) -> T {
-    let dir = Paths::storage();
-    let path = dir.join(key);
-
-    fs::create_dir_all(&dir).unwrap();
+fn get_or_init_value<T: Storable + Default>(path: &Path) -> T {
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).unwrap();
+    }
 
     if !path.exists() {
         let new = T::default();
-        set_value(&new, key);
+        set_value(&new, path);
         return new;
     }
     let json = fs::read_to_string(path).expect("Failed to read file");
@@ -45,55 +41,41 @@ fn get_or_init_value<T: Storable + Default>(key: &str) -> T {
 }
 
 pub struct OnDisk<T: Storable> {
-    name:  &'static str,
-    _path: Option<&'static str>,
-    _p:    PhantomData<T>,
+    path: &'static str,
+    _p:   PhantomData<T>,
 }
 
 impl<T: Storable> OnDisk<T> {
-    pub const fn new(name: &'static str) -> Self {
+    pub const fn new(path: &'static str) -> Self {
         Self {
-            name,
-            _path: None,
+            path,
             _p: PhantomData,
-        }
-    }
-
-    pub const fn path(path: &'static str) -> Self {
-        Self {
-            name:  "",
-            _path: Some(path),
-            _p:    PhantomData,
         }
     }
 
     pub fn set(&self, val: impl Into<T>) {
         let val = val.into();
-        set_value(val, self.name);
+        set_value(val, &expand_tilde(self.path));
     }
 
     pub fn get(&self) -> Option<T> {
-        get_value(self.name)
+        get_value(&expand_tilde(self.path))
     }
 
     pub fn reset(&self) {
-        let dir = Paths::storage();
-        let path = dir.join(self.name);
-
-        remove_file(path).expect("Failed to remove file");
-    }
-
-    fn _get_path(&self) -> PathBuf {
-        // if let Some(_path) = self._path {
-        //     todo!()
-        // }
-        todo!()
+        remove_file(expand_tilde(self.path)).expect("Failed to remove file");
     }
 }
 
 impl<T: Storable + Default> OnDisk<T> {
+    pub fn edit(&self, edit: impl FnOnce(&mut T)) {
+        let mut val = self.get_or_init();
+        edit(&mut val);
+        self.set(val);
+    }
+
     pub fn get_or_init(&self) -> T {
-        get_or_init_value(self.name)
+        get_or_init_value(&expand_tilde(self.path))
     }
 }
 
@@ -103,70 +85,67 @@ impl<T: Storable + Debug> Debug for OnDisk<T> {
     }
 }
 
-// #[cfg(test)]
-// mod test {
-//
-//     use anyhow::Result;
-//     use fake::{Fake, Faker};
-//     use serde::{Deserialize, Serialize};
-//     use tokio::spawn;
-//
-//     use crate::{OnDisk, Paths};
-//
-//     #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
-//     struct Data {
-//         number: i32,
-//         string: String,
-//     }
-//
-//     static STORED: OnDisk<i32> = OnDisk::new("stored_i32_test");
-//     static STORED_STRUCT: OnDisk<Data> = OnDisk::new("stored_struct_test");
-//
-//     fn check_send<T: Send>(_send: &T) {}
-//     fn check_sync<T: Sync>(_sync: &T) {}
-//
-//     #[tokio::test]
-//     async fn stored() -> Result<()> {
-//         check_send(&STORED);
-//         check_sync(&STORED);
-//         check_send(&STORED_STRUCT);
-//         check_sync(&STORED_STRUCT);
-//
-//         STORED.set(10);
-//         STORED.reset();
-//         assert_eq!(STORED.get(), None);
-//
-//         for _ in 0..10 {
-//             let rand: i32 = Faker.fake();
-//
-//             spawn(async move {
-//                 STORED.set(rand);
-//             })
-//             .await?;
-//
-//             spawn(async move {
-//                 assert_eq!(STORED.get(), Some(rand));
-//                 assert_eq!(format!("Some({rand})"), format!("{STORED:?}"));
-//             })
-//             .await?;
-//         }
-//
-//         let data = Data {
-//             number: 555,
-//             string: "Helloyyyy".to_string(),
-//         };
-//
-//         STORED_STRUCT.set(data.clone());
-//
-//         let loaded_data = STORED_STRUCT.get();
-//
-//         assert_eq!(data, loaded_data.unwrap());
-//
-//         Ok(())
-//     }
-//
-//     #[test]
-//     fn paths() {
-//         assert!(Paths::executable_name().starts_with("store"));
-//     }
-// }
+fn expand_tilde<P: AsRef<Path>>(path: P) -> PathBuf {
+    let p = path.as_ref();
+    if !p.starts_with("~") {
+        return p.to_path_buf();
+    }
+
+    if p == Path::new("~") {
+        Paths::home()
+    } else {
+        Paths::home().join(p.strip_prefix("~").unwrap())
+    }
+}
+
+#[cfg(test)]
+mod test {
+
+    use anyhow::Result;
+    use filesystem::Paths;
+    use serde::{Deserialize, Serialize};
+
+    use crate::OnDisk;
+
+    #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
+    struct Data {
+        number: i32,
+        string: String,
+    }
+
+    static STORED: OnDisk<i32> = OnDisk::new("~/.test/stored_i32_test.json");
+    static STORED_STRUCT: OnDisk<Data> = OnDisk::new("~/.test/stored_struct_test.json");
+
+    fn check_send<T: Send>(_send: &T) {}
+    fn check_sync<T: Sync>(_sync: &T) {}
+
+    #[test]
+    fn stored() -> Result<()> {
+        check_send(&STORED);
+        check_sync(&STORED);
+        check_send(&STORED_STRUCT);
+        check_sync(&STORED_STRUCT);
+
+        STORED.set(10);
+        STORED.reset();
+        assert_eq!(STORED.get(), None);
+
+        let data = Data {
+            number: 555,
+            string: "Helloyyyy".to_string(),
+        };
+
+        STORED_STRUCT.set(data.clone());
+
+        let loaded_data = STORED_STRUCT.get();
+
+        assert_eq!(data, loaded_data.unwrap());
+
+        Ok(())
+    }
+
+    #[test]
+    fn paths() {
+        assert!(Paths::executable_name().starts_with("store"));
+    }
+}

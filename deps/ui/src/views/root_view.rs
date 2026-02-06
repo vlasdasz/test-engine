@@ -48,7 +48,7 @@ impl RootView {
         self.screen.remove_all_subviews();
     }
 
-    pub fn set_color(mut self: Weak<Self>, color: impl Into<Color>) -> Weak<Self> {
+    pub fn set_color(self: Weak<Self>, color: impl Into<Color>) -> Weak<Self> {
         self.background.set_color(dbg!(color.into()));
         self
     }

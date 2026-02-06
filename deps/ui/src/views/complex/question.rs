@@ -100,7 +100,7 @@ impl IntoFuture for Question {
 }
 
 impl Setup for Question {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.set_corner_radius(10).set_border_color(BLACK);
 
         let question = self.question.clone();
@@ -110,7 +110,7 @@ impl Setup for Question {
         self.label.place().lrt(10).h(140);
         self.label.set_text_size(35);
         self.label.set_text(question);
-        self.label.multiline = true;
+        self.label.set_multiline(true);
 
         self.ok_button.place().h(50).br(2).relative(Width, self, 0.5);
 

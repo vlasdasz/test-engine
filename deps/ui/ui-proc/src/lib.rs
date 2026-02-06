@@ -63,11 +63,9 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
             fn weak_view(&self) -> test_engine::refs::Weak<dyn test_engine::ui::View> {
                 test_engine::refs::weak_from_ref(self as &dyn test_engine::ui::View)
             }
-            fn base_view(&self) -> &test_engine::ui::ViewBase {
-                &self.__view_base
-            }
-            fn base_view_mut(&mut self) -> &mut test_engine::ui::ViewBase {
-                &mut self.__view_base
+            fn base_view(&self) -> &mut test_engine::ui::ViewBase {
+                #![allow(clippy::transmute_ptr_to_ptr)]
+                unsafe { std::mem::transmute(&self.__view_base) }
             }
             fn init_views(&mut self) {
                 use test_engine::ui::ViewSubviews;
@@ -102,6 +100,12 @@ pub fn view(_args: TokenStream, stream: TokenStream) -> TokenStream {
                 let mut weak = test_engine::refs::weak_from_ref(self);
                 weak.setup();
                 self.__after_setup_event().trigger(());
+            }
+
+            fn __internal_inspect(&mut self) {
+                use test_engine::ui::Setup;
+                let mut weak = test_engine::refs::weak_from_ref(self);
+                weak.inspect();
             }
 
             fn __internal_on_selection_changed(&mut self, selected: bool) {
@@ -181,7 +185,7 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
         res = quote! {
             #res
             self.#name = self.add_view();
-            self.#name.base_view_mut().view_label = format!("{}: {}", #label, self.#name.base_view().view_label);
+            self.#name.base_view().view_label = format!("{}: {}", #label, self.#name.base_view().view_label);
         }
     }
 

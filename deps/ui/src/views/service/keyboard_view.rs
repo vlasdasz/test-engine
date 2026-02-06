@@ -5,6 +5,7 @@ mod test_engine {
     pub(crate) use crate as ui;
 }
 use gm::color::GRAY;
+use refs::Weak;
 use ui_proc::view;
 
 use crate::{Button, Container, Setup, ViewData, ViewSubviews, has_data::HasText};
@@ -19,11 +20,11 @@ const LAYOUT: &[&[char]] = &[A, B, C];
 pub struct KeyboardView {}
 
 impl Setup for KeyboardView {
-    fn setup(mut self: refs::Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.place().all_ver();
 
         for (i, row) in LAYOUT.iter().enumerate() {
-            let mut container = self.add_view::<Container>();
+            let container = self.add_view::<Container>();
 
             if i == 1 {
                 container.place().lr(20);

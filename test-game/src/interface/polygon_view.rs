@@ -22,7 +22,7 @@ pub struct PolygonView {
 }
 
 impl Setup for PolygonView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         LevelManager::stop_level();
 
         self.apply_style(HAS_BACK_BUTTON);

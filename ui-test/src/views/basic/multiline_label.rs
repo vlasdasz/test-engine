@@ -13,7 +13,7 @@ struct MultilineLabel {
 }
 
 impl Setup for MultilineLabel {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.label.place().tl(20).size(280, 280);
         self.label.set_text_size(40);
         self.label
@@ -22,7 +22,7 @@ impl Setup for MultilineLabel {
 }
 
 pub async fn test_multiline() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<MultilineLabel>();
+    let view = UIDrawer::init_test_view::<MultilineLabel>();
 
     check_colors(
         r#"
@@ -71,7 +71,7 @@ pub async fn test_multiline() -> Result<()> {
     )?;
 
     from_main(move || {
-        view.label.multiline = true;
+        view.label.set_multiline(true);
     });
 
     check_colors(

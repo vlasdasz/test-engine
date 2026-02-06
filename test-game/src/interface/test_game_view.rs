@@ -4,13 +4,14 @@ use test_engine::{
     AppRunner, Event,
     audio::Sound,
     dispatch::{after, on_main},
+    filesystem::Paths,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
-    refs::{DataManager, Weak},
+    refs::{Weak, manage::DataManager},
     store::OnDisk,
     ui::{
-        Alert, Anchor,
-        Anchor::{Height, Left, Top, Width, X, Y},
+        Alert,
+        Anchor::{self, Height, Left, Top, Width, X, Y},
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
         MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
         SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
@@ -86,8 +87,9 @@ pub struct TestGameView {
 
     render: Button,
 
-    benchmark:  Button,
-    test_level: Button,
+    benchmark:   Button,
+    test_level:  Button,
+    pick_folder: Button,
 
     add_box: Button,
 
@@ -111,6 +113,10 @@ pub struct TestGameView {
 }
 
 impl Setup for TestGameView {
+    fn inspect(self: Weak<Self>) {
+        dbg!("Test game view is: OK");
+    }
+
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         //DebugView::enable();
@@ -149,7 +155,7 @@ impl Setup for TestGameView {
         self.sys_info.set_text("system");
         self.sys_info.place().below(self.ip, 10);
         self.sys_info.on_tap(|| {
-            Alert::with_label(|mut l| {
+            Alert::with_label(|l| {
                 l.set_text_size(15);
             })
             .show(netrun::System::get_info().dump());
@@ -287,6 +293,14 @@ impl Setup for TestGameView {
         self.test_level.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
+        });
+
+        self.pick_folder.set_text("pick folder");
+        self.pick_folder.place().at_right(self.test_level, 10);
+        self.pick_folder.on_tap(|| {
+            test_engine::dispatch::spawn(async {
+                Alert::show(format!("{:?}", Paths::pick_folder().await));
+            });
         });
 
         self.ui_bench.set_text("ui bench");

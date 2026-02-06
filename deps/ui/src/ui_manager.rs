@@ -122,7 +122,7 @@ impl UIManager {
         if selected_view.is_null() {
             return;
         }
-        selected_view.base_view_mut().is_selected = false;
+        selected_view.base_view().is_selected = false;
         selected_view.__internal_on_selection_changed(false);
         *selected_view = Weak::default();
     }
@@ -141,7 +141,7 @@ impl UIManager {
             *selected_view = view;
         }
 
-        view.base_view_mut().is_selected = selected;
+        view.base_view().is_selected = selected;
         view.__internal_on_selection_changed(selected);
     }
 }
@@ -149,7 +149,7 @@ impl UIManager {
 impl UIManager {
     fn init() -> Self {
         let mut root_view = Own::<RootView>::default();
-        root_view.base_view_mut().view_label = "Root view".to_string();
+        root_view.base_view().view_label = "Root view".to_string();
         root_view.setup_root();
 
         Self {
@@ -283,9 +283,8 @@ impl UIManager {
         let mut root = UIManager::root_view();
         root.clear_root();
         let view = root.add_subview_to_root(view);
-        if view.place().is_empty() {
-            view.place().back();
-        }
+        view.place().back();
+
         weak
     }
 }

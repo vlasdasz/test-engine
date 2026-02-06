@@ -3,7 +3,7 @@ use std::ops::DerefMut;
 use test_engine::{
     RenderPass,
     game::{Game, GameDrawer, Object},
-    refs::{DataManager, Own, Weak},
+    refs::{Own, Weak, manage::DataManager},
     ui::{Image, Point, Setup, ViewCallbacks, ViewData, view},
 };
 

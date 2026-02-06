@@ -76,7 +76,7 @@ impl Setup for Spinner {
         self.set_corner_radius(20);
 
         for _ in 0..CIRCLES_N {
-            let mut circle = self.add_view::<Container>();
+            let circle = self.add_view::<Container>();
 
             circle.set_size(16, 16);
             circle.set_color(LIGHT_BLUE);
@@ -146,7 +146,7 @@ impl Spinner {
             let animation = UIAnimation::new(Animation::new(0.8, 0.0, 0.4), |sp, val| {
                 let color = sp.color();
                 sp.set_color(color.with_alpha(val));
-                for mut dot in sp.subviews_mut() {
+                for dot in sp.subviews_mut() {
                     let color = *dot.color();
                     dot.set_color(color.with_alpha(val));
                 }

@@ -23,7 +23,7 @@ struct NumberTestView {
 
 impl Setup for NumberTestView {
     fn setup(self: Weak<Self>) {
-        fn attach_label(mut label: Weak<Label>, view: Weak<NumberView>) {
+        fn attach_label(label: Weak<Label>, view: Weak<NumberView>) {
             label.place().same([Width, X], view).h(50).anchor(Bot, view, 20);
             view.on_change(move |num| {
                 label.set_text(num);
@@ -48,7 +48,7 @@ impl Setup for NumberTestView {
 }
 
 pub async fn test_number_view() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<NumberTestView>();
+    let view = UIDrawer::init_test_view::<NumberTestView>();
 
     inject_touches(
         "

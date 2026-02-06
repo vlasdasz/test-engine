@@ -12,7 +12,7 @@ struct TestColorChecker {
 }
 
 impl Setup for TestColorChecker {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.view.set_frame((80, 200, 20, 20)).set_color(GREEN);
     }
 }

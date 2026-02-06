@@ -20,9 +20,9 @@ pub trait App {
         (1200, 1000).into()
     }
 
-    fn start(self: Box<Self>)
+    fn start()
     where Self: Sized + 'static {
-        test_engine_start_with_app(self);
+        test_engine_start_with_app(Self::new());
     }
 
     fn sentry_url(&self) -> PinnedFuture<String> {

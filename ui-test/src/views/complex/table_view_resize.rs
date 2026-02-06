@@ -18,7 +18,7 @@ struct TableViewResize {
 }
 
 impl Setup for TableViewResize {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.table.set_frame((20, 20, 200, 200));
         self.table.set_data_source(self);
     }
@@ -34,7 +34,7 @@ impl TableData for TableViewResize {
     }
 
     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        Label::new().after_setup(|mut label| {
+        Label::new().after_setup(|label| {
             label.set_color(GREEN);
         })
     }
@@ -46,7 +46,7 @@ impl TableData for TableViewResize {
 }
 
 pub async fn test_table_view_resize() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<TableViewResize>();
+    let view = UIDrawer::init_test_view::<TableViewResize>();
 
     check_colors(
         r#"

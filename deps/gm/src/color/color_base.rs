@@ -82,6 +82,28 @@ impl<T: Copy + Abs + Sub<Output = T> + Add<Output = T>> Color<T> {
     }
 }
 
+impl<T: Sub<Output = T> + Copy> Color<T> {
+    pub fn lower_by(self, val: T) -> Self {
+        Self {
+            r: self.r - val,
+            g: self.g - val,
+            b: self.b - val,
+            a: self.a,
+        }
+    }
+}
+
+impl<T: Add<Output = T> + Copy> Color<T> {
+    pub fn increase_by(self, val: T) -> Self {
+        Self {
+            r: self.r + val,
+            g: self.g + val,
+            b: self.b + val,
+            a: self.a,
+        }
+    }
+}
+
 impl<T: Display> Display for Color<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "r: {}, g: {}, b: {}, a: {}", self.r, self.g, self.b, self.a)

@@ -1,0 +1,21 @@
+// https://zed.dev/docs/debugger
+[
+  {
+    "label": "Debug test game",
+    "adapter": "CodeLLDB",
+    "build": {
+      "command": "cargo",
+      "args": ["build", "-p", "test-game"],
+    },
+    "sourceLanguages": ["rust"],
+  },
+  {
+    "label": "Debug UI test",
+    "adapter": "CodeLLDB",
+    "build": {
+      "command": "cargo",
+      "args": ["build", "-p", "ui-test"],
+    },
+    "sourceLanguages": ["rust"],
+  },
+]

@@ -4,7 +4,7 @@ use gm::{
     ToF32,
     color::{CLEAR, Color, WHITE},
 };
-use refs::{Own, Weak};
+use refs::{Own, Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 use window::image::ToImage;
@@ -37,7 +37,7 @@ impl HasText for Button {
         self.label.text()
     }
 
-    fn set_text(&mut self, text: impl ToLabel) -> &mut Self {
+    fn set_text(&self, text: impl ToLabel) -> &Self {
         self.label.set_hidden(false);
         self.label.set_text(text);
         self
@@ -47,7 +47,7 @@ impl HasText for Button {
         self.label.text_color()
     }
 
-    fn set_text_color(&mut self, color: impl Into<Color>) -> &mut Self {
+    fn set_text_color(&self, color: impl Into<Color>) -> &Self {
         self.label.set_text_color(color);
         self
     }
@@ -56,8 +56,8 @@ impl HasText for Button {
         self.label.text_size()
     }
 
-    fn set_text_size(&mut self, size: impl ToF32) -> &mut Self {
-        self.label.set_text_size(size);
+    fn set_text_size(&self, size: impl ToF32) -> &Self {
+        weak_from_ref(self).label.set_text_size(size);
         self
     }
 }
@@ -103,10 +103,10 @@ impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
         self.set_color(WHITE);
 
-        let mut label = Own::<Label>::default();
+        let label = Own::<Label>::default();
 
-        label.base_view_mut().is_system = true;
-        label.base_view_mut().ignore_global_style = true;
+        label.base_view().is_system = true;
+        label.base_view().ignore_global_style = true;
 
         self.label = self.add_subview(label).downcast_view().unwrap();
 
@@ -116,7 +116,7 @@ impl Setup for Button {
 
         self.image.place().back();
         self.image.set_hidden(true);
-        self.image.base_view_mut().is_system = true;
+        self.image.base_view().is_system = true;
 
         self.touch().up_inside.sub(move || self.on_tap.trigger(()));
 

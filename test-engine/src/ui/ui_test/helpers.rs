@@ -7,13 +7,13 @@ use ui::{Button, Container, Setup, UIManager, View, ViewData, ViewSubviews, Weak
 
 use crate::{gm::Apply, ui_test::checks::check_colors_structured};
 
-pub fn add_corners(mut view: WeakView, color: Color) {
+pub fn add_corners(view: WeakView, color: Color) {
     let v1 = view.add_view::<Container>();
     let v2 = view.add_view::<Container>();
     let v3 = view.add_view::<Container>();
     let v4 = view.add_view::<Container>();
 
-    [v1, v2, v3, v4].apply(|mut a| {
+    [v1, v2, v3, v4].apply(|a| {
         a.place().size(100, 100);
         a.set_color(color);
     });
@@ -26,14 +26,14 @@ pub fn add_corners(mut view: WeakView, color: Color) {
 
 #[allow(dead_code)]
 pub fn add_action(action: impl FnMut() + Send + 'static) {
-    let mut button = UIManager::root_view()
+    let button = UIManager::root_view()
         .add_subview_to_root(Button::new())
         .downcast::<Button>()
         .unwrap();
     button.place().size(100, 100).bl(0);
     button.set_color(LIGHT_GRAY);
     button.on_tap(action);
-    button.base_view_mut().view_label = "Debug Action Button".into();
+    button.base_view().view_label = "Debug Action Button".into();
 }
 
 pub fn check_colors(data: &str) -> Result<()> {

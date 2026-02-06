@@ -26,13 +26,15 @@ pub struct LayoutRuleCell {
 
 impl Setup for LayoutRuleCell {
     fn setup(mut self: Weak<Self>) {
-        self.anchor.place().l(5).center_y().custom(move |mut view| {
+        self.anchor.place().l(5).center_y().custom(move |view| {
             let height = self.height() * 0.8;
             view.set_size(height, height);
         });
 
         self.value.steal_appearance(self.enabled);
         self.value.set_text_color(LIGHT_GRAY).set_text_size(20).integer_only();
+        let selected_color = *self.value.color();
+        self.value.set_selected_color(selected_color.increase_by(0.05));
 
         self.value.place().at_right(self.anchor, 8).w(88).relative_height(self, 0.6);
         self.value.editing_ended.val(move |val| {

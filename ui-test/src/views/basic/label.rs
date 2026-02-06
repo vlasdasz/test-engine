@@ -17,7 +17,7 @@ struct LabelSettings {
 }
 
 impl Setup for LabelSettings {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.label.set_text("ßšėčыў");
         self.label.place().size(280, 280).tl(80);
 
@@ -35,7 +35,7 @@ impl Setup for LabelSettings {
 }
 
 pub async fn test_label() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<LabelSettings>();
+    let view = UIDrawer::init_test_view::<LabelSettings>();
 
     check_colors(
         r#"

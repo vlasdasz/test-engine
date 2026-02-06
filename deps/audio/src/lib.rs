@@ -3,6 +3,7 @@
 mod manager;
 mod sound;
 
+use refs::managed;
 pub use sound::Sound;
 
-refs::managed!(Sound);
+managed!(Sound);

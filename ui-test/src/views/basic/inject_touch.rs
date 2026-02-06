@@ -16,7 +16,7 @@ struct InjectTouch {
 }
 
 impl Setup for InjectTouch {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.button.place().size(200, 100);
         self.button.set_text("bress");
         self.button.on_tap(|| COUNTER.fetch_add(1, Ordering::Relaxed));

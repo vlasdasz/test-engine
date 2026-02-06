@@ -5,8 +5,7 @@ use gm::{LossyConvert, flat::Size};
 use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
 use log::trace;
 use plat::Platform;
-use tiny_skia::Transform;
-use usvg::{ImageRendering, ShapeRendering, TextRendering};
+use usvg::{ImageRendering, ShapeRendering, TextRendering, Transform};
 use wgpu::{
     AddressMode, Device, Extent3d, FilterMode, MipmapFilterMode, Origin3d, Sampler, SamplerDescriptor,
     TexelCopyBufferLayout, TexelCopyTextureInfo, TextureAspect, TextureDescriptor, TextureDimension,

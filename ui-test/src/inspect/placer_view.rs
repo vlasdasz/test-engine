@@ -15,13 +15,13 @@ struct PlacerViewTest {
 }
 
 impl Setup for PlacerViewTest {
-    fn setup(mut self: Weak<Self>) {
-        // test_engine::ui::UIManager::override_scale(2.0);
+    fn setup(self: Weak<Self>) {
+        test_engine::ui::UIManager::override_scale(2.0);
 
         self.placer_view.set_size(200, 800);
 
         self.view.set_color(TURQUOISE);
-        self.view.place().l(250).t(100).size(80, 200);
+        self.view.place().center().size(80, 200);
     }
 }
 
@@ -35,6 +35,10 @@ pub(crate) async fn test_placer_view() -> Result<()> {
     });
 
     // test_engine::ui_test::record_ui_test();
+
+    from_main(|| {
+        test_engine::ui::UIManager::override_scale(1.0);
+    });
 
     Ok(())
 }

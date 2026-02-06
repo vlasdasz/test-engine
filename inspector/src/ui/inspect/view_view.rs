@@ -21,7 +21,7 @@ pub struct ViewView {
 }
 
 impl Setup for ViewView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.set_color(WHITE);
         self.label.set_text_size(10).set_alignment(Left).place().lrt(0).h(10);
         self.enable_touch();
@@ -29,7 +29,7 @@ impl Setup for ViewView {
         self.outline(TURQUOISE);
     }
 
-    fn on_selection_changed(mut self: Weak<Self>, selected: bool) {
+    fn on_selection_changed(self: Weak<Self>, selected: bool) {
         self.set_color(if selected { GRAY } else { WHITE });
         VIEW_SELECTED.trigger(self.repr.clone());
     }

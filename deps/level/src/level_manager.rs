@@ -138,7 +138,7 @@ impl LevelManager {
 
         pos *= 2;
 
-        if Platform::WIN {
+        if Platform::WINDOWS {
             pos /= Window::screen_scale().ceil();
         } else {
             pos /= Window::screen_scale();

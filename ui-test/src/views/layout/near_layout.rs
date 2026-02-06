@@ -13,7 +13,7 @@ struct NearLayout {
 }
 
 impl Setup for NearLayout {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.base.set_color(GREEN);
         self.next.set_color(BLUE);
 

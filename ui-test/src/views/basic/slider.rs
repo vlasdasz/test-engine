@@ -14,7 +14,7 @@ pub struct Slider {
 }
 
 impl Setup for Slider {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.slider.set_color(WHITE).place().size(50, 400).center();
         self.slider.on_change.val(move |a| {
             self.label.set_text(a);

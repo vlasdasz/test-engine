@@ -46,7 +46,7 @@ impl CircleView {
 }
 
 impl Setup for CircleView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.set_size(10, 10);
         self.drawing.place().back();
     }

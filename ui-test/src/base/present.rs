@@ -46,7 +46,7 @@ pub async fn test_navigation_view() -> Result<()> {
     let now = Instant::now();
 
     let presented = from_main(move || {
-        let mut presented = Container::new();
+        let presented = Container::new();
         presented.set_color(RED);
 
         view.present(presented)

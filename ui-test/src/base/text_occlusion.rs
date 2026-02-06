@@ -13,7 +13,7 @@ pub struct TextOccclusion {
 }
 
 impl Setup for TextOccclusion {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.label_below
             .set_text_size(100)
             .set_text("OOOOOOOO")

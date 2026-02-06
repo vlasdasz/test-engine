@@ -1,11 +1,11 @@
 use std::{
-    cell::{Ref, RefCell, RefMut},
+    cell::{Ref, RefMut},
     fmt::{Debug, Formatter},
     ops::{Deref, DerefMut},
     sync::Arc,
 };
 
-use gm::{LossyConvert, ToF32, axis::Axis, flat::Size};
+use gm::{LossyConvert, RefCell, ToF32, axis::Axis, flat::Size};
 use parking_lot::Mutex;
 use refs::{Rglica, ToRglica, Weak};
 
@@ -41,8 +41,12 @@ impl Placer {
             s_content:        Rglica::default(),
             all_margin:       RefCell::new(0.0),
             has:              RefCell::new(Size::default()),
-            custom:           None.into(),
+            custom:           RefCell::new(None),
         }
+    }
+
+    pub fn view(&self) -> WeakView {
+        self.view.weak_view()
     }
 
     pub fn is_empty(&self) -> bool {
@@ -68,6 +72,10 @@ impl Placer {
 
     pub fn get_rules(&self) -> Ref<'_, Vec<LayoutRule>> {
         self.rules.borrow()
+    }
+
+    pub fn get_tiling_rules(&self) -> Ref<'_, Vec<LayoutRule>> {
+        self.all_tiling_rules.borrow()
     }
 
     fn rules(&self) -> RefMut<'_, Vec<LayoutRule>> {
@@ -350,6 +358,10 @@ impl Placer {
         self.l(offset).r(offset).t(offset)
     }
 
+    pub fn tlr(&self, offset: impl ToF32) -> &Self {
+        self.t(offset).l(offset).r(offset)
+    }
+
     pub fn ltr(&self, offset: impl ToF32) -> &Self {
         self.l(offset).r(offset).t(offset)
     }
@@ -480,7 +492,13 @@ impl Placer {
         let side = rule.side.as_ref().expect("Reached side layout with no side rule");
 
         match side {
-            Anchor::Top => frame.origin.y = rule.offset,
+            Anchor::Top => {
+                if !has.height {
+                    frame.size.height = frame.max_y() - rule.offset;
+                }
+
+                frame.origin.y = rule.offset;
+            }
             Anchor::Bot => {
                 if has.height {
                     frame.origin.y = s_content.height - frame.height() - rule.offset;
@@ -488,7 +506,13 @@ impl Placer {
                     frame.size.height = frame.height() + s_content.height - frame.max_y() - rule.offset;
                 }
             }
-            Anchor::Left => frame.origin.x = rule.offset,
+            Anchor::Left => {
+                if !has.width {
+                    frame.size.width = frame.max_x() - rule.offset;
+                }
+
+                frame.origin.x = rule.offset;
+            }
             Anchor::Right => {
                 if has.width {
                     frame.origin.x = s_content.width - frame.width() - rule.offset;
@@ -699,7 +723,7 @@ fn place_horizontally(views: Vec<WeakView>, margin: f32) {
 }
 
 fn distribute<const AXIS: Axis>(mut views: Vec<WeakView>, margin: f32) {
-    let Some(mut last) = views.last_mut().map(|v| v.weak_view()) else {
+    let Some(last) = views.last_mut().map(|v| v.weak_view()) else {
         return;
     };
 
@@ -734,7 +758,7 @@ fn distribute<const AXIS: Axis>(mut views: Vec<WeakView>, margin: f32) {
     }
 }
 
-fn distribute_with_ratio(size: Size, mut views: Vec<WeakView>, ratios: &[f32]) {
+fn distribute_with_ratio(size: Size, views: Vec<WeakView>, ratios: &[f32]) {
     let total_ratio = 1.0 / ratios.iter().sum::<f32>();
 
     for i in 0..ratios.len() {

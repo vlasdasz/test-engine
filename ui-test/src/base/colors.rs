@@ -21,7 +21,7 @@ struct Colors {
 }
 
 impl Setup for Colors {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.set_color(WHITE);
 
         self.image.place().tl(20).size(280, 520);
