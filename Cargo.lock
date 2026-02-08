@@ -2187,6 +2187,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "hreads"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "175c31cbae15231862dee214949c262570a3dfbf2682c49d63d36600d492ea59"
+dependencies = [
+ "anyhow",
+ "async-std",
+ "futures",
+ "gloo-timers",
+ "log",
+ "parking_lot",
+ "plat 0.8.0",
+ "pollster",
+ "tokio",
+ "wasm-bindgen-futures",
+ "web-sys",
+]
+
+[[package]]
 name = "http"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2523,7 +2542,7 @@ name = "inspector"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "hreads",
+ "hreads 0.13.0",
  "inspect",
  "log",
  "netrun",
@@ -3156,7 +3175,7 @@ checksum = "c02d7214f04da1b7e7cb788f35e1e3616da56f650a5fde0987c9b45a9fa897d7"
 dependencies = [
  "anyhow",
  "byte-unit",
- "hreads",
+ "hreads 0.12.0",
  "infisical",
  "local-ip-address",
  "log",
@@ -4471,12 +4490,12 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.37.0"
+version = "0.38.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0dc768b2f20fefd9e97ba9dafe9aff4ca6a9e5639b2ed42d096fe2af93433a9"
+checksum = "00316b16f87f508f1df30863201bdd753563eb75d9a7f4c4ff51c1da0df9ecff"
 dependencies = [
  "derive_more",
- "hreads",
+ "hreads 0.13.0",
  "instant",
  "log",
  "parking_lot",
@@ -5584,7 +5603,7 @@ dependencies = [
  "generate",
  "gm",
  "hex",
- "hreads",
+ "hreads 0.13.0",
  "inspect",
  "level",
  "log",
@@ -6057,7 +6076,7 @@ dependencies = [
  "chrono",
  "educe",
  "gm",
- "hreads",
+ "hreads 0.13.0",
  "log",
  "netrun",
  "nonempty",
@@ -6322,7 +6341,7 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "gloo-timers",
- "hreads",
+ "hreads 0.12.0",
  "log",
  "plat 0.6.0",
  "wasm-bindgen-futures",
@@ -6813,7 +6832,7 @@ dependencies = [
  "anyhow",
  "bytemuck",
  "gm",
- "hreads",
+ "hreads 0.13.0",
  "image",
  "log",
  "plat 0.8.0",

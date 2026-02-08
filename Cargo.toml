@@ -73,12 +73,12 @@ wgpu = "28.0"
 wgpu_text = "28.0"
 winit = "0.30"
 
-#hreads = { path = "../deps/hreads" }
-hreads = "0.12"
+# hreads = { path = "../deps/hreads" }
+hreads = "0.13"
 
 netrun = "0.25"
 # refs = { path = "../deps/refs/refs" }
-refs = { version = "0.37", default-features = true }
+refs = { version = "0.38", default-features = true }
 #netrun = { path = "../deps/netrun/netrun" }
 plat = "0.8"
 reflected = "0.29"
