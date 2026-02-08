@@ -8,7 +8,9 @@ mod scroll_view;
 mod slider;
 mod switch;
 mod text_field;
+mod progress_view;
 
+pub use progress_view::*;
 pub use button::Button;
 pub use checkbox::*;
 pub use circle_view::CircleView;
