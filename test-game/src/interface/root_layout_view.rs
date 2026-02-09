@@ -62,6 +62,7 @@ pub mod test {
     };
 
     use super::{RootLayoutView, Setup, ViewData, Weak};
+    use crate::UITestInfo;
 
     #[view_test]
     struct RootLayoutViewTest {
@@ -71,8 +72,6 @@ pub mod test {
 
     impl Setup for RootLayoutViewTest {
         fn setup(self: Weak<Self>) {
-            crate::UI_TESTS.lock().push(|| test().boxed());
-
             self.view.place().back();
         }
     }
@@ -80,7 +79,10 @@ pub mod test {
     #[ctor]
     fn store_test() {
         dbg!("Storing test");
-        crate::UI_TESTS.lock().push(|| test().boxed());
+        crate::UI_TESTS.lock().push(UITestInfo {
+            name: "RootLayoutViewTest".to_string(),
+            test: || test().boxed(),
+        });
     }
 
     #[allow(clippy::unused_async)]

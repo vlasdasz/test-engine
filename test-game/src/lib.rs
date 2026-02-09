@@ -18,4 +18,10 @@ test_engine::register_app!(crate::app::TestGameApp);
 
 type AsyncFn = fn() -> BoxFuture<'static, anyhow::Result<()>>;
 
-pub static UI_TESTS: Mutex<Vec<AsyncFn>> = Mutex::new(Vec::new());
+#[derive(Clone)]
+pub struct UITestInfo {
+    pub name: String,
+    pub test: AsyncFn,
+}
+
+pub static UI_TESTS: Mutex<Vec<UITestInfo>> = Mutex::new(Vec::new());

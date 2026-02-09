@@ -15,7 +15,12 @@ mod levels;
 mod no_physics;
 
 type AsyncFn = fn() -> BoxFuture<'static, anyhow::Result<()>>;
-pub static UI_TESTS: Mutex<Vec<AsyncFn>> = Mutex::new(Vec::new());
+pub struct UITestInfo {
+    pub name: String,
+    pub test: AsyncFn,
+}
+
+pub static UI_TESTS: Mutex<Vec<UITestInfo>> = Mutex::new(Vec::new());
 
 test_engine::register_app!(TestGameApp);
 

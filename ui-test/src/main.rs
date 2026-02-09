@@ -49,8 +49,8 @@ fn main() -> Result<()> {
             guard.iter().cloned().collect()
         };
 
-        for test in tests.into_iter() {
-            test().await?;
+        for info in tests.into_iter() {
+            (info.test)().await?;
         }
 
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
