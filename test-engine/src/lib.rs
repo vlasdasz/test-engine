@@ -41,7 +41,9 @@ pub mod refs {
         pub use refs::manage::*;
     }
 
-    pub use refs::{AsAny, Mutex, MutexGuard, Own, Weak, managed, vec::OwnVec, weak_from_ref};
+    pub use refs::{
+        __internal_deps, AsAny, Mutex, MutexGuard, Own, Weak, managed, vec::OwnVec, weak_from_ref,
+    };
 }
 
 pub mod reflected {
