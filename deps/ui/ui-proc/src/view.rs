@@ -74,8 +74,12 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
 
             #[test]
             fn ui_test() -> anyhow::Result<()> {
-                if std::env::var("GITHUB_ACTIONS").is_ok() {
-                    dbg!("Skipping ui test in github action");
+                if std::env::var("GITHUB_ACTIONS").is_ok()
+                    || std::env::var("CI").is_ok()
+                    || std::env::var("RUNNER_NAME").is_ok()
+                    || std::env::var("GITHUB_WORKFLOW").is_ok()
+                {
+                    eprintln!("CI/GitHub Action detected. Skipping UI test.");
                     return Ok(());
                 }
 

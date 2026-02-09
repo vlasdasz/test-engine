@@ -96,6 +96,7 @@ pub mod dispatch {
 
 pub mod __internal_macro_deps {
     pub use ctor;
+    pub use parking_lot::Mutex;
 }
 
 #[cfg(target_os = "android")]

@@ -14,7 +14,6 @@ pub use test_engine;
 #[cfg(ios)]
 test_engine::register_app!(crate::app::TestGameApp);
 
-type TestFn = fn() -> anyhow::Result<()>;
-
-pub static UI_TESTS: parking_lot::Mutex<std::collections::BTreeMap<String, TestFn>> =
-    parking_lot::Mutex::new(std::collections::BTreeMap::new());
+pub static UI_TESTS: test_engine::__internal_macro_deps::Mutex<
+    std::collections::BTreeMap<String, fn() -> anyhow::Result<()>>,
+> = test_engine::__internal_macro_deps::Mutex::new(std::collections::BTreeMap::new());
