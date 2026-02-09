@@ -26,7 +26,7 @@ impl Setup for InjectTouch {
 pub async fn test_inject_touch() -> Result<()> {
     COUNTER.store(0, Ordering::Relaxed);
 
-    UITest::init::<InjectTouch>();
+    UITest::start::<InjectTouch>();
 
     let mut touches = String::new();
 

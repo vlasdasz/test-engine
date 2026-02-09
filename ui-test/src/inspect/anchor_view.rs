@@ -21,7 +21,7 @@ impl Setup for AnchorViewTest {
 }
 
 pub(crate) async fn test_anchor_view() -> Result<()> {
-    let view = UITest::init::<AnchorViewTest>();
+    let view = UITest::start::<AnchorViewTest>();
 
     from_main(move || {
         view.anchor_view.set_anchor(Anchor::Bot);

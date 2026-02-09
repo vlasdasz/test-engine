@@ -24,7 +24,7 @@ impl Setup for ViewOrder {
 }
 
 pub async fn test_view_order() -> Result<()> {
-    let view = UITest::init::<ViewOrder>();
+    let view = UITest::start::<ViewOrder>();
 
     assert_eq!(
         view.dump_subviews(),

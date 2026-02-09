@@ -27,7 +27,7 @@ impl Setup for NineSegment {
 }
 
 pub async fn test_nine_segment() -> Result<()> {
-    let mut view = UITest::init::<NineSegment>();
+    let mut view = UITest::start::<NineSegment>();
 
     check_colors(
         r#"

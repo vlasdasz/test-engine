@@ -28,7 +28,7 @@ impl Setup for Outline {
 }
 
 pub async fn test_outline() -> Result<()> {
-    let view = UITest::init::<Outline>();
+    let view = UITest::start::<Outline>();
 
     check_colors(
         r#"

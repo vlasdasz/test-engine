@@ -20,7 +20,7 @@ impl Setup for KeyboardViewTest {
 }
 
 pub async fn test_keyboard_view() -> Result<()> {
-    let _view = UITest::init::<KeyboardViewTest>();
+    let _view = UITest::start::<KeyboardViewTest>();
 
     AppRunner::set_window_size((800, 400));
 

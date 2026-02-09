@@ -29,7 +29,7 @@ impl Setup for PointTestView {
 }
 
 pub async fn test_point_view() -> Result<()> {
-    let view = UITest::init::<PointTestView>();
+    let view = UITest::start::<PointTestView>();
 
     inject_touches(
         r"

@@ -13,12 +13,12 @@ pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
 pub struct UITest;
 
 impl UITest {
-    pub fn reload<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set(T::new(), 600, 600, false, get_test_name::<T>())
+    pub fn start<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set(T::new(), 600, 600, true, get_test_name::<T>())
     }
 
-    pub fn init<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set(T::new(), 600, 600, true, get_test_name::<T>())
+    pub fn reload<T: View + ViewTest + Default + 'static>() -> Weak<T> {
+        Self::set(T::new(), 600, 600, false, get_test_name::<T>())
     }
 
     pub fn set<T: View + 'static>(

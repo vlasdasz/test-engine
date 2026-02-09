@@ -18,7 +18,7 @@ impl Setup for TestColorChecker {
 }
 
 pub async fn test_color_checker() -> Result<()> {
-    let _view = UITest::init::<TestColorChecker>();
+    let _view = UITest::start::<TestColorChecker>();
 
     check_colors(
         r#"

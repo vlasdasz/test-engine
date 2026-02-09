@@ -24,7 +24,7 @@ impl Setup for NearLayout {
 }
 
 pub async fn test_near_layout() -> anyhow::Result<()> {
-    let view = UITest::init::<NearLayout>();
+    let view = UITest::start::<NearLayout>();
 
     check_colors(
         r#"

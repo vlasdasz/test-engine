@@ -23,7 +23,7 @@ impl Setup for SwitchTestView {
 }
 
 pub async fn test_switch() -> Result<()> {
-    UITest::init::<SwitchTestView>();
+    UITest::start::<SwitchTestView>();
 
     AppRunner::set_window_size((200, 100));
 

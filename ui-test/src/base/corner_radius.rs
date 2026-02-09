@@ -27,7 +27,7 @@ impl Setup for CornerRadius {
 }
 
 pub async fn test_corner_radius() -> Result<()> {
-    UITest::init::<CornerRadius>();
+    UITest::start::<CornerRadius>();
 
     check_colors(
         r#"

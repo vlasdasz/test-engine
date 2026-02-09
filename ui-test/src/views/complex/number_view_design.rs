@@ -33,7 +33,7 @@ pub async fn test_number_view_design() -> Result<()> {
         STYLE.apply_globally::<NumberView>();
     });
 
-    let _view = UITest::init::<NumberViewDesign>();
+    let _view = UITest::start::<NumberViewDesign>();
 
     check_colors(
         r#"

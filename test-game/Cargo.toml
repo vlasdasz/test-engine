@@ -18,9 +18,12 @@ webgl = ["test-engine/webgl"]
 
 [dependencies]
 anyhow = { workspace = true }
+ctor = { workspace = true }
 fastrand = { workspace = true }
+futures = { workspace = true }
 log = { workspace = true }
 netrun = { workspace = true }
+parking_lot.workspace = true
 serde = { workspace = true }
 
 test-engine = { workspace = true }

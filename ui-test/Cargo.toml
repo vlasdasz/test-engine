@@ -19,3 +19,4 @@ serde_json = { workspace = true }
 
 inspect = { workspace = true }
 test-engine = { workspace = true }
+test-game = { workspace = true }

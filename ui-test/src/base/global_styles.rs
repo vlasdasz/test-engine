@@ -52,7 +52,7 @@ pub async fn test_global_styles() -> Result<()> {
         GLOBAL_STYLE.apply_globally::<Button>();
     });
 
-    UITest::init::<GlobalStyles>();
+    UITest::start::<GlobalStyles>();
 
     check_colors(
         r#"

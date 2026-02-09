@@ -48,7 +48,7 @@ impl Setup for NumberTestView {
 }
 
 pub async fn test_number_view() -> Result<()> {
-    let view = UITest::init::<NumberTestView>();
+    let view = UITest::start::<NumberTestView>();
 
     inject_touches(
         "

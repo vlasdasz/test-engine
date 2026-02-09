@@ -18,7 +18,7 @@ impl Setup for HighLightTestView {
 }
 
 pub async fn test_highlight() -> Result<()> {
-    UITest::init::<HighLightTestView>();
+    UITest::start::<HighLightTestView>();
 
     check_colors(
         r#"

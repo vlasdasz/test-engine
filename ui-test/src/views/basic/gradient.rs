@@ -45,7 +45,7 @@ impl Setup for Gradient {
 }
 
 pub async fn test_gradient() -> Result<()> {
-    UITest::init::<Gradient>();
+    UITest::start::<Gradient>();
 
     check_colors(
         r#"

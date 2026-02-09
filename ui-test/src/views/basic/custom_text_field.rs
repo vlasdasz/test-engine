@@ -25,7 +25,7 @@ impl Setup for CustomTextField {
 }
 
 pub async fn test_custom_text_field() -> Result<()> {
-    let _view = UITest::init::<CustomTextField>();
+    let _view = UITest::start::<CustomTextField>();
 
     check_colors(
         r#"

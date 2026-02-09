@@ -46,7 +46,7 @@ impl Setup for Colors {
 }
 
 pub async fn test_colors() -> Result<()> {
-    UITest::init::<Colors>();
+    UITest::start::<Colors>();
 
     check_colors(
         r#"

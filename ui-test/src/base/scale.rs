@@ -61,7 +61,7 @@ impl TableData for ScaleView {
 }
 
 pub async fn test_scale() -> Result<()> {
-    let mut view = UITest::init::<ScaleView>();
+    let mut view = UITest::start::<ScaleView>();
 
     inject_touches(
         "

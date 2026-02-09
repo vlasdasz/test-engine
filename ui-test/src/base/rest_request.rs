@@ -60,7 +60,7 @@ impl Setup for RestRequest {
 }
 
 pub async fn test_rest_request() -> Result<()> {
-    let view = UITest::init::<RestRequest>();
+    let view = UITest::start::<RestRequest>();
 
     inject_touches(
         "

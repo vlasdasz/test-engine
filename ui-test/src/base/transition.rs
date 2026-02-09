@@ -39,7 +39,7 @@ impl Setup for BlueView {
 }
 
 pub async fn test_transition() -> Result<()> {
-    UITest::init::<Transition>();
+    UITest::start::<Transition>();
 
     check_colors(
         r#"

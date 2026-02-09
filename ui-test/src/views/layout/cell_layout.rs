@@ -42,7 +42,7 @@ impl Setup for CellLayout {
 }
 
 pub async fn test_cell_layout() -> anyhow::Result<()> {
-    let view = UITest::init::<CellLayout>();
+    let view = UITest::start::<CellLayout>();
 
     check_colors(
         r#"

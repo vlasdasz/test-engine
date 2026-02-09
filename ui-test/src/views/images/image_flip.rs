@@ -32,7 +32,7 @@ impl Setup for ImageFlip {
 }
 
 pub async fn test_image_flip() -> Result<()> {
-    let _view = UITest::init::<ImageFlip>();
+    let _view = UITest::start::<ImageFlip>();
 
     check_colors(
         r#"

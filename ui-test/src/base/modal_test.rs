@@ -59,7 +59,7 @@ impl ModalView for Modal {
 }
 
 pub async fn test_modal() -> Result<()> {
-    UITest::init::<ShowModally>();
+    UITest::start::<ShowModally>();
 
     Modal::show_modally_with_input((), |()| {});
 

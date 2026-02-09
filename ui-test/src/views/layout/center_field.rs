@@ -26,7 +26,7 @@ impl Setup for CenterField {
 }
 
 pub async fn test_center_field() -> anyhow::Result<()> {
-    let view = UITest::init::<CenterField>();
+    let view = UITest::start::<CenterField>();
 
     check_colors(
         r#"

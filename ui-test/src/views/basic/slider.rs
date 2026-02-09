@@ -29,7 +29,7 @@ impl Setup for Slider {
 }
 
 pub async fn test_slider() -> Result<()> {
-    let mut view = UITest::init::<Slider>();
+    let mut view = UITest::start::<Slider>();
 
     inject_touches(
         r"

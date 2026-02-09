@@ -24,7 +24,7 @@ impl Setup for ImageOnView {
 }
 
 pub async fn test_image_on_view() -> Result<()> {
-    UITest::init::<ImageOnView>();
+    UITest::start::<ImageOnView>();
 
     check_colors(
         r#"

@@ -18,7 +18,7 @@ impl Setup for CheckBoxTestView {
 }
 
 pub async fn test_checkbox() -> Result<()> {
-    let view = UITest::init::<CheckBoxTestView>();
+    let view = UITest::start::<CheckBoxTestView>();
 
     assert!(!view.checkbox.on());
 

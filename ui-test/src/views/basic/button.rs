@@ -23,7 +23,7 @@ impl Setup for ButtonPress {
 }
 
 pub async fn test_button() -> Result<()> {
-    UITest::init::<ButtonPress>();
+    UITest::start::<ButtonPress>();
 
     check_colors(
         r#"

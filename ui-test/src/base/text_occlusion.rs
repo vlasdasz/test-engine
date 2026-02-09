@@ -31,7 +31,7 @@ impl Setup for TextOccclusion {
 }
 
 pub async fn test_text_occlusion() -> Result<()> {
-    let _view = UITest::init::<TextOccclusion>();
+    let _view = UITest::start::<TextOccclusion>();
 
     check_colors(
         r#"

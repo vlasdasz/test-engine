@@ -42,7 +42,7 @@ impl Setup for Styles {
 }
 
 pub async fn test_styles() -> Result<()> {
-    UITest::init::<Styles>();
+    UITest::start::<Styles>();
 
     check_colors(
         r#"

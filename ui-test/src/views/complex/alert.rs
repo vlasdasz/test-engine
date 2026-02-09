@@ -9,7 +9,7 @@ use test_engine::{
 struct AlertTestView {}
 
 pub async fn test_alert() -> Result<()> {
-    UITest::init::<AlertTestView>();
+    UITest::start::<AlertTestView>();
 
     from_main(|| {
         Alert::show("Forogorn\nSopokok\nFergel");

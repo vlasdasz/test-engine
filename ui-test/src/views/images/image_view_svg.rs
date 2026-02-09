@@ -26,7 +26,7 @@ impl Setup for ImageViewSVG {
 }
 
 pub async fn test_image_view_svg() -> Result<()> {
-    let view = UITest::init::<ImageViewSVG>();
+    let view = UITest::start::<ImageViewSVG>();
 
     check_colors(
         r#"

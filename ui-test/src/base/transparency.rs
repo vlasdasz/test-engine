@@ -37,7 +37,7 @@ impl Setup for Transparency {
 }
 
 pub async fn test_transparency() -> Result<()> {
-    UITest::init::<Transparency>();
+    UITest::start::<Transparency>();
 
     from_main(|| {
         LevelManager::set_level(SkyboxLevel::default());

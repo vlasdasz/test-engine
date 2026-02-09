@@ -37,7 +37,7 @@ impl ViewCallbacks for RenderTestView {
 pub async fn test_render() -> Result<()> {
     debug!("Test render");
 
-    let mut view = UITest::init::<RenderTestView>();
+    let mut view = UITest::start::<RenderTestView>();
 
     check_colors(
         r#"

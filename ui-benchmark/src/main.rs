@@ -12,7 +12,7 @@ use crate::benchmark_view::BenchmarkView;
 
 fn main() -> Result<()> {
     AppRunner::start_with_actor(async {
-        UITest::init::<BenchmarkView>();
+        UITest::start::<BenchmarkView>();
 
         Ok(())
     })

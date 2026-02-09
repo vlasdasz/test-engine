@@ -17,7 +17,7 @@ use test_engine::{
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
         MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
         SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
-        ViewSubviews, WHITE, all_views, async_link_button, view,
+        ViewSubviews, WHITE, all_view_tests, all_views, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -310,6 +310,9 @@ impl Setup for TestGameView {
             .on_tap(|| {
                 dbg!(all_views!());
                 dbg!(ALL_VIEWS);
+                dbg!(all_view_tests!());
+
+                // dbg!(__)
             })
             .set_text("all views")
             .place()

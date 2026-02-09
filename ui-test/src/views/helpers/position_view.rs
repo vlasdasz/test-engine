@@ -17,7 +17,7 @@ impl Setup for PositionViewTest {
 }
 
 pub async fn test_position_view() -> Result<()> {
-    let view = UITest::init::<PositionViewTest>();
+    let view = UITest::start::<PositionViewTest>();
 
     inject_touches(
         "

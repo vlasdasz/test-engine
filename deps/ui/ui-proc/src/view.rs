@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use parking_lot::Mutex;
-use proc_macro::TokenStream;
+use proc_macro::{Span, TokenStream};
 use quote::{quote, quote_spanned};
 use syn::{
     __private::TokenStream2,
@@ -13,9 +13,10 @@ use syn::{
 };
 
 pub(crate) static VIEWS: Mutex<Vec<String>> = Mutex::new(Vec::new());
+pub(crate) static VIEW_TESTS: Mutex<Vec<String>> = Mutex::new(Vec::new());
 
 #[allow(clippy::too_many_lines)]
-pub fn view_impl(stream: TokenStream) -> TokenStream {
+pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
     let mut stream = parse_macro_input!(stream as DeriveInput);
 
     let Data::Struct(data) = &mut stream.data else {
@@ -28,6 +29,10 @@ pub fn view_impl(stream: TokenStream) -> TokenStream {
         TokenStream2::from_str(&format!("\"{name}\"")).expect("Failed to extract view struct name");
 
     VIEWS.lock().push(name.to_string());
+
+    if test {
+        VIEW_TESTS.lock().push(format!("{} {:#?}", name, Span::call_site().file()));
+    }
 
     let generics = &stream.generics;
 
@@ -59,6 +64,8 @@ pub fn view_impl(stream: TokenStream) -> TokenStream {
     );
 
     quote! {
+
+
         #[derive(test_engine::educe::Educe)]
         #[educe(Default)]
         #stream

@@ -10,7 +10,7 @@ use test_engine::{
 struct Keymap {}
 
 pub async fn test_keymap() -> Result<()> {
-    let view = UITest::init::<Keymap>();
+    let view = UITest::start::<Keymap>();
 
     let presses = Own::new(0);
     let mut presses = presses.weak();
@@ -38,7 +38,7 @@ pub async fn test_keymap() -> Result<()> {
     inject_key('g');
     assert_eq!(*presses, 2);
 
-    UITest::init::<Keymap>();
+    UITest::start::<Keymap>();
     wait_for_next_frame();
 
     inject_key('g');

@@ -22,7 +22,7 @@ impl Setup for MultilineLabel {
 }
 
 pub async fn test_multiline() -> Result<()> {
-    let view = UITest::init::<MultilineLabel>();
+    let view = UITest::start::<MultilineLabel>();
 
     check_colors(
         r#"

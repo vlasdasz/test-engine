@@ -61,7 +61,7 @@ impl CollectionData for ButtonsOnTableView {
 }
 
 pub async fn test_buttons_on_table_view() -> Result<()> {
-    UITest::init::<ButtonsOnTableView>();
+    UITest::start::<ButtonsOnTableView>();
 
     assert_eq!(
         TouchStack::dump(),

@@ -60,7 +60,7 @@ impl TableData for TestTableView {
 pub async fn test_table_view() -> Result<()> {
     N_CELLS.store(2_000_000, Ordering::Relaxed);
 
-    let view = UITest::init::<TestTableView>();
+    let view = UITest::start::<TestTableView>();
 
     AppRunner::set_window_size((1000, 1000));
 

@@ -14,6 +14,7 @@ use test_engine::{
     dispatch::from_main,
     ui::{Label, UIManager},
 };
+use test_game::UI_TESTS;
 
 use crate::inspect::test_inspect;
 use crate::{
@@ -42,6 +43,15 @@ fn main() -> Result<()> {
         from_main(|| {
             UIManager::override_scale(1.0);
         });
+
+        let tests: Vec<_> = {
+            let guard = UI_TESTS.lock();
+            guard.iter().cloned().collect()
+        };
+
+        for test in tests.into_iter() {
+            test().await?;
+        }
 
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 

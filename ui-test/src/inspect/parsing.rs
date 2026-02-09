@@ -23,7 +23,7 @@ impl Setup for InspectParsing {
 }
 
 pub(crate) async fn test_inspect_parsing() -> Result<()> {
-    let view = UITest::init::<InspectParsing>();
+    let view = UITest::start::<InspectParsing>();
 
     let repr = from_main(move || view.view_to_inspect());
 

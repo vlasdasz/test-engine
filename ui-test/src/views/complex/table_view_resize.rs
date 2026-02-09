@@ -43,7 +43,7 @@ impl TableData for TableViewResize {
 }
 
 pub async fn test_table_view_resize() -> Result<()> {
-    let view = UITest::init::<TableViewResize>();
+    let view = UITest::start::<TableViewResize>();
 
     check_colors(
         r#"

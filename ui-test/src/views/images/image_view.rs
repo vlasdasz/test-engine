@@ -22,7 +22,7 @@ impl Setup for ImageView {
 }
 
 pub async fn test_image_view() -> Result<()> {
-    let mut view = UITest::init::<ImageView>();
+    let mut view = UITest::start::<ImageView>();
 
     check_colors(
         r#"

@@ -54,11 +54,16 @@ impl Drop for RootLayoutView {
 pub mod test {
 
     use anyhow::Result;
-    use test_engine::ui_test::UITest;
+    use ctor::ctor;
+    use futures::FutureExt;
+    use test_engine::{
+        ui::view_test,
+        ui_test::{UITest, record_ui_test},
+    };
 
-    use super::*;
+    use super::{RootLayoutView, Setup, ViewData, Weak};
 
-    #[view]
+    #[view_test]
     struct RootLayoutViewTest {
         #[init]
         view: RootLayoutView,
@@ -66,12 +71,23 @@ pub mod test {
 
     impl Setup for RootLayoutViewTest {
         fn setup(self: Weak<Self>) {
+            crate::UI_TESTS.lock().push(|| test().boxed());
+
             self.view.place().back();
         }
     }
 
+    #[ctor]
+    fn store_test() {
+        dbg!("Storing test");
+        crate::UI_TESTS.lock().push(|| test().boxed());
+    }
+
+    #[allow(clippy::unused_async)]
     pub async fn test() -> Result<()> {
-        UITest::init::<RootLayoutViewTest>();
+        UITest::start::<RootLayoutViewTest>();
+
+        record_ui_test();
 
         Ok(())
     }

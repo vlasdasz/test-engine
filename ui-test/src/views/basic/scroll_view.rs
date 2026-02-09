@@ -25,7 +25,7 @@ impl Setup for Scrolling {
 }
 
 pub async fn test_scroll_view() -> Result<()> {
-    let mut view = UITest::init::<Scrolling>();
+    let mut view = UITest::start::<Scrolling>();
 
     check_colors(
         r#"

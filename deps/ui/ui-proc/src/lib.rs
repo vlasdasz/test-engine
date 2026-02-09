@@ -1,3 +1,5 @@
+#![feature(proc_macro_span)]
+
 mod all_views;
 mod async_link_button;
 mod cast_cell;
@@ -7,18 +9,31 @@ mod view;
 use proc_macro::TokenStream;
 
 use crate::{
-    all_views::all_views_impl, async_link_button::async_link_button_impl, cast_cell::cast_cell_impl,
-    launch_app::launch_app_impl, view::view_impl,
+    all_views::{all_view_tests_impl, all_views_impl},
+    async_link_button::async_link_button_impl,
+    cast_cell::cast_cell_impl,
+    launch_app::launch_app_impl,
+    view::view_impl,
 };
 
 #[proc_macro_attribute]
 pub fn view(_: TokenStream, stream: TokenStream) -> TokenStream {
-    view_impl(stream)
+    view_impl(stream, false)
+}
+
+#[proc_macro_attribute]
+pub fn view_test(_: TokenStream, stream: TokenStream) -> TokenStream {
+    view_impl(stream, true)
 }
 
 #[proc_macro]
 pub fn all_views(_: TokenStream) -> TokenStream {
     all_views_impl()
+}
+
+#[proc_macro]
+pub fn all_view_tests(_: TokenStream) -> TokenStream {
+    all_view_tests_impl()
 }
 
 #[proc_macro]

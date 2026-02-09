@@ -53,7 +53,7 @@ impl Setup for CollectionTestView {
 }
 
 pub async fn test_collection_view() -> Result<()> {
-    let mut view = UITest::init::<CollectionTestView>();
+    let mut view = UITest::start::<CollectionTestView>();
 
     check_colors(
         r#"

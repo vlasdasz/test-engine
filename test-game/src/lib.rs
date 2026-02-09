@@ -8,8 +8,14 @@ mod interface;
 mod levels;
 mod no_physics;
 
+use futures::future::BoxFuture;
+use parking_lot::Mutex;
 #[cfg(not(ios))]
 pub use test_engine;
 
 #[cfg(ios)]
 test_engine::register_app!(crate::app::TestGameApp);
+
+type AsyncFn = fn() -> BoxFuture<'static, anyhow::Result<()>>;
+
+pub static UI_TESTS: Mutex<Vec<AsyncFn>> = Mutex::new(Vec::new());

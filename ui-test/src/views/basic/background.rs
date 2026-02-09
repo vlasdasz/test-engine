@@ -17,7 +17,7 @@ impl Setup for Background {
 }
 
 pub async fn test_background() -> Result<()> {
-    let _view = UITest::init::<Background>();
+    let _view = UITest::start::<Background>();
 
     check_colors(
         r#"

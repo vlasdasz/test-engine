@@ -25,7 +25,7 @@ impl Setup for MinWidth {
 }
 
 pub async fn test_min_width() -> anyhow::Result<()> {
-    let view = UITest::init::<MinWidth>();
+    let view = UITest::start::<MinWidth>();
 
     check_colors(
         r#"

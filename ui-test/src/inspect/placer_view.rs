@@ -27,7 +27,7 @@ impl Setup for PlacerViewTest {
 }
 
 pub(crate) async fn test_placer_view() -> Result<()> {
-    let view = UITest::init::<PlacerViewTest>();
+    let view = UITest::start::<PlacerViewTest>();
     // UIManager::enable_debug_frames();
     AppRunner::set_window_size((1000, 1000));
 

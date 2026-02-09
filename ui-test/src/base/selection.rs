@@ -36,7 +36,7 @@ impl Setup for Selection {
 }
 
 pub async fn test_selection() -> Result<()> {
-    UITest::init::<Selection>();
+    UITest::start::<Selection>();
 
     check_colors(
         r#"

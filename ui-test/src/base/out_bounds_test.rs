@@ -49,7 +49,7 @@ impl Setup for OutBounds {
 }
 
 pub async fn test_out_bounds() -> Result<()> {
-    UITest::init::<OutBounds>();
+    UITest::start::<OutBounds>();
 
     inject_touches(
         r"

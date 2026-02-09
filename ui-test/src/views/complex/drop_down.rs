@@ -35,7 +35,7 @@ impl Setup for DropDownTestView {
 }
 
 pub async fn test_drop_down() -> Result<()> {
-    let mut view = UITest::init::<DropDownTestView>();
+    let mut view = UITest::start::<DropDownTestView>();
 
     assert_eq!(view.top.value(), &"Dog");
     assert_eq!(view.bot.value(), &"Car");

@@ -102,7 +102,7 @@ impl Setup for LayoutPlace {
 }
 
 pub async fn test_layout() -> Result<()> {
-    UITest::init::<LayoutPlace>();
+    UITest::start::<LayoutPlace>();
 
     AppRunner::set_window_size((240, 240));
 

@@ -78,7 +78,7 @@ impl TableData for LabelImage {
 }
 
 pub async fn test_label_image() -> Result<()> {
-    let mut view = UITest::init::<LabelImage>();
+    let mut view = UITest::start::<LabelImage>();
 
     check_colors(
         r#"

@@ -22,7 +22,7 @@ impl Setup for TilingLayout {
 }
 
 pub async fn test_tiling_layout() -> anyhow::Result<()> {
-    let view = UITest::init::<TilingLayout>();
+    let view = UITest::start::<TilingLayout>();
 
     check_colors(
         r#"

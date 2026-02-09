@@ -9,7 +9,7 @@ use test_engine::{
 pub struct RootViewTest {}
 
 pub async fn test_root_view() -> Result<()> {
-    UITest::init::<RootViewTest>();
+    UITest::start::<RootViewTest>();
 
     check_colors(
         r#"

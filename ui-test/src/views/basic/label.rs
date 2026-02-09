@@ -35,7 +35,7 @@ impl Setup for LabelSettings {
 }
 
 pub async fn test_label() -> Result<()> {
-    let view = UITest::init::<LabelSettings>();
+    let view = UITest::start::<LabelSettings>();
 
     check_colors(
         r#"
