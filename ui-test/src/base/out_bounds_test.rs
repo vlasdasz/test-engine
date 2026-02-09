@@ -4,10 +4,11 @@ use test_engine::{
     ui::{
         Anchor,
         Anchor::{Height, Width, Y},
-        HasText, ImageView, Label, NumberView, Setup, UIDrawer, ViewData, ViewFrame, ViewSubviews,
+        HasText, ImageView, Label, NumberView, Setup, ViewData, ViewFrame, ViewSubviews,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
+    ui_test::UITest,
 };
 
 #[view]
@@ -48,7 +49,7 @@ impl Setup for OutBounds {
 }
 
 pub async fn test_out_bounds() -> Result<()> {
-    UIDrawer::init_test_view::<OutBounds>();
+    UITest::init::<OutBounds>();
 
     inject_touches(
         r"

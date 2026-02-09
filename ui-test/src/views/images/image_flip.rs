@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{ImageView, Setup, UIDrawer, ViewFrame, ViewSubviews, view},
-    ui_test::check_colors,
+    ui::{ImageView, Setup, ViewFrame, ViewSubviews, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -32,7 +32,7 @@ impl Setup for ImageFlip {
 }
 
 pub async fn test_image_flip() -> Result<()> {
-    let _view = UIDrawer::init_test_view::<ImageFlip>();
+    let _view = UITest::init::<ImageFlip>();
 
     check_colors(
         r#"

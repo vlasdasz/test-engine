@@ -1,34 +1,27 @@
-use std::{
-    any::type_name,
-    ops::{Deref, DerefMut},
-};
+use std::ops::{Deref, DerefMut};
 
 use gm::{
     color::{CLEAR, TURQUOISE},
     flat::Rect,
 };
-use hreads::{from_main, wait_for_next_frame};
-use log::{debug, trace};
-use parking_lot::Mutex;
-use refs::{Own, Weak, main_lock::MainLock};
+use refs::main_lock::MainLock;
 use render::{
     UIGradientPipeline, UIImageRectPipepeline,
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
 };
 use ui::{
-    DrawingView, HasText, ImageView, Label, Setup, TextAlignment, UIManager, View, ViewAnimation, ViewData,
-    ViewFrame, ViewLayout, ViewSubviews, ViewTest,
+    DrawingView, HasText, ImageView, Label, TextAlignment, UIManager, View, ViewAnimation, ViewData,
+    ViewFrame, ViewLayout, ViewSubviews,
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
 use window::{Font, Window};
 
-use crate::{AppRunner, pipelines::Pipelines, ui::ui_test::state::clear_state};
+use crate::pipelines::Pipelines;
 
 static GRADIENT_DRAWER: MainLock<UIGradientPipeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 // static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
-pub static TEST_NAME: Mutex<String> = Mutex::new(String::new());
 
 pub struct UIDrawer;
 
@@ -236,67 +229,4 @@ impl UIDrawer {
 
         sections.push(section);
     }
-}
-
-impl UIDrawer {
-    pub fn reload_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set_test_view(T::new(), 600, 600, false, get_test_name::<T>())
-    }
-
-    pub fn init_test_view<T: View + ViewTest + Default + 'static>() -> Weak<T> {
-        Self::set_test_view(T::new(), 600, 600, true, get_test_name::<T>())
-    }
-
-    pub fn set_test_view<T: View + 'static>(
-        view: Own<T>,
-        width: u32,
-        height: u32,
-        test_start: bool,
-        new_test_name: String,
-    ) -> Weak<T> {
-        let test_name = TEST_NAME.lock().clone();
-
-        if !test_name.is_empty() && test_start {
-            debug!("{test_name}: OK");
-        }
-
-        TEST_NAME.lock().clone_from(&new_test_name);
-
-        debug!("{new_test_name}: Started");
-
-        clear_state();
-
-        AppRunner::set_window_size((width, height));
-        wait_for_next_frame();
-        let view = from_main(move || {
-            let weak = view.weak();
-            let mut root = UIManager::root_view();
-            root.clear_root();
-            let view = root.add_subview_to_root(view);
-            view.place().back();
-            trace!("{width} - {height}");
-            weak
-        });
-        wait_for_next_frame();
-
-        view
-    }
-}
-
-fn get_test_name<T>() -> String {
-    let input = type_name::<T>();
-
-    let last_part = input.split("::").last().unwrap();
-
-    last_part
-        .chars()
-        .enumerate()
-        .map(|(i, c)| {
-            if i > 0 && c.is_uppercase() {
-                format!(" {}", c.to_ascii_lowercase())
-            } else {
-                c.to_string()
-            }
-        })
-        .collect::<String>()
 }

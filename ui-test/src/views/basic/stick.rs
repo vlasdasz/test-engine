@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
-    ui::{Container, GREEN, Point, PointView, Setup, UIDrawer, ViewData, ViewFrame, view},
-    ui_test::inject_touches,
+    ui::{Container, GREEN, Point, PointView, Setup, ViewData, ViewFrame, view},
+    ui_test::{UITest, inject_touches},
 };
 
 #[view]
@@ -35,7 +35,7 @@ impl Setup for StickView {
 }
 
 pub async fn test_stick() -> Result<()> {
-    let view = UIDrawer::init_test_view::<StickView>();
+    let view = UITest::init::<StickView>();
 
     inject_touches(
         r"

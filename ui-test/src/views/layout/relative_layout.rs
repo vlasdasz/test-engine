@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{BLUE, Container, GREEN, Setup, UIDrawer, ViewData, ViewFrame, ViewSubviews, view},
-    ui_test::check_colors,
+    ui::{BLUE, Container, GREEN, Setup, ViewData, ViewFrame, ViewSubviews, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -31,7 +31,7 @@ impl Setup for RelativeLayout {
 }
 
 pub async fn test_relative_layout() -> Result<()> {
-    let view = UIDrawer::init_test_view::<RelativeLayout>();
+    let view = UITest::init::<RelativeLayout>();
 
     check_colors(
         r#"

@@ -4,9 +4,9 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Height, Left, Top, Width, X},
-        Container, ImageView, Setup, UIDrawer, ViewData, WHITE, view,
+        Container, ImageView, Setup, ViewData, WHITE, view,
     },
-    ui_test::check_colors,
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -46,7 +46,7 @@ impl Setup for Colors {
 }
 
 pub async fn test_colors() -> Result<()> {
-    UIDrawer::init_test_view::<Colors>();
+    UITest::init::<Colors>();
 
     check_colors(
         r#"

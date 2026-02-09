@@ -10,12 +10,12 @@ const CORNER_STYLE: Style = Style::new(|v| {
 });
 
 #[view]
-pub struct RootTestView {
+pub struct RootLayoutView {
     #[init]
     scale: NumberView,
 }
 
-impl Setup for RootTestView {
+impl Setup for RootLayoutView {
     fn setup(self: Weak<Self>) {
         UIManager::enable_debug_frames();
         UIManager::root_view().set_image("square.png");
@@ -42,5 +42,37 @@ impl Setup for RootTestView {
         self.scale.on_change(|scale| {
             UIManager::set_scale(scale);
         });
+    }
+}
+
+impl Drop for RootLayoutView {
+    fn drop(&mut self) {
+        UIManager::disable_debug_frames();
+    }
+}
+
+pub mod test {
+
+    use anyhow::Result;
+    use test_engine::ui_test::UITest;
+
+    use super::*;
+
+    #[view]
+    struct RootLayoutViewTest {
+        #[init]
+        view: RootLayoutView,
+    }
+
+    impl Setup for RootLayoutViewTest {
+        fn setup(self: Weak<Self>) {
+            self.view.place().back();
+        }
+    }
+
+    pub async fn test() -> Result<()> {
+        UITest::init::<RootLayoutViewTest>();
+
+        Ok(())
     }
 }

@@ -3,7 +3,8 @@ use test_engine::{
     dispatch::from_main,
     inspect::views::AnchorView,
     refs::Weak,
-    ui::{Anchor, Setup, UIDrawer, ViewFrame, view},
+    ui::{Anchor, Setup, ViewFrame, view},
+    ui_test::UITest,
 };
 
 #[view]
@@ -20,7 +21,7 @@ impl Setup for AnchorViewTest {
 }
 
 pub(crate) async fn test_anchor_view() -> Result<()> {
-    let view = UIDrawer::init_test_view::<AnchorViewTest>();
+    let view = UITest::init::<AnchorViewTest>();
 
     from_main(move || {
         view.anchor_view.set_anchor(Anchor::Bot);

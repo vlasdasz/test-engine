@@ -1,15 +1,15 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    ui::{Alert, HasText, RED, TextAlignment, UIDrawer, view},
-    ui_test::{check_colors, inject_touches},
+    ui::{Alert, HasText, RED, TextAlignment, view},
+    ui_test::{UITest, check_colors, inject_touches},
 };
 
 #[view]
 struct AlertTestView {}
 
 pub async fn test_alert() -> Result<()> {
-    UIDrawer::init_test_view::<AlertTestView>();
+    UITest::init::<AlertTestView>();
 
     from_main(|| {
         Alert::show("Forogorn\nSopokok\nFergel");

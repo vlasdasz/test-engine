@@ -1,6 +1,7 @@
 mod checks;
 pub mod helpers;
 pub mod state;
+mod ui_test;
 
 use std::{
     fmt::Display,
@@ -16,6 +17,7 @@ use parking_lot::Mutex;
 use refs::Own;
 use serde::de::DeserializeOwned;
 pub use state::*;
+pub use ui_test::*;
 use window::Window;
 
 use crate::{

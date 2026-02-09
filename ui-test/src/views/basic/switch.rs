@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     AppRunner,
     refs::Weak,
-    ui::{Setup, Switch, UIDrawer, ViewData, view},
-    ui_test::{state::set_state, test_combinations},
+    ui::{Setup, Switch, ViewData, view},
+    ui_test::{UITest, state::set_state, test_combinations},
 };
 
 #[view]
@@ -23,7 +23,7 @@ impl Setup for SwitchTestView {
 }
 
 pub async fn test_switch() -> Result<()> {
-    UIDrawer::init_test_view::<SwitchTestView>();
+    UITest::init::<SwitchTestView>();
 
     AppRunner::set_window_size((200, 100));
 

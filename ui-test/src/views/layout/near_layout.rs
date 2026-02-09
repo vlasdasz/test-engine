@@ -1,8 +1,8 @@
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{BLUE, Container, GREEN, Setup, UIDrawer, ViewData, view},
-    ui_test::check_colors,
+    ui::{BLUE, Container, GREEN, Setup, ViewData, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -24,7 +24,7 @@ impl Setup for NearLayout {
 }
 
 pub async fn test_near_layout() -> anyhow::Result<()> {
-    let view = UIDrawer::init_test_view::<NearLayout>();
+    let view = UITest::init::<NearLayout>();
 
     check_colors(
         r#"

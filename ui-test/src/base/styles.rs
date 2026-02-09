@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{Anchor::Top, Button, HasText, ORANGE, Setup, Style, UIDrawer, ViewData, ViewSubviews, view},
-    ui_test::check_colors,
+    ui::{Anchor::Top, Button, HasText, ORANGE, Setup, Style, ViewData, ViewSubviews, view},
+    ui_test::{UITest, check_colors},
 };
 
 const MENU_BUTTON: Style = Style::new(|view| {
@@ -42,7 +42,7 @@ impl Setup for Styles {
 }
 
 pub async fn test_styles() -> Result<()> {
-    UIDrawer::init_test_view::<Styles>();
+    UITest::init::<Styles>();
 
     check_colors(
         r#"

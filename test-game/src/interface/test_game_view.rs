@@ -26,7 +26,7 @@ use crate::{
     api::TEST_REST_REQUEST,
     interface::{
         game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
-        root_test_view::RootTestView,
+        root_layout_view::RootLayoutView,
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -425,7 +425,7 @@ impl Setup for TestGameView {
             .w(150);
         self.root_view.on_tap(|| {
             LevelManager::stop_level();
-            UIManager::set_view(RootTestView::new());
+            UIManager::set_view(RootLayoutView::new());
         });
     }
 }

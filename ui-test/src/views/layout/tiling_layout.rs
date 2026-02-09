@@ -1,10 +1,8 @@
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{
-        BLACK, BLUE, Button, Container, GREEN, HasText, RED, Setup, UIDrawer, ViewData, ViewSubviews, view,
-    },
-    ui_test::check_colors,
+    ui::{BLACK, BLUE, Button, Container, GREEN, HasText, RED, Setup, ViewData, ViewSubviews, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -24,7 +22,7 @@ impl Setup for TilingLayout {
 }
 
 pub async fn test_tiling_layout() -> anyhow::Result<()> {
-    let view = UIDrawer::init_test_view::<TilingLayout>();
+    let view = UITest::init::<TilingLayout>();
 
     check_colors(
         r#"

@@ -141,6 +141,12 @@ impl Spinner {
 
         on_main(|| {
             let mut spinner = Self::current();
+
+            if spinner.is_null() {
+                warn!("Spinner already stopped");
+                return;
+            }
+
             TouchStack::pop_layer(spinner.weak_view());
 
             let animation = UIAnimation::new(Animation::new(0.8, 0.0, 0.4), |sp, val| {

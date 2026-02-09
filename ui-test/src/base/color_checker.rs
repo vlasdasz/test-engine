@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Container, GREEN, Setup, UIDrawer, ViewData, ViewFrame, view},
-    ui_test::check_colors,
+    ui::{Container, GREEN, Setup, ViewData, ViewFrame, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -18,7 +18,7 @@ impl Setup for TestColorChecker {
 }
 
 pub async fn test_color_checker() -> Result<()> {
-    let _view = UIDrawer::init_test_view::<TestColorChecker>();
+    let _view = UITest::init::<TestColorChecker>();
 
     check_colors(
         r#"

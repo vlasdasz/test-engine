@@ -12,7 +12,7 @@ use gm::{
     color::Color,
     flat::{Point, Rect, Size},
 };
-use hreads::{assert_main_thread, on_main};
+use hreads::{assert_main_thread, from_main, on_main};
 use parking_lot::Mutex;
 use plat::Platform;
 use refs::{Own, Weak};
@@ -279,13 +279,15 @@ impl UIManager {
     }
 
     pub fn set_view<T: View + 'static>(view: Own<T>) -> Weak<T> {
-        let weak = view.weak();
-        let mut root = UIManager::root_view();
-        root.clear_root();
-        let view = root.add_subview_to_root(view);
-        view.place().back();
+        from_main(move || {
+            let weak = view.weak();
+            let mut root = UIManager::root_view();
+            root.clear_root();
+            let view = root.add_subview_to_root(view);
+            view.place().back();
 
-        weak
+            weak
+        })
     }
 }
 

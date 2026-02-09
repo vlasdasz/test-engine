@@ -1,8 +1,8 @@
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{BLUE, Container, GREEN, Setup, UIDrawer, ViewData, ViewFrame, ViewSubviews, view},
-    ui_test::check_colors,
+    ui::{BLUE, Container, GREEN, Setup, ViewData, ViewFrame, ViewSubviews, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -25,7 +25,7 @@ impl Setup for MinWidth {
 }
 
 pub async fn test_min_width() -> anyhow::Result<()> {
-    let view = UIDrawer::init_test_view::<MinWidth>();
+    let view = UITest::init::<MinWidth>();
 
     check_colors(
         r#"

@@ -9,10 +9,10 @@ use test_engine::{
     dispatch::{from_main, wait_for_next_frame},
     refs::{Own, Weak},
     ui::{
-        AfterSetup, Container, GRAY, HasText, Label, Setup, TableData, TableView, UIDrawer, View, ViewData,
+        AfterSetup, Container, GRAY, HasText, Label, Setup, TableData, TableView, View, ViewData,
         ViewSubviews, view,
     },
-    ui_test::{helpers::check_colors, inject_touches},
+    ui_test::{UITest, helpers::check_colors, inject_touches},
 };
 
 static N_CELLS: AtomicUsize = AtomicUsize::new(2_000_000);
@@ -60,7 +60,7 @@ impl TableData for TestTableView {
 pub async fn test_table_view() -> Result<()> {
     N_CELLS.store(2_000_000, Ordering::Relaxed);
 
-    let view = UIDrawer::init_test_view::<TestTableView>();
+    let view = UITest::init::<TestTableView>();
 
     AppRunner::set_window_size((1000, 1000));
 

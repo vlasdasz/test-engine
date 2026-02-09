@@ -3,8 +3,8 @@ use log::debug;
 use test_engine::{
     RenderPass,
     dispatch::from_main,
-    ui::{UIDrawer, ViewCallbacks, view},
-    ui_test::check_colors,
+    ui::{ViewCallbacks, view},
+    ui_test::{UITest, check_colors},
 };
 
 use crate::{occlusion::render_occlusion, path::render_path, render::Case::*};
@@ -37,7 +37,7 @@ impl ViewCallbacks for RenderTestView {
 pub async fn test_render() -> Result<()> {
     debug!("Test render");
 
-    let mut view = UIDrawer::init_test_view::<RenderTestView>();
+    let mut view = UITest::init::<RenderTestView>();
 
     check_colors(
         r#"

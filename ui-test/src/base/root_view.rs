@@ -1,15 +1,15 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    ui::{CLEAR, GREEN, NoImage, UIDrawer, UIManager, view},
-    ui_test::check_colors,
+    ui::{CLEAR, GREEN, NoImage, UIManager, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
 pub struct RootViewTest {}
 
 pub async fn test_root_view() -> Result<()> {
-    UIDrawer::init_test_view::<RootViewTest>();
+    UITest::init::<RootViewTest>();
 
     check_colors(
         r#"
