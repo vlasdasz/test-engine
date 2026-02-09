@@ -78,7 +78,6 @@ pub mod time {
 pub use app_runner::AppRunner;
 pub use audio;
 pub use generate;
-pub use ui::views::task_spinner::TaskSpinner;
 pub use vents::{Event, OnceEvent};
 pub use window::{RenderPass, VertexBuffer, Window, cast_slice, image::ToImage};
 
@@ -105,3 +104,8 @@ pub mod __internal_macro_deps {
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;
 #[cfg(target_os = "android")]
 pub type EventLoop = winit::event_loop::EventLoop<window::Events>;
+
+#[allow(clippy::type_complexity)]
+pub static UI_TESTS: __internal_macro_deps::Mutex<
+    std::collections::BTreeMap<String, fn() -> anyhow::Result<()>>,
+> = __internal_macro_deps::Mutex::new(std::collections::BTreeMap::new());

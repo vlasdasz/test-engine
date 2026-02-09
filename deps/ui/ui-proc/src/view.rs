@@ -108,7 +108,7 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 let status = child.wait()?;
 
                 if !status.success() {
-                    std::process::exit(status.code().unwrap_or(1));
+                    panic!("Failed to run UI test: {}", status);
                 }
 
                 Ok(())
