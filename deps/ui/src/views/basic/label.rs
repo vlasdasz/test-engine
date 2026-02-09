@@ -104,7 +104,7 @@ impl Label {
         let image_view = self.add_view::<ImageView>();
         image_view.place().back();
         image_view.set_image(image);
-        image_view.base_view().z_position = self.z_position();
+        image_view.__base_view().z_position = self.z_position();
 
         self
     }
@@ -115,11 +115,11 @@ impl Label {
         let mut image_view = self.add_view::<ImageView>();
         image_view.place().back();
         image_view.set_resizing_image(name);
-        image_view.base_view().z_position = self.z_position();
+        image_view.__base_view().z_position = self.z_position();
         image_view.subviews_mut().iter_mut().for_each(|v| {
-            v.base_view().z_position = self.z_position();
+            v.__base_view().z_position = self.z_position();
             v.subviews_mut().iter_mut().for_each(|v| {
-                v.base_view().z_position = self.z_position();
+                v.__base_view().z_position = self.z_position();
             });
         });
 

@@ -59,74 +59,74 @@ pub trait ViewData {
 
 impl<T: ?Sized + View> ViewData for T {
     fn tag(&self) -> usize {
-        self.base_view().tag
+        self.__base_view().tag
     }
 
     fn set_tag(&mut self, tag: usize) -> &mut Self {
-        self.base_view().tag = tag;
+        self.__base_view().tag = tag;
         self
     }
 
     fn view_label(&self) -> &str {
-        &self.base_view().view_label
+        &self.__base_view().view_label
     }
 
     fn is_system(&self) -> bool {
-        self.base_view().is_system
+        self.__base_view().is_system
     }
 
     fn content_offset(&self) -> f32 {
-        self.base_view().content_offset
+        self.__base_view().content_offset
     }
 
     fn color(&self) -> &Color {
-        &self.base_view().color
+        &self.__base_view().color
     }
 
     fn set_color(&self, color: impl Into<Color>) -> &Self {
-        self.base_view().color = color.into();
-        self.base_view().end_gradient_color = Color::default();
+        self.__base_view().color = color.into();
+        self.__base_view().end_gradient_color = Color::default();
         self
     }
 
     fn end_gradient_color(&self) -> &Color {
-        &self.base_view().end_gradient_color
+        &self.__base_view().end_gradient_color
     }
 
     fn set_gradient(&self, start: impl Into<Color>, end: impl Into<Color>) -> &Self {
-        self.base_view().color = start.into();
-        self.base_view().end_gradient_color = end.into();
+        self.__base_view().color = start.into();
+        self.__base_view().end_gradient_color = end.into();
         self
     }
 
     fn border_color(&self) -> &Color {
-        &self.base_view().border_color
+        &self.__base_view().border_color
     }
 
     fn set_border_color(&self, color: impl Into<Color>) -> &Self {
-        self.base_view().border_color = color.into();
+        self.__base_view().border_color = color.into();
         self
     }
 
     fn corner_radius(&self) -> f32 {
-        self.base_view().corner_radius
+        self.__base_view().corner_radius
     }
 
     fn set_corner_radius(&self, radius: impl ToF32) -> &Self {
-        self.base_view().corner_radius = radius.to_f32();
+        self.__base_view().corner_radius = radius.to_f32();
         self
     }
     fn is_hidden(&self) -> bool {
-        self.base_view().is_hidden
+        self.__base_view().is_hidden
     }
 
     fn set_hidden(&self, is_hidden: bool) -> &Self {
-        self.weak_view().base_view().is_hidden = is_hidden;
+        self.weak_view().__base_view().is_hidden = is_hidden;
         self
     }
 
     fn place(&self) -> &Placer {
-        let placer = &self.base_view().placer;
+        let placer = &self.__base_view().placer;
         assert!(
             placer.is_ok(),
             "Invalid placer. Most likely this view was not initialized properly"
@@ -135,7 +135,7 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn placer_copy(&self) -> Placer {
-        let placer = &self.base_view().placer;
+        let placer = &self.__base_view().placer;
 
         if placer.is_ok() {
             placer.clone()
@@ -145,37 +145,37 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn navigation_view(&self) -> Weak<NavigationView> {
-        self.base_view().navigation_view
+        self.__base_view().navigation_view
     }
 
     fn set_navigation_view(&mut self, nav: Weak<NavigationView>) -> &mut Self {
-        self.base_view().navigation_view = nav;
+        self.__base_view().navigation_view = nav;
         self
     }
 
     fn label(&self) -> &str {
-        &self.base_view().view_label
+        &self.__base_view().view_label
     }
 
     fn set_label(&mut self, label: impl ToString) -> &mut Self {
-        self.base_view().view_label = label.to_string();
+        self.__base_view().view_label = label.to_string();
         self
     }
 
     fn animations(&mut self) -> &mut Vec<UIAnimation> {
-        &mut self.base_view().animations
+        &mut self.__base_view().animations
     }
 
     fn dont_hide(&self) -> bool {
-        self.base_view().dont_hide_off_screen
+        self.__base_view().dont_hide_off_screen
     }
 
     fn position_changed(&self) -> &Event {
-        &self.base_view().position_changed
+        &self.__base_view().position_changed
     }
 
     fn size_changed(&self) -> &Event {
-        &self.base_view().size_changed
+        &self.__base_view().size_changed
     }
 
     fn apply_style(&self, style: Style) -> &Self {
@@ -184,15 +184,15 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn __after_setup_event(&self) -> &OnceEvent {
-        &self.base_view().after_setup
+        &self.__base_view().after_setup
     }
 
     fn border_width(&self) -> f32 {
-        self.base_view().border_width
+        self.__base_view().border_width
     }
 
     fn set_border_width(&self, width: impl ToF32) -> &Self {
-        self.base_view().border_width = width.to_f32();
+        self.__base_view().border_width = width.to_f32();
         self
     }
 
@@ -213,7 +213,7 @@ pub trait AfterSetup {
 impl<T: ?Sized + View + 'static> AfterSetup for T {
     fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + Send + 'static) -> Own<Self> {
         let weak = self.weak();
-        self.base_view().after_setup.sub(move || {
+        self.__base_view().after_setup.sub(move || {
             action(weak);
         });
         self

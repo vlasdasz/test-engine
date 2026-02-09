@@ -58,7 +58,7 @@ impl Placer {
     }
 
     pub fn init(&mut self, view: WeakView) {
-        let s_content = view.base_view().superview.content_size();
+        let s_content = view.__base_view().superview.content_size();
         self.view = unsafe { view.to_rglica() };
         self.s_content = s_content.to_rglica();
     }

@@ -30,7 +30,7 @@ impl Style {
     pub(crate) fn apply_global<T: View>(view: Weak<T>) {
         Self::check_allowed::<T>();
 
-        if view.base_view().ignore_global_style {
+        if view.__base_view().ignore_global_style {
             return;
         }
 

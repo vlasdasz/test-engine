@@ -96,7 +96,7 @@ impl CollectionView {
         self.scroll.set_content_size((width, table_height));
         let width = self.width();
 
-        let mut content_start = -self.scroll.base_view().content_offset;
+        let mut content_start = -self.scroll.__base_view().content_offset;
         let content_end = content_start + table_height;
 
         if content_start < 0.0 {
@@ -137,7 +137,7 @@ impl CollectionView {
             let mut cell = self.data_source.make_cell();
             self.data_source.setup_cell_for_index(cell.as_any_mut(), i);
             let cell = self.scroll.add_subview(cell);
-            cell.base_view().view_label = format!("Table cell: {}", cell.label());
+            cell.__base_view().view_label = format!("Table cell: {}", cell.label());
             cell.enable_touch_low_priority();
             let mut this = weak_from_ref(self);
             cell.touch().up_inside.sub(move || this.data_source.cell_selected(i));
