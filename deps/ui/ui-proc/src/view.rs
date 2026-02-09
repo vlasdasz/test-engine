@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use parking_lot::Mutex;
 use proc_macro::TokenStream;
 use quote::{quote, quote_spanned};
 use syn::{
@@ -11,7 +12,7 @@ use syn::{
     token::{Bracket, Pound},
 };
 
-static mut VIEWS: Vec<String> = Vec::new();
+pub(crate) static VIEWS: Mutex<Vec<String>> = Mutex::new(Vec::new());
 
 #[allow(clippy::too_many_lines)]
 pub fn view_impl(stream: TokenStream) -> TokenStream {
@@ -23,10 +24,10 @@ pub fn view_impl(stream: TokenStream) -> TokenStream {
 
     let name = &stream.ident;
 
-    unsafe { VIEWS.push(name.to_string()) };
-
     let name_str =
         TokenStream2::from_str(&format!("\"{name}\"")).expect("Failed to extract view struct name");
+
+    VIEWS.lock().push(name.to_string());
 
     let generics = &stream.generics;
 

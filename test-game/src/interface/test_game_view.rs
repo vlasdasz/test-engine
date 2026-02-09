@@ -12,12 +12,12 @@ use test_engine::{
     refs::{Weak, manage::DataManager},
     store::OnDisk,
     ui::{
-        Alert,
+        ALL_VIEWS, Alert,
         Anchor::{self, Height, Left, Top, Width, X, Y},
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
         MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
         SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
-        ViewSubviews, WHITE, async_link_button, view,
+        ViewSubviews, WHITE, all_views, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -92,6 +92,7 @@ pub struct TestGameView {
     benchmark:   Button,
     test_level:  Button,
     pick_folder: Button,
+    all_views:   Button,
 
     add_box: Button,
 
@@ -304,6 +305,15 @@ impl Setup for TestGameView {
                 Alert::show(format!("{:?}", Paths::pick_folder().await));
             });
         });
+
+        self.all_views
+            .on_tap(|| {
+                dbg!(all_views!());
+                dbg!(ALL_VIEWS);
+            })
+            .set_text("all views")
+            .place()
+            .at_right(self.pick_folder, 10);
 
         self.ui_bench.set_text("ui bench");
         self.ui_bench

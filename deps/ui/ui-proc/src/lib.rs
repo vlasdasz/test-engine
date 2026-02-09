@@ -1,5 +1,4 @@
-#![allow(static_mut_refs)]
-
+mod all_views;
 mod async_link_button;
 mod cast_cell;
 mod launch_app;
@@ -8,13 +7,18 @@ mod view;
 use proc_macro::TokenStream;
 
 use crate::{
-    async_link_button::async_link_button_impl, cast_cell::cast_cell_impl, launch_app::launch_app_impl,
-    view::view_impl,
+    all_views::all_views_impl, async_link_button::async_link_button_impl, cast_cell::cast_cell_impl,
+    launch_app::launch_app_impl, view::view_impl,
 };
 
 #[proc_macro_attribute]
 pub fn view(_: TokenStream, stream: TokenStream) -> TokenStream {
     view_impl(stream)
+}
+
+#[proc_macro]
+pub fn all_views(_: TokenStream) -> TokenStream {
+    all_views_impl()
 }
 
 #[proc_macro]
