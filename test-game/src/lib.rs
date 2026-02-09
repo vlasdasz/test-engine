@@ -8,6 +8,8 @@ mod interface;
 mod levels;
 mod no_physics;
 
+use std::collections::BTreeMap;
+
 use futures::future::BoxFuture;
 use parking_lot::Mutex;
 #[cfg(not(ios))]
@@ -24,4 +26,4 @@ pub struct UITestInfo {
     pub test: AsyncFn,
 }
 
-pub static UI_TESTS: Mutex<Vec<UITestInfo>> = Mutex::new(Vec::new());
+pub static UI_TESTS: Mutex<BTreeMap<String, AsyncFn>> = Mutex::new(BTreeMap::new());

@@ -62,7 +62,6 @@ pub mod test {
     };
 
     use super::{RootLayoutView, Setup, ViewData, Weak};
-    use crate::UITestInfo;
 
     #[view_test]
     struct RootLayoutViewTest {
@@ -78,12 +77,43 @@ pub mod test {
 
     #[ctor]
     fn store_test() {
-        dbg!("Storing test");
-        crate::UI_TESTS.lock().push(UITestInfo {
-            name: "RootLayoutViewTest".to_string(),
-            test: || test().boxed(),
-        });
+        crate::UI_TESTS
+            .lock()
+            .insert("RootLayoutViewTest".to_string(), || test().boxed());
     }
+
+    macro_rules! ui_test {
+        () => {
+            #[test]
+            fn ui_test() -> anyhow::Result<()> {
+                let mut child = std::process::Command::new("cargo")
+                    .args([
+                        "run",
+                        "-p",
+                        "ui-test",
+                        "--target-dir",
+                        "../target/ui_tests",
+                        "--",
+                        "--test-name",
+                        "RootLayoutViewTest",
+                    ])
+                    .stdin(std::process::Stdio::inherit())
+                    .stdout(std::process::Stdio::inherit())
+                    .stderr(std::process::Stdio::inherit())
+                    .spawn()?;
+
+                let status = child.wait()?;
+
+                if !status.success() {
+                    std::process::exit(status.code().unwrap_or(1));
+                }
+
+                Ok(())
+            }
+        };
+    }
+
+    ui_test!();
 
     #[allow(clippy::unused_async)]
     pub async fn test() -> Result<()> {
