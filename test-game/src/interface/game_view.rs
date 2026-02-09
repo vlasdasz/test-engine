@@ -35,3 +35,43 @@ impl ViewCallbacks for GameView {
         GameDrawer::draw(pass, self.game.weak().deref_mut());
     }
 }
+
+pub mod test {
+
+    use anyhow::Result;
+    use test_engine::{
+        ui::{ViewTest, view_test},
+        ui_test::check_colors,
+    };
+
+    use super::{GameView, Setup, ViewData, Weak};
+
+    #[view_test]
+    struct GameViewTest {
+        #[init]
+        view: GameView,
+    }
+
+    impl Setup for GameViewTest {
+        fn setup(self: Weak<Self>) {
+            self.view.place().back();
+        }
+    }
+
+    impl ViewTest for GameViewTest {
+        fn perform_test(_view: Weak<Self>) -> Result<()> {
+            check_colors(
+                r"
+                         198  124 - 154 189 230
+                         173  343 - 139 177 214
+                         385  352 - 129 183 231
+                         395   83 - 191 215 238
+                    ",
+            )?;
+
+            // test_engine::ui_test::record_ui_test();
+
+            Ok(())
+        }
+    }
+}

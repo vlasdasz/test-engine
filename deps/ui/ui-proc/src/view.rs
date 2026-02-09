@@ -73,7 +73,6 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
             }
 
             #[test]
-            #[ignore]
             fn ui_test() -> anyhow::Result<()> {
                 let mut child = std::process::Command::new("cargo")
                     .args([

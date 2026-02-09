@@ -56,7 +56,7 @@ pub mod test {
     use anyhow::Result;
     use test_engine::{
         ui::{ViewTest, view_test},
-        ui_test::{check_colors, record_ui_test},
+        ui_test::check_colors,
     };
 
     use super::{RootLayoutView, Setup, ViewData, Weak};
@@ -85,7 +85,7 @@ pub mod test {
                     ",
             )?;
 
-            record_ui_test();
+            // test_engine::ui_test::record_ui_test();
 
             Ok(())
         }
