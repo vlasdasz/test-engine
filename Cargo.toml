@@ -3,15 +3,15 @@
 
 default-members = ["test-game"]
 members = [
-    "deps/ui/ui-proc-test",
-    "fuzz",
-    "inspector",
-    "render-test",
-    "test-engine",
-    "test-game",
-    "test-game-android",
-    "ui-benchmark",
-    "ui-test",
+  "deps/ui/ui-proc-test",
+  "fuzz",
+  "inspector",
+  "render-test",
+  "test-engine",
+  "test-game",
+  "test-game-android",
+  "ui-benchmark",
+  "ui-test",
 ]
 
 resolver = "3"
@@ -62,10 +62,7 @@ rapier2d = { version = "0.31", features = ["simd-nightly"] }
 resvg = "0.46"
 rfd = "0.17"
 rust_decimal = "1.40"
-sentry = { version = "0.46", default-features = false, features = [
-    "reqwest",
-    "rustls",
-] }
+sentry = { version = "0.46", default-features = false, features = ["reqwest", "rustls"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 syn = { version = "2.0", features = ["extra-traits", "full"] }

@@ -3,9 +3,6 @@
 #![feature(arbitrary_self_types)]
 #![feature(linkage)]
 
-use futures::future::BoxFuture;
-use parking_lot::Mutex;
-
 use crate::app::TestGameApp;
 
 mod api;
@@ -14,13 +11,9 @@ mod interface;
 mod levels;
 mod no_physics;
 
-type AsyncFn = fn() -> BoxFuture<'static, anyhow::Result<()>>;
-pub struct UITestInfo {
-    pub name: String,
-    pub test: AsyncFn,
-}
-
-pub static UI_TESTS: Mutex<Vec<UITestInfo>> = Mutex::new(Vec::new());
+type AsyncFn = fn() -> futures::future::BoxFuture<'static, anyhow::Result<()>>;
+pub static UI_TESTS: parking_lot::Mutex<std::collections::BTreeMap<String, AsyncFn>> =
+    parking_lot::Mutex::new(std::collections::BTreeMap::new());
 
 test_engine::register_app!(TestGameApp);
 

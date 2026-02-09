@@ -54,11 +54,9 @@ impl Drop for RootLayoutView {
 pub mod test {
 
     use anyhow::Result;
-    use ctor::ctor;
-    use futures::FutureExt;
     use test_engine::{
-        ui::view_test,
-        ui_test::{UITest, record_ui_test},
+        ui::{ViewTest, view_test},
+        ui_test::{check_colors, record_ui_test},
     };
 
     use super::{RootLayoutView, Setup, ViewData, Weak};
@@ -75,52 +73,21 @@ pub mod test {
         }
     }
 
-    #[ctor]
-    fn store_test() {
-        crate::UI_TESTS
-            .lock()
-            .insert("RootLayoutViewTest".to_string(), || test().boxed());
-    }
+    impl ViewTest for RootLayoutViewTest {
+        fn perform_test(_view: Weak<Self>) -> Result<()> {
+            check_colors(
+                r"
+                          26  273 -   0 218 255
+                          27  258 - 121 119 244
+                          24   88 - 111 123 231
+                          38   53 -   0 218 255
+                          95   38 - 119 130 247
+                    ",
+            )?;
 
-    macro_rules! ui_test {
-        () => {
-            #[test]
-            fn ui_test() -> anyhow::Result<()> {
-                let mut child = std::process::Command::new("cargo")
-                    .args([
-                        "run",
-                        "-p",
-                        "ui-test",
-                        "--target-dir",
-                        "../target/ui_tests",
-                        "--",
-                        "--test-name",
-                        "RootLayoutViewTest",
-                    ])
-                    .stdin(std::process::Stdio::inherit())
-                    .stdout(std::process::Stdio::inherit())
-                    .stderr(std::process::Stdio::inherit())
-                    .spawn()?;
+            record_ui_test();
 
-                let status = child.wait()?;
-
-                if !status.success() {
-                    std::process::exit(status.code().unwrap_or(1));
-                }
-
-                Ok(())
-            }
-        };
-    }
-
-    ui_test!();
-
-    #[allow(clippy::unused_async)]
-    pub async fn test() -> Result<()> {
-        UITest::start::<RootLayoutViewTest>();
-
-        record_ui_test();
-
-        Ok(())
+            Ok(())
+        }
     }
 }

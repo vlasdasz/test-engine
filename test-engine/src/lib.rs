@@ -94,6 +94,10 @@ pub mod dispatch {
     // pub use crate::ui::ui_dispatch::on_back;
 }
 
+pub mod __internal_macro_deps {
+    pub use ctor;
+}
+
 #[cfg(target_os = "android")]
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;
 #[cfg(target_os = "android")]

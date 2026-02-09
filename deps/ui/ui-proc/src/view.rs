@@ -63,6 +63,53 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
             .expect("parse2(quote! { __view_base: test_engine::ui::ViewBase })"),
     );
 
+    let ui_test_related_stuff = if test {
+        quote! {
+            #[test_engine::__internal_macro_deps::ctor::ctor(crate_path = test_engine::__internal_macro_deps::ctor)]
+            fn store_test() {
+                use futures::FutureExt;
+
+                crate::UI_TESTS
+                    .lock()
+                    .insert(#name_str.to_string(), || run_ui_test().boxed());
+            }
+
+            #[test]
+            fn ui_test() -> anyhow::Result<()> {
+                let mut child = std::process::Command::new("cargo")
+                    .args([
+                        "run",
+                        "-p",
+                        "ui-test",
+                        "--target-dir",
+                        "../target/ui_tests",
+                        "--",
+                        "--test-name",
+                        #name_str,
+                    ])
+                    .stdin(std::process::Stdio::inherit())
+                    .stdout(std::process::Stdio::inherit())
+                    .stderr(std::process::Stdio::inherit())
+                    .spawn()?;
+
+                let status = child.wait()?;
+
+                if !status.success() {
+                    std::process::exit(status.code().unwrap_or(1));
+                }
+
+                Ok(())
+            }
+
+            #[allow(clippy::unused_async)]
+            pub async fn run_ui_test() -> Result<()> {
+                #name::perform_test(test_engine::ui_test::UITest::start::<#name>())
+            }
+        }
+    } else {
+        quote!()
+    };
+
     quote! {
 
 
@@ -153,6 +200,8 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 weak.cell_selected(index)
             }
         }
+
+        #ui_test_related_stuff
 
     }
     .into()
