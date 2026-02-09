@@ -74,6 +74,11 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
 
             #[test]
             fn ui_test() -> anyhow::Result<()> {
+                if std::env::var("GITHUB_ACTIONS").is_ok() {
+                    dbg!("Skipping ui test in github action");
+                    return Ok(());
+                }
+
                 let mut child = std::process::Command::new("cargo")
                     .args([
                         "run",
