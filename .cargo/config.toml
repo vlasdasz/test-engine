@@ -62,11 +62,11 @@ strip = false
 
 # to save space for github action runners
 [profile.ci]
-inherits = "release"
 debug = 0
-strip = "debuginfo"
 incremental = false
+inherits = "release"
 opt-level = 1
+strip = "debuginfo"
 
 #[profile.dev.package."*"]
 #opt-level = 3

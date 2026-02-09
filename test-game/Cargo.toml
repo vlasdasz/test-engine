@@ -21,7 +21,6 @@ anyhow = { workspace = true }
 fastrand = { workspace = true }
 log = { workspace = true }
 netrun = { workspace = true }
-parking_lot.workspace = true
 serde = { workspace = true }
 
 test-engine = { workspace = true }

@@ -73,3 +73,13 @@ macro_rules! register_app {
         }
     };
 }
+
+#[macro_export]
+macro_rules! export_ui_tests {
+    () => {
+        #[allow(clippy::type_complexity)]
+        pub static UI_TESTS: test_engine::__internal_macro_deps::Mutex<
+            std::collections::BTreeMap<String, fn() -> anyhow::Result<()>>,
+        > = test_engine::__internal_macro_deps::Mutex::new(std::collections::BTreeMap::new());
+    };
+}

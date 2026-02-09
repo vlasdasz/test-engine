@@ -4,12 +4,13 @@ use test_engine::{
     RenderPass,
     game::{Game, GameDrawer, Object},
     refs::{Own, Weak, manage::DataManager},
-    ui::{Image, Point, Setup, ViewCallbacks, ViewData, view},
+    ui::{Image, Point, Setup, ViewCallbacks, ViewData, ViewTest, view_test},
+    ui_test::check_colors,
 };
 
 use crate::interface::test_game_view::HAS_BACK_BUTTON;
 
-#[view]
+#[view_test]
 pub struct GameView {
     game: Own<Game>,
 }
@@ -36,42 +37,19 @@ impl ViewCallbacks for GameView {
     }
 }
 
-pub mod test {
+impl ViewTest for GameView {
+    fn perform_test(_view: Weak<Self>) -> anyhow::Result<()> {
+        check_colors(
+            r"
+                     198  124 - 154 189 230
+                     173  343 - 139 177 214
+                     385  352 - 129 183 231
+                     395   83 - 191 215 238
+                ",
+        )?;
 
-    use anyhow::Result;
-    use test_engine::{
-        ui::{ViewTest, view_test},
-        ui_test::check_colors,
-    };
+        // test_engine::ui_test::record_ui_test();
 
-    use super::{GameView, Setup, ViewData, Weak};
-
-    #[view_test]
-    struct GameViewTest {
-        #[init]
-        view: GameView,
-    }
-
-    impl Setup for GameViewTest {
-        fn setup(self: Weak<Self>) {
-            self.view.place().back();
-        }
-    }
-
-    impl ViewTest for GameViewTest {
-        fn perform_test(_view: Weak<Self>) -> Result<()> {
-            check_colors(
-                r"
-                         198  124 - 154 189 230
-                         173  343 - 139 177 214
-                         385  352 - 129 183 231
-                         395   83 - 191 215 238
-                    ",
-            )?;
-
-            // test_engine::ui_test::record_ui_test();
-
-            Ok(())
-        }
+        Ok(())
     }
 }
