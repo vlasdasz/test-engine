@@ -74,11 +74,17 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
 
             #[test]
             fn ui_test() -> anyhow::Result<()> {
-                if std::env::var("GITHUB_ACTIONS").is_ok()
-                    || std::env::var("CI").is_ok()
-                    || std::env::var("RUNNER_NAME").is_ok()
-                    || std::env::var("GITHUB_WORKFLOW").is_ok()
-                {
+                fn is_headless() -> bool {
+                    let is_ci = std::env::var("GITHUB_ACTIONS").is_ok() || std::env::var("CI").is_ok();
+
+                    let is_headless_linux = cfg!(target_os = "linux")
+                        && std::env::var("DISPLAY").is_err()
+                        && std::env::var("WAYLAND_DISPLAY").is_err();
+
+                    is_ci || is_headless_linux
+                }
+
+                if is_headless() {
                     eprintln!("CI/GitHub Action detected. Skipping UI test.");
                     return Ok(());
                 }
@@ -108,7 +114,8 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 Ok(())
             }
 
-            pub fn run_ui_test() -> Result<()> {
+            pub fn run_ui_test() -> anyhow::Result<()> {
+                use test_engine::ui::ViewTest;
                 #name::perform_test(test_engine::ui_test::UITest::start::<#name>())
             }
         }
