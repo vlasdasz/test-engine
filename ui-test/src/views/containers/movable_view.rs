@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Container, GREEN, MovableView, Setup, UIDrawer, ViewData, ViewFrame, view},
-    ui_test::{check_colors, inject_touches},
+    ui::{Container, GREEN, MovableView, Setup, ViewData, ViewFrame, view},
+    ui_test::{UITest, check_colors, inject_touches},
 };
 
 #[view]
@@ -20,7 +20,7 @@ impl Setup for MovableViewTestView {
 }
 
 pub async fn test_movable_view() -> Result<()> {
-    let mut _view = UIDrawer::init_test_view::<MovableViewTestView>();
+    let mut _view = UITest::start::<MovableViewTestView>();
 
     inject_touches(
         "

@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{CheckBox, Setup, UIDrawer, ViewFrame, view},
-    ui_test::inject_touches,
+    ui::{CheckBox, Setup, ViewFrame, view},
+    ui_test::{UITest, inject_touches},
 };
 
 #[view]
@@ -18,7 +18,7 @@ impl Setup for CheckBoxTestView {
 }
 
 pub async fn test_checkbox() -> Result<()> {
-    let view = UIDrawer::init_test_view::<CheckBoxTestView>();
+    let view = UITest::start::<CheckBoxTestView>();
 
     assert!(!view.checkbox.on());
 

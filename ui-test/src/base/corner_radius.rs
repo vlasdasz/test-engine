@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Anchor::Left, BLUE, Container, ImageView, Setup, UIDrawer, ViewData, YELLOW, view},
-    ui_test::check_colors,
+    ui::{Anchor::Left, BLUE, Container, ImageView, Setup, ViewData, YELLOW, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -27,7 +27,7 @@ impl Setup for CornerRadius {
 }
 
 pub async fn test_corner_radius() -> Result<()> {
-    UIDrawer::init_test_view::<CornerRadius>();
+    UITest::start::<CornerRadius>();
 
     check_colors(
         r#"

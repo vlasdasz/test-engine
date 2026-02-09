@@ -3,10 +3,9 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Right, Top},
-        Button, Container, GREEN, Label, Setup, TURQUOISE, UIDrawer, UIImages, ViewData, ViewSubviews,
-        YELLOW, view,
+        Button, Container, GREEN, Label, Setup, TURQUOISE, UIImages, ViewData, ViewSubviews, YELLOW, view,
     },
-    ui_test::check_colors,
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -43,7 +42,7 @@ impl Setup for CellLayout {
 }
 
 pub async fn test_cell_layout() -> anyhow::Result<()> {
-    let view = UIDrawer::init_test_view::<CellLayout>();
+    let view = UITest::start::<CellLayout>();
 
     check_colors(
         r#"

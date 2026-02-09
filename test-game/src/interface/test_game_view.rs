@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use log::error;
 use netrun::local_ip;
 use test_engine::{
@@ -10,12 +12,12 @@ use test_engine::{
     refs::{Weak, manage::DataManager},
     store::OnDisk,
     ui::{
-        Alert,
+        ALL_VIEWS, Alert,
         Anchor::{self, Height, Left, Top, Width, X, Y},
         BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
         MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
         SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
-        ViewSubviews, WHITE, async_link_button, view,
+        ViewSubviews, WHITE, all_view_tests, all_views, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -24,13 +26,13 @@ use crate::{
     api::TEST_REST_REQUEST,
     interface::{
         game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
-        root_test_view::RootTestView,
+        root_layout_view::RootLayoutView,
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
 };
 
-static BOOL: OnDisk<bool> = OnDisk::new("bool");
+static BOOL: LazyLock<OnDisk<bool>> = LazyLock::new(|| OnDisk::new("bool"));
 
 pub(crate) static BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));
@@ -90,6 +92,7 @@ pub struct TestGameView {
     benchmark:   Button,
     test_level:  Button,
     pick_folder: Button,
+    all_views:   Button,
 
     add_box: Button,
 
@@ -303,6 +306,18 @@ impl Setup for TestGameView {
             });
         });
 
+        self.all_views
+            .on_tap(|| {
+                dbg!(all_views!());
+                dbg!(ALL_VIEWS);
+                dbg!(all_view_tests!());
+
+                // dbg!(__)
+            })
+            .set_text("all views")
+            .place()
+            .at_right(self.pick_folder, 10);
+
         self.ui_bench.set_text("ui bench");
         self.ui_bench
             .place()
@@ -413,7 +428,7 @@ impl Setup for TestGameView {
             .w(150);
         self.root_view.on_tap(|| {
             LevelManager::stop_level();
-            UIManager::set_view(RootTestView::new());
+            UIManager::set_view(RootLayoutView::new());
         });
     }
 }

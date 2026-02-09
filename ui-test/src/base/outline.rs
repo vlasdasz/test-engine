@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor::Left, BLUE, Container, GREEN, ImageView, RED, Setup, UIDrawer, ViewData, YELLOW, view},
-    ui_test::check_colors,
+    ui::{Anchor::Left, BLUE, Container, GREEN, ImageView, RED, Setup, ViewData, YELLOW, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -28,7 +28,7 @@ impl Setup for Outline {
 }
 
 pub async fn test_outline() -> Result<()> {
-    let view = UIDrawer::init_test_view::<Outline>();
+    let view = UITest::start::<Outline>();
 
     check_colors(
         r#"

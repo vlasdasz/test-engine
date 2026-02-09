@@ -7,11 +7,11 @@ pub(crate) trait ViewTouchInternal {
 
 impl<T: ?Sized + View> ViewTouchInternal for T {
     fn touch_id(&self) -> u64 {
-        self.base_view().touch_id
+        self.__base_view().touch_id
     }
 
     fn set_touch_id(&mut self, id: u64) -> &mut Self {
-        self.base_view().touch_id = id;
+        self.__base_view().touch_id = id;
         self
     }
 }

@@ -6,10 +6,10 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Top, X},
-        Container, HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, UIDrawer, ViewData, ViewSubviews,
-        WHITE, view,
+        Container, HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, ViewData, ViewSubviews, WHITE,
+        view,
     },
-    ui_test::helpers::check_colors,
+    ui_test::{UITest, helpers::check_colors},
 };
 
 #[view]
@@ -78,7 +78,7 @@ impl TableData for LabelImage {
 }
 
 pub async fn test_label_image() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<LabelImage>();
+    let mut view = UITest::start::<LabelImage>();
 
     check_colors(
         r#"

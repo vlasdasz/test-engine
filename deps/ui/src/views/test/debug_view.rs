@@ -48,7 +48,7 @@ impl DebugView {
         container.__internal_before_setup();
         container.set_z_position(UIManager::DEBUG_Z_OFFSET);
         container.__manually_set_superview(UIManager::root_view());
-        container.init_views();
+        container.__init_views();
         container.__internal_setup();
         container.set_title("Debug");
         if Platform::MOBILE {

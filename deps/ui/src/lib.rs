@@ -49,3 +49,5 @@ extern crate core;
 pub extern crate ui_proc;
 
 pub const MICROSECONDS_IN_ONE_SECOND: i64 = 1_000_000;
+
+pub const ALL_VIEWS: &[&str] = &all_views!();

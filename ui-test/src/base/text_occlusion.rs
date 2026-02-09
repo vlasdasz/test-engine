@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{HasText, LIGHT_GRAY, Label, Setup, UIDrawer, ViewData, view},
-    ui_test::helpers::check_colors,
+    ui::{HasText, LIGHT_GRAY, Label, Setup, ViewData, view},
+    ui_test::{UITest, helpers::check_colors},
 };
 
 #[view]
@@ -31,7 +31,7 @@ impl Setup for TextOccclusion {
 }
 
 pub async fn test_text_occlusion() -> Result<()> {
-    let _view = UIDrawer::init_test_view::<TextOccclusion>();
+    let _view = UITest::start::<TextOccclusion>();
 
     check_colors(
         r#"

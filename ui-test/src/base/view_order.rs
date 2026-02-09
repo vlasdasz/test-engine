@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{BLACK, BLUE, Container, GREEN, RED, Setup, UIDrawer, ViewData, ViewSubviews, view},
-    ui_test::helpers::check_colors,
+    ui::{BLACK, BLUE, Container, GREEN, RED, Setup, ViewData, ViewSubviews, view},
+    ui_test::{UITest, helpers::check_colors},
 };
 
 #[view]
@@ -24,7 +24,7 @@ impl Setup for ViewOrder {
 }
 
 pub async fn test_view_order() -> Result<()> {
-    let view = UIDrawer::init_test_view::<ViewOrder>();
+    let view = UITest::start::<ViewOrder>();
 
     assert_eq!(
         view.dump_subviews(),

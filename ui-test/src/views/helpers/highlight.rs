@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{BLUE, GREEN, HighlightView, Setup, UIDrawer, view},
-    ui_test::check_colors,
+    ui::{BLUE, GREEN, HighlightView, Setup, view},
+    ui_test::{UITest, check_colors},
 };
 
 #[view]
@@ -18,7 +18,7 @@ impl Setup for HighLightTestView {
 }
 
 pub async fn test_highlight() -> Result<()> {
-    UIDrawer::init_test_view::<HighLightTestView>();
+    UITest::start::<HighLightTestView>();
 
     check_colors(
         r#"

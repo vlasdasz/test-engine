@@ -4,11 +4,8 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
-    ui::{
-        AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, UIDrawer, View, ViewData, ViewFrame,
-        view,
-    },
-    ui_test::{check_colors, inject_scroll},
+    ui::{AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, View, ViewData, ViewFrame, view},
+    ui_test::{UITest, check_colors, inject_scroll},
 };
 
 #[view]
@@ -46,7 +43,7 @@ impl TableData for TableViewResize {
 }
 
 pub async fn test_table_view_resize() -> Result<()> {
-    let view = UIDrawer::init_test_view::<TableViewResize>();
+    let view = UITest::start::<TableViewResize>();
 
     check_colors(
         r#"

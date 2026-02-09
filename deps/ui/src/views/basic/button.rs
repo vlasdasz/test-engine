@@ -105,8 +105,8 @@ impl Setup for Button {
 
         let label = Own::<Label>::default();
 
-        label.base_view().is_system = true;
-        label.base_view().ignore_global_style = true;
+        label.__base_view().is_system = true;
+        label.__base_view().ignore_global_style = true;
 
         self.label = self.add_subview(label).downcast_view().unwrap();
 
@@ -116,7 +116,7 @@ impl Setup for Button {
 
         self.image.place().back();
         self.image.set_hidden(true);
-        self.image.base_view().is_system = true;
+        self.image.__base_view().is_system = true;
 
         self.touch().up_inside.sub(move || self.on_tap.trigger(()));
 

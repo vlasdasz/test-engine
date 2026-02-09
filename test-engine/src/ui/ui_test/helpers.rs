@@ -33,7 +33,7 @@ pub fn add_action(action: impl FnMut() + Send + 'static) {
     button.place().size(100, 100).bl(0);
     button.set_color(LIGHT_GRAY);
     button.on_tap(action);
-    button.base_view().view_label = "Debug Action Button".into();
+    button.__base_view().view_label = "Debug Action Button".into();
 }
 
 pub fn check_colors(data: &str) -> Result<()> {

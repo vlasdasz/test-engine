@@ -1,18 +1,14 @@
-use gm::flat::Size;
+use anyhow::Result;
 use refs::Weak;
 
 use crate::View;
 
 pub trait ViewTest {
-    fn test_setup(self: Weak<Self>);
-    fn test_size() -> Size<u32>
-    where Self: Sized;
+    fn perform_test(view: Weak<Self>) -> Result<()>;
 }
 
 impl<T: ?Sized + View> ViewTest for T {
-    default fn test_setup(self: Weak<Self>) {}
-    default fn test_size() -> Size<u32>
-    where Self: Sized {
-        (600, 600).into()
+    default fn perform_test(_view: Weak<Self>) -> Result<()> {
+        Ok(())
     }
 }

@@ -12,7 +12,7 @@ use gm::{
     color::Color,
     flat::{Point, Rect, Size},
 };
-use hreads::{assert_main_thread, on_main};
+use hreads::{assert_main_thread, from_main, on_main};
 use parking_lot::Mutex;
 use plat::Platform;
 use refs::{Own, Weak};
@@ -122,7 +122,7 @@ impl UIManager {
         if selected_view.is_null() {
             return;
         }
-        selected_view.base_view().is_selected = false;
+        selected_view.__base_view().is_selected = false;
         selected_view.__internal_on_selection_changed(false);
         *selected_view = Weak::default();
     }
@@ -141,7 +141,7 @@ impl UIManager {
             *selected_view = view;
         }
 
-        view.base_view().is_selected = selected;
+        view.__base_view().is_selected = selected;
         view.__internal_on_selection_changed(selected);
     }
 }
@@ -149,7 +149,7 @@ impl UIManager {
 impl UIManager {
     fn init() -> Self {
         let mut root_view = Own::<RootView>::default();
-        root_view.base_view().view_label = "Root view".to_string();
+        root_view.__base_view().view_label = "Root view".to_string();
         root_view.setup_root();
 
         Self {
@@ -279,13 +279,15 @@ impl UIManager {
     }
 
     pub fn set_view<T: View + 'static>(view: Own<T>) -> Weak<T> {
-        let weak = view.weak();
-        let mut root = UIManager::root_view();
-        root.clear_root();
-        let view = root.add_subview_to_root(view);
-        view.place().back();
+        from_main(move || {
+            let weak = view.weak();
+            let mut root = UIManager::root_view();
+            root.clear_root();
+            let view = root.add_subview_to_root(view);
+            view.place().back();
 
-        weak
+            weak
+        })
     }
 }
 

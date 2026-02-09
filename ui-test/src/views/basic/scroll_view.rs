@@ -2,8 +2,9 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{ScrollView, Setup, TURQUOISE, UIDrawer, ViewData, view},
+    ui::{ScrollView, Setup, TURQUOISE, ViewData, view},
     ui_test::{
+        UITest,
         helpers::{add_corners, check_colors},
         inject_scroll, inject_touches,
     },
@@ -24,7 +25,7 @@ impl Setup for Scrolling {
 }
 
 pub async fn test_scroll_view() -> Result<()> {
-    let mut view = UIDrawer::init_test_view::<Scrolling>();
+    let mut view = UITest::start::<Scrolling>();
 
     check_colors(
         r#"

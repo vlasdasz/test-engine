@@ -134,7 +134,7 @@ impl<T: ToLabel + Clone + 'static> CollectionData for DropDown<T> {
 
     fn make_cell(&self) -> Own<dyn View> {
         let label = Label::new();
-        label.base_view().view_label += "DropDown cell: ";
+        label.__base_view().view_label += "DropDown cell: ";
         label
     }
 

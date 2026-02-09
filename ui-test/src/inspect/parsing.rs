@@ -5,7 +5,8 @@ use test_engine::{
     dispatch::from_main,
     inspect::ViewToInspect,
     refs::Weak,
-    ui::{BLUE, Button, Setup, UIDrawer, ViewData, view},
+    ui::{BLUE, Button, Setup, ViewData, view},
+    ui_test::UITest,
 };
 
 #[view]
@@ -22,7 +23,7 @@ impl Setup for InspectParsing {
 }
 
 pub(crate) async fn test_inspect_parsing() -> Result<()> {
-    let view = UIDrawer::init_test_view::<InspectParsing>();
+    let view = UITest::start::<InspectParsing>();
 
     let repr = from_main(move || view.view_to_inspect());
 

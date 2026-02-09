@@ -1,13 +1,10 @@
-use gm::{
-    Apply,
-    flat::{Direction, Size},
-};
+use gm::{Apply, flat::Direction};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    Setup, ViewCallbacks, ViewTest,
+    Setup, ViewCallbacks,
     view::{ViewData, ViewFrame},
 };
 mod test_engine {
@@ -55,12 +52,5 @@ impl ViewCallbacks for DPadView {
         self.left.set_frame((0, height, width, height));
         self.down.set_frame((width, height, width, height));
         self.right.set_frame((width * 2.0, height, width, height));
-    }
-}
-
-impl ViewTest for DPadView {
-    fn test_size() -> Size<u32>
-    where Self: Sized {
-        (140, 100).into()
     }
 }

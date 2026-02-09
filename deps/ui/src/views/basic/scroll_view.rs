@@ -112,7 +112,10 @@ impl ViewCallbacks for ScrollView {
 
 impl ViewSubviews for ScrollView {
     fn remove_all_subviews(&self) {
-        let to_remove = self.base_view().subviews.extract_if(.., move |v| v.raw() != self.slider.raw());
+        let to_remove = self
+            .__base_view()
+            .subviews
+            .extract_if(.., move |v| v.raw() != self.slider.raw());
         UIManager::get().deleted_views.lock().extend(to_remove);
     }
 }

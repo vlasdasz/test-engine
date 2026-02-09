@@ -51,7 +51,7 @@ impl ImageView {
             self.nine_segment
                 .subviews_mut()
                 .iter_mut()
-                .for_each(|v| v.base_view().z_position = self.z_position());
+                .for_each(|v| v.__base_view().z_position = self.z_position());
         }
 
         self.nine_segment.set_image(name);

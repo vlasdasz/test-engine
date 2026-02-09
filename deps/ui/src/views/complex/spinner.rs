@@ -4,7 +4,7 @@ use gm::{
     Animation, LossyConvert,
     color::{GRAY, LIGHT_BLUE},
 };
-use hreads::{on_main, on_main_sync};
+use hreads::on_main;
 use parking_lot::{Mutex, MutexGuard};
 use ui_proc::view;
 use vents::OnceEvent;
@@ -126,7 +126,7 @@ impl Spinner {
             return;
         }
 
-        on_main_sync(|| {
+        on_main(|| {
             *Self::current() = Self::prepare_modally();
         });
     }
@@ -141,6 +141,12 @@ impl Spinner {
 
         on_main(|| {
             let mut spinner = Self::current();
+
+            if spinner.is_null() {
+                warn!("Spinner already stopped");
+                return;
+            }
+
             TouchStack::pop_layer(spinner.weak_view());
 
             let animation = UIAnimation::new(Animation::new(0.8, 0.0, 0.4), |sp, val| {

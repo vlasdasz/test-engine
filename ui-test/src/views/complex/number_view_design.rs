@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{BLUE, HasText, LIGHT_GRAY, NumberView, Setup, Style, UIDrawer, ViewData, ViewSubviews, view},
-    ui_test::check_colors,
+    ui::{BLUE, HasText, LIGHT_GRAY, NumberView, Setup, Style, ViewData, ViewSubviews, view},
+    ui_test::{UITest, check_colors},
 };
 
 const STYLE: Style = Style::new(|view| {
@@ -33,7 +33,7 @@ pub async fn test_number_view_design() -> Result<()> {
         STYLE.apply_globally::<NumberView>();
     });
 
-    let _view = UIDrawer::init_test_view::<NumberViewDesign>();
+    let _view = UITest::start::<NumberViewDesign>();
 
     check_colors(
         r#"

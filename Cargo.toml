@@ -33,8 +33,10 @@ bit_ops = "0.2"
 bytemuck = { version = "1.25", features = ["derive"] }
 cgmath = "0.18"
 chrono = "0.4"
+clap = { version = "4.5", features = ["derive"] }
 console_error_panic_hook = "0.1"
 console_log = "1.0"
+ctor = "0.6"
 dirs = "6.0"
 dotenvy = "0.15"
 educe = "0.6"
@@ -73,16 +75,16 @@ wgpu = "28.0"
 wgpu_text = "28.0"
 winit = "0.30"
 
-#hreads = { path = "../deps/hreads" }
-hreads = "0.12"
+# hreads = { path = "../deps/hreads" }
+hreads = "0.13"
 
-netrun = "0.25"
+netrun = "0.26"
 # refs = { path = "../deps/refs/refs" }
-refs = { version = "0.37", default-features = true }
+refs = { version = "0.38", default-features = true }
 #netrun = { path = "../deps/netrun/netrun" }
 plat = "0.8"
 reflected = "0.29"
-vents = "0.14"
+vents = "0.15"
 
 audio = { path = "deps/audio" }
 filesystem = { path = "deps/filesystem" }

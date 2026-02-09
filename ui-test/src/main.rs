@@ -5,15 +5,17 @@
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
-use std::env::var;
+use std::{collections::BTreeMap, env::var};
 
 use anyhow::Result;
+use clap::Parser;
 use log::info;
 use test_engine::{
     AppRunner,
     dispatch::from_main,
     ui::{Label, UIManager},
 };
+use test_game::UI_TESTS;
 
 use crate::inspect::test_inspect;
 use crate::{
@@ -34,7 +36,15 @@ mod inspect;
 mod level;
 mod views;
 
+#[derive(Parser)]
+struct Args {
+    #[arg(long, short)]
+    test_name: Option<String>,
+}
+
 fn main() -> Result<()> {
+    let args = Args::parse();
+
     AppRunner::start_with_actor(async {
         Label::set_default_text_size(32);
         UIManager::set_display_touches(true);
@@ -42,6 +52,26 @@ fn main() -> Result<()> {
         from_main(|| {
             UIManager::override_scale(1.0);
         });
+
+        let tests: BTreeMap<_, _> = { UI_TESTS.lock().clone() };
+
+        if let Some(test_name) = args.test_name {
+            let test = match tests.get(&test_name) {
+                Some(test) => test,
+                None => {
+                    println!("Test: {test_name} not found");
+                    AppRunner::stop();
+                    return Ok(());
+                }
+            };
+            test()?;
+            AppRunner::stop();
+            return Ok(());
+        }
+
+        for (_name, test) in tests.into_iter() {
+            test()?;
+        }
 
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 

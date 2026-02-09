@@ -6,8 +6,8 @@ use test_engine::{
     dispatch::{from_main, on_main},
     net::{Request, RestAPI},
     refs::Weak,
-    ui::{Button, HasText, Label, Setup, Spinner, UIDrawer, ViewFrame, async_link_button, view},
-    ui_test::inject_touches,
+    ui::{Button, HasText, Label, Setup, Spinner, ViewFrame, async_link_button, view},
+    ui_test::{UITest, inject_touches},
 };
 
 static NOT_REQUESTED: AtomicBool = AtomicBool::new(false);
@@ -60,7 +60,7 @@ impl Setup for RestRequest {
 }
 
 pub async fn test_rest_request() -> Result<()> {
-    let view = UIDrawer::init_test_view::<RestRequest>();
+    let view = UITest::start::<RestRequest>();
 
     inject_touches(
         "

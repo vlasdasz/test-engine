@@ -7,5 +7,6 @@ version.workspace = true
 proc-macro = true
 
 [dependencies]
+parking_lot = { workspace = true }
 quote = { workspace = true }
 syn = { workspace = true }

@@ -89,9 +89,14 @@ pub mod net {
 pub mod dispatch {
     #[cfg(not_wasm)]
     pub use ::hreads::first_ok;
-    pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_for_next_frame};
+    pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_async, wait_for_next_frame};
 
     // pub use crate::ui::ui_dispatch::on_back;
+}
+
+pub mod __internal_macro_deps {
+    pub use ctor;
+    pub use parking_lot::Mutex;
 }
 
 #[cfg(target_os = "android")]

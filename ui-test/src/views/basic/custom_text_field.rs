@@ -1,8 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Setup, TURQUOISE, TextField, UIDrawer, ViewData, ViewFrame, YELLOW, view},
-    ui_test::{check_colors, inject_touches},
+    ui::{Setup, TURQUOISE, TextField, ViewData, ViewFrame, YELLOW, view},
+    ui_test::{UITest, check_colors, inject_touches},
 };
 
 #[view]
@@ -25,7 +25,7 @@ impl Setup for CustomTextField {
 }
 
 pub async fn test_custom_text_field() -> Result<()> {
-    let _view = UIDrawer::init_test_view::<CustomTextField>();
+    let _view = UITest::start::<CustomTextField>();
 
     check_colors(
         r#"

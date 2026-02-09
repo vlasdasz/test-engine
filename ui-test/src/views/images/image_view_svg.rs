@@ -2,8 +2,8 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor::Top, BLUE, ImageView, Setup, Tinted, UIDrawer, ViewData, ViewTouch, view},
-    ui_test::helpers::check_colors,
+    ui::{Anchor::Top, BLUE, ImageView, Setup, Tinted, ViewData, ViewTouch, view},
+    ui_test::{UITest, helpers::check_colors},
 };
 
 #[view]
@@ -26,7 +26,7 @@ impl Setup for ImageViewSVG {
 }
 
 pub async fn test_image_view_svg() -> Result<()> {
-    let view = UIDrawer::init_test_view::<ImageViewSVG>();
+    let view = UITest::start::<ImageViewSVG>();
 
     check_colors(
         r#"

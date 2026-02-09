@@ -4,7 +4,7 @@ use hreads::from_main;
 use ui::{HighlightView, Setup, UIManager, ViewFrame, ViewSubviews};
 use window::Screenshot;
 
-use crate::{AppRunner, ui::ui::TEST_NAME};
+use crate::{AppRunner, ui_test::TEST_NAME};
 
 pub(super) fn check_pixel_color(screenshot: &Screenshot, pos: Point, color: U8Color) -> Result<()> {
     let pixel: U8Color = screenshot.get_pixel(pos);
