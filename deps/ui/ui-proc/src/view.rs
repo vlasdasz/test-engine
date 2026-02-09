@@ -67,14 +67,13 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
         quote! {
             #[test_engine::__internal_macro_deps::ctor::ctor(crate_path = test_engine::__internal_macro_deps::ctor)]
             fn store_test() {
-                use futures::FutureExt;
-
                 crate::UI_TESTS
                     .lock()
-                    .insert(#name_str.to_string(), || run_ui_test().boxed());
+                    .insert(#name_str.to_string(), run_ui_test);
             }
 
             #[test]
+            #[ignore]
             fn ui_test() -> anyhow::Result<()> {
                 let mut child = std::process::Command::new("cargo")
                     .args([
@@ -101,8 +100,7 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 Ok(())
             }
 
-            #[allow(clippy::unused_async)]
-            pub async fn run_ui_test() -> Result<()> {
+            pub fn run_ui_test() -> Result<()> {
                 #name::perform_test(test_engine::ui_test::UITest::start::<#name>())
             }
         }

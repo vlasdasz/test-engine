@@ -11,8 +11,9 @@ mod interface;
 mod levels;
 mod no_physics;
 
-type AsyncFn = fn() -> futures::future::BoxFuture<'static, anyhow::Result<()>>;
-pub static UI_TESTS: parking_lot::Mutex<std::collections::BTreeMap<String, AsyncFn>> =
+type TestFn = fn() -> anyhow::Result<()>;
+
+pub static UI_TESTS: parking_lot::Mutex<std::collections::BTreeMap<String, TestFn>> =
     parking_lot::Mutex::new(std::collections::BTreeMap::new());
 
 test_engine::register_app!(TestGameApp);

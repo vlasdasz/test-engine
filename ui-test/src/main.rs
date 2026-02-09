@@ -64,13 +64,13 @@ fn main() -> Result<()> {
                     return Ok(());
                 }
             };
-            test().await?;
+            test()?;
             AppRunner::stop();
             return Ok(());
         }
 
         for (_name, test) in tests.into_iter() {
-            test().await?;
+            test()?;
         }
 
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();

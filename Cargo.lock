@@ -5737,7 +5737,6 @@ dependencies = [
  "anyhow",
  "dotenvy",
  "fastrand",
- "futures",
  "log",
  "netrun",
  "parking_lot",

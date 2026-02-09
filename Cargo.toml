@@ -42,7 +42,6 @@ dotenvy = "0.15"
 educe = "0.6"
 fastrand = "2.3"
 fern = "0.7"
-futures = "0.3"
 gloo-timers = { version = "0.3", features = ["futures"] }
 hex = "0.4"
 image = "0.25"
