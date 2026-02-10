@@ -2,15 +2,18 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths-ignore:
+      - "**.md"
   pull_request:
-    branches: [ main ]
+    branches: [main]
+    paths-ignore:
+      - "**.md"
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-
   wasm:
     name: Wasm
     runs-on: ubuntu-latest
@@ -29,12 +32,12 @@ jobs:
       fail-fast: false
       matrix:
         target: [
-          { os: macos, runner: macos-latest, },
-          { os: windows , runner: windows-latest },
+            { os: macos, runner: macos-latest },
+            { os: windows, runner: windows-latest },
 
-          { os: ios, runner: mac },
-          #          { os: android, runner: ubuntu-latest },
-        ]
+            { os: ios, runner: mac },
+            #          { os: android, runner: ubuntu-latest },
+          ]
     runs-on: ${{ matrix.target.runner }}
     steps:
       - uses: actions/checkout@v4
@@ -63,14 +66,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [
-          { container: "ubuntu" },
-          { container: "debian" },
-          { container: "fedora" },
-          { container: "archlinux" },
-          { container: "amazonlinux" },
-          { container: "dockerscripts/linuxmint:cinnamon-minimal" },
-        ]
+        target:
+          [
+            { container: "ubuntu" },
+            { container: "debian" },
+            { container: "fedora" },
+            { container: "archlinux" },
+            { container: "amazonlinux" },
+            { container: "dockerscripts/linuxmint:cinnamon-minimal" },
+          ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
