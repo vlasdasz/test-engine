@@ -1,3 +1,5 @@
 pub(crate) mod color_meter;
+mod indicators;
 pub mod sprite_view;
-pub(crate) mod task_spinner;
+
+pub use indicators::*;

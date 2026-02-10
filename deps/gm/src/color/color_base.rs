@@ -119,4 +119,11 @@ impl<T: Zero> Default for Color<T> {
     }
 }
 
+impl<T: Default + PartialEq<T>> Color<T> {
+    pub fn is_default(&self) -> bool {
+        let def = T::default();
+        self.r == def && self.g == def && self.b == def && self.a == def
+    }
+}
+
 impl<T: Eq> Eq for Color<T> {}

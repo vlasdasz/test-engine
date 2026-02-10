@@ -7,7 +7,7 @@
 
 use std::{collections::BTreeMap, env::var};
 
-use anyhow::Result;
+use anyhow::{Result, bail};
 use clap::Parser;
 use log::info;
 use test_engine::{
@@ -15,7 +15,6 @@ use test_engine::{
     dispatch::from_main,
     ui::{Label, UIManager},
 };
-use test_game::UI_TESTS;
 
 use crate::inspect::test_inspect;
 use crate::{
@@ -53,7 +52,9 @@ fn main() -> Result<()> {
             UIManager::override_scale(1.0);
         });
 
-        let tests: BTreeMap<_, _> = { UI_TESTS.lock().clone() };
+        let mut tests: BTreeMap<_, _> = test_game::UI_TESTS.lock().clone();
+
+        tests.append(&mut test_engine::UI_TESTS.lock().clone());
 
         if let Some(test_name) = args.test_name {
             let test = match tests.get(&test_name) {
@@ -61,7 +62,7 @@ fn main() -> Result<()> {
                 None => {
                     println!("Test: {test_name} not found");
                     AppRunner::stop();
-                    return Ok(());
+                    bail!("Test: {test_name} not found");
                 }
             };
             test()?;

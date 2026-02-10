@@ -202,7 +202,7 @@ pub fn record_colors() -> Result<()> {
         UIEvents::on_debug_touch().remove_subscribers();
     });
 
-    println!("check_colors( r#\"");
+    println!("check_colors( r\"");
 
     for (touch, color) in touches.deref() {
         let x: u32 = touch.position.x.lossy_convert();
@@ -213,7 +213,7 @@ pub fn record_colors() -> Result<()> {
         );
     }
 
-    println!("        \"#");
+    println!("        \"");
     println!(")?;");
 
     drop(touch_lock);

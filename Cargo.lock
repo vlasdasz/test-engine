@@ -4598,9 +4598,9 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.38.0"
+version = "0.40.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00316b16f87f508f1df30863201bdd753563eb75d9a7f4c4ff51c1da0df9ecff"
+checksum = "ce48c38d7e96375663d6d2963edaf949aaf1a631c1c43d2fb8ed6ff0f667f6fe"
 dependencies = [
  "derive_more",
  "hreads",
@@ -5702,6 +5702,7 @@ dependencies = [
  "android_logger",
  "anyhow",
  "audio",
+ "chrono",
  "console_error_panic_hook",
  "console_log",
  "ctor",
@@ -5746,7 +5747,6 @@ dependencies = [
  "fastrand",
  "log",
  "netrun",
- "parking_lot",
  "plat",
  "serde",
  "test-engine",

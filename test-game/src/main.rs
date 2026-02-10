@@ -11,12 +11,8 @@ mod interface;
 mod levels;
 mod no_physics;
 
-type TestFn = fn() -> anyhow::Result<()>;
-
-pub static UI_TESTS: parking_lot::Mutex<std::collections::BTreeMap<String, TestFn>> =
-    parking_lot::Mutex::new(std::collections::BTreeMap::new());
-
 test_engine::register_app!(TestGameApp);
+test_engine::export_ui_tests!();
 
 fn main() {
     test_engine::test_engine_start_app();

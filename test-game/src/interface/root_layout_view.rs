@@ -1,6 +1,10 @@
 use test_engine::{
     refs::Weak,
-    ui::{Container, LIGHT_BLUE, NumberView, Setup, Style, UIManager, ViewData, ViewSubviews, view},
+    ui::{
+        Container, LIGHT_BLUE, NoImage, NumberView, Setup, Style, UIManager, ViewData, ViewSubviews,
+        ViewTest, view_test,
+    },
+    ui_test::check_colors,
 };
 
 use crate::interface::test_game_view::HAS_BACK_BUTTON;
@@ -9,7 +13,7 @@ const CORNER_STYLE: Style = Style::new(|v| {
     v.set_color(LIGHT_BLUE).place().size(80, 80);
 });
 
-#[view]
+#[view_test]
 pub struct RootLayoutView {
     #[init]
     scale: NumberView,
@@ -48,46 +52,24 @@ impl Setup for RootLayoutView {
 impl Drop for RootLayoutView {
     fn drop(&mut self) {
         UIManager::disable_debug_frames();
+        UIManager::root_view().set_image(NoImage);
     }
 }
 
-pub mod test {
+impl ViewTest for RootLayoutView {
+    fn perform_test(_view: Weak<Self>) -> anyhow::Result<()> {
+        check_colors(
+            r"
+                      26  273 -   0 218 255
+                      27  258 - 121 119 244
+                      24   88 - 111 123 231
+                      38   53 -   0 218 255
+                      95   38 - 119 130 247
+                ",
+        )?;
 
-    use anyhow::Result;
-    use test_engine::{
-        ui::{ViewTest, view_test},
-        ui_test::check_colors,
-    };
+        // test_engine::ui_test::record_ui_test();
 
-    use super::{RootLayoutView, Setup, ViewData, Weak};
-
-    #[view_test]
-    struct RootLayoutViewTest {
-        #[init]
-        view: RootLayoutView,
-    }
-
-    impl Setup for RootLayoutViewTest {
-        fn setup(self: Weak<Self>) {
-            self.view.place().back();
-        }
-    }
-
-    impl ViewTest for RootLayoutViewTest {
-        fn perform_test(_view: Weak<Self>) -> Result<()> {
-            check_colors(
-                r"
-                          26  273 -   0 218 255
-                          27  258 - 121 119 244
-                          24   88 - 111 123 231
-                          38   53 -   0 218 255
-                          95   38 - 119 130 247
-                    ",
-            )?;
-
-            // test_engine::ui_test::record_ui_test();
-
-            Ok(())
-        }
+        Ok(())
     }
 }

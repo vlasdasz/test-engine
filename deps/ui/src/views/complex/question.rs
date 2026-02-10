@@ -66,7 +66,7 @@ impl Question {
 
     ///bool == true -> right choice
     pub fn callback(self, callback: impl FnOnce(bool) + Send + 'static) {
-        Self::make_modal(self).event.val(callback);
+        Self::show_modally(self).event.val(callback);
     }
 
     pub fn on_yes(self, callback: impl FnOnce() + Send + 'static) {
@@ -81,7 +81,7 @@ impl Question {
         let (se, rc) = channel::<bool>();
 
         from_main(move || {
-            Self::make_modal(self).event.val(move |answer| {
+            Self::show_modally(self).event.val(move |answer| {
                 se.send(answer).unwrap();
             });
         });
