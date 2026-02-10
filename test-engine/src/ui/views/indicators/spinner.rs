@@ -3,7 +3,7 @@ use std::f32::consts::PI;
 use chrono::Utc;
 use gm::{
     Animation, LossyConvert,
-    color::{Color, GRAY, LIGHT_BLUE},
+    color::{BLACK, Color, GRAY, LIGHT_BLUE},
     flat::{Size, point_on_circle},
 };
 use hreads::on_main;
@@ -68,9 +68,9 @@ impl Spinner {
 
 impl Setup for Spinner {
     fn setup(mut self: Weak<Self>) {
-        self.set_color(GRAY.with_alpha(0.8));
-        self.set_corner_radius(20);
-        self.dot_color = LIGHT_BLUE;
+        if self.dot_color.is_default() {
+            self.dot_color = BLACK;
+        }
         self.rotation_speed = 1.5;
 
         for _ in 0..CIRCLES_N {
@@ -138,7 +138,13 @@ impl Spinner {
         }
 
         on_main(|| {
-            *Self::current() = Self::prepare_modally();
+            let mut spinner = Spinner::default();
+
+            spinner.set_color(GRAY.with_alpha(0.8));
+            spinner.set_corner_radius(20);
+            spinner.dot_color = LIGHT_BLUE;
+
+            *Self::current() = Self::show_modally(spinner);
         });
     }
 
@@ -265,8 +271,6 @@ mod test {
                 spinner.dot_color = WHITE;
                 spinner.rotation_speed = 5.0;
             });
-
-            crate::ui_test::record_ui_test();
 
             Ok(())
         }

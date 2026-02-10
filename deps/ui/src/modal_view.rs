@@ -1,4 +1,4 @@
-use gm::{color::WHITE, flat::Size};
+use gm::flat::Size;
 use hreads::{from_main, on_main};
 use refs::{Own, Weak};
 use vents::OnceEvent;
@@ -6,10 +6,9 @@ use vents::OnceEvent;
 use crate::{TouchStack, UIManager, View, ViewData, ViewFrame, view::ViewSubviews};
 
 pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
-    fn make_modal(view: Self) -> Weak<Self> {
+    fn show_modally(view: Self) -> Weak<Self> {
         let mut view = Own::new(view);
         view.set_z_position(UIManager::MODAL_Z_OFFSET);
-        view.set_color(WHITE);
         let size = Self::modal_size();
         let weak = view.weak();
         TouchStack::push_layer(weak.weak_view());
@@ -19,7 +18,7 @@ pub trait ModalView<In = (), Out: 'static = ()>: 'static + View + Default {
     }
 
     fn prepare_modally() -> Weak<Self> {
-        Self::make_modal(Self::default())
+        Self::show_modally(Self::default())
     }
 
     fn prepare_modally_with_input(input: In) -> Weak<Self> {
