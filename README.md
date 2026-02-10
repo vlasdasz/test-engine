@@ -45,14 +45,10 @@ impl Setup for MainScreen {
     }
 }
 
+#[derive(Default)]
 struct ExampleApp;
 
 impl App for ExampleApp {
-    fn new() -> Box<Self>
-    where Self: Sized {
-        Box::new(ExampleApp)
-    }
-
     fn make_root_view(&self) -> Own<dyn View> {
         MainScreen::new()
     }
@@ -61,7 +57,6 @@ impl App for ExampleApp {
 fn main() {
     ExampleApp::start();
 }
-
 
 ```
 

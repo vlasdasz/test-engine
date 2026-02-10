@@ -11,8 +11,6 @@ use crate::app_starter::test_engine_start_with_app;
 pub type PinnedFuture<T> = Pin<Box<dyn Future<Output = anyhow::Result<T>>>>;
 
 pub trait App {
-    fn new() -> Box<Self>
-    where Self: Sized;
     fn before_launch(&self) {}
     fn after_launch(&self) {}
     fn make_root_view(&self) -> Own<dyn View>;
@@ -21,8 +19,8 @@ pub trait App {
     }
 
     fn start()
-    where Self: Sized + 'static {
-        test_engine_start_with_app(Self::new());
+    where Self: Default + Sized + 'static {
+        test_engine_start_with_app(Box::new(Self::default()));
     }
 
     fn sentry_url(&self) -> PinnedFuture<String> {
@@ -69,7 +67,7 @@ macro_rules! register_app {
             fn check_trait<T: test_engine::App>() {}
             check_trait::<$app>();
 
-            <$app>::new()
+            Box::new(<$app>::default())
         }
     };
 }

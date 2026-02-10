@@ -7,10 +7,7 @@ use arbitrary::Arbitrary;
 use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    One,
-    num::{Abs, Zero},
-};
+use crate::num::{Abs, Zero};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize, Arbitrary)]

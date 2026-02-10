@@ -37,14 +37,10 @@ async fn secrets() -> anyhow::Result<&'static test_engine::net::SecretsManager> 
         .await
 }
 
+#[derive(Default)]
 pub struct TestGameApp;
 
 impl App for TestGameApp {
-    fn new() -> Box<Self>
-    where Self: Sized {
-        Box::new(Self)
-    }
-
     fn before_launch(&self) {
         RestAPI::init("https://jsonplaceholder.typicode.com/");
 

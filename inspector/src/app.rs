@@ -6,14 +6,10 @@ use test_engine::{
 
 use crate::ui::MainScreen;
 
+#[derive(Default)]
 pub struct InspectorApp;
 
 impl App for InspectorApp {
-    fn new() -> Box<Self>
-    where Self: Sized {
-        Box::new(Self)
-    }
-
     fn make_root_view(&self) -> Own<dyn View> {
         MainScreen::new()
     }

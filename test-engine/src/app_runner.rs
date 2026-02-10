@@ -174,14 +174,10 @@ impl AppRunner {
     ) -> Result<()> {
         use ui::Setup;
 
+        #[derive(Default)]
         struct ActorApp;
 
         impl App for ActorApp {
-            fn new() -> Box<Self>
-            where Self: Sized {
-                Box::new(ActorApp {})
-            }
-
             fn make_root_view(&self) -> Own<dyn View> {
                 Container::new()
             }
@@ -191,7 +187,7 @@ impl AppRunner {
             hreads::unasync(actions).unwrap();
         });
 
-        test_engine_start_with_app(ActorApp::new());
+        test_engine_start_with_app(Box::new(ActorApp::default()));
 
         Ok(())
     }
