@@ -7,7 +7,6 @@ use vents::Event;
 
 use crate::{
     Button, CollectionData, CollectionView, Label, Setup, ToLabel, View,
-    has_data::HasText,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 

@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicU16, Ordering};
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Button, HasText, Setup, ViewData, view},
+    ui::{Button, Setup, ViewData, view},
     ui_test::{UITest, inject_touches},
 };
 

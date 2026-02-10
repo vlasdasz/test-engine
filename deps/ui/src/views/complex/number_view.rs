@@ -5,7 +5,7 @@ use gm::{
 use refs::{Weak, weak_from_ref};
 use vents::Event;
 
-use crate::{Button, Container, HasText, Setup, Style, ToLabel, UIImages, view::ViewData};
+use crate::{Button, Container, Setup, Style, ToLabel, UIImages, view::ViewData};
 
 mod test_engine {
     pub(crate) use educe;
@@ -117,31 +117,23 @@ impl NumberView {
     }
 }
 
-impl HasText for NumberView {
-    fn text(&self) -> &str {
-        todo!()
-    }
-
-    fn set_text(&self, _text: impl ToLabel) -> &Self {
-        todo!()
-    }
-
-    fn text_color(&self) -> &Color {
+impl NumberView {
+    pub fn text_color(&self) -> &Color {
         self.up.text_color()
     }
 
-    fn set_text_color(&self, color: impl Into<Color>) -> &Self {
+    pub fn set_text_color(&self, color: impl Into<Color>) -> &Self {
         let color = color.into();
         self.up.set_text_color(color);
         self.down.set_text_color(color);
         self
     }
 
-    fn text_size(&self) -> f32 {
+    pub fn text_size(&self) -> f32 {
         self.up.text_size()
     }
 
-    fn set_text_size(&self, size: impl ToF32) -> &Self {
+    pub fn set_text_size(&self, size: impl ToF32) -> &Self {
         self.up.set_text_size(size);
         self.down.set_text_size(size);
         self

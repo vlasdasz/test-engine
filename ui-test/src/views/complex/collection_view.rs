@@ -5,8 +5,8 @@ use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
     ui::{
-        CollectionData, CollectionLayout, CollectionView, HasText, Label, Setup, Size, TouchStack, View,
-        ViewData, ViewFrame, view,
+        CollectionData, CollectionLayout, CollectionView, Label, Setup, Size, TouchStack, View, ViewData,
+        ViewFrame, view,
     },
     ui_test::{UITest, add_action, helpers::check_colors},
 };

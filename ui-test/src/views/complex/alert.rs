@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    ui::{Alert, HasText, RED, TextAlignment, view},
+    ui::{Alert, RED, TextAlignment, view},
     ui_test::{UITest, check_colors, inject_touches},
 };
 

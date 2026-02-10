@@ -11,7 +11,6 @@ use window::image::ToImage;
 
 use crate::{
     ImageView, Label, Setup, Style, ToLabel, UIManager, View, ViewSubviews, ViewTransition,
-    has_data::HasText,
     view::{ViewData, ViewTouch},
 };
 
@@ -32,31 +31,31 @@ pub struct Button {
     image: ImageView,
 }
 
-impl HasText for Button {
-    fn text(&self) -> &str {
+impl Button {
+    pub fn text(&self) -> &str {
         self.label.text()
     }
 
-    fn set_text(&self, text: impl ToLabel) -> &Self {
+    pub fn set_text(&self, text: impl ToLabel) -> &Self {
         self.label.set_hidden(false);
         self.label.set_text(text);
         self
     }
 
-    fn text_color(&self) -> &Color {
+    pub fn text_color(&self) -> &Color {
         self.label.text_color()
     }
 
-    fn set_text_color(&self, color: impl Into<Color>) -> &Self {
+    pub fn set_text_color(&self, color: impl Into<Color>) -> &Self {
         self.label.set_text_color(color);
         self
     }
 
-    fn text_size(&self) -> f32 {
+    pub fn text_size(&self) -> f32 {
         self.label.text_size()
     }
 
-    fn set_text_size(&self, size: impl ToF32) -> &Self {
+    pub fn set_text_size(&self, size: impl ToF32) -> &Self {
         weak_from_ref(self).label.set_text_size(size);
         self
     }

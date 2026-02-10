@@ -4,8 +4,8 @@ use anyhow::Result;
 use test_engine::{
     refs::{Own, Weak},
     ui::{
-        Button, CollectionData, CollectionView, Container, GREEN, HasText, ImageView, Label, Setup, Size,
-        TURQUOISE, View, ViewData, ViewSubviews,
+        Button, CollectionData, CollectionView, Container, GREEN, ImageView, Label, Setup, Size, TURQUOISE,
+        View, ViewData, ViewSubviews,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },

@@ -4,7 +4,7 @@ use test_engine::{
     dispatch::wait_for_next_frame,
     refs::Weak,
     ui::{
-        Anchor, Button, GREEN, HasText, ORANGE, Setup, ViewData, ViewSubviews,
+        Anchor, Button, GREEN, ORANGE, Setup, ViewData, ViewSubviews,
         ui_test::{
             inject_touches,
             state::{append_state, clear_state, get_state},

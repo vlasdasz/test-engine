@@ -3,8 +3,8 @@ use parking_lot::Mutex;
 use test_engine::{
     refs::Weak,
     ui::{
-        GRAY, HasText, Label, Setup, TURQUOISE, TextAlignment::Left, UIManager, ViewData, ViewFrame,
-        ViewSubviews, ViewTouch, WHITE, view,
+        GRAY, Label, Setup, TURQUOISE, TextAlignment::Left, UIManager, ViewData, ViewFrame, ViewSubviews,
+        ViewTouch, WHITE, view,
     },
 };
 

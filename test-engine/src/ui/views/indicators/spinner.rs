@@ -85,11 +85,11 @@ impl ViewCallbacks for Spinner {
         let duration_scale = self.rotation_speed;
         let microseconds_in_one_second = 1_000_000.0;
 
-        let cycle_duration = (microseconds_in_one_second * duration_scale) as i64;
+        let cycle_duration: i64 = (microseconds_in_one_second * duration_scale).lossy_convert();
 
         let current_time: i64 = Utc::now().timestamp_micros();
 
-        let val = (current_time % cycle_duration) as f32 / cycle_duration as f32;
+        let val: f32 = (current_time % cycle_duration).lossy_convert() / cycle_duration.lossy_convert();
 
         let span = PI * 2.0;
         let start = -PI;

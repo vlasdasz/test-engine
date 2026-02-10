@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Button, HasText, ImageView, NoImage, Setup, ViewFrame, WHITE, view},
+    ui::{Button, ImageView, NoImage, Setup, ViewFrame, WHITE, view},
     ui_test::{UITest, check_colors},
 };
 

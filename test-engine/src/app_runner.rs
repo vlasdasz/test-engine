@@ -187,7 +187,7 @@ impl AppRunner {
             hreads::unasync(actions).unwrap();
         });
 
-        test_engine_start_with_app(Box::new(ActorApp::default()));
+        test_engine_start_with_app(Box::new(ActorApp));
 
         Ok(())
     }

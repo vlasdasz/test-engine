@@ -9,7 +9,6 @@ use window::NamedKey;
 
 use crate::{
     Label, Setup, TextAlignment, TextFieldConstraint, ToLabel, UIEvents, UIManager,
-    has_data::HasText,
     text_field_constraint::AcceptChar,
     view::{ViewData, ViewFrame, ViewTouch},
 };

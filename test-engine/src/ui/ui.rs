@@ -10,8 +10,8 @@ use render::{
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
 };
 use ui::{
-    DrawingView, HasText, ImageView, Label, TextAlignment, UIManager, View, ViewAnimation, ViewData,
-    ViewFrame, ViewLayout, ViewSubviews,
+    DrawingView, ImageView, Label, TextAlignment, UIManager, View, ViewAnimation, ViewData, ViewFrame,
+    ViewLayout, ViewSubviews,
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};

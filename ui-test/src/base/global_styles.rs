@@ -4,7 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Top, X},
-        BLUE, Button, HasText, Setup, Style, ViewData, ViewSubviews, view,
+        BLUE, Button, Setup, Style, ViewData, ViewSubviews, view,
     },
     ui_test::{UITest, check_colors},
 };

@@ -4,8 +4,6 @@ use gm::color::WHITE;
 use plat::Platform;
 use refs::{Own, Weak, main_lock::MainLock};
 
-use crate::has_data::HasText;
-
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;

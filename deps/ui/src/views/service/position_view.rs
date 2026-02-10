@@ -9,7 +9,7 @@ use gm::{color::BLACK, flat::Point};
 use refs::Weak;
 use ui_proc::view;
 
-use crate::{Container, Label, Setup, UIEvent, ViewData, ViewFrame, ViewTouch, has_data::HasText};
+use crate::{Container, Label, Setup, UIEvent, ViewData, ViewFrame, ViewTouch};
 
 #[view]
 pub struct PositionView {

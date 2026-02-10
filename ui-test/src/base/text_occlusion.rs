@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{HasText, LIGHT_GRAY, Label, Setup, ViewData, view},
+    ui::{LIGHT_GRAY, Label, Setup, ViewData, view},
     ui_test::{UITest, helpers::check_colors},
 };
 

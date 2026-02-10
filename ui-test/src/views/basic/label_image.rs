@@ -6,8 +6,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Top, X},
-        Container, HasText, LIGHT_BLUE, Label, Setup, TableData, TableView, ViewData, ViewSubviews, WHITE,
-        view,
+        Container, LIGHT_BLUE, Label, Setup, TableData, TableView, ViewData, ViewSubviews, WHITE, view,
     },
     ui_test::{UITest, helpers::check_colors},
 };

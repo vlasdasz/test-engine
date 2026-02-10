@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{HasText, Label, Setup, ViewData, view},
+    ui::{Label, Setup, ViewData, view},
     ui_test::{UITest, check_colors},
 };
 

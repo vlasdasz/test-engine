@@ -4,10 +4,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::{Weak, weak_from_ref},
-    ui::{
-        Button, HasText, Label, Setup, TableData, TableView, UIManager, ViewData, ViewSubviews, cast_cell,
-        view,
-    },
+    ui::{Button, Label, Setup, TableData, TableView, UIManager, ViewData, ViewSubviews, cast_cell, view},
     ui_test::{UITest, check_colors, inject_touches},
 };
 

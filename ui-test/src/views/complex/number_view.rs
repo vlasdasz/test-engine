@@ -4,7 +4,7 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Bot, Height, Left, Right, Width, X, Y},
-        HasText, Label, NumberView, Setup, ViewData, view,
+        Label, NumberView, Setup, ViewData, view,
     },
     ui_test::{UITest, inject_touches},
 };

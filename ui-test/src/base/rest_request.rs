@@ -6,7 +6,7 @@ use test_engine::{
     dispatch::{from_main, on_main},
     net::{Request, RestAPI},
     refs::Weak,
-    ui::{Button, HasText, Label, Setup, Spinner, ViewFrame, async_link_button, view},
+    ui::{Button, Label, Setup, Spinner, ViewFrame, async_link_button, view},
     ui_test::{UITest, inject_touches},
 };
 

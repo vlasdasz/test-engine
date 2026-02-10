@@ -14,7 +14,7 @@ use ui_proc::view;
 use vents::OnceEvent;
 
 // use vents::OnceEvent;
-use crate::{ModalView, Setup, has_data::HasText, view::ViewData};
+use crate::{ModalView, Setup, view::ViewData};
 mod test_engine {
     pub(crate) use educe;
     pub(crate) use refs;

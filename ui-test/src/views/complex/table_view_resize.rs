@@ -4,7 +4,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
-    ui::{AfterSetup, GREEN, HasText, Label, Setup, TableData, TableView, View, ViewData, ViewFrame, view},
+    ui::{AfterSetup, GREEN, Label, Setup, TableData, TableView, View, ViewData, ViewFrame, view},
     ui_test::{UITest, check_colors, inject_scroll},
 };
 

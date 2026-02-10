@@ -4,8 +4,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Height, Top, Width, X},
-        Button, Container, HasText, Point, PositionView, Setup, ViewCallbacks, ViewData, ViewFrame,
-        ViewSubviews, WHITE, view,
+        Button, Container, Point, PositionView, Setup, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
+        WHITE, view,
     },
 };
 

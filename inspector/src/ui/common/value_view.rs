@@ -1,7 +1,7 @@
 use test_engine::{
     Event,
     refs::Weak,
-    ui::{HasText, Label, NumberView, Setup, ToLabel, ViewData, view},
+    ui::{Label, NumberView, Setup, ToLabel, ViewData, view},
 };
 
 #[view]

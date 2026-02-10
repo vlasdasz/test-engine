@@ -6,7 +6,7 @@
 //     refs::Weak,
 //     ui::{
 //         Anchor::{Size, Top, X},
-//         BLUE, Button, HasText, Label, Setup, Spinner, TableData, TableView,
+//         BLUE, Button,  Label, Setup, Spinner, TableData, TableView,
 // UI, ViewData, link_button, view,     },
 //     ui_test::inject_touches,
 // };

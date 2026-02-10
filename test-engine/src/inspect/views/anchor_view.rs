@@ -1,6 +1,6 @@
 use gm::color::{GRAY, U8Color, WHITE};
 use refs::Weak;
-use ui::{Anchor, Container, HasText, Label, Setup, ViewData, ViewSubviews};
+use ui::{Anchor, Container, Label, Setup, ViewData, ViewSubviews};
 use ui_proc::view;
 
 mod test_engine {

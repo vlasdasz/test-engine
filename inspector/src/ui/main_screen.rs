@@ -10,7 +10,7 @@ use test_engine::{
     ui::{
         Alert, AlertErr,
         Anchor::{Right, Top},
-        Button, DropDown, HasText, Setup, Spinner, UIEvent, ViewData, async_link_button, view,
+        Button, DropDown, Setup, Spinner, UIEvent, ViewData, async_link_button, view,
     },
 };
 

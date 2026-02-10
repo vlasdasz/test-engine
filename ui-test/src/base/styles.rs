@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     gm::Apply,
     refs::Weak,
-    ui::{Anchor::Top, Button, HasText, ORANGE, Setup, Style, ViewData, ViewSubviews, view},
+    ui::{Anchor::Top, Button, ORANGE, Setup, Style, ViewData, ViewSubviews, view},
     ui_test::{UITest, check_colors},
 };
 

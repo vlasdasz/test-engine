@@ -14,10 +14,10 @@ use test_engine::{
     ui::{
         ALL_VIEWS, Alert,
         Anchor::{self, Height, Left, Top, Width, X, Y},
-        Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label, MovableView,
-        NoImage, NumberView, PURPLE, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
-        Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, WHITE,
-        all_view_tests, all_views, async_link_button, view,
+        Button, ColorMeter, Container, DPadView, DrawingView, GREEN, ImageView, Label, MovableView, NoImage,
+        NumberView, PURPLE, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView, Style,
+        Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, WHITE, all_view_tests,
+        all_views, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;

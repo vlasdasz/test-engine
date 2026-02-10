@@ -4,8 +4,8 @@ use test_engine::{
     dispatch::wait_for_next_frame,
     refs::Weak,
     ui::{
-        Color, Container, HasText, Label, ModalView, Setup, Size, ViewData, ViewFrame, ViewSubviews,
-        WeakView, ui_test::helpers::check_colors, view,
+        Color, Container, Label, ModalView, Setup, Size, ViewData, ViewFrame, ViewSubviews, WeakView,
+        ui_test::helpers::check_colors, view,
     },
     ui_test::UITest,
 };

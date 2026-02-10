@@ -1,7 +1,7 @@
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{BLACK, BLUE, Button, Container, GREEN, HasText, RED, Setup, ViewData, ViewSubviews, view},
+    ui::{BLACK, BLUE, Button, Container, GREEN, RED, Setup, ViewData, ViewSubviews, view},
     ui_test::{UITest, check_colors},
 };
 

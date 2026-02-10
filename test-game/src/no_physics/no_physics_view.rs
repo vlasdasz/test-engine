@@ -1,7 +1,7 @@
 use test_engine::{
     level::LevelManager,
     refs::Weak,
-    ui::{Button, HasText, Setup, ViewData, view},
+    ui::{Button, Setup, ViewData, view},
 };
 
 use crate::{interface::test_game_view::TestGameView, no_physics::NoPhysicsLevel};

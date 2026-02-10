@@ -6,8 +6,7 @@ use refs::Weak;
 use ui_proc::view;
 
 use crate::{
-    Anchor::Top, HasText, ImageView, Label, Setup, UIImages, View, ViewData, ViewFrame, ViewSubviews,
-    ViewTouch,
+    Anchor::Top, ImageView, Label, Setup, UIImages, View, ViewData, ViewFrame, ViewSubviews, ViewTouch,
 };
 
 mod test_engine {

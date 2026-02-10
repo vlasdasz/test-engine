@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{Button, HasText, Setup, ViewData, view},
+    ui::{Button, Setup, ViewData, view},
     ui_test::{UITest, check_colors, state::increment_state, test_combinations},
 };
 

@@ -7,7 +7,6 @@
 #![feature(unsized_const_params)]
 #![feature(const_type_name)]
 
-mod has_data;
 mod images;
 mod input;
 mod layout;
@@ -28,7 +27,6 @@ pub mod mobile;
 pub mod serde;
 pub mod ui_dispatch;
 
-pub use has_data::*;
 pub use images::*;
 pub use input::*;
 pub use layout::*;

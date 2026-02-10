@@ -4,7 +4,7 @@ use test_engine::{
     AppRunner,
     dispatch::{from_main, on_main},
     refs::Weak,
-    ui::{Alert, Anchor, Color, HasText, Label, Setup, ViewData, ViewSubviews, view},
+    ui::{Alert, Anchor, Color, Label, Setup, ViewData, ViewSubviews, view},
 };
 
 static FINISHED: AtomicBool = AtomicBool::new(false);

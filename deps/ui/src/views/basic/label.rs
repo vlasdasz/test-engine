@@ -10,7 +10,7 @@ use ui_proc::view;
 use window::image::ToImage;
 
 use crate::{
-    HasText, ImageView, Setup, Style, ToLabel, View, ViewFrame,
+    ImageView, Setup, Style, ToLabel, View, ViewFrame,
     view::{ViewData, ViewSubviews},
 };
 
@@ -54,30 +54,30 @@ pub struct Label {
     text_size: f32,
 }
 
-impl HasText for Label {
-    fn text(&self) -> &str {
+impl Label {
+    pub fn text(&self) -> &str {
         &self.text
     }
 
-    fn set_text(&self, text: impl ToLabel) -> &Self {
+    pub fn set_text(&self, text: impl ToLabel) -> &Self {
         weak_from_ref(self).text = text.to_label();
         self
     }
 
-    fn text_color(&self) -> &Color {
+    pub fn text_color(&self) -> &Color {
         &self.text_color
     }
 
-    fn set_text_color(&self, color: impl Into<Color>) -> &Self {
+    pub fn set_text_color(&self, color: impl Into<Color>) -> &Self {
         weak_from_ref(self).text_color = color.into();
         self
     }
 
-    fn text_size(&self) -> f32 {
+    pub fn text_size(&self) -> f32 {
         self.text_size
     }
 
-    fn set_text_size(&self, size: impl ToF32) -> &Self {
+    pub fn set_text_size(&self, size: impl ToF32) -> &Self {
         weak_from_ref(self).text_size = size.to_f32();
         self
     }

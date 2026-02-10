@@ -5,7 +5,7 @@
 use test_engine::{
     App,
     refs::{Own, Weak},
-    ui::{HasText, Label, Setup, U8Color, UIManager, View, ViewData, view},
+    ui::{Label, Setup, U8Color, UIManager, View, ViewData, view},
 };
 
 #[view]

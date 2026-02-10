@@ -8,7 +8,7 @@ use gm::color::GRAY;
 use refs::Weak;
 use ui_proc::view;
 
-use crate::{Button, Container, Setup, ViewData, ViewSubviews, has_data::HasText};
+use crate::{Button, Container, Setup, ViewData, ViewSubviews};
 
 const A: &[char] = &['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 const B: &[char] = &['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];

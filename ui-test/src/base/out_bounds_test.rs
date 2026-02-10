@@ -4,7 +4,7 @@ use test_engine::{
     ui::{
         Anchor,
         Anchor::{Height, Width, Y},
-        HasText, ImageView, Label, NumberView, Setup, ViewData, ViewFrame, ViewSubviews,
+        ImageView, Label, NumberView, Setup, ViewData, ViewFrame, ViewSubviews,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },

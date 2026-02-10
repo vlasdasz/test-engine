@@ -9,8 +9,7 @@ use test_engine::{
     dispatch::{from_main, wait_for_next_frame},
     refs::{Own, Weak},
     ui::{
-        AfterSetup, Container, GRAY, HasText, Label, Setup, TableData, TableView, View, ViewData,
-        ViewSubviews, view,
+        AfterSetup, Container, GRAY, Label, Setup, TableData, TableView, View, ViewData, ViewSubviews, view,
     },
     ui_test::{UITest, helpers::check_colors, inject_touches},
 };

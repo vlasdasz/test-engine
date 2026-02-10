@@ -2,7 +2,7 @@ use anyhow::Result;
 use parking_lot::Mutex;
 use test_engine::{
     refs::Weak,
-    ui::{BLUE, Button, HasText, Setup, ViewData, ViewTransition, view},
+    ui::{BLUE, Button, Setup, ViewData, ViewTransition, view},
     ui_test::{UITest, check_colors, inject_touches},
 };
 

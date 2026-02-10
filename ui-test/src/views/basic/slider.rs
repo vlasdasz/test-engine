@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor, HasText, Label, Setup, ViewData, ViewFrame, ViewSubviews, WHITE, view},
+    ui::{Anchor, Label, Setup, ViewData, ViewFrame, ViewSubviews, WHITE, view},
     ui_test::{UITest, helpers::check_colors, inject_touches},
 };
 

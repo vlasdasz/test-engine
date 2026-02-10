@@ -2,10 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{
-        Anchor, BLUE, HasText, LIGHTER_GRAY, Label, NumberView, Setup, TextAlignment, ViewData, ViewSubviews,
-        view,
-    },
+    ui::{Anchor, BLUE, LIGHTER_GRAY, Label, NumberView, Setup, TextAlignment, ViewData, ViewSubviews, view},
     ui_test::{UITest, helpers::check_colors, inject_touches},
 };
 
