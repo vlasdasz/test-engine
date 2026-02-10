@@ -70,4 +70,4 @@ fn main() {
 
 Result:
 
-<img width="545" height="312" alt="image" src="https://github.com/user-attachments/assets/485fa6dc-25bd-4d57-851d-814561b644d2" />
+<img width="550" height="305" alt="image" src="https://github.com/user-attachments/assets/ac661f61-8984-4d02-a273-5e24897f8691" />
