@@ -23,6 +23,12 @@ impl From<Color> for U8Color {
     }
 }
 
+impl From<&str> for Color<f32> {
+    fn from(value: &str) -> Self {
+        U8Color::hex(value).into()
+    }
+}
+
 pub const BLACK: Color = Color::rgb(0.0, 0.0, 0.0);
 pub const WHITE: Color = Color::rgb(1.0, 1.0, 1.0);
 pub const RED: Color = Color::rgb(1.0, 0.0, 0.0);

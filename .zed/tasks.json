@@ -4,6 +4,10 @@
     "command": "cargo run -p test-game",
   },
   {
+    "label": "Run Example App",
+    "command": "cargo run -p example-app",
+  },
+  {
     "label": "Run UI Test",
     "command": "cargo run -p ui-test",
   },

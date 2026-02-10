@@ -186,8 +186,8 @@ impl TextField {
         self
     }
 
-    pub fn set_placeholder(&mut self, placeholder: impl ToLabel) -> &mut Self {
-        self.placeholder = placeholder.to_label();
+    pub fn set_placeholder(&self, placeholder: impl ToLabel) -> &Self {
+        weak_from_ref(self).placeholder = placeholder.to_label();
         if self.placeholding {
             self.label.set_text(self.placeholder.clone());
             self.label.set_text_color(GRAY);

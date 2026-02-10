@@ -14,10 +14,10 @@ use test_engine::{
     ui::{
         ALL_VIEWS, Alert,
         Anchor::{self, Height, Left, Top, Width, X, Y},
-        BLUE, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label,
-        MovableView, NoImage, NumberView, ORANGE, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
-        SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
-        ViewSubviews, WHITE, all_view_tests, all_views, async_link_button, view,
+        Button, ColorMeter, Container, DPadView, DrawingView, GREEN, HasText, ImageView, Label, MovableView,
+        NoImage, NumberView, PURPLE, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView,
+        Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, WHITE,
+        all_view_tests, all_views, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -55,11 +55,6 @@ pub struct TestGameView {
     rest_tapped: Event<usize>,
 
     #[init]
-    tl: Container,
-    tr: Container,
-    bl: Container,
-    br: Container,
-
     ip:       Label,
     app_id:   Label,
     sys_info: Button,
@@ -134,13 +129,6 @@ impl Setup for TestGameView {
 
         self.setup_keymap();
 
-        let corner_size = 50.0;
-
-        self.tl.set_color(PURPLE).place().size(corner_size, corner_size).tl(10);
-        self.tr.set_color(GREEN).place().size(corner_size, corner_size).tr(10);
-        self.bl.set_color(BLUE).place().size(corner_size, corner_size).bl(10);
-        self.br.set_color(ORANGE).place().size(corner_size, corner_size).br(10);
-
         self.ip
             .set_text(local_ip().map_or_else(
                 |err| {
@@ -150,7 +138,7 @@ impl Setup for TestGameView {
                 |ip| ip.to_string(),
             ))
             .set_text_size(10);
-        self.ip.place().anchor(Left, self.tl, 10).same_y(self.tl).size(80, 20);
+        self.ip.place().tl(20).size(80, 20);
 
         self.app_id.set_text(UIManager::app_instance_id());
         self.app_id.place().at_right(self.ip, 10);
@@ -190,7 +178,7 @@ impl Setup for TestGameView {
         self.gradient.set_gradient(PURPLE, TURQUOISE);
         self.gradient.set_corner_radius(20);
 
-        self.dpad.place().size(200, 140).b(20).anchor(Left, self.bl, 10);
+        self.dpad.place().size(80, 65).b(10).l(10);
 
         self.dpad.on_press.val(move |direction| {
             self.level.player.unit.body.move_by_direction(direction);
@@ -203,13 +191,13 @@ impl Setup for TestGameView {
             }
         });
 
-        self.level_scale.place().size(50, 150).b(20).anchor(Left, self.dpad, 10);
+        self.level_scale.place().at_right(self.dpad, 5).w(22);
         self.level_scale.set_min(4);
         self.level_scale.on_change(|val| {
             LevelManager::set_scale(val * 0.1);
         });
 
-        self.ui_scale.place().size(50, 150).b(20).anchor(Left, self.level_scale, 10);
+        self.ui_scale.place().at_right(self.level_scale, 5);
         self.ui_scale.set_min(4);
         self.ui_scale.on_change(|val| {
             UIManager::set_scale(val * 0.1);
@@ -246,14 +234,9 @@ impl Setup for TestGameView {
         self.sound.set_text_size(20);
         self.sound.on_tap(|| Sound::get("retro.wav").play());
 
-        self.color_meter.place().size(100, 100).b(10).anchor(Anchor::Right, self.br, 10);
+        self.color_meter.place().size(50, 50).br(10);
 
-        self.drawing
-            .place()
-            .w(280)
-            .t(10)
-            .anchor(Anchor::Right, self.tr, 10)
-            .relative(Height, self, 0.2);
+        self.drawing.place().w(280).tr(10).relative(Height, self, 0.2);
 
         self.drawing.add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)], GREEN);
 
@@ -262,19 +245,16 @@ impl Setup for TestGameView {
 
         self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
 
-        self.text_field.set_placeholder("type");
-        self.text_field.place().size(80, 28).t(100).anchor(Left, self.tl, 10);
+        self.text_field.set_placeholder("type").place().below(self.sys_info, 10).w(50);
 
-        self.render.set_text("render");
         self.render
+            .set_text("render")
+            .on_tap(|| {
+                LevelManager::stop_level();
+                UIManager::set_view(RenderView::new());
+            })
             .place()
-            .same([Y, Height], self.text_field)
-            .w(100)
-            .anchor(Left, self.text_field, 10);
-        self.render.on_tap(|| {
-            LevelManager::stop_level();
-            UIManager::set_view(RenderView::new());
-        });
+            .at_right(self.text_field, 5);
 
         self.benchmark.set_text("bench");
         self.benchmark

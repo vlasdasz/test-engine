@@ -1,0 +1,11 @@
+[package]
+authors = ["Vladas Zakrevskis <146100@gmail.com>"]
+edition.workspace = true
+name = "example-app"
+version.workspace = true
+
+[[bin]]
+name = "example-app"
+
+[dependencies]
+test-engine = { workspace = true }
