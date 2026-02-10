@@ -10,9 +10,13 @@ Previously written in C++: https://github.com/VladasZ/test_engine_cpp
 
 Inspired by Cross++: https://github.com/maxon887/Cross
 
+---
+
 Simplest example:
 
 ```rust
+// main.rs
+
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
