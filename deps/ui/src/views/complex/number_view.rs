@@ -39,7 +39,7 @@ pub struct NumberView {
 }
 
 impl Setup for NumberView {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         self.up.set_image(UIImages::up()).set_color(CLEAR);
         self.up.on_tap(move || self.up_tap());
         self.up.place().lrt(0).relative_height(self, 0.5);

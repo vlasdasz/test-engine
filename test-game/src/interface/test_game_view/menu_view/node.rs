@@ -2,6 +2,7 @@
 pub struct Node {
     pub open:  bool,
     pub index: usize,
+    pub depth: usize,
     pub value: String,
     pub leafs: Vec<Node>,
 }
@@ -11,6 +12,7 @@ impl Node {
         Self {
             open:  false,
             index: 0,
+            depth: 0,
             value: value.to_string(),
             leafs: vec![],
         }
@@ -20,9 +22,14 @@ impl Node {
         Self {
             open: false,
             index: 0,
+            depth: 0,
             value: value.to_string(),
             leafs,
         }
+    }
+
+    pub fn is_leaf(&self) -> bool {
+        self.leafs.is_empty()
     }
 
     pub fn length(&self) -> usize {
@@ -37,8 +44,9 @@ impl Node {
         length
     }
 
-    pub fn update_indices(&mut self, index: usize) -> usize {
+    pub fn update_indices(&mut self, index: usize, depth: usize) -> usize {
         self.index = index;
+        self.depth = depth;
         let mut last_index = index + 1;
 
         if !self.open {
@@ -46,7 +54,7 @@ impl Node {
         }
 
         for node in &mut self.leafs {
-            last_index = node.update_indices(last_index);
+            last_index = node.update_indices(last_index, depth + 1);
         }
 
         last_index
@@ -60,6 +68,10 @@ impl Node {
     fn find(&mut self, index: usize) -> Option<&mut Self> {
         if self.index == index {
             return Some(self);
+        }
+
+        if !self.open {
+            return None;
         }
 
         for leaf in &mut self.leafs {
@@ -101,14 +113,16 @@ mod test {
 
         assert_eq!(root.length(), 4);
 
-        root.update_indices(0);
+        root.update_indices(0, 0);
 
         assert_eq!(root.val_at_index(3).value, "C");
 
         root.leafs[1].open = true;
-        root.update_indices(0);
+        root.update_indices(0, 0);
 
         assert_eq!(root.val_at_index(3).value, "a");
         assert_eq!(root.val_at_index(5).value, "C");
+
+        dbg!(&root);
     }
 }

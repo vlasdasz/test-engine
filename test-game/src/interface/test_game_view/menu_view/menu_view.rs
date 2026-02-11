@@ -2,10 +2,13 @@ use std::any::Any;
 
 use anyhow::Result;
 use test_engine::{
-    gm::Toggle, refs::Weak, ui::{Label, Setup, TableData, TableView, ViewData, ViewTest, cast_cell, view_test}, ui_test::record_ui_test
+    gm::Toggle,
+    refs::{Own, Weak},
+    ui::{Setup, TableData, TableView, UIManager, View, ViewData, ViewTest, cast_cell, view_test},
+    ui_test::record_ui_test,
 };
 
-use crate::interface::test_game_view::Node;
+use crate::interface::test_game_view::{Node, NodeCell};
 
 #[view_test]
 pub struct MenuView {
@@ -17,6 +20,8 @@ pub struct MenuView {
 
 impl Setup for MenuView {
     fn setup(mut self: Weak<Self>) {
+        UIManager::override_scale(2.0);
+
         self.table.set_data_source(self).place().back();
 
         self.root = Node::new(
@@ -39,15 +44,19 @@ impl TableData for MenuView {
         self.root.length()
     }
 
+    fn make_cell(self: Weak<Self>, _: usize) -> Own<dyn View> {
+        NodeCell::new()
+    }
+
     fn setup_cell(mut self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let cell = cast_cell!(Label);
-        let val = self.root.val_at_index(index).value.clone();
-        cell.set_text(val);
+        let cell = cast_cell!(NodeCell);
+        cell.set_node(self.root.val_at_index(index));
     }
 
     fn cell_selected(mut self: Weak<Self>, index: usize) {
         self.root.val_at_index(index).open.toggle();
-        self.root.update_indices(0);
+        self.root.update_indices(0, 0);
+        dbg!(&self.root);
         self.table.reload_data();
     }
 }

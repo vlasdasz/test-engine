@@ -70,7 +70,7 @@ impl Button {
         self
     }
 
-    pub fn set_image(&mut self, image: impl ToImage) -> &mut Self {
+    pub fn set_image(&self, image: impl ToImage) -> &Self {
         self.image.set_hidden(false);
         self.image.set_image(image);
         self
