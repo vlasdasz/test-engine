@@ -56,6 +56,7 @@ pub mod gm {
         flat::{Direction, Shape},
         sign::Sign,
         volume::GyroData,
+        Toggle
     };
 }
 
