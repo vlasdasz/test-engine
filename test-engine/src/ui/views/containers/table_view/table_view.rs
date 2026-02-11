@@ -1,21 +1,13 @@
 use gm::LossyConvert;
 use refs::Weak;
-use ui_proc::view;
-
-use crate::{
-    __ViewInternalTableData, Setup, View, ViewCallbacks, ViewTouch,
-    view::{ViewData, ViewFrame, ViewSubviews},
+use ui::{
+    __ViewInternalTableData, ScrollView, Setup, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewTest,
+    ViewTouch, view_test,
 };
 
-mod test_engine {
-    pub(crate) use educe;
-    pub(crate) use refs;
+use crate as test_engine;
 
-    pub(crate) use crate as ui;
-}
-use crate::ScrollView;
-
-#[view]
+#[view_test]
 pub struct TableView {
     data: Weak<dyn __ViewInternalTableData>,
 
@@ -84,7 +76,7 @@ impl TableView {
 
         let number_of_cells_fits: usize = (self.height() / cell_height).ceil().lossy_convert();
 
-        let offset = self.scroll.__base_view().content_offset;
+        let offset = self.scroll.content_offset();
 
         let first_index: usize = (-offset / cell_height).floor().lossy_convert();
 
@@ -113,5 +105,11 @@ impl TableView {
                 self.data.__cell_selected(i);
             });
         }
+    }
+}
+
+impl ViewTest for TableView {
+    fn perform_test(view: Weak<Self>) -> anyhow::Result<()> {
+        Ok(())
     }
 }
