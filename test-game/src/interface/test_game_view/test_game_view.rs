@@ -1,36 +1,24 @@
-use std::sync::LazyLock;
-
 use log::error;
 use netrun::local_ip;
 use test_engine::{
-    AppRunner, Event,
+    AppRunner,
     audio::Sound,
-    dispatch::{after, on_main},
-    filesystem::Paths,
+    dispatch::after,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
     refs::{Weak, manage::DataManager},
-    store::OnDisk,
     ui::{
-        ALL_VIEWS, Alert, Anchor::*, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, ImageView,
-        Label, MovableView, NoImage, NumberView, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
-        SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
-        ViewSubviews, WHITE, all_view_tests, all_views, async_link_button, view,
+        Alert, Anchor::*, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, ImageView, Label,
+        MovableView, NoImage, NumberView, PURPLE, Point, PointsPath, Setup, Spinner, SpriteView, StickView,
+        Style, TURQUOISE, TextField, UIManager, ViewData, ViewSubviews, view,
     },
 };
-use ui_benchmark::BenchmarkView;
 
 use crate::{
-    api::TEST_REST_REQUEST,
-    interface::{
-        game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
-        root_layout_view::RootLayoutView, test_game_view::MenuView,
-    },
+    interface::test_game_view::MenuView,
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
 };
-
-static BOOL: LazyLock<OnDisk<bool>> = LazyLock::new(|| OnDisk::new("bool"));
 
 pub(crate) static BUTTON: Style = Style::new(|btn| {
     btn.set_color((18, 208, 255));
@@ -49,8 +37,7 @@ pub(crate) static HAS_BACK_BUTTON: Style = Style::new(|view| {
 
 #[view]
 pub struct TestGameView {
-    level:       Weak<TestLevel>,
-    rest_tapped: Event<usize>,
+    level: Weak<TestLevel>,
 
     #[init]
     ip:     Label,
@@ -80,34 +67,11 @@ pub struct TestGameView {
 
     text_field: TextField,
 
-    ui_bench: Button,
-
-    render: Button,
-
-    benchmark:   Button,
-    test_level:  Button,
-    pick_folder: Button,
-    all_views:   Button,
-
-    add_box: Button,
-
-    position: PositionView,
-
-    polygon: Button,
-    noise:   Button,
-    panic:   Button,
-    rest:    Button,
+    test_level: Button,
 
     some_button: Button,
 
     sprite_view: MovableView<SpriteView>,
-
-    bool_storage_view: Switch,
-
-    no_physics: Button,
-
-    game:      Button,
-    root_view: Button,
 }
 
 impl Setup for TestGameView {
@@ -138,7 +102,7 @@ impl Setup for TestGameView {
                 |ip| ip.to_string(),
             ))
             .set_text_size(10);
-        self.ip.place().tl(20).size(80, 20);
+        self.ip.place().t(20).l(10).size(80, 20);
 
         self.app_id.set_text(UIManager::app_instance_id());
         self.app_id.place().at_right(self.ip, 10);
@@ -154,7 +118,7 @@ impl Setup for TestGameView {
 
         self.menu
             .place()
-            .anchor(Top, self.system, 100)
+            .anchor(Top, self.system, 50)
             .same_x(self.system)
             .w(200)
             .anchor(Bot, self.dpad, 10);
@@ -254,191 +218,25 @@ impl Setup for TestGameView {
 
         self.text_field.set_placeholder("type").place().below(self.system, 10).w(50);
 
-        self.render
-            .set_text("render")
-            .on_tap(|| {
-                LevelManager::stop_level();
-                UIManager::set_view(RenderView::new());
-            })
-            .place()
-            .at_right(self.text_field, 5);
-
-        self.benchmark.set_text("bench");
-        self.benchmark
-            .place()
-            .same([Y, Height], self.text_field)
-            .w(100)
-            .anchor(Left, self.render, 10);
-        self.benchmark.on_tap(|| {
-            *LevelManager::camera_pos() = Point::default();
-            LevelManager::set_level(BenchmarkLevel::default());
-        });
-
         self.test_level.set_text("test level");
         self.test_level
             .place()
             .same([Y, Height], self.text_field)
             .w(100)
-            .anchor(Left, self.benchmark, 10);
+            .anchor(Left, self.text_field, 10);
         self.test_level.on_tap(|| {
             *LevelManager::camera_pos() = Point::default();
             LevelManager::set_level(TestLevel::default());
-        });
-
-        self.pick_folder.set_text("pick folder");
-        self.pick_folder.place().at_right(self.test_level, 10);
-        self.pick_folder.on_tap(|| {
-            test_engine::dispatch::spawn(async {
-                Alert::show(format!("{:?}", Paths::pick_folder().await));
-            });
-        });
-
-        self.all_views
-            .on_tap(|| {
-                dbg!(all_views!());
-                dbg!(ALL_VIEWS);
-                dbg!(all_view_tests!());
-
-                // dbg!(__)
-            })
-            .set_text("all views")
-            .place()
-            .at_right(self.pick_folder, 10);
-
-        self.ui_bench.set_text("ui bench");
-        self.ui_bench
-            .place()
-            .anchor(Top, self.text_field, 10)
-            .same([X, Width, Height], self.text_field);
-        self.ui_bench.on_tap(|| {
-            LevelManager::stop_level();
-            UIManager::set_view(BenchmarkView::new());
-        });
-
-        self.add_box.set_text("add box");
-        self.add_box
-            .place()
-            .anchor(Left, self.ui_bench, 10)
-            .same([Y, Width, Height], self.ui_bench);
-        self.add_box.on_tap(move || {
-            let mut level = LevelManager::downcast_level::<TestLevel>();
-            let pos = LevelManager::convert_touch(self.position.frame().origin);
-            level.add_random_box(pos);
-        });
-
-        self.position.set_position((400, 400));
-
-        self.polygon.set_text("polygon");
-        self.polygon
-            .place()
-            .anchor(Left, self.add_box, 10)
-            .same([Y, Width, Height], self.add_box);
-        self.polygon.on_tap(|| {
-            UIManager::set_view(PolygonView::new());
-        });
-
-        self.noise.set_text("noise");
-        self.noise
-            .place()
-            .anchor(Left, self.polygon, 10)
-            .same([Y, Width, Height], self.polygon);
-        self.noise.on_tap(|| {
-            LevelManager::stop_level();
-            UIManager::set_view(NoiseView::new().on_back(|| {
-                UIManager::set_view(Self::new());
-            }));
-        });
-
-        self.panic.set_text("panic");
-        self.panic
-            .place()
-            .anchor(Left, self.noise, 10)
-            .same([Y, Width, Height], self.noise);
-        self.panic.on_tap(|| {
-            panic!("test panic");
-        });
-
-        self.rest.set_text("request");
-        self.rest
-            .place()
-            .anchor(Left, self.panic, 10)
-            .same([Y, Width, Height], self.panic);
-        async_link_button!(self.rest, rest_pressed);
-
-        self.rest_tapped.val_async(move |val| async move {
-            on_main(move || {
-                self.rest.set_text(format!("rest: {val}"));
-            });
         });
 
         self.sprite_view.set_title("Sprite:");
         self.sprite_view.place().size(280, 120).center_y().r(0);
         let player = self.level.player;
         self.sprite_view.set_sprite(player);
-
-        self.bool_storage_view
-            .set_off_color(WHITE)
-            .set_on(BOOL.get().unwrap_or_default());
-        self.bool_storage_view
-            .place()
-            .same([X, Height], self.ui_bench)
-            .anchor(Top, self.ui_bench, 10)
-            .w(100);
-        self.bool_storage_view.selected.val(|val| {
-            BOOL.set(val);
-        });
-
-        self.no_physics.set_text("no physics");
-        self.no_physics
-            .place()
-            .same([Y, Height], self.bool_storage_view)
-            .anchor(Left, self.bool_storage_view, 10)
-            .w(250);
-        self.no_physics.add_transition::<Self, NoPhysicsView>();
-
-        self.game.set_text("game");
-        self.game
-            .place()
-            .same([Y, Height], self.no_physics)
-            .anchor(Left, self.no_physics, 10)
-            .w(100);
-        self.game.on_tap(|| {
-            LevelManager::stop_level();
-            UIManager::set_view(GameView::new());
-        });
-
-        self.root_view.set_text("root view");
-        self.root_view
-            .place()
-            .same([Y, Height], self.no_physics)
-            .anchor(Left, self.game, 10)
-            .w(150);
-        self.root_view.on_tap(|| {
-            LevelManager::stop_level();
-            UIManager::set_view(RootLayoutView::new());
-        });
     }
 }
 
 impl TestGameView {
-    async fn rest_pressed(self: Weak<Self>) -> anyhow::Result<()> {
-        let spin = Spinner::lock();
-
-        let users = TEST_REST_REQUEST.await?;
-
-        spin.stop();
-
-        Alert::show(format!(
-            "Got {} users. First name: {}",
-            users.len(),
-            users.first().unwrap().name
-        ));
-
-        self.rest_tapped.trigger(users.len());
-
-        Ok(())
-    }
-
     fn setup_keymap(mut self: Weak<Self>) {
         [
             (' ', Direction::Up),

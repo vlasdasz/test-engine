@@ -28,6 +28,12 @@ impl Node {
         }
     }
 
+    pub fn open(mut self) -> Self {
+        self.open = true;
+        self.update_indices(0, 0);
+        self
+    }
+
     pub fn is_leaf(&self) -> bool {
         self.leafs.is_empty()
     }

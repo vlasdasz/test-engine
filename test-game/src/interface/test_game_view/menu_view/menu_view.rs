@@ -2,12 +2,30 @@ use std::any::Any;
 
 use anyhow::Result;
 use test_engine::{
+    dispatch::spawn,
+    filesystem::Paths,
     gm::Toggle,
+    level::LevelManager,
     refs::{Own, Weak},
-    ui::{Setup, TableData, TableView, View, ViewData, ViewFrame, ViewTest, cast_cell, view_test},
+    ui::{
+        ALL_VIEWS, Alert, Point, Setup, Spinner, TableData, TableView, UIManager, View, ViewData, ViewFrame,
+        ViewTest, all_view_tests, all_views, cast_cell, view_test,
+    },
 };
 
-use crate::interface::test_game_view::{Node, NodeCell};
+use crate::{
+    api::TEST_REST_REQUEST,
+    interface::{
+        game_view::GameView,
+        noise_view::NoiseView,
+        polygon_view::PolygonView,
+        render_view::RenderView,
+        root_layout_view::RootLayoutView,
+        test_game_view::{BenchmarkView, Node, NodeCell},
+    },
+    levels::{BenchmarkLevel, TestLevel},
+    no_physics::NoPhysicsView,
+};
 
 #[view_test]
 pub struct MenuView {
@@ -26,11 +44,32 @@ impl Setup for MenuView {
         self.root = Node::new(
             "Root",
             vec![
-                Node::empty("A"),
-                Node::new("Ooo", vec![Node::empty("a"), Node::empty("b")]),
-                Node::empty("C"),
+                Node::new(
+                    "Scenes",
+                    vec![
+                        Node::empty("ui bench"),
+                        Node::empty("physics bench"),
+                        Node::empty("polygon"),
+                        Node::empty("noise"),
+                        Node::empty("render"),
+                        Node::empty("no physics"),
+                        Node::empty("root view"),
+                        Node::empty("empty game"),
+                    ],
+                ),
+                Node::new(
+                    "System",
+                    vec![
+                        Node::empty("add box"),
+                        Node::empty("pick folder"),
+                        Node::empty("request"),
+                        Node::empty("all views"),
+                        Node::empty("panic"),
+                    ],
+                ),
             ],
         )
+        .open();
     }
 
     fn inspect(self: Weak<Self>) {
@@ -40,7 +79,7 @@ impl Setup for MenuView {
 
 impl TableData for MenuView {
     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-        50.0
+        28.0
     }
 
     fn number_of_cells(self: Weak<Self>) -> usize {
@@ -57,10 +96,97 @@ impl TableData for MenuView {
     }
 
     fn cell_selected(mut self: Weak<Self>, index: usize) {
-        self.root.val_at_index(index).open.toggle();
+        let val = self.root.val_at_index(index);
+
+        if val.is_leaf() {
+            let command = val.value.clone();
+            self.command(command);
+            return;
+        }
+
+        val.open.toggle();
         self.root.update_indices(0, 0);
-        dbg!(&self.root);
         self.table.reload_data();
+    }
+}
+
+impl MenuView {
+    fn command(self: Weak<Self>, command: String) {
+        match command.as_str() {
+            "panic" => {
+                panic!("test panic");
+            }
+            "request" => {
+                spawn(async move {
+                    self.rest_pressed().await.unwrap();
+                });
+            }
+            "pick folder" => {
+                test_engine::dispatch::spawn(async {
+                    Alert::show(format!("{:?}", Paths::pick_folder().await));
+                });
+            }
+            "render" => {
+                LevelManager::stop_level();
+                UIManager::set_view(RenderView::new());
+            }
+            "no physics" => {
+                UIManager::set_view(NoPhysicsView::new());
+            }
+            "noise" => {
+                LevelManager::stop_level();
+                UIManager::set_view(NoiseView::new().on_back(|| {
+                    UIManager::set_view(Self::new());
+                }));
+            }
+            "all views" => {
+                dbg!(all_views!());
+                dbg!(ALL_VIEWS);
+                dbg!(all_view_tests!());
+            }
+            "ui bench" => {
+                LevelManager::stop_level();
+                UIManager::set_view(BenchmarkView::new());
+            }
+            "polygon" => {
+                UIManager::set_view(PolygonView::new());
+            }
+            "physics bench" => {
+                *LevelManager::camera_pos() = Point::default();
+                LevelManager::set_level(BenchmarkLevel::default());
+            }
+            "root view" => {
+                LevelManager::stop_level();
+                UIManager::set_view(RootLayoutView::new());
+            }
+            "empty game" => {
+                LevelManager::stop_level();
+                UIManager::set_view(GameView::new());
+            }
+            "add box" => {
+                let mut level = LevelManager::downcast_level::<TestLevel>();
+                level.add_random_box((-20, 40));
+            }
+            _ => {
+                panic!("Invalid command: {command}");
+            }
+        }
+    }
+
+    async fn rest_pressed(self: Weak<Self>) -> anyhow::Result<()> {
+        let spin = Spinner::lock();
+
+        let users = TEST_REST_REQUEST.await?;
+
+        spin.stop();
+
+        Alert::show(format!(
+            "Got {} users. First name: {}",
+            users.len(),
+            users.first().unwrap().name
+        ));
+
+        Ok(())
     }
 }
 

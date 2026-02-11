@@ -1,7 +1,7 @@
 use test_engine::{
     gm::LossyConvert,
     refs::Weak,
-    ui::{Anchor::Left, Button, Label, UIImages, ViewData, view},
+    ui::{Anchor::Left, Button, Label, TextAlignment, UIImages, ViewData, view},
 };
 
 use crate::interface::test_game_view::Node;
@@ -26,9 +26,14 @@ impl NodeCell {
         self.button
             .place()
             .clear()
-            .l(10.0 + node.depth.lossy_convert() * 40.0)
+            .l(5.0 + node.depth.lossy_convert() * 28.0)
             .center_y()
             .size(if node.is_leaf() { 0 } else { 20 }, 20);
-        self.label.place().clear().anchor(Left, self.button, 10).trb(5);
+        self.label
+            .set_alignment(TextAlignment::Left)
+            .place()
+            .clear()
+            .anchor(Left, self.button, 5)
+            .trb(2.5);
     }
 }
