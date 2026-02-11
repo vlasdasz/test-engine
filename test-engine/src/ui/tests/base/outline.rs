@@ -1,12 +1,13 @@
 use anyhow::Result;
-use test_engine::{
-    dispatch::from_main,
-    refs::Weak,
-    ui::{Anchor::Left, BLUE, Container, GREEN, ImageView, RED, Setup, ViewData, YELLOW, view},
-    ui_test::{UITest, check_colors},
-};
+use gm::color::{BLUE, GREEN, RED, YELLOW};
+use hreads::from_main;
+use refs::Weak;
+use ui::{Anchor::Left, Container, ImageView, Setup, ViewData, ViewTest, view_test};
 
-#[view]
+use crate as test_engine;
+use crate::ui_test::check_colors;
+
+#[view_test]
 struct Outline {
     #[init]
     square: Container,
@@ -27,11 +28,10 @@ impl Setup for Outline {
     }
 }
 
-pub async fn test_outline() -> Result<()> {
-    let view = UITest::start::<Outline>();
-
-    check_colors(
-        r#"
+impl ViewTest for Outline {
+    fn perform_test(view: Weak<Self>) -> Result<()> {
+        check_colors(
+            r#"
                   46  119 -  89 124 149
                   57  120 - 255   0   0
                   84  123 -   0   0 231
@@ -69,16 +69,16 @@ pub async fn test_outline() -> Result<()> {
                  488   59 -   0   0 231
                  485  145 -   0   0 231
             "#,
-    )?;
+        )?;
 
-    from_main(move || {
-        view.square.set_corner_radius(15);
-        view.image.set_corner_radius(25);
-        view.wide.set_corner_radius(40);
-    });
+        from_main(move || {
+            view.square.set_corner_radius(15);
+            view.image.set_corner_radius(25);
+            view.wide.set_corner_radius(40);
+        });
 
-    check_colors(
-        r#"
+        check_colors(
+            r#"
           46   65 -  89 124 149
           56   58 - 255   0   0
           64   42 -  89 124 149
@@ -115,7 +115,10 @@ pub async fn test_outline() -> Result<()> {
          312   68 -   0   0 231
          331   87 - 255 255   0
     "#,
-    )?;
+        )?;
 
-    Ok(())
+        // crate::ui_test::record_ui_test();
+        
+        Ok(())
+    }
 }

@@ -41,7 +41,7 @@ impl PlacerView {
 }
 
 impl TableData for PlacerView {
-    fn cell_height(self: Weak<Self>) -> f32 {
+    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
         50.0
     }
 

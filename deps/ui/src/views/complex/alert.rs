@@ -1,5 +1,5 @@
 use gm::{
-    color::{BLACK, BLUE, GRAY},
+    color::{BLACK, BLUE, GRAY, WHITE},
     flat::Size,
 };
 use parking_lot::Mutex;
@@ -45,6 +45,7 @@ impl Alert {
 impl Setup for Alert {
     fn setup(self: Weak<Self>) {
         self.set_corner_radius(10).set_border_color(BLACK);
+        self.set_color(WHITE);
 
         self.label.place().lrt(10).h(140);
         self.label.set_text_size(28);

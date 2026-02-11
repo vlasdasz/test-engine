@@ -187,10 +187,15 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
         }
 
         impl #generics test_engine::ui::__ViewInternalTableData for #name <#type_params>  {
-            fn __cell_height(&self) -> f32 {
+            fn __cell_height(&self, index: usize) -> f32 {
                 use test_engine::ui::TableData;
                 let weak = test_engine::refs::weak_from_ref(self);
-                weak.cell_height()
+                weak.cell_height(index)
+            }
+            fn __variable_height(&self) -> bool {
+                use test_engine::ui::TableData;
+                let weak = test_engine::refs::weak_from_ref(self);
+                weak.variable_height()
             }
             fn __number_of_cells(&self) -> usize {
                 use test_engine::ui::TableData;

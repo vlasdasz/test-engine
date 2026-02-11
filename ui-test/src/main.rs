@@ -90,9 +90,9 @@ fn main() -> Result<()> {
 }
 
 async fn test() -> Result<()> {
+    test_base_ui().await?;
     test_base_views().await?;
     test_inspect().await?;
-    test_base_ui().await?;
     test_layout().await?;
     test_complex_views().await?;
     test_image_views().await?;

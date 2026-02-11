@@ -22,7 +22,7 @@ impl Setup for TableViewResize {
 }
 
 impl TableData for TableViewResize {
-    fn cell_height(self: Weak<Self>) -> f32 {
+    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
         50.0
     }
 
