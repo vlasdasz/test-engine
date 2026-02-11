@@ -12,12 +12,10 @@ use test_engine::{
     refs::{Weak, manage::DataManager},
     store::OnDisk,
     ui::{
-        ALL_VIEWS, Alert,
-        Anchor::{self, Height, Left, Top, Width, X, Y},
-        Button, ColorMeter, Container, DPadView, DrawingView, GREEN, ImageView, Label, MovableView, NoImage,
-        NumberView, PURPLE, Point, PointsPath, PositionView, Setup, Spinner, SpriteView, StickView, Style,
-        Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame, ViewSubviews, WHITE, all_view_tests,
-        all_views, async_link_button, view,
+        ALL_VIEWS, Alert, Anchor::*, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, ImageView,
+        Label, MovableView, NoImage, NumberView, PURPLE, Point, PointsPath, PositionView, Setup, Spinner,
+        SpriteView, StickView, Style, Switch, TURQUOISE, TextField, UIManager, ViewData, ViewFrame,
+        ViewSubviews, WHITE, all_view_tests, all_views, async_link_button, view,
     },
 };
 use ui_benchmark::BenchmarkView;
@@ -26,7 +24,7 @@ use crate::{
     api::TEST_REST_REQUEST,
     interface::{
         game_view::GameView, noise_view::NoiseView, polygon_view::PolygonView, render_view::RenderView,
-        root_layout_view::RootLayoutView,
+        root_layout_view::RootLayoutView, test_game_view::MenuView,
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -55,9 +53,11 @@ pub struct TestGameView {
     rest_tapped: Event<usize>,
 
     #[init]
-    ip:       Label,
-    app_id:   Label,
-    sys_info: Button,
+    ip:     Label,
+    app_id: Label,
+    system: Button,
+
+    menu: MenuView,
 
     drawing: DrawingView,
     stick:   StickView,
@@ -143,14 +143,21 @@ impl Setup for TestGameView {
         self.app_id.set_text(UIManager::app_instance_id());
         self.app_id.place().at_right(self.ip, 10);
 
-        self.sys_info.set_text("system");
-        self.sys_info.place().below(self.ip, 10);
-        self.sys_info.on_tap(|| {
+        self.system.set_text("system");
+        self.system.place().below(self.ip, 10);
+        self.system.on_tap(|| {
             Alert::with_label(|l| {
                 l.set_text_size(15);
             })
             .show(netrun::System::get_info().dump());
         });
+
+        self.menu
+            .place()
+            .anchor(Top, self.system, 100)
+            .same_x(self.system)
+            .w(200)
+            .anchor(Bot, self.dpad, 10);
 
         self.image.place().center_x().b(5).relative_size(self, 0.14);
         self.image.set_image("cat.png").set_corner_radius(20);
@@ -159,7 +166,7 @@ impl Setup for TestGameView {
             .place()
             .b(5)
             .relative_size(self.image, 1.0)
-            .anchor(Anchor::Right, self.image, 20);
+            .anchor(Right, self.image, 20);
         self.label_l.text = "Łėŵœ Ы".into();
         self.label_l.set_text_size(64.).set_corner_radius(20);
 
@@ -167,7 +174,7 @@ impl Setup for TestGameView {
             .place()
             .b(5)
             .relative_size(self.image, 1.0)
-            .anchor(Anchor::Left, self.image, 20);
+            .anchor(Left, self.image, 20);
         self.image_r.set_image("palm.png");
 
         self.gradient
@@ -199,10 +206,10 @@ impl Setup for TestGameView {
 
         self.ui_scale.place().at_right(self.level_scale, 5);
         self.ui_scale.set_min(4);
+        self.ui_scale.set_value(10);
         self.ui_scale.on_change(|val| {
             UIManager::set_scale(val * 0.1);
         });
-        self.ui_scale.set_value(10);
 
         self.spinner.place().size(150, 40).b(20).anchor(Left, self.ui_scale, 10);
         self.spinner.set_text("Spinner");
@@ -218,7 +225,7 @@ impl Setup for TestGameView {
             .place()
             .same_size(self.spinner)
             .anchor(Left, self.ui_scale, 10)
-            .anchor(Anchor::Bot, self.spinner, 10);
+            .anchor(Bot, self.spinner, 10);
         self.alert.set_text("Alert");
         self.alert.set_text_size(20);
         self.alert.on_tap(|| {
@@ -229,7 +236,7 @@ impl Setup for TestGameView {
             .place()
             .same_size(self.spinner)
             .anchor(Left, self.ui_scale, 10)
-            .anchor(Anchor::Bot, self.alert, 10);
+            .anchor(Bot, self.alert, 10);
         self.sound.set_text("Sound");
         self.sound.set_text_size(20);
         self.sound.on_tap(|| Sound::get("retro.wav").play());
@@ -243,9 +250,9 @@ impl Setup for TestGameView {
         self.drawing
             .add_path(PointsPath::circle_triangles_with((200, 100), 50, 5), TURQUOISE);
 
-        self.stick.place().t(40).size(200, 200).anchor(Anchor::Right, self.drawing, 10);
+        self.stick.place().t(40).size(200, 200).anchor(Right, self.drawing, 10);
 
-        self.text_field.set_placeholder("type").place().below(self.sys_info, 10).w(50);
+        self.text_field.set_placeholder("type").place().below(self.system, 10).w(50);
 
         self.render
             .set_text("render")

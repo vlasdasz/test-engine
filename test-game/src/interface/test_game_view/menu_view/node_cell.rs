@@ -23,8 +23,6 @@ impl NodeCell {
 
         self.label.set_text(&node.value);
 
-        dbg!((&node.depth, &node.value));
-
         self.button
             .place()
             .clear()

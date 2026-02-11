@@ -4,8 +4,7 @@ use anyhow::Result;
 use test_engine::{
     gm::Toggle,
     refs::{Own, Weak},
-    ui::{Setup, TableData, TableView, UIManager, View, ViewData, ViewTest, cast_cell, view_test},
-    ui_test::record_ui_test,
+    ui::{Setup, TableData, TableView, View, ViewData, ViewFrame, ViewTest, cast_cell, view_test},
 };
 
 use crate::interface::test_game_view::{Node, NodeCell};
@@ -20,7 +19,7 @@ pub struct MenuView {
 
 impl Setup for MenuView {
     fn setup(mut self: Weak<Self>) {
-        UIManager::override_scale(2.0);
+        // UIManager::override_scale(2.0);
 
         self.table.set_data_source(self).place().back();
 
@@ -32,6 +31,10 @@ impl Setup for MenuView {
                 Node::empty("C"),
             ],
         )
+    }
+
+    fn inspect(self: Weak<Self>) {
+        dbg!(&self.frame());
     }
 }
 
@@ -63,7 +66,7 @@ impl TableData for MenuView {
 
 impl ViewTest for MenuView {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        record_ui_test();
+        // record_ui_test();
 
         Ok(())
     }

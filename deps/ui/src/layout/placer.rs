@@ -463,6 +463,7 @@ impl Placer {
         let this = self.to_rglica();
 
         let has_left = self.has_left();
+        let has_top = self.has_top();
 
         for rule in this.rules().iter_mut().filter(|r| r.enabled) {
             if rule.between {
@@ -473,7 +474,7 @@ impl Placer {
                 } else if rule.same {
                     self.same_layout(rule);
                 } else {
-                    self.anchor_layout(rule, has_left);
+                    self.anchor_layout(rule, has_left, has_top);
                 }
             } else if let Some(tiling) = &rule.tiling {
                 self.tiling_layout(tiling);
@@ -567,7 +568,7 @@ impl Placer {
         view.set_frame(frame);
     }
 
-    fn anchor_layout(&mut self, rule: &LayoutRule, has_left: bool) {
+    fn anchor_layout(&mut self, rule: &LayoutRule, has_left: bool, has_top: bool) {
         let view = self.view.deref_mut();
         let mut frame = *view.frame();
         let a_frame = rule.anchor_view.as_ref().expect("No anchor view in anchor layout").frame();
@@ -576,7 +577,16 @@ impl Placer {
 
         match side {
             Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
-            Anchor::Bot => frame.origin.y = a_frame.y() - rule.offset - frame.height(),
+            Anchor::Bot => {
+                if has_top {
+                    let max_y = frame.max_y();
+                    let desired_max_y = a_frame.y() - rule.offset;
+                    let diff = desired_max_y - max_y;
+                    frame.size.height += diff;
+                } else {
+                    frame.origin.y = a_frame.y() - rule.offset - frame.height()
+                }
+            }
             Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
             Anchor::Right => {
                 if has_left {
@@ -722,6 +732,10 @@ impl Placer {
 impl Placer {
     fn has_left(&self) -> bool {
         self.rules.borrow().iter().any(|rule| rule.side.is_some_and(Anchor::is_left))
+    }
+
+    fn has_top(&self) -> bool {
+        self.rules.borrow().iter().any(|rule| rule.side.is_some_and(Anchor::is_top))
     }
 }
 
