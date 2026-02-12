@@ -18,4 +18,4 @@ pub use window::{
     image::{Image, NoImage, Tinted},
 };
 
-pub use crate::ui::views::sprite_view::SpriteView;
+pub use crate::ui::views::SpriteView;

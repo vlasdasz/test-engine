@@ -1,19 +1,10 @@
 use gm::flat::Point;
 use refs::Weak;
+use ui::{ImageView, Setup, Touch, UIImages, ViewData, ViewFrame, ViewTouch};
 use ui_proc::view;
 use vents::Event;
 
-use crate::{
-    ImageView, Setup, Touch, UIImages, ViewData,
-    view::{ViewFrame, ViewTouch},
-};
-
-mod test_engine {
-    pub(crate) use educe;
-    pub(crate) use refs;
-
-    pub(crate) use crate as ui;
-}
+use crate as test_engine;
 
 #[view]
 pub struct StickView {
@@ -57,6 +48,7 @@ impl Setup for StickView {
     fn setup(mut self: Weak<Self>) {
         self.enable_touch();
         self.touch().all.val(move |touch| {
+            self.direction_stick.place().clear().relative_size(self, 0.5);
             self.on_touch(&touch);
         });
 
@@ -67,10 +59,41 @@ impl Setup for StickView {
 
         let _center = self.frame().size.center();
 
+        self.direction_stick.place().relative_size(self, 0.5).center();
+
         // self.direction_stick
         //     .set_frame((0, 0, STICK_VIEW_SIZE, STICK_VIEW_SIZE))
         //     .set_center(center);
         //
         // self.chan
+    }
+}
+
+mod test {
+    use anyhow::Result;
+    use refs::Weak;
+    use ui::{Setup, ViewData, ViewTest, view_test};
+
+    use crate as test_engine;
+    use crate::{ui::StickView, ui_test::record_ui_test};
+
+    #[view_test]
+    struct StickViewTest {
+        #[init]
+        stick: StickView,
+    }
+
+    impl Setup for StickViewTest {
+        fn setup(self: Weak<Self>) {
+            self.stick.place().back();
+        }
+    }
+
+    impl ViewTest for StickViewTest {
+        fn perform_test(_view: Weak<Self>) -> Result<()> {
+            record_ui_test();
+
+            Ok(())
+        }
     }
 }

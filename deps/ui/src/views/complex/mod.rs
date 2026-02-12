@@ -7,7 +7,6 @@ mod drop_down;
 mod number_view;
 mod point_view;
 mod question;
-mod stick_view;
 mod table_data;
 
 pub use alert::*;
@@ -19,5 +18,4 @@ pub use drop_down::*;
 pub use number_view::*;
 pub use point_view::PointView;
 pub use question::Question;
-pub use stick_view::StickView;
 pub use table_data::*;
