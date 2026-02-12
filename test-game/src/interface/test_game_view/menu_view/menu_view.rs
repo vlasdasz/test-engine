@@ -22,7 +22,7 @@ use crate::{
         polygon_view::PolygonView,
         render_view::RenderView,
         root_layout_view::RootLayoutView,
-        test_game_view::{BenchmarkView, Node, NodeCell, ScaleCell},
+        test_game_view::{BenchmarkView, Function, Node, NodeCell, ScaleCell},
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -68,13 +68,12 @@ impl Setup for MenuView {
                         Node::empty("pick folder"),
                     ],
                 ),
-                Node::new("Level", vec![Node::empty("benchmark")]),
+                Node::new("Level", vec![Node::empty("benchmark"), Node::empty("lvl scale")]),
                 Node::new(
                     "System",
                     vec![
                         Node::empty("system info"),
                         Node::empty("add box"),
-                        Node::empty("pick folder"),
                         Node::empty("request"),
                         Node::empty("all views"),
                         Node::empty("panic"),
@@ -102,7 +101,15 @@ impl TableData for MenuView {
     fn make_cell(mut self: Weak<Self>, index: usize) -> Own<dyn View> {
         let node = self.root.val_at_index(index);
         if node.value == "ui scale" {
-            ScaleCell::new()
+            ScaleCell::make(
+                Function::new(|_| UIManager::scale()),
+                Function::new(|scale| UIManager::set_scale(scale)),
+            )
+        } else if node.value == "lvl scale" {
+            ScaleCell::make(
+                Function::new(|_| LevelManager::scale()),
+                Function::new(|scale| LevelManager::set_scale(scale)),
+            )
         } else {
             NodeCell::new()
         }
@@ -110,7 +117,7 @@ impl TableData for MenuView {
 
     fn setup_cell(mut self: Weak<Self>, cell: &mut dyn Any, index: usize) {
         let node = self.root.val_at_index(index);
-        if node.value == "ui scale" {
+        if node.value == "ui scale" || node.value == "lvl scale" {
             let _cell = cast_cell!(ScaleCell);
         } else {
             let cell = cast_cell!(NodeCell);

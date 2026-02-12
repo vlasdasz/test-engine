@@ -7,8 +7,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Bot, Top},
-        Button, ColorMeter, Container, DPadView, Label, NoImage, NumberView, Point, Setup, StickView, Style,
-        UIManager, ViewData, ViewSubviews, view,
+        Button, ColorMeter, Container, DPadView, Label, NoImage, Point, Setup, StickView, Style, UIManager,
+        ViewData, ViewSubviews, view,
     },
 };
 
@@ -45,8 +45,7 @@ pub struct TestGameView {
 
     stick: StickView,
 
-    dpad:        DPadView,
-    level_scale: NumberView,
+    dpad: DPadView,
 
     color_meter: ColorMeter,
 }
@@ -79,7 +78,7 @@ impl Setup for TestGameView {
                 |ip| ip.to_string(),
             ))
             .set_text_size(10);
-        self.ip.place().t(20).l(10).size(80, 20);
+        self.ip.place().t(20).l(5).size(80, 20);
 
         self.app_id.set_text(UIManager::app_instance_id());
         self.app_id.place().at_right(self.ip, 10);
@@ -88,7 +87,7 @@ impl Setup for TestGameView {
             .place()
             .anchor(Top, self.ip, 10)
             .same_x(self.ip)
-            .w(200)
+            .w(170)
             .anchor(Bot, self.dpad, 10);
 
         self.dpad.place().size(80, 65).b(10).l(10);
@@ -103,15 +102,9 @@ impl Setup for TestGameView {
             }
         });
 
-        self.level_scale.place().at_right(self.dpad, 5).w(22);
-        self.level_scale.set_min(4);
-        self.level_scale.on_change(|val| {
-            LevelManager::set_scale(val * 0.1);
-        });
-
         self.color_meter.place().size(50, 50).tr(10);
 
-        self.stick.place().br(20).size(200, 200);
+        self.stick.place().br(20).size(150, 150);
     }
 }
 
