@@ -208,6 +208,7 @@ mod test {
     }
 
     impl ViewTest for TestTableView {
+        #[allow(clippy::too_many_lines)]
         fn perform_test(_view: Weak<Self>) -> Result<()> {
             N_CELLS.store(2_000_000, Ordering::Relaxed);
 
@@ -272,7 +273,7 @@ mod test {
             });
 
             check_colors(
-                r#"
+                r"
                      242  910 -  89 124 149
                      272  888 -  89 124 149
                      330  834 - 255 255 255
@@ -304,7 +305,7 @@ mod test {
                      728  181 -  89 124 149
                      731  179 -  89 124 149
                      871  134 -  89 124 149
-                "#,
+                ",
             )?;
 
             assert_eq!(
@@ -510,7 +511,7 @@ mod test {
                 ",
             );
 
-            assert_eq!(INDEX.load(Ordering::Relaxed), 666665);
+            assert_eq!(INDEX.load(Ordering::Relaxed), 666_665);
 
             Ok(())
         }

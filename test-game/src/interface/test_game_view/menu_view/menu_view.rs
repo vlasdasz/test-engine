@@ -22,7 +22,7 @@ use crate::{
         polygon_view::PolygonView,
         render_view::RenderView,
         root_layout_view::RootLayoutView,
-        test_game_view::{BenchmarkView, Node, NodeCell},
+        test_game_view::{BenchmarkView, Node, NodeCell, ScaleCell},
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -61,6 +61,7 @@ impl Setup for MenuView {
                 Node::new(
                     "UI",
                     vec![
+                        Node::empty("ui scale"),
                         Node::empty("sound"),
                         Node::empty("alert"),
                         Node::empty("spinner"),
@@ -98,13 +99,23 @@ impl TableData for MenuView {
         self.root.length()
     }
 
-    fn make_cell(self: Weak<Self>, _: usize) -> Own<dyn View> {
-        NodeCell::new()
+    fn make_cell(mut self: Weak<Self>, index: usize) -> Own<dyn View> {
+        let node = self.root.val_at_index(index);
+        if node.value == "ui scale" {
+            ScaleCell::new()
+        } else {
+            NodeCell::new()
+        }
     }
 
     fn setup_cell(mut self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let cell = cast_cell!(NodeCell);
-        cell.set_node(self.root.val_at_index(index));
+        let node = self.root.val_at_index(index);
+        if node.value == "ui scale" {
+            let _cell = cast_cell!(ScaleCell);
+        } else {
+            let cell = cast_cell!(NodeCell);
+            cell.set_node(node);
+        }
     }
 
     fn cell_selected(mut self: Weak<Self>, index: usize) {

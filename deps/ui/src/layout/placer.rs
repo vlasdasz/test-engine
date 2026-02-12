@@ -584,7 +584,7 @@ impl Placer {
                     let diff = desired_max_y - max_y;
                     frame.size.height += diff;
                 } else {
-                    frame.origin.y = a_frame.y() - rule.offset - frame.height()
+                    frame.origin.y = a_frame.y() - rule.offset - frame.height();
                 }
             }
             Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,

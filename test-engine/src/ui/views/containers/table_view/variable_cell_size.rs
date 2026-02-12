@@ -3,9 +3,8 @@ use gm::color::BLACK;
 use refs::{Own, Weak};
 use ui::{Container, Setup, TableData, View, ViewData, ViewTest, view_test};
 
-use crate::ui_test::check_colors;
 use crate as test_engine;
-use crate::ui::TableView;
+use crate::{ui::TableView, ui_test::check_colors};
 
 #[view_test]
 struct VariableCellSizeTest {

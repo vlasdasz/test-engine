@@ -1,30 +1,30 @@
 #[derive(Default, Debug)]
 pub struct Node {
-    pub open:  bool,
-    pub index: usize,
-    pub depth: usize,
-    pub value: String,
-    pub leafs: Vec<Node>,
+    pub open:   bool,
+    pub index:  usize,
+    pub depth:  usize,
+    pub value:  String,
+    pub leaves: Vec<Node>,
 }
 
 impl Node {
     pub fn empty(value: impl ToString) -> Self {
         Self {
-            open:  false,
-            index: 0,
-            depth: 0,
-            value: value.to_string(),
-            leafs: vec![],
+            open:   false,
+            index:  0,
+            depth:  0,
+            value:  value.to_string(),
+            leaves: vec![],
         }
     }
 
-    pub fn new(value: impl ToString, leafs: Vec<Node>) -> Self {
+    pub fn new(value: impl ToString, leaves: Vec<Node>) -> Self {
         Self {
             open: false,
             index: 0,
             depth: 0,
             value: value.to_string(),
-            leafs,
+            leaves,
         }
     }
 
@@ -35,14 +35,14 @@ impl Node {
     }
 
     pub fn is_leaf(&self) -> bool {
-        self.leafs.is_empty()
+        self.leaves.is_empty()
     }
 
     pub fn length(&self) -> usize {
         let mut length = 1;
 
         if self.open {
-            for leaf in &self.leafs {
+            for leaf in &self.leaves {
                 length += leaf.length();
             }
         }
@@ -59,7 +59,7 @@ impl Node {
             return last_index;
         }
 
-        for node in &mut self.leafs {
+        for node in &mut self.leaves {
             last_index = node.update_indices(last_index, depth + 1);
         }
 
@@ -80,7 +80,7 @@ impl Node {
             return None;
         }
 
-        for leaf in &mut self.leafs {
+        for leaf in &mut self.leaves {
             if let Some(val) = leaf.find(index) {
                 return Some(val);
             }
@@ -123,7 +123,7 @@ mod test {
 
         assert_eq!(root.val_at_index(3).value, "C");
 
-        root.leafs[1].open = true;
+        root.leaves[1].open = true;
         root.update_indices(0, 0);
 
         assert_eq!(root.val_at_index(3).value, "a");

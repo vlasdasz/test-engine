@@ -6,7 +6,9 @@ use test_engine::{
     level::{Control, LevelManager},
     refs::Weak,
     ui::{
-        Anchor::*, Button, ColorMeter, Container, DPadView, Label, NoImage, NumberView, Point, Setup, StickView, Style, UIManager, ViewData, ViewSubviews, view,
+        Anchor::{Bot, Top},
+        Button, ColorMeter, Container, DPadView, Label, NoImage, NumberView, Point, Setup, StickView, Style,
+        UIManager, ViewData, ViewSubviews, view,
     },
 };
 
@@ -45,7 +47,6 @@ pub struct TestGameView {
 
     dpad:        DPadView,
     level_scale: NumberView,
-    ui_scale:    NumberView,
 
     color_meter: ColorMeter,
 }
@@ -106,13 +107,6 @@ impl Setup for TestGameView {
         self.level_scale.set_min(4);
         self.level_scale.on_change(|val| {
             LevelManager::set_scale(val * 0.1);
-        });
-
-        self.ui_scale.place().at_right(self.level_scale, 5);
-        self.ui_scale.set_min(4);
-        self.ui_scale.set_value(10);
-        self.ui_scale.on_change(|val| {
-            UIManager::set_scale(val * 0.1);
         });
 
         self.color_meter.place().size(50, 50).tr(10);

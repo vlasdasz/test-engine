@@ -1,6 +1,6 @@
 mod input;
-mod ui;
 mod tests;
+mod ui;
 pub mod ui_test;
 pub(crate) mod views;
 

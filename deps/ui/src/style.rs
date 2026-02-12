@@ -79,7 +79,7 @@ impl Style {
 mod test {
     use hreads::set_current_thread_as_main;
 
-    use crate::{Button, Label, Style, TableView};
+    use crate::{Button, Label, Style, Switch};
 
     const STYLE: Style = Style::new(|_v| {});
     const STYLE2: Style = Style::new(|_v| {
@@ -103,6 +103,6 @@ mod test {
     #[test]
     #[should_panic]
     fn invalid_global_style_type() {
-        STYLE.apply_globally::<TableView>();
+        STYLE.apply_globally::<Switch>();
     }
 }

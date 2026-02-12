@@ -1,7 +1,10 @@
 use anyhow::Result;
 use gm::color::{BLUE, GREEN, RED};
 use refs::Weak;
-use ui::{Anchor::*, Container, Setup, ViewData, ViewTest, view_test};
+use ui::{
+    Anchor::{Bot, Top},
+    Container, Setup, ViewData, ViewTest, view_test,
+};
 
 use crate::{self as test_engine, ui_test::check_colors};
 

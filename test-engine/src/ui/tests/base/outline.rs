@@ -31,7 +31,7 @@ impl Setup for Outline {
 impl ViewTest for Outline {
     fn perform_test(view: Weak<Self>) -> Result<()> {
         check_colors(
-            r#"
+            r"
                   46  119 -  89 124 149
                   57  120 - 255   0   0
                   84  123 -   0   0 231
@@ -68,7 +68,7 @@ impl ViewTest for Outline {
                  483   45 -  89 124 149
                  488   59 -   0   0 231
                  485  145 -   0   0 231
-            "#,
+            ",
         )?;
 
         from_main(move || {
@@ -78,7 +78,7 @@ impl ViewTest for Outline {
         });
 
         check_colors(
-            r#"
+            r"
           46   65 -  89 124 149
           56   58 - 255   0   0
           64   42 -  89 124 149
@@ -114,11 +114,11 @@ impl ViewTest for Outline {
          301   62 -   0   0 231
          312   68 -   0   0 231
          331   87 - 255 255   0
-    "#,
+    ",
         )?;
 
         // crate::ui_test::record_ui_test();
-        
+
         Ok(())
     }
 }
