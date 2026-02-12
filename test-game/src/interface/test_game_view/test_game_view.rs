@@ -8,7 +8,7 @@ use test_engine::{
     ui::{
         Anchor::{Bot, Top},
         Button, ColorMeter, Container, DPadView, Label, NoImage, Point, Setup, StickView, Style, UIManager,
-        ViewData, ViewSubviews, view,
+        ViewData, ViewFrame, ViewSubviews, view,
     },
 };
 
@@ -105,6 +105,9 @@ impl Setup for TestGameView {
         self.color_meter.place().size(50, 50).tr(10);
 
         self.stick.place().br(20).size(150, 150);
+        self.stick.on_change.val(move |direction| {
+            self.level.player.unit.body.add_impulse(direction.invert_y() / 500.0);
+        });
     }
 }
 

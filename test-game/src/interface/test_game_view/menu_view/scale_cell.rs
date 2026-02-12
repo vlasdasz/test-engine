@@ -5,9 +5,12 @@ use ::test_engine::{
     ui::{Label, NumberView, Setup, view},
 };
 use test_engine::{
+    gm::LossyConvert,
     refs::Own,
-    ui::{TextAlignment, ViewData},
+    ui::{Anchor, TextAlignment, ViewData},
 };
+
+use crate::interface::test_game_view::Node;
 
 pub struct Function<In, Out> {
     fun: RefCell<Box<dyn FnMut(In) -> Out>>,
@@ -39,8 +42,8 @@ pub struct ScaleCell {
     set_scale: Function<f32, ()>,
 
     #[init]
-    label:  Label,
     number: NumberView,
+    label:  Label,
 }
 
 impl ScaleCell {
@@ -50,11 +53,22 @@ impl ScaleCell {
         new.set_scale = set;
         new
     }
+
+    pub fn set_node(self: Weak<Self>, node: &Node) {
+        self.label
+            .place()
+            .clear()
+            .l(10.0 + node.depth.lossy_convert() * 28.0)
+            .tb(2.5)
+            .anchor(Anchor::Right, self.number, 5);
+    }
 }
 
 impl Setup for ScaleCell {
     fn setup(self: Weak<Self>) {
         self.place().distribute_ratio([4, 1]);
+
+        self.number.place().trb(2.5).w(20);
 
         let scale = self.get_scale.call(());
 

@@ -7,20 +7,22 @@ use test_engine::{
     ui::{Alert, Anchor, Color, Label, Setup, ViewData, ViewSubviews, view},
 };
 
+use crate::interface::test_game_view::HAS_BACK_BUTTON;
+
 static FINISHED: AtomicBool = AtomicBool::new(false);
 static VIEWS_COUNT: AtomicU64 = AtomicU64::new(0);
 
 const TARGET_FPS: f32 = 40.0;
 
 #[view]
-pub struct BenchmarkView {
+pub struct UIBenchmarkView {
     index: u32,
 
     #[init]
     label: Label,
 }
 
-impl BenchmarkView {
+impl UIBenchmarkView {
     fn filled(&self) -> bool {
         self.index == 4
     }
@@ -32,7 +34,7 @@ impl BenchmarkView {
 
         VIEWS_COUNT.fetch_add(1, Ordering::AcqRel);
 
-        let view = self.add_view::<BenchmarkView>();
+        let view = self.add_view::<UIBenchmarkView>();
         view.place().relative(Anchor::Width, self, 0.5);
         view.place().relative(Anchor::Height, self, 0.5);
         match self.index {
@@ -73,9 +75,15 @@ impl BenchmarkView {
                                 return;
                             }
 
-                            Alert::show(format!("Views: {}", VIEWS_COUNT.load(Ordering::Acquire)));
+                            Alert::show_callback(
+                                format!("Views: {}", VIEWS_COUNT.load(Ordering::Acquire)),
+                                move || {
+                                    self.apply_style(HAS_BACK_BUTTON);
+                                },
+                            );
 
                             FINISHED.store(true, Ordering::Relaxed);
+
                             return;
                         }
 
@@ -93,7 +101,7 @@ impl BenchmarkView {
     }
 }
 
-impl Setup for BenchmarkView {
+impl Setup for UIBenchmarkView {
     fn setup(self: Weak<Self>) {
         self.label.set_text("djkshdsjkhjkds");
         self.label.place().back();
