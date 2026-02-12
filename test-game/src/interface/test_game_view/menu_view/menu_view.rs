@@ -2,11 +2,12 @@ use std::any::Any;
 
 use anyhow::Result;
 use test_engine::{
-    dispatch::spawn,
+    audio::Sound,
+    dispatch::{after, spawn},
     filesystem::Paths,
     gm::Toggle,
     level::LevelManager,
-    refs::{Own, Weak},
+    refs::{Own, Weak, manage::DataManager},
     ui::{
         ALL_VIEWS, Alert, Point, Setup, Spinner, TableData, TableView, UIManager, View, ViewData, ViewFrame,
         ViewTest, all_view_tests, all_views, cast_cell, view_test,
@@ -47,8 +48,8 @@ impl Setup for MenuView {
                 Node::new(
                     "Scenes",
                     vec![
+                        Node::empty("main"),
                         Node::empty("ui bench"),
-                        Node::empty("physics bench"),
                         Node::empty("polygon"),
                         Node::empty("noise"),
                         Node::empty("render"),
@@ -58,8 +59,19 @@ impl Setup for MenuView {
                     ],
                 ),
                 Node::new(
+                    "UI",
+                    vec![
+                        Node::empty("sound"),
+                        Node::empty("alert"),
+                        Node::empty("spinner"),
+                        Node::empty("pick folder"),
+                    ],
+                ),
+                Node::new("Level", vec![Node::empty("benchmark")]),
+                Node::new(
                     "System",
                     vec![
+                        Node::empty("system info"),
                         Node::empty("add box"),
                         Node::empty("pick folder"),
                         Node::empty("request"),
@@ -151,7 +163,7 @@ impl MenuView {
             "polygon" => {
                 UIManager::set_view(PolygonView::new());
             }
-            "physics bench" => {
+            "benchmark" => {
                 *LevelManager::camera_pos() = Point::default();
                 LevelManager::set_level(BenchmarkLevel::default());
             }
@@ -166,6 +178,28 @@ impl MenuView {
             "add box" => {
                 let mut level = LevelManager::downcast_level::<TestLevel>();
                 level.add_random_box((-20, 40));
+            }
+            "sound" => {
+                Sound::get("retro.wav").play();
+            }
+            "alert" => {
+                Alert::show("Hello!");
+            }
+            "spinner" => {
+                let spin = Spinner::lock();
+                after(2.0, || {
+                    spin.animated_stop();
+                });
+            }
+            "main" => {
+                *LevelManager::camera_pos() = Point::default();
+                LevelManager::set_level(TestLevel::default());
+            }
+            "system info" => {
+                Alert::with_label(|l| {
+                    l.set_text_size(15);
+                })
+                .show(netrun::System::get_info().dump());
             }
             _ => {
                 panic!("Invalid command: {command}");

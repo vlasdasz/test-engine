@@ -109,7 +109,11 @@ fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
                 return in.border_color;
             }
         }
-        return tex;
+        if tex.a == 0.0 {
+            discard;
+        } else {
+            return tex;
+        }
     }
     let corner: vec2<f32> = in.size * 0.5 - vec2<f32>(radius, radius);
     let d: vec2<f32> = abs(local_pos) - corner;
@@ -130,5 +134,9 @@ fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
         }
     }
 
-    return tex;
+    if tex.a == 0.0 {
+        discard;
+    } else {
+        return tex;
+    }
 }

@@ -53,7 +53,7 @@ impl App for TestGameApp {
     }
 
     fn initial_size(&self) -> Size {
-        (2400, 2000).into()
+        (1500, 1200).into()
     }
 
     #[cfg(not_wasm)]

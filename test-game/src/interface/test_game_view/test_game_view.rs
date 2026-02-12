@@ -2,15 +2,11 @@ use log::error;
 use netrun::local_ip;
 use test_engine::{
     AppRunner,
-    audio::Sound,
-    dispatch::after,
     gm::{Apply, Direction},
     level::{Control, LevelManager},
-    refs::{Weak, manage::DataManager},
+    refs::Weak,
     ui::{
-        Alert, Anchor::*, Button, ColorMeter, Container, DPadView, DrawingView, GREEN, ImageView, Label,
-        MovableView, NoImage, NumberView, PURPLE, Point, PointsPath, Setup, Spinner, SpriteView, StickView,
-        Style, TURQUOISE, TextField, UIManager, ViewData, ViewSubviews, view,
+        Anchor::*, Button, ColorMeter, Container, DPadView, Label, NoImage, NumberView, Point, Setup, StickView, Style, UIManager, ViewData, ViewSubviews, view,
     },
 };
 
@@ -42,36 +38,16 @@ pub struct TestGameView {
     #[init]
     ip:     Label,
     app_id: Label,
-    system: Button,
 
     menu: MenuView,
 
-    drawing: DrawingView,
-    stick:   StickView,
-
-    image: ImageView,
-
-    label_l:  Label,
-    image_r:  ImageView,
-    gradient: Container,
+    stick: StickView,
 
     dpad:        DPadView,
     level_scale: NumberView,
     ui_scale:    NumberView,
 
-    spinner: Button,
-    alert:   Button,
-    sound:   Button,
-
     color_meter: ColorMeter,
-
-    text_field: TextField,
-
-    test_level: Button,
-
-    some_button: Button,
-
-    sprite_view: MovableView<SpriteView>,
 }
 
 impl Setup for TestGameView {
@@ -107,54 +83,18 @@ impl Setup for TestGameView {
         self.app_id.set_text(UIManager::app_instance_id());
         self.app_id.place().at_right(self.ip, 10);
 
-        self.system.set_text("system");
-        self.system.place().below(self.ip, 10);
-        self.system.on_tap(|| {
-            Alert::with_label(|l| {
-                l.set_text_size(15);
-            })
-            .show(netrun::System::get_info().dump());
-        });
-
         self.menu
             .place()
-            .anchor(Top, self.system, 50)
-            .same_x(self.system)
+            .anchor(Top, self.ip, 10)
+            .same_x(self.ip)
             .w(200)
             .anchor(Bot, self.dpad, 10);
-
-        self.image.place().center_x().b(5).relative_size(self, 0.14);
-        self.image.set_image("cat.png").set_corner_radius(20);
-
-        self.label_l
-            .place()
-            .b(5)
-            .relative_size(self.image, 1.0)
-            .anchor(Right, self.image, 20);
-        self.label_l.text = "Łėŵœ Ы".into();
-        self.label_l.set_text_size(64.).set_corner_radius(20);
-
-        self.image_r
-            .place()
-            .b(5)
-            .relative_size(self.image, 1.0)
-            .anchor(Left, self.image, 20);
-        self.image_r.set_image("palm.png");
-
-        self.gradient
-            .place()
-            .same([Height, Y], self.image_r)
-            .w(50)
-            .anchor(Left, self.image_r, 10);
-        self.gradient.set_gradient(PURPLE, TURQUOISE);
-        self.gradient.set_corner_radius(20);
 
         self.dpad.place().size(80, 65).b(10).l(10);
 
         self.dpad.on_press.val(move |direction| {
             self.level.player.unit.body.move_by_direction(direction);
 
-            self.label_l.set_text(format!("{direction:?}"));
             AppRunner::set_window_title(format!("{direction:?}"));
 
             if direction.is_up() {
@@ -175,64 +115,9 @@ impl Setup for TestGameView {
             UIManager::set_scale(val * 0.1);
         });
 
-        self.spinner.place().size(150, 40).b(20).anchor(Left, self.ui_scale, 10);
-        self.spinner.set_text("Spinner");
-        self.spinner.set_text_size(20);
-        self.spinner.on_tap(|| {
-            let spin = Spinner::lock();
-            after(2.0, || {
-                spin.animated_stop();
-            });
-        });
+        self.color_meter.place().size(50, 50).tr(10);
 
-        self.alert
-            .place()
-            .same_size(self.spinner)
-            .anchor(Left, self.ui_scale, 10)
-            .anchor(Bot, self.spinner, 10);
-        self.alert.set_text("Alert");
-        self.alert.set_text_size(20);
-        self.alert.on_tap(|| {
-            Alert::show("Hello!");
-        });
-
-        self.sound
-            .place()
-            .same_size(self.spinner)
-            .anchor(Left, self.ui_scale, 10)
-            .anchor(Bot, self.alert, 10);
-        self.sound.set_text("Sound");
-        self.sound.set_text_size(20);
-        self.sound.on_tap(|| Sound::get("retro.wav").play());
-
-        self.color_meter.place().size(50, 50).br(10);
-
-        self.drawing.place().w(280).tr(10).relative(Height, self, 0.2);
-
-        self.drawing.add_path([(0, 0), (40, 20), (20, 200), (150, 20), (20, 50)], GREEN);
-
-        self.drawing
-            .add_path(PointsPath::circle_triangles_with((200, 100), 50, 5), TURQUOISE);
-
-        self.stick.place().t(40).size(200, 200).anchor(Right, self.drawing, 10);
-
-        self.text_field.set_placeholder("type").place().below(self.system, 10).w(50);
-
-        self.test_level.set_text("test level");
-        self.test_level
-            .place()
-            .same([Y, Height], self.text_field)
-            .w(100)
-            .anchor(Left, self.text_field, 10);
-        self.test_level.on_tap(|| {
-            *LevelManager::camera_pos() = Point::default();
-            LevelManager::set_level(TestLevel::default());
-        });
-
-        self.sprite_view.set_title("Sprite:");
-        self.sprite_view.place().size(280, 120).center_y().r(0);
-        let player = self.level.player;
-        self.sprite_view.set_sprite(player);
+        self.stick.place().br(20).size(200, 200);
     }
 }
 
