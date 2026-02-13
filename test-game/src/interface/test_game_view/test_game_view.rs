@@ -8,7 +8,7 @@ use test_engine::{
     ui::{
         Anchor::{Bot, Top},
         Button, ColorMeter, Container, DPadView, Label, NoImage, Point, Setup, StickView, Style, UIManager,
-        ViewData, ViewFrame, ViewSubviews, view,
+        ViewData, ViewSubviews, view,
     },
 };
 
@@ -78,7 +78,7 @@ impl Setup for TestGameView {
                 |ip| ip.to_string(),
             ))
             .set_text_size(10);
-        self.ip.place().t(20).l(5).size(80, 20);
+        self.ip.place().t(10).l(5).size(80, 20);
 
         self.app_id.set_text(UIManager::app_instance_id());
         self.app_id.place().at_right(self.ip, 10);
