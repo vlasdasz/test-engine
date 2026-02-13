@@ -2,6 +2,9 @@
 
 My attempt to create a cross platform game engine and UI framework from scratch using Rust.
 
+<img width="766" height="647" alt="image" src="https://github.com/user-attachments/assets/8ac5695f-8252-4fe6-b572-a17c56ef6ddb" />
+
+
 Previously written in `C++`: https://github.com/VladasZ/test_engine_cpp
 
 Inspired by `Cross++`: https://github.com/maxon887/Cross
