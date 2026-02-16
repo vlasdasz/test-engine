@@ -96,6 +96,7 @@ mod test {
     }
 
     impl ViewTest for StickViewTest {
+        #[allow(clippy::too_many_lines)]
         fn perform_test(view: Weak<Self>) -> Result<()> {
             inject_touches(
                 "
@@ -229,7 +230,7 @@ mod test {
              ",
             );
 
-            assert_eq!(view.point, Point::new(-0.08444512, 49.880524));
+            assert_eq!(view.point, Point::new(-0.084_445_12, 49.880_524));
 
             // record_ui_test();
 

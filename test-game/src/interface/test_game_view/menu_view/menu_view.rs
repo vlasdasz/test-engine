@@ -22,7 +22,7 @@ use crate::{
         polygon_view::PolygonView,
         render_view::RenderView,
         root_layout_view::RootLayoutView,
-        test_game_view::{UIBenchmarkView, Function, Node, NodeCell, ScaleCell},
+        test_game_view::{Function, Node, NodeCell, ScaleCell, UIBenchmarkView},
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -102,13 +102,13 @@ impl TableData for MenuView {
         let node = self.root.val_at_index(index);
         if node.value == "ui scale" {
             ScaleCell::make(
-                Function::new(|_| UIManager::scale()),
-                Function::new(|scale| UIManager::set_scale(scale)),
+                Function::new(|()| UIManager::scale()),
+                Function::new(UIManager::set_scale),
             )
         } else if node.value == "lvl scale" {
             ScaleCell::make(
-                Function::new(|_| LevelManager::scale()),
-                Function::new(|scale| LevelManager::set_scale(scale)),
+                Function::new(|()| LevelManager::scale()),
+                Function::new(LevelManager::set_scale),
             )
         } else {
             NodeCell::new()
