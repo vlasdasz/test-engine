@@ -14,7 +14,7 @@ pub(crate) static SHRINK_SCALE: Mutex<f32> = Mutex::new(0.2);
 
 #[view]
 pub struct ViewView {
-    repr: ViewRepr,
+    repr: Weak<ViewRepr>,
 
     #[init]
     label: Label,
@@ -31,12 +31,12 @@ impl Setup for ViewView {
 
     fn on_selection_changed(self: Weak<Self>, selected: bool) {
         self.set_color(if selected { GRAY } else { WHITE });
-        VIEW_SELECTED.trigger(self.repr.clone());
+        VIEW_SELECTED.trigger(self.repr);
     }
 }
 
 impl ViewView {
-    pub fn set_repr(mut self: Weak<Self>, scale: f32, repr: ViewRepr) {
+    pub fn set_repr(mut self: Weak<Self>, scale: f32, repr: Weak<ViewRepr>) {
         let shrink_scale = *SHRINK_SCALE.lock();
 
         self.cleanup();
@@ -54,7 +54,7 @@ impl ViewView {
 
         for sub in &repr.subviews {
             let view = self.add_view::<ViewView>();
-            view.set_repr(scale, sub.clone());
+            view.set_repr(scale, sub.weak());
         }
 
         self.repr = repr;

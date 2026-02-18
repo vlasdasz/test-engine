@@ -7,7 +7,7 @@ use test_engine::{
 
 #[view]
 pub struct ViewInspectorView {
-    view: ViewRepr,
+    view: Weak<ViewRepr>,
 
     #[init]
     label:       Label,
@@ -25,7 +25,7 @@ impl Setup for ViewInspectorView {
 }
 
 impl ViewInspectorView {
-    pub fn set_view(mut self: Weak<Self>, view: ViewRepr) {
+    pub fn set_view(mut self: Weak<Self>, view: Weak<ViewRepr>) {
         self.label.set_text(format!("Label: {}", view.label));
         self.id.set_text_size(10).set_text(format!("{}", view.id));
         self.placer_view.set_placer(&view.id, &view.placer);

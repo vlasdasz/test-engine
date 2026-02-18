@@ -1,6 +1,7 @@
 use std::any::Any;
 
 use anyhow::Result;
+use netrun::Function;
 use test_engine::{
     audio::Sound,
     dispatch::{after, spawn},
@@ -22,7 +23,7 @@ use crate::{
         polygon_view::PolygonView,
         render_view::RenderView,
         root_layout_view::RootLayoutView,
-        test_game_view::{Function, Node, NodeCell, ScaleCell, UIBenchmarkView},
+        test_game_view::{Node, NodeCell, ScaleCell, UIBenchmarkView},
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,

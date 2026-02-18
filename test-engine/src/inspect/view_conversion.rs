@@ -1,13 +1,14 @@
 use inspect::ui::ViewRepr;
+use refs::Own;
 use ui::{View, ViewData, ViewFrame, ViewSubviews, WeakView};
 
 pub trait ViewToInspect {
-    fn view_to_inspect(&self) -> ViewRepr;
+    fn view_to_inspect(&self) -> Own<ViewRepr>;
 }
 
 impl<T: View + ?Sized> ViewToInspect for T {
-    fn view_to_inspect(&self) -> ViewRepr {
-        ViewRepr {
+    fn view_to_inspect(&self) -> Own<ViewRepr> {
+        Own::new(ViewRepr {
             label:    self.label().to_string(),
             id:       weak_to_id(self.weak_view()),
             frame:    *self.frame(),
@@ -18,7 +19,7 @@ impl<T: View + ?Sized> ViewToInspect for T {
                 .filter(|v| !v.is_system())
                 .map(|v| v.view_to_inspect())
                 .collect(),
-        }
+        })
     }
 }
 

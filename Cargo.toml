@@ -83,7 +83,7 @@ hreads = "0.13"
 
 netrun = "0.27"
 # refs = { path = "../deps/refs/refs" }
-refs = { version = "0.40", default-features = true }
+refs = { version = "0.41", default-features = true }
 # netrun = { path = "../deps/netrun/netrun" }
 plat = "0.8"
 reflected = "0.29"

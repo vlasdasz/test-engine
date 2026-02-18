@@ -4,6 +4,7 @@ use ::test_engine::{
     refs::Weak,
     ui::{Label, NumberView, Setup, view},
 };
+use netrun::Function;
 use test_engine::{
     gm::LossyConvert,
     refs::Own,
@@ -11,30 +12,6 @@ use test_engine::{
 };
 
 use crate::interface::test_game_view::Node;
-
-pub struct Function<In, Out> {
-    fun: RefCell<Box<dyn FnMut(In) -> Out>>,
-}
-
-impl<In, Out> Default for Function<In, Out> {
-    fn default() -> Self {
-        Self {
-            fun: RefCell::new(Box::new(|_| panic!())),
-        }
-    }
-}
-
-impl<In, Out> Function<In, Out> {
-    pub fn new(fun: impl FnMut(In) -> Out + 'static) -> Self {
-        Self {
-            fun: RefCell::new(Box::new(fun)),
-        }
-    }
-
-    pub fn call(&self, input: In) -> Out {
-        (*self.fun.borrow_mut())(input)
-    }
-}
 
 #[view]
 pub struct ScaleCell {

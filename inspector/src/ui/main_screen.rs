@@ -4,7 +4,6 @@ use anyhow::{Result, anyhow, bail};
 use hreads::{log_spawn, sleep};
 use inspect::{AppCommand, InspectorCommand, SystemResponse, UIRequest, UIResponse, ui::ViewRepr};
 use log::{debug, info};
-use netrun::zmq::Req;
 use test_engine::{
     dispatch::on_main,
     refs::Weak,
@@ -22,7 +21,7 @@ use crate::ui::{
 
 type Client = netrun::zmq::Req<InspectorCommand, AppCommand>;
 
-pub static VIEW_SELECTED: UIEvent<ViewRepr> = UIEvent::const_new();
+pub static VIEW_SELECTED: UIEvent<Weak<ViewRepr>> = UIEvent::const_new();
 
 #[view]
 pub struct MainScreen {
@@ -108,7 +107,7 @@ impl MainScreen {
             return Ok(());
         };
 
-        let client = Client::new(&format!("tcp:://{ip}:{}", inspect::PORT_RANGE.start)).await?;
+        let client = Client::new(&format!("tcp://{ip}:{}", inspect::PORT_RANGE.start)).await?;
 
         let response = client.send(UIRequest::GetUI.into()).await?;
 
@@ -144,7 +143,7 @@ impl MainScreen {
 
         for (client_ip, _) in clients {
             debug!("Checking: {client_ip}");
-            let client = Client::new(&format!("tcp:://{client_ip}:{}", inspect::PORT_RANGE.start)).await?;
+            let client = Client::new(&format!("tcp://{client_ip}:{}", inspect::PORT_RANGE.start)).await?;
 
             let AppCommand::System(SystemResponse::Info(system)) =
                 client.send(InspectorCommand::GetSystemInfo).await?
@@ -161,7 +160,7 @@ impl MainScreen {
 
         let (_, ip) = available_clients[0];
 
-        let client = Client::new(&format!("tcp:://{ip}:{}", inspect::PORT_RANGE.start)).await?;
+        let client = Client::new(&format!("tcp://{ip}:{}", inspect::PORT_RANGE.start)).await?;
         let response = client.send(UIRequest::GetUI.into()).await?;
 
         on_main(move || {
@@ -189,8 +188,8 @@ impl MainScreen {
     }
 
     async fn get_ui_tapped(self: Weak<Self>) -> Result<()> {
-        let ok = self.client()?.send(UIRequest::GetUI.into()).await?;
-        dbg!(&ok);
+        let ui = self.client()?.send(UIRequest::GetUI.into()).await?;
+        self.process_command(ui).await?;
         Ok(())
     }
 

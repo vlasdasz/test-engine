@@ -18,4 +18,13 @@
     },
     "sourceLanguages": ["rust"],
   },
+  {
+    "label": "Debug Inspector",
+    "adapter": "CodeLLDB",
+    "build": {
+      "command": "cargo",
+      "args": ["build", "-p", "inspector"],
+    },
+    "sourceLanguages": ["rust"],
+  },
 ]

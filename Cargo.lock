@@ -2700,6 +2700,7 @@ dependencies = [
  "gm",
  "netrun",
  "plat",
+ "refs",
  "serde",
  "ui",
 ]
@@ -4675,15 +4676,16 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.40.0"
+version = "0.41.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce48c38d7e96375663d6d2963edaf949aaf1a631c1c43d2fb8ed6ff0f667f6fe"
+checksum = "269e25898c129fbd1ddbca970773b259281f75a78a736025ab23c9897c00395a"
 dependencies = [
  "derive_more",
  "hreads",
  "instant",
  "log",
  "parking_lot",
+ "serde",
 ]
 
 [[package]]
