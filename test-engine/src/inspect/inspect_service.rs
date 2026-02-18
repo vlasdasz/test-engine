@@ -1,34 +1,22 @@
 #![cfg(not_wasm)]
 
-use anyhow::Result;
 use audio::Sound;
 use hreads::{log_spawn, on_main};
-use inspect::{AppCommand, InspectorCommand, PORT_RANGE, SystemInfo, SystemResponse, UIRequest, UIResponse};
-use log::debug;
-use netrun::Service;
+use inspect::{AppCommand, InspectorCommand, SystemInfo, SystemResponse, UIRequest, UIResponse};
+use netrun::zmq::Rep;
 use refs::manage::DataManager;
 use ui::UIManager;
 
 use crate::inspect::view_conversion::ViewToInspect;
 
-type Server = netrun::Server<InspectorCommand, AppCommand>;
-
 #[derive(Clone)]
 pub struct InspectService;
-
-impl Service<InspectorCommand, AppCommand> for InspectService {
-    async fn respond(&self, i: InspectorCommand) -> Result<AppCommand> {
-        Ok(Self::process_command(i))
-    }
-}
 
 impl InspectService {
     pub fn start_listening() {
         log_spawn(async {
-            let server = Server::start(PORT_RANGE.start).await?;
-            debug!("Inspect server listening on: {}", PORT_RANGE.start);
-            server.serve(InspectService).await?;
-
+            let server = Rep::<InspectorCommand, AppCommand>::new("tcp://0.0.0.0:6969").await?;
+            server.on_receive(|command| Self::process_command(command));
             Ok(())
         });
     }
