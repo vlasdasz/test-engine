@@ -117,6 +117,7 @@ profile.json
 profile.json.gz
 
 test-game/dist/*
+example-app/dist/*
 
 *decrypted*
 
