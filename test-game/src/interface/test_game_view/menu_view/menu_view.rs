@@ -4,14 +4,14 @@ use anyhow::Result;
 use netrun::Function;
 use test_engine::{
     audio::Sound,
-    dispatch::{after, spawn},
+    dispatch::{after, from_back, spawn},
     filesystem::Paths,
     gm::Toggle,
     level::LevelManager,
     refs::{Own, Weak, manage::DataManager},
     ui::{
-        ALL_VIEWS, Alert, Point, Setup, Spinner, TableData, TableView, UIManager, View, ViewData, ViewFrame,
-        ViewTest, all_view_tests, all_views, cast_cell, view_test,
+        ALL_VIEWS, Alert, AlertErr, Point, Setup, Spinner, TableData, TableView, UIManager, View, ViewData,
+        ViewFrame, ViewTest, all_view_tests, all_views, cast_cell, view_test,
     },
 };
 
@@ -75,6 +75,7 @@ impl Setup for MenuView {
                     vec![
                         Node::empty("system info"),
                         Node::empty("add box"),
+                        Node::empty("load assets"),
                         Node::empty("request"),
                         Node::empty("all views"),
                         Node::empty("panic"),
@@ -219,6 +220,11 @@ impl MenuView {
                 })
                 .show(netrun::System::get_info().dump());
             }
+            "load assets" => {
+                from_back(load_assets_test, |result| {
+                    result.alert_err();
+                });
+            }
             _ => {
                 panic!("Invalid command: {command}");
             }
@@ -248,4 +254,19 @@ impl ViewTest for MenuView {
 
         Ok(())
     }
+}
+
+async fn load_assets_test() -> Result<()> {
+    let spin = Spinner::lock();
+
+    let bytes = reqwest::get("http://192.168.0.14:44800/assets/images/ak.png")
+        .await?
+        .bytes()
+        .await?;
+
+    spin.stop();
+
+    Alert::show(bytes.len());
+
+    Ok(())
 }

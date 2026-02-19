@@ -11,6 +11,7 @@ mod level_drawer;
 mod app;
 mod app_starter;
 mod config;
+mod dispatch_tools;
 mod game_drawer;
 pub mod inspect;
 mod pipelines;
@@ -91,6 +92,8 @@ pub mod dispatch {
     #[cfg(not_wasm)]
     pub use ::hreads::first_ok;
     pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_async, wait_for_next_frame};
+
+    pub use crate::dispatch_tools::*;
 
     // pub use crate::ui::ui_dispatch::on_back;
 }

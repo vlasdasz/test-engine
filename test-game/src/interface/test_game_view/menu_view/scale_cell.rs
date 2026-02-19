@@ -1,4 +1,3 @@
-use std::cell::RefCell;
 
 use ::test_engine::{
     refs::Weak,

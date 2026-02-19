@@ -22,6 +22,7 @@ fastrand = { workspace = true }
 log = { workspace = true }
 netrun = { workspace = true }
 serde = { workspace = true }
+reqwest = { workspace = true }
 
 test-engine = { workspace = true }
 
