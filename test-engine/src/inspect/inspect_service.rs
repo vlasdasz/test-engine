@@ -17,7 +17,7 @@ impl InspectService {
     pub fn start_listening() {
         log_spawn(async {
             let server = Rep::<InspectorCommand, AppCommand>::new("tcp://0.0.0.0:6969").await?;
-            server.on_receive(|command| Self::process_command(command));
+            server.on_receive(Self::process_command);
             info!("Waiting for inspect on: 6969");
             Ok(())
         });
