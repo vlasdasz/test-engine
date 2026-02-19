@@ -43,7 +43,7 @@ pub mod refs {
     }
 
     pub use refs::{
-        __internal_deps, AsAny, Mutex, MutexGuard, Own, Weak, managed, vec::OwnVec, weak_from_ref,
+        __internal_deps, AsAny, Own, Weak, managed, vec::OwnVec, weak_from_ref,
     };
 }
 

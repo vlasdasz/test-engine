@@ -134,7 +134,7 @@ impl BackgroundPipeline {
         }
 
         render_pass.set_bind_group(0, &self.view_bind, &[]);
-        render_pass.set_bind_group(1, &image.bind, &[]);
+        render_pass.set_bind_group(1, image.bind(), &[]);
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
         render_pass.draw(RANGE, 0..1);
     }

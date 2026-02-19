@@ -10,8 +10,8 @@ use test_engine::{
     level::LevelManager,
     refs::{Own, Weak, manage::DataManager},
     ui::{
-        ALL_VIEWS, Alert, AlertErr, Point, Setup, Spinner, TableData, TableView, UIManager, View, ViewData,
-        ViewFrame, ViewTest, all_view_tests, all_views, cast_cell, view_test,
+        ALL_VIEWS, Alert, AlertErr, Image, Point, Setup, Spinner, TableData, TableView, UIManager, View,
+        ViewData, ViewFrame, ViewTest, all_view_tests, all_views, cast_cell, view_test,
     },
 };
 
@@ -222,7 +222,11 @@ impl MenuView {
             }
             "load assets" => {
                 from_back(load_assets_test, |result| {
-                    result.alert_err();
+                    let Some(image) = result.alert_err() else {
+                        return;
+                    };
+
+                    LevelManager::level_weak().background = image;
                 });
             }
             _ => {
@@ -256,17 +260,12 @@ impl ViewTest for MenuView {
     }
 }
 
-async fn load_assets_test() -> Result<()> {
-    let spin = Spinner::lock();
+async fn load_assets_test() -> Result<Weak<Image>> {
+    let _spin = Spinner::lock();
 
-    let bytes = reqwest::get("http://192.168.0.14:44800/assets/images/ak.png")
-        .await?
-        .bytes()
-        .await?;
-
-    spin.stop();
-
-    Alert::show(bytes.len());
-
-    Ok(())
+    Image::download(
+        "downloaded.jpg",
+        "https://fastly.picsum.photos/id/299/1000/1000.jpg?hmac=DRpkgVaALpt0f0Y4kSTUOtLJ66_ULgUDZn2n6pbuafA",
+    )
+    .await
 }

@@ -1,6 +1,5 @@
-use std::{path::PathBuf, process::Command};
+use std::path::PathBuf;
 
-use log::warn;
 use parking_lot::Mutex;
 use plat::Platform;
 
@@ -25,12 +24,14 @@ impl Paths {
     }
 
     pub fn storage() -> PathBuf {
-        #[cfg(target_arch = "wasm32")]
+        #[cfg(wasm)]
         {
-            return PathBuf::default();
+            PathBuf::default()
         }
-
-        format!("{}/.{}", Self::home().display(), Self::executable_name()).into()
+        #[cfg(not_wasm)]
+        {
+            format!("{}/.{}", Self::home().display(), Self::executable_name()).into()
+        }
     }
 
     pub fn executable_name() -> String {
@@ -44,19 +45,25 @@ impl Paths {
 
     pub fn git_root() -> anyhow::Result<PathBuf> {
         #[cfg(wasm)]
-        return Ok(PathBuf::new());
-
-        let output = Command::new("git").args(["rev-parse", "--show-toplevel"]).output()?;
-
-        if !output.status.success() {
-            warn!("Failed to get Git repository root path");
-            return Ok(PathBuf::from("~/dev/money"));
+        {
+            Ok(PathBuf::new())
         }
+        #[cfg(not_wasm)]
+        {
+            let output = std::process::Command::new("git")
+                .args(["rev-parse", "--show-toplevel"])
+                .output()?;
 
-        assert!(output.status.success(), "Failed to get Git repository root path");
-        let git_root = String::from_utf8_lossy(&output.stdout).trim_end_matches('\n').to_string();
+            if !output.status.success() {
+                log::warn!("Failed to get Git repository root path");
+                return Ok(PathBuf::from("~/dev/money"));
+            }
 
-        Ok(PathBuf::from(git_root))
+            assert!(output.status.success(), "Failed to get Git repository root path");
+            let git_root = String::from_utf8_lossy(&output.stdout).trim_end_matches('\n').to_string();
+
+            Ok(PathBuf::from(git_root))
+        }
     }
 
     pub fn set_storage_path(path: String) {

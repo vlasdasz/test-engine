@@ -39,7 +39,6 @@ console_log = "1.0"
 ctor = "0.6"
 dirs = "6.0"
 dotenvy = "0.15"
-reqwest = "0.13"
 educe = "0.6"
 fastrand = "2.3"
 fern = "0.7"
@@ -59,6 +58,7 @@ pollster = "0.4"
 pretty_assertions = "1.4"
 quote = "1.0"
 rapier2d = { version = "0.31", features = ["simd-nightly"] }
+reqwest = "0.13"
 resvg = "0.47"
 rfd = "0.17"
 rust_decimal = "1.40"
@@ -84,7 +84,7 @@ hreads = "0.13"
 
 netrun = "0.27"
 # refs = { path = "../deps/refs/refs" }
-refs = { version = "0.41", default-features = true }
+refs = { version = "0.43", default-features = true }
 # netrun = { path = "../deps/netrun/netrun" }
 plat = "0.8"
 reflected = "0.29"
