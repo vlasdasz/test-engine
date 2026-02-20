@@ -1,135 +1,139 @@
 name: Build
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - "**.md"
-  pull_request:
-    branches: [main]
-    paths-ignore:
-      - "**.md"
+    push:
+        branches: [main]
+        paths-ignore:
+            - "**.md"
+    pull_request:
+        branches: [main]
+        paths-ignore:
+            - "**.md"
 
 env:
-  CARGO_TERM_COLOR: always
+    CARGO_TERM_COLOR: always
 
 jobs:
-  typos:
-    name: Spell Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Actions
-        uses: actions/checkout@v4
+    typos:
+        name: Spell Check
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Actions
+              uses: actions/checkout@v4
 
-      - name: Check for Typos
-        uses: crate-ci/typos@master
+            - name: Check for Typos
+              uses: crate-ci/typos@master
 
-  lint:
-    name: Linter
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
+    lint:
+        name: Linter
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  token: ${{secrets.GITHUB_TOKEN}}
+                  submodules: recursive
 
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: nightly
-          components: clippy
+            - uses: actions-rust-lang/setup-rust-toolchain@v1
+              with:
+                  toolchain: nightly
+                  components: clippy
 
-      - name: Lint
-        run: make lint
+            - name: Lint
+              run: |
+                  ./build/scripts/install-deps.sh
+                  make lint
 
-  fmt:
-    name: Formatting Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
+    fmt:
+        name: Formatting Check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  token: ${{secrets.GITHUB_TOKEN}}
+                  submodules: recursive
 
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: nightly
-          components: rustfmt
+            - uses: actions-rust-lang/setup-rust-toolchain@v1
+              with:
+                  toolchain: nightly
+                  components: rustfmt
 
-      - uses: actions-rust-lang/rustfmt@v1
+            - uses: actions-rust-lang/rustfmt@v1
 
-  wasm:
-    name: Wasm
-    needs: [typos, lint, fmt]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
+    wasm:
+        name: Wasm
+        needs: [typos, lint, fmt]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  token: ${{secrets.GITHUB_TOKEN}}
+                  submodules: recursive
 
-      - name: Build
-        run: make wasm
+            - name: Build
+              run: make wasm
 
-  build:
-    name: Build
-    needs: [typos, lint, fmt]
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [
-            { os: macos, runner: macos-latest },
-            { os: windows, runner: windows-latest },
+    build:
+        name: Build
+        needs: [typos, lint, fmt]
+        strategy:
+            fail-fast: false
+            matrix:
+                target: [
+                        { os: macos, runner: macos-latest },
+                        { os: windows, runner: windows-latest },
 
-            { os: ios, runner: mac },
-            #          { os: android, runner: ubuntu-latest },
-          ]
-    runs-on: ${{ matrix.target.runner }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
+                        { os: ios, runner: mac },
+                        #          { os: android, runner: ubuntu-latest },
+                    ]
+        runs-on: ${{ matrix.target.runner }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  token: ${{secrets.GITHUB_TOKEN}}
+                  submodules: recursive
 
-      - name: Free Space
-        if: ${{ matrix.target.os != 'windows' }}
-        run: ./build/scripts/free_action_runner.sh
+            - name: Free Space
+              if: ${{ matrix.target.os != 'windows' }}
+              run: ./build/scripts/free_action_runner.sh
 
-      - name: Build
-        if: ${{ matrix.target.os != 'windows' }}
-        run: ./build/build.sh ${{ matrix.target.os }}
+            - name: Build
+              if: ${{ matrix.target.os != 'windows' }}
+              run: ./build/build.sh ${{ matrix.target.os }}
 
-      - name: Build windows
-        if: ${{ matrix.target.os == 'windows' }}
-        run: py build/build.py
+            - name: Build windows
+              if: ${{ matrix.target.os == 'windows' }}
+              run: py build/build.py
 
-      - name: Test
-        if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
-        run: make test
+            - name: Test
+              if: ${{ matrix.target.os != 'ios' && matrix.target.os != 'android' }}
+              run: make test
 
-  linux:
-    name: Build Linux
-    needs: [typos, lint, fmt]
-    strategy:
-      fail-fast: false
-      matrix:
-        target:
-          [
-            { container: "ubuntu" },
-            { container: "debian" },
-            { container: "fedora" },
-            { container: "archlinux" },
-            { container: "amazonlinux" },
-            { container: "dockerscripts/linuxmint:cinnamon-minimal" },
-          ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
+    linux:
+        name: Build Linux
+        needs: [typos, lint, fmt]
+        strategy:
+            fail-fast: false
+            matrix:
+                target:
+                    [
+                        { container: "ubuntu" },
+                        { container: "debian" },
+                        { container: "fedora" },
+                        { container: "archlinux" },
+                        { container: "amazonlinux" },
+                        {
+                            container: "dockerscripts/linuxmint:cinnamon-minimal",
+                        },
+                    ]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  token: ${{secrets.GITHUB_TOKEN}}
+                  submodules: recursive
 
-      - name: Free Space
-        run: ./build/scripts/free_action_runner.sh
+            - name: Free Space
+              run: ./build/scripts/free_action_runner.sh
 
-      - name: Build
-        run: echo ${{ matrix.target.container }} && ./build/in_docker.sh ${{ matrix.target.container }}
+            - name: Build
+              run: echo ${{ matrix.target.container }} && ./build/in_docker.sh ${{ matrix.target.container }}
