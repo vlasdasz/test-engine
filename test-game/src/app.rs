@@ -7,7 +7,7 @@ use test_engine::{
     ui::{Button, Label, Setup, Size, View},
 };
 
-use crate::interface::test_game_view::{BUTTON, TestGameView};
+use crate::interface::{loading_view::LoadingView, test_game_view::BUTTON};
 
 #[cfg(not_wasm)]
 async fn secrets() -> anyhow::Result<&'static test_engine::net::SecretsManager> {
@@ -49,7 +49,7 @@ impl App for TestGameApp {
     }
 
     fn make_root_view(&self) -> Own<dyn View> {
-        TestGameView::new()
+        LoadingView::new()
     }
 
     fn initial_size(&self) -> Size {
