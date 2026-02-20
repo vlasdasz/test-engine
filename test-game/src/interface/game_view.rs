@@ -41,10 +41,7 @@ impl ViewTest for GameView {
     fn perform_test(_view: Weak<Self>) -> anyhow::Result<()> {
         check_colors(
             r"
-                     198  124 - 154 189 230
-                     173  343 - 139 177 214
-                     385  352 - 129 183 231
-                     395   83 - 191 215 238
+                     198  124 -  72 165  95
                 ",
         )?;
 

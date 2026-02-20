@@ -1,4 +1,4 @@
-use std::{convert::Infallible, fs::read, mem::transmute, path::Path};
+use std::{convert::Infallible, fs::read, path::Path};
 
 use anyhow::Result;
 use gm::flat::Size;
@@ -16,7 +16,7 @@ use wgpu::{
 
 use crate::{
     Window,
-    image::{ImageBind, Texture},
+    image::{ImageBind, Texture, TextureRawData},
 };
 
 #[derive(Debug)]
@@ -57,9 +57,14 @@ impl Image {
         }
     }
 
-    pub fn from_raw_data(data: &[u8], name: impl Into<String>, size: Size<u32>, channels: u8) -> Weak<Image> {
+    pub fn from_raw_data(
+        data: Vec<u8>,
+        name: impl Into<String>,
+        size: Size<u32>,
+        channels: u8,
+    ) -> Weak<Image> {
         let name = name.into();
-        let texture = Texture::from_raw_data(data, size, channels, &name);
+        let texture = Texture::from_raw_data(TextureRawData { data, size, channels }, &name);
         let image = Self::from_texture(&texture);
         Image::store_with_name::<Infallible>(&name, || Ok(image)).unwrap()
     }
@@ -103,17 +108,10 @@ impl ResourceLoader for Image {
     fn load_data(data: &[u8], name: impl ToString) -> Self {
         let name = name.to_string();
 
-        // TODO: make safe
-        // from_main loks current execution until it is done
-        // load_data won't exit until from main is finished
-        // so data has sufficient lifetime
-        // but we need to extend it to make it work
-        let data: &'static [u8] = unsafe { transmute(data) };
+        let raw_data = Texture::parse_file_from_bytes(data)
+            .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"));
 
-        from_main(move || {
-            Image::load_to_wgpu(&name, data)
-                .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
-        })
+        from_main(move || Image::from_texture(&Texture::from_raw_data(raw_data, &name)))
     }
 }
 

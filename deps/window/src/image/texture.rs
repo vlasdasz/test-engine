@@ -2,8 +2,7 @@ use std::path::Path;
 
 use anyhow::{Result, anyhow};
 use gm::{LossyConvert, flat::Size};
-use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba};
-use log::trace;
+use image::{GenericImageView, ImageBuffer, Rgba};
 use plat::Platform;
 use usvg::{ImageRendering, ShapeRendering, TextRendering, Transform};
 use wgpu::{
@@ -23,19 +22,80 @@ pub struct Texture {
     pub channels: u8,
 }
 
+pub struct TextureRawData {
+    pub data:     Vec<u8>,
+    pub size:     Size<u32>,
+    pub channels: u8,
+}
+
 impl Texture {
     pub const DEPTH_FORMAT: TextureFormat = TextureFormat::Depth32Float;
 
     pub fn from_file_bytes(bytes: &[u8], label: &str) -> Result<Self> {
-        if bytes.starts_with(b"<svg") || bytes.starts_with(b"<?xml") {
-            trace!("Loading SVG image: {label}");
-            return Self::from_svg_image(bytes, label);
-        }
-
-        Ok(Self::from_dynamic_image(&image::load_from_memory(bytes)?, label))
+        let data = Self::parse_file_from_bytes(bytes)?;
+        Ok(Self::from_raw_data(data, label))
     }
 
-    pub fn from_raw_data(data: &[u8], size: Size<u32>, channels: u8, label: &str) -> Self {
+    pub fn parse_file_from_bytes(bytes: &[u8]) -> Result<TextureRawData> {
+        if bytes.starts_with(b"<svg") || bytes.starts_with(b"<?xml") {
+            return Self::parse_svg_image(bytes);
+        }
+
+        Self::parse_dynamic_image(bytes)
+    }
+
+    fn parse_svg_image(bytes: &[u8]) -> Result<TextureRawData> {
+        use resvg::{
+            render,
+            tiny_skia::Pixmap,
+            usvg::{Options, Tree},
+        };
+
+        let opt = Options {
+            shape_rendering: ShapeRendering::OptimizeSpeed,
+            text_rendering: TextRendering::OptimizeSpeed,
+            image_rendering: ImageRendering::OptimizeSpeed,
+            ..Default::default()
+        };
+
+        // dbg!(&opt);
+
+        let tree = Tree::from_data(bytes, &opt)?;
+
+        let original_size = tree.size().to_int_size();
+
+        let scale = 8.0;
+
+        let width = (original_size.width().lossy_convert() * scale).round().lossy_convert();
+        let height = (original_size.height().lossy_convert() * scale).round().lossy_convert();
+
+        let mut pixmap = Pixmap::new(width, height).unwrap();
+
+        let transform = Transform::from_scale(scale, scale);
+        render(&tree, transform, &mut pixmap.as_mut());
+
+        // _save_rgba_image(&pixmap.data(), width, height, "/home/vladas/svg.png")?;
+
+        Ok(TextureRawData {
+            data:     pixmap.take(),
+            size:     (width, height).into(),
+            channels: 4,
+        })
+    }
+
+    fn parse_dynamic_image(bytes: &[u8]) -> Result<TextureRawData> {
+        let image = image::load_from_memory(bytes)?;
+
+        let dimensions = image.dimensions();
+
+        Ok(TextureRawData {
+            data:     image.to_rgba8().to_vec(),
+            size:     (dimensions.0, dimensions.1).into(),
+            channels: image.color().channel_count(),
+        })
+    }
+
+    pub fn from_raw_data(TextureRawData { data, size, channels }: TextureRawData, label: &str) -> Self {
         const RGBA_TEXTURE_FORMAT: TextureFormat = if Platform::ANDROID {
             TextureFormat::Rgba8Unorm
         } else {
@@ -74,7 +134,7 @@ impl Texture {
                 mip_level: 0,
                 origin:    Origin3d::ZERO,
             },
-            data,
+            &data,
             TexelCopyBufferLayout {
                 offset:         0,
                 bytes_per_row:  Some(u32::from(channels) * extend_size.width),
@@ -103,57 +163,6 @@ impl Texture {
             size,
             channels,
         }
-    }
-
-    fn from_dynamic_image(img: &DynamicImage, label: &str) -> Self {
-        let dimensions = img.dimensions();
-
-        Self::from_raw_data(
-            &img.to_rgba8(),
-            (dimensions.0, dimensions.1).into(),
-            img.color().channel_count(),
-            label,
-        )
-    }
-
-    fn from_svg_image(bytes: &[u8], label: &str) -> Result<Self> {
-        use resvg::{
-            render,
-            tiny_skia::Pixmap,
-            usvg::{Options, Tree},
-        };
-
-        let opt = Options {
-            shape_rendering: ShapeRendering::OptimizeSpeed,
-            text_rendering: TextRendering::OptimizeSpeed,
-            image_rendering: ImageRendering::OptimizeSpeed,
-            ..Default::default()
-        };
-
-        // dbg!(&opt);
-
-        let tree = Tree::from_data(bytes, &opt)?;
-
-        let original_size = tree.size().to_int_size();
-
-        let scale = 8.0;
-
-        let width = (original_size.width().lossy_convert() * scale).round().lossy_convert();
-        let height = (original_size.height().lossy_convert() * scale).round().lossy_convert();
-
-        let mut pixmap = Pixmap::new(width, height).unwrap();
-
-        let transform = Transform::from_scale(scale, scale);
-        render(&tree, transform, &mut pixmap.as_mut());
-
-        // _save_rgba_image(&pixmap.data(), width, height, "/home/vladas/svg.png")?;
-
-        Ok(Self::from_raw_data(
-            pixmap.data(),
-            dbg!((width, height).into()),
-            4,
-            label,
-        ))
     }
 
     pub fn create_depth_texture(device: &Device, size: Size<u32>, label: &str) -> Self {
