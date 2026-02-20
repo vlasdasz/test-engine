@@ -8,7 +8,7 @@ on:
 
 jobs:
   typos:
-    name: Run Linter
+    name: Linter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Actions
