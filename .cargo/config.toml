@@ -49,7 +49,7 @@ inherits = "release"
 lto = "fat"
 opt-level = 3
 overflow-checks = false
-panic = "abort"
+# panic = "abort"
 strip = true
 
 [profile.profile]

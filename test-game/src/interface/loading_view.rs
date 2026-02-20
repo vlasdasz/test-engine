@@ -1,5 +1,7 @@
 use anyhow::{Ok, Result};
+use log::error;
 use test_engine::{
+    Platform,
     dispatch::{from_main, on_main, spawn},
     gm::LossyConvert,
     refs::{Weak, manage::DataManager},
@@ -39,6 +41,7 @@ impl Setup for LoadingView {
 
         spawn(async move {
             self.load(vec![
+                "frisk.png",
                 "board.png",
                 "shop.png",
                 "stone_floor.png",
@@ -60,7 +63,14 @@ impl LoadingView {
         let part = 1.0 / assets.len().lossy_convert();
 
         for asset in assets {
-            Self::load_asset(asset.to_owned()).await?;
+            if Platform::WASM {
+                if let Err(err) = Self::download_asset(asset).await {
+                    error!("{err}");
+                }
+            } else {
+                Self::load_asset(asset.to_owned());
+            }
+
             on_main(move || {
                 self.progress.inc_progress(part);
             });
@@ -71,11 +81,14 @@ impl LoadingView {
         Ok(())
     }
 
-    #[allow(clippy::unused_async)]
-    async fn load_asset(path: String) -> Result<()> {
+    fn load_asset(path: String) {
         from_main(move || {
             Image::get(path);
         });
+    }
+
+    async fn download_asset(path: &str) -> Result<()> {
+        Image::download(&path, &format!("http://192.168.0.14:44800/assets/images/{path}")).await?;
 
         Ok(())
     }

@@ -30,6 +30,7 @@ winit = { workspace = true }
 
 hreads = { workspace = true }
 netrun = { workspace = true }
+plat = { workspace = true }
 reflected = { workspace = true }
 refs = { workspace = true }
 vents = { workspace = true }

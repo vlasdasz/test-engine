@@ -101,6 +101,8 @@ pub mod __internal_macro_deps {
     pub use parking_lot::Mutex;
 }
 
+pub use plat::Platform;
+
 #[cfg(target_os = "android")]
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;
 #[cfg(target_os = "android")]
