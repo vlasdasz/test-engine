@@ -18,8 +18,10 @@ jobs:
     name: Spell Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          submodules: recursive
 
       - name: Check for Typos
         uses: crate-ci/typos@master
@@ -28,8 +30,10 @@ jobs:
     name: Linter
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          submodules: recursive
 
       - name: Lint
         run: make lint
@@ -38,8 +42,10 @@ jobs:
     name: Formatting Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Actions
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          submodules: recursive
 
       - name: Fmt
         run: make fmt-check
