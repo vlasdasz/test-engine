@@ -18,10 +18,8 @@ jobs:
     name: Spell Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
+      - name: Checkout Actions
+        uses: actions/checkout@v4
 
       - name: Check for Typos
         uses: crate-ci/typos@master
@@ -35,6 +33,11 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           submodules: recursive
 
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: clippy
+
       - name: Lint
         run: make lint
 
@@ -47,8 +50,12 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           submodules: recursive
 
-      - name: Fmt
-        run: make fmt-check
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+
+      - uses: actions-rust-lang/rustfmt@v1
 
   wasm:
     name: Wasm
