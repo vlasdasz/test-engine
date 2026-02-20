@@ -35,7 +35,7 @@ impl Setup for DPadView {
             (self.left, Direction::Left, UIImages::left()),
             (self.right, Direction::Right, UIImages::right()),
         ]
-        .apply(|(mut view, direction, image)| {
+        .apply(|(view, direction, image)| {
             view.set_image(image);
             view.on_tap(move || self.on_press.trigger(direction));
             view.set_corner_radius(5);

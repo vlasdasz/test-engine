@@ -11,6 +11,7 @@ mod level_drawer;
 mod app;
 mod app_starter;
 mod config;
+mod dispatch_tools;
 mod game_drawer;
 pub mod inspect;
 mod pipelines;
@@ -41,9 +42,7 @@ pub mod refs {
         pub use refs::manage::*;
     }
 
-    pub use refs::{
-        __internal_deps, AsAny, Mutex, MutexGuard, Own, Weak, managed, vec::OwnVec, weak_from_ref,
-    };
+    pub use refs::{__internal_deps, AsAny, Own, Weak, managed, vec::OwnVec, weak_from_ref};
 }
 
 pub mod reflected {
@@ -52,7 +51,7 @@ pub mod reflected {
 
 pub mod gm {
     pub use gm::{
-        Animation, Apply, LossyConvert, ToF32,
+        Animation, Apply, LossyConvert, ToF32, Toggle,
         flat::{Direction, Shape},
         sign::Sign,
         volume::GyroData,
@@ -92,6 +91,8 @@ pub mod dispatch {
     pub use ::hreads::first_ok;
     pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_async, wait_for_next_frame};
 
+    pub use crate::dispatch_tools::*;
+
     // pub use crate::ui::ui_dispatch::on_back;
 }
 
@@ -99,6 +100,8 @@ pub mod __internal_macro_deps {
     pub use ctor;
     pub use parking_lot::Mutex;
 }
+
+pub use plat::Platform;
 
 #[cfg(target_os = "android")]
 pub type AndroidApp = winit::platform::android::activity::AndroidApp;

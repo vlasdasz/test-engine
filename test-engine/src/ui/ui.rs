@@ -117,7 +117,7 @@ impl UIDrawer {
                 z_position: view.z_position(),
                 scale,
             });
-        } else if view.color().a > 0.0 {
+        } else if view.color().a > 0.0 || view.border_color().a > 0.0 {
             Pipelines::rect().add(UIRectInstance::new(
                 frame,
                 *view.color(),

@@ -1,8 +1,9 @@
+use refs::Own;
 use serde::{Deserialize, Serialize};
 
 use crate::ui::ViewRepr;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum AppCommand {
     Ok,
     UI(UIResponse),
@@ -10,10 +11,10 @@ pub enum AppCommand {
 }
 
 #[allow(clippy::large_enum_variant)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum UIResponse {
     Scale(f32),
-    SendUI { scale: f32, root: ViewRepr },
+    SendUI { scale: f32, root: Own<ViewRepr> },
 }
 
 impl From<UIResponse> for AppCommand {

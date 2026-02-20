@@ -1,6 +1,4 @@
-use crate::base::{
-    color_checker::test_color_checker, outline::test_outline, rest_request::test_rest_request,
-};
+use crate::base::{color_checker::test_color_checker, rest_request::test_rest_request};
 use crate::base::{
     // async_calls::test_async_calls,
     colors::test_colors,
@@ -37,7 +35,6 @@ mod layout;
 mod modal_test;
 mod on_tap_add;
 mod out_bounds_test;
-mod outline;
 mod present;
 mod rest_request;
 mod root_view;
@@ -53,7 +50,6 @@ mod transparency;
 mod view_order;
 
 pub async fn test_base_ui() -> anyhow::Result<()> {
-    test_outline().await?;
     test_corner_radius().await?;
     test_color_checker().await?;
     test_rest_request().await?;

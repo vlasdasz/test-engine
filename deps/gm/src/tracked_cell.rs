@@ -20,21 +20,33 @@ impl<T> TrackedCell<T> {
     #[track_caller]
     pub fn borrow(&self) -> Ref<'_, T> {
         if let Ok(b) = self.inner.try_borrow() {
-            *self.borrowed_at.borrow_mut() = Some(Location::caller());
+            *self.borrowed_at.try_borrow_mut().expect("TrackedCell WTF") = Some(Location::caller());
             b
         } else {
-            let loc = self.borrowed_at.borrow().unwrap();
-            panic!("Already borrowed at: {}:{}", loc.file(), loc.line());
+            let loc = self
+                .borrowed_at
+                .try_borrow()
+                .expect("TrackedCell WTF")
+                .expect("Unknown location");
+            panic!(
+                "Conflicting borrow! Already borrowed at: {}:{}",
+                loc.file(),
+                loc.line()
+            );
         }
     }
 
     #[track_caller]
     pub fn borrow_mut(&self) -> RefMut<'_, T> {
         if let Ok(b) = self.inner.try_borrow_mut() {
-            *self.borrowed_at.borrow_mut() = Some(Location::caller());
+            *self.borrowed_at.try_borrow_mut().expect("TrackedCell WTF") = Some(Location::caller());
             b
         } else {
-            let loc = self.borrowed_at.borrow().expect("Unknown location");
+            let loc = self
+                .borrowed_at
+                .try_borrow()
+                .expect("TrackedCell WTF")
+                .expect("Unknown location");
             panic!(
                 "Conflicting borrow! Already borrowed at: {}:{}",
                 loc.file(),

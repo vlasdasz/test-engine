@@ -206,7 +206,7 @@ fn generate_image(
 
     (
         Image::from_raw_data(
-            &pixels,
+            pixels,
             image_name,
             (resolution.width, resolution.height).into(),
             1,

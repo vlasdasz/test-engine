@@ -29,6 +29,7 @@ use crate::{
     ui::{Input, UIDrawer},
 };
 
+#[cfg(not_wasm)]
 static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 

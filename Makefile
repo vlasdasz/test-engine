@@ -73,16 +73,20 @@ serve:
 	cargo install --locked trunk
 	cd ./test-game && trunk serve --features webgl --address 0.0.0.0 --port 44800
 
-serve-r:
+serve-release:
 	rustup target add wasm32-unknown-unknown
 	cargo install --locked trunk
 	cd ./test-game && trunk serve --features webgl --release --address 0.0.0.0 --port 44800
+
+serve-size:
+	rustup target add wasm32-unknown-unknown
+	cargo install --locked trunk
+	cd ./test-game && trunk serve --features webgl --cargo-profile=size --address 0.0.0.0 --port 44800
 
 wasm:
 	rustup target add wasm32-unknown-unknown
 	cargo install --locked trunk
 	cd ./test-game && trunk build
-
 
 enc:
 	sops -e secrets/decrypted/test-game.yml > secrets/test-game.enc.yml

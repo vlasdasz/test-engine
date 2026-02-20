@@ -3,11 +3,10 @@ use test_engine::{
     generate::noise::{TerrainParams, generate_terrain},
     gm::{LossyConvert, Shape},
     level::{
-        Banner, Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall,
-        level,
+        Body, Level, LevelCreation, LevelManager, LevelSetup, Player, Sprite, SpriteTemplates, Wall, level,
     },
     refs::{Weak, manage::DataManager},
-    ui::{BLUE, Color, GREEN, Image, Point, Size, TURQUOISE},
+    ui::{BLUE, Color, Image, Point, Size},
 };
 
 #[level]
@@ -20,8 +19,8 @@ pub struct TestLevel {
 
 impl TestLevel {
     pub fn add_random_box(&mut self, pos: impl Into<Point>) {
-        let w: u32 = fastrand::u32(2..28);
-        let h: u32 = fastrand::u32(2..28);
+        let w: u32 = fastrand::u32(2..20);
+        let h: u32 = fastrand::u32(2..20);
 
         let mut bx = self.make_sprite::<Body>(
             Shape::Rect(Size::<f32>::new(
@@ -31,10 +30,10 @@ impl TestLevel {
             pos,
         );
 
-        if fastrand::bool() {
-            bx.set_image("crate_box.png");
-        } else {
+        if fastrand::bool() && fastrand::bool() {
             bx.set_color(Color::random());
+        } else {
+            bx.set_image("crate_box.png");
         }
     }
 
@@ -57,7 +56,7 @@ impl TestLevel {
     }
 
     fn add_player(&mut self) {
-        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (-50, 60));
+        let mut player: Weak<Player> = self.make_sprite(Shape::Rect((1.2, 2).into()), (0, 0));
         self.player = player;
         player.set_image("frisk.png").unit.enable_collision_detection();
         player.weapon.set_image("ak.png");
@@ -75,16 +74,6 @@ impl TestLevel {
 
         self.collision_sound = Sound::get("pek.wav");
     }
-
-    fn add_house(&mut self) {
-        self.make_sprite::<Wall>(Shape::Rect((20, 1).into()), (-65, 55));
-        self.make_sprite::<Banner>(Shape::Rect((10, 10).into()), (-58, 60.5))
-            .set_image("wood-window.png")
-            .to_foreground();
-        self.make_sprite::<Banner>(Shape::Rect((10, 10).into()), (-65, 60.5))
-            .set_image("wood-window.png")
-            .to_background();
-    }
 }
 
 impl LevelSetup for TestLevel {
@@ -95,50 +84,33 @@ impl LevelSetup for TestLevel {
     fn setup(&mut self) {
         self.background = Image::get("sky.png");
 
-        self.make_sprite::<Wall>(Shape::Rect((200, 5).into()), (0, -5))
-            .set_color(Color::random());
-        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (100, 0))
-            .set_image("square.png");
-        self.make_sprite::<Wall>(Shape::Rect((5, 100).into()), (-100, 0))
-            .set_image("square.png");
+        self.make_sprite::<Wall>(Shape::Rect((10, 10).into()), (15, 3))
+            .set_image("board.png");
+        self.make_sprite::<Wall>(Shape::Rect((257.0 * 0.04, 216.0 * 0.04).into()), (-15, 2))
+            .set_image("shop.png");
 
-        self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (0, 50))
+        self.make_sprite::<Wall>(Shape::Rect((349.0 * 0.1, 32.0 * 0.1).into()), (0, -3))
+            .set_image("stone_floor.png");
+
+        self.make_sprite::<Wall>(Shape::Rect((349.0 * 0.1, 32.0 * 0.1).into()), (-3, -3))
+            .set_image("stone_floor.png");
+
+        self.make_sprite::<Wall>(Shape::Rect((349.0 * 0.1, 32.0 * 0.1).into()), (3, -3))
+            .set_image("stone_floor.png");
+
+        self.make_sprite::<Body>(Shape::triangle((-2, -2), (2, -2), (-2, 2)), (0, 50))
             .set_image("triangle.png");
 
-        self.make_sprite::<Body>(Shape::triangle((-5, -5), (5, -5), (-5, 5)), (-20, 80))
+        self.make_sprite::<Body>(Shape::triangle((-2, -2), (2, -2), (-2, 2)), (-20, 80))
             .set_color(BLUE);
 
-        let boxes = 100;
+        let boxes = 40;
 
         for i in 0..boxes {
-            let i = i * 2;
-            let coeff: f32 = if i < boxes / 2 { -0.4 } else { 0.4 };
-            self.add_random_box((coeff * i.lossy_convert(), i * 4 + 40));
+            self.add_random_box((i.lossy_convert() * 0.2f32, i + 10));
         }
 
-        let convex_points = vec![
-            Point { x: -0.93, y: 6.39 },
-            Point { x: -9.24, y: -1.83 },
-            Point { x: 12.08, y: -1.41 },
-            Point { x: 15.24, y: 3.65 },
-        ];
-
-        self.make_sprite::<Body>(Shape::Polygon(convex_points), (-20, 40))
-            .set_color(GREEN);
-
-        let concave_points = vec![
-            Point { x: -16.89, y: 4.16 },
-            Point { x: 8.59, y: 11.09 },
-            Point { x: 11.99, y: -0.36 },
-            Point { x: -9.97, y: -9.34 },
-            Point { x: -3.92, y: -0.85 },
-        ];
-
-        self.make_sprite::<Body>(Shape::Polygon(concave_points), (-20, 60))
-            .set_color(TURQUOISE);
-
         self.add_player();
-        self.add_house();
 
         self.on_tap.val(move |pos| {
             LevelManager::level_weak()
@@ -147,10 +119,6 @@ impl LevelSetup for TestLevel {
                 .unwrap()
                 .on_touch(pos);
         });
-
-        for island in make_test_terrain() {
-            self.make_sprite::<Wall>(Shape::Polyline(island), (0, 20));
-        }
     }
 
     fn update(&mut self) {

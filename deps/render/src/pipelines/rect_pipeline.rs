@@ -133,7 +133,7 @@ impl<
             render_pass.set_bind_group(0, self.view.bind(), &[]);
 
             if TYPE.image() {
-                render_pass.set_bind_group(1, &image.bind, &[]);
+                render_pass.set_bind_group(1, image.bind(), &[]);
             }
 
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));

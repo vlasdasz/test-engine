@@ -2,6 +2,9 @@
   {
     "label": "Run Test Game",
     "command": "cargo run -p test-game",
+    "env": {
+      "RUST_BACKTRACE": "1",
+    },
   },
   {
     "label": "Run Example App",

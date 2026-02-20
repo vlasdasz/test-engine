@@ -12,13 +12,20 @@ mod test_engine {
 
 #[view]
 pub struct ProgressView {
+    progress: f32,
     #[init]
-    pub bar: Container,
+    pub bar:  Container,
 }
 
 impl ProgressView {
-    pub fn set_progress(self: Weak<Self>, progress: impl ToF32) {
-        self.bar.place().clear().tlb(0).relative_width(self, progress);
+    pub fn inc_progress(self: Weak<Self>, progress: impl ToF32) -> Weak<Self> {
+        self.set_progress(self.progress + progress.to_f32())
+    }
+
+    pub fn set_progress(mut self: Weak<Self>, progress: impl ToF32) -> Weak<Self> {
+        self.progress = progress.to_f32();
+        self.bar.place().clear().tlb(0).relative_width(self, self.progress);
+        self
     }
 }
 

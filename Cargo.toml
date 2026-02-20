@@ -11,7 +11,6 @@ members = [
   "test-engine",
   "test-game",
   "test-game-android",
-  "ui-benchmark",
   "ui-test",
 ]
 
@@ -49,7 +48,7 @@ image = "0.25"
 indexmap = "2.13"
 instant = { version = "0.1", features = ["wasm-bindgen"] }
 jni = "0.21"
-kira = "0.11"
+kira = "0.12"
 log = "0.4"
 lyon = "1.0"
 nonempty = "0.12"
@@ -59,7 +58,7 @@ pollster = "0.4"
 pretty_assertions = "1.4"
 quote = "1.0"
 rapier2d = { version = "0.31", features = ["simd-nightly"] }
-resvg = "0.46"
+resvg = "0.47"
 rfd = "0.17"
 rust_decimal = "1.40"
 sentry = { version = "0.46", default-features = false, features = ["reqwest", "rustls"] }
@@ -68,7 +67,7 @@ serde_json = "1.0"
 syn = { version = "2.0", features = ["extra-traits", "full"] }
 tiny-skia = "0.12"
 tokio = { version = "1.49", features = ["full"] }
-usvg = "0.46"
+usvg = "0.47"
 wasm-bindgen-futures = "0.4"
 web-time = "1.1"
 
@@ -79,9 +78,9 @@ winit = "0.30"
 # hreads = { path = "../deps/hreads" }
 hreads = "0.13"
 
-netrun = "0.26"
+netrun = "0.27"
 # refs = { path = "../deps/refs/refs" }
-refs = { version = "0.40", default-features = true }
+refs = { version = "0.43", default-features = true }
 # netrun = { path = "../deps/netrun/netrun" }
 plat = "0.8"
 reflected = "0.29"
@@ -101,7 +100,6 @@ store = { path = "deps/store" }
 test-engine = { path = "test-engine" }
 test-game = { path = "test-game" }
 ui = { path = "deps/ui" }
-ui-benchmark = { path = "ui-benchmark" }
 ui-proc = { path = "deps/ui/ui-proc" }
 utils = { path = "deps/utils" }
 window = { path = "deps/window" }

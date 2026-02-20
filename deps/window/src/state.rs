@@ -6,7 +6,6 @@ use std::{
 };
 
 use anyhow::Result;
-use bytemuck::cast_slice;
 use gm::{
     LossyConvert,
     color::{Color, GRAY_BLUE, U8Color},
@@ -85,7 +84,7 @@ impl State {
 
         let queue = Window::queue();
 
-        for font in Font::storage().values_mut() {
+        for font in Font::storage_mut().values_mut() {
             font.brush.resize_view(new_size.width, new_size.height, queue);
         }
 
@@ -165,6 +164,7 @@ impl State {
             }
         }
 
+        #[cfg(not_wasm)]
         let buffer = if self.read_display_request.borrow().is_some() {
             Some(Self::read_screen(&mut encoder, &surface_texture.texture))
         } else {
@@ -193,8 +193,10 @@ impl State {
                 let (buff, size) = buffer;
 
                 let bytes: &[u8] = &buff.slice(..).get_mapped_range();
-                let data: Vec<U8Color> =
-                    cast_slice(bytes).iter().map(|color: &U8Color| color.bgra_to_rgba()).collect();
+                let data: Vec<U8Color> = bytemuck::cast_slice(bytes)
+                    .iter()
+                    .map(|color: &U8Color| color.bgra_to_rgba())
+                    .collect();
 
                 buffer_sender.send(Screenshot::new(data, size)).unwrap();
             });

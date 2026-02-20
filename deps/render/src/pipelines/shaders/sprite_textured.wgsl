@@ -80,6 +80,11 @@ fn v_main(
 
 @fragment
 fn f_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    return textureSample(t_diffuse, s_diffuse, in.uv);
-}
+    let out = textureSample(t_diffuse, s_diffuse, in.uv);
 
+    if out.a == 0.0 {
+        discard;
+    } else {
+        return out;
+    }
+}

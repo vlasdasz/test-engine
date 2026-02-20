@@ -19,9 +19,9 @@ use crate::ui::{
     inspect::{SHRINK_SCALE, UIRepresentView, ViewInspectorView},
 };
 
-type Client = netrun::Client<AppCommand, InspectorCommand>;
+type Client = netrun::zmq::Req<InspectorCommand, AppCommand>;
 
-pub static VIEW_SELECTED: UIEvent<ViewRepr> = UIEvent::const_new();
+pub static VIEW_SELECTED: UIEvent<Weak<ViewRepr>> = UIEvent::const_new();
 
 #[view]
 pub struct MainScreen {
@@ -107,9 +107,9 @@ impl MainScreen {
             return Ok(());
         };
 
-        let client = Client::connect((ip, inspect::PORT_RANGE.start)).await?;
+        let client = Client::new(&format!("tcp://{ip}:{}", inspect::PORT_RANGE.start)).await?;
 
-        client.send(UIRequest::GetUI).await?;
+        let response = client.send(UIRequest::GetUI.into()).await?;
 
         on_main(move || {
             self.clients.set_values(vec![ip]);
@@ -117,12 +117,9 @@ impl MainScreen {
 
             drop(spin);
 
-            log_spawn::<anyhow::Error>(async move {
-                loop {
-                    let client = self.current_client.as_ref().ok_or(anyhow!("No client"))?;
-                    let command = client.receive().await?;
-                    self.process_command(command).await?;
-                }
+            log_spawn(async move {
+                self.process_command(response).await?;
+                Ok(())
             });
         });
 
@@ -146,11 +143,11 @@ impl MainScreen {
 
         for (client_ip, _) in clients {
             debug!("Checking: {client_ip}");
-            let client = Client::connect((client_ip, inspect::PORT_RANGE.start)).await?;
+            let client = Client::new(&format!("tcp://{client_ip}:{}", inspect::PORT_RANGE.start)).await?;
 
-            client.send(InspectorCommand::GetSystemInfo).await?;
-
-            let AppCommand::System(SystemResponse::Info(system)) = client.receive().await? else {
+            let AppCommand::System(SystemResponse::Info(system)) =
+                client.send(InspectorCommand::GetSystemInfo).await?
+            else {
                 bail!("Invalid response from the client");
             };
 
@@ -163,47 +160,42 @@ impl MainScreen {
 
         let (_, ip) = available_clients[0];
 
-        let client = Client::connect((ip, inspect::PORT_RANGE.start)).await?;
+        let client = Client::new(&format!("tcp://{ip}:{}", inspect::PORT_RANGE.start)).await?;
+        let response = client.send(UIRequest::GetUI.into()).await?;
 
         on_main(move || {
             self.clients
                 .set_values(available_clients.iter().map(|(_app, ip)| *ip).collect());
             self.current_client = Some(client);
 
-            log_spawn::<anyhow::Error>(async move {
-                loop {
-                    let client = self.current_client.as_ref().ok_or(anyhow!("No client"))?;
-                    let command = client.receive().await?;
-                    self.process_command(command).await?;
-                }
+            log_spawn(async move {
+                self.process_command(response).await?;
+                Ok(())
             });
         });
 
         Ok(())
     }
 
+    fn client(&self) -> Result<&Client> {
+        Ok(self.current_client.as_ref().ok_or(anyhow!("No client"))?)
+    }
+
     async fn play_sound_tapped(self: Weak<Self>) -> Result<()> {
-        self.current_client
-            .as_ref()
-            .ok_or(anyhow!("No client"))?
-            .send(InspectorCommand::PlaySound)
-            .await
+        let ok = self.client()?.send(InspectorCommand::PlaySound).await?;
+        dbg!(&ok);
+        Ok(())
     }
 
     async fn get_ui_tapped(self: Weak<Self>) -> Result<()> {
-        self.current_client
-            .as_ref()
-            .ok_or(anyhow!("No client"))?
-            .send(UIRequest::GetUI)
-            .await
+        let ui = self.client()?.send(UIRequest::GetUI.into()).await?;
+        self.process_command(ui).await?;
+        Ok(())
     }
 
     async fn scale_changed(self: Weak<Self>, scale: f32) -> Result<()> {
-        self.current_client
-            .as_ref()
-            .ok_or(anyhow!("No client"))?
-            .send(UIRequest::SetScale(scale))
-            .await?;
+        let ok = self.client()?.send(UIRequest::SetScale(scale).into()).await?;
+        dbg!(&ok);
 
         sleep(0.1).await;
 

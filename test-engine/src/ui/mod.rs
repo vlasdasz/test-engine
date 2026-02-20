@@ -1,4 +1,5 @@
 mod input;
+mod tests;
 mod ui;
 pub mod ui_test;
 pub(crate) mod views;
@@ -17,4 +18,4 @@ pub use window::{
     image::{Image, NoImage, Tinted},
 };
 
-pub use crate::ui::views::sprite_view::SpriteView;
+pub use crate::ui::views::SpriteView;

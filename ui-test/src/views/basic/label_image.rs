@@ -54,7 +54,7 @@ impl Setup for LabelImage {
 }
 
 impl TableData for LabelImage {
-    fn cell_height(self: Weak<Self>) -> f32 {
+    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
         50.0
     }
 

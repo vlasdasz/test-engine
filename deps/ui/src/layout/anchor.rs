@@ -41,4 +41,8 @@ impl Anchor {
     pub(crate) fn is_left(self) -> bool {
         matches!(self, Self::Left)
     }
+
+    pub(crate) fn is_top(self) -> bool {
+        matches!(self, Self::Top)
+    }
 }

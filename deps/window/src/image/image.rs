@@ -2,6 +2,7 @@ use std::{convert::Infallible, fs::read, path::Path};
 
 use anyhow::Result;
 use gm::flat::Size;
+use hreads::from_main;
 use log::error;
 use refs::{
     Weak,
@@ -13,13 +14,16 @@ use wgpu::{
     BindingResource, BindingType, SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
-use crate::{Window, image::Texture};
+use crate::{
+    Window,
+    image::{ImageBind, Texture, TextureRawData},
+};
 
 #[derive(Debug)]
 pub struct Image {
     pub size:     Size<u32>,
     pub channels: u8,
-    pub bind:     BindGroup,
+    bind:         ImageBind,
 }
 
 impl Image {
@@ -47,15 +51,20 @@ impl Image {
         });
 
         Self {
-            size: texture.size,
+            size:     texture.size,
             channels: texture.channels,
-            bind,
+            bind:     bind.into(),
         }
     }
 
-    pub fn from_raw_data(data: &[u8], name: impl Into<String>, size: Size<u32>, channels: u8) -> Weak<Image> {
+    pub fn from_raw_data(
+        data: Vec<u8>,
+        name: impl Into<String>,
+        size: Size<u32>,
+        channels: u8,
+    ) -> Weak<Image> {
         let name = name.into();
-        let texture = Texture::from_raw_data(data, size, channels, &name);
+        let texture = Texture::from_raw_data(TextureRawData { data, size, channels }, &name);
         let image = Self::from_texture(&texture);
         Image::store_with_name::<Infallible>(&name, || Ok(image)).unwrap()
     }
@@ -67,6 +76,10 @@ impl Image {
 
     pub fn is_monochrome(&self) -> bool {
         self.channels == 1
+    }
+
+    pub fn bind(&self) -> &BindGroup {
+        self.bind.get()
     }
 }
 
@@ -95,8 +108,10 @@ impl ResourceLoader for Image {
     fn load_data(data: &[u8], name: impl ToString) -> Self {
         let name = name.to_string();
 
-        Image::load_to_wgpu(&name, data)
-            .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"))
+        let raw_data = Texture::parse_file_from_bytes(data)
+            .unwrap_or_else(|err| panic!("Failed to load image {name} to wgpu. Err: {err}"));
+
+        from_main(move || Image::from_texture(&Texture::from_raw_data(raw_data, &name)))
     }
 }
 
