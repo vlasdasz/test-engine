@@ -61,7 +61,7 @@ jobs:
 
   wasm:
     name: Wasm
-    needs: [typos, lint, fmt]
+    needs: [typos, fmt]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
 
   build:
     name: Build
-    needs: [typos, lint, fmt]
+    needs: [typos, fmt]
     strategy:
       fail-fast: false
       matrix:
@@ -110,7 +110,7 @@ jobs:
 
   linux:
     name: Build Linux
-    needs: [typos, lint, fmt]
+    needs: [typos, fmt]
     strategy:
       fail-fast: false
       matrix:
