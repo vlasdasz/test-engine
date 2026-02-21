@@ -23,7 +23,7 @@ pub use educe;
 pub use ui::{ui_proc::launch_app, ui_test};
 
 pub mod game {
-    pub use ::game::{Game, Object};
+    pub use ::game::*;
 
     pub use crate::game_drawer::GameDrawer;
 }
