@@ -15,6 +15,9 @@ default = ["2d"]
 3d = []
 
 [dependencies]
+anyhow = { workspace = true }
+gltf = { workspace = true }
+
 gm = { workspace = true }
 refs = { workspace = true }
 window = { workspace = true }

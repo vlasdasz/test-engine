@@ -3,15 +3,15 @@
 
 default-members = ["test-game"]
 members = [
-  "deps/ui/ui-proc-test",
-  "example-app",
-  "fuzz",
-  "inspector",
-  "render-test",
-  "test-engine",
-  "test-game",
-  "test-game-android",
-  "ui-test",
+    "deps/ui/ui-proc-test",
+    "example-app",
+    "fuzz",
+    "inspector",
+    "render-test",
+    "test-engine",
+    "test-game",
+    "test-game-android",
+    "ui-test",
 ]
 
 resolver = "3"
@@ -43,6 +43,7 @@ educe = "0.6"
 fastrand = "2.3"
 fern = "0.7"
 gloo-timers = { version = "0.3", features = ["futures"] }
+gltf = "1.4"
 hex = "0.4"
 image = "0.25"
 indexmap = "2.13"
@@ -61,7 +62,10 @@ rapier2d = { version = "0.31", features = ["simd-nightly"] }
 resvg = "0.47"
 rfd = "0.17"
 rust_decimal = "1.40"
-sentry = { version = "0.46", default-features = false, features = ["reqwest", "rustls"] }
+sentry = { version = "0.46", default-features = false, features = [
+    "reqwest",
+    "rustls",
+] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 syn = { version = "2.0", features = ["extra-traits", "full"] }
@@ -70,7 +74,6 @@ tokio = { version = "1.49", features = ["full"] }
 usvg = "0.47"
 wasm-bindgen-futures = "0.4"
 web-time = "1.1"
-
 wgpu = "28.0"
 wgpu_text = "28.0"
 winit = "0.30"
