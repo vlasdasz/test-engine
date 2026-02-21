@@ -231,6 +231,18 @@ impl UIManager {
     pub fn keymap() -> &'static Keymap {
         Self::get().keymap.deref()
     }
+
+    pub fn cloud_storage_dir() -> PathBuf {
+        #[cfg(ios)]
+        {
+            unsafe {
+                crate::mobile::ios::test_engine_ios_icloud_test();
+            }
+            PathBuf::default()
+        }
+        #[cfg(not(ios))]
+        PathBuf::default()
+    }
 }
 
 impl UIManager {
