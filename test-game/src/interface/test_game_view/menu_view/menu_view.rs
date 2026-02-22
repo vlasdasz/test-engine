@@ -1,4 +1,9 @@
-use std::any::Any;
+use std::{
+    any::Any,
+    fs::OpenOptions,
+    io::{Read, Write},
+    path::PathBuf,
+};
 
 use anyhow::Result;
 use netrun::Function;
@@ -231,7 +236,51 @@ impl MenuView {
                 });
             }
             "cloud" => {
-                let path = UIManager::cloud_storage_dir();
+                let Some(path) = UIManager::cloud_storage_dir() else {
+                    Alert::show("No path!");
+                    return;
+                };
+
+                let path = path.to_string_lossy();
+                let path = path.trim_start_matches("file://");
+
+                let mut path = PathBuf::from(path);
+
+                dbg!(&path);
+
+                // 2. IMPORTANT: Append "Documents"
+                // iCloud only syncs/shows files inside this specific subfolder
+                path.push("Documents");
+
+                dbg!(&path);
+
+                // 3. Create the Documents directory if it's missing
+                if !path.exists() {
+                    std::fs::create_dir_all(&path).unwrap();
+                }
+
+                let mut file = OpenOptions::new()
+                    .read(true)
+                    .write(true)
+                    .create(true)
+                    .open(path.join("data.txt"))
+                    .unwrap();
+
+                // 2. Read existing content
+                let mut content = String::new();
+                dbg!(&content);
+                file.read_to_string(&mut content).unwrap();
+
+                let mut number: i32 = content.parse().unwrap_or_default();
+
+                println!("Existing content: '{number}'");
+
+                number += 1;
+
+                // 3. Write new content
+                // Note: After reading, the cursor is at the end of the file.
+                // If you want to overwrite or append, manage the cursor or use .append(true)
+                file.write_all(number.to_string().as_bytes()).unwrap();
 
                 Alert::show(format!("{path:?}"));
             }
