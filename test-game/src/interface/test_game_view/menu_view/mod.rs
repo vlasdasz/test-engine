@@ -1,8 +1,10 @@
+mod menu_entry;
 mod menu_view;
 mod node;
 mod node_cell;
 mod scale_cell;
 
+pub use menu_entry::*;
 pub use menu_view::*;
 pub use node::*;
 pub use node_cell::*;

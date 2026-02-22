@@ -439,7 +439,7 @@ dependencies = [
  "kira",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.9.0",
  "refs",
 ]
 
@@ -1675,7 +1675,7 @@ dependencies = [
  "dirs",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.9.0",
  "rfd",
 ]
 
@@ -2404,7 +2404,7 @@ dependencies = [
  "gloo-timers",
  "log",
  "parking_lot",
- "plat",
+ "plat 0.8.0",
  "pollster",
  "tokio",
  "wasm-bindgen-futures",
@@ -2752,7 +2752,7 @@ dependencies = [
  "anyhow",
  "gm",
  "netrun",
- "plat",
+ "plat 0.9.0",
  "refs",
  "serde",
  "ui",
@@ -2964,7 +2964,7 @@ dependencies = [
  "educe",
  "gm",
  "level-proc",
- "plat",
+ "plat 0.9.0",
  "rapier2d",
  "refs",
  "utils",
@@ -3402,9 +3402,9 @@ dependencies = [
 
 [[package]]
 name = "netrun"
-version = "0.27.0"
+version = "0.28.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "614dcfc4ee419b9367d89f8467f11dcecae05499a3e6a2ce2b1dab9049ebe014"
+checksum = "488810de931fdd884a0d3eca3c6b12062d48ae866a1862efa44fdaff3ba666be"
 dependencies = [
  "anyhow",
  "byte-unit",
@@ -3414,7 +3414,7 @@ dependencies = [
  "log",
  "lz4_flex",
  "parking_lot",
- "plat",
+ "plat 0.8.0",
  "reqwest 0.13.2",
  "rust-network-scanner",
  "serde",
@@ -4134,6 +4134,15 @@ name = "plat"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e1f5c082988fce3995f97963ccbbf7e09080dba3c04746e84cc77ee0cc73d56"
+dependencies = [
+ "cfg_aliases",
+]
+
+[[package]]
+name = "plat"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "485ba4babff6129691b5674f261c40fb0e8bb5afc5ad92f9fc6aa2243f6e2f8d"
 dependencies = [
  "cfg_aliases",
 ]
@@ -5623,7 +5632,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "filesystem",
- "plat",
+ "plat 0.9.0",
  "serde",
  "serde_json",
 ]
@@ -5875,7 +5884,7 @@ dependencies = [
  "log",
  "netrun",
  "parking_lot",
- "plat",
+ "plat 0.9.0",
  "reflected",
  "refs",
  "render",
@@ -5903,7 +5912,7 @@ dependencies = [
  "fastrand",
  "log",
  "netrun",
- "plat",
+ "plat 0.9.0",
  "serde",
  "test-engine",
  "tokio",
@@ -6335,7 +6344,7 @@ dependencies = [
  "netrun",
  "nonempty",
  "parking_lot",
- "plat",
+ "plat 0.9.0",
  "reflected",
  "refs",
  "render",
@@ -6611,7 +6620,7 @@ dependencies = [
  "gloo-timers",
  "hreads",
  "log",
- "plat",
+ "plat 0.8.0",
  "wasm-bindgen-futures",
 ]
 
@@ -7146,7 +7155,7 @@ dependencies = [
  "hreads",
  "image",
  "log",
- "plat",
+ "plat 0.9.0",
  "refs",
  "resvg",
  "tiny-skia 0.12.0",

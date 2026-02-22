@@ -9,7 +9,6 @@ use test_engine::{
         AlertErr, CLEAR, Container, Image, LIGHT_BLUE, Label, ProgressView, Setup, Spinner, UIManager,
         ViewData, ViewSubviews, ViewTest, view_test,
     },
-    ui_test::record_ui_test,
 };
 
 use crate::interface::test_game_view::TestGameView;
@@ -96,7 +95,7 @@ impl LoadingView {
 
 impl ViewTest for LoadingView {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        record_ui_test();
+        // record_ui_test();
 
         Ok(())
     }

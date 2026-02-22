@@ -27,10 +27,10 @@ impl GameDrawer {
             if let Shape::Rect(size) = object.shape {
                 OBJECT_DRAWER.get_mut().add_with_image(
                     TexturedSpriteInstance {
-                        position:   object.position,
+                        position: object.position,
                         size,
-                        scale:      1.0,
-                        rotation:   object.rotation,
+                        scale: 1.0,
+                        rotation: object.rotation,
                         z_position: 0.85,
                     },
                     object.texture,

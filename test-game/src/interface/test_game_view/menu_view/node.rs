@@ -1,30 +1,38 @@
 #[derive(Default, Debug)]
-pub struct Node {
+pub struct Node<T> {
     pub open:   bool,
     pub index:  usize,
     pub depth:  usize,
-    pub value:  String,
-    pub leaves: Vec<Node>,
+    pub value:  T,
+    pub leaves: Vec<Self>,
 }
 
-impl Node {
-    pub fn empty(value: impl ToString) -> Self {
-        Self {
-            open:   false,
-            index:  0,
-            depth:  0,
-            value:  value.to_string(),
-            leaves: vec![],
-        }
-    }
-
-    pub fn new(value: impl ToString, leaves: Vec<Node>) -> Self {
+impl<T> Node<T> {
+    pub fn empty(value: T) -> Self {
         Self {
             open: false,
             index: 0,
             depth: 0,
-            value: value.to_string(),
+            value,
+            leaves: vec![],
+        }
+    }
+
+    pub fn new(value: T, leaves: Vec<Self>) -> Self {
+        Self {
+            open: false,
+            index: 0,
+            depth: 0,
+            value,
             leaves,
+        }
+    }
+
+    pub fn retain(&mut self, mut predicate: impl FnMut(&T) -> bool + Copy) {
+        self.leaves.retain(|node| predicate(&node.value));
+
+        for leaf in &mut self.leaves {
+            leaf.retain(predicate);
         }
     }
 
@@ -90,7 +98,7 @@ impl Node {
     }
 }
 
-impl Iterator for Node {
+impl<T> Iterator for Node<T> {
     type Item = Self;
 
     fn next(&mut self) -> Option<Self::Item> {

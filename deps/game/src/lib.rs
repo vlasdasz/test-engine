@@ -26,17 +26,17 @@ mod test {
         let gltf = Gltf::open("/Users/vladas/Downloads/Untitled.gltf")?;
 
         dbg!(gltf.scenes().len());
-        
+
         for scene in gltf.scenes() {
             for node in scene.nodes() {
                 println!("Node #{} has {} children", node.index(), node.children().count(),);
             }
         }
-        
+
         let (document, buffers, images) = gltf::import("/Users/vladas/Downloads/Untitled.gltf")?;
-        
+
         dbg!(document.meshes().len());
-        
+
         assert_eq!(buffers.len(), document.buffers().count());
         assert_eq!(images.len(), document.images().count());
 
