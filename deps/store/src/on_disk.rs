@@ -134,8 +134,7 @@ mod test {
     }
 
     static STORED: LazyLock<OnDisk<i32>> = LazyLock::new(|| OnDisk::new("stored_i32_test.json"));
-    static STORED_STRUCT: LazyLock<OnDisk<Data>> =
-        LazyLock::new(|| OnDisk::new("stored_struct_test.json"));
+    static STORED_STRUCT: LazyLock<OnDisk<Data>> = LazyLock::new(|| OnDisk::new("stored_struct_test.json"));
 
     fn check_send<T: Send>(_send: &T) {}
     fn check_sync<T: Sync>(_sync: &T) {}
