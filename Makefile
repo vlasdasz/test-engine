@@ -45,7 +45,6 @@ ios-debug:
 	rm -f ./target/universal/release/libtest_game.a
 	cp ./target/universal/debug/libtest_game.a ./target/universal/release/libtest_game.a
 
-
 lint:
 	cargo clippy \
       -- \

@@ -232,16 +232,26 @@ impl UIManager {
         Self::get().keymap.deref()
     }
 
-    pub fn cloud_storage_dir() -> PathBuf {
+    pub fn cloud_storage_dir() -> Option<PathBuf> {
         #[cfg(ios)]
         {
-            unsafe {
-                crate::mobile::ios::test_engine_ios_icloud_test();
+            let path = unsafe { crate::mobile::ios::test_engine_ios_get_icloud_storage_path() };
+
+            if path.is_null() {
+                return None;
             }
-            PathBuf::default()
+
+            let path = unsafe { std::ffi::CStr::from_ptr(path) };
+
+            let Ok(path) = path.to_str() else {
+                log::error!("Failed to get cloud storage path");
+                return None;
+            };
+
+            Some(PathBuf::from(path))
         }
         #[cfg(not(ios))]
-        PathBuf::default()
+        None
     }
 }
 

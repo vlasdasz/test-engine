@@ -74,6 +74,7 @@ impl Setup for MenuView {
                     "System",
                     vec![
                         Node::empty("system info"),
+                        Node::empty("cloud"),
                         Node::empty("add box"),
                         Node::empty("load assets"),
                         Node::empty("request"),
@@ -228,6 +229,11 @@ impl MenuView {
 
                     LevelManager::level_weak().background = image;
                 });
+            }
+            "cloud" => {
+                let path = UIManager::cloud_storage_dir();
+
+                Alert::show(format!("{path:?}"));
             }
             _ => {
                 panic!("Invalid command: {command}");
