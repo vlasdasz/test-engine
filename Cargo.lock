@@ -5632,6 +5632,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "filesystem",
+ "parking_lot",
  "plat 0.9.0",
  "serde",
  "serde_json",

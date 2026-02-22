@@ -6,8 +6,11 @@ use std::{
 };
 
 use filesystem::Paths;
+use parking_lot::Mutex;
 
 use crate::storable::Storable;
+
+static ROOT_PATH: Mutex<Option<PathBuf>> = Mutex::new(None);
 
 fn set_value<T: serde::ser::Serialize>(value: T, path: &Path) {
     let json = serde_json::to_string_pretty(&value).expect("Failed to serialize data");
@@ -41,7 +44,7 @@ fn get_or_init_value<T: Storable + Default>(path: &Path) -> T {
 }
 
 #[derive(Clone, Default)]
-pub struct OnDisk<T: Storable> {
+pub struct OnDisk<T> {
     path: PathBuf,
     _p:   PhantomData<T>,
 }
@@ -56,15 +59,23 @@ impl<T: Storable> OnDisk<T> {
 
     pub fn set(&self, val: impl Into<T>) {
         let val = val.into();
-        set_value(val, &expand_tilde(&self.path));
+        set_value(val, &expand_tilde(self.full_path()));
     }
 
     pub fn get(&self) -> Option<T> {
-        get_value(&expand_tilde(&self.path))
+        get_value(&expand_tilde(self.full_path()))
     }
 
     pub fn reset(&self) {
-        remove_file(expand_tilde(&self.path)).expect("Failed to remove file");
+        remove_file(expand_tilde(self.full_path())).expect("Failed to remove file");
+    }
+
+    fn full_path(&self) -> PathBuf {
+        if let Some(root) = &*ROOT_PATH.lock() {
+            root.join(&self.path)
+        } else {
+            self.path.clone()
+        }
     }
 }
 
@@ -77,6 +88,12 @@ impl<T: Storable + Default> OnDisk<T> {
 
     pub fn get_or_init(&self) -> T {
         get_or_init_value(&expand_tilde(&self.path))
+    }
+}
+
+impl<T> OnDisk<T> {
+    pub fn set_root_path(path: impl AsRef<Path>) {
+        *ROOT_PATH.lock() = Some(path.as_ref().to_path_buf())
     }
 }
 
@@ -116,15 +133,17 @@ mod test {
         string: String,
     }
 
-    static STORED: LazyLock<OnDisk<i32>> = LazyLock::new(|| OnDisk::new("~/.test/stored_i32_test.json"));
+    static STORED: LazyLock<OnDisk<i32>> = LazyLock::new(|| OnDisk::new("stored_i32_test.json"));
     static STORED_STRUCT: LazyLock<OnDisk<Data>> =
-        LazyLock::new(|| OnDisk::new("~/.test/stored_struct_test.json"));
+        LazyLock::new(|| OnDisk::new("stored_struct_test.json"));
 
     fn check_send<T: Send>(_send: &T) {}
     fn check_sync<T: Sync>(_sync: &T) {}
 
     #[test]
     fn stored() -> Result<()> {
+        OnDisk::<()>::set_root_path("~/.test_on_disk/");
+
         check_send(&STORED);
         check_sync(&STORED);
         check_send(&STORED_STRUCT);
