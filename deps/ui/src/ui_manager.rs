@@ -18,7 +18,15 @@ use plat::Platform;
 use refs::{Own, Weak};
 use window::Window;
 
-use crate::{DEBUG_VIEW, Keymap, RootView, TouchStack, UIEvent, View, ViewData, ViewFrame, WeakView};
+use crate::{
+    DEBUG_VIEW, Keymap, RootView, TouchStack, UIAnimation, UIEvent, View, ViewData, ViewFrame, WeakView,
+};
+
+pub(crate) static DELETED_VIEWS: Mutex<Vec<Own<dyn View>>> = Mutex::new(Vec::new());
+
+static ANIMATIONS: Mutex<Vec<UIAnimation>> = Mutex::new(Vec::new());
+
+static ON_SCROLL: UIEvent<Point> = UIEvent::const_new();
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -26,8 +34,7 @@ static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 static IOS_KEYBOARD_INIT: std::sync::Once = std::sync::Once::new();
 
 pub struct UIManager {
-    pub(crate) root_view:     Own<RootView>,
-    pub(crate) deleted_views: Mutex<Vec<Own<dyn View>>>,
+    pub(crate) root_view: Own<RootView>,
 
     touch_disabled: AtomicBool,
 
@@ -39,7 +46,6 @@ pub struct UIManager {
     manual_scale:  AtomicU32,
     scale_changed: UIEvent<f32>,
 
-    on_scroll:    UIEvent<Point>,
     on_drop_file: UIEvent<PathBuf>,
 
     draw_touches: AtomicBool,
@@ -154,14 +160,12 @@ impl UIManager {
 
         Self {
             root_view,
-            deleted_views: Mutex::default(),
             touch_disabled: false.into(),
             cursor_position: Mutex::new(Point::default()),
             draw_debug_frames: false.into(),
             scale: AtomicU32::new(u32::from_le_bytes(1.0f32.to_le_bytes())),
             manual_scale: AtomicU32::new(u32::from_le_bytes(0.0f32.to_le_bytes())),
             scale_changed: UIEvent::default(),
-            on_scroll: UIEvent::default(),
             on_drop_file: UIEvent::default(),
             draw_touches: false.into(),
             keymap: Own::default(),
@@ -204,7 +208,7 @@ impl UIManager {
     }
 
     pub fn free_deleted_views() {
-        Self::get().deleted_views.lock().clear();
+        DELETED_VIEWS.lock().clear();
         TouchStack::get().clear_freed();
     }
 
@@ -315,14 +319,14 @@ impl UIManager {
 
 impl UIManager {
     pub fn trigger_scroll(scroll: Point) {
-        Self::get().on_scroll.trigger(scroll);
+        ON_SCROLL.trigger(scroll);
     }
 
     pub fn on_scroll<T: View + ?Sized + 'static>(
         subscriber: Weak<T>,
         mut action: impl FnMut(Point) + Send + 'static,
     ) {
-        Self::get().on_scroll.val(subscriber, move |delta| {
+        ON_SCROLL.val(subscriber, move |delta| {
             if subscriber.absolute_frame().contains(UIManager::cursor_position()) {
                 action(delta);
             }
@@ -339,6 +343,24 @@ impl UIManager {
 
     pub fn set_clear_color(color: impl Into<Color>) {
         Window::set_clear_color(color);
+    }
+
+    pub(crate) fn add_animation(anim: UIAnimation) {
+        ANIMATIONS.lock().push(anim);
+    }
+
+    pub fn commit_animations() {
+        ANIMATIONS.lock().retain_mut(|a| {
+            let retain = a.active();
+
+            if retain {
+                a.commit();
+            } else {
+                a.on_finish.trigger(());
+            }
+
+            retain
+        });
     }
 }
 

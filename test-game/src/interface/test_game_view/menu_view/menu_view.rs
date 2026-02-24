@@ -17,7 +17,7 @@ use test_engine::{
     refs::{Own, Weak, manage::DataManager},
     ui::{
         ALL_VIEWS, Alert, AlertErr, Image, Point, Setup, Spinner, TableData, TableView, UIManager, View,
-        ViewData, ViewFrame, ViewTest, all_view_tests, all_views, cast_cell, view_test,
+        ViewData, ViewFrame, all_view_tests, all_views, cast_cell, view,
     },
 };
 
@@ -35,7 +35,7 @@ use crate::{
     no_physics::NoPhysicsView,
 };
 
-#[view_test]
+#[view]
 pub struct MenuView {
     root: Node<MenuEntry>,
 
@@ -313,14 +313,6 @@ impl MenuView {
             users.len(),
             users.first().unwrap().name
         ));
-
-        Ok(())
-    }
-}
-
-impl ViewTest for MenuView {
-    fn perform_test(_view: Weak<Self>) -> Result<()> {
-        // record_ui_test();
 
         Ok(())
     }

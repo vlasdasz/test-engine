@@ -4,9 +4,7 @@ use gm::{Animation, color::WHITE};
 use hreads::on_main;
 use refs::Own;
 
-use crate::{
-    NavigationView, Touch, UIAnimation, UIManager, View, ViewAnimation, ViewData, ViewFrame, ViewSubviews,
-};
+use crate::{NavigationView, Touch, UIAnimation, UIManager, View, ViewData, ViewFrame, ViewSubviews};
 
 pub trait ViewController {
     fn navigation(&self) -> Weak<NavigationView>;
@@ -41,7 +39,7 @@ impl<T: ?Sized + View + 'static> ViewController for T {
 
         on_main(move || {
             view.set_color(WHITE);
-            let mut view = UIManager::root_view().add_subview_to_root(view);
+            let view = UIManager::root_view().add_subview_to_root(view);
             view.set_frame(self.frame().with_zero_origin());
             let anim = UIAnimation::new(
                 Animation::new(self.height(), 0.0, PRESENT_ANIMATION_DURATION),

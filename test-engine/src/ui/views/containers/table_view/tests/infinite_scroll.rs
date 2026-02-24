@@ -2,9 +2,9 @@ use std::any::Any;
 
 use anyhow::Result;
 use refs::{Own, Weak};
-use ui::{Container, Label, Setup, TableData, View, ViewData, ViewTest, cast_cell, view_test};
+use ui::{Label, Setup, TableData, View, ViewData, ViewTest, cast_cell, view_test};
 
-use crate::{self as test_engine, ui::TableView, ui_test::record_ui_test};
+use crate::{self as test_engine, ui::TableView};
 
 #[view_test]
 struct InfiniteScrollTest {
@@ -27,9 +27,7 @@ impl TableData for InfiniteScrollTest {
     }
 
     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        let _cell = Container::new();
-    
-        todo!()
+        Label::new()
     }
 
     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
@@ -39,7 +37,7 @@ impl TableData for InfiniteScrollTest {
 
 impl ViewTest for InfiniteScrollTest {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        record_ui_test();
+        // record_ui_test();
         Ok(())
     }
 }

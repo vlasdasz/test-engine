@@ -4,7 +4,7 @@ use gm::{ToF32, color::Color};
 use refs::{Own, Weak};
 use vents::Event;
 
-use crate::{NavigationView, Style, UIAnimation, View, WeakView, layout::Placer};
+use crate::{NavigationView, Style, UIAnimation, UIManager, View, WeakView, layout::Placer};
 
 pub trait ViewData {
     fn tag(&self) -> usize;
@@ -43,8 +43,6 @@ pub trait ViewData {
     fn label(&self) -> &str;
     fn set_label(&mut self, label: impl ToString) -> &mut Self;
 
-    fn animations(&mut self) -> &mut Vec<UIAnimation>;
-
     fn dont_hide(&self) -> bool;
 
     fn position_changed(&self) -> &Event;
@@ -53,6 +51,8 @@ pub trait ViewData {
     fn apply_style(&self, style: Style) -> &Self;
 
     fn steal_appearance(&self, other: WeakView) -> &Self;
+
+    fn add_animation(&self, anim: UIAnimation);
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -160,10 +160,6 @@ impl<T: ?Sized + View> ViewData for T {
         self
     }
 
-    fn animations(&mut self) -> &mut Vec<UIAnimation> {
-        &mut self.__base_view().animations
-    }
-
     fn dont_hide(&self) -> bool {
         self.__base_view().dont_hide_off_screen
     }
@@ -197,6 +193,11 @@ impl<T: ?Sized + View> ViewData for T {
         this.set_border_width(other.border_width());
         this.set_corner_radius(other.corner_radius());
         self
+    }
+
+    fn add_animation(&self, mut anim: UIAnimation) {
+        anim.view = self.weak_view();
+        UIManager::add_animation(anim);
     }
 }
 

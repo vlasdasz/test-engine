@@ -13,7 +13,7 @@ mod test_engine {
 }
 use crate::{
     Setup, TouchStack, UIAnimation, View, ViewData,
-    view::{ViewAnimation, ViewFrame, ViewSubviews},
+    view::{ViewFrame, ViewSubviews},
 };
 
 #[view]

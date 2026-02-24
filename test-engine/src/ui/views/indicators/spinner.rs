@@ -11,8 +11,8 @@ use log::{trace, warn};
 use parking_lot::{Mutex, MutexGuard};
 use refs::Weak;
 use ui::{
-    Container, ModalView, Setup, TouchStack, UIAnimation, View, ViewAnimation, ViewCallbacks, ViewData,
-    ViewFrame, ViewSubviews,
+    Container, ModalView, Setup, TouchStack, UIAnimation, View, ViewCallbacks, ViewData, ViewFrame,
+    ViewSubviews,
 };
 use ui_proc::view;
 use vents::OnceEvent;
@@ -157,7 +157,7 @@ impl Spinner {
         }
 
         on_main(|| {
-            let mut spinner = Self::current();
+            let spinner = Self::current();
 
             if spinner.is_null() {
                 warn!("Spinner already stopped");

@@ -7,13 +7,13 @@ use test_engine::{
     refs::{Weak, manage::DataManager},
     ui::{
         AlertErr, CLEAR, Container, Image, LIGHT_BLUE, Label, ProgressView, Setup, Spinner, UIManager,
-        ViewData, ViewSubviews, ViewTest, view_test,
+        ViewData, ViewSubviews, ViewTest, view,
     },
 };
 
 use crate::interface::test_game_view::TestGameView;
 
-#[view_test]
+#[view]
 pub struct LoadingView {
     #[init]
     spinner:  Container,

@@ -6,7 +6,7 @@ use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    Setup, Slider, UIManager, View, ViewCallbacks,
+    DELETED_VIEWS, Setup, Slider, UIManager, View, ViewCallbacks,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
@@ -116,7 +116,7 @@ impl ViewSubviews for ScrollView {
             .__base_view()
             .subviews
             .extract_if(.., move |v| v.raw() != self.slider.raw());
-        UIManager::get().deleted_views.lock().extend(to_remove);
+        DELETED_VIEWS.lock().extend(to_remove);
     }
 }
 
