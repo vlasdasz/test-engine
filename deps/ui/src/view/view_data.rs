@@ -2,7 +2,7 @@ use std::ops::DerefMut;
 
 use gm::{ToF32, color::Color};
 use refs::{Own, Weak};
-use vents::{Event, OnceEvent};
+use vents::Event;
 
 use crate::{NavigationView, Style, UIAnimation, View, WeakView, layout::Placer};
 
@@ -53,8 +53,6 @@ pub trait ViewData {
     fn apply_style(&self, style: Style) -> &Self;
 
     fn steal_appearance(&self, other: WeakView) -> &Self;
-
-    fn __after_setup_event(&self) -> &OnceEvent;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -183,10 +181,6 @@ impl<T: ?Sized + View> ViewData for T {
         self
     }
 
-    fn __after_setup_event(&self) -> &OnceEvent {
-        &self.__base_view().after_setup
-    }
-
     fn border_width(&self) -> f32 {
         self.__base_view().border_width
     }
@@ -213,7 +207,7 @@ pub trait AfterSetup {
 impl<T: ?Sized + View + 'static> AfterSetup for T {
     fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + Send + 'static) -> Own<Self> {
         let weak = self.weak();
-        self.__base_view().after_setup.sub(move || {
+        self.__base_view().events.setup.sub(move || {
             action(weak);
         });
         self

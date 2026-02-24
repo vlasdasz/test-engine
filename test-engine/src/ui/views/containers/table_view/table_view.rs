@@ -155,9 +155,7 @@ mod test {
     use gm::color::GRAY;
     use hreads::{from_main, wait_for_next_frame};
     use refs::{Own, Weak};
-    use ui::{
-        AfterSetup, Container, Label, Setup, TableData, View, ViewData, ViewSubviews, ViewTest, view_test,
-    };
+    use ui::{AfterSetup, Container, Label, Setup, TableData, View, ViewData, ViewSubviews, ViewTest, view_test};
 
     use crate::{
         self as test_engine, AppRunner,

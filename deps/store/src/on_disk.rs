@@ -93,7 +93,7 @@ impl<T: Storable + Default> OnDisk<T> {
 
 impl<T> OnDisk<T> {
     pub fn set_root_path(path: impl AsRef<Path>) {
-        *ROOT_PATH.lock() = Some(path.as_ref().to_path_buf())
+        *ROOT_PATH.lock() = Some(path.as_ref().to_path_buf());
     }
 }
 

@@ -1,5 +1,5 @@
 use crate::{
-    Touch, TouchStack, UIManager, View, ViewTouchCallbacks, WeakView,
+    Touch, TouchStack, UIManager, View, ViewTouchEvents, WeakView,
     view::{ViewFrame, view_data::ViewData, view_touch_internal::ViewTouchInternal},
 };
 
@@ -8,7 +8,7 @@ pub trait ViewTouch {
     fn enable_touch(&self) -> &Self;
     fn enable_touch_low_priority(&self) -> &Self;
     fn disable_touch(&self);
-    fn touch(&self) -> &ViewTouchCallbacks;
+    fn touch(&self) -> &ViewTouchEvents;
 }
 
 impl<T: ?Sized + View> ViewTouch for T {
@@ -30,8 +30,8 @@ impl<T: ?Sized + View> ViewTouch for T {
         TouchStack::disable_for(self.weak_view());
     }
 
-    fn touch(&self) -> &ViewTouchCallbacks {
-        &self.__base_view().touch
+    fn touch(&self) -> &ViewTouchEvents {
+        &self.__base_view().events.touch
     }
 }
 
@@ -42,8 +42,8 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
 
     if touch.is_moved() && view.touch_id() == touch.id {
         touch.position -= view.absolute_frame().origin;
-        view.__base_view().touch.all.trigger(*touch);
-        view.__base_view().touch.moved.trigger(*touch);
+        view.__base_view().events.touch.all.trigger(*touch);
+        view.__base_view().events.touch.moved.trigger(*touch);
         return true;
     }
 
@@ -56,10 +56,10 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
 
         touch.position -= view.absolute_frame().origin;
         view.set_touch_id(0);
-        view.__base_view().touch.all.trigger(*touch);
+        view.__base_view().events.touch.all.trigger(*touch);
 
         if inside {
-            view.__base_view().touch.up_inside.trigger(*touch);
+            view.__base_view().events.touch.up_inside.trigger(*touch);
         }
         return true;
     }
@@ -68,10 +68,10 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         touch.position -= view.absolute_frame().origin;
         if touch.is_began() {
             view.set_touch_id(touch.id);
-            view.__base_view().touch.began.trigger(*touch);
+            view.__base_view().events.touch.began.trigger(*touch);
             UIManager::set_selected(view, true);
         }
-        view.__base_view().touch.all.trigger(*touch);
+        view.__base_view().events.touch.all.trigger(*touch);
         return true;
     }
 

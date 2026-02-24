@@ -60,7 +60,7 @@ pub struct ViewBase {
     pub(crate) placer: Placer,
 
     #[educe(Debug(ignore))]
-    pub touch: ViewTouchCallbacks,
+    pub events: ViewEvents,
 
     #[educe(Debug(ignore))]
     pub(crate) dont_hide_off_screen: bool,
@@ -75,15 +75,19 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) size_changed:     Event,
 
-    #[educe(Debug(ignore))]
-    pub(crate) after_setup:         OnceEvent,
     pub(crate) ignore_global_style: bool,
 
     pub tag: usize,
 }
 
 #[derive(Default)]
-pub struct ViewTouchCallbacks {
+pub struct ViewEvents {
+    pub touch: ViewTouchEvents,
+    pub setup: OnceEvent,
+}
+
+#[derive(Default)]
+pub struct ViewTouchEvents {
     pub all:       Event<Touch>,
     pub began:     Event<Touch>,
     pub moved:     Event<Touch>,
