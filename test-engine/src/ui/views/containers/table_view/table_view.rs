@@ -1,4 +1,4 @@
-use refs::Weak;
+use refs::{Weak, weak_from_ref};
 use ui::{
     __ViewInternalTableData, ScrollView, Setup, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewTouch,
     WeakView, view,
@@ -29,7 +29,7 @@ impl ViewCallbacks for TableView {
 }
 
 impl Setup for TableView {
-    fn setup(self: Weak<Self>) {
+    fn setup(mut self: Weak<Self>) {
         self.scroll.place().back();
         self.scroll.on_scroll.sub(move || {
             self.layout_cells();
@@ -60,13 +60,13 @@ impl TableView {
         self
     }
 
-    pub fn reload_data(self: Weak<Self>) {
+    pub fn reload_data(mut self: Weak<Self>) {
         self.layout_cells();
     }
 }
 
 impl TableView {
-    fn layout_cells(self: Weak<Self>) {
+    fn layout_cells(&mut self) {
         self.scroll.remove_all_subviews();
 
         if self.height() <= 0.0 {
@@ -99,7 +99,7 @@ impl TableView {
         }
     }
 
-    pub(super) fn add_cell(mut self: Weak<Self>, index: usize) -> WeakView {
+    pub(super) fn add_cell(&self, index: usize) -> WeakView {
         let mut cell = self.data.__make_cell(index);
 
         let label = format!("TableView cell: {}", cell.label());
@@ -110,8 +110,9 @@ impl TableView {
         self.data.__setup_cell(cell.as_any_mut(), index);
 
         cell.enable_touch_low_priority();
+        let mut weak = weak_from_ref(self);
         cell.touch().up_inside.sub(move || {
-            self.data.__cell_selected(index);
+            weak.data.__cell_selected(index);
         });
 
         cell
