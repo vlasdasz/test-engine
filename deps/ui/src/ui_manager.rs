@@ -19,14 +19,13 @@ use refs::{Own, Weak};
 use window::Window;
 
 use crate::{
-    DEBUG_VIEW, Keymap, RootView, TouchStack, UIAnimation, UIEvent, View, ViewData, ViewFrame, WeakView,
+    DEBUG_VIEW, Keymap, RootView, TouchStack, UIAnimation, UIEvent, UIEvents, View, ViewData, ViewFrame,
+    WeakView,
 };
 
 pub(crate) static DELETED_VIEWS: Mutex<Vec<Own<dyn View>>> = Mutex::new(Vec::new());
 
 static ANIMATIONS: Mutex<Vec<UIAnimation>> = Mutex::new(Vec::new());
-
-static ON_SCROLL: UIEvent<Point> = UIEvent::const_new();
 
 static UI_MANAGER: OnceLock<UIManager> = OnceLock::new();
 
@@ -318,16 +317,15 @@ impl UIManager {
 }
 
 impl UIManager {
-    pub fn trigger_scroll(scroll: Point) {
-        ON_SCROLL.trigger(scroll);
-    }
-
     pub fn on_scroll<T: View + ?Sized + 'static>(
         subscriber: Weak<T>,
         mut action: impl FnMut(Point) + Send + 'static,
     ) {
-        ON_SCROLL.val(subscriber, move |delta| {
-            if subscriber.absolute_frame().contains(UIManager::cursor_position()) {
+        UIEvents::on_scroll().val(subscriber, move |delta| {
+            let mut target_frame = *subscriber.absolute_frame();
+            target_frame.origin.y -= subscriber.content_offset();
+
+            if target_frame.contains(UIManager::cursor_position()) {
                 action(delta);
             }
         });

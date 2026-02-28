@@ -1,4 +1,4 @@
-use gm::color::Color;
+use gm::{color::Color, flat::Point};
 use level::LevelManager;
 use log::warn;
 use ui::{Container, Setup, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, check_touch};
@@ -17,6 +17,10 @@ impl Input {
 
     pub fn on_key(key: NamedKey) {
         UIEvents::keyboard_key().trigger(key);
+    }
+
+    pub fn on_scroll(offset: Point) {
+        UIEvents::on_scroll().trigger(offset);
     }
 
     pub fn process_touch_event(mut touch: Touch) -> bool {

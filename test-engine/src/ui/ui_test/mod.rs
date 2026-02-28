@@ -59,7 +59,7 @@ fn inject_touch(touch: impl Into<Touch> + Send + Copy + 'static) {
 #[allow(dead_code)]
 pub fn inject_scroll(scroll: impl ToF32) {
     from_main(move || {
-        UIManager::trigger_scroll((0, scroll).into());
+        Input::on_scroll((0, scroll).into());
     });
 }
 
