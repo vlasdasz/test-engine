@@ -6,7 +6,7 @@ use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    DELETED_VIEWS, Setup, Slider, UIManager, View, ViewCallbacks,
+    DELETED_VIEWS, Setup, Slider, UIEvent, UIManager, View, ViewCallbacks,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
@@ -18,8 +18,9 @@ mod test_engine {
 
 #[view]
 pub struct ScrollView {
-    content_size:  Size,
-    pub on_scroll: Event<f32>,
+    content_size:       Size,
+    pub on_scroll:      Event<f32>,
+    pub bottom_reached: UIEvent,
 
     #[init]
     slider: Slider,
@@ -127,6 +128,11 @@ impl ScrollView {
         }
         self.__view_base.content_offset += scroll;
         let range = self.content_size.height - self.height();
+
+        if self.__view_base.content_offset <= -range {
+            self.bottom_reached.trigger(());
+        }
+
         self.__view_base.content_offset = self.__view_base.content_offset.clamp(-range, 0.0);
         let slider_val = -self.__view_base.content_offset / range;
         self.slider.set_value_without_event(1.0 - slider_val);

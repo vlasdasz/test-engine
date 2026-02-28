@@ -1,7 +1,7 @@
 use refs::{Weak, weak_from_ref};
 use ui::{
-    __ViewInternalTableData, ScrollView, Setup, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewTouch,
-    WeakView, view,
+    __ViewInternalTableData, ScrollView, Setup, UIEvent, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
+    ViewTouch, WeakView, view,
 };
 
 use crate::{
@@ -62,6 +62,10 @@ impl TableView {
 
     pub fn reload_data(mut self: Weak<Self>) {
         self.layout_cells();
+    }
+
+    pub fn bottom_reached(&self) -> &UIEvent {
+        &self.scroll.bottom_reached
     }
 }
 

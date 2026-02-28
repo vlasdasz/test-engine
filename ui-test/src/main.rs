@@ -70,13 +70,13 @@ fn main() -> Result<()> {
             return Ok(());
         }
 
-        for (_name, test) in tests.into_iter() {
-            test()?;
-        }
-
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 
         for i in 1..=cycles {
+            for (_name, test) in tests.iter() {
+                test()?;
+            }
+
             test().await?;
             info!("Cycle {i}: OK");
         }
