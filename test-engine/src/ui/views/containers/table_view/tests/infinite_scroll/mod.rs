@@ -1,2 +1,2 @@
+mod infinite_cell;
 mod infinite_scroll;
-mod long_table;

@@ -1,0 +1,29 @@
+use refs::Weak;
+use ui::{Label, Setup, ToLabel, ViewData, view};
+
+use crate::{self as test_engine};
+
+#[view]
+pub struct InfiniteCell {
+    #[init]
+    label: Label,
+}
+
+impl InfiniteCell {
+    pub fn set_text(self: Weak<Self>, text: impl ToLabel) -> Weak<Self> {
+        self.label.set_text(text);
+        self
+    }
+}
+
+impl Setup for InfiniteCell {
+    fn setup(self: Weak<Self>) {
+        self.label
+            .set_color("#5555AA55")
+            .set_border_color("#33333333")
+            .set_border_width(10)
+            .place()
+            .tb(10)
+            .lr(20);
+    }
+}
