@@ -46,7 +46,7 @@ fn main() -> Result<()> {
 
     AppRunner::start_with_actor(async {
         Label::set_default_text_size(32);
-        UIManager::set_display_touches(true);
+        UIManager::set_display_touches(false);
 
         from_main(|| {
             UIManager::override_scale(1.0);
