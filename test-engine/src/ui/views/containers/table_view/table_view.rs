@@ -1,12 +1,14 @@
 use refs::Weak;
 use ui::{
-    __ViewInternalTableData, ScrollView, Setup, ViewCallbacks, ViewData, ViewFrame,
-    ViewSubviews, ViewTouch, WeakView, view,
+    __ViewInternalTableData, ScrollView, Setup, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewTouch,
+    WeakView, view,
 };
 
 use crate::{
     self as test_engine,
-    ui::views::containers::table_view::layout::{layout_same_sized_cells, layout_variable_sized_cells},
+    ui::views::containers::table_view::layout::{
+        layout_single_column_cells, layout_two_column_cells, layout_variable_sized_cells,
+    },
 };
 
 #[view]
@@ -48,6 +50,16 @@ impl TableView {
         self
     }
 
+    pub fn set_columns(mut self: Weak<Self>, columns: usize) -> Weak<Self> {
+        assert!(columns <= 2);
+
+        self.columns = columns;
+        self.scroll.set_content_offset(0);
+        self.reload_data();
+
+        self
+    }
+
     pub fn reload_data(self: Weak<Self>) {
         self.layout_cells();
     }
@@ -73,9 +85,17 @@ impl TableView {
         }
 
         if self.data.__variable_height() {
+            assert_eq!(
+                self.columns, 1,
+                "Variable height supported only for tables with 1 column"
+            );
             layout_variable_sized_cells(self, number_of_cells);
         } else {
-            layout_same_sized_cells(self, number_of_cells);
+            match self.columns {
+                1 => layout_single_column_cells(self, number_of_cells),
+                2 => layout_two_column_cells(self, number_of_cells),
+                _ => unimplemented!("More than TableView 2 columns is not supported yet"),
+            }
         }
     }
 

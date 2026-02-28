@@ -19,8 +19,9 @@ struct InfiniteScrollTest {
 
 impl Setup for InfiniteScrollTest {
     fn setup(mut self: Weak<Self>) {
+        self.table.columns = 2;
         self.table.set_data_source(self).place().back();
-        self.data = (1..20).into_iter().collect();
+        self.data = (1..=20).into_iter().collect();
     }
 }
 
@@ -44,7 +45,7 @@ impl TableData for InfiniteScrollTest {
 
 impl ViewTest for InfiniteScrollTest {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        crate::ui_test::record_ui_test();
+        // crate::ui_test::record_ui_test();
         Ok(())
     }
 }

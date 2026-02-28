@@ -49,7 +49,11 @@ impl TableData for LongTableTest {
 
     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
         let label = cell.downcast_mut::<Label>().unwrap();
-        label.set_text(format!("Cell number: {}", index + 1));
+        if self.table.columns == 1 {
+            label.set_text(format!("Cell number: {}", index + 1));
+        } else {
+            label.set_text(format!("Cell: {}", index + 1));
+        }
     }
 
     fn cell_selected(self: Weak<Self>, index: usize) {
@@ -362,6 +366,12 @@ impl ViewTest for LongTableTest {
         );
 
         assert_eq!(INDEX.load(Ordering::Relaxed), 666_665);
+
+        from_main(move || {
+            view.table.set_columns(2);
+        });
+
+        // record_ui_test();
 
         Ok(())
     }

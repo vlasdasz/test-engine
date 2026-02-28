@@ -4,7 +4,7 @@ use ui::{Anchor::Top, ViewData, ViewFrame, WeakView};
 
 use crate::ui::TableView;
 
-pub(super) fn layout_same_sized_cells(mut table: Weak<TableView>, number_of_cells: usize) {
+pub(super) fn layout_single_column_cells(mut table: Weak<TableView>, number_of_cells: usize) {
     let cell_height = table.data.__cell_height(0);
 
     let total_height = number_of_cells.lossy_convert() * cell_height;
@@ -27,6 +27,52 @@ pub(super) fn layout_same_sized_cells(mut table: Weak<TableView>, number_of_cell
 
     for i in first_index..last_index {
         table.add_cell(i).place().h(h).t(i.lossy_convert() * h).lr(0);
+    }
+}
+
+pub(super) fn layout_two_column_cells(mut table: Weak<TableView>, number_of_cells: usize) {
+    let row_height = table.data.__cell_height(0);
+
+    let total_height = (number_of_cells.lossy_convert() / 2.0).ceil() * row_height;
+
+    table.scroll.set_content_height(total_height);
+
+    let mut number_of_cells_fits: usize = (table.height() / row_height).ceil().lossy_convert();
+    number_of_cells_fits *= 2;
+
+    let offset = table.scroll.content_offset();
+
+    let mut first_index: usize = (-offset / row_height).floor().lossy_convert();
+    first_index /= 2;
+
+    let mut last_index = first_index + number_of_cells_fits + 4;
+
+    if last_index > number_of_cells {
+        last_index = number_of_cells;
+    }
+
+    let h = table.data.__cell_height(0);
+
+    for i in first_index..last_index {
+        if i % 2 == 0 {
+            table
+                .add_cell(i)
+                .place()
+                .h(h)
+                .t((i / 2).lossy_convert() * h)
+                .l(0)
+                .relative_width(table, 0.5);
+        } else {
+            table
+                .add_cell(i)
+                .place()
+                .h(h)
+                .relative_width(table, 0.5)
+                .t((i / 2).lossy_convert() * h)
+                .custom(move |mut view| {
+                    view.set_x(table.width() / 2.0);
+                });
+        }
     }
 }
 
