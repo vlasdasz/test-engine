@@ -4738,9 +4738,9 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.43.0"
+version = "0.44.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3572cc3da96512a442699aa71e2af47b23dbef59b8a49efae786349a10fbef5f"
+checksum = "d35a16559080ed907a53e6f4cbc0cdbf4c89c325c66b1e8d3965073c7c1af173"
 dependencies = [
  "anyhow",
  "derive_more",

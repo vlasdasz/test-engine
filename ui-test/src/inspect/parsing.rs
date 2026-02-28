@@ -2,7 +2,7 @@ use anyhow::Result;
 use inspect::ui::ViewRepr;
 use pretty_assertions::assert_eq;
 use test_engine::{
-    dispatch::from_main,
+    dispatch::{from_main, on_main},
     inspect::ViewToInspect,
     refs::Weak,
     ui::{BLUE, Button, Setup, ViewData, view},
@@ -32,6 +32,11 @@ pub(crate) async fn test_inspect_parsing() -> Result<()> {
     let parsed_repr: ViewRepr = serde_json::from_str(&json)?;
 
     assert_eq!(repr, parsed_repr);
+
+    on_main(move || {
+        drop(parsed_repr);
+        drop(repr);
+    });
 
     Ok(())
 }

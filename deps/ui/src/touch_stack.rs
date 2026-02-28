@@ -1,5 +1,6 @@
 use std::sync::OnceLock;
 
+use hreads::from_main;
 use nonempty::NonEmpty;
 use parking_lot::{Mutex, MutexGuard};
 
@@ -102,24 +103,26 @@ impl TouchStack {
     }
 
     pub fn dump() -> Vec<Vec<String>> {
-        UIManager::free_deleted_views();
-        TouchStack::get().clear_freed();
+        from_main(|| {
+            UIManager::free_deleted_views();
+            TouchStack::get().clear_freed();
 
-        let mut result = vec![];
+            let mut result = vec![];
 
-        for layer in &Self::get().stack {
-            let mut layer_vec = vec![];
+            for layer in &Self::get().stack {
+                let mut layer_vec = vec![];
 
-            layer_vec.push(format!("Layer: {}", layer.root_name()));
+                layer_vec.push(format!("Layer: {}", layer.root_name()));
 
-            for view in layer.views() {
-                assert!(view.is_ok(), "Null view in touch stack");
-                layer_vec.push(view.label().to_string());
+                for view in layer.views() {
+                    assert!(view.is_ok(), "Null view in touch stack");
+                    layer_vec.push(view.label().to_string());
+                }
+
+                result.push(layer_vec);
             }
 
-            result.push(layer_vec);
-        }
-
-        result
+            result
+        })
     }
 }

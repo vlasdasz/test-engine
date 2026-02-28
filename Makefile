@@ -37,9 +37,6 @@ else
 	@echo " build-ios can only be run on macOS."
 endif
 
-ios-lib:
-	cargo lipo -p test-game --release
-
 ios-debug:
 	cargo lipo -p test-game
 	rm -f ./target/universal/release/libtest_game.a
