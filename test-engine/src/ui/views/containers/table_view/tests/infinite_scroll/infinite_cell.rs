@@ -23,7 +23,7 @@ impl Setup for InfiniteCell {
             .set_border_color("#33333333")
             .set_border_width(10)
             .place()
-            .tb(10)
+            .tb(5)
             .lr(20);
     }
 }

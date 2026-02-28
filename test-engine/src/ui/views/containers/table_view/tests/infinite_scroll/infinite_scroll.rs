@@ -7,11 +7,18 @@ use ui::{Setup, TableData, View, ViewData, ViewTest, cast_cell, view_test};
 
 use crate::{
     self as test_engine,
-    ui::{TableView, views::containers::table_view::tests::infinite_scroll::infinite_cell::InfiniteCell},
+    ui::{
+        TableView,
+        views::containers::table_view::tests::infinite_scroll::{
+            basic_scroll::test_basic_scroll, infinite_cell::InfiniteCell,
+        },
+    },
 };
 
 #[view_test]
-struct InfiniteScrollTest {
+pub(super) struct InfiniteScrollTest {
+    pub(super) test_string: String,
+
     data: Vec<usize>,
 
     #[init]
@@ -26,10 +33,10 @@ impl Setup for InfiniteScrollTest {
             .set_border_color(BLACK)
             .set_border_width(5)
             .place()
-            .t(200)
-            .b(200)
+            .t(120)
+            .b(120)
             .lr(0);
-        self.data = (1..=100).collect();
+        self.data = (0..=199).collect();
     }
 }
 
@@ -49,11 +56,18 @@ impl TableData for InfiniteScrollTest {
     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
         cast_cell!(InfiniteCell).set_text(self.data[index]);
     }
+
+    fn cell_selected(mut self: Weak<Self>, index: usize) {
+        self.test_string.push_str(&format!("|{index}|"));
+    }
 }
 
 impl ViewTest for InfiniteScrollTest {
-    fn perform_test(_view: Weak<Self>) -> Result<()> {
+    fn perform_test(view: Weak<Self>) -> Result<()> {
+        test_basic_scroll(view)?;
+
         crate::ui_test::record_ui_test();
+
         Ok(())
     }
 }

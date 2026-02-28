@@ -87,6 +87,7 @@ pub mod net {
 }
 
 pub mod dispatch {
+    pub use ::gm::drop_on_main;
     #[cfg(not_wasm)]
     pub use ::hreads::first_ok;
     pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_async, wait_for_next_frame};

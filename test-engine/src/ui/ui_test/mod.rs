@@ -10,6 +10,7 @@ use std::{
 };
 
 use anyhow::{Result, bail};
+use gm::drop_on_main;
 pub use helpers::*;
 use hreads::{from_main, on_main, wait_for_next_frame};
 use log::{error, warn};
@@ -105,8 +106,8 @@ pub fn record_moved_touches() {
 }
 
 fn record_touches_internal(skip_moved: bool) {
-    let touches: Own<_> = Vec::<Touch>::new().into();
-    let mut touches = touches.weak();
+    let touches_own: Own<_> = Vec::<Touch>::new().into();
+    let mut touches = touches_own.weak();
 
     let (s, r) = channel::<()>();
 
@@ -156,6 +157,8 @@ fn record_touches_internal(skip_moved: bool) {
     "#,
         Touch::str_from_vec(touches.to_vec()),
     );
+
+    drop_on_main(touches_own);
 }
 
 #[allow(dead_code)]
@@ -174,8 +177,8 @@ pub fn record_colors() -> Result<()> {
 
     let screenshot = AppRunner::take_screenshot()?;
 
-    let touches: Own<_> = Vec::<(Touch, U8Color)>::new().into();
-    let mut touches = touches.weak();
+    let touches_own: Own<_> = Vec::<(Touch, U8Color)>::new().into();
+    let mut touches = touches_own.weak();
 
     let (s, r) = channel::<()>();
 
@@ -217,6 +220,8 @@ pub fn record_colors() -> Result<()> {
     println!(")?;");
 
     drop(touch_lock);
+
+    drop_on_main(touches_own);
 
     Ok(())
 }

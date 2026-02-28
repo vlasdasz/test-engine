@@ -43,7 +43,10 @@ pub(super) fn layout_two_column_cells(table: &mut TableView, number_of_cells: us
     let offset = table.scroll.content_offset();
 
     let mut first_index: usize = (-offset / row_height).floor().lossy_convert();
-    first_index /= 2;
+    if first_index % 2 != 0 {
+        first_index -= 1;
+    }
+    first_index *= 2;
 
     let mut last_index = first_index + number_of_cells_fits + 4;
 

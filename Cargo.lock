@@ -2268,7 +2268,9 @@ dependencies = [
  "chrono",
  "educe",
  "fastrand",
+ "hreads",
  "lyon",
+ "refs",
  "serde",
 ]
 

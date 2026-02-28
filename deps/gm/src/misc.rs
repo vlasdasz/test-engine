@@ -1,3 +1,5 @@
+use hreads::on_main;
+
 pub trait FloatIterExt {
     fn float_min(&mut self) -> f32;
     fn float_max(&mut self) -> f32;
@@ -44,6 +46,12 @@ impl Toggle for bool {
         *self = !*self;
         !*self
     }
+}
+
+pub fn drop_on_main<T: 'static>(val: refs::Own<T>) {
+    on_main(move || {
+        drop(val);
+    });
 }
 
 #[cfg(test)]
