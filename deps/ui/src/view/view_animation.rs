@@ -58,6 +58,10 @@ impl UIAnimation {
     }
 
     pub(crate) fn commit(&mut self) {
-        (self.action)(self.view.deref_mut(), self.animation.value());
+        if self.finish_condition.is_empty() {
+            (self.action)(self.view.deref_mut(), self.animation.value());
+        } else {
+            (self.action)(self.view.deref_mut(), 0.0);
+        }
     }
 }

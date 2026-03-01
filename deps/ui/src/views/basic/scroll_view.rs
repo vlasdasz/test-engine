@@ -177,10 +177,10 @@ impl ScrollView {
         let anim = UIAnimation::new(move |_, _| {
             let inertia = scroll.inertia;
             scroll.on_scroll(inertia);
-            scroll.inertia *= 0.9;
+            scroll.inertia *= 0.96;
             dbg!(&scroll.inertia);
         })
-        .finish_condition(move || scroll.inertia == 0.0);
+        .finish_condition(move || scroll.inertia.abs() <= 0.2);
 
         anim.on_finish.sub(|| {
             dbg!("No anime((");
