@@ -4,12 +4,13 @@ use gm::{
     ToF32,
     flat::{Point, Size},
 };
-use refs::Weak;
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    DELETED_VIEWS, NO_TOUCH_ID, Setup, Slider, Touch, TouchStack, UIEvent, UIManager, View, ViewCallbacks,
+    DELETED_VIEWS, NO_TOUCH_ID, Setup, Slider, Touch, TouchStack, UIAnimation, UIEvent, UIManager, View,
+    ViewCallbacks,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
@@ -149,15 +150,45 @@ impl ScrollView {
         }
 
         if touch.is_moved() && self.__view_base.touch_id == touch.id {
-            self.on_scroll(-(self.previous_touch.y - touch.position.y));
+            let delta = -(self.previous_touch.y - touch.position.y);
             self.previous_touch = touch.position;
+
+            if delta == 0.0 {
+                return true;
+            }
+
+            self.inertia = delta;
+            self.on_scroll(delta);
             return true;
         }
 
         false
     }
 
-    fn add_inertia_animation(&mut self) {}
+    fn add_inertia_animation(&self) {
+        if self.inertia == 0.0 {
+            return;
+        }
+
+        dbg!(&self.inertia);
+
+        let mut scroll = weak_from_ref(self);
+
+        let anim = UIAnimation::new(move |_, _| {
+            let inertia = scroll.inertia;
+            scroll.on_scroll(inertia);
+            scroll.inertia *= 0.9;
+            dbg!(&scroll.inertia);
+        })
+        .finish_condition(move || scroll.inertia == 0.0);
+
+        anim.on_finish.sub(|| {
+            dbg!("No anime((");
+        });
+
+        self.add_animation(anim);
+        dbg!("ANIMEE");
+    }
 
     fn on_scroll(&mut self, scroll: f32) {
         if self.height() >= self.content_size.height {

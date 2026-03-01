@@ -53,7 +53,7 @@ impl UIAnimation {
         if self.finish_condition.is_empty() {
             self.animation.active()
         } else {
-            self.finish_condition.call(())
+            !self.finish_condition.call(())
         }
     }
 
