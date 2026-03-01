@@ -41,12 +41,10 @@ impl<T: ?Sized + View + 'static> ViewController for T {
             view.set_color(WHITE);
             let view = UIManager::root_view().add_subview_to_root(view);
             view.set_frame(self.frame().with_zero_origin());
-            let anim = UIAnimation::new(
-                Animation::new(self.height(), 0.0, PRESENT_ANIMATION_DURATION),
-                |view, y| {
-                    view.set_y(y);
-                },
-            );
+            let anim = UIAnimation::new(|view, y| {
+                view.set_y(y);
+            })
+            .animation(Animation::new(self.height(), 0.0, PRESENT_ANIMATION_DURATION));
 
             anim.on_finish.sub(move || {
                 self.remove_from_superview();

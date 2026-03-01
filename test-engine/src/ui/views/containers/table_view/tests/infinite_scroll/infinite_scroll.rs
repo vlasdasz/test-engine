@@ -19,10 +19,11 @@ use crate::{
 
 #[view_test]
 pub struct InfiniteScrollTest {
+    pub page_size: usize,
+
     pub(super) test_string: String,
 
-    data: Vec<usize>,
-
+    data_size:  usize,
     requesting: bool,
 
     #[init]
@@ -31,6 +32,7 @@ pub struct InfiniteScrollTest {
 
 impl Setup for InfiniteScrollTest {
     fn setup(mut self: Weak<Self>) {
+        self.page_size = 100;
         self.table.columns = 2;
         self.table
             .set_data_source(self)
@@ -53,7 +55,7 @@ impl Setup for InfiniteScrollTest {
             });
         });
 
-        self.data = (0..=199).collect();
+        self.data_size = 200;
     }
 }
 
@@ -61,10 +63,10 @@ impl InfiniteScrollTest {
     async fn on_fetch(mut self: Weak<Self>) {
         let _spin = Spinner::lock();
 
-        let data = fetch_more_data(self.data.len()).await;
+        fetch_more_data().await;
 
         on_main(move || {
-            self.data.extend(data);
+            self.data_size += self.page_size;
             self.table.reload_data();
             self.requesting = false;
         });
@@ -77,7 +79,7 @@ impl TableData for InfiniteScrollTest {
     }
 
     fn number_of_cells(self: Weak<Self>) -> usize {
-        self.data.len()
+        self.data_size
     }
 
     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
@@ -85,7 +87,7 @@ impl TableData for InfiniteScrollTest {
     }
 
     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        cast_cell!(InfiniteCell).set_text(self.data[index]);
+        cast_cell!(InfiniteCell).set_text(index);
     }
 
     fn cell_selected(mut self: Weak<Self>, index: usize) {
@@ -208,8 +210,6 @@ impl ViewTest for InfiniteScrollTest {
     }
 }
 
-async fn fetch_more_data(last_index: usize) -> Vec<usize> {
+async fn fetch_more_data() {
     sleep(0.5).await;
-
-    (last_index..last_index + 100).collect()
 }

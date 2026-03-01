@@ -57,9 +57,10 @@ impl NavigationView {
         view.set_navigation_view(self);
         view.set_frame(self.frame().with_zero_origin());
 
-        let anim = UIAnimation::new(Animation::new(self.width(), 0.0, 0.5), |view, x| {
+        let anim = UIAnimation::new(|view, x| {
             view.set_x(x);
-        });
+        })
+        .animation(Animation::new(self.width(), 0.0, 0.5));
 
         anim.on_finish.sub(move || {
             drop(touch_lock);
@@ -79,9 +80,10 @@ impl NavigationView {
         below.set_hidden(false);
         let mut to_pop = self.subviews().last().unwrap().weak_view();
 
-        let anim = UIAnimation::new(Animation::new(0.0, self.width(), 0.5), |view, x| {
+        let anim = UIAnimation::new(|view, x| {
             view.set_x(x);
-        });
+        })
+        .animation(Animation::new(0.0, self.width(), 0.5));
 
         anim.on_finish.sub(move || {
             to_pop.remove_from_superview();
