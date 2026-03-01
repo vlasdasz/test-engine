@@ -1,12 +1,15 @@
 use std::ops::Neg;
 
-use gm::{ToF32, flat::Size};
+use gm::{
+    ToF32,
+    flat::{Point, Size},
+};
 use refs::Weak;
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    DELETED_VIEWS, Setup, Slider, UIEvent, UIManager, View, ViewCallbacks,
+    DELETED_VIEWS, Setup, Slider, Touch, TouchStack, UIEvent, UIManager, View, ViewCallbacks,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
@@ -18,6 +21,7 @@ mod test_engine {
 
 #[view]
 pub struct ScrollView {
+    previous_touch:     Point,
     content_size:       Size,
     pub on_scroll:      Event<f32>,
     pub bottom_reached: UIEvent,
@@ -93,6 +97,8 @@ impl Setup for ScrollView {
         self.size_changed().sub(move || {
             self.on_scroll(0.0);
         });
+
+        TouchStack::enable_scroll(self);
     }
 }
 
@@ -122,7 +128,33 @@ impl ViewSubviews for ScrollView {
 }
 
 impl ScrollView {
-    fn on_scroll(mut self: Weak<Self>, scroll: f32) {
+    pub fn __process_scroll_touch(&mut self, touch: Touch) -> bool {
+        use crate::view::view_touch_internal::ViewTouchInternal;
+
+        if touch.is_ended() {
+            self.reset_touch_id();
+            return false;
+        }
+
+        let mut target_frame = self.__view_base.absolute_frame;
+        target_frame.origin.y -= self.__view_base.content_offset;
+
+        if touch.is_began() && target_frame.contains(touch.position) {
+            self.set_touch_id(touch.id);
+            self.previous_touch = touch.position;
+            return true;
+        }
+
+        if touch.is_moved() && self.touch_id() == touch.id {
+            self.on_scroll(-(self.previous_touch.y - touch.position.y));
+            self.previous_touch = touch.position;
+            return true;
+        }
+
+        false
+    }
+
+    fn on_scroll(&mut self, scroll: f32) {
         if self.height() >= self.content_size.height {
             return;
         }

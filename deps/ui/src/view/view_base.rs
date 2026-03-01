@@ -39,7 +39,7 @@ pub struct ViewBase {
     pub(crate) subviews: Vec<Own<dyn View>>,
 
     #[educe(Debug(ignore))]
-    pub(crate) touch_id: u64,
+    pub(crate) touch_id: usize,
 
     #[educe(Debug(ignore))]
     pub(crate) is_selected: bool,

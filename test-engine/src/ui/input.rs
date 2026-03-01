@@ -2,7 +2,7 @@ use gm::{color::Color, flat::Point};
 use level::LevelManager;
 use log::warn;
 use ui::{Container, Setup, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, check_touch};
-pub use winit::{event::KeyEvent, keyboard::NamedKey};
+pub use winit::keyboard::NamedKey;
 
 const LOG_TOUCHES: bool = false;
 const DRAW_TOUCHES: bool = false;
@@ -26,7 +26,7 @@ impl Input {
     pub fn process_touch_event(mut touch: Touch) -> bool {
         UIEvents::on_debug_touch().trigger(touch);
 
-        if UIManager::touch_disabled() {
+        if UIManager::touch_disabled() && touch.is_began() {
             return false;
         }
 
@@ -49,6 +49,8 @@ impl Input {
             UIManager::root_view().add_subview_to_root(view);
         }
 
+        Self::check_scroll_touches(touch);
+
         for view in TouchStack::touch_views() {
             if check_touch(view, &mut touch) {
                 return true;
@@ -60,5 +62,15 @@ impl Input {
         }
 
         false
+    }
+}
+
+impl Input {
+    fn check_scroll_touches(touch: Touch) {
+        for mut scroll in TouchStack::scrolls() {
+            if scroll.__process_scroll_touch(touch) {
+                return;
+            }
+        }
     }
 }

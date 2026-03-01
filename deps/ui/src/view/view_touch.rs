@@ -1,3 +1,7 @@
+use std::ops::DerefMut;
+
+use refs::weak_from_ref;
+
 use crate::{
     Touch, TouchStack, UIManager, View, ViewTouchEvents, WeakView,
     view::{ViewFrame, view_data::ViewData, view_touch_internal::ViewTouchInternal},
@@ -40,6 +44,8 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         return false;
     }
 
+    let view = view.deref_mut();
+
     if touch.is_moved() && view.touch_id() == touch.id {
         touch.position -= view.absolute_frame().origin;
         view.__base_view().events.touch.all.trigger(*touch);
@@ -55,10 +61,10 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         let inside = view.absolute_frame().contains(touch.position);
 
         touch.position -= view.absolute_frame().origin;
-        view.set_touch_id(0);
+        view.reset_touch_id();
         view.__base_view().events.touch.all.trigger(*touch);
 
-        if inside {
+        if inside && touch.is_ended() {
             view.__base_view().events.touch.up_inside.trigger(*touch);
         }
         return true;
@@ -69,7 +75,7 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         if touch.is_began() {
             view.set_touch_id(touch.id);
             view.__base_view().events.touch.began.trigger(*touch);
-            UIManager::set_selected(view, true);
+            UIManager::set_selected(weak_from_ref(view), true);
         }
         view.__base_view().events.touch.all.trigger(*touch);
         return true;

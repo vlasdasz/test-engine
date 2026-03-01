@@ -1,11 +1,12 @@
-use std::sync::OnceLock;
+use std::{ops::Deref, sync::OnceLock};
 
 use hreads::from_main;
 use nonempty::NonEmpty;
 use parking_lot::{Mutex, MutexGuard};
+use refs::Weak;
 
 use crate::{
-    UIManager, View, WeakView,
+    ScrollView, UIManager, View, WeakView,
     touch_layer::TouchLayer,
     view::{ViewData, ViewSubviews},
 };
@@ -31,6 +32,8 @@ impl TouchStack {
 
 impl TouchStack {
     fn layer_for(&mut self, view: WeakView) -> &mut TouchLayer {
+        let view = view.deref();
+
         let mut view_stack = vec![];
 
         view_stack.push(view.label().to_string());
@@ -57,6 +60,14 @@ impl TouchStack {
 impl TouchStack {
     pub fn touch_views() -> impl Iterator<Item = WeakView> {
         Self::get().stack.last().views().into_iter().rev()
+    }
+
+    pub fn scrolls() -> impl Iterator<Item = Weak<ScrollView>> {
+        Self::get().stack.last().scrolls().into_iter()
+    }
+
+    pub fn enable_scroll(scroll: Weak<ScrollView>) {
+        Self::get().layer_for(scroll).add_scroll(scroll);
     }
 
     pub fn enable_for(view: WeakView) {
