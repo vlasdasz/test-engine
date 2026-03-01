@@ -139,6 +139,7 @@ impl Setup for MenuView {
                                         })
                                         .place()
                                         .size(100, 20);
+                                    v.table.place().clear().back();
                                 });
 
                                 LevelManager::stop_level();

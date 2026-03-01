@@ -11,7 +11,7 @@ pub struct InfiniteCell {
 
 impl InfiniteCell {
     pub fn set_text(self: Weak<Self>, text: impl ToLabel) -> Weak<Self> {
-        self.label.set_text(text);
+        self.label.set_text(text).set_text_size(32);
         self
     }
 }

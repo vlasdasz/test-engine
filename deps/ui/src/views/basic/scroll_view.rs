@@ -170,24 +170,16 @@ impl ScrollView {
             return;
         }
 
-        dbg!(&self.inertia);
-
         let mut scroll = weak_from_ref(self);
 
         let anim = UIAnimation::new(move |_, _| {
             let inertia = scroll.inertia;
             scroll.on_scroll(inertia);
-            scroll.inertia *= 0.96;
-            dbg!(&scroll.inertia);
+            scroll.inertia *= 0.97;
         })
         .finish_condition(move || scroll.inertia.abs() <= 0.2);
 
-        anim.on_finish.sub(|| {
-            dbg!("No anime((");
-        });
-
         self.add_animation(anim);
-        dbg!("ANIMEE");
     }
 
     fn on_scroll(&mut self, scroll: f32) {

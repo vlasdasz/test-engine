@@ -27,7 +27,7 @@ pub struct InfiniteScrollTest {
     requesting: bool,
 
     #[init]
-    table: TableView,
+    pub table: TableView,
 }
 
 impl Setup for InfiniteScrollTest {
@@ -204,7 +204,7 @@ impl ViewTest for InfiniteScrollTest {
 
         assert_eq!(view.test_string, "|204||207||211|");
 
-        crate::ui_test::record_ui_test();
+        // crate::ui_test::record_ui_test();
 
         Ok(())
     }

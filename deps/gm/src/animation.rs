@@ -29,7 +29,7 @@ impl Animation {
     pub fn finished(&self) -> bool {
         Utc::now().timestamp_millis() >= self.stamp + LossyConvert::<i64>::lossy_convert(self.duration)
     }
-    
+
     pub fn active(&self) -> bool {
         !self.finished()
     }
