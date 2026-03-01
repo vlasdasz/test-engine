@@ -18,7 +18,7 @@ use crate::{
 };
 
 #[view_test]
-pub(super) struct InfiniteScrollTest {
+pub struct InfiniteScrollTest {
     pub(super) test_string: String,
 
     data: Vec<usize>,

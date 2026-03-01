@@ -16,8 +16,9 @@ use test_engine::{
     level::LevelManager,
     refs::{Own, Weak, manage::DataManager},
     ui::{
-        ALL_VIEWS, Alert, AlertErr, Image, Point, Setup, Spinner, TableData, TableView, UIManager, View,
-        ViewData, ViewFrame, all_view_tests, all_views, cast_cell, view,
+        ALL_VIEWS, AfterSetup, Alert, AlertErr, Button, Image, InfiniteScrollTest, Point, Setup, Spinner,
+        TableData, TableView, UIManager, View, ViewData, ViewFrame, ViewSubviews, all_view_tests, all_views,
+        cast_cell, view,
     },
 };
 
@@ -29,7 +30,7 @@ use crate::{
         polygon_view::PolygonView,
         render_view::RenderView,
         root_layout_view::RootLayoutView,
-        test_game_view::{MenuEntry, Node, NodeCell, ScaleCell, UIBenchmarkView},
+        test_game_view::{MenuEntry, Node, NodeCell, ScaleCell, TestGameView, UIBenchmarkView},
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
@@ -125,6 +126,23 @@ impl Setup for MenuView {
                                 test_engine::dispatch::spawn(async {
                                     Alert::show(format!("{:?}", Paths::pick_folder().await));
                                 });
+                            })
+                            .into(),
+                        MenuEntry::new("scroll")
+                            .action(|| {
+                                let view = InfiniteScrollTest::new();
+                                let view = view.after_setup(|v| {
+                                    v.add_view::<Button>()
+                                        .set_text("Back")
+                                        .on_tap(|| {
+                                            UIManager::set_view(TestGameView::new());
+                                        })
+                                        .place()
+                                        .size(100, 20);
+                                });
+
+                                LevelManager::stop_level();
+                                UIManager::set_view(view);
                             })
                             .into(),
                     ],
