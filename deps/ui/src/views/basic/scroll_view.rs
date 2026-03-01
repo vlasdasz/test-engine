@@ -9,7 +9,7 @@ use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    DELETED_VIEWS, Setup, Slider, Touch, TouchStack, UIEvent, UIManager, View, ViewCallbacks,
+    DELETED_VIEWS, NO_TOUCH_ID, Setup, Slider, Touch, TouchStack, UIEvent, UIManager, View, ViewCallbacks,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
@@ -21,6 +21,7 @@ mod test_engine {
 
 #[view]
 pub struct ScrollView {
+    inertia:            f32,
     previous_touch:     Point,
     content_size:       Size,
     pub on_scroll:      Event<f32>,
@@ -129,10 +130,12 @@ impl ViewSubviews for ScrollView {
 
 impl ScrollView {
     pub fn __process_scroll_touch(&mut self, touch: Touch) -> bool {
-        use crate::view::view_touch_internal::ViewTouchInternal;
-
         if touch.is_ended() {
-            self.reset_touch_id();
+            if touch.id == self.__view_base.touch_id {
+                self.add_inertia_animation();
+            }
+
+            self.__view_base.touch_id = NO_TOUCH_ID;
             return false;
         }
 
@@ -140,12 +143,12 @@ impl ScrollView {
         target_frame.origin.y -= self.__view_base.content_offset;
 
         if touch.is_began() && target_frame.contains(touch.position) {
-            self.set_touch_id(touch.id);
+            self.__view_base.touch_id = touch.id;
             self.previous_touch = touch.position;
             return true;
         }
 
-        if touch.is_moved() && self.touch_id() == touch.id {
+        if touch.is_moved() && self.__view_base.touch_id == touch.id {
             self.on_scroll(-(self.previous_touch.y - touch.position.y));
             self.previous_touch = touch.position;
             return true;
@@ -153,6 +156,8 @@ impl ScrollView {
 
         false
     }
+
+    fn add_inertia_animation(&mut self) {}
 
     fn on_scroll(&mut self, scroll: f32) {
         if self.height() >= self.content_size.height {

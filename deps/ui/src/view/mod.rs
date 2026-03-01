@@ -11,7 +11,6 @@ mod view_layout;
 mod view_subviews;
 mod view_test;
 mod view_touch;
-pub(crate) mod view_touch_internal;
 mod view_transition;
 
 pub use container::*;

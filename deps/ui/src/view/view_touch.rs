@@ -4,8 +4,10 @@ use refs::weak_from_ref;
 
 use crate::{
     Touch, TouchStack, UIManager, View, ViewTouchEvents, WeakView,
-    view::{ViewFrame, view_data::ViewData, view_touch_internal::ViewTouchInternal},
+    view::{ViewFrame, view_data::ViewData},
 };
+
+pub(crate) const NO_TOUCH_ID: usize = 0;
 
 pub trait ViewTouch {
     fn is_selected(&self) -> bool;
@@ -45,11 +47,12 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
     }
 
     let view = view.deref_mut();
+    let base_view = view.__base_view();
 
-    if touch.is_moved() && view.touch_id() == touch.id {
+    if touch.is_moved() && base_view.touch_id == touch.id {
         touch.position -= view.absolute_frame().origin;
-        view.__base_view().events.touch.all.trigger(*touch);
-        view.__base_view().events.touch.moved.trigger(*touch);
+        base_view.events.touch.all.trigger(*touch);
+        base_view.events.touch.moved.trigger(*touch);
         return true;
     }
 
@@ -57,15 +60,15 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         return false;
     }
 
-    if touch.is_ended() && view.touch_id() == touch.id {
+    if touch.is_ended() && base_view.touch_id == touch.id {
         let inside = view.absolute_frame().contains(touch.position);
 
         touch.position -= view.absolute_frame().origin;
-        view.reset_touch_id();
-        view.__base_view().events.touch.all.trigger(*touch);
+        base_view.touch_id = NO_TOUCH_ID;
+        base_view.events.touch.all.trigger(*touch);
 
         if inside && touch.is_ended() {
-            view.__base_view().events.touch.up_inside.trigger(*touch);
+            base_view.events.touch.up_inside.trigger(*touch);
         }
         return true;
     }
@@ -73,11 +76,11 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
     if view.absolute_frame().contains(touch.position) {
         touch.position -= view.absolute_frame().origin;
         if touch.is_began() {
-            view.set_touch_id(touch.id);
-            view.__base_view().events.touch.began.trigger(*touch);
+            base_view.touch_id = touch.id;
+            base_view.events.touch.began.trigger(*touch);
             UIManager::set_selected(weak_from_ref(view), true);
         }
-        view.__base_view().events.touch.all.trigger(*touch);
+        base_view.events.touch.all.trigger(*touch);
         return true;
     }
 

@@ -41,7 +41,7 @@ impl UIAnimation {
     }
 
     pub fn finish_condition(self, mut finish: impl FnMut() -> bool + Send + 'static) -> Self {
-        self.finish_condition.replace(move |_| finish());
+        self.finish_condition.replace(move |()| finish());
         self
     }
 
