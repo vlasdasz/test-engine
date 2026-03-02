@@ -17,31 +17,10 @@ use ui::{
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate as test_engine;
+use crate::{self as test_engine, ui::SpinnerLockGlobal};
 
 static CIRCLES_N: u32 = 6;
 static SPINNER: Mutex<Weak<Spinner>> = Mutex::new(Weak::const_default());
-
-pub struct SpinnerLock {
-    stopped: bool,
-}
-
-impl SpinnerLock {
-    pub fn animated_stop(mut self) {
-        self.stopped = true;
-        Spinner::stop();
-    }
-    pub fn stop(self) {}
-}
-
-impl Drop for SpinnerLock {
-    fn drop(&mut self) {
-        trace!("Spinner lock dropped");
-        if !self.stopped {
-            Spinner::instant_stop();
-        }
-    }
-}
 
 #[view]
 pub struct Spinner {
@@ -123,11 +102,13 @@ impl ViewCallbacks for Spinner {
 }
 
 impl Spinner {
-    pub fn lock() -> SpinnerLock {
+    pub fn lock() -> SpinnerLockGlobal {
         trace!("Lock spinner");
         Self::start();
-        SpinnerLock { stopped: false }
+        SpinnerLockGlobal { stopped: false }
     }
+    
+    // pub fn 
 
     fn start() {
         trace!("Start spinner");
