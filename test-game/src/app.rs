@@ -2,7 +2,6 @@
 
 use test_engine::{
     App,
-    net::RestAPI,
     refs::Own,
     ui::{Button, Label, Setup, Size, View},
 };
@@ -42,8 +41,6 @@ pub struct TestGameApp;
 
 impl App for TestGameApp {
     fn before_launch(&self) {
-        RestAPI::init("https://jsonplaceholder.typicode.com/");
-
         BUTTON.apply_globally::<Button>();
         BUTTON.apply_globally::<Label>();
     }

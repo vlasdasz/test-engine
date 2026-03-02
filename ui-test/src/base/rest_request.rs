@@ -10,6 +10,7 @@ use test_engine::{
     ui_test::{UITest, inject_touches},
 };
 
+static REST_API: RestAPI = RestAPI::new("https://jsonplaceholder.typicode.com/");
 static NOT_REQUESTED: AtomicBool = AtomicBool::new(false);
 
 #[view]
@@ -24,7 +25,7 @@ impl RestRequest {
         #[derive(Debug, Deserialize)]
         struct User {}
 
-        static REQUEST: Request<(), Vec<User>> = Request::new("users");
+        static REQUEST: Request<(), Vec<User>> = REST_API.request("users");
 
         let spin = Spinner::lock();
 
@@ -46,8 +47,6 @@ impl RestRequest {
 impl Setup for RestRequest {
     fn setup(self: Weak<Self>) {
         NOT_REQUESTED.store(true, Ordering::Relaxed);
-
-        RestAPI::init("https://jsonplaceholder.typicode.com/");
 
         self.button.set_frame((50, 50, 100, 100));
         self.button.set_text("Send");
