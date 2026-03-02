@@ -46,7 +46,7 @@ impl BenchmarkLevel {
         self.right_wall = self.make_sprite(Shape::Rect((6, 50).into()), (40, 0));
         self.right_wall.set_image(square);
 
-        self.bottom_moving = self.make_sprite(Shape::rect(6, 14), (0, -68));
+        self.bottom_moving = self.make_sprite(Shape::rect(6, 14), (0, -75));
         self.bottom_moving.set_image(square);
 
         self.left_animation = Animation::new(-80.0, -20.0, 2.0);

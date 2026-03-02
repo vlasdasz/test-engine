@@ -4566,6 +4566,7 @@ dependencies = [
  "ordered-float",
  "parry2d",
  "profiling",
+ "rayon",
  "rustc-hash 2.1.1",
  "simba",
  "static_assertions",
@@ -4737,9 +4738,9 @@ dependencies = [
 
 [[package]]
 name = "refs"
-version = "0.47.0"
+version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0c6d56ed072daaa9325ffcf5d8ddb83b521272746bbfa4dfabed959721cc5d3"
+checksum = "41697d9eaa9ce81275782032dc1565c32411a41772e0c48711f0889861a523a5"
 dependencies = [
  "anyhow",
  "hreads",
