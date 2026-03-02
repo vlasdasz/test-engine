@@ -1,7 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rapier2d::{geometry::ColliderHandle, na::Vector2};
+use rapier2d::{geometry::ColliderHandle, prelude::Vec2};
 use refs::{Own, Weak, weak_from_ref};
 
 use crate::{LevelManager, Sprite, SpriteData, ToCollider};
@@ -16,7 +16,7 @@ impl Sprite for Sensor {
         let collider = shape
             .make_collider()
             .sensor(true)
-            .translation(Vector2::new(position.x, position.y))
+            .translation(Vec2::new(position.x, position.y))
             .build();
 
         let sprite = SpriteData::make(shape, position);

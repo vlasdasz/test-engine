@@ -1,7 +1,10 @@
 use std::panic::catch_unwind;
 
 use gm::{checked_usize_to_u32, flat::Shape};
-use rapier2d::{math::Real, parry::transformation::vhacd::VHACDParameters, prelude::ColliderBuilder};
+use rapier2d::{
+    parry::transformation::vhacd::VHACDParameters,
+    prelude::{ColliderBuilder, Vec2},
+};
 use utils::{Elapsed, elapsed};
 
 pub trait ToCollider {
@@ -22,8 +25,8 @@ impl ToCollider for Shape {
     }
 }
 
-fn make_indices(points: &[gm::flat::Point]) -> (Vec<rapier2d::prelude::Point<Real>>, Vec<[u32; 2]>) {
-    let points: Vec<_> = points.iter().map(|p| rapier2d::prelude::Point::<Real>::new(p.x, p.y)).collect();
+fn make_indices(points: &[gm::flat::Point]) -> (Vec<Vec2>, Vec<[u32; 2]>) {
+    let points: Vec<_> = points.iter().map(|p| Vec2::new(p.x, p.y)).collect();
     let indices: Vec<_> = (0..u32::try_from(points.len()).unwrap() - 1)
         .map(|i| [i, i + 1])
         .chain([[checked_usize_to_u32(points.len()) - 1, 0]])
@@ -33,7 +36,7 @@ fn make_indices(points: &[gm::flat::Point]) -> (Vec<rapier2d::prelude::Point<Rea
 
 fn polyline_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
     let (points, indices) = make_indices(points);
-    ColliderBuilder::polyline(points, indices.into())
+    ColliderBuilder::polyline(points, Some(indices))
 }
 
 fn convex_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
@@ -51,7 +54,7 @@ fn _concave_collider(points: &[gm::flat::Point]) -> ColliderBuilder {
     let result = catch_unwind(|| {
         ColliderBuilder::convex_decomposition_with_params(
             &points,
-            &indices,
+            &indices.iter().map(|&[a, b]| [a, b]).collect::<Vec<_>>(),
             &VHACDParameters {
                 concavity: 0.0,
                 ..Default::default()
