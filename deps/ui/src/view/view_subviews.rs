@@ -3,7 +3,7 @@ use std::{any::type_name, ops::DerefMut};
 use gm::{LossyConvert, color::Color};
 use refs::{Own, Weak, weak_from_ref};
 
-use crate::{Container, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{Container, DELETED_VIEWS, UIManager, View, ViewData, ViewFrame, WeakView};
 
 pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
@@ -57,7 +57,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn remove_from_superview(&mut self) {
         let removed = self.take_from_superview();
-        UIManager::get().deleted_views.lock().push(removed);
+        DELETED_VIEWS.lock().push(removed);
     }
 
     fn take_from_superview(&mut self) -> Own<dyn View> {
@@ -70,7 +70,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     default fn remove_all_subviews(&self) {
-        UIManager::get().deleted_views.lock().append(&mut self.__base_view().subviews);
+        DELETED_VIEWS.lock().append(&mut self.__base_view().subviews);
     }
 
     fn add_view<V: 'static + View + Default>(&self) -> Weak<V> {

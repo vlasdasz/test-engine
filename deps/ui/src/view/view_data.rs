@@ -2,9 +2,9 @@ use std::ops::DerefMut;
 
 use gm::{ToF32, color::Color};
 use refs::{Own, Weak};
-use vents::{Event, OnceEvent};
+use vents::Event;
 
-use crate::{NavigationView, Style, UIAnimation, View, WeakView, layout::Placer};
+use crate::{NavigationView, Style, UIAnimation, UIManager, View, WeakView, layout::Placer};
 
 pub trait ViewData {
     fn tag(&self) -> usize;
@@ -43,8 +43,6 @@ pub trait ViewData {
     fn label(&self) -> &str;
     fn set_label(&mut self, label: impl ToString) -> &mut Self;
 
-    fn animations(&mut self) -> &mut Vec<UIAnimation>;
-
     fn dont_hide(&self) -> bool;
 
     fn position_changed(&self) -> &Event;
@@ -54,7 +52,7 @@ pub trait ViewData {
 
     fn steal_appearance(&self, other: WeakView) -> &Self;
 
-    fn __after_setup_event(&self) -> &OnceEvent;
+    fn add_animation(&self, anim: UIAnimation);
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -162,10 +160,6 @@ impl<T: ?Sized + View> ViewData for T {
         self
     }
 
-    fn animations(&mut self) -> &mut Vec<UIAnimation> {
-        &mut self.__base_view().animations
-    }
-
     fn dont_hide(&self) -> bool {
         self.__base_view().dont_hide_off_screen
     }
@@ -181,10 +175,6 @@ impl<T: ?Sized + View> ViewData for T {
     fn apply_style(&self, style: Style) -> &Self {
         style.apply(self.weak_view().deref_mut());
         self
-    }
-
-    fn __after_setup_event(&self) -> &OnceEvent {
-        &self.__base_view().after_setup
     }
 
     fn border_width(&self) -> f32 {
@@ -204,6 +194,11 @@ impl<T: ?Sized + View> ViewData for T {
         this.set_corner_radius(other.corner_radius());
         self
     }
+
+    fn add_animation(&self, mut anim: UIAnimation) {
+        anim.view = self.weak_view();
+        UIManager::add_animation(anim);
+    }
 }
 
 pub trait AfterSetup {
@@ -213,7 +208,7 @@ pub trait AfterSetup {
 impl<T: ?Sized + View + 'static> AfterSetup for T {
     fn after_setup(self: Own<Self>, action: impl FnOnce(Weak<Self>) + Send + 'static) -> Own<Self> {
         let weak = self.weak();
-        self.__base_view().after_setup.sub(move || {
+        self.__base_view().events.setup.sub(move || {
             action(weak);
         });
         self

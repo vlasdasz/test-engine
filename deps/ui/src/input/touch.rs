@@ -7,7 +7,7 @@ use crate::{TouchLock, input::TouchEvent};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Touch {
-    pub id:       u64,
+    pub id:       usize,
     pub position: Point,
     pub event:    TouchEvent,
     pub button:   MouseButton,

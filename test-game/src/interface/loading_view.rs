@@ -7,14 +7,13 @@ use test_engine::{
     refs::{Weak, manage::DataManager},
     ui::{
         AlertErr, CLEAR, Container, Image, LIGHT_BLUE, Label, ProgressView, Setup, Spinner, UIManager,
-        ViewData, ViewSubviews, ViewTest, view_test,
+        ViewData, ViewSubviews, ViewTest, view,
     },
-    ui_test::record_ui_test,
 };
 
 use crate::interface::test_game_view::TestGameView;
 
-#[view_test]
+#[view]
 pub struct LoadingView {
     #[init]
     spinner:  Container,
@@ -96,7 +95,7 @@ impl LoadingView {
 
 impl ViewTest for LoadingView {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        record_ui_test();
+        // record_ui_test();
 
         Ok(())
     }

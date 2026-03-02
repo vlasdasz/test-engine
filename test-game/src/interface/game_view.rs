@@ -2,7 +2,7 @@ use std::ops::DerefMut;
 
 use test_engine::{
     RenderPass,
-    game::{Game, GameDrawer, Object},
+    game::{Game, GameDrawer, Object, Shape},
     refs::{Own, Weak, manage::DataManager},
     ui::{Image, Point, Setup, ViewCallbacks, ViewData, ViewTest, view_test},
     ui_test::check_colors,
@@ -19,14 +19,14 @@ impl Setup for GameView {
     fn setup(mut self: Weak<Self>) {
         self.apply_style(HAS_BACK_BUTTON);
 
-        self.game.background = Image::get("sky.png");
+        self.game.skybox = Image::get("sky.png");
 
         self.game.objects.push(Own::new(Object {
             position: Point::default(),
-            size:     (5, 10).into(),
             rotation: 0.0,
-            image:    Image::get("cat.png"),
-            velocity: (0.01, 0.01).into(),
+            texture:  Image::get("cat.png"),
+            velocity: (0.1, 0.1).into(),
+            shape:    Shape::Rect((5, 10).into()),
         }));
     }
 }

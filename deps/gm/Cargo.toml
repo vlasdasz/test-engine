@@ -16,3 +16,6 @@ educe = { workspace = true }
 fastrand = { workspace = true }
 lyon = { workspace = true }
 serde = { workspace = true }
+
+hreads = { workspace = true }
+refs = { workspace = true }

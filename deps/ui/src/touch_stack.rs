@@ -1,10 +1,12 @@
-use std::sync::OnceLock;
+use std::{ops::Deref, sync::OnceLock};
 
+use hreads::from_main;
 use nonempty::NonEmpty;
 use parking_lot::{Mutex, MutexGuard};
+use refs::Weak;
 
 use crate::{
-    UIManager, View, WeakView,
+    ScrollView, UIManager, View, WeakView,
     touch_layer::TouchLayer,
     view::{ViewData, ViewSubviews},
 };
@@ -30,6 +32,8 @@ impl TouchStack {
 
 impl TouchStack {
     fn layer_for(&mut self, view: WeakView) -> &mut TouchLayer {
+        let view = view.deref();
+
         let mut view_stack = vec![];
 
         view_stack.push(view.label().to_string());
@@ -56,6 +60,14 @@ impl TouchStack {
 impl TouchStack {
     pub fn touch_views() -> impl Iterator<Item = WeakView> {
         Self::get().stack.last().views().into_iter().rev()
+    }
+
+    pub fn scrolls() -> impl Iterator<Item = Weak<ScrollView>> {
+        Self::get().stack.last().scrolls().into_iter()
+    }
+
+    pub fn enable_scroll(scroll: Weak<ScrollView>) {
+        Self::get().layer_for(scroll).add_scroll(scroll);
     }
 
     pub fn enable_for(view: WeakView) {
@@ -102,24 +114,26 @@ impl TouchStack {
     }
 
     pub fn dump() -> Vec<Vec<String>> {
-        UIManager::free_deleted_views();
-        TouchStack::get().clear_freed();
+        from_main(|| {
+            UIManager::free_deleted_views();
+            TouchStack::get().clear_freed();
 
-        let mut result = vec![];
+            let mut result = vec![];
 
-        for layer in &Self::get().stack {
-            let mut layer_vec = vec![];
+            for layer in &Self::get().stack {
+                let mut layer_vec = vec![];
 
-            layer_vec.push(format!("Layer: {}", layer.root_name()));
+                layer_vec.push(format!("Layer: {}", layer.root_name()));
 
-            for view in layer.views() {
-                assert!(view.is_ok(), "Null view in touch stack");
-                layer_vec.push(view.label().to_string());
+                for view in layer.views() {
+                    assert!(view.is_ok(), "Null view in touch stack");
+                    layer_vec.push(view.label().to_string());
+                }
+
+                result.push(layer_vec);
             }
 
-            result.push(layer_vec);
-        }
-
-        result
+            result
+        })
     }
 }

@@ -15,7 +15,7 @@ mod tracked_cell;
 pub mod volume;
 
 pub use animation::Animation;
-pub use misc::{Apply, Toggle};
+pub use misc::{Apply, Toggle, drop_on_main};
 pub use num::{
     CheckedSub, IsZero, Min, MyAdd, One, Zero,
     checked_convert::{CheckedConvert, checked_usize_to_u32},

@@ -46,7 +46,7 @@ fn main() -> Result<()> {
 
     AppRunner::start_with_actor(async {
         Label::set_default_text_size(32);
-        UIManager::set_display_touches(true);
+        UIManager::set_display_touches(false);
 
         from_main(|| {
             UIManager::override_scale(1.0);
@@ -70,13 +70,13 @@ fn main() -> Result<()> {
             return Ok(());
         }
 
-        for (_name, test) in tests.into_iter() {
-            test()?;
-        }
-
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 
         for i in 1..=cycles {
+            for (_name, test) in tests.iter() {
+                test()?;
+            }
+
             test().await?;
             info!("Cycle {i}: OK");
         }

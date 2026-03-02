@@ -1,8 +1,14 @@
-use std::any::Any;
+use std::{
+    any::Any,
+    fs::OpenOptions,
+    io::{Read, Write},
+    path::PathBuf,
+};
 
 use anyhow::Result;
 use netrun::Function;
 use test_engine::{
+    Platform,
     audio::Sound,
     dispatch::{after, from_back, spawn},
     filesystem::Paths,
@@ -10,8 +16,9 @@ use test_engine::{
     level::LevelManager,
     refs::{Own, Weak, manage::DataManager},
     ui::{
-        ALL_VIEWS, Alert, AlertErr, Image, Point, Setup, Spinner, TableData, TableView, UIManager, View,
-        ViewData, ViewFrame, ViewTest, all_view_tests, all_views, cast_cell, view_test,
+        ALL_VIEWS, AfterSetup, Alert, AlertErr, Button, Image, InfiniteScrollTest, Point, Setup, Spinner,
+        TableData, TableView, UIManager, View, ViewData, ViewFrame, ViewSubviews, all_view_tests, all_views,
+        cast_cell, view,
     },
 };
 
@@ -23,67 +30,239 @@ use crate::{
         polygon_view::PolygonView,
         render_view::RenderView,
         root_layout_view::RootLayoutView,
-        test_game_view::{Node, NodeCell, ScaleCell, UIBenchmarkView},
+        test_game_view::{MenuEntry, Node, NodeCell, ScaleCell, TestGameView, UIBenchmarkView},
     },
     levels::{BenchmarkLevel, TestLevel},
     no_physics::NoPhysicsView,
 };
 
-#[view_test]
+#[view]
 pub struct MenuView {
-    root: Node,
+    root: Node<MenuEntry>,
 
     #[init]
     table: TableView,
 }
 
 impl Setup for MenuView {
+    #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         // UIManager::override_scale(2.0);
 
         self.table.set_data_source(self).place().back();
 
         self.root = Node::new(
-            "Root",
+            MenuEntry::new("Root"),
             vec![
                 Node::new(
-                    "Scenes",
+                    MenuEntry::new("Scenes"),
                     vec![
-                        Node::empty("main"),
-                        Node::empty("ui bench"),
-                        Node::empty("polygon"),
-                        Node::empty("noise"),
-                        Node::empty("render"),
-                        Node::empty("no physics"),
-                        Node::empty("root view"),
-                        Node::empty("empty game"),
+                        MenuEntry::new("main")
+                            .action(|| {
+                                *LevelManager::camera_pos() = Point::default();
+                                LevelManager::set_level(TestLevel::default());
+                            })
+                            .into(),
+                        MenuEntry::new("ui bench")
+                            .action(|| {
+                                LevelManager::stop_level();
+                                UIManager::set_view(UIBenchmarkView::new());
+                            })
+                            .into(),
+                        MenuEntry::new("polygon")
+                            .action(|| UIManager::set_view(PolygonView::new()))
+                            .into(),
+                        MenuEntry::new("noise")
+                            .action(|| {
+                                LevelManager::stop_level();
+                                UIManager::set_view(NoiseView::new().on_back(|| {
+                                    UIManager::set_view(Self::new());
+                                }));
+                            })
+                            .into(),
+                        MenuEntry::new("render")
+                            .action(|| {
+                                LevelManager::stop_level();
+                                UIManager::set_view(RenderView::new());
+                            })
+                            .into(),
+                        MenuEntry::new("no physics")
+                            .action(|| UIManager::set_view(NoPhysicsView::new()))
+                            .into(),
+                        MenuEntry::new("root view")
+                            .action(|| {
+                                LevelManager::stop_level();
+                                UIManager::set_view(RootLayoutView::new());
+                            })
+                            .into(),
+                        MenuEntry::new("empty game")
+                            .action(|| {
+                                LevelManager::stop_level();
+                                UIManager::set_view(GameView::new());
+                            })
+                            .into(),
                     ],
                 ),
                 Node::new(
-                    "UI",
+                    MenuEntry::new("UI"),
                     vec![
-                        Node::empty("ui scale"),
-                        Node::empty("sound"),
-                        Node::empty("alert"),
-                        Node::empty("spinner"),
-                        Node::empty("pick folder"),
+                        MenuEntry::new("ui scale").into(),
+                        MenuEntry::new("sound").action(|| Sound::get("retro.wav").play()).into(),
+                        MenuEntry::new("alert")
+                            .action(|| {
+                                Alert::show("Hello!");
+                            })
+                            .into(),
+                        MenuEntry::new("spinner")
+                            .action(|| {
+                                let spin = Spinner::lock();
+                                after(2.0, || {
+                                    spin.animated_stop();
+                                });
+                            })
+                            .into(),
+                        MenuEntry::new("pick folder")
+                            .action(|| {
+                                test_engine::dispatch::spawn(async {
+                                    Alert::show(format!("{:?}", Paths::pick_folder().await));
+                                });
+                            })
+                            .into(),
+                        MenuEntry::new("scroll")
+                            .action(|| {
+                                let view = InfiniteScrollTest::new();
+                                let view = view.after_setup(|v| {
+                                    v.add_view::<Button>()
+                                        .set_text("Back")
+                                        .on_tap(|| {
+                                            UIManager::set_view(TestGameView::new());
+                                        })
+                                        .place()
+                                        .size(100, 20);
+                                    v.table.place().clear().back();
+                                });
+
+                                LevelManager::stop_level();
+                                UIManager::set_view(view);
+                            })
+                            .into(),
                     ],
                 ),
-                Node::new("Level", vec![Node::empty("benchmark"), Node::empty("lvl scale")]),
                 Node::new(
-                    "System",
+                    MenuEntry::new("Level"),
                     vec![
-                        Node::empty("system info"),
-                        Node::empty("add box"),
-                        Node::empty("load assets"),
-                        Node::empty("request"),
-                        Node::empty("all views"),
-                        Node::empty("panic"),
+                        MenuEntry::new("benchmark")
+                            .action(|| {
+                                *LevelManager::camera_pos() = Point::default();
+                                LevelManager::set_level(BenchmarkLevel::default());
+                            })
+                            .into(),
+                        MenuEntry::new("lvl scale").into(),
+                    ],
+                ),
+                Node::new(
+                    MenuEntry::new("System"),
+                    vec![
+                        MenuEntry::new("system info")
+                            .action(|| {
+                                Alert::with_label(|l| {
+                                    l.set_text_size(15);
+                                })
+                                .show(netrun::System::get_info().dump());
+                            })
+                            .into(),
+                        MenuEntry::new("cloud")
+                            .action(|| {
+                                let Some(path) = UIManager::cloud_storage_dir() else {
+                                    Alert::show("No path!");
+                                    return;
+                                };
+
+                                let path = path.to_string_lossy();
+                                let path = path.trim_start_matches("file://");
+
+                                let mut path = PathBuf::from(path);
+
+                                dbg!(&path);
+
+                                // 2. IMPORTANT: Append "Documents"
+                                // iCloud only syncs/shows files inside this specific subfolder
+                                path.push("Documents");
+
+                                dbg!(&path);
+
+                                // 3. Create the Documents directory if it's missing
+                                if !path.exists() {
+                                    std::fs::create_dir_all(&path).unwrap();
+                                }
+
+                                let mut file = OpenOptions::new()
+                                    .read(true)
+                                    .write(true)
+                                    .create(true)
+                                    .truncate(true)
+                                    .open(path.join("data.txt"))
+                                    .unwrap();
+
+                                // 2. Read existing content
+                                let mut content = String::new();
+                                dbg!(&content);
+                                file.read_to_string(&mut content).unwrap();
+
+                                let mut number: i32 = content.parse().unwrap_or_default();
+
+                                println!("Existing content: '{number}'");
+
+                                number += 1;
+
+                                // 3. Write new content
+                                // Note: After reading, the cursor is at the end of the file.
+                                // If you want to overwrite or append, manage the cursor or use .append(true)
+                                file.write_all(number.to_string().as_bytes()).unwrap();
+
+                                Alert::show(format!("{}", path.display()));
+                            })
+                            .enabled(Platform::IOS)
+                            .into(),
+                        MenuEntry::new("add box")
+                            .action(|| {
+                                let mut level = LevelManager::downcast_level::<TestLevel>();
+                                level.add_random_box((-20, 40));
+                            })
+                            .into(),
+                        MenuEntry::new("load assets")
+                            .action(|| {
+                                from_back(load_assets_test, |result| {
+                                    let Some(image) = result.alert_err() else {
+                                        return;
+                                    };
+
+                                    LevelManager::level_weak().background = image;
+                                });
+                            })
+                            .into(),
+                        MenuEntry::new("request")
+                            .action(move || {
+                                spawn(async move {
+                                    self.rest_pressed().await.unwrap();
+                                });
+                            })
+                            .into(),
+                        MenuEntry::new("all views")
+                            .action(|| {
+                                dbg!(all_views!());
+                                dbg!(ALL_VIEWS);
+                                dbg!(all_view_tests!());
+                            })
+                            .into(),
+                        MenuEntry::new("panic").action(|| panic!("test panic")).into(),
                     ],
                 ),
             ],
         )
         .open();
+
+        self.root.retain(MenuEntry::is_enabled);
     }
 
     fn inspect(self: Weak<Self>) {
@@ -102,12 +281,12 @@ impl TableData for MenuView {
 
     fn make_cell(mut self: Weak<Self>, index: usize) -> Own<dyn View> {
         let node = self.root.val_at_index(index);
-        if node.value == "ui scale" {
+        if node.value.label == "ui scale" {
             ScaleCell::make(
                 Function::new(|()| UIManager::scale()),
                 Function::new(UIManager::set_scale),
             )
-        } else if node.value == "lvl scale" {
+        } else if node.value.label == "lvl scale" {
             ScaleCell::make(
                 Function::new(|()| LevelManager::scale()),
                 Function::new(LevelManager::set_scale),
@@ -119,7 +298,7 @@ impl TableData for MenuView {
 
     fn setup_cell(mut self: Weak<Self>, cell: &mut dyn Any, index: usize) {
         let node = self.root.val_at_index(index);
-        if node.value == "ui scale" || node.value == "lvl scale" {
+        if node.value.label == "ui scale" || node.value.label == "lvl scale" {
             cast_cell!(ScaleCell).set_node(node);
         } else {
             cast_cell!(NodeCell).set_node(node);
@@ -130,8 +309,7 @@ impl TableData for MenuView {
         let val = self.root.val_at_index(index);
 
         if val.is_leaf() {
-            let command = val.value.clone();
-            self.command(command);
+            val.value.run();
             return;
         }
 
@@ -142,99 +320,6 @@ impl TableData for MenuView {
 }
 
 impl MenuView {
-    fn command(self: Weak<Self>, command: String) {
-        match command.as_str() {
-            "panic" => {
-                panic!("test panic");
-            }
-            "request" => {
-                spawn(async move {
-                    self.rest_pressed().await.unwrap();
-                });
-            }
-            "pick folder" => {
-                test_engine::dispatch::spawn(async {
-                    Alert::show(format!("{:?}", Paths::pick_folder().await));
-                });
-            }
-            "render" => {
-                LevelManager::stop_level();
-                UIManager::set_view(RenderView::new());
-            }
-            "no physics" => {
-                UIManager::set_view(NoPhysicsView::new());
-            }
-            "noise" => {
-                LevelManager::stop_level();
-                UIManager::set_view(NoiseView::new().on_back(|| {
-                    UIManager::set_view(Self::new());
-                }));
-            }
-            "all views" => {
-                dbg!(all_views!());
-                dbg!(ALL_VIEWS);
-                dbg!(all_view_tests!());
-            }
-            "ui bench" => {
-                LevelManager::stop_level();
-                UIManager::set_view(UIBenchmarkView::new());
-            }
-            "polygon" => {
-                UIManager::set_view(PolygonView::new());
-            }
-            "benchmark" => {
-                *LevelManager::camera_pos() = Point::default();
-                LevelManager::set_level(BenchmarkLevel::default());
-            }
-            "root view" => {
-                LevelManager::stop_level();
-                UIManager::set_view(RootLayoutView::new());
-            }
-            "empty game" => {
-                LevelManager::stop_level();
-                UIManager::set_view(GameView::new());
-            }
-            "add box" => {
-                let mut level = LevelManager::downcast_level::<TestLevel>();
-                level.add_random_box((-20, 40));
-            }
-            "sound" => {
-                Sound::get("retro.wav").play();
-            }
-            "alert" => {
-                Alert::show("Hello!");
-            }
-            "spinner" => {
-                let spin = Spinner::lock();
-                after(2.0, || {
-                    spin.animated_stop();
-                });
-            }
-            "main" => {
-                *LevelManager::camera_pos() = Point::default();
-                LevelManager::set_level(TestLevel::default());
-            }
-            "system info" => {
-                Alert::with_label(|l| {
-                    l.set_text_size(15);
-                })
-                .show(netrun::System::get_info().dump());
-            }
-            "load assets" => {
-                from_back(load_assets_test, |result| {
-                    let Some(image) = result.alert_err() else {
-                        return;
-                    };
-
-                    LevelManager::level_weak().background = image;
-                });
-            }
-            _ => {
-                panic!("Invalid command: {command}");
-            }
-        }
-    }
-
     async fn rest_pressed(self: Weak<Self>) -> anyhow::Result<()> {
         let spin = Spinner::lock();
 
@@ -247,14 +332,6 @@ impl MenuView {
             users.len(),
             users.first().unwrap().name
         ));
-
-        Ok(())
-    }
-}
-
-impl ViewTest for MenuView {
-    fn perform_test(_view: Weak<Self>) -> Result<()> {
-        // record_ui_test();
 
         Ok(())
     }

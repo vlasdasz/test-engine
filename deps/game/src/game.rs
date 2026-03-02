@@ -5,8 +5,8 @@ use crate::object::Object;
 
 #[derive(Default)]
 pub struct Game {
-    pub objects:    Vec<Own<Object>>,
-    pub background: Weak<Image>,
+    pub objects: Vec<Own<Object>>,
+    pub skybox:  Weak<Image>,
 }
 
 impl Game {

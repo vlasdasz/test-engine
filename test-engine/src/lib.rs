@@ -23,7 +23,7 @@ pub use educe;
 pub use ui::{ui_proc::launch_app, ui_test};
 
 pub mod game {
-    pub use ::game::{Game, Object};
+    pub use ::game::*;
 
     pub use crate::game_drawer::GameDrawer;
 }
@@ -87,6 +87,7 @@ pub mod net {
 }
 
 pub mod dispatch {
+    pub use ::gm::drop_on_main;
     #[cfg(not_wasm)]
     pub use ::hreads::first_ok;
     pub use ::hreads::{after, from_main, ok_main, on_main, sleep, spawn, wait_async, wait_for_next_frame};

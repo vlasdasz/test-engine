@@ -1,15 +1,16 @@
-use gm::flat::{Point, Size};
 use refs::Weak;
 use window::image::Image;
 
+use crate::{Point, Rotation, Shape};
+
 pub struct Object {
     pub position: Point,
-    pub size:     Size,
-    pub rotation: f32,
-
-    pub image: Weak<Image>,
-
     pub velocity: Point,
+
+    pub shape:    Shape,
+    pub rotation: Rotation,
+
+    pub texture: Weak<Image>,
 }
 
 impl Object {

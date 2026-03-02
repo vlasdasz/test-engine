@@ -1,6 +1,6 @@
 use anyhow::Result;
 use test_engine::{
-    dispatch::wait_for_next_frame,
+    dispatch::{on_main, wait_for_next_frame},
     refs::Own,
     ui::{UIManager, view},
     ui_test::{UITest, inject_key},
@@ -13,39 +13,43 @@ pub async fn test_keymap() -> Result<()> {
     let view = UITest::start::<Keymap>();
 
     let presses = Own::new(0);
-    let mut presses = presses.weak();
+    let mut pr = presses.weak();
 
-    assert_eq!(*presses, 0);
+    assert_eq!(*pr, 0);
 
     UIManager::keymap().add(view, 'g', move || {
-        *presses += 1;
+        *pr += 1;
     });
 
-    assert_eq!(*presses, 0);
+    assert_eq!(*pr, 0);
 
     inject_key('a');
-    assert_eq!(*presses, 0);
+    assert_eq!(*pr, 0);
 
     inject_key('b');
-    assert_eq!(*presses, 0);
+    assert_eq!(*pr, 0);
 
     inject_key('c');
-    assert_eq!(*presses, 0);
+    assert_eq!(*pr, 0);
 
     inject_key('g');
-    assert_eq!(*presses, 1);
+    assert_eq!(*pr, 1);
 
     inject_key('g');
-    assert_eq!(*presses, 2);
+    assert_eq!(*pr, 2);
 
     UITest::start::<Keymap>();
     wait_for_next_frame();
 
     inject_key('g');
-    assert_eq!(*presses, 2);
+    assert_eq!(*pr, 2);
 
     inject_key('g');
-    assert_eq!(*presses, 2);
+    assert_eq!(*pr, 2);
+
+    on_main(move || {
+        drop(presses);
+    });
 
     Ok(())
 }

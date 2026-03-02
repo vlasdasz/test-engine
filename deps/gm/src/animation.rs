@@ -30,6 +30,10 @@ impl Animation {
         Utc::now().timestamp_millis() >= self.stamp + LossyConvert::<i64>::lossy_convert(self.duration)
     }
 
+    pub fn active(&self) -> bool {
+        !self.finished()
+    }
+
     pub fn value(&self) -> f32 {
         let now = Utc::now().timestamp_millis();
         let delta: f32 = (now - self.stamp).lossy_convert();

@@ -1,4 +1,4 @@
-use gm::volume::GyroData;
+use gm::{flat::Point, volume::GyroData};
 use refs::main_lock::MainLock;
 use vents::Event;
 use window::NamedKey;
@@ -10,6 +10,7 @@ static UI_EVENTS: MainLock<UIEvents> = MainLock::new();
 #[derive(Default)]
 pub struct UIEvents {
     on_touch:       Event<Touch>,
+    on_scroll:      UIEvent<Point>,
     on_debug_touch: Event<Touch>,
     size_changed:   UIEvent<()>,
     gyro:           UIEvent<GyroData>,
@@ -20,6 +21,10 @@ pub struct UIEvents {
 impl UIEvents {
     pub fn on_touch() -> &'static Event<Touch> {
         &UI_EVENTS.on_touch
+    }
+
+    pub fn on_scroll() -> &'static UIEvent<Point> {
+        &UI_EVENTS.on_scroll
     }
 
     /// Always triggered

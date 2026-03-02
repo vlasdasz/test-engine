@@ -4,7 +4,7 @@ use test_engine::{
     ui::{Anchor::Left, Button, Label, TextAlignment, UIImages, ViewData, view},
 };
 
-use crate::interface::test_game_view::Node;
+use crate::interface::test_game_view::{MenuEntry, Node};
 
 #[view]
 pub struct NodeCell {
@@ -14,14 +14,14 @@ pub struct NodeCell {
 }
 
 impl NodeCell {
-    pub fn set_node(self: Weak<Self>, node: &Node) {
+    pub fn set_node(self: Weak<Self>, node: &Node<MenuEntry>) {
         self.button.set_image(if node.open {
             UIImages::down()
         } else {
             UIImages::right()
         });
 
-        self.label.set_text(&node.value);
+        self.label.set_text(node.value.label);
 
         self.button
             .place()

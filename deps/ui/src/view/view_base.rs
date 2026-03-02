@@ -5,7 +5,7 @@ use gm::{color::Color, flat::Rect};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{NavigationView, Touch, UIAnimation, View, WeakView, layout::Placer};
+use crate::{NavigationView, Touch, View, WeakView, layout::Placer};
 
 #[derive(Educe)]
 #[educe(Default, Debug)]
@@ -39,7 +39,7 @@ pub struct ViewBase {
     pub(crate) subviews: Vec<Own<dyn View>>,
 
     #[educe(Debug(ignore))]
-    pub(crate) touch_id: u64,
+    pub(crate) touch_id: usize,
 
     #[educe(Debug(ignore))]
     pub(crate) is_selected: bool,
@@ -50,9 +50,6 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) navigation_view: Weak<NavigationView>,
 
-    #[educe(Debug(ignore))]
-    pub(crate) animations: Vec<UIAnimation>,
-
     pub view_label: String,
 
     #[educe(Debug(ignore))]
@@ -60,7 +57,7 @@ pub struct ViewBase {
     pub(crate) placer: Placer,
 
     #[educe(Debug(ignore))]
-    pub touch: ViewTouchCallbacks,
+    pub events: ViewEvents,
 
     #[educe(Debug(ignore))]
     pub(crate) dont_hide_off_screen: bool,
@@ -75,15 +72,19 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) size_changed:     Event,
 
-    #[educe(Debug(ignore))]
-    pub(crate) after_setup:         OnceEvent,
     pub(crate) ignore_global_style: bool,
 
     pub tag: usize,
 }
 
 #[derive(Default)]
-pub struct ViewTouchCallbacks {
+pub struct ViewEvents {
+    pub touch: ViewTouchEvents,
+    pub setup: OnceEvent,
+}
+
+#[derive(Default)]
+pub struct ViewTouchEvents {
     pub all:       Event<Touch>,
     pub began:     Event<Touch>,
     pub moved:     Event<Touch>,

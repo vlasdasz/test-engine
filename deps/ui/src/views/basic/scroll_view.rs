@@ -1,12 +1,16 @@
 use std::ops::Neg;
 
-use gm::{ToF32, flat::Size};
-use refs::Weak;
+use gm::{
+    ToF32,
+    flat::{Point, Size},
+};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 
 use crate::{
-    Setup, Slider, UIManager, View, ViewCallbacks,
+    DELETED_VIEWS, NO_TOUCH_ID, Setup, Slider, Touch, TouchStack, UIAnimation, UIEvent, UIManager, View,
+    ViewCallbacks,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
@@ -18,8 +22,11 @@ mod test_engine {
 
 #[view]
 pub struct ScrollView {
-    content_size:  Size,
-    pub on_scroll: Event<f32>,
+    inertia:            f32,
+    previous_touch:     Point,
+    content_size:       Size,
+    pub on_scroll:      Event<f32>,
+    pub bottom_reached: UIEvent,
 
     #[init]
     slider: Slider,
@@ -92,6 +99,8 @@ impl Setup for ScrollView {
         self.size_changed().sub(move || {
             self.on_scroll(0.0);
         });
+
+        TouchStack::enable_scroll(self);
     }
 }
 
@@ -116,17 +125,74 @@ impl ViewSubviews for ScrollView {
             .__base_view()
             .subviews
             .extract_if(.., move |v| v.raw() != self.slider.raw());
-        UIManager::get().deleted_views.lock().extend(to_remove);
+        DELETED_VIEWS.lock().extend(to_remove);
     }
 }
 
 impl ScrollView {
-    fn on_scroll(mut self: Weak<Self>, scroll: f32) {
+    pub fn __process_scroll_touch(&mut self, touch: Touch) -> bool {
+        if touch.is_ended() {
+            if touch.id == self.__view_base.touch_id {
+                self.add_inertia_animation();
+            }
+
+            self.__view_base.touch_id = NO_TOUCH_ID;
+            return false;
+        }
+
+        let mut target_frame = self.__view_base.absolute_frame;
+        target_frame.origin.y -= self.__view_base.content_offset;
+
+        if touch.is_began() && target_frame.contains(touch.position) {
+            self.__view_base.touch_id = touch.id;
+            self.previous_touch = touch.position;
+            return true;
+        }
+
+        if touch.is_moved() && self.__view_base.touch_id == touch.id {
+            let delta = -(self.previous_touch.y - touch.position.y);
+            self.previous_touch = touch.position;
+
+            if delta == 0.0 {
+                return true;
+            }
+
+            self.inertia = delta;
+            self.on_scroll(delta);
+            return true;
+        }
+
+        false
+    }
+
+    fn add_inertia_animation(&self) {
+        if self.inertia == 0.0 {
+            return;
+        }
+
+        let mut scroll = weak_from_ref(self);
+
+        let anim = UIAnimation::new(move |_, _| {
+            let inertia = scroll.inertia;
+            scroll.on_scroll(inertia);
+            scroll.inertia *= 0.97;
+        })
+        .finish_condition(move || scroll.inertia.abs() <= 0.2);
+
+        self.add_animation(anim);
+    }
+
+    fn on_scroll(&mut self, scroll: f32) {
         if self.height() >= self.content_size.height {
             return;
         }
         self.__view_base.content_offset += scroll;
         let range = self.content_size.height - self.height();
+
+        if self.__view_base.content_offset <= -range {
+            self.bottom_reached.trigger(());
+        }
+
         self.__view_base.content_offset = self.__view_base.content_offset.clamp(-range, 0.0);
         let slider_val = -self.__view_base.content_offset / range;
         self.slider.set_value_without_event(1.0 - slider_val);

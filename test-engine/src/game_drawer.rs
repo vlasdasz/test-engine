@@ -1,4 +1,4 @@
-use game::Game;
+use game::{Game, Shape};
 use gm::flat::Point;
 use refs::{main_lock::MainLock, manage::DataManager};
 use render::{BackgroundPipeline, SpriteView, TexturedSpriteBoxPipeline, data::TexturedSpriteInstance};
@@ -16,7 +16,7 @@ impl GameDrawer {
 
         BACKGROUND.get_mut().draw(
             pass,
-            unsafe { game.background.get_static() },
+            unsafe { game.skybox.get_static() },
             UIManager::window_resolution(),
             Point::default(),
             0.0,
@@ -24,16 +24,18 @@ impl GameDrawer {
         );
 
         for object in &game.objects {
-            OBJECT_DRAWER.get_mut().add_with_image(
-                TexturedSpriteInstance {
-                    position:   object.position,
-                    size:       object.size,
-                    scale:      1.0,
-                    rotation:   object.rotation,
-                    z_position: 0.85,
-                },
-                object.image,
-            );
+            if let Shape::Rect(size) = object.shape {
+                OBJECT_DRAWER.get_mut().add_with_image(
+                    TexturedSpriteInstance {
+                        position: object.position,
+                        size,
+                        scale: 1.0,
+                        rotation: object.rotation,
+                        z_position: 0.85,
+                    },
+                    object.texture,
+                );
+            }
         }
 
         OBJECT_DRAWER.get_mut().draw(

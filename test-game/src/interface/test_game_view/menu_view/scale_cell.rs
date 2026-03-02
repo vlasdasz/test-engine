@@ -9,7 +9,7 @@ use test_engine::{
     ui::{Anchor, TextAlignment, ViewData},
 };
 
-use crate::interface::test_game_view::Node;
+use crate::interface::test_game_view::{MenuEntry, Node};
 
 #[view]
 pub struct ScaleCell {
@@ -29,7 +29,7 @@ impl ScaleCell {
         new
     }
 
-    pub fn set_node(self: Weak<Self>, node: &Node) {
+    pub fn set_node(self: Weak<Self>, node: &Node<MenuEntry>) {
         self.label
             .place()
             .clear()

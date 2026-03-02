@@ -170,7 +170,7 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 self.layout_header();
                 let mut weak = test_engine::refs::weak_from_ref(self);
                 weak.setup();
-                self.__after_setup_event().trigger(());
+                self.__view_base.events.setup.trigger(());
             }
 
             fn __internal_inspect(&mut self) {

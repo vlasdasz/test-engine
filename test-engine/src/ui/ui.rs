@@ -10,8 +10,8 @@ use render::{
     data::{RectView, UIGradientInstance, UIImageInstance, UIRectInstance},
 };
 use ui::{
-    DrawingView, ImageView, Label, TextAlignment, UIManager, View, ViewAnimation, ViewData, ViewFrame,
-    ViewLayout, ViewSubviews,
+    DrawingView, ImageView, Label, TextAlignment, UIManager, View, ViewData, ViewFrame, ViewLayout,
+    ViewSubviews,
 };
 use wgpu::RenderPass;
 use wgpu_text::glyph_brush::{BuiltInLineBreaker, HorizontalAlign, Layout, Section, Text, VerticalAlign};
@@ -27,6 +27,7 @@ pub struct UIDrawer;
 
 impl UIDrawer {
     pub(crate) fn update() {
+        UIManager::commit_animations();
         Self::update_view(UIManager::root_view().deref_mut());
         if let Some(debug_view) = UIManager::debug_view() {
             Self::update_view(debug_view);
@@ -83,7 +84,6 @@ impl UIDrawer {
             return;
         }
         view.layout();
-        view.commit_animations();
         view.calculate_absolute_frame();
         view.update();
         view.trigger_events();
