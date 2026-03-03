@@ -107,8 +107,8 @@ impl Spinner {
         Self::start();
         SpinnerLockGlobal { stopped: false }
     }
-    
-    // pub fn 
+
+    // pub fn
 
     fn start() {
         trace!("Start spinner");

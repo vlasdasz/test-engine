@@ -1,4 +1,3 @@
-use hreads::on_main;
 use refs::Weak;
 use ui::{Setup, UIEvents, ViewCallbacks, ViewData};
 use ui_proc::view;
@@ -32,14 +31,14 @@ impl ViewCallbacks for ColorMeter {
 }
 
 impl ColorMeter {
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn update_screenshot(mut self: Weak<Self>) {
-        #[cfg(not_wasm)]
         hreads::spawn(async move {
             let Some(screenshot) = AppRunner::take_screenshot().ok() else {
                 return;
             };
 
-            on_main(move || {
+            hreads::on_main(move || {
                 if self.is_null() {
                     return;
                 }
@@ -48,4 +47,7 @@ impl ColorMeter {
             });
         });
     }
+
+    #[cfg(target_arch = "wasm32")]
+    pub fn update_screenshot(self: Weak<Self>) {}
 }

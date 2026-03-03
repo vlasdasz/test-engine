@@ -1,24 +1,22 @@
 use std::{
     cell::RefCell,
     f64,
-    mem::size_of,
     sync::mpsc::{Receiver, Sender, channel},
 };
 
 use anyhow::Result;
 use gm::{
     LossyConvert,
-    color::{Color, GRAY_BLUE, U8Color},
-    flat::Size,
+    color::{Color, GRAY_BLUE},
 };
 use log::{info, warn};
 use plat::Platform;
 use refs::manage::DataManager;
-use wgpu::{Buffer, BufferDescriptor, COPY_BYTES_PER_ROW_ALIGNMENT, CommandEncoder, Extent3d, TextureFormat};
+use wgpu::TextureFormat;
 
 use crate::{
-    Font, SUPPORT_SCREENSHOT, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter,
-    image::Texture, surface::Surface, window::surface_config_with_size,
+    Font, Screenshot, Window, app_handler::AppHandler, frame_counter::FrameCounter, image::Texture,
+    surface::Surface, window::surface_config_with_size,
 };
 
 type ReadDisplayRequest = Sender<Screenshot>;
@@ -193,9 +191,9 @@ impl State {
                 let (buff, size) = buffer;
 
                 let bytes: &[u8] = &buff.slice(..).get_mapped_range();
-                let data: Vec<U8Color> = bytemuck::cast_slice(bytes)
+                let data: Vec<gm::color::U8Color> = bytemuck::cast_slice(bytes)
                     .iter()
-                    .map(|color: &U8Color| color.bgra_to_rgba())
+                    .map(|color: &gm::color::U8Color| color.bgra_to_rgba())
                     .collect();
 
                 buffer_sender.send(Screenshot::new(data, size)).unwrap();
@@ -213,26 +211,30 @@ impl State {
         r
     }
 
-    fn read_screen(encoder: &mut CommandEncoder, texture: &wgpu::Texture) -> (Buffer, Size<u32>) {
-        if !SUPPORT_SCREENSHOT {
+    #[cfg(not(target_arch = "wasm32"))]
+    fn read_screen(
+        encoder: &mut wgpu::CommandEncoder,
+        texture: &wgpu::Texture,
+    ) -> (wgpu::Buffer, gm::flat::Size<u32>) {
+        if !crate::SUPPORT_SCREENSHOT {
             return (
-                Window::device().create_buffer(&BufferDescriptor {
+                Window::device().create_buffer(&wgpu::BufferDescriptor {
                     label:              Some("Empty Buffer"),
                     size:               0,
                     usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
                     mapped_at_creation: false,
                 }),
-                Size::default(),
+                gm::flat::Size::default(),
             );
         }
 
-        let screen_width_bytes: u64 = u64::from(texture.size().width) * size_of::<u32>() as u64;
+        let screen_width_bytes: u64 = u64::from(texture.size().width) * std::mem::size_of::<u32>() as u64;
 
-        let number_of_align = screen_width_bytes / u64::from(COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
+        let number_of_align = screen_width_bytes / u64::from(wgpu::COPY_BYTES_PER_ROW_ALIGNMENT) + 1;
 
-        let width_bytes = number_of_align * u64::from(COPY_BYTES_PER_ROW_ALIGNMENT);
+        let width_bytes = number_of_align * u64::from(wgpu::COPY_BYTES_PER_ROW_ALIGNMENT);
 
-        let buffer = Window::device().create_buffer(&BufferDescriptor {
+        let buffer = Window::device().create_buffer(&wgpu::BufferDescriptor {
             label:              Some("Read Screen Buffer"),
             size:               width_bytes * u64::from(texture.size().height),
             usage:              wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
@@ -254,15 +256,15 @@ impl State {
                     rows_per_image: texture.size().height.into(),
                 },
             },
-            Extent3d {
+            wgpu::Extent3d {
                 width:                 texture.size().width,
                 height:                texture.size().height,
                 depth_or_array_layers: 1,
             },
         );
 
-        let size: Size<u32> = Size::new(
-            u32::try_from(width_bytes / size_of::<U8Color>() as u64).unwrap(),
+        let size: gm::flat::Size<u32> = gm::flat::Size::new(
+            u32::try_from(width_bytes / std::mem::size_of::<gm::color::U8Color>() as u64).unwrap(),
             texture.size().height,
         );
 
