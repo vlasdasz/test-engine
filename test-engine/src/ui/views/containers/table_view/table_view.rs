@@ -17,8 +17,10 @@ pub struct TableView {
     #[educe(Default = 1)]
     pub(super) columns: usize,
 
+    pub on_reload: UIEvent,
+
     #[init]
-    pub scroll: ScrollView,
+    pub(super) scroll: ScrollView,
 }
 
 impl ViewCallbacks for TableView {
@@ -36,6 +38,7 @@ impl Setup for TableView {
         });
 
         self.size_changed().sub(move || {
+            dbg!("Size changed");
             self.layout_cells();
         });
     }
@@ -62,6 +65,7 @@ impl TableView {
 
     pub fn reload_data(mut self: Weak<Self>) {
         self.layout_cells();
+        self.on_reload.trigger(());
     }
 
     pub fn bottom_reached(&self) -> &UIEvent {

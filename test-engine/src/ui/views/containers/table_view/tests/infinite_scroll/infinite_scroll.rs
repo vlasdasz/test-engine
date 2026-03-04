@@ -138,7 +138,7 @@ impl ViewTest for InfiniteScrollTest {
              ",
         );
 
-        assert_eq!(view.test_string, "|216||217||219||218||220||223||223||222|");
+        assert_eq!(view.test_string, "|64||65||67||66||68||69||71||70|");
 
         inject_touches(
             "
@@ -202,9 +202,9 @@ impl ViewTest for InfiniteScrollTest {
          ",
         );
 
-        assert_eq!(view.test_string, "|204||207||211|");
+        assert_eq!(view.test_string, "|46||49||53|");
 
-        // crate::ui_test::record_ui_test();
+        crate::ui_test::record_ui_test();
 
         Ok(())
     }

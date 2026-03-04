@@ -26,7 +26,7 @@ impl Drop for SpinnerLockGlobal {
 }
 
 pub struct SpinnerLockOnView {
-    spinner: Weak<Spinner>,
+    pub(super) spinner: Weak<Spinner>,
 }
 
 impl SpinnerLockOnView {
@@ -35,7 +35,9 @@ impl SpinnerLockOnView {
 
 impl Drop for SpinnerLockOnView {
     fn drop(&mut self) {
-        trace!("SpinnerLockOnView dropped");
-        self.spinner.remove_from_superview();
+        if self.spinner.is_ok() {
+            trace!("SpinnerLockOnView dropped");
+            self.spinner.remove_from_superview();
+        }
     }
 }

@@ -18,12 +18,19 @@ mod test_engine {
 
 #[view]
 pub struct DrawingView {
+    prev_size:   Size,
     pub rescale: bool,
     paths:       Vec<PathData>,
 }
 
 impl ViewCallbacks for DrawingView {
     fn update(&mut self) {
+        if self.prev_size == self.size() {
+            return;
+        }
+
+        self.prev_size = self.size();
+
         self.update_buffers();
     }
 }
@@ -50,6 +57,9 @@ impl DrawingView {
             self.absolute_frame().origin,
             &path,
         ));
+
+        self.update_buffers();
+
         self
     }
 
@@ -79,5 +89,6 @@ impl DrawingView {
 
     pub fn remove_all_paths(&mut self) {
         self.paths.clear();
+        self.update_buffers();
     }
 }

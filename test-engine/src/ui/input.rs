@@ -20,7 +20,7 @@ impl Input {
     }
 
     pub fn on_scroll(offset: Point) {
-        UIEvents::on_scroll().trigger(offset);
+        UIEvents::on_scroll().trigger(offset / 4.0);
     }
 
     pub fn process_touch_event(mut touch: Touch) -> bool {

@@ -6,18 +6,21 @@ use gm::{
     color::{BLACK, Color, GRAY, LIGHT_BLUE},
     flat::{Size, point_on_circle},
 };
-use hreads::on_main;
+use hreads::{from_main, on_main};
 use log::{trace, warn};
 use parking_lot::{Mutex, MutexGuard};
 use refs::Weak;
 use ui::{
     Container, ModalView, Setup, TouchStack, UIAnimation, View, ViewCallbacks, ViewData, ViewFrame,
-    ViewSubviews,
+    ViewSubviews, WeakView,
 };
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate::{self as test_engine, ui::SpinnerLockGlobal};
+use crate::{
+    self as test_engine,
+    ui::{SpinnerLockGlobal, SpinnerLockOnView},
+};
 
 static CIRCLES_N: u32 = 6;
 static SPINNER: Mutex<Weak<Spinner>> = Mutex::new(Weak::const_default());
@@ -178,6 +181,18 @@ impl Spinner {
 
         spinner.hide_modal(());
         *spinner = Weak::default();
+    }
+
+    pub fn start_on(view: WeakView) -> SpinnerLockOnView {
+        from_main(move || {
+            if view.is_null() {
+                return SpinnerLockOnView {
+                    spinner: Weak::default(),
+                };
+            }
+            let spinner = view.add_view::<Spinner>();
+            SpinnerLockOnView { spinner }
+        })
     }
 }
 

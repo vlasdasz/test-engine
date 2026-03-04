@@ -140,6 +140,8 @@ impl<T: ?Sized + View> ViewFrame for T {
     }
 
     fn set_frame(&self, rect: impl Into<Rect>) -> &Self {
+        dbg!("set_frame");
+
         let rect = rect.into();
         let frame = &mut self.__base_view().frame;
 
@@ -155,6 +157,7 @@ impl<T: ?Sized + View> ViewFrame for T {
     }
 
     fn set_size(&self, width: impl ToF32, height: impl ToF32) -> &Self {
+        dbg!("set_size");
         let size = (width, height).into();
         let frame = &mut self.__base_view().frame;
 
@@ -168,6 +171,7 @@ impl<T: ?Sized + View> ViewFrame for T {
     }
 
     fn edit_frame(&mut self, edit: impl FnOnce(&mut Rect)) -> &mut Self {
+        dbg!("edit_frame");
         let frame = &mut self.__base_view().frame;
         let prev_frame = *frame;
         edit(frame);
