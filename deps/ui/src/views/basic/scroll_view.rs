@@ -193,4 +193,8 @@ impl ScrollView {
 
         self.on_scroll.trigger(self.container.__base_view().content_offset);
     }
+
+    fn unsize_own(self: Own<Self>) -> Own<dyn View> {
+        self
+    }
 }
