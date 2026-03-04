@@ -15,8 +15,8 @@ pub trait ViewSubviews {
     fn remove_all_subviews(&self);
 
     fn add_view<V: 'static + View + Default>(&self) -> Weak<V>;
-    fn add_subview(&self, view: Own<dyn View>) -> WeakView;
-    fn __add_subview_internal(&self, view: Own<dyn View>, is_root: bool) -> WeakView;
+    fn add_subview<V: ?Sized + View + 'static>(&self, view: Own<V>) -> Weak<V>;
+    fn __add_subview_internal<V: ?Sized + View + 'static>(&self, view: Own<V>, is_root: bool) -> Weak<V>;
 
     fn apply_if<V: View + 'static>(&mut self, action: impl FnMut(Weak<V>) + Clone + 'static);
 
@@ -80,11 +80,11 @@ impl<T: ?Sized + View> ViewSubviews for T {
         result
     }
 
-    fn add_subview(&self, view: Own<dyn View>) -> WeakView {
+    default fn add_subview<V: ?Sized + View + 'static>(&self, view: Own<V>) -> Weak<V> {
         self.__add_subview_internal(view, false)
     }
 
-    fn __add_subview_internal(&self, mut view: Own<dyn View>, is_root: bool) -> WeakView {
+    fn __add_subview_internal<V: ?Sized + View + 'static>(&self, mut view: Own<V>, is_root: bool) -> Weak<V> {
         assert!(
             is_root || self.superview().is_ok(),
             "Adding subview to view without superview is not allowed"
@@ -95,7 +95,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
         if view.__base_view().navigation_view.is_null() {
             view.__base_view().navigation_view = self.__base_view().navigation_view;
         }
-        let mut weak = view.weak_view();
+        let mut weak = view.weak();
 
         if weak.z_position() == UIManager::ROOT_VIEW_Z_OFFSET {
             weak.__base_view().z_position = self.z_position()

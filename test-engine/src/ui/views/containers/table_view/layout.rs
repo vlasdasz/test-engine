@@ -53,6 +53,9 @@ pub(super) fn layout_two_column_cells(table: &mut TableView, number_of_cells: us
     if last_index > number_of_cells {
         last_index = number_of_cells;
     }
+    
+    if first_index == table.first_index && last_index == table.last_index {
+    }
 
     let h = table.data.__cell_height(0);
 

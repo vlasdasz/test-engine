@@ -19,6 +19,9 @@ pub struct TableView {
 
     pub on_reload: UIEvent,
 
+    pub(super) first_index: usize,
+    pub(super) last_index:  usize,
+
     #[init]
     pub(super) scroll: ScrollView,
 }
