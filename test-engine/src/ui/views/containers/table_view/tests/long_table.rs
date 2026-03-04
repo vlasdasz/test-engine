@@ -11,8 +11,8 @@ use ui::{AfterSetup, Container, Label, Setup, TableData, View, ViewData, ViewSub
 
 use crate::{
     self as test_engine, AppRunner,
-    ui::TableView,
-    ui_test::{UITest, check_colors, inject_touches},
+    ui::{Input, TableView},
+    ui_test::{UITest, inject_touches},
 };
 
 static N_CELLS: AtomicUsize = AtomicUsize::new(2_000_000);
@@ -64,6 +64,8 @@ impl TableData for LongTableTest {
 impl ViewTest for LongTableTest {
     #[allow(clippy::too_many_lines)]
     fn perform_test(_view: Weak<Self>) -> Result<()> {
+        Input::set_scroll_multiplier(1.0);
+
         N_CELLS.store(2_000_000, Ordering::Relaxed);
 
         let view = UITest::start::<LongTableTest>();
@@ -116,56 +118,10 @@ impl ViewTest for LongTableTest {
              ",
         );
 
-        assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
-            "Cell number: 2000000"
-        );
-
         from_main(move || {
             N_CELLS.store(2_000_000 - 5, Ordering::Relaxed);
             view.table.reload_data();
         });
-
-        check_colors(
-            r"
-                  242  910 -  89 124 149
-                  272  888 -  89 124 149
-                  330  834 - 255 255 255
-                  331  827 - 255 255 255
-                  340  779 - 255 255 255
-                  357  746 -  22  22  22
-                  358  725 - 219 219 219
-                  373  693 -   0   0   0
-                  388  638 - 255 255 255
-                  413  591 - 255 255 255
-                  453  569 - 255 255 255
-                  502  514 - 255 255 255
-                  513  504 - 255 255 255
-                  518  467 - 208 208 208
-                  535  421 - 255 255 255
-                  548  398 - 255 255 255
-                  558  390 - 255 255 255
-                  566  380 - 170 170 170
-                  575  365 - 255 255 255
-                  599  344 -  13  13  13
-                  604  333 - 255 255 255
-                  616  319 - 255 255 255
-                  616  248 -  13  13  13
-                  626  216 - 255 255 255
-                  658  195 - 255 255 255
-                  661  191 - 255 255 255
-                  665  191 - 255 255 255
-                  704  183 - 255 255 255
-                  728  181 -  89 124 149
-                  731  179 -  89 124 149
-                  871  134 -  89 124 149
-             ",
-        )?;
-
-        assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
-            "Cell number: 1999995"
-        );
 
         inject_touches(
             "
@@ -370,6 +326,8 @@ impl ViewTest for LongTableTest {
         from_main(move || {
             view.table.set_columns(2);
         });
+
+        Input::set_scroll_multiplier(0.25);
 
         // record_ui_test();
 

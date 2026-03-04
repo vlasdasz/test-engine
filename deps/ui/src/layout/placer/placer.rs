@@ -4,7 +4,10 @@ use std::{
     sync::Arc,
 };
 
-use gm::{RefCell, flat::Size};
+use gm::{
+    RefCell,
+    flat::{Rect, Size},
+};
 use parking_lot::Mutex;
 use refs::{Rglica, ToRglica};
 
@@ -24,7 +27,7 @@ pub struct Placer {
     pub(crate) has: RefCell<Size<bool>>,
 
     #[allow(clippy::type_complexity)]
-    pub(crate) custom: RefCell<Option<Arc<Mutex<dyn FnMut(WeakView) + Send>>>>,
+    pub(crate) custom: RefCell<Option<Arc<Mutex<dyn FnMut(&mut Rect) + Send>>>>,
 }
 
 impl Placer {

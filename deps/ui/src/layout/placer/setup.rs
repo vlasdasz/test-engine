@@ -1,12 +1,12 @@
 use std::{ops::Deref, sync::Arc};
 
-use gm::ToF32;
+use gm::{ToF32, flat::Rect};
 use parking_lot::Mutex;
 use refs::Weak;
 
 use super::Placer;
 use crate::{
-    View, WeakView,
+    View,
     layout::{Anchor, Tiling, layout_rule::LayoutRule},
     view::{ViewFrame, ViewSubviews},
 };
@@ -272,7 +272,7 @@ impl Placer {
         self
     }
 
-    pub fn custom(&self, custom: impl FnMut(WeakView) + Send + 'static) -> &Self {
+    pub fn custom(&self, custom: impl FnMut(&mut Rect) + Send + 'static) -> &Self {
         *self.custom.borrow_mut() = Some(Arc::new(Mutex::new(custom)));
         self
     }

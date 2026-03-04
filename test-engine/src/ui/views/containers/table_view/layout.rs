@@ -74,8 +74,8 @@ pub(super) fn layout_two_column_cells(table: &mut TableView, number_of_cells: us
                 .h(h)
                 .relative_width(weak_table, 0.5)
                 .t((i / 2).lossy_convert() * h)
-                .custom(move |mut view| {
-                    view.set_x(weak_table.width() / 2.0);
+                .custom(move |frame| {
+                    frame.origin.x = weak_table.width() / 2.0;
                 });
         }
     }

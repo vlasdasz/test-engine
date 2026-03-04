@@ -1,6 +1,10 @@
-use std::ops::{Deref, DerefMut};
+use std::ops::Deref;
 
-use gm::{LossyConvert, axis::Axis, flat::Size};
+use gm::{
+    LossyConvert,
+    axis::Axis,
+    flat::{Rect, Size},
+};
 use refs::ToRglica;
 
 use super::Placer;
@@ -10,46 +14,56 @@ use crate::{
     view::ViewFrame,
 };
 
+type RMut<'a> = &'a mut Rect;
+
 impl Placer {
     pub fn layout(&mut self) {
+        if self.view.is_null() {
+            return;
+        }
+
         let this = self.to_rglica();
 
         let has_left = self.has_left();
         let has_top = self.has_top();
 
+        let old_frame = *self.view.frame();
+        let mut new_frame = old_frame;
+
         for rule in this.rules().iter_mut().filter(|r| r.enabled) {
             if rule.between {
-                self.between_layout(rule);
+                self.between_layout(&mut new_frame, rule);
             } else if rule.anchor_view.is_some() {
                 if rule.relative {
-                    self.relative_layout(rule);
+                    self.relative_layout(&mut new_frame, rule);
                 } else if rule.same {
-                    self.same_layout(rule);
+                    same_layout(&mut new_frame, rule);
                 } else {
-                    self.anchor_layout(rule, has_left, has_top);
+                    anchor_layout(&mut new_frame, rule, has_left, has_top);
                 }
             } else if let Some(tiling) = &rule.tiling {
-                self.tiling_layout(tiling);
+                self.tiling_layout(&mut new_frame, tiling);
             } else {
-                self.simple_layout(rule);
+                self.simple_layout(&mut new_frame, rule);
             }
         }
 
         for rule in this.all_tiling_rules().iter().filter(|r| r.enabled) {
-            self.tiling_layout(rule.tiling.as_ref().expect("BUG"));
+            self.tiling_layout(&mut new_frame, rule.tiling.as_ref().expect("BUG"));
         }
 
         if let Some(custom) = self.custom.borrow().as_ref() {
-            custom.lock()(self.view.weak_view());
+            custom.lock()(&mut new_frame);
+        }
+
+        if new_frame != old_frame {
+            self.view.set_frame(new_frame);
         }
     }
 
-    fn simple_layout(&mut self, rule: &LayoutRule) {
+    fn simple_layout(&mut self, frame: RMut, rule: &LayoutRule) {
         let has = *self.has();
         let s_content = self.s_content.deref();
-
-        let view = self.view.deref_mut();
-        let mut frame = *view.frame();
 
         let side = rule.side.as_ref().expect("Reached side layout with no side rule");
 
@@ -114,52 +128,9 @@ impl Placer {
                 unimplemented!("Simple layout for {:?} is not supported", side)
             }
         }
-
-        view.set_frame(frame);
     }
 
-    fn anchor_layout(&mut self, rule: &LayoutRule, has_left: bool, has_top: bool) {
-        let view = self.view.deref_mut();
-        let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in anchor layout").frame();
-
-        let side = rule.side.as_ref().expect("Anchor layout without side");
-
-        match side {
-            Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
-            Anchor::Bot => {
-                if has_top {
-                    let max_y = frame.max_y();
-                    let desired_max_y = a_frame.y() - rule.offset;
-                    let diff = desired_max_y - max_y;
-                    frame.size.height += diff;
-                } else {
-                    frame.origin.y = a_frame.y() - rule.offset - frame.height();
-                }
-            }
-            Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
-            Anchor::Right => {
-                if has_left {
-                    let max_x = frame.max_x();
-                    let desired_max_x = a_frame.x() - rule.offset;
-                    let diff = desired_max_x - max_x;
-                    frame.size.width += diff;
-                } else {
-                    frame.origin.x = a_frame.x() - rule.offset - frame.width();
-                }
-            }
-            Anchor::X => frame.origin.x = a_frame.x(),
-            Anchor::Y => frame.origin.y = a_frame.y(),
-            Anchor::Width => frame.size.width = a_frame.width(),
-            Anchor::Height => frame.size.height = a_frame.height(),
-            _ => unimplemented!("Anchor layout for: {:?} is not supported", side),
-        }
-        view.set_frame(frame);
-    }
-
-    fn relative_layout(&mut self, rule: &LayoutRule) {
-        let view = self.view.deref_mut();
-        let mut frame = *view.frame();
+    fn relative_layout(&mut self, frame: RMut, rule: &LayoutRule) {
         let a_frame = rule.anchor_view.as_ref().expect("No anchor view in relative layout").frame();
 
         let side = rule.side.as_ref().expect("Relative layout without side");
@@ -177,47 +148,16 @@ impl Placer {
             }
             _ => unimplemented!("Relative layout for {:?} is not supported", side),
         }
-        view.set_frame(frame);
     }
 
-    fn same_layout(&mut self, rule: &LayoutRule) {
-        let view = self.view.deref_mut();
-        let mut frame = *view.frame();
-        let a_frame = rule.anchor_view.as_ref().expect("No anchor view in same layout").frame();
-
-        let side = rule.side.as_ref().expect("Same layout without side");
-
-        match side {
-            Anchor::Width => frame.size.width = a_frame.size.width,
-            Anchor::Height => frame.size.height = a_frame.size.height,
-            Anchor::X => frame.origin.x = a_frame.x(),
-            Anchor::Y => frame.origin.y = a_frame.y(),
-            Anchor::CenterX => {
-                let mut frame_center = frame.center();
-                let a_center = a_frame.center();
-                frame_center.x = a_center.x;
-                frame.set_center(frame_center);
-            }
-            Anchor::CenterY => {
-                let mut frame_center = frame.center();
-                let a_center = a_frame.center();
-                frame_center.y = a_center.y;
-                frame.set_center(frame_center);
-            }
-            _ => unimplemented!("Same layout for {:?} is not supported", side),
-        }
-        view.set_frame(frame);
-    }
-
-    fn tiling_layout(&mut self, tiling: &Tiling) {
-        let mut frame = *self.view.frame();
+    fn tiling_layout(&mut self, frame: RMut, tiling: &Tiling) {
         match tiling {
-            Tiling::Background => frame = (*self.s_content.deref()).into(),
+            Tiling::Background => *frame = (*self.s_content.deref()).into(),
             Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
             Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
-            Tiling::LeftHalf => frame = (0, 0, self.s_content.width / 2.0, self.s_content.height).into(),
+            Tiling::LeftHalf => *frame = (0, 0, self.s_content.width / 2.0, self.s_content.height).into(),
             Tiling::RightHalf => {
-                frame = (
+                *frame = (
                     self.s_content.width / 2.0,
                     0,
                     self.s_content.width / 2.0,
@@ -227,38 +167,23 @@ impl Placer {
             }
             Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_mut(), ratio),
         }
-        self.view.set_frame(frame);
     }
 
-    fn between_layout(&mut self, rule: &LayoutRule) {
+    fn between_layout(&mut self, frame: RMut, rule: &LayoutRule) {
         if rule.side.is_none() {
-            self.between_2_layout(rule);
+            between_2_layout(frame, rule);
         } else {
-            self.between_super_layout(rule);
+            self.between_super_layout(frame, rule);
         }
     }
 
-    fn between_2_layout(&mut self, rule: &LayoutRule) {
-        let center_a = rule.anchor_view.expect("No anchor view in between 2 layout").frame().center();
-        let center_b = rule
-            .anchor_view2
-            .expect("No anchor 2 view in between 2 layout")
-            .frame()
-            .center();
-        let center = center_a.middle(&center_b);
-        self.view.edit_frame(|frame| frame.set_center(center));
-    }
-
-    fn between_super_layout(&mut self, rule: &LayoutRule) {
+    fn between_super_layout(&mut self, frame: RMut, rule: &LayoutRule) {
         let f = rule
             .anchor_view
             .as_ref()
             .expect("No anchor view in between super layout")
             .frame();
         let cen = f.center();
-
-        let view = self.view.deref_mut();
-        let mut frame = *view.frame();
 
         let side = rule.side.as_ref().expect("Between layout without side");
 
@@ -275,7 +200,6 @@ impl Placer {
             )),
             _ => unimplemented!("Between super layout for {:?} is not supported", side),
         }
-        view.set_frame(frame);
     }
 
     fn has_left(&self) -> bool {
@@ -338,5 +262,78 @@ fn distribute_with_ratio(size: Size, views: Vec<WeakView>, ratios: &[f32]) {
         let is_first = i == 0;
         let x_pos = if is_first { 0.0 } else { views[i - 1].max_x() };
         views[i].set_frame((x_pos, 0, ratios[i] * size.width * total_ratio, size.height));
+    }
+}
+
+fn anchor_layout(frame: RMut, rule: &LayoutRule, has_left: bool, has_top: bool) {
+    let a_frame = rule.anchor_view.as_ref().expect("No anchor view in anchor layout").frame();
+
+    let side = rule.side.as_ref().expect("Anchor layout without side");
+
+    match side {
+        Anchor::Top => frame.origin.y = a_frame.max_y() + rule.offset,
+        Anchor::Bot => {
+            if has_top {
+                let max_y = frame.max_y();
+                let desired_max_y = a_frame.y() - rule.offset;
+                let diff = desired_max_y - max_y;
+                frame.size.height += diff;
+            } else {
+                frame.origin.y = a_frame.y() - rule.offset - frame.height();
+            }
+        }
+        Anchor::Left => frame.origin.x = a_frame.max_x() + rule.offset,
+        Anchor::Right => {
+            if has_left {
+                let max_x = frame.max_x();
+                let desired_max_x = a_frame.x() - rule.offset;
+                let diff = desired_max_x - max_x;
+                frame.size.width += diff;
+            } else {
+                frame.origin.x = a_frame.x() - rule.offset - frame.width();
+            }
+        }
+        Anchor::X => frame.origin.x = a_frame.x(),
+        Anchor::Y => frame.origin.y = a_frame.y(),
+        Anchor::Width => frame.size.width = a_frame.width(),
+        Anchor::Height => frame.size.height = a_frame.height(),
+        _ => unimplemented!("Anchor layout for: {:?} is not supported", side),
+    }
+}
+
+fn between_2_layout(frame: RMut, rule: &LayoutRule) {
+    let center_a = rule.anchor_view.expect("No anchor view in between 2 layout").frame().center();
+    let center_b = rule
+        .anchor_view2
+        .expect("No anchor 2 view in between 2 layout")
+        .frame()
+        .center();
+    let center = center_a.middle(&center_b);
+    frame.set_center(center);
+}
+
+fn same_layout(frame: RMut, rule: &LayoutRule) {
+    let a_frame = rule.anchor_view.as_ref().expect("No anchor view in same layout").frame();
+
+    let side = rule.side.as_ref().expect("Same layout without side");
+
+    match side {
+        Anchor::Width => frame.size.width = a_frame.size.width,
+        Anchor::Height => frame.size.height = a_frame.size.height,
+        Anchor::X => frame.origin.x = a_frame.x(),
+        Anchor::Y => frame.origin.y = a_frame.y(),
+        Anchor::CenterX => {
+            let mut frame_center = frame.center();
+            let a_center = a_frame.center();
+            frame_center.x = a_center.x;
+            frame.set_center(frame_center);
+        }
+        Anchor::CenterY => {
+            let mut frame_center = frame.center();
+            let a_center = a_frame.center();
+            frame_center.y = a_center.y;
+            frame.set_center(frame_center);
+        }
+        _ => unimplemented!("Same layout for {:?} is not supported", side),
     }
 }
