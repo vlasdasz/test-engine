@@ -220,7 +220,7 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
         }
 
         impl #generics test_engine::ui::__ViewIntoUnsizedOwn for #name <#type_params> {
-            unsafe fn __into_unsized_own<V: ?Sized + test_engine::ui::View + 'static>(&self, own: test_engine::refs::Own<V>) -> test_engine::refs::Own<dyn test_engine::ui::View> {
+            unsafe fn __into_unsized_own<V: ?Sized + test_engine::ui::View + 'static>(own: test_engine::refs::Own<V>) -> test_engine::refs::Own<dyn test_engine::ui::View> {
                 use test_engine::refs::Own;
                 use test_engine::ui::View;
 

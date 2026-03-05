@@ -39,11 +39,11 @@ pub trait ViewSubviews {
 }
 
 pub trait __ViewIntoUnsizedOwn {
-    unsafe fn __into_unsized_own<V: ?Sized + View + 'static>(&self, own: Own<V>) -> Own<dyn View>;
+    unsafe fn __into_unsized_own<V: ?Sized + View + 'static>(own: Own<V>) -> Own<dyn View>;
 }
 
 impl<T: ?Sized + View + 'static> __ViewIntoUnsizedOwn for T {
-    default unsafe fn __into_unsized_own<V: ?Sized + View + 'static>(&self, own: Own<V>) -> Own<dyn View> {
+    default unsafe fn __into_unsized_own<V: ?Sized + View + 'static>(own: Own<V>) -> Own<dyn View> {
         assert!(!own.sized());
         assert_eq!(size_of::<Own<V>>(), size_of::<Own<dyn View>>());
 
@@ -117,10 +117,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
         let mut weak = view.weak();
 
-        // Don't ask
-        let rf = view.ptr();
-        let rf: &V = unsafe { &*rf };
-        let mut view: Own<dyn View> = unsafe { V::__into_unsized_own(rf, view) };
+        let mut view: Own<dyn View> = unsafe { V::__into_unsized_own(view) };
 
         view.__internal_before_setup();
 

@@ -6,18 +6,12 @@ use gm::{
 };
 use refs::{Own, Weak, weak_from_ref};
 use ui::{
-    __ViewInternalTableData, Container, NO_TOUCH_ID, Scrollable, Setup, Slider, Touch, TouchStack,
-    UIAnimation, UIEvent, UIManager, View, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewTouch,
-    WeakView, view,
+    Container, NO_TOUCH_ID, Scrollable, Setup, Slider, Touch, TouchStack, UIAnimation, UIEvent, UIManager,
+    View, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, view,
 };
 use vents::Event;
 
-use crate::{
-    self as test_engine,
-    ui::views::containers::table_view::layout::{
-        layout_single_column_cells, layout_two_column_cells, layout_variable_sized_cells,
-    },
-};
+use crate::{self as test_engine};
 
 #[view]
 pub struct ScrollView {
