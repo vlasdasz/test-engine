@@ -10,7 +10,7 @@ use vents::Event;
 
 use crate::{
     Container, NO_TOUCH_ID, Setup, Slider, Touch, TouchStack, UIAnimation, UIEvent, UIManager, View,
-    ViewCallbacks, WeakView,
+    ViewCallbacks,
     view::{ViewData, ViewFrame, ViewSubviews},
 };
 mod test_engine {
@@ -77,6 +77,8 @@ impl ScrollView {
 impl Setup for ScrollView {
     fn setup(mut self: Weak<Self>) {
         self.container.__base_view().dont_hide_off_screen = true;
+        self.container.place().back();
+
         self.slider.place().w(40).r(0);
         self.slider.on_change.val(move |val| {
             let val = 1.0 - val;
