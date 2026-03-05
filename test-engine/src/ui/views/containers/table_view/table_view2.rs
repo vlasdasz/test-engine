@@ -1,6 +1,6 @@
-use ui::{ScrollView, view_test};
+use ui::view_test;
 
-use crate::{self as test_engine};
+use crate::{self as test_engine, ui::ScrollView};
 
 #[view_test]
 pub struct TableView2 {

@@ -2,20 +2,13 @@ use std::{any::Any, ops::Deref};
 
 use gm::{LossyConvert, Toggle, flat::Size};
 use refs::{Own, Weak};
-use ui_proc::view;
+use ui::{Button, Label, Setup, ToLabel, View, ViewData, ViewFrame, ViewSubviews, view};
 use vents::Event;
 
 use crate::{
-    Button, CollectionData, CollectionView, Label, Setup, ToLabel, View,
-    view::{ViewData, ViewFrame, ViewSubviews},
+    self as test_engine,
+    ui::{CollectionData, CollectionView},
 };
-
-mod test_engine {
-    pub(crate) use educe;
-    pub(crate) use refs;
-
-    pub(crate) use crate as ui;
-}
 
 #[view]
 pub struct DropDown<T: 'static> {

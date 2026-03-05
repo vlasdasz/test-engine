@@ -42,6 +42,7 @@ pub use ui_proc::*;
 pub use view::*;
 pub use views::*;
 pub use with_header::*;
+pub use touch_layer::*;
 
 extern crate core;
 pub extern crate ui_proc;

@@ -58,7 +58,7 @@ impl<T: ?Sized + View> ViewFrame for T {
     }
 
     fn absolute_frame(&self) -> &Rect {
-        &self.__base_view().absolute_frame
+        &self.__base_view().__absolute_frame
     }
 
     fn x(&self) -> f32 {

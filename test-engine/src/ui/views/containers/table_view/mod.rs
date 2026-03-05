@@ -1,4 +1,4 @@
-mod layout;
+pub(crate) mod layout;
 mod table_view;
 mod table_view2;
 mod tests;

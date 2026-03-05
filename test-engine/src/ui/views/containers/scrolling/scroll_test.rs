@@ -1,22 +1,24 @@
-use anyhow::Result;
-use test_engine::{
-    dispatch::from_main,
-    refs::Weak,
-    ui::{Input, ScrollView, Setup, TURQUOISE, ViewData, view},
-    ui_test::{
-        UITest,
-        helpers::{add_corners, check_colors},
-        inject_scroll, inject_touches,
-    },
+use gm::{Apply, color::{Color, TURQUOISE}};
+use hreads::from_main;
+use refs::{Weak, weak_from_ref};
+use ui::{
+    __ViewInternalTableData, Container, Setup, UIEvent, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewTest, ViewTouch, WeakView, view
+}; use anyhow::Result;
+
+use crate::{
+    self as test_engine,
+    ui::{Input, ScrollView, views::containers::table_view::layout::{
+        layout_single_column_cells, layout_two_column_cells, layout_variable_sized_cells,
+    }}, ui_test::{UITest, check_colors, inject_scroll, inject_touches},
 };
 
 #[view]
-struct Scrolling {
+struct ScrollViewTest {
     #[init]
     scroll: ScrollView,
 }
 
-impl Setup for Scrolling {
+impl Setup for ScrollViewTest {
     fn setup(mut self: Weak<Self>) {
         self.scroll.set_content_size((600, 600));
         self.scroll.place().back();
@@ -24,8 +26,10 @@ impl Setup for Scrolling {
     }
 }
 
+impl ViewTest for ScrollViewTest {}
+
 pub async fn test_scroll_view() -> Result<()> {
-    let mut view = UITest::start::<Scrolling>();
+    let mut view = UITest::start::<ScrollViewTest>();
 
     Input::set_scroll_multiplier(1.0);
 
@@ -343,4 +347,21 @@ pub async fn test_scroll_view() -> Result<()> {
     Input::set_scroll_multiplier(0.25);
 
     Ok(())
+}
+
+fn add_corners(view: WeakView, color: Color) {
+    let v1 = view.add_view::<Container>();
+    let v2 = view.add_view::<Container>();
+    let v3 = view.add_view::<Container>();
+    let v4 = view.add_view::<Container>();
+
+    [v1, v2, v3, v4].apply(|a| {
+        a.place().size(100, 100);
+        a.set_color(color);
+    });
+
+    v1.place().tl(0);
+    v2.place().tr(0);
+    v3.place().bl(0);
+    v4.place().br(0);
 }

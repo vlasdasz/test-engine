@@ -22,15 +22,15 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) border_width:  f32,
 
-    pub(crate) content_offset: f32,
+    pub __content_offset: f32,
 
     pub(crate) is_hidden: bool,
 
     #[educe(Default = crate::UIManager::ROOT_VIEW_Z_OFFSET)]
     pub(crate) z_position: f32,
 
-    pub(crate) frame:          Rect,
-    pub(crate) absolute_frame: Rect,
+    pub(crate) frame:   Rect,
+    pub __absolute_frame: Rect,
 
     #[educe(Debug(ignore))]
     pub(crate) superview: WeakView,
@@ -39,7 +39,7 @@ pub struct ViewBase {
     pub(crate) subviews: Vec<Own<dyn View>>,
 
     #[educe(Debug(ignore))]
-    pub(crate) touch_id: usize,
+    pub __touch_id: usize,
 
     #[educe(Debug(ignore))]
     pub(crate) is_selected: bool,
@@ -60,7 +60,7 @@ pub struct ViewBase {
     pub events: ViewEvents,
 
     #[educe(Debug(ignore))]
-    pub(crate) dont_hide_off_screen: bool,
+    pub dont_hide_off_screen: bool,
 
     #[educe(Debug(ignore))]
     pub(crate) trigger_pos_changed:  bool,

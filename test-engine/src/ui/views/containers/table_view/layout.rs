@@ -4,7 +4,7 @@ use ui::{Anchor::Top, ViewData, ViewFrame, WeakView};
 
 use crate::ui::TableView;
 
-pub(super) fn layout_single_column_cells(table: &mut TableView, number_of_cells: usize) {
+pub(crate) fn layout_single_column_cells(table: &mut TableView, number_of_cells: usize) {
     let cell_height = table.data.__cell_height(0);
 
     let total_height = number_of_cells.lossy_convert() * cell_height;
@@ -30,7 +30,7 @@ pub(super) fn layout_single_column_cells(table: &mut TableView, number_of_cells:
     }
 }
 
-pub(super) fn layout_two_column_cells(table: &mut TableView, number_of_cells: usize) {
+pub(crate) fn layout_two_column_cells(table: &mut TableView, number_of_cells: usize) {
     let row_height = table.data.__cell_height(0);
 
     let total_height = (number_of_cells.lossy_convert() / 2.0).ceil() * row_height;
@@ -84,7 +84,7 @@ pub(super) fn layout_two_column_cells(table: &mut TableView, number_of_cells: us
     }
 }
 
-pub(super) fn layout_variable_sized_cells(table: &mut TableView, number_of_cells: usize) {
+pub(crate) fn layout_variable_sized_cells(table: &mut TableView, number_of_cells: usize) {
     let mut total_height: f32 = 0.0;
 
     let mut prev_cell: WeakView = Weak::default();

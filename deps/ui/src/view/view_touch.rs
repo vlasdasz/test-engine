@@ -7,7 +7,7 @@ use crate::{
     view::{ViewFrame, view_data::ViewData},
 };
 
-pub(crate) const NO_TOUCH_ID: usize = 0;
+pub const NO_TOUCH_ID: usize = 0;
 
 pub trait ViewTouch {
     fn is_selected(&self) -> bool;
@@ -49,7 +49,7 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
     let view = view.deref_mut();
     let base_view = view.__base_view();
 
-    if touch.is_moved() && base_view.touch_id == touch.id {
+    if touch.is_moved() && base_view.__touch_id == touch.id {
         touch.position -= view.absolute_frame().origin;
         base_view.events.touch.all.trigger(*touch);
         base_view.events.touch.moved.trigger(*touch);
@@ -60,11 +60,11 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
         return false;
     }
 
-    if touch.is_ended() && base_view.touch_id == touch.id {
+    if touch.is_ended() && base_view.__touch_id == touch.id {
         let inside = view.absolute_frame().contains(touch.position);
 
         touch.position -= view.absolute_frame().origin;
-        base_view.touch_id = NO_TOUCH_ID;
+        base_view.__touch_id = NO_TOUCH_ID;
         base_view.events.touch.all.trigger(*touch);
 
         if inside && touch.is_ended() {
@@ -76,7 +76,7 @@ pub fn check_touch(mut view: WeakView, touch: &mut Touch) -> bool {
     if view.absolute_frame().contains(touch.position) {
         touch.position -= view.absolute_frame().origin;
         if touch.is_began() {
-            base_view.touch_id = touch.id;
+            base_view.__touch_id = touch.id;
             base_view.events.touch.began.trigger(*touch);
             UIManager::set_selected(weak_from_ref(view), true);
         }

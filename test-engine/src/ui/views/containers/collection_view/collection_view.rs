@@ -1,20 +1,12 @@
-use gm::{LossyConvert, flat::Size};
+use game::Size;
+use gm::LossyConvert;
 use refs::{Weak, weak_from_ref};
-use ui_proc::view;
+use ui::{Setup, View, ViewData, ViewFrame, ViewSubviews, ViewTouch, WeakView, view};
 
 use crate::{
-    Setup, View, WeakView,
-    view::{ViewData, ViewFrame, ViewSubviews, ViewTouch},
+    self as test_engine,
+    ui::{CollectionData, ScrollView},
 };
-
-mod test_engine {
-    pub(crate) use educe;
-    pub(crate) use refs;
-
-    pub(crate) use crate as ui;
-}
-
-use crate::{CollectionData, ScrollView};
 
 #[derive(Default, Debug)]
 pub enum CollectionLayout {
@@ -96,7 +88,7 @@ impl CollectionView {
         self.scroll.set_content_size((width, table_height));
         let width = self.width();
 
-        let mut content_start = -self.scroll.__base_view().content_offset;
+        let mut content_start = -self.scroll.__base_view().__content_offset;
         let content_end = content_start + table_height;
 
         if content_start < 0.0 {

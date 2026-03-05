@@ -3,16 +3,20 @@ use refs::{
     vec::{WeakVec, WeakVecHelper},
 };
 
-use crate::{ScrollView, ViewData, WeakView};
+use crate::{Touch, View, ViewData, WeakView};
+
+pub trait Scrollable: View {
+    fn __process_scroll_touch(&mut self, touch: Touch) -> bool;
+}
 
 pub(crate) struct TouchLayer {
     pub(crate) root: WeakView,
     listeners:       Vec<WeakView>,
-    scrolls:         WeakVec<ScrollView>,
+    scrolls:         WeakVec<dyn Scrollable>,
 }
 
 impl TouchLayer {
-    pub(crate) fn add_scroll(&mut self, view: Weak<ScrollView>) {
+    pub(crate) fn add_scroll(&mut self, view: Weak<dyn Scrollable>) {
         self.scrolls.push(view);
     }
 
@@ -32,7 +36,7 @@ impl TouchLayer {
         self.listeners.clone()
     }
 
-    pub(crate) fn scrolls(&self) -> WeakVec<ScrollView> {
+    pub(crate) fn scrolls(&self) -> WeakVec<dyn Scrollable> {
         self.scrolls.clone()
     }
 

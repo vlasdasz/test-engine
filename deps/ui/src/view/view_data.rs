@@ -74,7 +74,7 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn content_offset(&self) -> f32 {
-        self.__base_view().content_offset
+        self.__base_view().__content_offset
     }
 
     fn color(&self) -> &Color {

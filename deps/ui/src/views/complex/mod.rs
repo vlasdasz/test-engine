@@ -1,9 +1,7 @@
 mod alert;
 mod alert_err;
-mod collection_view;
 mod dpad_view;
 mod drawing_view;
-mod drop_down;
 mod number_view;
 mod point_view;
 mod question;
@@ -11,10 +9,8 @@ mod table_data;
 
 pub use alert::*;
 pub use alert_err::*;
-pub use collection_view::*;
 pub use dpad_view::DPadView;
 pub use drawing_view::DrawingView;
-pub use drop_down::*;
 pub use number_view::*;
 pub use point_view::PointView;
 pub use question::Question;
