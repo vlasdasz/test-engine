@@ -118,7 +118,7 @@ impl ViewSubviews for ScrollView {
     }
 
     fn add_subview<V: ?Sized + View + 'static>(&self, view: Own<V>) -> Weak<V> {
-        self.container.__add_subview_internal(view, false)
+        self.container.add_subview(view)
     }
 }
 
@@ -192,9 +192,5 @@ impl ScrollView {
         self.slider.set_value_without_event(1.0 - slider_val);
 
         self.on_scroll.trigger(self.container.__base_view().content_offset);
-    }
-
-    fn unsize_own(self: Own<Self>) -> Own<dyn View> {
-        self
     }
 }

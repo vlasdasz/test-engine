@@ -79,8 +79,8 @@ winit = "0.30"
 hreads = "0.13"
 
 netrun = "0.32"
-# refs = { path = "../deps/refs/refs" }
-refs = { version = "0.48", default-features = true }
+refs = { path = "../deps/refs/refs" }
+# refs = { version = "0.48", default-features = true }
 # netrun = { path = "../deps/netrun/netrun" }
 plat = "0.9"
 reflected = "0.29"

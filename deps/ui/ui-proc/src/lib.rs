@@ -1,3 +1,5 @@
+#![allow(incomplete_features)]
+#![feature(specialization)]
 #![feature(proc_macro_span)]
 
 mod all_views;

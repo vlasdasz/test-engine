@@ -1,3 +1,5 @@
+#![allow(incomplete_features)]
+#![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
 use ui::Button;

@@ -219,6 +219,20 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
             }
         }
 
+        impl #generics test_engine::ui::__ViewIntoUnsizedOwn for #name <#type_params> {
+            unsafe fn __into_unsized_own<V: ?Sized + test_engine::ui::View + 'static>(&self, own: test_engine::refs::Own<V>) -> test_engine::refs::Own<dyn test_engine::ui::View> {
+                use test_engine::refs::Own;
+                use test_engine::ui::View;
+
+                assert!(own.sized());
+                assert_eq!(size_of::<Own<Self>>(), size_of::<Own<V>>());
+
+                let unsized_own: Own<Self> = unsafe { std::mem::transmute_copy(&own) };
+                std::mem::forget(own);
+                unsized_own
+            }
+        }
+
         #ui_test_related_stuff
 
     }
@@ -262,7 +276,7 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
 
         res = quote! {
             #res
-            self.#name = self.add_view();
+            self.#name = self.__add_view_internal();
             self.#name.__base_view().view_label = format!("{}: {}", #label, self.#name.__base_view().view_label);
         }
     }
