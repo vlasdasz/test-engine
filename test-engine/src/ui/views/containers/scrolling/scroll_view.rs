@@ -173,7 +173,10 @@ impl ScrollView {
     }
 
     fn on_scroll(&mut self, scroll: f32) {
-        if self.height() >= self.content_size.height {
+        dbg!(&scroll);
+
+        if dbg!(self.height()) >= dbg!(self.content_size.height) {
+            dbg!("Rome bb");
             return;
         }
         self.container.__base_view().__content_offset += scroll;
@@ -183,11 +186,13 @@ impl ScrollView {
             self.bottom_reached.trigger(());
         }
 
+        dbg!("Rome");
+
         self.container.__base_view().__content_offset =
             self.container.__base_view().__content_offset.clamp(-range, 0.0);
         let slider_val = -self.container.__base_view().__content_offset / range;
         self.slider.set_value_without_event(1.0 - slider_val);
 
-        self.on_scroll.trigger(self.container.__base_view().__content_offset);
+        self.on_scroll.trigger(dbg!(self.container.__base_view().__content_offset));
     }
 }

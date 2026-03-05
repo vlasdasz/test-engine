@@ -9,9 +9,9 @@ use refs::Weak;
 use ui::{Container, Setup, ViewData, ViewSubviews, ViewTest, WeakView};
 
 use crate::{
-    self as test_engine, ui,
-    ui::{Input, ScrollView},
-    ui_test::{check_colors, inject_scroll, inject_touches},
+    self as test_engine,
+    ui::{self, ScrollView},
+    ui_test::{check_colors, inject_scroll, inject_touches, record_ui_test},
 };
 
 #[view_test]
@@ -30,8 +30,6 @@ impl Setup for ScrollViewTest {
 
 impl ViewTest for ScrollViewTest {
     fn perform_test(mut view: Weak<Self>) -> Result<()> {
-        Input::set_scroll_multiplier(1.0);
-
         check_colors(
             r#"
                   51  117 -  89 124 149
@@ -204,6 +202,10 @@ impl ViewTest for ScrollViewTest {
             "#,
         )?;
 
+        inject_touches("258  176  b");
+        inject_touches("258  176  m");
+        inject_touches("258  176  e");
+
         inject_scroll(-150);
         assert_eq!(view.scroll.content_offset(), -150.0);
 
@@ -342,8 +344,6 @@ impl ViewTest for ScrollViewTest {
                 516  111  m
             ",
         );
-
-        Input::set_scroll_multiplier(0.25);
 
         Ok(())
     }
