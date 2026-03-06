@@ -63,12 +63,6 @@ impl Setup for MenuView {
                                 LevelManager::set_level(TestLevel::default());
                             })
                             .into(),
-                        MenuEntry::new("ui bench")
-                            .action(|| {
-                                LevelManager::stop_level();
-                                UIManager::set_view(UIBenchmarkView::new());
-                            })
-                            .into(),
                         MenuEntry::new("polygon")
                             .action(|| UIManager::set_view(PolygonView::new()))
                             .into(),
@@ -106,6 +100,12 @@ impl Setup for MenuView {
                 Node::new(
                     MenuEntry::new("UI"),
                     vec![
+                        MenuEntry::new("ui bench")
+                            .action(|| {
+                                LevelManager::stop_level();
+                                UIManager::set_view(UIBenchmarkView::new());
+                            })
+                            .into(),
                         MenuEntry::new("ui scale").into(),
                         MenuEntry::new("sound").action(|| Sound::get("retro.wav").play()).into(),
                         MenuEntry::new("alert")
