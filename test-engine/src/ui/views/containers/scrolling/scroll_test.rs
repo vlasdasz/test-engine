@@ -30,7 +30,6 @@ impl Setup for ScrollViewTest {
 
 impl ViewTest for ScrollViewTest {
     fn perform_test(mut view: Weak<Self>) -> Result<()> {
-
         check_colors(
             r#"
                   51  117 -  89 124 149
@@ -208,7 +207,7 @@ impl ViewTest for ScrollViewTest {
         inject_touches("258  176  e");
 
         inject_scroll(-150);
-        assert_eq!(view.scroll.content_offset(), -150.0);
+        assert_eq!(view.scroll.get_scroll_content_offset(), -150.0);
 
         check_colors(
             r#"
@@ -254,7 +253,7 @@ impl ViewTest for ScrollViewTest {
         )?;
 
         inject_scroll(-1500);
-        assert_eq!(view.scroll.content_offset(), -200.0);
+        assert_eq!(view.scroll.get_scroll_content_offset(), -200.0);
 
         check_colors(
             r#"

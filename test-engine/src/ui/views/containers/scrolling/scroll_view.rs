@@ -63,6 +63,10 @@ impl ScrollView {
 
         self
     }
+
+    pub fn get_scroll_content_offset(&self) -> f32 {
+        self.content.content_offset()
+    }
 }
 
 impl Setup for ScrollView {
