@@ -166,7 +166,7 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 use test_engine::ui::Setup;
                 use test_engine::ui::WithHeader;
                 use test_engine::ui::ViewData;
-                self.__view_base.view_label += &#name_str.to_string();
+                self.__view_base.view_label = #name_str.to_string();
                 self.layout_header();
                 let mut weak = test_engine::refs::weak_from_ref(self);
                 weak.setup();

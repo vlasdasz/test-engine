@@ -6,7 +6,7 @@ use gm::{
 };
 use hreads::from_main;
 use refs::Weak;
-use ui::{Container, Setup, ViewData, ViewSubviews, ViewTest, WeakView};
+use ui::{Container, Setup, ViewData, ViewSubviews, ViewTest};
 
 use crate::{
     self as test_engine,
@@ -30,6 +30,7 @@ impl Setup for ScrollViewTest {
 
 impl ViewTest for ScrollViewTest {
     fn perform_test(mut view: Weak<Self>) -> Result<()> {
+
         check_colors(
             r#"
                   51  117 -  89 124 149
@@ -67,13 +68,13 @@ impl ViewTest for ScrollViewTest {
         assert_eq!(view.scroll.content_offset(), 0.0);
 
         inject_scroll(-5);
-        assert_eq!(view.scroll.content_offset(), -0.0);
+        assert_eq!(view.scroll.content_offset(), 0.0);
 
         inject_scroll(-20);
-        assert_eq!(view.scroll.content_offset(), -0.0);
+        assert_eq!(view.scroll.content_offset(), 0.0);
 
         inject_scroll(-30);
-        assert_eq!(view.scroll.content_offset(), -0.0);
+        assert_eq!(view.scroll.content_offset(), 0.0);
 
         check_colors(
             r#"
@@ -349,7 +350,7 @@ impl ViewTest for ScrollViewTest {
     }
 }
 
-fn add_corners(view: WeakView, color: Color) {
+fn add_corners(view: Weak<ScrollView>, color: Color) {
     let v1 = view.add_view::<Container>();
     let v2 = view.add_view::<Container>();
     let v3 = view.add_view::<Container>();

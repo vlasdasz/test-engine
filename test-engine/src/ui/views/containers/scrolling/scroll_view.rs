@@ -1,4 +1,4 @@
-use std::ops::Neg;
+use std::ops::{DerefMut, Neg};
 
 use gm::{
     ToF32,
@@ -6,61 +6,59 @@ use gm::{
 };
 use refs::{Own, Weak, weak_from_ref};
 use ui::{
-    Container, NO_TOUCH_ID, Scrollable, Setup, Slider, Touch, TouchStack, UIAnimation, UIEvent, UIManager,
-    View, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, view,
+    NO_TOUCH_ID, Scrollable, Setup, Touch, TouchStack, UIAnimation, UIEvent, UIManager, View, ViewData,
+    ViewFrame, ViewSubviews, view,
 };
 use vents::Event;
 
-use crate::{self as test_engine};
+use crate::{self as test_engine, ui::views::containers::scrolling::ScrollContent};
 
 #[view]
 pub struct ScrollView {
     inertia:            f32,
     previous_touch:     Point,
-    content_size:       Size,
     pub on_scroll:      Event<f32>,
     pub bottom_reached: UIEvent,
 
     #[init]
-    slider:    Slider,
-    container: Container,
+    content: ScrollContent,
 }
 
 impl ScrollView {
     pub fn remove_all_subviews(&mut self) {
-        self.container.remove_all_subviews();
+        self.content.remove_all_subviews();
     }
 
     // Content offset must be negative
     fn max_offset(&self) -> f32 {
-        (self.content_size.height - self.height()).neg().min(0.0)
+        (self.content.content_size.height - self.height()).neg().min(0.0)
     }
 
     pub fn set_content_offset(&mut self, offset: impl ToF32) -> &mut Self {
-        self.container.__base_view().__content_offset = offset.to_f32();
+        self.content.__base_view().__content_offset = offset.to_f32();
 
-        if self.container.__base_view().__content_offset < self.max_offset() {
-            self.container.__base_view().__content_offset = self.max_offset();
+        if self.content.__base_view().__content_offset < self.max_offset() {
+            self.content.__base_view().__content_offset = self.max_offset();
         }
 
         self
     }
 
     pub fn set_content_size(&mut self, size: impl Into<Size>) -> &mut Self {
-        self.content_size = size.into();
+        self.content.content_size = size.into();
         self
     }
 
     pub fn set_content_width(&mut self, width: impl ToF32) -> &mut Self {
-        self.content_size.width = width.to_f32();
+        self.content.content_size.width = width.to_f32();
         self
     }
 
     pub fn set_content_height(&mut self, height: impl ToF32) -> &mut Self {
-        self.content_size.height = height.to_f32();
+        self.content.content_size.height = height.to_f32();
 
-        if self.container.__base_view().__content_offset < self.max_offset() {
-            self.container.__base_view().__content_offset = self.max_offset();
+        if self.content.__base_view().__content_offset < self.max_offset() {
+            self.content.__base_view().__content_offset = self.max_offset();
         }
 
         self
@@ -69,16 +67,8 @@ impl ScrollView {
 
 impl Setup for ScrollView {
     fn setup(mut self: Weak<Self>) {
-        self.container.__base_view().dont_hide_off_screen = true;
-        self.container.place().back();
-
-        self.slider.place().w(40).r(0);
-        self.slider.on_change.val(move |val| {
-            let val = 1.0 - val;
-            let range = self.content_size.height - self.height();
-            self.container.__base_view().__content_offset = -range * val;
-            self.on_scroll.trigger(self.container.__base_view().__content_offset);
-        });
+        self.content.__base_view().dont_hide_off_screen = true;
+        self.content.place().back();
 
         UIManager::on_scroll(self, move |scroll| {
             self.on_scroll(scroll.y);
@@ -92,28 +82,13 @@ impl Setup for ScrollView {
     }
 }
 
-impl ViewCallbacks for ScrollView {
-    fn update(&mut self) {
-        let co = self.__view_base.__content_offset;
-        self.slider.set_y(-co);
-        let height = self.height();
-        self.slider.set_height(height);
-        let hidden = self.height() >= self.content_size.height;
-        self.slider.set_hidden(hidden);
-    }
-
-    fn content_size(&self) -> &Size {
-        &self.content_size
-    }
-}
-
 impl ViewSubviews for ScrollView {
     fn remove_all_subviews(&self) {
-        self.container.remove_all_subviews();
+        self.content.remove_all_subviews();
     }
 
     fn add_subview<V: ?Sized + View + 'static>(&self, view: Own<V>) -> Weak<V> {
-        self.container.add_subview(view)
+        self.content.add_subview(view)
     }
 }
 
@@ -128,8 +103,8 @@ impl Scrollable for ScrollView {
             return false;
         }
 
-        let mut target_frame = self.container.__base_view().__absolute_frame;
-        target_frame.origin.y -= self.container.__base_view().__content_offset;
+        let mut target_frame = self.content.__base_view().__absolute_frame;
+        target_frame.origin.y -= self.content.__base_view().__content_offset;
 
         if touch.is_began() && target_frame.contains(touch.position) {
             self.__view_base.__touch_id = touch.id;
@@ -173,26 +148,22 @@ impl ScrollView {
     }
 
     fn on_scroll(&mut self, scroll: f32) {
-        dbg!(&scroll);
+        let height = self.content.height();
+        let content = self.content.deref_mut();
 
-        if dbg!(self.height()) >= dbg!(self.content_size.height) {
-            dbg!("Rome bb");
+        if height >= content.content_size.height {
             return;
         }
-        self.container.__base_view().__content_offset += scroll;
-        let range = self.content_size.height - self.height();
 
-        if self.container.__base_view().__content_offset <= -range {
+        *content.content_offset_mut() += scroll;
+        let range = content.content_size.height - height;
+
+        if *content.content_offset_mut() <= -range {
             self.bottom_reached.trigger(());
         }
 
-        dbg!("Rome");
+        *content.content_offset_mut() = content.content_offset_mut().clamp(-range, 0.0);
 
-        self.container.__base_view().__content_offset =
-            self.container.__base_view().__content_offset.clamp(-range, 0.0);
-        let slider_val = -self.container.__base_view().__content_offset / range;
-        self.slider.set_value_without_event(1.0 - slider_val);
-
-        self.on_scroll.trigger(dbg!(self.container.__base_view().__content_offset));
+        self.on_scroll.trigger(*content.content_offset_mut());
     }
 }

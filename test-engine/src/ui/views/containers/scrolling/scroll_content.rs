@@ -1,0 +1,21 @@
+use gm::flat::Size;
+use ui::{ViewCallbacks, view};
+
+use crate::{self as test_engine};
+
+#[view]
+pub(super) struct ScrollContent {
+    pub(super) content_size: Size,
+}
+
+impl ScrollContent {
+    pub(super) fn content_offset_mut(&mut self) -> &mut f32 {
+        &mut self.__view_base.__content_offset
+    }
+}
+
+impl ViewCallbacks for ScrollContent {
+    fn content_size(&self) -> &Size {
+        &self.content_size
+    }
+}

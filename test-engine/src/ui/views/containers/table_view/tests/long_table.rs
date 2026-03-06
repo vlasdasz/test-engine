@@ -11,7 +11,7 @@ use ui::{AfterSetup, Container, Label, Setup, TableData, View, ViewData, ViewSub
 
 use crate::{
     self as test_engine, AppRunner,
-    ui::{Input, TableView},
+    ui::TableView,
     ui_test::{UITest, inject_touches},
 };
 
@@ -64,8 +64,6 @@ impl TableData for LongTableTest {
 impl ViewTest for LongTableTest {
     #[allow(clippy::too_many_lines)]
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        Input::set_scroll_multiplier(1.0);
-
         N_CELLS.store(2_000_000, Ordering::Relaxed);
 
         let view = UITest::start::<LongTableTest>();
@@ -326,8 +324,6 @@ impl ViewTest for LongTableTest {
         from_main(move || {
             view.table.set_columns(2);
         });
-
-        Input::set_scroll_multiplier(0.25);
 
         // record_ui_test();
 

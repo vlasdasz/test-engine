@@ -1,3 +1,5 @@
+use std::any::type_name;
+
 use gm::flat::Size;
 use refs::{Own, Weak};
 use window::RenderPass;
@@ -35,9 +37,11 @@ pub trait Setup {
 }
 
 impl<T: View + 'static> Setup for T {
-    default fn new() -> Own<Self>
+    fn new() -> Own<Self>
     where Self: Default {
-        Own::<Self>::default()
+        let own = Own::<Self>::default();
+        own.__base_view().view_label = type_name::<Self>().to_string();
+        own
     }
 
     default fn setup(self: Weak<Self>) {}

@@ -3,7 +3,9 @@ use std::{any::type_name, ops::DerefMut};
 use gm::{LossyConvert, color::Color};
 use refs::{Own, Weak, weak_from_ref};
 
-use crate::{Container, DELETED_VIEWS, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{
+    Container, DELETED_VIEWS, UIManager, View, ViewData, ViewFrame, WeakView, view::view_callbacks::Setup,
+};
 
 pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
@@ -92,7 +94,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_view<V: 'static + View + Default>(&self) -> Weak<V> {
-        let view = Own::<V>::default();
+        let view = V::new();
         let result = view.weak();
         self.add_subview(view);
         result
@@ -103,7 +105,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn __add_view_internal<V: 'static + View + Default>(&self) -> Weak<V> {
-        let view = Own::<V>::default();
+        let view = V::new();
         let result = view.weak();
         self.__add_subview_internal(view, false);
         result

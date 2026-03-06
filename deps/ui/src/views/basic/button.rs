@@ -4,7 +4,7 @@ use gm::{
     ToF32,
     color::{CLEAR, Color, WHITE},
 };
-use refs::{Own, Weak, weak_from_ref};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use vents::Event;
 use window::image::ToImage;
@@ -102,7 +102,7 @@ impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
         self.set_color(WHITE);
 
-        let label = Own::<Label>::default();
+        let label = Label::new();
 
         label.__base_view().is_system = true;
         label.__base_view().ignore_global_style = true;
