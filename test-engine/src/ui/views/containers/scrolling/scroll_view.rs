@@ -21,7 +21,7 @@ pub struct ScrollView {
     pub bottom_reached: UIEvent,
 
     #[init]
-    content: ScrollContent,
+    pub(crate) content: ScrollContent,
 }
 
 impl ScrollView {

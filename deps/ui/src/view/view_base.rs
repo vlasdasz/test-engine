@@ -29,7 +29,7 @@ pub struct ViewBase {
     #[educe(Default = crate::UIManager::ROOT_VIEW_Z_OFFSET)]
     pub(crate) z_position: f32,
 
-    pub(crate) frame:   Rect,
+    pub(crate) frame:     Rect,
     pub __absolute_frame: Rect,
 
     #[educe(Debug(ignore))]
@@ -75,6 +75,12 @@ pub struct ViewBase {
     pub(crate) ignore_global_style: bool,
 
     pub tag: usize,
+}
+
+impl ViewBase {
+    pub fn __subviews(&self) -> &[Own<dyn View>] {
+        &self.subviews
+    }
 }
 
 #[derive(Default)]
