@@ -190,39 +190,6 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
             }
         }
 
-        impl #generics test_engine::ui::__ViewInternalTableData for #name <#type_params>  {
-            fn __cell_height(&self, index: usize) -> f32 {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.cell_height(index)
-            }
-            fn __variable_height(&self) -> bool {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.variable_height()
-            }
-            fn __number_of_cells(&self) -> usize {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.number_of_cells()
-            }
-            fn __make_cell(&self, index: usize) -> test_engine::refs::Own<dyn test_engine::ui::View> {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.make_cell(index)
-            }
-            fn __setup_cell(&self, cell: &mut dyn std::any::Any, index: usize) {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.setup_cell(cell, index)
-            }
-            fn __cell_selected(&mut self, index: usize) {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.cell_selected(index)
-            }
-        }
-
         impl #generics test_engine::ui::__ViewIntoUnsizedOwn for #name <#type_params> {
             unsafe fn __into_unsized_own<V: ?Sized + test_engine::ui::View + 'static>(own: test_engine::refs::Own<V>) -> test_engine::refs::Own<dyn test_engine::ui::View> {
                 use test_engine::refs::Own;

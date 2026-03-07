@@ -12,7 +12,7 @@ pub use gm::{
 pub use input::*;
 pub use ui::UIDrawer;
 pub use ui_proc::view;
-pub use views::{color_meter::ColorMeter, *};
+pub use views::*;
 pub use window::{
     PolygonMode, Screenshot,
     image::{Image, NoImage, Tinted},

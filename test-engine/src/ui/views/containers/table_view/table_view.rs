@@ -1,14 +1,13 @@
 use refs::{Weak, weak_from_ref};
-use ui::{
-    __ViewInternalTableData, Setup, UIEvent, ViewCallbacks, ViewData, ViewFrame, ViewSubviews,
-    ViewTouch, WeakView, view,
-};
+use ui::{Setup, UIEvent, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewTouch, WeakView, view};
 
 use crate::{
     self as test_engine,
-    ui::{ScrollView, views::containers::table_view::layout::{
-        layout_single_column_cells, layout_two_column_cells, layout_variable_sized_cells,
-    }},
+    ui::{
+        __ViewInternalTableData, ScrollView, views::containers::table_view::layout::{
+            layout_single_column_cells, layout_two_column_cells, layout_variable_sized_cells,
+        }
+    },
 };
 
 #[view]

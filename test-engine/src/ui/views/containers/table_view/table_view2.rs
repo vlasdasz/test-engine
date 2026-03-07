@@ -1,13 +1,13 @@
-use std::{any::type_name, collections::HashMap};
+use std::any::type_name;
 
 use anyhow::Result;
 use netrun::Function;
 use refs::{Own, Weak};
-use ui::{__ViewInternalTableData, Setup, View, ViewData, ViewTest, view_test};
+use ui::{Setup, View, ViewData, ViewTest, view_test};
 
 use crate::{
     self as test_engine,
-    ui::{ScrollView, cell_registry::CellRegistry},
+    ui::{__ViewInternalTableData, ScrollView, cell_registry::CellRegistry},
 };
 
 #[view_test]

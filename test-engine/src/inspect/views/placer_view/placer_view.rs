@@ -1,10 +1,10 @@
 use std::any::Any;
 
 use refs::{Own, Rglica, ToRglica, Weak};
-use ui::{Placer, Setup, TableData, UIEvent, View, ViewData};
+use ui::{Placer, Setup, UIEvent, View, ViewData};
 use ui_proc::{cast_cell, view};
 
-use crate::{inspect::views::LayoutRuleCell, ui::TableView};
+use crate::{inspect::views::LayoutRuleCell, ui::{TableData, TableView}};
 
 mod test_engine {
     pub(crate) use educe;

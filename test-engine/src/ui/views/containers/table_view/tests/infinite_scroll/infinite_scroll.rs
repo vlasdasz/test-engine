@@ -4,15 +4,14 @@ use anyhow::Result;
 use gm::color::BLACK;
 use hreads::{from_main, on_main, sleep, spawn};
 use refs::{Own, Weak};
-use ui::{Setup, TableData, View, ViewData, ViewTest, cast_cell, view_test};
+use ui::{Setup, View, ViewData, ViewTest, cast_cell, view_test};
 
 use crate::{
     self as test_engine,
     ui::{
-        Spinner, TableView,
-        views::containers::table_view::tests::infinite_scroll::{
+        Spinner, TableData, TableView, views::containers::table_view::tests::infinite_scroll::{
             basic_scroll::test_basic_scroll, infinite_cell::InfiniteCell,
-        },
+        }
     },
     ui_test::{inject_scroll, inject_touches},
 };

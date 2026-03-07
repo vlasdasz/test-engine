@@ -1,8 +1,9 @@
 use std::any::Any;
 
 use refs::{Own, Weak};
+use ui::{Label, View};
 
-use crate::{Label, Setup, View};
+use crate::ui::TableView2;
 
 pub trait __ViewInternalTableData {
     fn __cell_height(&self, index: usize) -> f32;
@@ -11,6 +12,7 @@ pub trait __ViewInternalTableData {
     fn __make_cell(&self, index: usize) -> Own<dyn View>;
     fn __setup_cell(&self, cell: &mut dyn Any, index: usize);
     fn __cell_selected(&mut self, index: usize);
+    fn __setup_cell2(&self, table: &mut TableView2);
 }
 
 pub trait TableData {

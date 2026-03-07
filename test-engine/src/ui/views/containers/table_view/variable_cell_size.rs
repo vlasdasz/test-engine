@@ -1,10 +1,13 @@
 use anyhow::Result;
 use gm::color::BLACK;
 use refs::{Own, Weak};
-use ui::{Container, Setup, TableData, View, ViewData, ViewTest, view_test};
+use ui::{Container, Setup, View, ViewData, ViewTest, view_test};
 
 use crate as test_engine;
-use crate::{ui::TableView, ui_test::check_colors};
+use crate::{
+    ui::{TableData, TableView},
+    ui_test::check_colors,
+};
 
 #[view_test]
 struct VariableCellSizeTest {
