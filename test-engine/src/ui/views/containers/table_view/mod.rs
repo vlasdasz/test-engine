@@ -1,3 +1,4 @@
+pub(crate) mod cell_registry;
 pub(crate) mod layout;
 mod table_view;
 mod table_view2;

@@ -75,7 +75,7 @@ impl ViewTest for LongTableTest {
         wait_for_next_frame();
 
         assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
+            view.table.scroll.subviews().last().unwrap().downcast_weak::<Label>().unwrap().text(),
             "Cell number: 26"
         );
 

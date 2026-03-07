@@ -163,7 +163,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn get_subview<V: 'static + View + Default>(&mut self) -> Weak<V> {
         for sub in self.subviews() {
-            if let Some(view) = sub.downcast::<V>() {
+            if let Some(view) = sub.downcast_weak::<V>() {
                 return view;
             }
         }

@@ -153,6 +153,10 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
             fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
                self
             }
+
+            fn into_any_box(self: Box<Self>) -> Box<dyn std::any::Any> {
+                self
+            }
         }
 
         impl #generics test_engine::ui::__ViewInternalSetup for #name <#type_params>  {
