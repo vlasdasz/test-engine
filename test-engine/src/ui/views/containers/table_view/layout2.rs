@@ -37,6 +37,7 @@ impl TableView2 {
                 c
             })
             .collect();
+
         self.registry.load_old_cells(old_cells);
 
         let mut weak_table = self.weak();

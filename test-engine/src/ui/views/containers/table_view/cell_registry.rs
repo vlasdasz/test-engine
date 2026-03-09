@@ -6,19 +6,19 @@ use ui::{View, ViewData};
 
 #[derive(Default)]
 pub struct CellRegistry {
-    pub free_cells:   HashMap<&'static str, Vec<Own<dyn View>>>,
+    pub free_cells:   HashMap<String, Vec<Own<dyn View>>>,
     pub constructors: HashMap<&'static str, Function<(), Own<dyn View>>>,
 }
 
 impl CellRegistry {
     pub(crate) fn load_old_cells(&mut self, mut cells: Vec<Own<dyn View>>) {
         for cell in cells.drain(..) {
-            dbg!(&cell.label());
+            self.free_cells.entry(cell.label().to_string()).or_default().push(cell);
         }
     }
 
     pub(crate) fn cell_for_ident(&mut self, ident: &'static str) -> Own<dyn View> {
-        let container = self.free_cells.entry(ident).or_default();
+        let container = self.free_cells.entry(ident.to_string()).or_default();
 
         if let Some(cell) = container.pop() {
             return cell;
@@ -33,6 +33,11 @@ impl CellRegistry {
     }
 
     pub fn get_cell<T: View + 'static>(&mut self) -> Own<T> {
-        self.cell_for_ident(type_name::<T>()).downcast::<T>()
+        self.cell_for_ident(struct_name::<T>()).downcast::<T>()
     }
+}
+
+pub(crate) fn struct_name<T>() -> &'static str {
+    let full_name = type_name::<T>();
+    full_name.split("::").last().unwrap_or(full_name)
 }

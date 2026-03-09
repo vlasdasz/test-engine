@@ -7,7 +7,7 @@ use ui::{Setup, View, ViewData, ViewFrame, ViewSubviews, ViewTest, view_test};
 
 use crate::{
     self as test_engine,
-    ui::{CellRegistry, ScrollView, TableData},
+    ui::{CellRegistry, ScrollView, TableData, struct_name},
 };
 
 #[view_test]
@@ -32,7 +32,6 @@ impl Setup for TableView2 {
         });
 
         self.size_changed().sub(move || {
-            dbg!("Size changed");
             self.layout_cells();
         });
     }
@@ -50,7 +49,7 @@ impl TableView2 {
     ) {
         self.registry
             .constructors
-            .insert(type_name::<T>(), Function::new(move |()| create()));
+            .insert(struct_name::<T>(), Function::new(move |()| create()));
     }
 
     pub fn reload_data(&mut self) {
@@ -60,8 +59,6 @@ impl TableView2 {
 
 impl TableView2 {
     fn layout_cells(&mut self) {
-        self.scroll.remove_all_subviews();
-
         if self.height() <= 0.0 {
             return;
         }
@@ -132,7 +129,7 @@ mod test {
         }
 
         fn number_of_cells(&self) -> usize {
-            100
+            10000
         }
 
         fn setup_cell2(&self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
