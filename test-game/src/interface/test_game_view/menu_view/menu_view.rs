@@ -271,54 +271,54 @@ impl Setup for MenuView {
     }
 }
 
-impl TableData for MenuView {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-        28.0
-    }
+// impl TableData for MenuView {
+//     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+//         28.0
+//     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        self.root.length()
-    }
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         self.root.length()
+//     }
 
-    fn make_cell(mut self: Weak<Self>, index: usize) -> Own<dyn View> {
-        let node = self.root.val_at_index(index);
-        if node.value.label == "ui scale" {
-            ScaleCell::make(
-                Function::new(|()| UIManager::scale()),
-                Function::new(UIManager::set_scale),
-            )
-        } else if node.value.label == "lvl scale" {
-            ScaleCell::make(
-                Function::new(|()| LevelManager::scale()),
-                Function::new(LevelManager::set_scale),
-            )
-        } else {
-            NodeCell::new()
-        }
-    }
+//     fn make_cell(mut self: Weak<Self>, index: usize) -> Own<dyn View> {
+//         let node = self.root.val_at_index(index);
+//         if node.value.label == "ui scale" {
+//             ScaleCell::make(
+//                 Function::new(|()| UIManager::scale()),
+//                 Function::new(UIManager::set_scale),
+//             )
+//         } else if node.value.label == "lvl scale" {
+//             ScaleCell::make(
+//                 Function::new(|()| LevelManager::scale()),
+//                 Function::new(LevelManager::set_scale),
+//             )
+//         } else {
+//             NodeCell::new()
+//         }
+//     }
 
-    fn setup_cell(mut self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let node = self.root.val_at_index(index);
-        if node.value.label == "ui scale" || node.value.label == "lvl scale" {
-            cast_cell!(ScaleCell).set_node(node);
-        } else {
-            cast_cell!(NodeCell).set_node(node);
-        }
-    }
+//     fn setup_cell(mut self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+//         let node = self.root.val_at_index(index);
+//         if node.value.label == "ui scale" || node.value.label == "lvl scale"
+// {             cast_cell!(ScaleCell).set_node(node);
+//         } else {
+//             cast_cell!(NodeCell).set_node(node);
+//         }
+//     }
 
-    fn cell_selected(mut self: Weak<Self>, index: usize) {
-        let val = self.root.val_at_index(index);
+//     fn cell_selected(mut self: Weak<Self>, index: usize) {
+//         let val = self.root.val_at_index(index);
 
-        if val.is_leaf() {
-            val.value.run();
-            return;
-        }
+//         if val.is_leaf() {
+//             val.value.run();
+//             return;
+//         }
 
-        val.open.toggle();
-        self.root.update_indices(0, 0);
-        self.table.reload_data();
-    }
-}
+//         val.open.toggle();
+//         self.root.update_indices(0, 0);
+//         self.table.reload_data();
+//     }
+// }
 
 impl MenuView {
     async fn rest_pressed(self: Weak<Self>) -> anyhow::Result<()> {

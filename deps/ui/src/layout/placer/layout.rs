@@ -155,13 +155,13 @@ impl Placer {
     fn tiling_layout(&mut self, frame: RMut, s_content: &Size, tiling: &Tiling) {
         match tiling {
             Tiling::Background => *frame = s_content.clone().into(),
-            Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
-            Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
+            Tiling::Horizontally => place_horizontally(self.view.subviews_weak(), *self.all_margin.borrow()),
+            Tiling::Vertically => place_vertically(self.view.subviews_weak(), *self.all_margin.borrow()),
             Tiling::LeftHalf => *frame = (0, 0, s_content.width / 2.0, s_content.height).into(),
             Tiling::RightHalf => {
                 *frame = (s_content.width / 2.0, 0, s_content.width / 2.0, s_content.height).into();
             }
-            Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_mut(), ratio),
+            Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_weak(), ratio),
         }
     }
 

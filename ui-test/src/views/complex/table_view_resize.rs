@@ -21,26 +21,26 @@ impl Setup for TableViewResize {
     }
 }
 
-impl TableData for TableViewResize {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-        50.0
-    }
+// impl TableData for TableViewResize {
+//     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+//         50.0
+//     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        1
-    }
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         1
+//     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        Label::new().after_setup(|label| {
-            label.set_color(GREEN);
-        })
-    }
+//     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
+//         Label::new().after_setup(|label| {
+//             label.set_color(GREEN);
+//         })
+//     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, _index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
-        label.set_text("alalalalal");
-    }
-}
+//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, _index: usize) {
+//         let label = cell.downcast_mut::<Label>().unwrap();
+//         label.set_text("alalalalal");
+//     }
+// }
 
 pub async fn test_table_view_resize() -> Result<()> {
     let view = UITest::start::<TableViewResize>();

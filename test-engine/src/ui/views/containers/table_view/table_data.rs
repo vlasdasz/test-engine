@@ -1,48 +1,43 @@
 use std::any::Any;
 
-use refs::{Own, Weak};
-use ui::{Label, Setup, View};
+use refs::Own;
+use ui::{Container, Label, Setup, View};
 
-use crate::ui::TableView2;
-
-pub trait __ViewInternalTableData {
-    fn __cell_height(&self, index: usize) -> f32;
-    fn __variable_height(&self) -> bool;
-    fn __number_of_cells(&self) -> usize;
-    fn __make_cell(&self, index: usize) -> Own<dyn View>;
-    fn __setup_cell(&self, cell: &mut dyn Any, index: usize);
-    fn __cell_selected(&mut self, index: usize);
-    fn __setup_cell2(&self, table: &mut TableView2);
-}
+use crate::ui::CellRegistry;
 
 pub trait TableData {
-    fn cell_height(self: Weak<Self>, index: usize) -> f32;
-    fn variable_height(self: Weak<Self>) -> bool;
-    fn number_of_cells(self: Weak<Self>) -> usize;
-    fn make_cell(self: Weak<Self>, index: usize) -> Own<dyn View>;
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize);
-    fn cell_selected(self: Weak<Self>, index: usize);
+    fn cell_height(&self, index: usize) -> f32;
+    fn variable_height(&self) -> bool;
+    fn number_of_cells(&self) -> usize;
+    fn make_cell(&self, index: usize) -> Own<dyn View>;
+    fn setup_cell(&self, cell: &mut dyn Any, index: usize);
+    fn cell_selected(&self, index: usize);
+    fn setup_cell2(&self, index: usize, registry: &mut CellRegistry) -> Own<dyn View>;
 }
 
 #[allow(unused_variables)]
 impl<T: View + 'static> TableData for T {
-    default fn cell_height(self: Weak<Self>, _index: usize) -> f32 {
+    default fn cell_height(&self, _index: usize) -> f32 {
         50.0
     }
 
-    default fn variable_height(self: Weak<Self>) -> bool {
+    default fn variable_height(&self) -> bool {
         false
     }
 
-    default fn number_of_cells(self: Weak<Self>) -> usize {
+    default fn number_of_cells(&self) -> usize {
         0
     }
 
-    default fn make_cell(self: Weak<Self>, index: usize) -> Own<dyn View> {
+    default fn make_cell(&self, index: usize) -> Own<dyn View> {
         Label::new()
     }
 
-    default fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {}
+    default fn setup_cell(&self, cell: &mut dyn Any, index: usize) {}
 
-    default fn cell_selected(self: Weak<Self>, index: usize) {}
+    default fn cell_selected(&self, index: usize) {}
+
+    default fn setup_cell2(&self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        Container::new()
+    }
 }

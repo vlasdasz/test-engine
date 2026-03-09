@@ -4,15 +4,16 @@ use ui::{Setup, UIEvent, ViewCallbacks, ViewData, ViewFrame, ViewSubviews, ViewT
 use crate::{
     self as test_engine,
     ui::{
-        __ViewInternalTableData, ScrollView, views::containers::table_view::layout::{
+        ScrollView, TableData,
+        views::containers::table_view::layout::{
             layout_single_column_cells, layout_two_column_cells, layout_variable_sized_cells,
-        }
+        },
     },
 };
 
 #[view]
 pub struct TableView {
-    pub(super) data:    Weak<dyn __ViewInternalTableData>,
+    pub(super) data:    Weak<dyn TableData>,
     #[educe(Default = 1)]
     pub(super) columns: usize,
 
@@ -47,7 +48,7 @@ impl Setup for TableView {
 }
 
 impl TableView {
-    pub fn set_data_source<T: __ViewInternalTableData + 'static>(
+    pub fn set_data_source<T: TableData + 'static>(
         mut self: Weak<Self>,
         data: Weak<T>,
     ) -> Weak<Self> {
@@ -88,13 +89,13 @@ impl TableView {
             "TableView data source is not set. Use set_data_source method."
         );
 
-        let number_of_cells = self.data.__number_of_cells();
+        let number_of_cells = self.data.number_of_cells();
 
         if number_of_cells == 0 {
             return;
         }
 
-        if self.data.__variable_height() {
+        if self.data.variable_height() {
             assert_eq!(
                 self.columns, 1,
                 "Variable height supported only for tables with 1 column"
@@ -110,19 +111,19 @@ impl TableView {
     }
 
     pub(super) fn add_cell(&self, index: usize) -> WeakView {
-        let mut cell = self.data.__make_cell(index);
+        let mut cell = self.data.make_cell(index);
 
         let label = format!("TableView cell: {}", cell.label());
         cell.set_label(label);
 
         let mut cell = self.scroll.add_subview(cell);
 
-        self.data.__setup_cell(cell.as_any_mut(), index);
+        self.data.setup_cell(cell.as_any_mut(), index);
 
         cell.enable_touch_low_priority();
         let mut weak = weak_from_ref(self);
         cell.touch().up_inside.sub(move || {
-            weak.data.__cell_selected(index);
+            weak.data.cell_selected(index);
         });
 
         cell

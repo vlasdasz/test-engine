@@ -24,27 +24,27 @@ impl Setup for VariableCellSizeTest {
     }
 }
 
-impl TableData for VariableCellSizeTest {
-    fn cell_height(self: Weak<Self>, index: usize) -> f32 {
-        [40.0, 200.0, 80.0, 100.0][index]
-    }
+// impl TableData for VariableCellSizeTest {
+//     fn cell_height(self: Weak<Self>, index: usize) -> f32 {
+//         [40.0, 200.0, 80.0, 100.0][index]
+//     }
 
-    fn variable_height(self: Weak<Self>) -> bool {
-        true
-    }
+//     fn variable_height(self: Weak<Self>) -> bool {
+//         true
+//     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        4
-    }
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         4
+//     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        let cell = Container::new();
+//     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
+//         let cell = Container::new();
 
-        cell.weak().set_border_color(BLACK).set_border_width(20).set_corner_radius(10);
+//         cell.weak().set_border_color(BLACK).set_border_width(20).set_corner_radius(10);
 
-        cell
-    }
-}
+//         cell
+//     }
+// }
 
 impl ViewTest for VariableCellSizeTest {
     fn perform_test(_view: Weak<Self>) -> Result<()> {

@@ -116,9 +116,9 @@ impl Label {
         image_view.place().back();
         image_view.set_resizing_image(name);
         image_view.__base_view().z_position = self.z_position();
-        image_view.subviews_mut().iter_mut().for_each(|v| {
+        image_view.subviews_weak().iter_mut().for_each(|v| {
             v.__base_view().z_position = self.z_position();
-            v.subviews_mut().iter_mut().for_each(|v| {
+            v.subviews_weak().iter_mut().for_each(|v| {
                 v.__base_view().z_position = self.z_position();
             });
         });

@@ -47,7 +47,7 @@ impl<T: ?Sized + View> ViewFrame for T {
 
     fn bump_z_position(&mut self, z: f32) -> &mut Self {
         self.__base_view().z_position -= z;
-        for mut sub in self.subviews_mut() {
+        for mut sub in self.subviews_weak() {
             sub.bump_z_position(z + UIManager::subview_z_offset());
         }
         self

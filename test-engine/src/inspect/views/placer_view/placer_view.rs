@@ -1,10 +1,8 @@
-use std::any::Any;
+use refs::{Rglica, ToRglica, Weak};
+use ui::{Placer, Setup, UIEvent, ViewData};
+use ui_proc::view;
 
-use refs::{Own, Rglica, ToRglica, Weak};
-use ui::{Placer, Setup, UIEvent, View, ViewData};
-use ui_proc::{cast_cell, view};
-
-use crate::{inspect::views::LayoutRuleCell, ui::{TableData, TableView}};
+use crate::ui::TableView;
 
 mod test_engine {
     pub(crate) use educe;
@@ -41,30 +39,30 @@ impl PlacerView {
     }
 }
 
-impl TableData for PlacerView {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-        50.0
-    }
+// impl TableData for PlacerView {
+//     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+//         50.0
+//     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        if self.placer.is_null() {
-            return 0;
-        }
-        self.placer.get_rules().len()
-    }
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         if self.placer.is_null() {
+//             return 0;
+//         }
+//         self.placer.get_rules().len()
+//     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        LayoutRuleCell::new()
-    }
+//     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
+//         LayoutRuleCell::new()
+//     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        if self.placer.is_null() {
-            return;
-        }
-        let cell = cast_cell!(LayoutRuleCell);
-        cell.set_rule(&self.placer.get_rules()[index]);
-        cell.editing_ended.sub(self, move || {
-            self.rule_changed.trigger(());
-        });
-    }
-}
+//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+//         if self.placer.is_null() {
+//             return;
+//         }
+//         let cell = cast_cell!(LayoutRuleCell);
+//         cell.set_rule(&self.placer.get_rules()[index]);
+//         cell.editing_ended.sub(self, move || {
+//             self.rule_changed.trigger(());
+//         });
+//     }
+// }

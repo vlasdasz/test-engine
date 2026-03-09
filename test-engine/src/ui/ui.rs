@@ -87,7 +87,7 @@ impl UIDrawer {
         view.calculate_absolute_frame();
         view.update();
         view.trigger_events();
-        for mut view in view.subviews_mut() {
+        for mut view in view.subviews_weak() {
             Self::update_view(view.deref_mut());
         }
     }

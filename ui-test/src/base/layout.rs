@@ -68,7 +68,7 @@ impl LayoutPlace {
 
 impl Setup for LayoutPlace {
     fn setup(mut self: Weak<Self>) {
-        for view in self.subviews_mut() {
+        for view in self.subviews_weak() {
             view.place().size(15, 15);
 
             let Some(button) = view.downcast::<Button>() else {

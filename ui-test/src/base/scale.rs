@@ -47,15 +47,15 @@ impl Setup for ScaleView {
     }
 }
 
-impl TableData for ScaleView {
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        4
-    }
+// impl TableData for ScaleView {
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         4
+//     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        cast_cell!(Label).set_text(index);
-    }
-}
+//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+//         cast_cell!(Label).set_text(index);
+//     }
+// }
 
 pub async fn test_scale() -> Result<()> {
     let mut view = UITest::start::<ScaleView>();

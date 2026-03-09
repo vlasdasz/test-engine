@@ -73,28 +73,28 @@ impl InfiniteScrollTest {
     }
 }
 
-impl TableData for InfiniteScrollTest {
-    fn cell_height(self: Weak<Self>, _index: usize) -> f32 {
-        80.0
-    }
+// impl TableData for InfiniteScrollTest {
+//     fn cell_height(self: Weak<Self>, _index: usize) -> f32 {
+//         80.0
+//     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        self.data_size
-    }
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         self.data_size
+//     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        InfiniteCell::new()
-    }
+//     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
+//         InfiniteCell::new()
+//     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        cast_cell!(InfiniteCell).set_text(index);
-    }
+//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+//         cast_cell!(InfiniteCell).set_text(index);
+//     }
 
-    fn cell_selected(mut self: Weak<Self>, index: usize) {
-        #[allow(clippy::format_push_string)]
-        self.test_string.push_str(&format!("|{index}|"));
-    }
-}
+//     fn cell_selected(mut self: Weak<Self>, index: usize) {
+//         #[allow(clippy::format_push_string)]
+//         self.test_string.push_str(&format!("|{index}|"));
+//     }
+// }
 
 impl ViewTest for InfiniteScrollTest {
     fn perform_test(mut view: Weak<Self>) -> Result<()> {

@@ -32,35 +32,35 @@ impl Setup for LongTableTest {
     }
 }
 
-impl TableData for LongTableTest {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-        40.0
-    }
+// impl TableData for LongTableTest {
+//     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+//         40.0
+//     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        N_CELLS.load(Ordering::Relaxed)
-    }
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         N_CELLS.load(Ordering::Relaxed)
+//     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        Label::new().after_setup(|label| {
-            label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
-            label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
-        })
-    }
+//     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
+//         Label::new().after_setup(|label| {
+//             label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
+//             label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
+//         })
+//     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
-        if self.table.columns == 1 {
-            label.set_text(format!("Cell number: {}", index + 1));
-        } else {
-            label.set_text(format!("Cell: {}", index + 1));
-        }
-    }
+//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+//         let label = cell.downcast_mut::<Label>().unwrap();
+//         if self.table.columns == 1 {
+//             label.set_text(format!("Cell number: {}", index + 1));
+//         } else {
+//             label.set_text(format!("Cell: {}", index + 1));
+//         }
+//     }
 
-    fn cell_selected(self: Weak<Self>, index: usize) {
-        INDEX.store(index, Ordering::Relaxed);
-    }
-}
+//     fn cell_selected(self: Weak<Self>, index: usize) {
+//         INDEX.store(index, Ordering::Relaxed);
+//     }
+// }
 
 impl ViewTest for LongTableTest {
     #[allow(clippy::too_many_lines)]

@@ -53,28 +53,28 @@ impl Setup for LabelImage {
     }
 }
 
-impl TableData for LabelImage {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-        50.0
-    }
+// impl TableData for LabelImage {
+//     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+//         50.0
+//     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
-        4
-    }
+//     fn number_of_cells(self: Weak<Self>) -> usize {
+//         4
+//     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
+//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
+//         let label = cell.downcast_mut::<Label>().unwrap();
 
-        label.set_text(index);
-        label.set_text_size(50);
-        label.set_text_color(WHITE);
-        if self.resizing_image {
-            label.set_resizing_image("button");
-        } else {
-            label.set_image("cat.png");
-        }
-    }
-}
+//         label.set_text(index);
+//         label.set_text_size(50);
+//         label.set_text_color(WHITE);
+//         if self.resizing_image {
+//             label.set_resizing_image("button");
+//         } else {
+//             label.set_image("cat.png");
+//         }
+//     }
+// }
 
 pub async fn test_label_image() -> Result<()> {
     let mut view = UITest::start::<LabelImage>();

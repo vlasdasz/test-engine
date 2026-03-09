@@ -49,7 +49,7 @@ impl ImageView {
             self.nine_segment = self.add_view();
             self.nine_segment.place().back();
             self.nine_segment
-                .subviews_mut()
+                .subviews_weak()
                 .iter_mut()
                 .for_each(|v| v.__base_view().z_position = self.z_position());
         }
