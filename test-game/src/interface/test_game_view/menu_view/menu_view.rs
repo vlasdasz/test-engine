@@ -49,7 +49,8 @@ impl Setup for MenuView {
     fn setup(mut self: Weak<Self>) {
         // UIManager::override_scale(2.0);
 
-        self.table.set_data_source(self).place().back();
+        // TODO:
+        // self.table.set_data_source(self).place().back();
 
         self.root = Node::new(
             MenuEntry::new("Root"),

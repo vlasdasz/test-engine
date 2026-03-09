@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use refs::{Own, Weak};
-use ui::{Label, View};
+use ui::{Label, Setup, View};
 
 use crate::ui::TableView2;
 

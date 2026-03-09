@@ -18,7 +18,8 @@ struct VariableCellSizeTest {
 impl Setup for VariableCellSizeTest {
     fn setup(self: Weak<Self>) {
         // UIManager::enable_debug_frames();
-        self.table.set_data_source(self).place().back();
+        // TODO:
+        // self.table.set_data_source(self).place().back();
         self.table.reload_data();
     }
 }

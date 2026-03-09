@@ -28,7 +28,8 @@ pub struct PlacerView {
 impl Setup for PlacerView {
     fn setup(self: Weak<Self>) {
         self.place().all_ver();
-        self.table.set_data_source(self);
+        // TODO:
+        // self.table.set_data_source(self);
     }
 }
 

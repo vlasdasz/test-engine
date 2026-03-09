@@ -9,9 +9,10 @@ use ui::{Setup, View, ViewData, ViewTest, cast_cell, view_test};
 use crate::{
     self as test_engine,
     ui::{
-        Spinner, TableData, TableView, views::containers::table_view::tests::infinite_scroll::{
+        Spinner, TableData, TableView,
+        views::containers::table_view::tests::infinite_scroll::{
             basic_scroll::test_basic_scroll, infinite_cell::InfiniteCell,
-        }
+        },
     },
     ui_test::{inject_scroll, inject_touches},
 };
@@ -34,7 +35,7 @@ impl Setup for InfiniteScrollTest {
         self.page_size = 100;
         self.table.columns = 2;
         self.table
-            .set_data_source(self)
+            // .set_data_source(self) TODO:
             .set_border_color(BLACK)
             .set_border_width(5)
             .place()

@@ -27,7 +27,8 @@ struct LongTableTest {
 impl Setup for LongTableTest {
     fn setup(self: Weak<Self>) {
         self.table.place().lr(280).tb(0);
-        self.table.set_data_source(self);
+        // TODO:
+        // self.table.set_data_source(self);
     }
 }
 
@@ -75,7 +76,14 @@ impl ViewTest for LongTableTest {
         wait_for_next_frame();
 
         assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast_weak::<Label>().unwrap().text(),
+            view.table
+                .scroll
+                .subviews()
+                .last()
+                .unwrap()
+                .downcast_weak::<Label>()
+                .unwrap()
+                .text(),
             "Cell number: 26"
         );
 
