@@ -132,7 +132,7 @@ impl CollectionView {
             cell.__base_view().view_label = format!("Table cell: {}", cell.label());
             cell.enable_touch_low_priority();
             let mut this = weak_from_ref(self);
-            cell.touch().up_inside.sub(move || this.data_source.cell_selected(i));
+            cell.touch().up_inside.sub(cell, move || this.data_source.cell_selected(i));
             self.cells.push(cell);
         }
 

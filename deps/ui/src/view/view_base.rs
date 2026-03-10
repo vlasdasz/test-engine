@@ -5,7 +5,7 @@ use gm::{color::Color, flat::Rect};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{NavigationView, Touch, View, WeakView, layout::Placer};
+use crate::{NavigationView, Touch, UIEvent, View, WeakView, layout::Placer};
 
 #[derive(Educe)]
 #[educe(Default, Debug)]
@@ -94,5 +94,5 @@ pub struct ViewTouchEvents {
     pub all:       Event<Touch>,
     pub began:     Event<Touch>,
     pub moved:     Event<Touch>,
-    pub up_inside: Event<Touch>,
+    pub up_inside: UIEvent<Touch>,
 }

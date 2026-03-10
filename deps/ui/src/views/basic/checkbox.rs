@@ -68,7 +68,7 @@ impl Setup for CheckBox {
             })
             .center();
 
-        self.touch().up_inside.sub(move || {
+        self.touch().up_inside.sub(self, move || {
             let on = !self.on;
             self.set_on(on);
             self.selected.trigger(on);

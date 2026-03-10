@@ -99,14 +99,21 @@ impl ViewTest for TableView2 {
 }
 
 mod test {
+    use std::ops::Deref;
+
     use anyhow::Result;
+    use gm::color::Color;
+    use parking_lot::Mutex;
     use refs::{Own, Weak};
-    use ui::{Label, Setup, UIManager, View, ViewData, ViewTest, view_test};
+    use ui::{AfterSetup, Label, Setup, View, ViewData, ViewTest, view_test};
 
     use crate::{
         self as test_engine,
         ui::{CellRegistry, TableData, TableView2},
+        ui_test::{inject_scroll, inject_touches},
     };
+
+    static TEST_DATA: Mutex<String> = Mutex::new(String::new());
 
     #[view_test]
     struct TableView2Test {
@@ -135,14 +142,68 @@ mod test {
         fn setup_cell2(&self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
             let cell = registry.get_cell::<Label>();
             cell.set_text(index);
+            cell.set_border_width(index % 20);
+            cell.set_color(Color::ALL[index % Color::ALL.len()]);
+            cell.set_border_color(Color::ALL[(index + 1) % Color::ALL.len()]);
+            cell.set_corner_radius(index % 40);
 
             cell
+        }
+
+        fn cell_selected(&mut self, index: usize) {
+            *TEST_DATA.lock() += &format!("|{index}|");
         }
     }
 
     impl ViewTest for TableView2Test {
-        fn perform_test(view: Weak<Self>) -> Result<()> {
-            UIManager::enable_debug_frames();
+        fn perform_test(_view: Weak<Self>) -> Result<()> {
+            inject_touches(
+                "
+                    395  35   b
+                    394  35   e
+                    357  160  b
+                    357  159  e
+                    349  258  b
+                    349  258  e
+                    351  366  b
+                    351  366  e
+                    353  455  b
+                    353  455  e
+                    350  528  b
+                    350  528  e
+                ",
+            );
+
+            assert_eq!(TEST_DATA.lock().deref(), "|0||1||2||3||4||5|");
+
+            TEST_DATA.lock().clear();
+
+            for _ in 0..200 {
+                inject_scroll(-20);
+            }
+
+            inject_scroll(-1000);
+
+            inject_touches(
+                "
+                359  58   b
+                359  58   e
+                334  159  b
+                334  159  e
+                349  239  b
+                349  239  e
+                354  346  b
+                353  345  e
+                354  436  b
+                353  435  e
+                353  536  b
+                353  536  e
+
+            ",
+            );
+
+            assert_eq!(TEST_DATA.lock().deref(), "|50||51||52||53||54||55|");
+
             crate::ui_test::record_ui_test();
             Ok(())
         }

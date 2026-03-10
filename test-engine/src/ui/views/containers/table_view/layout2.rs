@@ -1,6 +1,6 @@
 use gm::LossyConvert;
 use refs::{Weak, weak_from_ref};
-use ui::{Anchor::Top, ViewData, ViewFrame, ViewSubviews, WeakView};
+use ui::{Anchor::Top, ViewData, ViewFrame, ViewSubviews, ViewTouch, WeakView};
 
 use crate::ui::{TableView, TableView2};
 
@@ -34,6 +34,7 @@ impl TableView2 {
             .drain(..)
             .map(|c| {
                 c.place().clear();
+                c.touch().up_inside.clear_subscribers();
                 c
             })
             .collect();
@@ -48,6 +49,11 @@ impl TableView2 {
 
             // let cell = self.add_subview(cell);
             cell.place().h(cell_height).t(i.lossy_convert() * cell_height).lr(0);
+
+            cell.enable_touch_low_priority();
+            cell.touch().up_inside.sub(weak_table, move || {
+                weak_table.data.cell_selected(i);
+            });
         }
     }
 }

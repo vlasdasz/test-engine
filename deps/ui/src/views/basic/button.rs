@@ -117,7 +117,7 @@ impl Setup for Button {
         self.image.set_hidden(true);
         self.image.__base_view().is_system = true;
 
-        self.touch().up_inside.sub(move || self.on_tap.trigger(()));
+        self.touch().up_inside.sub(self, move || self.on_tap.trigger(()));
 
         Style::apply_global(self);
     }

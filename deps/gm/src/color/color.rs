@@ -47,7 +47,7 @@ pub const LIGHTER_GRAY: Color = Color::rgb(0.9, 0.9, 0.9);
 pub const CLEAR: Color = Color::rgba(0.0, 0.0, 0.0, 0.0);
 
 impl Color {
-    const ALL: [Color; 13] = [
+    pub const ALL: [Color; 13] = [
         BLACK,
         WHITE,
         RED,

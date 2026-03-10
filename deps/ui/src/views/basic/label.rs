@@ -51,6 +51,7 @@ pub struct Label {
     #[educe(Default = BLACK)]
     text_color: Color,
 
+    #[educe(Default = DEFAULT_TEXT_SIZE.load(Ordering::Relaxed))]
     text_size: f32,
 }
 
@@ -99,7 +100,6 @@ impl Label {
     }
 
     pub fn set_image(&self, image: impl ToImage) -> &Self {
-        self.set_color(CLEAR);
         self.remove_all_subviews();
         let image_view = self.add_view::<ImageView>();
         image_view.place().back();
@@ -110,7 +110,6 @@ impl Label {
     }
 
     pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
-        self.set_color(CLEAR);
         self.remove_all_subviews();
         let mut image_view = self.add_view::<ImageView>();
         image_view.place().back();
@@ -135,9 +134,6 @@ impl Label {
 
 impl Setup for Label {
     fn setup(mut self: Weak<Self>) {
-        self.text_size = DEFAULT_TEXT_SIZE.load(Ordering::Relaxed);
-        self.set_color(WHITE);
-
         Style::apply_global(self);
     }
 }

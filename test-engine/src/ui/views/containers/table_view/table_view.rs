@@ -48,10 +48,7 @@ impl Setup for TableView {
 }
 
 impl TableView {
-    pub fn set_data_source<T: TableData + 'static>(
-        mut self: Weak<Self>,
-        data: Weak<T>,
-    ) -> Weak<Self> {
+    pub fn set_data_source<T: TableData + 'static>(mut self: Weak<Self>, data: Weak<T>) -> Weak<Self> {
         self.data = data;
         self
     }
@@ -122,7 +119,7 @@ impl TableView {
 
         cell.enable_touch_low_priority();
         let mut weak = weak_from_ref(self);
-        cell.touch().up_inside.sub(move || {
+        cell.touch().up_inside.sub(cell, move || {
             weak.data.cell_selected(index);
         });
 

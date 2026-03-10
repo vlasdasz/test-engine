@@ -29,7 +29,7 @@ impl Setup for TouchOrder {
             v.enable_touch().place().size(200, 200);
             let color = v.color().with_alpha(0.5);
             v.set_color(color);
-            v.touch().up_inside.sub(move || {
+            v.touch().up_inside.sub(self, move || {
                 append_state(&format!("{}\n", v.view_label()));
             });
         });
