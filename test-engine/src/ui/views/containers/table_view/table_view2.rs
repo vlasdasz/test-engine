@@ -43,10 +43,11 @@ impl TableView2 {
     pub fn register_cell<T: View>(
         mut self: Weak<Self>,
         mut create: impl FnMut() -> Own<dyn View> + Send + 'static,
-    ) {
+    ) -> Weak<Self> {
         self.registry
             .constructors
             .insert(struct_name::<T>(), Function::new(move |()| create()));
+        self
     }
 
     pub fn reload_data(&mut self) {
@@ -72,7 +73,7 @@ impl TableView2 {
 
         assert!(
             self.data.is_ok(),
-            "TableView data source is not set. Use set_data_source method."
+            "TableView data source is not set. Use TableView::set_data_source method."
         );
 
         let number_of_cells = self.data.number_of_cells();
