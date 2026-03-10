@@ -47,7 +47,7 @@ impl Setup for MenuView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         self.table.set_data_source(self).place().back();
-        self.table.register_cell::<NodeCell>();
+        self.table.register_cell::<NodeCell>().register_cell::<ScaleCell>();
 
         self.root = Node::new(
             MenuEntry::new("Root"),
@@ -278,30 +278,32 @@ impl TableData for MenuView {
     }
 
     fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let mut this = self.weak();
+
         let node = self.root.val_at_index(index);
 
         if node.value.label == "ui scale" {
-            let mut cell = registry.get_cell::<ScaleCell>();
+            registry.get_cell::<ScaleCell>().after_setup(move |mut cell| {
+                let node = this.root.val_at_index(index);
 
-            cell.set_funcs(
-                Function::new(|()| UIManager::scale()),
-                Function::new(UIManager::set_scale),
-            );
+                cell.set_funcs(
+                    Function::new(|()| UIManager::scale()),
+                    Function::new(UIManager::set_scale),
+                );
 
-            cell.weak().set_node(node);
-
-            cell
+                cell.weak().set_node(node);
+            })
         } else if node.value.label == "lvl scale" {
-            let mut cell = registry.get_cell::<ScaleCell>();
+            registry.get_cell::<ScaleCell>().after_setup(move |mut cell| {
+                let node = this.root.val_at_index(index);
 
-            cell.set_funcs(
-                Function::new(|()| LevelManager::scale()),
-                Function::new(LevelManager::set_scale),
-            );
+                cell.set_funcs(
+                    Function::new(|()| LevelManager::scale()),
+                    Function::new(LevelManager::set_scale),
+                );
 
-            cell.weak().set_node(node);
-
-            cell
+                cell.weak().set_node(node);
+            })
         } else {
             let cell = registry.get_cell::<NodeCell>();
 
