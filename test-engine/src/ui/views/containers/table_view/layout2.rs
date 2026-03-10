@@ -5,6 +5,21 @@ use ui::{Anchor::Top, ViewData, ViewFrame, ViewSubviews, ViewTouch, WeakView};
 use crate::ui::{TableView, TableView2};
 
 impl TableView2 {
+    fn clear_old_cells(&mut self) {
+        let old_cells: Vec<_> = self
+            .scroll
+            .content
+            .subviews_mut()
+            .drain(..)
+            .map(|c| {
+                c.touch().up_inside.clear_subscribers();
+                c
+            })
+            .collect();
+
+        self.registry.load_old_cells(old_cells);
+    }
+
     pub(super) fn layout_single_column_cells_2(&mut self, number_of_cells: usize) {
         let cell_height = self.data.cell_height(0);
 
@@ -27,19 +42,7 @@ impl TableView2 {
             last_index = number_of_cells;
         }
 
-        let old_cells: Vec<_> = self
-            .scroll
-            .content
-            .subviews_mut()
-            .drain(..)
-            .map(|c| {
-                c.place().clear();
-                c.touch().up_inside.clear_subscribers();
-                c
-            })
-            .collect();
-
-        self.registry.load_old_cells(old_cells);
+        self.clear_old_cells();
 
         let mut weak_table = self.weak();
 
@@ -47,8 +50,7 @@ impl TableView2 {
             let cell = self.data.setup_cell2(i, &mut weak_table.registry);
             let cell = self.scroll.add_subview(cell);
 
-            // let cell = self.add_subview(cell);
-            cell.place().h(cell_height).t(i.lossy_convert() * cell_height).lr(0);
+            cell.set_frame((0, i.lossy_convert() * cell_height, width, cell_height));
 
             cell.enable_touch_low_priority();
             cell.touch().up_inside.sub(weak_table, move || {
@@ -56,82 +58,52 @@ impl TableView2 {
             });
         }
     }
-}
 
-pub(crate) fn layout_two_column_cells_2(table: &mut TableView, number_of_cells: usize) {
-    let row_height = table.data.cell_height(0);
+    pub(crate) fn layout_two_column_cells_2(&mut self, number_of_cells: usize) {
+        let row_height = self.data.cell_height(0);
+        let cell_width = self.width() / 2.0;
 
-    let total_height = (number_of_cells.lossy_convert() / 2.0).ceil() * row_height;
+        let total_height = (number_of_cells.lossy_convert() / 2.0).ceil() * row_height;
 
-    table.scroll.set_content_height(total_height);
+        self.scroll.set_content_height(total_height);
 
-    let mut number_of_cells_fits: usize = (table.height() / row_height).ceil().lossy_convert();
-    number_of_cells_fits *= 2;
+        let mut number_of_cells_fits: usize = (self.height() / row_height).ceil().lossy_convert();
+        number_of_cells_fits *= 2;
 
-    let offset = table.scroll.content_offset();
+        let offset = self.scroll.get_scroll_content_offset();
 
-    let mut first_index: usize = (-offset / row_height).floor().lossy_convert();
-    if !first_index.is_multiple_of(2) {
-        first_index -= 1;
-    }
-    first_index *= 2;
-
-    let mut last_index = first_index + number_of_cells_fits + 4;
-
-    if last_index > number_of_cells {
-        last_index = number_of_cells;
-    }
-
-    if first_index == table.first_index && last_index == table.last_index {}
-
-    let h = table.data.cell_height(0);
-
-    let weak_table = weak_from_ref(table);
-
-    for i in first_index..last_index {
-        if i % 2 == 0 {
-            table
-                .add_cell(i)
-                .place()
-                .h(h)
-                .t((i / 2).lossy_convert() * h)
-                .l(0)
-                .relative_width(weak_table, 0.5);
-        } else {
-            table
-                .add_cell(i)
-                .place()
-                .h(h)
-                .relative_width(weak_table, 0.5)
-                .t((i / 2).lossy_convert() * h)
-                .custom(move |frame| {
-                    frame.origin.x = weak_table.width() / 2.0;
-                });
+        let mut first_index: usize = (-offset / row_height).floor().lossy_convert();
+        if !first_index.is_multiple_of(2) {
+            first_index -= 1;
         }
-    }
-}
+        first_index *= 2;
 
-pub(crate) fn layout_variable_sized_cells_2(table: &mut TableView, number_of_cells: usize) {
-    let mut total_height: f32 = 0.0;
+        let mut last_index = first_index + number_of_cells_fits + 4;
 
-    let mut prev_cell: WeakView = Weak::default();
-
-    for i in 0..number_of_cells {
-        let height = table.data.cell_height(i);
-        total_height += height;
-
-        let cell = table.add_cell(i);
-
-        cell.place().lr(0).h(height);
-
-        if i == 0 {
-            cell.place().t(0);
-        } else {
-            cell.place().anchor(Top, prev_cell, 0);
+        if last_index > number_of_cells {
+            last_index = number_of_cells;
         }
 
-        prev_cell = cell;
-    }
+        self.clear_old_cells();
 
-    table.scroll.set_content_height(total_height);
+        let mut weak_table = weak_from_ref(self);
+
+        for i in first_index..last_index {
+            let cell = self.data.setup_cell2(i, &mut weak_table.registry);
+            let cell = self.scroll.add_subview(cell);
+
+            cell.enable_touch_low_priority();
+            cell.touch().up_inside.sub(weak_table, move || {
+                weak_table.data.cell_selected(i);
+            });
+
+            let y_pos = (i / 2).lossy_convert() * row_height;
+
+            if i % 2 == 0 {
+                cell.set_frame((0, y_pos, cell_width, row_height));
+            } else {
+                cell.set_frame((cell_width, y_pos, cell_width, row_height));
+            }
+        }
+    }
 }

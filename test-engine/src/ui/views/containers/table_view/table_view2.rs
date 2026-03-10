@@ -55,6 +55,12 @@ impl TableView2 {
     pub fn reload_data(&mut self) {
         self.layout_cells();
     }
+
+    pub fn set_columns(&mut self, columns: usize) -> &mut Self {
+        self.columns = columns;
+        self.layout_cells();
+        self
+    }
 }
 
 impl TableView2 {
@@ -79,11 +85,12 @@ impl TableView2 {
                 self.columns, 1,
                 "Variable height supported only for tables with 1 column"
             );
+            unimplemented!()
             // layout_variable_sized_cells(self, number_of_cells);
         } else {
             match self.columns {
                 1 => self.layout_single_column_cells_2(number_of_cells),
-                // 2 => layout_two_column_cells(self, number_of_cells),
+                2 => self.layout_two_column_cells_2(number_of_cells),
                 _ => unimplemented!("More than TableView 2 columns is not supported yet"),
             }
         }
@@ -103,6 +110,7 @@ mod test {
 
     use anyhow::Result;
     use gm::color::Color;
+    use hreads::from_main;
     use parking_lot::Mutex;
     use refs::{Own, Weak};
     use ui::{AfterSetup, Label, Setup, View, ViewData, ViewTest, view_test};
@@ -136,7 +144,7 @@ mod test {
         }
 
         fn number_of_cells(&self) -> usize {
-            10000
+            100_000
         }
 
         fn setup_cell2(&self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
@@ -156,7 +164,7 @@ mod test {
     }
 
     impl ViewTest for TableView2Test {
-        fn perform_test(_view: Weak<Self>) -> Result<()> {
+        fn perform_test(mut view: Weak<Self>) -> Result<()> {
             inject_touches(
                 "
                     395  35   b
@@ -203,6 +211,93 @@ mod test {
             );
 
             assert_eq!(TEST_DATA.lock().deref(), "|50||51||52||53||54||55|");
+            TEST_DATA.lock().clear();
+
+            from_main(move || {
+                view.table.set_columns(2);
+            });
+
+            for _ in 0..100 {
+                inject_scroll(-20);
+            }
+
+            inject_scroll(-1000);
+
+            inject_touches(
+                "
+                239  57   b
+                239  57   e
+                219  174  b
+                219  174  e
+                220  248  b
+                220  248  e
+                213  358  b
+                213  358  e
+                201  453  b
+                200  453  e
+                206  537  b
+                206  537  e
+                468  531  b
+                468  531  e
+                494  420  b
+                494  420  e
+                489  350  b
+                489  350  e
+                485  244  b
+                485  244  e
+                485  138  b
+                485  138  e
+                479  48   b
+                479  48   e
+            ",
+            );
+
+            assert_eq!(
+                TEST_DATA.lock().deref(),
+                "|160||162||164||166||168||170||171||169||167||165||163||161|"
+            );
+            TEST_DATA.lock().clear();
+
+            inject_scroll(-100_000_000);
+            inject_scroll(-100_000_000);
+            inject_scroll(-100_000_000);
+            inject_scroll(-100_000_000);
+
+            inject_touches(
+                "
+                212  565  b
+                212  565  e
+                211  455  b
+                210  455  e
+                215  365  b
+                215  365  e
+                219  262  b
+                219  262  e
+                211  139  b
+                211  139  e
+                205  62   b
+                205  62   e
+                390  56   b
+                390  56   e
+                380  144  b
+                380  144  e
+                382  264  b
+                382  264  e
+                370  351  b
+                370  351  e
+                372  432  b
+                371  432  e
+                396  569  b
+                396  569  e
+
+            ",
+            );
+
+            assert_eq!(
+                TEST_DATA.lock().deref(),
+                "|99998||99996||99994||99992||99990||99988||99989||99991||99993||99995||99997||99999|"
+            );
+            TEST_DATA.lock().clear();
 
             crate::ui_test::record_ui_test();
             Ok(())
