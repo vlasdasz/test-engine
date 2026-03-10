@@ -30,6 +30,8 @@ impl Placer {
         let old_frame = *self.view.frame();
         let mut new_frame = old_frame;
 
+        let s_content = *self.s_content.deref();
+
         for rule in this.rules().iter_mut().filter(|r| r.enabled) {
             if rule.between {
                 self.between_layout(&mut new_frame, rule);
@@ -42,14 +44,14 @@ impl Placer {
                     anchor_layout(&mut new_frame, rule, has_left, has_top);
                 }
             } else if let Some(tiling) = &rule.tiling {
-                self.tiling_layout(&mut new_frame, tiling);
+                self.tiling_layout(&mut new_frame, s_content, tiling);
             } else {
                 self.simple_layout(&mut new_frame, rule);
             }
         }
 
         for rule in this.all_tiling_rules().iter().filter(|r| r.enabled) {
-            self.tiling_layout(&mut new_frame, rule.tiling.as_ref().expect("BUG"));
+            self.tiling_layout(&mut new_frame, s_content, rule.tiling.as_ref().expect("BUG"));
         }
 
         if let Some(custom) = self.custom.borrow().as_ref() {
@@ -150,22 +152,16 @@ impl Placer {
         }
     }
 
-    fn tiling_layout(&mut self, frame: RMut, tiling: &Tiling) {
+    fn tiling_layout(&mut self, frame: RMut, s_content: Size, tiling: &Tiling) {
         match tiling {
-            Tiling::Background => *frame = (*self.s_content.deref()).into(),
-            Tiling::Horizontally => place_horizontally(self.view.subviews_mut(), *self.all_margin.borrow()),
-            Tiling::Vertically => place_vertically(self.view.subviews_mut(), *self.all_margin.borrow()),
-            Tiling::LeftHalf => *frame = (0, 0, self.s_content.width / 2.0, self.s_content.height).into(),
+            Tiling::Background => *frame = s_content.into(),
+            Tiling::Horizontally => place_horizontally(self.view.subviews_weak(), *self.all_margin.borrow()),
+            Tiling::Vertically => place_vertically(self.view.subviews_weak(), *self.all_margin.borrow()),
+            Tiling::LeftHalf => *frame = (0, 0, s_content.width / 2.0, s_content.height).into(),
             Tiling::RightHalf => {
-                *frame = (
-                    self.s_content.width / 2.0,
-                    0,
-                    self.s_content.width / 2.0,
-                    self.s_content.height,
-                )
-                    .into();
+                *frame = (s_content.width / 2.0, 0, s_content.width / 2.0, s_content.height).into();
             }
-            Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_mut(), ratio),
+            Tiling::Distribute(ratio) => distribute_with_ratio(frame.size, self.view.subviews_weak(), ratio),
         }
     }
 

@@ -1,12 +1,12 @@
-use std::any::Any;
-
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    refs::Weak,
+    refs::{Own, Weak},
     ui::{
+        AfterSetup,
         Anchor::{Top, X},
-        Container, LIGHT_BLUE, Label, Setup, TableData, TableView, ViewData, ViewSubviews, WHITE, view,
+        CellRegistry, Container, LIGHT_BLUE, Label, Setup, TableData, TableView, View, ViewData,
+        ViewSubviews, WHITE, view,
     },
     ui_test::{UITest, helpers::check_colors},
 };
@@ -26,7 +26,7 @@ impl Setup for LabelImage {
         self.label.set_text("ßšėčыў").set_text_size(110).set_image("cat.png");
         self.label.place().tl(50).w(400).h(200);
 
-        self.table_view.set_data_source(self);
+        self.table_view.set_data_source(self).register_cell::<Label>();
         self.table_view
             .place()
             .same([X], self.label)
@@ -54,25 +54,27 @@ impl Setup for LabelImage {
 }
 
 impl TableData for LabelImage {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+    fn cell_height(&self, _: usize) -> f32 {
         50.0
     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
+    fn number_of_cells(&self) -> usize {
         4
     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let this = self.weak();
 
-        label.set_text(index);
-        label.set_text_size(50);
-        label.set_text_color(WHITE);
-        if self.resizing_image {
-            label.set_resizing_image("button");
-        } else {
-            label.set_image("cat.png");
-        }
+        registry.get_cell::<Label>().after_setup(move |mut label| {
+            label.set_text(index);
+            label.set_text_size(50);
+            label.set_text_color(WHITE);
+            if this.resizing_image {
+                label.set_resizing_image("button");
+            } else {
+                label.set_image("cat.png");
+            }
+        })
     }
 }
 

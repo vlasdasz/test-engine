@@ -1,7 +1,10 @@
-mod layout;
+mod cell_registry;
+pub(crate) mod layout;
+mod table_data;
 mod table_view;
 mod tests;
-mod variable_cell_size;
 
+pub use cell_registry::*;
+pub use table_data::*;
 pub use table_view::*;
 pub use tests::InfiniteScrollTest;

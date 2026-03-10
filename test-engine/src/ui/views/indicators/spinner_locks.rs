@@ -1,3 +1,4 @@
+use hreads::on_main;
 use log::trace;
 use refs::Weak;
 use ui::ViewSubviews;
@@ -37,7 +38,10 @@ impl Drop for SpinnerLockOnView {
     fn drop(&mut self) {
         if self.spinner.is_ok() {
             trace!("SpinnerLockOnView dropped");
-            self.spinner.remove_from_superview();
+            let mut spinner = self.spinner;
+            on_main(move || {
+                spinner.remove_from_superview();
+            });
         }
     }
 }

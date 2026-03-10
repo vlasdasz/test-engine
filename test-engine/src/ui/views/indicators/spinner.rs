@@ -153,7 +153,7 @@ impl Spinner {
             let animation = UIAnimation::new(|sp, val| {
                 let color = sp.color();
                 sp.set_color(color.with_alpha(val));
-                for dot in sp.subviews_mut() {
+                for dot in sp.subviews_weak() {
                     let color = *dot.color();
                     dot.set_color(color.with_alpha(val));
                 }

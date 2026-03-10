@@ -1,18 +1,15 @@
-use std::{
-    any::Any,
-    sync::atomic::{AtomicUsize, Ordering},
-};
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use anyhow::Result;
 use gm::color::GRAY;
 use hreads::{from_main, wait_for_next_frame};
 use refs::{Own, Weak};
-use ui::{AfterSetup, Container, Label, Setup, TableData, View, ViewData, ViewSubviews, ViewTest, view_test};
+use ui::{AfterSetup, Container, Label, Setup, View, ViewData, ViewSubviews, ViewTest, view_test};
 
 use crate::{
     self as test_engine, AppRunner,
-    ui::{Input, TableView},
-    ui_test::{UITest, inject_touches},
+    ui::{CellRegistry, TableData, TableView},
+    ui_test::inject_touches,
 };
 
 static N_CELLS: AtomicUsize = AtomicUsize::new(2_000_000);
@@ -27,48 +24,44 @@ struct LongTableTest {
 impl Setup for LongTableTest {
     fn setup(self: Weak<Self>) {
         self.table.place().lr(280).tb(0);
-        self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<Label>();
     }
 }
 
 impl TableData for LongTableTest {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+    fn cell_height(&self, _: usize) -> f32 {
         40.0
     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
+    fn number_of_cells(&self) -> usize {
         N_CELLS.load(Ordering::Relaxed)
     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        Label::new().after_setup(|label| {
-            label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
-            label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
-        })
-    }
-
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let label = registry.get_cell::<Label>();
         if self.table.columns == 1 {
             label.set_text(format!("Cell number: {}", index + 1));
         } else {
             label.set_text(format!("Cell: {}", index + 1));
         }
+
+        Label::new().after_setup(|label| {
+            label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
+            label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
+        });
+
+        label
     }
 
-    fn cell_selected(self: Weak<Self>, index: usize) {
+    fn cell_selected(&mut self, index: usize) {
         INDEX.store(index, Ordering::Relaxed);
     }
 }
 
 impl ViewTest for LongTableTest {
     #[allow(clippy::too_many_lines)]
-    fn perform_test(_view: Weak<Self>) -> Result<()> {
-        Input::set_scroll_multiplier(1.0);
-
+    fn perform_test(mut view: Weak<Self>) -> Result<()> {
         N_CELLS.store(2_000_000, Ordering::Relaxed);
-
-        let view = UITest::start::<LongTableTest>();
 
         AppRunner::set_window_size((1000, 1000));
 
@@ -77,7 +70,15 @@ impl ViewTest for LongTableTest {
         wait_for_next_frame();
 
         assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
+            view.table
+                .scroll
+                .content
+                .subviews()
+                .last()
+                .unwrap()
+                .downcast_weak::<Label>()
+                .unwrap()
+                .text(),
             "Cell number: 26"
         );
 
@@ -321,13 +322,11 @@ impl ViewTest for LongTableTest {
              ",
         );
 
-        assert_eq!(INDEX.load(Ordering::Relaxed), 666_665);
+        assert_eq!(INDEX.load(Ordering::Relaxed), 25);
 
         from_main(move || {
             view.table.set_columns(2);
         });
-
-        Input::set_scroll_multiplier(0.25);
 
         // record_ui_test();
 

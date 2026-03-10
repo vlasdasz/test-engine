@@ -1,4 +1,4 @@
-#[derive(Default, Debug)]
+#[derive(Default, Clone, Debug)]
 pub struct Node<T> {
     pub open:   bool,
     pub index:  usize,

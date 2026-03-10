@@ -1,6 +1,4 @@
-use std::sync::atomic::{AtomicU32, Ordering};
-
-use gm::{ToF32, color::Color, flat::Point};
+use gm::{color::Color, flat::Point};
 use level::LevelManager;
 use log::warn;
 use ui::{Container, Setup, Touch, TouchStack, UIEvents, UIManager, ViewData, ViewFrame, check_touch};
@@ -8,8 +6,6 @@ pub use winit::keyboard::NamedKey;
 
 const LOG_TOUCHES: bool = false;
 const DRAW_TOUCHES: bool = false;
-
-static SCROLL_MULTIPLIER: AtomicU32 = AtomicU32::new(0.25_f32.to_bits());
 
 pub struct Input;
 
@@ -24,11 +20,7 @@ impl Input {
     }
 
     pub fn on_scroll(offset: Point) {
-        UIEvents::on_scroll().trigger(offset * f32::from_bits(SCROLL_MULTIPLIER.load(Ordering::Relaxed)));
-    }
-
-    pub fn set_scroll_multiplier(mult: impl ToF32) {
-        SCROLL_MULTIPLIER.store(mult.to_f32().to_bits(), Ordering::Release);
+        UIEvents::on_scroll().trigger(offset);
     }
 
     pub fn process_touch_event(mut touch: Touch) -> bool {

@@ -3,7 +3,8 @@ use test_engine::{
     refs::Weak,
     ui::{
         Anchor::{Right, Top},
-        Button, Container, GREEN, Label, Setup, TURQUOISE, UIImages, ViewData, ViewSubviews, YELLOW, view,
+        Button, Container, GREEN, Label, Setup, TURQUOISE, UIImages, ViewData, ViewSubviews, WHITE, YELLOW,
+        view,
     },
     ui_test::{UITest, check_colors},
 };
@@ -25,7 +26,13 @@ impl Setup for CellLayout {
         self.delete.place().t(100).l(400).size(50, 50);
         self.delete.set_image(UIImages::delete());
 
-        self.label.place().l(50).t(100).h(200).anchor(Right, self.delete, 10);
+        self.label
+            .set_color(WHITE)
+            .place()
+            .l(50)
+            .t(100)
+            .h(200)
+            .anchor(Right, self.delete, 10);
 
         self.container.set_color(TURQUOISE);
         self.container.place().t(400).l(10).size(200, 160);

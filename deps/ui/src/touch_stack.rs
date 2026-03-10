@@ -6,8 +6,8 @@ use parking_lot::{Mutex, MutexGuard};
 use refs::Weak;
 
 use crate::{
-    ScrollView, UIManager, View, WeakView,
-    touch_layer::TouchLayer,
+    UIManager, View, WeakView,
+    touch_layer::{Scrollable, TouchLayer},
     view::{ViewData, ViewSubviews},
 };
 
@@ -62,11 +62,11 @@ impl TouchStack {
         Self::get().stack.last().views().into_iter().rev()
     }
 
-    pub fn scrolls() -> impl Iterator<Item = Weak<ScrollView>> {
+    pub fn scrolls() -> impl Iterator<Item = Weak<dyn Scrollable>> {
         Self::get().stack.last().scrolls().into_iter()
     }
 
-    pub fn enable_scroll(scroll: Weak<ScrollView>) {
+    pub fn enable_scroll(scroll: Weak<dyn Scrollable>) {
         Self::get().layer_for(scroll).add_scroll(scroll);
     }
 

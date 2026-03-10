@@ -1,10 +1,11 @@
-use std::any::Any;
-
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    refs::{Weak, weak_from_ref},
-    ui::{Button, Label, Setup, TableData, TableView, UIManager, ViewData, ViewSubviews, cast_cell, view},
+    refs::{Own, Weak, weak_from_ref},
+    ui::{
+        Button, CellRegistry, Label, Setup, TableData, TableView, UIManager, View, ViewData, ViewSubviews,
+        WHITE, view,
+    },
     ui_test::{UITest, check_colors, inject_touches},
 };
 
@@ -24,14 +25,14 @@ struct ScaleView {
 
 impl Setup for ScaleView {
     fn setup(mut self: Weak<Self>) {
-        self.label.set_text("Label");
+        self.label.set_text("Label").set_color(WHITE);
         self.label.place().tl(20).size(150, 80);
 
         self.button.set_text("Button");
         self.button.place().below(self.label, 20);
 
         self.table.place().size(200, 280).br(20);
-        self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<Label>();
 
         self.tr_button.place().tr(20).size(50, 50);
         self.bl_button.place().bl(20).size(50, 50);
@@ -48,12 +49,15 @@ impl Setup for ScaleView {
 }
 
 impl TableData for ScaleView {
-    fn number_of_cells(self: Weak<Self>) -> usize {
+    fn number_of_cells(&self) -> usize {
         4
     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        cast_cell!(Label).set_text(index);
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let cell = registry.get_cell::<Label>();
+        cell.set_text(index);
+        cell.set_color(WHITE);
+        cell
     }
 }
 

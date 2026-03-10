@@ -1,5 +1,3 @@
-#![feature(proc_macro_span)]
-
 mod all_views;
 mod async_link_button;
 mod cast_cell;

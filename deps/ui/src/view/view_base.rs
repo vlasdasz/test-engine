@@ -5,7 +5,7 @@ use gm::{color::Color, flat::Rect};
 use refs::{Own, Weak};
 use vents::{Event, OnceEvent};
 
-use crate::{NavigationView, Touch, View, WeakView, layout::Placer};
+use crate::{NavigationView, Touch, UIEvent, View, WeakView, layout::Placer};
 
 #[derive(Educe)]
 #[educe(Default, Debug)]
@@ -22,15 +22,17 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) border_width:  f32,
 
-    pub(crate) content_offset: f32,
+    #[allow(clippy::pub_underscore_fields)]
+    pub __content_offset: f32,
 
     pub(crate) is_hidden: bool,
 
     #[educe(Default = crate::UIManager::ROOT_VIEW_Z_OFFSET)]
     pub(crate) z_position: f32,
 
-    pub(crate) frame:          Rect,
-    pub(crate) absolute_frame: Rect,
+    pub(crate) frame:     Rect,
+    #[allow(clippy::pub_underscore_fields)]
+    pub __absolute_frame: Rect,
 
     #[educe(Debug(ignore))]
     pub(crate) superview: WeakView,
@@ -39,7 +41,8 @@ pub struct ViewBase {
     pub(crate) subviews: Vec<Own<dyn View>>,
 
     #[educe(Debug(ignore))]
-    pub(crate) touch_id: usize,
+    #[allow(clippy::pub_underscore_fields)]
+    pub __touch_id: usize,
 
     #[educe(Debug(ignore))]
     pub(crate) is_selected: bool,
@@ -60,7 +63,7 @@ pub struct ViewBase {
     pub events: ViewEvents,
 
     #[educe(Debug(ignore))]
-    pub(crate) dont_hide_off_screen: bool,
+    pub dont_hide_off_screen: bool,
 
     #[educe(Debug(ignore))]
     pub(crate) trigger_pos_changed:  bool,
@@ -77,6 +80,12 @@ pub struct ViewBase {
     pub tag: usize,
 }
 
+impl ViewBase {
+    pub fn __subviews(&self) -> &[Own<dyn View>] {
+        &self.subviews
+    }
+}
+
 #[derive(Default)]
 pub struct ViewEvents {
     pub touch: ViewTouchEvents,
@@ -88,5 +97,5 @@ pub struct ViewTouchEvents {
     pub all:       Event<Touch>,
     pub began:     Event<Touch>,
     pub moved:     Event<Touch>,
-    pub up_inside: Event<Touch>,
+    pub up_inside: UIEvent<Touch>,
 }

@@ -153,6 +153,10 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
             fn as_any_mut(&mut self) -> &mut dyn std::any::Any {
                self
             }
+
+            fn into_any_box(self: Box<Self>) -> Box<dyn std::any::Any> {
+                self
+            }
         }
 
         impl #generics test_engine::ui::__ViewInternalSetup for #name <#type_params>  {
@@ -166,7 +170,7 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 use test_engine::ui::Setup;
                 use test_engine::ui::WithHeader;
                 use test_engine::ui::ViewData;
-                self.__view_base.view_label += &#name_str.to_string();
+                self.__view_base.view_label = #name_str.to_string();
                 self.layout_header();
                 let mut weak = test_engine::refs::weak_from_ref(self);
                 weak.setup();
@@ -186,36 +190,17 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
             }
         }
 
-        impl #generics test_engine::ui::__ViewInternalTableData for #name <#type_params>  {
-            fn __cell_height(&self, index: usize) -> f32 {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.cell_height(index)
-            }
-            fn __variable_height(&self) -> bool {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.variable_height()
-            }
-            fn __number_of_cells(&self) -> usize {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.number_of_cells()
-            }
-            fn __make_cell(&self, index: usize) -> test_engine::refs::Own<dyn test_engine::ui::View> {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.make_cell(index)
-            }
-            fn __setup_cell(&self, cell: &mut dyn std::any::Any, index: usize) {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.setup_cell(cell, index)
-            }
-            fn __cell_selected(&mut self, index: usize) {
-                use test_engine::ui::TableData;
-                let weak = test_engine::refs::weak_from_ref(self);
-                weak.cell_selected(index)
+        impl #generics test_engine::ui::__ViewIntoUnsizedOwn for #name <#type_params> {
+            unsafe fn __into_unsized_own<V: ?Sized + test_engine::ui::View + 'static>(own: test_engine::refs::Own<V>) -> test_engine::refs::Own<dyn test_engine::ui::View> {
+                use test_engine::refs::Own;
+                use test_engine::ui::View;
+
+                assert!(own.sized());
+                assert_eq!(size_of::<Own<Self>>(), size_of::<Own<V>>());
+
+                let unsized_own: Own<Self> = unsafe { std::mem::transmute_copy(&own) };
+                std::mem::forget(own);
+                unsized_own
             }
         }
 
@@ -262,7 +247,7 @@ fn add_inits(root_name: &Ident, fields: &mut FieldsNamed) -> TokenStream2 {
 
         res = quote! {
             #res
-            self.#name = self.add_view();
+            self.#name = self.__add_view_internal();
             self.#name.__base_view().view_label = format!("{}: {}", #label, self.#name.__base_view().view_label);
         }
     }

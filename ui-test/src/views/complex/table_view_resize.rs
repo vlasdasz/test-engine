@@ -1,10 +1,8 @@
-use std::any::Any;
-
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
-    ui::{AfterSetup, GREEN, Label, Setup, TableData, TableView, View, ViewData, ViewFrame, view},
+    ui::{GREEN, Label, Setup, TableData, TableView, View, ViewData, ViewFrame, view},
     ui_test::{UITest, check_colors, inject_scroll},
 };
 
@@ -17,28 +15,24 @@ struct TableViewResize {
 impl Setup for TableViewResize {
     fn setup(self: Weak<Self>) {
         self.table.set_frame((20, 20, 200, 200));
-        self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<Label>();
     }
 }
 
 impl TableData for TableViewResize {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+    fn cell_height(&self, _: usize) -> f32 {
         50.0
     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
+    fn number_of_cells(&self) -> usize {
         1
     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        Label::new().after_setup(|label| {
-            label.set_color(GREEN);
-        })
-    }
-
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, _index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
-        label.set_text("alalalalal");
+    fn setup_cell(&mut self, _index: usize, registry: &mut test_engine::ui::CellRegistry) -> Own<dyn View> {
+        let cell = registry.get_cell::<Label>();
+        cell.set_color(GREEN);
+        cell.set_text("alalalalal");
+        cell
     }
 }
 

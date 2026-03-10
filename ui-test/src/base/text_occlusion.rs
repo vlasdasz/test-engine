@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     refs::Weak,
-    ui::{LIGHT_GRAY, Label, Setup, ViewData, view},
+    ui::{LIGHT_GRAY, Label, Setup, ViewData, WHITE, view},
     ui_test::{UITest, helpers::check_colors},
 };
 
@@ -15,6 +15,7 @@ pub struct TextOccclusion {
 impl Setup for TextOccclusion {
     fn setup(self: Weak<Self>) {
         self.label_below
+            .set_color(WHITE)
             .set_text_size(100)
             .set_text("OOOOOOOO")
             .place()

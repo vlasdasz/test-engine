@@ -1,7 +1,6 @@
 #![allow(incomplete_features)]
 #![allow(clippy::float_cmp)]
 #![allow(clippy::too_many_lines)]
-#![feature(stmt_expr_attributes)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
 
@@ -41,9 +40,7 @@ struct Args {
     test_name: Option<String>,
 }
 
-fn main() -> Result<()> {
-    let args = Args::parse();
-
+fn run(test_name: Option<String>) -> Result<()> {
     AppRunner::start_with_actor(async {
         Label::set_default_text_size(32);
         UIManager::set_display_touches(false);
@@ -56,7 +53,7 @@ fn main() -> Result<()> {
 
         tests.append(&mut test_engine::UI_TESTS.lock().clone());
 
-        if let Some(test_name) = args.test_name {
+        if let Some(test_name) = test_name {
             let test = match tests.get(&test_name) {
                 Some(test) => test,
                 None => {
@@ -87,6 +84,11 @@ fn main() -> Result<()> {
     })?;
 
     Ok(())
+}
+
+fn main() -> Result<()> {
+    run(Args::parse().test_name)
+    // run(Some("TableView2Test".to_string()))
 }
 
 async fn test() -> Result<()> {

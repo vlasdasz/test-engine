@@ -3,7 +3,7 @@ use std::{fmt::Display, sync::atomic::Ordering};
 use atomic_float::AtomicF32;
 use gm::{
     ToF32,
-    color::{BLACK, CLEAR, Color, WHITE},
+    color::{BLACK, Color},
 };
 use refs::{Weak, weak_from_ref};
 use ui_proc::view;
@@ -51,6 +51,7 @@ pub struct Label {
     #[educe(Default = BLACK)]
     text_color: Color,
 
+    #[educe(Default = DEFAULT_TEXT_SIZE.load(Ordering::Relaxed))]
     text_size: f32,
 }
 
@@ -99,7 +100,6 @@ impl Label {
     }
 
     pub fn set_image(&self, image: impl ToImage) -> &Self {
-        self.set_color(CLEAR);
         self.remove_all_subviews();
         let image_view = self.add_view::<ImageView>();
         image_view.place().back();
@@ -110,15 +110,14 @@ impl Label {
     }
 
     pub fn set_resizing_image(&mut self, name: impl Display) -> &mut Self {
-        self.set_color(CLEAR);
         self.remove_all_subviews();
         let mut image_view = self.add_view::<ImageView>();
         image_view.place().back();
         image_view.set_resizing_image(name);
         image_view.__base_view().z_position = self.z_position();
-        image_view.subviews_mut().iter_mut().for_each(|v| {
+        image_view.subviews_weak().iter_mut().for_each(|v| {
             v.__base_view().z_position = self.z_position();
-            v.subviews_mut().iter_mut().for_each(|v| {
+            v.subviews_weak().iter_mut().for_each(|v| {
                 v.__base_view().z_position = self.z_position();
             });
         });
@@ -134,10 +133,7 @@ impl Label {
 }
 
 impl Setup for Label {
-    fn setup(mut self: Weak<Self>) {
-        self.text_size = DEFAULT_TEXT_SIZE.load(Ordering::Relaxed);
-        self.set_color(WHITE);
-
+    fn setup(self: Weak<Self>) {
         Style::apply_global(self);
     }
 }

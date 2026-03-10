@@ -19,8 +19,8 @@ use refs::{Own, Weak};
 use window::Window;
 
 use crate::{
-    DEBUG_VIEW, Keymap, RootView, TouchStack, UIAnimation, UIEvent, UIEvents, View, ViewData, ViewFrame,
-    WeakView,
+    DEBUG_VIEW, Keymap, RootView, Setup, TouchStack, UIAnimation, UIEvent, UIEvents, View, ViewData,
+    ViewFrame, WeakView,
 };
 
 pub(crate) static DELETED_VIEWS: Mutex<Vec<Own<dyn View>>> = Mutex::new(Vec::new());
@@ -153,7 +153,7 @@ impl UIManager {
 
 impl UIManager {
     fn init() -> Self {
-        let mut root_view = Own::<RootView>::default();
+        let mut root_view = RootView::new();
         root_view.__base_view().view_label = "Root view".to_string();
         root_view.setup_root();
 

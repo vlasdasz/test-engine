@@ -314,7 +314,7 @@ impl window::WindowEvents for AppRunner {
     }
 
     fn mouse_scroll(&mut self, delta: Point) {
-        Input::on_scroll(delta);
+        Input::on_scroll(delta * 0.25);
     }
 
     fn touch_event(&mut self, touch: winit::event::Touch) -> bool {

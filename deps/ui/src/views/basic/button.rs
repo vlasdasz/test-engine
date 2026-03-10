@@ -4,13 +4,12 @@ use gm::{
     ToF32,
     color::{CLEAR, Color, WHITE},
 };
-use refs::{Own, Weak, weak_from_ref};
+use refs::{Weak, weak_from_ref};
 use ui_proc::view;
-use vents::Event;
 use window::image::ToImage;
 
 use crate::{
-    ImageView, Label, Setup, Style, ToLabel, UIManager, View, ViewSubviews, ViewTransition,
+    ImageView, Label, Setup, Style, ToLabel, UIEvent, UIManager, View, ViewSubviews, ViewTransition,
     view::{ViewData, ViewTouch},
 };
 
@@ -23,7 +22,7 @@ mod test_engine {
 
 #[view]
 pub struct Button {
-    on_tap: Event,
+    on_tap: UIEvent,
 
     label: Weak<Label>,
 
@@ -64,7 +63,7 @@ impl Button {
 impl Button {
     pub fn on_tap<R>(&self, mut action: impl FnMut() -> R + Send + 'static) -> &Self {
         self.enable_touch();
-        self.on_tap.sub(move || {
+        self.on_tap.sub(self.weak(), move || {
             action();
         });
         self
@@ -102,7 +101,7 @@ impl Setup for Button {
     fn setup(mut self: Weak<Self>) {
         self.set_color(WHITE);
 
-        let label = Own::<Label>::default();
+        let label = Label::new();
 
         label.__base_view().is_system = true;
         label.__base_view().ignore_global_style = true;
@@ -117,7 +116,7 @@ impl Setup for Button {
         self.image.set_hidden(true);
         self.image.__base_view().is_system = true;
 
-        self.touch().up_inside.sub(move || self.on_tap.trigger(()));
+        self.touch().up_inside.sub(self, move || self.on_tap.trigger(()));
 
         Style::apply_global(self);
     }
