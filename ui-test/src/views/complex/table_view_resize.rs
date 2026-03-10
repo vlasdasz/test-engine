@@ -2,14 +2,14 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
-    ui::{GREEN, Label, Setup, TableData, TableView2, View, ViewData, ViewFrame, view},
+    ui::{GREEN, Label, Setup, TableData, TableView, View, ViewData, ViewFrame, view},
     ui_test::{UITest, check_colors, inject_scroll},
 };
 
 #[view]
 struct TableViewResize {
     #[init]
-    table: TableView2,
+    table: TableView,
 }
 
 impl Setup for TableViewResize {

@@ -8,7 +8,7 @@ use ui::{AfterSetup, Container, Label, Setup, View, ViewData, ViewSubviews, View
 
 use crate::{
     self as test_engine, AppRunner,
-    ui::{CellRegistry, TableData, TableView2},
+    ui::{CellRegistry, TableData, TableView},
     ui_test::inject_touches,
 };
 
@@ -18,7 +18,7 @@ static INDEX: AtomicUsize = AtomicUsize::new(0);
 #[view_test]
 struct LongTableTest {
     #[init]
-    table: TableView2,
+    table: TableView,
 }
 
 impl Setup for LongTableTest {

@@ -8,7 +8,7 @@ use crate::{
 };
 
 #[view]
-pub struct TableView2 {
+pub struct TableView {
     pub(super) data: Weak<dyn TableData>,
 
     #[educe(Default = 1)]
@@ -20,7 +20,7 @@ pub struct TableView2 {
     pub(super) scroll: ScrollView,
 }
 
-impl Setup for TableView2 {
+impl Setup for TableView {
     fn setup(mut self: Weak<Self>) {
         self.scroll.place().back();
 
@@ -34,7 +34,7 @@ impl Setup for TableView2 {
     }
 }
 
-impl TableView2 {
+impl TableView {
     pub fn set_data_source(mut self: Weak<Self>, data: Weak<dyn TableData>) -> Weak<Self> {
         self.data = data;
         self
@@ -68,7 +68,7 @@ impl TableView2 {
     }
 }
 
-impl TableView2 {
+impl TableView {
     fn layout_cells(&mut self) {
         if self.height() <= 0.0 {
             return;
@@ -94,8 +94,8 @@ impl TableView2 {
             // layout_variable_sized_cells(self, number_of_cells);
         } else {
             match self.columns {
-                1 => self.layout_single_column_cells_2(number_of_cells),
-                2 => self.layout_two_column_cells_2(number_of_cells),
+                1 => self.layout_single_column_cells(number_of_cells),
+                2 => self.layout_two_column_cells(number_of_cells),
                 _ => unimplemented!("More than TableView 2 columns is not supported yet"),
             }
         }
@@ -114,7 +114,7 @@ mod test {
 
     use crate::{
         self as test_engine,
-        ui::{CellRegistry, TableData, TableView2},
+        ui::{CellRegistry, TableData, TableView},
         ui_test::{inject_scroll, inject_touches},
     };
 
@@ -123,7 +123,7 @@ mod test {
     #[view_test]
     struct TableView2Test {
         #[init]
-        table: TableView2,
+        table: TableView,
     }
 
     impl Setup for TableView2Test {

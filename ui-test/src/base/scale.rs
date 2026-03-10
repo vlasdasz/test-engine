@@ -3,7 +3,7 @@ use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak, weak_from_ref},
     ui::{
-        Button, CellRegistry, Label, Setup, TableData, TableView2, UIManager, View, ViewData, ViewSubviews,
+        Button, CellRegistry, Label, Setup, TableData, TableView, UIManager, View, ViewData, ViewSubviews,
         WHITE, view,
     },
     ui_test::{UITest, check_colors, inject_touches},
@@ -16,7 +16,7 @@ struct ScaleView {
     #[init]
     label:  Label,
     button: Button,
-    table:  TableView2,
+    table:  TableView,
 
     tr_button: Button,
     bl_button: Button,

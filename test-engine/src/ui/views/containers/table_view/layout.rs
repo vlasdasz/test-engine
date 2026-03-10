@@ -2,9 +2,9 @@ use gm::LossyConvert;
 use refs::weak_from_ref;
 use ui::{ViewData, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::ui::TableView2;
+use crate::ui::TableView;
 
-impl TableView2 {
+impl TableView {
     fn clear_old_cells(&mut self) {
         let old_cells: Vec<_> = self
             .scroll
@@ -19,7 +19,7 @@ impl TableView2 {
         self.registry.load_old_cells(old_cells);
     }
 
-    pub(super) fn layout_single_column_cells_2(&mut self, number_of_cells: usize) {
+    pub(super) fn layout_single_column_cells(&mut self, number_of_cells: usize) {
         let cell_height = self.data.cell_height(0);
 
         let total_height = number_of_cells.lossy_convert() * cell_height;
@@ -58,7 +58,7 @@ impl TableView2 {
         }
     }
 
-    pub(crate) fn layout_two_column_cells_2(&mut self, number_of_cells: usize) {
+    pub(crate) fn layout_two_column_cells(&mut self, number_of_cells: usize) {
         let row_height = self.data.cell_height(0);
         let cell_width = self.width() / 2.0;
 

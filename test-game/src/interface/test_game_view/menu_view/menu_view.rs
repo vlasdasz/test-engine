@@ -16,7 +16,7 @@ use test_engine::{
     refs::{Own, Weak, manage::DataManager},
     ui::{
         ALL_VIEWS, AfterSetup, Alert, AlertErr, Button, CellRegistry, Image, InfiniteScrollTest, Point,
-        Setup, Spinner, TableData, TableView2, UIManager, View, ViewData, ViewFrame, ViewSubviews,
+        Setup, Spinner, TableData, TableView, UIManager, View, ViewData, ViewFrame, ViewSubviews,
         all_view_tests, all_views, view,
     },
 };
@@ -40,7 +40,7 @@ pub struct MenuView {
     root: Node<MenuEntry>,
 
     #[init]
-    table: TableView2,
+    table: TableView,
 }
 
 impl Setup for MenuView {

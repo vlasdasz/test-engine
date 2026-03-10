@@ -7,7 +7,7 @@ use ui::{AfterSetup, Setup, View, ViewData, ViewTest, view_test};
 use crate::{
     self as test_engine,
     ui::{
-        Spinner, TableData, TableView2,
+        Spinner, TableData, TableView,
         views::containers::table_view::tests::infinite_scroll::{
             basic_scroll::test_basic_scroll, infinite_cell::InfiniteCell,
         },
@@ -25,7 +25,7 @@ pub struct InfiniteScrollTest {
     requesting: bool,
 
     #[init]
-    pub table: TableView2,
+    pub table: TableView,
 }
 
 impl Setup for InfiniteScrollTest {

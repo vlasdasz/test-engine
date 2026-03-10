@@ -4,7 +4,7 @@ use ui_proc::view;
 
 use crate::{
     inspect::views::LayoutRuleCell,
-    ui::{CellRegistry, TableData, TableView2},
+    ui::{CellRegistry, TableData, TableView},
 };
 
 mod test_engine {
@@ -23,7 +23,7 @@ pub struct PlacerView {
     view_id: String,
 
     #[init]
-    table: TableView2,
+    table: TableView,
 }
 
 impl Setup for PlacerView {

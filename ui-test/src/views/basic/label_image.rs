@@ -5,7 +5,7 @@ use test_engine::{
     ui::{
         AfterSetup,
         Anchor::{Top, X},
-        CellRegistry, Container, LIGHT_BLUE, Label, Setup, TableData, TableView2, View, ViewData,
+        CellRegistry, Container, LIGHT_BLUE, Label, Setup, TableData, TableView, View, ViewData,
         ViewSubviews, WHITE, view,
     },
     ui_test::{UITest, helpers::check_colors},
@@ -17,7 +17,7 @@ struct LabelImage {
 
     #[init]
     label:      Label,
-    table_view: TableView2,
+    table_view: TableView,
     container:  Container,
 }
 
