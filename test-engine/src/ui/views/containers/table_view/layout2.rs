@@ -1,8 +1,8 @@
 use gm::LossyConvert;
-use refs::{Weak, weak_from_ref};
-use ui::{Anchor::Top, ViewData, ViewFrame, ViewSubviews, ViewTouch, WeakView};
+use refs::weak_from_ref;
+use ui::{ViewData, ViewFrame, ViewSubviews, ViewTouch};
 
-use crate::ui::{TableView, TableView2};
+use crate::ui::TableView2;
 
 impl TableView2 {
     fn clear_old_cells(&mut self) {
@@ -46,7 +46,7 @@ impl TableView2 {
 
         let mut weak_table = self.weak();
 
-        for i in first_index..=last_index {
+        for i in first_index..last_index {
             let cell = self.data.setup_cell2(i, &mut weak_table.registry);
             let cell = self.scroll.add_subview(cell);
 

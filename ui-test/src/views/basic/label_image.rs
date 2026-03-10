@@ -1,12 +1,11 @@
-use std::any::Any;
-
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    refs::Weak,
+    refs::{Own, Weak},
     ui::{
         Anchor::{Top, X},
-        Container, LIGHT_BLUE, Label, Setup, TableData, TableView, ViewData, ViewSubviews, WHITE, view,
+        CellRegistry, Container, LIGHT_BLUE, Label, Setup, TableData, TableView2, View, ViewData,
+        ViewSubviews, WHITE, view,
     },
     ui_test::{UITest, helpers::check_colors},
 };
@@ -17,7 +16,7 @@ struct LabelImage {
 
     #[init]
     label:      Label,
-    table_view: TableView,
+    table_view: TableView2,
     container:  Container,
 }
 
@@ -53,28 +52,30 @@ impl Setup for LabelImage {
     }
 }
 
-// impl TableData for LabelImage {
-//     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-//         50.0
-//     }
+impl TableData for LabelImage {
+    fn cell_height(&self, _: usize) -> f32 {
+        50.0
+    }
 
-//     fn number_of_cells(self: Weak<Self>) -> usize {
-//         4
-//     }
+    fn number_of_cells(&self) -> usize {
+        4
+    }
 
-//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-//         let label = cell.downcast_mut::<Label>().unwrap();
+    fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let mut label = registry.get_cell::<Label>();
 
-//         label.set_text(index);
-//         label.set_text_size(50);
-//         label.set_text_color(WHITE);
-//         if self.resizing_image {
-//             label.set_resizing_image("button");
-//         } else {
-//             label.set_image("cat.png");
-//         }
-//     }
-// }
+        label.set_text(index);
+        label.set_text_size(50);
+        label.set_text_color(WHITE);
+        if self.resizing_image {
+            label.set_resizing_image("button");
+        } else {
+            label.set_image("cat.png");
+        }
+
+        label
+    }
+}
 
 pub async fn test_label_image() -> Result<()> {
     let mut view = UITest::start::<LabelImage>();

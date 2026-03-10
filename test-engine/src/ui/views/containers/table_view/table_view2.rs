@@ -1,16 +1,13 @@
-use std::{any::type_name, ops::DerefMut};
-
-use anyhow::Result;
 use netrun::Function;
 use refs::{Own, Weak};
-use ui::{Setup, View, ViewData, ViewFrame, ViewSubviews, ViewTest, view_test};
+use ui::{Setup, UIEvent, View, ViewData, ViewFrame, view};
 
 use crate::{
     self as test_engine,
     ui::{CellRegistry, ScrollView, TableData, struct_name},
 };
 
-#[view_test]
+#[view]
 pub struct TableView2 {
     pub(super) data: Weak<dyn TableData>,
 
@@ -61,6 +58,10 @@ impl TableView2 {
         self.layout_cells();
         self
     }
+
+    pub fn bottom_reached(&self) -> &UIEvent {
+        &self.scroll.bottom_reached
+    }
 }
 
 impl TableView2 {
@@ -97,14 +98,6 @@ impl TableView2 {
     }
 }
 
-impl ViewTest for TableView2 {
-    fn perform_test(_view: Weak<Self>) -> Result<()> {
-        crate::ui_test::record_ui_test();
-
-        Ok(())
-    }
-}
-
 mod test {
     use std::ops::Deref;
 
@@ -113,7 +106,7 @@ mod test {
     use hreads::from_main;
     use parking_lot::Mutex;
     use refs::{Own, Weak};
-    use ui::{AfterSetup, Label, Setup, View, ViewData, ViewTest, view_test};
+    use ui::{Label, Setup, View, ViewData, ViewTest, view_test};
 
     use crate::{
         self as test_engine,
@@ -147,7 +140,7 @@ mod test {
             100_000
         }
 
-        fn setup_cell2(&self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
             let cell = registry.get_cell::<Label>();
             cell.set_text(index);
             cell.set_border_width(index % 20);
@@ -299,7 +292,7 @@ mod test {
             );
             TEST_DATA.lock().clear();
 
-            crate::ui_test::record_ui_test();
+            // crate::ui_test::record_ui_test();
             Ok(())
         }
     }

@@ -3,7 +3,7 @@ use std::{fmt::Display, sync::atomic::Ordering};
 use atomic_float::AtomicF32;
 use gm::{
     ToF32,
-    color::{BLACK, CLEAR, Color, WHITE},
+    color::{BLACK, Color},
 };
 use refs::{Weak, weak_from_ref};
 use ui_proc::view;
@@ -133,7 +133,7 @@ impl Label {
 }
 
 impl Setup for Label {
-    fn setup(mut self: Weak<Self>) {
+    fn setup(self: Weak<Self>) {
         Style::apply_global(self);
     }
 }

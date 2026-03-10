@@ -27,7 +27,7 @@ impl CellRegistry {
         let constructor = self
             .constructors
             .get(ident)
-            .unwrap_or_else(|| panic!("Constructor for cell identifier: {ident} is not registered"));
+            .unwrap_or_else(|| panic!("Constructor for cell identifier: {ident} is not registered. Use TableView::register_cell method."));
 
         constructor.call(())
     }

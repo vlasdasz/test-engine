@@ -2,7 +2,7 @@ use refs::{Rglica, ToRglica, Weak};
 use ui::{Placer, Setup, UIEvent, ViewData};
 use ui_proc::view;
 
-use crate::ui::TableView;
+use crate::ui::TableView2;
 
 mod test_engine {
     pub(crate) use educe;
@@ -20,7 +20,7 @@ pub struct PlacerView {
     view_id: String,
 
     #[init]
-    table: TableView,
+    table: TableView2,
 }
 
 impl Setup for PlacerView {

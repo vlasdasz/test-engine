@@ -1,15 +1,13 @@
-use std::any::Any;
-
 use anyhow::Result;
 use gm::color::BLACK;
 use hreads::{from_main, on_main, sleep, spawn};
 use refs::{Own, Weak};
-use ui::{Setup, View, ViewData, ViewTest, cast_cell, view_test};
+use ui::{Setup, View, ViewData, ViewTest, view_test};
 
 use crate::{
     self as test_engine,
     ui::{
-        Spinner, TableData, TableView,
+        Spinner, TableData, TableView2,
         views::containers::table_view::tests::infinite_scroll::{
             basic_scroll::test_basic_scroll, infinite_cell::InfiniteCell,
         },
@@ -27,7 +25,7 @@ pub struct InfiniteScrollTest {
     requesting: bool,
 
     #[init]
-    pub table: TableView,
+    pub table: TableView2,
 }
 
 impl Setup for InfiniteScrollTest {
@@ -73,28 +71,26 @@ impl InfiniteScrollTest {
     }
 }
 
-// impl TableData for InfiniteScrollTest {
-//     fn cell_height(self: Weak<Self>, _index: usize) -> f32 {
-//         80.0
-//     }
+impl TableData for InfiniteScrollTest {
+    fn cell_height(&self, _index: usize) -> f32 {
+        80.0
+    }
 
-//     fn number_of_cells(self: Weak<Self>) -> usize {
-//         self.data_size
-//     }
+    fn number_of_cells(&self) -> usize {
+        self.data_size
+    }
 
-//     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-//         InfiniteCell::new()
-//     }
+    fn setup_cell2(&mut self, index: usize, registry: &mut crate::ui::CellRegistry) -> Own<dyn View> {
+        let cell = registry.get_cell::<InfiniteCell>();
+        cell.weak().set_text(index);
+        cell
+    }
 
-//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-//         cast_cell!(InfiniteCell).set_text(index);
-//     }
-
-//     fn cell_selected(mut self: Weak<Self>, index: usize) {
-//         #[allow(clippy::format_push_string)]
-//         self.test_string.push_str(&format!("|{index}|"));
-//     }
-// }
+    fn cell_selected(&mut self, index: usize) {
+        #[allow(clippy::format_push_string)]
+        self.test_string.push_str(&format!("|{index}|"));
+    }
+}
 
 impl ViewTest for InfiniteScrollTest {
     fn perform_test(mut view: Weak<Self>) -> Result<()> {

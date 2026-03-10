@@ -87,8 +87,8 @@ fn run(test_name: Option<String>) -> Result<()> {
 }
 
 fn main() -> Result<()> {
-    // run(Args::parse().test_name)
-    run(Some("TableView2Test".to_string()))
+    run(Args::parse().test_name)
+    // run(Some("TableView2Test".to_string()))
 }
 
 async fn test() -> Result<()> {

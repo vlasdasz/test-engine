@@ -1,10 +1,11 @@
-use std::any::Any;
-
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    refs::{Weak, weak_from_ref},
-    ui::{Button, Label, Setup, TableData, TableView, UIManager, ViewData, ViewSubviews, cast_cell, view},
+    refs::{Own, Weak, weak_from_ref},
+    ui::{
+        Button, CellRegistry, Label, Setup, TableData, TableView2, UIManager, View, ViewData, ViewSubviews,
+        view,
+    },
     ui_test::{UITest, check_colors, inject_touches},
 };
 
@@ -15,7 +16,7 @@ struct ScaleView {
     #[init]
     label:  Label,
     button: Button,
-    table:  TableView,
+    table:  TableView2,
 
     tr_button: Button,
     bl_button: Button,
@@ -47,15 +48,17 @@ impl Setup for ScaleView {
     }
 }
 
-// impl TableData for ScaleView {
-//     fn number_of_cells(self: Weak<Self>) -> usize {
-//         4
-//     }
+impl TableData for ScaleView {
+    fn number_of_cells(&self) -> usize {
+        4
+    }
 
-//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-//         cast_cell!(Label).set_text(index);
-//     }
-// }
+    fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let cell = registry.get_cell::<Label>();
+        cell.set_text(index);
+        cell
+    }
+}
 
 pub async fn test_scale() -> Result<()> {
     let mut view = UITest::start::<ScaleView>();
