@@ -2,9 +2,8 @@ use anyhow::Result;
 use test_engine::{
     refs::Weak,
     ui::{
-        Anchor,
-        Anchor::{Height, Width, Y},
-        ImageView, Label, NumberView, Setup, ViewData, ViewFrame, ViewSubviews,
+        Anchor::{self, Height, Width, Y},
+        ImageView, Label, NumberView, Setup, ViewData, ViewFrame, ViewSubviews, WHITE,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
@@ -21,7 +20,11 @@ struct OutBounds {
 
 impl Setup for OutBounds {
     fn setup(mut self: Weak<Self>) {
-        self.test.set_text("AA").set_text_size(100).set_frame((200, 200, 200, 200));
+        self.test
+            .set_color(WHITE)
+            .set_text("AA")
+            .set_text_size(100)
+            .set_frame((200, 200, 200, 200));
 
         let image = self.test.add_view::<ImageView>();
         image.set_image("cat.png");

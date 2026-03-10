@@ -3,6 +3,7 @@ use test_engine::{
     dispatch::from_main,
     refs::{Own, Weak},
     ui::{
+        AfterSetup,
         Anchor::{Top, X},
         CellRegistry, Container, LIGHT_BLUE, Label, Setup, TableData, TableView2, View, ViewData,
         ViewSubviews, WHITE, view,
@@ -25,7 +26,7 @@ impl Setup for LabelImage {
         self.label.set_text("ßšėčыў").set_text_size(110).set_image("cat.png");
         self.label.place().tl(50).w(400).h(200);
 
-        self.table_view.set_data_source(self);
+        self.table_view.set_data_source(self).register_cell::<Label>();
         self.table_view
             .place()
             .same([X], self.label)
@@ -62,18 +63,18 @@ impl TableData for LabelImage {
     }
 
     fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        let mut label = registry.get_cell::<Label>();
+        let this = self.weak();
 
-        label.set_text(index);
-        label.set_text_size(50);
-        label.set_text_color(WHITE);
-        if self.resizing_image {
-            label.set_resizing_image("button");
-        } else {
-            label.set_image("cat.png");
-        }
-
-        label
+        registry.get_cell::<Label>().after_setup(move |mut label| {
+            label.set_text(index);
+            label.set_text_size(50);
+            label.set_text_color(WHITE);
+            if this.resizing_image {
+                label.set_resizing_image("button");
+            } else {
+                label.set_image("cat.png");
+            }
+        })
     }
 }
 

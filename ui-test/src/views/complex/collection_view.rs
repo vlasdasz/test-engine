@@ -6,7 +6,7 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         CollectionData, CollectionLayout, CollectionView, Label, Setup, Size, TouchStack, View, ViewData,
-        ViewFrame, view,
+        ViewFrame, WHITE, view,
     },
     ui_test::{UITest, add_action, helpers::check_colors},
 };
@@ -35,7 +35,9 @@ impl CollectionData for CollectionTestView {
     }
 
     fn make_cell(&self) -> Own<dyn View> {
-        Label::new()
+        let cell = Label::new();
+        cell.set_color(WHITE);
+        cell
     }
 }
 

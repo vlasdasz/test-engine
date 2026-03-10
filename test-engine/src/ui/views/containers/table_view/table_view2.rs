@@ -40,13 +40,16 @@ impl TableView2 {
         self
     }
 
-    pub fn register_cell<T: View>(
-        mut self: Weak<Self>,
-        mut create: impl FnMut() -> Own<dyn View> + Send + 'static,
-    ) -> Weak<Self> {
+    pub fn register_cell<T: View + Default + 'static>(mut self: Weak<Self>) -> Weak<Self> {
+        fn constr<T: Default + View + 'static>() -> impl FnMut() -> Own<dyn View> + Send + 'static {
+            || T::new()
+        }
+
+        let mut func = constr::<T>();
+
         self.registry
             .constructors
-            .insert(struct_name::<T>(), Function::new(move |()| create()));
+            .insert(struct_name::<T>(), Function::new(move |()| func()));
         self
     }
 
@@ -127,7 +130,7 @@ mod test {
         fn setup(mut self: Weak<Self>) {
             self.table.place().back();
             self.table.set_data_source(self);
-            self.table.register_cell::<Label>(|| Label::new());
+            self.table.register_cell::<Label>();
             self.table.reload_data();
         }
     }
@@ -152,12 +155,14 @@ mod test {
             cell
         }
 
+        #[allow(clippy::format_push_string)]
         fn cell_selected(&mut self, index: usize) {
             *TEST_DATA.lock() += &format!("|{index}|");
         }
     }
 
     impl ViewTest for TableView2Test {
+        #[allow(clippy::too_many_lines)]
         fn perform_test(mut view: Weak<Self>) -> Result<()> {
             inject_touches(
                 "

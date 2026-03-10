@@ -35,6 +35,7 @@ pub use navigation_view::*;
 pub use style::*;
 pub use text_field_constraint::*;
 pub use to_label::*;
+pub use touch_layer::*;
 pub use touch_stack::*;
 pub use ui_event::*;
 pub use ui_manager::*;
@@ -42,7 +43,6 @@ pub use ui_proc::*;
 pub use view::*;
 pub use views::*;
 pub use with_header::*;
-pub use touch_layer::*;
 
 extern crate core;
 pub extern crate ui_proc;

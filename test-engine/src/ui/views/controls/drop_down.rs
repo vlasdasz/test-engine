@@ -1,6 +1,6 @@
 use std::{any::Any, ops::Deref};
 
-use gm::{LossyConvert, Toggle, flat::Size};
+use gm::{LossyConvert, Toggle, color::WHITE, flat::Size};
 use refs::{Own, Weak};
 use ui::{Button, Label, Setup, ToLabel, View, ViewData, ViewFrame, ViewSubviews, view};
 use vents::Event;
@@ -96,7 +96,7 @@ impl<T: ToLabel + Clone + 'static> Setup for DropDown<T> {
         self.button.place().back();
         self.button.on_tap(move || self.tapped());
 
-        self.label.place().back();
+        self.label.set_color(WHITE).place().back();
 
         self.table.set_data_source(self.deref());
         self.table.set_hidden(true);
@@ -112,6 +112,8 @@ impl<T: ToLabel + Clone + 'static> CollectionData for DropDown<T> {
         let label = cell.downcast_mut::<Label>().unwrap();
 
         let val = self.values[index].clone();
+
+        label.set_color(WHITE);
 
         if let Some(format) = &self.custom_format {
             label.set_text(format(val));

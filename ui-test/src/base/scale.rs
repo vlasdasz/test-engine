@@ -4,7 +4,7 @@ use test_engine::{
     refs::{Own, Weak, weak_from_ref},
     ui::{
         Button, CellRegistry, Label, Setup, TableData, TableView2, UIManager, View, ViewData, ViewSubviews,
-        view,
+        WHITE, view,
     },
     ui_test::{UITest, check_colors, inject_touches},
 };
@@ -25,14 +25,14 @@ struct ScaleView {
 
 impl Setup for ScaleView {
     fn setup(mut self: Weak<Self>) {
-        self.label.set_text("Label");
+        self.label.set_text("Label").set_color(WHITE);
         self.label.place().tl(20).size(150, 80);
 
         self.button.set_text("Button");
         self.button.place().below(self.label, 20);
 
         self.table.place().size(200, 280).br(20);
-        self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<Label>();
 
         self.tr_button.place().tr(20).size(50, 50);
         self.bl_button.place().bl(20).size(50, 50);
@@ -56,6 +56,7 @@ impl TableData for ScaleView {
     fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         let cell = registry.get_cell::<Label>();
         cell.set_text(index);
+        cell.set_color(WHITE);
         cell
     }
 }

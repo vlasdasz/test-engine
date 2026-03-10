@@ -68,7 +68,6 @@ pub async fn test_buttons_on_table_view() -> Result<()> {
         vec![vec![
             "Layer: Root view".to_string(),
             "Container".to_string(),
-            "ScrollView.slider: Slider".to_string(),
             "Button".to_string(),
         ]],
     );

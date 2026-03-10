@@ -4,7 +4,7 @@ use test_engine::{
     dispatch::wait_for_next_frame,
     refs::Weak,
     ui::{
-        Color, Container, Label, ModalView, Setup, Size, ViewData, ViewFrame, ViewSubviews, WeakView,
+        Color, Container, Label, ModalView, Setup, Size, ViewData, ViewFrame, ViewSubviews, WHITE, WeakView,
         ui_test::helpers::check_colors, view,
     },
     ui_test::UITest,
@@ -45,6 +45,7 @@ impl Setup for Modal {
         self.label.place().back();
         self.label.set_text_size(100);
         self.label.set_text("Hello");
+        self.label.set_color(WHITE);
     }
 }
 

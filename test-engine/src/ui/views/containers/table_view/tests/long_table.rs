@@ -24,7 +24,7 @@ struct LongTableTest {
 impl Setup for LongTableTest {
     fn setup(self: Weak<Self>) {
         self.table.place().lr(280).tb(0);
-        self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<Label>();
     }
 }
 
@@ -72,6 +72,7 @@ impl ViewTest for LongTableTest {
         assert_eq!(
             view.table
                 .scroll
+                .content
                 .subviews()
                 .last()
                 .unwrap()
@@ -321,7 +322,7 @@ impl ViewTest for LongTableTest {
              ",
         );
 
-        assert_eq!(INDEX.load(Ordering::Relaxed), 666_665);
+        assert_eq!(INDEX.load(Ordering::Relaxed), 25);
 
         from_main(move || {
             view.table.set_columns(2);

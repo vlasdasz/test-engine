@@ -34,7 +34,7 @@ impl Setup for InfiniteScrollTest {
         self.table.columns = 2;
         self.table
             .set_data_source(self)
-            .register_cell::<InfiniteCell>(|| InfiniteCell::new())
+            .register_cell::<InfiniteCell>()
             .set_border_color(BLACK)
             .set_border_width(5)
             .place()
@@ -135,7 +135,7 @@ impl ViewTest for InfiniteScrollTest {
              ",
         );
 
-        assert_eq!(view.test_string, "|64||65||67||66||68||69||71||70|");
+        assert_eq!(view.test_string, "|216||217||219||218||220||223||223||222|");
 
         inject_touches(
             "
@@ -199,7 +199,7 @@ impl ViewTest for InfiniteScrollTest {
          ",
         );
 
-        assert_eq!(view.test_string, "|46||49||53|");
+        assert_eq!(view.test_string, "|198||201||205|");
 
         // crate::ui_test::record_ui_test();
 

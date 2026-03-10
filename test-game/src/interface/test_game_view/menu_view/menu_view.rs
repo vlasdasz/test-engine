@@ -47,7 +47,7 @@ impl Setup for MenuView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         self.table.set_data_source(self).place().back();
-        self.table.register_cell::<NodeCell>(|| NodeCell::new());
+        self.table.register_cell::<NodeCell>();
 
         self.root = Node::new(
             MenuEntry::new("Root"),

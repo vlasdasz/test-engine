@@ -5,7 +5,7 @@ use test_engine::{
     refs::{Own, Weak},
     ui::{
         Button, CollectionData, CollectionView, Container, GREEN, ImageView, Label, Setup, Size, TURQUOISE,
-        View, ViewData, ViewSubviews,
+        View, ViewData, ViewSubviews, WHITE,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
@@ -36,7 +36,10 @@ impl CollectionData for SomeView {
     }
 
     fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
-        cell.downcast_mut::<Label>().unwrap().set_text(format!("{index}"));
+        cell.downcast_mut::<Label>()
+            .unwrap()
+            .set_color(WHITE)
+            .set_text(format!("{index}"));
     }
 
     fn size_for_index(&self, _index: usize) -> Size {

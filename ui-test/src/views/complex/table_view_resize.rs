@@ -15,7 +15,7 @@ struct TableViewResize {
 impl Setup for TableViewResize {
     fn setup(self: Weak<Self>) {
         self.table.set_frame((20, 20, 200, 200));
-        self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<Label>();
     }
 }
 

@@ -1,6 +1,3 @@
-#![allow(incomplete_features)]
-#![feature(specialization)]
-
 mod all_views;
 mod async_link_button;
 mod cast_cell;

@@ -11,9 +11,8 @@ impl TableView2 {
             .content
             .subviews_mut()
             .drain(..)
-            .map(|c| {
+            .inspect(|c| {
                 c.touch().up_inside.clear_subscribers();
-                c
             })
             .collect();
 

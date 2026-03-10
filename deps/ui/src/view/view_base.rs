@@ -22,6 +22,7 @@ pub struct ViewBase {
     #[educe(Debug(ignore))]
     pub(crate) border_width:  f32,
 
+    #[allow(clippy::pub_underscore_fields)]
     pub __content_offset: f32,
 
     pub(crate) is_hidden: bool,
@@ -30,6 +31,7 @@ pub struct ViewBase {
     pub(crate) z_position: f32,
 
     pub(crate) frame:     Rect,
+    #[allow(clippy::pub_underscore_fields)]
     pub __absolute_frame: Rect,
 
     #[educe(Debug(ignore))]
@@ -39,6 +41,7 @@ pub struct ViewBase {
     pub(crate) subviews: Vec<Own<dyn View>>,
 
     #[educe(Debug(ignore))]
+    #[allow(clippy::pub_underscore_fields)]
     pub __touch_id: usize,
 
     #[educe(Debug(ignore))]

@@ -1,3 +1,5 @@
+#![allow(clippy::float_cmp)]
+
 use ::ui::view_test;
 use anyhow::Result;
 use gm::{
@@ -29,9 +31,10 @@ impl Setup for ScrollViewTest {
 }
 
 impl ViewTest for ScrollViewTest {
+    #[allow(clippy::too_many_lines)]
     fn perform_test(mut view: Weak<Self>) -> Result<()> {
         check_colors(
-            r#"
+            r"
                   51  117 -  89 124 149
                   50  120 -  89 124 149
                   55  100 -  89 124 149
@@ -61,22 +64,22 @@ impl ViewTest for ScrollViewTest {
                  532  533 -   0 255 255
                  542  518 -   0 255 255
                  552  476 -  89 124 149
-            "#,
+            ",
         )?;
 
-        assert_eq!(view.scroll.content_offset(), 0.0);
+        assert_eq!(view.scroll.content_offset(), 0.0_f32);
 
         inject_scroll(-5);
-        assert_eq!(view.scroll.content_offset(), 0.0);
+        assert_eq!(view.scroll.content_offset(), 0.0_f32);
 
         inject_scroll(-20);
-        assert_eq!(view.scroll.content_offset(), 0.0);
+        assert_eq!(view.scroll.content_offset(), 0.0_f32);
 
         inject_scroll(-30);
-        assert_eq!(view.scroll.content_offset(), 0.0);
+        assert_eq!(view.scroll.content_offset(), 0.0_f32);
 
         check_colors(
-            r#"
+            r"
                   51  117 -  89 124 149
                   50  120 -  89 124 149
                   55  100 -  89 124 149
@@ -106,7 +109,7 @@ impl ViewTest for ScrollViewTest {
                  532  533 -   0 255 255
                  542  518 -   0 255 255
                  552  476 -  89 124 149
-            "#,
+            ",
         )?;
 
         from_main(move || {
@@ -114,7 +117,7 @@ impl ViewTest for ScrollViewTest {
         });
 
         check_colors(
-            r#"
+            r"
                   71  115 -  89 124 149
                   71  100 -  89 124 149
                   76   91 -   0 255 255
@@ -152,7 +155,7 @@ impl ViewTest for ScrollViewTest {
                   46  340 -   0 255 255
                   48  392 -   0 255 255
                   53  434 -  89 124 149
-            "#,
+            ",
         )?;
 
         from_main(move || {
@@ -160,7 +163,7 @@ impl ViewTest for ScrollViewTest {
         });
 
         check_colors(
-            r#"
+            r"
                  549  127 -  89 124 149
                  545  119 -  89 124 149
                  542  111 -  89 124 149
@@ -199,7 +202,7 @@ impl ViewTest for ScrollViewTest {
                  510  166 -  89 124 149
                  337  116 -  89 124 149
                  193   50 -  89 124 149
-            "#,
+            ",
         )?;
 
         inject_touches("258  176  b");
@@ -210,7 +213,7 @@ impl ViewTest for ScrollViewTest {
         assert_eq!(view.scroll.get_scroll_content_offset(), -150.0);
 
         check_colors(
-            r#"
+            r"
                   70  493 -  89 124 149
                   71  508 -  89 124 149
                   64  523 -  89 124 149
@@ -249,14 +252,14 @@ impl ViewTest for ScrollViewTest {
                  318  403 -  89 124 149
                  399  282 -  89 124 149
                  214  178 -  89 124 149
-            "#,
+            ",
         )?;
 
         inject_scroll(-1500);
         assert_eq!(view.scroll.get_scroll_content_offset(), -200.0);
 
         check_colors(
-            r#"
+            r"
                   62  448 -  89 124 149
                   60  475 -  89 124 149
                   54  504 -   0 255 255
@@ -288,7 +291,7 @@ impl ViewTest for ScrollViewTest {
                  253  164 -  89 124 149
                  323  271 -  89 124 149
                  376  264 -  89 124 149
-            "#,
+            ",
         )?;
 
         from_main(move || {
@@ -296,7 +299,7 @@ impl ViewTest for ScrollViewTest {
         });
 
         check_colors(
-            r#"
+            r"
                   79  442 -  89 124 149
                   74  480 -  89 124 149
                   67  501 -   0 255 255
@@ -328,7 +331,7 @@ impl ViewTest for ScrollViewTest {
                  388  511 -  89 124 149
                  182  499 -  89 124 149
                   29  526 -   0 255 255
-            "#,
+            ",
         )?;
 
         Ok(())

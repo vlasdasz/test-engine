@@ -116,7 +116,7 @@ pub(super) fn test_basic_scroll(mut view: Weak<InfiniteScrollTest>) -> Result<()
     ",
     );
 
-    assert_eq!(view.test_string, "|6||7||8||9||10||11||12||13||12||15|");
+    assert_eq!(view.test_string, "|24||25||26||27||28||29||30||31||32||33|");
 
     Ok(())
 }

@@ -1,8 +1,11 @@
-use refs::{Rglica, ToRglica, Weak};
-use ui::{Placer, Setup, UIEvent, ViewData};
+use refs::{Own, Rglica, ToRglica, Weak};
+use ui::{AfterSetup, Placer, Setup, UIEvent, View, ViewData};
 use ui_proc::view;
 
-use crate::ui::TableView2;
+use crate::{
+    inspect::views::LayoutRuleCell,
+    ui::{CellRegistry, TableData, TableView2},
+};
 
 mod test_engine {
     pub(crate) use educe;
@@ -26,8 +29,7 @@ pub struct PlacerView {
 impl Setup for PlacerView {
     fn setup(self: Weak<Self>) {
         self.place().all_ver();
-        // TODO:
-        // self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<LayoutRuleCell>();
     }
 }
 
@@ -39,30 +41,28 @@ impl PlacerView {
     }
 }
 
-// impl TableData for PlacerView {
-//     fn cell_height(self: Weak<Self>, _: usize) -> f32 {
-//         50.0
-//     }
+impl TableData for PlacerView {
+    fn cell_height(&self, _: usize) -> f32 {
+        50.0
+    }
 
-//     fn number_of_cells(self: Weak<Self>) -> usize {
-//         if self.placer.is_null() {
-//             return 0;
-//         }
-//         self.placer.get_rules().len()
-//     }
+    fn number_of_cells(&self) -> usize {
+        if self.placer.is_null() {
+            return 0;
+        }
+        self.placer.get_rules().len()
+    }
 
-//     fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-//         LayoutRuleCell::new()
-//     }
-
-//     fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-//         if self.placer.is_null() {
-//             return;
-//         }
-//         let cell = cast_cell!(LayoutRuleCell);
-//         cell.set_rule(&self.placer.get_rules()[index]);
-//         cell.editing_ended.sub(self, move || {
-//             self.rule_changed.trigger(());
-//         });
-//     }
-// }
+    fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let this = self.weak();
+        registry.get_cell::<LayoutRuleCell>().after_setup(move |cell| {
+            if this.placer.is_null() {
+                return;
+            }
+            cell.set_rule(&this.placer.get_rules()[index]);
+            cell.editing_ended.sub(this, move || {
+                this.rule_changed.trigger(());
+            });
+        })
+    }
+}

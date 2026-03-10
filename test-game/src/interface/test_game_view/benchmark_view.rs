@@ -34,7 +34,7 @@ fn update_fps() {
 pub struct UIBenchmarkView {
     total_spawned: usize,
 
-    #[educe(Default = Instant::now() + Duration::from_secs(86400 * 365 * 30))]
+    #[educe(Default = Instant::now() + Duration::from_hours(1_000_000))]
     next_spawn: Instant,
 
     tl: Weak<Self>,
