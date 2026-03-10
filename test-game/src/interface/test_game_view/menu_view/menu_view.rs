@@ -277,7 +277,7 @@ impl TableData for MenuView {
         self.root.length()
     }
 
-    fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         let node = self.root.val_at_index(index);
 
         if node.value.label == "ui scale" {

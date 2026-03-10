@@ -46,7 +46,7 @@ impl TableView {
         let mut weak_table = self.weak();
 
         for i in first_index..last_index {
-            let cell = self.data.setup_cell2(i, &mut weak_table.registry);
+            let cell = self.data.setup_cell(i, &mut weak_table.registry);
             let cell = self.scroll.add_subview(cell);
 
             cell.set_frame((0, i.lossy_convert() * cell_height, width, cell_height));
@@ -88,7 +88,7 @@ impl TableView {
         let mut weak_table = weak_from_ref(self);
 
         for i in first_index..last_index {
-            let cell = self.data.setup_cell2(i, &mut weak_table.registry);
+            let cell = self.data.setup_cell(i, &mut weak_table.registry);
             let cell = self.scroll.add_subview(cell);
 
             cell.enable_touch_low_priority();

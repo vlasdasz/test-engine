@@ -6,11 +6,10 @@ use gm::{
 };
 use refs::{Weak, weak_from_ref};
 use ui_proc::view;
-use vents::Event;
 use window::image::ToImage;
 
 use crate::{
-    ImageView, Label, Setup, Style, ToLabel, UIManager, View, ViewSubviews, ViewTransition,
+    ImageView, Label, Setup, Style, ToLabel, UIEvent, UIManager, View, ViewSubviews, ViewTransition,
     view::{ViewData, ViewTouch},
 };
 
@@ -23,7 +22,7 @@ mod test_engine {
 
 #[view]
 pub struct Button {
-    on_tap: Event,
+    on_tap: UIEvent,
 
     label: Weak<Label>,
 
@@ -64,7 +63,7 @@ impl Button {
 impl Button {
     pub fn on_tap<R>(&self, mut action: impl FnMut() -> R + Send + 'static) -> &Self {
         self.enable_touch();
-        self.on_tap.sub(move || {
+        self.on_tap.sub(self.weak(), move || {
             action();
         });
         self

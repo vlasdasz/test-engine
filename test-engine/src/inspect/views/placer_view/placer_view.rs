@@ -53,7 +53,7 @@ impl TableData for PlacerView {
         self.placer.get_rules().len()
     }
 
-    fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         let this = self.weak();
         registry.get_cell::<LayoutRuleCell>().after_setup(move |cell| {
             if this.placer.is_null() {

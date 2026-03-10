@@ -8,7 +8,7 @@ pub trait TableData {
     fn variable_height(&self) -> bool;
     fn number_of_cells(&self) -> usize;
     fn cell_selected(&mut self, index: usize);
-    fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View>;
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View>;
 }
 
 #[allow(unused_variables)]
@@ -27,7 +27,7 @@ impl<T: View + 'static> TableData for T {
 
     default fn cell_selected(&mut self, index: usize) {}
 
-    default fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    default fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         Container::new()
     }
 }

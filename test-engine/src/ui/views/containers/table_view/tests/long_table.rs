@@ -37,7 +37,7 @@ impl TableData for LongTableTest {
         N_CELLS.load(Ordering::Relaxed)
     }
 
-    fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         let label = registry.get_cell::<Label>();
         if self.table.columns == 1 {
             label.set_text(format!("Cell number: {}", index + 1));

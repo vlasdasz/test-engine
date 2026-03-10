@@ -1,13 +1,11 @@
-use std::{any::Any, ops::Deref};
-
 use gm::{LossyConvert, Toggle, color::WHITE, flat::Size};
 use refs::{Own, Weak};
-use ui::{Button, Label, Setup, ToLabel, View, ViewData, ViewFrame, ViewSubviews, view};
+use ui::{AfterSetup, Button, Label, Setup, ToLabel, View, ViewData, ViewFrame, ViewSubviews, view};
 use vents::Event;
 
 use crate::{
     self as test_engine,
-    ui::{CollectionData, CollectionView},
+    ui::{CellRegistry, TableData, TableView},
 };
 
 #[view]
@@ -23,7 +21,7 @@ pub struct DropDown<T: 'static> {
     #[init]
     button: Button,
     label:  Label,
-    table:  CollectionView,
+    table:  TableView,
 }
 
 impl<T: ToLabel + Clone + 'static> DropDown<T> {
@@ -98,38 +96,35 @@ impl<T: ToLabel + Clone + 'static> Setup for DropDown<T> {
 
         self.label.set_color(WHITE).place().back();
 
-        self.table.set_data_source(self.deref());
+        self.table.set_data_source(self).register_cell::<Label>();
         self.table.set_hidden(true);
     }
 }
 
-impl<T: ToLabel + Clone + 'static> CollectionData for DropDown<T> {
+impl<T: ToLabel + Clone + 'static> TableData for DropDown<T> {
     fn number_of_cells(&self) -> usize {
         self.values.len()
     }
 
-    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
-
-        let val = self.values[index].clone();
-
-        label.set_color(WHITE);
-
-        if let Some(format) = &self.custom_format {
-            label.set_text(format(val));
-        } else {
-            label.set_text(val);
-        }
+    fn cell_height(&self, _: usize) -> f32 {
+        self.height()
     }
 
-    fn size_for_index(&self, _index: usize) -> Size {
-        (self.height(), self.height()).into()
-    }
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        let this = self.weak();
+        registry.get_cell::<Label>().after_setup(move |cell| {
+            cell.__base_view().view_label += "DropDown cell: ";
 
-    fn make_cell(&self) -> Own<dyn View> {
-        let label = Label::new();
-        label.__base_view().view_label += "DropDown cell: ";
-        label
+            let val = this.values[index].clone();
+
+            cell.set_color(WHITE);
+
+            if let Some(format) = &this.custom_format {
+                cell.set_text(format(val));
+            } else {
+                cell.set_text(val);
+            }
+        })
     }
 
     fn cell_selected(&mut self, index: usize) {

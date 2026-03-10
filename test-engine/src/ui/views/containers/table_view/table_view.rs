@@ -144,7 +144,7 @@ mod test {
             100_000
         }
 
-        fn setup_cell2(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
             let cell = registry.get_cell::<Label>();
             cell.set_text(index);
             cell.set_border_width(index % 20);
