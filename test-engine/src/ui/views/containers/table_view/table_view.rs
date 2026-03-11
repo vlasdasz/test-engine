@@ -53,6 +53,15 @@ impl TableView {
         self
     }
 
+    pub fn register_cell_id(
+        mut self: Weak<Self>,
+        id: &'static str,
+        mut constructor: impl FnMut() -> Own<dyn View> + Send + 'static,
+    ) -> Weak<Self> {
+        self.registry.constructors.insert(id, Function::new(move |()| constructor()));
+        self
+    }
+
     pub fn reload_data(&mut self) {
         self.layout_cells();
     }
@@ -145,7 +154,7 @@ mod test {
         }
 
         fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-            let cell = registry.get_cell::<Label>();
+            let cell = registry.cell::<Label>();
             cell.set_text(index);
             cell.set_border_width(index % 20);
             cell.set_color(Color::ALL[index % Color::ALL.len()]);

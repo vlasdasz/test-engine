@@ -29,7 +29,7 @@ impl TableData for TableViewResize {
     }
 
     fn setup_cell(&mut self, _index: usize, registry: &mut test_engine::ui::CellRegistry) -> Own<dyn View> {
-        let cell = registry.get_cell::<Label>();
+        let cell = registry.cell::<Label>();
         cell.set_color(GREEN);
         cell.set_text("alalalalal");
         cell

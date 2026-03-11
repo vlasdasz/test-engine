@@ -6,15 +6,7 @@ use crate::ui::TableView;
 
 impl TableView {
     fn clear_old_cells(&mut self) {
-        let old_cells: Vec<_> = self
-            .scroll
-            .content
-            .subviews_mut()
-            .drain(..)
-            .inspect(|c| {
-                c.touch().up_inside.clear_subscribers();
-            })
-            .collect();
+        let old_cells: Vec<_> = self.scroll.content.subviews_mut().drain(..).collect();
 
         self.registry.load_old_cells(old_cells);
     }

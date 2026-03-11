@@ -65,7 +65,7 @@ impl TableData for LabelImage {
     fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         let this = self.weak();
 
-        registry.get_cell::<Label>().after_setup(move |mut label| {
+        registry.cell::<Label>().after_setup(move |mut label| {
             label.set_text(index);
             label.set_text_size(50);
             label.set_text_color(WHITE);

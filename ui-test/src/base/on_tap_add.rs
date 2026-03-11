@@ -38,7 +38,7 @@ impl TableData for SomeView {
     }
 
     fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        registry.get_cell::<Label>().after_setup(move |cell| {
+        registry.cell::<Label>().after_setup(move |cell| {
             cell.set_color(WHITE).set_text(format!("{index}"));
         })
     }

@@ -47,7 +47,21 @@ impl Setup for MenuView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
         self.table.set_data_source(self).place().back();
-        self.table.register_cell::<NodeCell>().register_cell::<ScaleCell>();
+        self.table
+            .register_cell::<NodeCell>()
+            .register_cell::<ScaleCell>()
+            .register_cell_id("ui scale", || {
+                ScaleCell::make(
+                    Function::new(|()| UIManager::scale()),
+                    Function::new(UIManager::set_scale),
+                )
+            })
+            .register_cell_id("lvl scale", || {
+                ScaleCell::make(
+                    Function::new(|()| LevelManager::scale()),
+                    Function::new(LevelManager::set_scale),
+                )
+            });
 
         self.root = Node::new(
             MenuEntry::new("Root"),
@@ -283,29 +297,17 @@ impl TableData for MenuView {
         let node = self.root.val_at_index(index);
 
         if node.value.label == "ui scale" {
-            registry.get_cell::<ScaleCell>().after_setup(move |mut cell| {
+            registry.cell_with_id::<ScaleCell>("ui scale").after_setup(move |cell| {
                 let node = this.root.val_at_index(index);
-
-                cell.set_funcs(
-                    Function::new(|()| UIManager::scale()),
-                    Function::new(UIManager::set_scale),
-                );
-
                 cell.weak().set_node(node);
             })
         } else if node.value.label == "lvl scale" {
-            registry.get_cell::<ScaleCell>().after_setup(move |mut cell| {
+            registry.cell_with_id::<ScaleCell>("lvl scale").after_setup(move |cell| {
                 let node = this.root.val_at_index(index);
-
-                cell.set_funcs(
-                    Function::new(|()| LevelManager::scale()),
-                    Function::new(LevelManager::set_scale),
-                );
-
                 cell.weak().set_node(node);
             })
         } else {
-            let cell = registry.get_cell::<NodeCell>();
+            let cell = registry.cell::<NodeCell>();
 
             let weak = cell.weak();
             let node = node.clone();

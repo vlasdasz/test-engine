@@ -112,7 +112,7 @@ impl<T: ToLabel + Clone + 'static> TableData for DropDown<T> {
 
     fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         let this = self.weak();
-        registry.get_cell::<Label>().after_setup(move |cell| {
+        registry.cell::<Label>().after_setup(move |cell| {
             cell.__base_view().view_label += "DropDown cell: ";
 
             let val = this.values[index].clone();

@@ -32,8 +32,12 @@ impl CellRegistry {
         constructor.call(())
     }
 
-    pub fn get_cell<T: View + 'static>(&mut self) -> Own<T> {
+    pub fn cell<T: View + 'static>(&mut self) -> Own<T> {
         self.cell_for_ident(struct_name::<T>()).downcast::<T>()
+    }
+
+    pub fn cell_with_id<T: View + 'static>(&mut self, id: &'static str) -> Own<T> {
+        self.cell_for_ident(id).downcast::<T>()
     }
 }
 

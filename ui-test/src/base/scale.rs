@@ -54,7 +54,7 @@ impl TableData for ScaleView {
     }
 
     fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        let cell = registry.get_cell::<Label>();
+        let cell = registry.cell::<Label>();
         cell.set_text(index);
         cell.set_color(WHITE);
         cell

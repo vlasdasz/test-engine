@@ -5,6 +5,7 @@ use ::test_engine::{
 use netrun::Function;
 use test_engine::{
     gm::LossyConvert,
+    refs::Own,
     ui::{Anchor, TextAlignment, ViewData},
 };
 
@@ -21,9 +22,11 @@ pub struct ScaleCell {
 }
 
 impl ScaleCell {
-    pub fn set_funcs(&mut self, get: Function<(), f32>, set: Function<f32, ()>) {
-        self.get_scale = get;
-        self.set_scale = set;
+    pub fn make(get: Function<(), f32>, set: Function<f32, ()>) -> Own<Self> {
+        let mut new = Self::new();
+        new.get_scale = get;
+        new.set_scale = set;
+        new
     }
 
     pub fn set_node(self: Weak<Self>, node: &Node<MenuEntry>) {

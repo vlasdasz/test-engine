@@ -82,7 +82,7 @@ impl TableData for InfiniteScrollTest {
     }
 
     fn setup_cell(&mut self, index: usize, registry: &mut crate::ui::CellRegistry) -> Own<dyn View> {
-        registry.get_cell::<InfiniteCell>().after_setup(move |cell| {
+        registry.cell::<InfiniteCell>().after_setup(move |cell| {
             cell.set_text(index);
         })
     }

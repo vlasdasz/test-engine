@@ -55,7 +55,7 @@ impl TableData for PlacerView {
 
     fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
         let this = self.weak();
-        registry.get_cell::<LayoutRuleCell>().after_setup(move |cell| {
+        registry.cell::<LayoutRuleCell>().after_setup(move |cell| {
             if this.placer.is_null() {
                 return;
             }

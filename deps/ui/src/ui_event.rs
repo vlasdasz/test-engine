@@ -38,10 +38,8 @@ impl<T: Send + Clone> UIEvent<T> {
     pub fn val<U: ?Sized>(&self, subscriber: Weak<U>, action: impl FnMut(T) + Send + 'static) {
         let mut subs = self.subscribers.lock();
 
-        // This view is already subscribed
-        if subs.iter().any(|s| s.subscriber.raw() == subscriber.raw()) {
-            return;
-        }
+        // Remove if this view is already subscribed
+        subs.retain(|s| s.subscriber.raw() != subscriber.raw());
 
         subs.push(Subscriber {
             subscriber: subscriber.erase(),

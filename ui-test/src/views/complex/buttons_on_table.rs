@@ -31,7 +31,7 @@ impl TableData for ButtonsOnTableView {
     }
 
     fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        registry.get_cell::<Container>().after_setup(move |mut cell| {
+        registry.cell::<Container>().after_setup(move |mut cell| {
             cell.add_view::<Button>()
                 .set_image("plus.png")
                 .place()

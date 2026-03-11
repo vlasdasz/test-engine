@@ -17,14 +17,23 @@ pub(crate) struct TouchLayer {
 
 impl TouchLayer {
     pub(crate) fn add_scroll(&mut self, view: Weak<dyn Scrollable>) {
+        if self.scrolls.iter().any(|l| l.raw() == view.raw()) {
+            return;
+        }
         self.scrolls.push(view);
     }
 
     pub(crate) fn add(&mut self, view: WeakView) {
+        if self.listeners.iter().any(|l| l.raw() == view.raw()) {
+            return;
+        }
         self.listeners.push(view);
     }
 
     pub(crate) fn add_low_priority(&mut self, view: WeakView) {
+        if self.listeners.iter().any(|l| l.raw() == view.raw()) {
+            return;
+        }
         self.listeners.insert(0, view);
     }
 
