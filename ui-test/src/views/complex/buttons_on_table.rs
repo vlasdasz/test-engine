@@ -1,9 +1,9 @@
 use anyhow::Result;
 use test_engine::{
-    refs::{Own, Weak},
+    refs::Weak,
     ui::{
-        AfterSetup, Button, CellRegistry, Container, Label, Setup, TableData, TableView, TouchStack, View,
-        ViewData, ViewSubviews, view,
+        Button, CellRegistry, Container, Label, Setup, TableData, TableView, TouchStack, View, ViewData,
+        ViewSubviews, view,
     },
     ui_test::{UITest, get_str_state, inject_touches, state::append_state},
 };
@@ -30,22 +30,22 @@ impl TableData for ButtonsOnTableView {
         50.0
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        registry.cell::<Container>().after_setup(move |mut cell| {
-            cell.add_view::<Button>()
-                .set_image("plus.png")
-                .place()
-                .size(40, 40)
-                .center_y()
-                .r(20);
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        let mut cell = registry.cell::<Container>();
+        cell.add_view::<Button>()
+            .set_image("plus.png")
+            .place()
+            .size(40, 40)
+            .center_y()
+            .r(20);
 
-            cell.add_view::<Label>().place().size(100, 40).center_y().l(20);
+        cell.add_view::<Label>().place().size(100, 40).center_y().l(20);
 
-            cell.get_subview::<Label>().set_text(format!("{index}"));
-            cell.get_subview::<Button>().on_tap(move || {
-                append_state(format!("button_pressed: {index}\n"));
-            });
-        })
+        cell.get_subview::<Label>().set_text(format!("{index}"));
+        cell.get_subview::<Button>().on_tap(move || {
+            append_state(format!("button_pressed: {index}\n"));
+        });
+        cell
     }
 
     fn cell_selected(&mut self, index: usize) {

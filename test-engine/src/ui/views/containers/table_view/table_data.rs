@@ -1,5 +1,5 @@
-use refs::Own;
-use ui::{Container, Setup, View};
+use refs::Weak;
+use ui::View;
 
 use crate::ui::CellRegistry;
 
@@ -8,7 +8,7 @@ pub trait TableData {
     fn variable_height(&self) -> bool;
     fn number_of_cells(&self) -> usize;
     fn cell_selected(&mut self, index: usize);
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View>;
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View>;
 }
 
 #[allow(unused_variables)]
@@ -27,7 +27,7 @@ impl<T: View + 'static> TableData for T {
 
     default fn cell_selected(&mut self, index: usize) {}
 
-    default fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        Container::new()
+    default fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        unimplemented!("TableData::setup_cell must be overloaded")
     }
 }

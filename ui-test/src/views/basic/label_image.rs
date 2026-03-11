@@ -1,9 +1,8 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    refs::{Own, Weak},
+    refs::Weak,
     ui::{
-        AfterSetup,
         Anchor::{Top, X},
         CellRegistry, Container, LIGHT_BLUE, Label, Setup, TableData, TableView, View, ViewData,
         ViewSubviews, WHITE, view,
@@ -62,19 +61,17 @@ impl TableData for LabelImage {
         4
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        let this = self.weak();
-
-        registry.cell::<Label>().after_setup(move |mut label| {
-            label.set_text(index);
-            label.set_text_size(50);
-            label.set_text_color(WHITE);
-            if this.resizing_image {
-                label.set_resizing_image("button");
-            } else {
-                label.set_image("cat.png");
-            }
-        })
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        let mut cell = registry.cell::<Label>();
+        cell.set_text(index);
+        cell.set_text_size(50);
+        cell.set_text_color(WHITE);
+        if self.resizing_image {
+            cell.set_resizing_image("button");
+        } else {
+            cell.set_image("cat.png");
+        }
+        cell
     }
 }
 

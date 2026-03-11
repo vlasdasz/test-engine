@@ -22,6 +22,8 @@ pub struct TableView {
 
 impl Setup for TableView {
     fn setup(mut self: Weak<Self>) {
+        let weak = self;
+        self.registry.set_table(weak);
         self.scroll.place().back();
 
         self.scroll.on_scroll.sub(move || {
@@ -118,7 +120,7 @@ mod test {
     use gm::color::Color;
     use hreads::from_main;
     use parking_lot::Mutex;
-    use refs::{Own, Weak};
+    use refs::Weak;
     use ui::{Label, Setup, View, ViewData, ViewTest, view_test};
 
     use crate::{
@@ -153,7 +155,7 @@ mod test {
             100_000
         }
 
-        fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+        fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
             let cell = registry.cell::<Label>();
             cell.set_text(index);
             cell.set_border_width(index % 20);

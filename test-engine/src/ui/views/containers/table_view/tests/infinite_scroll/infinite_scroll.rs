@@ -1,13 +1,13 @@
 use anyhow::Result;
 use gm::color::BLACK;
 use hreads::{from_main, on_main, sleep, spawn};
-use refs::{Own, Weak};
-use ui::{AfterSetup, Setup, View, ViewData, ViewTest, view_test};
+use refs::Weak;
+use ui::{Setup, View, ViewData, ViewTest, view_test};
 
 use crate::{
     self as test_engine,
     ui::{
-        Spinner, TableData, TableView,
+        CellRegistry, Spinner, TableData, TableView,
         views::containers::table_view::tests::infinite_scroll::{
             basic_scroll::test_basic_scroll, infinite_cell::InfiniteCell,
         },
@@ -81,10 +81,8 @@ impl TableData for InfiniteScrollTest {
         self.data_size
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut crate::ui::CellRegistry) -> Own<dyn View> {
-        registry.cell::<InfiniteCell>().after_setup(move |cell| {
-            cell.set_text(index);
-        })
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        registry.cell::<InfiniteCell>().set_text(index)
     }
 
     fn cell_selected(&mut self, index: usize) {

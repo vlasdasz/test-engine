@@ -56,7 +56,7 @@ impl<T: Send + Clone> UIEvent<T> {
         let actions: Vec<_> = self.subscribers.lock().iter().map(|s| s.action.clone()).collect();
 
         for action in actions {
-            action.call(val.clone())
+            action.call(val.clone());
         }
     }
 }

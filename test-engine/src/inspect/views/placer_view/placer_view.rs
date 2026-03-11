@@ -1,5 +1,5 @@
-use refs::{Own, Rglica, ToRglica, Weak};
-use ui::{AfterSetup, Placer, Setup, UIEvent, View, ViewData};
+use refs::{Rglica, ToRglica, Weak};
+use ui::{Placer, Setup, UIEvent, View, ViewData};
 use ui_proc::view;
 
 use crate::{
@@ -53,16 +53,19 @@ impl TableData for PlacerView {
         self.placer.get_rules().len()
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        let cell = registry.cell::<LayoutRuleCell>();
+
+        if self.placer.is_null() {
+            return cell;
+        }
+
+        cell.set_rule(&self.placer.get_rules()[index]);
         let this = self.weak();
-        registry.cell::<LayoutRuleCell>().after_setup(move |cell| {
-            if this.placer.is_null() {
-                return;
-            }
-            cell.set_rule(&this.placer.get_rules()[index]);
-            cell.editing_ended.sub(this, move || {
-                this.rule_changed.trigger(());
-            });
-        })
+        cell.editing_ended.sub(this, move || {
+            this.rule_changed.trigger(());
+        });
+
+        cell
     }
 }

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    refs::{Own, Weak, weak_from_ref},
+    refs::{Weak, weak_from_ref},
     ui::{
         Button, CellRegistry, Label, Setup, TableData, TableView, UIManager, View, ViewData, ViewSubviews,
         WHITE, view,
@@ -53,7 +53,7 @@ impl TableData for ScaleView {
         4
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
         let cell = registry.cell::<Label>();
         cell.set_text(index);
         cell.set_color(WHITE);

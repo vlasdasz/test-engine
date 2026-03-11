@@ -13,7 +13,7 @@ use test_engine::{
     filesystem::Paths,
     gm::Toggle,
     level::LevelManager,
-    refs::{Own, Weak, manage::DataManager},
+    refs::{Weak, manage::DataManager},
     ui::{
         ALL_VIEWS, AfterSetup, Alert, AlertErr, Button, CellRegistry, Image, InfiniteScrollTest, Point,
         Setup, Spinner, TableData, TableView, UIManager, View, ViewData, ViewFrame, ViewSubviews,
@@ -291,30 +291,24 @@ impl TableData for MenuView {
         self.root.length()
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
         let mut this = self.weak();
 
         let node = self.root.val_at_index(index);
 
         if node.value.label == "ui scale" {
-            registry.cell_with_id::<ScaleCell>("ui scale").after_setup(move |cell| {
-                let node = this.root.val_at_index(index);
-                cell.weak().set_node(node);
-            })
+            let cell = registry.cell_with_id::<ScaleCell>("ui scale");
+            cell.set_node(node);
+            cell
         } else if node.value.label == "lvl scale" {
-            registry.cell_with_id::<ScaleCell>("lvl scale").after_setup(move |cell| {
-                let node = this.root.val_at_index(index);
-                cell.weak().set_node(node);
-            })
+            let cell = registry.cell_with_id::<ScaleCell>("lvl scale");
+            let node = this.root.val_at_index(index);
+            cell.weak().set_node(node);
+            cell
         } else {
             let cell = registry.cell::<NodeCell>();
-
-            let weak = cell.weak();
-            let node = node.clone();
-
-            cell.after_setup(move |_| {
-                weak.set_node(&node);
-            })
+            cell.set_node(node);
+            cell
         }
     }
 

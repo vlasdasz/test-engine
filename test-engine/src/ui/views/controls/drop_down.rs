@@ -1,6 +1,6 @@
 use gm::{LossyConvert, Toggle, color::WHITE, flat::Size};
-use refs::{Own, Weak};
-use ui::{AfterSetup, Button, Label, Setup, ToLabel, View, ViewData, ViewFrame, ViewSubviews, view};
+use refs::Weak;
+use ui::{Button, Label, Setup, ToLabel, View, ViewData, ViewFrame, ViewSubviews, view};
 use vents::Event;
 
 use crate::{
@@ -110,21 +110,22 @@ impl<T: ToLabel + Clone + 'static> TableData for DropDown<T> {
         self.height()
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
         let this = self.weak();
-        registry.cell::<Label>().after_setup(move |cell| {
-            cell.__base_view().view_label += "DropDown cell: ";
+        let cell = registry.cell::<Label>();
+        cell.__base_view().view_label += "DropDown cell: ";
 
-            let val = this.values[index].clone();
+        let val = this.values[index].clone();
 
-            cell.set_color(WHITE);
+        cell.set_color(WHITE);
 
-            if let Some(format) = &this.custom_format {
-                cell.set_text(format(val));
-            } else {
-                cell.set_text(val);
-            }
-        })
+        if let Some(format) = &this.custom_format {
+            cell.set_text(format(val));
+        } else {
+            cell.set_text(val);
+        }
+
+        cell
     }
 
     fn cell_selected(&mut self, index: usize) {

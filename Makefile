@@ -42,9 +42,7 @@ ios-debug:
 	rm -f ./target/universal/release/libtest_game.a
 	cp ./target/universal/debug/libtest_game.a ./target/universal/release/libtest_game.a
 
-lint:
-	cargo clippy \
-      -- \
+CLIPPY_FLAGS = -- \
       \
       -W clippy::all \
       -W clippy::pedantic \
@@ -61,7 +59,13 @@ lint:
       -A clippy::return_self_not_must_use \
       -A clippy::struct_field_names \
       -A clippy::manual_assert \
-      -A dead_code \
+      -A dead_code
+
+fix-lint:
+	cargo clippy --fix --allow-dirty --allow-staged $(CLIPPY_FLAGS)
+
+lint:
+	cargo clippy $(CLIPPY_FLAGS) \
       \
       -D warnings
 
@@ -93,5 +97,9 @@ decr:
 	mkdir secrets/decrypted
 	sops -d secrets/test-game.enc.yml > secrets/decrypted/test-game.yml
 
+
+.PHONY: import
+import:
+	cargo fix --allow-dirty --allow-staged --all --all-targets
 
 .PHONY: mobile

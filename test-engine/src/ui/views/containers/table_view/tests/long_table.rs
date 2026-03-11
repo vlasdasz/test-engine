@@ -3,8 +3,8 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use anyhow::Result;
 use gm::color::GRAY;
 use hreads::{from_main, wait_for_next_frame};
-use refs::{Own, Weak};
-use ui::{AfterSetup, Container, Label, Setup, View, ViewData, ViewSubviews, ViewTest, view_test};
+use refs::Weak;
+use ui::{Container, Label, Setup, View, ViewData, ViewSubviews, ViewTest, view_test};
 
 use crate::{
     self as test_engine, AppRunner,
@@ -37,7 +37,7 @@ impl TableData for LongTableTest {
         N_CELLS.load(Ordering::Relaxed)
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
         let label = registry.cell::<Label>();
         if self.table.columns == 1 {
             label.set_text(format!("Cell number: {}", index + 1));
@@ -45,10 +45,8 @@ impl TableData for LongTableTest {
             label.set_text(format!("Cell: {}", index + 1));
         }
 
-        Label::new().after_setup(|label| {
-            label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
-            label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
-        });
+        label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
+        label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
 
         label
     }

@@ -1,9 +1,9 @@
 use anyhow::Result;
 use test_engine::{
-    refs::{Own, Weak},
+    refs::Weak,
     ui::{
-        AfterSetup, Button, CellRegistry, Container, GREEN, ImageView, Label, Setup, TURQUOISE, TableData,
-        TableView, View, ViewData, ViewSubviews, WHITE,
+        Button, CellRegistry, Container, GREEN, ImageView, Label, Setup, TURQUOISE, TableData, TableView,
+        View, ViewData, ViewSubviews, WHITE,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
@@ -37,10 +37,8 @@ impl TableData for SomeView {
         50.0
     }
 
-    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Own<dyn View> {
-        registry.cell::<Label>().after_setup(move |cell| {
-            cell.set_color(WHITE).set_text(format!("{index}"));
-        })
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        registry.cell::<Label>().set_color(WHITE).set_text(format!("{index}")).weak()
     }
 }
 

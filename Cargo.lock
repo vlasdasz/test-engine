@@ -5911,6 +5911,7 @@ dependencies = [
  "fastrand",
  "log",
  "netrun",
+ "parking_lot",
  "plat 0.9.0",
  "serde",
  "test-engine",

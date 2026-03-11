@@ -1,7 +1,7 @@
 use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
-    refs::{Own, Weak},
+    refs::Weak,
     ui::{GREEN, Label, Setup, TableData, TableView, View, ViewData, ViewFrame, view},
     ui_test::{UITest, check_colors, inject_scroll},
 };
@@ -28,7 +28,7 @@ impl TableData for TableViewResize {
         1
     }
 
-    fn setup_cell(&mut self, _index: usize, registry: &mut test_engine::ui::CellRegistry) -> Own<dyn View> {
+    fn setup_cell(&mut self, _index: usize, registry: &mut test_engine::ui::CellRegistry) -> Weak<dyn View> {
         let cell = registry.cell::<Label>();
         cell.set_color(GREEN);
         cell.set_text("alalalalal");
