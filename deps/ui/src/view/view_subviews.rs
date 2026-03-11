@@ -126,6 +126,14 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
         let mut view: Own<dyn View> = unsafe { V::__into_unsized_own(view) };
 
+        // This view was already added, and is readded again
+        // This should be used only internally for types like TableView
+        if view.superview().raw() == self.weak().raw() {
+            self.__base_view().subviews.push(view);
+            self.__base_view().events.setup.trigger(());
+            return weak;
+        }
+
         view.__internal_before_setup();
 
         if view.__base_view().navigation_view.is_null() {
