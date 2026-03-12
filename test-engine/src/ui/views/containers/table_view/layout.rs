@@ -1,11 +1,25 @@
+use std::ops::DerefMut;
+
 use gm::LossyConvert;
 use refs::weak_from_ref;
 use ui::{ViewData, ViewFrame, ViewSubviews, ViewTouch};
 
 use crate::ui::TableView;
 
+pub(super) enum LayoutMode {
+    Scroll,
+    Resize,
+    Full,
+}
+
+fn cell_frame(i: usize, columns: usize, cell_width: f32, cell_height: f32) -> (f32, f32, f32, f32) {
+    let x: f32 = (i % columns).lossy_convert() * cell_width;
+    let y: f32 = (i / columns).lossy_convert() * cell_height;
+    (x, y, cell_width, cell_height)
+}
+
 impl TableView {
-    pub(super) fn layout_fixed_cells(&mut self, number_of_cells: usize, columns: usize, force: bool) {
+    pub(super) fn layout_fixed_cells(&mut self, number_of_cells: usize, columns: usize, mode: LayoutMode) {
         let cell_height = self.data.cell_height(0);
         let width = self.width();
         let cell_width = width / columns.lossy_convert();
@@ -30,31 +44,39 @@ impl TableView {
         let mut to_recycle = Vec::new();
         let mut shown = Vec::new();
 
-        for subview in self.scroll.content.subviews_mut().iter() {
-            let weak = subview.weak_view();
-            if weak.is_hidden() {
+        for view in self.scroll.content.subviews() {
+            if view.is_hidden() {
                 continue;
             }
-            let idx = weak.tag();
-            if !force && idx >= first_index && idx < last_index {
+
+            let idx = view.tag();
+            if !matches!(mode, LayoutMode::Full) && idx >= first_index && idx < last_index {
                 shown.push(idx);
             } else {
-                to_recycle.push(weak);
+                to_recycle.push(view.weak());
             }
         }
 
-        let recycled: Vec<_> = to_recycle
-            .into_iter()
-            .map(|mut cell| {
-                cell.set_hidden(true);
-                cell.as_cell().cell_removed();
-                cell
-            })
-            .collect();
-
-        self.registry.load_old_cells(recycled);
+        self.registry.load_old_cells(
+            to_recycle
+                .into_iter()
+                .map(|mut cell| {
+                    cell.set_hidden(true);
+                    cell.as_cell().cell_removed();
+                    cell
+                })
+                .collect(),
+        );
 
         let mut weak_table = weak_from_ref(self);
+
+        if matches!(mode, LayoutMode::Resize) {
+            for view in weak_table.scroll.content.subviews() {
+                if !view.is_hidden() {
+                    view.set_frame(cell_frame(view.tag(), columns, cell_width, cell_height));
+                }
+            }
+        }
 
         for i in first_index..last_index {
             if shown.contains(&i) {
@@ -62,11 +84,10 @@ impl TableView {
             }
 
             let mut cell = self.data.setup_cell(i, &mut weak_table.registry);
-            cell.set_tag(i);
+            let cell = cell.deref_mut();
 
-            let x: f32 = (i % columns).lossy_convert() * cell_width;
-            let y: f32 = (i / columns).lossy_convert() * cell_height;
-            cell.set_frame((x, y, cell_width, cell_height));
+            cell.set_tag(i);
+            cell.set_frame(cell_frame(i, columns, cell_width, cell_height));
 
             cell.touch().up_inside.clear_subscribers();
             cell.enable_touch_low_priority();

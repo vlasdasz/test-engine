@@ -2,6 +2,7 @@ use netrun::Function;
 use refs::{Own, Weak};
 use ui::{Setup, UIEvent, View, ViewData, ViewFrame, view};
 
+use super::layout::LayoutMode;
 use crate::{
     self as test_engine,
     ui::{CellRegistry, ScrollView, TableData, struct_name},
@@ -27,11 +28,11 @@ impl Setup for TableView {
         self.scroll.place().back();
 
         self.scroll.on_scroll.sub(move || {
-            self.layout_cells(false);
+            self.layout_cells(LayoutMode::Scroll);
         });
 
         self.size_changed().sub(move || {
-            self.layout_cells(true);
+            self.layout_cells(LayoutMode::Resize);
         });
     }
 }
@@ -65,12 +66,12 @@ impl TableView {
     }
 
     pub fn reload_data(&mut self) {
-        self.layout_cells(true);
+        self.layout_cells(LayoutMode::Full);
     }
 
     pub fn set_columns(&mut self, columns: usize) -> &mut Self {
         self.columns = columns;
-        self.layout_cells(true);
+        self.layout_cells(LayoutMode::Full);
         self
     }
 
@@ -80,7 +81,7 @@ impl TableView {
 }
 
 impl TableView {
-    fn layout_cells(&mut self, force: bool) {
+    fn layout_cells(&mut self, mode: LayoutMode) {
         if self.height() <= 0.0 {
             return;
         }
@@ -104,7 +105,7 @@ impl TableView {
             unimplemented!()
             // layout_variable_sized_cells(self, number_of_cells);
         } else {
-            self.layout_fixed_cells(number_of_cells, self.columns, force);
+            self.layout_fixed_cells(number_of_cells, self.columns, mode);
         }
     }
 }
