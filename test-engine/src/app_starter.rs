@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use window::{AppHandler, Window};
 use winit::event_loop::{ControlFlow, EventLoop};
 
@@ -60,7 +58,7 @@ pub(crate) fn test_engine_start_with_app(app: Box<dyn App>) -> std::ffi::c_int {
         let rt = tokio::runtime::Runtime::new().unwrap();
 
         rt.block_on(async {
-            let sentry_guard = AppRunner::setup_sentry(app.deref()).await;
+            let sentry_guard = AppRunner::setup_sentry(std::ops::Deref::deref(&app)).await;
 
             start(app);
 

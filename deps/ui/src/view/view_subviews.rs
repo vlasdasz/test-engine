@@ -3,20 +3,25 @@ use std::{any::type_name, ops::DerefMut};
 use gm::{LossyConvert, color::Color};
 use refs::{Own, Weak, weak_from_ref};
 
-use crate::{Container, DELETED_VIEWS, UIManager, View, ViewData, ViewFrame, WeakView};
+use crate::{
+    Container, DELETED_VIEWS, UIManager, View, ViewData, ViewFrame, WeakView, view::view_callbacks::Setup,
+};
 
 pub trait ViewSubviews {
     fn __manually_set_superview(&mut self, superview: WeakView);
     fn superview(&self) -> &WeakView;
     fn subviews(&self) -> &[Own<dyn View>];
-    fn subviews_mut(&mut self) -> Vec<WeakView>;
+    fn subviews_mut(&mut self) -> &mut Vec<Own<dyn View>>;
+    fn subviews_weak(&mut self) -> Vec<WeakView>;
     fn remove_from_superview(&mut self);
     fn take_from_superview(&mut self) -> Own<dyn View>;
     fn remove_all_subviews(&self);
 
     fn add_view<V: 'static + View + Default>(&self) -> Weak<V>;
-    fn add_subview(&self, view: Own<dyn View>) -> WeakView;
-    fn __add_subview_internal(&self, view: Own<dyn View>, is_root: bool) -> WeakView;
+    fn add_subview<V: ?Sized + View + 'static>(&self, view: Own<V>) -> Weak<V>;
+
+    fn __add_view_internal<V: 'static + View + Default>(&self) -> Weak<V>;
+    fn __add_subview_internal<V: ?Sized + View + 'static>(&self, view: Own<V>, is_root: bool) -> Weak<V>;
 
     fn apply_if<V: View + 'static>(&mut self, action: impl FnMut(Weak<V>) + Clone + 'static);
 
@@ -36,6 +41,22 @@ pub trait ViewSubviews {
     fn draw_on_top(&mut self);
 }
 
+pub trait __ViewIntoUnsizedOwn {
+    unsafe fn __into_unsized_own<V: ?Sized + View + 'static>(own: Own<V>) -> Own<dyn View>;
+}
+
+impl<T: ?Sized + View + 'static> __ViewIntoUnsizedOwn for T {
+    default unsafe fn __into_unsized_own<V: ?Sized + View + 'static>(own: Own<V>) -> Own<dyn View> {
+        assert!(!own.sized());
+        assert_eq!(size_of::<Own<V>>(), size_of::<Own<dyn View>>());
+
+        let unsz = unsafe { std::mem::transmute_copy(&own) };
+        std::mem::forget(own);
+
+        unsz
+    }
+}
+
 impl<T: ?Sized + View> ViewSubviews for T {
     fn __manually_set_superview(&mut self, superview: WeakView) {
         self.__base_view().superview = superview;
@@ -51,7 +72,11 @@ impl<T: ?Sized + View> ViewSubviews for T {
         &self.__base_view().subviews
     }
 
-    fn subviews_mut(&mut self) -> Vec<WeakView> {
+    fn subviews_mut(&mut self) -> &mut Vec<Own<dyn View>> {
+        &mut self.__base_view().subviews
+    }
+
+    fn subviews_weak(&mut self) -> Vec<WeakView> {
         self.__base_view().subviews.iter().map(Own::weak).collect()
     }
 
@@ -74,28 +99,46 @@ impl<T: ?Sized + View> ViewSubviews for T {
     }
 
     fn add_view<V: 'static + View + Default>(&self) -> Weak<V> {
-        let view = Own::<V>::default();
+        let view = V::new();
         let result = view.weak();
         self.add_subview(view);
         result
     }
 
-    fn add_subview(&self, view: Own<dyn View>) -> WeakView {
+    default fn add_subview<V: ?Sized + View + 'static>(&self, view: Own<V>) -> Weak<V> {
         self.__add_subview_internal(view, false)
     }
 
-    fn __add_subview_internal(&self, mut view: Own<dyn View>, is_root: bool) -> WeakView {
+    fn __add_view_internal<V: 'static + View + Default>(&self) -> Weak<V> {
+        let view = V::new();
+        let result = view.weak();
+        self.__add_subview_internal(view, false);
+        result
+    }
+
+    fn __add_subview_internal<V: ?Sized + View + 'static>(&self, view: Own<V>, is_root: bool) -> Weak<V> {
         assert!(
             is_root || self.superview().is_ok(),
             "Adding subview to view without superview is not allowed"
         );
+
+        let mut weak = view.weak();
+
+        let mut view: Own<dyn View> = unsafe { V::__into_unsized_own(view) };
+
+        // This view was already added, and is readded again
+        // This should be used only internally for types like TableView
+        if view.superview().raw() == self.weak().raw() {
+            self.__base_view().subviews.push(view);
+            self.__base_view().events.setup.trigger(());
+            return weak;
+        }
 
         view.__internal_before_setup();
 
         if view.__base_view().navigation_view.is_null() {
             view.__base_view().navigation_view = self.__base_view().navigation_view;
         }
-        let mut weak = view.weak_view();
 
         if weak.z_position() == UIManager::ROOT_VIEW_Z_OFFSET {
             weak.__base_view().z_position = self.z_position()
@@ -133,7 +176,7 @@ impl<T: ?Sized + View> ViewSubviews for T {
 
     fn get_subview<V: 'static + View + Default>(&mut self) -> Weak<V> {
         for sub in self.subviews() {
-            if let Some(view) = sub.downcast::<V>() {
+            if let Some(view) = sub.downcast_weak::<V>() {
                 return view;
             }
         }

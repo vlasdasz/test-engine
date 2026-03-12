@@ -1,5 +1,4 @@
 #![allow(incomplete_features)]
-#![feature(box_into_inner)]
 #![feature(arbitrary_self_types)]
 #![feature(specialization)]
 

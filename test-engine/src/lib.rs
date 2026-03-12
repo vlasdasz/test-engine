@@ -31,8 +31,8 @@ pub mod game {
 pub mod level {
     pub use ::level::{
         Banner, Body, CoefficientCombineRule, Control, Level, LevelBase, LevelCreation, LevelInternal,
-        LevelManager, LevelSetup, LevelTemplates, Player, Sensor, Sprite, SpriteData, SpriteTemplates, Wall,
-        level,
+        LevelManager, LevelSetup, LevelTemplates, MovingWall, Player, Sensor, Sprite, SpriteData,
+        SpriteTemplates, Wall, level,
     };
 }
 

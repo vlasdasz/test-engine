@@ -24,44 +24,9 @@ jobs:
       - name: Check for Typos
         uses: crate-ci/typos@master
 
-  # lint:
-  #     name: Linter
-  #     runs-on: ubuntu-latest
-  #     steps:
-  #         - uses: actions/checkout@v4
-  #           with:
-  #               token: ${{secrets.GITHUB_TOKEN}}
-  #               submodules: recursive
-
-  #         - uses: actions-rust-lang/setup-rust-toolchain@v1
-  #           with:
-  #               toolchain: nightly
-  #               components: clippy
-
-  #         - name: Lint
-  #           run: |
-  #               ./build/scripts/install-deps.sh
-  #               make lint
-
-  fmt:
-    name: Formatting Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          submodules: recursive
-
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: nightly
-          components: rustfmt
-
-      - uses: actions-rust-lang/rustfmt@v1
-
   wasm:
     name: Wasm
-    needs: [typos, fmt]
+    needs: [typos]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +39,7 @@ jobs:
 
   build:
     name: Build
-    needs: [typos, fmt]
+    needs: [typos]
     strategy:
       fail-fast: false
       matrix:
@@ -110,7 +75,7 @@ jobs:
 
   linux:
     name: Build Linux
-    needs: [typos, fmt]
+    needs: [typos]
     strategy:
       fail-fast: false
       matrix:

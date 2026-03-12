@@ -1,11 +1,8 @@
-use std::{any::Any, ops::Deref};
-
 use anyhow::Result;
-use log::debug;
 use test_engine::{
-    refs::{Own, Weak},
+    refs::Weak,
     ui::{
-        Button, CollectionData, CollectionView, Container, Label, Setup, Size, TouchStack, View, ViewData,
+        Button, CellRegistry, Container, Label, Setup, TableData, TableView, TouchStack, View, ViewData,
         ViewSubviews, view,
     },
     ui_test::{UITest, get_str_state, inject_touches, state::append_state},
@@ -14,24 +11,27 @@ use test_engine::{
 #[view]
 struct ButtonsOnTableView {
     #[init]
-    table: CollectionView,
+    table: TableView,
 }
 
 impl Setup for ButtonsOnTableView {
     fn setup(self: Weak<Self>) {
         self.table.place().back();
-        self.table.set_data_source(self.deref());
+        self.table.set_data_source(self).register_cell::<Container>();
     }
 }
 
-impl CollectionData for ButtonsOnTableView {
+impl TableData for ButtonsOnTableView {
     fn number_of_cells(&self) -> usize {
         1
     }
 
-    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
-        let cell = cell.downcast_mut::<Container>().unwrap();
+    fn cell_height(&self, _: usize) -> f32 {
+        50.0
+    }
 
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        let mut cell = registry.cell::<Container>();
         cell.add_view::<Button>()
             .set_image("plus.png")
             .place()
@@ -45,14 +45,7 @@ impl CollectionData for ButtonsOnTableView {
         cell.get_subview::<Button>().on_tap(move || {
             append_state(format!("button_pressed: {index}\n"));
         });
-    }
-
-    fn size_for_index(&self, _index: usize) -> Size {
-        (50, 50).into()
-    }
-
-    fn make_cell(&self) -> Own<dyn View> {
-        Container::new()
+        cell
     }
 
     fn cell_selected(&mut self, index: usize) {
@@ -68,7 +61,6 @@ pub async fn test_buttons_on_table_view() -> Result<()> {
         vec![vec![
             "Layer: Root view".to_string(),
             "Container".to_string(),
-            "ScrollView.slider: Slider".to_string(),
             "Button".to_string(),
         ]],
     );
@@ -115,8 +107,6 @@ button_pressed: 0
 button_pressed: 0
 "
     );
-
-    debug!("Test buttons on table view: OK");
 
     Ok(())
 }

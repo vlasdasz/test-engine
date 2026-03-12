@@ -16,7 +16,8 @@ mod test_engine {
 
 #[view]
 pub struct CircleView {
-    color: Color,
+    radius: f32,
+    color:  Color,
 
     #[init]
     drawing: DrawingView,
@@ -24,6 +25,14 @@ pub struct CircleView {
 
 impl CircleView {
     pub fn set_radius(&mut self, radius: impl ToF32) -> &mut Self {
+        let radius = radius.to_f32();
+
+        if (radius - self.radius).abs() < f32::EPSILON {
+            return self;
+        }
+
+        self.radius = radius;
+
         let diameter = radius.to_f32() * 2.0;
         self.set_size(diameter, diameter);
         self.redraw();

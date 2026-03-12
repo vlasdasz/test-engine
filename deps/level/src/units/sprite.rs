@@ -12,7 +12,7 @@ use rapier2d::{
     dynamics::RigidBodyHandle,
     geometry::{Collider, ColliderHandle},
     pipeline::ActiveEvents,
-    prelude::{CoefficientCombineRule, RigidBody, Rotation},
+    prelude::{CoefficientCombineRule, Pose2, RigidBody, Rotation},
 };
 use refs::{Own, Weak, weak_from_ref};
 use window::image::ToImage;
@@ -195,9 +195,9 @@ impl<T: ?Sized + Sprite> SpriteTemplates for T {
     fn set_position(&mut self, pos: impl Into<Point>) -> &mut Self {
         let pos = pos.into();
         if self.collider_handle().is_some() {
-            self.collider_mut().set_position([pos.x, pos.y].into());
+            self.collider_mut().set_position(Pose2::translation(pos.x, pos.y));
         } else if self.rigid_handle().is_some() {
-            self.rigid_body_mut().set_position([pos.x, pos.y].into(), true);
+            self.rigid_body_mut().set_position(Pose2::translation(pos.x, pos.y), true);
         }
         self.position = pos;
         self

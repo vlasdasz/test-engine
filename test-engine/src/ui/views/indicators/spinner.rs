@@ -6,42 +6,24 @@ use gm::{
     color::{BLACK, Color, GRAY, LIGHT_BLUE},
     flat::{Size, point_on_circle},
 };
-use hreads::on_main;
+use hreads::{from_main, on_main};
 use log::{trace, warn};
 use parking_lot::{Mutex, MutexGuard};
 use refs::Weak;
 use ui::{
     Container, ModalView, Setup, TouchStack, UIAnimation, View, ViewCallbacks, ViewData, ViewFrame,
-    ViewSubviews,
+    ViewSubviews, WeakView,
 };
 use ui_proc::view;
 use vents::OnceEvent;
 
-use crate as test_engine;
+use crate::{
+    self as test_engine,
+    ui::{SpinnerLockGlobal, SpinnerLockOnView},
+};
 
 static CIRCLES_N: u32 = 6;
 static SPINNER: Mutex<Weak<Spinner>> = Mutex::new(Weak::const_default());
-
-pub struct SpinnerLock {
-    stopped: bool,
-}
-
-impl SpinnerLock {
-    pub fn animated_stop(mut self) {
-        self.stopped = true;
-        Spinner::stop();
-    }
-    pub fn stop(self) {}
-}
-
-impl Drop for SpinnerLock {
-    fn drop(&mut self) {
-        trace!("Spinner lock dropped");
-        if !self.stopped {
-            Spinner::instant_stop();
-        }
-    }
-}
 
 #[view]
 pub struct Spinner {
@@ -123,11 +105,13 @@ impl ViewCallbacks for Spinner {
 }
 
 impl Spinner {
-    pub fn lock() -> SpinnerLock {
+    pub fn lock() -> SpinnerLockGlobal {
         trace!("Lock spinner");
         Self::start();
-        SpinnerLock { stopped: false }
+        SpinnerLockGlobal { stopped: false }
     }
+
+    // pub fn
 
     fn start() {
         trace!("Start spinner");
@@ -169,7 +153,7 @@ impl Spinner {
             let animation = UIAnimation::new(|sp, val| {
                 let color = sp.color();
                 sp.set_color(color.with_alpha(val));
-                for dot in sp.subviews_mut() {
+                for dot in sp.subviews_weak() {
                     let color = *dot.color();
                     dot.set_color(color.with_alpha(val));
                 }
@@ -197,6 +181,18 @@ impl Spinner {
 
         spinner.hide_modal(());
         *spinner = Weak::default();
+    }
+
+    pub fn start_on(view: WeakView) -> SpinnerLockOnView {
+        from_main(move || {
+            if view.is_null() {
+                return SpinnerLockOnView {
+                    spinner: Weak::default(),
+                };
+            }
+            let spinner = view.add_view::<Spinner>();
+            SpinnerLockOnView { spinner }
+        })
     }
 }
 

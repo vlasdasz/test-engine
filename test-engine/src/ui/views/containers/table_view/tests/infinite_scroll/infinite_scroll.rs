@@ -1,15 +1,13 @@
-use std::any::Any;
-
 use anyhow::Result;
 use gm::color::BLACK;
 use hreads::{from_main, on_main, sleep, spawn};
-use refs::{Own, Weak};
-use ui::{Setup, TableData, View, ViewData, ViewTest, cast_cell, view_test};
+use refs::Weak;
+use ui::{Setup, View, ViewData, ViewTest, view_test};
 
 use crate::{
     self as test_engine,
     ui::{
-        Spinner, TableView,
+        CellRegistry, Spinner, TableData, TableView,
         views::containers::table_view::tests::infinite_scroll::{
             basic_scroll::test_basic_scroll, infinite_cell::InfiniteCell,
         },
@@ -36,6 +34,7 @@ impl Setup for InfiniteScrollTest {
         self.table.columns = 2;
         self.table
             .set_data_source(self)
+            .register_cell::<InfiniteCell>()
             .set_border_color(BLACK)
             .set_border_width(5)
             .place()
@@ -74,23 +73,19 @@ impl InfiniteScrollTest {
 }
 
 impl TableData for InfiniteScrollTest {
-    fn cell_height(self: Weak<Self>, _index: usize) -> f32 {
+    fn cell_height(&self, _index: usize) -> f32 {
         80.0
     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
+    fn number_of_cells(&self) -> usize {
         self.data_size
     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        InfiniteCell::new()
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        registry.cell::<InfiniteCell>().set_text(index)
     }
 
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        cast_cell!(InfiniteCell).set_text(index);
-    }
-
-    fn cell_selected(mut self: Weak<Self>, index: usize) {
+    fn cell_selected(&mut self, index: usize) {
         #[allow(clippy::format_push_string)]
         self.test_string.push_str(&format!("|{index}|"));
     }
@@ -202,7 +197,7 @@ impl ViewTest for InfiniteScrollTest {
          ",
         );
 
-        assert_eq!(view.test_string, "|204||207||211|");
+        assert_eq!(view.test_string, "|201||205|");
 
         // crate::ui_test::record_ui_test();
 

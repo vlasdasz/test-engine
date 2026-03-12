@@ -1,28 +1,11 @@
 use anyhow::Result;
 use gm::{
-    color::{Color, LIGHT_GRAY, U8Color},
+    color::{LIGHT_GRAY, U8Color},
     flat::Point,
 };
-use ui::{Button, Container, Setup, UIManager, View, ViewData, ViewSubviews, WeakView};
+use ui::{Button, Setup, UIManager, View, ViewData};
 
-use crate::{gm::Apply, ui_test::checks::check_colors_structured};
-
-pub fn add_corners(view: WeakView, color: Color) {
-    let v1 = view.add_view::<Container>();
-    let v2 = view.add_view::<Container>();
-    let v3 = view.add_view::<Container>();
-    let v4 = view.add_view::<Container>();
-
-    [v1, v2, v3, v4].apply(|a| {
-        a.place().size(100, 100);
-        a.set_color(color);
-    });
-
-    v1.place().tl(0);
-    v2.place().tr(0);
-    v3.place().bl(0);
-    v4.place().br(0);
-}
+use crate::ui_test::checks::check_colors_structured;
 
 #[allow(dead_code)]
 pub fn add_action(action: impl FnMut() + Send + 'static) {

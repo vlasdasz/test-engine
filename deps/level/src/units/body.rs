@@ -1,7 +1,11 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::flat::{Point, Shape};
-use rapier2d::{dynamics::RigidBodyHandle, geometry::ColliderHandle, na::Vector2, prelude::RigidBodyBuilder};
+use rapier2d::{
+    dynamics::RigidBodyHandle,
+    geometry::ColliderHandle,
+    prelude::{RigidBodyBuilder, Vec2},
+};
 use refs::{Own, Weak, weak_from_ref};
 
 use crate::{LevelManager, Sprite, SpriteData, ToCollider, control::Control};
@@ -21,7 +25,7 @@ impl Body {
     }
 
     pub fn set_velocity(&mut self, vel: Point) -> &mut Self {
-        self.rigid_body_mut().set_linvel([vel.x, vel.y].into(), true);
+        self.rigid_body_mut().set_linvel(Vec2::new(vel.x, vel.y), true);
         self
     }
 }
@@ -30,7 +34,7 @@ impl Sprite for Body {
     fn make(shape: Shape, position: Point) -> Own<Self>
     where Self: Sized {
         let rigid_body = RigidBodyBuilder::dynamic()
-            .translation(Vector2::new(position.x, position.y))
+            .translation(Vec2::new(position.x, position.y))
             .build();
 
         let collider = shape.make_collider().build();
@@ -79,7 +83,7 @@ impl Control for Body {
 
     fn add_impulse(&mut self, impulse: Point) {
         self.rigid_body_mut()
-            .apply_impulse([impulse.x * 100.0, impulse.y * 100.0].into(), true);
+            .apply_impulse(Vec2::new(impulse.x * 100.0, impulse.y * 100.0), true);
     }
 }
 

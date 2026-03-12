@@ -1,6 +1,6 @@
 use test_engine::{
     gm::{Animation, Shape},
-    level::{LevelCreation, LevelSetup, Player, Sprite, SpriteTemplates, Wall, level},
+    level::{LevelCreation, LevelSetup, MovingWall, Player, SpriteTemplates, Wall, level},
     refs::{Weak, manage::DataManager},
     ui::{Alert, Color, Image, UIManager},
 };
@@ -12,12 +12,12 @@ use crate::levels::make_test_terrain;
 pub struct BenchmarkLevel {
     low_frames: usize,
 
-    top_wall:   Weak<Wall>,
-    left_wall:  Weak<Wall>,
-    right_wall: Weak<Wall>,
-    floor:      Weak<Wall>,
+    top_wall: Weak<Wall>,
 
-    bottom_moving: Weak<Wall>,
+    left_wall:     Weak<MovingWall>,
+    right_wall:    Weak<MovingWall>,
+    floor:         Weak<MovingWall>,
+    bottom_moving: Weak<MovingWall>,
 
     left_animation:   Animation,
     right_animation:  Animation,
@@ -37,16 +37,16 @@ impl BenchmarkLevel {
         self.top_wall = self.make_sprite(Shape::Rect((100, 5).into()), (0, 110));
         self.top_wall.set_color(Color::random());
 
-        self.floor = self.make_sprite(Shape::Rect((100, 5).into()), (0, 0));
+        self.floor = self.make_sprite(Shape::Rect((100, 6).into()), (0, 0));
         self.floor.set_image(square);
 
-        self.left_wall = self.make_sprite(Shape::Rect((5, 50).into()), (-40, 0));
+        self.left_wall = self.make_sprite(Shape::Rect((6, 50).into()), (-40, 0));
         self.left_wall.set_image(square);
 
-        self.right_wall = self.make_sprite(Shape::Rect((5, 50).into()), (40, 0));
+        self.right_wall = self.make_sprite(Shape::Rect((6, 50).into()), (40, 0));
         self.right_wall.set_image(square);
 
-        self.bottom_moving = self.make_sprite(Shape::rect(5, 14), (0, -68));
+        self.bottom_moving = self.make_sprite(Shape::rect(6, 14), (0, -75));
         self.bottom_moving.set_image(square);
 
         self.left_animation = Animation::new(-80.0, -20.0, 2.0);
@@ -54,7 +54,8 @@ impl BenchmarkLevel {
         self.floor_animation = Animation::new(-25.0, 0.0, 0.5);
         self.bottom_animation = Animation::new(-100.0, 100.0, 4.0);
 
-        self.make_sprite::<Wall>(Shape::rect(200, 2), (0, -85)).set_image(square);
+        // Cage around whole scene
+        self.make_sprite::<Wall>(Shape::rect(400, 2), (0, -85)).set_image(square);
         self.make_sprite::<Wall>(Shape::rect(2, 200), (120, 0)).set_image(square);
         self.make_sprite::<Wall>(Shape::rect(2, 200), (-120, 0)).set_image(square);
 
@@ -82,10 +83,10 @@ impl LevelSetup for BenchmarkLevel {
     }
 
     fn update(&mut self) {
-        self.left_wall.set_x(self.left_animation.value());
-        self.right_wall.set_x(self.right_animation.value());
-        self.floor.set_y(self.floor_animation.value());
-        self.bottom_moving.set_x(self.bottom_animation.value());
+        self.left_wall.move_x(self.left_animation.value());
+        self.right_wall.move_x(self.right_animation.value());
+        self.floor.move_y(self.floor_animation.value());
+        self.bottom_moving.move_x(self.bottom_animation.value());
 
         if self.finish {
             return;

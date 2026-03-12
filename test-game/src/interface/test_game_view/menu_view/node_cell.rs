@@ -9,8 +9,8 @@ use crate::interface::test_game_view::{MenuEntry, Node};
 #[view]
 pub struct NodeCell {
     #[init]
-    button: Button,
-    label:  Label,
+    pub button: Button,
+    pub label:  Label,
 }
 
 impl NodeCell {

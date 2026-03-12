@@ -1,3 +1,4 @@
+use netrun::rest::RestAPI;
 use serde::Deserialize;
 use test_engine::net::Request;
 
@@ -8,4 +9,6 @@ pub(crate) struct User {
     pub name: String,
 }
 
-pub(crate) static TEST_REST_REQUEST: Request<(), Vec<User>> = Request::new("users");
+pub(crate) static TEST_REST_API: RestAPI = RestAPI::new("https://jsonplaceholder.typicode.com/");
+
+pub(crate) static TEST_REST_REQUEST: Request<(), Vec<User>> = TEST_REST_API.request("users");

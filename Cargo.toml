@@ -58,7 +58,7 @@ paste = "1.0"
 pollster = "0.4"
 pretty_assertions = "1.4"
 quote = "1.0"
-rapier2d = { version = "0.31", features = ["simd-nightly"] }
+rapier2d = { version = "0.32" }
 resvg = "0.47"
 rfd = "0.17"
 rust_decimal = "1.40"
@@ -67,7 +67,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 syn = { version = "2.0", features = ["extra-traits", "full"] }
 tiny-skia = "0.12"
-tokio = { version = "1.49", features = ["full"] }
+tokio = { version = "1.50", features = ["full"] }
 usvg = "0.47"
 wasm-bindgen-futures = "0.4"
 web-time = "1.1"
@@ -78,9 +78,9 @@ winit = "0.30"
 # hreads = { path = "../deps/hreads" }
 hreads = "0.13"
 
-netrun = "0.30"
+netrun = "0.32"
 # refs = { path = "../deps/refs/refs" }
-refs = { version = "0.47", default-features = true }
+refs = { version = "0.50", default-features = true }
 # netrun = { path = "../deps/netrun/netrun" }
 plat = "0.9"
 reflected = "0.29"

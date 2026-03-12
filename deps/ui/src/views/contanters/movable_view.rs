@@ -1,6 +1,9 @@
 use std::ops::{Deref, DerefMut};
 
-use gm::flat::{Point, Size};
+use gm::{
+    color::WHITE,
+    flat::{Point, Size},
+};
 use plat::Platform;
 use refs::Weak;
 use ui_proc::view;
@@ -30,7 +33,7 @@ pub struct MovableView<T: View + Default + 'static> {
 
 impl<T: View + Default + 'static> Setup for MovableView<T> {
     fn setup(mut self: Weak<Self>) {
-        self.title_label.place().lrt(0).h(40);
+        self.title_label.set_color(WHITE).place().lrt(0).h(40);
         self.title_label.enable_touch();
 
         self.title_label.touch().began.val(move |touch| {

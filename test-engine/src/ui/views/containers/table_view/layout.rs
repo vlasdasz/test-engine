@@ -1,107 +1,108 @@
 use gm::LossyConvert;
-use refs::{Weak, weak_from_ref};
-use ui::{Anchor::Top, ViewData, ViewFrame, WeakView};
+use refs::weak_from_ref;
+use ui::{ViewData, ViewFrame, ViewSubviews, ViewTouch};
 
 use crate::ui::TableView;
 
-pub(super) fn layout_single_column_cells(table: &mut TableView, number_of_cells: usize) {
-    let cell_height = table.data.__cell_height(0);
+impl TableView {
+    fn clear_old_cells(&mut self) {
+        let old_cells: Vec<_> = self
+            .scroll
+            .content
+            .subviews_mut()
+            .iter()
+            .map(|c| {
+                let weak = c.weak();
+                weak.set_hidden(true);
+                weak
+            })
+            .collect();
 
-    let total_height = number_of_cells.lossy_convert() * cell_height;
-
-    table.scroll.set_content_height(total_height);
-
-    let number_of_cells_fits: usize = (table.height() / cell_height).ceil().lossy_convert();
-
-    let offset = table.scroll.content_offset();
-
-    let first_index: usize = (-offset / cell_height).floor().lossy_convert();
-
-    let mut last_index = first_index + number_of_cells_fits + 1;
-
-    if last_index > number_of_cells {
-        last_index = number_of_cells;
+        self.registry.load_old_cells(old_cells);
     }
 
-    let h = table.data.__cell_height(0);
+    pub(super) fn layout_single_column_cells(&mut self, number_of_cells: usize) {
+        let cell_height = self.data.cell_height(0);
 
-    for i in first_index..last_index {
-        table.add_cell(i).place().h(h).t(i.lossy_convert() * h).lr(0);
-    }
-}
+        let total_height = number_of_cells.lossy_convert() * cell_height;
 
-pub(super) fn layout_two_column_cells(table: &mut TableView, number_of_cells: usize) {
-    let row_height = table.data.__cell_height(0);
+        let width = self.width();
 
-    let total_height = (number_of_cells.lossy_convert() / 2.0).ceil() * row_height;
+        self.scroll.set_content_height(total_height);
+        self.scroll.set_content_width(width);
 
-    table.scroll.set_content_height(total_height);
+        let number_of_cells_fits: usize = (self.height() / cell_height).ceil().lossy_convert();
 
-    let mut number_of_cells_fits: usize = (table.height() / row_height).ceil().lossy_convert();
-    number_of_cells_fits *= 2;
+        let offset = self.scroll.get_scroll_content_offset();
 
-    let offset = table.scroll.content_offset();
+        let first_index: usize = (-offset / cell_height).floor().lossy_convert();
 
-    let mut first_index: usize = (-offset / row_height).floor().lossy_convert();
-    if !first_index.is_multiple_of(2) {
-        first_index -= 1;
-    }
-    first_index *= 2;
+        let mut last_index = first_index + number_of_cells_fits + 1;
 
-    let mut last_index = first_index + number_of_cells_fits + 4;
-
-    if last_index > number_of_cells {
-        last_index = number_of_cells;
-    }
-
-    let h = table.data.__cell_height(0);
-
-    let weak_table = weak_from_ref(table);
-
-    for i in first_index..last_index {
-        if i % 2 == 0 {
-            table
-                .add_cell(i)
-                .place()
-                .h(h)
-                .t((i / 2).lossy_convert() * h)
-                .l(0)
-                .relative_width(weak_table, 0.5);
-        } else {
-            table
-                .add_cell(i)
-                .place()
-                .h(h)
-                .relative_width(weak_table, 0.5)
-                .t((i / 2).lossy_convert() * h)
-                .custom(move |mut view| {
-                    view.set_x(weak_table.width() / 2.0);
-                });
-        }
-    }
-}
-
-pub(super) fn layout_variable_sized_cells(table: &mut TableView, number_of_cells: usize) {
-    let mut total_height: f32 = 0.0;
-
-    let mut prev_cell: WeakView = Weak::default();
-
-    for i in 0..number_of_cells {
-        let height = table.data.__cell_height(i);
-        total_height += height;
-
-        let cell = table.add_cell(i);
-
-        cell.place().lr(0).h(height);
-
-        if i == 0 {
-            cell.place().t(0);
-        } else {
-            cell.place().anchor(Top, prev_cell, 0);
+        if last_index > number_of_cells {
+            last_index = number_of_cells;
         }
 
-        prev_cell = cell;
+        self.clear_old_cells();
+
+        let mut weak_table = self.weak();
+
+        for i in first_index..last_index {
+            let cell = self.data.setup_cell(i, &mut weak_table.registry);
+
+            cell.set_frame((0, i.lossy_convert() * cell_height, width, cell_height));
+
+            cell.enable_touch_low_priority();
+            cell.touch().up_inside.sub(weak_table, move || {
+                weak_table.data.cell_selected(i);
+            });
+        }
     }
 
-    table.scroll.set_content_height(total_height);
+    pub(crate) fn layout_two_column_cells(&mut self, number_of_cells: usize) {
+        let row_height = self.data.cell_height(0);
+        let cell_width = self.width() / 2.0;
+
+        let total_height = (number_of_cells.lossy_convert() / 2.0).ceil() * row_height;
+
+        self.scroll.set_content_height(total_height);
+
+        let mut number_of_cells_fits: usize = (self.height() / row_height).ceil().lossy_convert();
+        number_of_cells_fits *= 2;
+
+        let offset = self.scroll.get_scroll_content_offset();
+
+        let mut first_index: usize = (-offset / row_height).floor().lossy_convert();
+        if !first_index.is_multiple_of(2) {
+            first_index -= 1;
+        }
+        first_index *= 2;
+
+        let mut last_index = first_index + number_of_cells_fits + 4;
+
+        if last_index > number_of_cells {
+            last_index = number_of_cells;
+        }
+
+        self.clear_old_cells();
+
+        let mut weak_table = weak_from_ref(self);
+
+        for i in first_index..last_index {
+            let cell = self.data.setup_cell(i, &mut weak_table.registry);
+
+            cell.enable_touch_low_priority();
+            cell.touch().up_inside.sub(weak_table, move || {
+                weak_table.data.cell_selected(i);
+            });
+
+            let y_pos = (i / 2).lossy_convert() * row_height;
+
+            if i % 2 == 0 {
+                cell.set_frame((0, y_pos, cell_width, row_height));
+            } else {
+                cell.set_frame((cell_width, y_pos, cell_width, row_height));
+            }
+        }
+    }
 }

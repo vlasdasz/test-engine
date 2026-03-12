@@ -13,10 +13,10 @@ pub trait ViewLayout {
 
 impl<T: ?Sized + View> ViewLayout for T {
     fn calculate_absolute_frame(&mut self) {
-        self.__base_view().absolute_frame = *self.frame();
+        self.__base_view().__absolute_frame = *self.frame();
         let orig = self.super_absolute_frame().origin;
-        self.__base_view().absolute_frame.origin += orig;
-        let offset = self.__base_view().content_offset;
-        self.__base_view().absolute_frame.origin.y += offset;
+        self.__base_view().__absolute_frame.origin += orig;
+        let offset = self.__base_view().__content_offset;
+        self.__base_view().__absolute_frame.origin.y += offset;
     }
 }

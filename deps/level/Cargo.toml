@@ -10,7 +10,6 @@ name = "level"
 
 [dependencies]
 educe = { workspace = true }
-rapier2d = { workspace = true }
 
 gm = { workspace = true }
 level-proc = { workspace = true }
@@ -19,3 +18,9 @@ refs = { workspace = true }
 utils = { workspace = true }
 vents = { workspace = true }
 window = { workspace = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+rapier2d = { workspace = true }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rapier2d = { workspace = true, features = ["parallel"] } # simd can crash if there are too many active objects

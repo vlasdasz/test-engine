@@ -1,5 +1,4 @@
 use std::{
-    any::Any,
     fs::OpenOptions,
     io::{Read, Write},
     path::PathBuf,
@@ -14,11 +13,11 @@ use test_engine::{
     filesystem::Paths,
     gm::Toggle,
     level::LevelManager,
-    refs::{Own, Weak, manage::DataManager},
+    refs::{Weak, manage::DataManager},
     ui::{
-        ALL_VIEWS, AfterSetup, Alert, AlertErr, Button, Image, InfiniteScrollTest, Point, Setup, Spinner,
-        TableData, TableView, UIManager, View, ViewData, ViewFrame, ViewSubviews, all_view_tests, all_views,
-        cast_cell, view,
+        ALL_VIEWS, AfterSetup, Alert, AlertErr, Button, CellRegistry, Image, InfiniteScrollTest, Point,
+        Setup, Spinner, TableData, TableView, UIManager, View, ViewData, ViewFrame, ViewSubviews,
+        all_view_tests, all_views, view,
     },
 };
 
@@ -47,9 +46,22 @@ pub struct MenuView {
 impl Setup for MenuView {
     #[allow(clippy::too_many_lines)]
     fn setup(mut self: Weak<Self>) {
-        // UIManager::override_scale(2.0);
-
         self.table.set_data_source(self).place().back();
+        self.table
+            .register_cell::<NodeCell>()
+            .register_cell::<ScaleCell>()
+            .register_cell_id("ui scale", || {
+                ScaleCell::make(
+                    Function::new(|()| UIManager::scale()),
+                    Function::new(UIManager::set_scale),
+                )
+            })
+            .register_cell_id("lvl scale", || {
+                ScaleCell::make(
+                    Function::new(|()| LevelManager::scale()),
+                    Function::new(LevelManager::set_scale),
+                )
+            });
 
         self.root = Node::new(
             MenuEntry::new("Root"),
@@ -61,12 +73,6 @@ impl Setup for MenuView {
                             .action(|| {
                                 *LevelManager::camera_pos() = Point::default();
                                 LevelManager::set_level(TestLevel::default());
-                            })
-                            .into(),
-                        MenuEntry::new("ui bench")
-                            .action(|| {
-                                LevelManager::stop_level();
-                                UIManager::set_view(UIBenchmarkView::new());
                             })
                             .into(),
                         MenuEntry::new("polygon")
@@ -106,6 +112,12 @@ impl Setup for MenuView {
                 Node::new(
                     MenuEntry::new("UI"),
                     vec![
+                        MenuEntry::new("ui bench")
+                            .action(|| {
+                                LevelManager::stop_level();
+                                UIManager::set_view(UIBenchmarkView::new());
+                            })
+                            .into(),
                         MenuEntry::new("ui scale").into(),
                         MenuEntry::new("sound").action(|| Sound::get("retro.wav").play()).into(),
                         MenuEntry::new("alert")
@@ -271,41 +283,36 @@ impl Setup for MenuView {
 }
 
 impl TableData for MenuView {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+    fn cell_height(&self, _: usize) -> f32 {
         28.0
     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
+    fn number_of_cells(&self) -> usize {
         self.root.length()
     }
 
-    fn make_cell(mut self: Weak<Self>, index: usize) -> Own<dyn View> {
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        let mut this = self.weak();
+
         let node = self.root.val_at_index(index);
+
         if node.value.label == "ui scale" {
-            ScaleCell::make(
-                Function::new(|()| UIManager::scale()),
-                Function::new(UIManager::set_scale),
-            )
+            let cell = registry.cell_with_id::<ScaleCell>("ui scale");
+            cell.set_node(node);
+            cell
         } else if node.value.label == "lvl scale" {
-            ScaleCell::make(
-                Function::new(|()| LevelManager::scale()),
-                Function::new(LevelManager::set_scale),
-            )
+            let cell = registry.cell_with_id::<ScaleCell>("lvl scale");
+            let node = this.root.val_at_index(index);
+            cell.weak().set_node(node);
+            cell
         } else {
-            NodeCell::new()
+            let cell = registry.cell::<NodeCell>();
+            cell.set_node(node);
+            cell
         }
     }
 
-    fn setup_cell(mut self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let node = self.root.val_at_index(index);
-        if node.value.label == "ui scale" || node.value.label == "lvl scale" {
-            cast_cell!(ScaleCell).set_node(node);
-        } else {
-            cast_cell!(NodeCell).set_node(node);
-        }
-    }
-
-    fn cell_selected(mut self: Weak<Self>, index: usize) {
+    fn cell_selected(&mut self, index: usize) {
         let val = self.root.val_at_index(index);
 
         if val.is_leaf() {

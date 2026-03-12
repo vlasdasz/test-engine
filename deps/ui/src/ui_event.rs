@@ -1,38 +1,33 @@
-use parking_lot::{Mutex, MutexGuard};
-use refs::{RawPointer, Weak};
+use netrun::Function;
+use parking_lot::Mutex;
+use refs::Weak;
 
-struct Subscriber<T: Send> {
+struct Subscriber<T: Send + Clone> {
     subscriber: Weak,
-    action:     Box<dyn FnMut(T) + Send>,
+    action:     Function<T, ()>,
 }
 
-pub struct UIEvent<T: Send = ()> {
+pub struct UIEvent<T: Send + Clone = ()> {
     subscribers: Mutex<Vec<Subscriber<T>>>,
-    /// This allows unsibscribing from the event during its execution
-    unsubscribe: Mutex<Vec<RawPointer>>,
 }
 
-impl<T: Send> Default for UIEvent<T> {
+impl<T: Send + Clone> Default for UIEvent<T> {
     fn default() -> Self {
         Self {
             subscribers: Mutex::default(),
-            unsubscribe: Mutex::default(),
         }
     }
 }
 
-impl<T: Send> UIEvent<T> {
+impl<T: Send + Clone> UIEvent<T> {
     pub const fn const_new() -> Self {
         Self {
             subscribers: Mutex::new(Vec::new()),
-            unsubscribe: Mutex::new(Vec::new()),
         }
     }
 
-    fn clear_subscribers(&self, subs: &mut MutexGuard<Vec<Subscriber<T>>>) -> &Self {
-        let mut unsubscribe = self.unsubscribe.lock();
-        subs.retain(|a| !unsubscribe.contains(&a.subscriber.raw()) && a.subscriber.is_ok());
-        unsubscribe.clear();
+    pub fn clear_subscribers(&self) -> &Self {
+        self.subscribers.lock().clear();
         self
     }
 
@@ -42,29 +37,26 @@ impl<T: Send> UIEvent<T> {
 
     pub fn val<U: ?Sized>(&self, subscriber: Weak<U>, action: impl FnMut(T) + Send + 'static) {
         let mut subs = self.subscribers.lock();
-        self.clear_subscribers(&mut subs);
 
-        // This view is already subscribed
-        if subs.iter().any(|s| s.subscriber.raw() == subscriber.raw()) {
-            return;
-        }
+        // Remove if this view is already subscribed
+        subs.retain(|s| s.subscriber.raw() != subscriber.raw());
 
         subs.push(Subscriber {
             subscriber: subscriber.erase(),
-            action:     Box::new(action),
+            action:     Function::new(action),
         });
     }
 
     pub fn unsubscribe<U: ?Sized>(&self, view: Weak<U>) {
-        self.unsubscribe.lock().push(view.raw());
+        self.subscribers.lock().retain(|s| s.subscriber.raw() != view.raw());
     }
 
     pub fn trigger(&self, val: T)
     where T: Clone {
-        let mut subs = self.subscribers.lock();
-        self.clear_subscribers(&mut subs);
-        for sub in subs.iter_mut() {
-            (sub.action)(val.clone());
+        let actions: Vec<_> = self.subscribers.lock().iter().map(|s| s.action.clone()).collect();
+
+        for action in actions {
+            action.call(val.clone());
         }
     }
 }

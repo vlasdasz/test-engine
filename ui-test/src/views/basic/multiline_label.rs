@@ -2,7 +2,7 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Label, Setup, ViewData, view},
+    ui::{Label, Setup, ViewData, WHITE, view},
     ui_test::{UITest, check_colors},
 };
 
@@ -15,7 +15,7 @@ struct MultilineLabel {
 impl Setup for MultilineLabel {
     fn setup(self: Weak<Self>) {
         self.label.place().tl(20).size(280, 280);
-        self.label.set_text_size(40);
+        self.label.set_text_size(40).set_color(WHITE);
         self.label
             .set_text("|       Plati mne dengi bistrenko pliz.\nJa kuplu dengushki.\nA");
     }

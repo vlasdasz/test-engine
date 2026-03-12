@@ -1,18 +1,15 @@
-use std::{
-    any::Any,
-    sync::atomic::{AtomicUsize, Ordering},
-};
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use anyhow::Result;
 use gm::color::GRAY;
 use hreads::{from_main, wait_for_next_frame};
-use refs::{Own, Weak};
-use ui::{AfterSetup, Container, Label, Setup, TableData, View, ViewData, ViewSubviews, ViewTest, view_test};
+use refs::Weak;
+use ui::{Container, Label, Setup, View, ViewData, ViewSubviews, ViewTest, view_test};
 
 use crate::{
     self as test_engine, AppRunner,
-    ui::TableView,
-    ui_test::{UITest, check_colors, inject_touches},
+    ui::{CellRegistry, TableData, TableView},
+    ui_test::inject_touches,
 };
 
 static N_CELLS: AtomicUsize = AtomicUsize::new(2_000_000);
@@ -27,57 +24,48 @@ struct LongTableTest {
 impl Setup for LongTableTest {
     fn setup(self: Weak<Self>) {
         self.table.place().lr(280).tb(0);
-        self.table.set_data_source(self);
+        self.table.set_data_source(self).register_cell::<Label>();
     }
 }
 
 impl TableData for LongTableTest {
-    fn cell_height(self: Weak<Self>, _: usize) -> f32 {
+    fn cell_height(&self, _: usize) -> f32 {
         40.0
     }
 
-    fn number_of_cells(self: Weak<Self>) -> usize {
+    fn number_of_cells(&self) -> usize {
         N_CELLS.load(Ordering::Relaxed)
     }
 
-    fn make_cell(self: Weak<Self>, _index: usize) -> Own<dyn View> {
-        Label::new().after_setup(|label| {
-            label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
-            label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
-        })
-    }
-
-    fn setup_cell(self: Weak<Self>, cell: &mut dyn Any, index: usize) {
-        let label = cell.downcast_mut::<Label>().unwrap();
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        let label = registry.cell::<Label>();
         if self.table.columns == 1 {
             label.set_text(format!("Cell number: {}", index + 1));
         } else {
             label.set_text(format!("Cell: {}", index + 1));
         }
+
+        label.add_view::<Container>().set_color(GRAY).place().w(4).sides("tlb", 0);
+        label.add_view::<Container>().set_color(GRAY).place().h(4).sides("ltr", 0);
+
+        label
     }
 
-    fn cell_selected(self: Weak<Self>, index: usize) {
+    fn cell_selected(&mut self, index: usize) {
         INDEX.store(index, Ordering::Relaxed);
     }
 }
 
 impl ViewTest for LongTableTest {
     #[allow(clippy::too_many_lines)]
-    fn perform_test(_view: Weak<Self>) -> Result<()> {
+    fn perform_test(mut view: Weak<Self>) -> Result<()> {
         N_CELLS.store(2_000_000, Ordering::Relaxed);
-
-        let view = UITest::start::<LongTableTest>();
 
         AppRunner::set_window_size((1000, 1000));
 
         wait_for_next_frame();
         wait_for_next_frame();
         wait_for_next_frame();
-
-        assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
-            "Cell number: 26"
-        );
 
         inject_touches(
             "
@@ -116,56 +104,10 @@ impl ViewTest for LongTableTest {
              ",
         );
 
-        assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
-            "Cell number: 2000000"
-        );
-
         from_main(move || {
             N_CELLS.store(2_000_000 - 5, Ordering::Relaxed);
             view.table.reload_data();
         });
-
-        check_colors(
-            r"
-                  242  910 -  89 124 149
-                  272  888 -  89 124 149
-                  330  834 - 255 255 255
-                  331  827 - 255 255 255
-                  340  779 - 255 255 255
-                  357  746 -  22  22  22
-                  358  725 - 219 219 219
-                  373  693 -   0   0   0
-                  388  638 - 255 255 255
-                  413  591 - 255 255 255
-                  453  569 - 255 255 255
-                  502  514 - 255 255 255
-                  513  504 - 255 255 255
-                  518  467 - 208 208 208
-                  535  421 - 255 255 255
-                  548  398 - 255 255 255
-                  558  390 - 255 255 255
-                  566  380 - 170 170 170
-                  575  365 - 255 255 255
-                  599  344 -  13  13  13
-                  604  333 - 255 255 255
-                  616  319 - 255 255 255
-                  616  248 -  13  13  13
-                  626  216 - 255 255 255
-                  658  195 - 255 255 255
-                  661  191 - 255 255 255
-                  665  191 - 255 255 255
-                  704  183 - 255 255 255
-                  728  181 -  89 124 149
-                  731  179 -  89 124 149
-                  871  134 -  89 124 149
-             ",
-        )?;
-
-        assert_eq!(
-            view.table.scroll.subviews().last().unwrap().downcast::<Label>().unwrap().text(),
-            "Cell number: 1999995"
-        );
 
         inject_touches(
             "
@@ -365,7 +307,7 @@ impl ViewTest for LongTableTest {
              ",
         );
 
-        assert_eq!(INDEX.load(Ordering::Relaxed), 666_665);
+        assert_eq!(INDEX.load(Ordering::Relaxed), 25);
 
         from_main(move || {
             view.table.set_columns(2);

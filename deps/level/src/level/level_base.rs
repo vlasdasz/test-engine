@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use educe::Educe;
 use gm::flat::Point;
-use rapier2d::na::Vector2;
+use rapier2d::prelude::Vec2;
 use refs::{Own, Weak};
 use vents::Event;
 use window::image::Image;
@@ -69,7 +69,7 @@ impl<T: ?Sized + Level> LevelTemplates for T {
     fn set_gravity(&mut self, g: impl Into<Point>) {
         let g = g.into();
         if let Some(physics) = self.physics.as_mut() {
-            physics.gravity = Vector2::new(g.x, g.y);
+            physics.gravity = Vec2::new(g.x, g.y);
         }
     }
 }

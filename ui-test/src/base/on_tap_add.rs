@@ -1,11 +1,9 @@
-use std::{any::Any, ops::Deref};
-
 use anyhow::Result;
 use test_engine::{
-    refs::{Own, Weak},
+    refs::Weak,
     ui::{
-        Button, CollectionData, CollectionView, Container, GREEN, ImageView, Label, Setup, Size, TURQUOISE,
-        View, ViewData, ViewSubviews,
+        Button, CellRegistry, Container, GREEN, ImageView, Label, Setup, TURQUOISE, TableData, TableView,
+        View, ViewData, ViewSubviews, WHITE,
         ui_test::{helpers::check_colors, inject_touches},
         view,
     },
@@ -15,7 +13,7 @@ use test_engine::{
 #[view]
 struct SomeView {
     #[init]
-    table:  CollectionView,
+    table:  TableView,
     label:  Label,
     image:  ImageView,
     square: Container,
@@ -23,28 +21,24 @@ struct SomeView {
 
 impl Setup for SomeView {
     fn setup(self: Weak<Self>) {
-        self.table.set_data_source(self.deref()).place().size(400, 400);
+        self.table.set_data_source(self).register_cell::<Label>().place().size(400, 400);
         self.label.set_text("Hello").set_color(GREEN).place().size(200, 200).tr(10);
         self.image.set_image("plus.png").place().size(200, 200).bl(10);
         self.square.set_color(TURQUOISE).place().size(200, 200).br(10);
     }
 }
 
-impl CollectionData for SomeView {
+impl TableData for SomeView {
     fn number_of_cells(&self) -> usize {
         2
     }
 
-    fn setup_cell_for_index(&self, cell: &mut dyn Any, index: usize) {
-        cell.downcast_mut::<Label>().unwrap().set_text(format!("{index}"));
+    fn cell_height(&self, _: usize) -> f32 {
+        50.0
     }
 
-    fn size_for_index(&self, _index: usize) -> Size {
-        (50, 50).into()
-    }
-
-    fn make_cell(&self) -> Own<dyn View> {
-        Label::new()
+    fn setup_cell(&mut self, index: usize, registry: &mut CellRegistry) -> Weak<dyn View> {
+        registry.cell::<Label>().set_color(WHITE).set_text(format!("{index}")).weak()
     }
 }
 

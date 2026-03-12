@@ -4,9 +4,8 @@ use educe::Educe;
 use rapier2d::{
     dynamics::{CCDSolver, ImpulseJointSet, IntegrationParameters, IslandManager, MultibodyJointSet},
     geometry::{ColliderHandle, CollisionEvent, NarrowPhase},
-    na::Vector2,
     pipeline::PhysicsPipeline,
-    prelude::BroadPhaseBvh,
+    prelude::{BroadPhaseBvh, Vec2},
 };
 use refs::{Own, Weak};
 
@@ -19,8 +18,8 @@ pub struct LevelPhysics {
 
     pub(crate) sets: Sets,
 
-    #[educe(Default = Vector2::new(0.0, -9.81))]
-    pub(crate) gravity: Vector2<f32>,
+    #[educe(Default = Vec2::new(0.0, -9.81))]
+    pub(crate) gravity: Vec2,
 
     integration_parameters: IntegrationParameters,
 
@@ -41,7 +40,7 @@ impl LevelPhysics {
         self.integration_parameters.dt = frame_time;
 
         self.physics_pipeline.step(
-            &self.gravity,
+            self.gravity,
             &self.integration_parameters,
             &mut self.island_manager,
             &mut self.broad_phase,

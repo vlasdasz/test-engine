@@ -12,7 +12,7 @@ use std::{
 use anyhow::{Result, bail};
 use gm::drop_on_main;
 pub use helpers::*;
-use hreads::{from_main, on_main, wait_for_next_frame};
+use hreads::{from_main, is_main_thread, on_main, wait_for_next_frame};
 use log::{error, warn};
 use parking_lot::Mutex;
 use refs::Own;
@@ -163,6 +163,10 @@ fn record_touches_internal(skip_moved: bool) {
 
 #[allow(dead_code)]
 pub fn record_ui_test() {
+    if is_main_thread() {
+        panic!("record_ui_test is blocking function. It shouldn't be called on main thread.");
+    }
+
     loop {
         Window::set_title("Recording touches");
         record_touches();

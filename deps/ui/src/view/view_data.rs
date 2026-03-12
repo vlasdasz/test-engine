@@ -1,7 +1,7 @@
 use std::ops::DerefMut;
 
 use gm::{ToF32, color::Color};
-use refs::{Own, Weak};
+use refs::{Own, Weak, weak_from_ref};
 use vents::Event;
 
 use crate::{NavigationView, Style, UIAnimation, UIManager, View, WeakView, layout::Placer};
@@ -53,6 +53,8 @@ pub trait ViewData {
     fn steal_appearance(&self, other: WeakView) -> &Self;
 
     fn add_animation(&self, anim: UIAnimation);
+
+    fn weak(&self) -> Weak<Self>;
 }
 
 impl<T: ?Sized + View> ViewData for T {
@@ -74,7 +76,7 @@ impl<T: ?Sized + View> ViewData for T {
     }
 
     fn content_offset(&self) -> f32 {
-        self.__base_view().content_offset
+        self.__base_view().__content_offset
     }
 
     fn color(&self) -> &Color {
@@ -127,7 +129,7 @@ impl<T: ?Sized + View> ViewData for T {
         let placer = &self.__base_view().placer;
         assert!(
             placer.is_ok(),
-            "Invalid placer. Most likely this view was not initialized properly"
+            "Invalid placer. Most likely this view was not initialized properly."
         );
         placer
     }
@@ -198,6 +200,10 @@ impl<T: ?Sized + View> ViewData for T {
     fn add_animation(&self, mut anim: UIAnimation) {
         anim.view = self.weak_view();
         UIManager::add_animation(anim);
+    }
+
+    fn weak(&self) -> Weak<Self> {
+        weak_from_ref(self)
     }
 }
 

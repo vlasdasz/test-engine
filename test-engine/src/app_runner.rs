@@ -8,10 +8,8 @@ use gm::{
 use hreads::{from_main, invoke_dispatched, wait_for_next_frame};
 use level::{LevelBase, LevelManager};
 use log::debug;
-use parking_lot::Mutex;
 use refs::{Own, main_lock::MainLock};
-use ui::{Container, Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewSubviews, WeakView};
-use vents::OnceEvent;
+use ui::{Touch, TouchEvent, UIEvents, UIManager, View, ViewData, ViewSubviews, WeakView};
 use wgpu::RenderPass;
 use window::{ElementState, MouseButton, Screenshot, Window};
 use winit::{
@@ -21,16 +19,14 @@ use winit::{
 
 use crate::{
     App,
-    app_starter::test_engine_start_with_app,
-    assets::Assets,
-    config::Config,
     level_drawer::LevelDrawer,
     pipelines::Pipelines,
     ui::{Input, UIDrawer},
 };
 
 #[cfg(not_wasm)]
-static WINDOW_READY: Mutex<OnceEvent> = Mutex::new(OnceEvent::const_default());
+static WINDOW_READY: parking_lot::Mutex<vents::OnceEvent> =
+    parking_lot::Mutex::new(vents::OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
 pub struct AppRunner {
@@ -97,7 +93,7 @@ impl AppRunner {
 
     #[cfg(not_wasm)]
     pub async fn setup_sentry(app: &dyn App) -> Option<sentry::ClientInitGuard> {
-        let sentry_url = Config::sentry_url(app).await?;
+        let sentry_url = crate::config::Config::sentry_url(app).await?;
 
         let client = sentry::init((
             dbg!(sentry_url),
@@ -116,15 +112,15 @@ impl AppRunner {
     }
 
     #[cfg(wasm)]
-    pub fn setup_sentry(app: &dyn App) -> Option<()> {
+    pub fn setup_sentry(_app: &dyn App) -> Option<()> {
         None
     }
 
     pub fn new(app: Box<dyn App>) -> Self {
         #[cfg(desktop)]
-        Assets::init(filesystem::Paths::git_root().expect("git_root()"));
+        crate::assets::Assets::init(filesystem::Paths::git_root().expect("git_root()"));
         #[cfg(mobile)]
-        Assets::init(std::path::PathBuf::default());
+        crate::assets::Assets::init(std::path::PathBuf::default());
 
         let first_view = Some(app.make_root_view());
 
@@ -180,7 +176,7 @@ impl AppRunner {
 
         impl App for ActorApp {
             fn make_root_view(&self) -> Own<dyn View> {
-                Container::new()
+                ui::Container::new()
             }
         }
 
@@ -188,7 +184,7 @@ impl AppRunner {
             hreads::unasync(actions).unwrap();
         });
 
-        test_engine_start_with_app(Box::new(ActorApp));
+        crate::app_starter::test_engine_start_with_app(Box::new(ActorApp));
 
         Ok(())
     }
@@ -318,7 +314,7 @@ impl window::WindowEvents for AppRunner {
     }
 
     fn mouse_scroll(&mut self, delta: Point) {
-        Input::on_scroll(delta);
+        Input::on_scroll(delta * 0.25);
     }
 
     fn touch_event(&mut self, touch: winit::event::Touch) -> bool {

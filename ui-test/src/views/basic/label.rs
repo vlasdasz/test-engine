@@ -2,7 +2,10 @@ use anyhow::Result;
 use test_engine::{
     dispatch::from_main,
     refs::Weak,
-    ui::{Anchor, BLUE, LIGHTER_GRAY, Label, NumberView, Setup, TextAlignment, ViewData, ViewSubviews, view},
+    ui::{
+        Anchor, BLUE, LIGHTER_GRAY, Label, NumberView, Setup, TextAlignment, ViewData, ViewSubviews, WHITE,
+        view,
+    },
     ui_test::{UITest, helpers::check_colors, inject_touches},
 };
 
@@ -15,7 +18,7 @@ struct LabelSettings {
 
 impl Setup for LabelSettings {
     fn setup(self: Weak<Self>) {
-        self.label.set_text("ßšėčыў");
+        self.label.set_text("ßšėčыў").set_color(WHITE);
         self.label.place().size(280, 280).tl(80);
 
         self.text_size_view
