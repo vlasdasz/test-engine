@@ -52,6 +52,8 @@ CLIPPY_FLAGS = -- \
       -A clippy::missing_panics_doc \
       -A clippy::missing_errors_doc \
       -A clippy::missing_safety_doc \
+      -A clippy::format_push_string \
+      -A clippy::new_without_default \
       -A clippy::must_use_candidate \
       -A clippy::module_inception \
       -A clippy::needless_pass_by_value \

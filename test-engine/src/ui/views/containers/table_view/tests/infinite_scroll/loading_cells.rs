@@ -1,18 +1,18 @@
 use anyhow::Result;
 use gm::{
     color::{BLACK, TURQUOISE},
-    random,
+    test_state::TestState,
 };
 use refs::Weak;
-use ui::{
-    CellCallbacks, Container, Label, Setup, View, ViewData, ViewFrame, ViewSubviews, ViewTest, view,
-    view_test,
-};
+use ui::{CellCallbacks, Container, Label, Setup, View, ViewData, ViewFrame, ViewTest, view, view_test};
 
 use crate::{
     self as test_engine,
     ui::{CellRegistry, Spinner, SpinnerLockOnView, TableData, TableView},
+    ui_test::{inject_scroll, inject_touches},
 };
+
+static DATA: TestState = TestState::new();
 
 #[view]
 struct LoadingCell {
@@ -41,15 +41,12 @@ impl Setup for LoadingCell {
 
 impl CellCallbacks for LoadingCell {
     fn cell_added(&mut self) {
-        dbg!("ADDED");
-        dbg!(random::<usize>());
-
+        DATA.add(format!("ADD_{}", self.tag()));
         self.spin = Spinner::start_on(self.spin_container);
-        dbg!(self.subviews().len());
     }
+
     fn cell_removed(&mut self) {
-        dbg!("REMOVED");
-        dbg!(random::<usize>());
+        DATA.add(format!("REM_{}", self.tag()));
         self.spin = SpinnerLockOnView::default();
     }
 }
@@ -68,9 +65,7 @@ impl Setup for LoadingCellsTest {
         self.table
             .set_data_source(self)
             .register_cell::<LoadingCell>()
-            .set_size(400, 400)
-            .place()
-            .back();
+            .set_size(500, 400);
         self.table.reload_data();
     }
 }
@@ -98,7 +93,44 @@ impl TableData for LoadingCellsTest {
 
 impl ViewTest for LoadingCellsTest {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        crate::ui_test::record_ui_test();
+        inject_touches(
+            "
+               166  70   b
+               166  70   e
+           ",
+        );
+
+        assert_eq!(
+            DATA,
+            "|ADD_0||ADD_1||ADD_2||ADD_3||ADD_4||ADD_5||ADD_6||ADD_7||ADD_8||ADD_9||ADD_10||ADD_11||ADD_12||ADD_13||ADD_14||ADD_15||ADD_16||ADD_17||ADD_18||ADD_19||ADD_20||ADD_21||ADD_22||ADD_23||ADD_24||ADD_25||ADD_26||ADD_27|"
+        );
+
+        for _ in 0..15 {
+            inject_scroll(-5);
+            assert_eq!(DATA, "");
+        }
+
+        inject_scroll(-20);
+        assert_eq!(
+            DATA,
+            "|REM_0||REM_1||REM_2||REM_3||ADD_28||ADD_29||ADD_30||ADD_31|"
+        );
+
+        inject_scroll(-100);
+
+        assert_eq!(
+            DATA,
+            "|REM_4||REM_5||REM_6||REM_7||ADD_32||ADD_33||ADD_34||ADD_35|"
+        );
+
+        inject_scroll(-100);
+
+        assert_eq!(
+            DATA,
+            "|REM_8||REM_9||REM_10||REM_11||ADD_36||ADD_37||ADD_38||ADD_39|"
+        );
+
+        // crate::ui_test::record_ui_test();
 
         Ok(())
     }
