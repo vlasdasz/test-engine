@@ -104,11 +104,7 @@ impl TableView {
             unimplemented!()
             // layout_variable_sized_cells(self, number_of_cells);
         } else {
-            match self.columns {
-                1 => self.layout_single_column_cells(number_of_cells),
-                2 => self.layout_two_column_cells(number_of_cells),
-                _ => unimplemented!("More than TableView 2 columns is not supported yet"),
-            }
+            self.layout_fixed_cells(number_of_cells, self.columns);
         }
     }
 }

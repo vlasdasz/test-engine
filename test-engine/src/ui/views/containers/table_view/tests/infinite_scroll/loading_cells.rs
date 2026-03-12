@@ -1,5 +1,8 @@
 use anyhow::Result;
-use gm::color::{BLACK, TURQUOISE};
+use gm::{
+    color::{BLACK, TURQUOISE},
+    random,
+};
 use refs::Weak;
 use ui::{CellCallbacks, Label, Setup, View, ViewData, ViewFrame, ViewTest, view, view_test};
 
@@ -28,7 +31,9 @@ impl Setup for LoadingCell {
 }
 
 impl CellCallbacks for LoadingCell {
-    fn cell_removed(&mut self) {}
+    fn cell_removed(&mut self) {
+        dbg!(random::<usize>());
+    }
 }
 
 #[view_test]
@@ -41,7 +46,7 @@ pub struct LoadingCellsTest {
 
 impl Setup for LoadingCellsTest {
     fn setup(mut self: Weak<Self>) {
-        self.table.columns = 2;
+        self.table.columns = 4;
         self.table
             .set_data_source(self)
             .register_cell::<LoadingCell>()
