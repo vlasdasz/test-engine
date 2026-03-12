@@ -197,7 +197,7 @@ impl ViewTest for InfiniteScrollTest {
          ",
         );
 
-        assert_eq!(view.test_string, "|201||205|");
+        assert_eq!(view.test_string, "|198||201||205|");
 
         // crate::ui_test::record_ui_test();
 

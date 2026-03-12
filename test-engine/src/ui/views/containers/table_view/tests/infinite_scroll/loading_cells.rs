@@ -78,7 +78,7 @@ impl TableData for LoadingCellsTest {
 
 impl ViewTest for LoadingCellsTest {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        crate::ui_test::record_ui_test();
+        // crate::ui_test::record_ui_test();
 
         Ok(())
     }

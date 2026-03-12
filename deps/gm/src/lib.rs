@@ -5,12 +5,12 @@ extern crate core;
 
 mod animation;
 pub mod axis;
-pub mod random;
 pub mod color;
 pub mod converter;
 pub mod flat;
 mod misc;
 mod num;
+pub mod random;
 pub mod sign;
 mod tracked_cell;
 pub mod volume;
