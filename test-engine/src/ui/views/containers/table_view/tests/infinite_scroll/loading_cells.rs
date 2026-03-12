@@ -50,7 +50,9 @@ impl Setup for LoadingCellsTest {
         self.table
             .set_data_source(self)
             .register_cell::<LoadingCell>()
-            .set_size(400, 400);
+            .set_size(400, 400)
+            .place()
+            .back();
         self.table.reload_data();
     }
 }

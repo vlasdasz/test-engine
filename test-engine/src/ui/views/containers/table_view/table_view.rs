@@ -27,11 +27,11 @@ impl Setup for TableView {
         self.scroll.place().back();
 
         self.scroll.on_scroll.sub(move || {
-            self.layout_cells();
+            self.layout_cells(false);
         });
 
         self.size_changed().sub(move || {
-            self.layout_cells();
+            self.layout_cells(true);
         });
     }
 }
@@ -65,12 +65,12 @@ impl TableView {
     }
 
     pub fn reload_data(&mut self) {
-        self.layout_cells();
+        self.layout_cells(true);
     }
 
     pub fn set_columns(&mut self, columns: usize) -> &mut Self {
         self.columns = columns;
-        self.layout_cells();
+        self.layout_cells(true);
         self
     }
 
@@ -80,7 +80,7 @@ impl TableView {
 }
 
 impl TableView {
-    fn layout_cells(&mut self) {
+    fn layout_cells(&mut self, force: bool) {
         if self.height() <= 0.0 {
             return;
         }
@@ -104,7 +104,7 @@ impl TableView {
             unimplemented!()
             // layout_variable_sized_cells(self, number_of_cells);
         } else {
-            self.layout_fixed_cells(number_of_cells, self.columns);
+            self.layout_fixed_cells(number_of_cells, self.columns, force);
         }
     }
 }

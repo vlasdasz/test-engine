@@ -5,7 +5,7 @@ use ui::{ViewData, ViewFrame, ViewSubviews, ViewTouch};
 use crate::ui::TableView;
 
 impl TableView {
-    pub(super) fn layout_fixed_cells(&mut self, number_of_cells: usize, columns: usize) {
+    pub(super) fn layout_fixed_cells(&mut self, number_of_cells: usize, columns: usize, force: bool) {
         let cell_height = self.data.cell_height(0);
         let width = self.width();
         let cell_width = width / columns.lossy_convert();
@@ -36,7 +36,7 @@ impl TableView {
                 continue;
             }
             let idx = weak.tag();
-            if idx >= first_index && idx < last_index {
+            if !force && idx >= first_index && idx < last_index {
                 shown.push(idx);
             } else {
                 to_recycle.push(weak);
