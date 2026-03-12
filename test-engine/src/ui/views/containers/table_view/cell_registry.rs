@@ -9,7 +9,7 @@ use crate::ui::TableView;
 #[derive(Default)]
 pub struct CellRegistry {
     table:            Weak<TableView>,
-    pub free_cells:   HashMap<String, Vec<Own<dyn View>>>,
+    pub free_cells:   HashMap<String, Vec<Weak<dyn View>>>,
     pub constructors: HashMap<&'static str, Function<(), Own<dyn View>>>,
 }
 
@@ -18,16 +18,23 @@ impl CellRegistry {
         self.table = table;
     }
 
-    pub(crate) fn load_old_cells(&mut self, mut cells: Vec<Own<dyn View>>) {
+    pub(crate) fn load_old_cells(&mut self, mut cells: Vec<Weak<dyn View>>) {
         for cell in cells.drain(..) {
-            self.free_cells.entry(cell.label().to_string()).or_default().push(cell);
+            let entry = self.free_cells.entry(cell.label().to_string()).or_default();
+
+            if entry.iter().any(|c| c.raw() == cell.raw()) {
+                continue;
+            }
+
+            entry.push(cell);
         }
     }
 
     pub(crate) fn cell_for_ident(&mut self, ident: &'static str) -> Weak<dyn View> {
         let container = self.free_cells.entry(ident.to_string()).or_default();
 
-        let cell = if let Some(cell) = container.pop() {
+        if let Some(cell) = container.pop() {
+            cell.set_hidden(false);
             cell
         } else {
             let constructor = self
@@ -35,14 +42,13 @@ impl CellRegistry {
                        .get(ident)
                      .unwrap_or_else(|| panic!("Constructor for cell identifier: {ident} is not registered. Use TableView::register_cell method."));
 
-            constructor.call(())
-        };
+            let owned = constructor.call(());
+            let weak = owned.weak();
 
-        let weak = cell.weak();
+            self.table.scroll.add_subview(owned);
 
-        self.table.add_subview(cell);
-
-        weak
+            weak
+        }
     }
 
     pub fn cell<T: View + 'static>(&mut self) -> Weak<T> {

@@ -104,7 +104,7 @@ impl TableData for TreeTableTest {
 
 impl ViewTest for TreeTableTest {
     fn perform_test(_view: Weak<Self>) -> Result<()> {
-        test_engine::ui_test::record_ui_test();
+        // test_engine::ui_test::record_ui_test();
 
         Ok(())
     }

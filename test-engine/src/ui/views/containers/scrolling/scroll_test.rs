@@ -334,6 +334,8 @@ impl ViewTest for ScrollViewTest {
             ",
         )?;
 
+        // ui::ui_test::record_ui_test();
+
         Ok(())
     }
 }

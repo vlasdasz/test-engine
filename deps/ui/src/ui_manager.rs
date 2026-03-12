@@ -322,6 +322,9 @@ impl UIManager {
         mut action: impl FnMut(Point) + Send + 'static,
     ) {
         UIEvents::on_scroll().val(subscriber, move |delta| {
+            if subscriber.is_null() {
+                return;
+            }
             let mut target_frame = *subscriber.absolute_frame();
             target_frame.origin.y -= subscriber.content_offset();
 

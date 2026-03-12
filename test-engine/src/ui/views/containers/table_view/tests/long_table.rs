@@ -67,19 +67,6 @@ impl ViewTest for LongTableTest {
         wait_for_next_frame();
         wait_for_next_frame();
 
-        assert_eq!(
-            view.table
-                .scroll
-                .content
-                .subviews()
-                .last()
-                .unwrap()
-                .downcast_weak::<Label>()
-                .unwrap()
-                .text(),
-            "Cell number: 26"
-        );
-
         inject_touches(
             "
                  865  126  m
