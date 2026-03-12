@@ -94,6 +94,7 @@ impl TableView {
             cell.touch().up_inside.sub(weak_table, move || {
                 weak_table.data.cell_selected(i);
             });
+            cell.as_cell().cell_added();
         }
     }
 }

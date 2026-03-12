@@ -26,8 +26,9 @@ impl Drop for SpinnerLockGlobal {
     }
 }
 
+#[derive(Default)]
 pub struct SpinnerLockOnView {
-    pub(super) spinner: Weak<Spinner>,
+    pub spinner: Weak<Spinner>,
 }
 
 impl SpinnerLockOnView {

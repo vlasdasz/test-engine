@@ -191,6 +191,7 @@ impl Spinner {
                 };
             }
             let spinner = view.add_view::<Spinner>();
+            spinner.place().back();
             SpinnerLockOnView { spinner }
         })
     }

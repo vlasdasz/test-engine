@@ -4,17 +4,23 @@ use gm::{
     random,
 };
 use refs::Weak;
-use ui::{CellCallbacks, Label, Setup, View, ViewData, ViewFrame, ViewTest, view, view_test};
+use ui::{
+    CellCallbacks, Container, Label, Setup, View, ViewData, ViewFrame, ViewSubviews, ViewTest, view,
+    view_test,
+};
 
 use crate::{
     self as test_engine,
-    ui::{CellRegistry, TableData, TableView},
+    ui::{CellRegistry, Spinner, SpinnerLockOnView, TableData, TableView},
 };
 
 #[view]
 struct LoadingCell {
+    spin: SpinnerLockOnView,
+
     #[init]
-    label: Label,
+    spin_container: Container,
+    label:          Label,
 }
 
 impl Setup for LoadingCell {
@@ -26,13 +32,25 @@ impl Setup for LoadingCell {
             .set_border_width(10)
             .set_border_color(BLACK)
             .place()
-            .all_sides(5);
+            .all_sides(4)
+            .l(60);
+
+        self.spin_container.place().center_y().l(5).size(50, 50);
     }
 }
 
 impl CellCallbacks for LoadingCell {
-    fn cell_removed(&mut self) {
+    fn cell_added(&mut self) {
+        dbg!("ADDED");
         dbg!(random::<usize>());
+
+        self.spin = Spinner::start_on(self.spin_container);
+        dbg!(self.subviews().len());
+    }
+    fn cell_removed(&mut self) {
+        dbg!("REMOVED");
+        dbg!(random::<usize>());
+        self.spin = SpinnerLockOnView::default();
     }
 }
 
