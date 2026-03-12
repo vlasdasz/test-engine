@@ -12,8 +12,9 @@ impl TableView {
             .subviews_mut()
             .iter()
             .map(|c| {
-                let weak = c.weak();
+                let mut weak = c.weak_view();
                 weak.set_hidden(true);
+                weak.as_cell().cell_removed();
                 weak
             })
             .collect();

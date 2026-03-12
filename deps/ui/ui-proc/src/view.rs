@@ -142,7 +142,9 @@ pub fn view_impl(stream: TokenStream, test: bool) -> TokenStream {
                 use test_engine::ui::ViewSubviews;
                 #inits
             }
-
+            fn as_cell(&mut self) -> &mut dyn test_engine::ui::CellCallbacks {
+                self as &mut dyn test_engine::ui::CellCallbacks
+            }
         }
 
         impl #generics test_engine::refs::AsAny for #name <#type_params> {

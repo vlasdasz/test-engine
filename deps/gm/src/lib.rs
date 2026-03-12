@@ -5,6 +5,7 @@ extern crate core;
 
 mod animation;
 pub mod axis;
+pub mod random;
 pub mod color;
 pub mod converter;
 pub mod flat;
@@ -22,4 +23,5 @@ pub use num::{
     into_f32::ToF32,
     lossy_convert::LossyConvert,
 };
+pub use random::{Random, random, random_range};
 pub use tracked_cell::TrackedCell as RefCell;
