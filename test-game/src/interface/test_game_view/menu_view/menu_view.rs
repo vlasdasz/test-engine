@@ -143,7 +143,7 @@ impl Setup for MenuView {
                         MenuEntry::new("scroll")
                             .action(|| {
                                 let view = InfiniteScrollTest::new();
-                                let view = view.after_setup(|v| {
+                                let view = view.after_setup(|mut v| {
                                     v.add_view::<Button>()
                                         .set_text("Back")
                                         .on_tap(|| {
@@ -152,6 +152,7 @@ impl Setup for MenuView {
                                         .place()
                                         .size(100, 20);
                                     v.table.place().clear().back();
+                                    v.table.set_columns(4);
                                 });
 
                                 LevelManager::stop_level();
