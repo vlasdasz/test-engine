@@ -159,7 +159,7 @@ impl ViewTest for TreeTableTest {
 
         assert_eq!(DATA.lock().deref(), "|pizza||borgor||ojje||barker||woofer|");
         DATA.lock().clear();
-        
+
         // test_engine::ui_test::record_ui_test();
 
         Ok(())
