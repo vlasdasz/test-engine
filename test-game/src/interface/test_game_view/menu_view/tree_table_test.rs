@@ -1,9 +1,13 @@
+use std::ops::Deref;
+
 use anyhow::Result;
 use parking_lot::Mutex;
 use test_engine::{
+    dispatch::from_main,
     gm::Toggle,
     refs::Weak,
     ui::{CellRegistry, Setup, TableData, TableView, View, ViewData, ViewFrame, ViewTest, WHITE, view_test},
+    ui_test::{inject_touches, inject_touches_delayed},
 };
 
 use crate::interface::test_game_view::{MenuEntry, Node, NodeCell};
@@ -68,7 +72,7 @@ impl Setup for TreeTableTest {
 
 impl TableData for TreeTableTest {
     fn cell_height(&self, _: usize) -> f32 {
-        100.0
+        40.0
     }
 
     fn number_of_cells(&self) -> usize {
@@ -103,7 +107,59 @@ impl TableData for TreeTableTest {
 }
 
 impl ViewTest for TreeTableTest {
-    fn perform_test(_view: Weak<Self>) -> Result<()> {
+    fn perform_test(view: Weak<Self>) -> Result<()> {
+        inject_touches(
+            "
+                128  209  b
+                128  208  e
+                129  173  b
+                130  170  e
+                133  118  b
+                133  118  e
+                133  88   b
+                133  88   e
+                133  58   b
+                132  58   e
+                142  25   b
+                142  25   e
+            ",
+        );
+
+        let rows = from_main(move || view.number_of_cells());
+
+        assert_eq!(rows, 3);
+
+        inject_touches_delayed(
+            "
+            185  59   b
+            185  59   e
+            174  217  b
+            174  217  e
+        ",
+        );
+
+        let rows = from_main(move || view.number_of_cells());
+
+        assert_eq!(rows, 8);
+
+        inject_touches(
+            "
+            152  99   b
+            152  99   e
+            123  141  b
+            123  141  e
+            105  178  b
+            105  178  e
+            106  251  b
+            106  251  e
+            115  299  b
+            115  298  e
+        ",
+        );
+
+        assert_eq!(DATA.lock().deref(), "|pizza||borgor||ojje||barker||woofer|");
+        DATA.lock().clear();
+        
         // test_engine::ui_test::record_ui_test();
 
         Ok(())
