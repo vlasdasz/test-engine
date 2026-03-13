@@ -23,6 +23,20 @@ static GRADIENT_DRAWER: MainLock<UIGradientPipeline> = MainLock::new();
 static IMAGE_RECT_DRAWER: MainLock<UIImageRectPipepeline> = MainLock::new();
 // static UI_PATH_DRAWER: MainLock<UIPathPipeline> = MainLock::new();
 
+struct TextGroup<'a> {
+    sections: Vec<Section<'a>>,
+    scissor:  Option<[u32; 4]>,
+}
+
+impl<'a> TextGroup<'a> {
+    fn new(scissor: Option<[u32; 4]>) -> Self {
+        Self {
+            sections: vec![],
+            scissor,
+        }
+    }
+}
+
 pub struct UIDrawer;
 
 impl UIDrawer {
@@ -34,49 +48,63 @@ impl UIDrawer {
         }
     }
 
-    pub(crate) fn draw(pass: &mut RenderPass) {
-        let mut sections: Vec<Section> = vec![];
+    pub(crate) fn draw<'a>(pass: &mut RenderPass<'a>) {
+        let resolution = UIManager::window_resolution();
+        let rect_view = RectView {
+            resolution,
+            _padding: 0,
+        };
         let debug_frames = UIManager::should_draw_debug_frames();
         let scale = UIManager::scale();
+        let vp = [0u32, 0u32, resolution.width as u32, resolution.height as u32];
+
+        let mut text_groups: Vec<TextGroup<'a>> = vec![TextGroup::new(None)];
+        let mut scissor_stack: Vec<[u32; 4]> = vec![];
+
         Self::draw_view(
             pass,
             UIManager::root_view_static(),
-            &mut sections,
+            &mut text_groups,
             debug_frames,
             scale,
+            rect_view,
+            &mut scissor_stack,
         );
         if let Some(debug_view) = UIManager::debug_view() {
-            Self::draw_view(pass, debug_view, &mut sections, debug_frames, scale);
+            Self::draw_view(
+                pass,
+                debug_view,
+                &mut text_groups,
+                debug_frames,
+                scale,
+                rect_view,
+                &mut scissor_stack,
+            );
         }
 
-        Pipelines::rect().draw(
-            pass,
-            RectView {
-                resolution: UIManager::window_resolution(),
-                _padding:   0,
-            },
-        );
+        Self::flush_pipelines(pass, rect_view);
+        pass.set_scissor_rect(vp[0], vp[1], vp[2], vp[3]);
 
-        IMAGE_RECT_DRAWER.get_mut().draw(
-            pass,
-            RectView {
-                resolution: UIManager::window_resolution(),
-                _padding:   0,
-            },
-        );
+        for group in text_groups {
+            if group.sections.is_empty() {
+                continue;
+            }
+            let [x, y, w, h] = group.scissor.unwrap_or(vp);
+            pass.set_scissor_rect(x, y, w, h);
+            Font::default()
+                .brush
+                .queue(Window::device(), Window::queue(), group.sections)
+                .unwrap();
+            Font::default().brush.draw(pass);
+        }
 
-        GRADIENT_DRAWER.get_mut().draw(
-            pass,
-            RectView {
-                resolution: UIManager::window_resolution(),
-                _padding:   0,
-            },
-        );
+        pass.set_scissor_rect(vp[0], vp[1], vp[2], vp[3]);
+    }
 
-        Font::default()
-            .brush
-            .queue(Window::device(), Window::queue(), sections)
-            .unwrap();
+    fn flush_pipelines(pass: &mut RenderPass, rect_view: RectView) {
+        Pipelines::rect().draw(pass, rect_view);
+        IMAGE_RECT_DRAWER.get_mut().draw(pass, rect_view);
+        GRADIENT_DRAWER.get_mut().draw(pass, rect_view);
     }
 
     fn update_view(view: &mut dyn View) {
@@ -95,9 +123,11 @@ impl UIDrawer {
     fn draw_view<'a>(
         pass: &mut RenderPass<'a>,
         view: &'a dyn View,
-        sections: &mut Vec<Section<'a>>,
+        text_groups: &mut Vec<TextGroup<'a>>,
         debug_frames: bool,
         scale: f32,
+        rect_view: RectView,
+        scissor_stack: &mut Vec<[u32; 4]>,
     ) {
         let frame = *view.absolute_frame();
 
@@ -106,6 +136,40 @@ impl UIDrawer {
         }
 
         view.before_render(pass);
+
+        let clips = view.clips_to_bounds();
+
+        if clips {
+            Self::flush_pipelines(pass, rect_view);
+
+            let pf = frame * scale;
+            let vp_w = rect_view.resolution.width as u32;
+            let vp_h = rect_view.resolution.height as u32;
+            let x = pf.x().max(0.0) as u32;
+            let y = pf.y().max(0.0) as u32;
+            let max_x = (pf.max_x() as u32).min(vp_w);
+            let max_y = (pf.max_y() as u32).min(vp_h);
+            let w = max_x.saturating_sub(x);
+            let h = max_y.saturating_sub(y);
+
+            if w == 0 || h == 0 {
+                return;
+            }
+
+            let new_scissor = if let Some(&parent) = scissor_stack.last() {
+                Self::intersect_scissor(parent, [x, y, w, h])
+            } else {
+                [x, y, w, h]
+            };
+
+            if new_scissor[2] == 0 || new_scissor[3] == 0 {
+                return;
+            }
+
+            scissor_stack.push(new_scissor);
+            pass.set_scissor_rect(new_scissor[0], new_scissor[1], new_scissor[2], new_scissor[3]);
+            text_groups.push(TextGroup::new(Some(new_scissor)));
+        }
 
         if view.end_gradient_color().a > 0.0 {
             GRADIENT_DRAWER.get_mut().add(UIGradientInstance {
@@ -150,6 +214,7 @@ impl UIDrawer {
         } else if let Some(label) = view.as_any().downcast_ref::<Label>()
             && !label.text.is_empty()
         {
+            let sections = &mut text_groups.last_mut().unwrap().sections;
             Self::draw_label(&frame, label, sections, scale);
         } else if let Some(drawing_view) = view.as_any().downcast_ref::<DrawingView>() {
             for _path in drawing_view.paths().iter().rev() {
@@ -181,9 +246,33 @@ impl UIDrawer {
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(pass, view.deref(), sections, debug_frames, scale);
+                Self::draw_view(pass, view.deref(), text_groups, debug_frames, scale, rect_view, scissor_stack);
             }
         }
+
+        if clips {
+            Self::flush_pipelines(pass, rect_view);
+            scissor_stack.pop();
+
+            let vp_w = rect_view.resolution.width as u32;
+            let vp_h = rect_view.resolution.height as u32;
+
+            if let Some(&parent) = scissor_stack.last() {
+                pass.set_scissor_rect(parent[0], parent[1], parent[2], parent[3]);
+                text_groups.push(TextGroup::new(Some(parent)));
+            } else {
+                pass.set_scissor_rect(0, 0, vp_w, vp_h);
+                text_groups.push(TextGroup::new(None));
+            }
+        }
+    }
+
+    fn intersect_scissor(a: [u32; 4], b: [u32; 4]) -> [u32; 4] {
+        let x = a[0].max(b[0]);
+        let y = a[1].max(b[1]);
+        let max_x = (a[0] + a[2]).min(b[0] + b[2]);
+        let max_y = (a[1] + a[3]).min(b[1] + b[3]);
+        [x, y, max_x.saturating_sub(x), max_y.saturating_sub(y)]
     }
 
     fn draw_label<'a>(frame: &Rect, label: &'a Label, sections: &mut Vec<Section<'a>>, scale: f32) {

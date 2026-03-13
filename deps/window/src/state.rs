@@ -156,10 +156,6 @@ impl State {
             });
 
             AppHandler::current().te_window_events.render(&mut render_pass);
-
-            for font in Font::storage().values() {
-                font.brush.draw(&mut render_pass);
-            }
         }
 
         #[cfg(not_wasm)]

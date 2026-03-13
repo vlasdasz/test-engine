@@ -5,7 +5,7 @@ use refs::{Weak, weak_from_ref};
 use ui_proc::view;
 use window::image::{Image, ToImage};
 
-use crate::{NineSegmentImageView, ViewData, ViewFrame, ViewSubviews};
+use crate::{NineSegmentImageView, ViewCallbacks, ViewData, ViewFrame, ViewSubviews};
 
 mod test_engine {
     pub(crate) use educe;
@@ -65,5 +65,11 @@ impl ImageView {
             ImageMode::AspectFit => self.absolute_frame().fit_aspect_ratio(self.image.size.into()),
             ImageMode::AspectFill => self.absolute_frame().fill_aspect_ratio(self.image.size.into()),
         }
+    }
+}
+
+impl ViewCallbacks for ImageView {
+    fn clips_to_bounds(&self) -> bool {
+        matches!(self.mode, ImageMode::AspectFill)
     }
 }
