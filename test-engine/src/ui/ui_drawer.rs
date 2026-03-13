@@ -1,6 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use gm::{
+    LossyConvert,
     color::{CLEAR, TURQUOISE},
     flat::Rect,
 };
@@ -28,7 +29,7 @@ struct TextGroup<'a> {
     scissor:  Option<[u32; 4]>,
 }
 
-impl<'a> TextGroup<'a> {
+impl TextGroup<'_> {
     fn new(scissor: Option<[u32; 4]>) -> Self {
         Self {
             sections: vec![],
@@ -50,13 +51,19 @@ impl UIDrawer {
 
     pub(crate) fn draw<'a>(pass: &mut RenderPass<'a>) {
         let resolution = UIManager::window_resolution();
+        let display_rect = [
+            0u32,
+            0u32,
+            resolution.width.lossy_convert(),
+            resolution.height.lossy_convert(),
+        ];
+
         let rect_view = RectView {
             resolution,
             _padding: 0,
         };
         let debug_frames = UIManager::should_draw_debug_frames();
         let scale = UIManager::scale();
-        let vp = [0u32, 0u32, resolution.width as u32, resolution.height as u32];
 
         let mut text_groups: Vec<TextGroup<'a>> = vec![TextGroup::new(None)];
         let mut scissor_stack: Vec<[u32; 4]> = vec![];
@@ -83,14 +90,20 @@ impl UIDrawer {
         }
 
         Self::flush_pipelines(pass, rect_view);
-        pass.set_scissor_rect(vp[0], vp[1], vp[2], vp[3]);
+        scissor_checked(
+            pass,
+            display_rect[0],
+            display_rect[1],
+            display_rect[2],
+            display_rect[3],
+        );
 
         for group in text_groups {
             if group.sections.is_empty() {
                 continue;
             }
-            let [x, y, w, h] = group.scissor.unwrap_or(vp);
-            pass.set_scissor_rect(x, y, w, h);
+            let [x, y, w, h] = group.scissor.unwrap_or(display_rect);
+            scissor_checked(pass, x, y, w, h);
             Font::default()
                 .brush
                 .queue(Window::device(), Window::queue(), group.sections)
@@ -98,7 +111,13 @@ impl UIDrawer {
             Font::default().brush.draw(pass);
         }
 
-        pass.set_scissor_rect(vp[0], vp[1], vp[2], vp[3]);
+        scissor_checked(
+            pass,
+            display_rect[0],
+            display_rect[1],
+            display_rect[2],
+            display_rect[3],
+        );
     }
 
     fn flush_pipelines(pass: &mut RenderPass, rect_view: RectView) {
@@ -120,6 +139,7 @@ impl UIDrawer {
         }
     }
 
+    #[allow(clippy::too_many_lines)]
     fn draw_view<'a>(
         pass: &mut RenderPass<'a>,
         view: &'a dyn View,
@@ -143,12 +163,14 @@ impl UIDrawer {
             Self::flush_pipelines(pass, rect_view);
 
             let pf = frame * scale;
-            let vp_w = rect_view.resolution.width as u32;
-            let vp_h = rect_view.resolution.height as u32;
-            let x = pf.x().max(0.0) as u32;
-            let y = pf.y().max(0.0) as u32;
-            let max_x = (pf.max_x() as u32).min(vp_w);
-            let max_y = (pf.max_y() as u32).min(vp_h);
+            let vp_w = rect_view.resolution.width.lossy_convert();
+            let vp_h = rect_view.resolution.height.lossy_convert();
+            let x = pf.x().max(0.0).lossy_convert();
+            let y = pf.y().max(0.0).lossy_convert();
+            let pf_max_x: u32 = pf.max_x().lossy_convert();
+            let pf_max_y: u32 = pf.max_y().lossy_convert();
+            let max_x = pf_max_x.min(vp_w);
+            let max_y = pf_max_y.min(vp_h);
             let w = max_x.saturating_sub(x);
             let h = max_y.saturating_sub(y);
 
@@ -167,7 +189,13 @@ impl UIDrawer {
             }
 
             scissor_stack.push(new_scissor);
-            pass.set_scissor_rect(new_scissor[0], new_scissor[1], new_scissor[2], new_scissor[3]);
+            scissor_checked(
+                pass,
+                new_scissor[0],
+                new_scissor[1],
+                new_scissor[2],
+                new_scissor[3],
+            );
             text_groups.push(TextGroup::new(Some(new_scissor)));
         }
 
@@ -246,7 +274,15 @@ impl UIDrawer {
 
         for view in view.subviews() {
             if view.dont_hide() || view.absolute_frame().intersects(root_frame) {
-                Self::draw_view(pass, view.deref(), text_groups, debug_frames, scale, rect_view, scissor_stack);
+                Self::draw_view(
+                    pass,
+                    view.deref(),
+                    text_groups,
+                    debug_frames,
+                    scale,
+                    rect_view,
+                    scissor_stack,
+                );
             }
         }
 
@@ -254,14 +290,14 @@ impl UIDrawer {
             Self::flush_pipelines(pass, rect_view);
             scissor_stack.pop();
 
-            let vp_w = rect_view.resolution.width as u32;
-            let vp_h = rect_view.resolution.height as u32;
+            let vp_w = rect_view.resolution.width.lossy_convert();
+            let vp_h = rect_view.resolution.height.lossy_convert();
 
             if let Some(&parent) = scissor_stack.last() {
-                pass.set_scissor_rect(parent[0], parent[1], parent[2], parent[3]);
+                scissor_checked(pass, parent[0], parent[1], parent[2], parent[3]);
                 text_groups.push(TextGroup::new(Some(parent)));
             } else {
-                pass.set_scissor_rect(0, 0, vp_w, vp_h);
+                scissor_checked(pass, 0, 0, vp_w, vp_h);
                 text_groups.push(TextGroup::new(None));
             }
         }
@@ -318,4 +354,8 @@ impl UIDrawer {
 
         sections.push(section);
     }
+}
+
+fn scissor_checked(pass: &mut RenderPass, x: u32, y: u32, w: u32, h: u32) {
+    pass.set_scissor_rect(x, y, w, h);
 }

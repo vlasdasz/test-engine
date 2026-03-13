@@ -92,9 +92,15 @@ impl State {
             Window::inner_size(),
             Window::outer_size(),
         );
+
+        window.is_resizing = false;
     }
 
     pub fn update(&mut self) {
+        if Window::is_resizing() {
+            return;
+        }
+
         AppHandler::current().te_window_events.update();
 
         if Window::current().title_set {
@@ -118,6 +124,10 @@ impl State {
         let Some(ref surface) = Window::current().surface else {
             return Ok(());
         };
+
+        if Window::is_resizing() {
+            return Ok(());
+        }
 
         let surface_texture = surface.presentable.get_current_texture()?;
         let view = surface_texture.texture.create_view(&wgpu::TextureViewDescriptor::default());

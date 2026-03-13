@@ -42,7 +42,8 @@ pub struct Window {
 
     pub(crate) surface: Option<Surface>,
 
-    pub(crate) title_set: bool,
+    pub(crate) title_set:   bool,
+    pub(crate) is_resizing: bool,
 
     pub(crate) winit_window: Arc<winit::window::Window>,
 }
@@ -58,6 +59,10 @@ impl Window {
 
     pub fn queue() -> &'static Queue {
         &Self::current().queue
+    }
+
+    pub fn is_resizing() -> bool {
+        Self::current().is_resizing
     }
 
     pub(crate) fn winit_window() -> &'static winit::window::Window {
@@ -189,6 +194,7 @@ impl Window {
             device,
             queue,
             surface,
+            is_resizing: false,
             title_set: false,
             winit_window,
         };
@@ -210,8 +216,17 @@ impl Window {
         });
     }
 
-    pub fn set_size(&self, size: impl Into<Size<u32>>) {
+    pub fn set_size(&mut self, size: impl Into<Size<u32>>) {
         let size = size.into();
+
+        let current_size: Size<u32> = Window::inner_size().lossy_convert();
+
+        if size == current_size {
+            return;
+        }
+
+        self.is_resizing = true;
+
         let _ = Self::winit_window().request_inner_size(PhysicalSize::new(size.width, size.height));
     }
 
