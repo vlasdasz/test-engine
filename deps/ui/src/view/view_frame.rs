@@ -10,7 +10,7 @@ use crate::{UIManager, View, ViewSubviews};
 pub trait ViewFrame {
     fn z_position(&self) -> f32;
     fn set_z_position(&mut self, z: f32) -> &mut Self;
-    fn bump_z_position(&mut self, z: f32) -> &mut Self;
+    fn bump_z_position(&self, z: f32) -> &Self;
     fn frame(&self) -> &Rect;
     fn absolute_frame(&self) -> &Rect;
     fn x(&self) -> f32;
@@ -45,9 +45,9 @@ impl<T: ?Sized + View> ViewFrame for T {
         self
     }
 
-    fn bump_z_position(&mut self, z: f32) -> &mut Self {
+    fn bump_z_position(&self, z: f32) -> &Self {
         self.__base_view().z_position -= z;
-        for mut sub in self.subviews_weak() {
+        for sub in self.subviews() {
             sub.bump_z_position(z + UIManager::subview_z_offset());
         }
         self

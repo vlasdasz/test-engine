@@ -32,6 +32,9 @@ pub struct SpinnerLockOnView {
 }
 
 impl SpinnerLockOnView {
+    pub fn is_active(&self) -> bool {
+        self.spinner.is_ok()
+    }
     pub fn stop(self) {}
 }
 

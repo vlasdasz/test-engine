@@ -10,7 +10,7 @@ pub trait WithHeader: View {
     fn header_size(&self) -> f32;
     fn header_margin(&self) -> f32;
     fn layout_header(&self) {
-        let mut header = self.header();
+        let header = self.header();
 
         if header.is_null() {
             trace!("No header");

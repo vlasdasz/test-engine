@@ -1,7 +1,7 @@
 #![allow(incomplete_features)]
 #![feature(specialization)]
 #![feature(arbitrary_self_types)]
-#![cfg_attr(wasm, feature(linkage))]
+#![feature(linkage)]
 
 mod app_runner;
 mod assets;
