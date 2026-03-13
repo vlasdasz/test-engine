@@ -1,6 +1,6 @@
 mod input;
 mod tests;
-mod ui;
+mod ui_drawer;
 pub mod ui_test;
 pub(crate) mod views;
 
@@ -10,7 +10,7 @@ pub use gm::{
     flat::{Point, PointsPath, Rect, Size},
 };
 pub use input::*;
-pub use ui::UIDrawer;
+pub use ui_drawer::UIDrawer;
 pub use ui_proc::view;
 pub use views::*;
 pub use window::{
