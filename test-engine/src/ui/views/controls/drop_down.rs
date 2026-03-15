@@ -29,6 +29,10 @@ impl<T: ToLabel + Clone + 'static> DropDown<T> {
         self.changed.val(action);
     }
 
+    pub fn try_get_value(&self) -> Option<&T> {
+        self.values.get(self.selected_index)
+    }
+
     pub fn value(&self) -> &T {
         assert!(!self.values.is_empty());
         self.values.get(self.selected_index).unwrap()

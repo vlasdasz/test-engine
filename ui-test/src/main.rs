@@ -70,12 +70,12 @@ fn run(test_name: Option<String>) -> Result<()> {
         let cycles: u32 = var("UI_TEST_CYCLES").unwrap_or("2".to_string()).parse().unwrap();
 
         for i in 1..=cycles {
+            test().await?;
+            info!("Cycle {i}: OK");
+
             for (_name, test) in tests.iter() {
                 test()?;
             }
-
-            test().await?;
-            info!("Cycle {i}: OK");
         }
 
         AppRunner::stop();

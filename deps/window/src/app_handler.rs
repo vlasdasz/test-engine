@@ -138,7 +138,6 @@ impl ApplicationHandler<Window> for AppHandler {
                 self.te_window_events.dropped_file(path);
             }
             WindowEvent::Resized(_physical_size) => {
-                dbg!("RESIZED WGPU");
                 if self.state.not_ready() {
                     return;
                 }
