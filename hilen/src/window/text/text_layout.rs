@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 use crate::gm::LossyConvert;
 
 /// One laid out line: the byte range of the text it shows and where
@@ -32,11 +34,35 @@ impl TextLayout {
         count * self.line_height - (self.line_height - self.ascent + self.descent)
     }
 
-    pub(crate) fn line_of(&self, byte: usize) -> usize {
+    /// The line that shows `byte`, the last line for a byte past the text.
+    pub fn line_of(&self, byte: usize) -> usize {
         self.lines
             .iter()
             .position(|line| byte <= line.end)
             .unwrap_or(self.lines.len().saturating_sub(1))
+    }
+
+    pub fn line_count(&self) -> usize {
+        self.lines.len()
+    }
+
+    /// The byte range of the text on `line`.
+    pub fn line_range(&self, line: usize) -> Range<usize> {
+        let line = &self.lines[line];
+        line.start..line.end
+    }
+
+    /// The top of `line` from the top of the text.
+    pub fn line_top(&self, line: usize) -> f32 {
+        let line: f32 = line.lossy_convert();
+        line * self.line_height
+    }
+
+    /// The line at `y` from the top of the text, clamped to the first
+    /// and last line so a position outside the text lands on an edge.
+    pub fn line_at_y(&self, y: f32) -> usize {
+        let line: usize = (y / self.line_height).max(0.0).lossy_convert();
+        line.min(self.lines.len().saturating_sub(1))
     }
 
     /// The caret position closest to `x` on `line`.
@@ -70,5 +96,46 @@ impl TextLayout {
             .or(line.boundaries.last())
             .map_or(0.0, |(_, x)| *x);
         (index, x)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn layout() -> TextLayout {
+        let line = |start, end, width| TextLine {
+            start,
+            end,
+            boundaries: vec![(start, 0.0), (end, width)],
+            width,
+        };
+        TextLayout {
+            lines:       vec![line(0, 5, 50.0), line(5, 9, 40.0)],
+            ascent:      8.0,
+            descent:     2.0,
+            line_height: 12.0,
+            underline:   (0.0, 1.0),
+        }
+    }
+
+    #[test]
+    fn lines_by_index() {
+        let layout = layout();
+        assert_eq!(layout.line_count(), 2);
+        assert_eq!(layout.line_range(1), 5..9);
+        assert!((layout.line_top(1) - 12.0).abs() < f32::EPSILON);
+        assert_eq!(layout.line_of(3), 0);
+        assert_eq!(layout.line_of(7), 1);
+        assert_eq!(layout.line_of(50), 1);
+    }
+
+    #[test]
+    fn line_at_y_clamps_to_the_text() {
+        let layout = layout();
+        assert_eq!(layout.line_at_y(-3.0), 0);
+        assert_eq!(layout.line_at_y(11.9), 0);
+        assert_eq!(layout.line_at_y(12.0), 1);
+        assert_eq!(layout.line_at_y(100.0), 1);
     }
 }

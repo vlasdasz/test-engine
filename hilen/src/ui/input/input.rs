@@ -16,7 +16,7 @@ use crate::{
     gm::{color::Color, flat::Point},
     ui::{
         Container, Cursor, LongPress, Scrollable, Setup, Tooltip, Touch, TouchStack, UIEvents, UIManager,
-        ViewData, ViewFrame, ViewSubviews, WeakView, check_touch,
+        ViewData, ViewFrame, check_touch,
     },
 };
 
@@ -156,38 +156,29 @@ impl Input {
     }
 
     /// Wheel scroll goes to a single scroll view of the top touch layer:
-    /// the deepest visible one under the cursor.
+    /// the one drawn in front under the cursor. So a scroll view floating
+    /// over a deeper one, a toast or a popover, wins the overlap. Smaller
+    /// z is closer, and a child is closer than its parent, so a nested
+    /// scroll view still beats the one around it.
     fn check_wheel_scroll(delta: Point) {
         let cursor = UIManager::cursor_position();
 
-        let mut deepest: Option<(usize, Weak<dyn Scrollable>)> = None;
+        let mut front: Option<(f32, Weak<dyn Scrollable>)> = None;
 
         for scroll in TouchStack::scrolls() {
             if scroll.is_null() || scroll.is_hidden_in_tree() || !scroll.absolute_frame().contains(cursor) {
                 continue;
             }
 
-            let depth = view_depth(scroll.weak_view());
+            let z = scroll.z_position();
 
-            if deepest.as_ref().is_none_or(|(deepest_depth, _)| depth >= *deepest_depth) {
-                deepest = Some((depth, scroll));
+            if front.as_ref().is_none_or(|(front_z, _)| z <= *front_z) {
+                front = Some((z, scroll));
             }
         }
 
-        if let Some((_, mut scroll)) = deepest {
+        if let Some((_, mut scroll)) = front {
             scroll.__process_wheel_scroll(delta);
         }
     }
-}
-
-fn view_depth(view: WeakView) -> usize {
-    let mut depth = 0;
-    let mut superview = *view.superview();
-
-    while superview.is_ok() {
-        depth += 1;
-        superview = *superview.superview();
-    }
-
-    depth
 }

@@ -72,9 +72,11 @@ fn restore_app(state: AppState) {
 /// The UI map, then the scene map. Two maps, a view and a scene may share
 /// a name, `Transparency` does.
 pub fn registered_test_maps() -> Vec<BTreeMap<String, UITestEntry>> {
-    let mut maps = vec![crate::UI_TESTS.lock().clone()];
+    let ui = crate::UI_TESTS.lock().clone();
     #[cfg(feature = "scene")]
-    maps.push(crate::SCENE_TESTS.lock().clone());
+    let maps = vec![ui, crate::SCENE_TESTS.lock().clone()];
+    #[cfg(not(feature = "scene"))]
+    let maps = vec![ui];
     maps
 }
 

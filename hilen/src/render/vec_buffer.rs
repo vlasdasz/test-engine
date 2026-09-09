@@ -60,6 +60,7 @@ impl<T> VecBuffer<T> {
 
     /// Elements pushed since the last `load()`, the index the next push
     /// lands at.
+    #[cfg(feature = "scene")]
     pub(crate) fn pending(&self) -> u32 {
         self.data.len().try_into().unwrap()
     }
@@ -70,6 +71,7 @@ impl<T> VecBuffer<T> {
 
     /// Whether the last `load()` landed any element. `is_empty` asks
     /// about the pushes since, not about what the frame draws.
+    #[cfg(feature = "scene")]
     pub(crate) fn has_loaded(&self) -> bool {
         self.len > 0
     }

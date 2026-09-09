@@ -5,6 +5,8 @@
 //! monitor whatever Windows is set to, so a window comes out at one
 //! physical pixel per logical pixel on a scaled display.
 
+pub(crate) mod theme;
+
 use std::{env, fs};
 
 use log::info;

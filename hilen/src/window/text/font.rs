@@ -259,10 +259,11 @@ impl Font {
         width: Option<f32>,
         tracking: f32,
         runs: Vec<FontRun>,
+        line_height: Option<f32>,
     ) -> TextLayout {
         let layout = ShapedLayout {
             emit:   &self.name,
-            params: self.params(tracking, width, runs, None),
+            params: self.params(tracking, width, runs, line_height),
         };
 
         let scale = PxScale::from(size.to_f32() * self.em_scale);

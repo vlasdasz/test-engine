@@ -2,10 +2,13 @@ use std::{convert::Infallible, path::Path};
 
 use anyhow::Result;
 use log::error;
+#[cfg(feature = "scene")]
+use wgpu::Sampler;
+#[cfg(any(feature = "scene", feature = "video"))]
+use wgpu::TextureView;
 use wgpu::{
     BindGroup, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry,
-    BindingResource, BindingType, Sampler, SamplerBindingType, ShaderStages, TextureSampleType, TextureView,
-    TextureViewDimension,
+    BindingResource, BindingType, SamplerBindingType, ShaderStages, TextureSampleType, TextureViewDimension,
 };
 
 use crate::{
@@ -59,7 +62,13 @@ impl Image {
                 },
             ],
         });
-        ImageBind::new(bind, texture.view.clone(), texture.sampler.clone())
+        ImageBind {
+            bind,
+            #[cfg(any(feature = "scene", feature = "video"))]
+            view: texture.view.clone(),
+            #[cfg(feature = "scene")]
+            sampler: texture.sampler.clone(),
+        }
     }
 
     fn from_texture(texture: &Texture, svg: Option<Svg>) -> Self {
@@ -104,15 +113,17 @@ impl Image {
     }
 
     pub(crate) fn bind(&self) -> &BindGroup {
-        self.bind.get()
+        &self.bind.bind
     }
 
+    #[cfg(any(feature = "scene", feature = "video"))]
     pub(crate) fn view(&self) -> &TextureView {
-        self.bind.view()
+        &self.bind.view
     }
 
+    #[cfg(feature = "scene")]
     pub(crate) fn sampler(&self) -> &Sampler {
-        self.bind.sampler()
+        &self.bind.sampler
     }
 }
 

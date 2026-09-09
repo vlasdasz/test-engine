@@ -337,11 +337,19 @@ impl Label {
     pub fn text_layout_for(&self, text: &str) -> TextLayout {
         let bound = self.multiline.then_some(self.width() - self.alignment_margin());
         let runs = self.shaping_runs(text);
-        self.font().text_layout(text, self.text_size, bound, self.letter_spacing, runs)
+        self.font().text_layout(
+            text,
+            self.text_size,
+            bound,
+            self.letter_spacing,
+            runs,
+            self.line_height,
+        )
     }
 
-    /// The drawer indents left and right aligned text, see `alignment_margin`.
-    pub(crate) fn text_inset(&self) -> f32 {
+    /// Where the drawn text starts inside the frame, see `alignment_margin`.
+    /// Public so a view can lay a selection highlight over the text.
+    pub fn text_inset(&self) -> f32 {
         self.alignment_margin()
     }
 

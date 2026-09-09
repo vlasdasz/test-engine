@@ -548,6 +548,9 @@ impl crate::window::WindowEvents for AppRunner {
                 Theme::set_system(theme.into());
             }
 
+            #[cfg(linux)]
+            crate::window::wsl::theme::start();
+
             #[cfg(not_wasm)]
             {
                 #[cfg(desktop)]

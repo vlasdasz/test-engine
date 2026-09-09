@@ -88,7 +88,7 @@ impl Svg {
         let raster = rasters
             .get(&(size.width, size.height))
             .expect("svg raster drawn without being touched this frame");
-        draw(raster.bind.get());
+        draw(&raster.bind.bind);
     }
 
     pub(crate) fn drop_stale(&self, frame: u64) {

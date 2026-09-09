@@ -127,6 +127,9 @@ fn start_with_app(app: Box<dyn App>, headless: bool) -> std::ffi::c_int {
 
         let app = AppHandler::new(AppRunner::new(app), &event_loop);
         run_app(event_loop, app);
+
+        #[cfg(linux)]
+        crate::window::wsl::theme::stop();
     }
 
     #[cfg(feature = "inspect")]
