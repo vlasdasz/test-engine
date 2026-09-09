@@ -37,10 +37,6 @@ static WINDOW_READY: parking_lot::Mutex<crate::deps::vents::OnceEvent> =
     parking_lot::Mutex::new(crate::deps::vents::OnceEvent::const_default());
 static CURSOR_POSITION: MainLock<Point> = MainLock::new();
 
-/// Scroll sensitivity. Mouse wheel line deltas are already converted to
-/// pixels by `LINE_SCROLL_PIXELS` in the window crate, then scaled by this.
-const SCROLL_SPEED: f32 = 0.25;
-
 /// Mouse events use id 1 and `NO_TOUCH_ID` is 0, so real fingers start above
 /// both. Keeps a finger from ever colliding with the pointer or the "no
 /// capture" sentinel.
@@ -669,7 +665,7 @@ impl crate::window::WindowEvents for AppRunner {
     }
 
     fn mouse_scroll(&mut self, delta: Point) {
-        Input::on_scroll(delta * SCROLL_SPEED);
+        Input::on_scroll(delta);
     }
 
     fn mouse_motion(&mut self, delta: Point) {

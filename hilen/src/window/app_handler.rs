@@ -21,10 +21,26 @@ use crate::{
 
 static APP_HANDLER: MainLock<Option<AppHandler>> = MainLock::new();
 
-/// Rough pixel height of one mouse wheel line. Wheel deltas arrive in lines,
-/// trackpads send pixels, this converts lines to pixels. The result is
-/// scaled again by `SCROLL_SPEED` in the engine.
-const LINE_SCROLL_PIXELS: f32 = 28.0;
+/// Pixels one wheel line scrolls. X11 and Windows report a wheel notch as
+/// one line, this is about the Windows default of three text lines. It
+/// used to be 28 and then went through `PIXEL_SCROLL_SPEED` as well, 7
+/// pixels a notch, a 30 pixel row took four notches.
+const LINE_SCROLL_PIXELS: f32 = 60.0;
+
+/// Trackpads and macOS report pixels with the OS acceleration already
+/// in, a quarter of that keeps a flick from flying off.
+const PIXEL_SCROLL_SPEED: f32 = 0.25;
+
+/// The pixels a wheel event scrolls, whichever unit the platform sent.
+fn scroll_pixels(delta: MouseScrollDelta) -> Point {
+    match delta {
+        MouseScrollDelta::LineDelta(x, y) => Point::new(x, y) * LINE_SCROLL_PIXELS,
+        MouseScrollDelta::PixelDelta(delta) => {
+            let pixels: Point = (delta.x, delta.y).into();
+            pixels * PIXEL_SCROLL_SPEED
+        }
+    }
+}
 
 /// What the event loop delivers through its user event channel.
 pub(crate) enum UserEvent {
@@ -265,15 +281,9 @@ impl ApplicationHandler<UserEvent> for AppHandler {
             WindowEvent::Touch(touch) => {
                 self.te_window_events.touch_event(touch);
             }
-            WindowEvent::MouseWheel { delta, .. } => match delta {
-                MouseScrollDelta::LineDelta(x, y) => {
-                    let point: Point = (x, y).into();
-                    self.te_window_events.mouse_scroll(point * LINE_SCROLL_PIXELS);
-                }
-                MouseScrollDelta::PixelDelta(delta) => {
-                    self.te_window_events.mouse_scroll((delta.x, delta.y).into());
-                }
-            },
+            WindowEvent::MouseWheel { delta, .. } => {
+                self.te_window_events.mouse_scroll(scroll_pixels(delta));
+            }
             WindowEvent::KeyboardInput { event, .. } => {
                 // A captured mouse takes Escape for itself, see `Cursor`.
                 // The press only, the release of that same key arrives
@@ -377,5 +387,23 @@ impl ApplicationHandler<UserEvent> for AppHandler {
         event_loop.set_control_flow(ControlFlow::Wait);
 
         window.request_redraw();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use winit::dpi::PhysicalPosition;
+
+    use super::*;
+
+    // One X11 or Windows wheel notch is one line and must move a few
+    // rows, not a fraction of one, and a trackpad pixel keeps the
+    // sensitivity that tamed it before.
+    #[test]
+    fn a_wheel_notch_is_sixty_pixels_and_a_trackpad_pixel_a_quarter() {
+        let notch = scroll_pixels(MouseScrollDelta::LineDelta(0.0, -1.0));
+        assert_eq!((notch.x, notch.y), (0.0, -60.0));
+        let flick = scroll_pixels(MouseScrollDelta::PixelDelta(PhysicalPosition::new(8.0, -40.0)));
+        assert_eq!((flick.x, flick.y), (2.0, -10.0));
     }
 }
